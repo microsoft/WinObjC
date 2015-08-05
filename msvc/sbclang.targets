@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)Islandwood.xml" />
+    <AvailableItemName
+      Include="ClangCompile">
+      <Targets>_ClangCompile</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+   
+  <PropertyGroup>
+	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' != 'SwapChain'">true</IncludeXamlCompositor>
+	<IncludeSwapChainCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' == 'SwapChain'">true</IncludeSwapChainCompositor>	
+	<IncludeDXCompositor Condition="'$(AppContainerApplication)' == '' Or '$(WSCompositor)' == 'SwapChain'">true</IncludeDXCompositor>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+    <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemGroup>
+  
+  <Target
+    Name="CopyStarboardDependencies"
+	AfterTargets="Link">
+    
+    <PropertyGroup>
+      <LinkAdditionalDependencies>@(Link);@(Link->Metadata('AdditionalDependencies'))</LinkAdditionalDependencies>
+    </PropertyGroup>
+	
+	<PropertyGroup>
+		<IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+		<IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
+		<IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib'))">true</IncludeOpenGLES>
+		<IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
+		<IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
+		<IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+		<IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
+		<IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
+		<IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+		<IncludeObjcrt>true</IncludeObjcrt>
+		<IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
+	</PropertyGroup>
+	
+    <ItemGroup>
+	  <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
+	  <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
+	
+	  <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
+	  <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
+	  <SBResourceCopy Condition="'$(IncludeCoreFoundation)' == 'true'" Include="$(StarboardLibDirs)\CoreFoundation.dll" />
+	  <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
+	  <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
+
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
+	  <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
+
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\cairo.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\freetype.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
+	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
+
+	  <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
+	  <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
+	  <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
+
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libEGL.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libGLESv2.dll" />
+
+	  <SBResourceCopy Condition="'$(IncludeDXCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\DXCompositor.dll" />
+	  <SBResourceCopy Condition="'$(IncludeSwapChainCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\StarboardSwapChain.dll" />
+    </ItemGroup>
+  </Target>
+
+  <UsingTask
+    TaskName="Clang"
+    AssemblyFile="ClangCompileTask.dll"/>
+	
+  <PropertyGroup>
+    <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
+	<ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
+	<ClangCompileAfterTargets>ClCompile</ClangCompileAfterTargets>
+	<BuildCompileTargets>$(BuildCompileTargets);_ClangCompile</BuildCompileTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ClangCompileExtraInputs>$(MSBuildProjectFile)</ClangCompileExtraInputs>
+    <CombinedHMapFilename>$(IntDir)$(MSBuildProjectName)-combined</CombinedHMapFilename>
+    <ProjectHMapFilename>$(IntDir)$(MSBuildProjectName)-project</ProjectHMapFilename>
+    <CombinedHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Combined'))</CombinedHMapRequired>
+    <ProjectHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Project'))</ProjectHMapRequired>
+  </PropertyGroup>
+
+  <Target
+    Name="_ClangCompile"
+    BeforeTargets="$(ClangCompileBeforeTargets)"
+    AfterTargets="$(ClangCompileAfterTargets)"
+    Condition="'@(ClangCompile)' != ''"
+    DependsOnTargets="$(ClangCompileDependsOn)">
+    <!-- Handle building of selected files -->
+    <ItemGroup Condition="'@(SelectedFiles)' != ''">
+      <ClangCompile Remove="@(ClangCompile)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+
+    <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
+    <Clang
+      Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
+      InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
+      Autocomplete="$(ClangAutocomplete)"
+      AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
+      CommandLineTemplate="%(ClangCompile.CommandLineTemplate)"
+      CommandTLogFile="%(ClangCompile.CommandTLogFile)"
+      CompileAs="%(ClangCompile.CompileAs)"
+      DebugInformation="%(ClangCompile.DebugInformation)"
+  	  DependencyFile="%(ClangCompile.DependencyFile)"
+      DependencySource="%(ClangCompile.DependencySource)"
+      ExceptionHandling="%(ClangCompile.ExceptionHandling)"
+      HeaderMapInclude="%(ClangCompile.HeaderMapInclude)"
+      IncludePaths="%(ClangCompile.IncludePaths)"
+      Input="@(ClangCompile)"
+      LLVMDirectory="$(StarboardLLVMDirectory)"
+      ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
+      ObjectFileName="%(ClangCompile.ObjectFileName)"
+      OptimizationLevel="%(ClangCompile.OptimizationLevel)"
+      PrefixHeader="%(ClangCompile.PrefixHeader)"
+      PreprocessorDefinitions="%(ClangCompile.PreprocessorDefinitions)"
+      ProjectFile="$(MSBuildProjectFullPath)"
+      RuntimeLibrary="%(ClangCompile.RuntimeLibrary)"
+      SystemHeaderDeps="%(ClangCompile.SystemHeaderDeps)"
+      UserIncludePaths="%(ClangCompile.UserIncludePaths)"
+      ReadTLogFile="%(ClangCompile.ReadTLogFile)"
+      AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
+	    <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
+	</Clang>
+  </Target>
+  
+  <Target
+    Name="GenerateHeaderMaps"
+    DependsOnTargets="GenerateCombinedHMap;GenerateProjectHMap;WriteHeaderMaps" />
+  
+  <Target
+    Name="ComputeCombinedHMap">
+
+    <ItemGroup>
+      <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.h" />
+      <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.hh" />
+      <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.hpp" />
+      <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.pch" />
+      <HeaderMapEntry Include="%(ClInclude.FullPath)" />
+      <HeaderMap Include="$(CombinedHMapFilename)" />
+    </ItemGroup>
+  </Target>
+
+  <Target
+    Name="GenerateCombinedHMap"
+    DependsOnTargets="ComputeCombinedHMap"
+    Condition="'$(CombinedHMapRequired)' == 'true'"
+    Inputs="@(HeaderMapEntry)"
+    Outputs="$(CombinedHMapFilename).txt">
+	
+    <!-- Only support ASCII paths for now -->
+    <WriteLinesToFile
+      File="$(CombinedHMapFilename).txt"
+      Lines="@(HeaderMapEntry)"
+      Overwrite="true"
+      Encoding="ASCII" />
+
+    <ItemGroup>
+      <HeaderMapEntry Remove="@(HeaderMapEntry)" />
+    </ItemGroup>
+  </Target>
+  
+  <Target 
+    Name="ComputeProjectHMap">
+
+    <ItemGroup>
+      <HeaderMapEntry Include="%(ClInclude.FullPath)" />
+      <HeaderMap Include="$(ProjectHMapFilename)" />
+    </ItemGroup>
+	
+	<ItemGroup Condition="@(HeaderMapEntry) == ''">
+		<HeaderMapEntry Include="Empty" />
+	</ItemGroup>
+  </Target>
+
+  <Target
+    Name="GenerateProjectHMap"
+    DependsOnTargets="ComputeProjectHMap"
+    Condition="'$(ProjectHMapRequired)' == 'true'"
+    Inputs="@(HeaderMapEntry)"
+    Outputs="$(ProjectHMapFilename).txt">
+
+    <!-- Only support ASCII paths for now -->
+    <WriteLinesToFile
+      File="$(ProjectHMapFilename).txt"
+      Lines="@(HeaderMapEntry)"
+      Overwrite="true"
+      Encoding="ASCII" />
+
+    <ItemGroup>
+      <HeaderMapEntry Remove="@(HeaderMapEntry)" />
+    </ItemGroup>
+  </Target>
+  
+  <Target
+    Name="WriteHeaderMaps"
+    Condition="'@(HeaderMap)' != ''"
+    Inputs="@(HeaderMap->'%(Identity).txt')"
+    Outputs="@(HeaderMap->'%(Identity).hmap')">
+
+   <Exec
+     Command="&quot;$(MSBuildThisFileDirectory)..\bin\hmapmaker.exe&quot; &quot;%(HeaderMap.Identity).txt&quot; &quot;%(HeaderMap.Identity).hmap&quot;" />
+  </Target>
+
+  <!-- Create parent directories for all object files -->
+  <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
+    <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
+  </Target>
+
+  <Target Name="ComputeClangOptions" Condition="">
+    <!-- Figure out what to compile each file as -->
+   <ItemGroup>
+      <ClangCompile Condition="'%(ClangCompile.CompileAs)' == 'Default' or '%(ClangCompile.CompileAs)' == ''">
+        <CompileAs Condition="'%(Extension)'=='.c'">CompileAsC</CompileAs>
+        <CompileAs Condition="'%(Extension)'=='.m'">CompileAsObjC</CompileAs>
+        <CompileAs Condition="'%(Extension)'=='.cpp' or '%(Extension)'=='.cc' or '%(Extension)'=='.cxx'">CompileAsCpp</CompileAs>
+        <CompileAs Condition="'%(Extension)'=='.mm' or '%(Extension)'=='.mxx'">CompileAsObjCpp</CompileAs>
+      </ClangCompile>
+    </ItemGroup>
+	
+	<ItemGroup>
+	  <ClangCompile Condition="'$(IWCompat)' == 'true'">
+	    <AdditionalOptions>%(ClangCompile.AdditionalOptions) -D__ISLANDWOOD_COMPAT</AdditionalOptions>
+		<IncludePaths>$(StarboardExtraIncludePath);$(StarboardSdkRoot)\include\compat;%(ClangCompile.IncludePaths)</IncludePaths>
+	  </ClangCompile>
+	</ItemGroup>
+	
+    <!-- Figure out language-specific flags -->
+    <ItemGroup>
+      <ClangCompile>
+        <OtherFlags Condition="'%(ClangCompile.CompileAs)' == 'CompileAsC' or
+                               '%(ClangCompile.CompileAs)' == 'CompileAsObjC'">%(ClangCompile.OtherCFlags)</OtherFlags>
+        <OtherFlags Condition="'%(ClangCompile.CompileAs)' == 'CompileAsCpp' or
+                               '%(ClangCompile.CompileAs)' == 'CompileAsObjCpp'">%(ClangCompile.OtherCPlusPlusFlags)</OtherFlags>
+      </ClangCompile>
+    </ItemGroup>
+
+    <!-- Figure out which header map to use -->
+    <ItemGroup>
+      <ClangCompile>
+        <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Project'">-iquote"$(ProjectHMapFilename).hmap"</HeaderMapInclude>
+        <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Combined'">-I"$(CombinedHMapFilename).hmap"</HeaderMapInclude>
+      </ClangCompile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Ensure Link/Lib/ImpLib pick up the object files -->
+  <ItemDefinitionGroup>
+    <ClangOutputs>
+      <LinkCompiled>$(LinkCompiled)</LinkCompiled>
+      <LibCompiled>$(LibCompiled)</LibCompiled>
+      <ImpLibCompiled>$(ImpLibCompiled)</ImpLibCompiled>
+    </ClangOutputs>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>$(ComputeLinkInputsTargets);ComputeClangLinkInputs;ComputeRuntimeInputs</ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
+    <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
+  </PropertyGroup>
+
+  <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
+	<PropertyGroup>
+	  <StarboardRuntimeLib Condition="'$(AppContainerApplication)' == ''">StarboardWin32.lib</StarboardRuntimeLib>
+	  <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
+	  <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
+	</PropertyGroup>
+    <ItemGroup>
+      <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
+      <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
+    </ItemGroup>
+  </Target>
+  
+  <Target Name="ComputeClangLinkInputs" DependsOnTargets="_ClangCompile">
+    <ItemGroup>
+      <Link Condition="'%(ClangOutputs.LinkCompiled)' == 'true'" Include="%(ClangOutputs.ObjectFileName)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="ComputeClangLibInputs" DependsOnTargets="ComputeClangOptions;_ClangCompile">
+    <ItemGroup>
+      <Lib Condition="'%(ClangOutputs.LibCompiled)' == 'true'" Include="%(ClangOutputs.ObjectFileName)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="ComputeClangImpLibInputs" DependsOnTargets="ComputeClangOptions;_ClangCompile">
+    <ItemGroup>
+      <ImpLib Condition="'%(ClangOutputs.ImpLibCompiled)' == 'true'" Include="%(ClangOutputs.ObjectFileName)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Clean generated files -->
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);CleanClang;</CleanDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CleanClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
+    <!-- Delete header maps -->
+    <Delete Files="$(CombinedHMapFilename).txt;$(CombinedHMapFilename).hmap;$(ProjectHMapFilename).txt;$(ProjectHMapFilename).hmap" />
+  </Target>
+</Project>

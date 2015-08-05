@@ -1,0 +1,27 @@
+[submodule "tools/vsimporter/third-party/PlistCpp"]
+	path = tools/vsimporter/third-party/PlistCpp
+	url = https://github.com/Microsoft/PlistCpp.git
+[submodule "tools/vsimporter/third-party/sole"]
+	path = tools/vsimporter/third-party/sole
+	url = https://github.com/r-lyeh/sole.git
+[submodule "deps/3rdparty/curl"]
+	path = deps/3rdparty/curl
+	url = https://github.com/bagder/curl.git
+[submodule "deps/3rdparty/openssl"]
+	path = deps/3rdparty/openssl
+	url = https://github.com/microsoft/openssl
+[submodule "deps/3rdparty/zlib"]
+	path = deps/3rdparty/zlib
+	url = https://github.com/madler/zlib
+[submodule "deps/3rdparty/libpng"]
+	path = deps/3rdparty/libpng
+	url = git://git.code.sf.net/p/libpng/code
+[submodule "deps/3rdparty/freetype2"]
+	path = deps/3rdparty/freetype2
+	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "deps/3rdparty/pixman"]
+	path = deps/3rdparty/pixman
+	url = git://anongit.freedesktop.org/pixman
+[submodule "deps/3rdparty/cairo"]
+	path = deps/3rdparty/cairo
+	url = git://anongit.freedesktop.org/git/cairo

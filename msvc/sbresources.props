@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- SBResourcesDir is not the final destination in the case we're building an AppX 
+         AppxPackagePayload takes care of the copying in that case -->
+    <SBResourcesDir Condition="'$(AppContainerApplication)' != 'true'">$(OutDir)</SBResourcesDir>
+    <SBResourcesDir Condition="'$(AppContainerApplication)' == 'true'"></SBResourcesDir>
+    <SBResourceArchive>$(OutDir)\app.zip</SBResourceArchive>
+  </PropertyGroup>
+</Project>

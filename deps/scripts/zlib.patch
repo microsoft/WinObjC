@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0c0247c..c464afd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -210,6 +210,9 @@ elseif(BUILD_SHARED_LIBS AND WIN32)
+     set_target_properties(zlib PROPERTIES SUFFIX "1.dll")
+ endif()
+ 
++# switch name to libz for islandwood
++set_target_properties(zlib zlibstatic PROPERTIES OUTPUT_NAME libz)
++
+ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
+     install(TARGETS zlib zlibstatic
+         RUNTIME DESTINATION "${INSTALL_BIN_DIR}"

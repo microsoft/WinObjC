@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{3E0BDCC3-B24D-4C67-B4F9-C817C9A5C032}</ItemsProjectGuid>
+    <ItemsRootNamespace>StarboardSwapChain</ItemsRootNamespace>
+    <ItemsProjectName>StarboardSwapChain.Shared</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\StarboardSwapChain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\DeviceResources.cpp" />	
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardSwapChain\SwapChainCompositor.cpp" />
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardSwapChain\DeviceResourcesXaml.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardSwapChain\DeviceResourcesXaml.h" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardSwapChain\DXCompositorClient.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3389E85F-0DB7-43FF-BFA5-496338534224}</ProjectGuid>
+    <RootNamespace>Package</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <DISABLEFASTUPTODATECHECK>true</DISABLEFASTUPTODATECHECK>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugPackage|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePackage|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\msvc\zip.tasks" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugPackage|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePackage|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup Label="Package Files">
+    <LLVMFiles Include="..\..\msvc\LLVM-3.6.0\**\*" />
+    <StarboardTemplates Include="..\..\msvc\vsimporter-templates\**\*" />
+    <MSVCFiles Include="..\..\msvc\*.props" />
+    <MSVCFiles Include="..\..\msvc\*.targets" />
+    <MSVCFiles Include="..\..\msvc\*.tasks" />
+    <MSVCFiles Include="..\..\msvc\*.xml" />
+    <MSVCFiles Include="..\..\msvc\*.dll" />
+    <MSVCFiles Include="..\..\msvc\*.cpp" />
+    <SBIncludes Include="..\..\include\**\*" />
+    <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
+    <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
+    <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
+    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.lib" />
+    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.dll" />
+    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.winmd" />
+    <SBLibsWin81 Include="..\..\deps\prebuilt\Windows 8.1\x86\*.lib" />
+    <SBLibsWin81 Include="..\..\deps\prebuilt\Windows 8.1\x86\*.dll" />
+    <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.lib" />
+    <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
+    <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
+    <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.lib" />
+    <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.dll" />
+    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.lib" />
+    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.dll" />
+    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.winmd" />
+    <SBLibsWinPhone81x86 Include="..\..\deps\prebuilt\Windows Phone 8.1\x86\*.lib" />
+    <SBLibsWinPhone81x86 Include="..\..\deps\prebuilt\Windows Phone 8.1\x86\*.dll" />
+    <SBSamples Include="..\..\samples\**\*" />
+    <SBBinaries Include="..\..\bin\*.exe" />
+    <SBBinaries Include="..\..\bin\*.vsix" />
+    <SBLegal Include="..\..\license.txt;..\..\ThirdPartyNotices.txt;..\..\README.md" />
+  </ItemGroup>
+  <PropertyGroup Label="PackageSDKDefaults">
+    <SBSDKDir>$(SolutionDir)SDKPackage\$(Configuration)\</SBSDKDir>
+    <SBSDKZipFile>$(SBSDKDir)winobjc.zip</SBSDKZipFile>
+    <SBPackageDir>$(OutDir)package\</SBPackageDir>
+  </PropertyGroup>
+  <Target Name="PackageSDKFiles" BeforeTargets="Build" AfterTargets="Build">
+    <!-- We want to start from scratch each time, in case we remove a dependency we don't want in the package -->
+    <Message Importance="high" Text="Removing old package" />
+    <RemoveDir Directories="$(SBPackageDir)" />
+    <ItemGroup>
+      <!-- We're replacing the starboard files included while building the SDK with the ones that will be released externally. -->
+      <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'starboard'" />
+    </ItemGroup>
+    <ItemGroup>
+      <MSVCFiles>
+        <OutputFileName Condition="'%(MSVCFiles.Filename)' == 'starboard-sdk'">starboard</OutputFileName>
+        <OutputFileName Condition="'%(MSVCFiles.Filename)' != 'starboard-sdk'">%(MSVCFiles.Filename)</OutputFileName>
+      </MSVCFiles>
+    </ItemGroup>
+    <Message Importance="high" Text="Copying LLVM to destination" />
+    <Copy SourceFiles="@(LLVMFiles)" DestinationFiles="@(LLVMFiles->'$(SBPackageDir)msvc\LLVM-3.6.0\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying VS Project Importer templates to destination" />
+    <Copy SourceFiles="@(StarboardTemplates)" DestinationFiles="@(StarboardTemplates->'$(SBPackageDir)msvc\vsimporter-templates\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying MSBuild files to destination" />
+    <Copy SourceFiles="@(MSVCFiles)" DestinationFiles="@(MSVCFiles->'$(SBPackageDir)msvc\%(OutputFileName)%(Extension)')" />
+    <Message Importance="high" Text="Copying lib files to destination" />
+    <Copy SourceFiles="@(SBLibsWin81)" DestinationFolder="$(SBPackageDir)lib\Windows 8.1\x86" />
+    <Copy SourceFiles="@(SBLibsWin10)" DestinationFolder="$(SBPackageDir)lib\Universal Windows\x86" />
+    <Copy SourceFiles="@(SBLibsWinPhone81x86)" DestinationFolder="$(SBPackageDir)lib\Windows Phone 8.1\x86" />
+    <Message Importance="high" Text="Copying includes to destination" />
+    <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying binaries to destination" />
+    <Copy SourceFiles="@(SBBinaries)" DestinationFolder="$(SBPackageDir)bin\" />
+    <Message Importance="high" Text="Copying samples to destination" />
+    <Copy SourceFiles="@(SBSamples)" DestinationFiles="@(SBSamples->'$(SBPackageDir)samples\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying legal notices" />
+    <Copy SourceFiles="@(SBLegal)" DestinationFolder="$(SBPackageDir)" />
+    <Message Importance="high" Text="Adding version information (last commit, date and time)" />
+    <Exec Command="echo $([System.DateTime]::Now.ToString()) &gt; &quot;$(SBPackageDir)VERSION.TXT&quot;" />
+    <Exec IgnoreExitCode="true" Command="git rev-parse HEAD &gt;&gt; &quot;$(SBPackageDir)VERSION.TXT&quot;" />
+    <Message Importance="high" Text="Zipping final package" />
+    <MakeDir Directories="$(SBSDKDir)" />
+    <ZipDirectory InputDirectory="$(SBPackageDir)" ZipFileName="$(SBSDKZipFile)" OverwriteExistingFile="true" />
+    <Message Importance="high" Text="Cleaning up package remnants. Remove this step if you wish to more closely examine package generation." />
+    <RemoveDir Directories="$(SBPackageDir)" />
+  </Target>
+  <Target Name="CleanPackage" AfterTargets="Clean">
+    <Message Importance="high" Text="Removing old package" />
+    <RemoveDir Directories="$(SBPackageDir)" />
+    <Delete Files="$(SBSDKZipFile)" />
+  </Target>
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);CleanPackage;</CleanDependsOn>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

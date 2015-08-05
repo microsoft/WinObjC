@@ -1,0 +1,11 @@
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\samples\Asteroids\dlls\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\samples\d3dcompiler\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\samples\gles2_book\Common\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\samples\gles2_book\Common\WP8\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\compiler\preprocessor\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\compiler\preprocessor\WP8\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\compiler\WP8\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\libEGL\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\libEGL\WP8\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\libGLESv2\ARM
+C:\MSFTDelivery\WP8_Branch\wp\deps\angleproject\src\libGLESv2\WP8\ARM

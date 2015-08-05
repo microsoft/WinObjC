@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>WOCCatalog</ProjectName>
+    <RootNamespace>WOCCatalog</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <ProjectGuid>{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}</ProjectGuid>
+    <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <TargetName>WOCCatalog</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <TargetName>WOCCatalog</TargetName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="../WOCCatalog-Headers-WinStore8.1/WOCCatalog-Headers.vcxitems" Label="Shared" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <PackageCertificateKeyFile>WOCCatalog_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib</AdditionalDependencies>
+    </Link>
+    <ClangCompile>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <OptimizationLevel>Disabled</OptimizationLevel>
+      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+    </ClangCompile>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib</AdditionalDependencies>
+    </Link>
+    <ClangCompile>
+      <HeaderMap>Project</HeaderMap>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <OptimizationLevel>MinSpace</OptimizationLevel>
+    </ClangCompile>
+    <SBInfoPlistCopy>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </SBInfoPlistCopy>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="WOCCatalog_TemporaryKey.pfx" />
+    <Image Include="Assets\Logo.scale-100.png" />
+    <Image Include="Assets\SmallLogo.scale-100.png" />
+    <Image Include="Assets\StoreLogo.scale-100.png" />
+    <Image Include="Assets\SplashScreen.scale-100.png" />
+    <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\main.m" />
+    <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m" />
+    <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\OpenGLES11Controller.m" />
+    <ClangCompile Include="..\..\WOCCatalog\AppDelegate.m" />
+    <ClangCompile Include="..\..\WOCCatalog\SearchBarViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png" />
+    <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
+      <VariableFile Condition="'$(Configuration)'=='Debug'">WOCCatalog-Debug-xcvars.txt</VariableFile>
+      <VariableFile Condition="'$(Configuration)'=='Release'">WOCCatalog-Release-xcvars.txt</VariableFile>
+    </SBInfoPlistCopy>
+    <Text Include="WOCCatalog-Debug-xcvars.txt" />
+    <Text Include="WOCCatalog-Release-xcvars.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
+  </ImportGroup>
+</Project>

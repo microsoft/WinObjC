@@ -1,0 +1,42 @@
+dnl
+dnl Version stuff
+dnl
+
+dnl This macro expands to one of 'git', 'snapshot', or 'release'
+m4_define([cairo_release_status],
+	  [m4_if(m4_eval(cairo_version_micro % 2), [1], [git],
+	         [m4_if(m4_eval(cairo_version_minor % 2), [1], [snapshot],
+		                                               [release])])])
+
+dnl This is the .so/dll number.  2 for cairo-1.x.x
+m4_define([cairo_version_sonum], m4_eval(cairo_version_major + 1))
+
+dnl The libtool shared library version stuff
+m4_define([cairo_version],
+	  m4_eval(cairo_version_major*10000 + cairo_version_minor*100 + cairo_version_micro))
+m4_if(m4_eval(cairo_version_minor % 2), [1],
+      [
+	dnl for unstable releases
+	m4_define([cairo_libtool_revision], 0)
+      ],
+      [
+	dnl for stable releases
+	m4_define([cairo_libtool_revision], cairo_version_micro)
+      ])
+m4_define([cairo_libtool_current],
+	  m4_eval(cairo_version_sonum + cairo_version - cairo_libtool_revision))
+m4_define([cairo_libtool_age],
+	  m4_eval(cairo_libtool_current - cairo_version_sonum))
+
+CAIRO_VERSION_MAJOR=cairo_version_major
+CAIRO_VERSION_MINOR=cairo_version_minor
+CAIRO_VERSION_MICRO=cairo_version_micro
+CAIRO_VERSION_SONUM=cairo_version_sonum
+CAIRO_RELEASE_STATUS=cairo_release_status
+CAIRO_LIBTOOL_VERSION_INFO=cairo_libtool_current:cairo_libtool_revision:cairo_libtool_age
+AC_SUBST(CAIRO_VERSION_MAJOR)
+AC_SUBST(CAIRO_VERSION_MINOR)
+AC_SUBST(CAIRO_VERSION_MICRO)
+AC_SUBST(CAIRO_VERSION_SONUM)
+AC_SUBST(CAIRO_RELEASE_STATUS)
+AC_SUBST(CAIRO_LIBTOOL_VERSION_INFO)

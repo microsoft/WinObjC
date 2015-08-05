@@ -1,0 +1,17 @@
+Debug
+Release
+AppPackages
+SubmissionInfo
+*.sdf
+*.ncb
+*.suo
+*.vcproj.*
+*.vcxproj.user
+patches-*
+*.target.mk
+ipch
+debug.txt
+*.opensdf
+*.orig
+*.rej
+

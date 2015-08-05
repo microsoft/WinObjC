@@ -1,0 +1,253 @@
+dnl Defines the macro CAIRO_CONFIGURE_PTHREAD to find a suitable
+dnl pthread implementation. There are two levels of pthread conformance
+dnl we are looking for:
+dnl
+dnl a) A minimal level denoted by -DCAIRO_HAS_PTHREAD=1: This level
+dnl requires mutex and recursive mutexattr support.  If possible we try
+dnl to use weakly linked stubs from libc over the real pthread library.
+dnl This level is required by the cairo library proper.  If the user
+dnl invokes configure with --enable-pthread=yes or
+dnl --enable-pthread=always then we avoid trying to use weak stubs.
+dnl
+dnl b) A full level denoted by -DCAIRO_HAS_REAL_PTHREAD=1: This level
+dnl requires full support from a real pthread library, including thread
+dnl creation, joins, thread attribtues, etc.  This level is required by
+dnl multithreaded applications using cairo, such as the test suite
+dnl binaries and cairo utilities.
+dnl
+dnl Usage:
+dnl	CAIRO_ENABLE(pthread, pthread, <default yes|no|auto|always>,
+dnl			[CAIRO_CONFIGURE_PTHREAD])
+dnl
+dnl	This should be invoked near the end of configure.ac so that
+dnl	the pthread specific CFLAGS and LIBS end up at the front
+dnl	of CAIRO_CFLAGS and CAIRO_LIBS -- this helps ensure that we
+dnl	really do get non-weak symbols from the actual pthread library
+dnl	rather than possible stubs in other libraries.
+dnl
+dnl	The user can override the choices made by
+dnl	CAIRO_CONFIGURE_PTHREAD by using --enable-pthread=yes and
+dnl	giving PTHREAD_CFLAGS and PTHREAD_LIBS to configure.
+dnl
+dnl Sets environment variables:
+dnl	use_pthread="yes" | "no (<errmsg>)"
+dnl	have_pthread="yes" | "no (<errmsg)"
+dnl	have_real_pthread="yes" | "no (<errmsg)"
+dnl	pthread_{CFLAGS,LIBS,REQUIRES}
+dnl	real_pthread_{CFLAGS,LIBS}
+dnl
+dnl Autoconfigured defines in config.h (conditional):
+dnl	CAIRO_HAS_PTHREAD
+dnl	CAIRO_HAS_REAL_PTHREAD
+dnl
+
+dnl -----------------------------------------------------------------------
+dnl A program to test all the pthread features we need to be able to
+dnl compile libcairo itself.  We could test the features independently,
+dnl but we need all of them anyway.
+m4_define([libcairo_pthread_program],[dnl
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* for PTHREAD_MUTEX_INITIALIZER under linux */
+#endif
+#include <pthread.h>
+
+pthread_mutex_t test_mutex_initializer = PTHREAD_MUTEX_INITIALIZER;
+int test_mutex (void)
+{
+	int x = 0;
+	pthread_mutex_t mutex;
+	x |= pthread_mutex_init (&mutex, NULL);
+	x |= pthread_mutex_lock (&mutex);
+	x |= pthread_mutex_unlock (&mutex);
+	x |= pthread_mutex_destroy (&mutex);
+	return 0;
+}
+
+int test_mutex_attr (void)
+{
+	int x = 0;
+	pthread_mutexattr_t attr;
+	pthread_mutex_t mutex;
+	x |= pthread_mutexattr_init (&attr);
+	x |= pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
+	x |= pthread_mutex_init (&mutex, &attr);
+	x |= pthread_mutex_lock (&mutex);
+	x |= pthread_mutex_unlock (&mutex);
+	x |= pthread_mutex_destroy (&mutex);
+	x |= pthread_mutexattr_destroy (&attr);
+	return x;
+}])
+
+dnl -----------------------------------------------------------------------
+dnl A program to test all the features we want to be able to run the test
+dnl suite or other thready cairo applications that want real threads.
+m4_define([testsuite_pthread_program],[dnl
+libcairo_pthread_program
+
+pthread_once_t once_control = PTHREAD_ONCE_INIT;
+void test_once_init (void) {}
+int test_once (void)
+{
+	return pthread_once (&once_control, test_once_init);
+}
+
+pthread_key_t test_specific_key;
+int test_specific (void)
+{
+	int x = 0;
+	x |= pthread_key_create (&test_specific_key, NULL);
+	x |= pthread_setspecific (test_specific_key, NULL);
+	x |= pthread_getspecific (test_specific_key) != NULL;
+	return x;
+}
+
+void cleaner (void *arg) { (void)arg; }
+
+void *
+test_thread_main (void *arg)
+{
+	pthread_cleanup_push (cleaner, arg);
+	pthread_exit (arg);
+	pthread_cleanup_pop (1);
+	return arg;
+}
+
+int
+test_threads (void)
+{
+	int x = 0;
+	pthread_t thread;
+	pthread_attr_t attr;
+	void *arg = NULL;
+	x |= pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+	x |= pthread_create (&thread, &attr, test_thread_main, arg);
+	x |= pthread_equal (pthread_self(), thread);
+	x |= pthread_join (thread, &arg);
+	x |= pthread_attr_destroy (&attr);
+	return x;
+}])
+
+dnl -----------------------------------------------------------------------
+
+dnl CAIRO_CHECK_PTHREAD(tag, cflags, libs, program, true-action, false-action)
+dnl   Set <tag>_{CFLAGS,LIBS} to {<cflags>,<libs>} if we can compile and link
+dnl   <program> with the given flags and libs.  Execute <true-action> on
+dnl   success and <false-action> on failure.
+AC_DEFUN([CAIRO_CHECK_PTHREAD],[dnl
+	CAIRO_CC_TRY_LINK_WITH_ENV_SILENT(
+		[CFLAGS="$CFLAGS $2";
+		 LIBS="$LIBS $3"],
+		[$4],
+		[$1_CFLAGS="$2";
+		 $1_LIBS="$3";
+		 $5],
+		[$1_CFLAGS="";
+		 $1_LIBS="";
+		 $6])
+])
+
+dnl CAIRO_CONFIGURE_PTHREADS(): Look for pthreads.
+dnl
+dnl If the user specifies PTHREAD_CFLAGS and PTHREAD_LIBS then we use
+dnl those.  Otherwise we try CFLAGS=-D_REENTRANT and LIBS=-lpthread for
+dnl full pthread support, and look for stubs in libc for the minimal
+dnl pthread support.
+dnl
+dnl CFLAGS=-D_REENTRANT LIBS=-lpthread has been tested to work on:
+dnl
+dnl	Solaris 9 (5.9)			Sun C 5.8 Patch 121015-04 2007/01/10
+dnl	OpenSolaris (5.11)		Sun C 5.9 Patch 124868-08 2008/11/25
+dnl	OpenSolaris (5.11)		clang version 1.1 (trunk 90017)
+dnl	Tru64/OSF1 V5.1			Compaq C V6.5-003
+dnl	Mac OS X 10.5.5			gcc 4.0.1 (Apple Inc. build 5465)
+dnl	Mac OS X 10.6			gcc 4.2.1 (Apple Inc. build 5659)
+dnl	FreeBSD	7.2			gcc 4.2
+dnl	OpenBSD 4.5			gcc 3.3.5 (propolice)
+dnl	Debian Linux (Etch)		gcc 4.3
+dnl
+dnl Thread support is also in various libcs directly, so often using no
+dnl flags at all works as well, but unfortunately Solaris 9 has
+dnl practically _all_ of libpthread stubbed out in libc, so we cannot
+dnl distinguish between a working libpthread and a stubbed out one by a
+dnl link-only test.
+dnl
+dnl We also explicitly do not link to pthread-stubs or whatever other
+dnl third-party stubs library, since that forces cairo clients to be
+dnl extra careful when giving both libcairo and libpthread on the
+dnl command line: the user would have to use "-lpthread -lcairo" rather
+dnl than the more common "-lcairo -lpthread" to not accidentally use
+dnl stubs pulled in by libcairo everywhere in the application.  We
+dnl might also need to have a way to teach pkg-config about library
+dnl ordering constraints which aren't actual dependencies, and at this
+dnl point it just starts doing my head in.
+dnl
+dnl If your unix-like doesn't work with the secret handshake
+dnl -D_REENTRANT -lpthread and you can actually compile the rest of
+dnl cairo just fine otherwise, please take a moment complain loudly
+dnl to the cairo mailing list!
+dnl
+AC_DEFUN([CAIRO_CONFIGURE_PTHREAD],[dnl
+	dnl Try to use the user's PTHREAD_LIBS/CFLAGS
+	dnl if they're available.
+	if test "x$PTHREAD_CFLAGS" = "x"; then
+		PTHREAD_CFLAGS="-D_REENTRANT"
+	fi
+	if test "x$PTHREAD_LIBS" = "x"; then
+		PTHREAD_LIBS="-lpthread"
+	fi
+
+	dnl First try to find the real pthreads.
+	CAIRO_CHECK_PTHREAD(
+		[real_pthread], [$PTHREAD_CFLAGS], [$PTHREAD_LIBS],
+		[testsuite_pthread_program],
+		[have_real_pthread=yes],
+		[have_real_pthread=no])
+	if test "x$have_real_pthread" != "xyes"; then
+		dnl Give -pthread a go.
+		CAIRO_CHECK_PTHREAD(
+			[real_pthread], [-pthread], [],
+			[testsuite_pthread_program],
+			[have_real_pthread=yes],
+			[have_real_pthread="no (can't link with -lpthread or -pthread)"])
+	fi
+	PTHREAD_CFLAGS=
+	PTHREAD_LIBS=
+
+	dnl Check if we can use libc's stubs in libcairo.
+	dnl Only do this if the user hasn't explicitly enabled
+	dnl pthreads, but is relying on automatic configuration.
+	have_pthread="no"
+	if test "x$enable_pthread" != "xyes"; then
+		CAIRO_CHECK_PTHREAD(
+			[pthread], [-D_REENTRANT], [],
+			[libcairo_pthread_program],
+			[have_pthread=yes],
+			[])
+	fi
+
+	dnl Default to using the real pthreads for libcairo.
+	if test "x$have_pthread" != "xyes"; then
+		have_pthread="$have_real_pthread";
+		pthread_CFLAGS="$real_pthread_CFLAGS";
+		pthread_LIBS="$real_pthread_LIBS";
+	fi
+
+	dnl Tell autoconf about the results.
+	if test "x$have_real_pthread" = "xyes"; then
+		 AC_DEFINE([CAIRO_HAS_REAL_PTHREAD], 1, 
+			[Define to 1 if we have full pthread support])
+	fi
+	if test "x$have_pthread" = "xyes"; then
+		AC_DEFINE([CAIRO_HAS_PTHREAD], 1,
+			[Define to 1 f we have minimal pthread support])
+	fi
+
+	dnl Make sure we scored some pthreads.
+	if test "x$enable_pthread" = "xyes" -a "x$have_pthread" != "xyes"; then
+		AC_MSG_ERROR([pthread requested but not found])
+	fi
+
+	dnl Set the output variables for CAIRO_ENABLE.
+	use_pthread="$have_pthread"
+	pthread_REQUIRES=""
+])

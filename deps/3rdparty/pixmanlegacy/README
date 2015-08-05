@@ -1,0 +1,22 @@
+pixman is a library that provides low-level pixel manipulation
+features such as image compositing and trapezoid rasterization.
+
+All questions regarding this software should be directed to the pixman
+mailing list:
+
+        http://lists.freedesktop.org/mailman/listinfo/pixman
+
+Please send patches and bug reports either to the mailing list above,
+or file them at the freedesktop bug tracker:
+
+        https://bugs.freedesktop.org/enter_bug.cgi?product=pixman
+
+The master development code repository can be found at:
+
+	git://anongit.freedesktop.org/git/pixman
+
+	http://gitweb.freedesktop.org/?p=pixman;a=summary
+
+For more information on the git code manager, see:
+
+	http://wiki.x.org/wiki/GitPage

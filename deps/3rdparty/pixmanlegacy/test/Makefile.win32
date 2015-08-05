@@ -1,0 +1,73 @@
+CC   = cl
+LINK = link
+
+CFG_VAR = $(CFG)
+ifeq ($(CFG_VAR),)
+CFG_VAR=release
+endif
+
+CFLAGS     = -MD -nologo -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_BIND_TO_CURRENT_VCLIBS_VERSION -D_MT -I../pixman -I. -I../
+TEST_LDADD = ../pixman/$(CFG_VAR)/pixman-1.lib
+INCLUDES = -I../pixman -I$(top_builddir)/pixman
+
+# optimization flags
+ifeq ($(CFG_VAR),debug)
+CFLAGS += -Od -Zi
+else
+CFLAGS += -O2
+endif
+
+SOURCES =			\
+	a1-trap-test.c		\
+	pdf-op-test.c		\
+	region-test.c		\
+	region-translate-test.c	\
+	fetch-test.c		\
+	oob-test.c		\
+	trap-crasher.c		\
+	alpha-loop.c		\
+	scaling-crash-test.c	\
+	gradient-crash-test.c	\
+	alphamap.c		\
+	stress-test.c		\
+	composite-traps-test.c	\
+	blitters-test.c		\
+	scaling-test.c		\
+	affine-test.c		\
+	composite.c		\
+	utils.c
+
+TESTS =						\
+	$(CFG_VAR)/a1-trap-test.exe		\
+	$(CFG_VAR)/pdf-op-test.exe		\
+	$(CFG_VAR)/region-test.exe		\
+	$(CFG_VAR)/region-translate-test.exe	\
+	$(CFG_VAR)/fetch-test.exe		\
+	$(CFG_VAR)/oob-test.exe			\
+	$(CFG_VAR)/trap-crasher.exe		\
+	$(CFG_VAR)/alpha-loop.exe		\
+	$(CFG_VAR)/scaling-crash-test.exe	\
+	$(CFG_VAR)/gradient-crash-test.exe	\
+	$(CFG_VAR)/alphamap.exe			\
+	$(CFG_VAR)/stress-test.exe		\
+	$(CFG_VAR)/composite-traps-test.exe	\
+	$(CFG_VAR)/blitters-test.exe		\
+	$(CFG_VAR)/scaling-test.exe		\
+	$(CFG_VAR)/affine-test.exe		\
+	$(CFG_VAR)/composite.exe
+
+
+OBJECTS     = $(patsubst %.c, $(CFG_VAR)/%.obj, $(SOURCES))
+
+$(CFG_VAR)/%.obj: %.c
+	@mkdir -p $(CFG_VAR)
+	@$(CC) -c $(CFLAGS) -Fo"$@" $<
+
+$(CFG_VAR)/%.exe: $(CFG_VAR)/%.obj
+	$(LINK) /NOLOGO /OUT:$@ $< $(CFG_VAR)/utils.obj $(TEST_LDADD)
+
+all: $(OBJECTS) $(TESTS)
+	@exit 0
+
+clean:
+	@rm -f $(CFG_VAR)/*.obj $(CFG_VAR)/*.pdb || exit 0

@@ -1,0 +1,228 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "runtime.h"
+
+@class NSZone;
+@class NSAutoreleasePool;
+
+@interface NSObject {
+@public
+#ifdef IW_NO_WINRT_ISA
+    Class isa;
+#else
+    WinRT_isa isa;
+#endif
+}
+@end
+
+@implementation NSObject
+    -(id) init
+    {
+        return self;
+    }
+
+    +(id) new
+    {
+        return [[self alloc] init];
+    }
+
+    +(id) class
+    {
+        return self;
+    }
+
+    -(id) class
+    {
+        return object_getClass(self);
+    }
+
+    -(BOOL) isEqual:(id)other {
+        return self == other;
+    }
+
+    +(Class) superclass
+    {
+        return class_getSuperclass(self);
+    }
+
+    +(BOOL) isSubclassOfClass: (Class)classRef
+    {
+        Class curClass = self;
+
+        while ( curClass != nil ) {
+            if ( curClass == classRef ) {
+                return YES;
+            }
+
+            curClass = curClass->superclass;
+        }
+
+        return NO;
+    }
+
+    -(BOOL) isMemberOfClass: (Class) classRef
+    {
+        return object_getClass(self) == classRef;
+    }
+
+    -(BOOL) isKindOfClass: (Class) classRef
+    {
+        Class curClass = object_getClass(self);
+
+        while ( curClass != nil ) {
+            if ( curClass == classRef ) {
+                return YES;
+            }
+
+            curClass = class_getSuperclass(curClass);
+        }
+
+        return NO;
+    }
+
+    -(BOOL) respondsToSelector: (SEL) selector
+    {
+        return class_respondsToSelector(object_getClass(self), selector);
+    }
+
+    +(BOOL) instancesRespondToSelector: (SEL) selector
+    {
+        return class_respondsToSelector(self, selector);
+    }
+
+    - (id)performSelector: (SEL)selector
+    {
+        id (*imp)(id, SEL) = (id(*)(id, SEL))[self methodForSelector: selector];
+
+        return imp(self, selector);
+    }
+
+    - (id)performSelector: (SEL)selector withObject: (id) obj1
+    {
+        id (*imp)(id, SEL, id) = (id(*)(id, SEL, id))[self methodForSelector: selector];
+
+        return imp(self, selector, obj1);
+    }
+
+    - (id)performSelector: (SEL)selector withObject: (id) obj1 withObject: (id) obj2
+    {
+        id (*imp)(id, SEL, id, id) = (id(*)(id, SEL, id, id))[self methodForSelector: selector];
+
+        return imp(self, selector, obj1, obj2);
+    }
+
+    - (id)performSelector: (SEL)selector withObject: (id) obj1 withObject: (id) obj2 withObject: (id) obj3
+    {
+        id (*imp)(id, SEL, id, id, id) = (id(*)(id, SEL, id, id, id))[self methodForSelector: selector];
+
+        return imp(self, selector, obj1, obj2, obj3);
+    }
+
+    - (IMP)methodForSelector: (SEL)selector
+    {
+        IMP ret = class_getMethodImplementation(object_getClass(self), selector);
+        if (!ret)
+            printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
+        return ret;
+    }
+
+    + (IMP)instanceMethodForSelector: (SEL)selector
+    {
+        IMP ret = class_getMethodImplementation(self, selector);
+        if (!ret)
+            printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
+        return ret;
+    }
+
+    -(instancetype) self
+    {
+        return self;
+    }
+
+    +(instancetype) self
+    {
+        return self;
+    }
+
+    +(id) allocWithZone: (NSZone *) zone
+    {
+        id ret = objc_allocateObject(self, 0);
+
+        return ret;
+    }
+
+    +(id) alloc
+    {
+        return [self allocWithZone: nil];
+    }
+
+    +(void) dealloc
+    {
+    }
+
+    +(id) retain
+    {
+        return self;
+    }
+
+    +(void) release
+    {
+    }
+
+    -(void) dealloc
+    {
+        objc_deallocateObject(self);
+    }
+
+    -(id) autorelease
+    {
+        [NSAutoreleasePool addObject:self];
+        return self;
+    }
+
+    -(id) retain
+    {
+        return (id) objc_retain_ref(self);
+    }
+
+    -(void) release
+    {
+        objc_release_ref(self);
+    }
+
+    -(id) mutableCopy {
+        return [self mutableCopyWithZone:nil];
+    }
+
+    -(id) copy
+    {
+        return [self copyWithZone: nil];
+    }
+
+    -(unsigned int) hash
+    {
+        return (unsigned int) self;
+    }
+
+    +(id) copyWithZone: (NSZone *) zone
+    {
+        return self;
+    }
+
+    +(BOOL) conformsToProtocol: (Protocol*)protocol
+    {
+        Class c;
+
+        for (c = self; c != Nil; c = class_getSuperclass(c))
+            if (class_conformsToProtocol(c, protocol))
+                return YES;
+
+        return NO;
+    }
+
+    -(BOOL) conformsToProtocol: (Protocol*)protocol
+    {
+        return [object_getClass(self) conformsToProtocol: protocol];
+    }
+@end
+

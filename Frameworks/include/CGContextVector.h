@@ -1,0 +1,38 @@
+//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#include "CGContextInternal.h"
+
+class CGVectorImageBacking;
+
+class CGContextVector : public CGContextImpl
+{
+protected:
+    idretain _curPath;
+
+public:
+    virtual void DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled = false);
+
+    CGContextVector(CGContextRef base, CGImageRef destinationImage);
+    virtual ~CGContextVector();
+
+    CGVectorImageBacking *VectorBacking();
+
+    void CGContextBeginPath();
+    void CGContextMoveToPoint(float x, float y);
+    void CGContextAddLineToPoint(float x, float y);
+    void CGContextStrokePath();
+};

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{c221a398-97a1-498f-bbdc-c026d9b879d4}</ProjectGuid>
+    <RootNamespace>cairo</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>../prebuilt/x86/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../prebuilt/x86/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <OutDir>../prebuilt/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <OutDir>../prebuilt/</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WINPHONE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>src;../pixman/pixman;../freetype2/include;../png;../zlib</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <OutputFile>..\prebuilt\x86\cairo.dll</OutputFile>
+    </Link>
+    <Lib>
+      <OutputFile>../prebuilt/x86/cairo.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WINPHONE;_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>src;../pixman/pixman;../freetype2/include;../png;../zlib</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WINPHONE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>src;../pixman/pixman;../freetype2/include;../png;../zlib</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <Lib>
+      <OutputFile>../prebuilt/cairo.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DLL;NDEBUG;%(PreprocessorDefinitions);CAIRO_NO_MUTEX=1;PACKAGE_VERSION="winphone-cairo"</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>src;..\pixman\pixman;..\freetype2\include;..\zlib;..\png</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cairo-analysis-surface.c" />
+    <ClCompile Include="src\cairo-arc.c" />
+    <ClCompile Include="src\cairo-array.c" />
+    <ClCompile Include="src\cairo-atomic.c" />
+    <ClCompile Include="src\cairo-base64-stream.c" />
+    <ClCompile Include="src\cairo-bentley-ottmann-rectangular.c" />
+    <ClCompile Include="src\cairo-bentley-ottmann-rectilinear.c" />
+    <ClCompile Include="src\cairo-bentley-ottmann.c" />
+    <ClCompile Include="src\cairo-boxes.c" />
+    <ClCompile Include="src\cairo-cache.c" />
+    <ClCompile Include="src\cairo-clip.c" />
+    <ClCompile Include="src\cairo-color.c" />
+    <ClCompile Include="src\cairo-composite-rectangles.c" />
+    <ClCompile Include="src\cairo-debug.c" />
+    <ClCompile Include="src\cairo-deflate-stream.c" />
+    <ClCompile Include="src\cairo-device.c" />
+    <ClCompile Include="src\cairo-fixed.c" />
+    <ClCompile Include="src\cairo-font-face-twin-data.c" />
+    <ClCompile Include="src\cairo-font-face-twin.c" />
+    <ClCompile Include="src\cairo-font-face.c" />
+    <ClCompile Include="src\cairo-font-options.c" />
+    <ClCompile Include="src\cairo-freelist.c" />
+    <ClCompile Include="src\cairo-ft-font.c" />
+    <ClCompile Include="src\cairo-gstate.c" />
+    <ClCompile Include="src\cairo-hash.c" />
+    <ClCompile Include="src\cairo-hull.c" />
+    <ClCompile Include="src\cairo-image-info.c" />
+    <ClCompile Include="src\cairo-image-surface.c" />
+    <ClCompile Include="src\cairo-lzw.c" />
+    <ClCompile Include="src\cairo-matrix.c" />
+    <ClCompile Include="src\cairo-misc.c" />
+    <ClCompile Include="src\cairo-mutex.c" />
+    <ClCompile Include="src\cairo-observer.c" />
+    <ClCompile Include="src\cairo-output-stream.c" />
+    <ClCompile Include="src\cairo-paginated-surface.c" />
+    <ClCompile Include="src\cairo-path-bounds.c" />
+    <ClCompile Include="src\cairo-path-fill.c" />
+    <ClCompile Include="src\cairo-path-fixed.c" />
+    <ClCompile Include="src\cairo-path-in-fill.c" />
+    <ClCompile Include="src\cairo-path-stroke.c" />
+    <ClCompile Include="src\cairo-path.c" />
+    <ClCompile Include="src\cairo-pattern.c" />
+    <ClCompile Include="src\cairo-pen.c" />
+    <ClCompile Include="src\cairo-png.c" />
+    <ClCompile Include="src\cairo-polygon.c" />
+    <ClCompile Include="src\cairo-recording-surface.c" />
+    <ClCompile Include="src\cairo-rectangle.c" />
+    <ClCompile Include="src\cairo-rectangular-scan-converter.c" />
+    <ClCompile Include="src\cairo-region.c" />
+    <ClCompile Include="src\cairo-scaled-font-subsets.c" />
+    <ClCompile Include="src\cairo-scaled-font.c" />
+    <ClCompile Include="src\cairo-slope.c" />
+    <ClCompile Include="src\cairo-spans.c" />
+    <ClCompile Include="src\cairo-spline.c" />
+    <ClCompile Include="src\cairo-stroke-style.c" />
+    <ClCompile Include="src\cairo-surface-clipper.c" />
+    <ClCompile Include="src\cairo-surface-fallback.c" />
+    <ClCompile Include="src\cairo-surface-snapshot.c" />
+    <ClCompile Include="src\cairo-surface-wrapper.c" />
+    <ClCompile Include="src\cairo-surface.c" />
+    <ClCompile Include="src\cairo-tor-scan-converter.c" />
+    <ClCompile Include="src\cairo-toy-font-face.c" />
+    <ClCompile Include="src\cairo-traps.c" />
+    <ClCompile Include="src\cairo-unicode.c" />
+    <ClCompile Include="src\cairo-user-font.c" />
+    <ClCompile Include="src\cairo-version.c" />
+    <ClCompile Include="src\cairo-wideint.c" />
+    <ClCompile Include="src\cairo.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Windows">
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="platform.winmd">
+      <IsWinMDFile>true</IsWinMDFile>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\freetype2\freetype2.vcxproj">
+      <Project>{39db0676-3830-45ea-a98c-5d8575e2cc8c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\pixman\pixman.vcxproj">
+      <Project>{ce291906-55dd-4102-99fb-ec70d11fe18a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\png\png.vcxproj">
+      <Project>{bb079bea-1598-44de-b783-354bf6d0073c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{da648da4-0774-418b-905c-c471e361e128}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6631fde..1c5e6f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,7 +51,6 @@
+ 
+ 
+ cmake_minimum_required(VERSION 2.6)
+-
+ # CMAKE_TOOLCHAIN_FILE must be set before `project' is called, which
+ # configures the base build environment and references the toolchain file
+ if (APPLE)
+@@ -102,6 +101,10 @@ set(VERSION_MINOR "6")
+ set(VERSION_PATCH "0")
+ set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+ 
++if(MSVC)
++  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
++endif(MSVC)
++
+ # Compiler definitions for building the library
+ add_definitions(-DFT2_BUILD_LIBRARY)
+ 
+@@ -196,6 +199,7 @@ if (BUILD_FRAMEWORK)
+ endif ()
+ 
+ add_library(freetype
++  SHARED
+   ${PUBLIC_HEADERS}
+   ${PUBLIC_CONFIG_HEADERS}
+   ${PRIVATE_HEADERS}
+diff --git a/include/config/ftoption.h b/include/config/ftoption.h
+index 1536c72..546c624 100644
+--- a/include/config/ftoption.h
++++ b/include/config/ftoption.h
+@@ -281,7 +281,8 @@ FT_BEGIN_HEADER
+   /*                                                                       */
+ /* #define FT_EXPORT(x)      extern x */
+ /* #define FT_EXPORT_DEF(x)  x */
+-
++#define FT_EXPORT(x) __declspec(dllexport) x
++#define FT_EXPORT_DEF(x) __declspec(dllexport) x
+ 
+   /*************************************************************************/
+   /*                                                                       */
