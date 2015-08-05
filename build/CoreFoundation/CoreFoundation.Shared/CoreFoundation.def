@@ -1,0 +1,10 @@
+LIBRARY CoreFoundation
+   EXPORTS
+	OSHostByteOrder
+	OSReadBigInt16
+	OSSwapInt16
+	OSSwapInt32
+	OSSwapBigToHostInt32
+	OSSwapBigToHostInt16
+	OSReadBigInt32
+	OSSwapLittleToHostInt32

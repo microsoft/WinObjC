@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="ZipFiles" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <InputFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <ZipFileName ParameterType="System.String" Required="true" />
+      <OverwriteExistingFile ParameterType="System.Boolean" Required="false" />
+	  </ParameterGroup>
+    <Task>
+      <Reference Include="System.IO.Compression" />
+      <Using Namespace="System.IO.Compression" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var fileMode = OverwriteExistingFile ? FileMode.Create : FileMode.CreateNew;
+          using (FileStream zipFileStream = new FileStream(ZipFileName, fileMode)) {
+            using (ZipArchive archive = new ZipArchive(zipFileStream, ZipArchiveMode.Create)) {
+              foreach (var inputFile in InputFiles.Select(f => f.ItemSpec)) {
+                ZipArchiveEntry zipEntry = archive.CreateEntry(Path.GetFileName(inputFile));
+                using (FileStream inputFileStream = new FileStream(inputFile, FileMode.Open)) {
+                  using (Stream zipEntryStream = zipEntry.Open()) {
+                    inputFileStream.CopyTo(zipEntryStream);
+                  }
+                }
+              }
+            }
+          }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="ZipDirectory" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <InputDirectory ParameterType="System.String" Required="true" />
+      <ZipFileName ParameterType="System.String" Required="true" />
+      <OverwriteExistingFile ParameterType="System.Boolean" Required="false" />
+      <IncludeBaseDirectory ParameterType="System.Boolean" Required="false" />
+	  </ParameterGroup>
+    <Task>
+      <Reference Include="System.IO.Compression" />
+      <Reference Include="System.IO.Compression.FileSystem" />
+      <Using Namespace="System.IO.Compression" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          if (File.Exists(ZipFileName)) {
+            if (OverwriteExistingFile) {
+              File.Delete(ZipFileName);
+            } else {
+              return false;
+            }
+          }
+          ZipFile.CreateFromDirectory(InputDirectory, ZipFileName, CompressionLevel.Optimal, IncludeBaseDirectory);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>

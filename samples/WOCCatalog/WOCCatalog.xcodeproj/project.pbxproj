@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6401F1B712C0B0092921E /* PhotogridViewController.m */; };
+		4ED640231B717E470092921E /* SingleImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED640221B717E470092921E /* SingleImageViewController.m */; };
+		4EE8615B1B5996BF00682BDB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE8615A1B5996BF00682BDB /* main.m */; };
+		4EE861751B5996BF00682BDB /* WOCCatalogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861741B5996BF00682BDB /* WOCCatalogTests.m */; };
+		4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861B21B5997A500682BDB /* AlertsViewController.m */; };
+		4EE861D01B5997A500682BDB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861B41B5997A500682BDB /* AppDelegate.m */; };
+		4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861B61B5997A500682BDB /* ButtonsViewController.m */; };
+		4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861B81B5997A500682BDB /* ControlsViewController.m */; };
+		4EE861D31B5997A500682BDB /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BA1B5997A500682BDB /* MenuTableViewController.m */; };
+		4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BC1B5997A500682BDB /* PickersViewController.m */; };
+		4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BE1B5997A500682BDB /* SearchBarViewController.m */; };
+		4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C01B5997A500682BDB /* SegmentsViewController.m */; };
+		4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C21B5997A500682BDB /* TextFieldsViewController.m */; };
+		4EE861D81B5997A500682BDB /* TextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C41B5997A500682BDB /* TextViewViewController.m */; };
+		4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C61B5997A500682BDB /* ToolbarsViewController.m */; };
+		4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C81B5997A500682BDB /* TransitionsViewController.m */; };
+		4EE861DB1B5997A500682BDB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CA1B5997A500682BDB /* ViewController.m */; };
+		4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CC1B5997A500682BDB /* WebViewController.m */; };
+		4EE861DD1B5997A500682BDB /* XamlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CE1B5997A500682BDB /* XamlViewController.m */; };
+		4EE861EB1B5997AD00682BDB /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861DE1B5997AD00682BDB /* blueButton.png */; };
+		4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861DF1B5997AD00682BDB /* photo1.jpg */; };
+		4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E01B5997AD00682BDB /* photo2.jpg */; };
+		4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E11B5997AD00682BDB /* photo3.jpg */; };
+		4EE861EF1B5997AD00682BDB /* photo4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E21B5997AD00682BDB /* photo4.jpg */; };
+		4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E31B5997AD00682BDB /* photo5.jpg */; };
+		4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E41B5997AD00682BDB /* photo6.jpg */; };
+		4EE861F21B5997AD00682BDB /* photo7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E51B5997AD00682BDB /* photo7.jpg */; };
+		4EE861F31B5997AD00682BDB /* photo8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E61B5997AD00682BDB /* photo8.jpg */; };
+		4EE861F41B5997AD00682BDB /* segment_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E71B5997AD00682BDB /* segment_check.png */; };
+		4EE861F51B5997AD00682BDB /* segment_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E81B5997AD00682BDB /* segment_search.png */; };
+		4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E91B5997AD00682BDB /* segment_tools.png */; };
+		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
+		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
+		7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */; };
+		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
+		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
+		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4EE8616F1B5996BF00682BDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EE8614D1B5996BF00682BDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EE861541B5996BF00682BDB;
+			remoteInfo = WOCCatalog;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4ED6401F1B712C0B0092921E /* PhotogridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotogridViewController.m; sourceTree = "<group>"; };
+		4ED640211B712C1D0092921E /* PhotogridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotogridViewController.h; sourceTree = "<group>"; };
+		4ED640221B717E470092921E /* SingleImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleImageViewController.m; sourceTree = "<group>"; };
+		4ED640241B717E530092921E /* SingleImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SingleImageViewController.h; sourceTree = "<group>"; };
+		4EE861551B5996BF00682BDB /* WOCCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WOCCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EE861591B5996BF00682BDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EE8615A1B5996BF00682BDB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4EE8616E1B5996BF00682BDB /* WOCCatalogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WOCCatalogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EE861731B5996BF00682BDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EE861741B5996BF00682BDB /* WOCCatalogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WOCCatalogTests.m; sourceTree = "<group>"; };
+		4EE861B11B5997A500682BDB /* AlertsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertsViewController.h; sourceTree = "<group>"; };
+		4EE861B21B5997A500682BDB /* AlertsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertsViewController.m; sourceTree = "<group>"; };
+		4EE861B31B5997A500682BDB /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4EE861B41B5997A500682BDB /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4EE861B51B5997A500682BDB /* ButtonsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonsViewController.h; sourceTree = "<group>"; };
+		4EE861B61B5997A500682BDB /* ButtonsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonsViewController.m; sourceTree = "<group>"; };
+		4EE861B71B5997A500682BDB /* ControlsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsViewController.h; sourceTree = "<group>"; };
+		4EE861B81B5997A500682BDB /* ControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlsViewController.m; sourceTree = "<group>"; };
+		4EE861B91B5997A500682BDB /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
+		4EE861BA1B5997A500682BDB /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
+		4EE861BB1B5997A500682BDB /* PickersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickersViewController.h; sourceTree = "<group>"; };
+		4EE861BC1B5997A500682BDB /* PickersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickersViewController.m; sourceTree = "<group>"; };
+		4EE861BD1B5997A500682BDB /* SearchBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarViewController.h; sourceTree = "<group>"; };
+		4EE861BE1B5997A500682BDB /* SearchBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarViewController.m; sourceTree = "<group>"; };
+		4EE861BF1B5997A500682BDB /* SegmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsViewController.h; sourceTree = "<group>"; };
+		4EE861C01B5997A500682BDB /* SegmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsViewController.m; sourceTree = "<group>"; };
+		4EE861C11B5997A500682BDB /* TextFieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldsViewController.h; sourceTree = "<group>"; };
+		4EE861C21B5997A500682BDB /* TextFieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldsViewController.m; sourceTree = "<group>"; };
+		4EE861C31B5997A500682BDB /* TextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewViewController.h; sourceTree = "<group>"; };
+		4EE861C41B5997A500682BDB /* TextViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewViewController.m; sourceTree = "<group>"; };
+		4EE861C51B5997A500682BDB /* ToolbarsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbarsViewController.h; sourceTree = "<group>"; };
+		4EE861C61B5997A500682BDB /* ToolbarsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbarsViewController.m; sourceTree = "<group>"; };
+		4EE861C71B5997A500682BDB /* TransitionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionsViewController.h; sourceTree = "<group>"; };
+		4EE861C81B5997A500682BDB /* TransitionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionsViewController.m; sourceTree = "<group>"; };
+		4EE861C91B5997A500682BDB /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		4EE861CA1B5997A500682BDB /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4EE861CB1B5997A500682BDB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		4EE861CC1B5997A500682BDB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		4EE861CD1B5997A500682BDB /* XamlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XamlViewController.h; sourceTree = "<group>"; };
+		4EE861CE1B5997A500682BDB /* XamlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XamlViewController.m; sourceTree = "<group>"; };
+		4EE861DE1B5997AD00682BDB /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueButton.png; path = WOCCatalog/Images/blueButton.png; sourceTree = "<group>"; };
+		4EE861DF1B5997AD00682BDB /* photo1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo1.jpg; path = WOCCatalog/Images/photo1.jpg; sourceTree = "<group>"; };
+		4EE861E01B5997AD00682BDB /* photo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo2.jpg; path = WOCCatalog/Images/photo2.jpg; sourceTree = "<group>"; };
+		4EE861E11B5997AD00682BDB /* photo3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo3.jpg; path = WOCCatalog/Images/photo3.jpg; sourceTree = "<group>"; };
+		4EE861E21B5997AD00682BDB /* photo4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo4.jpg; path = WOCCatalog/Images/photo4.jpg; sourceTree = "<group>"; };
+		4EE861E31B5997AD00682BDB /* photo5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo5.jpg; path = WOCCatalog/Images/photo5.jpg; sourceTree = "<group>"; };
+		4EE861E41B5997AD00682BDB /* photo6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo6.jpg; path = WOCCatalog/Images/photo6.jpg; sourceTree = "<group>"; };
+		4EE861E51B5997AD00682BDB /* photo7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo7.jpg; path = WOCCatalog/Images/photo7.jpg; sourceTree = "<group>"; };
+		4EE861E61B5997AD00682BDB /* photo8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo8.jpg; path = WOCCatalog/Images/photo8.jpg; sourceTree = "<group>"; };
+		4EE861E71B5997AD00682BDB /* segment_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_check.png; path = WOCCatalog/Images/segment_check.png; sourceTree = "<group>"; };
+		4EE861E81B5997AD00682BDB /* segment_search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_search.png; path = WOCCatalog/Images/segment_search.png; sourceTree = "<group>"; };
+		4EE861E91B5997AD00682BDB /* segment_tools.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_tools.png; path = WOCCatalog/Images/segment_tools.png; sourceTree = "<group>"; };
+		4EE861EA1B5997AD00682BDB /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = WOCCatalog/Images/whiteButton.png; sourceTree = "<group>"; };
+		4EE861F81B5997E400682BDB /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesViewController.h; sourceTree = "<group>"; };
+		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
+		7BCEEE451B70220300C31CF5 /* DisplayModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayModeViewController.h; sourceTree = "<group>"; };
+		7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayModeViewController.m; sourceTree = "<group>"; };
+		7BCEEE471B70220300C31CF5 /* OpenGLES11Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES11Controller.h; sourceTree = "<group>"; };
+		7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES11Controller.m; sourceTree = "<group>"; };
+		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
+		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
+		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4EE861521B5996BF00682BDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EE8616B1B5996BF00682BDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4EE8614C1B5996BF00682BDB = {
+			isa = PBXGroup;
+			children = (
+				7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */,
+				4EE8617E1B5996DA00682BDB /* Images */,
+				4EE861571B5996BF00682BDB /* WOCCatalog */,
+				4EE861711B5996BF00682BDB /* WOCCatalogTests */,
+				4EE861561B5996BF00682BDB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4EE861561B5996BF00682BDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4EE861551B5996BF00682BDB /* WOCCatalog.app */,
+				4EE8616E1B5996BF00682BDB /* WOCCatalogTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
+			isa = PBXGroup;
+			children = (
+				7BCEEE451B70220300C31CF5 /* DisplayModeViewController.h */,
+				7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */,
+				7BCEEE471B70220300C31CF5 /* OpenGLES11Controller.h */,
+				7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */,
+				7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */,
+				7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */,
+				4EE861F81B5997E400682BDB /* ImagesViewController.h */,
+				4EE861F91B5997E400682BDB /* ImagesViewController.m */,
+				4EE861B11B5997A500682BDB /* AlertsViewController.h */,
+				4EE861B21B5997A500682BDB /* AlertsViewController.m */,
+				4EE861B31B5997A500682BDB /* AppDelegate.h */,
+				4EE861B41B5997A500682BDB /* AppDelegate.m */,
+				4ED6401F1B712C0B0092921E /* PhotogridViewController.m */,
+				4ED640211B712C1D0092921E /* PhotogridViewController.h */,
+				4EE861B51B5997A500682BDB /* ButtonsViewController.h */,
+				4EE861B61B5997A500682BDB /* ButtonsViewController.m */,
+				4EE861B71B5997A500682BDB /* ControlsViewController.h */,
+				4EE861B81B5997A500682BDB /* ControlsViewController.m */,
+				4EE861B91B5997A500682BDB /* MenuTableViewController.h */,
+				4EE861BA1B5997A500682BDB /* MenuTableViewController.m */,
+				4EE861BB1B5997A500682BDB /* PickersViewController.h */,
+				4EE861BC1B5997A500682BDB /* PickersViewController.m */,
+				4EE861BD1B5997A500682BDB /* SearchBarViewController.h */,
+				4EE861BE1B5997A500682BDB /* SearchBarViewController.m */,
+				4EE861BF1B5997A500682BDB /* SegmentsViewController.h */,
+				4EE861C01B5997A500682BDB /* SegmentsViewController.m */,
+				4EE861C11B5997A500682BDB /* TextFieldsViewController.h */,
+				4EE861C21B5997A500682BDB /* TextFieldsViewController.m */,
+				4EE861C31B5997A500682BDB /* TextViewViewController.h */,
+				4EE861C41B5997A500682BDB /* TextViewViewController.m */,
+				4EE861C51B5997A500682BDB /* ToolbarsViewController.h */,
+				4EE861C61B5997A500682BDB /* ToolbarsViewController.m */,
+				4EE861C71B5997A500682BDB /* TransitionsViewController.h */,
+				4EE861C81B5997A500682BDB /* TransitionsViewController.m */,
+				4EE861C91B5997A500682BDB /* ViewController.h */,
+				4EE861CA1B5997A500682BDB /* ViewController.m */,
+				4EE861CB1B5997A500682BDB /* WebViewController.h */,
+				4EE861CC1B5997A500682BDB /* WebViewController.m */,
+				4EE861CD1B5997A500682BDB /* XamlViewController.h */,
+				4EE861CE1B5997A500682BDB /* XamlViewController.m */,
+				4ED640221B717E470092921E /* SingleImageViewController.m */,
+				4ED640241B717E530092921E /* SingleImageViewController.h */,
+				4EE861581B5996BF00682BDB /* Supporting Files */,
+			);
+			path = WOCCatalog;
+			sourceTree = "<group>";
+		};
+		4EE861581B5996BF00682BDB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4EE861591B5996BF00682BDB /* Info.plist */,
+				4EE8615A1B5996BF00682BDB /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4EE861711B5996BF00682BDB /* WOCCatalogTests */ = {
+			isa = PBXGroup;
+			children = (
+				4EE861741B5996BF00682BDB /* WOCCatalogTests.m */,
+				4EE861721B5996BF00682BDB /* Supporting Files */,
+			);
+			path = WOCCatalogTests;
+			sourceTree = "<group>";
+		};
+		4EE861721B5996BF00682BDB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4EE861731B5996BF00682BDB /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4EE8617E1B5996DA00682BDB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				4EE861DE1B5997AD00682BDB /* blueButton.png */,
+				4EE861DF1B5997AD00682BDB /* photo1.jpg */,
+				4EE861E01B5997AD00682BDB /* photo2.jpg */,
+				4EE861E11B5997AD00682BDB /* photo3.jpg */,
+				4EE861E21B5997AD00682BDB /* photo4.jpg */,
+				4EE861E31B5997AD00682BDB /* photo5.jpg */,
+				4EE861E41B5997AD00682BDB /* photo6.jpg */,
+				4EE861E51B5997AD00682BDB /* photo7.jpg */,
+				4EE861E61B5997AD00682BDB /* photo8.jpg */,
+				4EE861E71B5997AD00682BDB /* segment_check.png */,
+				4EE861E81B5997AD00682BDB /* segment_search.png */,
+				4EE861E91B5997AD00682BDB /* segment_tools.png */,
+				4EE861EA1B5997AD00682BDB /* whiteButton.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4EE861541B5996BF00682BDB /* WOCCatalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EE861781B5996BF00682BDB /* Build configuration list for PBXNativeTarget "WOCCatalog" */;
+			buildPhases = (
+				4EE861511B5996BF00682BDB /* Sources */,
+				4EE861521B5996BF00682BDB /* Frameworks */,
+				4EE861531B5996BF00682BDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WOCCatalog;
+			productName = WOCCatalog;
+			productReference = 4EE861551B5996BF00682BDB /* WOCCatalog.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4EE8616D1B5996BF00682BDB /* WOCCatalogTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EE8617B1B5996BF00682BDB /* Build configuration list for PBXNativeTarget "WOCCatalogTests" */;
+			buildPhases = (
+				4EE8616A1B5996BF00682BDB /* Sources */,
+				4EE8616B1B5996BF00682BDB /* Frameworks */,
+				4EE8616C1B5996BF00682BDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4EE861701B5996BF00682BDB /* PBXTargetDependency */,
+			);
+			name = WOCCatalogTests;
+			productName = WOCCatalogTests;
+			productReference = 4EE8616E1B5996BF00682BDB /* WOCCatalogTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4EE8614D1B5996BF00682BDB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = MSFT;
+				TargetAttributes = {
+					4EE861541B5996BF00682BDB = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					4EE8616D1B5996BF00682BDB = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = 4EE861541B5996BF00682BDB;
+					};
+				};
+			};
+			buildConfigurationList = 4EE861501B5996BF00682BDB /* Build configuration list for PBXProject "WOCCatalog" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4EE8614C1B5996BF00682BDB;
+			productRefGroup = 4EE861561B5996BF00682BDB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4EE861541B5996BF00682BDB /* WOCCatalog */,
+				4EE8616D1B5996BF00682BDB /* WOCCatalogTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4EE861531B5996BF00682BDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EE861EF1B5997AD00682BDB /* photo4.jpg in Resources */,
+				4EE861F31B5997AD00682BDB /* photo8.jpg in Resources */,
+				4EE861F41B5997AD00682BDB /* segment_check.png in Resources */,
+				4EE861F51B5997AD00682BDB /* segment_search.png in Resources */,
+				4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */,
+				4EE861F21B5997AD00682BDB /* photo7.jpg in Resources */,
+				4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */,
+				4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */,
+				4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */,
+				4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */,
+				4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */,
+				4EE861EB1B5997AD00682BDB /* blueButton.png in Resources */,
+				4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EE8616C1B5996BF00682BDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4EE861511B5996BF00682BDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EE861DD1B5997A500682BDB /* XamlViewController.m in Sources */,
+				4EE861DB1B5997A500682BDB /* ViewController.m in Sources */,
+				4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */,
+				4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */,
+				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
+				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
+				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,
+				4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */,
+				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
+				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
+				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
+				4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */,
+				4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */,
+				4EE861D31B5997A500682BDB /* MenuTableViewController.m in Sources */,
+				7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */,
+				4EE861D01B5997A500682BDB /* AppDelegate.m in Sources */,
+				4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */,
+				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
+				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
+				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
+				4EE861D81B5997A500682BDB /* TextViewViewController.m in Sources */,
+				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EE8616A1B5996BF00682BDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EE861751B5996BF00682BDB /* WOCCatalogTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4EE861701B5996BF00682BDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4EE861541B5996BF00682BDB /* WOCCatalog */;
+			targetProxy = 4EE8616F1B5996BF00682BDB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4EE861761B5996BF00682BDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4EE861771B5996BF00682BDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4EE861791B5996BF00682BDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = WOCCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4EE8617A1B5996BF00682BDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = WOCCatalog/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4EE8617C1B5996BF00682BDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WOCCatalogTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WOCCatalog.app/WOCCatalog";
+			};
+			name = Debug;
+		};
+		4EE8617D1B5996BF00682BDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WOCCatalogTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WOCCatalog.app/WOCCatalog";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4EE861501B5996BF00682BDB /* Build configuration list for PBXProject "WOCCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EE861761B5996BF00682BDB /* Debug */,
+				4EE861771B5996BF00682BDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4EE861781B5996BF00682BDB /* Build configuration list for PBXNativeTarget "WOCCatalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EE861791B5996BF00682BDB /* Debug */,
+				4EE8617A1B5996BF00682BDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4EE8617B1B5996BF00682BDB /* Build configuration list for PBXNativeTarget "WOCCatalogTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EE8617C1B5996BF00682BDB /* Debug */,
+				4EE8617D1B5996BF00682BDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4EE8614D1B5996BF00682BDB /* Project object */;
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
+
+  <Rule
+    Name="SBInfoPlist"
+    PageTemplate="tool"
+    SwitchPrefix=""
+    DisplayName="Info Plist"
+    Order="200">
+
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="SBInfoPlistCopy" />
+    </Rule.DataSource>
+
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+    </Rule.Categories>
+
+    <StringProperty
+      Name="VariableFile"
+      Category="General"
+      DisplayName="Variable File"
+      Description="Variable file to use for expansion"
+      Visible="True" />
+  </Rule>
+
+  <ItemType
+    Name="SBResourceCopy"
+    DisplayName="Starboard Resource" />
+  <ItemType
+    Name="SBInfoPlistCopy"
+    DisplayName="Info Plist" />
+  <ItemType
+    Name="XibCompile"
+    DisplayName="Xib" />
+  <ItemType
+    Name="StoryboardCompile"
+    DisplayName="Storyboard" />
+  <ItemType
+    Name="DataModelCompile"
+    DisplayName="Data Model" />
+  <ItemType
+    Name="DataModelDirCompile"
+    DisplayName="Data Model Directory" />
+  <ItemType
+    Name="AssetCatalogCompile"
+    DisplayName="Asset Catalog" />
+
+  <FileExtension
+    Name="*.xib"
+    ContentType="Xib" />
+  <FileExtension
+    Name="*.storyboard"
+    ContentType="Storyboard" />
+  <FileExtension
+    Name="*.xcdatamodel"
+    ContentType="DataModel" />
+  <FileExtension
+    Name="*.xcdatamodeld"
+    ContentType="DataModelDir" />
+  <FileExtension
+    Name="*.xcassets"
+    ContentType="AssetCatalog" />
+
+  <ContentType
+    Name="SBResource"
+    DisplayName="Starboard Resource"
+    ItemType="SBResourceCopy" />
+  <ContentType
+    Name="SBInfoPlist"
+    DisplayName="Info Plist"
+    ItemType="SBInfoPlistCopy" />
+  <ContentType
+    Name="Xib"
+    DisplayName="Xib"
+    ItemType="XibCompile" />
+  <ContentType
+    Name="Storyboard"
+    DisplayName="Storyboard"
+    ItemType="StoryboardCompile" />
+  <ContentType
+    Name="DataModel"
+    DisplayName="Data Model"
+    ItemType="DataModelCompile" />
+  <ContentType
+    Name="DataModelDir"
+    DisplayName="Data Model Directory"
+    ItemType="DataModelDirCompile" />
+  <ContentType
+    Name="AssetCatalog"
+    DisplayName="Asset Catalog"
+    ItemType="AssetCatalogCompile" />
+</ProjectSchemaDefinitions>

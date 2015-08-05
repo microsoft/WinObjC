@@ -1,0 +1,40 @@
+# Makefile.sources
+#
+# This file is pretty similar to $(top_srcdir)/src/Makefile.sources,
+# but for boilerplate.  Unlike that file, there are no special headers.
+#
+
+cairo_boilerplate_headers = \
+	cairo-boilerplate-getopt.h \
+	cairo-boilerplate-scaled-font.h \
+	cairo-boilerplate-system.h \
+	cairo-boilerplate.h \
+	$(NULL)
+cairo_boilerplate_sources = \
+	cairo-boilerplate-getopt.c \
+	cairo-boilerplate-system.c \
+	cairo-boilerplate.c \
+	$(NULL)
+cairo_boilerplate_private = \
+	cairo-boilerplate-private.h \
+	$(NULL)
+
+cairo_boilerplate_beos_cxx_sources = cairo-boilerplate-beos.cpp
+cairo_boilerplate_directfb_sources = cairo-boilerplate-directfb.c
+cairo_boilerplate_drm_sources = cairo-boilerplate-drm.c
+cairo_boilerplate_glx_sources = cairo-boilerplate-glx.c
+cairo_boilerplate_wgl_sources = cairo-boilerplate-wgl.c
+cairo_boilerplate_egl_sources = cairo-boilerplate-egl.c
+cairo_boilerplate_pdf_sources = cairo-boilerplate-pdf.c
+cairo_boilerplate_ps_sources = cairo-boilerplate-ps.c
+cairo_boilerplate_qt_cxx_sources = cairo-boilerplate-qt.cpp
+cairo_boilerplate_quartz_sources = cairo-boilerplate-quartz.c
+cairo_boilerplate_script_sources = cairo-boilerplate-script.c
+cairo_boilerplate_skia_sources = cairo-boilerplate-skia.c
+cairo_boilerplate_svg_sources = cairo-boilerplate-svg.c
+cairo_boilerplate_test_surfaces_sources = cairo-boilerplate-test-surfaces.c
+cairo_boilerplate_win32_sources = cairo-boilerplate-win32.c cairo-boilerplate-win32-printing.c
+cairo_boilerplate_xcb_sources = cairo-boilerplate-xcb.c
+cairo_boilerplate_xlib_headers = cairo-boilerplate-xlib.h
+cairo_boilerplate_xlib_sources = cairo-boilerplate-xlib.c
+cairo_boilerplate_vg_sources = cairo-boilerplate-vg.c

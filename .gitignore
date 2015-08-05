@@ -1,0 +1,15 @@
+*.opensdf
+*.sdf
+*.suo
+ipch
+Debug
+Release
+Generated
+Generated Files
+Doxygen
+AppPackages
+Packages.dgml
+packages
+bin
+.nuget
+

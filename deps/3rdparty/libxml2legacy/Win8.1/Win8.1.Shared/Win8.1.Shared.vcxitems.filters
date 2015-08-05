@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nanohttp.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\parser.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\parserInternals.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\pattern.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\relaxng.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SAX.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\SAX2.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\schematron.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\threads.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\tree.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\uri.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\valid.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xinclude.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xlink.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlIO.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlmemory.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlmodule.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlreader.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlregexp.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlsave.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlschemas.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlschemastypes.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlstring.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlunicode.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xmlwriter.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xpath.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\xpointer.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\pch.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\c14n.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\catalog.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\chvalid.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\debugXML.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\dict.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\DOCBparser.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\encoding.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\entities.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\error.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\globals.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\hash.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\HTMLparser.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\HTMLtree.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\legacy.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\list.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nanoftp.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\targetver.h" />
+  </ItemGroup>
+</Project>

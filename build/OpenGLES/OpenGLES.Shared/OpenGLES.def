@@ -1,0 +1,4 @@
+LIBRARY OpenGLES
+   EXPORTS
+     _OBJC_CLASS_EAGLContext	DATA
+	 __objc_class_name_EAGLContext	CONSTANT

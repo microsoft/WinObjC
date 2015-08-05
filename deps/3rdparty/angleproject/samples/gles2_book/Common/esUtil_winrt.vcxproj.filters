@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{3cbcc0c9-7096-4935-8e80-d89eda397a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{a900fe89-6119-4cb7-b8c8-ba6ce806b077}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="esShader_winrt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="esShapes_winrt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="esTransform_winrt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="esUtil_winrt.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32\esUtil_win32_winrt.cpp">
+      <Filter>Win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="esUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="esUtil_win.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

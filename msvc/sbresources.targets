@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName Include="SBResourceCopy">
+      <Targets>_SBResourceCopy</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="SBInfoPlistCopy">
+      <Targets>CopyInfoPlist</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="XibCompile">
+      <Targets>_XibCompile</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="StoryboardCompile">
+      <Targets>_StoryboardCompile</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="DataModelCompile">
+      <Targets>_DataModelCompile</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="DataModelDirCompile">
+      <Targets>_DataModelDirCompile</Targets>
+    </AvailableItemName>
+    <AvailableItemName Include="AssetCatalogCompile">
+      <Targets>_AssetCatalogCompile</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)zip.tasks" />
+
+  <PropertyGroup>
+    <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
+    <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
+    <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
+  </PropertyGroup>
+
+  <Target
+    Name="SBResourceCompile"
+    BeforeTargets="$(SBResourceCompileBeforeTargets)"
+    AfterTargets="$(SBResourceCompileAfterTargets)"
+    DependsOnTargets="$(SBResourceCompileDependsOn);SBResourceCopy;SBResourcePackage" />
+
+  <Target
+    Name="CopyInfoPlist"
+    DependsOnTargets="ComputePlistCopyOptions"
+    Condition="'@(SBInfoPlistCopy)' != ''"
+    Outputs="@(SBInfoPlistCopy->'%(IntermediateFile)')"
+    Inputs="@(SBInfoPlistCopy->'%(VariableFile)');@(SBInfoPlistCopy->'%(Identity)')">
+
+    <Error
+      Condition="'@(SBInfoPlistCopy->Count())' != '1'"
+      Text="You can only specify a single PList file! (Plists specified: @(SBInfoPlistCopy))" />
+
+    <Message
+      Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
+      Importance="High"
+      Text="Info.plist" />
+
+   <Exec
+      Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\sb-expandvars.exe&quot; -i &quot;%(SBInfoPlistCopy.Identity)&quot; -o &quot;%(SBInfoPlistCopy.IntermediateFile)&quot; -x &quot;%(SBInfoPlistCopy.VariableFile)&quot;" />
+  </Target>
+
+  <Target
+    Name="SBResourcePackage"
+    DependsOnTargets="ComputeResourceCopyOptions"
+    Inputs="@(SBResourceCopy)"
+    Outputs="$(AppxPackageRecipe)"
+    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' == 'true'">
+
+    <ItemGroup>
+      <_UnfilteredAppxPackagePayload Include="@(SBResourceCopy->'%(FullPath)')" Condition="'%(SBResourceCopy.ExcludedFromBuild)' != 'true'">
+        <TargetPath>%(SBResourceCopy.OutputFile)</TargetPath>
+        <ProjectName>$(ProjectName)</ProjectName>
+        <OutputGroup>BuiltProjectOutputGroup</OutputGroup>
+      </_UnfilteredAppxPackagePayload>
+    </ItemGroup>
+
+    <Message Importance="high"
+      Text="Packaging assets" />
+
+    <Message
+      Condition="'%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
+      Importance="high"
+      Text="%(SBResourceCopy.Identity)" />
+  </Target>
+
+  <Target
+    Name="SBResourceCopy"
+    DependsOnTargets="ComputeResourceCopyOptions"
+    Inputs="@(SBResourceCopy)"
+    Outputs="@(SBResourceCopy->'%(OutputFile)')"
+    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
+
+    <Message Importance="high"
+      Text="Copying assets" />
+
+    <MakeDir Directories="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <Copy
+      Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
+      SourceFiles="@(SBResourceCopy)"
+      DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
+  </Target>
+
+  <Target
+    Name="_XibCompile"
+    DependsOnTargets="ComputeXibCompileOptions"
+    Inputs="@(XibCompile)"
+    Outputs="@(XibCompile->'%(IntermediateFile)')"
+    Condition="'@(XibCompile)' != ''">
+
+    <Message
+      Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
+      Importance="High"
+      Text="%(XibCompile.Identity)" />
+
+    <MakeDir Directories="@(XibCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <Exec
+      Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe&quot; &quot;%(XibCompile.Identity)&quot; &quot;%(XibCompile.IntermediateFile)&quot;" />
+  </Target>
+
+  <Target
+    Name="_StoryboardCompile"
+    DependsOnTargets="ComputeStoryboardCompileOptions"
+    Condition="'@(StoryboardCompile)' != ''"
+    Outputs="%(StoryboardCompile.IntermediateFile)"
+    Inputs="%(StoryboardCompile.Identity)">
+
+    <Message
+      Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
+      Importance="High"
+      Text="Storyboard compilation not currently supported. Ignoring %(StoryboardCompile.Identity)" />
+
+    <MakeDir Directories="@(StoryboardCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <WriteLinesToFile
+      Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
+      File="%(StoryboardCompile.IntermediateFile)"
+      Lines="Storyboard compilation not currently supported."
+      Overwrite="true"
+      Encoding="Unicode"/>
+  </Target>
+
+  <Target
+    Name="_DataModelCompile"
+    DependsOnTargets="ComputeDataModelCompileOptions"
+    Condition="'@(DataModelCompile)' != ''"
+    Outputs="%(DataModelCompileFile.OutputFile)"
+    Inputs="%(DataModelCompileFile.SourceFile);%(DataModelCompileFile.Identity)">
+
+    <Message
+      Importance="High"
+      Condition="Exists('%(DataModelCompileFile.SourceFile)')"
+      Text="Data Model compilation not currently supported. Ignoring %(DataModelCompileFile.SourceFile)" />
+
+    <Message
+      Importance="High"
+      Condition="!Exists('%(DataModelCompileFile.SourceFile)')"
+      Text="%(DataModelCompileFile.SourceFile) does not exist. Project will never be up to date." />
+
+    <MakeDir Directories="@(DataModelCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <WriteLinesToFile File="%(DataModelCompileFile.OutputFile)"
+      Lines="Data Model compilation not currently supported."
+      Overwrite="true"
+      Encoding="Unicode"/>
+  </Target>
+
+  <Target
+    Name="_DataModelDirCompile"
+    DependsOnTargets="ComputeDataModelDirCompileOptions"
+    Condition="'@(DataModelDirCompile)' != ''"
+    Outputs="%(DataModelDirCompileFile.OutputFile)"
+    Inputs="%(DataModelDirCompileFile.SourceFile);%(DataModelDirCompileFile.Identity)">
+
+    <Message
+      Importance="High"
+      Text="Data Model Directory compilation not currently supported. Ignoring %(DataModelDirCompileFile.SourceFile)" />
+
+    <MakeDir Directories="@(DataModelDirCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <WriteLinesToFile File="%(DataModelDirCompileFile.OutputFile)"
+      Lines="Data Model Directory compilation not currently supported."
+      Overwrite="true"
+      Encoding="Unicode"/>
+  </Target>
+
+  <Target
+    Name="_AssetCatalogCompile"
+    DependsOnTargets="ComputeAssetCatalogCompileOptions"
+    Condition="'@(AssetCatalogCompile)' != ''"
+    Outputs="%(AssetCatalogCompileFile.OutputFile)"
+    Inputs="%(AssetCatalogCompileFile.SourceFile);%(AssetCatalogCompileFile.Identity)">
+
+    <Message
+      Importance="High"
+      Text="Asset Catalog compilation not currently supported. Ignoring %(AssetCatalogCompileFile.SourceFile)" />
+
+    <MakeDir Directories="@(AssetCatalogCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
+    <WriteLinesToFile File="%(AssetCatalogCompileFile.OutputFile)"
+      Lines="Asset Catalog compilation not currently supported."
+      Overwrite="true"
+      Encoding="Unicode"/>
+  </Target>
+
+  <Target
+    Name="ComputeResourceCopyOptions"
+    DependsOnTargets="ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies">
+
+    <ItemGroup>
+      <!-- Include files in any directories to be copied -->
+      <SBResourceCopy Condition="'@(SBResourceCopy)' != ''" Include="%(SBResourceCopy.Identity)\**\*">
+        <SourceDir>%(SBResourceCopy.Identity)</SourceDir>
+        <SourceDirName>%(SBResourceCopy.Filename)</SourceDirName>
+        <VariantDir>%(SBResourceCopy.VariantDir)</VariantDir>
+        <ExcludedFromBuild>%(SBResourceCopy.ExcludedFromBuild)</ExcludedFromBuild>
+      </SBResourceCopy>
+
+      <!-- Remove directories from SBResourceCopy -->
+      <SBResourceCopy Remove="@(SBResourceCopy->Metadata('SourceDir')->Distinct()->ClearMetadata())" />
+
+      <!-- Remove files excluded from the build -->
+      <SBResourceCopy Remove="@(SBResourceCopy->WithMetadataValue('ExcludedFromBuild', 'true'))" />
+
+      <!-- Fix up OutputFile path -->
+      <SBResourceCopy>
+        <OutputFile>$([System.IO.Path]::Combine('$(SBResourcesDir)', '%(SBResourceCopy.VariantDir)', '%(SBResourceCopy.SourceDirName)', '%(SBResourceCopy.RecursiveDir)', '%(SBResourceCopy.Filename)%(SBResourceCopy.Extension)'))</OutputFile>
+      </SBResourceCopy>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeXibCompileOptions">
+    <ItemGroup>
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <XibCompile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(XibCompile.VariantDir)', '%(XibCompile.Filename)')).nib</IntermediateFile>
+      </XibCompile>
+    </ItemGroup>
+    <ItemGroup>
+      <SBResourceCopy Include="@(XibCompile->'%(IntermediateFile)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeStoryboardCompileOptions">
+    <ItemGroup>
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <StoryboardCompile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(StoryboardCompile.VariantDir)', '%(StoryboardCompile.Filename)')).storyboardc.dummy</IntermediateFile>
+      </StoryboardCompile>
+    </ItemGroup>
+    <ItemGroup>
+      <SBResourceCopy Include="@(StoryboardCompile->'%(IntermediateFile)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeDataModelCompileOptions">
+    <ItemGroup Condition="'@(DataModelCompile)' != ''">
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <DataModelCompile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(DataModelCompile.VariantDir)', '%(DataModelCompile.Filename)')).mom.dummy</IntermediateFile>
+      </DataModelCompile>
+      <DataModelCompileFile Condition="'%(DataModelCompile.ExcludedFromBuild)' != 'true'" Include="%(DataModelCompile.Identity);%(DataModelCompile.Identity)\**\*">
+        <SourceFile>%(DataModelCompile.Identity)</SourceFile>
+        <OutputFile>%(DataModelCompile.IntermediateFile)</OutputFile>
+      </DataModelCompileFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeDataModelDirCompileOptions">
+    <ItemGroup Condition="'@(DataModelDirCompile)' != ''">
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <DataModelDirCompile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(DataModelDirCompile.VariantDir)', '%(DataModelDirCompile.Filename)')).momc.dummy</IntermediateFile>
+      </DataModelDirCompile>
+      <DataModelDirCompileFile Condition="'%(DataModelDirCompile.ExcludedFromBuild)' != 'true'" Include="%(DataModelDirCompile.Identity);%(DataModelDirCompile.Identity)\**\*">
+        <SourceFile>%(DataModelDirCompile.Identity)</SourceFile>
+        <OutputFile>%(DataModelDirCompile.IntermediateFile)</OutputFile>
+      </DataModelDirCompileFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeAssetCatalogCompileOptions">
+    <ItemGroup Condition="'@(AssetCatalogCompile)' != ''">
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <AssetCatalogCompile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', 'AssetCatalogDummy'))</IntermediateFile>
+      </AssetCatalogCompile>
+      <AssetCatalogCompile Condition="'%(AssetCatalogCompile.ExcludedFromBuild)' != 'true'" Include="%(AssetCatalogCompile.Identity);%(AssetCatalogCompile.Identity)\**\*">
+        <SourceFile>%(AssetCatalogCompile.Identity)</SourceFile>
+        <OutputFile>%(AssetCatalogCompile.IntermediateFile)</OutputFile>
+      </AssetCatalogCompile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputePlistCopyOptions">
+    <ItemGroup>
+      <!-- Fix up IntermediateFile to use VariantDir -->
+      <SBInfoPlistCopy>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', 'Info.plist'))</IntermediateFile>
+      </SBInfoPlistCopy>
+    </ItemGroup>
+    <ItemGroup>
+      <SBResourceCopy Include="@(SBInfoPlistCopy->'%(IntermediateFile)')" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Clean generated files -->
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);CleanSBResources;</CleanDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="ComputeCleanSBResources" >
+    <!-- Since we're not linking while we're cleaning, there's no easy way to compute the required libraries,
+         so for the sake of Clean, we link to them all. -->
+    <PropertyGroup>
+      <IncludeUIKit>true</IncludeUIKit>
+      <IncludeOpenGLES>true</IncludeOpenGLES>
+      <IncludeQuartzCore>true</IncludeQuartzCore>
+      <IncludeCoreGraphics>true</IncludeCoreGraphics>
+      <IncludeFoundation>true</IncludeFoundation>
+      <IncludeCoreFoundation>true</IncludeCoreFoundation>
+      <IncludeObjcrt>true</IncludeObjcrt>
+    </PropertyGroup>
+  </Target>
+  
+  <Target
+    Name="RemoveDirIfEmpty" 
+    AfterTargets="CleanSBResources" >
+
+    <ItemGroup>
+      <RemoveDirIfEmpty Remove="%(RemoveDirIfEmpty.Identity)" Condition="!Exists('%(RemoveDirIfEmpty.Identity)')"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(RemoveDirIfEmpty)' != ''">
+      <RemoveDirIfEmpty Remove="%(RemoveDirIfEmpty.Identity)" Condition="'$([System.IO.Directory]::GetFiles(%(RemoveDirIfEmpty.Identity)))' != '' Or '$([System.IO.Directory]::GetDirectories(%(RemoveDirIfEmpty.Identity)))' != ''"/>
+    </ItemGroup>
+    
+    <!-- Only delete directories that are empty, since there could be something useful in them. -->
+    <RemoveDir Condition="'@(RemoveDirIfEmpty)' != ''" Directories="@(RemoveDirIfEmpty)" />
+  </Target>
+  
+  <Target
+    Name="CleanSBResources"
+    Condition="'@(SBResourceCopy)' != ''"
+    DependsOnTargets="ComputeCleanSBResources;ComputeResourceCopyOptions" >
+
+    <!-- Delete intermediates -->
+    <Delete Files="@(XibCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <Delete Files="@(StoryboardCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <Delete Files="@(DataModelCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <Delete Files="@(DataModelDirCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <Delete Files="@(AssetCatalogCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <Delete Files="@(SBInfoPlistCopy->Metadata('IntermediateFile')->ClearMetadata())" />
+
+    <ItemGroup>
+      <RemoveDirIfEmpty Condition="'$(AppContainerApplication)' != 'true'" Include="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct())" />
+    </ItemGroup>
+
+    <!-- Delete assets -->
+    <Delete Condition="'$(AppContainerApplication)' != 'true'" Files="@(SBResourceCopy->Metadata('OutputFile')->ClearMetadata())" />
+  </Target>
+</Project>

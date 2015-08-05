@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CC03A86E-86D2-4B00-81AC-711729B9092A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>libGLESv2_phone</ProjectName>
+    <RootNamespace>libGLESv2_phone</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Phone</ApplicationType>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <WindowsAppContainer>true</WindowsAppContainer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <WindowsAppContainer>true</WindowsAppContainer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <WindowsAppContainer>true</WindowsAppContainer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <WindowsAppContainer>true</WindowsAppContainer>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>true</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <TargetName>libGLESv2</TargetName>
+    <OutDir>$(SolutionDir)WinRT\redist\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>WinRT\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <GenerateManifest>true</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <TargetName>libGLESv2</TargetName>
+    <OutDir>$(SolutionDir)WinRT\redist\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>WinRT\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <GenerateManifest>true</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <TargetName>libGLESv2</TargetName>
+    <OutDir>$(SolutionDir)WinRT\redist\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>WinRT\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <GenerateManifest>true</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <TargetName>libGLESv2</TargetName>
+    <OutDir>$(SolutionDir)WinRT\redist\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>WinRT\vs2013\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/..; $(ProjectDir)/../../include;$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <PreprocessorDefinitions>_WINDLL;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4451;4512;4702;4718;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>libGLESv2_winrt.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;RuntimeObject.lib;WindowsPhoneCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <AdditionalOptions>/IGNORE:4264 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/..; $(ProjectDir)/../../include;$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <PreprocessorDefinitions>_WINDLL;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4451;4512;4702;4718;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>libGLESv2_winrt.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;RuntimeObject.lib;WindowsPhoneCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <AdditionalOptions>/IGNORE:4264 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/..; $(ProjectDir)/../../include;$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <PreprocessorDefinitions>_WINDLL;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4451;4512;4702;4718;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>libGLESv2_winrt.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;RuntimeObject.lib;WindowsPhoneCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <AdditionalOptions>/IGNORE:4264 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)/..; $(ProjectDir)/../../include;$(GeneratedFilesDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <PreprocessorDefinitions>_WINDLL;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4451;4512;4702;4718;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>libGLESv2_winrt.def</ModuleDefinitionFile>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;RuntimeObject.lib;WindowsPhoneCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <AdditionalOptions>/IGNORE:4264 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\event_tracer.cpp" />
+    <ClCompile Include="..\common\winrtangle.cpp" />
+    <ClCompile Include="..\common\winrtangleutils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\common\winrtutils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\third_party\winrt\ThreadEmulation\ThreadEmulation.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Context.cpp" />
+    <ClCompile Include="..\common\debug.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Fence.cpp" />
+    <ClCompile Include="Float16ToFloat32.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="HandleAllocator.cpp" />
+    <ClCompile Include="libGLESv2.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ProgramBinary.cpp" />
+    <ClCompile Include="Query.cpp" />
+    <ClCompile Include="..\common\RefCountObject.cpp" />
+    <ClCompile Include="Renderbuffer.cpp" />
+    <ClCompile Include="renderer\Fence11.cpp" />
+    <ClCompile Include="renderer\BufferStorage.cpp" />
+    <ClCompile Include="renderer\BufferStorage11.cpp" />
+    <ClCompile Include="renderer\Image.cpp" />
+    <ClCompile Include="renderer\ImageSSE2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="renderer\IndexBuffer.cpp" />
+    <ClCompile Include="renderer\IndexBuffer11.cpp" />
+    <ClCompile Include="renderer\IndexDataManager.cpp" />
+    <ClCompile Include="renderer\Image11.cpp" />
+    <ClCompile Include="renderer\IndexRangeCache.cpp" />
+    <ClCompile Include="renderer\InputLayoutCache.cpp" />
+    <ClCompile Include="renderer\Query11.cpp" />
+    <ClCompile Include="renderer\Renderer.cpp" />
+    <ClCompile Include="renderer\Renderer11.cpp" />
+    <ClCompile Include="renderer\renderer11_utils.cpp" />
+    <ClCompile Include="renderer\RenderTarget11.cpp" />
+    <ClCompile Include="renderer\RenderStateCache.cpp" />
+    <ClCompile Include="renderer\ShaderExecutable11.cpp" />
+    <ClCompile Include="renderer\SwapChain11.cpp" />
+    <ClCompile Include="renderer\TextureStorage.cpp" />
+    <ClCompile Include="renderer\TextureStorage11.cpp" />
+    <ClCompile Include="renderer\VertexBuffer.cpp" />
+    <ClCompile Include="renderer\VertexBuffer11.cpp" />
+    <ClCompile Include="renderer\VertexDataManager.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TLSWinrt.cpp" />
+    <ClCompile Include="Uniform.cpp" />
+    <ClCompile Include="utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\debug.h" />
+    <ClInclude Include="..\common\system.h" />
+    <ClInclude Include="..\common\winrtangle.h" />
+    <ClInclude Include="..\common\winrtangleutils.h" />
+    <ClInclude Include="..\common\winrtplatform.h" />
+    <ClInclude Include="..\common\winrtutils.h" />
+    <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
+    <ClInclude Include="..\third_party\winrt\ThreadEmulation\ThreadEmulation.h" />
+    <ClInclude Include="angletypes.h" />
+    <ClInclude Include="BinaryStream.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="constants.h" />
+    <ClInclude Include="Context.h" />
+    <ClInclude Include="Fence.h" />
+    <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="..\..\include\GLES2\gl2.h" />
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h" />
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h" />
+    <ClInclude Include="HandleAllocator.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="mathutil.h" />
+    <ClInclude Include="precompiled.h" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="ProgramBinary.h" />
+    <ClInclude Include="Query.h" />
+    <ClInclude Include="..\common\RefCountObject.h" />
+    <ClInclude Include="Renderbuffer.h" />
+    <ClInclude Include="renderer\Fence11.h" />
+    <ClInclude Include="renderer\FenceImpl.h" />
+    <ClInclude Include="renderer\BufferStorage.h" />
+    <ClInclude Include="renderer\BufferStorage11.h" />
+    <ClInclude Include="renderer\generatemip.h" />
+    <ClInclude Include="renderer\Image.h" />
+    <ClInclude Include="renderer\Image11.h" />
+    <ClInclude Include="renderer\IndexBuffer.h" />
+    <ClInclude Include="renderer\IndexBuffer11.h" />
+    <ClInclude Include="renderer\IndexDataManager.h" />
+    <ClInclude Include="renderer\IndexRangeCache.h" />
+    <ClInclude Include="renderer\InputLayoutCache.h" />
+    <ClInclude Include="renderer\Query11.h" />
+    <ClInclude Include="renderer\QueryImpl.h" />
+    <ClInclude Include="renderer\Renderer.h" />
+    <ClInclude Include="renderer\Renderer11.h" />
+    <ClInclude Include="renderer\renderer11_utils.h" />
+    <ClInclude Include="renderer\RenderTarget.h" />
+    <ClInclude Include="renderer\RenderTarget11.h" />
+    <ClInclude Include="renderer\RenderStateCache.h" />
+    <ClInclude Include="renderer\ShaderExecutable.h" />
+    <ClInclude Include="renderer\ShaderExecutable11.h" />
+    <ClInclude Include="renderer\shaders\compiled\clear11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearmultiple11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearsingle11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\componentmaskps.h" />
+    <ClInclude Include="renderer\shaders\compiled\flipyvs.h" />
+    <ClInclude Include="renderer\shaders\compiled\luminanceps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthrough11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughlum11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\standardvs.h" />
+    <ClInclude Include="renderer\SwapChain.h" />
+    <ClInclude Include="renderer\SwapChain11.h" />
+    <ClInclude Include="renderer\TextureStorage.h" />
+    <ClInclude Include="renderer\TextureStorage11.h" />
+    <ClInclude Include="renderer\VertexBuffer.h" />
+    <ClInclude Include="renderer\VertexBuffer11.h" />
+    <ClInclude Include="renderer\vertexconversion.h" />
+    <ClInclude Include="renderer\VertexDataManager.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TLSWinrt.h" />
+    <ClInclude Include="Uniform.h" />
+    <ClInclude Include="utilities.h" />
+    <ClInclude Include="..\common\version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libGLESv2_winrt.def" />
+    <None Include="renderer\shaders\Blit.ps" />
+    <None Include="renderer\shaders\Blit.vs" />
+    <None Include="renderer\shaders\Clear11.hlsl" />
+    <None Include="renderer\shaders\generate_shaders.bat" />
+    <None Include="renderer\shaders\Passthrough11.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\compiler\preprocessor\preprocessor_phone_2013.vcxproj">
+      <Project>{61EE8A4C-8A07-44BF-B346-2C94457F8F73}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\compiler\translator_common_phone_2013.vcxproj">
+      <Project>{6F6768C2-8D81-49ED-9862-A9917F0A4245}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\compiler\translator_hlsl_phone_2013.vcxproj">
+      <Project>{88B26085-6F15-4C55-A04A-D5955AC1E499}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

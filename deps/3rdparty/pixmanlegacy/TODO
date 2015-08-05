@@ -1,0 +1,271 @@
+  - Testing
+    - Test implementations against each other
+    - Test both with and without the operator strength reduction.
+      They shold be identical.
+
+  - SSE 2 issues:
+
+      - Use MM_HINT_NTA instead of MM_HINT_T0
+
+      - Use of fbCompositeOver_x888x8x8888sse2()
+
+  - Update the RLEASING file
+
+  - Things to keep in mind if breaking ABI:
+
+      - There should be a guard #ifndef I_AM_EITHER_CAIRO_OR_THE_X_SERVER
+
+      - X server will require 16.16 essentially forever. Can we get
+        the required precision by simply adding offset_x/y to the
+        relevant rendering API?
+
+      - Get rid of workaround for X server bug.
+
+      - pixman_image_set_indexed() should copy its argument, and X
+        should be ported over to use a pixman_image as the
+        representation of a Picture, rather than creating one on each
+        operation.
+
+      - We should get rid of pixman_set_static_pointers()
+
+      - We should get rid of the various trapezoid helper functions().
+        (They only exist because they are theoretically available to
+        drivers).
+
+      - 16 bit regions should be deleted
+
+      - There should only be one trap rasterization API.
+
+      - The PIXMAN_g8/c8/etc formats should use the A channel
+        to indicate the actual depth. That way PIXMAN_x4c4 and PIXMAN_c8
+	won't collide.
+
+  - Maybe bite the bullet and make configure.ac generate a pixman-types.h
+    file that can be included from pixman.h to avoid the #ifdef magic
+    in pixman.h
+
+  - Make pixman_region_point_in() survive a NULL box, then fix up
+    pixman-compose.c
+
+      - Possibly look into inlining the fetch functions
+
+  - There is a bug with source clipping demonstrated by clip-test in the
+    test directory. If we interprete source clipping as given in
+    destination coordinates, which is probably the only sane choice,
+    then the result should have two red bars down the sides.
+    
+  - Test suite
+
+  - Add a general way of dealing with architecture specific
+    fast-paths.  The current idea is to have each operation that can
+    be optimized is called through a function pointer that is
+    initially set to an initialization function that is responsible for
+    setting the function pointer to the appropriate fast-path.
+
+  - Go through things marked FIXME
+
+  - Add calls to prepare and finish access where necessary.  grep for
+    ACCESS_MEM, and make sure they are correctly wrapped in prepare
+    and finish.
+
+  - restore READ/WRITE in the fbcompose combiners since they sometimes
+    store directly to destination drawables.
+
+  - It probably makes sense to move the more strange X region API
+    into pixman as well, but guarded with PIXMAN_XORG_COMPATIBILITY
+
+  - Reinstate the FbBits typedef? At the moment we don't
+    even have the FbBits type; we just use uint32_t everywhere.
+
+    Keith says in bug 2335:
+
+        The 64-bit code in fb (pixman) is probably broken; it hasn't been
+        used in quite some time as PCI (and AGP) is 32-bits wide, so
+        doing things 64-bits at a time is a net loss.  To quickly fix
+        this, I suggest just using 32-bit datatypes by setting
+        IC_SHIFT to 5 for all machines.
+
+  - Consider optimizing the 8/16 bit solid fills in pixman-util.c by
+    storing more than one value at a time.
+
+  - Add an image cache to prevent excessive malloc/free. Note that pixman
+    needs to be thread safe when used from cairo.
+
+  - Moving to 24.8 coordinates. This is tricky because X is still
+    defined as 16.16 and will be basically forever. It's possible we
+    could do this by adding extra offset_x/y parameters to the
+    trapezoid calls. The X server could then just call the API with
+    (0, 0). Cairo would have to make sure that the delta *within* a
+    batch of trapezoids does not exceed 16 bit.
+
+  - Consider adding actual backends. Brain dump:
+
+    A backend is something that knows how to
+
+      - Create images
+      - Composite three images
+      - Rasterize trapezoids
+      - Do solid fills and blits
+
+    These operations are provided by a vtable that the backend will
+    create when it is initialized. Initial backends:
+
+      - VMX
+      - SSE2
+      - MMX
+      - Plain Old C
+
+    When the SIMD backends are initialized, they will be passed a
+    pointer to the Plain Old C backend that they can use for fallback
+    purposes.
+
+    Images would gain a vtable as well that would contain things like
+
+      - Read scanline
+      - Write scanline
+
+    (Or even read_patch/write_patch as suggested by Keith a while
+    back).
+
+    This could simplify the compositing code considerably.
+
+  - Review the pixman_format_code_t enum to make sure it will support
+    future formats. Some formats we will probably need:
+
+    	   ARGB/ABGR with 16/32/64 bit integer/floating channels
+	   YUV2,
+	   YV12
+
+    Also we may need the ability to distinguish between PICT_c8 and
+    PICT_x4c4. (This could be done by interpreting the A channel as
+    the depth for TYPE_COLOR and TYPE_GRAY formats).
+
+    A possibility may be to reserve the two top bits and make them
+    encode "number of places to shift the channel widths given" Since
+    these bits are 00 at the moment everything will continue to work,
+    but these additional widths will be allowed:
+
+    	     All even widths between 18-32
+	     All multiples of four widths between 33 and 64
+	     All multiples of eight between 64 and 128
+
+    This means things like r21g22b21 won't work - is that worth
+    worrying about? I don't think so. And of course the bpp field
+    can't handle a depth of over 256, so > 64 bit channels arent'
+    really all that useful.
+
+    We could reserve one extra bit to indicate floating point, but
+    we may also just add 
+
+       	   PIXMAN_TYPE_ARGB_FLOAT
+	   PIXMAN_TYPE_BGRA_FLOAT
+	   PIXMAN_TYPE_A_FLOAT
+    
+    image types. With five bits we can support up to 32 different
+    format types, which should be enough for everybody, even if we
+    decide to support all the various video formats here:
+
+    	        http://www.fourcc.org/yuv.php
+
+    It may make sense to have a PIXMAN_TYPE_YUV, and then use the
+    channel bits to specify the exact subtype.
+
+    Another possibility is to add 
+
+      	  PIXMAN_TYPE_ARGB_W
+	  PIXMAN_TYPE_ARGB_WW
+    
+    where the channel widths would get 16 and 32 added to them,
+    respectively.
+
+    What about color spaces such a linear vs. srGB etc.?
+
+
+done:
+
+- Use pixmanFillsse2 and pixmanBltsse2
+
+- Be consistent about calling sse2 sse2
+
+- Rename "SSE" to "MMX_EXTENSIONS". (Deleted mmx extensions).
+
+- Commented-out uses of fbCompositeCopyAreasse2()
+
+- Consider whether calling regions region16 is really such a great
+  idea. Vlad wants 32 bit regions for Cairo. This will break X server
+  ABI, but should otherwise be mostly harmless, though a
+  pixman_region_get_boxes16() may be useful.
+
+- Altivec signal issue (Company has fix, there is also a patch by
+  dwmw2 in rawhide).
+
+- Behdad's MMX issue - see list
+
+- SSE2 issues:
+    - Crashes in Mozilla because of unaligned stack. Possible fixes
+        - Make use of gcc 4.2 feature to align the stack
+        - Write some sort of trampoline that aligns the stack
+          before calling SSE functions.
+
+- Get rid of the switch-of-doom; replace it with a big table
+  describing the various fast paths.
+
+- Make source clipping optional.
+    - done: source clipping happens through an indirection.
+        still needs to make the indirection settable. (And call it
+        from X)
+
+- Run cairo test suite; fix bugs
+	- one bug in source-scale-clip
+
+ - Remove the warning suppression in the ACCESS_MEM macro and fix the
+    warnings that are real
+	- irrelevant now.
+
+- make the wrapper functions global instead of image specific
+	- this won't work since pixman is linked to both fb and wfb
+
+- Add non-mmx solid fill
+
+- Make sure the endian-ness macros are defined correctly.
+
+- The rectangles in a region probably shouldn't be returned const as
+  the X server will be changing them.
+
+- Right now we _always_ have a clip region, which is empty by default.
+  Why does this work at all? It probably doesn't. The server
+  distinguishes two cases, one where nothing is clipped (CT_NONE), and
+  one where there is a clip region (CT_REGION).
+
+- Default clip region should be the full image
+
+  - Test if pseudo color still works. It does, but it also shows that
+    copying a pixman_indexed_t on every composite operation is not
+    going to fly. So, for now set_indexed() does not copy the 
+    indexed table. 
+
+    Also just the malloc() to allocate a pixman image shows up pretty
+    high.
+
+    Options include
+
+      - Make all the setters not copy their arguments
+
+      - Possibly combined with going back to the stack allocated 
+        approach that we already use for regions.
+
+      - Keep a cached pixman_image_t around for every picture. It would
+        have to be kept uptodate every time something changes about the
+        picture.
+
+      - Break the X server ABI and simply have the relevant parameter
+        stored in the pixman image. This would have the additional benefits
+        that:
+
+          - We can get rid of the annoying repeat field which is duplicated
+            elsewhere.
+
+          - We can use pixman_color_t and pixman_gradient_stop_t
+            etc. instead of the types that are defined in
+            renderproto.h
+

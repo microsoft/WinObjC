@@ -1,0 +1,35 @@
+Samples for WinObjC
+-------------------
+
+The included samples contain pre-generated Visual Studio solutions files so you may skip step 1 in the BUILD INSTRUCTIONS below. However, if you'd like to see how these .sln files were generated then you may run vsimporter as described.
+
+BUILD INSTRUCTIONS
+1. From the directory containing each sample, run "<winobjc_sdk_path>\bin\vsimporter.exe"
+2. Double click the generated .sln file to open in Visual Studio
+3. In Visual Studio solution explorer, right click on the target project and select "Set as Startup Project"
+4. Press Ctrl-F5 to build and run the application.
+
+For a look at a simple UIKit/Objective-C demo
+---------------------------------------------
+
+cd <winobjc_sdk_path>\samples\WOCCatalog
+<winobjc_sdk_path>\vsimporter.exe
+
+Or
+
+Open HelloUI/HelloUI.vcxproj
+
+For a simple OpenGL demo
+------------------------
+
+git clone https://github.com/ericjohnson/canabalt-ios.git
+cd canabalt-ios
+<winobjc_sdk_path>\bin\vsimporter.exe 
+
+For a simple Cocos2D demo
+-------------------------
+
+git clone https://github.com/haqu/tweejump.git
+cd tweejump
+<winobjc_sdk_path>\bin\vsimporter.exe
+

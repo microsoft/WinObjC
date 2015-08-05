@@ -1,0 +1,427 @@
+
+dnl
+dnl Define macros to enable various features.
+dnl  - Macro: CAIRO_ENABLE_* (ID, NAME, DEFAULT, COMMANDS)
+dnl
+dnl where:
+dnl
+dnl	ID is the feature id, eg. "ft" for cairo_ft_...
+dnl	NAME is the human-readable name of the feature, eg. "FreeType"
+dnl	DEFAULT is the default state of the feature:
+dnl		"no" for experimental backends, eg. your favorite new backend
+dnl		"yes" for mandatory backends, eg. png
+dnl		"auto" for other supported backends, eg. xlib
+dnl	COMMANDS are run to check whether the feature can be enabled.  Their
+dnl		result may be cached, so user should not count on them being run.
+dnl		They should set use_$(ID) to something other than yes if the
+dnl		feature cannot be built, eg. "no (requires SomeThing)".  It then
+dnl		should also set $(ID)_REQUIRES/CFLAGS/LIBS/...
+dnl		appropriately.  Look at the macro definition for more details,
+dnl		or ask if in doubt.
+dnl
+
+AC_DEFUN([CAIRO_ENABLE],
+	[_CAIRO_ENABLE([$1],	[$2],			,		[$3],[$4])])dnl
+
+AC_DEFUN([CAIRO_ENABLE_SURFACE_BACKEND],
+	[_CAIRO_ENABLE([$1],	[$2 surface backend],	surface,	[$3],[$4])])dnl
+
+AC_DEFUN([CAIRO_ENABLE_FONT_BACKEND],
+	[_CAIRO_ENABLE([$1],	[$2 font backend],	font,	  	[$3],[$4])])dnl
+
+AC_DEFUN([CAIRO_ENABLE_FUNCTIONS],
+	[_CAIRO_ENABLE([$1],	[$2 functions],		functions,	[$3],[$4])])dnl
+
+
+dnl
+dnl Define cr_feature_pc and friends ala other cr_feature_* macros
+dnl
+m4_define([cr_pc_modname],
+	[[cairo-]m4_translit([$1],_,-)])dnl
+m4_define([cr_feature_pc],
+	[cr_pc_modname(cr_feature)[.pc]])dnl
+m4_define([cr_feature_uninstalled_pc],
+	[cr_pc_modname(cr_feature)[-uninstalled.pc]])dnl
+
+
+dnl ===========================================================================
+dnl
+dnl Hooks
+dnl
+dnl ===========================================================================
+
+
+dnl ===========================================================================
+dnl
+dnl Generate {src,boilerplate}/Makefile.{am,win32}.config
+dnl
+
+CAIRO_INIT_MAKEFILES([build])
+CAIRO_CONFIG_MAKEFILE([cairo], [src])dnl
+CAIRO_CONFIG_MAKEFILE([cairo_boilerplate], [boilerplate])dnl
+CAIRO_MAKEFILE_INCLUDE(*,[Makefile.sources])dnl
+dnl An empty line per feature for readability
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,*,*,*,[])dnl
+
+
+dnl Collect list of all supported public headers
+CAIRO_MAKEFILE_ACCUMULATE(*,
+[supported_$1_headers = $($1_headers)]dnl
+)dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,*,!no,!,
+[supported_$1_headers += $($1_$2_headers)]dnl
+)dnl
+
+dnl Collect list of all unsupported public headers
+CAIRO_MAKEFILE_ACCUMULATE(*,
+[unsupported_$1_headers =]dnl
+)dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,*,no,!,
+[unsupported_$1_headers += $($1_$2_headers)]dnl
+)dnl
+
+dnl Collect list of source files for all public features
+CAIRO_MAKEFILE_ACCUMULATE(*,
+[dnl
+all_$1_headers = $($1_headers)
+all_$1_private = $($1_private)
+all_$1_cxx_sources = $($1_cxx_sources)
+all_$1_sources = $($1_sources)
+])dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,*,*,!,
+[dnl
+all_$1_headers += $($1_$2_headers)
+all_$1_private += $($1_$2_private)
+all_$1_cxx_sources += $($1_$2_cxx_sources)
+all_$1_sources += $($1_$2_sources)]dnl
+)dnl
+
+dnl Collect list of source files for enabled public features
+CAIRO_MAKEFILE_ACCUMULATE(*,
+[dnl
+enabled_$1_headers = $($1_headers)
+enabled_$1_private = $($1_private)
+enabled_$1_cxx_sources = $($1_cxx_sources)
+enabled_$1_sources = $($1_sources)
+])dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,yes,*,!,
+[dnl
+enabled_$1_headers += $($1_$2_headers)
+enabled_$1_private += $($1_$2_private)
+enabled_$1_cxx_sources += $($1_$2_cxx_sources)
+enabled_$1_sources += $($1_$2_sources)]dnl
+)dnl
+
+dnl No public headers for private features
+
+dnl Collect list of source files for all private features
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,*,*,,
+[dnl
+all_$1_private += $($1_$2_private) $($1_$2_headers)
+all_$1_cxx_sources += $($1_$2_cxx_sources)
+all_$1_sources += $($1_$2_sources)]dnl
+)dnl
+
+dnl Collect list of source files for enabled private features
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(*,yes,*,,
+[dnl
+enabled_$1_private += $($1_$2_private) $($1_$2_headers)
+enabled_$1_cxx_sources += $($1_$2_cxx_sources)
+enabled_$1_sources += $($1_$2_sources)]dnl
+)dnl
+
+
+dnl ===========================================================================
+dnl
+dnl Generate .pc files
+dnl
+
+dnl All .pc files are generated automatically except for this one
+AC_CONFIG_FILES([src/cairo.pc])dnl
+AC_CONFIG_FILES([cairo-uninstalled.pc:src/cairo-uninstalled.pc.in])dnl
+
+dnl pkg-config requires, non-pkgconfig cflags and libs, and total cflags and libs
+CAIRO_FEATURE_VARS_REGISTER([BASE],[cairo])dnl
+CAIRO_ACCUMULATED_FEATURE_VARS_REGISTER([REQUIRES],,[ ])dnl
+CAIRO_ACCUMULATED_FEATURE_VARS_REGISTER([CFLAGS NONPKGCONFIG_CFLAGS],,[ ])dnl
+CAIRO_ACCUMULATED_FEATURE_VARS_REGISTER([LIBS NONPKGCONFIG_LIBS],,[ ],[$LIBS])dnl
+CAIRO_FEATURE_VARS_REGISTER([NONPKGCONFIG_EXTRA_LIBS])dnl
+AC_SUBST(CAIRO_REQUIRES)dnl
+AC_SUBST(CAIRO_CFLAGS)dnl
+AC_SUBST(CAIRO_LDFLAGS)dnl
+AC_SUBST(CAIRO_NONPKGCONFIG_CFLAGS)dnl
+AC_SUBST(CAIRO_LIBS)dnl
+AC_SUBST(CAIRO_NONPKGCONFIG_LIBS)dnl
+
+dnl add non-pkgconfig values
+AC_CONFIG_COMMANDS_PRE(
+[dnl
+CAIRO_CFLAGS="$CAIRO_CFLAGS $CAIRO_NONPKGCONFIG_CFLAGS"
+CAIRO_LIBS="$CAIRO_LIBS $CAIRO_NONPKGCONFIG_LIBS"
+])dnl
+
+m4_define([_CAIRO_FEATURE_CONFIG_PKGCONFIG_FILE],
+[dnl
+	AC_CONFIG_FILES([$3:$4],
+	[dnl
+		mv "$3" "$3.tmp" &&
+		$SED "dnl
+		s%@FEATURE_PC@%]cr_pc_modname([$1])[%g;dnl
+		s%@FEATURE_NAME@%$2%g;dnl
+		s%@FEATURE_BASE@%$$1_BASE%g;dnl
+		s%@FEATURE_REQUIRES@%$$1_REQUIRES%g;dnl
+		s%@FEATURE_NONPKGCONFIG_LIBS@%$$1_NONPKGCONFIG_LIBS%g;dnl
+		s%@FEATURE_NONPKGCONFIG_EXTRA_LIBS@%$$1_NONPKGCONFIG_EXTRA_LIBS%g;dnl
+		s%@FEATURE_NONPKGCONFIG_CFLAGS@%$$1_NONPKGCONFIG_CFLAGS%g;dnl
+		" < "$3.tmp" > "$3" && rm -f "$3.tmp" ||
+		AC_MSG_ERROR(failed to update $3)
+	],[dnl
+		SED='$SED'
+		$1_BASE='$$1_BASE'
+		$1_REQUIRES='$$1_REQUIRES'
+		$1_NONPKGCONFIG_LIBS='$$1_NONPKGCONFIG_LIBS'
+		$1_NONPKGCONFIG_EXTRA_LIBS='$$1_NONPKGCONFIG_EXTRA_LIBS'
+		$1_NONPKGCONFIG_CFLAGS='$$1_NONPKGCONFIG_CFLAGS'
+	])dnl
+])dnl
+
+dnl Generate .pc files for enabled non-builtin public features
+CAIRO_FEATURE_HOOK_REGISTER(yes,!always,!,
+[dnl
+	_CAIRO_FEATURE_CONFIG_PKGCONFIG_FILE(
+		[$1],
+		cr_feature_name,
+		[src/]cr_feature_pc,
+		[src/cairo-features.pc.in]
+	)dnl
+])dnl
+
+dnl Generate -uninstalled.pc files for enabled non-builtin public features
+CAIRO_FEATURE_HOOK_REGISTER(yes,!always,!,
+[dnl
+	_CAIRO_FEATURE_CONFIG_PKGCONFIG_FILE(
+		[$1],
+		cr_feature_name,
+		cr_feature_uninstalled_pc,
+		[src/cairo-features-uninstalled.pc.in]
+	)dnl
+])dnl
+
+
+dnl Collect list of .pc files for all non-builtin public features
+CAIRO_MAKEFILE_ACCUMULATE(cairo,
+[all_$1_pkgconf = cairo.pc])dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(cairo,*,!always,!,
+[all_$1_pkgconf += cr_feature_pc])dnl
+
+dnl Collect list of .pc files for enabled non-builtin public features
+CAIRO_MAKEFILE_ACCUMULATE(cairo,
+[enabled_$1_pkgconf = cairo.pc])dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE(cairo,yes,!always,!,
+[enabled_$1_pkgconf += cr_feature_pc])dnl
+
+
+dnl ===========================================================================
+dnl
+dnl Generate src/cairo-features.h, src/cairo-supported-features.h, and
+dnl src/cairo-features-win32.h
+dnl
+
+dnl Collect list of enabled public features
+CAIRO_ACCUMULATORS_REGISTER(FEATURES,[ ])dnl
+CAIRO_FEATURE_HOOK_REGISTER(yes,*,!,dnl
+[dnl
+	CAIRO_ACCUMULATE(FEATURES, cr_feature_tag)dnl
+])dnl
+dnl Collect list of all supported public features
+CAIRO_ACCUMULATORS_REGISTER(SUPPORTED_FEATURES,[ ])dnl
+CAIRO_FEATURE_HOOK_REGISTER(*,!no,!,dnl
+[dnl
+	CAIRO_ACCUMULATE(SUPPORTED_FEATURES, cr_feature_tag)
+])dnl
+dnl Collect list of all supported disabled public features
+CAIRO_ACCUMULATORS_REGISTER(NO_FEATURES,[ ])dnl
+CAIRO_FEATURE_HOOK_REGISTER(no,*,!,
+[dnl
+	CAIRO_ACCUMULATE(NO_FEATURES, cr_feature_tag)
+])dnl
+
+dnl Generate src/cairo-features.h
+CAIRO_CONFIG_COMMANDS([src/cairo-features.h],
+[dnl
+	echo '/* Generated by configure.  Do not edit. */'
+	echo '#ifndef CAIRO_FEATURES_H'
+	echo '#define CAIRO_FEATURES_H'
+	echo ''
+	for FEATURE in $CAIRO_FEATURES; do
+		echo "#define $FEATURE 1"
+	done | LANG=C sort
+	echo ''
+	for FEATURE in $CAIRO_NO_FEATURES; do
+		echo "/*#undef $FEATURE */"
+	done | LANG=C sort
+	echo ''
+	echo '#endif'
+],[dnl
+	CAIRO_FEATURES='$CAIRO_FEATURES'
+	CAIRO_NO_FEATURES='$CAIRO_NO_FEATURES'
+])dnl
+dnl Generate src/cairo-supported-features.h
+CAIRO_CONFIG_COMMANDS([src/cairo-supported-features.h],
+[dnl
+	echo '/* Generated by configure.  Do not edit. */'
+	echo '#ifndef CAIRO_SUPPORTED_FEATURES_H'
+	echo '#define CAIRO_SUPPORTED_FEATURES_H'
+	echo ''
+	echo '/* This is a dummy header, to trick gtk-doc only */'
+	echo ''
+	for FEATURE in $CAIRO_SUPPORTED_FEATURES; do
+		echo "#define $FEATURE 1"
+	done
+	echo ''
+	echo '#endif'
+],[dnl
+	CAIRO_SUPPORTED_FEATURES='$CAIRO_SUPPORTED_FEATURES'
+])dnl
+
+dnl For enabled private features just define them in config.h.  No fanfare!
+CAIRO_FEATURE_HOOK_REGISTER(yes,*,,
+[dnl
+	AC_DEFINE(cr_feature_tag, 1, [Define to 1 to enable cairo's ]cr_feature_name[ feature])
+])dnl
+
+
+dnl Generate build/Makefile.win32.features-h that generates src/cairo-features.h
+CAIRO_CONFIG_MAKEFILE_PRIVATE_WIN32([win32_features_h],[build],[features-h])
+dnl
+CAIRO_MAKEFILE_ACCUMULATE([win32_features_h],
+[$(top_srcdir)/src/cairo-features.h: $(top_srcdir)/build/Makefile.win32.features
+	@echo "Generating src/cairo-features.h"
+	@echo "/* Generated by Makefile.win32.features-h.  Do not edit. */" > $(top_srcdir)/src/cairo-features.h
+	@echo "[#]ifndef CAIRO_FEATURES_H" >> $(top_srcdir)/src/cairo-features.h
+	@echo "[#]define CAIRO_FEATURES_H 1" >> $(top_srcdir)/src/cairo-features.h]dnl
+)
+AC_CONFIG_COMMANDS_PRE(
+[dnl
+	CAIRO_MAKEFILE_ACCUMULATE([win32_features_h], [	@echo "[#]endif" >>  $(top_srcdir)/src/cairo-features.h])
+])dnl
+CAIRO_MAKEFILE_ACCUMULATE_FEATURE([win32_features_h],yes,*,*,dnl
+[	@echo "[#]define cr_feature_tag 1" >> $(top_srcdir)/src/cairo-features.h]dnl
+)dnl
+
+
+dnl ===========================================================================
+dnl
+dnl Report
+dnl
+
+CAIRO_ACCUMULATORS_REGISTER([WARNING_MESSAGE],m4_newline()m4_newline)dnl
+
+dnl Collect warning message for enabled unsupported public features
+CAIRO_FEATURE_HOOK_REGISTER(yes,no,!,
+[dnl
+	CAIRO_ACCUMULATE([WARNING_MESSAGE], CAIRO_TEXT_WRAP([The ]cr_feature_name[ feature is still under active development and is included in this release only as a preview. It does NOT fully work yet and incompatible changes may yet be made to ]cr_feature_name[ specific API.], [--- ]))
+])dnl
+
+dnl Collect warning message for disabled recommended features
+CAIRO_FEATURE_HOOK_REGISTER(no,yes,*,
+[dnl
+	CAIRO_ACCUMULATE([WARNING_MESSAGE], CAIRO_TEXT_WRAP([It is strongly recommended that you do NOT disable the ]cr_feature_name[ feature.], [+++ ]))
+])dnl
+
+
+dnl Collect enabled native surface/font backend features
+CAIRO_ACCUMULATORS_REGISTER([NATIVE_SURFACE_BACKENDS])dnl
+CAIRO_ACCUMULATORS_REGISTER([NATIVE_FONT_BACKENDS])dnl
+CAIRO_FEATURE_HOOK_REGISTER(yes,auto,surface,
+[dnl
+	CAIRO_ACCUMULATE([NATIVE_SURFACE_BACKENDS], [$1])
+])dnl
+CAIRO_FEATURE_HOOK_REGISTER(yes,auto,font,
+[dnl
+	CAIRO_ACCUMULATE([NATIVE_FONT_BACKENDS], [$1])
+])dnl
+
+dnl Collect warning message if no native surface/font backend feature enabled
+AC_CONFIG_COMMANDS_PRE(dnl
+[dnl
+	AS_IF([test -z "$CAIRO_NATIVE_SURFACE_BACKENDS"],dnl
+	[dnl
+		CAIRO_ACCUMULATE([WARNING_MESSAGE], CAIRO_TEXT_WRAP([No native surface backends enabled for your platform. It is strongly recommended that you enable the native surface backend feature for your platform.], [*** ]))
+	])
+	AS_IF([test -z "$CAIRO_NATIVE_FONT_BACKENDS"],dnl
+	[dnl
+		CAIRO_ACCUMULATE([WARNING_MESSAGE], CAIRO_TEXT_WRAP([No native font backends enabled for your platform. It is strongly recommended that you enable the native font backend feature for your platform.], [*** ]))
+	])
+])dnl
+
+
+AC_DEFUN([CAIRO_REPORT],
+[dnl
+	V="$CAIRO_VERSION_MAJOR.$CAIRO_VERSION_MINOR.$CAIRO_VERSION_MICRO"
+	echo ""
+	echo "cairo (version $V [[$CAIRO_RELEASE_STATUS]]) will be compiled with:"
+	echo ""
+	echo "The following surface backends:"
+	echo "  Image:         yes (always builtin)"
+	echo "  Recording:     yes (always builtin)"
+	echo "  Observer:      yes (always builtin)"
+	echo "  Mime:          yes (always builtin)"
+	echo "  Tee:           $use_tee"
+	echo "  XML:           $use_xml"
+	echo "  Skia:          $use_skia"
+	echo "  Xlib:          $use_xlib"
+	echo "  Xlib Xrender:  $use_xlib_xrender"
+	echo "  Qt:            $use_qt"
+	echo "  Quartz:        $use_quartz"
+	echo "  Quartz-image:  $use_quartz_image"
+	echo "  XCB:           $use_xcb"
+	echo "  Win32:         $use_win32"
+	echo "  OS2:           $use_os2"
+	echo "  CairoScript:   $use_script"
+	echo "  PostScript:    $use_ps"
+	echo "  PDF:           $use_pdf"
+	echo "  SVG:           $use_svg"
+	echo "  OpenGL:        $use_gl"
+	echo "  OpenGL ES 2.0: $use_glesv2"
+	echo "  BeOS:          $use_beos"
+	echo "  DirectFB:      $use_directfb"
+	echo "  OpenVG:        $use_vg"
+	echo "  DRM:           $use_drm"
+	echo "  Cogl:          $use_cogl"
+	echo ""
+	echo "The following font backends:"
+	echo "  User:          yes (always builtin)"
+	echo "  FreeType:      $use_ft"
+	echo "  Fontconfig:    $use_fc"
+	echo "  Win32:         $use_win32_font"
+	echo "  Quartz:        $use_quartz_font"
+	echo ""
+	echo "The following functions:"
+	echo "  PNG functions:   $use_png"
+	echo "  GLX functions:   $use_glx"
+	echo "  WGL functions:   $use_wgl"
+	echo "  EGL functions:   $use_egl"
+	echo "  X11-xcb functions: $use_xlib_xcb"
+	echo "  XCB-shm functions: $use_xcb_shm"
+	echo ""
+	echo "The following features and utilities:"
+	echo "  cairo-trace:                $use_trace"
+	echo "  cairo-script-interpreter:   $use_interpreter"
+	echo ""
+	echo "And the following internal features:"
+	echo "  pthread:       $use_pthread"
+	echo "  gtk-doc:       $enable_gtk_doc"
+	echo "  gcov support:  $use_gcov"
+	echo "  symbol-lookup: $use_symbol_lookup"
+	echo "  test surfaces: $use_test_surfaces"
+	echo "  ps testing:    $test_ps"
+	echo "  pdf testing:   $test_pdf"
+	echo "  svg testing:   $test_svg"
+	if test x"$use_win32" = "xyes"; then
+		echo "  win32 printing testing:    $test_win32_printing"
+	fi
+	echo "$CAIRO_WARNING_MESSAGE"
+	echo ""
+])dnl
+

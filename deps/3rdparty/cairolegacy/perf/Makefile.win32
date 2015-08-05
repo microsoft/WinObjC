@@ -1,0 +1,44 @@
+top_srcdir = ..
+include $(top_srcdir)/build/Makefile.win32.common
+
+LDFLAGS += ../src/$(CFG)/cairo-static.lib $(PIXMAN_LIBS) ../boilerplate/$(CFG)/boiler.lib $(EXE_LDFLAGS)
+
+PERF_SOURCES = \
+	box-outline.c \
+	cairo-perf-win32.c \
+	cairo-perf-cover.c \
+	cairo-perf.c \
+	cairo-stats.c \
+	fill.c \
+	long-dashed-lines.c \
+	long-lines.c \
+	mosaic.c \
+	paint.c \
+	paint-with-alpha.c \
+	pattern_create_radial.c \
+	rectangles.c \
+	stroke.c \
+	subimage_copy.c \
+	tessellate.c \
+	text.c \
+	unaligned-clip.c \
+	world-map.c \
+	zrusin.c \
+#	extend-pad.c \
+	$(NULL)
+
+OBJECTS = $(patsubst %.c, $(CFG)/%.obj, $(PERF_SOURCES))
+
+all: inform $(CFG)/cairo-perf.exe
+
+$(CFG)/cairo-perf.exe: $(OBJECTS)
+	@mkdir -p $(CFG)
+	@$(CC) $(CFLAGS) -Fe"$@" $^ -link $(LDFLAGS)
+
+cairo-perf-diff-files:
+	@mkdir -p $(CFG)
+	@$(CC) $(CFLAGS) -Fe"$@" cairo-perf-diff-files.c cairo-perf-report.c cairo-stats.c -link $(LDFLAGS)
+
+cairo-perf-graph-files:
+	@mkdir -p $(CFG)
+	@$(CC) $(CFLAGS) -Fe"$@" cairo-perf-graph-files.c cairo-perf-report.c cairo-stats.c -link $(LDFLAGS)

@@ -1,0 +1,51 @@
+diff --git a/Makefile.win32.common b/Makefile.win32.common
+index 777f94c..9956408 100644
+--- a/Makefile.win32.common
++++ b/Makefile.win32.common
+@@ -22,6 +22,46 @@ CFG_CFLAGS  = -MD -O2
+ CFG_LDFLAGS =
+ endif
+ 
++# set up app container flags
++ifeq ($(WIN_SYSTEM_NAME),WindowsStore)
++NO_SIMD=true
++ifeq ($(WIN_VERSION),10.0)
++CFG_CFLAGS += -DWINAPI_FAMILY=WINAPI_FAMILY_APP -DWIN32_WINNT=0x0A00
++CFG_LDFLAGS += -APPCONTAINER WindowsApp.lib
++ifeq ($(WIN_ARCH),ARM)
++CFG_CFLAGS += -D__ARM_PCS_VFP
++endif
++endif
++
++ifeq ($(WIN_VERSION),8.1)
++CFG_CFLAGS += -DWINAPI_FAMILY=WINAPI_FAMILY_PC_APP -DWIN32_WINNT=0x0603
++CFG_LDFLAGS += -APPCONTAINER
++ifeq ($(WIN_ARCH),ARM)
++CFG_CFLAGS += -D__ARM_PCS_VFP
++CFG_LDFLAGS += -MACHINE:ARM
++endif
++endif
++endif # endif WindowsStore
++
++ifeq ($(WIN_SYSTEM_NAME),WindowsPhone)
++NO_SIMD=true
++CFG_CFLAGS += -DWINAPI_FAMILY=WINAPI_FAMILY_PHONE_APP -D_WIN32_WINNT=0x0603
++CFG_LDFLAGS += -APPCONTAINER -subsystem:console -opt:ref WindowsPhoneCore.lib RuntimeObject.lib PhoneAppModelHost.lib -NODEFAULTLIB:kernel32.lib -NODEFAULTLIB:ole32.lib
++ifeq ($(WIN_ARCH),ARM)
++CFG_CFLAGS += -D__ARM_PCS_VFP
++CFG_LDFLAGS += -MACHINE:ARM
++endif
++endif
++
++# turn off SIMD stuff for now
++ifeq ($(NO_SIMD),true)
++MMX=off
++SSE=off
++SSE2=off
++SSSE3=off
++endif
++
++
+ # Package definitions, to be used instead of those provided in config.h
+ PKG_CFLAGS  = -DPACKAGE=$(LIBRARY) -DPACKAGE_VERSION="" -DPACKAGE_BUGREPORT=""
+ 

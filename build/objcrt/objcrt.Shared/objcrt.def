@@ -1,0 +1,10 @@
+LIBRARY objcrt
+   EXPORTS
+     _NSConcreteGlobalBlock	CONSTANT
+	 _NSConcreteStackBlock	DATA
+     _OBJC_CLASS_NSObject	DATA
+	 __objc_class_name_NSObject	CONSTANT
+     _OBJC_CLASS_NSAutoreleasePool	DATA
+	 __objc_class_name_NSAutoreleasePool	CONSTANT
+	  
+	
