@@ -16,6 +16,8 @@
 
 #include <stdio.h>
 
+#pragma comment(linker, "/INCLUDE:___refMTAThread")
+
 extern "C"
 {
 	int __cdecl EbrDefaultXamlMain()
