@@ -234,7 +234,12 @@
 #define SECONDS_PER_HOUR    (SECONDS_PER_MIN * 60.0)
 #define SECONDS_PER_DAY     (SECONDS_PER_HOUR * 24.0)
 #define SECONDS_PER_WEEK    (SECONDS_PER_DAY * 7.0)
+
+// WARNING: This is a crude approximation of seconds per month and may not yield 
+// accurate results for date arithmetic when days of month are at the beginnings
+// or ends of months.
 #define SECONDS_PER_MONTH   (SECONDS_PER_DAY * 30.42)
+
 #define SECONDS_PER_YEAR    (SECONDS_PER_DAY * 365.0)
 
         if ( unitFlags & NSYearCalendarUnit ) {
