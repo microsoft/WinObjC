@@ -38,6 +38,27 @@ The best way to get started with WinObjC is to run one of the samples. We recomm
 
 For guidance about importing your own Xcode project and other Windows Bridge for iOS SDK details, see the [wiki](https://github.com/Microsoft/WinObjC/wiki)
 
+##Contributions
+
+There are many ways that you can contribute to the WinObjC project:
+
+- Submit a bug
+- Verify fixes for bugs
+- Submit a code fix for a bug
+- Submit a feature request
+- Submit a unit test
+- Tell others about the WinObjC project
+- Tell the developers how much you appreciate the project
+
+###Pull requests
+
+You will need to sign a [Contribution License Agreement](https://cla.microsoft.com/) (CLA) before submitting your pull request. To complete the CLA, you will need to submit the request via the form and then electronically sign the CLA when you receive an email containing a link to the document.
+
+This process needs to only be done once for any Microsoft open source project.
+
+###Contributing to README and Wiki
+
+You do not need to sign a Contribution License Agreement if you are just contributing to the README or the Wiki. However, by submitting a contribution to the README or the Wiki, you are contributing it under the [Creative Commons CC0 1.0 Universal Public Domain Dedication](http://creativecommons.org/publicdomain/zero/1.0/).
 
 ## What's still under development?
 As this project is still under active development, there are a few features that are not yet built out:
