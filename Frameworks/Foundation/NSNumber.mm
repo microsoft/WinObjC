@@ -245,30 +245,11 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 
     -(BOOL) isEqual:(NSObject *)objAddr {
-        if ( objAddr == self ) return TRUE;
-        if ( objAddr != nil && [objAddr isKindOfClass:[NSNumber class]] ) {
-            NSNumber *other = (NSNumber *) objAddr;
-            if ( type == other->type ) {
-                return val.i == other->val.i;
-            } else {
-                return [self doubleValue] == [other doubleValue];
-            }
-        }
-
-        return FALSE;
+        return [self compare: objAddr] == 0;
     }
 
     -(BOOL) isEqualToNumber:(NSNumber*)objAddr {
-        if ( objAddr == self ) return TRUE;
-        if ( objAddr != nil && [objAddr isKindOfClass:[NSNumber class]] ) {
-            if ( type == objAddr->type ) {
-                return val.i == objAddr->val.i;
-            } else {
-                return [self doubleValue] == [objAddr doubleValue];
-            }
-        }
-
-        return FALSE;
+        return [self compare: objAddr] == 0;
     }
 
     -(int) compare:(NSNumber*)objAddr {
