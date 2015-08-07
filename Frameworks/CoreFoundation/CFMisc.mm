@@ -37,9 +37,16 @@ COREFOUNDATION_EXPORT extern "C" int usleep(long secs)
 COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char *name, void *out, size_t *outSize, const void *, size_t)
 {
     if ( strcmp(name, "hw.machine") == 0 ) {
-        if ( outSize ) *outSize = 8;
-        if ( out ) strcpy((char *) out, "winobjc");
-        return 0;
+        const int required = 8;
+        if ( outSize ) {
+            // If there's no buffer, we have to return the nr. of bytes required for this response.
+            *outSize = !out ? required : min(*outSize, required);
+        } else {
+            return -1;
+        }
+
+        if ( out ) strncpy((char *) out, "winobjc", *outSize); // outsize is <= required here
+        return *outSize < required ? ENOMEM : 0;
     }
     return -1;
 }
