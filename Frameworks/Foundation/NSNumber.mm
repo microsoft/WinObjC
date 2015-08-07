@@ -253,7 +253,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 
     -(int) compare:(NSNumber*)objAddr {
-        if ( objAddr == self ) return TRUE;
+        if ( objAddr == self ) return 0;
         if ( objAddr != nil && [objAddr isKindOfClass:[NSNumber class]] ) {         
             if ( type == objAddr->type ) {
                 if ( val.i < objAddr->val.i ) {
