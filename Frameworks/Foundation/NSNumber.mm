@@ -274,7 +274,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
             }
         }
 
-        return FALSE;
+        return -1;
     }
 
 
