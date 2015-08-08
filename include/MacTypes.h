@@ -31,5 +31,7 @@ typedef uint64_t      UInt64;
 typedef uint8_t        Byte;
 typedef unsigned long  u_long;
 typedef uint16_t      mode_t;
+
+enum { kNilOptions = 0 };
 #endif
 
