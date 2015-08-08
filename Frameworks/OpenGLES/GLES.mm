@@ -561,6 +561,54 @@ EAGL_EXPORT DWORD glScalef(float x, float y, float z)
     return 0;
 }
 
+EAGL_EXPORT void glMaterialf(GLenum face, GLenum pname, GLfloat param)
+{
+    if (ctxManager.lockContext() == false) return;
+
+    EAGLContext *ctx = ctxManager.getEAGLContext();
+    ctx->eaglPriv->_gl11Ctx->glMaterialf(face, pname, param);
+
+    glCheckError();
+
+    ctxManager.unlockContext();
+}
+
+EAGL_EXPORT void glMaterialfv(GLenum face, GLenum pname, const GLfloat *params)
+{
+    if (ctxManager.lockContext() == false) return;
+
+    EAGLContext *ctx = ctxManager.getEAGLContext();
+    ctx->eaglPriv->_gl11Ctx->glMaterialfv(face, pname, params);
+
+    glCheckError();
+
+    ctxManager.unlockContext();
+}
+
+EAGL_EXPORT void glMaterialx(GLenum face, GLenum pname, GLfixed param)
+{
+    if (ctxManager.lockContext() == false) return;
+
+    EAGLContext *ctx = ctxManager.getEAGLContext();
+    ctx->eaglPriv->_gl11Ctx->glMaterialx(face, pname, param);
+
+    glCheckError();
+
+    ctxManager.unlockContext();
+}
+
+EAGL_EXPORT void glMaterialxv(GLenum face, GLenum pname, const GLfixed *params)
+{
+    if (ctxManager.lockContext() == false) return;
+
+    EAGLContext *ctx = ctxManager.getEAGLContext();
+    ctx->eaglPriv->_gl11Ctx->glMaterialxv(face, pname, params);
+
+    glCheckError();
+
+    ctxManager.unlockContext();
+}
+
 EAGL_EXPORT DWORD glOrthof(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     if (ctxManager.lockContext() == false) return 0;
