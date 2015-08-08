@@ -279,13 +279,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
 
 
     -(id) copyWithZone:(NSZone*)zone {
-        NSNumber* ret = [NSNumber alloc];
-        ret->val.i = val.i;
-        ret->type = type;
-        ret->objCType = objCType;
-        ret->isBool = isBool;
-
-        return ret;
+        return [self retain];
     }
 
     -(int) intValue {
