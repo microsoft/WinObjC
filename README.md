@@ -63,7 +63,7 @@ You do not need to sign a Contribution License Agreement if you are just contrib
 ## What's still under development?
 As this project is still under active development, there are a few features that are not yet built out:
 
-1. x86 only today ARM support coming soon
+1. x86 only today, ARM support coming soon
 2. Compiler optimizations will not work and will likely crash clang, debug builds only
 3. Autolayout
 4. Storyboard support
