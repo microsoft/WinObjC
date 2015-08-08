@@ -24,8 +24,6 @@
 #include "Starboard.h"
 #include "ContextManager.h"
 
-#include "TexDecompressor.h"
-
 #include "EbrGLES.h"
 #include "Platform/EbrPlatform.h"
 
@@ -1291,107 +1289,20 @@ EAGL_EXPORT DWORD glTexSubImage2D (GLenum target, GLint level, GLint xoffset, GL
     return 0;
 }
 
-DWORD UIImagePNGRepresentation(id img);
-
-#define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG     0x8C03
-#define GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG     0x8C02
-#define GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG      0x8C01
-#define GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG      0x8C00
-#define GL_ATC_RGB_AMD                          0x8C92
-#define GL_PALETTE4_RGBA8_OES                   0x8B91
-#define GL_PALETTE4_RGB8_OES                    0x8B90
-#define GL_PALETTE8_RGBA8_OES                   0x8B96
-#define GL_PALETTE8_RGB8_OES                    0x8B95
-
-EAGL_EXPORT DWORD glCompressedTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid *pixels)
+EAGL_EXPORT void glCompressedTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid *pixels)
 {
     if (!pixels) {
         EbrDebugLog("NULL passed to glCompressedTexImage2D\n");
-        return 0;
+        return;
     }
 
-    if (ctxManager.lockContext() == false) return 0;
+    if (ctxManager.lockContext() == false) return;
 
-    /*
-    static BYTE img[64 * 64 * 4];
-    memset(img, 127, 64 * 64 * 4);
-    ANGLE_glTexImage2D(target, level, GL_RGBA, 64, 64, border, GL_RGBA, GL_UNSIGNED_BYTE, img);
-    return 0;
-    */
-
-    static bool hasPvr, hasQueried;
-
-    logPerf("PVR texture load requested");
-    switch (internalformat) {
-        case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-        case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG: {
-            if (!hasQueried) {
-                hasQueried = true;
-                if (strstr((const char *) ANGLE_glGetString(GL_EXTENSIONS), "GL_IMG_texture_compression_pvrtc") != NULL) {
-                    hasPvr = true;
-                }
-            }
-
-            if (!hasPvr) {
-                logPerf("Decompressing texture to RGBA");
-                void *pixelsOut = (void *) EbrMalloc(width * height * 4);
-                Decompress((AMTC_BLOCK_STRUCT *) pixels, 0, width, height, 1, (unsigned char *) pixelsOut);
-                ANGLE_glTexImage2D(target, level, GL_RGBA, width, height, border, GL_RGBA, GL_UNSIGNED_BYTE, pixelsOut);
-
-                EbrFree(pixelsOut);
-                logPerf("Decompressed texture uploaded");
-            } else {
-                ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, pixels);
-            }
-            break;
-        }
-
-        case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-        case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG: {
-            assert(0);
-            if (!hasQueried) {
-                hasQueried = true;
-                if (strstr((const char *) ANGLE_glGetString(GL_EXTENSIONS), "GL_IMG_texture_compression_pvrtc") != NULL) {
-                    hasPvr = true;
-                }
-            }
-
-            if (!hasPvr) {
-                void *pixelsOut = (void *) EbrMalloc(width * height * 4);
-                Decompress((AMTC_BLOCK_STRUCT *) pixels, 1, width, height, 1, (unsigned char *) pixelsOut);
-
-                ANGLE_glTexImage2D(target, level, GL_RGBA, width, height, border, GL_RGBA, GL_UNSIGNED_BYTE, pixelsOut);
-                EbrFree(pixelsOut);
-            } else {
-                ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, pixels);
-            }
-            break;
-        }
-
-        case GL_ATC_RGB_AMD:
-            ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, pixels);
-            break;
-
-        case GL_PALETTE4_RGBA8_OES:
-        case GL_PALETTE8_RGBA8_OES:
-        case GL_PALETTE8_RGB8_OES:
-        case GL_PALETTE4_RGB8_OES:
-
-        // Allow clients to use DXT1 and DXT5 compression:
-        case  GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-        case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-            ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, pixels);
-            break;
-
-        default:
-            assert(0);
-    }
+    ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, pixels);
     
     int ret = glCheckError();
 
     ctxManager.unlockContext();
-
-    return 0;
 }
 
 EAGL_EXPORT DWORD glDrawTexiOES (GLint x, GLint y, GLint z, GLint width, GLint height)
