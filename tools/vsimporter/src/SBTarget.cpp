@@ -192,7 +192,7 @@ String SBTarget::makeRelativePath(const String& path, const String& absRoot) con
 
 SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
 {
-  static const char* const _productWildcards[] = {"lib*.a", "*.app"};
+  static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework"};
   static StringVec productWildcards(_productWildcards, _productWildcards + sizeof(_productWildcards) / sizeof(char*));
 
   sbAssert(buildFile);
