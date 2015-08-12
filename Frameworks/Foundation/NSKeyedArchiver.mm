@@ -137,6 +137,12 @@ static id makeReference(unsigned ref)
         [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
     }
 
+    -(void) encodeInteger:(int)anInteger forKey:(NSString*)aKey {
+        CHECKKEY
+
+        [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
+    }
+
     -(void) encodeInt32:(int32_t)anInteger forKey:(NSString*)aKey {
         CHECKKEY
 
