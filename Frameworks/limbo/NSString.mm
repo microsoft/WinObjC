@@ -418,6 +418,10 @@ static void *_conversionTempStr(int size)
     }
 #endif
 
+    -(NSString*) stringByAbbreviatingWithTildeInPath {
+        return [[self copy] autorelease];
+    }
+
     +(NSString*) string {
         return @"";
     }
