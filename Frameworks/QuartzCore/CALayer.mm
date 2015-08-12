@@ -320,12 +320,41 @@ static LockingBufferInterface _globallockingBufferInterface;
     }
 
 
-    -(void) _renderContents:(CGContextRef)ctx withOrigin:(CGPoint)origin {
+    -(void) renderInContext:(CGContextRef)ctx {
         if ( priv->hidden ) return;
 
-        [self displayIfNeeded];
+        [self layoutIfNeeded];
 
-        if ( priv->contents != NULL ) {
+        CGContextSaveGState(ctx);
+        CGContextTranslateCTM(ctx, priv->position.x, priv->position.y);
+        CGContextTranslateCTM(ctx, -priv->bounds.size.width * priv->anchorPoint.x,
+                                -priv->bounds.size.height * priv->anchorPoint.y);
+        CGRect destRect;
+
+        destRect.origin.x = 0;
+        destRect.origin.y = 0;
+        destRect.size.width = priv->bounds.size.width;
+        destRect.size.height = priv->bounds.size.height;
+
+        if ( priv->masksToBounds ) {
+            CGContextClipToRect(ctx, destRect);
+        }
+        if (priv->contents == NULL ) {
+            if ( [priv->delegate respondsToSelector:@selector(displayLayer:)] ) {
+                [priv->delegate displayLayer:self];
+            }
+        }
+
+        if (priv->contents == NULL ) {
+            if ( priv->_backgroundColor != nil ) {
+                [priv->_backgroundColor setFill];
+                CGContextFillRect(ctx, destRect);
+            }
+            [self drawInContext:ctx];
+            if ( ![priv->delegate respondsToSelector:@selector(displayLayer:)] ) {
+                [priv->delegate drawLayer:self inContext:ctx];
+            }
+        } else {
             CGRect rect;
 
             rect.origin.x = 0;
@@ -333,42 +362,15 @@ static LockingBufferInterface _globallockingBufferInterface;
             rect.size.width = priv->bounds.size.width * priv->contentsScale;
             rect.size.height = -priv->bounds.size.height * priv->contentsScale;
 
-            CGRect destRect;
-
-            destRect.origin.x = -priv->bounds.size.width * priv->anchorPoint.x;
-            destRect.origin.y = -priv->bounds.size.height * priv->anchorPoint.y;
-            destRect.size.width = priv->bounds.size.width;
-            destRect.size.height = priv->bounds.size.height;
-
             CGContextDrawImageRect(ctx, priv->contents, rect, destRect );
         }
 
-        origin.x = priv->bounds.size.width * priv->anchorPoint.x;
-        origin.y = priv->bounds.size.height * priv->anchorPoint.y;
-
         //  Draw sublayers
         LLTREE_FOREACH(curLayer, priv) {
-            CGAffineTransform oldTransform = CGContextGetCTM(ctx);
-
-            /* Note: should do other transforms */
-            CGContextTranslateCTM(ctx, curLayer->position.x - origin.x,
-                                  curLayer->position.y - origin.y);
-
-            [curLayer->self _renderContents:ctx withOrigin:origin];
-
-            CGContextSetCTM(ctx, oldTransform);
+            [curLayer->self renderInContext:ctx];
         }
-    }
 
-
-    -(void) renderInContext:(CGContextRef)ctx {
-        CGPoint origin;
-        origin.x = 0;
-        origin.y = 0;
-        CGContextTranslateCTM(ctx, priv->bounds.size.width * priv->anchorPoint.x,
-                                priv->bounds.size.height * priv->anchorPoint.y);
-
-        [self _renderContents:ctx withOrigin:origin];
+        CGContextRestoreGState(ctx);
     }
 
 
@@ -466,7 +468,9 @@ static LockingBufferInterface _globallockingBufferInterface;
                         //target = new CGVectorImage(width, height, _ColorARGB);
                     }
                     else {
-                        DisplayTexture *tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+                        DisplayTexture *tex = NULL;
+                        
+                        if ( [NSThread isMainThread] ) tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
                         drawContext = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
                         if ( tex ) _globallockingBufferInterface.ReleaseDisplayTexture(tex);
                     }
