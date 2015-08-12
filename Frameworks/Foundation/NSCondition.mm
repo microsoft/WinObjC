@@ -34,58 +34,45 @@ struct _mach_timeval
 
 @implementation NSCondition
 {
-    pthread_mutex_t mutex;
-    pthread_cond_t cond;
-    idretain _name;
+    pthread_mutex_t _mutex;
+    pthread_cond_t _cond;
+    idretaintype(NSString) _name;
 }
-
-    +(id) /* use typed version */ alloc {
-        NSCondition* ret = [super alloc];
-
-        pthread_mutex_init(&ret->mutex, NULL);
-        pthread_cond_init(&ret->cond, NULL);
-        return ret;
-    }
+	-(instancetype) init {
+        pthread_mutex_init(&_mutex, NULL);
+        pthread_cond_init(&_cond, NULL);
+		return self;
+	}
 
     -(void) dealloc {
-        int ret = pthread_mutex_destroy(&mutex);
+        int ret = pthread_mutex_destroy(&_mutex);
         assert(ret == 0);
-        ret = pthread_cond_destroy(&cond);
+        ret = pthread_cond_destroy(&_cond);
         assert(ret == 0);
         [super dealloc];
     }
 
-    -(id) /* use typed version */ lock {
-        pthread_mutex_lock(&mutex);
-
-        return self;
+    -(void) lock {
+        pthread_mutex_lock(&_mutex);
     }
 
-    -(id) /* use typed version */ unlock {
-        pthread_mutex_unlock(&mutex);
-
-        return self;
+    -(void) unlock {
+        pthread_mutex_unlock(&_mutex);
     }
 
-    -(id) /* use typed version */ signal {
-        pthread_cond_signal(&cond);
-
-        return self;
+    -(void) signal {
+        pthread_cond_signal(&_cond);
     }
 
-    -(id) /* use typed version */ broadcast {
-        pthread_cond_broadcast(&cond);
-
-        return self;
+    -(void) broadcast {
+        pthread_cond_broadcast(&_cond);
     }
 
-    -(id) /* use typed version */ wait {
-        pthread_cond_wait(&cond, &mutex);
-
-        return self;
+    -(void) wait {
+        pthread_cond_wait(&_cond, &_mutex);
     }
 
-    -(BOOL) waitUntilDate:(id)date {
+    -(BOOL) waitUntilDate: (NSDate *)date {
         int rc;
         struct timespec t={0};
         struct EbrTimeval tv;
@@ -102,37 +89,140 @@ struct _mach_timeval
         t.tv_sec += t.tv_nsec / 1000000000;
         t.tv_nsec %= 1000000000;
 
-        switch ((rc = pthread_cond_timedwait(&cond, &mutex, &t))) {
+        switch ((rc = pthread_cond_timedwait(&_cond, &_mutex, &t))) {
             case 0:
                 return YES;
 
             case 0x274c /* ETIMEDOUT in ios */:
-                /*
-                if((rc = pthread_mutex_unlock(&mutex)) != 0) {
-                    //[NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
-                    assert(0);
+                if((rc = pthread_mutex_unlock(&_mutex)) != 0) {
+                    [NSException raise: NSInvalidArgumentException format: @"failed to unlock %@ (errno: %d)", self, rc];
                 }
-                */
                 return NO;
 
             default:
-                if((rc = pthread_mutex_unlock(&mutex)) != 0) {
-                    //[NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
+                if((rc = pthread_mutex_unlock(&_mutex)) != 0) {
+                    [NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
                 }
-                //[NSException raise:NSInvalidArgumentException format:@"failed to lock %@ before date %@ (errno: %d)", self, date, rc];
-                assert(0);
+                [NSException raise:NSInvalidArgumentException format:@"failed to lock %@ before date %@ (errno: %d)", self, date, rc];
                 return NO;
         }
     }
 
-    /* annotate with type */ -(void) setName:(id)newName {
-        _name = newName;
+    -(void) setName: (NSString *)newName {
+        _name.attach([newName copy]);
     }
 
-    /* annotate with type */ -(id) name {
+    -(NSString *) name {
         return _name;
     }
-
-    
 @end
 
+@implementation NSConditionLock
+{
+	pthread_mutex_t _mutex;
+	pthread_cond_t _cond;
+	idretaintype(NSString) _name;
+	NSThread *_lockingThread;
+	NSInteger _value;
+}
+
+	+(instancetype) alloc {
+		NSConditionLock* ret = [super alloc];
+		return ret;
+	}
+
+	-(instancetype) init {
+		return [self initWithCondition: 0];
+	}
+
+	-(instancetype) initWithCondition: (NSInteger) value
+	{
+		pthread_mutex_init(&_mutex, NULL);
+		pthread_cond_init(&_cond, NULL);
+		_value = value;
+
+		return self;
+	}
+
+	-(NSInteger) condition
+	{
+		return _value;
+	}
+
+	-(void) dealloc {
+		int ret = pthread_mutex_destroy(&_mutex);
+		assert(ret == 0);
+		ret = pthread_cond_destroy(&_cond);
+		assert(ret == 0);
+		[super dealloc];
+	}
+
+	-(void) lock {
+		pthread_mutex_lock(&_mutex);
+	}
+
+	-(void) unlock {
+		pthread_mutex_unlock(&_mutex);
+	}
+
+	-(void) signal {
+		pthread_cond_signal(&_cond);
+	}
+
+	-(void) broadcast {
+		pthread_cond_broadcast(&_cond);
+	}
+
+	-(void) wait {
+		pthread_cond_wait(&_cond, &_mutex);
+	}
+
+	-(void) lockWhenCondition: (NSInteger) condition {
+		int rc;
+
+		if((rc = pthread_mutex_lock(&_mutex)) != 0) {
+			[NSException raise:NSInvalidArgumentException format:@"failed to lock %@ (errno: %d)", self, rc];
+		}
+
+		while ( _value != condition) {
+	        switch ((rc = pthread_cond_wait(&_cond, &_mutex))) {
+				case 0:
+					break;
+
+				default:
+					if((rc = pthread_mutex_unlock(&_mutex)) != 0) {
+						[NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
+					}
+					[NSException raise:NSInvalidArgumentException format:@"failed to lock %@ (errno: %d)", self, rc];
+			}
+
+		}
+
+		_lockingThread = [NSThread currentThread];
+	}
+
+	-(void) unlockWithCondition: (NSInteger) condition
+	{
+		if( _lockingThread != [NSThread currentThread] ) {
+			[NSException raise:NSInvalidArgumentException format:@"trying to unlock %@ from thread %@, was locked from %@", self, [NSThread currentThread], _lockingThread];
+		}
+
+		_lockingThread = nil;
+		_value = condition;
+		int rc;
+		if((rc = pthread_cond_broadcast(&_cond)) != 0) {
+			[NSException raise:NSInvalidArgumentException format:@"failed to broadcast %@ (errno: %d)", self, rc];
+		}
+		if((rc = pthread_mutex_unlock(&_mutex)) != 0) {
+	        [NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
+	    }
+	}
+
+	-(void) setName:(NSString *)newName {
+		_name = newName;
+	}
+
+	-(NSString *) name {
+		return _name;
+	}
+@end
