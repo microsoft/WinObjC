@@ -106,6 +106,8 @@ LIBRARY Foundation
 	 __objc_class_name_NSNumberFormatter	CONSTANT
      _OBJC_CLASS_NSHTTPCookie DATA
 	 __objc_class_name_NSHTTPCookie	CONSTANT
+     _OBJC_CLASS_NSHTTPURLResponse DATA
+	 __objc_class_name_NSHTTPURLResponse CONSTANT
      _OBJC_CLASS_NSLock DATA
 	 __objc_class_name_NSLock	CONSTANT
      _OBJC_CLASS_NSCondition DATA
