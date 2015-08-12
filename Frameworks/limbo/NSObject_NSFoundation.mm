@@ -245,16 +245,36 @@
         [self performSelector: selector onThread: [NSThread mainThread] withObject: obj waitUntilDone: wait modes: modes];
     }
 
+    -(void) performSelectorInBackground: (SEL) selector withObject: (id) obj {
+        [NSThread detachNewThreadSelector: selector toTarget: self withObject: obj];
+    }
+
+    +(void) performSelectorInBackground: (SEL) selector withObject: (id) obj {
+        [NSThread detachNewThreadSelector: selector toTarget: self withObject: obj];
+    }
+
     -(void) willChangeValueForKey:(NSString*)key {
     }
 
     -(void) didChangeValueForKey:(NSString*)key {
     }
 
-    - (id) performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)obj waitUntilDone:(BOOL)waitUntilDone modes:(id)modes {
-        id runloop = [thread _runLoop];
+    -(void) _performSelectorAndSignal: (NSArray *) args {
+        NSConditionLock *waitingLock = args[0];
+        SEL selector = NSSelectorFromString(args[1]);
+        id  object = (id) [args[2] pointerValue];
 
-        printf("performSelector %s on thread %x main %x wait=%d\n", sel_getName(selector), thread, [NSThread currentThread], waitUntilDone);
+        [waitingLock lockWhenCondition: 0];
+
+        [self performSelector: selector withObject: object];
+
+        [waitingLock unlockWithCondition: 1];
+        [args release];
+    }
+
+    - (void) performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)obj waitUntilDone:(BOOL)waitUntilDone modes:(id)modes {
+        NSRunLoop *runloop = [thread _runLoop];
+
         if ( waitUntilDone )
         {
             if ( thread == [NSThread currentThread] )
@@ -264,40 +284,31 @@
             {
                 if(!runloop)
                 {
-                    assert(0);
-                    //[NSException raise:NSInvalidArgumentException format:@"thread %@ has no runloop in %@", thread, NSStringFromSelector(_cmd)];
+                    [NSException raise:NSInvalidArgumentException format: @"Can't perform selector %@: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
                 }
 
-                assert(0);
-                /*
-                id waitingLock = _m(_m(NSConditionLock::_meta, "alloc"), "initWithCondition:", 0);
+                NSConditionLock *waitingLock = [[NSConditionLock alloc] initWithCondition: 0];
 
-                // array retain balanced in _performSelectorOnThreadHelper:
-                [runloop performSelector:@selector(_performSelectorOnThreadHelper) target:self argument:[NSArray arrayWithObjects:@[waitingLock, selector, [NSValue valueWithPointer:obj], nil]
-                    order:0 modes:modes]; 
+                [runloop performSelector:@selector(_performSelectorAndSignal:) target:self 
+                    argument: @[waitingLock, NSStringFromSelector(selector), [NSValue valueWithPointer:obj]]
+                    order:0 
+                    modes:modes];
 
                 [waitingLock lockWhenCondition:TRUE];
                 [waitingLock unlock];
                 [waitingLock release];
-                */
             }
         } else {
             if( runloop == nil ) {
-                assert(0);
-                //[NSException raise:NSInvalidArgumentException format:@"thread %@ has no runloop in %@", thread, NSStringFromSelector(_cmd)];
+                [NSException raise:NSInvalidArgumentException format: @"Can't perform selector %2: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
             }
 
             [runloop performSelector:selector target:self argument:obj order:0 modes:modes];
         }
-
-        return self;
     }
 
-    //performSelector:onThread:withObject:waitUntilDone:
-    - (id)performSelector: (SEL)selector onThread: (id) thread withObject: (id) obj waitUntilDone: (BOOL) wait {
+    - (void) performSelector: (SEL)selector onThread: (id) thread withObject: (id) obj waitUntilDone: (BOOL) wait {
         [self performSelector:selector onThread:thread withObject:obj waitUntilDone:wait modes:[NSArray arrayWithObject:@"kCFRunLoopDefaultMode"]];
-
-        //return [self performSelector:selector withObject:obj];
     }
 
     +(void) _delayedPerform: (NSTimer *) timer
@@ -366,6 +377,11 @@
     }
 
     +(NSString *) description
+    {
+        return NSStringFromClass([self class]);
+    }
+
+    -(NSString *) description
     {
         return NSStringFromClass([self class]);
     }
