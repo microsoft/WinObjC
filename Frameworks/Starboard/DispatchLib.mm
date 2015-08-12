@@ -316,7 +316,9 @@ void dispatch_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block
 
     if ( queue == (dispatch_queue_t) &_dispatch_main_q ) {
         double delay = (*((double *) &when)) - EbrGetMediaTime();
-        [block performSelector:@selector(invoke) withObject:nil afterDelay:delay];
+        id copy = [block copy];
+        [copy performSelector:@selector(invoke) withObject:nil afterDelay:delay];
+        [copy release];
         return;
     }
 
