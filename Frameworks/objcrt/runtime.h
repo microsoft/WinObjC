@@ -214,10 +214,12 @@ extern OBJCRT_EXPORT Method *class_copyMethodList(Class classRef, unsigned int *
 extern OBJCRT_EXPORT IMP class_getMethodImplementation(Class, SEL);
 extern OBJCRT_EXPORT IMP class_replaceMethod(Class, SEL, IMP, const char*);
 extern OBJCRT_EXPORT Ivar class_getInstanceVariable(Class cls, const char *name);
+extern OBJCRT_EXPORT Method class_getInstanceMethod(Class cls, SEL name);
 
 extern OBJCRT_EXPORT SEL method_getName(Method m);
 extern OBJCRT_EXPORT char *method_copyReturnType(Method m);
 extern OBJCRT_EXPORT unsigned int method_getNumberOfArguments(Method m);
+extern OBJCRT_EXPORT void method_exchangeImplementations(Method m1, Method m2);
 
 extern OBJCRT_EXPORT ptrdiff_t ivar_getOffset(Ivar ivar);
 extern OBJCRT_EXPORT const char* objc_get_type_encoding(Class, SEL);
