@@ -2155,15 +2155,6 @@ void UITableViewPriv::removeReusableCell(ReusableCell *cell)
         [super dealloc];
     }
 
-    -(instancetype) retain {
-        return [super retain];
-    }
-
-    -(void) release {
-        EbrDebugLog("%x: Table view release count: %d\n", self, CFGetRetainCount(self));
-        [super release];
-    }
-
     -(UITableViewStyle) style {
         return tablePriv->_style;
     }
