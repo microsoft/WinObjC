@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 import os
+import platform
+import shutil
 
 f = os.path.abspath(__file__) 
 scripts_dir = os.path.split(f)[0]
@@ -12,5 +14,9 @@ if os.path.islink(pre_commit_hook_dst) or os.path.isfile(pre_commit_hook_dst):
     os.remove(pre_commit_hook_dst)
     
 pre_commit_hook_src = os.path.join(scripts_dir,   'pre_commit.py')
-os.symlink(pre_commit_hook_src, pre_commit_hook_dst)
-print 'Installed git hook into', pre_commit_hook_dst, '~>', pre_commit_hook_src
+if platform.system() == 'Windows':
+	shutil.copy(pre_commit_hook_src, pre_commit_hook_dst)
+	print 'Installed git hook into', pre_commit_hook_dst
+else:
+	os.symlink(pre_commit_hook_src, pre_commit_hook_dst)
+	print 'Installed git hook into', pre_commit_hook_dst, '~>', pre_commit_hook_src
