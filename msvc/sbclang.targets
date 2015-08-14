@@ -286,7 +286,6 @@
 
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
 	<PropertyGroup>
-	  <StarboardRuntimeLib Condition="'$(AppContainerApplication)' == ''">StarboardWin32.lib</StarboardRuntimeLib>
 	  <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
 	  <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
 	</PropertyGroup>
