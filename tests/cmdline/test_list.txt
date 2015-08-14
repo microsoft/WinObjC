@@ -1,0 +1,4 @@
+# Test name             Source files
+
+objcrt_sanity           test_src\objcrt_sanity.m
+foundation              test_src\foundation.m
