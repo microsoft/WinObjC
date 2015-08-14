@@ -11,10 +11,31 @@ import os
 import tempfile
 import platform
 
-binary_name = 'clang-format'
+is_windows = False
 if platform.system() == 'Windows':
+    is_windows = True
+
+# Check whether line ending is to be fixed on Windows manually as apparently Python's universal newlines, i.e. 'rU' mode for open(), does not work
+needs_line_edings_fix = False
+if is_windows:
+    key_value_match = re.compile(r'^\s*(.+?)\s*=\s*(.+?)\s*$')
+    p = subprocess.Popen(['git', 'config', '--list'], stdout=subprocess.PIPE, stderr=None)
+    stdout, stderr = p.communicate()
+    if p.returncode == 0:
+        lines = StringIO.StringIO(stdout).readlines()
+        for line in lines:
+            mo = key_value_match.search(line)
+            if mo:
+                key = mo.group(1)
+                if key != 'core.autocrlf':
+                    continue
+                value = mo.group(2)
+                if value == 'true':
+                    needs_line_edings_fix = True
+
+binary_name = 'clang-format'
+if is_windows:
     binary_name = 'clang-format.exe'
-    
 binary = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'bin', binary_name))
 patch_prefix = 'com.microsoft.WinObjC.codestyle.'
 patch_suffix = '.patch'
@@ -70,10 +91,19 @@ def main():
         stdout, stderr = p.communicate()
         if p.returncode != 0:
             sys.exit(p.returncode)
-        
+
         with open(filename) as f:
             code = f.readlines()
+
+        if needs_line_edings_fix:
+            code_with_fixed_ending = []
+            for code_line in code:
+                code_line_with_fixed_ending = code_line.replace('\n', '\r\n')
+                code_with_fixed_ending.append(code_line_with_fixed_ending)
+            code = code_with_fixed_ending
+
         formatted_code = StringIO.StringIO(stdout).readlines()
+
         diff = difflib.unified_diff(code, formatted_code, filename, filename, '(before formatting)', '(after formatting)')
         diff_string = string.join(diff, '')
         if len(diff_string) > 0:
