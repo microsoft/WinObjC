@@ -16,7 +16,7 @@ if platform.system() == 'Windows':
     is_windows = True
 
 # Check whether line ending is to be fixed on Windows manually as apparently Python's universal newlines, i.e. 'rU' mode for open(), does not work
-needs_line_edings_fix = False
+needs_line_endings_fix = False
 if is_windows:
     key_value_match = re.compile(r'^\s*(.+?)\s*=\s*(.+?)\s*$')
     p = subprocess.Popen(['git', 'config', '--list'], stdout=subprocess.PIPE, stderr=None)
@@ -31,7 +31,7 @@ if is_windows:
                     continue
                 value = mo.group(2)
                 if value == 'true':
-                    needs_line_edings_fix = True
+                    needs_line_endings_fix = True
 
 binary_name = 'clang-format'
 if is_windows:
@@ -95,7 +95,7 @@ def main():
         with open(filename) as f:
             code = f.readlines()
 
-        if needs_line_edings_fix:
+        if needs_line_endings_fix:
             code_with_fixed_ending = []
             for code_line in code:
                 code_line_with_fixed_ending = code_line.replace('\n', '\r\n')
