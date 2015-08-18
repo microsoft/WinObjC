@@ -24,7 +24,7 @@
 #define USE_OLD_DISPATCH
 
 struct EbrTimeval {
-     unsigned int tv_sec;   /* seconds since Jan. 1, 1970 */
+     unsigned __int64 tv_sec;   /* seconds since Jan. 1, 1970 */
      unsigned int tv_usec;  /* and microseconds */
 };
 
