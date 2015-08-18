@@ -377,7 +377,7 @@ namespace ClangCompile
 
         string DecorateFile(string path, string extension)
         {
-            return Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "_" + Path.GetFullPath(path).GetHashCode().ToString("X") + extension;
+            return Path.GetFileNameWithoutExtension(path) + "_" + Path.GetFullPath(path).GetHashCode().ToString("X") + extension;
         }
 
         string GetSpecial(string name, object value, ITaskItem input)
@@ -406,7 +406,7 @@ namespace ClangCompile
             {
                 if (value.ToString().Last() == '\\' || value.ToString().Last() == '/')
                 {
-                    return DecorateFile(value + Path.GetFileName(input.ItemSpec), ".obj");
+                    return value + DecorateFile(input.ItemSpec, ".obj");
                 }
             }
             else if (name == "input")
