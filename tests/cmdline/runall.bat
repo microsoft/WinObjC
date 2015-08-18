@@ -13,7 +13,11 @@ FOR /F "tokens=1 eol=#" %%t IN (test_list.txt) DO (
     echo |set /p=!CURTEST! 
     echo. >> test_results.txt 
     echo =========^> Running !CURTEST! >> test_results.txt 
-    IF NOT EXIST bin\!CURTEST!.exe goto error
+    IF NOT EXIST bin\!CURTEST!.exe (
+        echo Can't find bin\!CURTEST!.exe
+        SET PASSED=FALSE
+        goto error
+    )
     bin\!CURTEST!.exe >> test_results.txt 2>&1
     IF NOT !ERRORLEVEL!==0 (
         SET RESULT=FAILED err=!ERRORLEVEL!
@@ -26,6 +30,7 @@ FOR /F "tokens=1 eol=#" %%t IN (test_list.txt) DO (
     
     echo !RESULT!
 )
+:error
 IF "%PASSED%"=="TRUE" goto passed
 echo.
 echo One or more tests FAILED

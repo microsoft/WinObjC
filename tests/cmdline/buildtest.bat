@@ -1,5 +1,5 @@
 @echo off
-SET LIBS=objcrt.lib;Starboard.lib;Foundation.lib;CoreFoundation.lib
+SET LIBS=objcrt.lib;Starboard.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;libdispatch.lib
 SET TESTNAME=%1
 
 SHIFT
