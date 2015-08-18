@@ -17,15 +17,39 @@
 #import <CoreFoundation/CoreFoundation.h>
 #include <Windows.h>
 
+#include <Windows.Foundation.h>
+#include <Windows.Security.Cryptography.h>
+#include <wrl\wrappers\corewrappers.h>
+#undef interface
+
+#include <Starboard.h>
+
 #ifndef __ISLANDWOOD_COMPAT
 #include <sys/types.h>
 #endif
 
+using namespace ABI::Windows::Foundation;
+using namespace Microsoft::WRL;
+using namespace Microsoft::WRL::Wrappers;
+
 extern "C" void *_OBJC_CLASS_CFConstantString = NULL;
+static ABI::Windows::Security::Cryptography::ICryptographicBufferStatics* bufferStatics = nullptr;
 
 COREFOUNDATION_EXPORT extern "C" uint32_t arc4random()
 {
-    return (rand() | (rand() << 16) ^ (rand() << 1) ^ (rand() << 17));
+    if (bufferStatics == nullptr) {
+        if (!SUCCEEDED(GetActivationFactory(HStringReference(L"Windows.Security.Cryptography.CryptographicBuffer").Get(), &bufferStatics))) {
+            EbrDebugLog("Unable to get CryptographicBuffer interface!\n");
+        }
+    }
+
+    UINT32 randResult = 0;
+    if(!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
+        EbrDebugLog("Unable to get random number!\n");
+    }
+    return randResult;
+
+    return (uint32_t)randResult;
 }
 
 COREFOUNDATION_EXPORT extern "C" int usleep(long secs)
