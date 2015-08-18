@@ -37,9 +37,11 @@
 #include <time.h>
 #include <sys/_types.h>
 
-struct timespec {
-    time_t  tv_sec;     /* seconds */
-    long    tv_nsec;    /* and nanoseconds */
-};
+__if_not_exists(timespec) {
+	struct timespec {
+		time_t  tv_sec;     /* seconds */
+		long    tv_nsec;    /* and nanoseconds */
+	};
+}
 
 #endif /* !_SYS__TIMESPEC_H_ */
