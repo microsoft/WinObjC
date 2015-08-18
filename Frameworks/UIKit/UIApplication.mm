@@ -199,7 +199,7 @@ static idretaintype(NSMutableArray) _curNotifications;
         g_NewMouseEvent = (EbrEvent) [newMouseEvent eventHandle];
 
         shutdownEvent = [NSRunLoopSource new];
-        [shutdownEvent setSourceDelegate:sharedApplication selector:@selector(_shutdownEvent)];
+        [shutdownEvent setSourceDelegate:[UIApplication class] selector:@selector(_shutdownEvent)];
         g_shutdownEvent = (EbrEvent) [shutdownEvent eventHandle];
 
         [[NSRunLoop mainRunLoop] addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
@@ -705,7 +705,7 @@ static idretaintype(NSMutableArray) _curNotifications;
         }
     }
 
-    -(void) _shutdownEvent {
+    +(void) _shutdownEvent {
         _doShutdown = TRUE;
         [[NSRunLoop mainRunLoop] _stop];
     }
@@ -2034,7 +2034,7 @@ void UIRequestTransactionProcessing()
 
 void UIShutdown()
 {
-    [[UIApplication sharedApplication] _shutdownEvent];
+    [UIApplication _shutdownEvent];
     [[NSRunLoop mainRunLoop] _wakeUp];
 }
 

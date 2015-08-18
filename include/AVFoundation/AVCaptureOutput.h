@@ -17,6 +17,8 @@
 #ifndef _AVCAPTUREOUTPUT_H_
 #define _AVCAPTUREOUTPUT_H_
 
+#include <dispatch/dispatch.h>
+
 @protocol AVCaptureVideoDataOutputSampleBufferDelegate <NSObject>
 @end
 

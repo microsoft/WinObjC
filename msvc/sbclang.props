@@ -4,7 +4,7 @@
     <IWCompat Condition="'$(IWCompat)' == ''">true</IWCompat>
     <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM-3.6.0\</StarboardLLVMDirectory>
-    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$(StarboardSdkRoot)\include\Platform\$(TargetOsAndVersion)"</StarboardIncludes>
+    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
     <ExtraStarboardOptions>-fconst-strings -fconstant-string-class CFConstantString -fblocks $(StarboardIncludes)</ExtraStarboardOptions>
     <ExtraStarboardOptions Condition="'$(ApplicationTypeRevision)'=='10.0'">$(ExtraStarboardOptions) -fmsvc-real-char</ExtraStarboardOptions>
   </PropertyGroup>
@@ -48,7 +48,7 @@
     <StarboardLibDirs Condition="'$(StarboardLibDirs)' == ''">$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
     <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
     <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
-    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
     <IWCompat Condition="'$(IWCompat)' == ''">true</IWCompat>
   </PropertyGroup>

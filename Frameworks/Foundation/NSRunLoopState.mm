@@ -17,6 +17,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "NSRunLoopSource.h"
 #include "NSDelayedPerform.h"
 #include "NSSelectInputSource.h"
+#include "dispatch/dispatch.h"
+#include "sys/timespec.h"
 
 int (*UIEventTimedMultipleWaitCallback)(EbrEvent *events, int numEvents, double timeout, SocketWait *sockets) = EbrEventTimedMultipleWait;
 
@@ -96,6 +98,18 @@ int dumb_socketpair(SOCKET socks[2], int make_overlapped)
     closesocket(socks[1]);
     WSASetLastError(e);
     return SOCKET_ERROR;
+}
+
+bool GetMainDispatchTimerTimeout(double *val)
+{
+	struct timespec timespec = { 0 };
+
+	if ( dispatch_get_next_timer_fire(&timespec) != NULL ) {
+		*val = timespec.tv_sec * 1.0 + timespec.tv_nsec / 1000000000.0;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 @implementation NSRunLoopState : NSObject
@@ -397,6 +411,14 @@ int dumb_socketpair(SOCKET socks[2], int make_overlapped)
         }
 
         double timeout = [date timeIntervalSinceNow];
+		double nextDispatchTimer;
+		
+        if ( [NSThread currentThread] == [NSThread mainThread] ) {      
+			//  Wake up early to service any dispatch timers
+			if ( GetMainDispatchTimerTimeout(&nextDispatchTimer) ) {
+				timeout = nextDispatchTimer;
+			}
+		}
         if ( timeout > 60 * 60 * 24 ) timeout = 60 * 60 * 24;
         if ( timeout < 0 ) timeout = 0;
         if ( timeout > 0 ) {

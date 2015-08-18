@@ -20,6 +20,7 @@
 #ifndef __ISLANDWOOD_COMPAT
 #include <sys/types.h>
 #endif
+#include <unistd.h>
 
 extern "C" void *_OBJC_CLASS_CFConstantString = NULL;
 
@@ -28,7 +29,13 @@ COREFOUNDATION_EXPORT extern "C" uint32_t arc4random()
     return (rand() | (rand() << 16) ^ (rand() << 1) ^ (rand() << 17));
 }
 
-COREFOUNDATION_EXPORT extern "C" int usleep(long secs)
+COREFOUNDATION_EXPORT extern "C" int usleep(useconds_t secs)
+{
+    Sleep(secs * 1000);
+    return 0;
+}
+
+COREFOUNDATION_EXPORT extern "C" unsigned int sleep(useconds_t secs)
 {
     Sleep(secs * 1000);
     return 0;

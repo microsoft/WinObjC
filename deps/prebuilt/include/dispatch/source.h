@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2008-2011 Apple Inc. All rights reserved.
+ * Copyright (c) 2008-2009 Apple Inc. All rights reserved.
  *
  * @APPLE_APACHE_LICENSE_HEADER_START@
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  * @APPLE_APACHE_LICENSE_HEADER_END@
  */
 
@@ -30,7 +30,10 @@
 #include <mach/port.h>
 #include <mach/message.h>
 #endif
-//#include <sys/signal.h>
+
+#ifndef _MSC_VER
+#include <sys/signal.h>
+#endif
 
 /*!
  * @header
@@ -50,6 +53,8 @@
  * dispatch queues in response to external events.
  */
 DISPATCH_DECL(dispatch_source);
+
+__DISPATCH_BEGIN_DECLS
 
 /*!
  * @typedef dispatch_source_type_t
@@ -125,6 +130,16 @@ DISPATCH_EXPORT
 const struct dispatch_source_type_s _dispatch_source_type_proc;
 
 /*!
+ * @const DISPATCH_SOURCE_TYPE_OIO
+ * @discussion A dispatch source that receives overlapped I/O events
+ * The handle is a Win32 HANDLE in overlapped mode.
+ * The mask is unused (pass zero for now).
+ */
+#define DISPATCH_SOURCE_TYPE_OIO (&_dispatch_source_type_oio)
+DISPATCH_EXPORT
+const struct dispatch_source_type_s _dispatch_source_type_oio;
+
+/*!
  * @const DISPATCH_SOURCE_TYPE_READ
  * @discussion A dispatch source that monitors a file descriptor for pending
  * bytes available to be read.
@@ -184,19 +199,17 @@ DISPATCH_EXPORT
 const struct dispatch_source_type_s _dispatch_source_type_write;
 
 /*!
- * @typedef dispatch_source_mach_send_flags_t
- * Type of dispatch_source_mach_send flags
+ * @enum dispatch_source_mach_send_flags_t
  *
  * @constant DISPATCH_MACH_SEND_DEAD
  * The receive right corresponding to the given send right was destroyed.
  */
-#define DISPATCH_MACH_SEND_DEAD 0x1
-
-typedef unsigned long dispatch_source_mach_send_flags_t;
+enum {
+	DISPATCH_MACH_SEND_DEAD = 0x1,
+};
 
 /*!
- * @typedef dispatch_source_proc_flags_t
- * Type of dispatch_source_proc flags
+ * @enum dispatch_source_proc_flags_t
  *
  * @constant DISPATCH_PROC_EXIT
  * The process has exited (perhaps cleanly, perhaps not).
@@ -211,16 +224,15 @@ typedef unsigned long dispatch_source_mach_send_flags_t;
  * @constant DISPATCH_PROC_SIGNAL
  * A Unix signal was delivered to the process.
  */
-#define DISPATCH_PROC_EXIT      0x80000000
-#define DISPATCH_PROC_FORK      0x40000000
-#define DISPATCH_PROC_EXEC      0x20000000
-#define DISPATCH_PROC_SIGNAL    0x08000000
-
-typedef unsigned long dispatch_source_proc_flags_t;
+enum : unsigned __int64 {
+	DISPATCH_PROC_EXIT = 0x80000000,
+	DISPATCH_PROC_FORK = 0x40000000,
+	DISPATCH_PROC_EXEC = 0x20000000,
+	DISPATCH_PROC_SIGNAL = 0x08000000,
+};
 
 /*!
- * @typedef dispatch_source_vnode_flags_t
- * Type of dispatch_source_vnode flags
+ * @enum dispatch_source_vnode_flags_t
  *
  * @constant DISPATCH_VNODE_DELETE
  * The filesystem object was deleted from the namespace.
@@ -243,18 +255,15 @@ typedef unsigned long dispatch_source_proc_flags_t;
  * @constant DISPATCH_VNODE_REVOKE
  * The filesystem object was revoked.
  */
-
-#define DISPATCH_VNODE_DELETE   0x1
-#define DISPATCH_VNODE_WRITE    0x2
-#define DISPATCH_VNODE_EXTEND   0x4
-#define DISPATCH_VNODE_ATTRIB   0x8
-#define DISPATCH_VNODE_LINK     0x10
-#define DISPATCH_VNODE_RENAME   0x20
-#define DISPATCH_VNODE_REVOKE   0x40
-
-typedef unsigned long dispatch_source_vnode_flags_t;
-
-__BEGIN_DECLS
+enum {
+	DISPATCH_VNODE_DELETE = 0x1,
+	DISPATCH_VNODE_WRITE = 0x2,
+	DISPATCH_VNODE_EXTEND = 0x4,
+	DISPATCH_VNODE_ATTRIB = 0x8,
+	DISPATCH_VNODE_LINK	= 0x10,
+	DISPATCH_VNODE_RENAME = 0x20,
+	DISPATCH_VNODE_REVOKE = 0x40,
+};
 
 /*!
  * @function dispatch_source_create
@@ -283,18 +292,15 @@ __BEGIN_DECLS
  * A mask of flags specifying which events are desired. The interpretation of
  * this argument is determined by the constant provided in the type parameter.
  * @param queue
- * The dispatch queue to which the event handler block will be submitted.
- * If queue is DISPATCH_TARGET_QUEUE_DEFAULT, the source will submit the event
- * handler block to the default priority global queue.
+ * The dispatch queue to which the event handler block will be submited.
  */
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_MALLOC DISPATCH_RETURNS_RETAINED DISPATCH_WARN_RESULT
-DISPATCH_NOTHROW
+DISPATCH_EXPORT DISPATCH_MALLOC DISPATCH_NOTHROW
 dispatch_source_t
 dispatch_source_create(dispatch_source_type_t type,
-    uintptr_t handle,
-    unsigned long mask,
-    dispatch_queue_t queue);
+	uintptr_t handle,
+	uintptr_t mask,
+	dispatch_queue_t queue);
 
 /*!
  * @function dispatch_source_set_event_handler
@@ -305,7 +311,7 @@ dispatch_source_create(dispatch_source_type_t type,
  * @param source
  * The dispatch source to modify.
  * The result of passing NULL in this parameter is undefined.
- *
+ * 
  * @param handler
  * The event handler block to submit to the source's target queue.
  */
@@ -314,7 +320,7 @@ __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
 void
 dispatch_source_set_event_handler(dispatch_source_t source,
-    dispatch_block_t handler);
+	dispatch_block_t handler);
 #endif /* __BLOCKS__ */
 
 /*!
@@ -337,7 +343,7 @@ __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
 void
 dispatch_source_set_event_handler_f(dispatch_source_t source,
-    dispatch_function_t handler);
+	dispatch_function_t handler);
 
 /*!
  * @function dispatch_source_set_cancel_handler
@@ -362,7 +368,7 @@ dispatch_source_set_event_handler_f(dispatch_source_t source,
  * @param source
  * The dispatch source to modify.
  * The result of passing NULL in this parameter is undefined.
- *
+ * 
  * @param handler
  * The cancellation handler block to submit to the source's target queue.
  */
@@ -371,7 +377,7 @@ __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
 void
 dispatch_source_set_cancel_handler(dispatch_source_t source,
-    dispatch_block_t cancel_handler);
+	dispatch_block_t cancel_handler);
 #endif /* __BLOCKS__ */
 
 /*!
@@ -396,7 +402,7 @@ __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
 void
 dispatch_source_set_cancel_handler_f(dispatch_source_t source,
-    dispatch_function_t cancel_handler);
+	dispatch_function_t cancel_handler);
 
 /*!
  * @function dispatch_source_cancel
@@ -439,8 +445,7 @@ dispatch_source_cancel(dispatch_source_t source);
  * Non-zero if canceled and zero if not canceled.
  */
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE
-DISPATCH_NOTHROW
+DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 long
 dispatch_source_testcancel(dispatch_source_t source);
 
@@ -463,14 +468,13 @@ dispatch_source_testcancel(dispatch_source_t source);
  *  DISPATCH_SOURCE_TYPE_MACH_RECV:       mach port (mach_port_t)
  *  DISPATCH_SOURCE_TYPE_PROC:            process identifier (pid_t)
  *  DISPATCH_SOURCE_TYPE_READ:            file descriptor (int)
- *  DISPATCH_SOURCE_TYPE_SIGNAL:          signal number (int)
+ *  DISPATCH_SOURCE_TYPE_SIGNAL:          signal number (int) 
  *  DISPATCH_SOURCE_TYPE_TIMER:           n/a
  *  DISPATCH_SOURCE_TYPE_VNODE:           file descriptor (int)
  *  DISPATCH_SOURCE_TYPE_WRITE:           file descriptor (int)
  */
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE
-DISPATCH_NOTHROW
+DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE DISPATCH_NOTHROW
 uintptr_t
 dispatch_source_get_handle(dispatch_source_t source);
 
@@ -499,9 +503,8 @@ dispatch_source_get_handle(dispatch_source_t source);
  *  DISPATCH_SOURCE_TYPE_WRITE:           n/a
  */
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE
-DISPATCH_NOTHROW
-unsigned long
+DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE DISPATCH_NOTHROW
+uintptr_t
 dispatch_source_get_mask(dispatch_source_t source);
 
 /*!
@@ -536,9 +539,8 @@ dispatch_source_get_mask(dispatch_source_t source);
  *  DISPATCH_SOURCE_TYPE_WRITE:           estimated buffer space available
  */
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
-DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE
-DISPATCH_NOTHROW
-unsigned long
+DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_WARN_RESULT DISPATCH_PURE DISPATCH_NOTHROW
+uintptr_t
 dispatch_source_get_data(dispatch_source_t source);
 
 /*!
@@ -560,7 +562,7 @@ dispatch_source_get_data(dispatch_source_t source);
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 void
-dispatch_source_merge_data(dispatch_source_t source, unsigned long value);
+dispatch_source_merge_data(dispatch_source_t source, uintptr_t value);
 
 /*!
  * @function dispatch_source_set_timer
@@ -570,15 +572,14 @@ dispatch_source_merge_data(dispatch_source_t source, unsigned long value);
  *
  * @discussion
  * Calling this function has no effect if the timer source has already been
- * canceled. Once this function returns, any pending timer data accumulated
- * for the previous timer values has been cleared
- *
+ * canceled.
+ * 
  * The start time argument also determines which clock will be used for the
  * timer. If the start time is DISPATCH_TIME_NOW or created with
  * dispatch_time() then the timer is based on mach_absolute_time(). Otherwise,
  * if the start time of the timer is created with dispatch_walltime() then the
  * timer is based on gettimeofday(3).
- *
+ * 
  * @param start
  * The start time of the timer. See dispatch_time() and dispatch_walltime()
  * for more information.
@@ -598,63 +599,10 @@ __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_4_0)
 DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 void
 dispatch_source_set_timer(dispatch_source_t source,
-    dispatch_time_t start,
-    uint64_t interval,
-    uint64_t leeway);
+	dispatch_time_t start,
+	uint64_t interval,
+	uint64_t leeway);
 
-/*!
- * @function dispatch_source_set_registration_handler
- *
- * @abstract
- * Sets the registration handler block for the given dispatch source.
- *
- * @discussion
- * The registration handler (if specified) will be submitted to the source's
- * target queue once the corresponding kevent() has been registered with the
- * system, following the initial dispatch_resume() of the source.
- *
- * If a source is already registered when the registration handler is set, the
- * registration handler will be invoked immediately.
- *
- * @param source
- * The dispatch source to modify.
- * The result of passing NULL in this parameter is undefined.
- *
- * @param handler
- * The registration handler block to submit to the source's target queue.
- */
-#ifdef __BLOCKS__
-__OSX_AVAILABLE_STARTING(__MAC_10_7,__IPHONE_4_3)
-DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
-void
-dispatch_source_set_registration_handler(dispatch_source_t source,
-    dispatch_block_t registration_handler);
-#endif /* __BLOCKS__ */
-
-/*!
- * @function dispatch_source_set_registration_handler_f
- *
- * @abstract
- * Sets the registration handler function for the given dispatch source.
- *
- * @discussion
- * See dispatch_source_set_registration_handler() for more details.
- *
- * @param source
- * The dispatch source to modify.
- * The result of passing NULL in this parameter is undefined.
- *
- * @param handler
- * The registration handler function to submit to the source's target queue.
- * The context parameter passed to the registration handler function is the
- * current context of the dispatch source at the time the handler call is made.
- */
-__OSX_AVAILABLE_STARTING(__MAC_10_7,__IPHONE_4_3)
-DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NOTHROW
-void
-dispatch_source_set_registration_handler_f(dispatch_source_t source,
-    dispatch_function_t registration_handler);
-
-__END_DECLS
+__DISPATCH_END_DECLS
 
 #endif
