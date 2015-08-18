@@ -1,0 +1,38 @@
+// !$*UTF8*$!
+{
+	build = libdispatch;
+	inherits = 10C540;
+	projects = {
+		libdispatch = {
+			branch = "/trunk";
+			dependencies = {
+				build = (
+					bootstrap_cmds,
+					cctools,
+					file_cmds,
+					gcc,
+					gcc_select,
+					shell_cmds,
+					system_cmds,
+					text_cmds,
+				);
+				lib = (
+					ICU,
+					Libsystem,
+					xnu,
+				);
+				header = (
+					CarbonHeaders,
+					Libc_headers,
+					Libsyscall,
+					libclosure,
+				);
+			};
+			source_sites = (
+				"http://svn.macosforge.org/repository/libdispatch/",
+			);
+			version = 1;
+		};
+	};
+}
+

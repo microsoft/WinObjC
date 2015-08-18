@@ -1,0 +1,96 @@
+Grand Central Dispatch (GCD)
+
+GCD is a concurrent programming framework first shipped with Mac OS X Snow
+Leopard.  This package is an open source bundling of libdispatch, the core
+user space library implementing GCD.  At the time of writing, support for
+the BSD kqueue API, and specifically extensions introduced in Mac OS X Snow
+Leopard and FreeBSD 9-CURRENT, are required to use libdispatch.  Other
+systems are currently unsupported.
+
+  Configuring and installing libdispatch
+
+GCD is built using autoconf, automake, and libtool, and has a number of
+compile-time configuration options that should be reviewed before starting.
+An uncustomized install requires:
+
+	./configure
+	make
+	make install
+
+The following configure options may be of general interest:
+
+--with-apple-libc-source
+
+	Specify the path to Apple's Libc package, so that appropriate headers
+	can be found and used.
+
+--with-apple-xnu-source
+
+	Specify the path to Apple's XNU package, so that appropriate headers
+	can be found and used.
+
+--with-blocks-runtime
+
+	On systems where -fblocks is supported, specify an additional library
+	path in which libBlocksRuntime can be found.  This is not required on
+	Mac OS X, where the Blocks runtime is included in libSystem, but is
+	required on FreeBSD.
+
+Some sites will wish to build using a non-default C compiler; for example,
+this is desirable on FreeBSD so that libdispatch is built with clang and
+blocks support.  A typically FreeBSD configuration will use:
+
+	CC=clang ./configure --with-blocks-runtime=/usr/local/lib
+	make
+	make install
+
+The following options are likely only to be required if building libdispatch
+as part of Mac OS X's libSystem:
+
+--enable-legacy-api
+
+	Enable a legacy (deprecated) API used by some early GCD applications.
+
+--disable-libdispatch-init-constructor
+
+	Do not tag libdispatch's init routine as __constructor, in which case
+	it must be run manually before libdispatch routines can be called.
+	For the libdispatch code compiled directly into libSystem, the init
+	routine is called automatically during process start.
+
+--enable-apple-crashreporter-info
+
+	Set global variables during a libdispatch crash to provide additional
+	debugging information for CrashReporter.
+
+--enable-apple-tsd-optimizations
+
+	Use a non-portable allocation scheme for pthread per-thread data
+	(TSD) keys when built into libSystem on Mac OS X.  This should not be
+	used on other OS's, nor on Mac OS X when building as a stand-alone
+	library.
+
+--enable-apple-semaphore-optimizations
+
+	libdispatch contains hand-optimized assembly for use with libdispatch
+	semaphores.
+
+  Typical configuration commands
+
+The following command lines create the default config.h required to build
+libdispatch with libSystem in Mac OS X Snow Leopard:
+
+	sh autogen.sh
+	./configure \
+	    --with-apple-libc-source=/path/to/10.6.0/Libc-583 \
+	    --with-apple-xnu-source=/path/to/10.6.0/xnu-1456.1.26 \
+	    --enable-legacy-api \
+	    --disable-libdispatch-init-constructor \
+	    --enable-apple-crashreporter-info \
+	    --enable-apple-tsd-optimizations \
+	    --enable-apple-semaphore-optimizations
+
+Typical configuration line for FreeBSD 8.x and 9.x:
+
+	sh autogen.sh
+	CC=clang ./configure --with-blocks-runtime=/usr/local/lib
