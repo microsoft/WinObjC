@@ -18,25 +18,9 @@
 
 #include "Hash.h"
 
-//#define USE_CONTEXT_MANAGER
-
-class EbrFastTexture;
-class DisplayTextureKHRDoubleBuffered;
-
-#ifdef WIN32
-extern HDC          hdcDisplay;
-#endif
-
-extern pthread_t global_currentOwner;
-extern EbrLock global_contextLock;
-
-void lockGlobalContext();
-void unlockGlobalContext();
-
 struct threadGLContext
 {
     id curEAGLContext;
-    bool didRelinquish;
 };
 
 extern __declspec(thread) threadGLContext *tlsCurContext;
@@ -44,12 +28,6 @@ class ContextManager
 {
 public:
     void setContext(id ctx, bool doRef = true);
-    DWORD emuTexToGL(DWORD emuTex);
-    DWORD glTexToEmu(DWORD glTex);
-
-    DWORD genTexture();
-    void removeTexture(DWORD emuTex);
-
     EAGLContext *getEAGLContext();
 
     bool lockContext();
@@ -62,20 +40,21 @@ namespace OpenGLES
     class OpenGLESContext;
 }
 
+class DisplayTextureD3D;
+
 struct EAGLContextPrivateData
 {
     int         contextHandle;
     EbrLock     contextLock;
 
     CAEAGLLayer* presentationLayer;
+	DisplayTextureD3D* _d3dSurface;
     GLuint      texNum;
     id sharedContext;
     id          _sharegroup;
     bool        _opaque;
     int         _curRenderbufferBinding;        //  Some gpus don't seem to support glGetInteger(GL_(RENDERBUFFER|FRAMEBUFFER)_BINDING_OES)
     int         _curFramebufferBinding;
-
-    DisplayTexture *_drawingOutputTexture;
 
     GLuint      _drawRenderbuffer, _flipRenderbuffer, _curRenderbufferTarget;
     GLuint      _deleteRenderbuffer;

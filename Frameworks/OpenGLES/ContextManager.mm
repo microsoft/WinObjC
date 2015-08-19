@@ -28,54 +28,141 @@
 #include "Etc.h"
 #include "CACompositor.h"
 #include <d3d11_1.h>
+#include <d3d11.h>
+#include <Dxgi1_3.h>
 
 #include "GLES1122/OpenGLES20/OpenGLES20Context.h"
 
 __declspec(thread) threadGLContext *tlsCurContext;
-
 ContextManager  ctxManager;
 
-pthread_t       global_currentOwner;
-EbrLock         global_contextLock = EBRLOCK_INITIALIZE;
-
-extern bool g_useKHRRenderbuffers;
 extern EbrComPtr<ID3D11Device1> m_AngleD3dDevice;
 extern EbrComPtr<ID3D11DeviceContext1> m_AngleD3dContext;
 
-void LoadFunc(char *name, void *funcAddr); // TODO: hack.
-#define LOAD_FUNC(x) LoadFunc(#x, (void *) &x)
-
-void lockGlobalContext()
+class DisplayTextureD3D
 {
-    EbrLockEnter(global_contextLock);
+private:
+    ID3D11Device1 *_device;
+    ID3D11DeviceContext1 *_context;
+    int _width, _height;
+
+    EbrComPtr<IDXGIAdapter> dxgiAdapter;
+    EbrComPtr<IDXGIFactory2> dxgiFactory;
+    EbrComPtr<ID3D11RenderTargetView> _renderTargetView;
+
+    HANDLE m_hRenderTargetHandle;
+    EbrComPtr<IDXGIKeyedMutex> m_renderTargetMutex;
+    EbrComPtr<ID3D11Texture2D> m_sharedTargetTexture;
+    EbrComPtr<ID3D11Texture2D> m_masterTexture;
+    EbrComPtr<IDXGIKeyedMutex> m_sharedTargetMutex;
+    bool locked;
+
+public:
+    EbrComPtr<IDXGISwapChain1>  m_swapChain;
+
+    ~DisplayTextureD3D()
+    {
+        locked = false;
+        _device->Release();
+        _context->Release();
+        m_renderTargetMutex->ReleaseSync(0);
+    }
+
+    DisplayTextureD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *tex, int width, int height)
+    {
+        _width = width;
+        _height = height;
+        _device = device;
+        _device->AddRef();
+        _context = context;
+        _context->AddRef();
+
+        m_masterTexture = tex;
+        EbrComPtr<IDXGIResource1> sharePtr;
+        m_masterTexture.As(&sharePtr);
+        sharePtr->CreateSharedHandle(NULL, DXGI_SHARED_RESOURCE_READ, NULL, &m_hRenderTargetHandle);
+        m_masterTexture.As(&m_renderTargetMutex);
+
+        device->OpenSharedResource1(m_hRenderTargetHandle, __uuidof(ID3D11Texture2D), (void **) m_sharedTargetTexture.GetAddressOf());
+        m_sharedTargetTexture.As(&m_sharedTargetMutex);
+
+        // Otherwise, create a new one using the same adapter as the existing Direct3D device.
+        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
+
+        swapChainDesc.Width = width;
+        swapChainDesc.Height = height;
+        swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // This is the most common swap chain format.
+        swapChainDesc.Stereo = false;
+        swapChainDesc.SampleDesc.Count = 1; // Don't use multi-sampling.
+        swapChainDesc.SampleDesc.Quality = 0;
+        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapChainDesc.BufferCount = 2; // Use double-buffering to minimize latency.
+        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // All Windows Store apps must use this SwapEffect.
+        swapChainDesc.Flags = 0;
+        swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
+        swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+
+        EbrComPtr<ID3D11Device1> _d3dDevice;
+        _d3dDevice = device;
+
+        // This sequence obtains the DXGI factory that was used to create the Direct3D device above.
+        EbrComPtr<IDXGIDevice> dxgiDevice;
+        _d3dDevice.As(&dxgiDevice);
+
+        dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf());
+        dxgiAdapter->GetParent(IID_PPV_ARGS(dxgiFactory.GetAddressOf()));
+
+        dxgiFactory->CreateSwapChainForComposition(
+            _d3dDevice.Get(),
+            &swapChainDesc,
+            nullptr,
+            m_swapChain.GetAddressOf()
+            );
+
+        DXGI_MATRIX_3X2_F mirror = { 0 };
+        mirror._11 = 1.0f;
+        mirror._22 = -1.0f;
+        mirror._32 = height;
+        EbrComPtr<IDXGISwapChain2> spSwapChain2;
+        m_swapChain.As<IDXGISwapChain2>(&spSwapChain2);
+        spSwapChain2->SetMatrixTransform(&mirror);
+
+        // Create a render target view of the swap chain back buffer.
+        EbrComPtr<ID3D11Texture2D> backBuffer;
+        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
+
+        _d3dDevice->CreateRenderTargetView(
+            backBuffer.Get(),
+            nullptr,
+            _renderTargetView.GetAddressOf()
+            );
+        m_renderTargetMutex->AcquireSync(0, INFINITE);
+    }
+
+    void Update()
+    {
+        m_renderTargetMutex->ReleaseSync(0);
+        m_sharedTargetMutex->AcquireSync(0, INFINITE);
+        float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+        EbrComPtr<ID3D11Texture2D> backBuffer;
+        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
+
+        _context->ClearRenderTargetView(_renderTargetView.Get(), color);
+        _context->CopySubresourceRegion1(backBuffer.Get(), 0, 0, 0, 0, m_sharedTargetTexture.Get(), 0, NULL, 0);
+        m_swapChain->Present(1, 0);
+        m_sharedTargetMutex->ReleaseSync(0);
+        m_renderTargetMutex->AcquireSync(0, INFINITE);
+    }
+};
+
+bool ContextManager::lockContext()
+{
+	return tlsCurContext != NULL;
 }
 
-void unlockGlobalContext()
+void ContextManager::unlockContext()
 {
-    EbrDebugLog("Unlocking global context\n");
-    EbrLockLeave(global_contextLock);
-}
-
-DWORD ContextManager::emuTexToGL(DWORD emuTex)
-{
-    return emuTex;
-}
-
-DWORD ContextManager::glTexToEmu(DWORD glTex)
-{
-    return glTex;
-}
-
-DWORD ContextManager::genTexture()
-{
-    GLuint tex;
-    ANGLE_glGenTextures(1, &tex);
-    return tex;
-}
-
-void ContextManager::removeTexture(DWORD emuTex)
-{
-    return;
 }
 
 EAGLContext *ContextManager::getEAGLContext()
@@ -83,22 +170,6 @@ EAGLContext *ContextManager::getEAGLContext()
     threadGLContext *curThreadCtx = tlsCurContext;
 
     return (EAGLContext *) curThreadCtx->curEAGLContext;
-}
-
-bool ContextManager::lockContext()
-{
-    if ( tlsCurContext == NULL ) {
-        EbrDebugLog("No GL context!\n");
-        return false;
-    }
-
-    GetCACompositor()->LockD3DDisplayTexture(getEAGLContext()->eaglPriv->_drawingOutputTexture);
-    return true;
-}
-
-void ContextManager::unlockContext()
-{
-    return;
 }
 
 void ContextManager::setContext(id newCtx, bool doRef)
@@ -126,11 +197,7 @@ void ContextManager::setContext(id newCtx, bool doRef)
     }
 }
 
-#define GL_BGRA_EXT 0x80E1
-
-extern int curDeviceOrientation;
-
-@implementation EAGLContext : NSObject {
+@implementation EAGLContext {
     bool _gles11EmulationMode;
 }
     -(instancetype) initWithAPI:(NSUInteger)api {
@@ -144,14 +211,7 @@ extern int curDeviceOrientation;
             return nil;
         }
         eaglPriv = (EAGLContextPrivateData *) calloc(1, sizeof(EAGLContextPrivateData));
-
-        if ( g_bNoSharedTextures ) {
-            lockGlobalContext();
-        }
         eaglPriv->contextHandle = EbrGLESCreateContext(0);
-        if ( g_bNoSharedTextures ) {
-            unlockGlobalContext();
-        }
 
         eaglPriv->_ownedFramebuffers = new HashMap<DWORD, DWORD>();
         EbrLockInit(&eaglPriv->contextLock);
@@ -214,19 +274,6 @@ extern int curDeviceOrientation;
         return TRUE;
     }
 
-#define GL_FRAMEBUFFER_EXT 0x8D40 
-#define GL_COLOR_ATTACHMENT0_EXT 0x8CE0
-#define GL_DEPTH_ATTACHMENT_EXT 0x8D00
-#define GL_RENDERBUFFER_EXT 0x8D41
-#define GL_DEPTH_COMPONENT24 0x81A6
-#define GL_FRAMEBUFFER_OES                                      0x8D40
-#define GL_COLOR_ATTACHMENT0_OES                                0x8CE0
-
-    static DWORD nextPow2(DWORD v)
-    {
-        return 1 << log2Ceil(v);
-    }
-
     -(BOOL) renderbufferStorage:(int)target fromDrawable:(CAEAGLLayer*)surface {
         CAEAGLLayer* drawableSurface = surface;
         GLint oldName;
@@ -245,23 +292,20 @@ extern int curDeviceOrientation;
             eaglPriv->_rbHeight = 480;
         }
 
-        ctxManager.lockContext();
-
         ANGLE_glRenderbufferStorage(target, GL_BGRA8_EXT, eaglPriv->_rbWidth, eaglPriv->_rbHeight);
         glCheckError();
         void *ptr = NULL;
         
         glGetRenderbufferStorageNATIVE(&ptr);
         eaglPriv->presentationLayer = drawableSurface;
-        eaglPriv->_drawingOutputTexture = GetCACompositor()->GetDisplayTextureForD3D(m_AngleD3dDevice.Get(), m_AngleD3dContext.Get(), (ID3D11Texture2D *) ptr, eaglPriv->_rbWidth, eaglPriv->_rbHeight);
+		if ( eaglPriv->_d3dSurface ) delete eaglPriv->_d3dSurface;
 
-        [eaglPriv->presentationLayer _setDisplayTexture:eaglPriv->_drawingOutputTexture];
+		eaglPriv->_d3dSurface = new DisplayTextureD3D(m_AngleD3dDevice.Get(), m_AngleD3dContext.Get(), (ID3D11Texture2D *) ptr, eaglPriv->_rbWidth, eaglPriv->_rbHeight);
+		[eaglPriv->presentationLayer _setSwapChainNative: eaglPriv->_d3dSurface->m_swapChain.Get()];
 
         eaglPriv->_opaque = [drawableSurface opaque] ? true : false;
         if ( [format isEqual:@"kEAGLColorFormatRGBA8"] || format == nil ) eaglPriv->_opaque = false;
 
-        ctxManager.unlockContext();
-        
         return TRUE;
     }
 
@@ -279,18 +323,8 @@ extern int curDeviceOrientation;
             return FALSE;
         }
 
-        EbrSignalsSafe();
-        ctxManager.lockContext();
-
-        glCheckError();
-        GLint oldName;
-
-        //glClearColor(1.0f, 0, 0, 1);
-
         glReleaseTargets();
-
-        ctxManager.unlockContext();
-        GetCACompositor()->UnlockD3DDisplayTexture(eaglPriv->_drawingOutputTexture);
+		eaglPriv->_d3dSurface->Update();
         EbrSignalsUnsafe();
 
         return TRUE;
@@ -300,53 +334,7 @@ extern int curDeviceOrientation;
         threadGLContext *curCtx = tlsCurContext;
 
         if ( curCtx ) {
-            ctxManager.lockContext();
             ctxManager.setContext(self, false);
-#if 0
-            size_t it = -1;
-
-            while ( _ownedFramebuffers->nextHandle(it, it) ) {
-                DWORD frameBufferId = _ownedFramebuffers->keyAtHandle(it);
-                /*
-                DWORD &textureBindId = _ownedFramebuffers->valueAtHandle(it);
-
-                if ( textureBindId != 0 ) {
-                    void (WINAPI *glFramebufferTexture2DEXT)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-                    LOAD_FUNC(glFramebufferTexture2DEXT);
-                    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D,  0, 0);
-                    glCheckError();
-                    glDeleteTextures(1, (GLuint *) &textureBindId);
-                    glCheckError();
-                }
-                */
-                void (WINAPI *glBindFramebufferEXT)(GLenum, GLuint);
-                LOAD_FUNC(glBindFramebufferEXT);
-                //glBindFramebufferEXT(GL_FRAMEBUFFER_OES, 0);
-                //glCheckError();
-                void (WINAPI *glDeleteFramebuffersEXT)(GLsizei n, GLuint *framebuffers);
-                LOAD_FUNC(glDeleteFramebuffersEXT);
-                glDeleteFramebuffersEXT(1, (GLuint *) &frameBufferId);
-                glCheckError();
-            }
-#endif
-
-#ifdef ANDROID
-typedef EGLSyncKHR (EGLAPIENTRYP _PFNEGLCREATESYNCKHRPROC) (EGLDisplay dpy, EGLenum type, const EGLint *attrib_list);
-typedef EGLBoolean (EGLAPIENTRYP _PFNEGLDESTROYSYNCKHRPROC) (EGLDisplay dpy, EGLSyncKHR sync);
-typedef EGLint (EGLAPIENTRYP _PFNEGLCLIENTWAITSYNCKHRPROC) (EGLDisplay dpy, EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout);
-
-            EGLSyncKHR sync;
-            EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-            LOADOES(_PFNEGLCREATESYNCKHRPROC, _eglCreateSyncKHR);
-            LOADOES(_PFNEGLCLIENTWAITSYNCKHRPROC, _eglClientWaitSyncKHR);
-            LOADOES(_PFNEGLDESTROYSYNCKHRPROC, _eglDestroySyncKHR);
-
-            sync = _eglCreateSyncKHR(display, EGL_SYNC_FENCE_KHR, NULL);
-            _eglClientWaitSyncKHR(display, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, EGL_FOREVER_KHR);
-            _eglDestroySyncKHR(display, sync);
-#endif
-
             EbrGLESDestroyContext(eaglPriv->contextHandle);
 
             if ( curCtx->curEAGLContext != self ) {
@@ -354,7 +342,6 @@ typedef EGLint (EGLAPIENTRYP _PFNEGLCLIENTWAITSYNCKHRPROC) (EGLDisplay dpy, EGLS
             } else {
                 ctxManager.setContext(nil, false);
             }
-            ctxManager.unlockContext();
         }
         delete eaglPriv->_ownedFramebuffers;
         if ( eaglPriv ) free(eaglPriv);

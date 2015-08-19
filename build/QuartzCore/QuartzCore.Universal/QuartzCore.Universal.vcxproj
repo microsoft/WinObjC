@@ -166,6 +166,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -187,6 +189,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -209,6 +213,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -230,6 +236,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -252,6 +260,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

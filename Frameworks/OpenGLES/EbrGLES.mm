@@ -44,8 +44,6 @@
 bool g_bNoSharedTextures = false;
 bool g_useKHRRenderbuffers = true;
 
-extern EbrLock      global_contextLock;
-
 static EGLDisplay eglDisplay = NULL;
 EbrComPtr<ID3D11Device1> m_AngleD3dDevice;
 EbrComPtr<ID3D11DeviceContext1> m_AngleD3dContext;
@@ -232,8 +230,6 @@ void InitializeAngleDevice()
     if ( initialized ) return;
 
     initialized = true;
-
-    EbrLockEnter(global_contextLock);
 
     // This flag adds support for surfaces with a different color channel ordering
     // than the API default. It is required for compatibility with Direct2D.

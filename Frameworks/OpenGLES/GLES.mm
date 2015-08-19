@@ -109,10 +109,6 @@ EAGL_EXPORT void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum
 {
     if (ctxManager.lockContext() == false) return;
 
-    if (texture != 0) {
-        DWORD texNum = ctxManager.emuTexToGL(texture);
-        texture = texNum;
-    }
     EAGLContext *ctx = ctxManager.getEAGLContext();
     *((*ctx->eaglPriv->_ownedFramebuffers)[(DWORD) ctx->eaglPriv->_curFramebufferBinding]) = texture;
 
@@ -1081,13 +1077,7 @@ EAGL_EXPORT DWORD glGenTextures(GLsizei n, GLuint *textures)
 {
     if (ctxManager.lockContext() == false) return 0;
 
-    assert(n < 1024);
-
-    for (int i = 0; i < n; i ++) {
-        textures[i] = ctxManager.genTexture();
-    }
-    totalTextures += n;
-    EbrDebugLog("Total GL textures: %d\n", totalTextures);
+	ANGLE_glGenTextures(n, textures);
 
     int ret = glCheckError();
 
@@ -1099,36 +1089,11 @@ EAGL_EXPORT DWORD glGenTextures(GLsizei n, GLuint *textures)
 EAGL_EXPORT DWORD glDeleteTextures(GLsizei n, GLuint *textures)
 {
     if (ctxManager.lockContext() == false) return 0;
-    totalTextures -= n;
-    EbrDebugLog("Total GL textures: %d\n", totalTextures);
-
-#ifdef NO_TEX2D_ON_SHARED
-    EAGLContext *ctx = ctxManager.getEAGLContext();
-    if (ctx && ctx->_sharegroup != nil) {
-        ctxManager.setContext(ctx->_sharegroup);
-        ANGLE_glDeleteTextures(n, textures);
-        ctxManager.setContext(ctx);
-        ctxManager.unlockContext();
-
-        return 0;
-    }
-#endif
 
     if (!textures) return 0;
-
-    assert(n < 1024);
-
-    GLuint localTextures[1024];
-
-    for (int i = 0; i < n; i ++) {
-        localTextures[i] = ctxManager.emuTexToGL(textures[i]);
-        ctxManager.removeTexture(textures[i]);
-    }
-
-    ANGLE_glDeleteTextures(n, localTextures);
+    ANGLE_glDeleteTextures(n, textures);
 
     int ret = glCheckError();
-
     ctxManager.unlockContext();
 
     return 0;
@@ -1139,24 +1104,11 @@ EAGL_EXPORT DWORD glBindTexture(GLenum target, GLuint texture)
     if (ctxManager.lockContext() == false) return 0;
 
     EAGLContext *ctx = ctxManager.getEAGLContext();
-    if (texture != 0) {
-        DWORD texNum = ctxManager.emuTexToGL(texture);
-
-        if ( !ctx || !ctx->eaglPriv->_gl11Ctx ) {
-            ANGLE_glBindTexture(target, texNum);
-        } else {
-            ctx->eaglPriv->_gl11Ctx->glBindTexture(target, texNum);
-        }
-        curTexture = texture;
+    if ( !ctx || !ctx->eaglPriv->_gl11Ctx ) {
+        ANGLE_glBindTexture(target, texture);
     } else {
-        if ( !ctx->eaglPriv->_gl11Ctx ) {
-            ANGLE_glBindTexture(target, 0);
-        } else {
-            ctx->eaglPriv->_gl11Ctx->glBindTexture(target, 0);
-        }
-        curTexture = texture;
+        ctx->eaglPriv->_gl11Ctx->glBindTexture(target, texture);
     }
-
     int ret = glCheckError();
 
     ctxManager.unlockContext();
@@ -1194,7 +1146,7 @@ EAGL_EXPORT DWORD glIsTexture (GLuint tex)
 {
     if (ctxManager.lockContext() == false) return 0;
 
-    int ret = ANGLE_glIsTexture(ctxManager.emuTexToGL(tex));
+    int ret = ANGLE_glIsTexture(tex);
 
     ctxManager.unlockContext();
 
@@ -1387,7 +1339,7 @@ EAGL_EXPORT DWORD glGetIntegerv(GLenum pname, GLint *params)
 
         ANGLE_glGetIntegerv(pname, &curTex);
         if (curTex != 0) {
-            *params = ctxManager.glTexToEmu(curTex);
+            *params = curTex;
         } else {
             *params = 0;
         }

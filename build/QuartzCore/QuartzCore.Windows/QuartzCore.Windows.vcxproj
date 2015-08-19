@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -164,6 +164,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -185,6 +187,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -207,6 +211,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -228,6 +234,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -250,6 +258,8 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -270,6 +280,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>kernel32.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
