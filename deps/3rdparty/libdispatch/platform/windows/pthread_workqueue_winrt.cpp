@@ -18,6 +18,8 @@
 
 #endif
 
+#include <time.h>
+
 #include <errno.h>
 
 #include "pthread.h"

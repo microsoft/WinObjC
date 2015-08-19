@@ -37,7 +37,9 @@
 #include <time.h>
 #include <sys/_types.h>
 
-__if_not_exists(timespec) {
+//  _timespec32 is defined by Win10 <time.h> (included above).  If _timespec32 is defined,
+//  timespec is also defined
+__if_not_exists(_timespec32) {
 	struct timespec {
 		time_t  tv_sec;     /* seconds */
 		long    tv_nsec;    /* and nanoseconds */

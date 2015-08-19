@@ -18,7 +18,6 @@
 
 #pragma warning(disable : 4200) // warning C4200: nonstandard extension used : zero-sized array in struct/union
 
-DWORD pthread_slot;
 long slots_allocated;
 typedef void (*slot_destructor)(void*);
 slot_destructor* destructors; // slot_destructor[slots_allocated]
@@ -33,6 +32,7 @@ struct _pthread_items
 
 typedef struct _pthread_items pthread_items;
 typedef pthread_items* pthread_items_t;
+__declspec(thread) pthread_items_t pthread_items_tlv;
 
 struct _pthread
 {
@@ -58,7 +58,7 @@ static void _pthread_destructors(void)
 	int more_calls_needed;
 
 	EnterCriticalSection(&destructor_lock);
-	items = TlsGetValue(pthread_slot);
+	items = pthread_items_tlv;
 	slot_count = slots_allocated;
 	local_destructors = calloc(slot_count, sizeof(slot_destructor));
 	memcpy(local_destructors, destructors, slot_count * sizeof(slot_destructor));
@@ -91,7 +91,7 @@ static void _pthread_destructors(void)
 
 void _pthread_tls_attach_thread()
 {
-	pthread_items_t items = TlsGetValue(pthread_slot);
+	pthread_items_t items = pthread_items_tlv;
 	if(!items)
 	{
 		HANDLE thread_handle = INVALID_HANDLE_VALUE;
@@ -101,13 +101,13 @@ void _pthread_tls_attach_thread()
 		items->current_thread->privately_owned = TRUE;
 		DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &thread_handle, 0, TRUE, DUPLICATE_SAME_ACCESS);
 		items->current_thread->thread = thread_handle;
-		TlsSetValue(pthread_slot, items);
+		pthread_items_tlv = items;
 	}
 }
 
 void _pthread_tls_detach_thread()
 {
-	pthread_items_t items = TlsGetValue(pthread_slot);
+	pthread_items_t items = pthread_items_tlv;
 	if(items)
 	{
 		_pthread_destructors();
@@ -117,7 +117,7 @@ void _pthread_tls_detach_thread()
 			free(items->current_thread);
 		}
 		free(items);
-		TlsSetValue(pthread_slot, NULL);
+		pthread_items_tlv = NULL;
 	}
 }
 
@@ -131,7 +131,6 @@ void NTAPI pthread_tls_init(void* dll, DWORD reason, void* reserved)
 	case DLL_PROCESS_ATTACH:
 		slots_allocated = 0;
 		destructors = NULL;
-		pthread_slot = TlsAlloc();
 		InitializeCriticalSectionEx(&destructor_lock, 0, 0);
 		// fall through
 	case DLL_THREAD_ATTACH:
@@ -214,7 +213,7 @@ int pthread_key_delete(pthread_key_t key)
 
 static pthread_items_t _get_items()
 {
-	pthread_items_t items = TlsGetValue(pthread_slot);
+	pthread_items_t items = pthread_items_tlv;
 	if(items->count < slots_allocated)
 	{
 		long i = 0;
@@ -224,7 +223,7 @@ static pthread_items_t _get_items()
 			items->items[i] = NULL;
 		}
 		items->count = slots_allocated;
-		TlsSetValue(pthread_slot, items);
+		pthread_items_tlv = items;
 	}
 	return items;
 }

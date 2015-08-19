@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -160,7 +160,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo;StarboardPrebuiltDirs;$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -186,7 +186,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -212,7 +212,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -238,7 +238,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -264,7 +264,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -290,7 +290,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

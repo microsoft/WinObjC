@@ -10,11 +10,13 @@ extern "C"
 {
 #endif
 
+#ifndef HAS_TIMESPEC
 struct timespec
 {
 	time_t tv_sec;
 	__int32 tv_nsec;
 };
+#endif
 
 typedef signed __int32 clockid_t;
 #define CLOCK_REALTIME 0
