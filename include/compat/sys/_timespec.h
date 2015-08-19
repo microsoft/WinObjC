@@ -34,16 +34,16 @@
 #ifndef _SYS__TIMESPEC_H_
 #define _SYS__TIMESPEC_H_
 
+#include <time.h>
 #include <sys/_types.h>
 
-#ifndef _TIME_T_DECLARED
-typedef __time_t    time_t;
-#define _TIME_T_DECLARED
-#endif
-
-struct timespec {
-    time_t  tv_sec;     /* seconds */
-    long    tv_nsec;    /* and nanoseconds */
-};
+//  _timespec32 is defined by Win10 <time.h> (included above).  If _timespec32 is defined,
+//  timespec is also defined
+__if_not_exists(_timespec32) {
+	struct timespec {
+		time_t  tv_sec;     /* seconds */
+		long    tv_nsec;    /* and nanoseconds */
+	};
+}
 
 #endif /* !_SYS__TIMESPEC_H_ */

@@ -25,6 +25,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #include <inttypes.h>
 #include <mach/mach.h>
+#include <dispatch/dispatch.h>
 
 typedef unsigned int mach_port_t;
 
@@ -188,7 +189,10 @@ extern "C" unsigned random()
 
 __declspec(dllexport)
 extern "C" int gettimeofday(struct timeval *tv, void *restrict) {
-    EbrGetTimeOfDay((EbrTimeval *) tv);
+	EbrTimeval curtime;
+    EbrGetTimeOfDay(&curtime);
+	tv->tv_sec = curtime.tv_sec;
+	tv->tv_usec = curtime.tv_usec;
     return 0;
 }
 

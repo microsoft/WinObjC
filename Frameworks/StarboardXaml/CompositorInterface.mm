@@ -28,9 +28,6 @@
 #include <deque>
 #include <map>
 #include <memory>
-#include <d3d11.h>
-#include <d3d11_1.h>
-#include <Dxgi1_3.h>
 #include "CompositorInterface.h"
 
 @class RTObject;
@@ -54,7 +51,6 @@ winobjc::Id CreateBitmapFromImageData(const void *ptr, int len);
 winobjc::Id CreateWritableBitmap(int width, int height);
 void *LockWritableBitmap(winobjc::Id &bitmap, void **ptr, int *stride);
 void UnlockWritableBitmap(winobjc::Id &bitmap, void *byteAccess);
-winobjc::Id CreateSwapchainElement(ID3D11Device1 *device, IDXGISwapChain1 *swapChain, int width, int height);
 void SetSwapchainScale(winobjc::Id &panel, float scale);
 
 winobjc::Id CreateWebView();
@@ -201,147 +197,6 @@ public:
     void SetNodeContent(DisplayNode *node, float width, float height, float scale)
     {
         node->SetContentsElement(_xamlView);
-    }
-};
-
-class DisplayTextureD3D : public DisplayTexture
-{
-private:
-    winobjc::Id _xamlPanel;
-
-    ID3D11Texture2D *_tex;
-    ID3D11Device1 *_device;
-    ID3D11DeviceContext1 *_context;
-    int _width, _height;
-
-    EbrComPtr<IDXGIAdapter> dxgiAdapter;
-    EbrComPtr<IDXGIFactory2> dxgiFactory;
-    EbrComPtr<IDXGISwapChain1>  m_swapChain;
-    EbrComPtr<ID3D11RenderTargetView> _renderTargetView;
-
-    HANDLE m_hRenderTargetHandle;
-    EbrComPtr<IDXGIKeyedMutex> m_renderTargetMutex;
-    EbrComPtr<ID3D11Texture2D> m_sharedTargetTexture;
-    EbrComPtr<ID3D11Texture2D> m_masterTexture;
-    EbrComPtr<IDXGIKeyedMutex> m_sharedTargetMutex;
-    bool locked;
-
-public:
-    ~DisplayTextureD3D()
-    {
-        DecrementCounter("D3DTextureXaml");
-
-        locked = false;
-        _tex->Release();
-        _device->Release();
-        _context->Release();
-    }
-
-    DisplayTextureD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *tex, int width, int height)
-    {
-        IncrementCounter("D3DTextureXaml");
-
-        _width = width;
-        _height = height;
-        _device = device;
-        _device->AddRef();
-        _context = context;
-        _context->AddRef();
-
-        m_masterTexture = tex;
-        EbrComPtr<IDXGIResource1> sharePtr;
-        m_masterTexture.As(&sharePtr);
-        sharePtr->CreateSharedHandle(NULL, DXGI_SHARED_RESOURCE_READ, NULL, &m_hRenderTargetHandle);
-        m_masterTexture.As(&m_renderTargetMutex);
-
-        device->OpenSharedResource1(m_hRenderTargetHandle, __uuidof(ID3D11Texture2D), (void **) m_sharedTargetTexture.GetAddressOf());
-        m_sharedTargetTexture.As(&m_sharedTargetMutex);
-
-        // Otherwise, create a new one using the same adapter as the existing Direct3D device.
-        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
-
-        swapChainDesc.Width = width;
-        swapChainDesc.Height = height;
-        swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // This is the most common swap chain format.
-        swapChainDesc.Stereo = false;
-        swapChainDesc.SampleDesc.Count = 1; // Don't use multi-sampling.
-        swapChainDesc.SampleDesc.Quality = 0;
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.BufferCount = 2; // Use double-buffering to minimize latency.
-        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // All Windows Store apps must use this SwapEffect.
-        swapChainDesc.Flags = 0;
-        swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-        swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-
-        EbrComPtr<ID3D11Device1> _d3dDevice;
-        _d3dDevice = device;
-
-        // This sequence obtains the DXGI factory that was used to create the Direct3D device above.
-        EbrComPtr<IDXGIDevice> dxgiDevice;
-        _d3dDevice.As(&dxgiDevice);
-
-        dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf());
-        dxgiAdapter->GetParent(IID_PPV_ARGS(dxgiFactory.GetAddressOf()));
-
-        dxgiFactory->CreateSwapChainForComposition(
-            _d3dDevice.Get(),
-            &swapChainDesc,
-            nullptr,
-            m_swapChain.GetAddressOf()
-            );
-        _xamlPanel = CreateSwapchainElement(device, m_swapChain, _width, _height);
-
-        DXGI_MATRIX_3X2_F mirror = { 0 };
-        mirror._11 = 1.0f;
-        mirror._22 = -1.0f;
-        mirror._32 = height;
-        EbrComPtr<IDXGISwapChain2> spSwapChain2;
-        m_swapChain.As<IDXGISwapChain2>(&spSwapChain2);
-        spSwapChain2->SetMatrixTransform(&mirror);
-
-        // Create a render target view of the swap chain back buffer.
-        EbrComPtr<ID3D11Texture2D> backBuffer;
-        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-
-        _d3dDevice->CreateRenderTargetView(
-            backBuffer.Get(),
-            nullptr,
-            _renderTargetView.GetAddressOf()
-            );
-    }
-
-    void Lock()
-    {
-        if ( !locked ) {
-            locked = true;
-            m_renderTargetMutex->AcquireSync(0, INFINITE);
-        }
-    }
-
-    void Update()
-    {
-        if ( locked ) {
-            locked = false;
-            m_renderTargetMutex->ReleaseSync(0);
-        }
-
-        m_sharedTargetMutex->AcquireSync(0, INFINITE);
-        float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-        EbrComPtr<ID3D11Texture2D> backBuffer;
-        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-
-        _context->ClearRenderTargetView(_renderTargetView.Get(), color);
-        _context->CopySubresourceRegion1(backBuffer.Get(), 0, 0, 0, 0, m_sharedTargetTexture.Get(), 0, NULL, 0);
-        m_swapChain->Present(1, 0);
-        m_sharedTargetMutex->ReleaseSync(0);
-
-    }
-
-    void SetNodeContent(DisplayNode *node, float width, float height, float scale)
-    {
-        SetSwapchainScale(_xamlPanel, scale);
-        node->SetContentsElement(_xamlPanel, width, height, scale);
     }
 };
 
@@ -1459,23 +1314,6 @@ public:
     virtual void ReleaseDisplayTexture(DisplayTexture *tex) 
     {
         tex->Release();
-    }
-
-    void LockD3DDisplayTexture(DisplayTexture *tex)
-    {
-        if ( !tex ) return;
-
-        ((DisplayTextureD3D *) tex)->Lock();
-    }
-    void UnlockD3DDisplayTexture(DisplayTexture *tex)
-    {
-        ((DisplayTextureD3D *) tex)->Update();
-    }
-
-    DisplayTexture *GetDisplayTextureForD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *tex, int width, int height) 
-    {
-        DisplayTexture *ret = new DisplayTextureD3D(device, context, tex, width, height);
-        return ret;
     }
 
     void SortWindowLevels()

@@ -27,6 +27,7 @@
 #ifndef __ISLANDWOOD_COMPAT
 #include <sys/types.h>
 #endif
+#include <unistd.h>
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
@@ -52,7 +53,13 @@ COREFOUNDATION_EXPORT extern "C" uint32_t arc4random()
     return (uint32_t)randResult;
 }
 
-COREFOUNDATION_EXPORT extern "C" int usleep(long secs)
+COREFOUNDATION_EXPORT extern "C" int usleep(useconds_t secs)
+{
+    Sleep(secs * 1000);
+    return 0;
+}
+
+COREFOUNDATION_EXPORT extern "C" unsigned int sleep(useconds_t secs)
 {
     Sleep(secs * 1000);
     return 0;

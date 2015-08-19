@@ -200,12 +200,9 @@ static id _mainQueue;
             didWork = FALSE;
 
             for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-                void *oldVal = pthread_getspecific(g_currentDispatchQueue);
-                pthread_setspecific(g_currentDispatchQueue, (void *) self);
                 if ( RunOperationFromLists( &priv->myQueues[i], ( NSAtomicListRef *)(&priv->queues[i] ), &priv->curOperation) ) {
                     didWork = TRUE;
                 }
-                pthread_setspecific(g_currentDispatchQueue, oldVal);
             }
         } while ( didWork );
 

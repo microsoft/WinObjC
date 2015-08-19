@@ -22,10 +22,6 @@ class DisplayAnimation;
 class DisplayTexture;
 class DisplayTransaction;
 
-class ID3D11Device1;
-class ID3D11Texture2D;
-class ID3D11DeviceContext1;
-
 class WebViewControl
 {
 public:
@@ -83,10 +79,6 @@ public:
     virtual void ReleaseDisplayTexture(DisplayTexture *tex) = 0;
 
     //virtual CGPoint ConvertPoint(CGPoint point, CALayer *fromLayer, CALayer *toLayer) = 0;
-
-    virtual void LockD3DDisplayTexture(DisplayTexture *tex) = 0;
-    virtual void UnlockD3DDisplayTexture(DisplayTexture *tex) = 0;
-    virtual DisplayTexture *GetDisplayTextureForD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *, int width, int height) = 0;
 
     virtual void SortWindowLevels() = 0;
     virtual bool isTablet() = 0;

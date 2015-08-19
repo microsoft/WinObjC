@@ -25,9 +25,5 @@ typedef struct DisplayTexture DisplayTexture;
 #endif
 CA_EXPORT_CLASS
 @interface CAEAGLLayer : CALayer
-{
-    NSDictionary *properties;
-    DisplayTexture *_glTexture;
-}
 @property(copy) NSDictionary *drawableProperties;
 @end

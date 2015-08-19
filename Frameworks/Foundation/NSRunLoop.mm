@@ -21,14 +21,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Foundation/NSNotificationCenter.h"
 #include "Foundation/NSOperationQueue.h"
 
-#ifndef USE_OLD_DISPATCH
- #include "dispatch/dispatch.h"
-#endif
+#include "dispatch/dispatch.h"
+#include <Windows.h>
 
 FOUNDATION_EXPORT NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
 FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
+static void DispatchMainRunLoopWakeup(void *arg)
+{
+	[[NSRunLoop mainRunLoop] _wakeUp];
+}
+
 @implementation NSRunLoop : NSObject
+	+(void) initialize
+	{
+		dispatch_set_wakeup_callback(DispatchMainRunLoopWakeup, NULL);
+	}
+
     +(NSRunLoop*) currentRunLoop {
         return [[NSThread currentThread] _runLoop];
     }
@@ -217,6 +226,9 @@ FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes
         }
 
         NSAutoreleasePool* pool = [NSAutoreleasePool new];
+        if ( [NSThread currentThread] == [NSThread mainThread] ) {
+		    dispatch_main_queue_callback();
+		}
         NSDate* limitDate = [self limitDateForMode:mode];
 
         if ( limitDate != nil ) {
@@ -226,9 +238,7 @@ FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes
    
         if ( [NSThread currentThread] == [NSThread mainThread] ) {
             [[NSOperationQueue mainQueue] _doMainWork];
-#ifndef USE_OLD_DISPATCH
-            dispatch_main_drain();
-#endif
+	        dispatch_main_queue_callback();
         }
 
         [pool release];

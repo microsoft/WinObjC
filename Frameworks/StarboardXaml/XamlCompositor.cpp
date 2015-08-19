@@ -23,10 +23,7 @@
 #include <ppltasks.h>
 #include <robuffer.h>
 #include <collection.h>
-#include <d3d11.h>
-#include <d3d11_1.h>
 #include <assert.h>
-#include <windows.ui.xaml.media.dxinterop.h>
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
@@ -568,26 +565,6 @@ void DisplayNode::SetContentsElement(winobjc::Id &elem)
     float height = contents->Height;
     float scale = 1.0f;
     xamlNode->setContentElement(contents, width, height, scale);
-}
-
-winobjc::Id CreateSwapchainElement(ID3D11Device1 *device, IDXGISwapChain1 *swapChain, int width, int height)
-{
-    Windows::UI::Xaml::Controls::SwapChainPanel ^newPanel = ref new Windows::UI::Xaml::Controls::SwapChainPanel();
-
-    ComPtr<ISwapChainPanelNative> panelNative;
-    reinterpret_cast<IUnknown*>(newPanel)->QueryInterface(IID_PPV_ARGS(&panelNative));
-    panelNative->SetSwapChain(swapChain);
-    return (Platform::Object ^) newPanel;
-}
-
-void SetSwapchainScale(winobjc::Id &panel, float scale)
-{
-    Windows::UI::Xaml::Media::ScaleTransform ^trans = ref new Windows::UI::Xaml::Media::ScaleTransform();
-    Windows::UI::Xaml::Controls::SwapChainPanel ^swapChainPanel = (Windows::UI::Xaml::Controls::SwapChainPanel ^) (Platform::Object ^) panel;
-
-    trans->ScaleX = 1.0 / scale;
-    trans->ScaleY = 1.0 / scale;
-    swapChainPanel->RenderTransform = trans;
 }
 
 winobjc::Id CreateWebView()

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+/usr/bin/leaks "$@" 2>&1 | tee "$@.leakslog" | grep -q " 0 leaks for 0 total leaked bytes"
+
+if [ $? -eq 0 ]; then
+    rm "$@.leakslog"
+    exit 0
+else
+    exit $?
+fi
