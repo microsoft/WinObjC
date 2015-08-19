@@ -9,10 +9,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdispatch.Windows", "libd
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdispatch.Universal", "libdispatch.Universal\libdispatch.Universal.vcxproj", "{A3F4F08E-5727-46AE-910C-CF957EB6612E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libdispatch.WindowsPhone", "libdispatch.WindowsPhone\libdispatch.WindowsPhone.vcxproj", "{8AADA779-614C-4A9F-A06D-F886ED0161C1}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		libdispatch.Shared\libdispatch.Shared.vcxitems*{cbf40332-6e32-11e0-b7c7-61f84824019b}*SharedItemsImports = 4
 		libdispatch.Shared\libdispatch.Shared.vcxitems*{e2703c67-6fdb-4157-b8eb-73eb74c566ea}*SharedItemsImports = 9
+		libdispatch.Shared\libdispatch.Shared.vcxitems*{8aada779-614c-4a9f-a06d-f886ed0161c1}*SharedItemsImports = 4
 		libdispatch.Shared\libdispatch.Shared.vcxitems*{a3f4f08e-5727-46ae-910c-cf957eb6612e}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +31,10 @@ Global
 		{A3F4F08E-5727-46AE-910C-CF957EB6612E}.Debug|x86.Build.0 = Debug|Win32
 		{A3F4F08E-5727-46AE-910C-CF957EB6612E}.Release|x86.ActiveCfg = Release|Win32
 		{A3F4F08E-5727-46AE-910C-CF957EB6612E}.Release|x86.Build.0 = Release|Win32
+		{8AADA779-614C-4A9F-A06D-F886ED0161C1}.Debug|x86.ActiveCfg = Debug|Win32
+		{8AADA779-614C-4A9F-A06D-F886ED0161C1}.Debug|x86.Build.0 = Debug|Win32
+		{8AADA779-614C-4A9F-A06D-F886ED0161C1}.Release|x86.ActiveCfg = Release|Win32
+		{8AADA779-614C-4A9F-A06D-F886ED0161C1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
