@@ -103,6 +103,7 @@
     <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
     <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
     <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
+    <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
     <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.lib" />
     <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.dll" />
     <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.winmd" />
@@ -155,6 +156,7 @@
     <Message Importance="high" Text="Copying includes to destination" />
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBDispatchIncludes)" DestinationFiles="@(SBDispatchIncludes->'$(SBPackageDir)include\dispatch\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying binaries to destination" />
     <Copy SourceFiles="@(SBBinaries)" DestinationFolder="$(SBPackageDir)bin\" />
     <Message Importance="high" Text="Copying samples to destination" />
