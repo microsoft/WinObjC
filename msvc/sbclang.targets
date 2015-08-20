@@ -13,9 +13,7 @@
   </ItemGroup>
    
   <PropertyGroup>
-	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' != 'SwapChain'">true</IncludeXamlCompositor>
-	<IncludeSwapChainCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' == 'SwapChain'">true</IncludeSwapChainCompositor>	
-	<IncludeDXCompositor Condition="'$(AppContainerApplication)' == '' Or '$(WSCompositor)' == 'SwapChain'">true</IncludeDXCompositor>
+	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
@@ -83,9 +81,6 @@
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libEGL.dll" />
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libGLESv2.dll" />
-
-	  <SBResourceCopy Condition="'$(IncludeDXCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\DXCompositor.dll" />
-	  <SBResourceCopy Condition="'$(IncludeSwapChainCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\StarboardSwapChain.dll" />
     </ItemGroup>
   </Target>
 
