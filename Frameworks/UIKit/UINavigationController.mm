@@ -496,9 +496,11 @@ extern float _UINavigationControllerHideShowBarDuration;
         _navigationBar = nil;
         _toolBar = nil;
         _viewControllers = nil;
-        [_mainView removeFromSuperview];
-        _mainView->_parentController = nil;
-        [_mainView release];
+		if ( _mainView != nil ) {
+			[_mainView removeFromSuperview];
+			_mainView->_parentController = nil;
+			[_mainView release];
+		}
 
         [super dealloc];
     }
