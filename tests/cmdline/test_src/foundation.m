@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     printf("Foundation sanity test: ");
 
+    /*** NSArray ***/
     NSArray *arr1 = [NSArray arrayWithObject: @1];
     NSArray *arr2 = [NSArray arrayWithObject: @1];
     NSArray *arr3 = [NSArray arrayWithObject: @2];
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     
+    /*** NSCalendar ***/    
     //  Feb 14, 2012 12:00 GMT (leap year)
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970: 1329220800.0];    
     //  Apr 1, 2012 12:00 GMT
@@ -77,6 +79,13 @@ int main(int argc, char *argv[])
                                fromDate: startDate toDate: endDate options: 0];
     if ( comp2.second != 4060800 ) {
         printf("FAILED: comp2 not accurate: %d\n", comp2.second);
+        return -1;
+    }
+    
+    /*** NSNull ***/
+    NSNull *nul1 = [NSNull null], *nul2 = [NSNull alloc], *nul3 = [NSNull new], *nul4 = [nul1 copy];
+    if ( nul1 != nul2 || nul2 != nul3 || nul3 != nul4 || ![nul1 isEqual: nul4] ) {
+        printf("FAILED: NSNull should only have one value - %p %p %p %p %d\n", nul1, nul2, nul3, nul4, [nul1 isEqual: nul4]);
         return -1;
     }
     

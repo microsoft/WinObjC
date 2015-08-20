@@ -17,38 +17,51 @@
 #include "Starboard.h"
 #include "Foundation/NSNull.h"
 
-NSNull* nullSingleton;
+static NSNull* nullSingleton;
 
 @implementation NSNull : NSObject
+	+(void) initialize
+	{
+		if ( self == [NSNull class] ) {
+			nullSingleton = [super allocWithZone: nil];
+		}
+	}
+
     -(instancetype) initWithCoder:(NSCoder*)coder {
         return self;
     }
 
-    -(instancetype) encodeWithCoder:(NSCoder*)coder {
-        return self;
+    -(void) encodeWithCoder:(NSCoder*)coder {
     }
 
     -(instancetype) copyWithZone:(NSZone*)zone {
         return nullSingleton;
     }
 
-    -(void) release {
+	+(instancetype) allocWithZone:(NSZone*)zone {
+		return nullSingleton;
+	}
+
+    -(oneway void) release {
     }
 
+	-(instancetype) retain {
+		return self;
+	}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
     -(void) dealloc {
+		assert(0 && "NSNull should never be deallocated");
     }
+#pragma clang diagnostic pop
 
     -(NSString*) description {
         return @"<null>";
     }
 
     +(NSNull*) null {
-        if ( nullSingleton == nil ) {
-            nullSingleton = [self alloc];
-        }
         return nullSingleton;
     }
-
-    
 @end
 
