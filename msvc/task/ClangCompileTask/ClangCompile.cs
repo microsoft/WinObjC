@@ -656,13 +656,50 @@ namespace ClangCompile
         [ResolvePath()]
         public string[] InternalSystemIncludePaths { get; set; }
 
+        private void dirSearch(string dirPath, ref List<string> outPaths)
+        {
+            int maxCount = outPaths.Count + 2048;
+            outPaths.Add(dirPath);
+            for (var i = outPaths.Count - 1; i < Math.Min(outPaths.Count, maxCount); i++)
+            {
+                try
+                {
+                    foreach (string d in Directory.GetDirectories(outPaths[i]))
+                    {
+                        outPaths.Add(d);
+                    }
+                }
+                catch (System.Exception e) { }
+            }
+        }
+
+        private string[] expandPathGlobs(string[] inPaths)
+        {
+            List<string> outPaths = new List<string>();
+            foreach (string path in inPaths)
+            {
+                string winPath = path.Replace('/', '\\');
+                if (winPath.EndsWith("\\**"))
+                    dirSearch(winPath.Substring(0, path.Length - 3), ref outPaths);
+                else
+                    outPaths.Add(winPath);
+            }
+            return outPaths.ToArray();
+        }
+
         [PropertyPage(
             Category = "Paths",
             DisplayName = "User Include Paths",
             Description = "User header search paths.",
             Switch = "-iquote ")]
         [ResolvePath()]
-        public string[] UserIncludePaths { get; set; }
+        public string[] UserIncludePaths
+        {
+            get { return UserIncludePathsValue; }
+            set { UserIncludePathsValue = expandPathGlobs(value); }
+        }
+
+        string[] UserIncludePathsValue;
 
         [PropertyPage(
             Category = "Paths",
@@ -670,7 +707,13 @@ namespace ClangCompile
             Description = "Header search paths.",
             Switch = "-I")]
         [ResolvePath()]
-        public string[] IncludePaths { get; set; }
+        public string[] IncludePaths
+        {
+            get { return IncludePathsValue; }
+            set { IncludePathsValue = expandPathGlobs(value); }
+        }
+
+        string[] IncludePathsValue;
 
         [PropertyPage(
             Category = "Paths",
