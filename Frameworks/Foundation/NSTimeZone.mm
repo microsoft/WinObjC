@@ -25,7 +25,9 @@
 
 #include <unicode/gregocal.h>
 
-@implementation NSTimeZone : NSObject
+@implementation NSTimeZone {
+    icu_48::TimeZone* _icuTZ;
+}
     +(instancetype) systemTimeZone {
         NSTimeZone* ret = [self alloc];
         ret->_icuTZ = icu_48::TimeZone::createDefault();
@@ -37,7 +39,8 @@
     }
 
     +(NSArray*) knownTimeZoneNames {
-        return [NSArray arrayWithObject:@"America/Toronto"];
+		//  TODO
+        return [NSArray arrayWithObject:@"America/Los_Angeles"];
     }
 
     -(void) _getICUTimezone:(icu_48::TimeZone**)tz {
@@ -45,8 +48,10 @@
     }
 
     +(instancetype) timeZoneForSecondsFromGMT:(NSInteger)seconds {
-        EbrDebugLog("timeZoneForSecondsFromGMT not supported\n");
-        return [self timeZoneWithName:@"America/Toronto"];
+        NSTimeZone* ret = [self alloc];
+        ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
+		ret->_icuTZ->setRawOffset(seconds * 1000);
+        return [ret autorelease];
     }
 
     +(instancetype) localTimeZone {
@@ -73,8 +78,6 @@
         ret->_icuTZ = tz;
         return [ret autorelease];
     }
-
-    // TODO: Implement these when needed:
 
     -(NSString*) name {
         icu_48::UnicodeString n;
@@ -117,10 +120,15 @@
     +(void) setDefaultTimeZone:(NSTimeZone*)zone {
     }
 
+	-(BOOL) isDaylightSavingTimeForDate: (NSDate *) date
+	{
+		UErrorCode status = U_ZERO_ERROR;
+
+        return _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status);
+	}
+
     -(BOOL) isDaylightSavingTime {
-        // [BUG: Blatant lie]
-        // something like return _icuTZ->inDaylightTime();
-        return NO;
+		return [self isDaylightSavingTimeForDate: [NSDate date]];
     }
 
     -(void) dealloc {
