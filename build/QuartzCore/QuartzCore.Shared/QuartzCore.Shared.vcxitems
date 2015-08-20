@@ -31,9 +31,4 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
-  <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAWebLayer.mm">
-      <FileType>Document</FileType>
-    </ClangCompile>
-  </ItemGroup>
 </Project>

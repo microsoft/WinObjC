@@ -53,9 +53,6 @@ void *LockWritableBitmap(winobjc::Id &bitmap, void **ptr, int *stride);
 void UnlockWritableBitmap(winobjc::Id &bitmap, void *byteAccess);
 void SetSwapchainScale(winobjc::Id &panel, float scale);
 
-winobjc::Id CreateWebView();
-void WebViewLoadURL(winobjc::Id &webView, const char *url);
-void WebViewLoadHTML(winobjc::Id &webView, const char *html, const char *url);
 void SetScreenParameters(float width, float height, float magnification);
 void SetRootGrid(winobjc::Id& root);
 
@@ -140,45 +137,6 @@ DisplayTexture::DisplayTexture()
 DisplayTexture::~DisplayTexture()
 {
 }
-
-class WebViewControlXaml : public DisplayTexture,
-                           public WebViewControl                
-{
-public:
-    winobjc::Id _xamlWebView;
-
-    WebViewControlXaml()
-    {
-        IncrementCounter("WebViewXaml");
-        _xamlWebView = CreateWebView();
-    }
-
-    ~WebViewControlXaml()
-    {
-        DecrementCounter("WebViewXaml");
-    }
-
-    DisplayTexture *GetDisplayTexture() 
-    {
-        return this;
-    }
-
-    void LoadURL(NSString *url)
-    {
-        if ( url ) WebViewLoadURL(_xamlWebView, [url UTF8String]);
-    }
-
-    void LoadHTMLString(NSString *html, NSString *baseUrl)
-    {
-        if ( html ) WebViewLoadHTML(_xamlWebView, [html UTF8String], [baseUrl UTF8String]);
-    }
-
-
-    void SetNodeContent(DisplayNode *node, float width, float height, float scale)
-    {
-        node->SetContentsElement(_xamlWebView, width, height, scale);
-    }
-};
 
 class GenericControlXaml : public DisplayTexture
 {
@@ -1400,12 +1358,6 @@ public:
     void DisableDisplaySyncNotification() 
     {
         DisableRenderingListener();
-    }
-
-    virtual WebViewControl * CreateWebViewDisplayTexture()
-    {
-        WebViewControlXaml *ret = new WebViewControlXaml();
-        return ret;
     }
 
     NSObject *getDisplayProperty(DisplayNode *node, const char *propertyName)

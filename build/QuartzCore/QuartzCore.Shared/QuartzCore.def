@@ -20,6 +20,4 @@ LIBRARY QuartzCore
 	 __objc_class_name_CAShapeLayer	CONSTANT
      _OBJC_CLASS_CAEAGLLayer	DATA
 	 __objc_class_name_CAEAGLLayer	CONSTANT
-     _OBJC_CLASS_CAWebLayer	DATA
-	 __objc_class_name_CAWebLayer	CONSTANT
 

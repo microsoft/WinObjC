@@ -567,30 +567,6 @@ void DisplayNode::SetContentsElement(winobjc::Id &elem)
     xamlNode->setContentElement(contents, width, height, scale);
 }
 
-winobjc::Id CreateWebView()
-{
-    Windows::UI::Xaml::Controls::WebView ^ret = ref new Windows::UI::Xaml::Controls::WebView();
-
-    return (Platform::Object ^) ret;
-}
-
-void WebViewLoadURL(winobjc::Id &webView, const char *url)
-{
-    Windows::UI::Xaml::Controls::WebView ^webCtrl = (Windows::UI::Xaml::Controls::WebView ^) (Platform::Object ^) webView;
-    std::string uristr(url);
-    std::wstring wuristr(uristr.begin(), uristr.end());
-    Windows::Foundation::Uri ^uri = ref new Windows::Foundation::Uri(ref new Platform::String(wuristr.data()));
-    webCtrl->Navigate(uri);
-}
-
-void WebViewLoadHTML(winobjc::Id &webView, const char *html, const char *url)
-{
-    Windows::UI::Xaml::Controls::WebView ^webCtrl = (Windows::UI::Xaml::Controls::WebView ^) (Platform::Object ^) webView;
-    std::string htmlstr(html);
-    std::wstring whtmlstr(htmlstr.begin(), htmlstr.end());
-    webCtrl->NavigateToString(ref new Platform::String(whtmlstr.data()));
-}
-
 DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs()
 {
     _horzAlignment = alignLeft;

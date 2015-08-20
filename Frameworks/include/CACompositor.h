@@ -22,14 +22,6 @@ class DisplayAnimation;
 class DisplayTexture;
 class DisplayTransaction;
 
-class WebViewControl
-{
-public:
-    virtual DisplayTexture *GetDisplayTexture() = 0;
-    virtual void LoadURL(NSString *url) = 0;
-    virtual void LoadHTMLString(NSString *html, NSString *baseUrl) = 0;
-};
-
 class CACompositorInterface
 {
 public:
@@ -63,7 +55,6 @@ public:
     virtual DisplayTexture * CreateDisplayTextureForText() = 0;
     virtual void SetTextDisplayTextureParams(DisplayTexture *texture, id font, id text, id color, UITextAlignment alignment, UILineBreakMode lineBreak, id shadowColor,
                             const CGSize &shadowOffset, int numLines, UIEdgeInsets edgeInsets, bool centerVertically) = 0;
-    virtual WebViewControl *CreateWebViewDisplayTexture() = 0;
     virtual DisplayTexture *CreateDisplayTextureForElement(id xamlElement) = 0;
 
     virtual DisplayAnimation * GetBasicDisplayAnimation(id caanim, NSString *propertyName, NSObject *fromValue, NSObject *toValue, CAMediaTimingProperties *timingProperties) = 0;
