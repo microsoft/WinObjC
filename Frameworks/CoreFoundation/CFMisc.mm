@@ -49,8 +49,6 @@ COREFOUNDATION_EXPORT extern "C" uint32_t arc4random()
         EbrDebugLog("Unable to get random number!\n");
     }
     return randResult;
-
-    return (uint32_t)randResult;
 }
 
 COREFOUNDATION_EXPORT extern "C" int usleep(useconds_t secs)
