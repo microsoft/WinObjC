@@ -125,6 +125,7 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "subviews", XIBArray)
     IS_CONVERTER(ret, className, "items", XIBArray)
     IS_CONVERTER(ret, className, "connections", XIBArray)
+    IS_CONVERTER(ret, className, "string", XIBObjectString)
     IS_CONVERTER(ret, className, "viewController", UIViewController)
     IS_CONVERTER(ret, className, "placeholder", UIProxyObject)
     IS_CONVERTER(ret, className, "tabBarController", UITabBarController)
@@ -145,6 +146,7 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "tableViewController", UITableViewController)
     IS_CONVERTER(ret, className, "tableView", UITableView)
     IS_CONVERTER(ret, className, "textField", UITextField)
+    IS_CONVERTER(ret, className, "textView", UITextView)
     IS_CONVERTER(ret, className, "button", UIButton)
     IS_CONVERTER(ret, className, "webView", UIWebView)
     IS_CONVERTER(ret, className, "searchBar", UISearchBar)
@@ -152,8 +154,12 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "activityIndicatorView", UIActivityIndicatorView)
     IS_CONVERTER(ret, className, "imageView", UIImageView)
     IS_CONVERTER(ret, className, "action", UIRuntimeEventConnection)
+    IS_CONVERTER(ret, className, "switch", UISwitch)
 
     if ( ret == NULL ) {
+#ifdef _DEBUG
+        printf("Unrecognized tag <%s>\n", className);
+#endif
         ret = new XIBObject();
     }
 

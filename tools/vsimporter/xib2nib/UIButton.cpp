@@ -46,7 +46,7 @@ void ConvertInsets(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *p
     obj->AddOutputMember(writer, strdup(szName), new XIBObjectDataWriter(dataOut, sizeof(EdgeInsets) + 1));
 }
 
-XIBObject *GetButtonContent(NIBWriter *writer, XIBObject *obj, char *mode)
+static XIBObject *GetButtonContent(NIBWriter *writer, XIBObject *obj, char *mode)
 {
     XIBObject *buttonContent = new XIBObject();
     buttonContent->_className = "UIButtonContent";
@@ -97,19 +97,62 @@ XIBObject *GetButtonContent(NIBWriter *writer, XIBObject *obj, char *mode)
     return buttonContent;
 }
 
-void WriteStatefulContent(NIBWriter *writer, XIBObject *obj)
+static XIBObject *GetButtonContentStoryboard(NIBWriter *writer, XIBObject *obj, char *mode)
+{
+    XIBObject *buttonContent = new XIBObject();
+    buttonContent->_className = "UIButtonContent";
+    buttonContent->_outputClassName = "UIButtonContent";
+    buttonContent->_needsConversion = false;
+
+    obj = obj->FindMember(mode);
+    if (!obj) {
+        return buttonContent;
+    }
+
+    if (obj->getAttrib("title") != NULL ) {
+        buttonContent->AddOutputMember(writer, "UITitle", new XIBObjectString(obj->getAttrib("title")));
+    }
+
+    if ( obj->FindMember("titleShadowColor") != NULL ) {
+        buttonContent->AddOutputMember(writer, "UIShadowColor", obj->FindMember("titleShadowColor"));
+    }
+
+    if (obj->FindMember("titleColor") != NULL) {
+        buttonContent->AddOutputMember(writer, "UITitleColor", obj->FindMember("titleColor"));
+    } else if (strcmp(mode, "normal") == 0) {
+        UIColor *color = new UIColor(0, 4, 0.0f, 0.47f, 0.84f, 1.0f, NULL);
+        color->_isStory = true;
+        buttonContent->AddOutputMember(writer, "UITitleColor", color);
+    }
+
+    return buttonContent;
+}
+
+void UIButton::WriteStatefulContent(NIBWriter *writer, XIBObject *obj)
 {
     XIBDictionary *contentDict = new XIBDictionary();
     contentDict->_className = "NSMutableDictionary";
 
     XIBObjectNumber *normalState = new XIBObjectNumber(0);
-    XIBObject *normalContent = GetButtonContent(writer, obj, "Normal");
+    XIBObject *normalContent = NULL;
     XIBObjectNumber *highlightedState = new XIBObjectNumber(1);
-    XIBObject *highlightedContent = GetButtonContent(writer, obj, "Highlighted");
+    XIBObject *highlightedContent = NULL;
     XIBObjectNumber *disabledState = new XIBObjectNumber(2);
-    XIBObject *disabledContent = GetButtonContent(writer, obj, "Disabled");
+    XIBObject *disabledContent = NULL;
     XIBObjectNumber *selectedState = new XIBObjectNumber(4);
-    XIBObject *selectedContent = GetButtonContent(writer, obj, "Selected");
+    XIBObject *selectedContent = NULL;
+
+    if ( !_isStory) {
+        normalContent = GetButtonContent(writer, obj, "Normal");
+        highlightedContent = GetButtonContent(writer, obj, "Highlighted");
+        disabledContent = GetButtonContent(writer, obj, "Disabled");
+        selectedContent = GetButtonContent(writer, obj, "Selected");
+    } else {
+        normalContent = GetButtonContentStoryboard(writer, obj, "normal");
+        highlightedContent = GetButtonContentStoryboard(writer, obj, "highlighted");
+        disabledContent = GetButtonContentStoryboard(writer, obj, "disabled");
+        selectedContent = GetButtonContentStoryboard(writer, obj, "selected");
+    }
 
     if ( normalContent->_outputMembers.size() > 0 ) contentDict->AddObjectForKey(normalState, normalContent);
     if ( highlightedContent->_outputMembers.size() > 0 ) {
@@ -179,7 +222,8 @@ void UIButton::InitFromStory(XIBObject *obj)
         if ( strcmp(type, "roundedRect") == 0 ) {
             _buttonType = 1;
         } else {
-            assert(0);
+            printf("Unknown button type <%s>\n", type);
+            _buttonType = 0;
         }
     }
 
@@ -218,8 +262,6 @@ void UIButton::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
             }
         }
     }
-    if ( !_isStory ) {
-        WriteStatefulContent(writer, this);
-    }
+    WriteStatefulContent(writer, this);
     UIControl::ConvertStaticMappings(writer, obj);
 }

@@ -14,21 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "UIControl.h"
+#ifndef __XIBDOCUMENT_H
+#define __XIBDOCUMENT_H
 
-class UIFont;
-class UIButton :
-    public UIControl
+class XIBDocument : public XIBObject
 {
 public:
-    int _buttonType;
-    UIFont *_font;
-    XIBObject *_statefulContent;
-    UIButton();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    void WriteStatefulContent(NIBWriter *writer, XIBObject *obj);
+    XIBDocument(pugi::xml_node node);
+    XIBArray *Objects();
 };
-
+#endif

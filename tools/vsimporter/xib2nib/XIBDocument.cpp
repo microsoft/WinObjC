@@ -14,21 +14,24 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "UIControl.h"
+#include <assert.h>
+#include "XIBObjectTypes.h"
+#include "NIBWriter.h"
+#include "XIBDocument.h"
 
-class UIFont;
-class UIButton :
-    public UIControl
+XIBDocument::XIBDocument(pugi::xml_node node)
 {
-public:
-    int _buttonType;
-    UIFont *_font;
-    XIBObject *_statefulContent;
-    UIButton();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    void WriteStatefulContent(NIBWriter *writer, XIBObject *obj);
-};
+    ScanStoryObjects(node);
+}
 
+XIBArray *XIBDocument::Objects()
+{
+    //  Find the objects array
+    for (auto curMember : _members) {
+        if ( strcmp(curMember->_obj->_node.name(), "objects") == 0 ) {
+            return (XIBArray *) curMember->_obj;
+        }
+    }
+
+    return NULL;
+}

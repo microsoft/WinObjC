@@ -20,6 +20,7 @@
 #include "UIRuntimeEventConnection.h"
 #include "UIProxyObject.h"
 #include <assert.h>
+#include <map>
 
 int curPlaceholder = 1;
 
@@ -298,23 +299,26 @@ XIBObject *NIBWriter::GetProxyFor(XIBObject *obj)
     return newProxy;
 }
 
+std::map<std::string, std::string> _g_exportedControllers;
+
 void NIBWriter::ExportController(const char *controllerId)
 {
-    static std::vector<char *> _exportedControllers;
-
-    for ( std::vector<char *>::iterator cur = _exportedControllers.begin(); cur != _exportedControllers.end(); cur ++ ) {
-        if ( strcmp(*cur, controllerId) == 0 ) {
-            return;
-        }
+    std::string controllerName = std::string("UIViewController-") + controllerId;
+    //  Check if we've already written out the controller
+    if (_g_exportedControllers.find(controllerName) != _g_exportedControllers.end()) {
+        return;
     }
-    _exportedControllers.push_back(strdup(controllerId));
+
+    _g_exportedControllers[controllerName] = controllerName;
+
+    char szFilename[255];
+    sprintf(szFilename, "UIViewController-%s.nib", controllerId);
+
     XIBObject *controller = XIBObject::findReference(controllerId);
     XIBArray *objects = (XIBArray *) controller->_parent;
 
-    char szFilename[255];
-    sprintf(szFilename, "UIViewController-%s.nib", controllerId);   
-    printf("Writing %s\n", szFilename);
-    FILE *fpOut = fopen(szFilename, "wb");
+    printf("Writing %s\n", GetOutputFilename(szFilename).c_str());
+    FILE *fpOut = fopen(GetOutputFilename(szFilename).c_str(), "wb");
 
     NIBWriter *writer = new NIBWriter(fpOut, NULL, NULL);
 
@@ -354,6 +358,10 @@ void NIBWriter::WriteData()
 
     for ( int i = 0; i < _outputObjects.size(); i ++ ) {
         XIBObject *pObject = _outputObjects[i];
+        if (pObject->_outputClassName == NULL) {
+            printf("Unable to find class mapping for required object <%s>\n", pObject->_node.name());
+            exit(-1);
+        }
         pObject->_outputClassNameIdx = classNames.AddString(pObject->_outputClassName);
         pObject->_outputObjectIdx = i;
     }
