@@ -233,22 +233,9 @@ DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize)
 DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect)
 {
     CGRect ret;
-
+	
     char *str = (char *) [strRect UTF8String];
     sscanf(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
-    return ret;
-}
-
-__declspec(dllexport) extern "C" uint64_t mach_absolute_time()
-{
-    static uint32_t start;
-
-    if (start == 0) {
-        start = EbrGetAbsoluteTime();
-    }
-    uint32_t ret = EbrGetAbsoluteTime();
-    ret -= start;
-
     return ret;
 }
 

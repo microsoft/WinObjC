@@ -14,4 +14,24 @@
 //
 //******************************************************************************
 
-// This header file is not yet implemented
+#ifndef __MACH_TIME_H
+#define __MACH_TIME_H
+
+struct mach_timebase_info {
+    uint32_t numer, denom;
+};
+
+typedef struct mach_timebase_info *mach_timebase_info_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+kern_return_t mach_timebase_info(mach_timebase_info_t tinfo);
+uint64_t mach_absolute_time();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

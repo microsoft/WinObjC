@@ -1,6 +1,7 @@
 # Test name             Source files
 
 objcrt_sanity           test_src\objcrt_sanity.m
+corefoundation           test_src\corefoundation.m
 foundation              test_src\foundation.m
 dispatch                test_src\dispatch.m
 
