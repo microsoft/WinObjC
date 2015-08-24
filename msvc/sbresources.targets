@@ -132,16 +132,12 @@
     <Message
       Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
       Importance="High"
-      Text="Storyboard compilation not currently supported. Ignoring %(StoryboardCompile.Identity)" />
+      Text="%(StoryboardCompile.Identity)" />
 
     <MakeDir Directories="@(StoryboardCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
-
-    <WriteLinesToFile
+    <Exec
       Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
-      File="%(StoryboardCompile.IntermediateFile)"
-      Lines="Storyboard compilation not currently supported."
-      Overwrite="true"
-      Encoding="Unicode"/>
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe&quot; &quot;%(StoryboardCompile.Identity)&quot; &quot;%(StoryboardCompile.IntermediateFile)&quot;" />
   </Target>
 
   <Target
@@ -215,7 +211,7 @@
       <!-- Include files in any directories to be copied -->
       <SBResourceCopy Condition="'@(SBResourceCopy)' != ''" Include="%(SBResourceCopy.Identity)\**\*">
         <SourceDir>%(SBResourceCopy.Identity)</SourceDir>
-        <SourceDirName>%(SBResourceCopy.Filename)</SourceDirName>
+        <SourceDirName>%(SBResourceCopy.Filename)%(SBResourceCopy.Extension)</SourceDirName>
         <VariantDir>%(SBResourceCopy.VariantDir)</VariantDir>
         <ExcludedFromBuild>%(SBResourceCopy.ExcludedFromBuild)</ExcludedFromBuild>
       </SBResourceCopy>
@@ -249,7 +245,7 @@
     <ItemGroup>
       <!-- Fix up IntermediateFile to use VariantDir -->
       <StoryboardCompile>
-        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(StoryboardCompile.VariantDir)', '%(StoryboardCompile.Filename)')).storyboardc.dummy</IntermediateFile>
+        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(StoryboardCompile.VariantDir)', '%(StoryboardCompile.Filename)')).storyboardc</IntermediateFile>
       </StoryboardCompile>
     </ItemGroup>
     <ItemGroup>
