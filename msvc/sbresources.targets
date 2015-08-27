@@ -29,9 +29,10 @@
   <Import Project="$(MSBuildThisFileDirectory)zip.tasks" />
 
   <PropertyGroup>
-    <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
+    <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_DataModelDirCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
+    <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies</SBResourceComputeTargets>
   </PropertyGroup>
 
   <Target
@@ -41,20 +42,36 @@
     DependsOnTargets="$(SBResourceCompileDependsOn);SBResourceCopy;SBResourcePackage" />
 
   <Target
+    Name="CheckForMultiplePlists"
+    AfterTargets="Link"
+    BeforeTargets="CopyInfoPlist"
+    Condition="'@(SBInfoPlistCopy->Count())' &gt; '1'"
+    DependsOnTargets="ComputePlistCopyOptions">
+
+    <Error Text="You can only specify a single Info.plist file! Files specified: @(SBInfoPlistCopy)" />
+  </Target>
+
+  <Target
+    Name="CheckForMultipleAssetCatalogs"
+    AfterTargets="Link"
+    BeforeTargets="_AssetCatalogCompile"
+    Condition="'@(AssetCatalogCompile->Count())' &gt; '1'"
+    DependsOnTargets="ComputeAssetCatalogCompileOptions">
+
+    <Error Text="You can only specify a single Asset Catalog! Files specified: @(AssetCatalogCompile)" />
+  </Target>
+
+  <Target
     Name="CopyInfoPlist"
     DependsOnTargets="ComputePlistCopyOptions"
     Condition="'@(SBInfoPlistCopy)' != ''"
     Outputs="@(SBInfoPlistCopy->'%(IntermediateFile)')"
     Inputs="@(SBInfoPlistCopy->'%(VariableFile)');@(SBInfoPlistCopy->'%(Identity)')">
 
-    <Error
-      Condition="'@(SBInfoPlistCopy->Count())' != '1'"
-      Text="You can only specify a single PList file! (Plists specified: @(SBInfoPlistCopy))" />
-
     <Message
       Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
       Importance="High"
-      Text="Info.plist" />
+      Text="%(SBInfoPlistCopy.Identity)" />
 
    <Exec
       Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
@@ -188,24 +205,28 @@
     Name="_AssetCatalogCompile"
     DependsOnTargets="ComputeAssetCatalogCompileOptions"
     Condition="'@(AssetCatalogCompile)' != ''"
-    Outputs="%(AssetCatalogCompileFile.OutputFile)"
+    Outputs="%(AssetCatalogCompileFile.OutputDir)"
     Inputs="%(AssetCatalogCompileFile.SourceFile);%(AssetCatalogCompileFile.Identity)">
 
     <Message
       Importance="High"
-      Text="Asset Catalog compilation not currently supported. Ignoring %(AssetCatalogCompileFile.SourceFile)" />
+      Text="%(AssetCatalogCompileFile.SourceFile)" />
 
-    <MakeDir Directories="@(AssetCatalogCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <RemoveDir Directories="%(AssetCatalogCompileFile.OutputDir)" />
+    <MakeDir Directories="%(AssetCatalogCompileFile.OutputDir)" />
 
-    <WriteLinesToFile File="%(AssetCatalogCompileFile.OutputFile)"
-      Lines="Asset Catalog compilation not currently supported."
-      Overwrite="true"
-      Encoding="Unicode"/>
+    <Exec
+      Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\acbuilder.exe&quot; --target-device iphone --target-device ipad --compile &quot;%(AssetCatalogCompileFile.OutputDir)&quot; &quot;%(AssetCatalogCompileFile.SourceFile)&quot;" />
+
+    <ItemGroup>
+      <SBResourceCopy Include="%(AssetCatalogCompileFile.OutputDir)\**\*" />
+    </ItemGroup>
   </Target>
 
   <Target
     Name="ComputeResourceCopyOptions"
-    DependsOnTargets="ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies">
+    DependsOnTargets="$(SBResourceComputeTargets)">
 
     <ItemGroup>
       <!-- Include files in any directories to be copied -->
@@ -281,19 +302,23 @@
 
   <Target Name="ComputeAssetCatalogCompileOptions">
     <ItemGroup Condition="'@(AssetCatalogCompile)' != ''">
+      <!-- Remove items excluded from the build, so we can get an accurate count later -->
+      <AssetCatalogCompile Remove="@(AssetCatalogCompile->WithMetadataValue('ExcludedFromBuild', 'true'))" />
       <!-- Fix up IntermediateFile to use VariantDir -->
       <AssetCatalogCompile>
-        <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', 'AssetCatalogDummy'))</IntermediateFile>
+        <IntermediateDir>$([System.IO.Path]::Combine('$(IntDir)', 'AssetCatalog'))</IntermediateDir>
       </AssetCatalogCompile>
-      <AssetCatalogCompile Condition="'%(AssetCatalogCompile.ExcludedFromBuild)' != 'true'" Include="%(AssetCatalogCompile.Identity);%(AssetCatalogCompile.Identity)\**\*">
+      <AssetCatalogCompileFile Condition="'%(AssetCatalogCompile.ExcludedFromBuild)' != 'true'" Include="%(AssetCatalogCompile.Identity);%(AssetCatalogCompile.Identity)\**\*">
         <SourceFile>%(AssetCatalogCompile.Identity)</SourceFile>
-        <OutputFile>%(AssetCatalogCompile.IntermediateFile)</OutputFile>
-      </AssetCatalogCompile>
+        <OutputDir>%(AssetCatalogCompile.IntermediateDir)</OutputDir>
+      </AssetCatalogCompileFile>
     </ItemGroup>
   </Target>
 
   <Target Name="ComputePlistCopyOptions">
     <ItemGroup>
+      <!-- Remove items excluded from the build, so we can get an accurate count later -->
+      <SBInfoPlistCopy Remove="@(SBInfoPlistCopy->WithMetadataValue('ExcludedFromBuild', 'true'))" />
       <!-- Fix up IntermediateFile to use VariantDir -->
       <SBInfoPlistCopy>
         <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', 'Info.plist'))</IntermediateFile>
@@ -342,15 +367,14 @@
   
   <Target
     Name="CleanSBResources"
-    Condition="'@(SBResourceCopy)' != ''"
-    DependsOnTargets="ComputeCleanSBResources;ComputeResourceCopyOptions" >
+    DependsOnTargets="ComputeCleanSBResources;$(SBResourceComputeTargets)" >
 
     <!-- Delete intermediates -->
+    <RemoveDir Directories="@(StoryboardCompile->Metadata('IntermediateFile')->ClearMetadata())" />
+    <RemoveDir Directories="@(AssetCatalogCompile->Metadata('IntermediateDir')->ClearMetadata())" />
     <Delete Files="@(XibCompile->Metadata('IntermediateFile')->ClearMetadata())" />
-    <Delete Files="@(StoryboardCompile->Metadata('IntermediateFile')->ClearMetadata())" />
     <Delete Files="@(DataModelCompile->Metadata('IntermediateFile')->ClearMetadata())" />
     <Delete Files="@(DataModelDirCompile->Metadata('IntermediateFile')->ClearMetadata())" />
-    <Delete Files="@(AssetCatalogCompile->Metadata('IntermediateFile')->ClearMetadata())" />
     <Delete Files="@(SBInfoPlistCopy->Metadata('IntermediateFile')->ClearMetadata())" />
 
     <ItemGroup>
