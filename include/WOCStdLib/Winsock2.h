@@ -1,3 +1,5 @@
+#pragma once 
+
 //******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
@@ -14,8 +16,13 @@
 //
 //******************************************************************************
 
-#define timeval __ws2_timeval
+#ifndef __TIMEVAL_REDEFINED
+ #define __TIMEVAL_REDEFINED
+ #define timeval __ws2_timeval
+ #include_next <Winsock2.h>
 
-#include_next <Winsock2.h>
-
-#undef timeval
+ #undef timeval
+ #undef __TIMEVAL_REDEFINED
+#else
+ #include_next <Winsock2.h>
+#endif

@@ -1,3 +1,5 @@
+#pragma once
+
 //******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
@@ -14,37 +16,13 @@
 //
 //******************************************************************************
 
-#include_next <stdio.h>
+#ifndef __TIMEVAL_REDEFINED
+ #define __TIMEVAL_REDEFINED
+ #define timeval __ws2_timeval
+ #include_next <Winsock.h>
 
-#undef min
-#undef max
-
-#include <strings.h>
-
-#ifndef vsnprintf
-#include <stdarg.h>
-
-__if_not_exists(vsnprintf) {
-    __forceinline int vsnprintf(char *buf, size_t count, const char *fmt, va_list list)
-    {
-        return _vsnprintf(buf, count, fmt, list);
-    }
-}
-#endif
-
-#ifndef snprintf
-#include <stdarg.h>
-
-__if_not_exists(snprintf) {
-    __forceinline int snprintf(char *buf, size_t count, const char *fmt, ...)
-    {
-        int rc;
-        va_list list;
-        va_start(list, fmt);
-        rc = vsnprintf(buf, count, fmt, list);
-        va_end(list);
-        
-        return rc;
-    }
-}
+ #undef timeval
+ #undef __TIMEVAL_REDEFINED
+#else
+ #include_next <Winsock.h>
 #endif

@@ -18,6 +18,3 @@
 
 #include_next <stdlib.h>
 #include <strings.h>
-
-#define snprintf _snprintf 
-#define vsnprintf _vsnprintf 
