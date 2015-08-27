@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 
+#include <COMIncludes.h>
 #include <wrl/client.h>
 #include <audioclient.h>
 #include <cguid.h>
@@ -27,6 +28,7 @@
 #include <synchapi.h>
 #include <Mmdeviceapi.h>
 #include "windows.media.devices.h"
+#include <COMIncludes_End.h>
 
 #include <process.h>
 #include <stdlib.h>
@@ -40,13 +42,8 @@
 #include <memory>
 #include <thread>
 
-#ifdef EBRIUS
-#include "AL\AL.h"
-#include "AL\alc.h"
-#else
 #include "OpenAL\al.h"
 #include "OpenAL\alc.h"
-#endif
 
 #undef AL_API
 #undef ALC_API

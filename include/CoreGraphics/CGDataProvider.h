@@ -9,7 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef _CGDATAPROVIDER_H_
 #define _CGDATAPROVIDER_H_
 
-#import <StarboardExport.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 

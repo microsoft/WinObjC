@@ -114,13 +114,13 @@
       <ClangCompile Remove="@(ClangCompile)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
     </ItemGroup>
 
-    <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
+      <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
     <Clang
       Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
       InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
       Autocomplete="$(ClangAutocomplete)"
       AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
-      CommandLineTemplate="%(ClangCompile.CommandLineTemplate)"
+      CommandLineTemplate="%(ClangCompile.WOCStdlibOptions) %(ClangCompile.CommandLineTemplate)"
       CommandTLogFile="%(ClangCompile.CommandTLogFile)"
       CompileAs="%(ClangCompile.CompileAs)"
       DebugInformation="%(ClangCompile.DebugInformation)"
@@ -240,13 +240,6 @@
       </ClangCompile>
     </ItemGroup>
 	
-	<ItemGroup>
-	  <ClangCompile Condition="'$(IWCompat)' == 'true'">
-	    <AdditionalOptions>%(ClangCompile.AdditionalOptions) -D__ISLANDWOOD_COMPAT</AdditionalOptions>
-		<IncludePaths>$(StarboardExtraIncludePath);$(StarboardSdkRoot)\include\compat;%(ClangCompile.IncludePaths)</IncludePaths>
-	  </ClangCompile>
-	</ItemGroup>
-	
     <!-- Figure out language-specific flags -->
     <ItemGroup>
       <ClangCompile>
@@ -264,6 +257,14 @@
         <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Combined'">-I"$(CombinedHMapFilename).hmap"</HeaderMapInclude>
       </ClangCompile>
     </ItemGroup>
+    
+    <!-- Figure out WOCStdlib options to use -->
+    <ItemGroup>
+      <ClangCompile>
+        <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem $(StarboardSdkRoot)\include\WOCStdLib -include WOCStdlib.h</WOCStdlibOptions>
+      </ClangCompile>
+    </ItemGroup>
+
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->

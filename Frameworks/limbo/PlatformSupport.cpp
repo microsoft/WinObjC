@@ -881,8 +881,6 @@ int EbrMunmap(void *addr, DWORD size)
     return 0;
 }
 
-#define strcasecmp stricmp
-
 bool EbrRemoveEmptyDir(const char* path)
 {
     return RemoveDirectoryA(CPathMapper(path));

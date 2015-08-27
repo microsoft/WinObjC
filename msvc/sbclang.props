@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <IWCompat Condition="'$(IWCompat)' == ''">true</IWCompat>
     <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM-3.6.0\</StarboardLLVMDirectory>
     <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
@@ -40,6 +39,7 @@
       <OptimizationLevel Condition="'%(ClangCompile.OptimizationLevel)' == ''">Disabled</OptimizationLevel>
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDebugDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
+      <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
       <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude</InternalSystemIncludePaths>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -50,7 +50,6 @@
     <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
     <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
-    <IWCompat Condition="'$(IWCompat)' == ''">true</IWCompat>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

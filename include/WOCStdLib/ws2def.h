@@ -14,44 +14,21 @@
 //
 //******************************************************************************
 
-#pragma once
+#define sockaddr_in __ws2_sockaddr_in
+#include_next <ws2def.h>
+#undef sockaddr_in
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+typedef struct sockaddr_in {
+#if(_WIN32_WINNT < 0x0600)
+    short   sin_family;
+#else //(_WIN32_WINNT < 0x0600)
+    ADDRESS_FAMILY sin_family;
+#endif //(_WIN32_WINNT < 0x0600)
 
-#undef WIN32
-
-#define LOADOES(type, name) type name; { name = (type) eglGetProcAddress(#name); }
-
-#define PERFORM_ERROR_CHECKS 0
-#if PERFORM_ERROR_CHECKS
-
-inline int glCheckError()
-{
-    int ret = glGetError();
-
-    if ( ret != 0 ) {
-        err_printf("glError: %x\n", ret);
-        //*((char *) 0) = 0;
-    }
-
-    return 0;
-}
-
-#else
-
-inline int glCheckError()
-{
-    return 0;
-}
-
-#endif 
-
-void RegisterEGL();
-
-inline void EbrEnableTextures() {}
-inline void EbrDisableTextures() {}
-
-#define GL_RENDERBUFFER_OES GL_RENDERBUFFER
-#define GL_RENDERBUFFER_BINDING_OES GL_RENDERBUFFER_BINDING
-#define GL_FRAMEBUFFER_BINDING_OES GL_FRAMEBUFFER_BINDING
+    USHORT sin_port;
+    IN_ADDR sin_addr;
+    union {
+        CHAR sin_zero[8];
+        USHORT   sin_len;
+    };
+};

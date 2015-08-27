@@ -14,21 +14,20 @@
 //
 //******************************************************************************
 
-#import <CoreFoundation/CoreFoundation.h>
-#include <Windows.h>
+#include <Starboard.h>
 
+#include <COMIncludes.h>
 #include <Windows.Foundation.h>
 #include <Windows.Security.Cryptography.h>
 #include <wrl\wrappers\corewrappers.h>
-#undef interface
+#include <COMIncludes_End.h>
 
-#include <Starboard.h>
+#import <CoreFoundation/CoreFoundation.h>
 
-#ifndef __ISLANDWOOD_COMPAT
-#include <sys/types.h>
-#endif
 #include <unistd.h>
-#include <compat/mach/mach_time.h>
+#include <mach/mach_time.h>
+
+#include <algorithm>
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
@@ -70,7 +69,7 @@ COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char *name, void *out, s
         const int required = 8;
         if ( outSize ) {
             // If there's no buffer, we have to return the nr. of bytes required for this response.
-            *outSize = !out ? required : min(*outSize, required);
+            *outSize = !out ? required : std::min(*outSize, (size_t) required);
         } else {
             return -1;
         }

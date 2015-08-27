@@ -213,7 +213,7 @@
 #define __section(x)
 #define __weak
 #else
-//#define   __weak      __attribute__((__weak__))
+#define   __weak      __attribute__((__weak__))
 #if !__GNUC_PREREQ__(2, 5) && !defined(__INTEL_COMPILER)
 #define __dead2
 #define __pure2

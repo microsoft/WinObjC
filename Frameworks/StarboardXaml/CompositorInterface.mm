@@ -853,7 +853,7 @@ public:
     {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = strdup("contents");
+        _propertyName = _strdup("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;

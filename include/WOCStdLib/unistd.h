@@ -46,13 +46,6 @@ typedef __gid_t     gid_t;
 #define _GID_T_DECLARED
 #endif
 
-/*
-#ifndef _OFF_T_DECLARED
-typedef __off_t     off_t;
-#define _OFF_T_DECLARED
-#endif
-*/
-
 #ifndef _PID_T_DECLARED
 typedef __pid_t     pid_t;
 #define _PID_T_DECLARED

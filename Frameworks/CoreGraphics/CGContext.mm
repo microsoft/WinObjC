@@ -37,7 +37,6 @@ static IWLazyClassLookup _LazyUIImage("UIImage"), _LazyUIScreen("UIScreen");
 
 EbrLock _cairoLock = EBRLOCK_INITIALIZE;
 
-#undef interface
 @interface CGNSContext : NSObject {
 }
 @end
@@ -428,9 +427,9 @@ void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef l
     ctx->Backing()->CGContextDrawLayerAtPoint(destPoint, layer);
 }
 
-void CGContextSetLineDash(CGContextRef ctx, float phase, float *lengths, unsigned count)
+void CGContextSetLineDash(CGContextRef ctx, float phase, const float *lengths, unsigned count)
 {
-    ctx->Backing()->CGContextSetLineDash(phase, lengths, count);
+    ctx->Backing()->CGContextSetLineDash(phase, (float *) lengths, count);
 }
 
 void CGContextSetMiterLimit(CGContextRef ctx, float limit)

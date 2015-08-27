@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 #import <math.h>
 #import <stdbool.h>
 #import <MacTypes.h>
-#ifdef __ISLANDWOOD_COMPAT
+#ifdef WOCSTDLIB
  #import <mach/mach_types.h>
 #endif
 #import <TargetConditionals.h>

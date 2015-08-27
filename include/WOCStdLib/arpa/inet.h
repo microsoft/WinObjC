@@ -108,11 +108,13 @@ typedef __socklen_t socklen_t;
 #define _SOCKLEN_T_DECLARED
 #endif
 
+#ifndef WINOBJC     //  Defined by winsock2.h
 #ifndef _STRUCT_IN_ADDR_DECLARED
 struct in_addr {
     in_addr_t s_addr;
 };
 #define _STRUCT_IN_ADDR_DECLARED
+#endif
 #endif
 
 /* XXX all new diversions!! argh!! */

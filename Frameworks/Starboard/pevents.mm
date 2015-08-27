@@ -34,18 +34,11 @@ THE SOFTWARE.
 #include "pevents.h"
 #include <assert.h>
 #include <errno.h>
-//#include <sys/time.h>
+#include <sys/time.h>
+#include <sys/timespec.h>
 #ifdef WFMO
 #include <algorithm>
 #include <deque>
-#endif
-
-#ifdef NEEDTIMESPEC
-struct timespec
-{
-    long tv_sec;
-    long tv_nsec;
-};
 #endif
 
 namespace neosmart
@@ -362,7 +355,7 @@ namespace neosmart
                 {
                     if ( wfmo->WakeupSocket != -1 ) {
                         pthread_mutex_unlock(&wfmo->Mutex);
-                        struct timeval tv;
+                        struct __ws2_timeval tv;
                         tv.tv_sec = long(milliseconds / 1000);
                         tv.tv_usec = (milliseconds % 1000) * 1000;
                         int selectResult = select(sockets->max + 1, (fd_set *) sockets->fdread, (fd_set *) sockets->fdwrite, (fd_set *) sockets->fderror, &tv);

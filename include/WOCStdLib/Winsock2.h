@@ -14,44 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
+#define timeval __ws2_timeval
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include_next <Winsock2.h>
 
-#undef WIN32
-
-#define LOADOES(type, name) type name; { name = (type) eglGetProcAddress(#name); }
-
-#define PERFORM_ERROR_CHECKS 0
-#if PERFORM_ERROR_CHECKS
-
-inline int glCheckError()
-{
-    int ret = glGetError();
-
-    if ( ret != 0 ) {
-        err_printf("glError: %x\n", ret);
-        //*((char *) 0) = 0;
-    }
-
-    return 0;
-}
-
-#else
-
-inline int glCheckError()
-{
-    return 0;
-}
-
-#endif 
-
-void RegisterEGL();
-
-inline void EbrEnableTextures() {}
-inline void EbrDisableTextures() {}
-
-#define GL_RENDERBUFFER_OES GL_RENDERBUFFER
-#define GL_RENDERBUFFER_BINDING_OES GL_RENDERBUFFER_BINDING
-#define GL_FRAMEBUFFER_BINDING_OES GL_FRAMEBUFFER_BINDING
+#undef timeval

@@ -88,6 +88,7 @@ typedef __uint32_t  uint32_t;
 
 #define h_errno (*__h_errno())
 
+#ifndef WINOBJC     //  Defined by winsock2.h
 /*
  * Structures returned by network data base library.  All addresses are
  * supplied in host order, and returned in network order (suitable for
@@ -132,6 +133,7 @@ struct addrinfo {
     struct  sockaddr *ai_addr;  /* binary address */
     struct  addrinfo *ai_next;  /* next structure in linked list */
 };
+#endif
 
 /*
  * Error return codes from gethostbyname() and gethostbyaddr()
@@ -219,7 +221,9 @@ void        endnetent(void);
 void        endprotoent(void);
 void        endservent(void);
 #if __BSD_VISIBLE || (__POSIX_VISIBLE && __POSIX_VISIBLE <= 200112)
+#ifndef WINOBJC     //  Defined by winsock2.h
 struct hostent  *gethostbyaddr(const void *, socklen_t, int);
+#endif
 struct hostent  *gethostbyname(const char *);
 #endif
 struct hostent  *gethostent(void);
