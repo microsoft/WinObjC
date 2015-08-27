@@ -17,6 +17,12 @@ enum {
    NSMACHOperatingSystem,
 };
 
+typedef struct {
+    NSInteger majorVersion;
+    NSInteger minorVersion;
+    NSInteger patchVersion;
+} NSOperatingSystemVersion;
+
 @interface NSProcessInfo : NSObject {
    NSMutableDictionary *_environment;
    NSArray      *_arguments;
@@ -35,6 +41,9 @@ enum {
 -(NSUInteger)operatingSystem;
 -(NSString *)operatingSystemName;
 -(NSString *)operatingSystemVersionString;
+
+- (NSOperatingSystemVersion)operatingSystemVersion;
+- (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version;
 
 -(NSString *)hostName;
 
