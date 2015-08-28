@@ -356,6 +356,12 @@ enum {
 	DISPATCH_QUEUE_PRIORITY_LOW = -2,
 };
 
+static const uint32_t DISPATCH_QUEUE_PRIORITY_BACKGROUND 
+    __attribute__((deprecated("DISPATCH_QUEUE_PRIORITY_BACKGROUND has a value of DISPATCH_QUEUE_PRIORITY_LOW instead of INT16_MIN on WinObjC"))) 
+        = DISPATCH_QUEUE_PRIORITY_LOW;
+        
+#define DISPATCH_QUEUE_SERIAL NULL
+
 /*!
  * @function dispatch_get_global_queue
  *
