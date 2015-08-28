@@ -80,9 +80,6 @@ void EbrResumeSound(void)
     }
 @end
 
-@implementation _TransitionNotifier
-@end
-
 @implementation __UIGroupEdgeView
 @end
 
@@ -113,23 +110,10 @@ void EbrResumeSound(void)
 }
 @end
 
-#undef dispatch_once
-/*
-void dispatch_once(dispatch_once_t *predicate, dispatch_block_t block)
-{
-    if ( *predicate == 0 ) {
-        *predicate = 1;
-        block();
-    }
-}
-*/
-
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation)
 {
     return false;
 }
-
-#import <UIKit/UIStoryboardPushSegueTemplate.h>
 
 @implementation UIPageControl
 @end
