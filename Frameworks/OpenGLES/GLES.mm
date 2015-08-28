@@ -774,6 +774,18 @@ EAGL_EXPORT DWORD glTexEnvf(GLenum target, GLenum pname, float param)
     return 0;
 }
 
+EAGL_EXPORT void glTexEnvfv(GLenum target, GLenum pname, GLfloat *param)
+{
+    if (ctxManager.lockContext() == false) return;
+
+    EAGLContext *ctx = ctxManager.getEAGLContext();
+    ctx->eaglPriv->_gl11Ctx->glTexEnvfv(target, pname, param);
+
+    int ret = glCheckError();
+
+    ctxManager.unlockContext();
+}
+
 EAGL_EXPORT DWORD glTexEnvi(GLenum target, GLenum pname, GLint param)
 {
     if (ctxManager.lockContext() == false) return 0;
