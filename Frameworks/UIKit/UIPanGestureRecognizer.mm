@@ -47,8 +47,6 @@ struct Private
 NSArray* curPanList = nil;
 
 @implementation UIPanGestureRecognizer  {
-    NSUInteger _maximumNumberOfTouches;
-    NSUInteger _minimumNumberOfTouches;
     CGPoint _translation;
     CGPoint _velocity;
     NSTimeInterval _lastMovementTime;
@@ -59,7 +57,6 @@ NSArray* curPanList = nil;
 
     // Configurable properties of the gesture:
     float _dragSlack;
-    size_t _minNumTouches, _maxNumTouches;
     double _lastTouchUp;
     double _disableVelocity;
 
@@ -68,11 +65,12 @@ NSArray* curPanList = nil;
     bool _lockVertical, _lockHorizontal;
 
 }
+
     static void commonInit(UIPanGestureRecognizer* self)
     {
         self->_dragSlack = 5.0f;
-        self->_minNumTouches = 1;
-        self->_maxNumTouches = NSUIntegerMax;
+        self->_minimumNumberOfTouches = 1;
+        self->_maximumNumberOfTouches = NSUIntegerMax;
         self->_priv = new Private;
     }
 
@@ -100,17 +98,17 @@ NSArray* curPanList = nil;
     }
 
     -(void) setMinimumNumberOfTouches:(NSUInteger)numberOfTouches {
-        _minNumTouches = numberOfTouches;
+        _minimumNumberOfTouches = numberOfTouches;
     }
 
     -(void) setMaximumNumberOfTouches:(NSUInteger)numberOfTouches {
-        _maxNumTouches = numberOfTouches;
+        _maximumNumberOfTouches = numberOfTouches;
     }
 
     static void numTouchesChanged(UIPanGestureRecognizer* o)
     {
         // End or fail the gesture if we have too many touches to make a match:
-        if ( o->_priv->touches.size() > o->_maxNumTouches || o->_priv->touches.size() < o->_minNumTouches ) {
+        if ( o->_priv->touches.size() > o->_maximumNumberOfTouches || o->_priv->touches.size() < o->_minimumNumberOfTouches ) {
             switch ( o->_state ) {
                 case UIGestureRecognizerStateBegan:
                 case UIGestureRecognizerStateChanged:
@@ -233,7 +231,7 @@ NSArray* curPanList = nil;
         _priv->currentVelocity = getAverageVelocity(_disableVelocity, _priv->touches);
 
         if ( _state == UIGestureRecognizerStatePossible &&
-            _priv->touches.size() >= _minNumTouches && _priv->touches.size() <= _maxNumTouches ) {
+            _priv->touches.size() >= _minimumNumberOfTouches && _priv->touches.size() <= _maximumNumberOfTouches ) {
                 if ( [_delegate respondsToSelector:@selector(_gestureRecognizerTouchesReached:)] ) {
                     [_delegate _gestureRecognizerTouchesReached:self];
                 }
@@ -271,7 +269,7 @@ NSArray* curPanList = nil;
         _priv->currentVelocity = getAverageVelocity(_disableVelocity, _priv->touches);
 
         if ( _state == UIGestureRecognizerStatePossible &&
-            _priv->touches.size() >= _minNumTouches && _priv->touches.size() <= _maxNumTouches ) {
+            _priv->touches.size() >= _minimumNumberOfTouches && _priv->touches.size() <= _maximumNumberOfTouches ) {
                 if ( _priv->currentTranslation.lenGe( _dragSlack ) ) {
                     BOOL start = TRUE;
 
