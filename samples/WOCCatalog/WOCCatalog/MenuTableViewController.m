@@ -29,6 +29,7 @@
 #import "ImagesViewController.h"
 #import "OpenGLES11Controller.h"
 #import "OpenGLES20Controller.h"
+#import "GLKitExampleController.h"
 #import "PhotogridViewController.h"
 #import "BezierViewController.h"
 
@@ -115,6 +116,13 @@ static NSString *viewTitleKeyName = @"ViewName";
     [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                @"Open GLES 2.0", viewTitleKeyName,
                                gl20ViewController, controllerKeyName,
+                               nil]];
+
+    // OpenGL 2.0
+    GLKitExampleController *glkitController = [[GLKitExampleController alloc] init];
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               @"GLKit", viewTitleKeyName,
+                               glkitController, controllerKeyName,
                                nil]];
 
     // TextView

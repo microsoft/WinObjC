@@ -341,6 +341,7 @@
     <PropertyGroup>
       <IncludeUIKit>true</IncludeUIKit>
       <IncludeOpenGLES>true</IncludeOpenGLES>
+      <IncludeGLKit>true</IncludeGLKit>
       <IncludeQuartzCore>true</IncludeQuartzCore>
       <IncludeCoreGraphics>true</IncludeCoreGraphics>
       <IncludeFoundation>true</IncludeFoundation>

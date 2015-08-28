@@ -1,0 +1,28 @@
+LIBRARY GLKit
+   EXPORTS
+     _OBJC_CLASS_GLKView	DATA
+	 __objc_class_name_GLKView	CONSTANT
+     _OBJC_CLASS_GLKViewController	DATA
+	 __objc_class_name_GLKViewController	CONSTANT
+     _OBJC_CLASS_GLKBaseEffect	DATA
+	 __objc_class_name_GLKBaseEffect	CONSTANT
+     _OBJC_CLASS_GLKEffectProperty	DATA
+	 __objc_class_name_GLKEffectProperty	CONSTANT
+     _OBJC_CLASS_GLKReflectionMapEffect	DATA
+	 __objc_class_name_GLKReflectionMapEffect	CONSTANT
+     _OBJC_CLASS_GLKEffectPropertyFog	DATA
+	 __objc_class_name_GLKEffectPropertyFog	CONSTANT
+     _OBJC_CLASS_GLKEffectPropertyLight	DATA
+	 __objc_class_name_GLKEffectPropertyLight	CONSTANT
+     _OBJC_CLASS_GLKEffectPropertyMaterial	DATA
+	 __objc_class_name_GLKEffectPropertyMaterial	CONSTANT
+     _OBJC_CLASS_GLKEffectPropertyTexture	DATA
+	 __objc_class_name_GLKEffectPropertyTexture	CONSTANT
+     _OBJC_CLASS_GLKEffectPropertyTransform	DATA
+	 __objc_class_name_GLKEffectPropertyTransform	CONSTANT
+     _OBJC_CLASS_GLKSkyboxEffect	DATA
+	 __objc_class_name_GLKSkyboxEffect	CONSTANT
+     _OBJC_CLASS_GLKTextureInfo	DATA
+	 __objc_class_name_GLKTextureInfo	CONSTANT
+     _OBJC_CLASS_GLKTextureLoader	DATA
+	 __objc_class_name_GLKTextureLoader	CONSTANT
