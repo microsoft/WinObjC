@@ -91,7 +91,8 @@ extern "C" int CFNSDescriptorCompare(id obj1, id obj2, id descriptors)
 __declspec(dllexport) 
 extern "C" int CFNSBlockCompare(id obj1, id obj2, id block)
 {
-    int ret = (int) EbrCallBlock(block, "ddd", block, obj1, obj2);
+	int (^blockFunc)(id, id) = (int (^)(id, id)) block;
+    int ret = (int) blockFunc(obj1, obj2);
 
     return ret;
 }
