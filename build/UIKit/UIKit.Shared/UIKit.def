@@ -22,6 +22,8 @@ LIBRARY UIKit
 	 __objc_class_name_UIFont	CONSTANT
      _OBJC_CLASS_UIButton	DATA
 	 __objc_class_name_UIButton	CONSTANT
+     _OBJC_CLASS_UIGestureRecognizer	DATA
+	 __objc_class_name_UIGestureRecognizer	CONSTANT
      _OBJC_CLASS_UIPanGestureRecognizer	DATA
 	 __objc_class_name_UIPanGestureRecognizer	CONSTANT
      _OBJC_CLASS_UITapGestureRecognizer	DATA
