@@ -22,8 +22,7 @@
 //  INCORRECT
 const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord, CGPointApplyAffineTransform, ArgTypeCGPoint, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(CGPoint, CGPointApplyAffineTransform, CGPoint, pt, CGAffineTransform, t)
+CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t)
 {
     CGPoint ret;
 
@@ -33,7 +32,7 @@ DEFINE_FUNCTION_STRET_2(CGPoint, CGPointApplyAffineTransform, CGPoint, pt, CGAff
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGRectApplyAffineTransform, CGRect, rect, CGAffineTransform, curTransform)
+CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform)
 {
     CGPoint pts[4];
 
@@ -107,7 +106,7 @@ extern "C" CGRect CGRectStandardize(CGRect r)
     return out;
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGRectIntersection, CGRect, r1, CGRect, r2)
+CGRect CGRectIntersection(CGRect r1, CGRect r2)
 {
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);
@@ -162,8 +161,7 @@ DEFINE_FUNCTION_STRET_2(CGRect, CGRectIntersection, CGRect, r1, CGRect, r2)
     return out;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord, CGRectIntegral, ArgTypeWordPtr, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
-DEFINE_FUNCTION_STRET_1(CGRect, CGRectIntegral, CGRect, r)
+CGRect CGRectIntegral(CGRect r)
 {
     r = CGRectStandardize(r);
 
