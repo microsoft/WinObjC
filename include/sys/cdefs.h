@@ -214,7 +214,7 @@
 #define __weak
 #else
 #if !__has_feature(objc_arc)
- #define   __weak      __attribute__((__weak__))
+ #define   __weak      __attribute__((__weak_unavailable_without_arc))
 #endif
 #if !__GNUC_PREREQ__(2, 5) && !defined(__INTEL_COMPILER)
 #define __dead2
