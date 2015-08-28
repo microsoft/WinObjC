@@ -15,13 +15,3 @@
 //******************************************************************************
 
 #pragma once
-
-#if __has_include_next("strings.h")
- #include "strings.h"
-#endif
-
-#define strcasecmp _stricmp 
-#define strncasecmp _strnicmp
-#define strtok_r strtok_s
-
-void bzero(void *ptr, size_t len);
