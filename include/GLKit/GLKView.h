@@ -23,7 +23,8 @@
 enum _GLKViewDrawableColorFormat {
     GLKViewDrawableColorFormatRGBA8888 = 0,
     GLKViewDrawableColorFormatRGB565,
-    GLKViewDrawableColorFormatSRGBA8888
+    GLKViewDrawableColorFormatSRGBA8888,
+    GLKViewDrawableColorFormatWindow
 };
 typedef GLuint GLKViewDrawableColorFormat;
 
@@ -43,7 +44,7 @@ typedef GLuint GLKViewDrawableStencilFormat;
 @class GLKView;
 
 @protocol GLKViewDelegate
--(void)glkView:(GLKView*) drawInRect:(CGRect)rect;
+-(void)glkView:(GLKView*)view drawInRect:(CGRect)rect;
 @end
 
 // --------------------------------------------------------------------------------
@@ -63,6 +64,11 @@ GLKIT_EXPORT_CLASS
 
 @property BOOL enableSetNeedsDisplay;
 
--(void) bindDrawable;
+// ----------------------------------------
+
+-(id) initWithFrame: (CGRect)rect;
+-(id) initWithCoder: (NSCoder*)coder;
+
+-(void) layoutSubviews;
 
 @end

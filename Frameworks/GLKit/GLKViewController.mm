@@ -18,6 +18,46 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKViewController.h>
 
-@implementation GLKViewController
+// TODO: BK: when to call glkViewControllerUpdate on delegate?
+
+@implementation GLKViewController {
+    CADisplayLink *_displayLink;
+}
+
+-(void) viewWillLayoutSubviews
+{
+    NSLog(@"GLKViewController got viewWillLayoutSubviews.");
+}
+
+-(void) viewDidLoad
+{
+    [super viewDidLoad];
+    NSLog(@"GLKViewController got viewDidLoad.");
+    
+    _displayLink = [CADisplayLink displayLinkWithTarget: self selector: @selector(render)];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"GLKViewController got viewWillAppear.");
+    
+    [super viewWillAppear: animated];
+    [self.delegate glkViewController: self willPause: FALSE];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    NSLog(@"GLKViewController got viewWillDisappear.");
+    
+    [super viewWillDisappear: animated];
+    [self.delegate glkViewController: self willPause: TRUE];
+}
+
+-(void)render
+{
+    NSLog(@"GLKViewController got render.");
+    [self.view setNeedsDisplay];
+}
+
 @end
 
