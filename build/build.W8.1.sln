@@ -111,7 +111,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.
 		{29901BE9-6238-43B8-99FA-6E381297B16C} = {29901BE9-6238-43B8-99FA-6E381297B16C}
 	EndProjectSection
 EndProject
-<<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoLayout", "AutoLayout", "{E8908BA0-C3EE-45AC-B43A-A171EED23412}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AutoLayout.Shared", "AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems", "{B15E4CDA-7696-435B-8C43-62640BCCC345}"
@@ -128,6 +127,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLKit", "GLKit", "{175628B8
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKit.Windows", "GLKit\GLKit.Windows\GLKit.Windows.vcxproj", "{AA0C8E83-62D3-4E3C-98A5-6A25077474D2}"
 	ProjectSection(ProjectDependencies) = postProject
+		{B46CBD1B-CFFD-43C2-962B-C7A8DEFBD879} = {B46CBD1B-CFFD-43C2-962B-C7A8DEFBD879}
 		{D4B2AB87-EC16-4D9C-98D5-2EBB69C72370} = {D4B2AB87-EC16-4D9C-98D5-2EBB69C72370}
 		{B3177BAC-2E11-4EF2-976B-2B8B4632FA4A} = {B3177BAC-2E11-4EF2-976B-2B8B4632FA4A}
 	EndProjectSection
@@ -168,6 +168,7 @@ Global
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{8c190ec0-1493-414a-8320-c6e570a5686a}*SharedItemsImports = 9
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{dcc9debc-3518-49bb-85c8-89b7974820e0}*SharedItemsImports = 4
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{537d7738-f86d-471b-a5c0-c257a72069be}*SharedItemsImports = 9
+		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{3b9baa3e-22f1-48af-97f4-7a0c3bf93e1f}*SharedItemsImports = 9
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{1ccd9c7d-4f10-4ece-a783-3d03d1a375c2}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{c7c02737-7cbe-42b3-9a2c-c8814a942fa4}*SharedItemsImports = 9
 	EndGlobalSection
