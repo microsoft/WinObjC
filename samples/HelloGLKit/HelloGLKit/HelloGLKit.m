@@ -21,13 +21,12 @@
     view.context = ctx;
     view.delegate = _renderer;
 
-    // GLKViewController* ctl = [[GLKViewController alloc] initWithNibName: nil bundle: nil];
-    // ctl.view = view;
-    // ctl.delegate = _renderer;
-    // ctl.preferredFramesPerSecond = 60;
+    GLKViewController* ctl = [[GLKViewController alloc] initWithNibName: nil bundle: nil];
+    ctl.view = view;
+    ctl.delegate = _renderer;
+    ctl.preferredFramesPerSecond = 60;
 
-    // _mainWindow.rootViewController = ctl;
-    [_mainWindow addSubview: view];
+    _mainWindow.rootViewController = ctl;
     [_mainWindow makeKeyAndVisible];
 }
 

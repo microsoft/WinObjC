@@ -16,12 +16,11 @@
 
 #import <Starboard.h>
 #import <GLKit/GLKitExport.h>
+#import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
 
-// TODO: BK: when to call glkViewControllerUpdate on delegate?
-
 @implementation GLKViewController {
-    CADisplayLink *_displayLink;
+    CADisplayLink *_link;
 }
 
 -(void) viewWillLayoutSubviews
@@ -32,31 +31,41 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
+    if ([self.view isKindOfClass: [GLKView class]]) {
+        GLKView* kv = (GLKView*)self.view;
+        kv.enableSetNeedsDisplay = FALSE;
+    }
     NSLog(@"GLKViewController got viewDidLoad.");
     
-    _displayLink = [CADisplayLink displayLinkWithTarget: self selector: @selector(render)];
+    _link = [CADisplayLink displayLinkWithTarget: self selector: @selector(_renderFrame)];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"GLKViewController got viewWillAppear.");
-    
+
     [super viewWillAppear: animated];
     [self.delegate glkViewController: self willPause: FALSE];
+
+    [_link addToRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];    
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     NSLog(@"GLKViewController got viewWillDisappear.");
-    
+
     [super viewWillDisappear: animated];
     [self.delegate glkViewController: self willPause: TRUE];
+
+    [_link removeFromRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
--(void)render
-{
-    NSLog(@"GLKViewController got render.");
-    [self.view setNeedsDisplay];
+-(void)_renderFrame {
+    // TODO: BK: call glkViewControllerUpdate on delegate?
+
+    if([self.view respondsToSelector: @selector(_renderFrame)]) {
+        [self.view _renderFrame];
+    }
 }
 
 @end
