@@ -14,9 +14,12 @@
     CGRect bounds = [[UIScreen mainScreen] bounds];    
     _mainWindow = [[UIWindow alloc] initWithFrame: bounds];
 
-    _renderer = [[GLRenderer alloc] init];
-
     EAGLContext* ctx = [[EAGLContext alloc] initWithAPI: kEAGLRenderingAPIOpenGLES2];
+    [EAGLContext setCurrentContext: ctx];
+
+    _renderer = [[GLRenderer alloc] init];
+    [_renderer initGLData];
+    
     GLKView* view = [[GLKView alloc] initWithFrame: bounds];
     view.context = ctx;
     view.delegate = _renderer;

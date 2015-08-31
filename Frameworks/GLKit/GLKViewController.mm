@@ -61,7 +61,7 @@
 }
 
 -(void)_renderFrame {
-    // TODO: BK: call glkViewControllerUpdate on delegate?
+    [self.delegate glkViewControllerUpdate: self];
 
     if([self.view respondsToSelector: @selector(_renderFrame)]) {
         [self.view _renderFrame];

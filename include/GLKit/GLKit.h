@@ -25,3 +25,4 @@
 #import <GLKit/GLKSkyboxEffect.h>
 #import <GLKit/GLKTexture.h>
 
+#import <GLKit/GLKMath.h>
