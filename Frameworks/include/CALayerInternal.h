@@ -40,9 +40,6 @@ public:
     BOOL    drewOpaque;
     BOOL    positionSet, sizeSet, originSet;
 
-    BOOL forceOverrideBounds;
-    CGRect overrideBounds;
-
     CATransform3D transform;
     CATransform3D sublayerTransform;
     ColorQuad backgroundColor, borderColor, contentColor;

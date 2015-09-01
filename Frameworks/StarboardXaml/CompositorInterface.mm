@@ -589,18 +589,10 @@ void DisplayNode::SetContents(DisplayTexture *tex, float width, float height, fl
 
 class DisplayNodeXaml : public DisplayNode
 {
-    CGRect overrideBounds;
-    CGPoint curPosition;
-    bool forceOverrideBounds;
-
 public:
     DisplayNodeXaml()
     {
         IncrementCounter("DisplayNodeXaml");
-
-        forceOverrideBounds = false;
-        curPosition.x = 0;
-        curPosition.y = 0;
     }
     
     ~DisplayNodeXaml()
@@ -686,11 +678,6 @@ public:
             SetProperty(L"anchorPoint.y", value.y);
         } else if ( strcmp(name, "position") == 0 ) {
             CGPoint position = [(NSValue *) newValue CGPointValue];
-            curPosition = position;
-            if ( forceOverrideBounds ) {
-                position.x += overrideBounds.origin.x;
-                position.y += overrideBounds.origin.y;
-            }
             SetProperty(L"position.x", position.x);
             SetProperty(L"position.y", position.y);
         } else if ( strcmp(name, "bounds.origin") == 0 ) {
@@ -699,9 +686,6 @@ public:
             SetProperty(L"origin.y", value.y);
         } else if ( strcmp(name, "bounds.size") == 0 ) {
             CGSize size = [(NSValue *) newValue CGSizeValue];
-            if ( forceOverrideBounds ) {
-                size = overrideBounds.size;
-            }
             SetProperty(L"size.width", size.width);
             SetProperty(L"size.height", size.height);
         } else if ( strcmp(name, "opacity") == 0 ) {
@@ -733,20 +717,6 @@ public:
             SetProperty(L"transform.scale.y", scale[1]);
             SetProperty(L"transform.translation.x", translation[0]);
             SetProperty(L"transform.translation.y", translation[1]);
-        } else if ( strcmp(name, "overrideBounds") == 0 ) {
-            overrideBounds = [(NSValue *) newValue CGRectValue];
-            CGPoint position = curPosition;
-            forceOverrideBounds = true;
-
-            position.x += overrideBounds.origin.x;
-            position.y += overrideBounds.origin.y;
-
-            SetProperty(L"position.x", position.x);
-            SetProperty(L"position.y", position.y);
-            CGSize size = overrideBounds.size;
-
-            SetProperty(L"size.width", size.width);
-            SetProperty(L"size.height", size.height);
         } else if ( strcmp(name, "contentsScale") == 0 ) {
             //  [TODO: Update contents scale in Xaml node]
             //contentScale = [(NSNumber *) newValue floatValue];

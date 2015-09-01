@@ -105,6 +105,7 @@
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\main.m" />
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
@@ -124,6 +125,7 @@
     <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
+    <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />

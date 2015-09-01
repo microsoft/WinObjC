@@ -7,6 +7,8 @@ LIBRARY UIKit
      _OBJC_CLASS_UIImage	DATA
 	 __objc_class_name_UIImage	CONSTANT
      _OBJC_CLASS_UIApplication	DATA
+	 __objc_class_name_UIBezierPath	CONSTANT
+     _OBJC_CLASS_UIBezierPath	DATA
 	 __objc_class_name_UIApplication	CONSTANT
      _OBJC_CLASS_UIViewController	DATA
 	 __objc_class_name_UIViewController	CONSTANT

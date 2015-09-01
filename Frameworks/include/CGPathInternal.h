@@ -29,7 +29,8 @@ enum pathComponentType
     pathComponentBezierCurve,
     pathComponentCurve,
     pathComponentEllipseInRect,
-    pathComponentClose
+    pathComponentClose,
+	pathComponentArcAngle,
 };
 
 typedef struct
@@ -37,6 +38,13 @@ typedef struct
     float x1, y1, x2, y2;
     float radius;
 } arcToPoint;
+
+typedef struct
+{
+	float x, y, startAngle, endAngle;
+	float radius;
+	BOOL clockwise;
+} arcAngle;
 
 struct curveToPoint
 {
@@ -68,16 +76,10 @@ typedef struct
         curveToPoint ctp;
         ellipseInRect eir;
         quadCurveToPoint qtp;
+		arcAngle aa;
     };
 } pathComponent;
 
-#ifdef EBRIUS
-BEGIN_DEFINE_OBJC_CLASS(CGPath, NSObject)
-    pathComponent *_components;
-    DWORD          _count;
-    DWORD          _max;
-END_DEFINE_OBJC_CLASS()
-#else
 @interface CGPath : NSObject
 {
 @public
@@ -86,6 +88,5 @@ END_DEFINE_OBJC_CLASS()
     NSUInteger _max;
 }
 @end
-#endif
 
 #endif

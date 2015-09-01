@@ -29,6 +29,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\WebViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\XamlViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\SingleImageViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BezierViewController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
