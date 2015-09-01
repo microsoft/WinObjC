@@ -16,41 +16,160 @@
 
 #pragma once
 
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+
 #import "Foundation/NSObject.h"
+#import "GLKit/GLKMath.h"
 
 @protocol GLKNamedEffect
 -(void)prepareToDraw;
 @end
 
-GLKIT_EXPORT_CLASS
-@interface GLKBaseEffect : NSObject
-@end
+enum _GLKLightingType {
+    GLKLightingTypePerVertex = 0,
+    GLKLightingTypePerPixel
+};
+typedef unsigned int GLKLightingType;
+
+enum _GLKFogMode {
+    GLKFogModeExp = 0,
+    GLKFogModeExp2,
+    GLKFogModeLinear
+};
+typedef unsigned int GLKFogMode;
+
+enum _GLKTextureEnvMode {
+    GLKTextureEnvModeReplace = 0,
+    GLKTextureEnvModeModulate,
+    GLKTextureEnvModeDecal
+};
+typedef unsigned int GLKTextureEnvMode;
+
+enum _GLKTextureTarget {
+    GLKTextureTarget2D = GL_TEXTURE_2D,
+    GLKTextureTargetCubeMap = GL_TEXTURE_CUBE_MAP,
+    GLKTextureTargetCt = 2
+};
+typedef unsigned int GLKTextureTarget;
+
+// ----------------------------------------
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectProperty : NSObject
 @end
 
 GLKIT_EXPORT_CLASS
-@interface GLKReflectionMapEffect : GLKBaseEffect
+@interface GLKEffectPropertyTransform : GLKEffectProperty
+
+@property(assign) GLKMatrix4 modelviewMatrix;
+@property(readonly) GLKMatrix3 normalMatrix;
+@property(assign) GLKMatrix4 projectionMatrix;
+@property(readonly) GLKMatrix4 mvp;
+
+-(id)init;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyFog : GLKEffectProperty
+
+@property BOOL enabled;
+@property GLKFogMode mode;
+@property float start;
+@property float end;
+@property float density;
+@property(assign) GLKVector4 color;
+
+-(id)init;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyLight : GLKEffectProperty
+
+@property BOOL enabled;
+
+@property(assign) GLKVector3 position;
+@property(assign) GLKVector4 ambientColor;
+@property(assign) GLKVector4 diffuseColor;
+@property(assign) GLKVector4 specularColor;
+
+@property float constantAttenuation;
+@property float linearAttenuation;
+@property float quadraticAttenuation;
+
+@property(assign) GLKVector3 spotDirection;
+@property float spotCutoff;
+@property float spotExponent;
+
+@property(retain) GLKEffectPropertyTransform* transform;
+
+-(id)init;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyMaterial : GLKEffectProperty
+
+@property (assign)GLKVector4 ambientColor;
+@property (assign)GLKVector4 diffuseColor;
+@property (assign)GLKVector4 specularColor;
+@property (assign)GLKVector4 emissiveColor;
+@property float shininess;
+
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyTexture : GLKEffectProperty
+
+@property BOOL enabled;
+@property GLuint name;
+@property GLKTextureEnvMode envMode;
+@property GLKTextureTarget target;
+
+-(id)init;
+@end
+
+// ----------------------------------------
+
+GLKIT_EXPORT_CLASS
+@interface GLKShaderEffect : NSObject<GLKNamedEffect>
+
+@property(readonly) GLKEffectPropertyTransform* transform;
+
+-(id)init;
+-(void)prepareToDraw;
+
 @end
 
 GLKIT_EXPORT_CLASS
-@interface GLKEffectPropertyTransform : GLKEffectProperty
+@interface GLKBaseEffect : GLKShaderEffect
+
+
+@property(readonly) GLKEffectPropertyLight* light0;
+@property(readonly) GLKEffectPropertyLight* light1;
+@property(readonly) GLKEffectPropertyLight* light2;
+@property(copy) NSArray* lightOrder;
+
+@property(assign) GLKLightingType lightingType;
+@property(assign) BOOL lightModelTwoSided;
+
+@property(readonly) GLKEffectPropertyTexture* texture2d0;
+@property(readonly) GLKEffectPropertyTexture* texture2d1;
+@property(copy) NSArray* textureOrder;
+
+@property(readonly) GLKEffectPropertyMaterial* material;
+@property(readonly) GLKEffectPropertyFog* fog;
+
+@property BOOL colorMaterialEnabled;
+@property BOOL useConstantColor;
+@property(assign) GLKVector4 constantColor;
+
+-(id)init;
+-(void)prepareToDraw;
+@end
+
+// ----------------------------------------
+
+GLKIT_EXPORT_CLASS
+@interface GLKReflectionMapEffect : GLKBaseEffect
 @end
 

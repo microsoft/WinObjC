@@ -17,6 +17,73 @@
 #include <Starboard.h>
 #include <GLKit/GLKMath.h>
 
+#include <utility>
+
+GLKMatrix3 GLKMatrix3Identity()
+{
+    GLKMatrix3 res;
+
+    res.m11 = 1.f;
+    res.m12 = 0.f;
+    res.m13 = 0.f;
+
+    res.m21 = 0.f;
+    res.m22 = 1.f;
+    res.m23 = 0.f;
+
+    res.m31 = 0.f;
+    res.m32 = 0.f;
+    res.m33 = 1.f;
+
+    return res;
+}
+
+GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m)
+{
+    GLKMatrix3 res;
+
+    res.m11 = m.m11;
+    res.m12 = m.m12;
+    res.m13 = m.m13;
+
+    res.m21 = m.m21;
+    res.m22 = m.m22;
+    res.m23 = m.m23;
+
+    res.m31 = m.m31;
+    res.m32 = m.m32;
+    res.m33 = m.m33;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4Identity()
+{
+    GLKMatrix4 res;
+
+    res.m11 = 1.f;
+    res.m12 = 0.f;
+    res.m13 = 0.f;
+    res.m14 = 0.f;
+
+    res.m21 = 0.f;
+    res.m22 = 1.f;
+    res.m23 = 0.f;
+    res.m24 = 0.f;
+
+    res.m31 = 0.f;
+    res.m32 = 0.f;
+    res.m33 = 1.f;
+    res.m34 = 0.f;
+
+    res.m41 = 0.f;
+    res.m42 = 0.f;
+    res.m43 = 0.f;
+    res.m44 = 1.f;
+
+    return res;
+}
+
 GLKMatrix4 GLKMatrix4Make(float m00, float m01, float m02, float m03,
                           float m10, float m11, float m12, float m13,
                           float m20, float m21, float m22, float m23,
@@ -231,7 +298,7 @@ GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
     GLKVector3 eye = GLKVector3Make(eyeX, eyeY, eyeZ);
     GLKVector3 fwd = GLKVector3Normalize(GLKVector3Subtract(GLKVector3Make(lookX, lookY, lookZ), eye));
     GLKVector3 up = GLKVector3Normalize(GLKVector3Make(upX, upY, upZ));
-    GLKVector3 right = GLKVector3Cross(up, fwd);
+    GLKVector3 right = GLKVector3CrossProduct(up, fwd);
     
     return GLKMatrix4MakeOrthonormalXform(right, up, fwd, GLKVector3Negate(eye));
 }
@@ -248,7 +315,7 @@ GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, fl
     res.m21 = 0.f;
     res.m22 = 2.f / (top - bot);
     res.m23 = 0.f;
-    res.m24 = (0.f - top - bottom) / (top - bottom);
+    res.m24 = (0.f - top - bot) / (top - bot);
 
     res.m31 = 0.f;
     res.m32 = 0.f;
@@ -295,5 +362,83 @@ GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float to
     res.m43 = -1.f;
     res.m44 = 0.f;
     
+    return res;
+}
+
+GLKMatrix4 GLKMatrixMultiply(GLKMatrix4 m1, GLKMatrix4 m2)
+{
+    GLKMatrix4 res;
+
+    res.m11 = m1.m11 * m2.m11 + m1.m12 * m2.m21 + m1.m13 * m2.m31 + m1.m14 * m2.m41;
+    res.m12 = m1.m11 * m2.m12 + m1.m12 * m2.m22 + m1.m13 * m2.m32 + m1.m14 * m2.m42;
+    res.m13 = m1.m11 * m2.m13 + m1.m12 * m2.m23 + m1.m13 * m2.m33 + m1.m14 * m2.m43;
+    res.m14 = m1.m11 * m2.m14 + m1.m12 * m2.m24 + m1.m13 * m2.m34 + m1.m14 * m2.m44;
+
+    res.m21 = m1.m21 * m2.m11 + m1.m22 * m2.m21 + m1.m23 * m2.m31 + m1.m24 * m2.m41;
+    res.m22 = m1.m21 * m2.m12 + m1.m22 * m2.m22 + m1.m23 * m2.m32 + m1.m24 * m2.m42;
+    res.m23 = m1.m21 * m2.m13 + m1.m22 * m2.m23 + m1.m23 * m2.m33 + m1.m24 * m2.m43;
+    res.m24 = m1.m21 * m2.m14 + m1.m22 * m2.m24 + m1.m23 * m2.m34 + m1.m24 * m2.m44;
+
+    res.m31 = m1.m31 * m2.m11 + m1.m32 * m2.m21 + m1.m33 * m2.m31 + m1.m34 * m2.m41;
+    res.m32 = m1.m31 * m2.m12 + m1.m32 * m2.m22 + m1.m33 * m2.m32 + m1.m34 * m2.m42;
+    res.m33 = m1.m31 * m2.m13 + m1.m32 * m2.m23 + m1.m33 * m2.m33 + m1.m34 * m2.m43;
+    res.m34 = m1.m31 * m2.m14 + m1.m32 * m2.m24 + m1.m33 * m2.m34 + m1.m34 * m2.m44;
+
+    res.m41 = m1.m41 * m2.m11 + m1.m42 * m2.m21 + m1.m43 * m2.m31 + m1.m44 * m2.m41;
+    res.m42 = m1.m41 * m2.m12 + m1.m42 * m2.m22 + m1.m43 * m2.m32 + m1.m44 * m2.m42;
+    res.m43 = m1.m41 * m2.m13 + m1.m42 * m2.m23 + m1.m43 * m2.m33 + m1.m44 * m2.m43;
+    res.m44 = m1.m41 * m2.m14 + m1.m42 * m2.m24 + m1.m43 * m2.m34 + m1.m44 * m2.m44;
+    
+    return res;
+}
+
+GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02,
+                          float m10, float m11, float m12,
+                          float m20, float m21, float m22)
+{
+    GLKMatrix3 res;
+
+    res.m11 = m00;
+    res.m12 = m01;
+    res.m13 = m02;
+
+    res.m21 = m10;
+    res.m22 = m11;
+    res.m23 = m12;
+
+    res.m31 = m20;
+    res.m32 = m21;
+    res.m33 = m22;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat)
+{
+    std::swap(mat.m12, mat.m21);
+    std::swap(mat.m13, mat.m31);
+    std::swap(mat.m23, mat.m32);
+
+    return mat;
+}
+
+GLKMatrix3 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02,
+                                      float m10, float m11, float m12,
+                                      float m20, float m21, float m22)
+{
+    GLKMatrix3 res;
+
+    res.m11 = m00;
+    res.m21 = m01;
+    res.m31 = m02;
+           
+    res.m12 = m10;
+    res.m22 = m11;
+    res.m32 = m12;
+           
+    res.m13 = m20;
+    res.m23 = m21;
+    res.m33 = m22;
+
     return res;
 }
