@@ -20,6 +20,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm">
       <FileType>Document</FileType>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm">
       <FileType>Document</FileType>
     </ClangCompile>
@@ -36,6 +39,9 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm" />

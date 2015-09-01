@@ -23,6 +23,7 @@ static Vertex cubeVertices[] = {
 @implementation GLRenderer {
     GLuint          _positionBuffer;
     GLKBaseEffect*  _effect;
+    float           _cubeAngle;
 }
 
 -(void)initGLData {
@@ -31,6 +32,8 @@ static Vertex cubeVertices[] = {
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
     _effect = [[GLKBaseEffect alloc] init];
+
+    _cubeAngle = 0.f;
 }
 
 -(void)cleanupGLData {
@@ -57,8 +60,25 @@ static Vertex cubeVertices[] = {
 -(void)glkView:(GLKView*)view drawInRect:(CGRect)rect {
     NSLog(@"GLRenderer got render framer request.");
 
-    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearColor(0.0, 0.1, 0.8, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    float aspect = rect.size.width / rect.size.height;
+    
+    GLKMatrix4 rotate = GLKMatrix4MakeYRotation(cubeAngle);
+    GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.0f);
+    GLKMatrix4 proj = GLKMatrix4MakePerspective(M_PI / 3, aspect, 0.01f, 100.f);
+
+    
+    glEnableVertexAttribArray(_positionAttrib);
+    glEnableVertexAttribArray(_colorAttrib); 
+
+    glVertexAttribPointer(_positionAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(_colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *) (sizeof(float) * 3));
+
+    glPerspective(M_PI / 3, _aspect, 0.01f, 100.0f, _projectionAttrib);
+    
+    _cubeAngle += 1.0f / 180.0f * M_PI;
 }
 
 @end
