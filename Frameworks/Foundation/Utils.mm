@@ -54,8 +54,7 @@ NSRange NSUnionRange(NSRange range1, NSRange range2)
 
 BOOL NSEqualRanges(NSRange range1, NSRange range2)
 {
-    assert(0);
-    return false;
+    return ((range1.location == range2.location) && (range1.length == range2.length));
 }
 
 NSArray *NSSearchPathForDirectoriesInDomains (NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde)
