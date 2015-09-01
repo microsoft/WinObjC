@@ -20,7 +20,8 @@ class UIImageView :
     public UIView
 {
 public:
-    UIImageView();
+	XIBObject *_image;
+	UIImageView();
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);

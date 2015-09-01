@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "UIImageView.h"
+#include "UICustomResource.h"
 
 static PropertyMapper propertyMappings[] = {
     "IBUIImage", "UIImage", NULL,
@@ -23,24 +24,34 @@ static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(Propert
 
 UIImageView::UIImageView()
 {
+	_image = NULL;
 }
 
 void UIImageView::InitFromXIB(XIBObject *obj)
 {
     UIView::InitFromXIB(obj);
 
-    obj->_outputClassName = "UIImageView";
+	obj->_outputClassName = "UIImageView";
 }
 
 void UIImageView::InitFromStory(XIBObject *obj)
 {
     UIView::InitFromStory(obj);
 
-    obj->_outputClassName = "UIImageView";
+	_image = NULL;
+	const char *imageName = getAttrib("image");
+	if (imageName) {
+		UICustomResource *image = new UICustomResource();
+		image->_imageName = imageName;
+		_image = image;
+	}
+
+	obj->_outputClassName = "UIImageView";
 }
 
 void UIImageView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
 {
     Map(writer, obj, propertyMappings, numPropertyMappings);
-    UIView::ConvertStaticMappings(writer, obj);
+	UIView::ConvertStaticMappings(writer, obj);
+	if (_image) AddOutputMember(writer, "UIImage", _image);
 }
