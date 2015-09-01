@@ -197,3 +197,103 @@ GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, G
     return res;    
 }
 
+GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos)
+{
+    GLKMatrix4 res;
+
+    res.m11 = right.x;
+    res.m12 = up.x;
+    res.m13 = forward.x;
+    res.m14 = pos.x;
+
+    res.m21 = right.y;
+    res.m22 = up.y;
+    res.m23 = forward.y;
+    res.m24 = pos.y;
+
+    res.m31 = right.z;
+    res.m32 = up.z;
+    res.m33 = forward.z;
+    res.m34 = pos.z;
+
+    res.m41 = 0.f;
+    res.m42 = 0.f;
+    res.m43 = 0.f;
+    res.m44 = 1.f;
+
+    return res;    
+}
+
+GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
+                                float lookX, float lookY, float lookZ,
+                                float upX, float upY, float upZ)
+{
+    GLKVector3 eye = GLKVector3Make(eyeX, eyeY, eyeZ);
+    GLKVector3 fwd = GLKVector3Normalize(GLKVector3Subtract(GLKVector3Make(lookX, lookY, lookZ), eye));
+    GLKVector3 up = GLKVector3Normalize(GLKVector3Make(upX, upY, upZ));
+    GLKVector3 right = GLKVector3Cross(up, fwd);
+    
+    return GLKMatrix4MakeOrthonormalXform(right, up, fwd, GLKVector3Negate(eye));
+}
+
+GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far)
+{
+    GLKMatrix4 res;
+
+    res.m11 = 2.f / (right - left);
+    res.m12 = 0.f;
+    res.m13 = 0.f;
+    res.m14 = (0.f - right - left) / (right - left);
+
+    res.m21 = 0.f;
+    res.m22 = 2.f / (top - bot);
+    res.m23 = 0.f;
+    res.m24 = (0.f - top - bottom) / (top - bottom);
+
+    res.m31 = 0.f;
+    res.m32 = 0.f;
+    res.m33 = -2.f / (far - near);
+    res.m34 = (far + near) / (far - near);
+
+    res.m41 = 0.f;
+    res.m42 = 0.f;
+    res.m43 = 0.f;
+    res.m44 = 1.f;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far)
+{
+    float yd = tanf(yrad) * near;
+    float xd = tanf(aspect * yrad) * near;
+
+    return GLKMatrix4MakeFrustum(-xd, xd, -yd, yd, near, far);
+}
+
+GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far)
+{
+    GLKMatrix4 res;
+
+    res.m11 = (2.f * near) / (right - left);
+    res.m12 = 0.f;
+    res.m13 = (right + left) / (right - left);
+    res.m14 = 0.f;
+
+    res.m21 = 0.f;
+    res.m22 = (2.f * near) / (top - bottom);
+    res.m23 = (top + bottom) / (top - bottom);
+    res.m24 = 0.f;
+
+    res.m31 = 0.f;
+    res.m32 = 0.f;
+    res.m33 = (0.f - far - near) / (far - near);
+    res.m34 = (2.f * far * near) / (far - near);
+
+    res.m41 = 0.f;
+    res.m42 = 0.f;
+    res.m43 = -1.f;
+    res.m44 = 0.f;
+    
+    return res;
+}
