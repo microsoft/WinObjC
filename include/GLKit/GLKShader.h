@@ -26,12 +26,18 @@
 +(instancetype) get;
 +(instancetype) alloc;
 
--(GLKShader*)shaderForEffect: (GLKShaderEffect*)effect;
+-(GLKShader*)shaderForName: (NSString*)baseName effect: (GLKShaderEffect*)effect;
 -(id)init;
 @end
 
+@interface GLKShaderSource : NSObject
+-(id)initWithVS: (NSString*)baseVSource PS: (NSString*)basePSource;
+@end
+
 @interface GLKShader : NSObject
+
 @property(readonly) GLuint program;
 -(id)init;
+
 @end
 
