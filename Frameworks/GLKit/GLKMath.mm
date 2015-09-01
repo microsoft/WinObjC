@@ -442,3 +442,80 @@ GLKMatrix3 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02,
 
     return res;
 }
+
+GLKMatrix3 GLKMatrix3MakeWithArray(float* values)
+{
+    GLKMatrix3 res;
+
+    res.m11 = values[0];
+    res.m12 = values[1];
+    res.m13 = values[2];
+           
+    res.m21 = values[3];
+    res.m22 = values[4];
+    res.m23 = values[5];
+           
+    res.m31 = values[6];
+    res.m32 = values[7];
+    res.m33 = values[8];
+
+    return res;
+}
+
+GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values)
+{
+    GLKMatrix3 res;
+
+    res.m11 = values[0];
+    res.m21 = values[1];
+    res.m31 = values[2];
+           
+    res.m12 = values[3];
+    res.m22 = values[4];
+    res.m32 = values[5];
+           
+    res.m13 = values[6];
+    res.m23 = values[7];
+    res.m33 = values[8];
+
+    return res;
+}
+
+GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
+{
+    GLKMatrix3 res;
+
+    res.m11 = r0.x;
+    res.m21 = r0.y;
+    res.m31 = r0.z;
+           
+    res.m12 = r1.x;
+    res.m22 = r1.y;
+    res.m32 = r1.z;
+           
+    res.m13 = r2.x;
+    res.m23 = r2.y;
+    res.m33 = r2.z;
+
+    return res;
+}
+
+GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
+{
+    GLKMatrix3 res;
+
+    res.m11 = r0.x;
+    res.m12 = r0.y;
+    res.m13 = r0.z;
+           
+    res.m21 = r1.x;
+    res.m22 = r1.y;
+    res.m23 = r1.z;
+           
+    res.m31 = r2.x;
+    res.m32 = r2.y;
+    res.m33 = r2.z;
+
+    return res;
+}
+

@@ -23,6 +23,14 @@
 typedef CATransform3D GLKMatrix4;
 typedef CAPoint3D GLKVector3;
 
+typedef struct _GLKVector2 {
+    union {
+        struct { float x, y; };
+        struct { float s, t; };
+        float v[2];
+    };
+} GLKVector2;
+
 typedef struct _GLKVector4 {
     union {
         struct { float x, y, z, w; };
@@ -70,6 +78,11 @@ GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values);
 GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
 GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
 GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos);
+
+GLKMatrix3 GLKMatrix3MakeWithArray(float* values);
+GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
+GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
+GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 
 GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, bool* invertible);
 
@@ -225,12 +238,12 @@ inline GLKVector4 GLKVector4MultiplyScalar(GLKVector4 v1, float s)
 
 inline GLKVector3 GLKVector3DivideScalar(GLKVector3 v1, float s)
 {
-    return GLKVector3Make(v1.x / s, v1.y / s, v1.z / s);
+    return GLKVector3MultiplyScalar(v1, 1.f / s);
 }
 
 inline GLKVector4 GLKVector4DivideScalar(GLKVector4 v1, float s)
 {
-    return GLKVector4Make(v1.x / s, v1.y / s, v1.z / s, v1.w / s);
+    return GLKVector4MultiplyScalar(v1, 1.f / s);
 }
 
 inline GLKVector3 GLKVector3Subtract(GLKVector3 v1, GLKVector3 v2)
@@ -322,6 +335,103 @@ inline GLKVector3 GLKVector3Lerp(GLKVector3 a, GLKVector3 b, float t)
     res.y = t * b.y + it * a.y;
     res.z = t * b.z + it * a.z;
     
+    return res;
+}
+
+inline GLKVector2 GLKVector2Make(float x, float y)
+{
+    GLKVector2 res;
+    
+    res.x = x;
+    res.y = y;
+
+    return res;
+}
+
+inline GLKVector2 GLKVector2MakeWithArray(float* v)
+{
+    GLKVector2 res;
+    
+    res.x = v[0];
+    res.y = v[1];
+
+    return res;
+}
+
+inline float GLKVector2Length(GLKVector2 v)
+{
+    return sqrtf(v.x * v.x + v.y * v.y);
+}
+
+inline GLKVector2 GLKVector2Normalize(GLKVector2 v)
+{
+    float invdist = 1.f / sqrtf(v.x * v.x + v.y * v.y);
+    return GLKVector2Make(v.x * invdist, v.y * invdist);
+}
+
+inline GLKVector2 GLKVector2Add(GLKVector2 v1, GLKVector2 v2)
+{
+    return GLKVector2Make(v1.x + v2.x, v1.y + v2.y);
+}
+
+inline GLKVector2 GLKVector2Subtract(GLKVector2 v1, GLKVector2 v2)
+{
+    return GLKVector2Make(v1.x - v2.x, v1.y - v2.y);
+}
+
+inline float GLKVector2Distance(GLKVector2 v1, GLKVector2 v2)
+{
+    return GLKVector2Length(GLKVector2Subtract(v1, v2));
+}
+
+inline float GLKVector2DotProduct(GLKVector2 v1, GLKVector2 v2)
+{
+    return v1.x * v2.x + v1.y * v2.y;
+}
+
+inline GLKVector2 GLKVector2Negate(GLKVector2 v)
+{
+    return GLKVector2Make(-v.x, -v.y);
+}
+
+inline GLKVector2 GLKVector2AddScalar(GLKVector2 v, float val)
+{
+    return GLKVector2Make(v.x + val, v.y + val);
+}
+    
+inline GLKVector2 GLKVector2SubtractScalar(GLKVector2 v, float val)
+{
+    return GLKVector2Make(v.x - val, v.y - val);
+}
+    
+inline GLKVector2 GLKVector2MultiplyScalar(GLKVector2 v, float val)
+{
+    return GLKVector2Make(v.x * val, v.y * val);
+}
+
+inline GLKVector2 GLKVector2DivideScalar(GLKVector2 v, float val)
+{
+    return GLKVector2MultiplyScalar(v, 1.f / val);
+}
+
+inline GLKVector2 GLKVector2Multiply(GLKVector2 v1, GLKVector2 v2)
+{
+    return GLKVector2Make(v1.x * v2.x, v1.y * v2.y);
+}
+
+inline GLKVector2 GLKVector2Divide(GLKVector2 v1, GLKVector2 v2)
+{
+    return GLKVector2Make(v1.x / v2.x, v1.y / v2.y);
+}
+
+inline GLKVector2 GLKVector2Lerp(GLKVector2 v1, GLKVector2 v2, float t)
+{
+    float it = 1.f - t;
+    GLKVector2 res;
+
+    res.x = v1.x * it + v2.x * t;
+    res.y = v1.y * it + v2.y * t;
+
     return res;
 }
 
