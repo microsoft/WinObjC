@@ -20,6 +20,26 @@
 #import <Starboard.h>
 #import <GLKit/GLKShader.h>
 
+static const char vertexShader[] =
+ "attribute vec4 _position;\n"
+ "attribute vec4 _color;\n"
+ "varying vec4 _outcolor;\n"
+ "uniform mat4 _mvp;\n"
+ "void main()\n"
+ "{\n"
+ "    _outcolor = _color;\n"
+ "    gl_Position = _mvp * _position;\n"
+ "}";
+
+static const char fragShader[] =
+ "varying lowp vec4 _outcolor;\n"
+ "void main()\n"
+ "{\n"
+ "    gl_FragColor = _outcolor;\n"
+ "}";
+
+static NSString* standardShaderSrc = @"";
+
 @implementation GLKShaderCache {
     NSMutableDictionary* _shaders;
 }
@@ -38,12 +58,34 @@ static GLKShaderCache* imp = nil;
     return nil;
 }
 
--(GLKShader*)shaderForEffect: (GLKShaderEffect*)effect {
-    return nil;
+-(void)preloadShaders {
+}
+
+-(GLKShader*)shaderForName: (NSString*)baseName effect: (GLKShaderEffect*)effect {
+    GLKShaderSource* s = [_shaders objectForKey: baseName];
+    if (s == nil) return nil;
+
+
+    return nil;    
 }
 
 -(id)init {
     _shaders = [[NSMutableDictionary alloc] init];
+    [self preloadShaders];
+    return self;
+}
+
+@end
+
+@implementation GLKShaderSource {
+    NSString* _vertSrc;
+    NSString* _fragSrc;
+}
+
+-(id)initWithVS: (NSString*)baseVSource PS: (NSString*)basePSource {
+    _vertSrc = baseVSource;
+    _fragSrc = basePSource;
+
     return self;
 }
 

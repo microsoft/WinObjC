@@ -26,6 +26,8 @@
     if (!self) return nil;
     
     _transform = [[GLKEffectPropertyTransform alloc] init];
+
+    return self;
 }
 
 
