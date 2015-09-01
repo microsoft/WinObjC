@@ -4,6 +4,7 @@
 #include <time.h>
 #include <windows.h>
 #include <stdio.h>
+#include <sys/timespec.h>
 
 static const unsigned __int64 intervals_per_second      = 10000000ULL;
 static const unsigned __int64 microseconds_per_second   = 1000000ULL;

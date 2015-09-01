@@ -1,5 +1,5 @@
 #import <CoreFoundation/CoreFoundation.h>
-#import <compat/mach/mach_time.h>
+#import <mach/mach_time.h>
 #include <stdio.h>
 #include <assert.h>
 #include <windows.h>

@@ -68,7 +68,7 @@ Set-Cookie header)"
 // more information see CURL's rawstr.c:88.
 bool Curl_raw_equal(const char *a, const char *b)
 {
-    return stricmp(a, b) == 0;
+    return strcasecmp(a, b) == 0;
 }
 
 // Read things from the cookies line and add them to the dictionary

@@ -35,6 +35,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/_types.h>
+#include <sys/socket.h>
 #include <machine/endian.h>
 
 /* Protocols common to RFC 1700, POSIX, and X/Open. */
@@ -76,12 +77,14 @@ typedef __sa_family_t       sa_family_t;
 #define _SA_FAMILY_T_DECLARED
 #endif
 
+#ifndef WINOBJC     //  Defined by winsock2.h
 /* Internet address (a structure for historical reasons). */
 #ifndef _STRUCT_IN_ADDR_DECLARED
 struct in_addr {
     in_addr_t s_addr;
 };
 #define _STRUCT_IN_ADDR_DECLARED
+#endif
 #endif
 
 #ifndef _SOCKLEN_T_DECLARED
@@ -91,6 +94,7 @@ typedef __socklen_t socklen_t;
 
 #include <sys/_sockaddr_storage.h>
 
+#ifndef WINOBJC     //  Defined by winsock2.h
 /* Socket address, internet style. */
 struct sockaddr_in {
     uint8_t sin_len;
@@ -99,9 +103,11 @@ struct sockaddr_in {
     struct  in_addr sin_addr;
     char    sin_zero[8];
 };
+#endif
 
 #if !defined(_KERNEL) && __POSIX_VISIBLE >= 200112
 
+#ifndef WINOBJC     //  Defined by winsock2.h
 #ifndef _BYTEORDER_PROTOTYPED
 #define _BYTEORDER_PROTOTYPED
 __BEGIN_DECLS
@@ -110,6 +116,7 @@ uint16_t    htons(uint16_t);
 uint32_t    ntohl(uint32_t);
 uint16_t    ntohs(uint16_t);
 __END_DECLS
+#endif
 #endif
 
 #ifndef _BYTEORDER_FUNC_DEFINED

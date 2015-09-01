@@ -37,7 +37,6 @@ static IWLazyClassLookup _LazyUIImage("UIImage"), _LazyUIScreen("UIScreen");
 
 EbrLock _cairoLock = EBRLOCK_INITIALIZE;
 
-#undef interface
 @interface CGNSContext : NSObject {
 }
 @end

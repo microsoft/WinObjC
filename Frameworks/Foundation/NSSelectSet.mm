@@ -158,7 +158,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         native_set    *activeRead=native_set_new(maxDescriptor);
         native_set    *activeWrite=native_set_new(maxDescriptor);
         native_set    *activeExcept=native_set_new(maxDescriptor);
-        struct timeval timeval;
+        struct __ws2_timeval timeval;
         NSTimeInterval interval=1.0;
 
         int numFds=0;

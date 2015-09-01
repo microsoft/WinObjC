@@ -28,7 +28,9 @@ typedef wchar_t WCHAR;
 #include <d3d11.h>
 #include <d3d11_1.h>
 
+#include <COMIncludes.h>
 #include "Windows.ui.xaml.media.dxinterop.h"
+#include <COMIncludes_End.h>
 
 @implementation CAEAGLLayer {
     NSDictionary *_properties;

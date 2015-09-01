@@ -14,44 +14,37 @@
 //
 //******************************************************************************
 
-#pragma once
+#include_next <stdio.h>
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#undef min
+#undef max
 
-#undef WIN32
+#include <strings.h>
 
-#define LOADOES(type, name) type name; { name = (type) eglGetProcAddress(#name); }
+#ifndef vsnprintf
+#include <stdarg.h>
 
-#define PERFORM_ERROR_CHECKS 0
-#if PERFORM_ERROR_CHECKS
-
-inline int glCheckError()
-{
-    int ret = glGetError();
-
-    if ( ret != 0 ) {
-        err_printf("glError: %x\n", ret);
-        //*((char *) 0) = 0;
+__if_not_exists(vsnprintf) {
+    __forceinline int vsnprintf(char *buf, size_t count, const char *fmt, va_list list)
+    {
+        return _vsnprintf(buf, count, fmt, list);
     }
-
-    return 0;
 }
+#endif
 
-#else
+#ifndef snprintf
+#include <stdarg.h>
 
-inline int glCheckError()
-{
-    return 0;
+__if_not_exists(snprintf) {
+    __forceinline int snprintf(char *buf, size_t count, const char *fmt, ...)
+    {
+        int rc;
+        va_list list;
+        va_start(list, fmt);
+        rc = vsnprintf(buf, count, fmt, list);
+        va_end(list);
+        
+        return rc;
+    }
 }
-
-#endif 
-
-void RegisterEGL();
-
-inline void EbrEnableTextures() {}
-inline void EbrDisableTextures() {}
-
-#define GL_RENDERBUFFER_OES GL_RENDERBUFFER
-#define GL_RENDERBUFFER_BINDING_OES GL_RENDERBUFFER_BINDING
-#define GL_FRAMEBUFFER_BINDING_OES GL_FRAMEBUFFER_BINDING
+#endif

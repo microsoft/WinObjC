@@ -15,32 +15,9 @@
         DisplayName="Libraries" />
     </Rule.Categories>
     <BoolProperty
-      Category="Compatibility"
-      DisplayName="Compile with Islandwood compat headers"
-      Description="Adds the compat directory to include paths, and defines __ISLANDWOOD_COMPAT"
-      Name="IWCompat"/>
-    <BoolProperty
       Category="Libraries"
       DisplayName="Link with Islandwood default libraries"
       Description="Specifies if the project should be linked with the default Islandwood libraries."
       Name="IslandwoodDRT" />
-    <EnumProperty
-      Category="Composition"
-      DisplayName="Composite layers as"
-      Description="Select method of compositing Objective C layers onto the screen."
-      Name="WSCompositor">
-      <EnumValue
-        DisplayName="Default"
-        Description="Default"
-        Name="Default" />
-      <EnumValue
-        DisplayName="XAML elements"
-        Description="Composites each individual layer as a XAML element.  Required for compatibility with web controls."
-        Name="Xaml" />
-      <EnumValue
-        DisplayName="SwapChainPanel"
-        Description="Composites all layers onto a single SwapChainPanel."
-        Name="SwapChain" />
-    </EnumProperty>
   </Rule>
  </ProjectSchemaDefinitions>

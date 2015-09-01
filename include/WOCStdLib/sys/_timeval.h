@@ -46,14 +46,9 @@ typedef __time_t    time_t;
 /*
  * Structure returned by gettimeofday(2) system call, and used in other calls.
  */
-//  LIMBO: winsock2 defn
-#if !defined( _WINSOCK2API_ ) && !defined( _WINSOCKAPI_ )
-    #define _WINSOCK2API_
-    #define _WINSOCKAPI_
-    struct timeval {
-            long    tv_sec;         /* seconds */
-            long    tv_usec;        /* and microseconds */
-    };
-#endif
-
+struct timeval {
+        long    tv_sec;         /* seconds */
+        long    tv_usec;        /* and microseconds */
+};
+    
 #endif /* !_SYS__TIMEVAL_H_ */

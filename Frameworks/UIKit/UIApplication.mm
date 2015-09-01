@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-// Include D3D11 headers before Starboard.h
-#include <D3D11.h>
-#include <D3D11_1.h>
-
 #include "Starboard.h"
 @interface UIKeyboardRotationView : UIView {
 }
@@ -25,7 +21,6 @@
 @class _UISettings;
 
 #include "Platform/EbrPlatform.h"
-#include "EbrGLES.h"
 #include "EbrRemoteNotifications.h"
 
 #include "CoreFoundation/CFArray.h"
@@ -40,6 +35,7 @@
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
+typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
 
 #include "UIEmptyController.h"

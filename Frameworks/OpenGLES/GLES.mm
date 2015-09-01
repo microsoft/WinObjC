@@ -19,12 +19,12 @@
 #include <vector>
 
 #define GL_GLEXT_PROTOTYPES
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
+#include "GLES2/gl2ext.h"
 
 #include "Starboard.h"
 #include "ContextManager.h"
 
-#include "EbrGLES.h"
 #include "Platform/EbrPlatform.h"
 
 #include "Etc.h"
@@ -1457,13 +1457,7 @@ EAGL_EXPORT DWORD glBlendFuncSeparateOES(int srcRGB, int dstRGB, int srcAlpha, i
 {
     if (ctxManager.lockContext() == false) return 0;
 
-#ifdef WIN32
-    assert(0);
-#else
-    typedef void (*GLBLENDFUNCSEPARATEOES)(int srcRGB, int dstRGB, int srcAlpha, int dstAlpha);
-    LOADOES(GLBLENDFUNCSEPARATEOES, glBlendFuncSeparateOES);
-    glBlendFuncSeparateOES(srcRGB, dstRGB, srcAlpha, dstAlpha);
-#endif
+    assert(0 && "glBlendFuncSeparateOES not supported");
     int ret = glCheckError();
 
     ctxManager.unlockContext();

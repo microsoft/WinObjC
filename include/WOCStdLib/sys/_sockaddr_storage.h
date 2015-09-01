@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 1982, 1986, 1993
+ * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994
  *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,24 +26,31 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *  @(#)time.h  8.5 (Berkeley) 5/4/95
- * from: FreeBSD: src/sys/sys/time.h,v 1.43 2000/03/20 14:09:05 phk Exp
- *  $FreeBSD$
+ *  @(#)socket.h    8.4 (Berkeley) 2/21/94
+ * $FreeBSD$
  */
 
-#ifndef _SYS__TIMESPEC_H_
-#define _SYS__TIMESPEC_H_
+#ifndef _SYS__SOCKADDR_STORAGE_H_
+#define _SYS__SOCKADDR_STORAGE_H_
 
-#include <time.h>
-#include <sys/_types.h>
+/*
+ * RFC 2553: protocol-independent placeholder for socket addresses
+ */
+#define _SS_MAXSIZE 128U
+#define _SS_ALIGNSIZE   (sizeof(__int64_t))
+#define _SS_PAD1SIZE    (_SS_ALIGNSIZE - sizeof(unsigned char) - \
+                sizeof(sa_family_t))
+#define _SS_PAD2SIZE    (_SS_MAXSIZE - sizeof(unsigned char) - \
+                sizeof(sa_family_t) - _SS_PAD1SIZE - _SS_ALIGNSIZE)
 
-//  _timespec32 is defined by Win10 <time.h> (included above).  If _timespec32 is defined,
-//  timespec is also defined
-__if_not_exists(_timespec32) {
-	struct timespec {
-		time_t  tv_sec;     /* seconds */
-		long    tv_nsec;    /* and nanoseconds */
-	};
-}
+#ifndef WINOBJC     //  Defined by winsock2.h
+struct sockaddr_storage {
+    unsigned char   ss_len;     /* address length */
+    sa_family_t ss_family;  /* address family */
+    char        __ss_pad1[_SS_PAD1SIZE];
+    __int64_t   __ss_align; /* force desired struct alignment */
+    char        __ss_pad2[_SS_PAD2SIZE];
+};
+#endif
 
-#endif /* !_SYS__TIMESPEC_H_ */
+#endif /* !_SYS__SOCKADDR_STORAGE_H_ */

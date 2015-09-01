@@ -27,9 +27,6 @@
 
 #include <sys/stat.h>
 
-#define strcasecmp stricmp
-#define strtok_r strtok_s
-
 @class NSNib;
 
 #ifdef WIN32

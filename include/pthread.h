@@ -40,7 +40,7 @@
  */
 
 #include <sys/_pthreadtypes.h>
-#ifdef __ISLANDWOOD_COMPAT
+#ifdef WOCSTDLIB
  #include <sched.h>
 #endif
 #include <time.h>

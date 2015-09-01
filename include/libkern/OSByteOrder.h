@@ -21,7 +21,7 @@
 #ifndef _OSBYTEORDER_H_
 #define _OSBYTEORDER_H_
 
-#ifdef __ISLANDWOOD_COMPAT
+#ifdef WOCSTDLIB
  #include <sys/_types.h>
 #endif
 #include <assert.h>

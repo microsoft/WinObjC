@@ -18,6 +18,7 @@
 #define _AVAILABILITY_H_
 
 #include <StarboardAdditionalDefines.h>
+#include <AvailabilityMacros.h>
 
 #if defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) && !defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #define __IPHONE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
