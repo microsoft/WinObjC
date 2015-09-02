@@ -20,9 +20,6 @@
 
 #include <QuartzCore/CATransform3D.h>
 
-typedef CATransform3D GLKMatrix4;
-typedef CAPoint3D GLKVector3;
-
 typedef struct _GLKVector2 {
     union {
         struct { float x, y; };
@@ -30,6 +27,15 @@ typedef struct _GLKVector2 {
         float v[2];
     };
 } GLKVector2;
+
+typedef struct _GLKVector3 {
+    union {
+        struct { float x, y, z; };
+        struct { float s, t, p; };
+        struct { float r, g, b; };
+        float v[3];
+    };
+} GLKVector3;
 
 typedef struct _GLKVector4 {
     union {
@@ -51,57 +57,57 @@ typedef struct _GLKMatrix3 {
     };
 } GLKMatrix3;
 
+typedef CATransform3D GLKMatrix4;
+
 // --------------------------------------------------------------------------------
 // Matrices
 
-GLKMatrix3 GLKMatrix3Identity();
-GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m);
-GLKMatrix4 GLKMatrix4Identity();
-GLKMatrix4 GLKMatrix4Make(float m00, float m01, float m02, float m03,
-                          float m10, float m11, float m12, float m13,
-                          float m20, float m21, float m22, float m23,
-                          float m30, float m31, float m32, float m33);
-GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02,
-                          float m10, float m11, float m12,
-                          float m20, float m21, float m22);
-GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat);
-GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat);
-GLKMatrix3 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02,
-                                      float m10, float m11, float m12,
-                                      float m20, float m21, float m22);
-GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00, float m01, float m02, float m03,
-                                      float m10, float m11, float m12, float m13,
-                                      float m20, float m21, float m22, float m23,
-                                      float m30, float m31, float m32, float m33);
-GLKMatrix4 GLKMatrix4MakeWithArray(float* values);
-GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values);
-GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
-GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
-GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Identity();
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Identity();
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Make(float m00, float m01, float m02, float m03,
+                                       float m10, float m11, float m12, float m13,
+                                       float m20, float m21, float m22, float m23,
+                                       float m30, float m31, float m32, float m33);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02,
+                                       float m10, float m11, float m12,
+                                       float m20, float m21, float m22);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02,
+                                                   float m10, float m11, float m12,
+                                                   float m20, float m21, float m22);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00, float m01, float m02, float m03,
+                                                   float m10, float m11, float m12, float m13,
+                                                   float m20, float m21, float m22, float m23,
+                                                   float m30, float m31, float m32, float m33);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArray(float* values);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos);
 
-GLKMatrix3 GLKMatrix3MakeWithArray(float* values);
-GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
-GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
-GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArray(float* values);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 
-GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, bool* invertible);
+inline GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)  { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, x, y, z)); }
+inline GLKMatrix4 GLKMatrix4MakeXRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 1.f, 0.f, 0.f)); }
+inline GLKMatrix4 GLKMatrix4MakeYRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 0.f, 1.f, 0.f)); }
+inline GLKMatrix4 GLKMatrix4MakeZRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 0.f, 0.f, 1.f)); }
 
-inline GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)  { return CATransform3DMakeRotation(rad, x, y, z); }
-inline GLKMatrix4 GLKMatrix4MakeXRotation(float rad)                            { return CATransform3DMakeRotation(rad, 1.f, 0.f, 0.f); }
-inline GLKMatrix4 GLKMatrix4MakeYRotation(float rad)                            { return CATransform3DMakeRotation(rad, 0.f, 1.f, 0.f); }
-inline GLKMatrix4 GLKMatrix4MakeZRotation(float rad)                            { return CATransform3DMakeRotation(rad, 0.f, 0.f, 1.f); }
+inline GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z)          { return GLKMatrix4Transpose(CATransform3DMakeTranslation(x, y, z)); }
+inline GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z)                { return GLKMatrix4Transpose(CATransform3DMakeScale(x, y, z)); }
 
-inline GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z)          { return CATransform3DMakeTranslation(x, y, z); }
-inline GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z)                { return CATransform3DMakeScale(x, y, z); }
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
+                                             float lookX, float lookY, float lookZ,
+                                             float upX, float upY, float upZ);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far);
 
-GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
-                                float lookX, float lookY, float lookZ,
-                                float upX, float upY, float upZ);
-GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far);
-GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far);
-GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far);
-
-GLKMatrix4 GLKMatrixMultiply(GLKMatrix4 m1, GLKMatrix4 m2);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2);
 
 // --------------------------------------------------------------------------------
 // Vectors.

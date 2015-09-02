@@ -39,6 +39,7 @@
     GLKView* view = [[GLKView alloc] initWithFrame: bounds];
     view.context = ctx;
     view.delegate = _renderer;
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
 
     GLKViewController* ctl = [[GLKViewController alloc] initWithNibName: nil bundle: nil];
     ctl.view = view;

@@ -19,25 +19,43 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+#define GLKSH_STANDARD_SHADER   @"Standard"
+
+#define GLKSH_POS_NAME          "_position"
+#define GLKSH_NORMAL_NAME       "_normal"
+#define GLKSH_COLOR_NAME        "_color"
+#define GLKSH_UV0_NAME          "_uv0"
+#define GLKSH_UV1_NAME          "_uv1"
+
+#define GLKSH_MVP_NAME          "_mvp"
+
 @class GLKShaderEffect;
 @class GLKShader;
 
 @interface GLKShaderCache : NSObject
 +(instancetype) get;
-+(instancetype) alloc;
 
 -(GLKShader*)shaderForName: (NSString*)baseName effect: (GLKShaderEffect*)effect;
 -(id)init;
 @end
 
 @interface GLKShaderSource : NSObject
--(id)initWithVS: (NSString*)baseVSource PS: (NSString*)basePSource;
+
+@property(readonly) GLuint program;
+@property(readonly) GLuint vsh;
+@property(readonly) GLuint psh;
+
+-(id)initWithVS: (const char*)baseVSource PS: (const char*)basePSource;
+-(GLKShader*)shaderForEffect: (GLKShaderEffect*)effect;
 @end
 
 @interface GLKShader : NSObject
 
 @property(readonly) GLuint program;
--(id)init;
+@property(readonly) GLuint vsh;
+@property(readonly) GLuint psh;
+@property(readonly) GLint mvploc;
 
+-(id)initWith: (GLKShaderSource*)src;
 @end
 

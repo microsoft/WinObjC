@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#include <Starboard.h>
-#include <GLKit/GLKMath.h>
+#import <Starboard.h>
+#import <GLKit/GLKitExport.h>
+#import <GLKit/GLKMath.h>
 
 #include <utility>
 
@@ -332,8 +333,8 @@ GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, fl
 
 GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far)
 {
-    float yd = tanf(yrad) * near;
-    float xd = tanf(aspect * yrad) * near;
+    float yd = tanf(yrad / 2.f) * near;
+    float xd = tanf(aspect * yrad / 2.f) * near;
 
     return GLKMatrix4MakeFrustum(-xd, xd, -yd, yd, near, far);
 }
@@ -354,8 +355,8 @@ GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float to
 
     res.m31 = 0.f;
     res.m32 = 0.f;
-    res.m33 = (0.f - far - near) / (far - near);
-    res.m34 = (2.f * far * near) / (far - near);
+    res.m33 = (far + near) / (near - far);
+    res.m34 = (2.f * far * near) / (near - far);
 
     res.m41 = 0.f;
     res.m42 = 0.f;
@@ -365,7 +366,7 @@ GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float to
     return res;
 }
 
-GLKMatrix4 GLKMatrixMultiply(GLKMatrix4 m1, GLKMatrix4 m2)
+GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2)
 {
     GLKMatrix4 res;
 

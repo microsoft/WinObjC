@@ -22,6 +22,8 @@
 #import "Foundation/NSObject.h"
 #import "GLKit/GLKMath.h"
 
+@class GLKShader;
+
 @protocol GLKNamedEffect
 -(void)prepareToDraw;
 @end
@@ -52,6 +54,15 @@ enum _GLKTextureTarget {
     GLKTextureTargetCt = 2
 };
 typedef unsigned int GLKTextureTarget;
+
+enum _GLKVertexAttrib {
+    GLKVertexAttribPosition = 0,
+    GLKVertexAttribNormal,
+    GLKVertexAttribColor,
+    GLKVertexAttribTexCoord0,
+    GLKVertexAttribTexCoord1
+};
+typedef unsigned int GLKVertexAttrib;
 
 // ----------------------------------------
 
@@ -134,6 +145,7 @@ GLKIT_EXPORT_CLASS
 @interface GLKShaderEffect : NSObject<GLKNamedEffect>
 
 @property(readonly) GLKEffectPropertyTransform* transform;
+@property(readonly) GLKShader* shader;
 
 -(id)init;
 -(void)prepareToDraw;
@@ -142,7 +154,6 @@ GLKIT_EXPORT_CLASS
 
 GLKIT_EXPORT_CLASS
 @interface GLKBaseEffect : GLKShaderEffect
-
 
 @property(readonly) GLKEffectPropertyLight* light0;
 @property(readonly) GLKEffectPropertyLight* light1;
@@ -162,6 +173,8 @@ GLKIT_EXPORT_CLASS
 @property BOOL colorMaterialEnabled;
 @property BOOL useConstantColor;
 @property(assign) GLKVector4 constantColor;
+
+@property(readonly) NSString* shaderName;
 
 -(id)init;
 -(void)prepareToDraw;

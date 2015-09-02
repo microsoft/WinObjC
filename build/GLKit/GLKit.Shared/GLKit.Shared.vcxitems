@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -35,13 +35,14 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm">
       <FileType>Document</FileType>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm">
-      <FileType>Document</FileType>
-    </ClangCompile>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm" />
