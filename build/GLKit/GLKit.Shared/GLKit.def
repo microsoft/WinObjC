@@ -20,9 +20,36 @@ LIBRARY GLKit
 	 __objc_class_name_GLKEffectPropertyTexture	CONSTANT
      _OBJC_CLASS_GLKEffectPropertyTransform	DATA
 	 __objc_class_name_GLKEffectPropertyTransform	CONSTANT
-     _OBJC_CLASS_GLKSkyboxEffect	DATA
-	 __objc_class_name_GLKSkyboxEffect	CONSTANT
-     _OBJC_CLASS_GLKTextureInfo	DATA
+     _OBJC_CLASS_GLKShader	DATA
+	 __objc_class_name_GLKShader	CONSTANT
+     _OBJC_CLASS_GLKShaderCache	DATA
+	 __objc_class_name_GLKShaderCache	CONSTANT
+     _OBJC_CLASS_GLKShaderSource	DATA
+	 __objc_class_name_GLKShaderSource	CONSTANT
+	 _OBJC_CLASS_GLKTextureInfo	DATA
 	 __objc_class_name_GLKTextureInfo	CONSTANT
      _OBJC_CLASS_GLKTextureLoader	DATA
 	 __objc_class_name_GLKTextureLoader	CONSTANT
+     GLKMatrix3Identity
+	 GLKMatrix3FromMatrix4
+     GLKMatrix4Identity
+	 GLKMatrix4Make
+     GLKMatrix3Make
+	 GLKMatrix3Transpose
+     GLKMatrix4Transpose
+	 GLKMatrix3MakeAndTranspose
+     GLKMatrix4MakeAndTranspose
+	 GLKMatrix4MakeWithArray
+     GLKMatrix4MakeWithArrayAndTranspose
+	 GLKMatrix4MakeWithColumns
+     GLKMatrix4MakeWithRows
+	 GLKMatrix4MakeOrthonormalXform
+	 GLKMatrix3MakeWithArray
+	 GLKMatrix3MakeWithArrayAndTranspose
+     GLKMatrix3MakeWithColumns
+	 GLKMatrix3MakeWithRows
+	 GLKMatrix4MakeLookAt
+     GLKMatrix4MakeOrtho
+	 GLKMatrix4MakePerspective
+     GLKMatrix4MakeFrustum
+	 GLKMatrix4Multiply

@@ -27,14 +27,32 @@ struct Vertex {
 
 static Vertex cubeVertices[] = {
     { {-1.0f, -1.0f, -1.0f}, {0.0f,  1.0f,  0.0f,  1.0f}},
-    { {1.0f, -1.0f, -1.0f}, {0.0f,  1.0f,  0.0f,  1.0f}},
-    { {1.0f,  1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
-    { {-1.0f, 1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
+    { { 1.0f, -1.0f, -1.0f}, {0.0f,  1.0f,  0.0f,  1.0f}},
+    { { 1.0f,  1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
+    { {-1.0f,  1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
     { {-1.0f, -1.0f,  1.0f}, {1.0f,  0.0f,  0.0f,  1.0f}},
     { { 1.0f, -1.0f,  1.0f}, {1.0f,  0.0f,  0.0f,  1.0f}},
     { { 1.0f,  1.0f,  1.0f}, {0.0f,  0.0f,  1.0f,  1.0f}},
     { {-1.0f,  1.0f,  1.0f}, {1.0f,  0.0f,  1.0f,  1.0f }}
 };
+
+static uint8_t drawIndices[] = {
+    0, 4, 5, 0, 5, 1,
+    1, 5, 6, 1, 6, 2,
+    2, 6, 7, 2, 7, 3,
+    3, 7, 4, 3, 4, 0,
+    4, 7, 6, 4, 6, 5,
+    3, 0, 1, 3, 1, 2
+};
+
+static void dumpMat(const GLKMatrix4& mat)
+{
+    const float* f = (const float*)&mat;
+    NSLog(@"------------------------------");
+    for(int i = 0; i < 4; i ++, f += 4) {
+        NSLog(@"%6.2f  %6.2f  %6.2f  %6.2f", f[0], f[1], f[2], f[3]);
+    }
+}
 
 @implementation GLRenderer {
     GLuint          _positionBuffer;
@@ -47,9 +65,13 @@ static Vertex cubeVertices[] = {
     glBindBuffer(GL_ARRAY_BUFFER, _positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
-    _effect = [[GLKBaseEffect alloc] init];
-
+    _effect = [[GLKBaseEffect alloc] init];    
     _cubeAngle = 0.f;
+
+    glClearColor(0.0, 0.3, 0.7, 1.0);
+    glClearDepthf(1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);    
 }
 
 -(void)cleanupGLData {
@@ -70,31 +92,30 @@ static Vertex cubeVertices[] = {
 }
 
 -(void)glkViewControllerUpdate: (GLKViewController*)controller {
-    NSLog(@"GLRenderer got update event from controller.");
+    _cubeAngle += 1.0f / 180.0f * M_PI;
 }
 
 -(void)glkView:(GLKView*)view drawInRect:(CGRect)rect {
-    NSLog(@"GLRenderer got render framer request.");
-
-    glClearColor(0.0, 0.1, 0.8, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     float aspect = rect.size.width / rect.size.height;
-    
-    GLKMatrix4 rotate = GLKMatrix4MakeYRotation(cubeAngle);
-    GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.0f);
     GLKMatrix4 proj = GLKMatrix4MakePerspective(M_PI / 3, aspect, 0.01f, 100.f);
+    _effect.transform.projectionMatrix = proj;
 
+    GLKMatrix4 rotate = GLKMatrix4MakeYRotation(_cubeAngle);
+    GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.0f);
+    GLKMatrix4 modelview = GLKMatrix4Multiply(translate, rotate);
+    _effect.transform.modelviewMatrix = modelview;
+
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glEnableVertexAttribArray(GLKVertexAttribColor); 
+
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *) (sizeof(float) * 3));
+
+    [_effect prepareToDraw];
     
-    glEnableVertexAttribArray(_positionAttrib);
-    glEnableVertexAttribArray(_colorAttrib); 
-
-    glVertexAttribPointer(_positionAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-    glVertexAttribPointer(_colorAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *) (sizeof(float) * 3));
-
-    glPerspective(M_PI / 3, _aspect, 0.01f, 100.0f, _projectionAttrib);
-    
-    _cubeAngle += 1.0f / 180.0f * M_PI;
+    glDrawElements(GL_TRIANGLES, sizeof(drawIndices) / sizeof(uint8_t), GL_UNSIGNED_BYTE, drawIndices);
 }
 
 @end

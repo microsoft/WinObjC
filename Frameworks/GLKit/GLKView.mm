@@ -86,8 +86,6 @@
 }
 
 -(void) _renderFrame {
-    NSLog(@"GLKView got draw request.");
-
     [EAGLContext setCurrentContext: self.context];
     [self.delegate glkView: self drawInRect: self.frame];
         

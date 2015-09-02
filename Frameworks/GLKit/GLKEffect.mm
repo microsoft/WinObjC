@@ -17,6 +17,7 @@
 #import <Starboard.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEffect.h>
+#import <GLKit/GLKShader.h>
 
 @implementation GLKShaderEffect {
 }
@@ -30,9 +31,9 @@
     return self;
 }
 
-
 -(void)prepareToDraw {
-    // TODO: BK: code goes here LOL!
+    _shader = [[GLKShaderCache get] shaderForName: [self shaderName] effect: self];
+    glUseProgram(_shader.program);
 }
 
 @end
@@ -59,6 +60,8 @@
     _material = [[GLKEffectPropertyMaterial alloc] init];
     _fog = [[GLKEffectPropertyFog alloc] init];
 
+    _shaderName = GLKSH_STANDARD_SHADER;
+    
     return self;
 }
 
@@ -113,7 +116,10 @@
 }
 
 -(void)prepareToDraw {
-    // TODO: BK: code goes here LOL!
+    [super prepareToDraw];
+    GLKMatrix4 mvp = GLKMatrix4Transpose(self.transform.mvp);
+    GLint loc = self.shader.mvploc;
+    glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
 }
 
 @end
@@ -203,7 +209,7 @@
 }
 
 -(GLKMatrix4)mvp {
-    return GLKMatrixMultiply(self.projectionMatrix, self.modelviewMatrix);
+    return GLKMatrix4Multiply(self.projectionMatrix, self.modelviewMatrix);
 }
 
 @end
