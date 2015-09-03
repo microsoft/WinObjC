@@ -58,6 +58,8 @@ static void dumpMat(const GLKMatrix4& mat)
     GLuint          _positionBuffer;
     GLKBaseEffect*  _effect;
     float           _cubeAngle;
+
+    GLKTextureInfo* _tex1;
 }
 
 -(void)initGLData {
@@ -71,7 +73,12 @@ static void dumpMat(const GLKMatrix4& mat)
     glClearColor(0.0, 0.35, 0.6, 1.0);
     glClearDepthf(1.0f);
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);    
+    glDepthFunc(GL_LEQUAL);
+
+    UIImage* img = [UIImage imageNamed: @"seafloor.png"];
+    if (img) {
+        _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+    }
 }
 
 -(void)cleanupGLData {

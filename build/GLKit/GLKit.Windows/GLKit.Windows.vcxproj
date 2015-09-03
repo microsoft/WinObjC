@@ -151,7 +151,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;OpenGLES.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
     </Link>

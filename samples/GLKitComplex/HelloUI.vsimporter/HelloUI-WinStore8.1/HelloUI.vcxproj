@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -89,6 +89,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="HelloUI_TemporaryKey.pfx" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
     <Image Include="Assets\Logo.scale-100.png" />
     <Image Include="Assets\SmallLogo.scale-100.png" />
     <Image Include="Assets\StoreLogo.scale-100.png" />
