@@ -18,6 +18,11 @@
 
 #import "GLES2/gl2.h"
 #import "Foundation/NSObject.h"
+#import "Foundation/NSData.h"
+#import "CoreGraphics/CGImage.h"
+
+@class NSOpenGLContext;
+@class NSData;
 
 enum _GLKTextureInfoAlphaState {
     GLKTextureInfoAlphaStateNone = 0,
@@ -36,7 +41,8 @@ typedef GLuint GLKTextureInfoOrigin;
 // --------------------------------------------------------------------------------
 
 GLKIT_EXPORT_CLASS
-@interface GLKTextureInfo
+@interface GLKTextureInfo : NSObject
+
 @property (readonly) GLuint name;
 @property (readonly) GLuint target;
 
@@ -47,9 +53,17 @@ GLKIT_EXPORT_CLASS
 
 @property (readonly) GLKTextureInfoOrigin textureOrigin;
 
+-(id)initWith: (GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height alphaState:(GLKTextureInfoAlphaState)as;
 @end
 
 GLKIT_EXPORT_CLASS
-@interface GLKTextureLoader
+@interface GLKTextureLoader : NSObject
+
++(GLKTextureInfo*)textureWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err;
++(GLKTextureInfo*)textureWithContentsOfData: (NSData*)data options: (NSDictionary*)opts error: (NSError**)err;
++(GLKTextureInfo*)textureWithCGImage: (CGImageRef)img options: (NSDictionary*)opts error: (NSError**)err;
+
+-(id)initWithShareContext:(NSOpenGLContext*)context;
+
 @end
 

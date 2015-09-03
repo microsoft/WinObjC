@@ -17,7 +17,6 @@
 #pragma once
 
 #include <math.h>
-
 #include <QuartzCore/CATransform3D.h>
 
 typedef struct _GLKVector2 {
@@ -58,6 +57,11 @@ typedef struct _GLKMatrix3 {
 } GLKMatrix3;
 
 typedef CATransform3D GLKMatrix4;
+
+// --------------------------------------------------------------------------------
+
+inline float GLKMathDegreesToRadians(float deg) { return deg * M_PI / 180.f; }
+inline float GLKMathRadiansToDegrees(float rad) { return rad * 180.f / M_PI; }
 
 // --------------------------------------------------------------------------------
 // Matrices
