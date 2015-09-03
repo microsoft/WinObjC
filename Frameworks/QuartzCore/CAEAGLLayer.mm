@@ -58,7 +58,7 @@ typedef wchar_t WCHAR;
 	{
 		_swapChainPanel = [WXCSwapChainPanel create];
 		[super init];
-		[super setContentsElement: _swapChainPanel];
+		self.contentsElement = _swapChainPanel;
 
 		return self;
 	}

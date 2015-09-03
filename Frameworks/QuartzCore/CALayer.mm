@@ -305,7 +305,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height)
     return ret;
 }
 
-@implementation CALayer
+@implementation CALayer {
+	WXFrameworkElement *_contentsElement;
+}
+
     -(instancetype) init {
         assert(priv == NULL);
         priv = new CAPrivateInfo(self);
@@ -388,8 +391,15 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height)
     -(void) drawInContext:(CGContextRef)ctx {
     }
 
-    -(void) setContentsElement: (WXFrameworkElement *) element
-    {
+    -(WXFrameworkElement *) contentsElement {
+		return _contentsElement;
+    }
+
+    -(void) setContentsElement: (WXFrameworkElement *) element {
+		[element retain];
+		[_contentsElement release];
+		_contentsElement = element;
+
         if ( priv->_textureOverride ) {
             GetCACompositor()->ReleaseDisplayTexture(priv->_textureOverride);
         }
@@ -1798,6 +1808,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height)
         while ( priv->firstChild ) {
             [priv->firstChild->self removeFromSuperlayer];
         }
+
+		[_contentsElement release];
 
         delete priv;
         priv = NULL;

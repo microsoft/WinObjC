@@ -113,6 +113,8 @@ CA_EXPORT_CLASS
 @property (getter=isDoubleSided) BOOL doubleSided;
 @property(copy) NSDictionary *actions;
 
+@property WXFrameworkElement *contentsElement;
+
 - (id)init;
 - (id)initWithLayer:(id)layer;
 
@@ -155,7 +157,6 @@ CA_EXPORT_CLASS
 
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer *)layer toLayer:(CALayer *)layer;
 
--(void) setContentsElement:(WXFrameworkElement *) nativeElement;
 @end
 
 @interface NSObject(CALayerDelegate)
