@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.Threading;
+using System.Globalization;
 
 namespace ClangCompile
 {
@@ -382,6 +383,9 @@ namespace ClangCompile
 
         string GetSpecial(string name, object value, ITaskItem input)
         {
+            // ToLower is affected by localization. Need to be careful here.
+            name = name.ToLower(new CultureInfo("en-US", false));
+
             if (value == null)
             {
                 if (name == "inputfilename")
@@ -898,6 +902,8 @@ namespace ClangCompile
         #endregion
 
         #region ToolTask Overrides
+        // ToLower() is affected by localization.
+        // Be VERY careful when adding static strings to the dictionary, since lookup is also done with ToLower.
         static Dictionary<string, PropertyInfo> AllProps = typeof(Clang).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToDictionary(x => x.Name.ToLower());
 
         protected override string GenerateFullPathToTool()
@@ -928,7 +934,7 @@ namespace ClangCompile
                     PropertyPageAttribute ppAttr = (PropertyPageAttribute)Attribute.GetCustomAttribute(pInfo, typeof(PropertyPageAttribute));
                     string propSwitch = ppAttr.Switch;
                     object value = pInfo.GetValue(this);                        
-                    string propVal = GetSpecial(autoSubst.ToLower(), value, input);
+                    string propVal = GetSpecial(autoSubst, value, input);
 
                     if (propVal != null && propVal != "")
                     {
