@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <math.h>
 #include <QuartzCore/CATransform3D.h>
 
 typedef struct _GLKVector2 {

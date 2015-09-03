@@ -17,33 +17,10 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+#include "Mesh.h"
+
 #import "GLRenderer.h"
 #import <GLKit/GLKit.h>
-
-struct Vertex {
-    float pps[3];
-    float color[4];
-};
-
-static Vertex cubeVertices[] = {
-    { {-1.0f, -1.0f, -1.0f}, {0.0f,  1.0f,  0.0f,  1.0f}},
-    { { 1.0f, -1.0f, -1.0f}, {0.0f,  1.0f,  0.0f,  1.0f}},
-    { { 1.0f,  1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
-    { {-1.0f,  1.0f, -1.0f}, {1.0f,  0.5f,  0.0f,  1.0f}},
-    { {-1.0f, -1.0f,  1.0f}, {1.0f,  0.0f,  0.0f,  1.0f}},
-    { { 1.0f, -1.0f,  1.0f}, {1.0f,  0.0f,  0.0f,  1.0f}},
-    { { 1.0f,  1.0f,  1.0f}, {0.0f,  0.0f,  1.0f,  1.0f}},
-    { {-1.0f,  1.0f,  1.0f}, {1.0f,  0.0f,  1.0f,  1.0f }}
-};
-
-static uint8_t drawIndices[] = {
-    0, 4, 5, 0, 5, 1,
-    1, 5, 6, 1, 6, 2,
-    2, 6, 7, 2, 7, 3,
-    3, 7, 4, 3, 4, 0,
-    4, 7, 6, 4, 6, 5,
-    3, 0, 1, 3, 1, 2
-};
 
 static void dumpMat(const GLKMatrix4& mat)
 {
@@ -55,18 +32,14 @@ static void dumpMat(const GLKMatrix4& mat)
 }
 
 @implementation GLRenderer {
-    GLuint          _positionBuffer;
     GLKBaseEffect*  _effect;
     float           _cubeAngle;
+    Mesh*           _mesh;
 
     GLKTextureInfo* _tex1;
 }
 
 -(void)initGLData {
-    glGenBuffers(1, &_positionBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, _positionBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
     _effect = [[GLKBaseEffect alloc] init];    
     _cubeAngle = 0.f;
 
@@ -75,19 +48,32 @@ static void dumpMat(const GLKMatrix4& mat)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
+    _mesh = new Mesh();
+
+    NSString *file = [[NSBundle mainBundle] pathForResource:@"utah-teapot" ofType:@"obj"];
+    NSString *str = [NSString stringWithContentsOfFile: file encoding:NSUTF8StringEncoding error:NULL];
+    if (str) {
+        _mesh->parse([str UTF8String], [str length]);
+        _mesh->calcColours();
+    } else {
+        _mesh->testMesh();
+    }
+    if (!_mesh->createOGLBuffers()) {
+        NSLog(@"Unable to create OpenGL buffer objects for mesh!");
+    }
+
     UIImage* img = [UIImage imageNamed: @"seafloor.png"];
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+        _effect.textureOrder = @[ [[GLKEffectPropertyTexture alloc] initWith: _tex1] ];
     }
 }
 
 -(void)cleanupGLData {
     _effect = nil;
-    
-    if (_positionBuffer) {
-        glDeleteBuffers(1, &_positionBuffer);
-        _positionBuffer = 0;
-    }
+
+    delete _mesh;
+    _mesh = nullptr;
 }
 
 -(void)glkViewController: (GLKViewController*)controller willPause:(BOOL)paused {
@@ -110,19 +96,14 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.transform.projectionMatrix = proj;
 
     GLKMatrix4 rotate = GLKMatrix4MakeYRotation(_cubeAngle);
-    GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -5.0f);
+    static GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -75.f);
     GLKMatrix4 modelview = GLKMatrix4Multiply(translate, rotate);
     _effect.transform.modelviewMatrix = modelview;
 
-    glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glEnableVertexAttribArray(GLKVertexAttribColor); 
-
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *) (sizeof(float) * 3));
-
     [_effect prepareToDraw];
-    
-    glDrawElements(GL_TRIANGLES, sizeof(drawIndices) / sizeof(uint8_t), GL_UNSIGNED_BYTE, drawIndices);
+
+    _mesh->bindVertexData();
+    glDrawElements(GL_TRIANGLES, 3 * _mesh->faceCount(), GL_UNSIGNED_SHORT, 0);
 }
 
 @end

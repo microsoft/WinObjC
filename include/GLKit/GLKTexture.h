@@ -20,23 +20,10 @@
 #import "Foundation/NSObject.h"
 #import "Foundation/NSData.h"
 #import "CoreGraphics/CGImage.h"
+#import "GLKit/GLKEnums.h"
 
 @class NSOpenGLContext;
 @class NSData;
-
-enum _GLKTextureInfoAlphaState {
-    GLKTextureInfoAlphaStateNone = 0,
-    GLKTextureInfoAlphaStateNonPremultiplied = 1,
-    GLKTextureInfoAlphaStatePremultiplied = 2
-};
-typedef GLuint GLKTextureInfoAlphaState;
-
-enum _GLKTextureInfoOrigin {
-    GLKTextureInfoOriginUnknown = 0,
-    GLKTextureInfoOriginTopLeft = 1,
-    GLKTextureInfoOriginBottomLeft = 2,
-};
-typedef GLuint GLKTextureInfoOrigin;
 
 // --------------------------------------------------------------------------------
 

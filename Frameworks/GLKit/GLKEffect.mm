@@ -18,6 +18,7 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
+#import <GLKit/GLKTexture.h>
 
 @implementation GLKShaderEffect {
 }
@@ -145,7 +146,8 @@
 
 @implementation GLKEffectPropertyLight
 
--(id)init {
+-(id)init
+{
     _transform = [[GLKEffectPropertyTransform alloc] init];
 
     self.enabled = TRUE;
@@ -172,7 +174,8 @@
 
 @implementation GLKEffectPropertyMaterial
 
--(id)init {
+-(id)init
+{
     self.ambientColor = GLKVector4Black();
     self.diffuseColor = GLKVector4White();
     self.specularColor = GLKVector4Black();
@@ -185,7 +188,9 @@
 @end
 
 @implementation GLKEffectPropertyTexture
--(id)init {
+
+-(id)init
+{
     self.enabled = FALSE;
     self.name = 0;
     self.envMode = GLKTextureEnvModeReplace;
@@ -193,6 +198,15 @@
 
     return self;
 }
+
+-(id)initWith: (GLKTextureInfo*)tex
+{
+    [self init];
+    self.name = tex.name;
+    self.enabled = TRUE;    
+    return self;
+}
+
 @end
 
 @implementation GLKEffectPropertyTransform
