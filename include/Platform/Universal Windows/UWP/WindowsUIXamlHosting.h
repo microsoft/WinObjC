@@ -25,13 +25,15 @@
 
 #include "WindowsUIXaml.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.UI.Xaml.Hosting.ElementCompositionPreview
 #ifndef __WUXHElementCompositionPreview_DEFINED__
 #define __WUXHElementCompositionPreview_DEFINED__
 
 WINRT_EXPORT
 @interface WUXHElementCompositionPreview : RTObject
-+ (RTObject *)getContainerVisual:(WXUIElement *)element;
++ (RTObject*)getContainerVisual:(WXUIElement*)element;
 @end
 
 #endif // __WUXHElementCompositionPreview_DEFINED__

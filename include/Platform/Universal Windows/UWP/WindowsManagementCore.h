@@ -25,13 +25,15 @@
 
 #include "WindowsStorage.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Management.Core.ApplicationDataManager
 #ifndef __WMCApplicationDataManager_DEFINED__
 #define __WMCApplicationDataManager_DEFINED__
 
 WINRT_EXPORT
 @interface WMCApplicationDataManager : RTObject
-+ (WSApplicationData *)createForPackageFamily:(NSString *)packageFamilyName;
++ (WSApplicationData*)createForPackageFamily:(NSString *)packageFamilyName;
 @end
 
 #endif // __WMCApplicationDataManager_DEFINED__

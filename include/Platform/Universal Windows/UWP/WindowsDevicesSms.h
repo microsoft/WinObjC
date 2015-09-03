@@ -26,126 +26,126 @@
 
 // Windows.Devices.Sms.SmsMessageClass
 enum _WDSSmsMessageClass {
-    WDSSmsMessageClassNone = 0,
-    WDSSmsMessageClassClass0 = 1,
-    WDSSmsMessageClassClass1 = 2,
-    WDSSmsMessageClassClass2 = 3,
-    WDSSmsMessageClassClass3 = 4,
+	WDSSmsMessageClassNone = 0,
+	WDSSmsMessageClassClass0 = 1,
+	WDSSmsMessageClassClass1 = 2,
+	WDSSmsMessageClassClass2 = 3,
+	WDSSmsMessageClassClass3 = 4,
 };
 typedef unsigned WDSSmsMessageClass;
 
 // Windows.Devices.Sms.SmsMessageType
 enum _WDSSmsMessageType {
-    WDSSmsMessageTypeBinary = 0,
-    WDSSmsMessageTypeText = 1,
-    WDSSmsMessageTypeWap = 2,
-    WDSSmsMessageTypeApp = 3,
-    WDSSmsMessageTypeBroadcast = 4,
-    WDSSmsMessageTypeVoicemail = 5,
-    WDSSmsMessageTypeStatus = 6,
+	WDSSmsMessageTypeBinary = 0,
+	WDSSmsMessageTypeText = 1,
+	WDSSmsMessageTypeWap = 2,
+	WDSSmsMessageTypeApp = 3,
+	WDSSmsMessageTypeBroadcast = 4,
+	WDSSmsMessageTypeVoicemail = 5,
+	WDSSmsMessageTypeStatus = 6,
 };
 typedef unsigned WDSSmsMessageType;
 
 // Windows.Devices.Sms.CellularClass
 enum _WDSCellularClass {
-    WDSCellularClassNone = 0,
-    WDSCellularClassGsm = 1,
-    WDSCellularClassCdma = 2,
+	WDSCellularClassNone = 0,
+	WDSCellularClassGsm = 1,
+	WDSCellularClassCdma = 2,
 };
 typedef unsigned WDSCellularClass;
 
 // Windows.Devices.Sms.SmsDataFormat
 enum _WDSSmsDataFormat {
-    WDSSmsDataFormatUnknown = 0,
-    WDSSmsDataFormatCdmaSubmit = 1,
-    WDSSmsDataFormatGsmSubmit = 2,
-    WDSSmsDataFormatCdmaDeliver = 3,
-    WDSSmsDataFormatGsmDeliver = 4,
+	WDSSmsDataFormatUnknown = 0,
+	WDSSmsDataFormatCdmaSubmit = 1,
+	WDSSmsDataFormatGsmSubmit = 2,
+	WDSSmsDataFormatCdmaDeliver = 3,
+	WDSSmsDataFormatGsmDeliver = 4,
 };
 typedef unsigned WDSSmsDataFormat;
 
 // Windows.Devices.Sms.SmsEncoding
 enum _WDSSmsEncoding {
-    WDSSmsEncodingUnknown = 0,
-    WDSSmsEncodingOptimal = 1,
-    WDSSmsEncodingSevenBitAscii = 2,
-    WDSSmsEncodingUnicode = 3,
-    WDSSmsEncodingGsmSevenBit = 4,
-    WDSSmsEncodingEightBit = 5,
-    WDSSmsEncodingLatin = 6,
-    WDSSmsEncodingKorean = 7,
-    WDSSmsEncodingIA5 = 8,
-    WDSSmsEncodingShiftJis = 9,
-    WDSSmsEncodingLatinHebrew = 10,
+	WDSSmsEncodingUnknown = 0,
+	WDSSmsEncodingOptimal = 1,
+	WDSSmsEncodingSevenBitAscii = 2,
+	WDSSmsEncodingUnicode = 3,
+	WDSSmsEncodingGsmSevenBit = 4,
+	WDSSmsEncodingEightBit = 5,
+	WDSSmsEncodingLatin = 6,
+	WDSSmsEncodingKorean = 7,
+	WDSSmsEncodingIA5 = 8,
+	WDSSmsEncodingShiftJis = 9,
+	WDSSmsEncodingLatinHebrew = 10,
 };
 typedef unsigned WDSSmsEncoding;
 
 // Windows.Devices.Sms.SmsGeographicalScope
 enum _WDSSmsGeographicalScope {
-    WDSSmsGeographicalScopeNone = 0,
-    WDSSmsGeographicalScopeCellWithImmediateDisplay = 1,
-    WDSSmsGeographicalScopeLocationArea = 2,
-    WDSSmsGeographicalScopePlmn = 3,
-    WDSSmsGeographicalScopeCell = 4,
+	WDSSmsGeographicalScopeNone = 0,
+	WDSSmsGeographicalScopeCellWithImmediateDisplay = 1,
+	WDSSmsGeographicalScopeLocationArea = 2,
+	WDSSmsGeographicalScopePlmn = 3,
+	WDSSmsGeographicalScopeCell = 4,
 };
 typedef unsigned WDSSmsGeographicalScope;
 
 // Windows.Devices.Sms.SmsBroadcastType
 enum _WDSSmsBroadcastType {
-    WDSSmsBroadcastTypeOther = 0,
-    WDSSmsBroadcastTypeCmasPresidential = 1,
-    WDSSmsBroadcastTypeCmasExtreme = 2,
-    WDSSmsBroadcastTypeCmasSevere = 3,
-    WDSSmsBroadcastTypeCmasAmber = 4,
-    WDSSmsBroadcastTypeCmasTest = 5,
-    WDSSmsBroadcastTypeEUAlert1 = 6,
-    WDSSmsBroadcastTypeEUAlert2 = 7,
-    WDSSmsBroadcastTypeEUAlert3 = 8,
-    WDSSmsBroadcastTypeEUAlertAmber = 9,
-    WDSSmsBroadcastTypeEUAlertInfo = 10,
-    WDSSmsBroadcastTypeEtwsEarthquake = 11,
-    WDSSmsBroadcastTypeEtwsTsunami = 12,
-    WDSSmsBroadcastTypeEtwsTsunamiAndEarthquake = 13,
-    WDSSmsBroadcastTypeLatAlertLocal = 14,
+	WDSSmsBroadcastTypeOther = 0,
+	WDSSmsBroadcastTypeCmasPresidential = 1,
+	WDSSmsBroadcastTypeCmasExtreme = 2,
+	WDSSmsBroadcastTypeCmasSevere = 3,
+	WDSSmsBroadcastTypeCmasAmber = 4,
+	WDSSmsBroadcastTypeCmasTest = 5,
+	WDSSmsBroadcastTypeEUAlert1 = 6,
+	WDSSmsBroadcastTypeEUAlert2 = 7,
+	WDSSmsBroadcastTypeEUAlert3 = 8,
+	WDSSmsBroadcastTypeEUAlertAmber = 9,
+	WDSSmsBroadcastTypeEUAlertInfo = 10,
+	WDSSmsBroadcastTypeEtwsEarthquake = 11,
+	WDSSmsBroadcastTypeEtwsTsunami = 12,
+	WDSSmsBroadcastTypeEtwsTsunamiAndEarthquake = 13,
+	WDSSmsBroadcastTypeLatAlertLocal = 14,
 };
 typedef unsigned WDSSmsBroadcastType;
 
 // Windows.Devices.Sms.SmsDeviceStatus
 enum _WDSSmsDeviceStatus {
-    WDSSmsDeviceStatusOff = 0,
-    WDSSmsDeviceStatusReady = 1,
-    WDSSmsDeviceStatusSimNotInserted = 2,
-    WDSSmsDeviceStatusBadSim = 3,
-    WDSSmsDeviceStatusDeviceFailure = 4,
-    WDSSmsDeviceStatusSubscriptionNotActivated = 5,
-    WDSSmsDeviceStatusDeviceLocked = 6,
-    WDSSmsDeviceStatusDeviceBlocked = 7,
+	WDSSmsDeviceStatusOff = 0,
+	WDSSmsDeviceStatusReady = 1,
+	WDSSmsDeviceStatusSimNotInserted = 2,
+	WDSSmsDeviceStatusBadSim = 3,
+	WDSSmsDeviceStatusDeviceFailure = 4,
+	WDSSmsDeviceStatusSubscriptionNotActivated = 5,
+	WDSSmsDeviceStatusDeviceLocked = 6,
+	WDSSmsDeviceStatusDeviceBlocked = 7,
 };
 typedef unsigned WDSSmsDeviceStatus;
 
 // Windows.Devices.Sms.SmsModemErrorCode
 enum _WDSSmsModemErrorCode {
-    WDSSmsModemErrorCodeOther = 0,
-    WDSSmsModemErrorCodeMessagingNetworkError = 1,
-    WDSSmsModemErrorCodeSmsOperationNotSupportedByDevice = 2,
-    WDSSmsModemErrorCodeSmsServiceNotSupportedByNetwork = 3,
-    WDSSmsModemErrorCodeDeviceFailure = 4,
-    WDSSmsModemErrorCodeMessageNotEncodedProperly = 5,
-    WDSSmsModemErrorCodeMessageTooLarge = 6,
-    WDSSmsModemErrorCodeDeviceNotReady = 7,
-    WDSSmsModemErrorCodeNetworkNotReady = 8,
-    WDSSmsModemErrorCodeInvalidSmscAddress = 9,
-    WDSSmsModemErrorCodeNetworkFailure = 10,
-    WDSSmsModemErrorCodeFixedDialingNumberRestricted = 11,
+	WDSSmsModemErrorCodeOther = 0,
+	WDSSmsModemErrorCodeMessagingNetworkError = 1,
+	WDSSmsModemErrorCodeSmsOperationNotSupportedByDevice = 2,
+	WDSSmsModemErrorCodeSmsServiceNotSupportedByNetwork = 3,
+	WDSSmsModemErrorCodeDeviceFailure = 4,
+	WDSSmsModemErrorCodeMessageNotEncodedProperly = 5,
+	WDSSmsModemErrorCodeMessageTooLarge = 6,
+	WDSSmsModemErrorCodeDeviceNotReady = 7,
+	WDSSmsModemErrorCodeNetworkNotReady = 8,
+	WDSSmsModemErrorCodeInvalidSmscAddress = 9,
+	WDSSmsModemErrorCodeNetworkFailure = 10,
+	WDSSmsModemErrorCodeFixedDialingNumberRestricted = 11,
 };
 typedef unsigned WDSSmsModemErrorCode;
 
 // Windows.Devices.Sms.SmsFilterActionType
 enum _WDSSmsFilterActionType {
-    WDSSmsFilterActionTypeAcceptImmediately = 0,
-    WDSSmsFilterActionTypeDrop = 1,
-    WDSSmsFilterActionTypePeek = 2,
-    WDSSmsFilterActionTypeAccept = 3,
+	WDSSmsFilterActionTypeAcceptImmediately = 0,
+	WDSSmsFilterActionTypeDrop = 1,
+	WDSSmsFilterActionTypePeek = 2,
+	WDSSmsFilterActionTypeAccept = 3,
 };
 typedef unsigned WDSSmsFilterActionType;
 
@@ -153,15 +153,17 @@ typedef unsigned WDSSmsFilterActionType;
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.Devices.Sms.SmsEncodedLength
 WINRT_EXPORT
 @interface WDSSmsEncodedLength : NSObject
 + (instancetype)new;
-@property unsigned segmentCount;
-@property unsigned characterCountLastSegment;
-@property unsigned charactersPerSegment;
-@property unsigned byteCountLastSegment;
-@property unsigned bytesPerSegment;
+@property unsigned int segmentCount;
+@property unsigned int characterCountLastSegment;
+@property unsigned int charactersPerSegment;
+@property unsigned int byteCountLastSegment;
+@property unsigned int bytesPerSegment;
 @end
 
 // Windows.Devices.Sms.ISmsMessageBase
@@ -198,7 +200,7 @@ WINRT_EXPORT
 @property (copy) NSString * body;
 @property (readonly) int protocolId;
 @property (readonly) NSString * from;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) int teleserviceId;
 @end
 
@@ -215,12 +217,12 @@ WINRT_EXPORT
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString * simIccId;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) NSString * applicationId;
 @property (readonly) RTObject<WSSIBuffer>* binaryBody;
 @property (readonly) NSString * contentType;
 @property (readonly) NSString * from;
-@property (readonly) NSDictionary * /*String, String*/  headers;
+@property (readonly) NSMutableDictionary* headers;
 @property (readonly) NSString * to;
 @end
 
@@ -244,7 +246,7 @@ WINRT_EXPORT
 @property (copy) NSString * to;
 @property int teleserviceId;
 @property (readonly) NSString * from;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
@@ -267,7 +269,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isEmergencyAlert;
 @property (readonly) BOOL isUserPopupRequested;
 @property (readonly) int messageCode;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) NSString * to;
 @property (readonly) int updateNumber;
 @property (readonly) WDSCellularClass cellularClass;
@@ -291,8 +293,8 @@ WINRT_EXPORT
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString * simIccId;
 @property (readonly) NSString * body;
-@property (readonly) NSNumber* messageCount;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) id messageCount;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) NSString * to;
 @end
 
@@ -311,10 +313,10 @@ WINRT_EXPORT
 @property (readonly) NSString * simIccId;
 @property (readonly) int status;
 @property (readonly) NSString * body;
-@property (readonly) WFDateTime * dischargeTime;
+@property (readonly) WFDateTime* dischargeTime;
 @property (readonly) NSString * from;
 @property (readonly) int messageReferenceNumber;
-@property (readonly) WFDateTime * serviceCenterTimestamp;
+@property (readonly) WFDateTime* serviceCenterTimestamp;
 @property (readonly) NSString * to;
 @end
 
@@ -329,7 +331,7 @@ WINRT_EXPORT
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) BOOL isErrorTransient;
 @property (readonly) BOOL isSuccessful;
-@property (readonly) NSArray* /*Int32*/  messageReferenceNumbers;
+@property (readonly) NSArray* messageReferenceNumbers;
 @property (readonly) WDSSmsModemErrorCode modemErrorCode;
 @property (readonly) int networkCauseCode;
 @property (readonly) int transportFailureCause;
@@ -344,19 +346,19 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmsDevice2 : RTObject
 + (NSString *)getDeviceSelector;
-+ (WDSSmsDevice2 *)fromId:(NSString *)deviceId;
-+ (WDSSmsDevice2 *)getDefault;
-+ (WDSSmsDevice2 *)fromParentId:(NSString *)parentDeviceId;
++ (WDSSmsDevice2*)fromId:(NSString *)deviceId;
++ (WDSSmsDevice2*)getDefault;
++ (WDSSmsDevice2*)fromParentId:(NSString *)parentDeviceId;
 @property (copy) NSString * smscAddress;
 @property (readonly) NSString * accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsDeviceStatus deviceStatus;
 @property (readonly) NSString * parentDeviceId;
-- (EventRegistrationToken)addDeviceStatusChangedEvent:(void(^)(WDSSmsDevice2 *, RTObject *))del;
+- (EventRegistrationToken)addDeviceStatusChangedEvent:(void(^)(WDSSmsDevice2*, RTObject*))del;
 - (void)removeDeviceStatusChangedEvent:(EventRegistrationToken)tok;
-- (WDSSmsEncodedLength *)calculateLength:(RTObject<WDSISmsMessageBase>*)message;
-- (void)sendMessageAndGetResultAsync:(RTObject<WDSISmsMessageBase>*)message success:(void (^)(WDSSmsSendMessageResult *))success failure:(void (^)(NSError*))failure;
+- (WDSSmsEncodedLength*)calculateLength:(RTObject<WDSISmsMessageBase>*)message;
+- (void)sendMessageAndGetResultAsync:(RTObject<WDSISmsMessageBase>*)message success:(void (^)(WDSSmsSendMessageResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmsDevice2_DEFINED__
@@ -367,13 +369,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsMessageReceivedTriggerDetails : RTObject
-@property (readonly) WDSSmsAppMessage * appMessage;
-@property (readonly) WDSSmsBroadcastMessage * broadcastMessage;
+@property (readonly) WDSSmsAppMessage* appMessage;
+@property (readonly) WDSSmsBroadcastMessage* broadcastMessage;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) WDSSmsStatusMessage * statusMessage;
-@property (readonly) WDSSmsTextMessage2 * textMessage;
-@property (readonly) WDSSmsVoicemailMessage * voicemailMessage;
-@property (readonly) WDSSmsWapMessage * wapMessage;
+@property (readonly) WDSSmsStatusMessage* statusMessage;
+@property (readonly) WDSSmsTextMessage2* textMessage;
+@property (readonly) WDSSmsVoicemailMessage* voicemailMessage;
+@property (readonly) WDSSmsWapMessage* wapMessage;
 - (void)drop;
 - (void)accept;
 @end
@@ -386,20 +388,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsFilterRule : RTObject
-+ (WDSSmsFilterRule *)createFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
++ (WDSSmsFilterRule*)createFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
 @property WDSCellularClass cellularClass;
-@property (readonly) NSMutableArray* /*Int32*/  broadcastChannels;
-@property (readonly) NSMutableArray* /*WDSSmsBroadcastType*/  broadcastTypes;
-@property (readonly) NSMutableArray* /*String*/  deviceIds;
-@property (readonly) NSMutableArray* /*String*/  imsiPrefixes;
+@property (readonly) NSMutableArray* broadcastChannels;
+@property (readonly) NSMutableArray* broadcastTypes;
+@property (readonly) NSMutableArray* deviceIds;
+@property (readonly) NSMutableArray* imsiPrefixes;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSMutableArray* /*Int32*/  portNumbers;
-@property (readonly) NSMutableArray* /*Int32*/  protocolIds;
-@property (readonly) NSMutableArray* /*String*/  senderNumbers;
-@property (readonly) NSMutableArray* /*Int32*/  teleserviceIds;
-@property (readonly) NSMutableArray* /*String*/  textMessagePrefixes;
-@property (readonly) NSMutableArray* /*String*/  wapApplicationIds;
-@property (readonly) NSMutableArray* /*String*/  wapContentTypes;
+@property (readonly) NSMutableArray* portNumbers;
+@property (readonly) NSMutableArray* protocolIds;
+@property (readonly) NSMutableArray* senderNumbers;
+@property (readonly) NSMutableArray* teleserviceIds;
+@property (readonly) NSMutableArray* textMessagePrefixes;
+@property (readonly) NSMutableArray* wapApplicationIds;
+@property (readonly) NSMutableArray* wapContentTypes;
 @end
 
 #endif // __WDSSmsFilterRule_DEFINED__
@@ -410,9 +412,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsFilterRules : RTObject
-+ (WDSSmsFilterRules *)createFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
++ (WDSSmsFilterRules*)createFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
 @property (readonly) WDSSmsFilterActionType actionType;
-@property (readonly) NSMutableArray* /*WDSSmsFilterRule*/  rules;
+@property (readonly) NSMutableArray* rules;
 @end
 
 #endif // __WDSSmsFilterRules_DEFINED__
@@ -423,10 +425,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsMessageRegistration : RTObject
-+ (WDSSmsMessageRegistration *)Register:(NSString *)id filterRules:(WDSSmsFilterRules *)filterRules;
++ (WDSSmsMessageRegistration*)Register:(NSString *)id filterRules:(WDSSmsFilterRules*)filterRules;
 @property (readonly) NSString * id;
-+ (NSArray* /*WDSSmsMessageRegistration*/ )allRegistrations;
-- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WDSSmsMessageRegistration *, WDSSmsMessageReceivedTriggerDetails *))del;
++ (NSArray*)allRegistrations;
+- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WDSSmsMessageRegistration*, WDSSmsMessageReceivedTriggerDetails*))del;
 - (void)removeMessageReceivedEvent:(EventRegistrationToken)tok;
 - (void)unregister;
 @end

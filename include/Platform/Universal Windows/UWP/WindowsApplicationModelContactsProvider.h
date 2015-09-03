@@ -25,15 +25,17 @@
 
 // Windows.ApplicationModel.Contacts.Provider.AddContactResult
 enum _WACPAddContactResult {
-    WACPAddContactResultAdded = 0,
-    WACPAddContactResultAlreadyAdded = 1,
-    WACPAddContactResultUnavailable = 2,
+	WACPAddContactResultAdded = 0,
+	WACPAddContactResultAlreadyAdded = 1,
+	WACPAddContactResultUnavailable = 2,
 };
 typedef unsigned WACPAddContactResult;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModelContacts.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.Contacts.Provider.ContactRemovedEventArgs
 #ifndef __WACPContactRemovedEventArgs_DEFINED__
@@ -52,15 +54,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPContactPickerUI : RTObject
-@property (readonly) NSArray* /*String*/  desiredFields;
+@property (readonly) NSArray* desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;
-@property (readonly) NSMutableArray* /*WACContactFieldType*/  desiredFieldsWithContactFieldType;
-- (EventRegistrationToken)addContactRemovedEvent:(void(^)(WACPContactPickerUI *, WACPContactRemovedEventArgs *))del;
+@property (readonly) NSMutableArray* desiredFieldsWithContactFieldType;
+- (EventRegistrationToken)addContactRemovedEvent:(void(^)(WACPContactPickerUI*, WACPContactRemovedEventArgs*))del;
 - (void)removeContactRemovedEvent:(EventRegistrationToken)tok;
-- (WACPAddContactResult)addContact:(NSString *)id contact:(WACContact *)contact;
+- (WACPAddContactResult)addContact:(NSString *)id contact:(WACContact*)contact;
 - (void)removeContact:(NSString *)id;
 - (BOOL)containsContact:(NSString *)id;
-- (WACPAddContactResult)addContact:(WACContact *)contact;
+- (WACPAddContactResult)addContact:(WACContact*)contact;
 @end
 
 #endif // __WACPContactPickerUI_DEFINED__

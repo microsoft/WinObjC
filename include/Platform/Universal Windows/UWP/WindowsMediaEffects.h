@@ -25,41 +25,41 @@
 
 // Windows.Media.Effects.AudioEffectType
 enum _WMEAudioEffectType {
-    WMEAudioEffectTypeOther = 0,
-    WMEAudioEffectTypeAcousticEchoCancellation = 1,
-    WMEAudioEffectTypeNoiseSuppression = 2,
-    WMEAudioEffectTypeAutomaticGainControl = 3,
-    WMEAudioEffectTypeBeamForming = 4,
-    WMEAudioEffectTypeConstantToneRemoval = 5,
-    WMEAudioEffectTypeEqualizer = 6,
-    WMEAudioEffectTypeLoudnessEqualizer = 7,
-    WMEAudioEffectTypeBassBoost = 8,
-    WMEAudioEffectTypeVirtualSurround = 9,
-    WMEAudioEffectTypeVirtualHeadphones = 10,
-    WMEAudioEffectTypeSpeakerFill = 11,
-    WMEAudioEffectTypeRoomCorrection = 12,
-    WMEAudioEffectTypeBassManagement = 13,
-    WMEAudioEffectTypeEnvironmentalEffects = 14,
-    WMEAudioEffectTypeSpeakerProtection = 15,
-    WMEAudioEffectTypeSpeakerCompensation = 16,
-    WMEAudioEffectTypeDynamicRangeCompression = 17,
+	WMEAudioEffectTypeOther = 0,
+	WMEAudioEffectTypeAcousticEchoCancellation = 1,
+	WMEAudioEffectTypeNoiseSuppression = 2,
+	WMEAudioEffectTypeAutomaticGainControl = 3,
+	WMEAudioEffectTypeBeamForming = 4,
+	WMEAudioEffectTypeConstantToneRemoval = 5,
+	WMEAudioEffectTypeEqualizer = 6,
+	WMEAudioEffectTypeLoudnessEqualizer = 7,
+	WMEAudioEffectTypeBassBoost = 8,
+	WMEAudioEffectTypeVirtualSurround = 9,
+	WMEAudioEffectTypeVirtualHeadphones = 10,
+	WMEAudioEffectTypeSpeakerFill = 11,
+	WMEAudioEffectTypeRoomCorrection = 12,
+	WMEAudioEffectTypeBassManagement = 13,
+	WMEAudioEffectTypeEnvironmentalEffects = 14,
+	WMEAudioEffectTypeSpeakerProtection = 15,
+	WMEAudioEffectTypeSpeakerCompensation = 16,
+	WMEAudioEffectTypeDynamicRangeCompression = 17,
 };
 typedef unsigned WMEAudioEffectType;
 
 // Windows.Media.Effects.MediaMemoryTypes
 enum _WMEMediaMemoryTypes {
-    WMEMediaMemoryTypesGpu = 0,
-    WMEMediaMemoryTypesCpu = 1,
-    WMEMediaMemoryTypesGpuAndCpu = 2,
+	WMEMediaMemoryTypesGpu = 0,
+	WMEMediaMemoryTypesCpu = 1,
+	WMEMediaMemoryTypesGpuAndCpu = 2,
 };
 typedef unsigned WMEMediaMemoryTypes;
 
 // Windows.Media.Effects.MediaEffectClosedReason
 enum _WMEMediaEffectClosedReason {
-    WMEMediaEffectClosedReasonDone = 0,
-    WMEMediaEffectClosedReasonUnknownError = 1,
-    WMEMediaEffectClosedReasonUnsupportedEncodingFormat = 2,
-    WMEMediaEffectClosedReasonEffectCurrentlyUnloaded = 3,
+	WMEMediaEffectClosedReasonDone = 0,
+	WMEMediaEffectClosedReasonUnknownError = 1,
+	WMEMediaEffectClosedReasonUnsupportedEncodingFormat = 2,
+	WMEMediaEffectClosedReasonEffectCurrentlyUnloaded = 3,
 };
 typedef unsigned WMEMediaEffectClosedReason;
 
@@ -104,8 +104,8 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 @protocol WMEIVideoCompositor <WMIMediaExtension>
 @property (readonly) BOOL timeIndependent;
-- (void)setEncodingProperties:(WMMVideoEncodingProperties *)backgroundProperties device:(RTObject<WGDDIDirect3DDevice>*)device;
-- (void)compositeFrame:(WMECompositeVideoFrameContext *)context;
+- (void)setEncodingProperties:(WMMVideoEncodingProperties*)backgroundProperties device:(RTObject<WGDDIDirect3DDevice>*)device;
+- (void)compositeFrame:(WMECompositeVideoFrameContext*)context;
 - (void)close:(WMEMediaEffectClosedReason)reason;
 - (void)discardQueuedFrames;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
@@ -141,11 +141,11 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 @protocol WMEIBasicVideoEffect <WMIMediaExtension>
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSArray* /*WMMVideoEncodingProperties*/  supportedEncodingProperties;
+@property (readonly) NSArray* supportedEncodingProperties;
 @property (readonly) WMEMediaMemoryTypes supportedMemoryTypes;
 @property (readonly) BOOL timeIndependent;
-- (void)setEncodingProperties:(WMMVideoEncodingProperties *)encodingProperties device:(RTObject<WGDDIDirect3DDevice>*)device;
-- (void)processFrame:(WMEProcessVideoFrameContext *)context;
+- (void)setEncodingProperties:(WMMVideoEncodingProperties*)encodingProperties device:(RTObject<WGDDIDirect3DDevice>*)device;
+- (void)processFrame:(WMEProcessVideoFrameContext*)context;
 - (void)close:(WMEMediaEffectClosedReason)reason;
 - (void)discardQueuedFrames;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
@@ -158,10 +158,10 @@ typedef unsigned WMEMediaEffectClosedReason;
 #define __WMEIBasicAudioEffect_DEFINED__
 
 @protocol WMEIBasicAudioEffect <WMIMediaExtension>
-@property (readonly) NSArray* /*WMMAudioEncodingProperties*/  supportedEncodingProperties;
+@property (readonly) NSArray* supportedEncodingProperties;
 @property (readonly) BOOL useInputFrameForOutput;
-- (void)setEncodingProperties:(WMMAudioEncodingProperties *)encodingProperties;
-- (void)processFrame:(WMEProcessAudioFrameContext *)context;
+- (void)setEncodingProperties:(WMMAudioEncodingProperties*)encodingProperties;
+- (void)processFrame:(WMEProcessAudioFrameContext*)context;
 - (void)close:(WMEMediaEffectClosedReason)reason;
 - (void)discardQueuedFrames;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
@@ -175,8 +175,8 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 WINRT_EXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
-+ (WMEVideoCompositorDefinition *)create:(NSString *)activatableClassId ACTIVATOR;
-+ (WMEVideoCompositorDefinition *)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoCompositorDefinition*)create:(NSString *)activatableClassId ACTIVATOR;
++ (WMEVideoCompositorDefinition*)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -189,10 +189,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
-@property (readonly) WMVideoFrame * backgroundFrame;
-@property (readonly) WMVideoFrame * outputFrame;
-@property (readonly) NSArray* /*WGDDIDirect3DSurface*/  surfacesToOverlay;
-- (WMEMediaOverlay *)getOverlayForSurface:(RTObject<WGDDIDirect3DSurface>*)surfaceToOverlay;
+@property (readonly) WMVideoFrame* backgroundFrame;
+@property (readonly) WMVideoFrame* outputFrame;
+@property (readonly) NSArray* surfacesToOverlay;
+- (WMEMediaOverlay*)getOverlayForSurface:(RTObject<WGDDIDirect3DSurface>*)surfaceToOverlay;
 @end
 
 #endif // __WMECompositeVideoFrameContext_DEFINED__
@@ -216,9 +216,9 @@ WINRT_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
 @property (readonly) NSString * effectsProviderSettingsLabel;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
-- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void(^)(WMEAudioRenderEffectsManager *, RTObject *))del;
+- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void(^)(WMEAudioRenderEffectsManager*, RTObject*))del;
 - (void)removeAudioRenderEffectsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray* /*WMEAudioEffect*/ )getAudioRenderEffects;
+- (NSArray*)getAudioRenderEffects;
 - (void)showSettingsUI;
 @end
 
@@ -230,9 +230,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
-- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void(^)(WMEAudioCaptureEffectsManager *, RTObject *))del;
+- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void(^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray* /*WMEAudioEffect*/ )getAudioCaptureEffects;
+- (NSArray*)getAudioCaptureEffects;
 @end
 
 #endif // __WMEAudioCaptureEffectsManager_DEFINED__
@@ -243,10 +243,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioEffectsManager : RTObject
-+ (WMEAudioRenderEffectsManager *)createAudioRenderEffectsManager:(NSString *)deviceId category:(WMRAudioRenderCategory)category;
-+ (WMEAudioRenderEffectsManager *)createAudioRenderEffectsManagerWithMode:(NSString *)deviceId category:(WMRAudioRenderCategory)category mode:(WMAudioProcessing)mode;
-+ (WMEAudioCaptureEffectsManager *)createAudioCaptureEffectsManager:(NSString *)deviceId category:(WMCMediaCategory)category;
-+ (WMEAudioCaptureEffectsManager *)createAudioCaptureEffectsManagerWithMode:(NSString *)deviceId category:(WMCMediaCategory)category mode:(WMAudioProcessing)mode;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString *)deviceId category:(WMRAudioRenderCategory)category;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString *)deviceId category:(WMRAudioRenderCategory)category mode:(WMAudioProcessing)mode;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManager:(NSString *)deviceId category:(WMCMediaCategory)category;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManagerWithMode:(NSString *)deviceId category:(WMCMediaCategory)category mode:(WMAudioProcessing)mode;
 @end
 
 #endif // __WMEAudioEffectsManager_DEFINED__
@@ -257,8 +257,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (WMEVideoEffectDefinition *)create:(NSString *)activatableClassId ACTIVATOR;
-+ (WMEVideoEffectDefinition *)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoEffectDefinition*)create:(NSString *)activatableClassId ACTIVATOR;
++ (WMEVideoEffectDefinition*)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -271,8 +271,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMEAudioEffectDefinition *)create:(NSString *)activatableClassId ACTIVATOR;
-+ (WMEAudioEffectDefinition *)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEAudioEffectDefinition*)create:(NSString *)activatableClassId ACTIVATOR;
++ (WMEAudioEffectDefinition*)createWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -285,8 +285,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEProcessVideoFrameContext : RTObject
-@property (readonly) WMVideoFrame * inputFrame;
-@property (readonly) WMVideoFrame * outputFrame;
+@property (readonly) WMVideoFrame* inputFrame;
+@property (readonly) WMVideoFrame* outputFrame;
 @end
 
 #endif // __WMEProcessVideoFrameContext_DEFINED__
@@ -297,8 +297,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEProcessAudioFrameContext : RTObject
-@property (readonly) WMAudioFrame * inputFrame;
-@property (readonly) WMAudioFrame * outputFrame;
+@property (readonly) WMAudioFrame* inputFrame;
+@property (readonly) WMAudioFrame* outputFrame;
 @end
 
 #endif // __WMEProcessAudioFrameContext_DEFINED__
@@ -314,10 +314,10 @@ WINRT_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @property WMMMediaRotation rotation;
 @property WMTMediaVideoProcessingAlgorithm processingAlgorithm;
-@property (copy) WUColor * paddingColor;
-@property (copy) WFSize * outputSize;
+@property (copy) WUColor* paddingColor;
+@property (copy) WFSize* outputSize;
 @property WMMMediaMirroringOptions mirror;
-@property (copy) WFRect * cropRectangle;
+@property (copy) WFRect* cropRectangle;
 @end
 
 #endif // __WMEVideoTransformEffectDefinition_DEFINED__

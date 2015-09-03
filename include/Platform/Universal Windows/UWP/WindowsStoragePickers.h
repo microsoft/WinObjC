@@ -25,23 +25,23 @@
 
 // Windows.Storage.Pickers.PickerViewMode
 enum _WSPPickerViewMode {
-    WSPPickerViewModeList = 0,
-    WSPPickerViewModeThumbnail = 1,
+	WSPPickerViewModeList = 0,
+	WSPPickerViewModeThumbnail = 1,
 };
 typedef unsigned WSPPickerViewMode;
 
 // Windows.Storage.Pickers.PickerLocationId
 enum _WSPPickerLocationId {
-    WSPPickerLocationIdDocumentsLibrary = 0,
-    WSPPickerLocationIdComputerFolder = 1,
-    WSPPickerLocationIdDesktop = 2,
-    WSPPickerLocationIdDownloads = 3,
-    WSPPickerLocationIdHomeGroup = 4,
-    WSPPickerLocationIdMusicLibrary = 5,
-    WSPPickerLocationIdPicturesLibrary = 6,
-    WSPPickerLocationIdVideosLibrary = 7,
-    WSPPickerLocationIdObjects3D = 8,
-    WSPPickerLocationIdUnspecified = 9,
+	WSPPickerLocationIdDocumentsLibrary = 0,
+	WSPPickerLocationIdComputerFolder = 1,
+	WSPPickerLocationIdDesktop = 2,
+	WSPPickerLocationIdDownloads = 3,
+	WSPPickerLocationIdHomeGroup = 4,
+	WSPPickerLocationIdMusicLibrary = 5,
+	WSPPickerLocationIdPicturesLibrary = 6,
+	WSPPickerLocationIdVideosLibrary = 7,
+	WSPPickerLocationIdObjects3D = 8,
+	WSPPickerLocationIdUnspecified = 9,
 };
 typedef unsigned WSPPickerLocationId;
 
@@ -49,13 +49,15 @@ typedef unsigned WSPPickerLocationId;
 #include "WindowsFoundation.h"
 #include "WindowsStorage.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Storage.Pickers.FilePickerSelectedFilesArray
 #ifndef __WSPFilePickerSelectedFilesArray_DEFINED__
 #define __WSPFilePickerSelectedFilesArray_DEFINED__
 
 WINRT_EXPORT
 @interface WSPFilePickerSelectedFilesArray : RTObject
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -72,8 +74,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFilePickerFileTypesOrderedMap : RTObject
-@property (readonly) unsigned size;
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,Windows.Foundation.Collections.IVector`1<String>> type information
+@property (readonly) unsigned int size;
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
 #endif // __WSPFilePickerFileTypesOrderedMap_DEFINED__
@@ -84,7 +100,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileExtensionVector : RTObject
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -107,17 +123,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileOpenPicker : RTObject
-+ (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
++ (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (instancetype)create ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (copy) NSString * settingsIdentifier;
 @property (copy) NSString * commitButtonText;
-@property (readonly) NSMutableArray* /*String*/  fileTypeFilter;
-@property (readonly) WFCValueSet * continuationData;
-- (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
-- (void)pickMultipleFilesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WSStorageFile*/ ))success failure:(void (^)(NSError*))failure;
-- (void)pickSingleFileAsync:(NSString *)pickerOperationId success:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSMutableArray* fileTypeFilter;
+@property (readonly) WFCValueSet* continuationData;
+- (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)pickMultipleFilesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)pickSingleFileAsync:(NSString *)pickerOperationId success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickSingleFileAndContinue;
 - (void)pickMultipleFilesAndContinue;
 @end
@@ -132,15 +148,15 @@ WINRT_EXPORT
 @interface WSPFileSavePicker : RTObject
 + (instancetype)create ACTIVATOR;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) WSStorageFile * suggestedSaveFile;
+@property (copy) WSStorageFile* suggestedSaveFile;
 @property (copy) NSString * suggestedFileName;
 @property (copy) NSString * settingsIdentifier;
 @property (copy) NSString * defaultFileExtension;
 @property (copy) NSString * commitButtonText;
-@property (readonly) NSDictionary * /*String, WFCIVector*/  fileTypeChoices;
-@property (readonly) WFCValueSet * continuationData;
+@property (readonly) NSMutableDictionary* fileTypeChoices;
+@property (readonly) WFCValueSet* continuationData;
 @property (copy) NSString * enterpriseId;
-- (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+- (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickSaveFileAndContinue;
 @end
 
@@ -157,9 +173,9 @@ WINRT_EXPORT
 @property WSPPickerLocationId suggestedStartLocation;
 @property (copy) NSString * settingsIdentifier;
 @property (copy) NSString * commitButtonText;
-@property (readonly) NSMutableArray* /*String*/  fileTypeFilter;
-@property (readonly) WFCValueSet * continuationData;
-- (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder *))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSMutableArray* fileTypeFilter;
+@property (readonly) WFCValueSet* continuationData;
+- (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (void)pickFolderAndContinue;
 @end
 

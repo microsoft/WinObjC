@@ -26,20 +26,22 @@
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Devices.Sensors.Custom.CustomSensor
 #ifndef __WDSCCustomSensor_DEFINED__
 #define __WDSCCustomSensor_DEFINED__
 
 WINRT_EXPORT
 @interface WDSCCustomSensor : RTObject
-+ (NSString *)getDeviceSelector:(WFGUID *)interfaceId;
-+ (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor *))success failure:(void (^)(NSError*))failure;
-@property unsigned reportInterval;
++ (NSString *)getDeviceSelector:(WFGUID*)interfaceId;
++ (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
+@property unsigned int reportInterval;
 @property (readonly) NSString * deviceId;
-@property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCCustomSensor *, WDSCCustomSensorReadingChangedEventArgs *))del;
+@property (readonly) unsigned int minimumReportInterval;
+- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSCCustomSensorReading *)getCurrentReading;
+- (WDSCCustomSensorReading*)getCurrentReading;
 @end
 
 #endif // __WDSCCustomSensor_DEFINED__
@@ -50,8 +52,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCCustomSensorReading : RTObject
-@property (readonly) NSDictionary * /*String, SObject*/  properties;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) NSDictionary* properties;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSCCustomSensorReading_DEFINED__
@@ -62,7 +64,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
-@property (readonly) WDSCCustomSensorReading * reading;
+@property (readonly) WDSCCustomSensorReading* reading;
 @end
 
 #endif // __WDSCCustomSensorReadingChangedEventArgs_DEFINED__

@@ -25,73 +25,73 @@
 
 // Windows.Media.Playback.MediaPlayerState
 enum _WMPMediaPlayerState {
-    WMPMediaPlayerStateClosed = 0,
-    WMPMediaPlayerStateOpening = 1,
-    WMPMediaPlayerStateBuffering = 2,
-    WMPMediaPlayerStatePlaying = 3,
-    WMPMediaPlayerStatePaused = 4,
-    WMPMediaPlayerStateStopped = 5,
+	WMPMediaPlayerStateClosed = 0,
+	WMPMediaPlayerStateOpening = 1,
+	WMPMediaPlayerStateBuffering = 2,
+	WMPMediaPlayerStatePlaying = 3,
+	WMPMediaPlayerStatePaused = 4,
+	WMPMediaPlayerStateStopped = 5,
 };
 typedef unsigned WMPMediaPlayerState;
 
 // Windows.Media.Playback.MediaPlayerError
 enum _WMPMediaPlayerError {
-    WMPMediaPlayerErrorUnknown = 0,
-    WMPMediaPlayerErrorAborted = 1,
-    WMPMediaPlayerErrorNetworkError = 2,
-    WMPMediaPlayerErrorDecodingError = 3,
-    WMPMediaPlayerErrorSourceNotSupported = 4,
+	WMPMediaPlayerErrorUnknown = 0,
+	WMPMediaPlayerErrorAborted = 1,
+	WMPMediaPlayerErrorNetworkError = 2,
+	WMPMediaPlayerErrorDecodingError = 3,
+	WMPMediaPlayerErrorSourceNotSupported = 4,
 };
 typedef unsigned WMPMediaPlayerError;
 
 // Windows.Media.Playback.MediaPlayerAudioCategory
 enum _WMPMediaPlayerAudioCategory {
-    WMPMediaPlayerAudioCategoryOther = 0,
-    WMPMediaPlayerAudioCategoryCommunications = 3,
-    WMPMediaPlayerAudioCategoryAlerts = 4,
-    WMPMediaPlayerAudioCategorySoundEffects = 5,
-    WMPMediaPlayerAudioCategoryGameEffects = 6,
-    WMPMediaPlayerAudioCategoryGameMedia = 7,
-    WMPMediaPlayerAudioCategoryGameChat = 8,
-    WMPMediaPlayerAudioCategorySpeech = 9,
-    WMPMediaPlayerAudioCategoryMovie = 10,
-    WMPMediaPlayerAudioCategoryMedia = 11,
+	WMPMediaPlayerAudioCategoryOther = 0,
+	WMPMediaPlayerAudioCategoryCommunications = 3,
+	WMPMediaPlayerAudioCategoryAlerts = 4,
+	WMPMediaPlayerAudioCategorySoundEffects = 5,
+	WMPMediaPlayerAudioCategoryGameEffects = 6,
+	WMPMediaPlayerAudioCategoryGameMedia = 7,
+	WMPMediaPlayerAudioCategoryGameChat = 8,
+	WMPMediaPlayerAudioCategorySpeech = 9,
+	WMPMediaPlayerAudioCategoryMovie = 10,
+	WMPMediaPlayerAudioCategoryMedia = 11,
 };
 typedef unsigned WMPMediaPlayerAudioCategory;
 
 // Windows.Media.Playback.MediaPlayerAudioDeviceType
 enum _WMPMediaPlayerAudioDeviceType {
-    WMPMediaPlayerAudioDeviceTypeConsole = 0,
-    WMPMediaPlayerAudioDeviceTypeMultimedia = 1,
-    WMPMediaPlayerAudioDeviceTypeCommunications = 2,
+	WMPMediaPlayerAudioDeviceTypeConsole = 0,
+	WMPMediaPlayerAudioDeviceTypeMultimedia = 1,
+	WMPMediaPlayerAudioDeviceTypeCommunications = 2,
 };
 typedef unsigned WMPMediaPlayerAudioDeviceType;
 
 // Windows.Media.Playback.MediaPlaybackItemErrorCode
 enum _WMPMediaPlaybackItemErrorCode {
-    WMPMediaPlaybackItemErrorCodeNone = 0,
-    WMPMediaPlaybackItemErrorCodeAborted = 1,
-    WMPMediaPlaybackItemErrorCodeNetworkError = 2,
-    WMPMediaPlaybackItemErrorCodeDecodeError = 3,
-    WMPMediaPlaybackItemErrorCodeSourceNotSupportedError = 4,
-    WMPMediaPlaybackItemErrorCodeEncryptionError = 5,
+	WMPMediaPlaybackItemErrorCodeNone = 0,
+	WMPMediaPlaybackItemErrorCodeAborted = 1,
+	WMPMediaPlaybackItemErrorCodeNetworkError = 2,
+	WMPMediaPlaybackItemErrorCodeDecodeError = 3,
+	WMPMediaPlaybackItemErrorCodeSourceNotSupportedError = 4,
+	WMPMediaPlaybackItemErrorCodeEncryptionError = 5,
 };
 typedef unsigned WMPMediaPlaybackItemErrorCode;
 
 // Windows.Media.Playback.FailedMediaStreamKind
 enum _WMPFailedMediaStreamKind {
-    WMPFailedMediaStreamKindUnknown = 0,
-    WMPFailedMediaStreamKindAudio = 1,
-    WMPFailedMediaStreamKindVideo = 2,
+	WMPFailedMediaStreamKindUnknown = 0,
+	WMPFailedMediaStreamKindAudio = 1,
+	WMPFailedMediaStreamKindVideo = 2,
 };
 typedef unsigned WMPFailedMediaStreamKind;
 
 // Windows.Media.Playback.TimedMetadataTrackPresentationMode
 enum _WMPTimedMetadataTrackPresentationMode {
-    WMPTimedMetadataTrackPresentationModeDisabled = 0,
-    WMPTimedMetadataTrackPresentationModeHidden = 1,
-    WMPTimedMetadataTrackPresentationModeApplicationPresented = 2,
-    WMPTimedMetadataTrackPresentationModePlatformPresented = 3,
+	WMPTimedMetadataTrackPresentationModeDisabled = 0,
+	WMPTimedMetadataTrackPresentationModeHidden = 1,
+	WMPTimedMetadataTrackPresentationModeApplicationPresented = 2,
+	WMPTimedMetadataTrackPresentationModePlatformPresented = 3,
 };
 typedef unsigned WMPTimedMetadataTrackPresentationMode;
 
@@ -102,6 +102,8 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 #include "WindowsMediaCore.h"
 #include "WindowsStorage.h"
 #include "WindowsMediaProtection.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Media.Playback.IMediaPlaybackSource
 #ifndef __WMPIMediaPlaybackSource_DEFINED__
@@ -117,7 +119,7 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 #define __WMPIMediaEnginePlaybackSource_DEFINED__
 
 @protocol WMPIMediaEnginePlaybackSource
-@property (readonly) WMPMediaPlaybackItem * currentItem;
+@property (readonly) WMPMediaPlaybackItem* currentItem;
 - (void)setPlaybackSource:(RTObject<WMPIMediaPlaybackSource>*)source;
 @end
 
@@ -129,11 +131,11 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarker : RTObject
-+ (WMPPlaybackMediaMarker *)createFromTime:(WFTimeSpan *)value ACTIVATOR;
-+ (WMPPlaybackMediaMarker *)create:(WFTimeSpan *)value mediaMarketType:(NSString *)mediaMarketType text:(NSString *)text ACTIVATOR;
++ (WMPPlaybackMediaMarker*)createFromTime:(WFTimeSpan*)value ACTIVATOR;
++ (WMPPlaybackMediaMarker*)create:(WFTimeSpan*)value mediaMarketType:(NSString *)mediaMarketType text:(NSString *)text ACTIVATOR;
 @property (readonly) NSString * mediaMarkerType;
 @property (readonly) NSString * text;
-@property (readonly) WFTimeSpan * time;
+@property (readonly) WFTimeSpan* time;
 @end
 
 #endif // __WMPPlaybackMediaMarker_DEFINED__
@@ -144,8 +146,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarkerSequence : RTObject
-@property (readonly) unsigned size;
-- (void)insert:(WMPPlaybackMediaMarker *)value;
+@property (readonly) unsigned int size;
+- (void)insert:(WMPPlaybackMediaMarker*)value;
 - (void)clear;
 @end
 
@@ -181,7 +183,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarkerReachedEventArgs : RTObject
-@property (readonly) WMPPlaybackMediaMarker * playbackMediaMarker;
+@property (readonly) WMPPlaybackMediaMarker* playbackMediaMarker;
 @end
 
 #endif // __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
@@ -192,7 +194,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlayerDataReceivedEventArgs : RTObject
-@property (readonly) WFCValueSet * data;
+@property (readonly) WFCValueSet* data;
 @end
 
 #endif // __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
@@ -204,46 +206,46 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayer : RTObject
 @property double volume;
-@property (copy) WFTimeSpan * position;
+@property (copy) WFTimeSpan* position;
 @property double playbackRate;
 @property BOOL isLoopingEnabled;
 @property BOOL isMuted;
 @property BOOL autoPlay;
 @property (readonly) WMPMediaPlayerState currentState;
 @property (readonly) BOOL isProtected;
-@property (readonly) WFTimeSpan * naturalDuration;
+@property (readonly) WFTimeSpan* naturalDuration;
 @property (readonly) BOOL canPause;
-@property (readonly) WMPPlaybackMediaMarkerSequence * playbackMediaMarkers;
+@property (readonly) WMPPlaybackMediaMarkerSequence* playbackMediaMarkers;
 @property (readonly) double bufferingProgress;
 @property (readonly) BOOL canSeek;
 @property WMPMediaPlayerAudioDeviceType audioDeviceType;
 @property WMPMediaPlayerAudioCategory audioCategory;
-@property (readonly) WMSystemMediaTransportControls * systemMediaTransportControls;
-@property (copy) WMPMediaProtectionManager * protectionManager;
+@property (readonly) WMSystemMediaTransportControls* systemMediaTransportControls;
+@property (copy) WMPMediaProtectionManager* protectionManager;
 @property (copy) RTObject<WMPIMediaPlaybackSource>* source;
-- (EventRegistrationToken)addBufferingEndedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addBufferingEndedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeBufferingEndedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBufferingStartedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addBufferingStartedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeBufferingStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCurrentStateChangedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addCurrentStateChangedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeCurrentStateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMediaEndedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addMediaEndedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeMediaEndedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMediaFailedEvent:(void(^)(WMPMediaPlayer *, WMPMediaPlayerFailedEventArgs *))del;
+- (EventRegistrationToken)addMediaFailedEvent:(void(^)(WMPMediaPlayer*, WMPMediaPlayerFailedEventArgs*))del;
 - (void)removeMediaFailedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMediaOpenedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addMediaOpenedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeMediaOpenedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMediaPlayerRateChangedEvent:(void(^)(WMPMediaPlayer *, WMPMediaPlayerRateChangedEventArgs *))del;
+- (EventRegistrationToken)addMediaPlayerRateChangedEvent:(void(^)(WMPMediaPlayer*, WMPMediaPlayerRateChangedEventArgs*))del;
 - (void)removeMediaPlayerRateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlaybackMediaMarkerReachedEvent:(void(^)(WMPMediaPlayer *, WMPPlaybackMediaMarkerReachedEventArgs *))del;
+- (EventRegistrationToken)addPlaybackMediaMarkerReachedEvent:(void(^)(WMPMediaPlayer*, WMPPlaybackMediaMarkerReachedEventArgs*))del;
 - (void)removePlaybackMediaMarkerReachedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSeekCompletedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addSeekCompletedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeSeekCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVolumeChangedEvent:(void(^)(WMPMediaPlayer *, RTObject *))del;
+- (EventRegistrationToken)addVolumeChangedEvent:(void(^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeVolumeChangedEvent:(EventRegistrationToken)tok;
 - (void)play;
 - (void)pause;
-- (void)setUriSource:(WFUri *)value;
+- (void)setUriSource:(WFUri*)value;
 - (void)setFileSource:(RTObject<WSIStorageFile>*)file;
 - (void)setStreamSource:(RTObject<WSSIRandomAccessStream>*)stream;
 - (void)setMediaSource:(RTObject<WMCIMediaSource>*)source;
@@ -257,14 +259,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPBackgroundMediaPlayer : RTObject
-+ (void)sendMessageToBackground:(WFCValueSet *)value;
-+ (void)sendMessageToForeground:(WFCValueSet *)value;
++ (void)sendMessageToBackground:(WFCValueSet*)value;
++ (void)sendMessageToForeground:(WFCValueSet*)value;
 + (BOOL)isMediaPlaying;
 + (void)shutdown;
-+ (WMPMediaPlayer *)current;
-+ (EventRegistrationToken)addMessageReceivedFromBackgroundEvent:(void(^)(RTObject*, WMPMediaPlayerDataReceivedEventArgs *))del;
++ (WMPMediaPlayer*)current;
++ (EventRegistrationToken)addMessageReceivedFromBackgroundEvent:(void(^)(RTObject*, WMPMediaPlayerDataReceivedEventArgs*))del;
 + (void)removeMessageReceivedFromBackgroundEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addMessageReceivedFromForegroundEvent:(void(^)(RTObject*, WMPMediaPlayerDataReceivedEventArgs *))del;
++ (EventRegistrationToken)addMessageReceivedFromForegroundEvent:(void(^)(RTObject*, WMPMediaPlayerDataReceivedEventArgs*))del;
 + (void)removeMessageReceivedFromForegroundEvent:(EventRegistrationToken)tok;
 @end
 
@@ -276,16 +278,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
-+ (WMPMediaPlaybackItem *)create:(WMCMediaSource *)source ACTIVATOR;
-@property (readonly) WMPMediaPlaybackAudioTrackList * audioTracks;
-@property (readonly) WMCMediaSource * source;
-@property (readonly) WMPMediaPlaybackTimedMetadataTrackList * timedMetadataTracks;
-@property (readonly) WMPMediaPlaybackVideoTrackList * videoTracks;
-- (EventRegistrationToken)addAudioTracksChangedEvent:(void(^)(WMPMediaPlaybackItem *, RTObject<WFCIVectorChangedEventArgs>*))del;
++ (WMPMediaPlaybackItem*)create:(WMCMediaSource*)source ACTIVATOR;
+@property (readonly) WMPMediaPlaybackAudioTrackList* audioTracks;
+@property (readonly) WMCMediaSource* source;
+@property (readonly) WMPMediaPlaybackTimedMetadataTrackList* timedMetadataTracks;
+@property (readonly) WMPMediaPlaybackVideoTrackList* videoTracks;
+- (EventRegistrationToken)addAudioTracksChangedEvent:(void(^)(WMPMediaPlaybackItem*, RTObject<WFCIVectorChangedEventArgs>*))del;
 - (void)removeAudioTracksChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTimedMetadataTracksChangedEvent:(void(^)(WMPMediaPlaybackItem *, RTObject<WFCIVectorChangedEventArgs>*))del;
+- (EventRegistrationToken)addTimedMetadataTracksChangedEvent:(void(^)(WMPMediaPlaybackItem*, RTObject<WFCIVectorChangedEventArgs>*))del;
 - (void)removeTimedMetadataTracksChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVideoTracksChangedEvent:(void(^)(WMPMediaPlaybackItem *, RTObject<WFCIVectorChangedEventArgs>*))del;
+- (EventRegistrationToken)addVideoTracksChangedEvent:(void(^)(WMPMediaPlaybackItem*, RTObject<WFCIVectorChangedEventArgs>*))del;
 - (void)removeVideoTracksChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -297,7 +299,7 @@ WINRT_EXPORT
 
 @protocol WMCISingleSelectMediaTrackList
 @property int selectedIndex;
-- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject *))del;
+- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -309,9 +311,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackAudioTrackList : RTObject <WMCISingleSelectMediaTrackList>
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 @property int selectedIndex;
-- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject *))del;
+- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -329,9 +331,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackVideoTrackList : RTObject <WMCISingleSelectMediaTrackList>
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 @property int selectedIndex;
-- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject *))del;
+- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -349,8 +351,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackTimedMetadataTrackList : RTObject
-@property (readonly) unsigned size;
-- (EventRegistrationToken)addPresentationModeChangedEvent:(void(^)(WMPMediaPlaybackTimedMetadataTrackList *, WMPTimedMetadataPresentationModeChangedEventArgs *))del;
+@property (readonly) unsigned int size;
+- (EventRegistrationToken)addPresentationModeChangedEvent:(void(^)(WMPMediaPlaybackTimedMetadataTrackList*, WMPTimedMetadataPresentationModeChangedEventArgs*))del;
 - (void)removePresentationModeChangedEvent:(EventRegistrationToken)tok;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -358,8 +360,8 @@ WINRT_EXPORT
                                   objects:(id __unsafe_unretained [])buffer
                                     count:(NSUInteger)len;
 
-- (WMPTimedMetadataTrackPresentationMode)getPresentationMode:(unsigned)index;
-- (void)setPresentationMode:(unsigned)index value:(WMPTimedMetadataTrackPresentationMode)value;
+- (WMPTimedMetadataTrackPresentationMode)getPresentationMode:(unsigned int)index;
+- (void)setPresentationMode:(unsigned int)index value:(WMPTimedMetadataTrackPresentationMode)value;
 @end
 
 #endif // __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
@@ -385,19 +387,18 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property BOOL shuffleEnabled;
 @property BOOL autoRepeatEnabled;
-@property (readonly) WMPMediaPlaybackItem * currentItem;
-@property (readonly) unsigned currentItemIndex;
-// Failed to generate property Items (Can't marshal Windows.Foundation.Collections.IObservableVector`1<Windows.Media.Playback.MediaPlaybackItem>)
-- (EventRegistrationToken)addCurrentItemChangedEvent:(void(^)(WMPMediaPlaybackList *, WMPCurrentMediaPlaybackItemChangedEventArgs *))del;
+@property (readonly) WMPMediaPlaybackItem* currentItem;
+@property (readonly) unsigned int currentItemIndex;
+@property (readonly) NSMutableArray<RTObservableCollection>* items;
+- (EventRegistrationToken)addCurrentItemChangedEvent:(void(^)(WMPMediaPlaybackList*, WMPCurrentMediaPlaybackItemChangedEventArgs*))del;
 - (void)removeCurrentItemChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addItemFailedEvent:(void(^)(WMPMediaPlaybackList *, WMPMediaPlaybackItemFailedEventArgs *))del;
+- (EventRegistrationToken)addItemFailedEvent:(void(^)(WMPMediaPlaybackList*, WMPMediaPlaybackItemFailedEventArgs*))del;
 - (void)removeItemFailedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addItemOpenedEvent:(void(^)(WMPMediaPlaybackList *, WMPMediaPlaybackItemOpenedEventArgs *))del;
+- (EventRegistrationToken)addItemOpenedEvent:(void(^)(WMPMediaPlaybackList*, WMPMediaPlaybackItemOpenedEventArgs*))del;
 - (void)removeItemOpenedEvent:(EventRegistrationToken)tok;
-// Failed to generate member get_Items (Can't marshal Windows.Foundation.Collections.IObservableVector`1<Windows.Media.Playback.MediaPlaybackItem>)
-- (WMPMediaPlaybackItem *)moveNext;
-- (WMPMediaPlaybackItem *)movePrevious;
-- (WMPMediaPlaybackItem *)moveTo:(unsigned)itemIndex;
+- (WMPMediaPlaybackItem*)moveNext;
+- (WMPMediaPlaybackItem*)movePrevious;
+- (WMPMediaPlaybackItem*)moveTo:(unsigned int)itemIndex;
 @end
 
 #endif // __WMPMediaPlaybackList_DEFINED__
@@ -408,8 +409,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackItemFailedEventArgs : RTObject
-@property (readonly) WMPMediaPlaybackItemError * error;
-@property (readonly) WMPMediaPlaybackItem * item;
+@property (readonly) WMPMediaPlaybackItemError* error;
+@property (readonly) WMPMediaPlaybackItem* item;
 @end
 
 #endif // __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
@@ -420,8 +421,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPCurrentMediaPlaybackItemChangedEventArgs : RTObject
-@property (readonly) WMPMediaPlaybackItem * newItem;
-@property (readonly) WMPMediaPlaybackItem * oldItem;
+@property (readonly) WMPMediaPlaybackItem* newItem;
+@property (readonly) WMPMediaPlaybackItem* oldItem;
 @end
 
 #endif // __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
@@ -432,7 +433,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackItemOpenedEventArgs : RTObject
-@property (readonly) WMPMediaPlaybackItem * item;
+@property (readonly) WMPMediaPlaybackItem* item;
 @end
 
 #endif // __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
@@ -445,7 +446,7 @@ WINRT_EXPORT
 @interface WMPTimedMetadataPresentationModeChangedEventArgs : RTObject
 @property (readonly) WMPTimedMetadataTrackPresentationMode newPresentationMode;
 @property (readonly) WMPTimedMetadataTrackPresentationMode oldPresentationMode;
-@property (readonly) WMCTimedMetadataTrack * track;
+@property (readonly) WMCTimedMetadataTrack* track;
 @end
 
 #endif // __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__

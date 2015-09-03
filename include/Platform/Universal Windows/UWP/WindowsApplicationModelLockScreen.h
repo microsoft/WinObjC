@@ -27,6 +27,8 @@
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.ApplicationModel.LockScreen.LockScreenInfo
 #ifndef __WALLockScreenInfo_DEFINED__
 #define __WALLockScreenInfo_DEFINED__
@@ -34,16 +36,16 @@
 WINRT_EXPORT
 @interface WALLockScreenInfo : RTObject
 @property (readonly) RTObject<WSSIRandomAccessStream>* alarmIcon;
-@property (readonly) NSArray* /*WALLockScreenBadge*/  badges;
-@property (readonly) NSArray* /*String*/  detailText;
+@property (readonly) NSArray* badges;
+@property (readonly) NSArray* detailText;
 @property (readonly) RTObject<WSSIRandomAccessStream>* lockScreenImage;
-- (EventRegistrationToken)addAlarmIconChangedEvent:(void(^)(WALLockScreenInfo *, RTObject *))del;
+- (EventRegistrationToken)addAlarmIconChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeAlarmIconChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBadgesChangedEvent:(void(^)(WALLockScreenInfo *, RTObject *))del;
+- (EventRegistrationToken)addBadgesChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeBadgesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDetailTextChangedEvent:(void(^)(WALLockScreenInfo *, RTObject *))del;
+- (EventRegistrationToken)addDetailTextChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeDetailTextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLockScreenImageChangedEvent:(void(^)(WALLockScreenInfo *, RTObject *))del;
+- (EventRegistrationToken)addLockScreenImageChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeLockScreenImageChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -58,7 +60,7 @@ WINRT_EXPORT
 @property (readonly) NSString * automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
-@property (readonly) NSNumber* number;
+@property (readonly) id number;
 - (void)launchApp;
 @end
 
@@ -81,8 +83,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockApplicationHost : RTObject
-+ (WALLockApplicationHost *)getForCurrentView;
-- (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost *, WALLockScreenUnlockingEventArgs *))del;
++ (WALLockApplicationHost*)getForCurrentView;
+- (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
 - (void)requestUnlock;
 @end
@@ -95,8 +97,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockScreenUnlockingEventArgs : RTObject
-@property (readonly) WFDateTime * deadline;
-- (WALLockScreenUnlockingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WALLockScreenUnlockingDeferral*)getDeferral;
 @end
 
 #endif // __WALLockScreenUnlockingEventArgs_DEFINED__

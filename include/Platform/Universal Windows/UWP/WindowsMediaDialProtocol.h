@@ -25,39 +25,39 @@
 
 // Windows.Media.DialProtocol.DialAppState
 enum _WMDDialAppState {
-    WMDDialAppStateUnknown = 0,
-    WMDDialAppStateStopped = 1,
-    WMDDialAppStateRunning = 2,
-    WMDDialAppStateNetworkFailure = 3,
+	WMDDialAppStateUnknown = 0,
+	WMDDialAppStateStopped = 1,
+	WMDDialAppStateRunning = 2,
+	WMDDialAppStateNetworkFailure = 3,
 };
 typedef unsigned WMDDialAppState;
 
 // Windows.Media.DialProtocol.DialAppLaunchResult
 enum _WMDDialAppLaunchResult {
-    WMDDialAppLaunchResultLaunched = 0,
-    WMDDialAppLaunchResultFailedToLaunch = 1,
-    WMDDialAppLaunchResultNotFound = 2,
-    WMDDialAppLaunchResultNetworkFailure = 3,
+	WMDDialAppLaunchResultLaunched = 0,
+	WMDDialAppLaunchResultFailedToLaunch = 1,
+	WMDDialAppLaunchResultNotFound = 2,
+	WMDDialAppLaunchResultNetworkFailure = 3,
 };
 typedef unsigned WMDDialAppLaunchResult;
 
 // Windows.Media.DialProtocol.DialAppStopResult
 enum _WMDDialAppStopResult {
-    WMDDialAppStopResultStopped = 0,
-    WMDDialAppStopResultStopFailed = 1,
-    WMDDialAppStopResultOperationNotSupported = 2,
-    WMDDialAppStopResultNetworkFailure = 3,
+	WMDDialAppStopResultStopped = 0,
+	WMDDialAppStopResultStopFailed = 1,
+	WMDDialAppStopResultOperationNotSupported = 2,
+	WMDDialAppStopResultNetworkFailure = 3,
 };
 typedef unsigned WMDDialAppStopResult;
 
 // Windows.Media.DialProtocol.DialDeviceDisplayStatus
 enum _WMDDialDeviceDisplayStatus {
-    WMDDialDeviceDisplayStatusNone = 0,
-    WMDDialDeviceDisplayStatusConnecting = 1,
-    WMDDialDeviceDisplayStatusConnected = 2,
-    WMDDialDeviceDisplayStatusDisconnecting = 3,
-    WMDDialDeviceDisplayStatusDisconnected = 4,
-    WMDDialDeviceDisplayStatusError = 5,
+	WMDDialDeviceDisplayStatusNone = 0,
+	WMDDialDeviceDisplayStatusConnecting = 1,
+	WMDDialDeviceDisplayStatusConnected = 2,
+	WMDDialDeviceDisplayStatusDisconnecting = 3,
+	WMDDialDeviceDisplayStatusDisconnected = 4,
+	WMDDialDeviceDisplayStatusError = 5,
 };
 typedef unsigned WMDDialDeviceDisplayStatus;
 
@@ -65,6 +65,8 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Media.DialProtocol.DialAppStateDetails
 #ifndef __WMDDialAppStateDetails_DEFINED__
@@ -87,7 +89,7 @@ WINRT_EXPORT
 @property (readonly) NSString * appName;
 - (void)requestLaunchAsync:(NSString *)appArgument success:(void (^)(WMDDialAppLaunchResult))success failure:(void (^)(NSError*))failure;
 - (void)stopAsyncWithSuccess:(void (^)(WMDDialAppStopResult))success failure:(void (^)(NSError*))failure;
-- (void)getAppStateAsyncWithSuccess:(void (^)(WMDDialAppStateDetails *))success failure:(void (^)(NSError*))failure;
+- (void)getAppStateAsyncWithSuccess:(void (^)(WMDDialAppStateDetails*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMDDialApp_DEFINED__
@@ -99,10 +101,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDevice : RTObject
 + (NSString *)getDeviceSelector:(NSString *)appName;
-+ (void)fromIdAsync:(NSString *)value success:(void (^)(WMDDialDevice *))success failure:(void (^)(NSError*))failure;
-+ (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation *)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
++ (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @property (readonly) NSString * id;
-- (WMDDialApp *)getDialApp:(NSString *)appName;
+- (WMDDialApp*)getDialApp:(NSString *)appName;
 @end
 
 #endif // __WMDDialDevice_DEFINED__
@@ -113,7 +115,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
-@property (readonly) WMDDialDevice * selectedDialDevice;
+@property (readonly) WMDDialDevice* selectedDialDevice;
 @end
 
 #endif // __WMDDialDeviceSelectedEventArgs_DEFINED__
@@ -124,7 +126,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
-@property (readonly) WMDDialDevice * device;
+@property (readonly) WMDDialDevice* device;
 @end
 
 #endif // __WMDDialDisconnectButtonClickedEventArgs_DEFINED__
@@ -135,7 +137,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
-@property (readonly) NSMutableArray* /*String*/  supportedAppNames;
+@property (readonly) NSMutableArray* supportedAppNames;
 @end
 
 #endif // __WMDDialDevicePickerFilter_DEFINED__
@@ -147,20 +149,20 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDDialDevicePicker : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WDEDevicePickerAppearance * appearance;
-@property (readonly) WMDDialDevicePickerFilter * filter;
-- (EventRegistrationToken)addDialDevicePickerDismissedEvent:(void(^)(WMDDialDevicePicker *, RTObject *))del;
+@property (readonly) WDEDevicePickerAppearance* appearance;
+@property (readonly) WMDDialDevicePickerFilter* filter;
+- (EventRegistrationToken)addDialDevicePickerDismissedEvent:(void(^)(WMDDialDevicePicker*, RTObject*))del;
 - (void)removeDialDevicePickerDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDialDeviceSelectedEvent:(void(^)(WMDDialDevicePicker *, WMDDialDeviceSelectedEventArgs *))del;
+- (EventRegistrationToken)addDialDeviceSelectedEvent:(void(^)(WMDDialDevicePicker*, WMDDialDeviceSelectedEventArgs*))del;
 - (void)removeDialDeviceSelectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDisconnectButtonClickedEvent:(void(^)(WMDDialDevicePicker *, WMDDialDisconnectButtonClickedEventArgs *))del;
+- (EventRegistrationToken)addDisconnectButtonClickedEvent:(void(^)(WMDDialDevicePicker*, WMDDialDisconnectButtonClickedEventArgs*))del;
 - (void)removeDisconnectButtonClickedEvent:(EventRegistrationToken)tok;
-- (void)show:(WFRect *)selection;
-- (void)showWithPlacement:(WFRect *)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-- (void)pickSingleDialDeviceAsync:(WFRect *)selection success:(void (^)(WMDDialDevice *))success failure:(void (^)(NSError*))failure;
-- (void)pickSingleDialDeviceAsyncWithPlacement:(WFRect *)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(WMDDialDevice *))success failure:(void (^)(NSError*))failure;
+- (void)show:(WFRect*)selection;
+- (void)showWithPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
+- (void)pickSingleDialDeviceAsync:(WFRect*)selection success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
+- (void)pickSingleDialDeviceAsyncWithPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
 - (void)hide;
-- (void)setDisplayStatus:(WMDDialDevice *)device status:(WMDDialDeviceDisplayStatus)status;
+- (void)setDisplayStatus:(WMDDialDevice*)device status:(WMDDialDeviceDisplayStatus)status;
 @end
 
 #endif // __WMDDialDevicePicker_DEFINED__

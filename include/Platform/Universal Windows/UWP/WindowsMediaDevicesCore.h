@@ -21,13 +21,14 @@
 
 #include "interopBase.h"
 @class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities, WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities, WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl, WMDCFrameController;
+@class RTArray_C_WFNVector2, RTArray_C_WFPoint;
 @protocol WMDCICameraIntrinsicsFactory, WMDCICameraIntrinsics, WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities, WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2, WMDCIFrameExposureControl, WMDCIFrameExposureCompensationControl, WMDCIFrameIsoSpeedControl, WMDCIFrameFocusControl, WMDCIFrameFlashControl, WMDCIFrameController, WMDCIFrameController2, WMDCIVariablePhotoSequenceController;
 
 // Windows.Media.Devices.Core.FrameFlashMode
 enum _WMDCFrameFlashMode {
-    WMDCFrameFlashModeDisable = 0,
-    WMDCFrameFlashModeEnable = 1,
-    WMDCFrameFlashModeGlobal = 2,
+	WMDCFrameFlashModeDisable = 0,
+	WMDCFrameFlashModeEnable = 1,
+	WMDCFrameFlashModeGlobal = 2,
 };
 typedef unsigned WMDCFrameFlashMode;
 
@@ -36,22 +37,24 @@ typedef unsigned WMDCFrameFlashMode;
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsFoundationCollections.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Media.Devices.Core.CameraIntrinsics
 #ifndef __WMDCCameraIntrinsics_DEFINED__
 #define __WMDCCameraIntrinsics_DEFINED__
 
 WINRT_EXPORT
 @interface WMDCCameraIntrinsics : RTObject
-@property (readonly) WFNVector2 * focalLength;
-@property (readonly) unsigned imageHeight;
-@property (readonly) unsigned imageWidth;
-@property (readonly) WFNVector2 * principalPoint;
-@property (readonly) WFNVector3 * radialDistortion;
-@property (readonly) WFNVector2 * tangentialDistortion;
-- (WFPoint *)projectOntoFrame:(WFNVector3 *)coordinate;
-- (WFNVector2 *)unprojectAtUnitDepth:(WFPoint *)pixelCoordinate;
-- (void)projectManyOntoFrame:(id<NSFastEnumeration> /*WFNVector3*/ )coordinates results:(id<NSFastEnumeration> /*WFPoint*/ *)results;
-- (void)unprojectPixelsAtUnitDepth:(id<NSFastEnumeration> /*WFPoint*/ )pixelCoordinates results:(id<NSFastEnumeration> /*WFNVector2*/ *)results;
+@property (readonly) WFNVector2* focalLength;
+@property (readonly) unsigned int imageHeight;
+@property (readonly) unsigned int imageWidth;
+@property (readonly) WFNVector2* principalPoint;
+@property (readonly) WFNVector3* radialDistortion;
+@property (readonly) WFNVector2* tangentialDistortion;
+- (WFPoint*)projectOntoFrame:(WFNVector3*)coordinate;
+- (WFNVector2*)unprojectAtUnitDepth:(WFPoint*)pixelCoordinate;
+- (void)projectManyOntoFrame:(id<NSFastEnumeration> /* WFNVector3* */)coordinates results:(RTArray_C_WFPoint*)results;
+- (void)unprojectPixelsAtUnitDepth:(id<NSFastEnumeration> /* WFPoint* */)pixelCoordinates results:(RTArray_C_WFNVector2*)results;
 @end
 
 #endif // __WMDCCameraIntrinsics_DEFINED__
@@ -63,12 +66,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
 @property float photosPerSecondLimit;
-@property (readonly) NSMutableArray* /*WMDCFrameController*/  desiredFrameControllers;
-@property (readonly) WMDCFrameControlCapabilities * frameCapabilities;
+@property (readonly) NSMutableArray* desiredFrameControllers;
+@property (readonly) WMDCFrameControlCapabilities* frameCapabilities;
 @property (readonly) float maxPhotosPerSecond;
 @property (readonly) BOOL supported;
-- (WMMMediaRatio *)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
-- (WMMMediaRatio *)getCurrentFrameRate;
+- (WMMMediaRatio*)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
+- (WMMMediaRatio*)getCurrentFrameRate;
 @end
 
 #endif // __WMDCVariablePhotoSequenceController_DEFINED__
@@ -79,9 +82,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCapabilities : RTObject
-@property (readonly) WFTimeSpan * max;
-@property (readonly) WFTimeSpan * min;
-@property (readonly) WFTimeSpan * step;
+@property (readonly) WFTimeSpan* max;
+@property (readonly) WFTimeSpan* min;
+@property (readonly) WFTimeSpan* step;
 @property (readonly) BOOL supported;
 @end
 
@@ -107,9 +110,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedCapabilities : RTObject
-@property (readonly) unsigned max;
-@property (readonly) unsigned min;
-@property (readonly) unsigned step;
+@property (readonly) unsigned int max;
+@property (readonly) unsigned int min;
+@property (readonly) unsigned int step;
 @property (readonly) BOOL supported;
 @end
 
@@ -121,9 +124,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusCapabilities : RTObject
-@property (readonly) unsigned max;
-@property (readonly) unsigned min;
-@property (readonly) unsigned step;
+@property (readonly) unsigned int max;
+@property (readonly) unsigned int min;
+@property (readonly) unsigned int step;
 @property (readonly) BOOL supported;
 @end
 
@@ -148,12 +151,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameControlCapabilities : RTObject
-@property (readonly) WMDCFrameExposureCapabilities * exposure;
-@property (readonly) WMDCFrameExposureCompensationCapabilities * exposureCompensation;
-@property (readonly) WMDCFrameFocusCapabilities * focus;
-@property (readonly) WMDCFrameIsoSpeedCapabilities * isoSpeed;
+@property (readonly) WMDCFrameExposureCapabilities* exposure;
+@property (readonly) WMDCFrameExposureCompensationCapabilities* exposureCompensation;
+@property (readonly) WMDCFrameFocusCapabilities* focus;
+@property (readonly) WMDCFrameIsoSpeedCapabilities* isoSpeed;
 @property (readonly) BOOL photoConfirmationSupported;
-@property (readonly) WMDCFrameFlashCapabilities * flash;
+@property (readonly) WMDCFrameFlashCapabilities* flash;
 @end
 
 #endif // __WMDCFrameControlCapabilities_DEFINED__
@@ -164,7 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureControl : RTObject
-@property (copy) WFTimeSpan * value;
+@property (copy) id value;
 @property BOOL Auto;
 @end
 
@@ -176,7 +179,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
-@property (copy) NSNumber* value;
+@property (copy) id value;
 @end
 
 #endif // __WMDCFrameExposureCompensationControl_DEFINED__
@@ -187,7 +190,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
-@property (copy) NSNumber* value;
+@property (copy) id value;
 @property BOOL Auto;
 @end
 
@@ -199,7 +202,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusControl : RTObject
-@property (copy) NSNumber* value;
+@property (copy) id value;
 @end
 
 #endif // __WMDCFrameFocusControl_DEFINED__
@@ -225,12 +228,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSNumber* photoConfirmationEnabled;
-@property (readonly) WMDCFrameExposureCompensationControl * exposureCompensationControl;
-@property (readonly) WMDCFrameExposureControl * exposureControl;
-@property (readonly) WMDCFrameFocusControl * focusControl;
-@property (readonly) WMDCFrameIsoSpeedControl * isoSpeedControl;
-@property (readonly) WMDCFrameFlashControl * flashControl;
+@property (copy) id photoConfirmationEnabled;
+@property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
+@property (readonly) WMDCFrameExposureControl* exposureControl;
+@property (readonly) WMDCFrameFocusControl* focusControl;
+@property (readonly) WMDCFrameIsoSpeedControl* isoSpeedControl;
+@property (readonly) WMDCFrameFlashControl* flashControl;
 @end
 
 #endif // __WMDCFrameController_DEFINED__

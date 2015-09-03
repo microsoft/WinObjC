@@ -28,13 +28,15 @@
 #include "WindowsFoundationCollections.h"
 #include "WindowsMedia.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Media.FaceAnalysis.DetectedFace
 #ifndef __WMFDetectedFace_DEFINED__
 #define __WMFDetectedFace_DEFINED__
 
 WINRT_EXPORT
 @interface WMFDetectedFace : RTObject
-@property (readonly) WGIBitmapBounds * faceBox;
+@property (readonly) WGIBitmapBounds* faceBox;
 @end
 
 #endif // __WMFDetectedFace_DEFINED__
@@ -45,13 +47,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMFFaceTracker : RTObject
-+ (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker *))success failure:(void (^)(NSError*))failure;
-+ (NSArray* /*WGIBitmapPixelFormat*/ )getSupportedBitmapPixelFormats;
++ (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
++ (NSArray*)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
-@property (copy) WGIBitmapSize * minDetectableFaceSize;
-@property (copy) WGIBitmapSize * maxDetectableFaceSize;
+@property (copy) WGIBitmapSize* minDetectableFaceSize;
+@property (copy) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)processNextFrameAsync:(WMVideoFrame *)videoFrame success:(void (^)(id<NSFastEnumeration> /*WMFDetectedFace*/ ))success failure:(void (^)(NSError*))failure;
+- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceTracker_DEFINED__
@@ -62,14 +64,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMFFaceDetector : RTObject
-+ (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector *))success failure:(void (^)(NSError*))failure;
-+ (NSArray* /*WGIBitmapPixelFormat*/ )getSupportedBitmapPixelFormats;
++ (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
++ (NSArray*)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
-@property (copy) WGIBitmapSize * minDetectableFaceSize;
-@property (copy) WGIBitmapSize * maxDetectableFaceSize;
+@property (copy) WGIBitmapSize* minDetectableFaceSize;
+@property (copy) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)detectFacesAsync:(WGISoftwareBitmap *)image success:(void (^)(id<NSFastEnumeration> /*WMFDetectedFace*/ ))success failure:(void (^)(NSError*))failure;
-- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap *)image searchArea:(WGIBitmapBounds *)searchArea success:(void (^)(id<NSFastEnumeration> /*WMFDetectedFace*/ ))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image searchArea:(WGIBitmapBounds*)searchArea success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceDetector_DEFINED__

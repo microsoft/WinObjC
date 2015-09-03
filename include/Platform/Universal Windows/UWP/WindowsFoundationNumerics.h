@@ -22,6 +22,8 @@
 #include "interopBase.h"
 @class WFNVector2, WFNVector3, WFNVector4, WFNMatrix3x2, WFNMatrix4x4, WFNPlane, WFNQuaternion;
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.Foundation.Numerics.Vector2
 WINRT_EXPORT
 @interface WFNVector2 : NSObject
@@ -87,7 +89,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFNPlane : NSObject
 + (instancetype)new;
-@property (copy) WFNVector3 * normal;
+@property (copy) WFNVector3* normal;
 @property float d;
 @end
 

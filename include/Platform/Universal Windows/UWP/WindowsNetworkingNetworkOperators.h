@@ -26,229 +26,229 @@
 
 // Windows.Networking.NetworkOperators.DataClasses
 enum _WNNDataClasses {
-    WNNDataClassesNone = 0,
-    WNNDataClassesGprs = 1,
-    WNNDataClassesEdge = 2,
-    WNNDataClassesUmts = 4,
-    WNNDataClassesHsdpa = 8,
-    WNNDataClassesHsupa = 16,
-    WNNDataClassesLteAdvanced = 32,
-    WNNDataClassesCdma1xRtt = 65536,
-    WNNDataClassesCdma1xEvdo = 131072,
-    WNNDataClassesCdma1xEvdoRevA = 262144,
-    WNNDataClassesCdma1xEvdv = 524288,
-    WNNDataClassesCdma3xRtt = 1048576,
-    WNNDataClassesCdma1xEvdoRevB = 2097152,
-    WNNDataClassesCdmaUmb = 4194304,
-    WNNDataClassesCustom = -2147483648,
+	WNNDataClassesNone = 0,
+	WNNDataClassesGprs = 1,
+	WNNDataClassesEdge = 2,
+	WNNDataClassesUmts = 4,
+	WNNDataClassesHsdpa = 8,
+	WNNDataClassesHsupa = 16,
+	WNNDataClassesLteAdvanced = 32,
+	WNNDataClassesCdma1xRtt = 65536,
+	WNNDataClassesCdma1xEvdo = 131072,
+	WNNDataClassesCdma1xEvdoRevA = 262144,
+	WNNDataClassesCdma1xEvdv = 524288,
+	WNNDataClassesCdma3xRtt = 1048576,
+	WNNDataClassesCdma1xEvdoRevB = 2097152,
+	WNNDataClassesCdmaUmb = 4194304,
+	WNNDataClassesCustom = -2147483648,
 };
 typedef unsigned WNNDataClasses;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandDeviceType
 enum _WNNMobileBroadbandDeviceType {
-    WNNMobileBroadbandDeviceTypeUnknown = 0,
-    WNNMobileBroadbandDeviceTypeEmbedded = 1,
-    WNNMobileBroadbandDeviceTypeRemovable = 2,
-    WNNMobileBroadbandDeviceTypeRemote = 3,
+	WNNMobileBroadbandDeviceTypeUnknown = 0,
+	WNNMobileBroadbandDeviceTypeEmbedded = 1,
+	WNNMobileBroadbandDeviceTypeRemovable = 2,
+	WNNMobileBroadbandDeviceTypeRemote = 3,
 };
 typedef unsigned WNNMobileBroadbandDeviceType;
 
 // Windows.Networking.NetworkOperators.NetworkDeviceStatus
 enum _WNNNetworkDeviceStatus {
-    WNNNetworkDeviceStatusDeviceNotReady = 0,
-    WNNNetworkDeviceStatusDeviceReady = 1,
-    WNNNetworkDeviceStatusSimNotInserted = 2,
-    WNNNetworkDeviceStatusBadSim = 3,
-    WNNNetworkDeviceStatusDeviceHardwareFailure = 4,
-    WNNNetworkDeviceStatusAccountNotActivated = 5,
-    WNNNetworkDeviceStatusDeviceLocked = 6,
-    WNNNetworkDeviceStatusDeviceBlocked = 7,
+	WNNNetworkDeviceStatusDeviceNotReady = 0,
+	WNNNetworkDeviceStatusDeviceReady = 1,
+	WNNNetworkDeviceStatusSimNotInserted = 2,
+	WNNNetworkDeviceStatusBadSim = 3,
+	WNNNetworkDeviceStatusDeviceHardwareFailure = 4,
+	WNNNetworkDeviceStatusAccountNotActivated = 5,
+	WNNNetworkDeviceStatusDeviceLocked = 6,
+	WNNNetworkDeviceStatusDeviceBlocked = 7,
 };
 typedef unsigned WNNNetworkDeviceStatus;
 
 // Windows.Networking.NetworkOperators.NetworkRegistrationState
 enum _WNNNetworkRegistrationState {
-    WNNNetworkRegistrationStateNone = 0,
-    WNNNetworkRegistrationStateDeregistered = 1,
-    WNNNetworkRegistrationStateSearching = 2,
-    WNNNetworkRegistrationStateHome = 3,
-    WNNNetworkRegistrationStateRoaming = 4,
-    WNNNetworkRegistrationStatePartner = 5,
-    WNNNetworkRegistrationStateDenied = 6,
+	WNNNetworkRegistrationStateNone = 0,
+	WNNNetworkRegistrationStateDeregistered = 1,
+	WNNNetworkRegistrationStateSearching = 2,
+	WNNNetworkRegistrationStateHome = 3,
+	WNNNetworkRegistrationStateRoaming = 4,
+	WNNNetworkRegistrationStatePartner = 5,
+	WNNNetworkRegistrationStateDenied = 6,
 };
 typedef unsigned WNNNetworkRegistrationState;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandRadioState
 enum _WNNMobileBroadbandRadioState {
-    WNNMobileBroadbandRadioStateOff = 0,
-    WNNMobileBroadbandRadioStateOn = 1,
+	WNNMobileBroadbandRadioStateOff = 0,
+	WNNMobileBroadbandRadioStateOn = 1,
 };
 typedef unsigned WNNMobileBroadbandRadioState;
 
 // Windows.Networking.NetworkOperators.NetworkOperatorEventMessageType
 enum _WNNNetworkOperatorEventMessageType {
-    WNNNetworkOperatorEventMessageTypeGsm = 0,
-    WNNNetworkOperatorEventMessageTypeCdma = 1,
-    WNNNetworkOperatorEventMessageTypeUssd = 2,
-    WNNNetworkOperatorEventMessageTypeDataPlanThresholdReached = 3,
-    WNNNetworkOperatorEventMessageTypeDataPlanReset = 4,
-    WNNNetworkOperatorEventMessageTypeDataPlanDeleted = 5,
-    WNNNetworkOperatorEventMessageTypeProfileConnected = 6,
-    WNNNetworkOperatorEventMessageTypeProfileDisconnected = 7,
-    WNNNetworkOperatorEventMessageTypeRegisteredRoaming = 8,
-    WNNNetworkOperatorEventMessageTypeRegisteredHome = 9,
-    WNNNetworkOperatorEventMessageTypeTetheringEntitlementCheck = 10,
-    WNNNetworkOperatorEventMessageTypeTetheringOperationalStateChanged = 11,
-    WNNNetworkOperatorEventMessageTypeTetheringNumberOfClientsChanged = 12,
+	WNNNetworkOperatorEventMessageTypeGsm = 0,
+	WNNNetworkOperatorEventMessageTypeCdma = 1,
+	WNNNetworkOperatorEventMessageTypeUssd = 2,
+	WNNNetworkOperatorEventMessageTypeDataPlanThresholdReached = 3,
+	WNNNetworkOperatorEventMessageTypeDataPlanReset = 4,
+	WNNNetworkOperatorEventMessageTypeDataPlanDeleted = 5,
+	WNNNetworkOperatorEventMessageTypeProfileConnected = 6,
+	WNNNetworkOperatorEventMessageTypeProfileDisconnected = 7,
+	WNNNetworkOperatorEventMessageTypeRegisteredRoaming = 8,
+	WNNNetworkOperatorEventMessageTypeRegisteredHome = 9,
+	WNNNetworkOperatorEventMessageTypeTetheringEntitlementCheck = 10,
+	WNNNetworkOperatorEventMessageTypeTetheringOperationalStateChanged = 11,
+	WNNNetworkOperatorEventMessageTypeTetheringNumberOfClientsChanged = 12,
 };
 typedef unsigned WNNNetworkOperatorEventMessageType;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandAccountWatcherStatus
 enum _WNNMobileBroadbandAccountWatcherStatus {
-    WNNMobileBroadbandAccountWatcherStatusCreated = 0,
-    WNNMobileBroadbandAccountWatcherStatusStarted = 1,
-    WNNMobileBroadbandAccountWatcherStatusEnumerationCompleted = 2,
-    WNNMobileBroadbandAccountWatcherStatusStopped = 3,
-    WNNMobileBroadbandAccountWatcherStatusAborted = 4,
+	WNNMobileBroadbandAccountWatcherStatusCreated = 0,
+	WNNMobileBroadbandAccountWatcherStatusStarted = 1,
+	WNNMobileBroadbandAccountWatcherStatusEnumerationCompleted = 2,
+	WNNMobileBroadbandAccountWatcherStatusStopped = 3,
+	WNNMobileBroadbandAccountWatcherStatusAborted = 4,
 };
 typedef unsigned WNNMobileBroadbandAccountWatcherStatus;
 
 // Windows.Networking.NetworkOperators.TetheringOperationalState
 enum _WNNTetheringOperationalState {
-    WNNTetheringOperationalStateUnknown = 0,
-    WNNTetheringOperationalStateOn = 1,
-    WNNTetheringOperationalStateOff = 2,
-    WNNTetheringOperationalStateInTransition = 3,
+	WNNTetheringOperationalStateUnknown = 0,
+	WNNTetheringOperationalStateOn = 1,
+	WNNTetheringOperationalStateOff = 2,
+	WNNTetheringOperationalStateInTransition = 3,
 };
 typedef unsigned WNNTetheringOperationalState;
 
 // Windows.Networking.NetworkOperators.TetheringCapability
 enum _WNNTetheringCapability {
-    WNNTetheringCapabilityEnabled = 0,
-    WNNTetheringCapabilityDisabledByGroupPolicy = 1,
-    WNNTetheringCapabilityDisabledByHardwareLimitation = 2,
-    WNNTetheringCapabilityDisabledByOperator = 3,
-    WNNTetheringCapabilityDisabledBySku = 4,
-    WNNTetheringCapabilityDisabledByRequiredAppNotInstalled = 5,
-    WNNTetheringCapabilityDisabledDueToUnknownCause = 6,
-    WNNTetheringCapabilityDisabledBySystemCapability = 7,
+	WNNTetheringCapabilityEnabled = 0,
+	WNNTetheringCapabilityDisabledByGroupPolicy = 1,
+	WNNTetheringCapabilityDisabledByHardwareLimitation = 2,
+	WNNTetheringCapabilityDisabledByOperator = 3,
+	WNNTetheringCapabilityDisabledBySku = 4,
+	WNNTetheringCapabilityDisabledByRequiredAppNotInstalled = 5,
+	WNNTetheringCapabilityDisabledDueToUnknownCause = 6,
+	WNNTetheringCapabilityDisabledBySystemCapability = 7,
 };
 typedef unsigned WNNTetheringCapability;
 
 // Windows.Networking.NetworkOperators.TetheringOperationStatus
 enum _WNNTetheringOperationStatus {
-    WNNTetheringOperationStatusSuccess = 0,
-    WNNTetheringOperationStatusUnknown = 1,
-    WNNTetheringOperationStatusMobileBroadbandDeviceOff = 2,
-    WNNTetheringOperationStatusWiFiDeviceOff = 3,
-    WNNTetheringOperationStatusEntitlementCheckTimeout = 4,
-    WNNTetheringOperationStatusEntitlementCheckFailure = 5,
-    WNNTetheringOperationStatusOperationInProgress = 6,
+	WNNTetheringOperationStatusSuccess = 0,
+	WNNTetheringOperationStatusUnknown = 1,
+	WNNTetheringOperationStatusMobileBroadbandDeviceOff = 2,
+	WNNTetheringOperationStatusWiFiDeviceOff = 3,
+	WNNTetheringOperationStatusEntitlementCheckTimeout = 4,
+	WNNTetheringOperationStatusEntitlementCheckFailure = 5,
+	WNNTetheringOperationStatusOperationInProgress = 6,
 };
 typedef unsigned WNNTetheringOperationStatus;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandPinLockState
 enum _WNNMobileBroadbandPinLockState {
-    WNNMobileBroadbandPinLockStateUnknown = 0,
-    WNNMobileBroadbandPinLockStateUnlocked = 1,
-    WNNMobileBroadbandPinLockStatePinRequired = 2,
-    WNNMobileBroadbandPinLockStatePinUnblockKeyRequired = 3,
+	WNNMobileBroadbandPinLockStateUnknown = 0,
+	WNNMobileBroadbandPinLockStateUnlocked = 1,
+	WNNMobileBroadbandPinLockStatePinRequired = 2,
+	WNNMobileBroadbandPinLockStatePinUnblockKeyRequired = 3,
 };
 typedef unsigned WNNMobileBroadbandPinLockState;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandPinType
 enum _WNNMobileBroadbandPinType {
-    WNNMobileBroadbandPinTypeNone = 0,
-    WNNMobileBroadbandPinTypeCustom = 1,
-    WNNMobileBroadbandPinTypePin1 = 2,
-    WNNMobileBroadbandPinTypePin2 = 3,
-    WNNMobileBroadbandPinTypeSimPin = 4,
-    WNNMobileBroadbandPinTypeFirstSimPin = 5,
-    WNNMobileBroadbandPinTypeNetworkPin = 6,
-    WNNMobileBroadbandPinTypeNetworkSubsetPin = 7,
-    WNNMobileBroadbandPinTypeServiceProviderPin = 8,
-    WNNMobileBroadbandPinTypeCorporatePin = 9,
-    WNNMobileBroadbandPinTypeSubsidyLock = 10,
+	WNNMobileBroadbandPinTypeNone = 0,
+	WNNMobileBroadbandPinTypeCustom = 1,
+	WNNMobileBroadbandPinTypePin1 = 2,
+	WNNMobileBroadbandPinTypePin2 = 3,
+	WNNMobileBroadbandPinTypeSimPin = 4,
+	WNNMobileBroadbandPinTypeFirstSimPin = 5,
+	WNNMobileBroadbandPinTypeNetworkPin = 6,
+	WNNMobileBroadbandPinTypeNetworkSubsetPin = 7,
+	WNNMobileBroadbandPinTypeServiceProviderPin = 8,
+	WNNMobileBroadbandPinTypeCorporatePin = 9,
+	WNNMobileBroadbandPinTypeSubsidyLock = 10,
 };
 typedef unsigned WNNMobileBroadbandPinType;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandPinFormat
 enum _WNNMobileBroadbandPinFormat {
-    WNNMobileBroadbandPinFormatUnknown = 0,
-    WNNMobileBroadbandPinFormatNumeric = 1,
-    WNNMobileBroadbandPinFormatAlphanumeric = 2,
+	WNNMobileBroadbandPinFormatUnknown = 0,
+	WNNMobileBroadbandPinFormatNumeric = 1,
+	WNNMobileBroadbandPinFormatAlphanumeric = 2,
 };
 typedef unsigned WNNMobileBroadbandPinFormat;
 
 // Windows.Networking.NetworkOperators.MobileBroadbandUiccAppOperationStatus
 enum _WNNMobileBroadbandUiccAppOperationStatus {
-    WNNMobileBroadbandUiccAppOperationStatusSuccess = 0,
-    WNNMobileBroadbandUiccAppOperationStatusInvalidUiccFilePath = 1,
-    WNNMobileBroadbandUiccAppOperationStatusAccessConditionNotHeld = 2,
-    WNNMobileBroadbandUiccAppOperationStatusUiccBusy = 3,
+	WNNMobileBroadbandUiccAppOperationStatusSuccess = 0,
+	WNNMobileBroadbandUiccAppOperationStatusInvalidUiccFilePath = 1,
+	WNNMobileBroadbandUiccAppOperationStatusAccessConditionNotHeld = 2,
+	WNNMobileBroadbandUiccAppOperationStatusUiccBusy = 3,
 };
 typedef unsigned WNNMobileBroadbandUiccAppOperationStatus;
 
 // Windows.Networking.NetworkOperators.UiccAppKind
 enum _WNNUiccAppKind {
-    WNNUiccAppKindUnknown = 0,
-    WNNUiccAppKindMF = 1,
-    WNNUiccAppKindMFSim = 2,
-    WNNUiccAppKindMFRuim = 3,
-    WNNUiccAppKindUSim = 4,
-    WNNUiccAppKindCSim = 5,
-    WNNUiccAppKindISim = 6,
+	WNNUiccAppKindUnknown = 0,
+	WNNUiccAppKindMF = 1,
+	WNNUiccAppKindMFSim = 2,
+	WNNUiccAppKindMFRuim = 3,
+	WNNUiccAppKindUSim = 4,
+	WNNUiccAppKindCSim = 5,
+	WNNUiccAppKindISim = 6,
 };
 typedef unsigned WNNUiccAppKind;
 
 // Windows.Networking.NetworkOperators.UiccAppRecordKind
 enum _WNNUiccAppRecordKind {
-    WNNUiccAppRecordKindUnknown = 0,
-    WNNUiccAppRecordKindTransparent = 1,
-    WNNUiccAppRecordKindRecordOriented = 2,
+	WNNUiccAppRecordKindUnknown = 0,
+	WNNUiccAppRecordKindTransparent = 1,
+	WNNUiccAppRecordKindRecordOriented = 2,
 };
 typedef unsigned WNNUiccAppRecordKind;
 
 // Windows.Networking.NetworkOperators.UiccAccessCondition
 enum _WNNUiccAccessCondition {
-    WNNUiccAccessConditionAlwaysAllowed = 0,
-    WNNUiccAccessConditionPin1 = 1,
-    WNNUiccAccessConditionPin2 = 2,
-    WNNUiccAccessConditionPin3 = 3,
-    WNNUiccAccessConditionPin4 = 4,
-    WNNUiccAccessConditionAdministrative5 = 5,
-    WNNUiccAccessConditionAdministrative6 = 6,
-    WNNUiccAccessConditionNeverAllowed = 7,
+	WNNUiccAccessConditionAlwaysAllowed = 0,
+	WNNUiccAccessConditionPin1 = 1,
+	WNNUiccAccessConditionPin2 = 2,
+	WNNUiccAccessConditionPin3 = 3,
+	WNNUiccAccessConditionPin4 = 4,
+	WNNUiccAccessConditionAdministrative5 = 5,
+	WNNUiccAccessConditionAdministrative6 = 6,
+	WNNUiccAccessConditionNeverAllowed = 7,
 };
 typedef unsigned WNNUiccAccessCondition;
 
 // Windows.Networking.NetworkOperators.HotspotAuthenticationResponseCode
 enum _WNNHotspotAuthenticationResponseCode {
-    WNNHotspotAuthenticationResponseCodeNoError = 0,
-    WNNHotspotAuthenticationResponseCodeLoginSucceeded = 50,
-    WNNHotspotAuthenticationResponseCodeLoginFailed = 100,
-    WNNHotspotAuthenticationResponseCodeRadiusServerError = 102,
-    WNNHotspotAuthenticationResponseCodeNetworkAdministratorError = 105,
-    WNNHotspotAuthenticationResponseCodeLoginAborted = 151,
-    WNNHotspotAuthenticationResponseCodeAccessGatewayInternalError = 255,
+	WNNHotspotAuthenticationResponseCodeNoError = 0,
+	WNNHotspotAuthenticationResponseCodeLoginSucceeded = 50,
+	WNNHotspotAuthenticationResponseCodeLoginFailed = 100,
+	WNNHotspotAuthenticationResponseCodeRadiusServerError = 102,
+	WNNHotspotAuthenticationResponseCodeNetworkAdministratorError = 105,
+	WNNHotspotAuthenticationResponseCodeLoginAborted = 151,
+	WNNHotspotAuthenticationResponseCodeAccessGatewayInternalError = 255,
 };
 typedef unsigned WNNHotspotAuthenticationResponseCode;
 
 // Windows.Networking.NetworkOperators.ProfileMediaType
 enum _WNNProfileMediaType {
-    WNNProfileMediaTypeWlan = 0,
-    WNNProfileMediaTypeWwan = 1,
+	WNNProfileMediaTypeWlan = 0,
+	WNNProfileMediaTypeWwan = 1,
 };
 typedef unsigned WNNProfileMediaType;
 
 // Windows.Networking.NetworkOperators.UssdResultCode
 enum _WNNUssdResultCode {
-    WNNUssdResultCodeNoActionRequired = 0,
-    WNNUssdResultCodeActionRequired = 1,
-    WNNUssdResultCodeTerminated = 2,
-    WNNUssdResultCodeOtherLocalClient = 3,
-    WNNUssdResultCodeOperationNotSupported = 4,
-    WNNUssdResultCodeNetworkTimeout = 5,
+	WNNUssdResultCodeNoActionRequired = 0,
+	WNNUssdResultCodeActionRequired = 1,
+	WNNUssdResultCodeTerminated = 2,
+	WNNUssdResultCodeOtherLocalClient = 3,
+	WNNUssdResultCodeOperationNotSupported = 4,
+	WNNUssdResultCodeNetworkTimeout = 5,
 };
 typedef unsigned WNNUssdResultCode;
 
@@ -260,12 +260,14 @@ typedef unsigned WNNUssdResultCode;
 #include "WindowsNetworking.h"
 #include "WindowsDataXmlDom.h"
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.Networking.NetworkOperators.ProfileUsage
 WINRT_EXPORT
 @interface WNNProfileUsage : NSObject
 + (instancetype)new;
-@property unsigned usageInMegabytes;
-@property (copy) WFDateTime * lastSyncTime;
+@property unsigned int usageInMegabytes;
+@property (copy) WFDateTime* lastSyncTime;
 @end
 
 // Windows.Networking.NetworkOperators.MobileBroadbandAccount
@@ -274,14 +276,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandAccount : RTObject
-+ (WNNMobileBroadbandAccount *)createFromNetworkAccountId:(NSString *)networkAccountId;
-@property (readonly) WNNMobileBroadbandDeviceInformation * currentDeviceInformation;
-@property (readonly) WNNMobileBroadbandNetwork * currentNetwork;
++ (WNNMobileBroadbandAccount*)createFromNetworkAccountId:(NSString *)networkAccountId;
+@property (readonly) WNNMobileBroadbandDeviceInformation* currentDeviceInformation;
+@property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
 @property (readonly) NSString * networkAccountId;
-@property (readonly) WFGUID * serviceProviderGuid;
+@property (readonly) WFGUID* serviceProviderGuid;
 @property (readonly) NSString * serviceProviderName;
-+ (NSArray* /*String*/ )availableNetworkAccountIds;
-- (NSArray* /*WNCConnectionProfile*/ )getConnectionProfiles;
++ (NSArray*)availableNetworkAccountIds;
+- (NSArray*)getConnectionProfiles;
 @end
 
 #endif // __WNNMobileBroadbandAccount_DEFINED__
@@ -293,15 +295,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandNetwork : RTObject
 @property (readonly) NSString * accessPointName;
-@property (readonly) unsigned activationNetworkError;
-@property (readonly) WNCNetworkAdapter * networkAdapter;
+@property (readonly) unsigned int activationNetworkError;
+@property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WNNNetworkRegistrationState networkRegistrationState;
-@property (readonly) unsigned packetAttachNetworkError;
+@property (readonly) unsigned int packetAttachNetworkError;
 @property (readonly) WNNDataClasses registeredDataClass;
 @property (readonly) NSString * registeredProviderId;
 @property (readonly) NSString * registeredProviderName;
-@property (readonly) unsigned registrationNetworkError;
-@property (readonly) NSArray* /*WNNMobileBroadbandUiccApp*/  registrationUiccApps;
+@property (readonly) unsigned int registrationNetworkError;
+@property (readonly) NSArray* registrationUiccApps;
 - (void)showConnectionUI;
 - (void)getVoiceCallSupportAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -327,8 +329,8 @@ WINRT_EXPORT
 @property (readonly) WNNNetworkDeviceStatus networkDeviceStatus;
 @property (readonly) NSString * simIccId;
 @property (readonly) NSString * subscriberId;
-@property (readonly) NSArray* /*String*/  telephoneNumbers;
-@property (readonly) WNNMobileBroadbandPinManager * pinManager;
+@property (readonly) NSArray* telephoneNumbers;
+@property (readonly) WNNMobileBroadbandPinManager* pinManager;
 @property (readonly) NSString * revision;
 @property (readonly) NSString * serialNumber;
 @end
@@ -341,8 +343,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPinManager : RTObject
-@property (readonly) NSArray* /*WNNMobileBroadbandPinType*/  supportedPins;
-- (WNNMobileBroadbandPin *)getPin:(WNNMobileBroadbandPinType)pinType;
+@property (readonly) NSArray* supportedPins;
+- (WNNMobileBroadbandPin*)getPin:(WNNMobileBroadbandPinType)pinType;
 @end
 
 #endif // __WNNMobileBroadbandPinManager_DEFINED__
@@ -355,8 +357,8 @@ WINRT_EXPORT
 @interface WNNMobileBroadbandUiccApp : RTObject
 @property (readonly) RTObject<WSSIBuffer>* id;
 @property (readonly) WNNUiccAppKind kind;
-- (void)getRecordDetailsAsync:(id<NSFastEnumeration> /*UInt32*/ )uiccFilePath success:(void (^)(WNNMobileBroadbandUiccAppRecordDetailsResult *))success failure:(void (^)(NSError*))failure;
-- (void)readRecordAsync:(id<NSFastEnumeration> /*UInt32*/ )uiccFilePath recordIndex:(int)recordIndex success:(void (^)(WNNMobileBroadbandUiccAppReadRecordResult *))success failure:(void (^)(NSError*))failure;
+- (void)getRecordDetailsAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath success:(void (^)(WNNMobileBroadbandUiccAppRecordDetailsResult*))success failure:(void (^)(NSError*))failure;
+- (void)readRecordAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath recordIndex:(int)recordIndex success:(void (^)(WNNMobileBroadbandUiccAppReadRecordResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandUiccApp_DEFINED__
@@ -393,17 +395,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringManager : RTObject
 + (WNNTetheringCapability)getTetheringCapability:(NSString *)networkAccountId;
-+ (WNNNetworkOperatorTetheringManager *)createFromNetworkAccountId:(NSString *)networkAccountId;
-+ (WNNTetheringCapability)getTetheringCapabilityFromConnectionProfile:(WNCConnectionProfile *)profile;
-+ (WNNNetworkOperatorTetheringManager *)createFromConnectionProfile:(WNCConnectionProfile *)profile;
-@property (readonly) unsigned clientCount;
-@property (readonly) unsigned maxClientCount;
++ (WNNNetworkOperatorTetheringManager*)createFromNetworkAccountId:(NSString *)networkAccountId;
++ (WNNTetheringCapability)getTetheringCapabilityFromConnectionProfile:(WNCConnectionProfile*)profile;
++ (WNNNetworkOperatorTetheringManager*)createFromConnectionProfile:(WNCConnectionProfile*)profile;
+@property (readonly) unsigned int clientCount;
+@property (readonly) unsigned int maxClientCount;
 @property (readonly) WNNTetheringOperationalState tetheringOperationalState;
-- (WNNNetworkOperatorTetheringAccessPointConfiguration *)getCurrentAccessPointConfiguration;
-- (RTObject<WFIAsyncAction>*)configureAccessPointAsync:(WNNNetworkOperatorTetheringAccessPointConfiguration *)configuration;
-- (void)startTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)stopTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult *))success failure:(void (^)(NSError*))failure;
-- (NSArray* /*WNNNetworkOperatorTetheringClient*/ )getTetheringClients;
+- (WNNNetworkOperatorTetheringAccessPointConfiguration*)getCurrentAccessPointConfiguration;
+- (RTObject<WFIAsyncAction>*)configureAccessPointAsync:(WNNNetworkOperatorTetheringAccessPointConfiguration*)configuration;
+- (void)startTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)stopTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult*))success failure:(void (^)(NSError*))failure;
+- (NSArray*)getTetheringClients;
 @end
 
 #endif // __WNNNetworkOperatorTetheringManager_DEFINED__
@@ -414,7 +416,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringClient : RTObject
-@property (readonly) NSArray* /*WNHostName*/  hostNames;
+@property (readonly) NSArray* hostNames;
 @property (readonly) NSString * macAddress;
 @end
 
@@ -452,15 +454,15 @@ WINRT_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
 + (instancetype)create ACTIVATOR;
 @property (readonly) WNNMobileBroadbandAccountWatcherStatus status;
-- (EventRegistrationToken)addAccountAddedEvent:(void(^)(WNNMobileBroadbandAccountWatcher *, WNNMobileBroadbandAccountEventArgs *))del;
+- (EventRegistrationToken)addAccountAddedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAccountRemovedEvent:(void(^)(WNNMobileBroadbandAccountWatcher *, WNNMobileBroadbandAccountEventArgs *))del;
+- (EventRegistrationToken)addAccountRemovedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAccountUpdatedEvent:(void(^)(WNNMobileBroadbandAccountWatcher *, WNNMobileBroadbandAccountUpdatedEventArgs *))del;
+- (EventRegistrationToken)addAccountUpdatedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountUpdatedEventArgs*))del;
 - (void)removeAccountUpdatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNNMobileBroadbandAccountWatcher *, RTObject *))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WNNMobileBroadbandAccountWatcher *, RTObject *))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -475,18 +477,18 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandModem : RTObject
 + (NSString *)getDeviceSelector;
-+ (WNNMobileBroadbandModem *)fromId:(NSString *)deviceId;
-+ (WNNMobileBroadbandModem *)getDefault;
-@property (readonly) WNNMobileBroadbandAccount * currentAccount;
-@property (readonly) WNNMobileBroadbandNetwork * currentNetwork;
-@property (readonly) WNNMobileBroadbandDeviceInformation * deviceInformation;
-@property (readonly) NSArray* /*WNNMobileBroadbandDeviceServiceInformation*/  deviceServices;
++ (WNNMobileBroadbandModem*)fromId:(NSString *)deviceId;
++ (WNNMobileBroadbandModem*)getDefault;
+@property (readonly) WNNMobileBroadbandAccount* currentAccount;
+@property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
+@property (readonly) WNNMobileBroadbandDeviceInformation* deviceInformation;
+@property (readonly) NSArray* deviceServices;
 @property (readonly) BOOL isResetSupported;
-@property (readonly) unsigned maxDeviceServiceCommandSizeInBytes;
-@property (readonly) unsigned maxDeviceServiceDataSizeInBytes;
-- (WNNMobileBroadbandDeviceService *)getDeviceService:(WFGUID *)deviceServiceId;
+@property (readonly) unsigned int maxDeviceServiceCommandSizeInBytes;
+@property (readonly) unsigned int maxDeviceServiceDataSizeInBytes;
+- (WNNMobileBroadbandDeviceService*)getDeviceService:(WFGUID*)deviceServiceId;
 - (RTObject<WFIAsyncAction>*)resetAsync;
-- (void)getCurrentConfigurationAsyncWithSuccess:(void (^)(WNNMobileBroadbandModemConfiguration *))success failure:(void (^)(NSError*))failure;
+- (void)getCurrentConfigurationAsyncWithSuccess:(void (^)(WNNMobileBroadbandModemConfiguration*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandModem_DEFINED__
@@ -498,7 +500,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandUicc : RTObject
 @property (readonly) NSString * simIccId;
-- (void)getUiccAppsAsyncWithSuccess:(void (^)(WNNMobileBroadbandUiccAppsResult *))success failure:(void (^)(NSError*))failure;
+- (void)getUiccAppsAsyncWithSuccess:(void (^)(WNNMobileBroadbandUiccAppsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandUicc_DEFINED__
@@ -511,7 +513,7 @@ WINRT_EXPORT
 @interface WNNMobileBroadbandModemConfiguration : RTObject
 @property (readonly) NSString * homeProviderId;
 @property (readonly) NSString * homeProviderName;
-@property (readonly) WNNMobileBroadbandUicc * uicc;
+@property (readonly) WNNMobileBroadbandUicc* uicc;
 @end
 
 #endif // __WNNMobileBroadbandModemConfiguration_DEFINED__
@@ -522,7 +524,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceServiceInformation : RTObject
-@property (readonly) WFGUID * deviceServiceId;
+@property (readonly) WFGUID* deviceServiceId;
 @property (readonly) BOOL isDataReadSupported;
 @property (readonly) BOOL isDataWriteSupported;
 @end
@@ -535,10 +537,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceService : RTObject
-@property (readonly) WFGUID * deviceServiceId;
-@property (readonly) NSArray* /*UInt32*/  supportedCommands;
-- (WNNMobileBroadbandDeviceServiceDataSession *)openDataSession;
-- (WNNMobileBroadbandDeviceServiceCommandSession *)openCommandSession;
+@property (readonly) WFGUID* deviceServiceId;
+@property (readonly) NSArray* supportedCommands;
+- (WNNMobileBroadbandDeviceServiceDataSession*)openDataSession;
+- (WNNMobileBroadbandDeviceServiceCommandSession*)openCommandSession;
 @end
 
 #endif // __WNNMobileBroadbandDeviceService_DEFINED__
@@ -549,18 +551,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPin : RTObject
-@property (readonly) unsigned attemptsRemaining;
+@property (readonly) unsigned int attemptsRemaining;
 @property (readonly) BOOL enabled;
 @property (readonly) WNNMobileBroadbandPinFormat format;
 @property (readonly) WNNMobileBroadbandPinLockState lockState;
-@property (readonly) unsigned maxLength;
-@property (readonly) unsigned minLength;
+@property (readonly) unsigned int maxLength;
+@property (readonly) unsigned int minLength;
 @property (readonly) WNNMobileBroadbandPinType type;
-- (void)enableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)disableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)enterAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)changeAsync:(NSString *)currentPin newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)unblockAsync:(NSString *)pinUnblockKey newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult *))success failure:(void (^)(NSError*))failure;
+- (void)enableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)disableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)enterAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)changeAsync:(NSString *)currentPin newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)unblockAsync:(NSString *)pinUnblockKey newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandPin_DEFINED__
@@ -571,7 +573,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPinOperationResult : RTObject
-@property (readonly) unsigned attemptsRemaining;
+@property (readonly) unsigned int attemptsRemaining;
 @property (readonly) BOOL isSuccessful;
 @end
 
@@ -583,7 +585,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataSession : RTObject
-- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WNNMobileBroadbandDeviceServiceDataSession *, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs *))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WNNMobileBroadbandDeviceServiceDataSession*, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)writeDataAsync:(RTObject<WSSIBuffer>*)value;
 - (void)closeSession;
@@ -597,8 +599,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandSession : RTObject
-- (void)sendQueryCommandAsync:(unsigned)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult *))success failure:(void (^)(NSError*))failure;
-- (void)sendSetCommandAsync:(unsigned)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult *))success failure:(void (^)(NSError*))failure;
+- (void)sendQueryCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
+- (void)sendSetCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
 - (void)closeSession;
 @end
 
@@ -622,7 +624,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandResult : RTObject
 @property (readonly) RTObject<WSSIBuffer>* responseData;
-@property (readonly) unsigned statusCode;
+@property (readonly) unsigned int statusCode;
 @end
 
 #endif // __WNNMobileBroadbandDeviceServiceCommandResult_DEFINED__
@@ -634,7 +636,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandUiccAppsResult : RTObject
 @property (readonly) WNNMobileBroadbandUiccAppOperationStatus status;
-@property (readonly) NSArray* /*WNNMobileBroadbandUiccApp*/  uiccApps;
+@property (readonly) NSArray* uiccApps;
 @end
 
 #endif // __WNNMobileBroadbandUiccAppsResult_DEFINED__
@@ -674,7 +676,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChange : RTObject
 @property (readonly) NSString * deviceId;
-@property (readonly) WNNMobileBroadbandNetwork * network;
+@property (readonly) WNNMobileBroadbandNetwork* network;
 @end
 
 #endif // __WNNMobileBroadbandNetworkRegistrationStateChange_DEFINED__
@@ -685,7 +687,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* /*WNNMobileBroadbandNetworkRegistrationStateChange*/  networkRegistrationStateChanges;
+@property (readonly) NSArray* networkRegistrationStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
@@ -708,7 +710,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandRadioStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* /*WNNMobileBroadbandRadioStateChange*/  radioStateChanges;
+@property (readonly) NSArray* radioStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
@@ -732,7 +734,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPinLockStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* /*WNNMobileBroadbandPinLockStateChange*/  pinLockStateChanges;
+@property (readonly) NSArray* pinLockStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
@@ -744,7 +746,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceServiceTriggerDetails : RTObject
 @property (readonly) NSString * deviceId;
-@property (readonly) WFGUID * deviceServiceId;
+@property (readonly) WFGUID* deviceServiceId;
 @property (readonly) RTObject<WSSIBuffer>* receivedData;
 @end
 
@@ -756,9 +758,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownCSimFilePaths : RTObject
-+ (NSArray* /*UInt32*/ )eFSpn;
-+ (NSArray* /*UInt32*/ )gid1;
-+ (NSArray* /*UInt32*/ )gid2;
++ (NSArray*)eFSpn;
++ (NSArray*)gid1;
++ (NSArray*)gid2;
 @end
 
 #endif // __WNNKnownCSimFilePaths_DEFINED__
@@ -769,9 +771,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownRuimFilePaths : RTObject
-+ (NSArray* /*UInt32*/ )eFSpn;
-+ (NSArray* /*UInt32*/ )gid1;
-+ (NSArray* /*UInt32*/ )gid2;
++ (NSArray*)eFSpn;
++ (NSArray*)gid1;
++ (NSArray*)gid2;
 @end
 
 #endif // __WNNKnownRuimFilePaths_DEFINED__
@@ -782,10 +784,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownSimFilePaths : RTObject
-+ (NSArray* /*UInt32*/ )eFOns;
-+ (NSArray* /*UInt32*/ )eFSpn;
-+ (NSArray* /*UInt32*/ )gid1;
-+ (NSArray* /*UInt32*/ )gid2;
++ (NSArray*)eFOns;
++ (NSArray*)eFSpn;
++ (NSArray*)gid1;
++ (NSArray*)gid2;
 @end
 
 #endif // __WNNKnownSimFilePaths_DEFINED__
@@ -796,11 +798,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownUSimFilePaths : RTObject
-+ (NSArray* /*UInt32*/ )eFOpl;
-+ (NSArray* /*UInt32*/ )eFPnn;
-+ (NSArray* /*UInt32*/ )eFSpn;
-+ (NSArray* /*UInt32*/ )gid1;
-+ (NSArray* /*UInt32*/ )gid2;
++ (NSArray*)eFOpl;
++ (NSArray*)eFPnn;
++ (NSArray*)eFSpn;
++ (NSArray*)gid1;
++ (NSArray*)gid2;
 @end
 
 #endif // __WNNKnownUSimFilePaths_DEFINED__
@@ -822,17 +824,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNHotspotAuthenticationContext : RTObject
-+ (BOOL)tryGetAuthenticationContext:(NSString *)evenToken context:(WNNHotspotAuthenticationContext **)context;
-@property (readonly) WFUri * authenticationUrl;
-@property (readonly) WNCNetworkAdapter * networkAdapter;
-@property (readonly) WFUri * redirectMessageUrl;
-@property (readonly) WDXDXmlDocument * redirectMessageXml;
-@property (readonly) id<NSFastEnumeration> /*UInt8*/  wirelessNetworkId;
++ (BOOL)tryGetAuthenticationContext:(NSString *)evenToken context:(WNNHotspotAuthenticationContext**)context;
+@property (readonly) WFUri* authenticationUrl;
+@property (readonly) WNCNetworkAdapter* networkAdapter;
+@property (readonly) WFUri* redirectMessageUrl;
+@property (readonly) WDXDXmlDocument* redirectMessageXml;
+@property (readonly) NSArray* wirelessNetworkId;
 - (void)issueCredentials:(NSString *)userName password:(NSString *)password extraParameters:(NSString *)extraParameters markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure;
 - (void)abortAuthentication:(BOOL)markAsManual;
 - (void)skipAuthentication;
 - (void)triggerAttentionRequired:(NSString *)packageRelativeApplicationId applicationParameters:(NSString *)applicationParameters;
-- (void)issueCredentialsAsync:(NSString *)userName password:(NSString *)password extraParameters:(NSString *)extraParameters markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure success:(void (^)(WNNHotspotCredentialsAuthenticationResult *))success failure:(void (^)(NSError*))failure;
+- (void)issueCredentialsAsync:(NSString *)userName password:(NSString *)password extraParameters:(NSString *)extraParameters markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNHotspotAuthenticationContext_DEFINED__
@@ -843,9 +845,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNHotspotCredentialsAuthenticationResult : RTObject
-@property (readonly) WDXDXmlDocument * authenticationReplyXml;
+@property (readonly) WDXDXmlDocument* authenticationReplyXml;
 @property (readonly) BOOL hasNetworkErrorOccurred;
-@property (readonly) WFUri * logoffUrl;
+@property (readonly) WFUri* logoffUrl;
 @property (readonly) WNNHotspotAuthenticationResponseCode responseCode;
 @end
 
@@ -870,7 +872,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNProvisionedProfile : RTObject
 - (void)updateCost:(WNCNetworkCostType)value;
-- (void)updateUsage:(WNNProfileUsage *)value;
+- (void)updateUsage:(WNNProfileUsage*)value;
 @end
 
 #endif // __WNNProvisionedProfile_DEFINED__
@@ -881,10 +883,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNProvisioningAgent : RTObject
-+ (WNNProvisioningAgent *)createFromNetworkAccountId:(NSString *)networkAccountId;
++ (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString *)networkAccountId;
 + (instancetype)create ACTIVATOR;
-- (void)provisionFromXmlDocumentAsync:(NSString *)provisioningXmlDocument success:(void (^)(WNNProvisionFromXmlDocumentResults *))success failure:(void (^)(NSError*))failure;
-- (WNNProvisionedProfile *)getProvisionedProfile:(WNNProfileMediaType)mediaType profileName:(NSString *)profileName;
+- (void)provisionFromXmlDocumentAsync:(NSString *)provisioningXmlDocument success:(void (^)(WNNProvisionFromXmlDocumentResults*))success failure:(void (^)(NSError*))failure;
+- (WNNProvisionedProfile*)getProvisionedProfile:(WNNProfileMediaType)mediaType profileName:(NSString *)profileName;
 @end
 
 #endif // __WNNProvisioningAgent_DEFINED__
@@ -895,11 +897,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNUssdMessage : RTObject
-+ (WNNUssdMessage *)createMessage:(NSString *)messageText ACTIVATOR;
++ (WNNUssdMessage*)createMessage:(NSString *)messageText ACTIVATOR;
 @property (copy) NSString * payloadAsText;
 @property uint8_t dataCodingScheme;
-- (id<NSFastEnumeration> /*UInt8*/ )getPayload;
-- (void)setPayload:(id<NSFastEnumeration> /*UInt8*/ )value;
+- (NSArray*)getPayload;
+- (void)setPayload:(id<NSFastEnumeration> /* uint8_t */)value;
 @end
 
 #endif // __WNNUssdMessage_DEFINED__
@@ -910,7 +912,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNUssdReply : RTObject
-@property (readonly) WNNUssdMessage * message;
+@property (readonly) WNNUssdMessage* message;
 @property (readonly) WNNUssdResultCode resultCode;
 @end
 
@@ -922,9 +924,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNUssdSession : RTObject
-+ (WNNUssdSession *)createFromNetworkAccountId:(NSString *)networkAccountId;
-+ (WNNUssdSession *)createFromNetworkInterfaceId:(NSString *)networkInterfaceId;
-- (void)sendMessageAndGetReplyAsync:(WNNUssdMessage *)message success:(void (^)(WNNUssdReply *))success failure:(void (^)(NSError*))failure;
++ (WNNUssdSession*)createFromNetworkAccountId:(NSString *)networkAccountId;
++ (WNNUssdSession*)createFromNetworkInterfaceId:(NSString *)networkInterfaceId;
+- (void)sendMessageAndGetReplyAsync:(WNNUssdMessage*)message success:(void (^)(WNNUssdReply*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 

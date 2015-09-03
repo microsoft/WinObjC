@@ -25,18 +25,20 @@
 
 // Windows.Globalization.DayOfWeek
 enum _WGDayOfWeek {
-    WGDayOfWeekSunday = 0,
-    WGDayOfWeekMonday = 1,
-    WGDayOfWeekTuesday = 2,
-    WGDayOfWeekWednesday = 3,
-    WGDayOfWeekThursday = 4,
-    WGDayOfWeekFriday = 5,
-    WGDayOfWeekSaturday = 6,
+	WGDayOfWeekSunday = 0,
+	WGDayOfWeekMonday = 1,
+	WGDayOfWeekTuesday = 2,
+	WGDayOfWeekWednesday = 3,
+	WGDayOfWeekThursday = 4,
+	WGDayOfWeekFriday = 5,
+	WGDayOfWeekSaturday = 6,
 };
 typedef unsigned WGDayOfWeek;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Globalization.CalendarIdentifiers
 #ifndef __WGCalendarIdentifiers_DEFINED__
@@ -302,13 +304,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString *)geographicRegionCode;
-+ (WGGeographicRegion *)createGeographicRegion:(NSString *)geographicRegionCode ACTIVATOR;
++ (WGGeographicRegion*)createGeographicRegion:(NSString *)geographicRegionCode ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @property (readonly) NSString * code;
 @property (readonly) NSString * codeThreeDigit;
 @property (readonly) NSString * codeThreeLetter;
 @property (readonly) NSString * codeTwoLetter;
-@property (readonly) NSArray* /*String*/  currenciesInUse;
+@property (readonly) NSArray* currenciesInUse;
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * nativeName;
 @end
@@ -323,13 +325,13 @@ WINRT_EXPORT
 @interface WGLanguage : RTObject
 + (BOOL)trySetInputMethodLanguageTag:(NSString *)languageTag;
 + (BOOL)isWellFormed:(NSString *)languageTag;
-+ (WGLanguage *)createLanguage:(NSString *)languageTag ACTIVATOR;
++ (WGLanguage*)createLanguage:(NSString *)languageTag ACTIVATOR;
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * languageTag;
 @property (readonly) NSString * nativeName;
 @property (readonly) NSString * script;
 + (NSString *)currentInputMethodLanguageTag;
-- (NSArray* /*String*/ )getExtensionSubtags:(NSString *)singleton;
+- (NSArray*)getExtensionSubtags:(NSString *)singleton;
 @end
 
 #endif // __WGLanguage_DEFINED__
@@ -340,10 +342,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGCalendar : RTObject
-+ (WGCalendar *)createCalendarWithTimeZone:(id<NSFastEnumeration> /*String*/ )languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
++ (WGCalendar*)createCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-+ (WGCalendar *)createCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /*String*/ )languages ACTIVATOR;
-+ (WGCalendar *)createCalendar:(id<NSFastEnumeration> /*String*/ )languages calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
++ (WGCalendar*)createCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
++ (WGCalendar*)createCalendar:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
 @property int year;
 @property int second;
 @property int period;
@@ -357,7 +359,7 @@ WINRT_EXPORT
 @property (readonly) int firstSecondInThisMinute;
 @property (readonly) int firstYearInThisEra;
 @property (readonly) BOOL isDaylightSavingTime;
-@property (readonly) NSArray* /*String*/  languages;
+@property (readonly) NSArray* languages;
 @property (readonly) int lastDayInThisMonth;
 @property (readonly) int lastEra;
 @property (readonly) int lastHourInThisPeriod;
@@ -382,15 +384,15 @@ WINRT_EXPORT
 @property (readonly) NSString * resolvedLanguage;
 @property (readonly) int firstMonthInThisYear;
 @property (readonly) int firstPeriodInThisDay;
-- (WGCalendar *)clone;
+- (WGCalendar*)clone;
 - (void)setToMin;
 - (void)setToMax;
 - (NSString *)getCalendarSystem;
 - (void)changeCalendarSystem:(NSString *)value;
 - (NSString *)getClock;
 - (void)changeClock:(NSString *)value;
-- (WFDateTime *)getDateTime;
-- (void)setDateTime:(WFDateTime *)value;
+- (WFDateTime*)getDateTime;
+- (void)setDateTime:(WFDateTime*)value;
 - (void)setToNow;
 - (void)addEras:(int)eras;
 - (NSString *)eraAsFullString;
@@ -429,9 +431,9 @@ WINRT_EXPORT
 - (void)addNanoseconds:(int)nanoseconds;
 - (NSString *)nanosecondAsString;
 - (NSString *)nanosecondAsPaddedString:(int)minDigits;
-- (int)compare:(WGCalendar *)other;
-- (int)compareDateTime:(WFDateTime *)other;
-- (void)copyTo:(WGCalendar *)other;
+- (int)compare:(WGCalendar*)other;
+- (int)compareDateTime:(WFDateTime*)other;
+- (void)copyTo:(WGCalendar*)other;
 - (NSString *)getTimeZone;
 - (void)changeTimeZone:(NSString *)timeZoneId;
 - (NSString *)timeZoneAsFullString;
@@ -448,8 +450,8 @@ WINRT_EXPORT
 @interface WGApplicationLanguages : RTObject
 + (NSString *)primaryLanguageOverride;
 + (void)setPrimaryLanguageOverride:(NSString *)value;
-+ (NSArray* /*String*/ )languages;
-+ (NSArray* /*String*/ )manifestLanguages;
++ (NSArray*)languages;
++ (NSArray*)manifestLanguages;
 @end
 
 #endif // __WGApplicationLanguages_DEFINED__

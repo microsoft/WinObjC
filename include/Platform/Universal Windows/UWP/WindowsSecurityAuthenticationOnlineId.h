@@ -25,9 +25,9 @@
 
 // Windows.Security.Authentication.OnlineId.CredentialPromptType
 enum _WSAOCredentialPromptType {
-    WSAOCredentialPromptTypePromptIfNeeded = 0,
-    WSAOCredentialPromptTypeRetypeCredentials = 1,
-    WSAOCredentialPromptTypeDoNotPrompt = 2,
+	WSAOCredentialPromptTypePromptIfNeeded = 0,
+	WSAOCredentialPromptTypeRetypeCredentials = 1,
+	WSAOCredentialPromptTypeDoNotPrompt = 2,
 };
 typedef unsigned WSAOCredentialPromptType;
 
@@ -40,14 +40,16 @@ typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo
 #endif // __WFAsyncActionCompletedHandler__DEFINED
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.Security.Authentication.OnlineId.OnlineIdServiceTicketRequest
 #ifndef __WSAOOnlineIdServiceTicketRequest_DEFINED__
 #define __WSAOOnlineIdServiceTicketRequest_DEFINED__
 
 WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicketRequest : RTObject
-+ (WSAOOnlineIdServiceTicketRequest *)createOnlineIdServiceTicketRequest:(NSString *)service policy:(NSString *)policy ACTIVATOR;
-+ (WSAOOnlineIdServiceTicketRequest *)createOnlineIdServiceTicketRequestAdvanced:(NSString *)service ACTIVATOR;
++ (WSAOOnlineIdServiceTicketRequest*)createOnlineIdServiceTicketRequest:(NSString *)service policy:(NSString *)policy ACTIVATOR;
++ (WSAOOnlineIdServiceTicketRequest*)createOnlineIdServiceTicketRequestAdvanced:(NSString *)service ACTIVATOR;
 @property (readonly) NSString * policy;
 @property (readonly) NSString * service;
 @end
@@ -61,7 +63,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicket : RTObject
 @property (readonly) int errorCode;
-@property (readonly) WSAOOnlineIdServiceTicketRequest * request;
+@property (readonly) WSAOOnlineIdServiceTicketRequest* request;
 @property (readonly) NSString * value;
 @end
 
@@ -73,7 +75,7 @@ WINRT_EXPORT
 
 @protocol WFIAsyncInfo
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 - (void)cancel;
 - (void)close;
@@ -88,7 +90,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOUserAuthenticationOperation : RTObject <WFIAsyncInfo>
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 // Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<Windows.Security.Authentication.OnlineId.UserIdentity>)
 // Could not find base class Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity> type information
@@ -118,7 +120,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOSignOutUserOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 @property (copy) WFAsyncActionCompletedHandler completed;
 - (void)getResults;
@@ -141,7 +143,7 @@ WINRT_EXPORT
 @property (readonly) NSString * lastName;
 @property (readonly) NSString * safeCustomerId;
 @property (readonly) NSString * signInName;
-@property (readonly) NSArray* /*WSAOOnlineIdServiceTicket*/  tickets;
+@property (readonly) NSArray* tickets;
 @end
 
 #endif // __WSAOUserIdentity_DEFINED__
@@ -153,12 +155,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
 + (instancetype)create ACTIVATOR;
-@property WFGUID * applicationId;
+@property WFGUID* applicationId;
 @property (readonly) NSString * authenticatedSafeCustomerId;
 @property (readonly) BOOL canSignOut;
-- (WSAOUserAuthenticationOperation *)authenticateUserAsync:(WSAOOnlineIdServiceTicketRequest *)request;
-- (WSAOUserAuthenticationOperation *)authenticateUserAsyncAdvanced:(id<NSFastEnumeration> /*WSAOOnlineIdServiceTicketRequest*/ )requests credentialPromptType:(WSAOCredentialPromptType)credentialPromptType;
-- (WSAOSignOutUserOperation *)signOutUserAsync;
+// Failed to generate member AuthenticateUserAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity>)
+// Failed to generate member AuthenticateUserAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<Windows.Security.Authentication.OnlineId.UserIdentity>)
+- (WSAOSignOutUserOperation*)signOutUserAsync;
 @end
 
 #endif // __WSAOOnlineIdAuthenticator_DEFINED__

@@ -25,21 +25,21 @@
 
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdRegistrationStatus
 enum _WNSDDnssdRegistrationStatus {
-    WNSDDnssdRegistrationStatusSuccess = 0,
-    WNSDDnssdRegistrationStatusInvalidServiceName = 1,
-    WNSDDnssdRegistrationStatusServerError = 2,
-    WNSDDnssdRegistrationStatusSecurityError = 3,
+	WNSDDnssdRegistrationStatusSuccess = 0,
+	WNSDDnssdRegistrationStatusInvalidServiceName = 1,
+	WNSDDnssdRegistrationStatusServerError = 2,
+	WNSDDnssdRegistrationStatusSecurityError = 3,
 };
 typedef unsigned WNSDDnssdRegistrationStatus;
 
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdServiceWatcherStatus
 enum _WNSDDnssdServiceWatcherStatus {
-    WNSDDnssdServiceWatcherStatusCreated = 0,
-    WNSDDnssdServiceWatcherStatusStarted = 1,
-    WNSDDnssdServiceWatcherStatusEnumerationCompleted = 2,
-    WNSDDnssdServiceWatcherStatusStopping = 3,
-    WNSDDnssdServiceWatcherStatusStopped = 4,
-    WNSDDnssdServiceWatcherStatusAborted = 5,
+	WNSDDnssdServiceWatcherStatusCreated = 0,
+	WNSDDnssdServiceWatcherStatusStarted = 1,
+	WNSDDnssdServiceWatcherStatusEnumerationCompleted = 2,
+	WNSDDnssdServiceWatcherStatusStopping = 3,
+	WNSDDnssdServiceWatcherStatusStopped = 4,
+	WNSDDnssdServiceWatcherStatusAborted = 5,
 };
 typedef unsigned WNSDDnssdServiceWatcherStatus;
 
@@ -49,6 +49,8 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 #include "WindowsFoundationCollections.h"
 #include "WindowsNetworkingConnectivity.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdServiceWatcher
 #ifndef __WNSDDnssdServiceWatcher_DEFINED__
 #define __WNSDDnssdServiceWatcher_DEFINED__
@@ -56,11 +58,11 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 WINRT_EXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
 @property (readonly) WNSDDnssdServiceWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void(^)(WNSDDnssdServiceWatcher *, WNSDDnssdServiceInstance *))del;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNSDDnssdServiceWatcher *, RTObject *))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNSDDnssdServiceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WNSDDnssdServiceWatcher *, RTObject *))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WNSDDnssdServiceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -84,17 +86,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
-+ (WNSDDnssdServiceInstance *)create:(NSString *)dnssdServiceInstanceName hostName:(WNHostName *)hostName port:(unsigned short)port ACTIVATOR;
++ (WNSDDnssdServiceInstance*)create:(NSString *)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 @property unsigned short weight;
 @property unsigned short priority;
 @property unsigned short port;
-@property (copy) WNHostName * hostName;
+@property (copy) WNHostName* hostName;
 @property (copy) NSString * dnssdServiceInstanceName;
-@property (readonly) NSDictionary * /*String, String*/  textAttributes;
-- (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener *)socket success:(void (^)(WNSDDnssdRegistrationResult *))success failure:(void (^)(NSError*))failure;
-- (void)registerStreamSocketListenerAsync2:(WNSStreamSocketListener *)socket adapter:(WNCNetworkAdapter *)adapter success:(void (^)(WNSDDnssdRegistrationResult *))success failure:(void (^)(NSError*))failure;
-- (void)registerDatagramSocketAsync1:(WNSDatagramSocket *)socket success:(void (^)(WNSDDnssdRegistrationResult *))success failure:(void (^)(NSError*))failure;
-- (void)registerDatagramSocketAsync2:(WNSDatagramSocket *)socket adapter:(WNCNetworkAdapter *)adapter success:(void (^)(WNSDDnssdRegistrationResult *))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSMutableDictionary* textAttributes;
+- (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener*)socket success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
+- (void)registerStreamSocketListenerAsync2:(WNSStreamSocketListener*)socket adapter:(WNCNetworkAdapter*)adapter success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
+- (void)registerDatagramSocketAsync1:(WNSDatagramSocket*)socket success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
+- (void)registerDatagramSocketAsync2:(WNSDatagramSocket*)socket adapter:(WNCNetworkAdapter*)adapter success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
 - (NSString *)toString;
 @end
 
@@ -108,7 +110,7 @@ WINRT_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
 + (instancetype)create ACTIVATOR;
 @property (readonly) BOOL hasInstanceNameChanged;
-@property (readonly) WNHostName * iPAddress;
+@property (readonly) WNHostName* iPAddress;
 @property (readonly) WNSDDnssdRegistrationStatus status;
 - (NSString *)toString;
 @end
@@ -121,7 +123,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstanceCollection : RTObject
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state

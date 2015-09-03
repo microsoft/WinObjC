@@ -21,29 +21,29 @@
 
 #include "interopBase.h"
 @class WSSDataReaderLoadOperation, WSSDataReader, WSSDataWriterStoreOperation, WSSDataWriter, WSSRandomAccessStream, WSSBuffer, WSSRandomAccessStreamReference, WSSFileRandomAccessStream, WSSFileInputStream, WSSFileOutputStream, WSSRandomAccessStreamOverStream, WSSInputStreamOverStream, WSSOutputStreamOverStream, WSSInMemoryRandomAccessStream;
-@class NSArray_C_UInt8;
+@class RTArray_C_UInt8;
 @protocol WSSIDataReader, WSSIDataReaderFactory, WSSIDataReaderStatics, WSSIDataWriter, WSSIDataWriterFactory, WSSIRandomAccessStreamStatics, WSSIBufferFactory, WSSIBuffer, WSSIBufferStatics, WSSIContentTypeProvider, WSSIRandomAccessStreamReference, WSSIInputStreamReference, WSSIRandomAccessStreamReferenceStatics, WSSIInputStream, WSSIOutputStream, WSSIRandomAccessStream, WSSIRandomAccessStreamWithContentType;
 
 // Windows.Storage.Streams.ByteOrder
 enum _WSSByteOrder {
-    WSSByteOrderLittleEndian = 0,
-    WSSByteOrderBigEndian = 1,
+	WSSByteOrderLittleEndian = 0,
+	WSSByteOrderBigEndian = 1,
 };
 typedef unsigned WSSByteOrder;
 
 // Windows.Storage.Streams.UnicodeEncoding
 enum _WSSUnicodeEncoding {
-    WSSUnicodeEncodingUtf8 = 0,
-    WSSUnicodeEncodingUtf16LE = 1,
-    WSSUnicodeEncodingUtf16BE = 2,
+	WSSUnicodeEncodingUtf8 = 0,
+	WSSUnicodeEncodingUtf16LE = 1,
+	WSSUnicodeEncodingUtf16BE = 2,
 };
 typedef unsigned WSSUnicodeEncoding;
 
 // Windows.Storage.Streams.InputStreamOptions
 enum _WSSInputStreamOptions {
-    WSSInputStreamOptionsNone = 0,
-    WSSInputStreamOptionsPartial = 1,
-    WSSInputStreamOptionsReadAhead = 2,
+	WSSInputStreamOptionsNone = 0,
+	WSSInputStreamOptionsPartial = 1,
+	WSSInputStreamOptionsReadAhead = 2,
 };
 typedef unsigned WSSInputStreamOptions;
 
@@ -59,25 +59,25 @@ typedef unsigned WSSInputStreamOptions;
 @protocol WSSIDataReader
 @property WSSByteOrder byteOrder;
 @property WSSInputStreamOptions inputStreamOptions;
-@property (readonly) unsigned unconsumedBufferLength;
+@property (readonly) unsigned int unconsumedBufferLength;
 @property WSSUnicodeEncoding unicodeEncoding;
 - (uint8_t)readByte;
-- (void)readBytes:(NSArray_C_UInt8* )value;
-- (RTObject<WSSIBuffer>*)readBuffer:(unsigned)length;
+- (void)readBytes:(RTArray_C_UInt8*)value;
+- (RTObject<WSSIBuffer>*)readBuffer:(unsigned int)length;
 - (BOOL)readBoolean;
-- (WFGUID *)readGuid;
-- (short)readInt16;
+- (WFGUID*)readGuid;
+- (int16_t)readInt16;
 - (int)readInt32;
 - (int64_t)readInt64;
 - (unsigned short)readUInt16;
-- (unsigned)readUInt32;
+- (unsigned int)readUInt32;
 - (uint64_t)readUInt64;
 - (float)readSingle;
 - (double)readDouble;
-- (NSString *)readString:(unsigned)codeUnitCount;
-- (WFDateTime *)readDateTime;
-- (WFTimeSpan *)readTimeSpan;
-- (WSSDataReaderLoadOperation *)loadAsync:(unsigned)count;
+- (NSString *)readString:(unsigned int)codeUnitCount;
+- (WFDateTime*)readDateTime;
+- (WFTimeSpan*)readTimeSpan;
+// Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>)
 - (RTObject<WSSIBuffer>*)detachBuffer;
 - (RTObject<WSSIInputStream>*)detachStream;
 @end
@@ -91,26 +91,26 @@ typedef unsigned WSSInputStreamOptions;
 @protocol WSSIDataWriter
 @property WSSByteOrder byteOrder;
 @property WSSUnicodeEncoding unicodeEncoding;
-@property (readonly) unsigned unstoredBufferLength;
+@property (readonly) unsigned int unstoredBufferLength;
 - (void)writeByte:(uint8_t)value;
-- (void)writeBytes:(id<NSFastEnumeration> /*UInt8*/ )value;
+- (void)writeBytes:(id<NSFastEnumeration> /* uint8_t */)value;
 - (void)writeBuffer:(RTObject<WSSIBuffer>*)buffer;
-- (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned)start count:(unsigned)count;
+- (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned int)start count:(unsigned int)count;
 - (void)writeBoolean:(BOOL)value;
-- (void)writeGuid:(WFGUID *)value;
-- (void)writeInt16:(short)value;
+- (void)writeGuid:(WFGUID*)value;
+- (void)writeInt16:(int16_t)value;
 - (void)writeInt32:(int)value;
 - (void)writeInt64:(int64_t)value;
 - (void)writeUInt16:(unsigned short)value;
-- (void)writeUInt32:(unsigned)value;
+- (void)writeUInt32:(unsigned int)value;
 - (void)writeUInt64:(uint64_t)value;
 - (void)writeSingle:(float)value;
 - (void)writeDouble:(double)value;
-- (void)writeDateTime:(WFDateTime *)value;
-- (void)writeTimeSpan:(WFTimeSpan *)value;
-- (unsigned)writeString:(NSString *)value;
-- (unsigned)measureString:(NSString *)value;
-- (WSSDataWriterStoreOperation *)storeAsync;
+- (void)writeDateTime:(WFDateTime*)value;
+- (void)writeTimeSpan:(WFTimeSpan*)value;
+- (unsigned int)writeString:(NSString *)value;
+- (unsigned int)measureString:(NSString *)value;
+// Failed to generate member StoreAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>)
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIBuffer>*)detachBuffer;
 - (RTObject<WSSIOutputStream>*)detachStream;
@@ -123,8 +123,8 @@ typedef unsigned WSSInputStreamOptions;
 #define __WSSIBuffer_DEFINED__
 
 @protocol WSSIBuffer
-@property (readonly) unsigned capacity;
-@property unsigned length;
+@property (readonly) unsigned int capacity;
+@property unsigned int length;
 @end
 
 #endif // __WSSIBuffer_DEFINED__
@@ -174,7 +174,7 @@ typedef unsigned WSSInputStreamOptions;
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -185,7 +185,7 @@ typedef unsigned WSSInputStreamOptions;
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -206,8 +206,8 @@ typedef unsigned WSSInputStreamOptions;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -223,8 +223,8 @@ typedef unsigned WSSInputStreamOptions;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -236,7 +236,7 @@ typedef unsigned WSSInputStreamOptions;
 
 @protocol WFIAsyncInfo
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 - (void)cancel;
 - (void)close;
@@ -251,7 +251,7 @@ typedef unsigned WSSInputStreamOptions;
 WINRT_EXPORT
 @interface WSSDataReaderLoadOperation : RTObject <WFIAsyncInfo>
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 // Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<UInt32>)
 // Could not find base class Windows.Foundation.IAsyncOperation`1<UInt32> type information
@@ -267,29 +267,29 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSDataReader : RTObject <WSSIDataReader, WFIClosable>
-+ (WSSDataReader *)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
-+ (WSSDataReader *)createDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
++ (WSSDataReader*)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
++ (WSSDataReader*)createDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSInputStreamOptions inputStreamOptions;
 @property WSSByteOrder byteOrder;
-@property (readonly) unsigned unconsumedBufferLength;
+@property (readonly) unsigned int unconsumedBufferLength;
 - (uint8_t)readByte;
-- (void)readBytes:(NSArray_C_UInt8* )value;
-- (RTObject<WSSIBuffer>*)readBuffer:(unsigned)length;
+- (void)readBytes:(RTArray_C_UInt8*)value;
+- (RTObject<WSSIBuffer>*)readBuffer:(unsigned int)length;
 - (BOOL)readBoolean;
-- (WFGUID *)readGuid;
-- (short)readInt16;
+- (WFGUID*)readGuid;
+- (int16_t)readInt16;
 - (int)readInt32;
 - (int64_t)readInt64;
 - (unsigned short)readUInt16;
-- (unsigned)readUInt32;
+- (unsigned int)readUInt32;
 - (uint64_t)readUInt64;
 - (float)readSingle;
 - (double)readDouble;
-- (NSString *)readString:(unsigned)codeUnitCount;
-- (WFDateTime *)readDateTime;
-- (WFTimeSpan *)readTimeSpan;
-- (WSSDataReaderLoadOperation *)loadAsync:(unsigned)count;
+- (NSString *)readString:(unsigned int)codeUnitCount;
+- (WFDateTime*)readDateTime;
+- (WFTimeSpan*)readTimeSpan;
+// Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>)
 - (RTObject<WSSIBuffer>*)detachBuffer;
 - (RTObject<WSSIInputStream>*)detachStream;
 - (void)close;
@@ -304,7 +304,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSDataWriterStoreOperation : RTObject <WFIAsyncInfo>
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 // Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<UInt32>)
 // Could not find base class Windows.Foundation.IAsyncOperation`1<UInt32> type information
@@ -320,30 +320,30 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
-+ (WSSDataWriter *)createDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
++ (WSSDataWriter*)createDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSByteOrder byteOrder;
-@property (readonly) unsigned unstoredBufferLength;
+@property (readonly) unsigned int unstoredBufferLength;
 - (void)writeByte:(uint8_t)value;
-- (void)writeBytes:(id<NSFastEnumeration> /*UInt8*/ )value;
+- (void)writeBytes:(id<NSFastEnumeration> /* uint8_t */)value;
 - (void)writeBuffer:(RTObject<WSSIBuffer>*)buffer;
-- (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned)start count:(unsigned)count;
+- (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned int)start count:(unsigned int)count;
 - (void)writeBoolean:(BOOL)value;
-- (void)writeGuid:(WFGUID *)value;
-- (void)writeInt16:(short)value;
+- (void)writeGuid:(WFGUID*)value;
+- (void)writeInt16:(int16_t)value;
 - (void)writeInt32:(int)value;
 - (void)writeInt64:(int64_t)value;
 - (void)writeUInt16:(unsigned short)value;
-- (void)writeUInt32:(unsigned)value;
+- (void)writeUInt32:(unsigned int)value;
 - (void)writeUInt64:(uint64_t)value;
 - (void)writeSingle:(float)value;
 - (void)writeDouble:(double)value;
-- (void)writeDateTime:(WFDateTime *)value;
-- (void)writeTimeSpan:(WFTimeSpan *)value;
-- (unsigned)writeString:(NSString *)value;
-- (unsigned)measureString:(NSString *)value;
-- (WSSDataWriterStoreOperation *)storeAsync;
+- (void)writeDateTime:(WFDateTime*)value;
+- (void)writeTimeSpan:(WFTimeSpan*)value;
+- (unsigned int)writeString:(NSString *)value;
+- (unsigned int)measureString:(NSString *)value;
+// Failed to generate member StoreAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<UInt32>)
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIBuffer>*)detachBuffer;
 - (RTObject<WSSIOutputStream>*)detachStream;
@@ -371,11 +371,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSBuffer : RTObject <WSSIBuffer>
-+ (WSSBuffer *)createCopyFromMemoryBuffer:(RTObject<WFIMemoryBuffer>*)input;
-+ (WFMemoryBuffer *)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
-+ (WSSBuffer *)create:(unsigned)capacity ACTIVATOR;
-@property unsigned length;
-@property (readonly) unsigned capacity;
++ (WSSBuffer*)createCopyFromMemoryBuffer:(RTObject<WFIMemoryBuffer>*)input;
++ (WFMemoryBuffer*)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
++ (WSSBuffer*)create:(unsigned int)capacity ACTIVATOR;
+@property unsigned int length;
+@property (readonly) unsigned int capacity;
 @end
 
 #endif // __WSSBuffer_DEFINED__
@@ -386,9 +386,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
-+ (WSSRandomAccessStreamReference *)createFromFile:(RTObject<WSIStorageFile>*)file;
-+ (WSSRandomAccessStreamReference *)createFromUri:(WFUri *)uri;
-+ (WSSRandomAccessStreamReference *)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
++ (WSSRandomAccessStreamReference*)createFromFile:(RTObject<WSIStorageFile>*)file;
++ (WSSRandomAccessStreamReference*)createFromUri:(WFUri*)uri;
++ (WSSRandomAccessStreamReference*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -409,8 +409,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -422,7 +422,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSFileInputStream : RTObject <WSSIInputStream, WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -434,7 +434,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSFileOutputStream : RTObject <WSSIOutputStream, WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -456,8 +456,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -469,7 +469,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSInputStreamOverStream : RTObject <WSSIInputStream, WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -481,7 +481,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSOutputStreamOverStream : RTObject <WSSIOutputStream, WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -504,8 +504,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 

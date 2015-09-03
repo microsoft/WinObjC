@@ -26,15 +26,17 @@
 #include "WindowsFoundation.h"
 #include "WindowsMediaCapture.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Media.Capture.Core.VariablePhotoSequenceCapture
 #ifndef __WMCCVariablePhotoSequenceCapture_DEFINED__
 #define __WMCCVariablePhotoSequenceCapture_DEFINED__
 
 WINRT_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
-- (EventRegistrationToken)addPhotoCapturedEvent:(void(^)(WMCCVariablePhotoSequenceCapture *, WMCCVariablePhotoCapturedEventArgs *))del;
+- (EventRegistrationToken)addPhotoCapturedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WMCCVariablePhotoSequenceCapture *, RTObject *))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)stopAsync;
@@ -50,10 +52,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCVariablePhotoCapturedEventArgs : RTObject
-@property (readonly) WFTimeSpan * captureTimeOffset;
-@property (readonly) WMCCapturedFrameControlValues * capturedFrameControlValues;
-@property (readonly) WMCCapturedFrame * frame;
-@property (readonly) NSNumber* usedFrameControllerIndex;
+@property (readonly) WFTimeSpan* captureTimeOffset;
+@property (readonly) WMCCapturedFrameControlValues* capturedFrameControlValues;
+@property (readonly) WMCCapturedFrame* frame;
+@property (readonly) id usedFrameControllerIndex;
 @end
 
 #endif // __WMCCVariablePhotoCapturedEventArgs_DEFINED__

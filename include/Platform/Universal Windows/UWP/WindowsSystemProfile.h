@@ -24,6 +24,8 @@
 @protocol WSPIAnalyticsInfoStatics, WSPIAnalyticsVersionInfo;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Profile.AnalyticsVersionInfo
 #ifndef __WSPAnalyticsVersionInfo_DEFINED__
 #define __WSPAnalyticsVersionInfo_DEFINED__
@@ -43,7 +45,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPAnalyticsInfo : RTObject
 + (NSString *)deviceForm;
-+ (WSPAnalyticsVersionInfo *)versionInfo;
++ (WSPAnalyticsVersionInfo*)versionInfo;
 @end
 
 #endif // __WSPAnalyticsInfo_DEFINED__

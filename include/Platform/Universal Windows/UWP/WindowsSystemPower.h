@@ -25,30 +25,32 @@
 
 // Windows.System.Power.BatteryStatus
 enum _WSPBatteryStatus {
-    WSPBatteryStatusNotPresent = 0,
-    WSPBatteryStatusDischarging = 1,
-    WSPBatteryStatusIdle = 2,
-    WSPBatteryStatusCharging = 3,
+	WSPBatteryStatusNotPresent = 0,
+	WSPBatteryStatusDischarging = 1,
+	WSPBatteryStatusIdle = 2,
+	WSPBatteryStatusCharging = 3,
 };
 typedef unsigned WSPBatteryStatus;
 
 // Windows.System.Power.EnergySaverStatus
 enum _WSPEnergySaverStatus {
-    WSPEnergySaverStatusDisabled = 0,
-    WSPEnergySaverStatusOff = 1,
-    WSPEnergySaverStatusOn = 2,
+	WSPEnergySaverStatusDisabled = 0,
+	WSPEnergySaverStatusOff = 1,
+	WSPEnergySaverStatusOn = 2,
 };
 typedef unsigned WSPEnergySaverStatus;
 
 // Windows.System.Power.PowerSupplyStatus
 enum _WSPPowerSupplyStatus {
-    WSPPowerSupplyStatusNotPresent = 0,
-    WSPPowerSupplyStatusInadequate = 1,
-    WSPPowerSupplyStatusAdequate = 2,
+	WSPPowerSupplyStatusNotPresent = 0,
+	WSPPowerSupplyStatusInadequate = 1,
+	WSPPowerSupplyStatusAdequate = 2,
 };
 typedef unsigned WSPPowerSupplyStatus;
 
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.System.Power.PowerManager
 #ifndef __WSPPowerManager_DEFINED__
@@ -60,16 +62,16 @@ WINRT_EXPORT
 + (WSPEnergySaverStatus)energySaverStatus;
 + (WSPPowerSupplyStatus)powerSupplyStatus;
 + (int)remainingChargePercent;
-+ (WFTimeSpan *)remainingDischargeTime;
-+ (EventRegistrationToken)addBatteryStatusChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (WFTimeSpan*)remainingDischargeTime;
++ (EventRegistrationToken)addBatteryStatusChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeBatteryStatusChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addEnergySaverStatusChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addEnergySaverStatusChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeEnergySaverStatusChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addPowerSupplyStatusChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addPowerSupplyStatusChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removePowerSupplyStatusChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addRemainingChargePercentChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addRemainingChargePercentChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRemainingChargePercentChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addRemainingDischargeTimeChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addRemainingDischargeTimeChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRemainingDischargeTimeChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -81,17 +83,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPBackgroundEnergyManager : RTObject
-+ (unsigned)excessiveUsageLevel;
-+ (unsigned)lowUsageLevel;
-+ (unsigned)maxAcceptableUsageLevel;
-+ (unsigned)nearMaxAcceptableUsageLevel;
-+ (unsigned)nearTerminationUsageLevel;
-+ (unsigned)recentEnergyUsage;
-+ (unsigned)recentEnergyUsageLevel;
-+ (unsigned)terminationUsageLevel;
-+ (EventRegistrationToken)addRecentEnergyUsageIncreasedEvent:(void(^)(RTObject*, RTObject *))del;
++ (unsigned int)excessiveUsageLevel;
++ (unsigned int)lowUsageLevel;
++ (unsigned int)maxAcceptableUsageLevel;
++ (unsigned int)nearMaxAcceptableUsageLevel;
++ (unsigned int)nearTerminationUsageLevel;
++ (unsigned int)recentEnergyUsage;
++ (unsigned int)recentEnergyUsageLevel;
++ (unsigned int)terminationUsageLevel;
++ (EventRegistrationToken)addRecentEnergyUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRecentEnergyUsageIncreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addRecentEnergyUsageReturnedToLowEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addRecentEnergyUsageReturnedToLowEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRecentEnergyUsageReturnedToLowEvent:(EventRegistrationToken)tok;
 @end
 
@@ -103,15 +105,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPForegroundEnergyManager : RTObject
-+ (unsigned)excessiveUsageLevel;
-+ (unsigned)lowUsageLevel;
-+ (unsigned)maxAcceptableUsageLevel;
-+ (unsigned)nearMaxAcceptableUsageLevel;
-+ (unsigned)recentEnergyUsage;
-+ (unsigned)recentEnergyUsageLevel;
-+ (EventRegistrationToken)addRecentEnergyUsageIncreasedEvent:(void(^)(RTObject*, RTObject *))del;
++ (unsigned int)excessiveUsageLevel;
++ (unsigned int)lowUsageLevel;
++ (unsigned int)maxAcceptableUsageLevel;
++ (unsigned int)nearMaxAcceptableUsageLevel;
++ (unsigned int)recentEnergyUsage;
++ (unsigned int)recentEnergyUsageLevel;
++ (EventRegistrationToken)addRecentEnergyUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRecentEnergyUsageIncreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addRecentEnergyUsageReturnedToLowEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addRecentEnergyUsageReturnedToLowEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRecentEnergyUsageReturnedToLowEvent:(EventRegistrationToken)tok;
 @end
 

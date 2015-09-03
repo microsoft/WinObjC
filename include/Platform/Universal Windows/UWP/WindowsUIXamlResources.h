@@ -24,6 +24,18 @@
 @protocol WUXRICustomXamlResourceLoader, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
 
 
+#import <Foundation/Foundation.h>
+
+// Windows.UI.Xaml.Resources.ICustomXamlResourceLoaderOverrides
+#ifndef __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
+#define __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
+
+@protocol WUXRICustomXamlResourceLoaderOverrides
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
+@end
+
+#endif // __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
+
 // Windows.UI.Xaml.Resources.CustomXamlResourceLoader
 #ifndef __WUXRCustomXamlResourceLoader_DEFINED__
 #define __WUXRCustomXamlResourceLoader_DEFINED__
@@ -31,9 +43,9 @@
 WINRT_EXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WUXRCustomXamlResourceLoader *)current;
-+ (void)setCurrent:(WUXRCustomXamlResourceLoader *)value;
-- (RTObject *)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
++ (WUXRCustomXamlResourceLoader*)current;
++ (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
 #endif // __WUXRCustomXamlResourceLoader_DEFINED__

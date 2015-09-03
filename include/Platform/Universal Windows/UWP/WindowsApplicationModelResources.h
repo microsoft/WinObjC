@@ -25,21 +25,23 @@
 
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.ApplicationModel.Resources.ResourceLoader
 #ifndef __WARResourceLoader_DEFINED__
 #define __WARResourceLoader_DEFINED__
 
 WINRT_EXPORT
 @interface WARResourceLoader : RTObject
-+ (WARResourceLoader *)getForCurrentView;
-+ (WARResourceLoader *)getForCurrentViewWithName:(NSString *)name;
-+ (WARResourceLoader *)getForViewIndependentUse;
-+ (WARResourceLoader *)getForViewIndependentUseWithName:(NSString *)name;
-+ (NSString *)getStringForReference:(WFUri *)uri;
-+ (WARResourceLoader *)createResourceLoaderByName:(NSString *)name ACTIVATOR;
++ (WARResourceLoader*)getForCurrentView;
++ (WARResourceLoader*)getForCurrentViewWithName:(NSString *)name;
++ (WARResourceLoader*)getForViewIndependentUse;
++ (WARResourceLoader*)getForViewIndependentUseWithName:(NSString *)name;
++ (NSString *)getStringForReference:(WFUri*)uri;
++ (WARResourceLoader*)createResourceLoaderByName:(NSString *)name ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 - (NSString *)getString:(NSString *)resource;
-- (NSString *)getStringForUri:(WFUri *)uri;
+- (NSString *)getStringForUri:(WFUri*)uri;
 @end
 
 #endif // __WARResourceLoader_DEFINED__

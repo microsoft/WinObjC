@@ -25,8 +25,8 @@
 
 // Windows.Media.SpeechSynthesis.VoiceGender
 enum _WMSVoiceGender {
-    WMSVoiceGenderMale = 0,
-    WMSVoiceGenderFemale = 1,
+	WMSVoiceGenderMale = 0,
+	WMSVoiceGenderFemale = 1,
 };
 typedef unsigned WMSVoiceGender;
 
@@ -34,6 +34,8 @@ typedef unsigned WMSVoiceGender;
 #include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsMedia.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Media.SpeechSynthesis.VoiceInformation
 #ifndef __WMSVoiceInformation_DEFINED__
@@ -65,7 +67,7 @@ WINRT_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -76,7 +78,7 @@ WINRT_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -97,8 +99,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -124,8 +126,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -137,7 +139,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
-@property (readonly) NSArray* /*WMIMediaMarker*/  markers;
+@property (readonly) NSArray* markers;
 @property (readonly) NSString * contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -148,8 +150,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -162,11 +164,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)create ACTIVATOR;
-@property (copy) WMSVoiceInformation * voice;
-+ (NSArray* /*WMSVoiceInformation*/ )allVoices;
-+ (WMSVoiceInformation *)defaultVoice;
-- (void)synthesizeTextToStreamAsync:(NSString *)text success:(void (^)(WMSSpeechSynthesisStream *))success failure:(void (^)(NSError*))failure;
-- (void)synthesizeSsmlToStreamAsync:(NSString *)Ssml success:(void (^)(WMSSpeechSynthesisStream *))success failure:(void (^)(NSError*))failure;
+@property (copy) WMSVoiceInformation* voice;
++ (NSArray*)allVoices;
++ (WMSVoiceInformation*)defaultVoice;
+- (void)synthesizeTextToStreamAsync:(NSString *)text success:(void (^)(WMSSpeechSynthesisStream*))success failure:(void (^)(NSError*))failure;
+- (void)synthesizeSsmlToStreamAsync:(NSString *)Ssml success:(void (^)(WMSSpeechSynthesisStream*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 

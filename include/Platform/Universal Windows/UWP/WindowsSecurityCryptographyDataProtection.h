@@ -26,6 +26,8 @@
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Security.Cryptography.DataProtection.DataProtectionProvider
 #ifndef __WSCDDataProtectionProvider_DEFINED__
 #define __WSCDDataProtectionProvider_DEFINED__
@@ -33,7 +35,7 @@
 WINRT_EXPORT
 @interface WSCDDataProtectionProvider : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WSCDDataProtectionProvider *)createOverloadExplicit:(NSString *)protectionDescriptor ACTIVATOR;
++ (WSCDDataProtectionProvider*)createOverloadExplicit:(NSString *)protectionDescriptor ACTIVATOR;
 - (void)protectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)unprotectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)protectStreamAsync:(RTObject<WSSIInputStream>*)src dest:(RTObject<WSSIOutputStream>*)dest;

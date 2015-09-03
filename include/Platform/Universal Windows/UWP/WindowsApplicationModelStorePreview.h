@@ -25,44 +25,46 @@
 
 // Windows.ApplicationModel.Store.Preview.StorePreviewProductPurchaseStatus
 enum _WASPStorePreviewProductPurchaseStatus {
-    WASPStorePreviewProductPurchaseStatusSucceeded = 0,
-    WASPStorePreviewProductPurchaseStatusAlreadyPurchased = 1,
-    WASPStorePreviewProductPurchaseStatusNotFulfilled = 2,
-    WASPStorePreviewProductPurchaseStatusNotPurchased = 3,
+	WASPStorePreviewProductPurchaseStatusSucceeded = 0,
+	WASPStorePreviewProductPurchaseStatusAlreadyPurchased = 1,
+	WASPStorePreviewProductPurchaseStatusNotFulfilled = 2,
+	WASPStorePreviewProductPurchaseStatusNotPurchased = 3,
 };
 typedef unsigned WASPStorePreviewProductPurchaseStatus;
 
 // Windows.ApplicationModel.Store.Preview.StoreSystemFeature
 enum _WASPStoreSystemFeature {
-    WASPStoreSystemFeatureArchitectureX86 = 0,
-    WASPStoreSystemFeatureArchitectureX64 = 1,
-    WASPStoreSystemFeatureArchitectureArm = 2,
-    WASPStoreSystemFeatureDirectX9 = 3,
-    WASPStoreSystemFeatureDirectX10 = 4,
-    WASPStoreSystemFeatureDirectX11 = 5,
-    WASPStoreSystemFeatureD3D12HardwareFL11 = 6,
-    WASPStoreSystemFeatureD3D12HardwareFL12 = 7,
-    WASPStoreSystemFeatureMemory300MB = 8,
-    WASPStoreSystemFeatureMemory750MB = 9,
-    WASPStoreSystemFeatureMemory1GB = 10,
-    WASPStoreSystemFeatureMemory2GB = 11,
-    WASPStoreSystemFeatureCameraFront = 12,
-    WASPStoreSystemFeatureCameraRear = 13,
-    WASPStoreSystemFeatureGyroscope = 14,
-    WASPStoreSystemFeatureHover = 15,
-    WASPStoreSystemFeatureMagnetometer = 16,
-    WASPStoreSystemFeatureNfc = 17,
-    WASPStoreSystemFeatureResolution720P = 18,
-    WASPStoreSystemFeatureResolutionWvga = 19,
-    WASPStoreSystemFeatureResolutionWvgaOr720P = 20,
-    WASPStoreSystemFeatureResolutionWxga = 21,
-    WASPStoreSystemFeatureResolutionWvgaOrWxga = 22,
-    WASPStoreSystemFeatureResolutionWxgaOr720P = 23,
+	WASPStoreSystemFeatureArchitectureX86 = 0,
+	WASPStoreSystemFeatureArchitectureX64 = 1,
+	WASPStoreSystemFeatureArchitectureArm = 2,
+	WASPStoreSystemFeatureDirectX9 = 3,
+	WASPStoreSystemFeatureDirectX10 = 4,
+	WASPStoreSystemFeatureDirectX11 = 5,
+	WASPStoreSystemFeatureD3D12HardwareFL11 = 6,
+	WASPStoreSystemFeatureD3D12HardwareFL12 = 7,
+	WASPStoreSystemFeatureMemory300MB = 8,
+	WASPStoreSystemFeatureMemory750MB = 9,
+	WASPStoreSystemFeatureMemory1GB = 10,
+	WASPStoreSystemFeatureMemory2GB = 11,
+	WASPStoreSystemFeatureCameraFront = 12,
+	WASPStoreSystemFeatureCameraRear = 13,
+	WASPStoreSystemFeatureGyroscope = 14,
+	WASPStoreSystemFeatureHover = 15,
+	WASPStoreSystemFeatureMagnetometer = 16,
+	WASPStoreSystemFeatureNfc = 17,
+	WASPStoreSystemFeatureResolution720P = 18,
+	WASPStoreSystemFeatureResolutionWvga = 19,
+	WASPStoreSystemFeatureResolutionWvgaOr720P = 20,
+	WASPStoreSystemFeatureResolutionWxga = 21,
+	WASPStoreSystemFeatureResolutionWvgaOrWxga = 22,
+	WASPStoreSystemFeatureResolutionWxgaOr720P = 23,
 };
 typedef unsigned WASPStoreSystemFeature;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.Store.Preview.StorePreviewSkuInfo
 #ifndef __WASPStorePreviewSkuInfo_DEFINED__
@@ -103,7 +105,7 @@ WINRT_EXPORT
 @property (readonly) NSString * description;
 @property (readonly) NSString * productId;
 @property (readonly) NSString * productType;
-@property (readonly) NSArray* /*WASPStorePreviewSkuInfo*/  skuInfoList;
+@property (readonly) NSArray* skuInfoList;
 @property (readonly) NSString * title;
 @end
 
@@ -129,8 +131,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPStorePreview : RTObject
-+ (void)requestProductPurchaseByProductIdAndSkuIdAsync:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(WASPStorePreviewPurchaseResults *))success failure:(void (^)(NSError*))failure;
-+ (void)loadAddOnProductInfosAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WASPStorePreviewProductInfo*/ ))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseByProductIdAndSkuIdAsync:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(WASPStorePreviewPurchaseResults*))success failure:(void (^)(NSError*))failure;
++ (void)loadAddOnProductInfosAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WASPStorePreview_DEFINED__
@@ -141,12 +143,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPStoreConfiguration : RTObject
-+ (void)setSystemConfiguration:(NSString *)catalogHardwareManufacturerId catalogStoreContentModifierId:(NSString *)catalogStoreContentModifierId systemConfigurationExpiration:(WFDateTime *)systemConfigurationExpiration catalogHardwareDescriptor:(NSString *)catalogHardwareDescriptor;
-+ (void)setMobileOperatorConfiguration:(NSString *)mobileOperatorId appDownloadLimitInMegabytes:(unsigned)appDownloadLimitInMegabytes updateDownloadLimitInMegabytes:(unsigned)updateDownloadLimitInMegabytes;
++ (void)setSystemConfiguration:(NSString *)catalogHardwareManufacturerId catalogStoreContentModifierId:(NSString *)catalogStoreContentModifierId systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration catalogHardwareDescriptor:(NSString *)catalogHardwareDescriptor;
++ (void)setMobileOperatorConfiguration:(NSString *)mobileOperatorId appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;
 + (void)setStoreWebAccountId:(NSString *)webAccountId;
 + (BOOL)isStoreWebAccountId:(NSString *)webAccountId;
-+ (void)filterUnsupportedSystemFeaturesAsync:(id<NSFastEnumeration> /*WASPStoreSystemFeature*/ )systemFeatures success:(void (^)(id<NSFastEnumeration> /*WASPStoreSystemFeature*/ ))success failure:(void (^)(NSError*))failure;
-+ (WASPStoreHardwareManufacturerInfo *)hardwareManufacturerInfo;
++ (void)filterUnsupportedSystemFeaturesAsync:(id<NSFastEnumeration> /* WASPStoreSystemFeature */)systemFeatures success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (WASPStoreHardwareManufacturerInfo*)hardwareManufacturerInfo;
 @end
 
 #endif // __WASPStoreConfiguration_DEFINED__

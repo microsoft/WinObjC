@@ -25,59 +25,61 @@
 
 // Windows.Devices.Usb.UsbTransferDirection
 enum _WDUUsbTransferDirection {
-    WDUUsbTransferDirectionOut = 0,
-    WDUUsbTransferDirectionIn = 1,
+	WDUUsbTransferDirectionOut = 0,
+	WDUUsbTransferDirectionIn = 1,
 };
 typedef unsigned WDUUsbTransferDirection;
 
 // Windows.Devices.Usb.UsbEndpointType
 enum _WDUUsbEndpointType {
-    WDUUsbEndpointTypeControl = 0,
-    WDUUsbEndpointTypeIsochronous = 1,
-    WDUUsbEndpointTypeBulk = 2,
-    WDUUsbEndpointTypeInterrupt = 3,
+	WDUUsbEndpointTypeControl = 0,
+	WDUUsbEndpointTypeIsochronous = 1,
+	WDUUsbEndpointTypeBulk = 2,
+	WDUUsbEndpointTypeInterrupt = 3,
 };
 typedef unsigned WDUUsbEndpointType;
 
 // Windows.Devices.Usb.UsbControlRecipient
 enum _WDUUsbControlRecipient {
-    WDUUsbControlRecipientDevice = 0,
-    WDUUsbControlRecipientSpecifiedInterface = 1,
-    WDUUsbControlRecipientEndpoint = 2,
-    WDUUsbControlRecipientOther = 3,
-    WDUUsbControlRecipientDefaultInterface = 4,
+	WDUUsbControlRecipientDevice = 0,
+	WDUUsbControlRecipientSpecifiedInterface = 1,
+	WDUUsbControlRecipientEndpoint = 2,
+	WDUUsbControlRecipientOther = 3,
+	WDUUsbControlRecipientDefaultInterface = 4,
 };
 typedef unsigned WDUUsbControlRecipient;
 
 // Windows.Devices.Usb.UsbControlTransferType
 enum _WDUUsbControlTransferType {
-    WDUUsbControlTransferTypeStandard = 0,
-    WDUUsbControlTransferTypeClass = 1,
-    WDUUsbControlTransferTypeVendor = 2,
+	WDUUsbControlTransferTypeStandard = 0,
+	WDUUsbControlTransferTypeClass = 1,
+	WDUUsbControlTransferTypeVendor = 2,
 };
 typedef unsigned WDUUsbControlTransferType;
 
 // Windows.Devices.Usb.UsbReadOptions
 enum _WDUUsbReadOptions {
-    WDUUsbReadOptionsNone = 0,
-    WDUUsbReadOptionsAutoClearStall = 1,
-    WDUUsbReadOptionsOverrideAutomaticBufferManagement = 2,
-    WDUUsbReadOptionsIgnoreShortPacket = 4,
-    WDUUsbReadOptionsAllowPartialReads = 8,
+	WDUUsbReadOptionsNone = 0,
+	WDUUsbReadOptionsAutoClearStall = 1,
+	WDUUsbReadOptionsOverrideAutomaticBufferManagement = 2,
+	WDUUsbReadOptionsIgnoreShortPacket = 4,
+	WDUUsbReadOptionsAllowPartialReads = 8,
 };
 typedef unsigned WDUUsbReadOptions;
 
 // Windows.Devices.Usb.UsbWriteOptions
 enum _WDUUsbWriteOptions {
-    WDUUsbWriteOptionsNone = 0,
-    WDUUsbWriteOptionsAutoClearStall = 1,
-    WDUUsbWriteOptionsShortPacketTerminate = 2,
+	WDUUsbWriteOptionsNone = 0,
+	WDUUsbWriteOptionsAutoClearStall = 1,
+	WDUUsbWriteOptionsShortPacketTerminate = 2,
 };
 typedef unsigned WDUUsbWriteOptions;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Devices.Usb.UsbControlRequestType
 #ifndef __WDUUsbControlRequestType_DEFINED__
@@ -100,13 +102,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbSetupPacket : RTObject
-+ (WDUUsbSetupPacket *)createWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
++ (WDUUsbSetupPacket*)createWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property unsigned value;
-@property (copy) WDUUsbControlRequestType * requestType;
+@property unsigned int value;
+@property (copy) WDUUsbControlRequestType* requestType;
 @property uint8_t request;
-@property unsigned length;
-@property unsigned index;
+@property unsigned int length;
+@property unsigned int index;
 @end
 
 #endif // __WDUUsbSetupPacket_DEFINED__
@@ -118,8 +120,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDeviceClass : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSNumber* subclassCode;
-@property (copy) NSNumber* protocolCode;
+@property (copy) id subclassCode;
+@property (copy) id protocolCode;
 @property uint8_t classCode;
 @end
 
@@ -131,15 +133,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbDeviceClasses : RTObject
-+ (WDUUsbDeviceClass *)activeSync;
-+ (WDUUsbDeviceClass *)cdcControl;
-+ (WDUUsbDeviceClass *)deviceFirmwareUpdate;
-+ (WDUUsbDeviceClass *)irda;
-+ (WDUUsbDeviceClass *)measurement;
-+ (WDUUsbDeviceClass *)palmSync;
-+ (WDUUsbDeviceClass *)personalHealthcare;
-+ (WDUUsbDeviceClass *)physical;
-+ (WDUUsbDeviceClass *)vendorSpecific;
++ (WDUUsbDeviceClass*)activeSync;
++ (WDUUsbDeviceClass*)cdcControl;
++ (WDUUsbDeviceClass*)deviceFirmwareUpdate;
++ (WDUUsbDeviceClass*)irda;
++ (WDUUsbDeviceClass*)measurement;
++ (WDUUsbDeviceClass*)palmSync;
++ (WDUUsbDeviceClass*)personalHealthcare;
++ (WDUUsbDeviceClass*)physical;
++ (WDUUsbDeviceClass*)vendorSpecific;
 @end
 
 #endif // __WDUUsbDeviceClasses_DEFINED__
@@ -160,18 +162,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbDevice : RTObject <WFIClosable>
-+ (NSString *)getDeviceSelector:(unsigned)vendorId productId:(unsigned)productId winUsbInterfaceClass:(WFGUID *)winUsbInterfaceClass;
-+ (NSString *)getDeviceSelectorGuidOnly:(WFGUID *)winUsbInterfaceClass;
-+ (NSString *)getDeviceSelectorVidPidOnly:(unsigned)vendorId productId:(unsigned)productId;
-+ (NSString *)getDeviceClassSelector:(WDUUsbDeviceClass *)usbClass;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDUUsbDevice *))success failure:(void (^)(NSError*))failure;
-@property (readonly) WDUUsbConfiguration * configuration;
-@property (readonly) WDUUsbInterface * defaultInterface;
-@property (readonly) WDUUsbDeviceDescriptor * deviceDescriptor;
-- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket *)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
-- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket *)setupPacket success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsync:(WDUUsbSetupPacket *)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket *)setupPacket success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(unsigned int)vendorId productId:(unsigned int)productId winUsbInterfaceClass:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorGuidOnly:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorVidPidOnly:(unsigned int)vendorId productId:(unsigned int)productId;
++ (NSString *)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
+@property (readonly) WDUUsbConfiguration* configuration;
+@property (readonly) WDUUsbInterface* defaultInterface;
+@property (readonly) WDUUsbDeviceDescriptor* deviceDescriptor;
+- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -183,13 +185,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterface : RTObject
-@property (readonly) NSArray* /*WDUUsbBulkInPipe*/  bulkInPipes;
-@property (readonly) NSArray* /*WDUUsbBulkOutPipe*/  bulkOutPipes;
-@property (readonly) NSArray* /*WDUUsbDescriptor*/  descriptors;
+@property (readonly) NSArray* bulkInPipes;
+@property (readonly) NSArray* bulkOutPipes;
+@property (readonly) NSArray* descriptors;
 @property (readonly) uint8_t interfaceNumber;
-@property (readonly) NSArray* /*WDUUsbInterfaceSetting*/  interfaceSettings;
-@property (readonly) NSArray* /*WDUUsbInterruptInPipe*/  interruptInPipes;
-@property (readonly) NSArray* /*WDUUsbInterruptOutPipe*/  interruptOutPipes;
+@property (readonly) NSArray* interfaceSettings;
+@property (readonly) NSArray* interruptInPipes;
+@property (readonly) NSArray* interruptOutPipes;
 @end
 
 #endif // __WDUUsbInterface_DEFINED__
@@ -200,12 +202,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbDeviceDescriptor : RTObject
-@property (readonly) unsigned bcdDeviceRevision;
-@property (readonly) unsigned bcdUsb;
+@property (readonly) unsigned int bcdDeviceRevision;
+@property (readonly) unsigned int bcdUsb;
 @property (readonly) uint8_t maxPacketSize0;
 @property (readonly) uint8_t numberOfConfigurations;
-@property (readonly) unsigned productId;
-@property (readonly) unsigned vendorId;
+@property (readonly) unsigned int productId;
+@property (readonly) unsigned int vendorId;
 @end
 
 #endif // __WDUUsbDeviceDescriptor_DEFINED__
@@ -216,9 +218,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbConfiguration : RTObject
-@property (readonly) WDUUsbConfigurationDescriptor * configurationDescriptor;
-@property (readonly) NSArray* /*WDUUsbDescriptor*/  descriptors;
-@property (readonly) NSArray* /*WDUUsbInterface*/  usbInterfaces;
+@property (readonly) WDUUsbConfigurationDescriptor* configurationDescriptor;
+@property (readonly) NSArray* descriptors;
+@property (readonly) NSArray* usbInterfaces;
 @end
 
 #endif // __WDUUsbConfiguration_DEFINED__
@@ -242,10 +244,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbConfigurationDescriptor : RTObject
-+ (BOOL)tryParse:(WDUUsbDescriptor *)descriptor parsed:(WDUUsbConfigurationDescriptor **)parsed;
-+ (WDUUsbConfigurationDescriptor *)parse:(WDUUsbDescriptor *)descriptor;
++ (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbConfigurationDescriptor**)parsed;
++ (WDUUsbConfigurationDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
 @property (readonly) uint8_t configurationValue;
-@property (readonly) unsigned maxPowerMilliamps;
+@property (readonly) unsigned int maxPowerMilliamps;
 @property (readonly) BOOL remoteWakeup;
 @property (readonly) BOOL selfPowered;
 @end
@@ -258,8 +260,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterfaceDescriptor : RTObject
-+ (BOOL)tryParse:(WDUUsbDescriptor *)descriptor parsed:(WDUUsbInterfaceDescriptor **)parsed;
-+ (WDUUsbInterfaceDescriptor *)parse:(WDUUsbDescriptor *)descriptor;
++ (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbInterfaceDescriptor**)parsed;
++ (WDUUsbInterfaceDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
 @property (readonly) uint8_t alternateSettingNumber;
 @property (readonly) uint8_t classCode;
 @property (readonly) uint8_t interfaceNumber;
@@ -276,8 +278,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkInEndpointDescriptor : RTObject
 @property (readonly) uint8_t endpointNumber;
-@property (readonly) unsigned maxPacketSize;
-@property (readonly) WDUUsbBulkInPipe * pipe;
+@property (readonly) unsigned int maxPacketSize;
+@property (readonly) WDUUsbBulkInPipe* pipe;
 @end
 
 #endif // __WDUUsbBulkInEndpointDescriptor_DEFINED__
@@ -289,9 +291,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptInEndpointDescriptor : RTObject
 @property (readonly) uint8_t endpointNumber;
-@property (readonly) WFTimeSpan * interval;
-@property (readonly) unsigned maxPacketSize;
-@property (readonly) WDUUsbInterruptInPipe * pipe;
+@property (readonly) WFTimeSpan* interval;
+@property (readonly) unsigned int maxPacketSize;
+@property (readonly) WDUUsbInterruptInPipe* pipe;
 @end
 
 #endif // __WDUUsbInterruptInEndpointDescriptor_DEFINED__
@@ -303,8 +305,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkOutEndpointDescriptor : RTObject
 @property (readonly) uint8_t endpointNumber;
-@property (readonly) unsigned maxPacketSize;
-@property (readonly) WDUUsbBulkOutPipe * pipe;
+@property (readonly) unsigned int maxPacketSize;
+@property (readonly) WDUUsbBulkOutPipe* pipe;
 @end
 
 #endif // __WDUUsbBulkOutEndpointDescriptor_DEFINED__
@@ -316,9 +318,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptOutEndpointDescriptor : RTObject
 @property (readonly) uint8_t endpointNumber;
-@property (readonly) WFTimeSpan * interval;
-@property (readonly) unsigned maxPacketSize;
-@property (readonly) WDUUsbInterruptOutPipe * pipe;
+@property (readonly) WFTimeSpan* interval;
+@property (readonly) unsigned int maxPacketSize;
+@property (readonly) WDUUsbInterruptOutPipe* pipe;
 @end
 
 #endif // __WDUUsbInterruptOutEndpointDescriptor_DEFINED__
@@ -329,12 +331,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbEndpointDescriptor : RTObject
-+ (BOOL)tryParse:(WDUUsbDescriptor *)descriptor parsed:(WDUUsbEndpointDescriptor **)parsed;
-+ (WDUUsbEndpointDescriptor *)parse:(WDUUsbDescriptor *)descriptor;
-@property (readonly) WDUUsbBulkInEndpointDescriptor * asBulkInEndpointDescriptor;
-@property (readonly) WDUUsbBulkOutEndpointDescriptor * asBulkOutEndpointDescriptor;
-@property (readonly) WDUUsbInterruptInEndpointDescriptor * asInterruptInEndpointDescriptor;
-@property (readonly) WDUUsbInterruptOutEndpointDescriptor * asInterruptOutEndpointDescriptor;
++ (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbEndpointDescriptor**)parsed;
++ (WDUUsbEndpointDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
+@property (readonly) WDUUsbBulkInEndpointDescriptor* asBulkInEndpointDescriptor;
+@property (readonly) WDUUsbBulkOutEndpointDescriptor* asBulkOutEndpointDescriptor;
+@property (readonly) WDUUsbInterruptInEndpointDescriptor* asInterruptInEndpointDescriptor;
+@property (readonly) WDUUsbInterruptOutEndpointDescriptor* asInterruptOutEndpointDescriptor;
 @property (readonly) WDUUsbTransferDirection direction;
 @property (readonly) uint8_t endpointNumber;
 @property (readonly) WDUUsbEndpointType endpointType;
@@ -359,8 +361,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterruptInPipe : RTObject
-@property (readonly) WDUUsbInterruptInEndpointDescriptor * endpointDescriptor;
-- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDUUsbInterruptInPipe *, WDUUsbInterruptInEventArgs *))del;
+@property (readonly) WDUUsbInterruptInEndpointDescriptor* endpointDescriptor;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 @end
@@ -374,9 +376,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkInPipe : RTObject
 @property WDUUsbReadOptions readOptions;
-@property (readonly) WDUUsbBulkInEndpointDescriptor * endpointDescriptor;
+@property (readonly) WDUUsbBulkInEndpointDescriptor* endpointDescriptor;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
-@property (readonly) unsigned maxTransferSizeBytes;
+@property (readonly) unsigned int maxTransferSizeBytes;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 - (void)flushBuffer;
 @end
@@ -390,7 +392,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbBulkOutPipe : RTObject
 @property WDUUsbWriteOptions writeOptions;
-@property (readonly) WDUUsbBulkOutEndpointDescriptor * endpointDescriptor;
+@property (readonly) WDUUsbBulkOutEndpointDescriptor* endpointDescriptor;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 @end
@@ -404,7 +406,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbInterruptOutPipe : RTObject
 @property WDUUsbWriteOptions writeOptions;
-@property (readonly) WDUUsbInterruptOutEndpointDescriptor * endpointDescriptor;
+@property (readonly) WDUUsbInterruptOutEndpointDescriptor* endpointDescriptor;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 @end
@@ -417,12 +419,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterfaceSetting : RTObject
-@property (readonly) NSArray* /*WDUUsbBulkInEndpointDescriptor*/  bulkInEndpoints;
-@property (readonly) NSArray* /*WDUUsbBulkOutEndpointDescriptor*/  bulkOutEndpoints;
-@property (readonly) NSArray* /*WDUUsbDescriptor*/  descriptors;
-@property (readonly) WDUUsbInterfaceDescriptor * interfaceDescriptor;
-@property (readonly) NSArray* /*WDUUsbInterruptInEndpointDescriptor*/  interruptInEndpoints;
-@property (readonly) NSArray* /*WDUUsbInterruptOutEndpointDescriptor*/  interruptOutEndpoints;
+@property (readonly) NSArray* bulkInEndpoints;
+@property (readonly) NSArray* bulkOutEndpoints;
+@property (readonly) NSArray* descriptors;
+@property (readonly) WDUUsbInterfaceDescriptor* interfaceDescriptor;
+@property (readonly) NSArray* interruptInEndpoints;
+@property (readonly) NSArray* interruptOutEndpoints;
 @property (readonly) BOOL selected;
 - (RTObject<WFIAsyncAction>*)selectSettingAsync;
 @end

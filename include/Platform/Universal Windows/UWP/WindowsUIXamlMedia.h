@@ -22,160 +22,160 @@
 #include "interopBase.h"
 @class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection, WUXMFontFamily, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection, WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode, WUXMGeneralTransform, WUXMGeometry, WUXMGradientStop, WUXMImageSource, WUXMPathFigure, WUXMPathSegment, WUXMProjection, WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMArcSegment, WUXMBezierSegment, WUXMBitmapCache, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMMatrix3DProjection, WUXMPathGeometry, WUXMPlaneProjection, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment, WUXMQuadraticBezierSegment, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTileBrush, WUXMTransform, WUXMCompositeTransform, WUXMImageBrush, WUXMLinearGradientBrush, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform, WUXMTransformGroup, WUXMTranslateTransform;
 @class WUXMMatrix;
-@class NSArray_C_Double, NSArray_C_WFPoint, NSArray_C_WUXMGeometry, NSArray_C_WUXMGradientStop, NSArray_C_WUXMPathFigure, NSArray_C_WUXMPathSegment, NSArray_C_WUXMTimelineMarker, NSArray_C_WUXMTransform;
+@class RTArray_C_Double, RTArray_C_WFPoint, RTArray_C_WUXMGeometry, RTArray_C_WUXMGradientStop, RTArray_C_WUXMPathFigure, RTArray_C_WUXMPathSegment, RTArray_C_WUXMTimelineMarker, RTArray_C_WUXMTransform;
 @protocol WUXMIVisualTreeHelper, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIMatrixHelper, WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory, WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform, WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory, WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathFigure, WUXMIPathFigureStatics, WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs, WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIArcSegment, WUXMIArcSegmentStatics, WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIBitmapCache, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup, WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry, WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics, WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIPolyBezierSegment, WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment, WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMIRectangleGeometry, WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITileBrush, WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform, WUXMICompositeTransformStatics, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics, WUXMILinearGradientBrushFactory, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics, WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup, WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics;
 
 // Windows.UI.Xaml.Media.MediaElementState
 enum _WUXMMediaElementState {
-    WUXMMediaElementStateClosed = 0,
-    WUXMMediaElementStateOpening = 1,
-    WUXMMediaElementStateBuffering = 2,
-    WUXMMediaElementStatePlaying = 3,
-    WUXMMediaElementStatePaused = 4,
-    WUXMMediaElementStateStopped = 5,
+	WUXMMediaElementStateClosed = 0,
+	WUXMMediaElementStateOpening = 1,
+	WUXMMediaElementStateBuffering = 2,
+	WUXMMediaElementStatePlaying = 3,
+	WUXMMediaElementStatePaused = 4,
+	WUXMMediaElementStateStopped = 5,
 };
 typedef unsigned WUXMMediaElementState;
 
 // Windows.UI.Xaml.Media.AlignmentX
 enum _WUXMAlignmentX {
-    WUXMAlignmentXLeft = 0,
-    WUXMAlignmentXCenter = 1,
-    WUXMAlignmentXRight = 2,
+	WUXMAlignmentXLeft = 0,
+	WUXMAlignmentXCenter = 1,
+	WUXMAlignmentXRight = 2,
 };
 typedef unsigned WUXMAlignmentX;
 
 // Windows.UI.Xaml.Media.AlignmentY
 enum _WUXMAlignmentY {
-    WUXMAlignmentYTop = 0,
-    WUXMAlignmentYCenter = 1,
-    WUXMAlignmentYBottom = 2,
+	WUXMAlignmentYTop = 0,
+	WUXMAlignmentYCenter = 1,
+	WUXMAlignmentYBottom = 2,
 };
 typedef unsigned WUXMAlignmentY;
 
 // Windows.UI.Xaml.Media.AudioCategory
 enum _WUXMAudioCategory {
-    WUXMAudioCategoryOther = 0,
-    WUXMAudioCategoryForegroundOnlyMedia = 1,
-    WUXMAudioCategoryBackgroundCapableMedia = 2,
-    WUXMAudioCategoryCommunications = 3,
-    WUXMAudioCategoryAlerts = 4,
-    WUXMAudioCategorySoundEffects = 5,
-    WUXMAudioCategoryGameEffects = 6,
-    WUXMAudioCategoryGameMedia = 7,
-    WUXMAudioCategoryGameChat = 8,
-    WUXMAudioCategorySpeech = 9,
-    WUXMAudioCategoryMovie = 10,
-    WUXMAudioCategoryMedia = 11,
+	WUXMAudioCategoryOther = 0,
+	WUXMAudioCategoryForegroundOnlyMedia = 1,
+	WUXMAudioCategoryBackgroundCapableMedia = 2,
+	WUXMAudioCategoryCommunications = 3,
+	WUXMAudioCategoryAlerts = 4,
+	WUXMAudioCategorySoundEffects = 5,
+	WUXMAudioCategoryGameEffects = 6,
+	WUXMAudioCategoryGameMedia = 7,
+	WUXMAudioCategoryGameChat = 8,
+	WUXMAudioCategorySpeech = 9,
+	WUXMAudioCategoryMovie = 10,
+	WUXMAudioCategoryMedia = 11,
 };
 typedef unsigned WUXMAudioCategory;
 
 // Windows.UI.Xaml.Media.AudioDeviceType
 enum _WUXMAudioDeviceType {
-    WUXMAudioDeviceTypeConsole = 0,
-    WUXMAudioDeviceTypeMultimedia = 1,
-    WUXMAudioDeviceTypeCommunications = 2,
+	WUXMAudioDeviceTypeConsole = 0,
+	WUXMAudioDeviceTypeMultimedia = 1,
+	WUXMAudioDeviceTypeCommunications = 2,
 };
 typedef unsigned WUXMAudioDeviceType;
 
 // Windows.UI.Xaml.Media.BrushMappingMode
 enum _WUXMBrushMappingMode {
-    WUXMBrushMappingModeAbsolute = 0,
-    WUXMBrushMappingModeRelativeToBoundingBox = 1,
+	WUXMBrushMappingModeAbsolute = 0,
+	WUXMBrushMappingModeRelativeToBoundingBox = 1,
 };
 typedef unsigned WUXMBrushMappingMode;
 
 // Windows.UI.Xaml.Media.ColorInterpolationMode
 enum _WUXMColorInterpolationMode {
-    WUXMColorInterpolationModeScRgbLinearInterpolation = 0,
-    WUXMColorInterpolationModeSRgbLinearInterpolation = 1,
+	WUXMColorInterpolationModeScRgbLinearInterpolation = 0,
+	WUXMColorInterpolationModeSRgbLinearInterpolation = 1,
 };
 typedef unsigned WUXMColorInterpolationMode;
 
 // Windows.UI.Xaml.Media.ElementCompositeMode
 enum _WUXMElementCompositeMode {
-    WUXMElementCompositeModeInherit = 0,
-    WUXMElementCompositeModeSourceOver = 1,
-    WUXMElementCompositeModeMinBlend = 2,
+	WUXMElementCompositeModeInherit = 0,
+	WUXMElementCompositeModeSourceOver = 1,
+	WUXMElementCompositeModeMinBlend = 2,
 };
 typedef unsigned WUXMElementCompositeMode;
 
 // Windows.UI.Xaml.Media.FillRule
 enum _WUXMFillRule {
-    WUXMFillRuleEvenOdd = 0,
-    WUXMFillRuleNonzero = 1,
+	WUXMFillRuleEvenOdd = 0,
+	WUXMFillRuleNonzero = 1,
 };
 typedef unsigned WUXMFillRule;
 
 // Windows.UI.Xaml.Media.GradientSpreadMethod
 enum _WUXMGradientSpreadMethod {
-    WUXMGradientSpreadMethodPad = 0,
-    WUXMGradientSpreadMethodReflect = 1,
-    WUXMGradientSpreadMethodRepeat = 2,
+	WUXMGradientSpreadMethodPad = 0,
+	WUXMGradientSpreadMethodReflect = 1,
+	WUXMGradientSpreadMethodRepeat = 2,
 };
 typedef unsigned WUXMGradientSpreadMethod;
 
 // Windows.UI.Xaml.Media.MediaCanPlayResponse
 enum _WUXMMediaCanPlayResponse {
-    WUXMMediaCanPlayResponseNotSupported = 0,
-    WUXMMediaCanPlayResponseMaybe = 1,
-    WUXMMediaCanPlayResponseProbably = 2,
+	WUXMMediaCanPlayResponseNotSupported = 0,
+	WUXMMediaCanPlayResponseMaybe = 1,
+	WUXMMediaCanPlayResponseProbably = 2,
 };
 typedef unsigned WUXMMediaCanPlayResponse;
 
 // Windows.UI.Xaml.Media.PenLineCap
 enum _WUXMPenLineCap {
-    WUXMPenLineCapFlat = 0,
-    WUXMPenLineCapSquare = 1,
-    WUXMPenLineCapRound = 2,
-    WUXMPenLineCapTriangle = 3,
+	WUXMPenLineCapFlat = 0,
+	WUXMPenLineCapSquare = 1,
+	WUXMPenLineCapRound = 2,
+	WUXMPenLineCapTriangle = 3,
 };
 typedef unsigned WUXMPenLineCap;
 
 // Windows.UI.Xaml.Media.PenLineJoin
 enum _WUXMPenLineJoin {
-    WUXMPenLineJoinMiter = 0,
-    WUXMPenLineJoinBevel = 1,
-    WUXMPenLineJoinRound = 2,
+	WUXMPenLineJoinMiter = 0,
+	WUXMPenLineJoinBevel = 1,
+	WUXMPenLineJoinRound = 2,
 };
 typedef unsigned WUXMPenLineJoin;
 
 // Windows.UI.Xaml.Media.Stereo3DVideoPackingMode
 enum _WUXMStereo3DVideoPackingMode {
-    WUXMStereo3DVideoPackingModeNone = 0,
-    WUXMStereo3DVideoPackingModeSideBySide = 1,
-    WUXMStereo3DVideoPackingModeTopBottom = 2,
+	WUXMStereo3DVideoPackingModeNone = 0,
+	WUXMStereo3DVideoPackingModeSideBySide = 1,
+	WUXMStereo3DVideoPackingModeTopBottom = 2,
 };
 typedef unsigned WUXMStereo3DVideoPackingMode;
 
 // Windows.UI.Xaml.Media.Stereo3DVideoRenderMode
 enum _WUXMStereo3DVideoRenderMode {
-    WUXMStereo3DVideoRenderModeMono = 0,
-    WUXMStereo3DVideoRenderModeStereo = 1,
+	WUXMStereo3DVideoRenderModeMono = 0,
+	WUXMStereo3DVideoRenderModeStereo = 1,
 };
 typedef unsigned WUXMStereo3DVideoRenderMode;
 
 // Windows.UI.Xaml.Media.Stretch
 enum _WUXMStretch {
-    WUXMStretchNone = 0,
-    WUXMStretchFill = 1,
-    WUXMStretchUniform = 2,
-    WUXMStretchUniformToFill = 3,
+	WUXMStretchNone = 0,
+	WUXMStretchFill = 1,
+	WUXMStretchUniform = 2,
+	WUXMStretchUniformToFill = 3,
 };
 typedef unsigned WUXMStretch;
 
 // Windows.UI.Xaml.Media.StyleSimulations
 enum _WUXMStyleSimulations {
-    WUXMStyleSimulationsNone = 0,
-    WUXMStyleSimulationsBoldSimulation = 1,
-    WUXMStyleSimulationsItalicSimulation = 2,
-    WUXMStyleSimulationsBoldItalicSimulation = 3,
+	WUXMStyleSimulationsNone = 0,
+	WUXMStyleSimulationsBoldSimulation = 1,
+	WUXMStyleSimulationsItalicSimulation = 2,
+	WUXMStyleSimulationsBoldItalicSimulation = 3,
 };
 typedef unsigned WUXMStyleSimulations;
 
 // Windows.UI.Xaml.Media.SweepDirection
 enum _WUXMSweepDirection {
-    WUXMSweepDirectionCounterclockwise = 0,
-    WUXMSweepDirectionClockwise = 1,
+	WUXMSweepDirectionCounterclockwise = 0,
+	WUXMSweepDirectionClockwise = 1,
 };
 typedef unsigned WUXMSweepDirection;
 
@@ -190,19 +190,19 @@ typedef unsigned WUXMSweepDirection;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, WXDependencyProperty * dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void(^WXExceptionRoutedEventHandler)(RTObject * sender, WXExceptionRoutedEventArgs * e);
+typedef void(^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject * sender, WXRoutedEventArgs * e);
+typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
 
 
@@ -223,14 +223,26 @@ WINRT_EXPORT
 // Windows.UI.Xaml.Media.RateChangedRoutedEventHandler
 #ifndef __WUXMRateChangedRoutedEventHandler__DEFINED
 #define __WUXMRateChangedRoutedEventHandler__DEFINED
-typedef void(^WUXMRateChangedRoutedEventHandler)(RTObject * sender, WUXMRateChangedRoutedEventArgs * e);
+typedef void(^WUXMRateChangedRoutedEventHandler)(RTObject* sender, WUXMRateChangedRoutedEventArgs* e);
 #endif // __WUXMRateChangedRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.TimelineMarkerRoutedEventHandler
 #ifndef __WUXMTimelineMarkerRoutedEventHandler__DEFINED
 #define __WUXMTimelineMarkerRoutedEventHandler__DEFINED
-typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject * sender, WUXMTimelineMarkerRoutedEventArgs * e);
+typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimelineMarkerRoutedEventArgs* e);
 #endif // __WUXMTimelineMarkerRoutedEventHandler__DEFINED
+
+// Windows.UI.Xaml.Media.IGeneralTransformOverrides
+#ifndef __WUXMIGeneralTransformOverrides_DEFINED__
+#define __WUXMIGeneralTransformOverrides_DEFINED__
+
+@protocol WUXMIGeneralTransformOverrides
+@property (readonly) WUXMGeneralTransform* inverseCore;
+- (BOOL)tryTransformCore:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
+- (WFRect*)transformBoundsCore:(WFRect*)rect;
+@end
+
+#endif // __WUXMIGeneralTransformOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.VisualTreeHelper
 #ifndef __WUXMVisualTreeHelper_DEFINED__
@@ -238,15 +250,15 @@ typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject * sender, WUXMTimel
 
 WINRT_EXPORT
 @interface WUXMVisualTreeHelper : RTObject
-+ (id<NSFastEnumeration> /*WXUIElement*/ )findElementsInHostCoordinatesPoint:(WFPoint *)intersectingPoint subtree:(WXUIElement *)subtree;
-+ (id<NSFastEnumeration> /*WXUIElement*/ )findElementsInHostCoordinatesRect:(WFRect *)intersectingRect subtree:(WXUIElement *)subtree;
-+ (id<NSFastEnumeration> /*WXUIElement*/ )findAllElementsInHostCoordinatesPoint:(WFPoint *)intersectingPoint subtree:(WXUIElement *)subtree includeAllElements:(BOOL)includeAllElements;
-+ (id<NSFastEnumeration> /*WXUIElement*/ )findAllElementsInHostCoordinatesRect:(WFRect *)intersectingRect subtree:(WXUIElement *)subtree includeAllElements:(BOOL)includeAllElements;
-+ (WXDependencyObject *)getChild:(WXDependencyObject *)reference childIndex:(int)childIndex;
-+ (int)getChildrenCount:(WXDependencyObject *)reference;
-+ (WXDependencyObject *)getParent:(WXDependencyObject *)reference;
-+ (void)disconnectChildrenRecursive:(WXUIElement *)element;
-+ (NSArray* /*WUXCPPopup*/ )getOpenPopups:(WXWindow *)window;
++ (id<NSFastEnumeration>)findElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree;
++ (id<NSFastEnumeration>)findElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree;
++ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
++ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
++ (WXDependencyObject*)getChild:(WXDependencyObject*)reference childIndex:(int)childIndex;
++ (int)getChildrenCount:(WXDependencyObject*)reference;
++ (WXDependencyObject*)getParent:(WXDependencyObject*)reference;
++ (void)disconnectChildrenRecursive:(WXUIElement*)element;
++ (NSArray*)getOpenPopups:(WXWindow*)window;
 @end
 
 #endif // __WUXMVisualTreeHelper_DEFINED__
@@ -269,10 +281,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMatrixHelper : RTObject
-+ (WUXMMatrix *)fromElements:(double)m11 m12:(double)m12 m21:(double)m21 m22:(double)m22 offsetX:(double)offsetX offsetY:(double)offsetY;
-+ (BOOL)getIsIdentity:(WUXMMatrix *)target;
-+ (WFPoint *)transform:(WUXMMatrix *)target point:(WFPoint *)point;
-+ (WUXMMatrix *)identity;
++ (WUXMMatrix*)fromElements:(double)m11 m12:(double)m12 m21:(double)m21 m22:(double)m22 offsetX:(double)offsetX offsetY:(double)offsetY;
++ (BOOL)getIsIdentity:(WUXMMatrix*)target;
++ (WFPoint*)transform:(WUXMMatrix*)target point:(WFPoint*)point;
++ (WUXMMatrix*)identity;
 @end
 
 #endif // __WUXMMatrixHelper_DEFINED__
@@ -283,9 +295,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMCompositionTarget : RTObject
-+ (EventRegistrationToken)addRenderingEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addRenderingEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeRenderingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addSurfaceContentsLostEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addSurfaceContentsLostEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeSurfaceContentsLostEvent:(EventRegistrationToken)tok;
 @end
 
@@ -298,7 +310,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMDoubleCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -333,7 +345,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGeometryCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -357,7 +369,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGradientStopCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -381,7 +393,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPathFigureCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -405,7 +417,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPathSegmentCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -429,7 +441,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPointCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -452,7 +464,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMRenderingEventArgs : RTObject
-@property (readonly) WFTimeSpan * renderingTime;
+@property (readonly) WFTimeSpan* renderingTime;
 @end
 
 #endif // __WUXMRenderingEventArgs_DEFINED__
@@ -464,7 +476,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -488,7 +500,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTransformCollection : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -512,14 +524,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (RTObject *)getValue:(WXDependencyProperty *)dp;
-- (void)setValue:(WXDependencyProperty *)dp value:(RTObject *)value;
-- (void)clearValue:(WXDependencyProperty *)dp;
-- (RTObject *)readLocalValue:(WXDependencyProperty *)dp;
-- (RTObject *)getAnimationBaseValue:(WXDependencyProperty *)dp;
-- (int64_t)registerPropertyChangedCallback:(WXDependencyProperty *)dp callback:(WXDependencyPropertyChangedCallback)callback;
-- (void)unregisterPropertyChangedCallback:(WXDependencyProperty *)dp token:(int64_t)token;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (RTObject*)getValue:(WXDependencyProperty*)dp;
+- (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
+- (void)clearValue:(WXDependencyProperty*)dp;
+- (RTObject*)readLocalValue:(WXDependencyProperty*)dp;
+- (RTObject*)getAnimationBaseValue:(WXDependencyProperty*)dp;
+- (int64_t)registerPropertyChangedCallback:(WXDependencyProperty*)dp callback:(WXDependencyPropertyChangedCallback)callback;
+- (void)unregisterPropertyChangedCallback:(WXDependencyProperty*)dp token:(int64_t)token;
 @end
 
 #endif // __WXDependencyObject_DEFINED__
@@ -531,12 +543,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMTransform * transform;
-@property (copy) WUXMTransform * relativeTransform;
+@property (copy) WUXMTransform* transform;
+@property (copy) WUXMTransform* relativeTransform;
 @property double opacity;
-+ (WXDependencyProperty *)opacityProperty;
-+ (WXDependencyProperty *)relativeTransformProperty;
-+ (WXDependencyProperty *)transformProperty;
++ (WXDependencyProperty*)opacityProperty;
++ (WXDependencyProperty*)relativeTransformProperty;
++ (WXDependencyProperty*)transformProperty;
 @end
 
 #endif // __WUXMBrush_DEFINED__
@@ -559,13 +571,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUXMGeneralTransform * inverse;
-@property (readonly) WUXMGeneralTransform * inverseCore;
-- (WFPoint *)transformPoint:(WFPoint *)point;
-- (BOOL)tryTransform:(WFPoint *)inPoint outPoint:(WFPoint **)outPoint;
-- (WFRect *)transformBounds:(WFRect *)rect;
-- (BOOL)tryTransformCore:(WFPoint *)inPoint outPoint:(WFPoint **)outPoint;
-- (WFRect *)transformBoundsCore:(WFRect *)rect;
+@property (readonly) WUXMGeneralTransform* inverse;
+@property (readonly) WUXMGeneralTransform* inverseCore;
+- (WFPoint*)transformPoint:(WFPoint*)point;
+- (BOOL)tryTransform:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
+- (WFRect*)transformBounds:(WFRect*)rect;
+- (BOOL)tryTransformCore:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
+- (WFRect*)transformBoundsCore:(WFRect*)rect;
 @end
 
 #endif // __WUXMGeneralTransform_DEFINED__
@@ -576,11 +588,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeometry : WXDependencyObject
-@property (copy) WUXMTransform * transform;
-@property (readonly) WFRect * bounds;
-+ (WUXMGeometry *)empty;
+@property (copy) WUXMTransform* transform;
+@property (readonly) WFRect* bounds;
++ (WUXMGeometry*)empty;
 + (double)standardFlatteningTolerance;
-+ (WXDependencyProperty *)transformProperty;
++ (WXDependencyProperty*)transformProperty;
 @end
 
 #endif // __WUXMGeometry_DEFINED__
@@ -593,9 +605,9 @@ WINRT_EXPORT
 @interface WUXMGradientStop : WXDependencyObject
 + (instancetype)create ACTIVATOR;
 @property double offset;
-@property (copy) WUColor * color;
-+ (WXDependencyProperty *)colorProperty;
-+ (WXDependencyProperty *)offsetProperty;
+@property (copy) WUColor* color;
++ (WXDependencyProperty*)colorProperty;
++ (WXDependencyProperty*)offsetProperty;
 @end
 
 #endif // __WUXMGradientStop_DEFINED__
@@ -617,14 +629,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPathFigure : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFPoint * startPoint;
-@property (copy) WUXMPathSegmentCollection * segments;
+@property (copy) WFPoint* startPoint;
+@property (copy) WUXMPathSegmentCollection* segments;
 @property BOOL isFilled;
 @property BOOL isClosed;
-+ (WXDependencyProperty *)isClosedProperty;
-+ (WXDependencyProperty *)isFilledProperty;
-+ (WXDependencyProperty *)segmentsProperty;
-+ (WXDependencyProperty *)startPointProperty;
++ (WXDependencyProperty*)isClosedProperty;
++ (WXDependencyProperty*)isFilledProperty;
++ (WXDependencyProperty*)segmentsProperty;
++ (WXDependencyProperty*)startPointProperty;
 @end
 
 #endif // __WUXMPathFigure_DEFINED__
@@ -657,7 +669,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) RTObject * originalSource;
+@property (readonly) RTObject* originalSource;
 @end
 
 #endif // __WXRoutedEventArgs_DEFINED__
@@ -681,11 +693,11 @@ WINRT_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)create ACTIVATOR;
 @property (copy) NSString * type;
-@property (copy) WFTimeSpan * time;
+@property (copy) WFTimeSpan* time;
 @property (copy) NSString * text;
-+ (WXDependencyProperty *)textProperty;
-+ (WXDependencyProperty *)timeProperty;
-+ (WXDependencyProperty *)typeProperty;
++ (WXDependencyProperty*)textProperty;
++ (WXDependencyProperty*)timeProperty;
++ (WXDependencyProperty*)typeProperty;
 @end
 
 #endif // __WUXMTimelineMarker_DEFINED__
@@ -697,7 +709,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMTimelineMarker * marker;
+@property (copy) WUXMTimelineMarker* marker;
 @end
 
 #endif // __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
@@ -710,15 +722,15 @@ WINRT_EXPORT
 @interface WUXMArcSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
 @property WUXMSweepDirection sweepDirection;
-@property (copy) WFSize * size;
+@property (copy) WFSize* size;
 @property double rotationAngle;
-@property (copy) WFPoint * point;
+@property (copy) WFPoint* point;
 @property BOOL isLargeArc;
-+ (WXDependencyProperty *)isLargeArcProperty;
-+ (WXDependencyProperty *)pointProperty;
-+ (WXDependencyProperty *)rotationAngleProperty;
-+ (WXDependencyProperty *)sizeProperty;
-+ (WXDependencyProperty *)sweepDirectionProperty;
++ (WXDependencyProperty*)isLargeArcProperty;
++ (WXDependencyProperty*)pointProperty;
++ (WXDependencyProperty*)rotationAngleProperty;
++ (WXDependencyProperty*)sizeProperty;
++ (WXDependencyProperty*)sweepDirectionProperty;
 @end
 
 #endif // __WUXMArcSegment_DEFINED__
@@ -730,12 +742,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WFPoint * point3;
-@property (copy) WFPoint * point2;
-@property (copy) WFPoint * point1;
-+ (WXDependencyProperty *)point1Property;
-+ (WXDependencyProperty *)point2Property;
-+ (WXDependencyProperty *)point3Property;
+@property (copy) WFPoint* point3;
+@property (copy) WFPoint* point2;
+@property (copy) WFPoint* point1;
++ (WXDependencyProperty*)point1Property;
++ (WXDependencyProperty*)point2Property;
++ (WXDependencyProperty*)point3Property;
 @end
 
 #endif // __WUXMBezierSegment_DEFINED__
@@ -760,10 +772,10 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property double radiusY;
 @property double radiusX;
-@property (copy) WFPoint * center;
-+ (WXDependencyProperty *)centerProperty;
-+ (WXDependencyProperty *)radiusXProperty;
-+ (WXDependencyProperty *)radiusYProperty;
+@property (copy) WFPoint* center;
++ (WXDependencyProperty*)centerProperty;
++ (WXDependencyProperty*)radiusXProperty;
++ (WXDependencyProperty*)radiusYProperty;
 @end
 
 #endif // __WUXMEllipseGeometry_DEFINED__
@@ -776,9 +788,9 @@ WINRT_EXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
 + (instancetype)create ACTIVATOR;
 @property WUXMFillRule fillRule;
-@property (copy) WUXMGeometryCollection * children;
-+ (WXDependencyProperty *)childrenProperty;
-+ (WXDependencyProperty *)fillRuleProperty;
+@property (copy) WUXMGeometryCollection* children;
++ (WXDependencyProperty*)childrenProperty;
++ (WXDependencyProperty*)fillRuleProperty;
 @end
 
 #endif // __WUXMGeometryGroup_DEFINED__
@@ -792,12 +804,12 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property WUXMGradientSpreadMethod spreadMethod;
 @property WUXMBrushMappingMode mappingMode;
-@property (copy) WUXMGradientStopCollection * gradientStops;
+@property (copy) WUXMGradientStopCollection* gradientStops;
 @property WUXMColorInterpolationMode colorInterpolationMode;
-+ (WXDependencyProperty *)colorInterpolationModeProperty;
-+ (WXDependencyProperty *)gradientStopsProperty;
-+ (WXDependencyProperty *)mappingModeProperty;
-+ (WXDependencyProperty *)spreadMethodProperty;
++ (WXDependencyProperty*)colorInterpolationModeProperty;
++ (WXDependencyProperty*)gradientStopsProperty;
++ (WXDependencyProperty*)mappingModeProperty;
++ (WXDependencyProperty*)spreadMethodProperty;
 @end
 
 #endif // __WUXMGradientBrush_DEFINED__
@@ -809,10 +821,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMLineGeometry : WUXMGeometry
 + (instancetype)create ACTIVATOR;
-@property (copy) WFPoint * startPoint;
-@property (copy) WFPoint * endPoint;
-+ (WXDependencyProperty *)endPointProperty;
-+ (WXDependencyProperty *)startPointProperty;
+@property (copy) WFPoint* startPoint;
+@property (copy) WFPoint* endPoint;
++ (WXDependencyProperty*)endPointProperty;
++ (WXDependencyProperty*)startPointProperty;
 @end
 
 #endif // __WUXMLineGeometry_DEFINED__
@@ -824,8 +836,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMLineSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WFPoint * point;
-+ (WXDependencyProperty *)pointProperty;
+@property (copy) WFPoint* point;
++ (WXDependencyProperty*)pointProperty;
 @end
 
 #endif // __WUXMLineSegment_DEFINED__
@@ -837,8 +849,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMMMatrix3D * projectionMatrix;
-+ (WXDependencyProperty *)projectionMatrixProperty;
+@property (copy) WUXMMMatrix3D* projectionMatrix;
++ (WXDependencyProperty*)projectionMatrixProperty;
 @end
 
 #endif // __WUXMMatrix3DProjection_DEFINED__
@@ -851,9 +863,9 @@ WINRT_EXPORT
 @interface WUXMPathGeometry : WUXMGeometry
 + (instancetype)create ACTIVATOR;
 @property WUXMFillRule fillRule;
-@property (copy) WUXMPathFigureCollection * figures;
-+ (WXDependencyProperty *)figuresProperty;
-+ (WXDependencyProperty *)fillRuleProperty;
+@property (copy) WUXMPathFigureCollection* figures;
++ (WXDependencyProperty*)figuresProperty;
++ (WXDependencyProperty*)fillRuleProperty;
 @end
 
 #endif // __WUXMPathGeometry_DEFINED__
@@ -877,20 +889,20 @@ WINRT_EXPORT
 @property double rotationX;
 @property double localOffsetZ;
 @property double localOffsetY;
-@property (readonly) WUXMMMatrix3D * projectionMatrix;
-+ (WXDependencyProperty *)centerOfRotationXProperty;
-+ (WXDependencyProperty *)centerOfRotationYProperty;
-+ (WXDependencyProperty *)centerOfRotationZProperty;
-+ (WXDependencyProperty *)globalOffsetXProperty;
-+ (WXDependencyProperty *)globalOffsetYProperty;
-+ (WXDependencyProperty *)globalOffsetZProperty;
-+ (WXDependencyProperty *)localOffsetXProperty;
-+ (WXDependencyProperty *)localOffsetYProperty;
-+ (WXDependencyProperty *)localOffsetZProperty;
-+ (WXDependencyProperty *)projectionMatrixProperty;
-+ (WXDependencyProperty *)rotationXProperty;
-+ (WXDependencyProperty *)rotationYProperty;
-+ (WXDependencyProperty *)rotationZProperty;
+@property (readonly) WUXMMMatrix3D* projectionMatrix;
++ (WXDependencyProperty*)centerOfRotationXProperty;
++ (WXDependencyProperty*)centerOfRotationYProperty;
++ (WXDependencyProperty*)centerOfRotationZProperty;
++ (WXDependencyProperty*)globalOffsetXProperty;
++ (WXDependencyProperty*)globalOffsetYProperty;
++ (WXDependencyProperty*)globalOffsetZProperty;
++ (WXDependencyProperty*)localOffsetXProperty;
++ (WXDependencyProperty*)localOffsetYProperty;
++ (WXDependencyProperty*)localOffsetZProperty;
++ (WXDependencyProperty*)projectionMatrixProperty;
++ (WXDependencyProperty*)rotationXProperty;
++ (WXDependencyProperty*)rotationYProperty;
++ (WXDependencyProperty*)rotationZProperty;
 @end
 
 #endif // __WUXMPlaneProjection_DEFINED__
@@ -902,8 +914,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection * points;
-+ (WXDependencyProperty *)pointsProperty;
+@property (copy) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
 @end
 
 #endif // __WUXMPolyBezierSegment_DEFINED__
@@ -915,8 +927,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection * points;
-+ (WXDependencyProperty *)pointsProperty;
+@property (copy) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
 @end
 
 #endif // __WUXMPolyLineSegment_DEFINED__
@@ -928,8 +940,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection * points;
-+ (WXDependencyProperty *)pointsProperty;
+@property (copy) WUXMPointCollection* points;
++ (WXDependencyProperty*)pointsProperty;
 @end
 
 #endif // __WUXMPolyQuadraticBezierSegment_DEFINED__
@@ -941,10 +953,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)create ACTIVATOR;
-@property (copy) WFPoint * point2;
-@property (copy) WFPoint * point1;
-+ (WXDependencyProperty *)point1Property;
-+ (WXDependencyProperty *)point2Property;
+@property (copy) WFPoint* point2;
+@property (copy) WFPoint* point1;
++ (WXDependencyProperty*)point1Property;
++ (WXDependencyProperty*)point2Property;
 @end
 
 #endif // __WUXMQuadraticBezierSegment_DEFINED__
@@ -956,8 +968,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
 + (instancetype)create ACTIVATOR;
-@property (copy) WFRect * rect;
-+ (WXDependencyProperty *)rectProperty;
+@property (copy) WFRect* rect;
++ (WXDependencyProperty*)rectProperty;
 @end
 
 #endif // __WUXMRectangleGeometry_DEFINED__
@@ -968,10 +980,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
-+ (WUXMSolidColorBrush *)createInstanceWithColor:(WUColor *)color ACTIVATOR;
++ (WUXMSolidColorBrush*)createInstanceWithColor:(WUColor*)color ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (copy) WUColor * color;
-+ (WXDependencyProperty *)colorProperty;
+@property (copy) WUColor* color;
++ (WXDependencyProperty*)colorProperty;
 @end
 
 #endif // __WUXMSolidColorBrush_DEFINED__
@@ -986,9 +998,9 @@ WINRT_EXPORT
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
 @property WUXMAlignmentX alignmentX;
-+ (WXDependencyProperty *)alignmentXProperty;
-+ (WXDependencyProperty *)alignmentYProperty;
-+ (WXDependencyProperty *)stretchProperty;
++ (WXDependencyProperty*)alignmentXProperty;
++ (WXDependencyProperty*)alignmentYProperty;
++ (WXDependencyProperty*)stretchProperty;
 @end
 
 #endif // __WUXMTileBrush_DEFINED__
@@ -1019,15 +1031,15 @@ WINRT_EXPORT
 @property double rotation;
 @property double centerY;
 @property double centerX;
-+ (WXDependencyProperty *)centerXProperty;
-+ (WXDependencyProperty *)centerYProperty;
-+ (WXDependencyProperty *)rotationProperty;
-+ (WXDependencyProperty *)scaleXProperty;
-+ (WXDependencyProperty *)scaleYProperty;
-+ (WXDependencyProperty *)skewXProperty;
-+ (WXDependencyProperty *)skewYProperty;
-+ (WXDependencyProperty *)translateXProperty;
-+ (WXDependencyProperty *)translateYProperty;
++ (WXDependencyProperty*)centerXProperty;
++ (WXDependencyProperty*)centerYProperty;
++ (WXDependencyProperty*)rotationProperty;
++ (WXDependencyProperty*)scaleXProperty;
++ (WXDependencyProperty*)scaleYProperty;
++ (WXDependencyProperty*)skewXProperty;
++ (WXDependencyProperty*)skewYProperty;
++ (WXDependencyProperty*)translateXProperty;
++ (WXDependencyProperty*)translateYProperty;
 @end
 
 #endif // __WUXMCompositeTransform_DEFINED__
@@ -1039,8 +1051,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMImageBrush : WUXMTileBrush
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMImageSource * imageSource;
-+ (WXDependencyProperty *)imageSourceProperty;
+@property (copy) WUXMImageSource* imageSource;
++ (WXDependencyProperty*)imageSourceProperty;
 - (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
 - (void)removeImageFailedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addImageOpenedEvent:(WXRoutedEventHandler)del;
@@ -1056,11 +1068,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMLinearGradientBrush : WUXMGradientBrush
 + (instancetype)create ACTIVATOR;
-+ (WUXMLinearGradientBrush *)createInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection *)gradientStopCollection angle:(double)angle ACTIVATOR;
-@property (copy) WFPoint * startPoint;
-@property (copy) WFPoint * endPoint;
-+ (WXDependencyProperty *)endPointProperty;
-+ (WXDependencyProperty *)startPointProperty;
++ (WUXMLinearGradientBrush*)createInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection angle:(double)angle ACTIVATOR;
+@property (copy) WFPoint* startPoint;
+@property (copy) WFPoint* endPoint;
++ (WXDependencyProperty*)endPointProperty;
++ (WXDependencyProperty*)startPointProperty;
 @end
 
 #endif // __WUXMLinearGradientBrush_DEFINED__
@@ -1072,8 +1084,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMMatrixTransform : WUXMTransform
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMMatrix * matrix;
-+ (WXDependencyProperty *)matrixProperty;
+@property (copy) WUXMMatrix* matrix;
++ (WXDependencyProperty*)matrixProperty;
 @end
 
 #endif // __WUXMMatrixTransform_DEFINED__
@@ -1088,9 +1100,9 @@ WINRT_EXPORT
 @property double centerY;
 @property double centerX;
 @property double angle;
-+ (WXDependencyProperty *)angleProperty;
-+ (WXDependencyProperty *)centerXProperty;
-+ (WXDependencyProperty *)centerYProperty;
++ (WXDependencyProperty*)angleProperty;
++ (WXDependencyProperty*)centerXProperty;
++ (WXDependencyProperty*)centerYProperty;
 @end
 
 #endif // __WUXMRotateTransform_DEFINED__
@@ -1106,10 +1118,10 @@ WINRT_EXPORT
 @property double scaleX;
 @property double centerY;
 @property double centerX;
-+ (WXDependencyProperty *)centerXProperty;
-+ (WXDependencyProperty *)centerYProperty;
-+ (WXDependencyProperty *)scaleXProperty;
-+ (WXDependencyProperty *)scaleYProperty;
++ (WXDependencyProperty*)centerXProperty;
++ (WXDependencyProperty*)centerYProperty;
++ (WXDependencyProperty*)scaleXProperty;
++ (WXDependencyProperty*)scaleYProperty;
 @end
 
 #endif // __WUXMScaleTransform_DEFINED__
@@ -1125,10 +1137,10 @@ WINRT_EXPORT
 @property double centerX;
 @property double angleY;
 @property double angleX;
-+ (WXDependencyProperty *)angleXProperty;
-+ (WXDependencyProperty *)angleYProperty;
-+ (WXDependencyProperty *)centerXProperty;
-+ (WXDependencyProperty *)centerYProperty;
++ (WXDependencyProperty*)angleXProperty;
++ (WXDependencyProperty*)angleYProperty;
++ (WXDependencyProperty*)centerXProperty;
++ (WXDependencyProperty*)centerYProperty;
 @end
 
 #endif // __WUXMSkewTransform_DEFINED__
@@ -1140,9 +1152,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTransformGroup : WUXMTransform
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMTransformCollection * children;
-@property (readonly) WUXMMatrix * value;
-+ (WXDependencyProperty *)childrenProperty;
+@property (copy) WUXMTransformCollection* children;
+@property (readonly) WUXMMatrix* value;
++ (WXDependencyProperty*)childrenProperty;
 @end
 
 #endif // __WUXMTransformGroup_DEFINED__
@@ -1156,8 +1168,8 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property double y;
 @property double x;
-+ (WXDependencyProperty *)xProperty;
-+ (WXDependencyProperty *)yProperty;
++ (WXDependencyProperty*)xProperty;
++ (WXDependencyProperty*)yProperty;
 @end
 
 #endif // __WUXMTranslateTransform_DEFINED__

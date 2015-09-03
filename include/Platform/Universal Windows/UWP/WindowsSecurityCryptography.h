@@ -25,13 +25,15 @@
 
 // Windows.Security.Cryptography.BinaryStringEncoding
 enum _WSCBinaryStringEncoding {
-    WSCBinaryStringEncodingUtf8 = 0,
-    WSCBinaryStringEncodingUtf16LE = 1,
-    WSCBinaryStringEncodingUtf16BE = 2,
+	WSCBinaryStringEncodingUtf8 = 0,
+	WSCBinaryStringEncodingUtf16LE = 1,
+	WSCBinaryStringEncodingUtf16BE = 2,
 };
 typedef unsigned WSCBinaryStringEncoding;
 
 #include "WindowsStorageStreams.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Security.Cryptography.CryptographicBuffer
 #ifndef __WSCCryptographicBuffer_DEFINED__
@@ -40,10 +42,10 @@ typedef unsigned WSCBinaryStringEncoding;
 WINRT_EXPORT
 @interface WSCCryptographicBuffer : RTObject
 + (BOOL)compare:(RTObject<WSSIBuffer>*)object1 object2:(RTObject<WSSIBuffer>*)object2;
-+ (RTObject<WSSIBuffer>*)generateRandom:(unsigned)length;
-+ (unsigned)generateRandomNumber;
-+ (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /*UInt8*/ )value;
-+ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /*UInt8*/ *)value;
++ (RTObject<WSSIBuffer>*)generateRandom:(unsigned int)length;
++ (unsigned int)generateRandomNumber;
++ (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /* uint8_t */)value;
++ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /* uint8_t */*)value;
 + (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
 + (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
 + (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;

@@ -25,26 +25,28 @@
 
 // Windows.Foundation.Collections.CollectionChange
 enum _WFCCollectionChange {
-    WFCCollectionChangeReset = 0,
-    WFCCollectionChangeItemInserted = 1,
-    WFCCollectionChangeItemRemoved = 2,
-    WFCCollectionChangeItemChanged = 3,
+	WFCCollectionChangeReset = 0,
+	WFCCollectionChangeItemInserted = 1,
+	WFCCollectionChangeItemRemoved = 2,
+	WFCCollectionChangeItemChanged = 3,
 };
 typedef unsigned WFCCollectionChange;
 
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Foundation.Collections.VectorChangedEventHandler`1
- // Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableVector`1<0>
+ // Could not generate delegate: Can't marshal 0
 // Windows.Foundation.Collections.MapChangedEventHandler`2
- // Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableMap`2<0,1>
+ // Could not generate delegate: Can't marshal 0
 // Windows.Foundation.Collections.IVectorChangedEventArgs
 #ifndef __WFCIVectorChangedEventArgs_DEFINED__
 #define __WFCIVectorChangedEventArgs_DEFINED__
 
 @protocol WFCIVectorChangedEventArgs
 @property (readonly) WFCCollectionChange collectionChange;
-@property (readonly) unsigned index;
+@property (readonly) unsigned int index;
 @end
 
 #endif // __WFCIVectorChangedEventArgs_DEFINED__
@@ -54,8 +56,23 @@ typedef unsigned WFCCollectionChange;
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCIPropertySet_DEFINED__
@@ -67,13 +84,26 @@ typedef unsigned WFCCollectionChange;
 WINRT_EXPORT
 @interface WFCPropertySet : RTObject <WFCIPropertySet>
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCPropertySet_DEFINED__
@@ -85,13 +115,26 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFCValueSet : RTObject <WFCIPropertySet>
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCValueSet_DEFINED__
@@ -103,11 +146,24 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFCStringMap : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,String> type information
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,String> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
 #endif // __WFCStringMap_DEFINED__

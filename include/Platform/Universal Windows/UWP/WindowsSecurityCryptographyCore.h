@@ -25,37 +25,37 @@
 
 // Windows.Security.Cryptography.Core.CryptographicPrivateKeyBlobType
 enum _WSCCCryptographicPrivateKeyBlobType {
-    WSCCCryptographicPrivateKeyBlobTypePkcs8RawPrivateKeyInfo = 0,
-    WSCCCryptographicPrivateKeyBlobTypePkcs1RsaPrivateKey = 1,
-    WSCCCryptographicPrivateKeyBlobTypeBCryptPrivateKey = 2,
-    WSCCCryptographicPrivateKeyBlobTypeCapi1PrivateKey = 3,
-    WSCCCryptographicPrivateKeyBlobTypeBCryptEccFullPrivateKey = 4,
+	WSCCCryptographicPrivateKeyBlobTypePkcs8RawPrivateKeyInfo = 0,
+	WSCCCryptographicPrivateKeyBlobTypePkcs1RsaPrivateKey = 1,
+	WSCCCryptographicPrivateKeyBlobTypeBCryptPrivateKey = 2,
+	WSCCCryptographicPrivateKeyBlobTypeCapi1PrivateKey = 3,
+	WSCCCryptographicPrivateKeyBlobTypeBCryptEccFullPrivateKey = 4,
 };
 typedef unsigned WSCCCryptographicPrivateKeyBlobType;
 
 // Windows.Security.Cryptography.Core.CryptographicPublicKeyBlobType
 enum _WSCCCryptographicPublicKeyBlobType {
-    WSCCCryptographicPublicKeyBlobTypeX509SubjectPublicKeyInfo = 0,
-    WSCCCryptographicPublicKeyBlobTypePkcs1RsaPublicKey = 1,
-    WSCCCryptographicPublicKeyBlobTypeBCryptPublicKey = 2,
-    WSCCCryptographicPublicKeyBlobTypeCapi1PublicKey = 3,
-    WSCCCryptographicPublicKeyBlobTypeBCryptEccFullPublicKey = 4,
+	WSCCCryptographicPublicKeyBlobTypeX509SubjectPublicKeyInfo = 0,
+	WSCCCryptographicPublicKeyBlobTypePkcs1RsaPublicKey = 1,
+	WSCCCryptographicPublicKeyBlobTypeBCryptPublicKey = 2,
+	WSCCCryptographicPublicKeyBlobTypeCapi1PublicKey = 3,
+	WSCCCryptographicPublicKeyBlobTypeBCryptEccFullPublicKey = 4,
 };
 typedef unsigned WSCCCryptographicPublicKeyBlobType;
 
 // Windows.Security.Cryptography.Core.Capi1KdfTargetAlgorithm
 enum _WSCCCapi1KdfTargetAlgorithm {
-    WSCCCapi1KdfTargetAlgorithmNotAes = 0,
-    WSCCCapi1KdfTargetAlgorithmAes = 1,
+	WSCCCapi1KdfTargetAlgorithmNotAes = 0,
+	WSCCCapi1KdfTargetAlgorithmAes = 1,
 };
 typedef unsigned WSCCCapi1KdfTargetAlgorithm;
 
 // Windows.Security.Cryptography.Core.CryptographicPadding
 enum _WSCCCryptographicPadding {
-    WSCCCryptographicPaddingNone = 0,
-    WSCCCryptographicPaddingRsaOaep = 1,
-    WSCCCryptographicPaddingRsaPkcs1V15 = 2,
-    WSCCCryptographicPaddingRsaPss = 3,
+	WSCCCryptographicPaddingNone = 0,
+	WSCCCryptographicPaddingRsaOaep = 1,
+	WSCCCryptographicPaddingRsaPkcs1V15 = 2,
+	WSCCCryptographicPaddingRsaPss = 3,
 };
 typedef unsigned WSCCCryptographicPadding;
 
@@ -64,18 +64,20 @@ typedef unsigned WSCCCryptographicPadding;
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCryptographyCertificates.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Security.Cryptography.Core.KeyDerivationParameters
 #ifndef __WSCCKeyDerivationParameters_DEFINED__
 #define __WSCCKeyDerivationParameters_DEFINED__
 
 WINRT_EXPORT
 @interface WSCCKeyDerivationParameters : RTObject
-+ (WSCCKeyDerivationParameters *)buildForCapi1Kdf:(WSCCCapi1KdfTargetAlgorithm)capi1KdfTargetAlgorithm;
-+ (WSCCKeyDerivationParameters *)buildForPbkdf2:(RTObject<WSSIBuffer>*)pbkdf2Salt iterationCount:(unsigned)iterationCount;
-+ (WSCCKeyDerivationParameters *)buildForSP800108:(RTObject<WSSIBuffer>*)label context:(RTObject<WSSIBuffer>*)context;
-+ (WSCCKeyDerivationParameters *)buildForSP80056a:(RTObject<WSSIBuffer>*)algorithmId partyUInfo:(RTObject<WSSIBuffer>*)partyUInfo partyVInfo:(RTObject<WSSIBuffer>*)partyVInfo suppPubInfo:(RTObject<WSSIBuffer>*)suppPubInfo suppPrivInfo:(RTObject<WSSIBuffer>*)suppPrivInfo;
++ (WSCCKeyDerivationParameters*)buildForCapi1Kdf:(WSCCCapi1KdfTargetAlgorithm)capi1KdfTargetAlgorithm;
++ (WSCCKeyDerivationParameters*)buildForPbkdf2:(RTObject<WSSIBuffer>*)pbkdf2Salt iterationCount:(unsigned int)iterationCount;
++ (WSCCKeyDerivationParameters*)buildForSP800108:(RTObject<WSSIBuffer>*)label context:(RTObject<WSSIBuffer>*)context;
++ (WSCCKeyDerivationParameters*)buildForSP80056a:(RTObject<WSSIBuffer>*)algorithmId partyUInfo:(RTObject<WSSIBuffer>*)partyUInfo partyVInfo:(RTObject<WSSIBuffer>*)partyVInfo suppPubInfo:(RTObject<WSSIBuffer>*)suppPubInfo suppPrivInfo:(RTObject<WSSIBuffer>*)suppPrivInfo;
 @property (copy) RTObject<WSSIBuffer>* kdfGenericBinary;
-@property (readonly) unsigned iterationCount;
+@property (readonly) unsigned int iterationCount;
 @property WSCCCapi1KdfTargetAlgorithm capi1KdfTargetAlgorithm;
 @end
 
@@ -87,7 +89,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCryptographicKey : RTObject
-@property (readonly) unsigned keySize;
+@property (readonly) unsigned int keySize;
 - (RTObject<WSSIBuffer>*)exportDefaultPrivateKeyBlobType;
 - (RTObject<WSSIBuffer>*)exportPrivateKeyWithBlobType:(WSCCCryptographicPrivateKeyBlobType)BlobType;
 - (RTObject<WSSIBuffer>*)exportDefaultPublicKeyBlobType;
@@ -114,8 +116,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCPersistedKeyProvider : RTObject
-+ (void)openKeyPairFromCertificateAsync:(WSCCCertificate *)certificate hashAlgorithmName:(NSString *)hashAlgorithmName padding:(WSCCCryptographicPadding)padding success:(void (^)(WSCCCryptographicKey *))success failure:(void (^)(NSError*))failure;
-+ (WSCCCryptographicKey *)openPublicKeyFromCertificate:(WSCCCertificate *)certificate hashAlgorithmName:(NSString *)hashAlgorithmName padding:(WSCCCryptographicPadding)padding;
++ (void)openKeyPairFromCertificateAsync:(WSCCCertificate*)certificate hashAlgorithmName:(NSString *)hashAlgorithmName padding:(WSCCCryptographicPadding)padding success:(void (^)(WSCCCryptographicKey*))success failure:(void (^)(NSError*))failure;
++ (WSCCCryptographicKey*)openPublicKeyFromCertificate:(WSCCCertificate*)certificate hashAlgorithmName:(NSString *)hashAlgorithmName padding:(WSCCCryptographicPadding)padding;
 @end
 
 #endif // __WSCCPersistedKeyProvider_DEFINED__
@@ -138,18 +140,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCryptographicEngine : RTObject
-+ (RTObject<WSSIBuffer>*)encrypt:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
-+ (RTObject<WSSIBuffer>*)decrypt:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
-+ (WSCCEncryptedAndAuthenticatedData *)encryptAndAuthenticate:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data nonce:(RTObject<WSSIBuffer>*)nonce authenticatedData:(RTObject<WSSIBuffer>*)authenticatedData;
-+ (RTObject<WSSIBuffer>*)decryptAndAuthenticate:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data nonce:(RTObject<WSSIBuffer>*)nonce authenticationTag:(RTObject<WSSIBuffer>*)authenticationTag authenticatedData:(RTObject<WSSIBuffer>*)authenticatedData;
-+ (RTObject<WSSIBuffer>*)sign:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data;
-+ (BOOL)verifySignature:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
-+ (RTObject<WSSIBuffer>*)deriveKeyMaterial:(WSCCCryptographicKey *)key parameters:(WSCCKeyDerivationParameters *)parameters desiredKeySize:(unsigned)desiredKeySize;
-+ (RTObject<WSSIBuffer>*)signHashedData:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data;
-+ (BOOL)verifySignatureWithHashInput:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
-+ (void)decryptAsync:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-+ (void)signAsync:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-+ (void)signHashedDataAsync:(WSCCCryptographicKey *)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WSSIBuffer>*)encrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
++ (RTObject<WSSIBuffer>*)decrypt:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv;
++ (WSCCEncryptedAndAuthenticatedData*)encryptAndAuthenticate:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data nonce:(RTObject<WSSIBuffer>*)nonce authenticatedData:(RTObject<WSSIBuffer>*)authenticatedData;
++ (RTObject<WSSIBuffer>*)decryptAndAuthenticate:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data nonce:(RTObject<WSSIBuffer>*)nonce authenticationTag:(RTObject<WSSIBuffer>*)authenticationTag authenticatedData:(RTObject<WSSIBuffer>*)authenticatedData;
++ (RTObject<WSSIBuffer>*)sign:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data;
++ (BOOL)verifySignature:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
++ (RTObject<WSSIBuffer>*)deriveKeyMaterial:(WSCCCryptographicKey*)key parameters:(WSCCKeyDerivationParameters*)parameters desiredKeySize:(unsigned int)desiredKeySize;
++ (RTObject<WSSIBuffer>*)signHashedData:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data;
++ (BOOL)verifySignatureWithHashInput:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data signature:(RTObject<WSSIBuffer>*)signature;
++ (void)decryptAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data iv:(RTObject<WSSIBuffer>*)iv success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)signAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)signHashedDataAsync:(WSCCCryptographicKey*)key data:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCCCryptographicEngine_DEFINED__
@@ -160,11 +162,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCHashAlgorithmProvider : RTObject
-+ (WSCCHashAlgorithmProvider *)openAlgorithm:(NSString *)algorithm;
++ (WSCCHashAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 @property (readonly) NSString * algorithmName;
-@property (readonly) unsigned hashLength;
+@property (readonly) unsigned int hashLength;
 - (RTObject<WSSIBuffer>*)hashData:(RTObject<WSSIBuffer>*)data;
-- (WSCCCryptographicHash *)createHash;
+- (WSCCCryptographicHash*)createHash;
 @end
 
 #endif // __WSCCHashAlgorithmProvider_DEFINED__
@@ -175,11 +177,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCMacAlgorithmProvider : RTObject
-+ (WSCCMacAlgorithmProvider *)openAlgorithm:(NSString *)algorithm;
++ (WSCCMacAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 @property (readonly) NSString * algorithmName;
-@property (readonly) unsigned macLength;
-- (WSCCCryptographicKey *)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
-- (WSCCCryptographicHash *)createHash:(RTObject<WSSIBuffer>*)keyMaterial;
+@property (readonly) unsigned int macLength;
+- (WSCCCryptographicKey*)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
+- (WSCCCryptographicHash*)createHash:(RTObject<WSSIBuffer>*)keyMaterial;
 @end
 
 #endif // __WSCCMacAlgorithmProvider_DEFINED__
@@ -190,9 +192,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCKeyDerivationAlgorithmProvider : RTObject
-+ (WSCCKeyDerivationAlgorithmProvider *)openAlgorithm:(NSString *)algorithm;
++ (WSCCKeyDerivationAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 @property (readonly) NSString * algorithmName;
-- (WSCCCryptographicKey *)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
+- (WSCCCryptographicKey*)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
 @end
 
 #endif // __WSCCKeyDerivationAlgorithmProvider_DEFINED__
@@ -203,10 +205,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCSymmetricKeyAlgorithmProvider : RTObject
-+ (WSCCSymmetricKeyAlgorithmProvider *)openAlgorithm:(NSString *)algorithm;
++ (WSCCSymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 @property (readonly) NSString * algorithmName;
-@property (readonly) unsigned blockLength;
-- (WSCCCryptographicKey *)createSymmetricKey:(RTObject<WSSIBuffer>*)keyMaterial;
+@property (readonly) unsigned int blockLength;
+- (WSCCCryptographicKey*)createSymmetricKey:(RTObject<WSSIBuffer>*)keyMaterial;
 @end
 
 #endif // __WSCCSymmetricKeyAlgorithmProvider_DEFINED__
@@ -217,15 +219,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCAsymmetricKeyAlgorithmProvider : RTObject
-+ (WSCCAsymmetricKeyAlgorithmProvider *)openAlgorithm:(NSString *)algorithm;
++ (WSCCAsymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 @property (readonly) NSString * algorithmName;
-- (WSCCCryptographicKey *)createKeyPair:(unsigned)keySize;
-- (WSCCCryptographicKey *)importDefaultPrivateKeyBlob:(RTObject<WSSIBuffer>*)keyBlob;
-- (WSCCCryptographicKey *)importKeyPairWithBlobType:(RTObject<WSSIBuffer>*)keyBlob BlobType:(WSCCCryptographicPrivateKeyBlobType)BlobType;
-- (WSCCCryptographicKey *)importDefaultPublicKeyBlob:(RTObject<WSSIBuffer>*)keyBlob;
-- (WSCCCryptographicKey *)importPublicKeyWithBlobType:(RTObject<WSSIBuffer>*)keyBlob BlobType:(WSCCCryptographicPublicKeyBlobType)BlobType;
-- (WSCCCryptographicKey *)createKeyPairWithCurveName:(NSString *)curveName;
-- (WSCCCryptographicKey *)createKeyPairWithCurveParameters:(id<NSFastEnumeration> /*UInt8*/ )parameters;
+- (WSCCCryptographicKey*)createKeyPair:(unsigned int)keySize;
+- (WSCCCryptographicKey*)importDefaultPrivateKeyBlob:(RTObject<WSSIBuffer>*)keyBlob;
+- (WSCCCryptographicKey*)importKeyPairWithBlobType:(RTObject<WSSIBuffer>*)keyBlob BlobType:(WSCCCryptographicPrivateKeyBlobType)BlobType;
+- (WSCCCryptographicKey*)importDefaultPublicKeyBlob:(RTObject<WSSIBuffer>*)keyBlob;
+- (WSCCCryptographicKey*)importPublicKeyWithBlobType:(RTObject<WSSIBuffer>*)keyBlob BlobType:(WSCCCryptographicPublicKeyBlobType)BlobType;
+- (WSCCCryptographicKey*)createKeyPairWithCurveName:(NSString *)curveName;
+- (WSCCCryptographicKey*)createKeyPairWithCurveParameters:(id<NSFastEnumeration> /* uint8_t */)parameters;
 @end
 
 #endif // __WSCCAsymmetricKeyAlgorithmProvider_DEFINED__
@@ -327,7 +329,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCEccCurveNames : RTObject
-+ (NSArray* /*String*/ )allEccCurveNames;
++ (NSArray*)allEccCurveNames;
 + (NSString *)brainpoolP160r1;
 + (NSString *)brainpoolP160t1;
 + (NSString *)brainpoolP192r1;

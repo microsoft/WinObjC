@@ -33,7 +33,7 @@
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, WXDependencyProperty * dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 
@@ -48,7 +48,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @property (readonly) NSString * annotationTypeName;
 @property (readonly) NSString * author;
 @property (readonly) NSString * dateTime;
-@property (readonly) WUXAPIRawElementProviderSimple * target;
+@property (readonly) WUXAPIRawElementProviderSimple* target;
 @end
 
 #endif // __WUXAPIAnnotationProvider_DEFINED__
@@ -70,9 +70,9 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPIDragProvider
 @property (readonly) NSString * dropEffect;
-@property (readonly) id<NSFastEnumeration> /*String*/  dropEffects;
+@property (readonly) NSArray* dropEffects;
 @property (readonly) BOOL isGrabbed;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getGrabbedItems;
+- (NSArray*)getGrabbedItems;
 @end
 
 #endif // __WUXAPIDragProvider_DEFINED__
@@ -83,7 +83,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPIDropTargetProvider
 @property (readonly) NSString * dropEffect;
-@property (readonly) id<NSFastEnumeration> /*String*/  dropEffects;
+@property (readonly) NSArray* dropEffects;
 @end
 
 #endif // __WUXAPIDropTargetProvider_DEFINED__
@@ -107,7 +107,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @protocol WUXAPIGridItemProvider
 @property (readonly) int column;
 @property (readonly) int columnSpan;
-@property (readonly) WUXAPIRawElementProviderSimple * containingGrid;
+@property (readonly) WUXAPIRawElementProviderSimple* containingGrid;
 @property (readonly) int row;
 @property (readonly) int rowSpan;
 @end
@@ -121,7 +121,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @protocol WUXAPIGridProvider
 @property (readonly) int columnCount;
 @property (readonly) int rowCount;
-- (WUXAPIRawElementProviderSimple *)getItem:(int)row column:(int)column;
+- (WUXAPIRawElementProviderSimple*)getItem:(int)row column:(int)column;
 @end
 
 #endif // __WUXAPIGridProvider_DEFINED__
@@ -141,7 +141,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPIItemContainerProvider_DEFINED__
 
 @protocol WUXAPIItemContainerProvider
-- (WUXAPIRawElementProviderSimple *)findItemByProperty:(WUXAPIRawElementProviderSimple *)startAfter automationProperty:(WUXAAutomationProperty *)automationProperty value:(RTObject *)value;
+- (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter automationProperty:(WUXAAutomationProperty*)automationProperty value:(RTObject*)value;
 @end
 
 #endif // __WUXAPIItemContainerProvider_DEFINED__
@@ -152,7 +152,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPIMultipleViewProvider
 @property (readonly) int currentView;
-- (id<NSFastEnumeration> /*Int32*/ )getSupportedViews;
+- (NSArray*)getSupportedViews;
 - (NSString *)getViewName:(int)viewId;
 - (void)setCurrentView:(int)viewId;
 @end
@@ -164,7 +164,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPIObjectModelProvider_DEFINED__
 
 @protocol WUXAPIObjectModelProvider
-- (RTObject *)getUnderlyingObjectModel;
+- (RTObject*)getUnderlyingObjectModel;
 @end
 
 #endif // __WUXAPIObjectModelProvider_DEFINED__
@@ -218,7 +218,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPISelectionItemProvider
 @property (readonly) BOOL isSelected;
-@property (readonly) WUXAPIRawElementProviderSimple * selectionContainer;
+@property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)addToSelection;
 - (void)removeFromSelection;
 - (void)select;
@@ -233,7 +233,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @protocol WUXAPISelectionProvider
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getSelection;
+- (NSArray*)getSelection;
 @end
 
 #endif // __WUXAPISelectionProvider_DEFINED__
@@ -244,8 +244,8 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPISpreadsheetItemProvider
 @property (readonly) NSString * formula;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getAnnotationObjects;
-- (id<NSFastEnumeration> /*WUXAAnnotationType*/ )getAnnotationTypes;
+- (NSArray*)getAnnotationObjects;
+- (NSArray*)getAnnotationTypes;
 @end
 
 #endif // __WUXAPISpreadsheetItemProvider_DEFINED__
@@ -255,7 +255,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPISpreadsheetProvider_DEFINED__
 
 @protocol WUXAPISpreadsheetProvider
-- (WUXAPIRawElementProviderSimple *)getItemByName:(NSString *)name;
+- (WUXAPIRawElementProviderSimple*)getItemByName:(NSString *)name;
 @end
 
 #endif // __WUXAPISpreadsheetProvider_DEFINED__
@@ -266,8 +266,8 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPIStylesProvider
 @property (readonly) NSString * extendedProperties;
-@property (readonly) WUColor * fillColor;
-@property (readonly) WUColor * fillPatternColor;
+@property (readonly) WUColor* fillColor;
+@property (readonly) WUColor* fillPatternColor;
 @property (readonly) NSString * fillPatternStyle;
 @property (readonly) NSString * shape;
 @property (readonly) int styleId;
@@ -292,8 +292,8 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPITableItemProvider_DEFINED__
 
 @protocol WUXAPITableItemProvider
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getColumnHeaderItems;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getRowHeaderItems;
+- (NSArray*)getColumnHeaderItems;
+- (NSArray*)getRowHeaderItems;
 @end
 
 #endif // __WUXAPITableItemProvider_DEFINED__
@@ -304,8 +304,8 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 
 @protocol WUXAPITableProvider
 @property (readonly) WUXARowOrColumnMajor rowOrColumnMajor;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getColumnHeaders;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getRowHeaders;
+- (NSArray*)getColumnHeaders;
+- (NSArray*)getRowHeaders;
 @end
 
 #endif // __WUXAPITableProvider_DEFINED__
@@ -315,7 +315,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPITextChildProvider_DEFINED__
 
 @protocol WUXAPITextChildProvider
-@property (readonly) WUXAPIRawElementProviderSimple * textContainer;
+@property (readonly) WUXAPIRawElementProviderSimple* textContainer;
 @property (readonly) RTObject<WUXAPITextRangeProvider>* textRange;
 @end
 
@@ -330,11 +330,11 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 - (BOOL)compare:(RTObject<WUXAPITextRangeProvider>*)textRangeProvider;
 - (int)compareEndpoints:(WUXATTextPatternRangeEndpoint)endpoint textRangeProvider:(RTObject<WUXAPITextRangeProvider>*)textRangeProvider targetEndpoint:(WUXATTextPatternRangeEndpoint)targetEndpoint;
 - (void)expandToEnclosingUnit:(WUXATTextUnit)unit;
-- (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject *)value backward:(BOOL)backward;
+- (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject*)value backward:(BOOL)backward;
 - (RTObject<WUXAPITextRangeProvider>*)findText:(NSString *)text backward:(BOOL)backward ignoreCase:(BOOL)ignoreCase;
-- (RTObject *)getAttributeValue:(int)attributeId;
-- (void)getBoundingRectangles:(id<NSFastEnumeration> /*Double*/ *)returnValue;
-- (WUXAPIRawElementProviderSimple *)getEnclosingElement;
+- (RTObject*)getAttributeValue:(int)attributeId;
+- (void)getBoundingRectangles:(id<NSFastEnumeration> /* double */*)returnValue;
+- (WUXAPIRawElementProviderSimple*)getEnclosingElement;
 - (NSString *)getText:(int)maxLength;
 - (int)move:(WUXATTextUnit)unit count:(int)count;
 - (int)moveEndpointByUnit:(WUXATTextPatternRangeEndpoint)endpoint unit:(WUXATTextUnit)unit count:(int)count;
@@ -343,7 +343,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 - (void)addToSelection;
 - (void)removeFromSelection;
 - (void)scrollIntoView:(BOOL)alignToTop;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getChildren;
+- (NSArray*)getChildren;
 @end
 
 #endif // __WUXAPITextRangeProvider_DEFINED__
@@ -355,10 +355,10 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @protocol WUXAPITextProvider
 @property (readonly) RTObject<WUXAPITextRangeProvider>* documentRange;
 @property (readonly) WUXASupportedTextSelection supportedTextSelection;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getSelection;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getVisibleRanges;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple *)childElement;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint *)screenLocation;
+- (NSArray*)getSelection;
+- (NSArray*)getVisibleRanges;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
 #endif // __WUXAPITextProvider_DEFINED__
@@ -368,12 +368,12 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPITextProvider2_DEFINED__
 
 @protocol WUXAPITextProvider2 <WUXAPITextProvider>
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromAnnotation:(WUXAPIRawElementProviderSimple *)annotationElement;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromAnnotation:(WUXAPIRawElementProviderSimple*)annotationElement;
 - (RTObject<WUXAPITextRangeProvider>*)getCaretRange:(BOOL*)isActive;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getSelection;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getVisibleRanges;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple *)childElement;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint *)screenLocation;
+- (NSArray*)getSelection;
+- (NSArray*)getVisibleRanges;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
 #endif // __WUXAPITextProvider2_DEFINED__
@@ -388,11 +388,11 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 - (BOOL)compare:(RTObject<WUXAPITextRangeProvider>*)textRangeProvider;
 - (int)compareEndpoints:(WUXATTextPatternRangeEndpoint)endpoint textRangeProvider:(RTObject<WUXAPITextRangeProvider>*)textRangeProvider targetEndpoint:(WUXATTextPatternRangeEndpoint)targetEndpoint;
 - (void)expandToEnclosingUnit:(WUXATTextUnit)unit;
-- (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject *)value backward:(BOOL)backward;
+- (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject*)value backward:(BOOL)backward;
 - (RTObject<WUXAPITextRangeProvider>*)findText:(NSString *)text backward:(BOOL)backward ignoreCase:(BOOL)ignoreCase;
-- (RTObject *)getAttributeValue:(int)attributeId;
-- (void)getBoundingRectangles:(id<NSFastEnumeration> /*Double*/ *)returnValue;
-- (WUXAPIRawElementProviderSimple *)getEnclosingElement;
+- (RTObject*)getAttributeValue:(int)attributeId;
+- (void)getBoundingRectangles:(id<NSFastEnumeration> /* double */*)returnValue;
+- (WUXAPIRawElementProviderSimple*)getEnclosingElement;
 - (NSString *)getText:(int)maxLength;
 - (int)move:(WUXATTextUnit)unit count:(int)count;
 - (int)moveEndpointByUnit:(WUXATTextPatternRangeEndpoint)endpoint unit:(WUXATTextUnit)unit count:(int)count;
@@ -401,7 +401,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 - (void)addToSelection;
 - (void)removeFromSelection;
 - (void)scrollIntoView:(BOOL)alignToTop;
-- (id<NSFastEnumeration> /*WUXAPIRawElementProviderSimple*/ )getChildren;
+- (NSArray*)getChildren;
 @end
 
 #endif // __WUXAPITextRangeProvider2_DEFINED__
@@ -495,7 +495,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 #define __WUXAPICustomNavigationProvider_DEFINED__
 
 @protocol WUXAPICustomNavigationProvider
-- (RTObject *)navigateCustom:(WUXAPAutomationNavigationDirection)direction;
+- (RTObject*)navigateCustom:(WUXAPAutomationNavigationDirection)direction;
 @end
 
 #endif // __WUXAPICustomNavigationProvider_DEFINED__
@@ -507,10 +507,10 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 @protocol WUXAPITextEditProvider <WUXAPITextProvider>
 - (RTObject<WUXAPITextRangeProvider>*)getActiveComposition;
 - (RTObject<WUXAPITextRangeProvider>*)getConversionTarget;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getSelection;
-- (id<NSFastEnumeration> /*WUXAPITextRangeProvider*/ )getVisibleRanges;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple *)childElement;
-- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint *)screenLocation;
+- (NSArray*)getSelection;
+- (NSArray*)getVisibleRanges;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
+- (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
 #endif // __WUXAPITextEditProvider_DEFINED__
@@ -522,14 +522,14 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject * sender, 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (RTObject *)getValue:(WXDependencyProperty *)dp;
-- (void)setValue:(WXDependencyProperty *)dp value:(RTObject *)value;
-- (void)clearValue:(WXDependencyProperty *)dp;
-- (RTObject *)readLocalValue:(WXDependencyProperty *)dp;
-- (RTObject *)getAnimationBaseValue:(WXDependencyProperty *)dp;
-- (int64_t)registerPropertyChangedCallback:(WXDependencyProperty *)dp callback:(WXDependencyPropertyChangedCallback)callback;
-- (void)unregisterPropertyChangedCallback:(WXDependencyProperty *)dp token:(int64_t)token;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (RTObject*)getValue:(WXDependencyProperty*)dp;
+- (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
+- (void)clearValue:(WXDependencyProperty*)dp;
+- (RTObject*)readLocalValue:(WXDependencyProperty*)dp;
+- (RTObject*)getAnimationBaseValue:(WXDependencyProperty*)dp;
+- (int64_t)registerPropertyChangedCallback:(WXDependencyProperty*)dp callback:(WXDependencyPropertyChangedCallback)callback;
+- (void)unregisterPropertyChangedCallback:(WXDependencyProperty*)dp token:(int64_t)token;
 @end
 
 #endif // __WXDependencyObject_DEFINED__

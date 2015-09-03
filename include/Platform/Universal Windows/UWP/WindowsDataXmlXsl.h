@@ -25,15 +25,17 @@
 
 #include "WindowsDataXmlDom.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Data.Xml.Xsl.XsltProcessor
 #ifndef __WDXXXsltProcessor_DEFINED__
 #define __WDXXXsltProcessor_DEFINED__
 
 WINRT_EXPORT
 @interface WDXXXsltProcessor : RTObject
-+ (WDXXXsltProcessor *)createInstance:(WDXDXmlDocument *)document ACTIVATOR;
++ (WDXXXsltProcessor*)createInstance:(WDXDXmlDocument*)document ACTIVATOR;
 - (NSString *)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
-- (WDXDXmlDocument *)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;
+- (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;
 @end
 
 #endif // __WDXXXsltProcessor_DEFINED__

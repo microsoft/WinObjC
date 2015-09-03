@@ -26,6 +26,8 @@
 #include "WindowsApplicationModelAppointments.h"
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.ApplicationModel.Appointments.AppointmentsProvider.AppointmentsProviderLaunchActionVerbs
 #ifndef __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 #define __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
@@ -47,7 +49,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
-@property (readonly) WAAAppointment * appointmentInformation;
+@property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) NSString * sourcePackageFamilyName;
 - (void)reportCompleted:(NSString *)itemId;
 - (void)reportCanceled;
@@ -64,8 +66,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 @property (readonly) NSString * appointmentId;
-@property (readonly) WAAAppointment * appointmentInformation;
-@property (readonly) WFDateTime * instanceStartDate;
+@property (readonly) WAAAppointment* appointmentInformation;
+@property (readonly) id instanceStartDate;
 @property (readonly) NSString * sourcePackageFamilyName;
 - (void)reportCompleted:(NSString *)itemId;
 - (void)reportCanceled;
@@ -82,7 +84,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 @property (readonly) NSString * appointmentId;
-@property (readonly) WFDateTime * instanceStartDate;
+@property (readonly) id instanceStartDate;
 @property (readonly) NSString * sourcePackageFamilyName;
 - (void)reportCompleted;
 - (void)reportCanceled;

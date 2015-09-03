@@ -25,27 +25,29 @@
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionReason
 enum _WAEExtendedExecutionReason {
-    WAEExtendedExecutionReasonUnspecified = 0,
-    WAEExtendedExecutionReasonLocationTracking = 1,
-    WAEExtendedExecutionReasonSavingData = 2,
+	WAEExtendedExecutionReasonUnspecified = 0,
+	WAEExtendedExecutionReasonLocationTracking = 1,
+	WAEExtendedExecutionReasonSavingData = 2,
 };
 typedef unsigned WAEExtendedExecutionReason;
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionResult
 enum _WAEExtendedExecutionResult {
-    WAEExtendedExecutionResultAllowed = 0,
-    WAEExtendedExecutionResultDenied = 1,
+	WAEExtendedExecutionResultAllowed = 0,
+	WAEExtendedExecutionResultDenied = 1,
 };
 typedef unsigned WAEExtendedExecutionResult;
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionRevokedReason
 enum _WAEExtendedExecutionRevokedReason {
-    WAEExtendedExecutionRevokedReasonResumed = 0,
-    WAEExtendedExecutionRevokedReasonSystemPolicy = 1,
+	WAEExtendedExecutionRevokedReasonResumed = 0,
+	WAEExtendedExecutionRevokedReasonSystemPolicy = 1,
 };
 typedef unsigned WAEExtendedExecutionRevokedReason;
 
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionRevokedEventArgs
 #ifndef __WAEExtendedExecutionRevokedEventArgs_DEFINED__
@@ -76,9 +78,9 @@ WINRT_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
 + (instancetype)create ACTIVATOR;
 @property WAEExtendedExecutionReason reason;
-@property unsigned percentProgress;
+@property unsigned int percentProgress;
 @property (copy) NSString * description;
-- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject *, WAEExtendedExecutionRevokedEventArgs *))del;
+- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject*, WAEExtendedExecutionRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEExtendedExecutionResult))success failure:(void (^)(NSError*))failure;
 - (void)close;

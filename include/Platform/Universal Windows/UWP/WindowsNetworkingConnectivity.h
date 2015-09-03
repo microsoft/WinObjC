@@ -26,131 +26,131 @@
 
 // Windows.Networking.Connectivity.NetworkCostType
 enum _WNCNetworkCostType {
-    WNCNetworkCostTypeUnknown = 0,
-    WNCNetworkCostTypeUnrestricted = 1,
-    WNCNetworkCostTypeFixed = 2,
-    WNCNetworkCostTypeVariable = 3,
+	WNCNetworkCostTypeUnknown = 0,
+	WNCNetworkCostTypeUnrestricted = 1,
+	WNCNetworkCostTypeFixed = 2,
+	WNCNetworkCostTypeVariable = 3,
 };
 typedef unsigned WNCNetworkCostType;
 
 // Windows.Networking.Connectivity.NetworkConnectivityLevel
 enum _WNCNetworkConnectivityLevel {
-    WNCNetworkConnectivityLevelNone = 0,
-    WNCNetworkConnectivityLevelLocalAccess = 1,
-    WNCNetworkConnectivityLevelConstrainedInternetAccess = 2,
-    WNCNetworkConnectivityLevelInternetAccess = 3,
+	WNCNetworkConnectivityLevelNone = 0,
+	WNCNetworkConnectivityLevelLocalAccess = 1,
+	WNCNetworkConnectivityLevelConstrainedInternetAccess = 2,
+	WNCNetworkConnectivityLevelInternetAccess = 3,
 };
 typedef unsigned WNCNetworkConnectivityLevel;
 
 // Windows.Networking.Connectivity.NetworkTypes
 enum _WNCNetworkTypes {
-    WNCNetworkTypesNone = 0,
-    WNCNetworkTypesInternet = 1,
-    WNCNetworkTypesPrivateNetwork = 2,
+	WNCNetworkTypesNone = 0,
+	WNCNetworkTypesInternet = 1,
+	WNCNetworkTypesPrivateNetwork = 2,
 };
 typedef unsigned WNCNetworkTypes;
 
 // Windows.Networking.Connectivity.RoamingStates
 enum _WNCRoamingStates {
-    WNCRoamingStatesNone = 0,
-    WNCRoamingStatesNotRoaming = 1,
-    WNCRoamingStatesRoaming = 2,
+	WNCRoamingStatesNone = 0,
+	WNCRoamingStatesNotRoaming = 1,
+	WNCRoamingStatesRoaming = 2,
 };
 typedef unsigned WNCRoamingStates;
 
 // Windows.Networking.Connectivity.NetworkAuthenticationType
 enum _WNCNetworkAuthenticationType {
-    WNCNetworkAuthenticationTypeNone = 0,
-    WNCNetworkAuthenticationTypeUnknown = 1,
-    WNCNetworkAuthenticationTypeOpen80211 = 2,
-    WNCNetworkAuthenticationTypeSharedKey80211 = 3,
-    WNCNetworkAuthenticationTypeWpa = 4,
-    WNCNetworkAuthenticationTypeWpaPsk = 5,
-    WNCNetworkAuthenticationTypeWpaNone = 6,
-    WNCNetworkAuthenticationTypeRsna = 7,
-    WNCNetworkAuthenticationTypeRsnaPsk = 8,
-    WNCNetworkAuthenticationTypeIhv = 9,
+	WNCNetworkAuthenticationTypeNone = 0,
+	WNCNetworkAuthenticationTypeUnknown = 1,
+	WNCNetworkAuthenticationTypeOpen80211 = 2,
+	WNCNetworkAuthenticationTypeSharedKey80211 = 3,
+	WNCNetworkAuthenticationTypeWpa = 4,
+	WNCNetworkAuthenticationTypeWpaPsk = 5,
+	WNCNetworkAuthenticationTypeWpaNone = 6,
+	WNCNetworkAuthenticationTypeRsna = 7,
+	WNCNetworkAuthenticationTypeRsnaPsk = 8,
+	WNCNetworkAuthenticationTypeIhv = 9,
 };
 typedef unsigned WNCNetworkAuthenticationType;
 
 // Windows.Networking.Connectivity.NetworkEncryptionType
 enum _WNCNetworkEncryptionType {
-    WNCNetworkEncryptionTypeNone = 0,
-    WNCNetworkEncryptionTypeUnknown = 1,
-    WNCNetworkEncryptionTypeWep = 2,
-    WNCNetworkEncryptionTypeWep40 = 3,
-    WNCNetworkEncryptionTypeWep104 = 4,
-    WNCNetworkEncryptionTypeTkip = 5,
-    WNCNetworkEncryptionTypeCcmp = 6,
-    WNCNetworkEncryptionTypeWpaUseGroup = 7,
-    WNCNetworkEncryptionTypeRsnUseGroup = 8,
-    WNCNetworkEncryptionTypeIhv = 9,
+	WNCNetworkEncryptionTypeNone = 0,
+	WNCNetworkEncryptionTypeUnknown = 1,
+	WNCNetworkEncryptionTypeWep = 2,
+	WNCNetworkEncryptionTypeWep40 = 3,
+	WNCNetworkEncryptionTypeWep104 = 4,
+	WNCNetworkEncryptionTypeTkip = 5,
+	WNCNetworkEncryptionTypeCcmp = 6,
+	WNCNetworkEncryptionTypeWpaUseGroup = 7,
+	WNCNetworkEncryptionTypeRsnUseGroup = 8,
+	WNCNetworkEncryptionTypeIhv = 9,
 };
 typedef unsigned WNCNetworkEncryptionType;
 
 // Windows.Networking.Connectivity.DomainConnectivityLevel
 enum _WNCDomainConnectivityLevel {
-    WNCDomainConnectivityLevelNone = 0,
-    WNCDomainConnectivityLevelUnauthenticated = 1,
-    WNCDomainConnectivityLevelAuthenticated = 2,
+	WNCDomainConnectivityLevelNone = 0,
+	WNCDomainConnectivityLevelUnauthenticated = 1,
+	WNCDomainConnectivityLevelAuthenticated = 2,
 };
 typedef unsigned WNCDomainConnectivityLevel;
 
 // Windows.Networking.Connectivity.DataUsageGranularity
 enum _WNCDataUsageGranularity {
-    WNCDataUsageGranularityPerMinute = 0,
-    WNCDataUsageGranularityPerHour = 1,
-    WNCDataUsageGranularityPerDay = 2,
-    WNCDataUsageGranularityTotal = 3,
+	WNCDataUsageGranularityPerMinute = 0,
+	WNCDataUsageGranularityPerHour = 1,
+	WNCDataUsageGranularityPerDay = 2,
+	WNCDataUsageGranularityTotal = 3,
 };
 typedef unsigned WNCDataUsageGranularity;
 
 // Windows.Networking.Connectivity.CellularApnAuthenticationType
 enum _WNCCellularApnAuthenticationType {
-    WNCCellularApnAuthenticationTypeNone = 0,
-    WNCCellularApnAuthenticationTypePap = 1,
-    WNCCellularApnAuthenticationTypeChap = 2,
-    WNCCellularApnAuthenticationTypeMschapv2 = 3,
+	WNCCellularApnAuthenticationTypeNone = 0,
+	WNCCellularApnAuthenticationTypePap = 1,
+	WNCCellularApnAuthenticationTypeChap = 2,
+	WNCCellularApnAuthenticationTypeMschapv2 = 3,
 };
 typedef unsigned WNCCellularApnAuthenticationType;
 
 // Windows.Networking.Connectivity.TriStates
 enum _WNCTriStates {
-    WNCTriStatesDoNotCare = 0,
-    WNCTriStatesNo = 1,
-    WNCTriStatesYes = 2,
+	WNCTriStatesDoNotCare = 0,
+	WNCTriStatesNo = 1,
+	WNCTriStatesYes = 2,
 };
 typedef unsigned WNCTriStates;
 
 // Windows.Networking.Connectivity.WwanNetworkRegistrationState
 enum _WNCWwanNetworkRegistrationState {
-    WNCWwanNetworkRegistrationStateNone = 0,
-    WNCWwanNetworkRegistrationStateDeregistered = 1,
-    WNCWwanNetworkRegistrationStateSearching = 2,
-    WNCWwanNetworkRegistrationStateHome = 3,
-    WNCWwanNetworkRegistrationStateRoaming = 4,
-    WNCWwanNetworkRegistrationStatePartner = 5,
-    WNCWwanNetworkRegistrationStateDenied = 6,
+	WNCWwanNetworkRegistrationStateNone = 0,
+	WNCWwanNetworkRegistrationStateDeregistered = 1,
+	WNCWwanNetworkRegistrationStateSearching = 2,
+	WNCWwanNetworkRegistrationStateHome = 3,
+	WNCWwanNetworkRegistrationStateRoaming = 4,
+	WNCWwanNetworkRegistrationStatePartner = 5,
+	WNCWwanNetworkRegistrationStateDenied = 6,
 };
 typedef unsigned WNCWwanNetworkRegistrationState;
 
 // Windows.Networking.Connectivity.WwanDataClass
 enum _WNCWwanDataClass {
-    WNCWwanDataClassNone = 0,
-    WNCWwanDataClassGprs = 1,
-    WNCWwanDataClassEdge = 2,
-    WNCWwanDataClassUmts = 4,
-    WNCWwanDataClassHsdpa = 8,
-    WNCWwanDataClassHsupa = 16,
-    WNCWwanDataClassLteAdvanced = 32,
-    WNCWwanDataClassCdma1xRtt = 65536,
-    WNCWwanDataClassCdma1xEvdo = 131072,
-    WNCWwanDataClassCdma1xEvdoRevA = 262144,
-    WNCWwanDataClassCdma1xEvdv = 524288,
-    WNCWwanDataClassCdma3xRtt = 1048576,
-    WNCWwanDataClassCdma1xEvdoRevB = 2097152,
-    WNCWwanDataClassCdmaUmb = 4194304,
-    WNCWwanDataClassCustom = -2147483648,
+	WNCWwanDataClassNone = 0,
+	WNCWwanDataClassGprs = 1,
+	WNCWwanDataClassEdge = 2,
+	WNCWwanDataClassUmts = 4,
+	WNCWwanDataClassHsdpa = 8,
+	WNCWwanDataClassHsupa = 16,
+	WNCWwanDataClassLteAdvanced = 32,
+	WNCWwanDataClassCdma1xRtt = 65536,
+	WNCWwanDataClassCdma1xEvdo = 131072,
+	WNCWwanDataClassCdma1xEvdoRevA = 262144,
+	WNCWwanDataClassCdma1xEvdv = 524288,
+	WNCWwanDataClassCdma3xRtt = 1048576,
+	WNCWwanDataClassCdma1xEvdoRevB = 2097152,
+	WNCWwanDataClassCdmaUmb = 4194304,
+	WNCWwanDataClassCustom = -2147483648,
 };
 typedef unsigned WNCWwanDataClass;
 
@@ -161,9 +161,11 @@ typedef unsigned WNCWwanDataClass;
 // Windows.Networking.Connectivity.NetworkStatusChangedEventHandler
 #ifndef __WNCNetworkStatusChangedEventHandler__DEFINED
 #define __WNCNetworkStatusChangedEventHandler__DEFINED
-typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject * sender);
+typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 #endif // __WNCNetworkStatusChangedEventHandler__DEFINED
 
+
+#import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.Connectivity.NetworkUsageStates
 WINRT_EXPORT
@@ -176,7 +178,7 @@ WINRT_EXPORT
 // Windows.Networking.Connectivity.NetworkStatusChangedEventHandler
 #ifndef __WNCNetworkStatusChangedEventHandler__DEFINED
 #define __WNCNetworkStatusChangedEventHandler__DEFINED
-typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject * sender);
+typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 #endif // __WNCNetworkStatusChangedEventHandler__DEFINED
 
 // Windows.Networking.Connectivity.IPInformation
@@ -185,8 +187,8 @@ typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject * sender);
 
 WINRT_EXPORT
 @interface WNCIPInformation : RTObject
-@property (readonly) WNCNetworkAdapter * networkAdapter;
-@property (readonly) NSNumber* prefixLength;
+@property (readonly) WNCNetworkAdapter* networkAdapter;
+@property (readonly) id prefixLength;
 @end
 
 #endif // __WNCIPInformation_DEFINED__
@@ -197,8 +199,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCDataPlanUsage : RTObject
-@property (readonly) WFDateTime * lastSyncTime;
-@property (readonly) unsigned megabytesUsed;
+@property (readonly) WFDateTime* lastSyncTime;
+@property (readonly) unsigned int megabytesUsed;
 @end
 
 #endif // __WNCDataPlanUsage_DEFINED__
@@ -224,12 +226,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCDataPlanStatus : RTObject
-@property (readonly) NSNumber* dataLimitInMegabytes;
-@property (readonly) WNCDataPlanUsage * dataPlanUsage;
-@property (readonly) NSNumber* inboundBitsPerSecond;
-@property (readonly) NSNumber* maxTransferSizeInMegabytes;
-@property (readonly) WFDateTime * nextBillingCycle;
-@property (readonly) NSNumber* outboundBitsPerSecond;
+@property (readonly) id dataLimitInMegabytes;
+@property (readonly) WNCDataPlanUsage* dataPlanUsage;
+@property (readonly) id inboundBitsPerSecond;
+@property (readonly) id maxTransferSizeInMegabytes;
+@property (readonly) id nextBillingCycle;
+@property (readonly) id outboundBitsPerSecond;
 @end
 
 #endif // __WNCDataPlanStatus_DEFINED__
@@ -240,12 +242,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCNetworkAdapter : RTObject
-@property (readonly) unsigned ianaInterfaceType;
+@property (readonly) unsigned int ianaInterfaceType;
 @property (readonly) uint64_t inboundMaxBitsPerSecond;
-@property (readonly) WFGUID * networkAdapterId;
-@property (readonly) WNCNetworkItem * networkItem;
+@property (readonly) WFGUID* networkAdapterId;
+@property (readonly) WNCNetworkItem* networkItem;
 @property (readonly) uint64_t outboundMaxBitsPerSecond;
-- (void)getConnectedProfileAsyncWithSuccess:(void (^)(WNCConnectionProfile *))success failure:(void (^)(NSError*))failure;
+- (void)getConnectedProfileAsyncWithSuccess:(void (^)(WNCConnectionProfile*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNCNetworkAdapter_DEFINED__
@@ -293,7 +295,7 @@ WINRT_EXPORT
 @interface WNCNetworkUsage : RTObject
 @property (readonly) uint64_t bytesReceived;
 @property (readonly) uint64_t bytesSent;
-@property (readonly) WFTimeSpan * connectionDuration;
+@property (readonly) WFTimeSpan* connectionDuration;
 @end
 
 #endif // __WNCNetworkUsage_DEFINED__
@@ -304,8 +306,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectivityInterval : RTObject
-@property (readonly) WFTimeSpan * connectionDuration;
-@property (readonly) WFDateTime * startTime;
+@property (readonly) WFTimeSpan* connectionDuration;
+@property (readonly) WFDateTime* startTime;
 @end
 
 #endif // __WNCConnectivityInterval_DEFINED__
@@ -331,8 +333,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCLanIdentifierData : RTObject
-@property (readonly) unsigned type;
-@property (readonly) NSArray* /*UInt8*/  value;
+@property (readonly) unsigned int type;
+@property (readonly) NSArray* value;
 @end
 
 #endif // __WNCLanIdentifierData_DEFINED__
@@ -343,25 +345,25 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectionProfile : RTObject
-@property (readonly) WNCNetworkAdapter * networkAdapter;
-@property (readonly) WNCNetworkSecuritySettings * networkSecuritySettings;
+@property (readonly) WNCNetworkAdapter* networkAdapter;
+@property (readonly) WNCNetworkSecuritySettings* networkSecuritySettings;
 @property (readonly) NSString * profileName;
 @property (readonly) BOOL isWlanConnectionProfile;
 @property (readonly) BOOL isWwanConnectionProfile;
-@property (readonly) WFGUID* serviceProviderGuid;
-@property (readonly) WNCWlanConnectionProfileDetails * wlanConnectionProfileDetails;
-@property (readonly) WNCWwanConnectionProfileDetails * wwanConnectionProfileDetails;
+@property (readonly) id serviceProviderGuid;
+@property (readonly) WNCWlanConnectionProfileDetails* wlanConnectionProfileDetails;
+@property (readonly) WNCWwanConnectionProfileDetails* wwanConnectionProfileDetails;
 - (WNCNetworkConnectivityLevel)getNetworkConnectivityLevel;
-- (NSArray* /*String*/ )getNetworkNames;
-- (WNCConnectionCost *)getConnectionCost;
-- (WNCDataPlanStatus *)getDataPlanStatus;
-- (WNCDataUsage *)getLocalUsage:(WFDateTime *)StartTime EndTime:(WFDateTime *)EndTime;
-- (WNCDataUsage *)getLocalUsagePerRoamingStates:(WFDateTime *)StartTime EndTime:(WFDateTime *)EndTime States:(WNCRoamingStates)States;
-- (NSNumber*)getSignalBars;
+- (NSArray*)getNetworkNames;
+- (WNCConnectionCost*)getConnectionCost;
+- (WNCDataPlanStatus*)getDataPlanStatus;
+- (WNCDataUsage*)getLocalUsage:(WFDateTime*)StartTime EndTime:(WFDateTime*)EndTime;
+- (WNCDataUsage*)getLocalUsagePerRoamingStates:(WFDateTime*)StartTime EndTime:(WFDateTime*)EndTime States:(WNCRoamingStates)States;
+- (id)getSignalBars;
 - (WNCDomainConnectivityLevel)getDomainConnectivityLevel;
-- (void)getNetworkUsageAsync:(WFDateTime *)startTime endTime:(WFDateTime *)endTime granularity:(WNCDataUsageGranularity)granularity states:(WNCNetworkUsageStates *)states success:(void (^)(id<NSFastEnumeration> /*WNCNetworkUsage*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getConnectivityIntervalsAsync:(WFDateTime *)startTime endTime:(WFDateTime *)endTime states:(WNCNetworkUsageStates *)states success:(void (^)(id<NSFastEnumeration> /*WNCConnectivityInterval*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getAttributedNetworkUsageAsync:(WFDateTime *)startTime endTime:(WFDateTime *)endTime states:(WNCNetworkUsageStates *)states success:(void (^)(id<NSFastEnumeration> /*WNCAttributedNetworkUsage*/ ))success failure:(void (^)(NSError*))failure;
+- (void)getNetworkUsageAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime granularity:(WNCDataUsageGranularity)granularity states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getConnectivityIntervalsAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getAttributedNetworkUsageAsync:(WFDateTime*)startTime endTime:(WFDateTime*)endTime states:(WNCNetworkUsageStates*)states success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNCConnectionProfile_DEFINED__
@@ -372,9 +374,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCLanIdentifier : RTObject
-@property (readonly) WNCLanIdentifierData * infrastructureId;
-@property (readonly) WFGUID * networkAdapterId;
-@property (readonly) WNCLanIdentifierData * portId;
+@property (readonly) WNCLanIdentifierData* infrastructureId;
+@property (readonly) WFGUID* networkAdapterId;
+@property (readonly) WNCLanIdentifierData* portId;
 @end
 
 #endif // __WNCLanIdentifier_DEFINED__
@@ -386,7 +388,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNCProxyConfiguration : RTObject
 @property (readonly) BOOL canConnectDirectly;
-@property (readonly) NSArray* /*WFUri*/  proxyUris;
+@property (readonly) NSArray* proxyUris;
 @end
 
 #endif // __WNCProxyConfiguration_DEFINED__
@@ -398,14 +400,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNCConnectionProfileFilter : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFGUID* serviceProviderGuid;
+@property (copy) id serviceProviderGuid;
 @property WNCNetworkCostType networkCostType;
 @property BOOL isWwanConnectionProfile;
 @property BOOL isWlanConnectionProfile;
 @property BOOL isConnected;
-@property (copy) NSNumber* isRoaming;
-@property (copy) NSNumber* isOverDataLimit;
-@property (copy) NSNumber* isBackgroundDataUsageRestricted;
+@property (copy) id isRoaming;
+@property (copy) id isOverDataLimit;
+@property (copy) id isBackgroundDataUsageRestricted;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @end
 
@@ -417,7 +419,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCNetworkItem : RTObject
-@property (readonly) WFGUID * networkId;
+@property (readonly) WFGUID* networkId;
 - (WNCNetworkTypes)getNetworkTypes;
 @end
 
@@ -429,9 +431,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCRoutePolicy : RTObject
-+ (WNCRoutePolicy *)createRoutePolicy:(WNCConnectionProfile *)connectionProfile hostName:(WNHostName *)hostName type:(WNDomainNameType)type ACTIVATOR;
-@property (readonly) WNCConnectionProfile * connectionProfile;
-@property (readonly) WNHostName * hostName;
++ (WNCRoutePolicy*)createRoutePolicy:(WNCConnectionProfile*)connectionProfile hostName:(WNHostName*)hostName type:(WNDomainNameType)type ACTIVATOR;
+@property (readonly) WNCConnectionProfile* connectionProfile;
+@property (readonly) WNHostName* hostName;
 @property (readonly) WNDomainNameType hostNameType;
 @end
 
@@ -470,7 +472,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectionSession : RTObject <WFIClosable>
-@property (readonly) WNCConnectionProfile * connectionProfile;
+@property (readonly) WNCConnectionProfile* connectionProfile;
 - (void)close;
 @end
 
@@ -482,13 +484,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCNetworkInformation : RTObject
-+ (void)findConnectionProfilesAsync:(WNCConnectionProfileFilter *)pProfileFilter success:(void (^)(id<NSFastEnumeration> /*WNCConnectionProfile*/ ))success failure:(void (^)(NSError*))failure;
-+ (NSArray* /*WNCConnectionProfile*/ )getConnectionProfiles;
-+ (WNCConnectionProfile *)getInternetConnectionProfile;
-+ (NSArray* /*WNCLanIdentifier*/ )getLanIdentifiers;
-+ (NSArray* /*WNHostName*/ )getHostNames;
-+ (void)getProxyConfigurationAsync:(WFUri *)uri success:(void (^)(WNCProxyConfiguration *))success failure:(void (^)(NSError*))failure;
-+ (NSArray* /*WNEndpointPair*/ )getSortedEndpointPairs:(id<NSFastEnumeration> /*WNEndpointPair*/ )destinationList sortOptions:(WNHostNameSortOptions)sortOptions;
++ (void)findConnectionProfilesAsync:(WNCConnectionProfileFilter*)pProfileFilter success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (NSArray*)getConnectionProfiles;
++ (WNCConnectionProfile*)getInternetConnectionProfile;
++ (NSArray*)getLanIdentifiers;
++ (NSArray*)getHostNames;
++ (void)getProxyConfigurationAsync:(WFUri*)uri success:(void (^)(WNCProxyConfiguration*))success failure:(void (^)(NSError*))failure;
++ (NSArray*)getSortedEndpointPairs:(id<NSFastEnumeration> /* WNEndpointPair* */)destinationList sortOptions:(WNHostNameSortOptions)sortOptions;
 + (EventRegistrationToken)addNetworkStatusChangedEvent:(WNCNetworkStatusChangedEventHandler)del;
 + (void)removeNetworkStatusChangedEvent:(EventRegistrationToken)tok;
 @end
@@ -501,9 +503,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectivityManager : RTObject
-+ (void)acquireConnectionAsync:(WNCCellularApnContext *)cellularApnContext success:(void (^)(WNCConnectionSession *))success failure:(void (^)(NSError*))failure;
-+ (void)addHttpRoutePolicy:(WNCRoutePolicy *)routePolicy;
-+ (void)removeHttpRoutePolicy:(WNCRoutePolicy *)routePolicy;
++ (void)acquireConnectionAsync:(WNCCellularApnContext*)cellularApnContext success:(void (^)(WNCConnectionSession*))success failure:(void (^)(NSError*))failure;
++ (void)addHttpRoutePolicy:(WNCRoutePolicy*)routePolicy;
++ (void)removeHttpRoutePolicy:(WNCRoutePolicy*)routePolicy;
 @end
 
 #endif // __WNCConnectivityManager_DEFINED__

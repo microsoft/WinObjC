@@ -25,46 +25,46 @@
 
 // Windows.Security.Credentials.WebAccountState
 enum _WSCWebAccountState {
-    WSCWebAccountStateNone = 0,
-    WSCWebAccountStateConnected = 1,
-    WSCWebAccountStateError = 2,
+	WSCWebAccountStateNone = 0,
+	WSCWebAccountStateConnected = 1,
+	WSCWebAccountStateError = 2,
 };
 typedef unsigned WSCWebAccountState;
 
 // Windows.Security.Credentials.WebAccountPictureSize
 enum _WSCWebAccountPictureSize {
-    WSCWebAccountPictureSizeSize64x64 = 64,
-    WSCWebAccountPictureSizeSize208x208 = 208,
-    WSCWebAccountPictureSizeSize424x424 = 424,
-    WSCWebAccountPictureSizeSize1080x1080 = 1080,
+	WSCWebAccountPictureSizeSize64x64 = 64,
+	WSCWebAccountPictureSizeSize208x208 = 208,
+	WSCWebAccountPictureSizeSize424x424 = 424,
+	WSCWebAccountPictureSizeSize1080x1080 = 1080,
 };
 typedef unsigned WSCWebAccountPictureSize;
 
 // Windows.Security.Credentials.KeyCredentialStatus
 enum _WSCKeyCredentialStatus {
-    WSCKeyCredentialStatusSuccess = 0,
-    WSCKeyCredentialStatusUnknownError = 1,
-    WSCKeyCredentialStatusNotFound = 2,
-    WSCKeyCredentialStatusUserCanceled = 3,
-    WSCKeyCredentialStatusUserPrefersPassword = 4,
-    WSCKeyCredentialStatusCredentialAlreadyExists = 5,
-    WSCKeyCredentialStatusSecurityDeviceLocked = 6,
+	WSCKeyCredentialStatusSuccess = 0,
+	WSCKeyCredentialStatusUnknownError = 1,
+	WSCKeyCredentialStatusNotFound = 2,
+	WSCKeyCredentialStatusUserCanceled = 3,
+	WSCKeyCredentialStatusUserPrefersPassword = 4,
+	WSCKeyCredentialStatusCredentialAlreadyExists = 5,
+	WSCKeyCredentialStatusSecurityDeviceLocked = 6,
 };
 typedef unsigned WSCKeyCredentialStatus;
 
 // Windows.Security.Credentials.KeyCredentialAttestationStatus
 enum _WSCKeyCredentialAttestationStatus {
-    WSCKeyCredentialAttestationStatusSuccess = 0,
-    WSCKeyCredentialAttestationStatusUnknownError = 1,
-    WSCKeyCredentialAttestationStatusNotSupported = 2,
-    WSCKeyCredentialAttestationStatusTemporaryFailure = 3,
+	WSCKeyCredentialAttestationStatusSuccess = 0,
+	WSCKeyCredentialAttestationStatusUnknownError = 1,
+	WSCKeyCredentialAttestationStatusNotSupported = 2,
+	WSCKeyCredentialAttestationStatusTemporaryFailure = 3,
 };
 typedef unsigned WSCKeyCredentialAttestationStatus;
 
 // Windows.Security.Credentials.KeyCredentialCreationOption
 enum _WSCKeyCredentialCreationOption {
-    WSCKeyCredentialCreationOptionReplaceExisting = 0,
-    WSCKeyCredentialCreationOptionFailIfExists = 1,
+	WSCKeyCredentialCreationOptionReplaceExisting = 0,
+	WSCKeyCredentialCreationOptionFailIfExists = 1,
 };
 typedef unsigned WSCKeyCredentialCreationOption;
 
@@ -73,6 +73,8 @@ typedef unsigned WSCKeyCredentialCreationOption;
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Security.Credentials.IWebAccount
 #ifndef __WSCIWebAccount_DEFINED__
 #define __WSCIWebAccount_DEFINED__
@@ -80,7 +82,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 @protocol WSCIWebAccount
 @property (readonly) WSCWebAccountState state;
 @property (readonly) NSString * userName;
-@property (readonly) WSCWebAccountProvider * webAccountProvider;
+@property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
 #endif // __WSCIWebAccount_DEFINED__
@@ -91,13 +93,13 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 WINRT_EXPORT
 @interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider *)createWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri *)iconUri ACTIVATOR;
++ (WSCWebAccountProvider*)createWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 @property (readonly) NSString * displayName;
-@property (readonly) WFUri * iconUri;
+@property (readonly) WFUri* iconUri;
 @property (readonly) NSString * id;
 @property (readonly) NSString * authority;
 @property (readonly) NSString * displayPurpose;
-@property (readonly) WSUser * user;
+@property (readonly) WSUser* user;
 @end
 
 #endif // __WSCWebAccountProvider_DEFINED__
@@ -108,12 +110,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
-+ (WSCWebAccount *)createWebAccount:(WSCWebAccountProvider *)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
++ (WSCWebAccount*)createWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
 @property (readonly) WSCWebAccountState state;
 @property (readonly) NSString * userName;
-@property (readonly) WSCWebAccountProvider * webAccountProvider;
+@property (readonly) WSCWebAccountProvider* webAccountProvider;
 @property (readonly) NSString * id;
-@property (readonly) NSDictionary * /*String, String*/  properties;
+@property (readonly) NSDictionary* properties;
 - (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)signOutAsync;
 - (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString *)clientId;
@@ -127,7 +129,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredentialRetrievalResult : RTObject
-@property (readonly) WSCKeyCredential * credential;
+@property (readonly) WSCKeyCredential* credential;
 @property (readonly) WSCKeyCredentialStatus status;
 @end
 
@@ -166,8 +168,8 @@ WINRT_EXPORT
 @interface WSCKeyCredential : RTObject
 @property (readonly) NSString * name;
 - (RTObject<WSSIBuffer>*)retrievePublicKey;
-- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(WSCKeyCredentialOperationResult *))success failure:(void (^)(NSError*))failure;
-- (void)getAttestationAsyncWithSuccess:(void (^)(WSCKeyCredentialAttestationResult *))success failure:(void (^)(NSError*))failure;
+- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(WSCKeyCredentialOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)getAttestationAsyncWithSuccess:(void (^)(WSCKeyCredentialAttestationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCKeyCredential_DEFINED__
@@ -180,8 +182,8 @@ WINRT_EXPORT
 @interface WSCKeyCredentialManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)renewAttestationAsync;
-+ (void)requestCreateAsync:(NSString *)name option:(WSCKeyCredentialCreationOption)option success:(void (^)(WSCKeyCredentialRetrievalResult *))success failure:(void (^)(NSError*))failure;
-+ (void)openAsync:(NSString *)name success:(void (^)(WSCKeyCredentialRetrievalResult *))success failure:(void (^)(NSError*))failure;
++ (void)requestCreateAsync:(NSString *)name option:(WSCKeyCredentialCreationOption)option success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
++ (void)openAsync:(NSString *)name success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)deleteAsync:(NSString *)name;
 @end
 
@@ -194,7 +196,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordCredential : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WSCPasswordCredential *)createPasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
++ (WSCPasswordCredential*)createPasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
 @property (copy) NSString * userName;
 @property (copy) NSString * resource;
 @property (copy) NSString * password;
@@ -211,12 +213,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)create ACTIVATOR;
-- (void)add:(WSCPasswordCredential *)credential;
-- (void)remove:(WSCPasswordCredential *)credential;
-- (WSCPasswordCredential *)retrieve:(NSString *)resource userName:(NSString *)userName;
-- (NSArray* /*WSCPasswordCredential*/ )findAllByResource:(NSString *)resource;
-- (NSArray* /*WSCPasswordCredential*/ )findAllByUserName:(NSString *)userName;
-- (NSArray* /*WSCPasswordCredential*/ )retrieveAll;
+- (void)add:(WSCPasswordCredential*)credential;
+- (void)remove:(WSCPasswordCredential*)credential;
+- (WSCPasswordCredential*)retrieve:(NSString *)resource userName:(NSString *)userName;
+- (NSArray*)findAllByResource:(NSString *)resource;
+- (NSArray*)findAllByUserName:(NSString *)userName;
+- (NSArray*)retrieveAll;
 @end
 
 #endif // __WSCPasswordVault_DEFINED__
@@ -226,8 +228,23 @@ WINRT_EXPORT
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCIPropertySet_DEFINED__
@@ -239,13 +256,26 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IObservableMap`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMap`2<String,System.Object> type information
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WSCPasswordCredentialPropertyStore_DEFINED__

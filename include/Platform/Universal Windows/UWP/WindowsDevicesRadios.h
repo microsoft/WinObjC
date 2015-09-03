@@ -25,34 +25,36 @@
 
 // Windows.Devices.Radios.RadioState
 enum _WDRRadioState {
-    WDRRadioStateUnknown = 0,
-    WDRRadioStateOn = 1,
-    WDRRadioStateOff = 2,
-    WDRRadioStateDisabled = 3,
+	WDRRadioStateUnknown = 0,
+	WDRRadioStateOn = 1,
+	WDRRadioStateOff = 2,
+	WDRRadioStateDisabled = 3,
 };
 typedef unsigned WDRRadioState;
 
 // Windows.Devices.Radios.RadioKind
 enum _WDRRadioKind {
-    WDRRadioKindOther = 0,
-    WDRRadioKindWiFi = 1,
-    WDRRadioKindMobileBroadband = 2,
-    WDRRadioKindBluetooth = 3,
-    WDRRadioKindFM = 4,
+	WDRRadioKindOther = 0,
+	WDRRadioKindWiFi = 1,
+	WDRRadioKindMobileBroadband = 2,
+	WDRRadioKindBluetooth = 3,
+	WDRRadioKindFM = 4,
 };
 typedef unsigned WDRRadioKind;
 
 // Windows.Devices.Radios.RadioAccessStatus
 enum _WDRRadioAccessStatus {
-    WDRRadioAccessStatusUnspecified = 0,
-    WDRRadioAccessStatusAllowed = 1,
-    WDRRadioAccessStatusDeniedByUser = 2,
-    WDRRadioAccessStatusDeniedBySystem = 3,
+	WDRRadioAccessStatusUnspecified = 0,
+	WDRRadioAccessStatusAllowed = 1,
+	WDRRadioAccessStatusDeniedByUser = 2,
+	WDRRadioAccessStatusDeniedBySystem = 3,
 };
 typedef unsigned WDRRadioAccessStatus;
 
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Devices.Radios.Radio
 #ifndef __WDRRadio_DEFINED__
@@ -60,14 +62,14 @@ typedef unsigned WDRRadioAccessStatus;
 
 WINRT_EXPORT
 @interface WDRRadio : RTObject
-+ (void)getRadiosAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WDRRadio*/ ))success failure:(void (^)(NSError*))failure;
++ (void)getRadiosAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDRRadio *))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 @property (readonly) WDRRadioKind kind;
 @property (readonly) NSString * name;
 @property (readonly) WDRRadioState state;
-- (EventRegistrationToken)addStateChangedEvent:(void(^)(WDRRadio *, RTObject *))del;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WDRRadio*, RTObject*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
 - (void)setStateAsync:(WDRRadioState)value success:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 @end

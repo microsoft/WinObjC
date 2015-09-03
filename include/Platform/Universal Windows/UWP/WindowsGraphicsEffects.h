@@ -23,6 +23,8 @@
 @protocol WGEIGraphicsEffectSource, WGEIGraphicsEffect;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.Graphics.Effects.IGraphicsEffectSource
 #ifndef __WGEIGraphicsEffectSource_DEFINED__
 #define __WGEIGraphicsEffectSource_DEFINED__
