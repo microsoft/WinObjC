@@ -19,27 +19,7 @@
 #import <GLES2/gl2.h>
 #import <OpenGLES/EAGL.h>
 #import <UIKit/UIKit.h>
-
-enum _GLKViewDrawableColorFormat {
-    GLKViewDrawableColorFormatRGBA8888 = 0,
-    GLKViewDrawableColorFormatRGB565,
-    GLKViewDrawableColorFormatSRGBA8888,
-    GLKViewDrawableColorFormatWindow
-};
-typedef GLuint GLKViewDrawableColorFormat;
-
-enum _GLKViewDrawableDepthFormat {
-    GLKViewDrawableDepthFormatNone = 0,
-    GLKViewDrawableDepthFormat16,
-    GLKViewDrawableDepthFormat24
-};
-typedef GLuint GLKViewDrawableDepthFormat;
-
-enum _GLKViewDrawableStencilFormat {
-    GLKViewDrawableStencilFormatNone = 0,
-    GLKViewDrawableStencilFormat8
-};
-typedef GLuint GLKViewDrawableStencilFormat;
+#import <GLKit/GLKEnums.h>
 
 @class GLKView;
 

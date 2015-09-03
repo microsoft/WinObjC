@@ -21,48 +21,14 @@
 
 #import "Foundation/NSObject.h"
 #import "GLKit/GLKMath.h"
+#import "GLKit/GLKEnums.h"
 
 @class GLKShader;
+@class GLKTextureInfo;
 
 @protocol GLKNamedEffect
 -(void)prepareToDraw;
 @end
-
-enum _GLKLightingType {
-    GLKLightingTypePerVertex = 0,
-    GLKLightingTypePerPixel
-};
-typedef unsigned int GLKLightingType;
-
-enum _GLKFogMode {
-    GLKFogModeExp = 0,
-    GLKFogModeExp2,
-    GLKFogModeLinear
-};
-typedef unsigned int GLKFogMode;
-
-enum _GLKTextureEnvMode {
-    GLKTextureEnvModeReplace = 0,
-    GLKTextureEnvModeModulate,
-    GLKTextureEnvModeDecal
-};
-typedef unsigned int GLKTextureEnvMode;
-
-enum _GLKTextureTarget {
-    GLKTextureTarget2D = GL_TEXTURE_2D,
-    GLKTextureTargetCubeMap = GL_TEXTURE_CUBE_MAP,
-    GLKTextureTargetCt = 2
-};
-typedef unsigned int GLKTextureTarget;
-
-enum _GLKVertexAttrib {
-    GLKVertexAttribPosition = 0,
-    GLKVertexAttribNormal,
-    GLKVertexAttribColor,
-    GLKVertexAttribTexCoord0,
-    GLKVertexAttribTexCoord1
-};
-typedef unsigned int GLKVertexAttrib;
 
 // ----------------------------------------
 
@@ -137,6 +103,7 @@ GLKIT_EXPORT_CLASS
 @property GLKTextureTarget target;
 
 -(id)init;
+-(id)initWith: (GLKTextureInfo*)tex;
 @end
 
 // ----------------------------------------

@@ -59,6 +59,9 @@
     <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.m">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.cpp">
+      <Filter>GLKitComplex</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <SBInfoPlistCopy Include="..\..\GLKitComplex\Info.plist" />
@@ -70,5 +73,13 @@
     <ClInclude Include="..\..\GLKitComplex\GLRenderer.h">
       <Filter>GLKitComplex</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\GLKitComplex\Mesh.h">
+      <Filter>GLKitComplex</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\GLKitComplex\Images.xcassets\utah-teapot.obj">
+      <Filter>Assets</Filter>
+    </Text>
   </ItemGroup>
 </Project>

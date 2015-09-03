@@ -54,7 +54,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GLKit.lib;OpenGLES.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLKit.lib;OpenGLES.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
@@ -88,6 +88,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.cpp" />
     <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
     <Image Include="Assets\Logo.scale-100.png" />
@@ -109,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\GLKitComplex\GLRenderer.h" />
+    <ClInclude Include="..\..\GLKitComplex\Mesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\GLKitComplex\Images.xcassets\utah-teapot.obj">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
