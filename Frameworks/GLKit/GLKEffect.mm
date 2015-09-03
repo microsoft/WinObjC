@@ -61,7 +61,7 @@
     _material = [[GLKEffectPropertyMaterial alloc] init];
     _fog = [[GLKEffectPropertyFog alloc] init];
 
-    _shaderName = GLKSH_STANDARD_SHADER;
+    _shaderName = @GLKSH_STANDARD_SHADER;
     
     return self;
 }

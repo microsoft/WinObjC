@@ -19,15 +19,7 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-#define GLKSH_STANDARD_SHADER   @"Standard"
-
-#define GLKSH_POS_NAME          "_position"
-#define GLKSH_NORMAL_NAME       "_normal"
-#define GLKSH_COLOR_NAME        "_color"
-#define GLKSH_UV0_NAME          "_uv0"
-#define GLKSH_UV1_NAME          "_uv1"
-
-#define GLKSH_MVP_NAME          "_mvp"
+#import <GLKit/GLKShaderDefs.h>
 
 @class GLKShaderEffect;
 @class GLKShader;
