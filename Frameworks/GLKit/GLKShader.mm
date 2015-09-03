@@ -22,6 +22,11 @@
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
 
+#include <vector>
+#include <map>
+
+using namespace std;
+
 // See GLKVertexAttrib enum in GLKEffect.h for layout locations.
 //
 static const char* vertShader =
@@ -62,7 +67,7 @@ static GLKShaderCache* imp = nil;
 -(void)preloadShaders {
     GLKShaderSource* ss = [[GLKShaderSource alloc] initWithVS: vertShader PS: fragShader];
     if(ss) {
-        [_shaders setObject: ss forKey: GLKSH_STANDARD_SHADER];
+        [_shaders setObject: ss forKey: @GLKSH_STANDARD_SHADER];
     }
 }
 
@@ -133,7 +138,7 @@ static GLKShaderCache* imp = nil;
 
 @implementation GLKShader {
     GLKShaderSource* _src;
-}
+ }
 
 -(id)initWith: (GLKShaderSource*)src {
     _src = src;
