@@ -20,6 +20,24 @@
 #import <QuartzCore/CALayer.h>
 #import "XamlViewController.h"
 
+//
+// A special checkbox that is inheriting off the regular one and overriding the onToggle message:
+//
+
+#ifdef WINOBJC_WIN10
+
+@interface OurCheckBox : WXCCheckBox <WUXCPIToggleButtonOverrides>
+@end
+
+@implementation OurCheckBox
+- (void)onToggle {
+	NSLog(@"Clicked!");
+	[super onToggle];
+}
+@end
+
+#endif
+
 @implementation XamlViewController {
 }
 
@@ -83,7 +101,11 @@
        cell.accessoryView = buttonView;
     }
     else if (indexPath.row == 2) {
+#ifdef WINOBJC_WIN10
+       WXCCheckBox *checkBox = [OurCheckBox create];
+#else
        WXCCheckBox *checkBox = [WXCCheckBox create];
+#endif
        checkBox.requestedTheme = WXApplicationThemeDark;
        checkBox.content = [WFPropertyValue createString:@"Check"];
        UIView *checkBoxView = [[UIView alloc] initWithFrame: CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
