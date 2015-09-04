@@ -54,8 +54,8 @@ objc_not_found_handler(id obj, SEL sel)
     if (objc_forward_handler != NULL)
         return objc_forward_handler(obj, sel);
 
-    OBJC_ERROR("Selector %c[%s] is not implemented for class %s!",
-        (is_class ? '+' : '-'), sel_getName(sel), object_getClassName(obj));
+    OBJC_NOT_IMPLEMENTED_ERROR("Selector %c[%s] is not implemented for class %s on object 0x%x!",
+        (is_class ? '+' : '-'), sel_getName(sel), object_getClassName(obj), obj);
 }
 
 BOOL

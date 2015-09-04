@@ -165,6 +165,15 @@ extern void objc_global_mutex_lock(void);
 extern void objc_global_mutex_unlock(void);
 extern void objc_global_mutex_free(void);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void objc_RaiseNotImplementedException(const char *format, ...);
+void objc_RaiseGeneralFailureException(const char *format, ...);
+#ifdef __cplusplus
+}
+#endif
+
 static void*
 objc_sparsearray_get(const struct objc_sparsearray *s, uint32_t idx)
 {
@@ -191,14 +200,25 @@ objc_sparsearray_get(const struct objc_sparsearray *s, uint32_t idx)
         sprintf_s(buf, sizeof(buf), __VA_ARGS__);               \
         OutputDebugStringA(buf); \
         \
-        fprintf(stderr, "[objc @ " __FILE__ ":%d] ", __LINE__); \
-        fprintf(stderr, __VA_ARGS__);               \
-        fputs("\n", stderr);                    \
-        abort();                        \
+        objc_RaiseGeneralFailureException(__VA_ARGS__);  \
+    }
+#define OBJC_NOT_IMPLEMENTED_ERROR(...)                         \
+    {   \
+        char buf[1024] = { 0 }; \
+        sprintf_s(buf, sizeof(buf), "[objc @ " __FILE__ ":%d] ", __LINE__); \
+        OutputDebugStringA(buf); \
+        sprintf_s(buf, sizeof(buf), __VA_ARGS__);               \
+        OutputDebugStringA(buf); \
+        \
+        objc_RaiseNotImplementedException(__VA_ARGS__);  \
     }
 #else
 #define OBJC_ERROR(...)                         \
     {   \
-        abort();                        \
+        objc_RaiseGeneralFailureException(__VA_ARGS__);                        \
+    }
+#define OBJC_NOT_IMPLEMENTED_ERROR(...)                         \
+    {   \
+        objc_RaiseNotImplementedException(__VA_ARGS__);  \
     }
 #endif

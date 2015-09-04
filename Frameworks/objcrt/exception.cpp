@@ -2,6 +2,9 @@
 #include <memory.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdarg.h>
+#include <malloc.h>
+#include <string>
 #include "runtime.h"
 
 typedef struct
@@ -79,4 +82,43 @@ extern "C" __declspec(dllexport) void objc_exception_throw(void *exception)
     };
 
     _CxxThrowException(&exception, &ti);
+}
+
+static void formatExceptionMessage(std::string &str, const char *format, va_list va)
+{
+    int len = _vscprintf(format, va);
+
+    if (len > 0) {
+        str.resize(len + 1);
+
+        _vsnprintf_s(&str[0], str.size(), str.size(), format, va);
+    }
+}
+
+extern "C" void objc_RaiseNotImplementedException(const char *format, ...)
+{
+    va_list va;
+
+    va_start(va, format);
+    std::string errorMsg;
+    formatExceptionMessage(errorMsg, format, va);
+    va_end(va);
+
+    std::wstring wstr(errorMsg.begin(), errorMsg.end());
+
+    throw ref new Platform::NotImplementedException(ref new Platform::String(wstr.data()));
+}
+
+extern "C" void objc_RaiseGeneralFailureException(const char *format, ...)
+{
+    va_list va;
+
+    va_start(va, format);
+    std::string errorMsg;
+    formatExceptionMessage(errorMsg, format, va);
+    va_end(va);
+
+    std::wstring wstr(errorMsg.begin(), errorMsg.end());
+
+    throw ref new Platform::FailureException(ref new Platform::String(wstr.data()));
 }
