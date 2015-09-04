@@ -359,6 +359,10 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
       templateName = outputFormat + "-" + "App";
     } else if (target.second->getProductType() == TargetStaticLib) {
       templateName = outputFormat + "-" + "StaticLib";
+    } else if (target.first->getType() == "PBXAggregateTarget") {
+      templateName = outputFormat + "-" + "Aggregate";
+    } else {
+      SBLog::warning() << "Failed to construct VS template name for \"" << target.second->getName() << "\" target." << std::endl;
     }
 
     // Get the template
