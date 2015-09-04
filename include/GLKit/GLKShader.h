@@ -30,8 +30,8 @@ typedef void* GLKShaderLayoutPtr;
 GLKIT_EXPORT_CLASS
 @interface GLKShaderPair : NSObject
 
-@property NSString* vertexShader;
-@property NSString* pixelShader;
+@property(retain) NSString* vertexShader;
+@property(retain) NSString* pixelShader;
 
 @end
 

@@ -23,7 +23,7 @@
 -(void)initGLData;
 -(void)cleanupGLData;
 
--(void)changeMaterial;
+-(NSString*)changeMaterial;
 
 -(void)glkViewController: (GLKViewController*)controller willPause:(BOOL)paused;
 -(void)glkViewControllerUpdate: (GLKViewController*)controller;

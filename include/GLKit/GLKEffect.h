@@ -117,8 +117,8 @@ GLKIT_EXPORT_CLASS
 
 @property(readonly) GLKEffectPropertyTransform* transform;
 @property(readonly) GLKShaderMaterialPtr        shaderMat;
-@property GLKShader* shader;
-@property NSString* shaderName;
+@property(retain) GLKShader* shader;
+@property(retain) NSString* shaderName;
 
 -(id)init;
 -(void)prepareToDraw;

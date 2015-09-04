@@ -55,7 +55,7 @@
     _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
     [_welcomeLabel setBackgroundColor: nil];
     [_welcomeLabel setTextColor: [UIColor whiteColor]];
-    [_welcomeLabel setText: @"Hello Islandwood!"];
+    [_welcomeLabel setText: @"Vertex Color!"];
     [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 24.0f]];
     [_welcomeLabel setTextAlignment: UITextAlignmentCenter];    
     [_mainWindow addSubview: _welcomeLabel];
@@ -70,8 +70,7 @@
 
 -(void)handleTap: (UITapGestureRecognizer*)tap {
     CGPoint location = [tap locationInView: [tap.view superview]];
-    [_welcomeLabel setText: @"Stop touching me!"];
-    [_renderer changeMaterial];
+    [_welcomeLabel setText: [_renderer changeMaterial]];
 }
 
 @end

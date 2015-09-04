@@ -56,6 +56,7 @@
     NSMutableArray* _textures;
     NSMutableArray* _lights;
     bool            _effectChanged;
+    bool            _useConstantColor;
 }
 
 -(id)init {
@@ -135,6 +136,10 @@
 -(void)prepareToDraw
 {
     // Assemble material, calculate name.
+    NSLog(@"LOL 0x%x", self);
+    NSLog(@"prepareToDraw going to town: shader name: %@", self.shaderName);
+    NSLog(@"OWNED 0x%x", self);
+
     ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;    
     if (_effectChanged) {
         string shaderName = GLKSH_STANDARD_SHADER "_";
@@ -158,6 +163,7 @@
         m->vertattr(GLKSH_UV1_NAME);
     
         self.shaderName = [NSString stringWithCString: shaderName.c_str()];
+        NSLog(@"Shader name now: %@", self.shaderName);
     }
 
     // Check for shader existence.
@@ -197,6 +203,14 @@
             }
         }
     }
+
+    NSLog(@"LOL 0x%x", self);
+    NSLog(@"prepareToDraw done going to town: shader name: %@", self.shaderName);
+    NSLog(@"OWNED 0x%x", self);
+}
+
+-(BOOL)useConstantColor {
+    return _useConstantColor;
 }
 
 -(void)setUseConstantColor: (BOOL)use {
