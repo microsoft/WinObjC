@@ -106,9 +106,12 @@ static void dumpMat(const GLKMatrix4& mat)
     glDrawElements(GL_TRIANGLES, 3 * _mesh->faceCount(), GL_UNSIGNED_SHORT, 0);
 }
 
--(void)changeMaterial {
+-(NSString*)changeMaterial {
     _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
     _effect.useConstantColor = !_effect.useConstantColor;
+
+    if (_effect.useConstantColor) return @"Solid Color!";
+    return @"Vertex Color!";
 }
 
 @end
