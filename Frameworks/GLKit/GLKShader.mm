@@ -22,10 +22,7 @@
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
 
-#include <vector>
-#include <map>
-
-using namespace std;
+#include "ShaderInfo.h"
 
 // See GLKVertexAttrib enum in GLKEffect.h for layout locations.
 //
