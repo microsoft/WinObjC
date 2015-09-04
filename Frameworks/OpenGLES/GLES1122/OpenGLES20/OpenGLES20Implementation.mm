@@ -15,7 +15,7 @@
  */
 
 #include "OpenGLES20Implementation.h"
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
 #include <stdlib.h>
 #include "../OpenGLESMath.h"
 #include <algorithm>
