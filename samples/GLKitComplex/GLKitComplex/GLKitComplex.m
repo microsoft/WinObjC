@@ -19,8 +19,9 @@
 #import "GLRenderer.h"
 
 @interface HelloOpenGLApp : NSObject {
-    UIWindow* _mainWindow;
-    GLRenderer* _renderer;
+    UIWindow*       _mainWindow;
+    GLRenderer*     _renderer;
+    UILabel*        _welcomeLabel;    
 }
 @end
 
@@ -47,7 +48,30 @@
     ctl.preferredFramesPerSecond = 60;
 
     _mainWindow.rootViewController = ctl;
+
+    bounds.origin.y = bounds.size.height - 100.f;
+    bounds.size.height = 100.f;
+
+    _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
+    [_welcomeLabel setBackgroundColor: nil];
+    [_welcomeLabel setTextColor: [UIColor whiteColor]];
+    [_welcomeLabel setText: @"Hello Islandwood!"];
+    [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 24.0f]];
+    [_welcomeLabel setTextAlignment: UITextAlignmentCenter];    
+    [_mainWindow addSubview: _welcomeLabel];
+
+    //The setup code (in viewDidLoad in your view controller)
+    UITapGestureRecognizer *tap = [UITapGestureRecognizer alloc];
+    [tap initWithTarget:self action:@selector(handleTap:)];
+    [view addGestureRecognizer: tap];
+    
     [_mainWindow makeKeyAndVisible];
+}
+
+-(void)handleTap: (UITapGestureRecognizer*)tap {
+    CGPoint location = [tap locationInView: [tap.view superview]];
+    [_welcomeLabel setText: @"Stop touching me!"];
+    [_renderer changeMaterial];
 }
 
 @end

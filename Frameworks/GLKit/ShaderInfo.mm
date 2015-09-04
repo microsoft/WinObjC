@@ -19,7 +19,7 @@
 
 void ShaderMaterial::addvar(const string& var, float* data, int size)
 {
-    assert(!size & 3);
+    assert((size & 3) == 0);
     
     VarInfo v;
     v.loc = values.size();
