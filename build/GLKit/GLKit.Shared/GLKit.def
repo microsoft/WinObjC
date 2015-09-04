@@ -24,8 +24,8 @@ LIBRARY GLKit
 	 __objc_class_name_GLKShader	CONSTANT
      _OBJC_CLASS_GLKShaderCache	DATA
 	 __objc_class_name_GLKShaderCache	CONSTANT
-     _OBJC_CLASS_GLKShaderSource	DATA
-	 __objc_class_name_GLKShaderSource	CONSTANT
+     _OBJC_CLASS_GLKShaderPair	DATA
+	 __objc_class_name_GLKShaderPair	CONSTANT
 	 _OBJC_CLASS_GLKTextureInfo	DATA
 	 __objc_class_name_GLKTextureInfo	CONSTANT
      _OBJC_CLASS_GLKTextureLoader	DATA

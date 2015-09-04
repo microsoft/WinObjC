@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import <GLKit/GLKShaderDefs.h>
+#import <Starboard.h>
 #include "ShaderInfo.h"
 
 void VarInfos::clear()
@@ -54,7 +54,7 @@ string ShaderContext::generate(VarInfos& outputs, VarInfos& inputs, const Shader
     return final;
 }
 
-StrPair ShaderContext::generate(VarInfos& inputs)
+GLKShaderPair* ShaderContext::generate(VarInfos& inputs)
 {
     VarInfos intermediates;
     VarInfos outputs;
@@ -83,16 +83,22 @@ StrPair ShaderContext::generate(VarInfos& inputs)
     string outpix = generate(outputs, intermediates, ps, "PS");
 
     string pixvars;
-    for(auto vp : outputs.vars) {
-        VarInfo& vd = vp.second;
-        string res = "varying lowp " + vd.vtype() + " " + vp.first + ";\n";
-        pixvars += res;
+    for(auto vp : intermediates.vars) {
+        if(vp.first != "gl_Position") {        
+            VarInfo& vd = vp.second;
+            string res = "varying lowp " + vd.vtype() + " " + vp.first + ";\n";
+            pixvars += res;
+        }
     }
 
     outvert = vertinvars + "\n" + vertoutvars + "\nvoid main() {\n" + outvert + "}\n";
     outpix = pixvars + "\nvoid main() {\n" + outpix + "}\n";
+
+    GLKShaderPair* res = [[GLKShaderPair alloc] init];
+    res.vertexShader = [NSString stringWithCString: outvert.c_str()];
+    res.pixelShader = [NSString stringWithCString: outpix.c_str()];
     
-    return pair<string, string>(outvert, outpix);
+    return res;
 }
 
 bool ShaderVarRef::generate(string& out, ShaderContext& c, VarInfos& v)

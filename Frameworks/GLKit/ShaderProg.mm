@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <GLKit/GLKShaderDefs.h>
 
 #include "ShaderInfo.h"

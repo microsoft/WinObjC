@@ -112,7 +112,8 @@ GLKIT_EXPORT_CLASS
 @interface GLKShaderEffect : NSObject<GLKNamedEffect>
 
 @property(readonly) GLKEffectPropertyTransform* transform;
-@property(readonly) GLKShader* shader;
+@property GLKShader* shader;
+@property NSString* shaderName;
 
 -(id)init;
 -(void)prepareToDraw;
@@ -140,8 +141,6 @@ GLKIT_EXPORT_CLASS
 @property BOOL colorMaterialEnabled;
 @property BOOL useConstantColor;
 @property(assign) GLKVector4 constantColor;
-
-@property(readonly) NSString* shaderName;
 
 -(id)init;
 -(void)prepareToDraw;
