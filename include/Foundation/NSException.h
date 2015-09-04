@@ -59,6 +59,10 @@ FOUNDATION_EXPORT_CLASS
 
 @end
 
+@interface NSException(WinObjC)
++ (void)raiseWithLogging:(NSString *)name format : (NSString *)format, ...;
+@end
+
 typedef void NSUncaughtExceptionHandler(NSException *exception);
 
 FOUNDATION_EXPORT NSUncaughtExceptionHandler *NSGetUncaughtExceptionHandler(void);

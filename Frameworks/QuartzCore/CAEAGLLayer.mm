@@ -63,14 +63,10 @@ typedef wchar_t WCHAR;
 		return self;
 	}
 
-	-(void) _setSwapChainNative: (IDXGISwapChain1 *) swapChain
-	{
-		IUnknown *pUnkRaw = (IUnknown *) [_swapChainPanel internalObject];
-		ISwapChainPanelNative *panelNative;
-		pUnkRaw->QueryInterface(__uuidof(panelNative), (void **) &panelNative);
-		panelNative->SetSwapChain(swapChain);
-		panelNative->Release();
-	}
+    -(WXCSwapChainPanel *) swapChainPanel
+    {
+        return _swapChainPanel;
+    }
 
     -(DisplayTexture *) _getDisplayTexture {
         return NULL;

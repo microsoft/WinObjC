@@ -17,7 +17,7 @@
 #ifndef Attribute_H_
 #define Attribute_H_
 
-#include "EbrOpenglIncludes.h"
+#include "GLES2\gl2.h"
 #include <string>
 
 namespace OpenGLES {

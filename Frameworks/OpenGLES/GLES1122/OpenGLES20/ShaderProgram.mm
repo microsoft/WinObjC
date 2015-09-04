@@ -32,8 +32,6 @@ ShaderProgram::ShaderProgram(OpenGLESString name, Shader *vertexShader, Shader *
     
     delete vertexShader;
     delete fragmentShader;
-
-    EbrDebugLog("Hi\n");
 }
 
 ShaderProgram::ShaderProgram(OpenGLESString name, const void *binary, int length, GLenum binaryformat) : name(name)
@@ -51,7 +49,7 @@ ShaderProgram::~ShaderProgram()
         delete uniforms[i];
     }
     
-    ANGLE_glDeleteProgram(program);
+    glDeleteProgram(program);
 }
 
 #ifdef WINPHONE
@@ -64,9 +62,9 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
     GLuint vertexShaderId = vertexShader->compile();
     GLuint fragmentShaderId = fragmentShader->compile();
     
-    ANGLE_glReleaseShaderCompiler();
+    glReleaseShaderCompiler();
     
-    GLuint program = ANGLE_glCreateProgram();
+    GLuint program = glCreateProgram();
     
     if (program == 0) 
     {
@@ -74,34 +72,31 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
         return 0;
     }
     
-    ANGLE_glAttachShader(program, vertexShaderId);
+    glAttachShader(program, vertexShaderId);
     
-    ANGLE_glAttachShader(program, fragmentShaderId);
+    glAttachShader(program, fragmentShaderId);
     
 #ifdef WINPHONE
     glLinkProgram(program);
 #else
-    ANGLE_glLinkProgram(program);
+    glLinkProgram(program);
 #endif
     
     GLint linked;
-    ANGLE_glGetProgramiv(program, GL_LINK_STATUS, &linked);
+    glGetProgramiv(program, GL_LINK_STATUS, &linked);
     
-    EbrDebugLog("Linking\n");
     if (!linked || OpenGLESConfig::DEBUG)
     {
         GLint infoLength;
-        ANGLE_glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
         
-        EbrDebugLog("Link failure\n");
         if (infoLength > 1)
         {
             char *infoLog = (char *)malloc(sizeof(char) * infoLength);
             
-            ANGLE_glGetProgramInfoLog(program, infoLength, NULL, infoLog);
+            glGetProgramInfoLog(program, infoLength, NULL, infoLog);
             
             EbrDebugLog("Error compiling %s\n", infoLog);
-            *((char *) 0) = 0;
             if (linked) 
             {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Linked program ") + name + " with warnings:\n" + infoLog);
@@ -119,17 +114,16 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
         }
         else
         {
-            ANGLE_glDeleteProgram(program);
+            glDeleteProgram(program);
             return 0;
         }
     }
     
-    EbrDebugLog("Linked=%d\n", linked);
-    ANGLE_glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &activeAttributes);
-    ANGLE_glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &activeAttributesMaxLength);
-    ANGLE_glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUniforms);
-    ANGLE_glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &activeUniformsMaxLength);
-    ANGLE_glGetProgramiv(program, GL_ATTACHED_SHADERS, &attachedShaders);
+    glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &activeAttributes);
+    glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &activeAttributesMaxLength);
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUniforms);
+    glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &activeUniformsMaxLength);
+    glGetProgramiv(program, GL_ATTACHED_SHADERS, &attachedShaders);
     
     LOG_DEBUG_MESSAGE(OpenGLESString("Active attributes: ") + activeAttributes);
     LOG_DEBUG_MESSAGE(OpenGLESString("Active attributes max length: ") + activeAttributesMaxLength);
@@ -143,8 +137,8 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
         GLint size;
         GLenum type;
         
-        ANGLE_glGetActiveAttrib(program, i, activeAttributesMaxLength, NULL, &size, &type, attributeName);
-        GLint attributeLocation = ANGLE_glGetAttribLocation(program, attributeName);
+        glGetActiveAttrib(program, i, activeAttributesMaxLength, NULL, &size, &type, attributeName);
+        GLint attributeLocation = glGetAttribLocation(program, attributeName);
         
         int id = -1;
         if (strcmp(attributeName,"a_position") == 0) {
@@ -207,8 +201,8 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
         char* uniformName = (char *)malloc(sizeof(char) * activeUniformsMaxLength);
         GLint size;
         GLenum uniformType;
-        ANGLE_glGetActiveUniform(program, i, activeUniformsMaxLength, NULL, &size, &uniformType, uniformName);
-        GLint uniformLocation = ANGLE_glGetUniformLocation(program, uniformName);
+        glGetActiveUniform(program, i, activeUniformsMaxLength, NULL, &size, &uniformType, uniformName);
+        GLint uniformLocation = glGetUniformLocation(program, uniformName);
         
         int id = -1;
         if (strcmp(uniformName,"u_lightModelLocalViewerEnabled") == 0) {
@@ -518,7 +512,7 @@ GLuint ShaderProgram::createProgram(Shader *vertexShader, Shader *fragmentShader
 
 void ShaderProgram::use()
 {
-    ANGLE_glUseProgram(program);
+    glUseProgram(program);
 #if OPENGLES_DEBUG
     validate();
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
@@ -527,26 +521,26 @@ void ShaderProgram::use()
 
 void ShaderProgram::unuse()
 {
-    ANGLE_glUseProgram(0);
+    glUseProgram(0);
 }
 
 void ShaderProgram::validate()
 {
-    ANGLE_glValidateProgram(program);
+    glValidateProgram(program);
     
     GLint validated;
-    ANGLE_glGetProgramiv(program, GL_VALIDATE_STATUS, &validated);
+    glGetProgramiv(program, GL_VALIDATE_STATUS, &validated);
     
     if (!validated)
     {
         GLint infoLength;
-        ANGLE_glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
         
         if (infoLength > 1)
         {
             char *infoLog = (char *)malloc(sizeof(char) * infoLength);
             
-            ANGLE_glGetProgramInfoLog(program, infoLength, NULL, infoLog);
+            glGetProgramInfoLog(program, infoLength, NULL, infoLog);
             
             LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
             
@@ -567,7 +561,7 @@ std::vector<UniformSimple *>* ShaderProgram::getActiveUniforms()
 
 GLint ShaderProgram::getAttributeLocation(const char* attribName)
 {
-    GLint res = ANGLE_glGetAttribLocation(program, attribName);
+    GLint res = glGetAttribLocation(program, attribName);
     
     if (res == -1) {
         LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown attribute ") + attribName + " in program " + name);
@@ -580,7 +574,7 @@ GLint ShaderProgram::getAttributeLocation(const char* attribName)
 
 GLint ShaderProgram::getUniformLocation(const char* uniformName)
 {
-    GLint res = ANGLE_glGetUniformLocation(program, uniformName);
+    GLint res = glGetUniformLocation(program, uniformName);
     
     if (res == -1) {
         LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown uniform ") + uniformName + " in program " + name);
@@ -593,115 +587,115 @@ GLint ShaderProgram::getUniformLocation(const char* uniformName)
 
 void ShaderProgram::setAttributeVertexPointer(GLuint location, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer)
 {
-    ANGLE_glVertexAttribPointer(location, size, type, normalized, stride, pointer);
+    glVertexAttribPointer(location, size, type, normalized, stride, pointer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform3f( const char *name, GLfloat x, GLfloat y, GLfloat z )
 {
-    ANGLE_glUniform3f(getUniformLocation(name), x, y, z);
+    glUniform3f(getUniformLocation(name), x, y, z);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform3f( GLint loc, GLfloat x, GLfloat y, GLfloat z )
 {
-    ANGLE_glUniform3f(loc, x, y, z);
+    glUniform3f(loc, x, y, z);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform4f( const char *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w )
 {
-    ANGLE_glUniform4f(getUniformLocation(name), x, y, z, w);
+    glUniform4f(getUniformLocation(name), x, y, z, w);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform4f( GLint loc, GLfloat x, GLfloat y, GLfloat z, GLfloat w )
 {
-    ANGLE_glUniform4f(loc, x, y, z, w);
+    glUniform4f(loc, x, y, z, w);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1f( const char *name, GLfloat v)
 {
-    ANGLE_glUniform1f(getUniformLocation(name), v);
+    glUniform1f(getUniformLocation(name), v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1f( GLint loc, GLfloat v)
 {
-    ANGLE_glUniform1f(loc, v);
+    glUniform1f(loc, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniformMatrix4fv( const char *name, GLfloat* m )
 {
-    ANGLE_glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m);
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniformMatrix4fv( GLint loc, GLfloat* m )
 {
-    ANGLE_glUniformMatrix4fv(loc, 1, GL_FALSE, m);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, m);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniformMatrix3fv( const char *name, GLfloat* m )
 {
-    ANGLE_glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, m);
+    glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, m);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniformMatrix3fv( GLint loc, GLfloat* m )
 {
-    ANGLE_glUniformMatrix3fv(loc, 1, GL_FALSE, m);
+    glUniformMatrix3fv(loc, 1, GL_FALSE, m);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1i( const char *name, GLint i)
 {
-    ANGLE_glUniform1i(getUniformLocation(name), i);
+    glUniform1i(getUniformLocation(name), i);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1i(GLint loc, GLint i)
 {
-    ANGLE_glUniform1i(loc, i);
+    glUniform1i(loc, i);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1iv( const char *name, GLint count, GLint* i)
 {
-    ANGLE_glUniform1iv(getUniformLocation(name), count, i);
+    glUniform1iv(getUniformLocation(name), count, i);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform1iv( GLint loc, GLint count, GLint* i)
 {
-    ANGLE_glUniform1iv(loc, count, i);
+    glUniform1iv(loc, count, i);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform4fv( const char *name, GLint count, GLfloat *v )
 {
-    ANGLE_glUniform4fv(getUniformLocation(name), count, v);
+    glUniform4fv(getUniformLocation(name), count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform4fv( GLint loc, GLint count, GLfloat *v )
 {
-    ANGLE_glUniform4fv(loc, count, v);
+    glUniform4fv(loc, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform3fv( const char *name, GLint count, GLfloat *v )
 {
-    ANGLE_glUniform3fv(getUniformLocation(name), count, v);
+    glUniform3fv(getUniformLocation(name), count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void ShaderProgram::setUniform3fv( GLint loc, GLint count, GLfloat *v )
 {
-    ANGLE_glUniform3fv(loc, count, v);
+    glUniform3fv(loc, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 

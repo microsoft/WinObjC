@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -39,6 +39,9 @@
     <ProjectReference Include="..\..\Starboard\Starboard.Windows\Starboard.Windows.vcxproj">
       <Project>{d9bba177-5624-43bf-ace5-cc68949598e4}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{d4b2ab87-ec16-4d9c-98d5-2ebb69c72370}</ProjectGuid>
@@ -166,13 +169,21 @@
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <UserIncludePaths></UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(angle-BinPath)\libEGL.dll" "$(OutDir)libEGL.dll"
+COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying ANGLE dependencies</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -219,13 +230,21 @@
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <UserIncludePaths></UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(angle-BinPath)\libEGL.dll" "$(OutDir)libEGL.dll"
+COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying ANGLE dependencies</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
@@ -245,7 +264,8 @@
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <UserIncludePaths></UserIncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -271,13 +291,21 @@
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <UserIncludePaths></UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(angle-BinPath)\libEGL.dll" "$(OutDir)libEGL.dll"
+COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying ANGLE dependencies</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -297,7 +325,8 @@
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <UserIncludePaths></UserIncludePaths>
+      <UserIncludePaths>
+      </UserIncludePaths>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -307,5 +336,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.targets" />
+    <Import Project="..\..\packages\ANGLE.WindowsStore.2.1.3\build\native\ANGLE.WindowsStore.targets" Condition="Exists('..\..\packages\ANGLE.WindowsStore.2.1.3\build\native\ANGLE.WindowsStore.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\ANGLE.WindowsStore.2.1.3\build\native\ANGLE.WindowsStore.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ANGLE.WindowsStore.2.1.3\build\native\ANGLE.WindowsStore.targets'))" />
+  </Target>
 </Project>

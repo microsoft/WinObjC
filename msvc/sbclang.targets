@@ -79,8 +79,8 @@
 	  <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
 
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libEGL.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libGLESv2.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
     </ItemGroup>
   </Target>
 

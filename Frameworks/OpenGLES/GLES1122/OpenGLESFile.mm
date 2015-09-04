@@ -85,7 +85,6 @@ OpenGLESFile::OpenGLESFile(std::string n) : name()
 
 bool OpenGLESFile::open() 
 {
-    EbrDebugLog("Opening shader %s\n", name.c_str());
     for ( int i = 0; i < NUMFILES; i ++ ) {
         if ( strcmp(files[i]._filename, name.c_str()) == 0 )
         {
@@ -95,7 +94,6 @@ bool OpenGLESFile::open()
             return true;
         }
     }
-    EbrDebugLog("Failed opening shader %s\n", name.c_str());
     return false;
 }
 

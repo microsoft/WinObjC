@@ -29,14 +29,8 @@ typedef uint32_t EAGLRenderingAPI;
 @interface EAGLSharegroup : NSObject
 @end
 
-struct EAGLContextPrivateData;
-
 EAGL_EXPORT_CLASS
-@interface EAGLContext : NSObject {
-@public
-    struct EAGLContextPrivateData *eaglPriv;
-}
-
+@interface EAGLContext : NSObject
 @property (readonly) EAGLSharegroup *sharegroup;
 
 - (id)initWithAPI:(EAGLRenderingAPI)api;
