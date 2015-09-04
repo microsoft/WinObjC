@@ -60,6 +60,22 @@ NSString *const NSURLErrorDomain = @"NSURLErrorDomain";
         [exception raise];
     }
 
+    +(void) raiseWithLogging:(NSString *) name format: (NSString *) format,  ...
+    {
+        va_list reader;
+        va_start(reader, format);
+
+        NSString *reason = [[NSString alloc] initWithFormat: format arguments: reader];
+        va_end(reader);
+
+        NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
+
+        NSException *exception = [self exceptionWithName: name reason: reason userInfo: nil];
+        [reason release];
+
+        [exception raise];
+    }
+
     +(void) raise:(NSString *) name format: (NSString *) format arguments: (va_list) args
     {
         NSString *reason = [[NSString alloc] initWithFormat: format arguments: args];

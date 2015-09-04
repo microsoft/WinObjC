@@ -33,7 +33,7 @@ Shader::~Shader()
 
 GLuint Shader::compile() 
 {
-    id = ANGLE_glCreateShader(type);
+    id = glCreateShader(type);
 
     const char* typeString = type == GL_FRAGMENT_SHADER ? "Fragment shader" : "Vertex shader";
 
@@ -53,22 +53,22 @@ GLuint Shader::compile()
 
     EbrDebugLog("Compiling\n");
 #ifndef WINPHONE
-    ANGLE_glCompileShader(id);
+    glCompileShader(id);
 
     GLint compiled;
-    ANGLE_glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
+    glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 
     if (!compiled || OpenGLESConfig::DEBUG)
     {
         GLint infoLength;
-        ANGLE_glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLength);
+        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLength);
 
          EbrDebugLog("Compile failed %d\n", infoLength);
         if ( 1 ) //infoLength > 1)
         {
             char *infoLog = (char *)calloc(sizeof(char) * 4096, 1);
             GLsizei len;
-            ANGLE_glGetShaderInfoLog(id, 4096, &len, infoLog);
+            glGetShaderInfoLog(id, 4096, &len, infoLog);
             EbrDebugLog("Error compiling %d %s\n", len, infoLog);
 
             if (compiled) 
@@ -88,7 +88,7 @@ GLuint Shader::compile()
         }
         else
         {
-            ANGLE_glDeleteShader(id);
+            glDeleteShader(id);
             return 0;
         }
     }
@@ -123,7 +123,7 @@ bool Shader::readShaderSource()
         shaderSources[i] = convertStringToChar(sources[i]->getSource());
     }
 
-    ANGLE_glShaderSource(id, sources.size(), (const char **)shaderSources, NULL);
+    glShaderSource(id, sources.size(), (const char **)shaderSources, NULL);
 
     /*
     int curLine = 0;

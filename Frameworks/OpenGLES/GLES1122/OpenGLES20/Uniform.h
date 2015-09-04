@@ -17,7 +17,7 @@
 #ifndef Uniform_H_
 #define Uniform_H_
 
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
 #include <string>
 #include <sstream>
 #include <utility>

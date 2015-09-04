@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
 #include <vector>
 #include "../OpenGLESString.h"
 

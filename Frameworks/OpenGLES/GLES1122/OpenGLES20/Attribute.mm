@@ -60,13 +60,13 @@ void Attribute::setLocation( GLint loc )
 void Attribute::upload(ShaderProgram *program)
 {
     if (enabled) {
-        ANGLE_glEnableVertexAttribArray(location);
+        glEnableVertexAttribArray(location);
         if (!uploaded) {
             program->setAttributeVertexPointer(location, size, type, normalized, stride, pointer);
             uploaded = true;
         }
     } else {
-        ANGLE_glDisableVertexAttribArray(location);
+        glDisableVertexAttribArray(location);
     }
 }
 

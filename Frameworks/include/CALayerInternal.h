@@ -90,4 +90,9 @@ public:
     CAPrivateInfo(CALayer *self, bool bPresentationLayer = false);
     ~CAPrivateInfo();
 };
+
+@interface CALayer(Internal)
+- (int)_pixelWidth;
+- (int)_pixelHeight;
+@end
 #endif /* _CALAYERPRIVATE_H_ */
