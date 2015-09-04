@@ -16,13 +16,16 @@
 
 #pragma once
 
-#include <vector>
-#include <map>
+#import <Foundation/NSDictionary.h>
+#import <GLKit/GLKShader.h>
+
 #include <assert.h>
+#include <map>
 
 using namespace std;
 
 struct ShaderNode;
+
 typedef map<string, ShaderNode*> ShaderDef;
 
 typedef pair<string, string> StrPair;
@@ -86,7 +89,7 @@ public:
 
     string addTempExpr(string valExpr);
     
-    StrPair generate(VarInfos& inputs);
+    GLKShaderPair* generate(VarInfos& inputs);
 };
 
 // --------------------------------------------------------------------------------

@@ -19,6 +19,8 @@
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
 #import <GLKit/GLKTexture.h>
+#import "ShaderInfo.h"
+#import "ShaderProg.h"
 
 @implementation GLKShaderEffect {
 }
@@ -32,9 +34,14 @@
     return self;
 }
 
--(void)prepareToDraw {
-    _shader = [[GLKShaderCache get] shaderForName: [self shaderName] effect: self];
-    glUseProgram(_shader.program);
+-(void)prepareToDraw
+{
+    _shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
+    if (_shader != nil) glUseProgram(_shader.program);
+    
+    GLKMatrix4 mvp = GLKMatrix4Transpose(self.transform.mvp);
+    GLint loc = _shader.mvploc;
+    glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
 }
 
 @end
@@ -61,7 +68,7 @@
     _material = [[GLKEffectPropertyMaterial alloc] init];
     _fog = [[GLKEffectPropertyFog alloc] init];
 
-    _shaderName = @GLKSH_STANDARD_SHADER;
+    self.shaderName = @GLKSH_STANDARD_SHADER;
     
     return self;
 }
@@ -116,11 +123,44 @@
     }
 }
 
--(void)prepareToDraw {
+-(void)prepareToDraw
+{
+    // Assemble material.
+    VarInfos inputs;
+    inputs.vertattr(GLKSH_POS_NAME);
+    inputs.vertattr(GLKSH_NORMAL_NAME);
+    inputs.vertattr(GLKSH_COLOR_NAME);
+    inputs.vertattr(GLKSH_UV0_NAME);
+    inputs.vertattr(GLKSH_UV1_NAME);
+
+    inputs.mat(GLKSH_MVP_NAME);
+    
+    // Calculate material name.
+    self.shaderName = @GLKSH_STANDARD_SHADER;
+
+    // Check for shader existence.
+    self.shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
+    if (self.shader == nil) {
+
+        // Need to generate a new shader based on the supplied material here.
+        ShaderContext shd(standardVsh, standardPsh);
+        GLKShaderPair* p = shd.generate(inputs);
+        if (p) {
+            NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
+            NSLog(p.vertexShader);
+            NSLog(@"---[ PIXEL SHADER ]-------------------------------------------------------------");
+            NSLog(p.pixelShader);
+            self.shader = [[GLKShaderCache get] addShaderNamed: self.shaderName source: p];
+            if (self.shader == nil) {
+                NSLog(@"There was a problem generating a shader for material %@", self.shaderName);
+                return;
+            }
+        }
+    }
+
     [super prepareToDraw];
-    GLKMatrix4 mvp = GLKMatrix4Transpose(self.transform.mvp);
-    GLint loc = self.shader.mvploc;
-    glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
+
+    // Additional material parameters setting goes here.
 }
 
 @end

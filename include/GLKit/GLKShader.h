@@ -19,35 +19,36 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+#import <GLKit/GLKitExport.h>
 #import <GLKit/GLKShaderDefs.h>
 
 @class GLKShaderEffect;
 @class GLKShader;
 
+GLKIT_EXPORT_CLASS
+@interface GLKShaderPair : NSObject
+
+@property NSString* vertexShader;
+@property NSString* pixelShader;
+
+@end
+
+GLKIT_EXPORT_CLASS
 @interface GLKShaderCache : NSObject
 +(instancetype) get;
 
--(GLKShader*)shaderForName: (NSString*)baseName effect: (GLKShaderEffect*)effect;
+-(GLKShader*)addShaderNamed: (NSString*)name source: (GLKShaderPair*)src;
+-(GLKShader*)shaderNamed: (NSString*)name;
+
 -(id)init;
 @end
 
-@interface GLKShaderSource : NSObject
-
-@property(readonly) GLuint program;
-@property(readonly) GLuint vsh;
-@property(readonly) GLuint psh;
-
--(id)initWithVS: (const char*)baseVSource PS: (const char*)basePSource;
--(GLKShader*)shaderForEffect: (GLKShaderEffect*)effect;
-@end
-
+GLKIT_EXPORT_CLASS
 @interface GLKShader : NSObject
 
 @property(readonly) GLuint program;
-@property(readonly) GLuint vsh;
-@property(readonly) GLuint psh;
 @property(readonly) GLint mvploc;
 
--(id)initWith: (GLKShaderSource*)src;
+-(id)initWith: (GLuint)program;
 @end
 
