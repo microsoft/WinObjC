@@ -64,10 +64,15 @@
     if (!self) return nil;
 
     _lights =  [[NSMutableArray alloc] init];
+    [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
+    [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
+    [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
     self.lightingType = GLKLightingTypePerPixel;
     self.lightModelTwoSided = FALSE;
 
     _textures = [[NSMutableArray alloc] init];
+    [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];
+    [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];
 
     self.colorMaterialEnabled = FALSE;
     self.useConstantColor = FALSE;
@@ -228,7 +233,7 @@
 @end
 
 @implementation GLKEffectPropertyFog {
-    GLKBaseEffect* _parent;
+    GLKShaderEffect* _parent;
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
@@ -246,7 +251,7 @@
 @end
 
 @implementation GLKEffectPropertyLight {
-    GLKBaseEffect* _parent;
+    GLKShaderEffect* _parent;
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
@@ -277,7 +282,7 @@
 @end
 
 @implementation GLKEffectPropertyMaterial {
-    GLKBaseEffect* _parent;
+    GLKShaderEffect* _parent;
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
@@ -295,7 +300,7 @@
 @end
 
 @implementation GLKEffectPropertyTexture {
-    GLKBaseEffect* _parent;
+    GLKShaderEffect* _parent;
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
@@ -312,7 +317,7 @@
 @end
 
 @implementation GLKEffectPropertyTransform {
-    GLKBaseEffect* _parent;
+    GLKShaderEffect* _parent;
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
