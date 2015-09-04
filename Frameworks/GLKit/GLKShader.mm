@@ -101,9 +101,12 @@ static GLKShaderCache* imp = nil;
 
 @end
 
-@implementation GLKShader
+@implementation GLKShader {
+    ShaderLayout vars;
+}
 
 -(id)initWith: (GLuint)prog {
+    [self init];
     _program = prog;
 
     GLint numAttrs = 0, numUniforms = 0;
@@ -115,10 +118,12 @@ static GLKShaderCache* imp = nil;
     GLint size;
     GLenum type;
 
+    // Build shader layout.
+    
     for(int i = 0; i < numAttrs; i ++) {
         glGetActiveAttrib(prog, i, sizeof(buf), &len, &size, &type, buf);
         GLint loc = glGetAttribLocation(prog, buf);
-        NSLog(@"Shader attr: %d name: %s type: %d size: %d loc: %d", i, buf, type, size, loc);
+        vars.add(buf, loc, size, true);
     }
 
     for(int i = 0; i < numUniforms; i ++) {
@@ -127,13 +132,21 @@ static GLKShaderCache* imp = nil;
         if (strcmp(buf, GLKSH_MVP_NAME) == 0) {
             _mvploc = loc;
         } else {
-            // TODO: BK: build uniform dictionary here.
-            NSLog(@"Shader uniform: %d name: %s type: %d size: %d loc: %d", i, buf, type, size, loc); 
+            vars.add(buf, loc, size, false);
         }
     }
 
+    for(auto v : vars.vars) {
+        NSLog(@"Shader %s: name %s location %d size %d", v.second.vertexAttr ? "vert attr" : "constant",
+              v.first.c_str(), v.second.loc, v.second.size);
+    }
+    
     return self;
 }
 
+-(GLKShaderLayoutPtr)layout {
+    return &vars;
+}
+  
 @end
 

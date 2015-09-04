@@ -22,16 +22,16 @@ struct ShaderNode;
 typedef map<string, ShaderNode*> ShaderDef;
 
 class ShaderContext {
-    VarInfos    shaderVars;
+    ShaderLayout    shaderVars;
 
-    ShaderDef   vs;
-    ShaderDef   ps;
+    ShaderDef       vs;
+    ShaderDef       ps;
 
-    string      temporaries;
-    int         nextTemp;
+    string          temporaries;
+    int             nextTemp;
     
 protected:
-    string generate(VarInfos& outputs, VarInfos& inputs, const ShaderDef& shader,
+    string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc);
     
 public:
@@ -40,13 +40,13 @@ public:
 
     string addTempExpr(string valExpr);
     
-    GLKShaderPair* generate(VarInfos& inputs);
+    GLKShaderPair* generate(ShaderLayout& inputs);
 };
 
 // --------------------------------------------------------------------------------
 
 struct ShaderNode {
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) { return false; }
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) { return false; }
 };
 
 struct ShaderVarRef : public ShaderNode {    
@@ -54,7 +54,7 @@ struct ShaderVarRef : public ShaderNode {
 public:
     ShaderVarRef(const string& name) : name(name) {}
 
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
 struct ShaderFallbackRef : public ShaderNode {
@@ -65,12 +65,12 @@ public:
     ShaderFallbackRef(const string& first, const string& second, const string& constantResult) :
         first(first), second(second), constantResult(constantResult) {}
 
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
 struct ShaderPosRef : public ShaderNode {
 public:
     inline ShaderPosRef() {}
     
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

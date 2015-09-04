@@ -24,6 +24,7 @@
 #import "ShaderProg.h"
 
 @implementation GLKShaderEffect {
+    ShaderMaterial _mat;
 }
 
 -(id)init {
@@ -45,11 +46,16 @@
     glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
 }
 
+-(GLKShaderMaterialPtr)shaderMat {
+    return &_mat;
+}
+
 @end
 
 @implementation GLKBaseEffect {
     NSMutableArray* _textures;
     NSMutableArray* _lights;
+    bool            _effectChanged;
 }
 
 -(id)init {
@@ -70,6 +76,8 @@
     _fog = [[GLKEffectPropertyFog alloc] init];
 
     self.shaderName = @GLKSH_STANDARD_SHADER;
+
+    _effectChanged = true;
     
     return self;
 }
@@ -126,18 +134,31 @@
 
 -(void)prepareToDraw
 {
-    // Assemble material.
-    VarInfos inputs;
-    inputs.vertattr(GLKSH_POS_NAME);
-    inputs.vertattr(GLKSH_NORMAL_NAME);
-    inputs.vertattr(GLKSH_COLOR_NAME);
-    inputs.vertattr(GLKSH_UV0_NAME);
-    inputs.vertattr(GLKSH_UV1_NAME);
+    // Assemble material, calculate name.
+    ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;    
+    if (_effectChanged) {
+        string shaderName = GLKSH_STANDARD_SHADER "_";
+        m->reset();
 
-    inputs.mat(GLKSH_MVP_NAME);
+        // We need these.
+        m->mat(GLKSH_MVP_NAME);
+        m->vertattr(GLKSH_POS_NAME);
+
+        if (self.useConstantColor) {
+            shaderName += 'C';
+            m->addvar(GLKSH_CONSTCOLOR_NAME, (float*)&_constantColor);
+        } else {
+            m->vertattr(GLKSH_COLOR_NAME);
+            shaderName += 'V';
+        }
+
+        // Add these, figure out if we want them later.
+        m->vertattr(GLKSH_NORMAL_NAME);
+        m->vertattr(GLKSH_UV0_NAME);
+        m->vertattr(GLKSH_UV1_NAME);
     
-    // Calculate material name.
-    self.shaderName = @GLKSH_STANDARD_SHADER;
+        self.shaderName = [NSString stringWithCString: shaderName.c_str()];
+    }
 
     // Check for shader existence.
     self.shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
@@ -145,7 +166,7 @@
 
         // Need to generate a new shader based on the supplied material here.
         ShaderContext shd(standardVsh, standardPsh);
-        GLKShaderPair* p = shd.generate(inputs);
+        GLKShaderPair* p = shd.generate(*m);
         if (p) {
             NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
             NSLog(p.vertexShader);
@@ -162,6 +183,27 @@
     [super prepareToDraw];
 
     // Additional material parameters setting goes here.
+    if (_effectChanged) {
+        _effectChanged = false;
+
+        ShaderLayout* l = (ShaderLayout*)self.shader.layout;
+        for(auto v : l->vars) {
+            if (v.second.vertexAttr) continue;
+            auto mv = m->find(v.first);
+            if (mv == nullptr) {
+                NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
+            } else {
+                glUniform4fv(v.second.loc, 1, &m->values[mv->loc]);
+            }
+        }
+    }
+}
+
+-(void)setUseConstantColor: (BOOL)use {
+    if (_useConstantColor != use) {
+        _effectChanged = true;
+        _useConstantColor = use;
+    }
 }
 
 @end
