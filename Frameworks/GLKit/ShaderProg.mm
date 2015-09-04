@@ -17,12 +17,15 @@
 #import <Starboard.h>
 #import <GLKit/GLKShaderDefs.h>
 
-#include "ShaderInfo.h"
+#include "ShaderGen.h"
 #include "ShaderProg.h"
+
+#define COLOR_WHITE "vec4(1, 1, 1, 1)"
+#define COLOR_BLACK "vec4(0, 0, 0, 1)"
 
 ShaderDef standardVsh{
     {"gl_Position", new ShaderPosRef() },
-    {"_outColor", new ShaderVarRef(GLKSH_COLOR_NAME) }
+    {"_outColor", new ShaderFallbackRef(GLKSH_CONSTCOLOR_NAME, GLKSH_COLOR_NAME, COLOR_WHITE) }
 };
 
 ShaderDef standardPsh{
