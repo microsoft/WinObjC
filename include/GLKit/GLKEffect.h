@@ -26,6 +26,10 @@
 @class GLKShader;
 @class GLKTextureInfo;
 
+typedef void* GLKShaderMaterialPtr;
+
+// ----------------------------------------
+
 @protocol GLKNamedEffect
 -(void)prepareToDraw;
 @end
@@ -112,6 +116,7 @@ GLKIT_EXPORT_CLASS
 @interface GLKShaderEffect : NSObject<GLKNamedEffect>
 
 @property(readonly) GLKEffectPropertyTransform* transform;
+@property(readonly) GLKShaderMaterialPtr        shaderMat;
 @property GLKShader* shader;
 @property NSString* shaderName;
 
@@ -135,10 +140,10 @@ GLKIT_EXPORT_CLASS
 @property(readonly) GLKEffectPropertyTexture* texture2d1;
 @property(copy) NSArray* textureOrder;
 
+@property BOOL colorMaterialEnabled;
 @property(readonly) GLKEffectPropertyMaterial* material;
 @property(readonly) GLKEffectPropertyFog* fog;
 
-@property BOOL colorMaterialEnabled;
 @property BOOL useConstantColor;
 @property(assign) GLKVector4 constantColor;
 

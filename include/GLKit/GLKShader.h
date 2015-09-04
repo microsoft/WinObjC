@@ -25,7 +25,7 @@
 @class GLKShaderEffect;
 @class GLKShader;
 
-typedef void* ShaderLayoutPtr;
+typedef void* GLKShaderLayoutPtr;
 
 GLKIT_EXPORT_CLASS
 @interface GLKShaderPair : NSObject
@@ -48,7 +48,7 @@ GLKIT_EXPORT_CLASS
 GLKIT_EXPORT_CLASS
 @interface GLKShader : NSObject
 
-@property(readonly) ShaderLayoutPtr layout;
+@property(readonly) GLKShaderLayoutPtr layout;
 @property(readonly) GLuint program;
 @property(readonly) GLint mvploc;
 

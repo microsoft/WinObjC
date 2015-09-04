@@ -29,7 +29,7 @@ string ShaderContext::addTempExpr(string valExpr)
     return string(name);
 }
 
-string ShaderContext::generate(VarInfos& outputs, VarInfos& inputs, const ShaderDef& shader,
+string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                                const string& desc)
 {
     nextTemp = 0;
@@ -50,10 +50,10 @@ string ShaderContext::generate(VarInfos& outputs, VarInfos& inputs, const Shader
     return final;
 }
 
-GLKShaderPair* ShaderContext::generate(VarInfos& inputs)
+GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 {
-    VarInfos intermediates;
-    VarInfos outputs;
+    ShaderLayout intermediates;
+    ShaderLayout outputs;
 
     string outvert = generate(intermediates, inputs, vs, "VS");
 
@@ -97,7 +97,7 @@ GLKShaderPair* ShaderContext::generate(VarInfos& inputs)
     return res;
 }
 
-bool ShaderVarRef::generate(string& out, ShaderContext& c, VarInfos& v)
+bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto var = v.find(name);
     if(var) {
@@ -107,7 +107,7 @@ bool ShaderVarRef::generate(string& out, ShaderContext& c, VarInfos& v)
     return false;
 }
 
-bool ShaderFallbackRef::generate(string& out, ShaderContext& c, VarInfos& v)
+bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto v1 = v.find(first);
     if(v1) {
@@ -126,7 +126,7 @@ bool ShaderFallbackRef::generate(string& out, ShaderContext& c, VarInfos& v)
     return true;
 }
 
-bool ShaderPosRef::generate(string& out, ShaderContext& c, VarInfos& v)
+bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto pos = v.find(GLKSH_POS_NAME);
     auto mat = v.find(GLKSH_MVP_NAME);

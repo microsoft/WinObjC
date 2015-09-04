@@ -21,12 +21,15 @@
 
 #include <assert.h>
 #include <map>
+#include <vector>
 
 using namespace std;
 
 struct VarInfo {
     VarInfo() : loc(-1), size(1), vertexAttr(false), used(false) {}
 
+    // when in a layout, used for variable location.
+    // when in a shader mat, used for constant location in the array.
     int loc;
     int size;
     bool vertexAttr;
@@ -40,7 +43,7 @@ struct VarInfo {
     }
 };
 
-struct VarInfos {
+struct ShaderLayout {
     map<string, VarInfo> vars;
     inline void clear() { for(auto it : vars) it.second.used = false; }
 
@@ -64,3 +67,13 @@ struct VarInfos {
     inline void mat(const string& var) { add(var, -1, 4, false); }
 };
 
+struct ShaderMaterial : public ShaderLayout {
+    vector<float> values;
+
+    void addvar(const string& var, float* data, int size = 4);
+
+    inline void reset() {
+        vars.clear();
+        values.resize(0);
+    }
+};
