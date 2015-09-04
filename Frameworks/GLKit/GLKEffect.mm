@@ -31,7 +31,7 @@
     self = [super init];
     if (!self) return nil;
     
-    _transform = [[GLKEffectPropertyTransform alloc] init];
+    _transform = [[GLKEffectPropertyTransform alloc] initWith: self];
 
     return self;
 }
@@ -73,8 +73,8 @@
     self.useConstantColor = FALSE;
     self.constantColor = GLKVector4Black();
 
-    _material = [[GLKEffectPropertyMaterial alloc] init];
-    _fog = [[GLKEffectPropertyFog alloc] init];
+    _material = [[GLKEffectPropertyMaterial alloc] initWith: self];
+    _fog = [[GLKEffectPropertyFog alloc] initWith: self];
 
     self.shaderName = @GLKSH_STANDARD_SHADER;
 
@@ -227,9 +227,13 @@
 @implementation GLKEffectProperty
 @end
 
-@implementation GLKEffectPropertyFog
+@implementation GLKEffectPropertyFog {
+    GLKBaseEffect* _parent;
+}
 
--(id)init {
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super init];
+    _parent = parent;
     self.color = GLKVector4Black();
     self.mode = GLKFogModeLinear;
     self.density = 1.f;
@@ -241,11 +245,14 @@
 
 @end
 
-@implementation GLKEffectPropertyLight
+@implementation GLKEffectPropertyLight {
+    GLKBaseEffect* _parent;
+}
 
--(id)init
-{
-    _transform = [[GLKEffectPropertyTransform alloc] init];
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super init];
+    _parent = parent;
+    _transform = [[GLKEffectPropertyTransform alloc] initWith: parent];
 
     self.enabled = TRUE;
     self.position = GLKVector3Origin();
@@ -269,10 +276,13 @@
 
 @end
 
-@implementation GLKEffectPropertyMaterial
+@implementation GLKEffectPropertyMaterial {
+    GLKBaseEffect* _parent;
+}
 
--(id)init
-{
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super init];
+    _parent = parent;
     self.ambientColor = GLKVector4Black();
     self.diffuseColor = GLKVector4White();
     self.specularColor = GLKVector4Black();
@@ -284,10 +294,13 @@
 
 @end
 
-@implementation GLKEffectPropertyTexture
+@implementation GLKEffectPropertyTexture {
+    GLKBaseEffect* _parent;
+}
 
--(id)init
-{
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super init];
+    _parent = parent;
     self.enabled = FALSE;
     self.name = 0;
     self.envMode = GLKTextureEnvModeReplace;
@@ -296,19 +309,15 @@
     return self;
 }
 
--(id)initWith: (GLKTextureInfo*)tex
-{
-    [self init];
-    self.name = tex.name;
-    self.enabled = TRUE;    
-    return self;
-}
-
 @end
 
-@implementation GLKEffectPropertyTransform
+@implementation GLKEffectPropertyTransform {
+    GLKBaseEffect* _parent;
+}
 
--(id)init {
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super init];
+    _parent = parent;
     self.modelviewMatrix = GLKMatrix4Identity();
     self.projectionMatrix = GLKMatrix4Identity();
 

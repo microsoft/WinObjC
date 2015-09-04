@@ -65,7 +65,7 @@ static void dumpMat(const GLKMatrix4& mat)
     UIImage* img = [UIImage imageNamed: @"seafloor.png"];
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
-        _effect.textureOrder = @[ [[GLKEffectPropertyTexture alloc] initWith: _tex1] ];
+        _effect.texture2d0.name = _tex1.name;
     }
 }
 
