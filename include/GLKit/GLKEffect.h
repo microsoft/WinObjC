@@ -24,6 +24,7 @@
 #import "GLKit/GLKEnums.h"
 
 @class GLKShader;
+@class GLKShaderEffect;
 @class GLKTextureInfo;
 
 typedef void* GLKShaderMaterialPtr;
@@ -48,7 +49,7 @@ GLKIT_EXPORT_CLASS
 @property(assign) GLKMatrix4 projectionMatrix;
 @property(readonly) GLKMatrix4 mvp;
 
--(id)init;
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -61,7 +62,7 @@ GLKIT_EXPORT_CLASS
 @property float density;
 @property(assign) GLKVector4 color;
 
--(id)init;
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -84,7 +85,7 @@ GLKIT_EXPORT_CLASS
 
 @property(retain) GLKEffectPropertyTransform* transform;
 
--(id)init;
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -96,6 +97,7 @@ GLKIT_EXPORT_CLASS
 @property (assign)GLKVector4 emissiveColor;
 @property float shininess;
 
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -106,8 +108,7 @@ GLKIT_EXPORT_CLASS
 @property GLKTextureEnvMode envMode;
 @property GLKTextureTarget target;
 
--(id)init;
--(id)initWith: (GLKTextureInfo*)tex;
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 // ----------------------------------------
