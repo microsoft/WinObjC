@@ -23,6 +23,8 @@
 #import <GLKit/GLKShader.h>
 #import <GLKit/GLKShaderDefs.h>
 
+#import "ShaderInfo.h"
+
 @implementation GLKShaderPair
 @end
 

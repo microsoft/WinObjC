@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "ShaderInfo.h"
+#include "ShaderGen.h"
 
 extern ShaderDef standardVsh;
 extern ShaderDef standardPsh;

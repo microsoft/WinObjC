@@ -20,6 +20,7 @@
 #import <GLKit/GLKShader.h>
 #import <GLKit/GLKTexture.h>
 #import "ShaderInfo.h"
+#import "ShaderGen.h"
 #import "ShaderProg.h"
 
 @implementation GLKShaderEffect {

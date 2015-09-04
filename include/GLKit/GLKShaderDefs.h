@@ -28,4 +28,4 @@
 #define GLKSH_UV1_NAME          "_uv1"
 
 #define GLKSH_MVP_NAME          "_mvp"
-
+#define GLKSH_CONSTCOLOR_NAME   "_constColor"

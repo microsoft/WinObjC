@@ -24,12 +24,6 @@
 
 using namespace std;
 
-struct ShaderNode;
-
-typedef map<string, ShaderNode*> ShaderDef;
-
-typedef pair<string, string> StrPair;
-
 struct VarInfo {
     VarInfo() : loc(-1), size(1), vertexAttr(false), used(false) {}
 
@@ -48,9 +42,9 @@ struct VarInfo {
 
 struct VarInfos {
     map<string, VarInfo> vars;
-    void clear();
+    inline void clear() { for(auto it : vars) it.second.used = false; }
 
-    VarInfo* find(const string& name) {
+    inline VarInfo* find(const string& name) {
         auto it = vars.find(name);
         if (it == vars.end()) return NULL;
         it->second.used = true;
@@ -68,57 +62,5 @@ struct VarInfos {
     inline void vertattr(const string& var) { add(var, -1, 1, true); }
     inline void constant(const string& var) { add(var, -1, 1, false); }
     inline void mat(const string& var) { add(var, -1, 4, false); }
-};
-
-class ShaderContext {
-    VarInfos    shaderVars;
-
-    ShaderDef   vs;
-    ShaderDef   ps;
-
-    string      temporaries;
-    int         nextTemp;
-    
-protected:
-    string generate(VarInfos& outputs, VarInfos& inputs, const ShaderDef& shader,
-                    const string& desc);
-    
-public:
-    ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        vs(vert), ps(pixel), nextTemp(0) {}
-
-    string addTempExpr(string valExpr);
-    
-    GLKShaderPair* generate(VarInfos& inputs);
-};
-
-// --------------------------------------------------------------------------------
-
-struct ShaderNode {
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) { return false; }
-};
-
-struct ShaderVarRef : public ShaderNode {    
-    string name;
-public:
-    ShaderVarRef(const string& name) : name(name) {}
-
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
-};
-
-struct ShaderFallbackRef : public ShaderNode {
-    string first;
-    string second;
-public:
-    ShaderFallbackRef(const string& first, const string& second) : first(first), second(second) {}
-
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
-};
-
-struct ShaderPosRef : public ShaderNode {
-public:
-    inline ShaderPosRef() {}
-    
-    virtual bool generate(string& out, ShaderContext& c, VarInfos& v) override;
 };
 

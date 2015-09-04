@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -38,6 +38,15 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm">
       <FileType>Document</FileType>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm" />
@@ -47,13 +56,10 @@
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm" />
     <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKViewController.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm">
-      <FileType>Document</FileType>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm">
-      <FileType>Document</FileType>
-    </ClangCompile>
   </ItemGroup>
 </Project>
