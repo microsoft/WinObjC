@@ -135,7 +135,7 @@ namespace XamlCompositorCS
                 _LayerContentCache.PushCacheableObject(layer);
             }
 
-            static public void SetScreenScale(Canvas windowContainer, float scale)
+            static public void ApplyMagnificationFactor(Canvas windowContainer, float scale)
             {
                 ScaleTransform windowScale = new ScaleTransform();
                 windowScale.ScaleX = scale;

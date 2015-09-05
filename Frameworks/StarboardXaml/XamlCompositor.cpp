@@ -646,6 +646,7 @@ void DisplayTextureXamlGlyphs::SetNodeContent(DisplayNode *node, float width, fl
     Measure(slackWidth, height / scale);
     node->SetContentsElement(textControl, slackWidth, _desiredHeight, 1.0f);
 }
+
 void SetScreenParameters(float width, float height, float magnification)
 {
     windowCollection->Width = width;
@@ -654,7 +655,7 @@ void SetScreenParameters(float width, float height, float magnification)
     windowCollection->InvalidateMeasure();
     rootNode->InvalidateArrange();
     rootNode->InvalidateMeasure();
-    XamlCompositorCS::Controls::CALayerXaml::SetScreenScale(windowCollection, magnification);
+    XamlCompositorCS::Controls::CALayerXaml::ApplyMagnificationFactor(windowCollection, magnification);
 }
 
 void CreateXamlCompositor(winobjc::Id &root);
