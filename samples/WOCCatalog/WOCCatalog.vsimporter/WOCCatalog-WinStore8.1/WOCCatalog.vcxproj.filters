@@ -108,7 +108,7 @@
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
       <Filter>WOCCatalog</Filter>
     </XibCompile>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.jpg">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png">
@@ -120,7 +120,7 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.jpg">
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif">
       <Filter>Images</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.jpg">
