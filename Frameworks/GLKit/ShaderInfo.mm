@@ -20,6 +20,7 @@
 void ShaderMaterial::addvar(const string& var, float* data, int size)
 {
     assert((size & 3) == 0);
+    assert(vars.find(var) == vars.end());
     
     VarInfo v;
     v.loc = values.size();
@@ -28,5 +29,17 @@ void ShaderMaterial::addvar(const string& var, float* data, int size)
     for(int i = 0; i < size; i ++) {
         values.push_back(data[i]);
     }
+    vars[var] = v;
+}
+
+void ShaderMaterial::addtex(const string& var, GLuint name)
+{
+    assert(vars.find(var) == vars.end());
+
+    VarInfo v;
+    v.texture = true;
+    v.loc = name;
+    v.size = 0;
+
     vars[var] = v;
 }

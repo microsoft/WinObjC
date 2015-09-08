@@ -29,3 +29,5 @@
 
 #define GLKSH_MVP_NAME          "_mvp"
 #define GLKSH_CONSTCOLOR_NAME   "_constColor"
+#define GLKSH_TEX0_NAME         "_tex0"
+#define GLKSH_TEX1_NAME         "_tex1"

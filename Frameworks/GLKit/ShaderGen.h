@@ -49,7 +49,7 @@ struct ShaderNode {
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) { return false; }
 };
 
-struct ShaderVarRef : public ShaderNode {    
+class ShaderVarRef : public ShaderNode {    
     string name;
     string constantResult;
 public:
@@ -58,10 +58,11 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-struct ShaderFallbackRef : public ShaderNode {
+class ShaderFallbackRef : public ShaderNode {
     string first;
     string second;
     string constantResult;
+
 public:
     ShaderFallbackRef(const string& first, const string& second, const string& constantResult = "") :
         first(first), second(second), constantResult(constantResult) {}
@@ -70,9 +71,7 @@ public:
 };
 
 struct ShaderPosRef : public ShaderNode {
-public:
-    inline ShaderPosRef() {}
-    
+    inline ShaderPosRef() {}    
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
@@ -83,7 +82,7 @@ struct ShaderTexRef : public ShaderNode {
 
 public:
     ShaderTexRef(const string& tex, ShaderNode* uvRef, ShaderNode* nextRef) :
-        texVar(rex), uvRef(uvRef), nextRef(nextRef) {}
+        texVar(tex), uvRef(uvRef), nextRef(nextRef) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

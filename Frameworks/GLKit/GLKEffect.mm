@@ -158,10 +158,32 @@
             shaderName += 'V';
         }
 
-        // Add these, figure out if we want them later.
+        shaderName += '_';
+        
+        // Add these for now.  See if we can figure out if something is bound to them.
         m->vertattr(GLKSH_NORMAL_NAME);
         m->vertattr(GLKSH_UV0_NAME);
         m->vertattr(GLKSH_UV1_NAME);
+
+        for(GLKEffectPropertyTexture* t in _textures) {
+            if (t.enabled) {
+                GLuint name = t.name;
+                if (name > 0) {
+                    m->addtex(GLKSH_TEX0_NAME, name);
+                    shaderName += 'T';
+                    continue;
+                }
+            }
+            shaderName += 'U';
+        }
+
+        shaderName += '_';
+        
+        for(GLKEffectPropertyLight* l in _lights) {
+            if(l.enabled) {
+            }
+            shaderName += 'U';
+        }
     
         self.shaderName = [NSString stringWithCString: shaderName.c_str()];
     }
@@ -174,6 +196,7 @@
         ShaderContext shd(standardVsh, standardPsh);
         GLKShaderPair* p = shd.generate(*m);
         if (p) {
+            NSLog(@"For shader named: %@", self.shaderName);
             NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
             NSLog(p.vertexShader);
             NSLog(@"---[ PIXEL SHADER ]-------------------------------------------------------------");
@@ -189,17 +212,31 @@
     [super prepareToDraw];
 
     // Additional material parameters setting goes here.
+    // TODO: BK: this should ultimately be in the shader code, not effect code.
+    int curTexUnit = 0;
     if (_effectChanged) {
         _effectChanged = false;
 
         ShaderLayout* l = (ShaderLayout*)self.shader.layout;
-        for(auto v : l->vars) {
+        for(const auto& v : l->vars) {
             if (v.second.vertexAttr) continue;
             auto mv = m->find(v.first);
             if (mv == nullptr) {
                 NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
             } else {
-                glUniform4fv(v.second.loc, 1, &m->values[mv->loc]);
+                if (mv->texture) {
+                    NSLog(@"Setting up texture %s - %d at unit %d, loc %d", v.first.c_str(), mv->loc, curTexUnit, v.second.loc);
+                    glActiveTexture(GL_TEXTURE0 + curTexUnit);
+                    glBindTexture(GL_TEXTURE_2D, mv->loc);
+                    glUniform1i(v.second.loc, curTexUnit);
+                    int res = glGetError();
+                    if (res) {
+                        NSLog(@"Error %d setting up texture", res);
+                    }
+                    curTexUnit ++;
+                } else {
+                    glUniform4fv(v.second.loc, 1, &m->values[mv->loc]);
+                }
             }
         }
     }
