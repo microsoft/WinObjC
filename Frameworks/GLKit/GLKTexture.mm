@@ -99,6 +99,8 @@
         return nil;
     }
 
+    NSLog(@"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
+
     glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, type, bytes);
     GLint i = glGetError();
     if (i != 0) {

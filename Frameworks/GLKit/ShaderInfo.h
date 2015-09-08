@@ -26,17 +26,19 @@
 using namespace std;
 
 struct VarInfo {
-    VarInfo() : loc(-1), size(1), vertexAttr(false), intermediate(false), used(false) {}
+    VarInfo() : loc(-1), size(1), texture(false), vertexAttr(false), intermediate(false), used(false) {}
 
     // when in a layout, used for variable location.
     // when in a shader mat, used for constant location in the array.
     int loc;
     int size;
+    bool texture;
     bool vertexAttr;
     bool intermediate;
     bool used;
 
     inline string vtype() const {
+        if (texture) return "sampler2D";
         if (size == 1) return "vec4";
         if (size == 4) return "mat4";
         assert(!"unknown size!");
@@ -55,10 +57,11 @@ struct ShaderLayout {
         return &it->second;
     }
 
-    inline void add(const string& var, int loc, int size, bool attr) {
+    inline void add(const string& var, int loc, int size, bool attr, bool texture = false) {
         if (vars.find(var) != vars.end()) return;
 
         VarInfo v;
+        v.texture = texture;
         v.loc = loc;
         v.size = size;
         v.vertexAttr = attr;
@@ -67,6 +70,7 @@ struct ShaderLayout {
 
     inline void vertattr(const string& var) { add(var, -1, 1, true); }
     inline void constant(const string& var) { add(var, -1, 1, false); }
+    inline void texture(const string& var) { add(var, -1, 1, false, true); }
     inline void mat(const string& var) { add(var, -1, 4, false); }
 };
 
@@ -74,6 +78,7 @@ struct ShaderMaterial : public ShaderLayout {
     vector<float> values;
 
     void addvar(const string& var, float* data, int size = 4);
+    void addtex(const string& var, GLuint name);
 
     inline void reset() {
         vars.clear();

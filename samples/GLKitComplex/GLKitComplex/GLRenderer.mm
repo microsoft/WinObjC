@@ -46,6 +46,7 @@ static void dumpMat(const GLKMatrix4& mat)
     glClearColor(0.0, 0.35, 0.6, 1.0);
     glClearDepthf(1.0f);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
     glDepthFunc(GL_LEQUAL);
 
     _mesh = new Mesh();
@@ -66,6 +67,7 @@ static void dumpMat(const GLKMatrix4& mat)
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
         _effect.texture2d0.name = _tex1.name;
+        _effect.texture2d0.enabled = FALSE;
     }
 }
 

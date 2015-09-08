@@ -82,7 +82,11 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     for(auto vp : inputs.vars) {
         VarInfo& vd = vp.second;
         if (vd.vertexAttr) continue;
-        intermediates.constant(vp.first);
+        if (vd.texture) {
+            intermediates.texture(vp.first);
+        } else {
+            intermediates.constant(vp.first);
+        }
     }
 
     // Perform pixel shader generation.
@@ -164,7 +168,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
         return !next.empty();
     }
 
-    out = "texture2D(" + texVar + ", " + uv + ")";
+    out = "texture2D(" + texVar + ", vec2(" + uv + "))";
     if (!next.empty()) {
         out = "(" + out + " * " + next + ")";
     }
