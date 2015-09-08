@@ -18,12 +18,23 @@
 
 #import <GLKit/GLKit.h>
 
+enum _DisplayMode {
+    DM_VertexColor,
+    DM_SolidColor,
+    DM_TexturedVertexColor,
+    DM_TexturedSolidColor,
+    DM_Last = DM_TexturedSolidColor
+};
+typedef unsigned int DisplayMode;
+
 @interface GLRenderer : NSObject<GLKViewDelegate, GLKViewControllerDelegate>
+
+@property(readonly) DisplayMode mode;
 
 -(void)initGLData;
 -(void)cleanupGLData;
 
--(NSString*)changeMaterial;
+-(void)nextDisplayMode;
 
 -(void)glkViewController: (GLKViewController*)controller willPause:(BOOL)paused;
 -(void)glkViewControllerUpdate: (GLKViewController*)controller;

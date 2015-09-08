@@ -229,10 +229,6 @@
                     glActiveTexture(GL_TEXTURE0 + curTexUnit);
                     glBindTexture(GL_TEXTURE_2D, mv->loc);
                     glUniform1i(v.second.loc, curTexUnit);
-                    int res = glGetError();
-                    if (res) {
-                        NSLog(@"Error %d setting up texture", res);
-                    }
                     curTexUnit ++;
                 } else {
                     glUniform4fv(v.second.loc, 1, &m->values[mv->loc]);

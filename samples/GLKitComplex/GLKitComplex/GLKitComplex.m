@@ -55,11 +55,12 @@
     _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
     [_welcomeLabel setBackgroundColor: nil];
     [_welcomeLabel setTextColor: [UIColor whiteColor]];
-    [_welcomeLabel setText: @"Vertex Color!"];
     [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 24.0f]];
     [_welcomeLabel setTextAlignment: UITextAlignmentCenter];    
     [_mainWindow addSubview: _welcomeLabel];
 
+    [self setLabelText];
+    
     //The setup code (in viewDidLoad in your view controller)
     UITapGestureRecognizer *tap = [UITapGestureRecognizer alloc];
     [tap initWithTarget:self action:@selector(handleTap:)];
@@ -68,9 +69,21 @@
     [_mainWindow makeKeyAndVisible];
 }
 
+-(void)setLabelText {
+    static NSString* modeDescriptions[]={
+        @"Vertex Colors, No Texture",
+        @"Solid Color, No Texture",
+        @"Vertex Colors, Textured",
+        @"Solid Color, Textured"
+    };
+    
+    [_welcomeLabel setText: modeDescriptions[_renderer.mode]];
+}
+
 -(void)handleTap: (UITapGestureRecognizer*)tap {
     CGPoint location = [tap locationInView: [tap.view superview]];
-    [_welcomeLabel setText: [_renderer changeMaterial]];
+    [_renderer nextDisplayMode];
+    [self setLabelText];
 }
 
 @end

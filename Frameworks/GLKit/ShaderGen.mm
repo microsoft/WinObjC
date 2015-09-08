@@ -93,7 +93,8 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
         if(vp.first != "gl_Position" ) {
             VarInfo& vd = vp.second;
             if (vd.used) {
-                string res = vd.intermediate ? "varying lowp " : "uniform lowp ";
+                string res = vd.intermediate ? "varying " : "uniform ";
+                if (vd.texture == false) res += "lowp ";
                 res += vd.vtype() + " " + vp.first + ";\n";
                 pixvars += res;
             }
