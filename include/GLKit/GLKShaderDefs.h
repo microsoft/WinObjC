@@ -21,13 +21,33 @@
 
 #define GLKSH_STANDARD_SHADER   "Standard"
 
+// ------------------------------
+// Vertex attrs
+
 #define GLKSH_POS_NAME          "_position"
 #define GLKSH_NORMAL_NAME       "_normal"
 #define GLKSH_COLOR_NAME        "_color"
 #define GLKSH_UV0_NAME          "_uv0"
 #define GLKSH_UV1_NAME          "_uv1"
 
+// ------------------------------
+// Constant names
+
 #define GLKSH_MVP_NAME          "_mvp"
+
 #define GLKSH_CONSTCOLOR_NAME   "_constColor"
+
 #define GLKSH_TEX0_NAME         "_tex0"
 #define GLKSH_TEX1_NAME         "_tex1"
+
+#define GLKSH_AMBIENT           "_ambient"
+
+#define GLKSH_LIGHT0_COLOR      "_lightcolor0"
+#define GLKSH_LIGHT0_POS        "_lightpos0"
+
+#define GLKSH_LIGHT1_COLOR      "_lightcolor1"
+#define GLKSH_LIGHT1_POS        "_lightpos1"
+
+#define GLKSH_LIGHT2_COLOR      "_lightcolor2"
+#define GLKSH_LIGHT2_POS        "_lightpos2"
+

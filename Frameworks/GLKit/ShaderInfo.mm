@@ -32,6 +32,18 @@ void ShaderMaterial::addvar(const string& var, float* data, int size)
     vars[var] = v;
 }
 
+void ShaderMaterial::addvar(const string& var, GLKVector3 vec)
+{
+    float vals[4] = { vec.x, vec.y, vec.z, 1.f };
+    addvar(var, vals, 4);
+}
+
+void ShaderMaterial::addvar(const string& var, GLKVector2 vec)
+{
+    float vals[4] = { vec.x, vec.y, 0.f, 1.f };
+    addvar(var, vals, 4);    
+}
+
 void ShaderMaterial::addtex(const string& var, GLuint name)
 {
     assert(vars.find(var) == vars.end());

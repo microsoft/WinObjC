@@ -23,6 +23,19 @@
 #import "ShaderGen.h"
 #import "ShaderProg.h"
 
+#define MAX_LIGHTS 3
+
+struct LightVars {
+    const char* color;
+    const char* pos;
+};
+
+static LightVars lightVarNames[MAX_LIGHTS] = {
+    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS },
+    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS },
+    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS },
+};
+
 @implementation GLKShaderEffect {
     ShaderMaterial _mat;
 }
@@ -152,7 +165,7 @@
 
         if (self.useConstantColor) {
             shaderName += 'C';
-            m->addvar(GLKSH_CONSTCOLOR_NAME, (float*)&_constantColor);
+            m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
         } else {
             m->vertattr(GLKSH_COLOR_NAME);
             shaderName += 'V';
@@ -165,6 +178,7 @@
         m->vertattr(GLKSH_UV0_NAME);
         m->vertattr(GLKSH_UV1_NAME);
 
+        // Process texture variables.
         for(GLKEffectPropertyTexture* t in _textures) {
             if (t.enabled) {
                 GLuint name = t.name;
@@ -178,13 +192,30 @@
         }
 
         shaderName += '_';
-        
+
+        // Process lighting variables.
+        int numEnabled = 0;
+        int lightNum = 0;
+        GLKVector4 ambient = { 0 };
         for(GLKEffectPropertyLight* l in _lights) {
             if(l.enabled) {
+                if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
+                    m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
+                    m->addvar(lightVarNames[lightNum].pos, l.position);
+                }
+                ambient = GLKVector4Add(ambient, l.ambientColor);
+                numEnabled ++;
             }
             shaderName += 'U';
+
+            lightNum ++;
+            if (lightNum >= MAX_LIGHTS) break;
         }
-    
+        if (numEnabled && !GLKVector4AllEqualToScalar(ambient, 0.f)) {
+            m->addvar(GLKSH_AMBIENT, ambient);
+        }
+
+        // Save final shader name.
         self.shaderName = [NSString stringWithCString: shaderName.c_str()];
     }
 
@@ -225,7 +256,6 @@
                 NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
             } else {
                 if (mv->texture) {
-                    NSLog(@"Setting up texture %s - %d at unit %d, loc %d", v.first.c_str(), mv->loc, curTexUnit, v.second.loc);
                     glActiveTexture(GL_TEXTURE0 + curTexUnit);
                     glBindTexture(GL_TEXTURE_2D, mv->loc);
                     glUniform1i(v.second.loc, curTexUnit);

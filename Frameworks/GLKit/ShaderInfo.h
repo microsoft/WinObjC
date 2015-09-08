@@ -17,7 +17,7 @@
 #pragma once
 
 #import <Foundation/NSDictionary.h>
-#import <GLKit/GLKShader.h>
+#import <GLKit/GLKit.h>
 
 #include <assert.h>
 #include <map>
@@ -77,7 +77,10 @@ struct ShaderLayout {
 struct ShaderMaterial : public ShaderLayout {
     vector<float> values;
 
-    void addvar(const string& var, float* data, int size = 4);
+    void addvar(const string& var, float* data, int size);
+    inline void addvar(const string& var, GLKVector4 vec) { addvar(var, (float*)&vec, 4); }
+    void addvar(const string& var, GLKVector3 vec);
+    void addvar(const string& var, GLKVector2 vec);
     void addtex(const string& var, GLuint name);
 
     inline void reset() {

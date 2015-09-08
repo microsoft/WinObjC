@@ -52,6 +52,7 @@ static void dumpMat(const GLKMatrix4& mat)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
     glDepthFunc(GL_LEQUAL);
 
+    // Load the mesh.
     _mesh = new Mesh();
 
     NSString *file = [[NSBundle mainBundle] pathForResource:@"utah-teapot" ofType:@"obj"];
@@ -66,11 +67,21 @@ static void dumpMat(const GLKMatrix4& mat)
         NSLog(@"Unable to create OpenGL buffer objects for mesh!");
     }
 
+    // Load the mesh's texture.
     UIImage* img = [UIImage imageNamed: @"seafloor.png"];
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
         _effect.texture2d0.name = _tex1.name;
     }
+
+    // Set up lights.
+    GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);
+    _effect.light0.ambientColor = GLKVector4Make(0.f, 0.f, 0.f, 1.f);
+
+    _effect.light1.position = pos;
+    _effect.light1.diffuseColor = GLKVector4Make(0.f, 0.7f, 1.f, 1.f);
+
+    // Set up draw mode.
     _mode = DM_VertexColor;
     [self setupMaterials];
 }
@@ -104,7 +115,7 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.transform.projectionMatrix = proj;
 
     GLKMatrix4 rotate = GLKMatrix4MakeYRotation(_cubeAngle);
-    static GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -75.f);
+    static GLKMatrix4 translate = GLKMatrix4MakeTranslation(0.0f, 0.0f, -_mesh->getRadius() * 2.25f);
     GLKMatrix4 modelview = GLKMatrix4Multiply(translate, rotate);
     _effect.transform.modelviewMatrix = modelview;
 

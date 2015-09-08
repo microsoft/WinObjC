@@ -16,7 +16,10 @@
 
 #pragma once
 
-#include <QuartzCore/CATransform3D.h>
+#import <CoreGraphics/CGAffineTransform.h>
+#import <QuartzCore/CATransform3D.h>
+
+#define COMPARISON_EPSILON 0.0000001f
 
 typedef struct _GLKVector2 {
     union {
@@ -442,6 +445,13 @@ inline GLKVector2 GLKVector2Lerp(GLKVector2 v1, GLKVector2 v2, float t)
     res.y = v1.y * it + v2.y * t;
 
     return res;
+}
+
+inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar)
+{
+    GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
 }
 
 // --------------------------------------------------------------------------------

@@ -88,7 +88,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ClangCompile Include="..\..\GLKitComplex\Mesh.cpp" />
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm" />
     <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
     <Image Include="Assets\Logo.scale-100.png" />
