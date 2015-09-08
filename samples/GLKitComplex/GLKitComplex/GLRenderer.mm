@@ -41,12 +41,15 @@ static void dumpMat(const GLKMatrix4& mat)
 
 -(void)initGLData {
     _effect = [[GLKBaseEffect alloc] init];    
+    _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
     _cubeAngle = 0.f;
 
     glClearColor(0.0, 0.35, 0.6, 1.0);
     glClearDepthf(1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
     glDepthFunc(GL_LEQUAL);
 
     _mesh = new Mesh();
@@ -67,8 +70,9 @@ static void dumpMat(const GLKMatrix4& mat)
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
         _effect.texture2d0.name = _tex1.name;
-        _effect.texture2d0.enabled = FALSE;
     }
+    _mode = DM_VertexColor;
+    [self setupMaterials];
 }
 
 -(void)cleanupGLData {
@@ -91,6 +95,8 @@ static void dumpMat(const GLKMatrix4& mat)
 }
 
 -(void)glkView:(GLKView*)view drawInRect:(CGRect)rect {
+    [self setupMaterials];
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     float aspect = rect.size.width / rect.size.height;
@@ -108,12 +114,36 @@ static void dumpMat(const GLKMatrix4& mat)
     glDrawElements(GL_TRIANGLES, 3 * _mesh->faceCount(), GL_UNSIGNED_SHORT, 0);
 }
 
--(NSString*)changeMaterial {
-    _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
-    _effect.useConstantColor = !_effect.useConstantColor;
+-(void)nextDisplayMode {
+    if (_mode == DM_Last) {
+        _mode = DM_VertexColor;
+    } else {
+        _mode = _mode + 1;
+    }
+}
 
-    if (_effect.useConstantColor) return @"Solid Color!";
-    return @"Vertex Color!";
+-(void)setupMaterials {
+    switch(_mode) {
+    case DM_VertexColor:
+        _effect.texture2d0.enabled = FALSE;
+        _effect.useConstantColor = FALSE;
+        break;
+          
+    case DM_SolidColor:
+        _effect.texture2d0.enabled = FALSE;
+        _effect.useConstantColor = TRUE;
+        break;
+          
+    case DM_TexturedVertexColor:
+        _effect.texture2d0.enabled = TRUE;
+        _effect.useConstantColor = FALSE;
+        break;
+          
+    case DM_TexturedSolidColor:
+        _effect.texture2d0.enabled = TRUE;
+        _effect.useConstantColor = TRUE;
+        break;          
+    };
 }
 
 @end

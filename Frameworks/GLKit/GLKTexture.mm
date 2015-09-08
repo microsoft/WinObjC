@@ -66,6 +66,8 @@
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
 
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
@@ -108,7 +110,7 @@
     }
 
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
-}   
+}
 
 -(id)initWithShareContext:(NSOpenGLContext*)context {
     return self;
