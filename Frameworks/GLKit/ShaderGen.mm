@@ -55,8 +55,8 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     ShaderLayout intermediates;
     ShaderLayout outputs;
 
+    // Perform vertex shader generation.
     string outvert = generate(intermediates, inputs, vs, "VS");
-
     string vertinvars;
     for(auto vp : inputs.vars) {
         VarInfo& vd = vp.second;
@@ -67,33 +67,45 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
         }
     }
 
+    // Generate vars for VS outputs, tag them as intermediates.
     string vertoutvars;
-    for(auto vp : intermediates.vars) {
+    for(auto& vp : intermediates.vars) {
         if(vp.first != "gl_Position") {
             VarInfo& vd = vp.second;
+            vd.intermediate = true;
             string res = "varying " + vd.vtype() + " " + vp.first + ";\n";
             vertoutvars += res;
         }
     }
 
-    string outpix = generate(outputs, intermediates, ps, "PS");
+    // Add constants available to the vertex shader program.
+    for(auto vp : inputs.vars) {
+        VarInfo& vd = vp.second;
+        if (vd.vertexAttr) continue;
+        intermediates.constant(vp.first);
+    }
 
+    // Perform pixel shader generation.
+    string outpix = generate(outputs, intermediates, ps, "PS");
     string pixvars;
     for(auto vp : intermediates.vars) {
-        if(vp.first != "gl_Position") {        
+        if(vp.first != "gl_Position" ) {
             VarInfo& vd = vp.second;
-            string res = "varying lowp " + vd.vtype() + " " + vp.first + ";\n";
-            pixvars += res;
+            if (vd.used || vd.intermediate) {
+                string res = vd.intermediate ? "varying lowp " : "uniform lowp ";
+                res += vd.vtype() + " " + vp.first + ";\n";
+                pixvars += res;
+            }
         }
     }
 
+    // Perform final generation.
     outvert = vertinvars + "\n" + vertoutvars + "\nvoid main() {\n" + outvert + "}\n";
     outpix = pixvars + "\nvoid main() {\n" + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
-    res.pixelShader = [NSString stringWithCString: outpix.c_str()];
-    
+    res.pixelShader = [NSString stringWithCString: outpix.c_str()];    
     return res;
 }
 
@@ -104,7 +116,9 @@ bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
         out = name;
         return true;
     }
-    return false;
+    if (constantResult.empty()) return false;
+    out = constantResult;
+    return true;
 }
 
 bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
@@ -133,5 +147,26 @@ bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     if (!pos || !mat) return false;
 
     out = GLKSH_MVP_NAME " * " GLKSH_POS_NAME;
+    return true;
+}
+
+bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    // TODO: BK: texture2D + "*" should be params.
+
+    string next;
+    if (nextRef) nextRef->generate(next, c, v);
+
+    string uv;
+    auto v1 = v.find(texVar);
+    if (!v1 || !uvRef || !uvRef->generate(uv, c, v)) {
+        out = next;
+        return !next.empty();
+    }
+
+    out = "texture2D(" + texVar + ", " + uv + ")";
+    if (!next.empty()) {
+        out = "(" + out + " * " + next + ")";
+    }
     return true;
 }

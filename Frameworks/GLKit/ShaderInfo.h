@@ -26,13 +26,14 @@
 using namespace std;
 
 struct VarInfo {
-    VarInfo() : loc(-1), size(1), vertexAttr(false), used(false) {}
+    VarInfo() : loc(-1), size(1), vertexAttr(false), intermediate(false), used(false) {}
 
     // when in a layout, used for variable location.
     // when in a shader mat, used for constant location in the array.
     int loc;
     int size;
     bool vertexAttr;
+    bool intermediate;
     bool used;
 
     inline string vtype() const {
@@ -55,6 +56,8 @@ struct ShaderLayout {
     }
 
     inline void add(const string& var, int loc, int size, bool attr) {
+        if (vars.find(var) != vars.end()) return;
+
         VarInfo v;
         v.loc = loc;
         v.size = size;
