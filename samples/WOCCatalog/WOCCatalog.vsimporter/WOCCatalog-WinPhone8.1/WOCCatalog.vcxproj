@@ -122,11 +122,11 @@
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.jpg" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg" />
