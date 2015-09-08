@@ -18,29 +18,25 @@
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
 
-string ShaderContext::addTempExpr(string valExpr)
-{
-    char name[64];
-    sprintf(name, "_temp%d", nextTemp);
-    nextTemp ++;
-
-    temporaries += "\tvec4 " + string(name) + " = " + valExpr + ";\n";
-    
-    return string(name);
-}
-
 string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
-                               const string& desc)
+                               const string& desc, ShaderLayout* usedOutputs)
 {
     nextTemp = 0;
 
     string final;
     for(const auto& it : shader) {
         string res;
-        temporaries = "";
+        if (usedOutputs) {
+            auto used = usedOutputs->vars.find(it.first);
+            if(it.first != "gl_Position") {
+                if (used != usedOutputs->vars.end() && !used->second.used) {
+                    final += "\t// " + desc + ": Output for " + it.first + " skipped, unused later in program.\n";
+                    continue;
+                }
+            }
+        }
         if (it.second->generate(res, *this, inputs)) {
             outputs.vars[it.first] = VarInfo();
-            if (!temporaries.empty()) final += temporaries;
             final += "\t" + it.first + " = " + res + ";\n";
         } else {
             final += "\t// " + desc + ": Cannot generate output for " + it.first + ", skipping...\n";
@@ -73,6 +69,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
         if(vp.first != "gl_Position") {
             VarInfo& vd = vp.second;
             vd.intermediate = true;
+            vd.used = false;
             string res = "varying " + vd.vtype() + " " + vp.first + ";\n";
             vertoutvars += res;
         }
@@ -95,7 +92,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     for(auto vp : intermediates.vars) {
         if(vp.first != "gl_Position" ) {
             VarInfo& vd = vp.second;
-            if (vd.used || vd.intermediate) {
+            if (vd.used) {
                 string res = vd.intermediate ? "varying lowp " : "uniform lowp ";
                 res += vd.vtype() + " " + vp.first + ";\n";
                 pixvars += res;
@@ -103,6 +100,11 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
         }
     }
 
+    // Regenerate the vertex shader based on the intermediates used in the pixel shader.
+    // This is a little messy, but should be fine.
+    ShaderLayout unusedIntermediates;
+    outvert = generate(unusedIntermediates, inputs, vs, "VS", &intermediates);
+    
     // Perform final generation.
     outvert = vertinvars + "\n" + vertoutvars + "\nvoid main() {\n" + outvert + "}\n";
     outpix = pixvars + "\nvoid main() {\n" + outpix + "}\n";
