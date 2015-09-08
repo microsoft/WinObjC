@@ -27,19 +27,18 @@ class ShaderContext {
     ShaderDef       vs;
     ShaderDef       ps;
 
-    string          temporaries;
     int             nextTemp;
+
+    // TODO: BK: allow temporary vars to be created.
     
 protected:
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
-                    const string& desc);
+                    const string& desc, ShaderLayout* usedOutputs = NULL);
     
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
         vs(vert), ps(pixel), nextTemp(0) {}
 
-    string addTempExpr(string valExpr);
-    
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
 
