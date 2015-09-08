@@ -20,14 +20,18 @@
 #include "ShaderGen.h"
 #include "ShaderProg.h"
 
+#define GL_INPUT_POS "gl_Position"
+#define GL_INPUT_TEXCOORD "gl_MultiTexCoord0"
+
 #define COLOR_WHITE "vec4(1, 1, 1, 1)"
 #define COLOR_BLACK "vec4(0, 0, 0, 1)"
 
 ShaderDef standardVsh{
-    {"gl_Position", new ShaderPosRef() },
-    {"_outColor", new ShaderFallbackRef(GLKSH_CONSTCOLOR_NAME, GLKSH_COLOR_NAME, COLOR_WHITE) }
+    {GL_INPUT_POS,  new ShaderPosRef() },
+    {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
+    {"_texCoord",   new ShaderVarRef(GL_INPUT_TEXCOORD) }
 };
 
 ShaderDef standardPsh{
-    {"gl_FragColor", new ShaderVarRef("_outColor")}
+    {"gl_FragColor", new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE)}
 };
