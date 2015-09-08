@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #import "Foundation/Foundation.h"
+#import "NSObjectInternal.h"
 #include "../objcrt/runtime.h"
 
 #include "CoreGraphics/CGAffineTransform.h"
@@ -384,6 +385,16 @@
     -(NSString *) description
     {
         return NSStringFromClass([self class]);
+    }
+
+    + (void)_raiseSelectorNotFoundError:(SEL)selector format: (const char *)format, ...
+    {
+        va_list va;
+        va_start(va, format);
+        NSString *err = [[[NSString alloc] initWithFormat: [NSString stringWithCString: format] arguments: va] autorelease];
+        va_end(va);
+
+        [NSException raiseWithLogging: @"SelectorNotFound" format: @"%@", err];
     }
 @end
 
