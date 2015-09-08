@@ -1,7 +1,0 @@
-*.exe
-*.ilk
-*.pdb
-shader_wp8.h
-shader_winrt.h
-shader.h
-
