@@ -16,6 +16,7 @@
 
 #pragma once
 
+#import <GLKit/GLKit.h>
 #include <vector>
 
 struct v2 {
@@ -56,6 +57,11 @@ class Mesh {
                    std::vector<std::string>::iterator end,
                    const V3Array& verts, const V3Array& norms, const V2Array& uvs);
 
+    void calcBounding();
+
+    GLKVector3 center;
+    float radius;
+    
 public:
     Mesh();
     ~Mesh();
@@ -67,5 +73,7 @@ public:
 
     void bindVertexData();
     
-    inline size_t faceCount() const { return faces.size(); }
+    inline size_t faceCount() const                 { return faces.size(); }
+    inline const GLKVector3& getCenter() const      { return center; }
+    inline float getRadius()                        { return radius; }
 };

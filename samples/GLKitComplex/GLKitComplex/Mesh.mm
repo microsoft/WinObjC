@@ -22,6 +22,7 @@
 
 #include <math.h>
 #include <string>
+#include <algorithm>
 #include <sstream>
 
 bool operator==(const MeshVertex& a, const MeshVertex& b)
@@ -190,6 +191,24 @@ void Mesh::testMesh()
 
     verts = cubeVertices;
     faces = cubeFaces;
+
+    calcBounding();
+}
+
+void Mesh::calcBounding()
+{
+    // This won't be a tight bound due to duplicated vertex positions within the array, but it's "good enough"
+    center = GLKVector3Make(0, 0, 0);
+    for(const auto& v : verts) {
+        center = GLKVector3Add(center, GLKVector3Make(v.pos[0], v.pos[1], v.pos[2]));
+    }
+    center = GLKVector3DivideScalar(center, static_cast<float>(verts.size()));
+
+    radius = 0.f;
+    for(const auto& v : verts) {
+        float dist = GLKVector3Distance(center, GLKVector3Make(v.pos[0], v.pos[1], v.pos[2]));
+        radius = std::max<float>(radius, dist);
+    }    
 }
 
 void Mesh::parse(const char* str, size_t len)
@@ -223,6 +242,8 @@ void Mesh::parse(const char* str, size_t len)
             parseFace(next, words.end(), pos, norm, uv);
         }
     }
+
+    calcBounding();
 }
 
 bool Mesh::createOGLBuffers()

@@ -20,24 +20,25 @@
 
 struct ShaderNode;
 typedef map<string, ShaderNode*> ShaderDef;
+typedef vector<ShaderNode*> ShaderNodes;
+
+@class GLKShaderPair;
 
 class ShaderContext {
     ShaderLayout    shaderVars;
 
     ShaderDef       vs;
     ShaderDef       ps;
-
-    int             nextTemp;
-
-    // TODO: BK: allow temporary vars to be created.
     
+    // TODO: BK: allow temporary vars to be created.
+
 protected:
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc, ShaderLayout* usedOutputs = NULL);
-    
+
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        vs(vert), ps(pixel), nextTemp(0) {}
+        vs(vert), ps(pixel) {}
 
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
@@ -61,7 +62,6 @@ class ShaderFallbackRef : public ShaderNode {
     string first;
     string second;
     string constantResult;
-
 public:
     ShaderFallbackRef(const string& first, const string& second, const string& constantResult = "") :
         first(first), second(second), constantResult(constantResult) {}
@@ -70,11 +70,11 @@ public:
 };
 
 struct ShaderPosRef : public ShaderNode {
-    inline ShaderPosRef() {}    
+    inline ShaderPosRef() {}
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-struct ShaderTexRef : public ShaderNode {
+class ShaderTexRef : public ShaderNode {
     string texVar;
     ShaderNode* uvRef;
     ShaderNode* nextRef;
@@ -82,6 +82,18 @@ struct ShaderTexRef : public ShaderNode {
 public:
     ShaderTexRef(const string& tex, ShaderNode* uvRef, ShaderNode* nextRef) :
         texVar(tex), uvRef(uvRef), nextRef(nextRef) {}
-
+    
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderAdditiveCombiner : public ShaderNode {
+    ShaderNodes subNodes;
+
+public:
+    inline ShaderAdditiveCombiner() {}
+    inline ShaderAdditiveCombiner(const ShaderNodes& n) : subNodes(n) {}
+
+    inline void addNode(ShaderNode* n) { subNodes.push_back(n); }
+    
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;    
 };

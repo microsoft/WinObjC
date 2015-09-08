@@ -59,7 +59,7 @@
     <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.m">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\GLKitComplex\Mesh.cpp">
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
   </ItemGroup>

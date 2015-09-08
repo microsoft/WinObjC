@@ -15,14 +15,15 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import <GLKit/GLKit.h>
+#import <GLKit/GLKShader.h>
+#import <GLKit/GLKShaderDefs.h>
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
 
 string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                                const string& desc, ShaderLayout* usedOutputs)
 {
-    nextTemp = 0;
-
     string final;
     for(const auto& it : shader) {
         string res;
@@ -102,7 +103,8 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     }
 
     // Regenerate the vertex shader based on the intermediates used in the pixel shader.
-    // This is a little messy, but should be fine.
+    // TODO: BK: This is a little messy.  I should just store the results in a dict and then
+    // calculate them only once.  Also, the vertex inputs and intermediates should be regenerated.
     ShaderLayout unusedIntermediates;
     outvert = generate(unusedIntermediates, inputs, vs, "VS", &intermediates);
     
@@ -176,4 +178,27 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
         out = "(" + out + " * " + next + ")";
     }
     return true;
+}
+
+bool ShaderAdditiveCombiner::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    int numGenerated = 0;
+    for(auto n : subNodes) {
+        string res;
+        if (n->generate(res, c, v) && !res.empty()) {
+            if (numGenerated == 0) {
+                out = res;
+            } else if(numGenerated == 1) {
+                out = '(' + out + " + " + res;
+            } else {
+                out += " + " + res;
+            }
+            numGenerated ++;
+        }
+    }
+    if (numGenerated > 1) {
+        out += ')';
+    }
+
+    return numGenerated >= 1;
 }
