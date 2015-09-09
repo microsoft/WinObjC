@@ -268,6 +268,7 @@ typedef uint32_t WOCDeviceType;
 @property (nonatomic) BOOL  autoMagnification;
 @property (nonatomic) BOOL  sizeUIWindowToFit;
 @property (nonatomic) WOCOperationMode operationMode;
+@property (nonatomic) UIInterfaceOrientation presentationTransform;
 
 @property (nonatomic, readonly) CGSize currentSize;
 @property (nonatomic, readonly) float currentMagnification;

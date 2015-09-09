@@ -53,7 +53,7 @@ void *LockWritableBitmap(winobjc::Id &bitmap, void **ptr, int *stride);
 void UnlockWritableBitmap(winobjc::Id &bitmap, void *byteAccess);
 void SetSwapchainScale(winobjc::Id &panel, float scale);
 
-void SetScreenParameters(float width, float height, float magnification);
+void SetScreenParameters(float width, float height, float magnification, float rotation);
 void SetRootGrid(winobjc::Id& root);
 
 void EnableRenderingListener(void (*callback)());
@@ -1296,11 +1296,11 @@ public:
         CASignalDisplayLink();
     }
 
-    virtual void setScreenSize(float width, float height, float scale) {
+    virtual void setScreenSize(float width, float height, float scale, float rotation) {
         ::screenWidth = width;
         ::screenHeight = height;
         ::screenMagnification = scale;
-        SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification);
+        SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification, rotation);
     }
 
     virtual void setDeviceSize(int width, int height) 

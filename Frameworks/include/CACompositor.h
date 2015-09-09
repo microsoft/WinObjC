@@ -22,6 +22,11 @@ class DisplayAnimation;
 class DisplayTexture;
 class DisplayTransaction;
 
+#define CACompositorRotationNone                0.0f
+#define CACompositorRotation90Clockwise         90.0f
+#define CACompositorRotation180                 180.0f
+#define CACompositorRotation90CounterClockwise  270.0f
+
 class CACompositorInterface
 {
 public:
@@ -81,7 +86,7 @@ public:
     virtual float screenXDpi() = 0;
     virtual float screenYDpi() = 0;
 
-    virtual void setScreenSize(float width, float height, float scale) = 0;
+    virtual void setScreenSize(float width, float height, float scale, float rotationClockwise) = 0;
     virtual void setDeviceSize(int width, int height) = 0;
     virtual void setScreenDpi(int xDpi, int yDpi) = 0;
     virtual void setTablet(bool isTablet) = 0;

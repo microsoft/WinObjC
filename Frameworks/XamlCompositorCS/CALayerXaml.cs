@@ -135,14 +135,28 @@ namespace XamlCompositorCS
                 _LayerContentCache.PushCacheableObject(layer);
             }
 
-            static public void ApplyMagnificationFactor(Canvas windowContainer, float scale)
+            static public void ApplyMagnificationFactor(Canvas windowContainer, float scale, float rotation)
             {
+                TransformGroup globalTransform = new TransformGroup();
                 ScaleTransform windowScale = new ScaleTransform();
+                RotateTransform orientation = new RotateTransform();
+
                 windowScale.ScaleX = scale;
                 windowScale.ScaleY = scale;
                 windowScale.CenterX = windowContainer.Width / 2.0;
                 windowScale.CenterY = windowContainer.Height / 2.0;
-                windowContainer.RenderTransform = windowScale;
+
+                globalTransform.Children.Add(windowScale);
+                if (rotation != 0.0f)
+                {
+                    orientation.Angle = rotation;
+                    orientation.CenterX = windowContainer.Width / 2.0;
+                    orientation.CenterY = windowContainer.Height / 2.0;
+
+                    globalTransform.Children.Add(orientation);
+                }
+
+                windowContainer.RenderTransform = globalTransform;
                 screenScale = (double)scale;
             }
 
