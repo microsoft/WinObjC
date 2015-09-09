@@ -454,6 +454,13 @@ inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar)
     return FALSE;
 }
 
+inline BOOL GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar)
+{
+    GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
 // --------------------------------------------------------------------------------
 // Utilities.
 

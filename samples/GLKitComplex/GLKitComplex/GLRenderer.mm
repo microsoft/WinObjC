@@ -42,6 +42,7 @@ static void dumpMat(const GLKMatrix4& mat)
 -(void)initGLData {
     _effect = [[GLKBaseEffect alloc] init];    
     _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
+    _effect.colorMaterialEnabled = TRUE; // use vertex colors.
     _cubeAngle = 0.f;
 
     glClearColor(0.0, 0.35, 0.6, 1.0);
@@ -73,15 +74,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
         _effect.texture2d0.name = _tex1.name;
     }
-
+    
     // Set up lights.
-    _effect.lightingEnabled = TRUE;
+    _effect.material.ambientColor = GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f);
+    _effect.material.shininess = 20.f;
     
     GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);
-    _effect.light0.ambientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
-
     _effect.light0.position = pos;
-    _effect.light0.diffuseColor = GLKVector4Make(0.6f, 1.5f, 2.f, 1.f);
+    _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.light0.linearAttenuation = 10.f / _mesh->getRadius();
 
@@ -142,36 +142,42 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
+        _effect.lightingEnabled = TRUE;
         break;
 
     case DM_LitTextured:
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
+        _effect.lightingEnabled = TRUE;
         break;
         
     case DM_VertexColor:
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;
+        _effect.lightingEnabled = FALSE;
         break;
           
     case DM_SolidColor:
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;        
+        _effect.lightingEnabled = FALSE;
         break;
           
     case DM_TexturedVertexColor:
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;        
+        _effect.lightingEnabled = FALSE;
         break;
           
     case DM_TexturedSolidColor:
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
+        _effect.lightingEnabled = FALSE;
         break;
     };
 }

@@ -35,21 +35,25 @@
 
 #define GLKSH_MVP_NAME          "_mvp"
 
-#define GLKSH_CONSTCOLOR_NAME   "_constColor"
-
 #define GLKSH_TEX0_NAME         "_tex0"
 #define GLKSH_TEX1_NAME         "_tex1"
 
+#define GLKSH_CAMERA            "_camera"
+
+#define GLKSH_CONSTCOLOR_NAME   "_constColor"
 #define GLKSH_AMBIENT           "_ambient"
 
 #define GLKSH_LIGHT0_COLOR      "_lightcolor0"
 #define GLKSH_LIGHT0_POS        "_lightpos0"
 #define GLKSH_LIGHT0_ATTEN      "_lightatten0"
+#define GLKSH_LIGHT0_SPECULAR   "_lightspec0"
 
 #define GLKSH_LIGHT1_COLOR      "_lightcolor1"
 #define GLKSH_LIGHT1_POS        "_lightpos1"
-#define GLKSH_LIGHT1_ATTEN      "_lightatten0"
+#define GLKSH_LIGHT1_ATTEN      "_lightatten1"
+#define GLKSH_LIGHT1_SPECULAR   "_lightspec1"
 
 #define GLKSH_LIGHT2_COLOR      "_lightcolor2"
 #define GLKSH_LIGHT2_POS        "_lightpos2"
-#define GLKSH_LIGHT2_ATTEN      "_lightatten0"
+#define GLKSH_LIGHT2_ATTEN      "_lightatten2"
+#define GLKSH_LIGHT2_SPECULAR   "_lightspec2"
