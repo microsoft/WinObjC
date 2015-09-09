@@ -253,6 +253,8 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
+// TODO: move attenuation factor out into separate node, use temps to calculate it.
+
 bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     string ldStr, normStr, clrStr, attenStr;
@@ -271,5 +273,25 @@ bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
                   "}\n");
 
     out = "performLighting(" + ldStr + ", " + normStr + ", " + clrStr + ", " + attenStr + ")";
+    return true;
+}
+
+bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string ldStr, cdStr, normStr, clrStr;
+    if (!lightDir->generate(ldStr, c, v) ||
+        !cameraDir->generate(cdStr, c, v) ||
+        !normal->generate(normStr, c, v) ||
+        !color->generate(clrStr, c, v)) return false;
+
+    c.addTempFunc("performSpecular",
+                  "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color) {\n"
+                  "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal));\n"
+                  "    vec3 camNorm = normalize(vec3(toCam));\n"
+                  "    float specular = pow(dot(camNorm, lightRefl), color.w);\n"
+                  "    return vec4(color.x * specular, color.y * specular, color.z * specular, 1.0);\n"
+                  "}\n");
+
+    out = "performSpecular(" + ldStr + ", " + cdStr + ", " + normStr + ", " + clrStr + ")";
     return true;
 }
