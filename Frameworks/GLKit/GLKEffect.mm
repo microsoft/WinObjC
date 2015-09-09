@@ -246,6 +246,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                         if (shininess > 0.f) {
                             GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
                             if (!GLKVector4XYZEqualToScalar(spec, 0.f)) {
+                                cameraRequired = true;
                                 ltype = 'S';
                                 spec.w = shininess;
                                 m->addvar(lightVarNames[lightNum].specular, spec);
@@ -254,7 +255,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                     }
                     ambient = GLKVector4Add(ambient, l.ambientColor);
                     numEnabled ++;
-                    shaderName += 'L';
+                    shaderName += ltype;
                 } else {
                     shaderName += 'U';
                 }
@@ -278,7 +279,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         }
 
         // Save final shader name.
-        self.shaderName = [NSString stringWithCString: shaderName.c_str()];
+        NSString* s = [NSString stringWithCString: shaderName.c_str()];
+        if (s != self.shaderName) {
+            NSLog(@"Switching to shader %@", s);
+            self.shaderName = s;
+        }
     }
 
     // Check for shader existence.

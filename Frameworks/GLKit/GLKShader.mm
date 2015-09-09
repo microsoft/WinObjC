@@ -135,17 +135,6 @@ static GLKShaderCache* imp = nil;
             vars.add(buf, loc, size, false, type == GL_SAMPLER_2D); // TODO: BK: more types go here.
         }
     }
-
-    for(auto v : vars.vars) {
-        const char* type;
-
-        if (v.second.texture) type = "texture";
-        else if(v.second.vertexAttr) type = "vert attr";
-        else type = "constant";
-
-        NSLog(@"Shader %s: name %s location %d size %d", type,
-              v.first.c_str(), v.second.loc, v.second.size);
-    }
     
     return self;
 }
