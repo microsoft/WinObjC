@@ -83,6 +83,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
     self.lightingType = GLKLightingTypePerPixel;
     self.lightModelTwoSided = FALSE;
+    self.lightingEnabled = FALSE;
 
     _textures = [[NSMutableArray alloc] init];
     [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];
@@ -198,27 +199,31 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         int numEnabled = 0;
         int lightNum = 0;
         GLKVector4 ambient = { 0 };
-        // TODO: sort lights so we don't get shader permutations such as LUL which is the same
-        // as ULL and LLU.
-        for(GLKEffectPropertyLight* l in _lights) {
-            if(l.enabled) {
-                if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
-                    m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
-                    m->addvar(lightVarNames[lightNum].pos, l.position);
-                    m->addvar(lightVarNames[lightNum].atten, l.attenuation);
+        if (self.lightingEnabled) {
+            // TODO: sort lights so we don't get shader permutations such as LUL which is the same
+            // as ULL and LLU.
+            for(GLKEffectPropertyLight* l in _lights) {
+                if(l.enabled) {
+                    if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
+                        m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
+                        m->addvar(lightVarNames[lightNum].pos, l.position);
+                        m->addvar(lightVarNames[lightNum].atten, l.attenuation);
+                    }
+                    ambient = GLKVector4Add(ambient, l.ambientColor);
+                    numEnabled ++;
+                    shaderName += 'L';
+                } else {
+                    shaderName += 'U';
                 }
-                ambient = GLKVector4Add(ambient, l.ambientColor);
-                numEnabled ++;
-                shaderName += 'L';
-            } else {
-                shaderName += 'U';
-            }
 
-            lightNum ++;
-            if (lightNum >= MAX_LIGHTS) break;
-        }
-        if (numEnabled && !GLKVector4AllEqualToScalar(ambient, 0.f)) {
-            m->addvar(GLKSH_AMBIENT, ambient);
+                lightNum ++;
+                if (lightNum >= MAX_LIGHTS) break;
+            }
+            if (numEnabled && !GLKVector4AllEqualToScalar(ambient, 0.f)) {
+                m->addvar(GLKSH_AMBIENT, ambient);
+            }
+        } else {
+            shaderName += "UUU";
         }
 
         // Save final shader name.

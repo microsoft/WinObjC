@@ -137,6 +137,7 @@ GLKIT_EXPORT_CLASS
 
 @property(assign) GLKLightingType lightingType;
 @property(assign) BOOL lightModelTwoSided;
+@property(assign) BOOL lightingEnabled;
 
 @property(readonly) GLKEffectPropertyTexture* texture2d0;
 @property(readonly) GLKEffectPropertyTexture* texture2d1;
