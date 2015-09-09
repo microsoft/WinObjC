@@ -77,6 +77,7 @@ static void dumpMat(const GLKMatrix4& mat)
     
     // Set up lights.
     _effect.material.ambientColor = GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f);
+    _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.material.shininess = 20.f;
     
     GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);

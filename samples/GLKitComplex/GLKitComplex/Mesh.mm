@@ -32,12 +32,7 @@ bool operator==(const MeshVertex& a, const MeshVertex& b)
     dist += fabsf(a.pos[1] - b.pos[1]);
     dist += fabsf(a.pos[2] - b.pos[2]);
 
-    // Deliberately ignore normal contributions.
-
-    dist += fabsf(a.color[0] - b.color[0]);
-    dist += fabsf(a.color[1] - b.color[1]);
-    dist += fabsf(a.color[2] - b.color[2]);
-    dist += fabsf(a.color[3] - b.color[3]);
+    // Deliberately ignore normal contributions and color contributions.
 
     dist += fabsf(a.uv[0] - b.uv[0]);
     dist += fabsf(a.uv[1] - b.uv[1]);
