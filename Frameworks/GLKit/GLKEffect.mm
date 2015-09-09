@@ -197,6 +197,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         int numEnabled = 0;
         int lightNum = 0;
         GLKVector4 ambient = { 0 };
+        // TODO: sort lights so we don't get shader permutations such as LUL which is the same
+        // as ULL and LLU.
         for(GLKEffectPropertyLight* l in _lights) {
             if(l.enabled) {
                 if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
@@ -205,8 +207,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 }
                 ambient = GLKVector4Add(ambient, l.ambientColor);
                 numEnabled ++;
+                shaderName += 'L';
+            } else {
+                shaderName += 'U';
             }
-            shaderName += 'U';
 
             lightNum ++;
             if (lightNum >= MAX_LIGHTS) break;
@@ -313,7 +317,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     _parent = parent;
     _transform = [[GLKEffectPropertyTransform alloc] initWith: parent];
 
-    self.enabled = TRUE;
+    self.enabled = FALSE;
     self.position = GLKVector3Origin();
 
     self.ambientColor = GLKVector4Black();

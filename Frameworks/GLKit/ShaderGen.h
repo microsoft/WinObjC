@@ -25,20 +25,24 @@ typedef vector<ShaderNode*> ShaderNodes;
 @class GLKShaderPair;
 
 class ShaderContext {
-    ShaderLayout    shaderVars;
+    ShaderLayout            shaderVars;
 
-    ShaderDef       vs;
-    ShaderDef       ps;
+    ShaderDef               vs;
+    ShaderDef               ps;
+
+    bool                    vertexStage;
+    map<string, string>     vsTemps;
+    map<string, string>     psTemps;
     
-    // TODO: BK: allow temporary vars to be created.
-
 protected:
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc, ShaderLayout* usedOutputs = NULL);
 
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        vs(vert), ps(pixel) {}
+        vs(vert), ps(pixel), vertexStage(false) {}
+
+    void addTempFunc(const string& name, const string& body);
 
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
@@ -96,4 +100,29 @@ public:
     inline void addNode(ShaderNode* n) { subNodes.push_back(n); }
     
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;    
+};
+
+class ShaderOp : public ShaderNode {
+    ShaderNode* n1;
+    ShaderNode* n2;
+    string op;
+    bool isOperator;
+
+public:
+    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const string& op, bool isOperator) :
+        n1(n1), n2(n2), op(op), isOperator(isOperator) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderLighter : public ShaderNode {
+    ShaderNode* lightDir;
+    ShaderNode* normal;
+    ShaderNode* color;
+
+public:
+    inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color) :
+        lightDir(lightDir), normal(normal), color(color) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
