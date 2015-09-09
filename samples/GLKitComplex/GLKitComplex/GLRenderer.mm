@@ -75,11 +75,14 @@ static void dumpMat(const GLKMatrix4& mat)
     }
 
     // Set up lights.
+    _effect.lightingEnabled = TRUE;
+    
     GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);
     _effect.light0.ambientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
 
     _effect.light0.position = pos;
     _effect.light0.diffuseColor = GLKVector4Make(0.6f, 1.5f, 2.f, 1.f);
+    _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.light0.linearAttenuation = 10.f / _mesh->getRadius();
 
     // Set up draw mode.
