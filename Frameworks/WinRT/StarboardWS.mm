@@ -132,7 +132,7 @@ int UIApplicationMainStart(int argc,
 
     //  Setup default landscape presentation transform on desktop only, 
     //  based on the declared default application orientations
-#if WINAPI_FAMILY==WINAPI_FAMILY_APP
+#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
     if ( defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
          defaultOrientation == UIInterfaceOrientationLandscapeRight ) {
         displayMode.presentationTransform = defaultOrientation;
