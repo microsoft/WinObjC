@@ -71,8 +71,10 @@
 
 -(void)setLabelText {
     static NSString* modeDescriptions[]={
-        @"Vertex Colors, No Texture",
-        @"Solid Color, No Texture",
+        @"Vertex Lit, Solid Color, Untextured",
+        @"Vertex Lit, Vertex Colors, Textured",
+        @"Vertex Colors, Untextured",
+        @"Solid Color, Untextured",
         @"Vertex Colors, Textured",
         @"Solid Color, Textured"
     };

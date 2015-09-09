@@ -19,6 +19,8 @@
 #import <GLKit/GLKit.h>
 
 enum _DisplayMode {
+    DM_LitSolidColor,
+    DM_LitTextured,
     DM_VertexColor,
     DM_SolidColor,
     DM_TexturedVertexColor,

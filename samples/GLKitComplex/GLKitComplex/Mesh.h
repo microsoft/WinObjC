@@ -57,6 +57,7 @@ class Mesh {
                    std::vector<std::string>::iterator end,
                    const V3Array& verts, const V3Array& norms, const V2Array& uvs);
 
+    void calcNormals();
     void calcBounding();
 
     GLKVector3 center;

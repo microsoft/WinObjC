@@ -74,6 +74,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
             vertinvars += res;
         }
     }
+    if (!vertinvars.empty()) vertinvars += '\n';
 
     // Generate vars for VS outputs, tag them as intermediates.
     string vertoutvars;
@@ -86,6 +87,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
             vertoutvars += res;
         }
     }
+    if (!vertoutvars.empty()) vertoutvars += '\n';
 
     // Add constants available to the vertex shader program.
     for(auto vp : inputs.vars) {
@@ -114,6 +116,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
             }
         }
     }
+    if (!pixvars.empty()) pixvars += '\n';
 
     // Regenerate the vertex shader based on the intermediates used in the pixel shader.
     // TODO: BK: This is a little messy.  I should just store the results in a dict and then
@@ -125,15 +128,13 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 
     string vsTempFuncs;
     for(const auto& p : vsTemps) vsTempFuncs += p.second + '\n';
-    if (!vsTempFuncs.empty()) vsTempFuncs = '\n' + vsTempFuncs;
 
     string psTempFuncs;
     for(const auto& p : psTemps) psTempFuncs += p.second + '\n';
-    if (!psTempFuncs.empty()) psTempFuncs = '\n' + psTempFuncs;
         
     // Perform final generation.
-    outvert = vertinvars + "\n" + vertoutvars + vsTempFuncs + "\nvoid main() {\n" + outvert + "}\n";
-    outpix = pixvars + psTempFuncs + "\nvoid main() {\n" + outpix + "}\n";
+    outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + outvert + "}\n";
+    outpix = pixvars + psTempFuncs + "void main() {\n" + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
