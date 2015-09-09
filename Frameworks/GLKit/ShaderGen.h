@@ -119,10 +119,11 @@ class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* normal;
     ShaderNode* color;
+    ShaderNode* atten;
 
 public:
-    inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color) :
-        lightDir(lightDir), normal(normal), color(color) {}
+    inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color, ShaderNode* atten) :
+        lightDir(lightDir), normal(normal), color(color), atten(atten) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

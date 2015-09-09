@@ -44,10 +44,12 @@
 
 #define GLKSH_LIGHT0_COLOR      "_lightcolor0"
 #define GLKSH_LIGHT0_POS        "_lightpos0"
+#define GLKSH_LIGHT0_ATTEN      "_lightatten0"
 
 #define GLKSH_LIGHT1_COLOR      "_lightcolor1"
 #define GLKSH_LIGHT1_POS        "_lightpos1"
+#define GLKSH_LIGHT1_ATTEN      "_lightatten0"
 
 #define GLKSH_LIGHT2_COLOR      "_lightcolor2"
 #define GLKSH_LIGHT2_POS        "_lightpos2"
-
+#define GLKSH_LIGHT2_ATTEN      "_lightatten0"

@@ -30,11 +30,11 @@
 static auto lighter =
     new ShaderAdditiveCombiner({
         new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT0_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT0_COLOR)),
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT0_COLOR), new ShaderVarRef(GLKSH_LIGHT0_ATTEN)),
         new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT1_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT1_COLOR)),
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT1_COLOR), new ShaderVarRef(GLKSH_LIGHT1_ATTEN)),
         new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT2_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT2_COLOR))});
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT2_COLOR), new ShaderVarRef(GLKSH_LIGHT2_ATTEN))});
 
 ShaderDef standardVsh{
     {GL_INPUT_POS,  new ShaderPosRef() },
