@@ -25,13 +25,28 @@
 #define COLOR_WHITE "vec4(1, 1, 1, 1)"
 #define COLOR_BLACK "vec4(0, 0, 0, 1)"
 
+// Per-vertex lighting.
+
+static auto lighter =
+    new ShaderAdditiveCombiner({
+        new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT0_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT0_COLOR)),
+        new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT1_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT1_COLOR)),
+        new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT2_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
+                          new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT2_COLOR))});
+
 ShaderDef standardVsh{
     {GL_INPUT_POS,  new ShaderPosRef() },
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
-    {"_texCoord",   new ShaderVarRef(GLKSH_UV0_NAME) }
+    {"_texCoord",   new ShaderVarRef(GLKSH_UV0_NAME) },
+    {"_lighting",   new ShaderOp(new ShaderVarRef("_ambient"), lighter, "+", true) }
 };
 
 ShaderDef standardPsh{
     {"gl_FragColor", new ShaderTexRef(GLKSH_TEX0_NAME, new ShaderVarRef("_texCoord"),
-                                      new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE)) }
+                                      new ShaderOp(new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                                   new ShaderVarRef("_lighting"), "*", true)) }
 };
+
+// Per-pixel lighting.

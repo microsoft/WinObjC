@@ -47,11 +47,22 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
     return final;
 }
 
+void ShaderContext::addTempFunc(const string& name, const string& body)
+{
+    if (vertexStage) {
+        vsTemps[name] = body;
+    } else {
+        psTemps[name] = body;
+    }
+}
+
 GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 {
     ShaderLayout intermediates;
     ShaderLayout outputs;
 
+    vertexStage = true;
+    
     // Perform vertex shader generation.
     string outvert = generate(intermediates, inputs, vs, "VS");
     string vertinvars;
@@ -87,6 +98,8 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
         }
     }
 
+    vertexStage = false;
+    
     // Perform pixel shader generation.
     string outpix = generate(outputs, intermediates, ps, "PS");
     string pixvars;
@@ -106,11 +119,21 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     // TODO: BK: This is a little messy.  I should just store the results in a dict and then
     // calculate them only once.  Also, the vertex inputs and intermediates should be regenerated.
     ShaderLayout unusedIntermediates;
+    vertexStage = true;
+    vsTemps.clear();
     outvert = generate(unusedIntermediates, inputs, vs, "VS", &intermediates);
-    
+
+    string vsTempFuncs;
+    for(const auto& p : vsTemps) vsTempFuncs += p.second + '\n';
+    if (!vsTempFuncs.empty()) vsTempFuncs = '\n' + vsTempFuncs;
+
+    string psTempFuncs;
+    for(const auto& p : psTemps) psTempFuncs += p.second + '\n';
+    if (!psTempFuncs.empty()) psTempFuncs = '\n' + psTempFuncs;
+        
     // Perform final generation.
-    outvert = vertinvars + "\n" + vertoutvars + "\nvoid main() {\n" + outvert + "}\n";
-    outpix = pixvars + "\nvoid main() {\n" + outpix + "}\n";
+    outvert = vertinvars + "\n" + vertoutvars + vsTempFuncs + "\nvoid main() {\n" + outvert + "}\n";
+    outpix = pixvars + psTempFuncs + "\nvoid main() {\n" + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
@@ -201,4 +224,47 @@ bool ShaderAdditiveCombiner::generate(string& out, ShaderContext& c, ShaderLayou
     }
 
     return numGenerated >= 1;
+}
+
+bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string res1, res2;
+    bool a = n1->generate(res1, c, v);
+    bool b = n2->generate(res2, c, v);
+    if (!a) {
+        if (b) {
+            out = res2;
+            return true;
+        }
+        return false;
+    }
+
+    if (!b) {
+        out = res1;
+        return true;
+    }
+            
+    if (isOperator) {
+        out = '(' + res1 + ' ' + op + ' ' + res2 + ')';
+    } else {
+        out = op + '(' + res1 + ", " + res2 + ')';
+    }
+    return true;
+}
+
+bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string ldStr, normStr, clrStr;
+    if (!lightDir->generate(ldStr, c, v) ||
+        !normal->generate(normStr, c, v) ||
+        !color->generate(clrStr, c, v)) return false;
+
+    c.addTempFunc("performLighting",
+                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color) {\n"
+                  "    vec3 lightNorm = normalize(vec3(toLight));\n"
+                  "    return vec4(color.xyz * max(0.0, dot(lightNorm, vec3(normal))), 1.0);\n"
+                  "}\n");
+
+    out = "performLighting(" + ldStr + ", " + normStr + ", " + clrStr + ")";
+    return true;
 }
