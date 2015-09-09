@@ -28,12 +28,13 @@
 struct LightVars {
     const char* color;
     const char* pos;
+    const char* atten;
 };
 
 static LightVars lightVarNames[MAX_LIGHTS] = {
-    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS },
-    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS },
-    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS },
+    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_ATTEN },
+    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_ATTEN },
+    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_ATTEN },
 };
 
 @implementation GLKShaderEffect {
@@ -204,6 +205,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
                     m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
                     m->addvar(lightVarNames[lightNum].pos, l.position);
+                    m->addvar(lightVarNames[lightNum].atten, l.attenuation);
                 }
                 ambient = GLKVector4Add(ambient, l.ambientColor);
                 numEnabled ++;
@@ -336,6 +338,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     return self;
 }   
+
+-(GLKVector3)attenuation {
+    GLKVector3 res = { _constantAttenuation, _linearAttenuation, _quadraticAttenuation };
+    return res;
+}
 
 @end
 

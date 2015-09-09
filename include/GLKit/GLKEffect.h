@@ -78,6 +78,7 @@ GLKIT_EXPORT_CLASS
 @property float constantAttenuation;
 @property float linearAttenuation;
 @property float quadraticAttenuation;
+@property(readonly) GLKVector3 attenuation;
 
 @property(assign) GLKVector3 spotDirection;
 @property float spotCutoff;

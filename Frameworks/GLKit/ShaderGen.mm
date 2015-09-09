@@ -255,17 +255,21 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    string ldStr, normStr, clrStr;
+    string ldStr, normStr, clrStr, attenStr;
     if (!lightDir->generate(ldStr, c, v) ||
         !normal->generate(normStr, c, v) ||
-        !color->generate(clrStr, c, v)) return false;
+        !color->generate(clrStr, c, v) ||
+        !atten->generate(attenStr, c, v)) return false;
 
     c.addTempFunc("performLighting",
-                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color) {\n"
+                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color, vec4 atten) {\n"
+                  "    float dist = length(vec3(toLight));\n"
+                  "    float distAtten = 1.0 / (atten.x + atten.y * dist + atten.z * dist * dist);\n"
                   "    vec3 lightNorm = normalize(vec3(toLight));\n"
-                  "    return vec4(color.xyz * max(0.0, dot(lightNorm, vec3(normal))), 1.0);\n"
+                  "    float intensity = max(0.0, dot(lightNorm, vec3(normal))) * distAtten;\n"
+                  "    return vec4(color.xyz * intensity, 1.0);\n"
                   "}\n");
 
-    out = "performLighting(" + ldStr + ", " + normStr + ", " + clrStr + ")";
+    out = "performLighting(" + ldStr + ", " + normStr + ", " + clrStr + ", " + attenStr + ")";
     return true;
 }
