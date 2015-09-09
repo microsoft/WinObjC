@@ -29,21 +29,23 @@ struct LightVars {
     const char* color;
     const char* pos;
     const char* atten;
+    const char* specular;
 };
 
 static LightVars lightVarNames[MAX_LIGHTS] = {
-    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_ATTEN },
-    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_ATTEN },
-    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_ATTEN },
+    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPECULAR },
+    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPECULAR },
+    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPECULAR },
 };
 
 @implementation GLKShaderEffect {
-    ShaderMaterial _mat;
+    ShaderMaterial  _mat;
 }
 
 -(id)init {
     self = [super init];
     if (!self) return nil;
+    _effectChanged = TRUE;
     
     _transform = [[GLKEffectPropertyTransform alloc] initWith: self];
 
@@ -54,10 +56,35 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 {
     _shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
     if (_shader != nil) glUseProgram(_shader.program);
-    
+
+    // Projection matrix.
     GLKMatrix4 mvp = GLKMatrix4Transpose(self.transform.mvp);
     GLint loc = _shader.mvploc;
     glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
+
+    // Set up shader constants.
+    int curTexUnit = 0;
+    if (_effectChanged) {
+        _effectChanged = FALSE;
+
+        ShaderLayout* l = (ShaderLayout*)self.shader.layout;
+        for(const auto& v : l->vars) {
+            if (v.second.vertexAttr) continue;
+            auto mv = _mat.find(v.first);
+            if (mv == nullptr) {
+                NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
+            } else {
+                if (mv->texture) {
+                    glActiveTexture(GL_TEXTURE0 + curTexUnit);
+                    glBindTexture(GL_TEXTURE_2D, mv->loc);
+                    glUniform1i(v.second.loc, curTexUnit);
+                    curTexUnit ++;
+                } else {
+                    glUniform4fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                }
+            }
+        }
+    }
 }
 
 -(GLKShaderMaterialPtr)shaderMat {
@@ -69,8 +96,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 @implementation GLKBaseEffect {
     NSMutableArray* _textures;
     NSMutableArray* _lights;
-    bool            _effectChanged;
-    bool            _useConstantColor;
+    BOOL            _useConstantColor;
+    BOOL            _lightingEnabled;
+    GLKLightingType _lightingType;
 }
 
 -(id)init {
@@ -81,9 +109,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
-    self.lightingType = GLKLightingTypePerPixel;
-    self.lightModelTwoSided = FALSE;
-    self.lightingEnabled = FALSE;
+
+    _lightingType = GLKLightingTypePerPixel;
+    _lightModelTwoSided = FALSE;
+    _lightingEnabled = FALSE;
 
     _textures = [[NSMutableArray alloc] init];
     [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];
@@ -98,8 +127,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     self.shaderName = @GLKSH_STANDARD_SHADER;
 
-    _effectChanged = true;
-    
     return self;
 }
 
@@ -157,7 +184,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 {
     // Assemble material, calculate name.
     ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;    
-    if (_effectChanged) {
+    if (self.effectChanged) {
+        bool cameraRequired = false;
+    
         string shaderName = GLKSH_STANDARD_SHADER "_";
         m->reset();
 
@@ -168,9 +197,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         if (self.useConstantColor) {
             shaderName += 'C';
             m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
-        } else {
+        } else if (self.colorMaterialEnabled) {
             m->vertattr(GLKSH_COLOR_NAME);
             shaderName += 'V';
+        } else {
+            shaderName += 'N';
         }
 
         shaderName += '_';
@@ -198,16 +229,28 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         // Process lighting variables.
         int numEnabled = 0;
         int lightNum = 0;
-        GLKVector4 ambient = { 0 };
+        GLKVector4 ambient = self.material.ambientColor;
+        float shininess = self.material.shininess;
+        GLKVector4 specBase = self.material.specularColor;
+        if (GLKVector4XYZEqualToScalar(specBase, 0.f)) shininess = 0.f;
         if (self.lightingEnabled) {
             // TODO: sort lights so we don't get shader permutations such as LUL which is the same
             // as ULL and LLU.
             for(GLKEffectPropertyLight* l in _lights) {
                 if(l.enabled) {
-                    if (!GLKVector4AllEqualToScalar(l.diffuseColor, 0.f)) {
+                    char ltype = 'L';
+                    if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
                         m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
                         m->addvar(lightVarNames[lightNum].pos, l.position);
                         m->addvar(lightVarNames[lightNum].atten, l.attenuation);
+                        if (shininess > 0.f) {
+                            GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
+                            if (!GLKVector4XYZEqualToScalar(spec, 0.f)) {
+                                ltype = 'S';
+                                spec.w = shininess;
+                                m->addvar(lightVarNames[lightNum].specular, spec);
+                            }
+                        }
                     }
                     ambient = GLKVector4Add(ambient, l.ambientColor);
                     numEnabled ++;
@@ -219,11 +262,19 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 lightNum ++;
                 if (lightNum >= MAX_LIGHTS) break;
             }
-            if (numEnabled && !GLKVector4AllEqualToScalar(ambient, 0.f)) {
+            if (!GLKVector4XYZEqualToScalar(ambient, 0.f)) {
+                shaderName += 'a';
                 m->addvar(GLKSH_AMBIENT, ambient);
+            } else {
+                shaderName += 'n';
             }
         } else {
-            shaderName += "UUU";
+            shaderName += "UUUn";
+        }
+
+        if (cameraRequired) {
+            // TODO: actual camera pos.
+            m->addvar(GLKSH_CAMERA, GLKVector4Make(0, 0, 0, 1.f));
         }
 
         // Save final shader name.
@@ -252,31 +303,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     }
 
     [super prepareToDraw];
-
-    // Additional material parameters setting goes here.
-    // TODO: BK: this should ultimately be in the shader code, not effect code.
-    int curTexUnit = 0;
-    if (_effectChanged) {
-        _effectChanged = false;
-
-        ShaderLayout* l = (ShaderLayout*)self.shader.layout;
-        for(const auto& v : l->vars) {
-            if (v.second.vertexAttr) continue;
-            auto mv = m->find(v.first);
-            if (mv == nullptr) {
-                NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
-            } else {
-                if (mv->texture) {
-                    glActiveTexture(GL_TEXTURE0 + curTexUnit);
-                    glBindTexture(GL_TEXTURE_2D, mv->loc);
-                    glUniform1i(v.second.loc, curTexUnit);
-                    curTexUnit ++;
-                } else {
-                    glUniform4fv(v.second.loc, 1, &m->values[mv->loc]);
-                }
-            }
-        }
-    }
 }
 
 -(BOOL)useConstantColor {
@@ -285,8 +311,30 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(void)setUseConstantColor: (BOOL)use {
     if (_useConstantColor != use) {
-        _effectChanged = true;
+        self.effectChanged = TRUE;
         _useConstantColor = use;
+    }
+}
+
+-(BOOL)lightingEnabled {
+    return _lightingEnabled;
+}
+
+-(void)setLightingEnabled: (BOOL)enabled {
+    if (_lightingEnabled != enabled) {
+        _lightingEnabled = TRUE;
+        self.effectChanged = TRUE;
+    }
+}
+
+-(GLKLightingType)lightingType {
+    return _lightingType;
+}
+
+-(void)setLightingType: (GLKLightingType)type {
+    if (_lightingType != type) {
+        _lightingType = type;
+        self.effectChanged = TRUE;
     }
 }
 
