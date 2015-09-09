@@ -76,14 +76,13 @@ static void dumpMat(const GLKMatrix4& mat)
 
     // Set up lights.
     GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);
-    _effect.light0.ambientColor = GLKVector4Make(0.f, 0.f, 0.f, 1.f);
+    _effect.light0.ambientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
 
-    _effect.light1.position = pos;
-    _effect.light1.diffuseColor = GLKVector4Make(0.f, 0.7f, 1.f, 1.f);
+    _effect.light0.position = pos;
+    _effect.light0.diffuseColor = GLKVector4Make(0.15f, 0.35f, 0.5f, 1.f);
 
     // Set up draw mode.
-    _mode = DM_VertexColor;
-    [self setupMaterials];
+    _mode = DM_LitSolidColor;
 }
 
 -(void)cleanupGLData {
@@ -127,7 +126,7 @@ static void dumpMat(const GLKMatrix4& mat)
 
 -(void)nextDisplayMode {
     if (_mode == DM_Last) {
-        _mode = DM_VertexColor;
+        _mode = DM_LitSolidColor;
     } else {
         _mode = _mode + 1;
     }
@@ -135,25 +134,41 @@ static void dumpMat(const GLKMatrix4& mat)
 
 -(void)setupMaterials {
     switch(_mode) {
+    case DM_LitSolidColor:
+        _effect.texture2d0.enabled = FALSE;
+        _effect.useConstantColor = TRUE;
+        _effect.light0.enabled = TRUE;
+        break;
+
+    case DM_LitTextured:
+        _effect.texture2d0.enabled = TRUE;
+        _effect.useConstantColor = FALSE;
+        _effect.light0.enabled = TRUE;
+        break;
+        
     case DM_VertexColor:
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = FALSE;
+        _effect.light0.enabled = FALSE;
         break;
           
     case DM_SolidColor:
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = TRUE;
+        _effect.light0.enabled = FALSE;        
         break;
           
     case DM_TexturedVertexColor:
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = FALSE;
+        _effect.light0.enabled = FALSE;        
         break;
           
     case DM_TexturedSolidColor:
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = TRUE;
-        break;          
+        _effect.light0.enabled = FALSE;
+        break;
     };
 }
 

@@ -32,9 +32,7 @@ bool operator==(const MeshVertex& a, const MeshVertex& b)
     dist += fabsf(a.pos[1] - b.pos[1]);
     dist += fabsf(a.pos[2] - b.pos[2]);
 
-    dist += fabsf(a.norm[0] - b.norm[0]);
-    dist += fabsf(a.norm[1] - b.norm[1]);
-    dist += fabsf(a.norm[2] - b.norm[2]);
+    // Deliberately ignore normal contributions.
 
     dist += fabsf(a.color[0] - b.color[0]);
     dist += fabsf(a.color[1] - b.color[1]);
@@ -109,6 +107,9 @@ short int Mesh::add(const MeshVertex& v)
 {
     auto it = std::find(verts.begin(), verts.end(), v);
     if (it != verts.end()) {
+        it->norm[0] += v.norm[0];
+        it->norm[1] += v.norm[1];
+        it->norm[2] += v.norm[2];
         return it - verts.begin();
     }
 
@@ -195,6 +196,19 @@ void Mesh::testMesh()
     calcBounding();
 }
 
+void Mesh::calcNormals()
+{
+    for(auto& v : verts) {
+        float magn = sqrtf(v.norm[0] * v.norm[0] + v.norm[1] * v.norm[1] +v.norm[2] * v.norm[2]);
+        if (magn) {
+            magn = 1.f / magn;
+            v.norm[0] *= magn;
+            v.norm[1] *= magn;
+            v.norm[2] *= magn;
+        }
+    }
+}
+
 void Mesh::calcBounding()
 {
     // This won't be a tight bound due to duplicated vertex positions within the array, but it's "good enough"
@@ -243,6 +257,7 @@ void Mesh::parse(const char* str, size_t len)
         }
     }
 
+    calcNormals();
     calcBounding();
 }
 
