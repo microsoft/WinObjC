@@ -42,6 +42,7 @@
 
 #define GLKSH_CONSTCOLOR_NAME   "_constColor"
 #define GLKSH_AMBIENT           "_ambient"
+#define GLKSH_EMISSIVE          "_emissive"
 
 #define GLKSH_LIGHT0_COLOR      "_lightcolor0"
 #define GLKSH_LIGHT0_POS        "_lightpos0"

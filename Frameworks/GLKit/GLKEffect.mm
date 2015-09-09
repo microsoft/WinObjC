@@ -269,8 +269,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             } else {
                 shaderName += 'n';
             }
+
+            GLKVector4 emissive = self.material.emissiveColor;
+            if (!GLKVector4XYZEqualToScalar(emissive, 0.f)) {
+                shaderName += 'e';
+                m->addvar(GLKSH_EMISSIVE, emissive);
+            } else {
+                shaderName += 'n';
+            }
         } else {
-            shaderName += "UUUn";
+            shaderName += "UUUnn";
         }
 
         if (cameraRequired) {

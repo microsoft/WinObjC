@@ -115,6 +115,8 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// TODO: these two are where variable temporaries would probably help.
+
 class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* normal;
@@ -124,6 +126,19 @@ class ShaderLighter : public ShaderNode {
 public:
     inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color, ShaderNode* atten) :
         lightDir(lightDir), normal(normal), color(color), atten(atten) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderSpecLighter : public ShaderNode {
+    ShaderNode* lightDir;
+    ShaderNode* cameraDir;
+    ShaderNode* normal;
+    ShaderNode* color;
+
+public:
+    inline ShaderSpecLighter(ShaderNode* lightDir, ShaderNode* cameraDir, ShaderNode* normal, ShaderNode* color) :
+        lightDir(lightDir), cameraDir(cameraDir), normal(normal), color(color) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
