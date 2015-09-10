@@ -19,5 +19,19 @@
 #import <GLKit/GLKSkyboxEffect.h>
 
 @implementation GLKSkyboxEffect
+-(id)init {
+    [super init];
+    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith: self];
+    return self;
+}
+
+-(void)prepareToDraw {
+    
+}
+
+-(void)draw {
+    
+}
+
 @end
 
