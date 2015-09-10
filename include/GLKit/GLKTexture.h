@@ -25,6 +25,12 @@
 @class NSOpenGLContext;
 @class NSData;
 
+extern GLKIT_EXPORT NSString* const GLKTextureLoaderApplyPremultiplication;
+extern GLKIT_EXPORT NSString* const GLKTextureLoaderGenerateMipmaps;
+extern GLKIT_EXPORT NSString* const GLKTextureLoaderOriginBottomLeft;
+extern GLKIT_EXPORT NSString* const GLKTextureLoaderGrayscaleAsAlpha;
+extern GLKIT_EXPORT NSString* const GLKTextureLoaderSRGB;
+
 // --------------------------------------------------------------------------------
 
 GLKIT_EXPORT_CLASS

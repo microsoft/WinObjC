@@ -60,8 +60,8 @@ typedef struct _GLKMatrix3 {
 
 typedef CATransform3D GLKMatrix4;
 
-extern GLKMatrix3 GLKMatrix3Identity;
-extern GLKMatrix4 GLKMatrix4Identity;
+extern GLKIT_EXPORT GLKMatrix3 GLKMatrix3Identity;
+extern GLKIT_EXPORT GLKMatrix4 GLKMatrix4Identity;
 
 // --------------------------------------------------------------------------------
 
@@ -117,6 +117,12 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, floa
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far);
 
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2);
+
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateY(GLKMatrix4 m, float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateZ(GLKMatrix4 m, float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Translate(GLKMatrix4 m, float x, float y, float z);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z);
 
 // --------------------------------------------------------------------------------
 // Vectors.

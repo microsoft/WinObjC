@@ -520,5 +520,35 @@ GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
     return res;
 }
 
+GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad)
+{
+    GLKMatrix4 r = GLKMatrix4MakeXRotation(rad);
+    return GLKMatrix4Multiply(r, m);
+}
+
+GLKMatrix4 GLKMatrix4RotateY(GLKMatrix4 m, float rad)
+{
+    GLKMatrix4 r = GLKMatrix4MakeYRotation(rad);
+    return GLKMatrix4Multiply(r, m);
+}
+
+GLKMatrix4 GLKMatrix4RotateZ(GLKMatrix4 m, float rad)
+{
+    GLKMatrix4 r = GLKMatrix4MakeZRotation(rad);
+    return GLKMatrix4Multiply(r, m);
+}
+
+GLKMatrix4 GLKMatrix4Translate(GLKMatrix4 m, float x, float y, float z)
+{
+    GLKMatrix4 t = GLKMatrix4MakeTranslation(x, y, z);
+    return GLKMatrix4Multiply(t, m);
+}
+
+GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z)
+{
+    GLKMatrix4 s = GLKMatrix4MakeScale(x, y, z);
+    return GLKMatrix4Multiply(s, m);
+}
+
 GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
 GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
