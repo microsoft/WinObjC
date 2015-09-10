@@ -39,6 +39,9 @@ typedef void* GLKShaderMaterialPtr;
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectProperty : NSObject
+@property BOOL enabled;
+@property(readonly) GLKShaderEffect* parent;
+-(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -49,26 +52,21 @@ GLKIT_EXPORT_CLASS
 @property(assign) GLKMatrix4 projectionMatrix;
 @property(readonly) GLKMatrix4 mvp;
 
--(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyFog : GLKEffectProperty
 
-@property BOOL enabled;
 @property GLKFogMode mode;
 @property float start;
 @property float end;
 @property float density;
 @property(assign) GLKVector4 color;
 
--(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyLight : GLKEffectProperty
-
-@property BOOL enabled;
 
 @property(assign) GLKVector3 position;
 @property(assign) GLKVector4 ambientColor;
@@ -86,7 +84,6 @@ GLKIT_EXPORT_CLASS
 
 @property(retain) GLKEffectPropertyTransform* transform;
 
--(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
@@ -98,18 +95,15 @@ GLKIT_EXPORT_CLASS
 @property (assign)GLKVector4 emissiveColor;
 @property float shininess;
 
--(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyTexture : GLKEffectProperty
 
-@property BOOL enabled;
 @property GLuint name;
 @property GLKTextureEnvMode envMode;
 @property GLKTextureTarget target;
 
--(id)initWith: (GLKShaderEffect*)parent;
 @end
 
 // ----------------------------------------

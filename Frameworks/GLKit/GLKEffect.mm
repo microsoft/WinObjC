@@ -336,7 +336,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(void)setLightingEnabled: (BOOL)enabled {
     if (_lightingEnabled != enabled) {
-        _lightingEnabled = TRUE;
+        _lightingEnabled = enabled;
         self.effectChanged = TRUE;
     }
 }
@@ -356,16 +356,33 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 // ----------------------------------------
 
-@implementation GLKEffectProperty
-@end
-
-@implementation GLKEffectPropertyFog {
+@implementation GLKEffectProperty {
     GLKShaderEffect* _parent;
+    BOOL _enabled;
+}
+
+-(BOOL)enabled {
+    return _enabled;
+}
+
+-(void)setEnabled: (BOOL)e {
+    if (e != _enabled) {
+        _enabled = e;
+        self.parent.effectChanged = TRUE;
+    }
 }
 
 -(id)initWith: (GLKShaderEffect*)parent {
     [super init];
     _parent = parent;
+    return self;
+}
+
+@end
+
+@implementation GLKEffectPropertyFog
+-(id)initWith: (GLKShaderEffect*)parent {
+    [super initWith: parent];
     self.color = GLKVector4Black();
     self.mode = GLKFogModeLinear;
     self.density = 1.f;
@@ -377,16 +394,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @end
 
-@implementation GLKEffectPropertyLight {
-    GLKShaderEffect* _parent;
-}
+@implementation GLKEffectPropertyLight
 
 -(id)initWith: (GLKShaderEffect*)parent {
-    [super init];
-    _parent = parent;
+    [super initWith: parent];
     _transform = [[GLKEffectPropertyTransform alloc] initWith: parent];
 
-    self.enabled = FALSE;
     self.position = GLKVector3Origin();
 
     self.ambientColor = GLKVector4Black();
@@ -413,13 +426,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @end
 
-@implementation GLKEffectPropertyMaterial {
-    GLKShaderEffect* _parent;
-}
+@implementation GLKEffectPropertyMaterial
 
 -(id)initWith: (GLKShaderEffect*)parent {
-    [super init];
-    _parent = parent;
+    [super initWith: parent];
     self.ambientColor = GLKVector4Black();
     self.diffuseColor = GLKVector4White();
     self.specularColor = GLKVector4Black();
@@ -431,14 +441,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @end
 
-@implementation GLKEffectPropertyTexture {
-    GLKShaderEffect* _parent;
-}
+@implementation GLKEffectPropertyTexture
 
 -(id)initWith: (GLKShaderEffect*)parent {
-    [super init];
-    _parent = parent;
-    self.enabled = FALSE;
+    [super initWith: parent];
     self.name = 0;
     self.envMode = GLKTextureEnvModeReplace;
     self.target = GLKTextureTarget2D;
@@ -448,13 +454,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @end
 
-@implementation GLKEffectPropertyTransform {
-    GLKShaderEffect* _parent;
-}
+@implementation GLKEffectPropertyTransform
 
 -(id)initWith: (GLKShaderEffect*)parent {
-    [super init];
-    _parent = parent;
+    [super initWith: parent];
     self.modelviewMatrix = GLKMatrix4Identity();
     self.projectionMatrix = GLKMatrix4Identity();
 
