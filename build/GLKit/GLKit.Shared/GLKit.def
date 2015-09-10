@@ -65,3 +65,12 @@ LIBRARY GLKit
      GLKTextureLoaderOriginBottomLeft
      GLKTextureLoaderGrayscaleAsAlpha
      GLKTextureLoaderSRGB
+     GLKMatrix4MultiplyVector3
+     GLKMatrix4MultiplyVector4
+     GLKMatrix4MultiplyVector3Array
+     GLKMatrix4MultiplyVector4Array
+     GLKMatrix4Invert
+     GLKMatrix4MultiplyVector3WithTranslation
+     GLKMatrix4MultiplyVector3ArrayWithTranslation
+     GLKMatrix4Rotate
+     

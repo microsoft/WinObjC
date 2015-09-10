@@ -20,6 +20,9 @@
 
 #include <utility>
 
+GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
+GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
+
 GLKMatrix3 GLKMatrix3MakeIdentity()
 {
     GLKMatrix3 res;
@@ -520,6 +523,12 @@ GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
     return res;
 }
 
+GLKMatrix4 GLKMatrix4Rotate(GLKMatrix4 m, float rad, float x, float y, float z)
+{
+    GLKMatrix4 r = GLKMatrix4MakeRotation(rad, x, y, z);
+    return GLKMatrix4Multiply(r, m);
+}
+
 GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad)
 {
     GLKMatrix4 r = GLKMatrix4MakeXRotation(rad);
@@ -550,5 +559,69 @@ GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z)
     return GLKMatrix4Multiply(s, m);
 }
 
-GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
-GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
+
+GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec)
+{
+    GLKVector3 res;
+
+    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z;
+    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z;
+    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z;
+
+    return res;
+}
+
+GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec)
+{
+    GLKVector3 res;
+
+    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z + m.m41;
+    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z + m.m42;
+    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z + m.m43;
+
+    return res;
+}
+
+void GLKMatrix4MultiplyVector3ArrayWithTranslation(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs)
+{
+    for(size_t i = 0; i < numVecs; i ++) vecs[i] = GLKMatrix4MultiplyVector3WithTranslation(m, vecs[i]);
+}
+
+GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec)
+{
+    GLKVector4 res;
+
+    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z + m.m41 * vec.w;
+    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z + m.m42 * vec.w;
+    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z + m.m43 * vec.w;
+    res.w = m.m14 * vec.x + m.m24 * vec.y + m.m34 * vec.z + m.m44 * vec.w;
+
+    return res;
+}
+
+void GLKMatrix4MultiplyVector3Array(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs)
+{
+    for(size_t i = 0; i < numVecs; i ++) vecs[i] = GLKMatrix4MultiplyVector3(m, vecs[i]);
+}
+
+void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs, size_t numVecs)
+{
+    for(size_t i = 0; i < numVecs; i ++) vecs[i] = GLKMatrix4MultiplyVector4(m, vecs[i]);
+}
+
+GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible)
+{
+    GLKMatrix4 res = m;
+    
+    // This is only going to work in very limited circumstances.
+    *isInvertible = true;
+
+    std::swap(res.m12, res.m21);
+    std::swap(res.m13, res.m31);
+    std::swap(res.m23, res.m32);
+    res.m14 = -res.m14;
+    res.m24 = -res.m24;
+    res.m34 = -res.m34;
+    
+    return res;
+}
