@@ -124,7 +124,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;objcuwp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -150,7 +150,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;objcuwp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -176,7 +176,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;objcuwp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -202,7 +202,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;objcuwp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

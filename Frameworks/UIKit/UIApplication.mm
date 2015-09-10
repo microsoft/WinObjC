@@ -29,7 +29,7 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
-#include "../Foundation/NSRunLoopSource.h"
+#include "NSRunLoopSource.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIColor.h"
