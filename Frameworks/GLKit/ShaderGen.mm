@@ -21,6 +21,48 @@
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
 
+// This is really crude.  Determine if an (unparsed) expression depends on a set of variables.
+bool TempInfo::dependsOn(const StrSet& set) const
+{
+    for(const auto& s : set) {
+        if (body.find(s) != string::npos) return true;
+    }
+    return false;
+}
+
+// Write out a series of vars such that calculations needed later are done first.
+string ShaderContext::orderedTempVals(const TempMap& temps)
+{
+    string res;
+    StrSet tnames;
+
+    for(const auto& p : temps) tnames.insert(p.first);
+
+    TempMap remainingTemps = temps;
+    while(!remainingTemps.empty()) {
+        bool foundOne = false;
+        for(const auto& p : remainingTemps) {
+            if (!p.second.dependsOn(tnames)) {
+                res = res + "\t" + getTypeStr(p.second.type) + " " + p.first + " = " + p.second.body + ";\n";
+
+                string name = p.first;
+                remainingTemps.erase(name);
+                tnames.erase(name);
+                foundOne = true;
+                break;
+            }
+        }
+        
+        if (!foundOne) {
+            NSLog(@"Unable to generate temporary calculations for shader!");
+            assert(0);
+            break;
+        }
+    }
+
+    return res;
+}
+
 string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                                const string& desc, ShaderLayout* usedOutputs)
 {
@@ -47,12 +89,21 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
     return final;
 }
 
-void ShaderContext::addTempFunc(const string& name, const string& body)
+void ShaderContext::addTempFunc(ShaderVarType type, const string& name, const string& body)
 {
     if (vertexStage) {
-        vsTemps[name] = body;
+        vsTemps[name] = TempInfo(type, body);
     } else {
-        psTemps[name] = body;
+        psTemps[name] = TempInfo(type, body);
+    }
+}
+
+void ShaderContext::addTempVal(ShaderVarType type, const string& name, const string& body)
+{
+    if (vertexStage) {
+        vsTempVals[name] = TempInfo(type, body);
+    } else {
+        psTempVals[name] = TempInfo(type, body);
     }
 }
 
@@ -124,17 +175,20 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
     ShaderLayout unusedIntermediates;
     vertexStage = true;
     vsTemps.clear();
+    vsTempVals.clear();
     outvert = generate(unusedIntermediates, inputs, vs, "VS", &intermediates);
 
     string vsTempFuncs;
-    for(const auto& p : vsTemps) vsTempFuncs += p.second + '\n';
-
+    for(const auto& p : vsTemps) vsTempFuncs += p.second.body + '\n';
+    string vsTempValsOut = orderedTempVals(vsTempVals);
+    
     string psTempFuncs;
-    for(const auto& p : psTemps) psTempFuncs += p.second + '\n';
+    for(const auto& p : psTemps) psTempFuncs += p.second.body + '\n';
+    string psTempValsOut = orderedTempVals(psTempVals);
         
     // Perform final generation.
-    outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + outvert + "}\n";
-    outpix = pixvars + psTempFuncs + "void main() {\n" + outpix + "}\n";
+    outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + vsTempValsOut + outvert + "}\n";
+    outpix = pixvars + psTempFuncs + "void main() {\n" + psTempValsOut + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
@@ -232,17 +286,24 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
     string res1, res2;
     bool a = n1->generate(res1, c, v);
     bool b = n2->generate(res2, c, v);
-    if (!a) {
-        if (b) {
-            out = res2;
+    if (needsAll) {
+        // Too bad.
+        if (!a || !b) return false;
+    } else {
+
+        // Recover nicely if something is missing.
+        if (!a) {
+            if (b) {
+                out = res2;
+                return true;
+            }
+            return false;
+        }
+
+        if (!b) {
+            out = res1;
             return true;
         }
-        return false;
-    }
-
-    if (!b) {
-        out = res1;
-        return true;
     }
             
     if (isOperator) {
@@ -253,7 +314,31 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
-// TODO: move attenuation factor out into separate node, use temps to calculate it.
+bool ShaderTempRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string res;
+    if (!body->generate(res, c, v)) return false;
+    c.addTempVal(type, name, res);
+    out = name;
+    return true;
+}
+
+bool ShaderAttenuator::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string lightStr, attenStr;
+
+    if (!toLight->generate(lightStr, c, v) ||
+        !atten->generate(attenStr, c, v)) return false;
+
+    c.addTempFunc(SVT_FLOAT, "performAttenuation",
+                  "float performAttenuation(vec4 toLight, vec4 atten) {\n"
+                  "    float dist = length(vec3(toLight));\n"
+                  "    return min(1.0, 1.0 / (atten.x + atten.y * dist + atten.z * dist * dist));\n"
+                  "}\n");
+
+    out = "performAttenuation(" + lightStr + ", " + attenStr + ")";
+    return true;
+}
 
 bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
@@ -263,10 +348,8 @@ bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !color->generate(clrStr, c, v) ||
         !atten->generate(attenStr, c, v)) return false;
 
-    c.addTempFunc("performLighting",
-                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color, vec4 atten) {\n"
-                  "    float dist = length(vec3(toLight));\n"
-                  "    float distAtten = 1.0 / (atten.x + atten.y * dist + atten.z * dist * dist);\n"
+    c.addTempFunc(SVT_FLOAT4, "performLighting",
+                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color, float distAtten) {\n"
                   "    vec3 lightNorm = normalize(vec3(toLight));\n"
                   "    float intensity = max(0.0, dot(lightNorm, vec3(normal))) * distAtten;\n"
                   "    return vec4(color.xyz * intensity, 1.0);\n"
@@ -278,20 +361,21 @@ bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    string ldStr, cdStr, normStr, clrStr;
+    string ldStr, cdStr, normStr, clrStr, attenStr;
     if (!lightDir->generate(ldStr, c, v) ||
         !cameraDir->generate(cdStr, c, v) ||
         !normal->generate(normStr, c, v) ||
-        !color->generate(clrStr, c, v)) return false;
+        !color->generate(clrStr, c, v) ||
+        !atten->generate(attenStr, c, v)) return false;
 
-    c.addTempFunc("performSpecular",
-                  "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color) {\n"
+    c.addTempFunc(SVT_FLOAT4, "performSpecular",
+                  "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color, float distAtten) {\n"
                   "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal));\n"
                   "    vec3 camNorm = normalize(vec3(toCam));\n"
-                  "    float specular = pow(dot(camNorm, lightRefl), color.w);\n"
+                  "    float specular = distAtten * pow(dot(camNorm, lightRefl), color.w);\n"
                   "    return vec4(color.x * specular, color.y * specular, color.z * specular, 1.0);\n"
                   "}\n");
 
-    out = "performSpecular(" + ldStr + ", " + cdStr + ", " + normStr + ", " + clrStr + ")";
+    out = "performSpecular(" + ldStr + ", " + cdStr + ", " + normStr + ", " + clrStr + ", " + attenStr + ")";
     return true;
 }

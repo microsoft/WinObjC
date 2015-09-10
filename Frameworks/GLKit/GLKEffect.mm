@@ -288,8 +288,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         // Save final shader name.
         NSString* s = [NSString stringWithCString: shaderName.c_str()];
-        if (s != self.shaderName) {
-            NSLog(@"Switching to shader %@", s);
+        if (![s isEqualToString: self.shaderName]) {
+            NSLog(@"Switching to shader [%@] from [%@]", s, self.shaderName);
             self.shaderName = s;
         }
     }

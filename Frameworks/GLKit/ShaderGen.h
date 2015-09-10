@@ -17,10 +17,23 @@
 #pragma once
 
 #include "ShaderInfo.h"
+#include <set>
 
 struct ShaderNode;
 typedef map<string, ShaderNode*> ShaderDef;
+typedef set<string> StrSet;
 typedef vector<ShaderNode*> ShaderNodes;
+
+struct TempInfo {
+    inline TempInfo() : type(SVT_INVALID) {}
+    inline TempInfo(ShaderVarType type, const string& body) : type(type), body(body) {}
+
+    bool dependsOn(const StrSet& set) const;
+    
+    ShaderVarType type;
+    string body;
+};
+typedef map<string, TempInfo> TempMap;
 
 @class GLKShaderPair;
 
@@ -31,10 +44,12 @@ class ShaderContext {
     ShaderDef               ps;
 
     bool                    vertexStage;
-    map<string, string>     vsTemps;
-    map<string, string>     psTemps;
+    TempMap                 vsTemps, vsTempVals;
+    TempMap                 psTemps, psTempVals;
     
 protected:
+    string orderedTempVals(const TempMap& temps);
+    
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc, ShaderLayout* usedOutputs = NULL);
 
@@ -42,7 +57,9 @@ public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
         vs(vert), ps(pixel), vertexStage(false) {}
 
-    void addTempFunc(const string& name, const string& body);
+    // NOTE: neither of these check for interdependencies or overwriting.
+    void addTempFunc(ShaderVarType type, const string& name, const string& body);
+    void addTempVal(ShaderVarType type, const string& name, const string& body);
 
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
@@ -107,15 +124,37 @@ class ShaderOp : public ShaderNode {
     ShaderNode* n2;
     string op;
     bool isOperator;
+    bool needsAll;
 
 public:
-    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const string& op, bool isOperator) :
-        n1(n1), n2(n2), op(op), isOperator(isOperator) {}
+    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const string& op, bool isOperator, bool needsAll = false) :
+        n1(n1), n2(n2), op(op), isOperator(isOperator), needsAll(needsAll) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// TODO: these two are where variable temporaries would probably help.
+// Used to save stuff into a temp.  Only valuable if reused > 1 time.
+class ShaderTempRef : public ShaderNode {
+    ShaderVarType type;
+    string name;
+    ShaderNode* body;
+
+public:
+    inline ShaderTempRef(ShaderVarType type, const string& name, ShaderNode* n) :
+        type(type), name(name), body(n) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderAttenuator : public ShaderNode {
+    ShaderNode* toLight;
+    ShaderNode* atten;
+public:
+    inline ShaderAttenuator(ShaderNode* toLight, ShaderNode* atten) :
+        toLight(toLight), atten(atten) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
 
 class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
@@ -135,10 +174,12 @@ class ShaderSpecLighter : public ShaderNode {
     ShaderNode* cameraDir;
     ShaderNode* normal;
     ShaderNode* color;
+    ShaderNode* atten;
 
 public:
-    inline ShaderSpecLighter(ShaderNode* lightDir, ShaderNode* cameraDir, ShaderNode* normal, ShaderNode* color) :
-        lightDir(lightDir), cameraDir(cameraDir), normal(normal), color(color) {}
+    inline ShaderSpecLighter(ShaderNode* lightDir, ShaderNode* cameraDir, ShaderNode* normal,
+                             ShaderNode* color, ShaderNode* atten) :
+        lightDir(lightDir), cameraDir(cameraDir), normal(normal), color(color), atten(atten) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

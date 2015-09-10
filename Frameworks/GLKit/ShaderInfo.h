@@ -25,6 +25,22 @@
 
 using namespace std;
 
+enum _ShaderVarType {
+    SVT_INVALID,
+    SVT_SAMPLER2D,
+    SVT_SAMPLERCUBE,
+    SVT_FLOAT,
+    SVT_FLOAT2,
+    SVT_FLOAT3,
+    SVT_FLOAT4,
+    SVT_MAT4
+};
+typedef unsigned int ShaderVarType;
+
+string getTypeStr(ShaderVarType t);
+
+// TODO: integrate above into below.
+
 struct VarInfo {
     VarInfo() : loc(-1), size(1), texture(false), vertexAttr(false), intermediate(false), used(false) {}
 

@@ -25,17 +25,30 @@
 #define COLOR_WHITE "vec4(1, 1, 1, 1)"
 #define COLOR_BLACK "vec4(0, 0, 0, 1)"
 
+#define TO_LIGHT0_TMP "toLight0"
+#define TO_LIGHT1_TMP "toLight1"
+#define TO_LIGHT2_TMP "toLight2"
+
+#define ATTEN_LIGHT0_TMP "attenLight0"
+#define ATTEN_LIGHT1_TMP "attenLight1"
+#define ATTEN_LIGHT2_TMP "attenLight2"
+
+ShaderNode* mklighter(const string& toLightTemp, const string& attenTemp, const string& pos, const string& clr, const string& attenName)
+{
+    ShaderNode* toLight = new ShaderTempRef(SVT_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    ShaderNode* atten = new ShaderTempRef(SVT_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
+  
+    return new ShaderLighter(toLight, new ShaderVarRef("_normal"), new ShaderVarRef(clr), atten);
+}
+
 // Per-vertex lighting.
 
 static auto diffuseLighter =
     new ShaderOp(
       new ShaderAdditiveCombiner({
-              new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT0_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                                new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT0_COLOR), new ShaderVarRef(GLKSH_LIGHT0_ATTEN)),
-              new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT1_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                                new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT1_COLOR), new ShaderVarRef(GLKSH_LIGHT1_ATTEN)),
-              new ShaderLighter(new ShaderOp(new ShaderVarRef(GLKSH_LIGHT2_POS), new ShaderVarRef(GLKSH_POS_NAME), "-", true),
-                                new ShaderVarRef("_normal"), new ShaderVarRef(GLKSH_LIGHT2_COLOR), new ShaderVarRef(GLKSH_LIGHT2_ATTEN))}),
+              mklighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN),
+              mklighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN),
+              mklighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN)}),
       new ShaderVarRef(GLKSH_EMISSIVE), "max", false);
 
 static auto specularLighter =
