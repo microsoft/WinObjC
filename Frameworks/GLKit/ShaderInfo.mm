@@ -17,6 +17,22 @@
 #import <Starboard.h>
 #include "ShaderInfo.h"
 
+string getTypeStr(ShaderVarType t)
+{
+    static const char* types[] = {
+        "void",
+        "sampler2D",
+        "samplerCUBE",
+        "float",
+        "vec2",
+        "vec3",
+        "vec4",
+        "mat4"
+    };
+
+    return string(types[t]);
+}
+
 void ShaderMaterial::addvar(const string& var, float* data, int size)
 {
     assert((size & 3) == 0);
