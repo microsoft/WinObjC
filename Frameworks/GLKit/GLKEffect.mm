@@ -229,13 +229,14 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         // Process lighting variables.
         int numEnabled = 0;
         int lightNum = 0;
-        GLKVector4 ambient = self.material.ambientColor;
+        GLKVector4 ambient = GLKVector4Make(0, 0, 0, 0);
         float shininess = self.material.shininess;
         GLKVector4 specBase = self.material.specularColor;
         if (GLKVector4XYZEqualToScalar(specBase, 0.f)) shininess = 0.f;
         if (self.lightingEnabled) {
             // TODO: sort lights so we don't get shader permutations such as LUL which is the same
             // as ULL and LLU.
+            ambient = GLKVector4Add(ambient, self.material.ambientColor);
             for(GLKEffectPropertyLight* l in _lights) {
                 if(l.enabled) {
                     char ltype = 'L';
