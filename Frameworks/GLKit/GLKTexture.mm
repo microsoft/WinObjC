@@ -40,7 +40,10 @@
 }
 
 +(GLKTextureInfo*)textureWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err {
-    return nil;
+    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname cString]);
+    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
+    
+    return [self textureWithCGImage: img options: opts error: err];
 }
 
 +(GLKTextureInfo*)textureWithContentsOfData: (NSData*)data options: (NSDictionary*)opts error: (NSError**)err {
@@ -110,6 +113,16 @@
     }
 
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
+}
+
++(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err {
+    return nil;
+}
+
++(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err
+{
+    if ([fnames count] != 6) return nil;
+    return nil;
 }
 
 -(id)initWithShareContext:(NSOpenGLContext*)context {

@@ -50,6 +50,9 @@ GLKIT_EXPORT_CLASS
 +(GLKTextureInfo*)textureWithContentsOfData: (NSData*)data options: (NSDictionary*)opts error: (NSError**)err;
 +(GLKTextureInfo*)textureWithCGImage: (CGImageRef)img options: (NSDictionary*)opts error: (NSError**)err;
 
++(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err;
++(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err;
+
 -(id)initWithShareContext:(NSOpenGLContext*)context;
 
 @end
