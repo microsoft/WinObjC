@@ -30,6 +30,8 @@ LIBRARY GLKit
 	 __objc_class_name_GLKTextureInfo	CONSTANT
      _OBJC_CLASS_GLKTextureLoader	DATA
 	 __objc_class_name_GLKTextureLoader	CONSTANT
+     _OBJC_CLASS_GLKSkyboxEffect	DATA
+	 __objc_class_name_GLKSkyboxEffect	CONSTANT
      GLKMatrix3Identity
      GLKMatrix3MakeIdentity
 	 GLKMatrix3FromMatrix4

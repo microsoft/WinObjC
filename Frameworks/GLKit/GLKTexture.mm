@@ -21,11 +21,48 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
 
+// TODO: BK: reorg, lots of cut & paste here.
+
 NSString* const GLKTextureLoaderApplyPremultiplication = @"ApplyPremult";
 NSString* const GLKTextureLoaderGenerateMipmaps = @"Mips";
 NSString* const GLKTextureLoaderOriginBottomLeft = @"BottomLeft";
 NSString* const GLKTextureLoaderGrayscaleAsAlpha = @"AlphaGrayscale";
 NSString* const GLKTextureLoaderSRGB = @"SRGB";
+
+static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int bpp)
+{
+    switch(bpp) {
+      case 8:
+          fmt = GL_ALPHA;
+          type = GL_UNSIGNED_BYTE;
+          as = GLKTextureInfoAlphaStateNonPremultiplied;
+          break;
+          
+      case 16:
+          fmt = GL_RGB;
+          type = GL_UNSIGNED_SHORT_5_6_5;
+          as = GLKTextureInfoAlphaStateNone;
+          break;
+          
+      case 24:
+          fmt = GL_RGB;
+          type = GL_UNSIGNED_BYTE;
+          as = GLKTextureInfoAlphaStateNone;
+          break;
+          
+      case 32:
+          fmt = GL_RGBA;
+          type = GL_UNSIGNED_BYTE;
+          as = GLKTextureInfoAlphaStateNonPremultiplied;
+          break;
+
+      default:
+          NSLog(@"Unrecognized image format - %d bpp.", bpp);
+          return false;
+    }
+
+    return true;
+}
 
 @implementation GLKTextureInfo
 -(id)initWith: (GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height
@@ -80,35 +117,7 @@ NSString* const GLKTextureLoaderSRGB = @"SRGB";
 
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
-    switch(bpp) {
-    case 8:
-        fmt = GL_ALPHA;
-        type = GL_UNSIGNED_BYTE;
-        as = GLKTextureInfoAlphaStateNonPremultiplied;
-        break;
-          
-    case 16:
-        fmt = GL_RGB;
-        type = GL_UNSIGNED_SHORT_5_6_5;
-        as = GLKTextureInfoAlphaStateNone;
-        break;
-          
-    case 24:
-        fmt = GL_RGB;
-        type = GL_UNSIGNED_BYTE;
-        as = GLKTextureInfoAlphaStateNone;
-        break;
-          
-    case 32:
-        fmt = GL_RGBA;
-        type = GL_UNSIGNED_BYTE;
-        as = GLKTextureInfoAlphaStateNonPremultiplied;
-        break;
-
-    default:
-        NSLog(@"Unrecognized image format - %d bpp, (%dx%d) image.", bpp, w, h);
-        return nil;
-    }
+    if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
 
     NSLog(@"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
 
@@ -121,14 +130,136 @@ NSString* const GLKTextureLoaderSRGB = @"SRGB";
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
 }
 
-+(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err {
-    return nil;
++(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err
+{
+    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname cString]);
+    if (!provider) return nil;
+    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
+    if (!img) return nil;
+    
+    size_t w = CGImageGetWidth(img);
+    size_t h = CGImageGetHeight(img);
+    size_t bpp = CGImageGetBitsPerPixel(img);
+    size_t rowSize = CGImageGetBytesPerRow(img);
+    size_t expectedRowSize = (bpp / 8) * w;
+    if(rowSize != expectedRowSize) {
+        NSLog(@"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
+    }
+
+    if (h != 6 * w) {
+        NSLog(@"ERROR - Unexpected cube map format, expected 6 square textures aligned vertically.");
+        return nil;
+    }
+    
+    NSData* data = (id)CGDataProviderCopyData(provider);
+    [data autorelease];
+    auto bytes = (const unsigned char*)[data bytes];
+
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    GLint fmt, type;
+    GLKTextureInfoAlphaState as;
+    if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
+
+    NSLog(@"Creating %dx%d cube map texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
+
+    size_t sideh = h / 6;
+    for(int i = 0; i < 6; i ++) {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, fmt, w, sideh, 0, fmt, type, bytes);
+        GLint err = glGetError();
+        if (err != 0) {
+            NSLog(@"Error %d creating cube face %d.", err, i);
+        }
+        bytes += rowSize * sideh;
+    }
+
+    return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: sideh alphaState: as];
 }
 
 +(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err
 {
     if ([fnames count] != 6) return nil;
-    return nil;
+
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    bool fmtInited = false;
+    size_t sideW = 0, sideH = 0, imgBpp = 0, imgRowSize = 0;
+    size_t curSide = 0;
+
+    GLKTextureInfoAlphaState as;
+    for(NSString* fn in fnames) {
+        CGDataProviderRef provider = CGDataProviderCreateWithFilename([fn cString]);
+        if (!provider) {
+            NSLog(@"Unable to open cube side texture %@", fn);
+            curSide ++;
+            continue;
+        }
+        CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
+        if (!img) {
+            NSLog(@"Unable to create image from cube side texture %@", fn);            
+            curSide ++;
+            continue;
+        }
+
+        NSData* data = (id)CGDataProviderCopyData(provider);
+        [data autorelease];
+        auto bytes = (const unsigned char*)[data bytes];
+
+        size_t w = CGImageGetWidth(img);
+        size_t h = CGImageGetHeight(img);
+        size_t bpp = CGImageGetBitsPerPixel(img);
+        size_t rowSize = CGImageGetBytesPerRow(img);
+        size_t expectedRowSize = (bpp / 8) * w;
+        if(w != h || rowSize != expectedRowSize) {
+            NSLog(@"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
+            curSide ++;
+            continue;
+        }
+
+        if (!fmtInited) {
+            fmtInited = true;
+            sideW = w;
+            sideH = h;
+            imgBpp = bpp;
+            imgRowSize = rowSize;
+        } else {
+            if ((w != sideW) || (h != sideH) || (imgBpp != bpp)) {
+                NSLog(@"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
+                curSide ++;
+                continue;
+            }
+        }
+
+        GLint fmt, type;
+        if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, 0, fmt, w, h, 0, fmt, type, bytes);
+        GLint err = glGetError();
+        if (err != 0) {
+            NSLog(@"Error %d creating cube face %d.", err, curSide);
+        }
+        curSide ++;
+    }
+    if (!fmtInited) {
+        NSLog(@"Unable to create cube map.");
+        return nil;
+    }
+    
+    return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: sideW height: sideH alphaState: as];
 }
 
 -(id)initWithShareContext:(NSOpenGLContext*)context {
