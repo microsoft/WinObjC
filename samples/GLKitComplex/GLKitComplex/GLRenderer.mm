@@ -22,6 +22,9 @@
 #import "GLRenderer.h"
 #import <GLKit/GLKit.h>
 
+#define AMBIENT_COLOR   GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f)
+#define ZERO_COLOR      GLKVector4Make(0.f, 0.f, 0.f, 0.f)
+
 static void dumpMat(const GLKMatrix4& mat)
 {
     const float* f = (const float*)&mat;
@@ -76,7 +79,6 @@ static void dumpMat(const GLKMatrix4& mat)
     }
     
     // Set up lights.
-    _effect.material.ambientColor = GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f);
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.material.shininess = 20.f;
     
@@ -144,6 +146,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
+        _effect.material.ambientColor = AMBIENT_COLOR;
         break;
 
     case DM_LitTextured:
@@ -151,6 +154,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
+        _effect.material.ambientColor = AMBIENT_COLOR;        
         break;
         
     case DM_VertexColor:
@@ -158,6 +162,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
+        _effect.material.ambientColor = ZERO_COLOR;
         break;
           
     case DM_SolidColor:
@@ -165,6 +170,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
+        _effect.material.ambientColor = ZERO_COLOR;
         break;
           
     case DM_TexturedVertexColor:
@@ -172,6 +178,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
+        _effect.material.ambientColor = ZERO_COLOR;
         break;
           
     case DM_TexturedSolidColor:
@@ -179,6 +186,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
+        _effect.material.ambientColor = ZERO_COLOR;
         break;
     };
 }
