@@ -17,7 +17,18 @@
 #pragma once
 
 #import "Foundation/NSObject.h"
+#import "GLKit/GLKEffect.h"
 
 GLKIT_EXPORT_CLASS
-@interface GLKSkyboxEffect : NSObject
+@interface GLKSkyboxEffect : GLKShaderEffect
+@property(readonly) GLKEffectPropertyTexture* textureCubeMap;
+
+@property(assign) GLKVector3 center;
+@property(assign) float xSize;
+@property(assign) float ySize;
+@property(assign) float zSize;
+
+-(void)prepareToDraw;
+-(void)draw;
+
 @end
