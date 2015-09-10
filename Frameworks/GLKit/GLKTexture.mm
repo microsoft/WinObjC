@@ -21,6 +21,12 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
 
+NSString* const GLKTextureLoaderApplyPremultiplication = @"ApplyPremult";
+NSString* const GLKTextureLoaderGenerateMipmaps = @"Mips";
+NSString* const GLKTextureLoaderOriginBottomLeft = @"BottomLeft";
+NSString* const GLKTextureLoaderGrayscaleAsAlpha = @"AlphaGrayscale";
+NSString* const GLKTextureLoaderSRGB = @"SRGB";
+
 @implementation GLKTextureInfo
 -(id)initWith: (GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height
    alphaState:(GLKTextureInfoAlphaState)as

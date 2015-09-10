@@ -31,8 +31,10 @@ LIBRARY GLKit
      _OBJC_CLASS_GLKTextureLoader	DATA
 	 __objc_class_name_GLKTextureLoader	CONSTANT
      GLKMatrix3Identity
+     GLKMatrix3MakeIdentity
 	 GLKMatrix3FromMatrix4
      GLKMatrix4Identity
+     GLKMatrix4MakeIdentity
 	 GLKMatrix4Make
      GLKMatrix3Make
 	 GLKMatrix3Transpose
@@ -53,3 +55,13 @@ LIBRARY GLKit
 	 GLKMatrix4MakePerspective
      GLKMatrix4MakeFrustum
 	 GLKMatrix4Multiply
+     GLKMatrix4RotateX
+     GLKMatrix4RotateY
+     GLKMatrix4RotateZ
+     GLKMatrix4Translate
+     GLKMatrix4Scale
+     GLKTextureLoaderApplyPremultiplication
+     GLKTextureLoaderGenerateMipmaps
+     GLKTextureLoaderOriginBottomLeft
+     GLKTextureLoaderGrayscaleAsAlpha
+     GLKTextureLoaderSRGB
