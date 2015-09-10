@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "../Foundation/NSInputSource.h"
+#include "NSInputSource.h"
 
 @implementation NSInputSource : NSObject
     -(BOOL) isValid {

@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.WindowsPhone\CoreFoundation.WindowsPhone.vcxproj">
       <Project>{5ddce358-cc33-40ce-87d2-fef7eb1221cd}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Foundation\Foundation.WindowsPhone\Foundation.WindowsPhone.vcxproj">
+      <Project>{231c4f3c-9efc-4718-bab1-459c41fe63b4}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.WindowsPhone\objcrt.WindowsPhone.vcxproj">
       <Project>{2ab1b594-97f6-4793-a887-6cb72edc1c42}</Project>
     </ProjectReference>
@@ -30,8 +33,8 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{231c4f3c-9efc-4718-bab1-459c41fe63b4}</ProjectGuid>
-    <RootNamespace>Foundation</RootNamespace>
+    <ProjectGuid>{23D3982A-12A6-46AF-9221-9CC062A38D75}</ProjectGuid>
+    <RootNamespace>SystemConfiguration</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -40,7 +43,7 @@
     <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>Foundation</OutputName>
+    <OutputName>SystemConfiguration</OutputName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -69,7 +72,7 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.props" />
   </ImportGroup>
-  <Import Project="..\Foundation.Shared\Foundation.Shared.vcxitems" Label="Shared" />
+  <Import Project="..\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems" Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -121,12 +124,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DSystemConfiguration_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -147,12 +150,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -173,12 +176,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DSystemConfiguration_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -199,12 +202,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;icudt.lib;icuin.lib;icuuc.lib;libcurl_imp.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>WindowsPhoneCore.lib;RuntimeObject.lib;PhoneAppModelHost.lib;libdispatch.lib;ws2_32.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

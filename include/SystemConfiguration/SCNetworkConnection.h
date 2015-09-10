@@ -14,4 +14,16 @@
 //
 //******************************************************************************
 
-// This header file is not yet implemented
+#pragma once
+
+enum {
+    kSCNetworkFlagsTransientConnection  = 0x01,
+    kSCNetworkFlagsReachable            = 0x02,
+    kSCNetworkFlagsConnectionRequired   = 0x04,
+    kSCNetworkFlagsConnectionAutomatic  = 0x08,
+    kSCNetworkFlagsInterventionRequired = 0x10,
+    kSCNetworkFlagsIsLocalAddress       = 0x10000,
+    kSCNetworkFlagsIsDirect             = 0x20000
+};
+
+typedef uint32_t SCNetworkConnectionFlags;
