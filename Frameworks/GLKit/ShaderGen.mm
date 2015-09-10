@@ -370,9 +370,9 @@ bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
     c.addTempFunc(SVT_FLOAT4, "performSpecular",
                   "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color, float distAtten) {\n"
-                  "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal));\n"
+                  "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal)));\n"
                   "    vec3 camNorm = normalize(vec3(toCam));\n"
-                  "    float specular = distAtten * pow(dot(camNorm, lightRefl), color.w);\n"
+                  "    float specular = distAtten * pow(max(0.0, dot(camNorm, lightRefl)), color.w);\n"
                   "    return vec4(color.x * specular, color.y * specular, color.z * specular, 1.0);\n"
                   "}\n");
 

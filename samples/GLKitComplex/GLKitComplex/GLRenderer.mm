@@ -24,6 +24,7 @@
 
 #define AMBIENT_COLOR   GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f)
 #define ZERO_COLOR      GLKVector4Make(0.f, 0.f, 0.f, 0.f)
+#define MAT_SHININESS   30.f
 
 static void dumpMat(const GLKMatrix4& mat)
 {
@@ -80,9 +81,8 @@ static void dumpMat(const GLKMatrix4& mat)
     
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
-    _effect.material.shininess = 20.f;
     
-    GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius(), 0.f);
+    GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.6f, 0.f);
     _effect.light0.position = pos;
     _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
@@ -142,6 +142,7 @@ static void dumpMat(const GLKMatrix4& mat)
 -(void)setupMaterials {
     switch(_mode) {
     case DM_LitSolidColor:
+        _effect.material.shininess = 0.f;
         _effect.texture2d0.enabled = FALSE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
@@ -150,6 +151,7 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
 
     case DM_LitTextured:
+        _effect.material.shininess = MAT_SHININESS;
         _effect.texture2d0.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
