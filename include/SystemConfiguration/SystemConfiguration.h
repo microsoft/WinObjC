@@ -19,6 +19,10 @@
 
 #include <SystemConfiguration/SCExport.h>
 #include <SystemConfiguration/SCNetwork.h>
+#include <SystemConfiguration/SCNetworkConnection.h>
+
+SC_EXPORT int SCError(void);
+SC_EXPORT const char *SCErrorString(int status);
 
 #endif
 

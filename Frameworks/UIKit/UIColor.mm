@@ -280,6 +280,10 @@ static id _cachedColorsDict;
         RETURN_CACHED("lightText", [self colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f]);
     }
 
+    +(UIColor*) darkTextColor {
+        RETURN_CACHED("darkText", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]);
+    }
+
     -(CGColorRef) CGColor {
         return (CGColorRef) self;
     }

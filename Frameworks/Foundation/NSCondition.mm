@@ -122,7 +122,6 @@ struct _mach_timeval
 	pthread_mutex_t _mutex;
 	pthread_cond_t _cond;
 	idretaintype(NSString) _name;
-	NSThread *_lockingThread;
 	NSInteger _value;
 }
 
@@ -197,17 +196,10 @@ struct _mach_timeval
 			}
 
 		}
-
-		_lockingThread = [NSThread currentThread];
 	}
 
 	-(void) unlockWithCondition: (NSInteger) condition
 	{
-		if( _lockingThread != [NSThread currentThread] ) {
-			[NSException raise:NSInvalidArgumentException format:@"trying to unlock %@ from thread %@, was locked from %@", self, [NSThread currentThread], _lockingThread];
-		}
-
-		_lockingThread = nil;
 		_value = condition;
 		int rc;
 		if((rc = pthread_cond_broadcast(&_cond)) != 0) {
