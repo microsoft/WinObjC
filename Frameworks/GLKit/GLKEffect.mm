@@ -400,7 +400,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [super initWith: parent];
     _transform = [[GLKEffectPropertyTransform alloc] initWith: parent];
 
-    self.position = GLKVector3Origin();
+    self.position = GLKVector4Origin();
 
     self.ambientColor = GLKVector4Black();
     self.diffuseColor = GLKVector4White();
@@ -458,8 +458,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(id)initWith: (GLKShaderEffect*)parent {
     [super initWith: parent];
-    self.modelviewMatrix = GLKMatrix4Identity();
-    self.projectionMatrix = GLKMatrix4Identity();
+    self.modelviewMatrix = GLKMatrix4MakeIdentity();
+    self.projectionMatrix = GLKMatrix4MakeIdentity();
 
     return self;
 }

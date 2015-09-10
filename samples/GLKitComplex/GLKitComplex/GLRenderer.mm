@@ -14,9 +14,6 @@
 //
 //******************************************************************************
 
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
-
 #include "Mesh.h"
 
 #import "GLRenderer.h"
@@ -82,8 +79,7 @@ static void dumpMat(const GLKMatrix4& mat)
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     
-    GLKVector3 pos = GLKVector3Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.6f, 0.f);
-    _effect.light0.position = pos;
+    _effect.light0.position = GLKVector4Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.6f, 0.f, 0.f);
     _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.light0.linearAttenuation = 10.f / _mesh->getRadius();

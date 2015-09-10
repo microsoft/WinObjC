@@ -60,6 +60,9 @@ typedef struct _GLKMatrix3 {
 
 typedef CATransform3D GLKMatrix4;
 
+extern GLKMatrix3 GLKMatrix3Identity;
+extern GLKMatrix4 GLKMatrix4Identity;
+
 // --------------------------------------------------------------------------------
 
 inline float GLKMathDegreesToRadians(float deg) { return deg * M_PI / 180.f; }
@@ -68,9 +71,9 @@ inline float GLKMathRadiansToDegrees(float rad) { return rad * 180.f / M_PI; }
 // --------------------------------------------------------------------------------
 // Matrices
 
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Identity();
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeIdentity();
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Identity();
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeIdentity();
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Make(float m00, float m01, float m02, float m03,
                                        float m10, float m11, float m12, float m13,
                                        float m20, float m21, float m22, float m23,
@@ -137,6 +140,18 @@ inline GLKVector4 GLKVector4Make(float x, float y, float z, float w)
     res.y = y;
     res.z = z;
     res.w = w;
+
+    return res;
+}
+
+inline GLKVector4 GLKVector4MakeFromVec3(GLKVector3 v)
+{
+    GLKVector4 res;
+
+    res.x = v.x;
+    res.y = v.y;
+    res.z = v.z;
+    res.w = 0.f;
 
     return res;
 }
@@ -471,3 +486,4 @@ inline GLKVector3 GLKVector3ZAxis()     { return GLKVector3Make(0.f, 0.f, 1.f); 
 
 inline GLKVector4 GLKVector4Black()     { return GLKVector4Make(0.f, 0.f, 0.f, 1.f); }
 inline GLKVector4 GLKVector4White()     { return GLKVector4Make(1.f, 1.f, 1.f, 1.f); }
+inline GLKVector4 GLKVector4Origin()    { return GLKVector4Make(0.f, 0.f, 0.f, 0.f); }

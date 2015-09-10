@@ -20,7 +20,7 @@
 
 #include <utility>
 
-GLKMatrix3 GLKMatrix3Identity()
+GLKMatrix3 GLKMatrix3MakeIdentity()
 {
     GLKMatrix3 res;
 
@@ -58,7 +58,7 @@ GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m)
     return res;
 }
 
-GLKMatrix4 GLKMatrix4Identity()
+GLKMatrix4 GLKMatrix4MakeIdentity()
 {
     GLKMatrix4 res;
 
@@ -520,3 +520,5 @@ GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
     return res;
 }
 
+GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
+GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
