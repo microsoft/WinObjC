@@ -29,37 +29,55 @@
 #define TO_LIGHT1_TMP "toLight1"
 #define TO_LIGHT2_TMP "toLight2"
 
+#define TO_CAM_TMP "toCam"
+
 #define ATTEN_LIGHT0_TMP "attenLight0"
 #define ATTEN_LIGHT1_TMP "attenLight1"
 #define ATTEN_LIGHT2_TMP "attenLight2"
 
-ShaderNode* mklighter(const string& toLightTemp, const string& attenTemp, const string& pos, const string& clr, const string& attenName)
+ShaderNode* mklighter(const string& toLightTemp, const string& attenTemp, const string& pos,
+                      const string& clr, const string& attenName)
 {
     ShaderNode* toLight = new ShaderTempRef(SVT_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
     ShaderNode* atten = new ShaderTempRef(SVT_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
   
-    return new ShaderLighter(toLight, new ShaderVarRef("_normal"), new ShaderVarRef(clr), atten);
+    return new ShaderLighter(toLight, new ShaderVarRef(GLKSH_NORMAL_NAME), new ShaderVarRef(clr), atten);
+}
+
+ShaderNode* mkspeclighter(const string& toLightTemp, const string& attenTemp, const string& pos,
+                          const string& clr, const string& attenName)
+{
+    // These two nodes will reuse the temps created in mklighter above.
+    ShaderNode* toLight = new ShaderTempRef(SVT_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    ShaderNode* atten = new ShaderTempRef(SVT_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
+
+    // This gets reused across the 3 active lights.
+    ShaderNode* toCam = new ShaderTempRef(SVT_FLOAT4, TO_CAM_TMP, new ShaderOp(new ShaderVarRef(GLKSH_CAMERA), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    return new ShaderSpecLighter(toLight, toCam, new ShaderVarRef(GLKSH_NORMAL_NAME), new ShaderVarRef(clr), atten);
 }
 
 // Per-vertex lighting.
 
 static auto diffuseLighter =
     new ShaderOp(
-      new ShaderAdditiveCombiner({
-              mklighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN),
-              mklighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN),
-              mklighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN)}),
+        new ShaderAdditiveCombiner({
+            mklighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN),
+            mklighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN),
+            mklighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN)}),
       new ShaderVarRef(GLKSH_EMISSIVE), "max", false);
 
 static auto specularLighter =
-    new ShaderAdditiveCombiner();
+    new ShaderAdditiveCombiner({
+        mkspeclighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_SPECULAR, GLKSH_LIGHT0_ATTEN),
+        mkspeclighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_SPECULAR, GLKSH_LIGHT0_ATTEN),
+        mkspeclighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_SPECULAR, GLKSH_LIGHT0_ATTEN)});
 
 ShaderDef standardVsh{
     {GL_INPUT_POS,  new ShaderPosRef() },
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
     {"_texCoord",   new ShaderVarRef(GLKSH_UV0_NAME) },
     {"_lighting",   new ShaderOp(new ShaderVarRef("_ambient"), diffuseLighter, "+", true) },
-  //    {"_specular",   specularLighter }
+    {"_specular",   specularLighter }
 };
 
 ShaderDef standardPsh{
