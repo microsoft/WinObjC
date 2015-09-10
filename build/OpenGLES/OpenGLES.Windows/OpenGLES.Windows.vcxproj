@@ -205,7 +205,7 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <ClangCompile>
       <UserIncludePaths>
       </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
@@ -271,7 +271,7 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <ClangCompile>
       <UserIncludePaths>
       </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
@@ -337,7 +337,7 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <ClangCompile>
       <UserIncludePaths>
       </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -DEAGL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
