@@ -68,7 +68,7 @@ GLKIT_EXPORT_CLASS
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyLight : GLKEffectProperty
 
-@property(assign) GLKVector3 position;
+@property(assign) GLKVector4 position;
 @property(assign) GLKVector4 ambientColor;
 @property(assign) GLKVector4 diffuseColor;
 @property(assign) GLKVector4 specularColor;

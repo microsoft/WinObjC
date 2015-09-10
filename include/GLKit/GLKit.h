@@ -16,6 +16,9 @@
 
 #pragma once
 
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+
 #import <GLKit/GLKitExport.h>
 
 #import <GLKit/GLKView.h>
