@@ -1,0 +1,75 @@
+# Note that this is NOT a relocatable package
+%define ver 0.3.1
+%define rel 2
+%define prefix /usr
+
+Name: GTL
+Summary: The Graph Template Library
+Version: %ver
+Release: %rel
+Source: http://www.fmi.uni-passau.de/archive/archive.theory/ftp/GTL/GTL-0.3.1.tar.gz
+Group: Development/Libraries
+BuildRoot: /tmp/gtl-%ver-build
+Copyright: Copyright (C) 1999 University of Passau
+Packager: Greg J. Badros <gjb@cs.washington.edu>
+URL: http://www.fmi.uni-passau.de/Graphlet/GTL/
+
+%description
+
+There are some basic data structures and algorithms that are frequently
+used in many programs. This includes container classes such as vectors,
+sets and lists.
+
+Many commercial but some free libraries have implemented these data
+structures and algorithms in a general way. This makes them usable for
+many purposes.
+
+One of these libraries is the Standard Template Library (STL), an
+extremely flexible implementation of many container classes and standard
+algorithms. STL is supposed to become a part of the C++ standard library
+and therefore is an ideal basis when writing portable programs.
+
+Unfortunately, STL has no support for graphs and graph
+algorithms. However, graphs are widely used for complex relational
+structures.
+
+Since we are intensively working with graph algorithms and Graphlet, we
+decided to implement GTL, a graph library based on STL. For the design
+of GTL's API the API of LEDA has served as a basis. GTL contains the
+classes needed to work with graphs, nodes and edges and some basic
+algorithms as building blocks for more complex graph algorithms. Further
+algorithms are under work.
+
+%changelog
+* Wed Aug 25 1999 Greg J. Badros <gjb@cs.washington.edu>
+- Initial RPM packaging.
+
+%prep
+
+%setup
+
+%build
+%ifarch alpha
+./configure --host=alpha-linux --prefix=%prefix --enable-fsstd
+%else
+./configure --prefix=%prefix --enable-fsstd
+%endif
+make
+
+%install
+make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+libtool --finish %prefix/lib
+
+%clean
+#rm -rf $RPM_BUILD_ROOT
+
+%post
+
+%postun
+
+%files
+%defattr(-, root, root)
+
+%{prefix}/lib/*
+%{prefix}/include/*
+%doc %{prefix}/share/GTL/*

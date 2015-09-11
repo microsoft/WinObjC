@@ -46,6 +46,7 @@ UIView::UIView()
     memset(&_center, 0, sizeof(_center));
     memset(&_contentStretch, 0, sizeof(_contentStretch));
     _subviews = new XIBArray();
+    _constraints = new XIBArray();
     _hidden = false;
     _opaque = true;
     _autoresizeSubviews = true;
@@ -57,6 +58,7 @@ UIView::UIView()
     _backgroundColor = NULL;
     _clearsContextBeforeDrawing = true;
     _enabled = true;
+    _translatesAutoresizeToConstraints = true;
 }
 
 void UIView::InitFromXIB(XIBObject *obj)
@@ -117,6 +119,8 @@ void UIView::InitFromXIB(XIBObject *obj)
     _multipleTouchEnabled = GetBool("IBUIMultipleTouchEnabled", false);
     _backgroundColor = (UIColor *) FindMember("IBUIBackgroundColor");
 
+    // Constraints for XIB are handled in NSLayoutConstraint.cpp
+
     _outputClassName = "UIView";
 }
 
@@ -126,6 +130,9 @@ void UIView::InitFromStory(XIBObject *obj)
 
     _subviews = (XIBArray *) obj->FindMemberClass("subviews");
     if ( !_subviews ) _subviews = new XIBArray();
+
+    _constraints = (XIBArray *)obj->FindMemberClass("constraints");
+    if (!_constraints) _constraints = new XIBArray();
 
     if ( getAttrib("opaque") ) {
         const char *pVal = getAttrib("opaque");
@@ -189,6 +196,10 @@ void UIView::InitFromStory(XIBObject *obj)
     }
     _backgroundColor = (UIColor *) FindMember("backgroundColor");
 
+    if (getAttrib("translatesAutoresizingMaskIntoConstraints")) {
+        if (strcmp(getAttrib("translatesAutoresizingMaskIntoConstraints"), "NO") == 0) _translatesAutoresizeToConstraints = false;
+    }
+
     _outputClassName = "UIView";
 }
 
@@ -212,6 +223,7 @@ void UIView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
 
     Map(writer, obj, propertyMappings, numPropertyMappings);
     if ( _subviews->count() > 0 ) AddOutputMember(writer, "UISubviews", _subviews);
+    if ( _constraints->count() > 0) AddOutputMember(writer, "UIViewAutolayoutConstraints", _constraints);
 
     if ( _autoresizeSubviews ) AddBool(writer, "UIAutoresizeSubviews", _autoresizeSubviews);
     if ( _autoresizingMask ) AddInt(writer, "UIAutoresizingMask", _autoresizingMask);
@@ -223,6 +235,9 @@ void UIView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
     if ( !_enabled ) AddBool(writer, "UIDisabled", true);
     if ( _multipleTouchEnabled ) AddBool(writer, "UIMultipleTouchEnabled", _multipleTouchEnabled);
     if ( !_clearsContextBeforeDrawing ) AddBool(writer, "UIClearsContextBeforeDrawing", _clearsContextBeforeDrawing);
+
+    // Metadata
+    if ( !_translatesAutoresizeToConstraints || !obj->GetBool("IBViewMetadataTranslatesAutoresizingMaskIntoConstraints", true) ) AddBool(writer, "UIViewDoesNotTranslateAutoresizingMaskIntoConstraints", true);
 
     if ( _opaque ) obj->AddBool(writer, "UIOpaque", _opaque);
 

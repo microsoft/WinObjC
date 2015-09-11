@@ -738,6 +738,9 @@ void UITableViewPriv::removeReusableCell(ReusableCell *cell)
 
         priv->_allowsMultipleSelection = priv->_allowsMultipleSelectionDuringEditing = FALSE;
 
+        priv->_delegate = nil;
+        priv->_dataSource = nil;
+
         priv->_defaultRowHeight = 50.0f;
         priv->_defaultSectionHeaderHeight = 22.0f;
         priv->_footerYPos = 0.f;

@@ -1,0 +1,300 @@
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ../..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AS = @AS@
+BENCH_PROGRAMS = @BENCH_PROGRAMS@
+CASSOWARY_VERSION = @CASSOWARY_VERSION@
+CC = @CC@
+CPPEXTRAFLAGS = @CPPEXTRAFLAGS@
+CXX = @CXX@
+DLLTOOL = @DLLTOOL@
+GTL_INCLUDES = @GTL_INCLUDES@
+GTL_LIB = @GTL_LIB@
+GUILE = @GUILE@
+GUILE_BIN_DIR = @GUILE_BIN_DIR@
+GUILE_CONFIG = @GUILE_CONFIG@
+GUILE_INCLUDES = @GUILE_INCLUDES@
+GUILE_LIBS = @GUILE_LIBS@
+GUILE_LIB_DIR = @GUILE_LIB_DIR@
+GUILE_PKGDATA_DIR = @GUILE_PKGDATA_DIR@
+JAVACFLAGS = @JAVACFLAGS@
+JAVA_CLASS_PATH = @JAVA_CLASS_PATH@
+LD = @LD@
+LEX = @LEX@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+MAINT = @MAINT@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
+OBJDUMP = @OBJDUMP@
+PACKAGE = @PACKAGE@
+PYTHON_HEADER_DIR = @PYTHON_HEADER_DIR@
+RANLIB = @RANLIB@
+TEST_PROGRAMS = @TEST_PROGRAMS@
+VERSION = @VERSION@
+YACC = @YACC@
+cassoguiledir = @cassoguiledir@
+
+JAVAFILES = DraggableBox.java QuadDemo.java
+
+@HAVE_JAVA_TRUE@java_JAVA = $(JAVAFILES)
+
+EXTRA_DIST = $(JAVAFILES) quaddemo.htm
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../../c++/config.h
+CONFIG_CLEAN_FILES = 
+PROGRAMS =  $(BENCH_PROGRAMS) $(TEST_PROGRAMS)
+
+JAVAC = javac
+CLASSPATH_ENV = CLASSPATH=$(JAVAROOT):$(srcdir)/$(JAVAROOT):$$CLASSPATH
+JAVAROOT = $(top_builddir)
+DIST_COMMON =  $(java_JAVA) Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps java/demos/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-BENCHPROGRAMS:
+
+clean-BENCHPROGRAMS:
+	-test -z "$(BENCH_PROGRAMS)" || rm -f $(BENCH_PROGRAMS)
+
+distclean-BENCHPROGRAMS:
+
+maintainer-clean-BENCHPROGRAMS:
+
+install-BENCHPROGRAMS: $(BENCH_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(BENCHdir)
+	@list='$(BENCH_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-BENCHPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(BENCH_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-TESTPROGRAMS:
+
+clean-TESTPROGRAMS:
+	-test -z "$(TEST_PROGRAMS)" || rm -f $(TEST_PROGRAMS)
+
+distclean-TESTPROGRAMS:
+
+maintainer-clean-TESTPROGRAMS:
+
+install-TESTPROGRAMS: $(TEST_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(TESTdir)
+	@list='$(TEST_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-TESTPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(TEST_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-javaJAVA:
+
+clean-javaJAVA:
+	-rm *.class classjava.stamp
+
+distclean-javaJAVA:
+
+maintainer-clean-javaJAVA:
+
+uninstall-javaJAVA:
+	@$(NORMAL_UNINSTALL)
+	for p in *.class; do \
+	  rm -f $(DESTDIR)$(javadir)/$$p; \
+	done
+classjava.stamp: $(java_JAVA)
+	$(CLASSPATH_ENV) $(JAVAC) -d $(JAVAROOT) $(JAVACFLAGS) $?
+	echo timestamp > classjava.stamp
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = java/demos
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am: install-BENCHPROGRAMS install-TESTPROGRAMS \
+		install-javaJAVA
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-BENCHPROGRAMS uninstall-TESTPROGRAMS \
+		uninstall-javaJAVA
+uninstall: uninstall-am
+all-am: Makefile $(PROGRAMS) classjava.stamp
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(BENCHdir) $(DESTDIR)$(TESTdir) \
+		$(DESTDIR)$(javadir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-BENCHPROGRAMS mostlyclean-TESTPROGRAMS \
+		mostlyclean-javaJAVA mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-BENCHPROGRAMS clean-TESTPROGRAMS clean-javaJAVA \
+		clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-BENCHPROGRAMS distclean-TESTPROGRAMS \
+		distclean-javaJAVA distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-BENCHPROGRAMS \
+		maintainer-clean-TESTPROGRAMS maintainer-clean-javaJAVA \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-BENCHPROGRAMS distclean-BENCHPROGRAMS \
+clean-BENCHPROGRAMS maintainer-clean-BENCHPROGRAMS \
+uninstall-BENCHPROGRAMS install-BENCHPROGRAMS mostlyclean-TESTPROGRAMS \
+distclean-TESTPROGRAMS clean-TESTPROGRAMS maintainer-clean-TESTPROGRAMS \
+uninstall-TESTPROGRAMS install-TESTPROGRAMS mostlyclean-javaJAVA \
+distclean-javaJAVA clean-javaJAVA maintainer-clean-javaJAVA \
+uninstall-javaJAVA install-javaJAVA tags distdir info-am info dvi-am \
+dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+@HAVE_JAVA_FALSE@classjava.stamp:
+@HAVE_JAVA_FALSE@	echo timestamp > classjava.stamp
+
+@HAVE_JAVA_FALSE@install-javaJAVA:
+@HAVE_JAVA_FALSE@	echo "Not installing java .class files since Java build was disabled"
+
+run:
+	appletviewer quaddemo.htm
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

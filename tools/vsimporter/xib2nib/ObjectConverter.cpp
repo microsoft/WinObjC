@@ -55,6 +55,8 @@
 #include "UIDatePicker.h"
 #include "MKMapView.h"
 #include "UISlider.h"
+#include "NSLayoutConstraint.h"
+#include "_UILayoutGuide.h"
 #include <assert.h>
 
 #define IS_CONVERTER(newinst, classnamevar, name, type) \
@@ -107,6 +109,7 @@ XIBObject *ObjectConverter::ConverterForObject(const char *className, pugi::xml_
     IS_CONVERTER(ret, className, "IBMKMapView", MKMapView)
     IS_CONVERTER(ret, className, "IBUISearchDisplayController", UISearchDisplayController)
     IS_CONVERTER(ret, className, "IBUISlider", UISlider)
+    IS_CONVERTER(ret, className, "IBNSLayoutConstraint", NSLayoutConstraint)
 
     if ( ret == NULL ) {
         ret = new XIBObject();
@@ -123,6 +126,8 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
 
     IS_CONVERTER(ret, className, "objects", XIBArray)
     IS_CONVERTER(ret, className, "subviews", XIBArray)
+    IS_CONVERTER(ret, className, "constraints", XIBArray)
+    IS_CONVERTER(ret, className, "variation", XIBVariation)
     IS_CONVERTER(ret, className, "items", XIBArray)
     IS_CONVERTER(ret, className, "connections", XIBArray)
     IS_CONVERTER(ret, className, "string", XIBObjectString)
@@ -155,6 +160,9 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "imageView", UIImageView)
     IS_CONVERTER(ret, className, "action", UIRuntimeEventConnection)
     IS_CONVERTER(ret, className, "switch", UISwitch)
+    IS_CONVERTER(ret, className, "constraint", NSLayoutConstraint)
+    IS_CONVERTER(ret, className, "layoutGuides", XIBVariation)
+    IS_CONVERTER(ret, className, "viewControllerLayoutGuide", _UILayoutGuide)
 
     if ( ret == NULL ) {
 #ifdef _DEBUG

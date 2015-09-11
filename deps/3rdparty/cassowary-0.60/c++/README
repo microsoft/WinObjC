@@ -1,0 +1,54 @@
+See ../README for general information and generic instructions.
+Also see ../LICENSE for legalese regarding use of this distribution.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
+Cassowary/C++ needs to be compiled using a modern C++ compiler.
+At one time or another, it has compiled using:
+  o egcs-1.0.1
+  o egcs-1.0.3a
+  o egcs-1.1b
+      (v0.2 required some modifications:
+      comment out last line of ClLinearExpression.cc:
+      // template class ClGenericLinearExpression<ClSymbolicWeight>;
+
+      and remove -pedantic from the Makefile's CPPFLAGS variable)
+  o gcc-2.8.1 (needs libstdc++-2.8.x, too)
+  o Visual C++ 5.0
+
+In particular, Cassowary will *not* build with gcc-2.7.x.x!
+
+Note that with egcs versions between 1.0.1 - 1.0.3 and gcc-2.8.1, the
+following warning is ok to ignore:
+
+.../include/g++/std/bastring.h:76: warning: inline function `static void
+basic_string<char,string_char_traits<char>,__default_alloc_template<false,0>
+>::Rep::operator delete(void *)' called before definition
+
+(If you know how to eliminate this warning, I'd love to hear about it -- 
+write me at gjb@cs.washington.edu)
+
+
+To build, just use GNU make, and "make all" within this directory.
+
+Try running `./ClTests' after the build completes.
+
+
+The qdemos/ subdirectory contains a demonstration application that
+builds using the Qt widget toolkit (cross-platform, free for Unices
+only) from:
+
+http://www.troll.no/dl/qtfree-dl.html
+
+
+
+The ccc/ subdirectory contains some files that may help you in building
+under MS Visual C++ 5.0 (not tested recently--- please feel free to
+contribute improved versions).
+
+The demos/ subdirectory contains the ClBoundedQuadDemo (a.k.a. QuadDemo) 
+for the wxWindows widget toolkit (cross platform, free everywhere) from:
+
+http://www.wxwindows.org/
+
+(this demo is deprecated, and may not build as easily at the Qt demo in
+the qdemos/ subdirectory)

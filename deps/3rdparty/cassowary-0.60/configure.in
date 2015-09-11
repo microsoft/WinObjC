@@ -1,0 +1,459 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl $Id: configure.in,v 1.47 2000/03/12 21:58:25 gjb Exp $
+dnl configure.in
+dnl Autoconf script for Cassowary
+dnl (C) 1999 Greg J. Badros
+
+dnl ## Initialize autoconf ##
+AC_INIT(c++/ClSimplexSolver.cc)
+AC_PREREQ(2.4)
+
+CASSOWARY_VERSION=0.60
+AC_SUBST(CASSOWARY_VERSION)
+
+dnl ## Initialize automake ##
+AM_INIT_AUTOMAKE(cassowary, $CASSOWARY_VERSION)
+AM_MAINTAINER_MODE
+AM_CONFIG_HEADER(c++/config.h)
+
+
+dnl ## Checks for programs ##
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+AM_PROG_LEX
+AC_PROG_YACC
+AM_PROG_LIBTOOL
+
+dnl ## Package options ##
+## ACE == AC-Extended -- this was SCWM_ARG_PATH
+AC_DEFUN(ACE_ARG_PATH,
+[
+  AC_ARG_WITH($1,[$2],[
+    if test -z "${withval}" || test "yes" = "${withval}" || test "no" = "${withval}"; then
+      AC_MSG_ERROR(missing pathname argument to --with-$1)
+    elif test ! -d "${withval}"; then
+      AC_MSG_ERROR(invalid pathname argument (not a dir, or does not exist) to --with-$1: ${withval})
+    else
+      $3
+    fi],
+    $4)
+])
+
+
+AC_DEFUN(AC_PROG_CC_PERMISSIVE,
+[AC_MSG_CHECKING(whether $CC understands -fpermissive option)
+set dummy $CC; ac_cc="`echo [$]2 |
+changequote(, )dnl
+                       sed -e 's/[^a-zA-Z0-9_]/_/g' -e 's/^[0-9]/_/'`"
+changequote([, ])dnl
+AC_CACHE_VAL(ac_cv_prog_cc_${ac_cc}_permissive,
+[echo 'foo(){}' > conftest.c
+# Make sure it works both with $CC and with simple cc.
+# We do the test twice because some compilers refuse to overwrite an
+# existing .o file with -o, though they will create one.
+ac_try='${CC-cc} -c conftest.c -fpermissive 1>&AC_FD_CC'
+if AC_TRY_EVAL(ac_try) &&
+   test -f conftest.o && AC_TRY_EVAL(ac_try);
+then
+  eval ac_cv_prog_cc_${ac_cc}_permissive=yes
+else
+  eval ac_cv_prog_cc_${ac_cc}_permissive=no
+fi
+rm -f conftest*
+])dnl
+if eval "test \"`echo '$ac_cv_prog_cc_'${ac_cc}_permissive`\" = yes"; then
+  AC_MSG_RESULT(yes)
+  PERMISSIVE_OPTION="-fpermissive"
+else
+  PERMISSIVE_OPTION=""
+  AC_MSG_RESULT(no)
+  AC_DEFINE(NO_CC_PERMISSIVE)
+fi
+])
+
+
+AC_PROG_CC_PERMISSIVE
+
+AC_ARG_ENABLE(check-integrity,
+[  --enable-check-integrity   Verify the integrity of solver data structures at runtime]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_SOLVER_CHECK_INTEGRITY)
+  fi
+])
+
+
+TEST_PROGRAMS=""
+BENCH_PROGRAMS=""
+AC_ARG_ENABLE(cxx-tests,
+[  --enable-cxx-tests   Build various C++ test/benchmark programs in addition to the library]
+,[if test "yes" = "$enableval"; then
+    CL_BUILD_TESTS="true"
+    TEST_PROGRAMS='$(test_programs)'
+    BENCH_PROGRAMS='${bench_programs}'
+  fi
+])
+
+AM_CONDITIONAL(CL_BUILD_TESTS, test "true" = "$CL_BUILD_TESTS")
+AC_SUBST(TEST_PROGRAMS)
+AC_SUBST(BENCH_PROGRAMS)
+
+
+sources_for_fd_solver="ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc"
+
+AC_ARG_ENABLE(fd-solver,
+[  --enable-fd-solver   Enable the restricted finite domain solver]
+,[if test "yes" = "$enableval"; then
+    CL_BUILD_FD_SOLVER=true
+dnl    # Check for the GTL library (needed for fd solver)
+    GTL_LIB="-lGTL"  #just define this for now
+dnl    AC_CHECK_LIB(GTL, GML_init, [
+dnl    GTL_LIB="-lGTL"
+dnl    AC_DEFINE(CL_HAVE_GTL)
+dnl    ], no_gtl_lib=yes,)
+  fi
+])
+AM_CONDITIONAL(CL_BUILD_FD_SOLVER, test "true" = "$CL_BUILD_FD_SOLVER")
+
+
+
+ACE_ARG_PATH(gtl,
+[  --with-gtl=DIR   Use GTL installation from DIR
+                         can omit DIR to use $prefix ],
+[
+	AC_DEFINE(CL_HAVE_GTL)
+	CL_HAVE_GTL="yes"
+	AC_MSG_CHECKING(where to expect to find GTL headers and library)
+	if test -z "${withval}" || test "yes" = "${withval}"; then
+	   AC_MSG_RESULT("defaulting to the prefix = ${prefix}")
+	   withval=${prefix}
+	else
+	   AC_MSG_RESULT("${withval}")
+        fi
+	if test -d "${withval}/include/GTL"; then
+           GTL_INCLUDES="-I${withval}/include"
+        elif test -d "${withval}/share/include/GTL"; then
+           GTL_INCLUDES="-I${withval}/share/include"
+        fi
+	case "$ac_R_nospace" in
+	"yes") gtl_lib_path="-L${withval}/lib -R${withval}/lib" ;;
+	"no")  gtl_lib_path="-L${withval}/lib -R ${withval}/lib" ;;
+	*)     gtl_lib_path="-L${withval}/lib" ;;
+	esac
+	GTL_LIB="${gtl_lib_path} -lGTL"
+])
+AC_SUBST(GTL_LIB)
+AC_SUBST(GTL_INCLUDES)
+
+
+AC_ARG_ENABLE(no-deprecated-api,
+[  --enable-no-deprecated-api Disallow deprecated API functions to be invoked]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_NO_DEPRECATED)
+  fi
+])
+
+
+AC_ARG_ENABLE(trace,
+[  --enable-trace             Turn on trace messages to STDERR]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_TRACE)
+  fi
+])
+
+AC_ARG_ENABLE(cpp_build, [ --disable-cpp-build  Do not build C++ version ],
+		enable_cpp_build=no, enable_cpp_build=yes)
+if test x"$enable_cpp_build" = x"no" ; then
+    HAVE_CPP="false"
+else
+    HAVE_CPP="true"
+fi
+AM_CONDITIONAL(HAVE_CPP, test "true" = "$HAVE_CPP")
+
+
+AC_ARG_ENABLE(static-library, [ --enable-static-library  Build static libcassowary.a ],
+		build_static_library=yes, build_static_library=no)
+AM_CONDITIONAL(CL_BUILD_STATIC_LIBRARY, test "yes" = "$build_static_library")
+
+
+AC_ARG_ENABLE(hash_map_and_set,
+[  --enable-hash-map-and-set  Use hash_map, hash_set for the tableau data structures]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_USE_HASH_MAP_AND_SET)
+  fi
+])
+
+
+AC_ARG_ENABLE(no-io,
+[  --enable-no-io             Turn off all I/O from the library (for embedded sytems)]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_NO_IO)
+  fi
+])
+
+AC_ARG_ENABLE(stats-display,
+[  --enable-stats-display     Display solver statistics at runtime]
+,[if test "yes" = "$enableval"; then
+    AC_DEFINE(CL_SOLVER_STATS)
+  fi
+])
+
+CPPEXTRAFLAGS=""
+AC_ARG_ENABLE(warnings,
+[  --enable-warnings          Turn on most compiler warnings]
+,[if test "yes" = "$enableval"; then
+   CPPEXTRAFLAGS="-Wall -W"
+  fi
+])
+
+CPPEXTRAFLAGS="$CPPEXTRAFLAGS $PERMISSIVE_OPTION"
+AC_SUBST(CPPEXTRAFLAGS)
+
+
+GUILE_BIN_DIR=""
+GUILE_INCLUDES=""
+
+guile_lib_path=""
+
+if test "NONE" = "$exec_prefix"; then
+	if test "NONE" = "$prefix"; then
+		guile_lib_path="$ac_default_prefix/lib"
+	else
+		guile_lib_path="$prefix/lib"
+	fi
+else
+        guile_lib_path="$exec_prefix/lib"
+fi
+if test "NONE" = "$prefix"; then
+        GUILE_INCLUDES="-I$ac_default_prefix/include"
+else
+        GUILE_INCLUDES="-I$prefix/include"
+fi
+
+GUILE_ENABLED="false"
+
+ACE_ARG_PATH(guile-prefix,
+[  --with-guile-prefix=DIR Expect guile to be installed in DIR [optional]],
+[
+	GUILE_ENABLED=true
+	AC_MSG_CHECKING(where to expect to find guile)
+	guile_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_prefix}/bin"
+	GUILE_INCLUDES="-I${guile_prefix}/include"
+	guile_lib_path="${guile_prefix}/lib"
+	
+	AC_MSG_RESULT("${guile_prefix}")
+])
+
+ACE_ARG_PATH(guile-exec-prefix,
+[  --with-guile-exec-prefix=DIR 
+                          Expect guile binaries to be installed in DIR 
+                          [optional]],
+[
+	GUILE_ENABLED=true
+	AC_MSG_CHECKING(where to expect to find guile binaries)
+	guile_exec_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_exec_prefix}"
+	
+	AC_MSG_RESULT("${guile_exec_prefix}")
+])
+
+if test -z "${GUILE_BIN_DIR}"; then
+	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no)
+else
+	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no, ${GUILE_BIN_DIR})
+fi
+
+case "$ac_R_nospace" in 
+"yes") GUILE_LIBS_PRE="-L${guile_lib_path} -R${guile_lib_path}" ;;
+"no")  GUILE_LIBS_PRE="-L${guile_lib_path} -R ${guile_lib_path}" ;;
+*)     GUILE_LIBS_PRE="-L${guile_lib_path}" ;;
+esac
+
+
+GUILE_CONFIG_works=no
+if test "no" != "$GUILE_CONFIG"; then
+  AC_MSG_CHECKING(whether guile-config or build-guile works)
+  if (${GUILE_CONFIG} link) >/dev/null 2>&1; then
+    GUILE_CONFIG_works=yes
+  fi
+  AC_MSG_RESULT($GUILE_CONFIG_works)
+
+  if test -z "${GUILE_BIN_DIR}"; then
+    AC_PATH_PROG(GUILE, guile, no)
+  else
+    AC_PATH_PROG(GUILE, guile, no, ${GUILE_BIN_DIR})
+  fi
+
+  AC_MSG_CHECKING(what the guile pkgdatadir is)
+  GUILE_PKGDATA_DIR=`${GUILE_CONFIG} info pkgdatadir`
+  AC_MSG_RESULT($GUILE_PKGDATA_DIR)
+  GUILE_PKGDATA_DIR=${fake_root_for_install}${GUILE_PKGDATA_DIR}
+  AC_MSG_CHECKING(what the guile pkglibdir is)
+  GUILE_PKGLIB_DIR=`${GUILE_CONFIG} info pkglibdir`
+  AC_MSG_RESULT($GUILE_PKGLIB_DIR)
+  GUILE_PKGLIB_DIR=${fake_root_for_install}${GUILE_PKGLIB_DIR}
+  cassoguiledir=$GUILE_PKGLIB_DIR/site/cassowary
+fi
+
+if test "yes" = "$GUILE_CONFIG_works"; then
+  AC_MSG_CHECKING(for guile libraries)
+  GUILE_LIBS="${GUILE_LIBS_PRE} `${GUILE_CONFIG} link`"
+  GUILE_ENABLED="true"
+  AC_MSG_RESULT($GUILE_LIBS)
+else
+  AC_CHECK_LIB(m, sin, GUILE_LIBS="-lm",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(rx, main, GUILE_LIBS="-lrx $GUILE_LIBS",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(qt, main, GUILE_LIBS="-lqt $GUILE_LIBS",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(dl, dlopen, GUILE_LIBS="-ldl $GUILE_LIBS";DL_SUPPORT=true,, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(c, dlopen, GUILE_LIBS="$GUILE_LIBS";DL_SUPPORT=true,, $GUILE_LIBS_PRE)
+
+  AC_CHECK_LIB(guile, scm_handle_by_message_noexit, GUILE_LIBS="${GUILE_LIBS_PRE} -lguile ${GUILE_LIBS}", [
+  	AC_MSG_ERROR(Can not find Guile 1.2 or later on the system)
+  ], $GUILE_LIBS_PRE $GUILE_LIBS)
+fi
+
+
+AC_ARG_ENABLE(guile_build, [ --disable-guile-build  Build Guile wrapper for Cassowary ],
+		disable_guile_build=yes, disable_guile_build=no)
+if test x"disable_guile_build" = x"yes"; then
+    GUILE_ENABLED="false"
+fi
+
+AC_CHECK_LIB(guile, scm_make_smob_type_mfpe, AC_DEFINE(HAVE_SCM_MAKE_SMOB_TYPE_MFPE), ,$GUILE_LIBS)
+
+AC_SUBST(cassoguiledir)
+AC_SUBST(GUILE)
+AC_SUBST(GUILE_INCLUDES)
+AC_SUBST(GUILE_LIBS)
+AC_SUBST(GUILE_BIN_DIR)
+AC_SUBST(GUILE_LIB_DIR)
+AC_SUBST(GUILE_PKGDATA_DIR)
+AM_CONDITIONAL(HAVE_GUILE, test "yes" = "$GUILE_CONFIG_works" -a "true" = "$GUILE_ENABLED")
+
+
+PYTHON_HEADER_DIR=${prefix}/python-1.5
+
+ACE_ARG_PATH(python-headers,
+[  --with-python-headers=DIR    Expect Python headers to be installed in DIR [optional]],
+[
+	AC_MSG_CHECKING(where to find python headers)
+	PYTHON_HEADER_DIR="${withval}"
+	
+	AC_MSG_RESULT("${python_headers}")
+])
+
+AC_SUBST(PYTHON_HEADER_DIR)
+
+if test -d ${PYTHON_HEADER_DIR}; then
+  HAVE_PYTHON=yes
+else
+  HAVE_PYTHON=no
+fi
+AM_CONDITIONAL(HAVE_PYTHON, test "true" = "$HAVE_PYTHON")
+
+
+
+JAVA_CLASS_PATH="./classes"
+ACE_ARG_PATH(java-class-path,
+[  --with-java-class-path=DIR 
+                             Use DIR as the destination for java .class files
+                             [optional]],
+[
+	AC_MSG_CHECKING(where to install java .class files)
+	JAVA_CLASS_PATH=$withval
+	AC_MSG_RESULT("$JAVA_CLASS_PATH")
+])
+
+AC_SUBST(JAVA_CLASS_PATH)
+
+if test -d ${JAVA_CLASS_PATH}; then
+  HAVE_JAVA=true
+else
+  HAVE_JAVA=false
+fi
+
+AC_ARG_ENABLE(cflags,
+[  --enable-cflags=FLAGS   Set CFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cflags"
+	   exit;;
+ esac
+ CFLAGS="$enableval"
+])
+
+
+AC_ARG_ENABLE(cxxflags,
+[  --enable-cxxflags=FLAGS   Set CXXFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cxxflags"
+	   exit;;
+ esac
+ CXXFLAGS="$enableval"
+])
+
+AC_ARG_ENABLE(cppextraflags,
+[  --enable-cppextraflags=FLAGS   Set CPPEXTRAFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cppextraflags"
+	   exit;;
+ esac
+ CPPEXTRAFLAGS="$enableval"
+])
+
+AC_SUBST(CPPEXTRAFLAGS)
+
+
+JAVACFLAGS="-g -O"
+AC_ARG_ENABLE(javac-flags,
+[  --enable-javac-flags=FLAGS Set the javac compile flags to FLAGS]
+,[JAVACFLAGS="$enableval"])
+AC_SUBST(JAVACFLAGS)
+
+HAVE_JAVA="false"
+AC_ARG_ENABLE(java_build, [ --enable-java-build  Build java version of Cassowary ],
+		enable_java_build=yes, enable_java_build=no)
+if test x"$enable_java_build" = x"yes"; then
+    which javac >/dev/null 2>&1 && HAVE_JAVA="true"
+fi
+AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
+
+
+AC_OUTPUT([
+	Makefile \
+	ANNOUNCE \
+	cassowary-config \
+	c++/Makefile \
+	guile/Makefile \
+	guile/doc/Makefile \
+	docs/Makefile \
+	smalltalk/Makefile \
+	cassowary.spec \
+	cassowary-nofd.spec2 \
+	GTL.spec \
+	java/Makefile \
+	java/demos/Makefile \
+	java/cda/Makefile \
+	],[chmod +x cassowary-config; sh scripts/recreate-symlinks])
+
+# Not create config-inline.h for the C++ header files to include
+# (needed in case another package uses autoconf and includes the Cassowary
+#  header files -- w/o this hack the two config.h files and their defs would
+#  conflict and cause at least warnings, and maybe really bad things --03/18/99 gjb)
+d="c++"
+grep '#define CL_' $d/config.h > $d/config-inline-check.h || true
+echo "" >> $d/config-inline-check.h  # add a newline
+
+# replace config-inline.h only if the new version is different
+# (avoid rebuilding everything)
+if test ! -f $d/config-inline.h; then 
+   mv $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
+else
+   if diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1; then
+      echo "$d/config-inline.h is unchanged"
+   else
+      mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
+   fi
+fi
+rm -f $d/config-inline-check.h

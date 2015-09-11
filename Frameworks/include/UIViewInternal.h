@@ -19,8 +19,8 @@
 
 #include "LinkedList.h"
 
-@class UIView;
 class AutoLayoutProperties;
+class ConstraintProperties;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView>
 {
@@ -35,12 +35,16 @@ public:
     AutoLayoutProperties *layoutProperties;
     id currentTouches;
     id gestures;
-    idretain constraints;
+    NSMutableArray* constraints;
     bool _isChangingParent;
 
     UIViewAutoresizing autoresizingMask;
+    CGSize             _contentHuggingPriority;
+    CGSize             _contentCompressionResistancePriority;
     BOOL               autoresizesSubviews;
-    CGRect            _resizeRoundingError;
+    BOOL               translatesAutoresizingMaskIntoConstraints;
+    BOOL               _constrained;
+    CGRect             _resizeRoundingError;
 
     UIViewPrivateState()
     {
@@ -56,8 +60,14 @@ public:
         currentTouches = nil;
         gestures = nil;
         constraints = nil;
+        translatesAutoresizingMaskIntoConstraints = TRUE;
         layoutProperties = NULL;
         _isChangingParent = false;
+        _constrained = false;
+        _contentHuggingPriority.height = 250.0f;
+        _contentHuggingPriority.width = 250.0f;
+        _contentCompressionResistancePriority.height = 750.0f;
+        _contentCompressionResistancePriority.width = 750.0f;
 
         autoresizingMask = (UIViewAutoresizing) 0;
         autoresizesSubviews = FALSE;
@@ -65,5 +75,35 @@ public:
     }
 };
 
+class NSLayoutConstraintPrivateState
+{
+public:
+    NSLayoutConstraintPrivateState() 
+        : _constraints(NULL)
+    { 
+    }
+
+    ConstraintProperties* _constraints;
+};
+
+@interface UIView() {
+@public
+    UIViewPrivateState* priv;
+}
+-(void) initPriv;
+-(void) initInternal;
+-(UIViewPrivateState*) _privateState;
+@end
+
+@interface NSLayoutConstraint() { 
+    NSLayoutConstraintPrivateState* priv;
+}
+-(NSLayoutConstraintPrivateState*) _privateState;
+-(void)printConstraint;
++(void)printConstraints:(NSArray*)constraints;
+@end
+
+@interface _UILayoutGuide : UIView<UILayoutSupport>
+@end
 
 #endif /* _UIVIEWPRIVATE_H_ */

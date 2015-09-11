@@ -74,10 +74,22 @@ public:
     XIBArray(pugi::xml_node node);
     XIBArray();
 
+    virtual XIBObject *ApplyVariation(XIBObject *variation);
+
     virtual void InitFromStory(XIBObject *obj);
     void EmitObject(NIBWriter *writer);
     XIBObject *objectAtIndex(int idx);
     int count();
+};
+
+class XIBVariation : public XIBArray
+{
+public:
+    XIBVariation(pugi::xml_node node);
+    XIBVariation();
+
+    bool NeedsSerialization();
+    void EmitObject(NIBWriter *writer);
 };
 
 class XIBAccessibilityArray : public XIBArray

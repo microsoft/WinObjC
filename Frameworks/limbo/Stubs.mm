@@ -86,9 +86,6 @@ void EbrResumeSound(void)
 @implementation _UISettings
 @end
 
-@implementation NSLayoutConstraint
-@end
-
 @implementation NSUndoManager
 @end
 

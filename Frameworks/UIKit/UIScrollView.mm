@@ -1415,6 +1415,7 @@
     }
 
     -(void) layoutSubviews {
+        [super layoutSubviews];
         //  Make sure we stay within our bounds
         // We don't want to clamp when we have no content since they're doing the positioning manually.
         if ( ![self isTracking] && _displayLink == nil && !CGSizeEqualToSize(_contentSize, CGSizeZero) ) {

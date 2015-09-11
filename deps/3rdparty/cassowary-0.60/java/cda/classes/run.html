@@ -1,0 +1,90 @@
+<title>Constraint-Based Drawing Applet</title>
+<b>Instructions at bottom of page</b>
+<hr>
+<applet code="EDU.Washington.grad.noth.cda.Main" width=500 height=500>
+</applet>
+<hr>
+
+
+  If any of you were interested in helping test (and providing feedback upon)
+my quals project (a constraint-based drawing applet that currently has
+no name), I'd much appreciate it.<p>
+  How to run it:<p>
+  If you have Netscape 4.03 or 4.04 with the "jdk 1.1 enhancements"
+you can run the applet from 
+http://www.cs.washington.edu/homes/noth/Quals/classes/run.html.
+Note that the department has Netscape 4.02 installed, so you'll have to 
+grab a newer version (*and* the Java upgrade) to have it work that way.
+
+<p>
+  If you have access to the 1.1.x JDK (available under Linux on departmental
+machines, and maybe even NT in some cases), you can run appletviewer
+with the above URL.
+<p>
+  My desktop box (ikura in 423) is running NT, has the JDK1.1.5 for NT
+installed, and has Netscape 4.04 w/ the necessary fiddly bits to run the
+applet, if that's more convenient.  I usually work at home, and am virtually
+never here in the mornings, so feel free to use ikura then.
+
+<p>
+  Notes about it:
+<p>
+<OL>
+<LI>Under the Linux 1.1.3 JDK, the icons on the buttons seem to disappear
+  after pressing the button.  If that gets really really annoying, 
+  forcing a window repaint (covering it with another window, or minimizing
+  and restoring it) seems to help.  I don't know why it does that...
+<LI>To place an object, use the top 4 buttons (the line, line with
+  midpoint, rectangle, and oval).  Click the crosshair cursor to place the
+  object, or hit ESC to cancel placement.
+<LI>Click on a point to select it (turns green).  Use control + clicking
+  to select multiple points.  Click inside the blue box (visible
+only when the SHIFT key is down) around an object
+  to select all of its associated points at once (the box around the
+  selected object will be green, also, instead of the blue box 
+  currently used for highlighting)
+<LI>The constraints that can be established are:
+<UL>
+<LI> Anchor constraint:  Point stays where it is.  Select one or more points,
+   then click the anchor button to establish anchor constraints on them.
+<LI> Colocation constraint:  Point(s) stay together.  Select two or more
+   points, then click the colocation button (circle with inward arrows).
+<LI> Relational constraints (above, below, left, right):  Object stays
+   above/below/left of/right of other object.  The black box on the icon
+   represents the "source" object, and the red the target object that
+   will stay above/below/etc. the source.  Select an entire object
+   (click inside its blue box so all the points are selected), then the
+   constraint button, then click the pointing hand cursor on the target
+   object.  The constraint is represented by a small red circle in the
+   source object and a line going to the center of the target object.
+<LI> Alignment constraints (left, right, top, bottom): Objects are aligned
+   so that their left/right/top/bottom edge of their bounding boxes are all
+   aligned vertically or horizontally (as appropriate).  Select as many whole
+   objects (so they are outlined in green) and click on the desired
+   alignment button.  The constraint is represented visually as a thin
+   grey line along the appropriate edge of the constrained objects.
+</UL>
+
+<LI>To delete an object, select it and hit the d key.
+<LI>Drag the mouse to get a grey selection box.
+<LI>The i key prints some information about the current state of the 
+  application.  In particular, you can see how many constraints it's 
+  maintaining.
+<LI>You can select the visual representation of a constraint with a single 
+  click (it gets outlined with a green box).  The d key will delete any 
+  selected constraint as well as other objects.
+<LI>When dragging a point around, it will snap to other points if the cursor 
+  moves within the other point's box.  When released, colocation constraints
+  will be established between points that are exactly on top of each other
+  (e.g., those that were snapped to).  
+</OL>
+
+  If you could play with the applet for a while and 
+<a href="mailto:noth@cs.washington.edu">email</a>/tell me what you
+think, UI gripes/suggestions, etc., I'd really appreciate it. <p> 
+
+  Thanks in advance!<p>
+
+  Michael Noth<br>
+  <a href="mailto:noth@cs.washington.edu">noth@cs.washington.edu</a><p>
+

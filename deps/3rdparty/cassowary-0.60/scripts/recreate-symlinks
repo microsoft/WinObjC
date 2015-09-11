@@ -1,0 +1,4 @@
+#!/bin/sh -
+ln -sf . ./c++/cassowary
+ln -sf ../../../EDU/ ./java/cda/classes/EDU
+ln -sf ../../EDU ./java/demos/EDU

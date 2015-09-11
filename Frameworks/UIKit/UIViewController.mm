@@ -33,6 +33,7 @@
 #include "CoreGraphics/CGAffineTransform.h"
 #include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
+#include "AutoLayout.h"
 
 @interface _TransitionNotifier : NSObject
 @end
@@ -214,6 +215,37 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return UIInterfaceOrientationUnknown;
     }
 }
+
+@interface _UILayoutSupportConstraint : NSLayoutConstraint
+@end
+
+// Not convinced this is here for anything but a rename.
+@implementation _UILayoutSupportConstraint
+@end
+
+@implementation _UILayoutGuide
+{
+    CGFloat _length;
+    NSString* _identifier;
+}
+
+-(NSString*) description {
+    NSString* ret = [super description];
+    return [NSString stringWithFormat:@"%@:%@", ret, _identifier];
+}
+
+-(instancetype)initWithCoder:(NSCoder*)coder {
+    _UILayoutGuide* ret = [super initWithCoder:coder];
+    _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
+    assert(_identifier);
+    return ret;
+}
+
+-(CGFloat) length {
+    // TODO: Search up the hierarchy for the controller, look for nav/tab bars, return height + status bar
+    return _length;
+}
+@end
 
 @implementation UIViewController : UIResponder
 
@@ -1837,6 +1869,16 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ( parent != nil ) [parent->priv->_childViewControllers removeObject:self];
     }
 
+    -(id<UILayoutSupport>) getTopLayoutGuide
+    {
+        return nil;//priv->_topLayoutGuide;
+    }
+
+    -(id<UILayoutSupport>) getBottomLayoutGuide
+    {
+        return nil;//priv->_bottomLayoutGuide;
+    }
+
     -(BOOL) viewWillLayoutSubviews {
         return TRUE;
     }
@@ -1844,7 +1886,5 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     -(void) updateViewConstraints {
         [((UIView*)(priv->view)) updateConstraints];
     }
-
-        //      //
 @end
 

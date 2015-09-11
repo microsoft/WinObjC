@@ -27,6 +27,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AutoLayout\AutoLayout.Universal\AutoLayout.Universal.vcxproj">
+      <Project>{00d9c3e9-f324-4fd0-a857-61122339e726}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
       <Project>{2FB40E04-969C-4484-AE3B-CBD6620A8256}</Project>
     </ProjectReference>
@@ -163,6 +166,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

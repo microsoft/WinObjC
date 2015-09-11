@@ -47,8 +47,8 @@
   <PropertyGroup Label="SBAdditionalLibraries">
     <StarboardLibDirs Condition="'$(StarboardLibDirs)' == ''">$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
     <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
-    <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
-    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
   </PropertyGroup>
 

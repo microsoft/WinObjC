@@ -1,0 +1,229 @@
+Cassowary NEWS -- history of user-visible changes. -*- text -*-
+
+Cassowary Constraint Solving Toolkit was
+Implemented by:
+
+Greg J. Badros <gjb@cs.washington.edu> and
+Alan Borning <borning@cs.washington.edu>
+University of Washington
+Computer Science and Engineering
+Seattle, WA 98195-2350
+
+with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+
+12-March-2000: Version 0.60 released.
+* Changed license to LGPL!!!
+* Added SetAutoResetStayConstants(), FIsAutoResetStayConstants(), make ResetStayConstants() public
+
+29-Jan-2000: Version 0.55 released.
+* Some bug fixes
+* Added ClSimplexSolver::{ChangeStrength,ChangeStrengthAndWeight,ChangeWeight,
+                          DisplayObjective,ExternalResetStayConstants} fns
+  From A. Beurivé.
+
+16-Dec-1999: Version 0.54a released.
+* Include correct version of OTI Smalltalk .dat file
+  (the source in the *.app files was right, the .dat file was old)
+* Fix java build bug
+
+15-Dec-1999: Version 0.54 released.
+* Bug fixes
+* auto-configuration improvements
+* Support Java 2 (jdk-1.2)
+* Improved ease of building Java demos
+* Build guile wrapper as long as guile-config works, use new --disable-guile-build to force off
+* Alpha-version of Java constraint parser contributed by Will Portnoy
+
+24-October-1999: Version 0.53 released.
+* Bug fixes
+* License exception for linking with Scwm.
+
+25-September-1999: Version 0.52 released.
+* Bug fix for nested edits where a later edit includes an already-being-edited variable
+
+14-September-1999: Version 0.51 released.
+* Minor bug fixes
+* Much better packaging, RPMs, etc. more forced reliance on GTL
+
+26-August-1999: Version 0.51 pre-releases begin
+
+12-July-1999: Version 0.50 released.
+* Made only C++ version build by default, --enable-java-build is needed to turn java on
+* Added restricted finite domain solver
+** needs --with-gtl configure option, and libGTL.{a,so*} to be installed
+* Added ClSolver base class, and use its type for pointers in callbacks
+
+14-Apr-1999: Version 0.43 released.
+* DEBUG_PARSE turned off by default
+* Added cassowary.spec for RPM building
+
+31-Mar-1999: Version 0.42 released.
+* Fixed autoconf bugs (.41 was a buggy release)
+*  Added --disable-cpp-build,--disable-java-build, and disable Python/Guile builds
+automatically if directories cannot be found
+
+20-Mar-1999: Version 0.41 released.
+* Fixed bug in autoconf support -- config.sub, config.guess to the
+distribution so configure should actually work (they were symlinks
+before, in error).
+
+18-Mar-1999: Version 0.4 released.
+
+18-Mar-1999: Changes since Cassowary v0.32 (for release v0.4)
+* MUCH improved autoconf/automake support including numerous configure
+options, added libtool support.  
+* Renamed many identifiers in the public API;  this will break old code
+using Cassowary.  See the scripts/convert-ids script for help converting
+your code (beware false positives; i.e., improper or unnecessary
+changes).
+
+
+10-Mar-1999: Changes since Cassowary v0.31 (for release v0.32)
+* Added automake/autoconf support.  Old Makefiles are now
+Makefile.linux.  This is not yet fully tested or correct, but I need to
+make a release now for the bug fixes.  Consider compiling with "make -f
+Makefile.linux all" if you have problems running autoconf and/or
+automake.
+
+* Changes to C++
+** Bug fix for problem Anthony Beurivé noticed regarding removing non-1
+weight stay constraints.
+** Minor bug fix for parser.  Also renamed the creader files to ClReader.
+
+* Changes to Java
+** Bug fix for problem Emmanuel Pietriga reported regarding edit
+constraints.
+** Improved debugging support a bit by adding descriptions to
+ExCLInternalError-s and assert()s
+
+* Changes to guile wrapper
+** changed name of library to libcassowaryguile.a from libconstraints.a
+
+
+1-Mar-1999: Changes since Cassowary v0.3 (for release v0.31)
+* Changes to C++
+** Some bug fixes -- pass ClVariable-s around by value instead of const
+& since they are now a handle class.
+** Changed output format for ClEditConstraint, ClStayConstraint instances
+** Use a function-object for controlling lookup/creation of variables in PcnParseConstraint
+** Fix bugs in creader.y parser (did not accept parens or division
+before).  Introduced "==" as a a synonym for "="
+** Added szCassowaryVersion id string as a public char *.
+** Added ChangeStrength, ChangeWeight to ClConstraint's public
+interface, and have it valid only when the constraint is not in a solver 
+** Added ClConstraint::FIsInSolver()
+
+* Changes to Guile wrapper
+** Fix bugs
+** Wrap parsing functionality, including a lambda for lookup/creation of 
+variables
+** Build a dynamically-loadable guile module, update cltests.scm to use it
+
+
+23-Feb-1999: Version 0.3 released.
+
+19-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
+
+* Changes to Java and C++
+** Bug fix for Michael Kaufmann's report (see ChangeLog for details)
+** resolve(Vector..) procedure is now depracated;  preferred interface is
+suggestValue(...) calls followed by resolve() (the one taking no
+arguments).
+** Added ClVariable::SetVarMap(..), ClVariable::VarMap() to permit
+ClVariable ctr to save the mapping between given name and actual object
+in a symbol table (used for parsing ascii expressions in C++ version)
+
+* Changes to just C++ implementation
+** Use ClVariable as a handle class to a ClAbstractVariable-- old
+ClVariable is now a ClFloatVariable.  SetChangeClvCallback now takes a
+function that takes a ClVariable handle, not a pointer.
+** Passing ClConstraints's by const & is now deprecated -- pass by
+pointer to the ClConstraint object
+** Added creader.y, creader.l and function PcnParseConstraint(..) for
+creating a constraint from an ASCII string.
+** Added CL_NO_IO compile-time option to C++ version for preventing need
+to link with the stream library (is not complete)
+** Added CL_FIND_LEAK compile-time option for counting ctrs/dtr
+invocations
+** Added CL_USE_HASH_MAP compile-time option to permit using the GNU
+hash_map class instead of the standard STL map (which is a sorted
+associative container whose performance for lookups is logarithmic
+rather than constant time).  Still does not work for me --02/16/99 gjb.
+
+* Changes to just Java implementation (updated to match changes to C++
+version for .2)
+** Added {get,set}AttachedObject for ClVariable, ClConstant
+** Permit access to ClSimplexSolver.ConstraintMap()
+** Permit nested beginEdit()s and handle them correctly
+
+* Miscellaneous changes
+** Updated copyright to include 1999
+** Fixed wrappers/Makefile for building Python wrapper
+** Reference Anthony Beurivé's STk wrapper
+** Fix Scwm URL
+
+
+30-Jan-1999, Changes since Cassowary v0.22 (for release v0.23)
+* Bug fix (see ChangeLog for details)
+
+
+23-Jan-1999, Changes since Cassowary v0.21 (for release v0.22)
+* Minor code cleanup, additions of comments.
+
+
+14-Sep-98, Changes since Cassowary v0.2 (for release v0.21)
+
+* Make compile cleanly using egcs-1.1b -- use typename, and drop
+  unused templated instantiation
+
+* Improved guile interface: add a void pointer to the solver objects,
+  and let the guile wrapper use it to keep a pointer to the scheme-level
+  object;  also added clv-attach! and clv-attached-object for attaching
+  an object to a cl-variable (somewhat redundant with guile's
+  object properties)
+
+* Wrap ClStayConstraints so they can be managed explicitly
+
+* cl-add-stay, cl-add-editvar now take strength and factor arguments,
+  instead  of a list of cl-vars
+
+* Added weight option to addEditVar
+
+
+6-Aug-98, Changes since Cassowary v0.1 (for release v0.2):
+
+* Changes to the distribution for release v0.2
+
+** added guile/scheme wrapper of C++ version
+
+** mention SCWM in README
+
+** mention non-maintenance of Smalltalk implementation unless we have users
+
+* Changes to the C++ and Java implementations
+
+** Fixed several bugs -- dummy variables were wrongly being pivoted into
+   the basis, and constraints that threw required failure exceptions
+   were mistakenly remaining in the tableau (now trying to remove an
+   exception that was not added because of a required-failure exception
+   will correctly throw a ConstraintNotFound exception); more -- see ChangeLog
+
+** Added a virtual change_value function to permit applications to watch 
+   for changes made to external variables.
+
+* Changes to only the C++ version (Java version will catch up in 0.3)
+
+** Added new test cases to ClTests, fixed bugs in ClTestColumns
+
+** Added _pv (void *) field hanging off of ClConstraint and ClVariable
+   for associating arbitrary structs with those (needed by SCWM)
+
+** Permit nested beginEdit()s, and do the right thing upon calling
+   endEdit() -- i.e., not all the edit variables are removed, only the
+   nested ones
+
+** Permit access to ClSimplexSolver::ConstraintMap() (used by
+   guile-wrapper to efficiently get at a list of constraints in the
+   solver)
+
+** Added ExCLEditMisuse exception
