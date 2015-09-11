@@ -31,6 +31,8 @@
 #include "WindowsDevicesBluetoothRfcomm.h"
 #include "WindowsNetworkingSockets.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Devices.Bluetooth.Background.RfcommInboundConnectionInformation
 #ifndef __WDBBRfcommInboundConnectionInformation_DEFINED__
 #define __WDBBRfcommInboundConnectionInformation_DEFINED__
@@ -39,7 +41,7 @@ WINRT_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
 @property WDBBluetoothServiceCapabilities serviceCapabilities;
 @property (copy) RTObject<WSSIBuffer>* sdpRecord;
-@property (copy) WDBRRfcommServiceId * localServiceId;
+@property (copy) WDBRRfcommServiceId* localServiceId;
 @end
 
 #endif // __WDBBRfcommInboundConnectionInformation_DEFINED__
@@ -50,7 +52,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
-@property (copy) WDBRRfcommServiceId * remoteServiceId;
+@property (copy) WDBRRfcommServiceId* remoteServiceId;
 @end
 
 #endif // __WDBBRfcommOutboundConnectionInformation_DEFINED__
@@ -62,8 +64,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBBRfcommConnectionTriggerDetails : RTObject
 @property (readonly) BOOL incoming;
-@property (readonly) WDBBluetoothDevice * remoteDevice;
-@property (readonly) WNSStreamSocket * socket;
+@property (readonly) WDBBluetoothDevice* remoteDevice;
+@property (readonly) WNSStreamSocket* socket;
 @end
 
 #endif // __WDBBRfcommConnectionTriggerDetails_DEFINED__
@@ -74,7 +76,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBGattCharacteristicNotificationTriggerDetails : RTObject
-@property (readonly) WDBGGattCharacteristic * characteristic;
+@property (readonly) WDBGGattCharacteristic* characteristic;
 @property (readonly) RTObject<WSSIBuffer>* value;
 @end
 
@@ -86,9 +88,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
-@property (readonly) NSArray* /*WDBABluetoothLEAdvertisementReceivedEventArgs*/  advertisements;
+@property (readonly) NSArray* advertisements;
 @property (readonly) WDBBluetoothError error;
-@property (readonly) WDBBluetoothSignalStrengthFilter * signalStrengthFilter;
+@property (readonly) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @end
 
 #endif // __WDBBBluetoothLEAdvertisementWatcherTriggerDetails_DEFINED__

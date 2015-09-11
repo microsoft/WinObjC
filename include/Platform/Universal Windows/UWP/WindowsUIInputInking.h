@@ -25,46 +25,46 @@
 
 // Windows.UI.Input.Inking.InkPresenterPredefinedConfiguration
 enum _WUIIInkPresenterPredefinedConfiguration {
-    WUIIInkPresenterPredefinedConfigurationSimpleSinglePointer = 0,
-    WUIIInkPresenterPredefinedConfigurationSimpleMultiplePointer = 1,
+	WUIIInkPresenterPredefinedConfigurationSimpleSinglePointer = 0,
+	WUIIInkPresenterPredefinedConfigurationSimpleMultiplePointer = 1,
 };
 typedef unsigned WUIIInkPresenterPredefinedConfiguration;
 
 // Windows.UI.Input.Inking.InkInputRightDragAction
 enum _WUIIInkInputRightDragAction {
-    WUIIInkInputRightDragActionLeaveUnprocessed = 0,
-    WUIIInkInputRightDragActionAllowProcessing = 1,
+	WUIIInkInputRightDragActionLeaveUnprocessed = 0,
+	WUIIInkInputRightDragActionAllowProcessing = 1,
 };
 typedef unsigned WUIIInkInputRightDragAction;
 
 // Windows.UI.Input.Inking.InkInputProcessingMode
 enum _WUIIInkInputProcessingMode {
-    WUIIInkInputProcessingModeNone = 0,
-    WUIIInkInputProcessingModeInking = 1,
-    WUIIInkInputProcessingModeErasing = 2,
+	WUIIInkInputProcessingModeNone = 0,
+	WUIIInkInputProcessingModeInking = 1,
+	WUIIInkInputProcessingModeErasing = 2,
 };
 typedef unsigned WUIIInkInputProcessingMode;
 
 // Windows.UI.Input.Inking.InkManipulationMode
 enum _WUIIInkManipulationMode {
-    WUIIInkManipulationModeInking = 0,
-    WUIIInkManipulationModeErasing = 1,
-    WUIIInkManipulationModeSelecting = 2,
+	WUIIInkManipulationModeInking = 0,
+	WUIIInkManipulationModeErasing = 1,
+	WUIIInkManipulationModeSelecting = 2,
 };
 typedef unsigned WUIIInkManipulationMode;
 
 // Windows.UI.Input.Inking.InkRecognitionTarget
 enum _WUIIInkRecognitionTarget {
-    WUIIInkRecognitionTargetAll = 0,
-    WUIIInkRecognitionTargetSelected = 1,
-    WUIIInkRecognitionTargetRecent = 2,
+	WUIIInkRecognitionTargetAll = 0,
+	WUIIInkRecognitionTargetSelected = 1,
+	WUIIInkRecognitionTargetRecent = 2,
 };
 typedef unsigned WUIIInkRecognitionTarget;
 
 // Windows.UI.Input.Inking.PenTipShape
 enum _WUIIPenTipShape {
-    WUIIPenTipShapeCircle = 0,
-    WUIIPenTipShapeRectangle = 1,
+	WUIIPenTipShapeCircle = 0,
+	WUIIPenTipShapeRectangle = 1,
 };
 typedef unsigned WUIIPenTipShape;
 
@@ -83,7 +83,7 @@ typedef unsigned WUIIPenTipShape;
 #define __WUIIIInkPointFactory_DEFINED__
 
 @protocol WUIIIInkPointFactory
-- (WUIIInkPoint *)createInkPoint:(WFPoint *)position pressure:(float)pressure;
+- (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure;
 @end
 
 #endif // __WUIIIInkPointFactory_DEFINED__
@@ -93,20 +93,20 @@ typedef unsigned WUIIPenTipShape;
 #define __WUIIIInkStrokeContainer_DEFINED__
 
 @protocol WUIIIInkStrokeContainer
-@property (readonly) WFRect * boundingRect;
-- (void)addStroke:(WUIIInkStroke *)stroke;
-- (WFRect *)deleteSelected;
-- (WFRect *)moveSelected:(WFPoint *)translation;
-- (WFRect *)selectWithPolyLine:(id<NSFastEnumeration> /*WFPoint*/ )polyline;
-- (WFRect *)selectWithLine:(WFPoint *)from to:(WFPoint *)to;
+@property (readonly) WFRect* boundingRect;
+- (void)addStroke:(WUIIInkStroke*)stroke;
+- (WFRect*)deleteSelected;
+- (WFRect*)moveSelected:(WFPoint*)translation;
+- (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
+- (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
 - (void)copySelectedToClipboard;
-- (WFRect *)pasteFromClipboard:(WFPoint *)position;
+- (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
-- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)updateRecognitionResults:(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ )recognitionResults;
-- (NSArray* /*WUIIInkStroke*/ )getStrokes;
-- (NSArray* /*WUIIInkRecognitionResult*/ )getRecognitionResults;
+- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)updateRecognitionResults:(id<NSFastEnumeration> /* WUIIInkRecognitionResult* */)recognitionResults;
+- (NSArray*)getStrokes;
+- (NSArray*)getRecognitionResults;
 @end
 
 #endif // __WUIIIInkStrokeContainer_DEFINED__
@@ -116,9 +116,9 @@ typedef unsigned WUIIPenTipShape;
 #define __WUIIIInkRecognizerContainer_DEFINED__
 
 @protocol WUIIIInkRecognizerContainer
-- (void)setDefaultRecognizer:(WUIIInkRecognizer *)recognizer;
-- (void)recognizeAsync:(WUIIInkStrokeContainer *)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ ))success failure:(void (^)(NSError*))failure;
-- (NSArray* /*WUIIInkRecognizer*/ )getRecognizers;
+- (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
+- (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (NSArray*)getRecognizers;
 @end
 
 #endif // __WUIIIInkRecognizerContainer_DEFINED__
@@ -129,20 +129,20 @@ typedef unsigned WUIIPenTipShape;
 
 WINRT_EXPORT
 @interface WUIIInkUnprocessedInput : RTObject
-@property (readonly) WUIIInkPresenter * inkPresenter;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+@property (readonly) WUIIInkPresenter* inkPresenter;
+- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerHoveredEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerHoveredEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerHoveredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerLostEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerLostEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(WUIIInkUnprocessedInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(WUIIInkUnprocessedInput*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -154,14 +154,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeInput : RTObject
-@property (readonly) WUIIInkPresenter * inkPresenter;
-- (EventRegistrationToken)addStrokeCanceledEvent:(void(^)(WUIIInkStrokeInput *, WUCPointerEventArgs *))del;
+@property (readonly) WUIIInkPresenter* inkPresenter;
+- (EventRegistrationToken)addStrokeCanceledEvent:(void(^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
 - (void)removeStrokeCanceledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStrokeContinuedEvent:(void(^)(WUIIInkStrokeInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addStrokeContinuedEvent:(void(^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
 - (void)removeStrokeContinuedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStrokeEndedEvent:(void(^)(WUIIInkStrokeInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addStrokeEndedEvent:(void(^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
 - (void)removeStrokeEndedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStrokeStartedEvent:(void(^)(WUIIInkStrokeInput *, WUCPointerEventArgs *))del;
+- (EventRegistrationToken)addStrokeStartedEvent:(void(^)(WUIIInkStrokeInput*, WUCPointerEventArgs*))del;
 - (void)removeStrokeStartedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -185,7 +185,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkSynchronizer : RTObject
-- (NSArray* /*WUIIInkStroke*/ )beginDry;
+- (NSArray*)beginDry;
 - (void)endDry;
 @end
 
@@ -197,19 +197,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkPresenter : RTObject
-@property (copy) WUIIInkStrokeContainer * strokeContainer;
+@property (copy) WUIIInkStrokeContainer* strokeContainer;
 @property BOOL isInputEnabled;
 @property WUCCoreInputDeviceTypes inputDeviceTypes;
-@property (readonly) WUIIInkInputProcessingConfiguration * inputProcessingConfiguration;
-@property (readonly) WUIIInkStrokeInput * strokeInput;
-@property (readonly) WUIIInkUnprocessedInput * unprocessedInput;
-- (EventRegistrationToken)addStrokesCollectedEvent:(void(^)(WUIIInkPresenter *, WUIIInkStrokesCollectedEventArgs *))del;
+@property (readonly) WUIIInkInputProcessingConfiguration* inputProcessingConfiguration;
+@property (readonly) WUIIInkStrokeInput* strokeInput;
+@property (readonly) WUIIInkUnprocessedInput* unprocessedInput;
+- (EventRegistrationToken)addStrokesCollectedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesCollectedEventArgs*))del;
 - (void)removeStrokesCollectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStrokesErasedEvent:(void(^)(WUIIInkPresenter *, WUIIInkStrokesErasedEventArgs *))del;
+- (EventRegistrationToken)addStrokesErasedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesErasedEventArgs*))del;
 - (void)removeStrokesErasedEvent:(EventRegistrationToken)tok;
-- (WUIIInkDrawingAttributes *)copyDefaultDrawingAttributes;
-- (void)updateDefaultDrawingAttributes:(WUIIInkDrawingAttributes *)value;
-- (WUIIInkSynchronizer *)activateCustomDrying;
+- (WUIIInkDrawingAttributes*)copyDefaultDrawingAttributes;
+- (void)updateDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)value;
+- (WUIIInkSynchronizer*)activateCustomDrying;
 - (void)setPredefinedConfiguration:(WUIIInkPresenterPredefinedConfiguration)value;
 @end
 
@@ -221,7 +221,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokesCollectedEventArgs : RTObject
-@property (readonly) NSArray* /*WUIIInkStroke*/  strokes;
+@property (readonly) NSArray* strokes;
 @end
 
 #endif // __WUIIInkStrokesCollectedEventArgs_DEFINED__
@@ -232,7 +232,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokesErasedEventArgs : RTObject
-@property (readonly) NSArray* /*WUIIInkStroke*/  strokes;
+@property (readonly) NSArray* strokes;
 @end
 
 #endif // __WUIIInkStrokesErasedEventArgs_DEFINED__
@@ -243,8 +243,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkPoint : RTObject
-+ (WUIIInkPoint *)createInkPoint:(WFPoint *)position pressure:(float)pressure ACTIVATOR;
-@property (readonly) WFPoint * position;
++ (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
+@property (readonly) WFPoint* position;
 @property (readonly) float pressure;
 @end
 
@@ -257,12 +257,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFSize * size;
+@property (copy) WFSize* size;
 @property WUIIPenTipShape penTip;
 @property BOOL ignorePressure;
 @property BOOL fitToCurve;
-@property (copy) WUColor * color;
-@property (copy) WFNMatrix3x2 * penTipTransform;
+@property (copy) WUColor* color;
+@property (copy) WFNMatrix3x2* penTipTransform;
 @property BOOL drawAsHighlighter;
 @end
 
@@ -274,9 +274,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeRenderingSegment : RTObject
-@property (readonly) WFPoint * bezierControlPoint1;
-@property (readonly) WFPoint * bezierControlPoint2;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* bezierControlPoint1;
+@property (readonly) WFPoint* bezierControlPoint2;
+@property (readonly) WFPoint* position;
 @property (readonly) float pressure;
 @property (readonly) float tiltX;
 @property (readonly) float tiltY;
@@ -292,13 +292,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStroke : RTObject
 @property BOOL selected;
-@property (copy) WUIIInkDrawingAttributes * drawingAttributes;
-@property (readonly) WFRect * boundingRect;
+@property (copy) WUIIInkDrawingAttributes* drawingAttributes;
+@property (readonly) WFRect* boundingRect;
 @property (readonly) BOOL recognized;
-@property (copy) WFNMatrix3x2 * pointTransform;
-- (NSArray* /*WUIIInkStrokeRenderingSegment*/ )getRenderingSegments;
-- (WUIIInkStroke *)clone;
-- (NSArray* /*WUIIInkPoint*/ )getInkPoints;
+@property (copy) WFNMatrix3x2* pointTransform;
+- (NSArray*)getRenderingSegments;
+- (WUIIInkStroke*)clone;
+- (NSArray*)getInkPoints;
 @end
 
 #endif // __WUIIInkStroke_DEFINED__
@@ -310,12 +310,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStrokeBuilder : RTObject
 + (instancetype)create ACTIVATOR;
-- (void)beginStroke:(WUIPointerPoint *)pointerPoint;
-- (WUIPointerPoint *)appendToStroke:(WUIPointerPoint *)pointerPoint;
-- (WUIIInkStroke *)endStroke:(WUIPointerPoint *)pointerPoint;
-- (WUIIInkStroke *)createStroke:(id<NSFastEnumeration> /*WFPoint*/ )points;
-- (void)setDefaultDrawingAttributes:(WUIIInkDrawingAttributes *)drawingAttributes;
-- (WUIIInkStroke *)createStrokeFromInkPoints:(id<NSFastEnumeration> /*WUIIInkPoint*/ )inkPoints transform:(WFNMatrix3x2 *)transform;
+- (void)beginStroke:(WUIPointerPoint*)pointerPoint;
+- (WUIPointerPoint*)appendToStroke:(WUIPointerPoint*)pointerPoint;
+- (WUIIInkStroke*)endStroke:(WUIPointerPoint*)pointerPoint;
+- (WUIIInkStroke*)createStroke:(id<NSFastEnumeration> /* WFPoint* */)points;
+- (void)setDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)drawingAttributes;
+- (WUIIInkStroke*)createStrokeFromInkPoints:(id<NSFastEnumeration> /* WUIIInkPoint* */)inkPoints transform:(WFNMatrix3x2*)transform;
 @end
 
 #endif // __WUIIInkStrokeBuilder_DEFINED__
@@ -326,9 +326,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkRecognitionResult : RTObject
-@property (readonly) WFRect * boundingRect;
-- (NSArray* /*String*/ )getTextCandidates;
-- (NSArray* /*WUIIInkStroke*/ )getStrokes;
+@property (readonly) WFRect* boundingRect;
+- (NSArray*)getTextCandidates;
+- (NSArray*)getStrokes;
 @end
 
 #endif // __WUIIInkRecognitionResult_DEFINED__
@@ -340,21 +340,21 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 + (instancetype)create ACTIVATOR;
-@property (readonly) WFRect * boundingRect;
-- (void)addStroke:(WUIIInkStroke *)stroke;
-- (WFRect *)deleteSelected;
-- (WFRect *)moveSelected:(WFPoint *)translation;
-- (WFRect *)selectWithPolyLine:(id<NSFastEnumeration> /*WFPoint*/ )polyline;
-- (WFRect *)selectWithLine:(WFPoint *)from to:(WFPoint *)to;
+@property (readonly) WFRect* boundingRect;
+- (void)addStroke:(WUIIInkStroke*)stroke;
+- (WFRect*)deleteSelected;
+- (WFRect*)moveSelected:(WFPoint*)translation;
+- (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
+- (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
 - (void)copySelectedToClipboard;
-- (WFRect *)pasteFromClipboard:(WFPoint *)position;
+- (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
-- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)updateRecognitionResults:(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ )recognitionResults;
-- (NSArray* /*WUIIInkStroke*/ )getStrokes;
-- (NSArray* /*WUIIInkRecognitionResult*/ )getRecognitionResults;
-- (void)addStrokes:(id<NSFastEnumeration> /*WUIIInkStroke*/ )strokes;
+- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)updateRecognitionResults:(id<NSFastEnumeration> /* WUIIInkRecognitionResult* */)recognitionResults;
+- (NSArray*)getStrokes;
+- (NSArray*)getRecognitionResults;
+- (void)addStrokes:(id<NSFastEnumeration> /* WUIIInkStroke* */)strokes;
 - (void)clear;
 @end
 
@@ -378,9 +378,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 + (instancetype)create ACTIVATOR;
-- (void)setDefaultRecognizer:(WUIIInkRecognizer *)recognizer;
-- (void)recognizeAsync:(WUIIInkStrokeContainer *)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ ))success failure:(void (^)(NSError*))failure;
-- (NSArray* /*WUIIInkRecognizer*/ )getRecognizers;
+- (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
+- (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (NSArray*)getRecognizers;
 @end
 
 #endif // __WUIIInkRecognizerContainer_DEFINED__
@@ -393,28 +393,28 @@ WINRT_EXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
 + (instancetype)create ACTIVATOR;
 @property WUIIInkManipulationMode mode;
-@property (readonly) WFRect * boundingRect;
-- (void)processPointerDown:(WUIPointerPoint *)pointerPoint;
-- (RTObject *)processPointerUpdate:(WUIPointerPoint *)pointerPoint;
-- (WFRect *)processPointerUp:(WUIPointerPoint *)pointerPoint;
-- (void)setDefaultDrawingAttributes:(WUIIInkDrawingAttributes *)drawingAttributes;
-- (void)recognizeAsync2:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ ))success failure:(void (^)(NSError*))failure;
-- (void)addStroke:(WUIIInkStroke *)stroke;
-- (WFRect *)deleteSelected;
-- (WFRect *)moveSelected:(WFPoint *)translation;
-- (WFRect *)selectWithPolyLine:(id<NSFastEnumeration> /*WFPoint*/ )polyline;
-- (WFRect *)selectWithLine:(WFPoint *)from to:(WFPoint *)to;
+@property (readonly) WFRect* boundingRect;
+- (void)processPointerDown:(WUIPointerPoint*)pointerPoint;
+- (RTObject*)processPointerUpdate:(WUIPointerPoint*)pointerPoint;
+- (WFRect*)processPointerUp:(WUIPointerPoint*)pointerPoint;
+- (void)setDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)drawingAttributes;
+- (void)recognizeAsync2:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)addStroke:(WUIIInkStroke*)stroke;
+- (WFRect*)deleteSelected;
+- (WFRect*)moveSelected:(WFPoint*)translation;
+- (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
+- (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
 - (void)copySelectedToClipboard;
-- (WFRect *)pasteFromClipboard:(WFPoint *)position;
+- (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
-- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)updateRecognitionResults:(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ )recognitionResults;
-- (NSArray* /*WUIIInkStroke*/ )getStrokes;
-- (NSArray* /*WUIIInkRecognitionResult*/ )getRecognitionResults;
-- (void)setDefaultRecognizer:(WUIIInkRecognizer *)recognizer;
-- (void)recognizeAsync:(WUIIInkStrokeContainer *)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(id<NSFastEnumeration> /*WUIIInkRecognitionResult*/ ))success failure:(void (^)(NSError*))failure;
-- (NSArray* /*WUIIInkRecognizer*/ )getRecognizers;
+- (void)saveAsync:(RTObject<WSSIOutputStream>*)outputStream success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)updateRecognitionResults:(id<NSFastEnumeration> /* WUIIInkRecognitionResult* */)recognitionResults;
+- (NSArray*)getStrokes;
+- (NSArray*)getRecognitionResults;
+- (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
+- (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (NSArray*)getRecognizers;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
 @end
 

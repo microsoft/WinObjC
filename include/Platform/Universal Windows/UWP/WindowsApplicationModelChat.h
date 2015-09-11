@@ -25,133 +25,133 @@
 
 // Windows.ApplicationModel.Chat.ChatMessageStatus
 enum _WACChatMessageStatus {
-    WACChatMessageStatusDraft = 0,
-    WACChatMessageStatusSending = 1,
-    WACChatMessageStatusSent = 2,
-    WACChatMessageStatusSendRetryNeeded = 3,
-    WACChatMessageStatusSendFailed = 4,
-    WACChatMessageStatusReceived = 5,
-    WACChatMessageStatusReceiveDownloadNeeded = 6,
-    WACChatMessageStatusReceiveDownloadFailed = 7,
-    WACChatMessageStatusReceiveDownloading = 8,
-    WACChatMessageStatusDeleted = 9,
-    WACChatMessageStatusDeclined = 10,
-    WACChatMessageStatusCancelled = 11,
-    WACChatMessageStatusRecalled = 12,
-    WACChatMessageStatusReceiveRetryNeeded = 13,
+	WACChatMessageStatusDraft = 0,
+	WACChatMessageStatusSending = 1,
+	WACChatMessageStatusSent = 2,
+	WACChatMessageStatusSendRetryNeeded = 3,
+	WACChatMessageStatusSendFailed = 4,
+	WACChatMessageStatusReceived = 5,
+	WACChatMessageStatusReceiveDownloadNeeded = 6,
+	WACChatMessageStatusReceiveDownloadFailed = 7,
+	WACChatMessageStatusReceiveDownloading = 8,
+	WACChatMessageStatusDeleted = 9,
+	WACChatMessageStatusDeclined = 10,
+	WACChatMessageStatusCancelled = 11,
+	WACChatMessageStatusRecalled = 12,
+	WACChatMessageStatusReceiveRetryNeeded = 13,
 };
 typedef unsigned WACChatMessageStatus;
 
 // Windows.ApplicationModel.Chat.ChatMessageKind
 enum _WACChatMessageKind {
-    WACChatMessageKindStandard = 0,
-    WACChatMessageKindFileTransferRequest = 1,
-    WACChatMessageKindTransportCustom = 2,
-    WACChatMessageKindJoinedConversation = 3,
-    WACChatMessageKindLeftConversation = 4,
-    WACChatMessageKindOtherParticipantJoinedConversation = 5,
-    WACChatMessageKindOtherParticipantLeftConversation = 6,
+	WACChatMessageKindStandard = 0,
+	WACChatMessageKindFileTransferRequest = 1,
+	WACChatMessageKindTransportCustom = 2,
+	WACChatMessageKindJoinedConversation = 3,
+	WACChatMessageKindLeftConversation = 4,
+	WACChatMessageKindOtherParticipantJoinedConversation = 5,
+	WACChatMessageKindOtherParticipantLeftConversation = 6,
 };
 typedef unsigned WACChatMessageKind;
 
 // Windows.ApplicationModel.Chat.ChatMessageOperatorKind
 enum _WACChatMessageOperatorKind {
-    WACChatMessageOperatorKindUnspecified = 0,
-    WACChatMessageOperatorKindSms = 1,
-    WACChatMessageOperatorKindMms = 2,
-    WACChatMessageOperatorKindRcs = 3,
+	WACChatMessageOperatorKindUnspecified = 0,
+	WACChatMessageOperatorKindSms = 1,
+	WACChatMessageOperatorKindMms = 2,
+	WACChatMessageOperatorKindRcs = 3,
 };
 typedef unsigned WACChatMessageOperatorKind;
 
 // Windows.ApplicationModel.Chat.ChatMessageChangeType
 enum _WACChatMessageChangeType {
-    WACChatMessageChangeTypeMessageCreated = 0,
-    WACChatMessageChangeTypeMessageModified = 1,
-    WACChatMessageChangeTypeMessageDeleted = 2,
-    WACChatMessageChangeTypeChangeTrackingLost = 3,
+	WACChatMessageChangeTypeMessageCreated = 0,
+	WACChatMessageChangeTypeMessageModified = 1,
+	WACChatMessageChangeTypeMessageDeleted = 2,
+	WACChatMessageChangeTypeChangeTrackingLost = 3,
 };
 typedef unsigned WACChatMessageChangeType;
 
 // Windows.ApplicationModel.Chat.ChatMessageValidationStatus
 enum _WACChatMessageValidationStatus {
-    WACChatMessageValidationStatusValid = 0,
-    WACChatMessageValidationStatusNoRecipients = 1,
-    WACChatMessageValidationStatusInvalidData = 2,
-    WACChatMessageValidationStatusMessageTooLarge = 3,
-    WACChatMessageValidationStatusTooManyRecipients = 4,
-    WACChatMessageValidationStatusTransportInactive = 5,
-    WACChatMessageValidationStatusTransportNotFound = 6,
-    WACChatMessageValidationStatusTooManyAttachments = 7,
-    WACChatMessageValidationStatusInvalidRecipients = 8,
-    WACChatMessageValidationStatusInvalidBody = 9,
-    WACChatMessageValidationStatusInvalidOther = 10,
+	WACChatMessageValidationStatusValid = 0,
+	WACChatMessageValidationStatusNoRecipients = 1,
+	WACChatMessageValidationStatusInvalidData = 2,
+	WACChatMessageValidationStatusMessageTooLarge = 3,
+	WACChatMessageValidationStatusTooManyRecipients = 4,
+	WACChatMessageValidationStatusTransportInactive = 5,
+	WACChatMessageValidationStatusTransportNotFound = 6,
+	WACChatMessageValidationStatusTooManyAttachments = 7,
+	WACChatMessageValidationStatusInvalidRecipients = 8,
+	WACChatMessageValidationStatusInvalidBody = 9,
+	WACChatMessageValidationStatusInvalidOther = 10,
 };
 typedef unsigned WACChatMessageValidationStatus;
 
 // Windows.ApplicationModel.Chat.ChatConversationThreadingKind
 enum _WACChatConversationThreadingKind {
-    WACChatConversationThreadingKindParticipants = 0,
-    WACChatConversationThreadingKindContactId = 1,
-    WACChatConversationThreadingKindConversationId = 2,
-    WACChatConversationThreadingKindCustom = 3,
+	WACChatConversationThreadingKindParticipants = 0,
+	WACChatConversationThreadingKindContactId = 1,
+	WACChatConversationThreadingKindConversationId = 2,
+	WACChatConversationThreadingKindCustom = 3,
 };
 typedef unsigned WACChatConversationThreadingKind;
 
 // Windows.ApplicationModel.Chat.ChatStoreChangedEventKind
 enum _WACChatStoreChangedEventKind {
-    WACChatStoreChangedEventKindNotificationsMissed = 0,
-    WACChatStoreChangedEventKindStoreModified = 1,
-    WACChatStoreChangedEventKindMessageCreated = 2,
-    WACChatStoreChangedEventKindMessageModified = 3,
-    WACChatStoreChangedEventKindMessageDeleted = 4,
-    WACChatStoreChangedEventKindConversationModified = 5,
-    WACChatStoreChangedEventKindConversationDeleted = 6,
-    WACChatStoreChangedEventKindConversationTransportDeleted = 7,
+	WACChatStoreChangedEventKindNotificationsMissed = 0,
+	WACChatStoreChangedEventKindStoreModified = 1,
+	WACChatStoreChangedEventKindMessageCreated = 2,
+	WACChatStoreChangedEventKindMessageModified = 3,
+	WACChatStoreChangedEventKindMessageDeleted = 4,
+	WACChatStoreChangedEventKindConversationModified = 5,
+	WACChatStoreChangedEventKindConversationDeleted = 6,
+	WACChatStoreChangedEventKindConversationTransportDeleted = 7,
 };
 typedef unsigned WACChatStoreChangedEventKind;
 
 // Windows.ApplicationModel.Chat.ChatTransportErrorCodeCategory
 enum _WACChatTransportErrorCodeCategory {
-    WACChatTransportErrorCodeCategoryNone = 0,
-    WACChatTransportErrorCodeCategoryHttp = 1,
-    WACChatTransportErrorCodeCategoryNetwork = 2,
-    WACChatTransportErrorCodeCategoryMmsServer = 3,
+	WACChatTransportErrorCodeCategoryNone = 0,
+	WACChatTransportErrorCodeCategoryHttp = 1,
+	WACChatTransportErrorCodeCategoryNetwork = 2,
+	WACChatTransportErrorCodeCategoryMmsServer = 3,
 };
 typedef unsigned WACChatTransportErrorCodeCategory;
 
 // Windows.ApplicationModel.Chat.ChatTransportInterpretedErrorCode
 enum _WACChatTransportInterpretedErrorCode {
-    WACChatTransportInterpretedErrorCodeNone = 0,
-    WACChatTransportInterpretedErrorCodeUnknown = 1,
-    WACChatTransportInterpretedErrorCodeInvalidRecipientAddress = 2,
-    WACChatTransportInterpretedErrorCodeNetworkConnectivity = 3,
-    WACChatTransportInterpretedErrorCodeServiceDenied = 4,
-    WACChatTransportInterpretedErrorCodeTimeout = 5,
+	WACChatTransportInterpretedErrorCodeNone = 0,
+	WACChatTransportInterpretedErrorCodeUnknown = 1,
+	WACChatTransportInterpretedErrorCodeInvalidRecipientAddress = 2,
+	WACChatTransportInterpretedErrorCodeNetworkConnectivity = 3,
+	WACChatTransportInterpretedErrorCodeServiceDenied = 4,
+	WACChatTransportInterpretedErrorCodeTimeout = 5,
 };
 typedef unsigned WACChatTransportInterpretedErrorCode;
 
 // Windows.ApplicationModel.Chat.ChatMessageTransportKind
 enum _WACChatMessageTransportKind {
-    WACChatMessageTransportKindText = 0,
-    WACChatMessageTransportKindUntriaged = 1,
-    WACChatMessageTransportKindBlocked = 2,
-    WACChatMessageTransportKindCustom = 3,
+	WACChatMessageTransportKindText = 0,
+	WACChatMessageTransportKindUntriaged = 1,
+	WACChatMessageTransportKindBlocked = 2,
+	WACChatMessageTransportKindCustom = 3,
 };
 typedef unsigned WACChatMessageTransportKind;
 
 // Windows.ApplicationModel.Chat.RcsServiceKind
 enum _WACRcsServiceKind {
-    WACRcsServiceKindChat = 0,
-    WACRcsServiceKindGroupChat = 1,
-    WACRcsServiceKindFileTransfer = 2,
-    WACRcsServiceKindCapability = 3,
+	WACRcsServiceKindChat = 0,
+	WACRcsServiceKindGroupChat = 1,
+	WACRcsServiceKindFileTransfer = 2,
+	WACRcsServiceKindCapability = 3,
 };
 typedef unsigned WACRcsServiceKind;
 
 // Windows.ApplicationModel.Chat.ChatItemKind
 enum _WACChatItemKind {
-    WACChatItemKindMessage = 0,
-    WACChatItemKindConversation = 1,
+	WACChatItemKindMessage = 0,
+	WACChatItemKindConversation = 1,
 };
 typedef unsigned WACChatItemKind;
 
@@ -159,6 +159,8 @@ typedef unsigned WACChatItemKind;
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.Chat.IChatItem
 #ifndef __WACIChatItem_DEFINED__
@@ -176,11 +178,11 @@ typedef unsigned WACChatItemKind;
 
 WINRT_EXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
-@property (readonly) NSDictionary * /*String, SObject*/  extendedProperties;
+@property (readonly) NSDictionary* extendedProperties;
 @property (readonly) int maxAttachmentCount;
 @property (readonly) int maxMessageSizeInKilobytes;
 @property (readonly) int maxRecipientCount;
-@property (readonly) WMMMediaEncodingProfile * supportedVideoFormat;
+@property (readonly) WMMMediaEncodingProfile* supportedVideoFormat;
 @end
 
 #endif // __WACChatMessageTransportConfiguration_DEFINED__
@@ -193,8 +195,8 @@ WINRT_EXPORT
 @interface WACChatMessage : RTObject
 + (instancetype)create ACTIVATOR;
 @property (copy) NSString * transportId;
-@property (copy) WFDateTime * networkTimestamp;
-@property (copy) WFDateTime * localTimestamp;
+@property (copy) WFDateTime* networkTimestamp;
+@property (copy) WFDateTime* localTimestamp;
 @property BOOL isRead;
 @property BOOL isIncoming;
 @property BOOL isForwardingDisabled;
@@ -202,12 +204,12 @@ WINRT_EXPORT
 @property (copy) NSString * from;
 @property (copy) NSString * body;
 @property WACChatMessageStatus status;
-@property (readonly) NSMutableArray* /*WACChatMessageAttachment*/  attachments;
-@property (readonly) NSDictionary * /*String, WACChatMessageStatus*/  recipientSendStatuses;
-@property (readonly) NSMutableArray* /*String*/  recipients;
+@property (readonly) NSMutableArray* attachments;
+@property (readonly) NSDictionary* recipientSendStatuses;
+@property (readonly) NSMutableArray* recipients;
 @property (readonly) NSString * transportFriendlyName;
 @property (readonly) NSString * id;
-@property (copy) WACChatConversationThreadingInfo * threadingInfo;
+@property (copy) WACChatConversationThreadingInfo* threadingInfo;
 @property BOOL isSeen;
 @property BOOL isReceivedDuringQuietHours;
 @property BOOL isAutoReply;
@@ -218,7 +220,7 @@ WINRT_EXPORT
 @property WACChatMessageKind messageKind;
 @property (readonly) BOOL isReplyDisabled;
 @property (readonly) BOOL isSimMessage;
-@property (readonly) NSMutableArray* /*WACChatRecipientDeliveryInfo*/  recipientsDeliveryInfos;
+@property (readonly) NSMutableArray* recipientsDeliveryInfos;
 @end
 
 #endif // __WACChatMessage_DEFINED__
@@ -230,7 +232,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatMessageChange : RTObject
 @property (readonly) WACChatMessageChangeType changeType;
-@property (readonly) WACChatMessage * message;
+@property (readonly) WACChatMessage* message;
 @end
 
 #endif // __WACChatMessageChange_DEFINED__
@@ -242,8 +244,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatMessageChangeReader : RTObject
 - (void)acceptChanges;
-- (void)acceptChangesThrough:(WACChatMessageChange *)lastChangeToAcknowledge;
-- (void)readBatchAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACChatMessageChange*/ ))success failure:(void (^)(NSError*))failure;
+- (void)acceptChangesThrough:(WACChatMessageChange*)lastChangeToAcknowledge;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatMessageChangeReader_DEFINED__
@@ -254,10 +256,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageAttachment : RTObject
-+ (WACChatMessageAttachment *)createChatMessageAttachment:(NSString *)mimeType dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
++ (WACChatMessageAttachment*)createChatMessageAttachment:(NSString *)mimeType dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
 @property (copy) NSString * text;
 @property (copy) NSString * mimeType;
-@property unsigned groupId;
+@property unsigned int groupId;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* dataStreamReference;
 @property double transferProgress;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
@@ -277,7 +279,7 @@ WINRT_EXPORT
 @property (copy) NSString * custom;
 @property (copy) NSString * conversationId;
 @property (copy) NSString * contactId;
-@property (readonly) NSMutableArray* /*String*/  participants;
+@property (readonly) NSMutableArray* participants;
 @end
 
 #endif // __WACChatConversationThreadingInfo_DEFINED__
@@ -290,8 +292,8 @@ WINRT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)create ACTIVATOR;
 @property (copy) NSString * transportAddress;
-@property (copy) WFDateTime * readTime;
-@property (copy) WFDateTime * deliveryTime;
+@property (copy) id readTime;
+@property (copy) id deliveryTime;
 @property (readonly) BOOL isErrorPermanent;
 @property (readonly) WACChatMessageStatus status;
 @property (readonly) int transportErrorCode;
@@ -308,7 +310,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatMessageChangeTracker : RTObject
 - (void)enable;
-- (WACChatMessageChangeReader *)getChangeReader;
+- (WACChatMessageChangeReader*)getChangeReader;
 - (void)reset;
 @end
 
@@ -320,8 +322,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACChatMessage*/ ))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(id<NSFastEnumeration> /*WACChatMessage*/ ))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatMessageReader_DEFINED__
@@ -332,9 +334,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageValidationResult : RTObject
-@property (readonly) NSNumber* maxPartCount;
-@property (readonly) NSNumber* partCount;
-@property (readonly) NSNumber* remainingCharacterCountInPart;
+@property (readonly) id maxPartCount;
+@property (readonly) id partCount;
+@property (readonly) id remainingCharacterCountInPart;
 @property (readonly) WACChatMessageValidationStatus status;
 @end
 
@@ -346,33 +348,33 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageStore : RTObject
-@property (readonly) WACChatMessageChangeTracker * changeTracker;
-- (EventRegistrationToken)addMessageChangedEvent:(void(^)(WACChatMessageStore *, WACChatMessageChangedEventArgs *))del;
+@property (readonly) WACChatMessageChangeTracker* changeTracker;
+- (EventRegistrationToken)addMessageChangedEvent:(void(^)(WACChatMessageStore*, WACChatMessageChangedEventArgs*))del;
 - (void)removeMessageChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoreChangedEvent:(void(^)(WACChatMessageStore *, WACChatMessageStoreChangedEventArgs *))del;
+- (EventRegistrationToken)addStoreChangedEvent:(void(^)(WACChatMessageStore*, WACChatMessageStoreChangedEventArgs*))del;
 - (void)removeStoreChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)deleteMessageAsync:(NSString *)localMessageId;
 - (RTObject<WFIAsyncAction>*)downloadMessageAsync:(NSString *)localChatMessageId;
-- (void)getMessageAsync:(NSString *)localChatMessageId success:(void (^)(WACChatMessage *))success failure:(void (^)(NSError*))failure;
-- (WACChatMessageReader *)getMessageReader1;
-- (WACChatMessageReader *)getMessageReader2:(WFTimeSpan *)recentTimeLimit;
+- (void)getMessageAsync:(NSString *)localChatMessageId success:(void (^)(WACChatMessage*))success failure:(void (^)(NSError*))failure;
+- (WACChatMessageReader*)getMessageReader1;
+- (WACChatMessageReader*)getMessageReader2:(WFTimeSpan*)recentTimeLimit;
 - (RTObject<WFIAsyncAction>*)markMessageReadAsync:(NSString *)localChatMessageId;
 - (RTObject<WFIAsyncAction>*)retrySendMessageAsync:(NSString *)localChatMessageId;
-- (RTObject<WFIAsyncAction>*)sendMessageAsync:(WACChatMessage *)chatMessage;
-- (WACChatMessageValidationResult *)validateMessage:(WACChatMessage *)chatMessage;
-- (void)forwardMessageAsync:(NSString *)localChatMessageId addresses:(id<NSFastEnumeration> /*String*/ )addresses success:(void (^)(WACChatMessage *))success failure:(void (^)(NSError*))failure;
-- (void)getConversationAsync:(NSString *)conversationId success:(void (^)(WACChatConversation *))success failure:(void (^)(NSError*))failure;
-- (void)getConversationForTransportsAsync:(NSString *)conversationId transportIds:(id<NSFastEnumeration> /*String*/ )transportIds success:(void (^)(WACChatConversation *))success failure:(void (^)(NSError*))failure;
-- (void)getConversationFromThreadingInfoAsync:(WACChatConversationThreadingInfo *)threadingInfo success:(void (^)(WACChatConversation *))success failure:(void (^)(NSError*))failure;
-- (WACChatConversationReader *)getConversationReader;
-- (WACChatConversationReader *)getConversationForTransportsReader:(id<NSFastEnumeration> /*String*/ )transportIds;
-- (void)getMessageByRemoteIdAsync:(NSString *)transportId remoteId:(NSString *)remoteId success:(void (^)(WACChatMessage *))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)sendMessageAsync:(WACChatMessage*)chatMessage;
+- (WACChatMessageValidationResult*)validateMessage:(WACChatMessage*)chatMessage;
+- (void)forwardMessageAsync:(NSString *)localChatMessageId addresses:(id<NSFastEnumeration> /* NSString * */)addresses success:(void (^)(WACChatMessage*))success failure:(void (^)(NSError*))failure;
+- (void)getConversationAsync:(NSString *)conversationId success:(void (^)(WACChatConversation*))success failure:(void (^)(NSError*))failure;
+- (void)getConversationForTransportsAsync:(NSString *)conversationId transportIds:(id<NSFastEnumeration> /* NSString * */)transportIds success:(void (^)(WACChatConversation*))success failure:(void (^)(NSError*))failure;
+- (void)getConversationFromThreadingInfoAsync:(WACChatConversationThreadingInfo*)threadingInfo success:(void (^)(WACChatConversation*))success failure:(void (^)(NSError*))failure;
+- (WACChatConversationReader*)getConversationReader;
+- (WACChatConversationReader*)getConversationForTransportsReader:(id<NSFastEnumeration> /* NSString * */)transportIds;
+- (void)getMessageByRemoteIdAsync:(NSString *)transportId remoteId:(NSString *)remoteId success:(void (^)(WACChatMessage*))success failure:(void (^)(NSError*))failure;
 - (void)getUnseenCountAsyncWithSuccess:(void (^)(int))success failure:(void (^)(NSError*))failure;
-- (void)getUnseenCountForTransportsReaderAsync:(id<NSFastEnumeration> /*String*/ )transportIds success:(void (^)(int))success failure:(void (^)(NSError*))failure;
+- (void)getUnseenCountForTransportsReaderAsync:(id<NSFastEnumeration> /* NSString * */)transportIds success:(void (^)(int))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)markAsSeenAsync;
-- (RTObject<WFIAsyncAction>*)markAsSeenForTransportsAsync:(id<NSFastEnumeration> /*String*/ )transportIds;
-- (WACChatSearchReader *)getSearchReader:(WACChatQueryOptions *)value;
-- (RTObject<WFIAsyncAction>*)saveMessageAsync:(WACChatMessage *)chatMessage;
+- (RTObject<WFIAsyncAction>*)markAsSeenForTransportsAsync:(id<NSFastEnumeration> /* NSString * */)transportIds;
+- (WACChatSearchReader*)getSearchReader:(WACChatQueryOptions*)value;
+- (RTObject<WFIAsyncAction>*)saveMessageAsync:(WACChatMessage*)chatMessage;
 - (void)tryCancelDownloadMessageAsync:(NSString *)localChatMessageId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)tryCancelSendMessageAsync:(NSString *)localChatMessageId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -385,7 +387,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageChangedEventArgs : RTObject
-- (WACChatMessageChangedDeferral *)getDeferral;
+- (WACChatMessageChangedDeferral*)getDeferral;
 @end
 
 #endif // __WACChatMessageChangedEventArgs_DEFINED__
@@ -401,14 +403,14 @@ WINRT_EXPORT
 @property (readonly) BOOL hasUnreadMessages;
 @property (readonly) NSString * id;
 @property (readonly) NSString * mostRecentMessageId;
-@property (readonly) NSMutableArray* /*String*/  participants;
-@property (readonly) WACChatConversationThreadingInfo * threadingInfo;
-- (EventRegistrationToken)addRemoteParticipantComposingChangedEvent:(void(^)(WACChatConversation *, WACRemoteParticipantComposingChangedEventArgs *))del;
+@property (readonly) NSMutableArray* participants;
+@property (readonly) WACChatConversationThreadingInfo* threadingInfo;
+- (EventRegistrationToken)addRemoteParticipantComposingChangedEvent:(void(^)(WACChatConversation*, WACRemoteParticipantComposingChangedEventArgs*))del;
 - (void)removeRemoteParticipantComposingChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
-- (WACChatMessageReader *)getMessageReader;
+- (WACChatMessageReader*)getMessageReader;
 - (RTObject<WFIAsyncAction>*)markAllMessagesAsReadAsync;
-- (RTObject<WFIAsyncAction>*)markMessagesAsReadAsync:(WFDateTime *)value;
+- (RTObject<WFIAsyncAction>*)markMessagesAsReadAsync:(WFDateTime*)value;
 - (RTObject<WFIAsyncAction>*)saveAsync;
 - (void)notifyLocalParticipantComposing:(NSString *)transportId participantAddress:(NSString *)participantAddress isComposing:(BOOL)isComposing;
 - (void)notifyRemoteParticipantComposing:(NSString *)transportId participantAddress:(NSString *)participantAddress isComposing:(BOOL)isComposing;
@@ -422,8 +424,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversationReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACChatConversation*/ ))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(id<NSFastEnumeration> /*WACChatConversation*/ ))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatConversationReader_DEFINED__
@@ -446,8 +448,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatSearchReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACIChatItem*/ ))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(id<NSFastEnumeration> /*WACIChatItem*/ ))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatSearchReader_DEFINED__
@@ -485,7 +487,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isAppSetAsNotificationProvider;
 @property (readonly) NSString * transportFriendlyName;
 @property (readonly) NSString * transportId;
-@property (readonly) WACChatMessageTransportConfiguration * configuration;
+@property (readonly) WACChatMessageTransportConfiguration* configuration;
 @property (readonly) WACChatMessageTransportKind transportKind;
 - (RTObject<WFIAsyncAction>*)requestSetAsNotificationProviderAsync;
 @end
@@ -526,7 +528,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessageManager : RTObject
-- (EventRegistrationToken)addMessageAvailableChangedEvent:(void(^)(WACRcsEndUserMessageManager *, WACRcsEndUserMessageAvailableEventArgs *))del;
+- (EventRegistrationToken)addMessageAvailableChangedEvent:(void(^)(WACRcsEndUserMessageManager*, WACRcsEndUserMessageAvailableEventArgs*))del;
 - (void)removeMessageAvailableChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -538,12 +540,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsTransport : RTObject
-@property (readonly) WACRcsTransportConfiguration * configuration;
-@property (readonly) NSDictionary * /*String, SObject*/  extendedProperties;
+@property (readonly) WACRcsTransportConfiguration* configuration;
+@property (readonly) NSDictionary* extendedProperties;
 @property (readonly) BOOL isActive;
 @property (readonly) NSString * transportFriendlyName;
 @property (readonly) NSString * transportId;
-- (EventRegistrationToken)addServiceKindSupportedChangedEvent:(void(^)(WACRcsTransport *, WACRcsServiceKindSupportedChangedEventArgs *))del;
+- (EventRegistrationToken)addServiceKindSupportedChangedEvent:(void(^)(WACRcsTransport*, WACRcsServiceKindSupportedChangedEventArgs*))del;
 - (void)removeServiceKindSupportedChangedEvent:(EventRegistrationToken)tok;
 - (BOOL)isStoreAndForwardEnabled:(WACRcsServiceKind)serviceKind;
 - (BOOL)isServiceKindSupported:(WACRcsServiceKind)serviceKind;
@@ -585,7 +587,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACRcsEndUserMessageAvailableEventArgs : RTObject
 @property (readonly) BOOL isMessageAvailable;
-@property (readonly) WACRcsEndUserMessage * message;
+@property (readonly) WACRcsEndUserMessage* message;
 @end
 
 #endif // __WACRcsEndUserMessageAvailableEventArgs_DEFINED__
@@ -607,13 +609,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessage : RTObject
-@property (readonly) NSArray* /*WACRcsEndUserMessageAction*/  actions;
+@property (readonly) NSArray* actions;
 @property (readonly) BOOL isPinRequired;
 @property (readonly) NSString * text;
 @property (readonly) NSString * title;
 @property (readonly) NSString * transportId;
-- (RTObject<WFIAsyncAction>*)sendResponseAsync:(WACRcsEndUserMessageAction *)action;
-- (RTObject<WFIAsyncAction>*)sendResponseWithPinAsync:(WACRcsEndUserMessageAction *)action pin:(NSString *)pin;
+- (RTObject<WFIAsyncAction>*)sendResponseAsync:(WACRcsEndUserMessageAction*)action;
+- (RTObject<WFIAsyncAction>*)sendResponseWithPinAsync:(WACRcsEndUserMessageAction*)action pin:(NSString *)pin;
 @end
 
 #endif // __WACRcsEndUserMessage_DEFINED__
@@ -624,15 +626,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageManager : RTObject
-+ (void)getTransportsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACChatMessageTransport*/ ))success failure:(void (^)(NSError*))failure;
-+ (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore *))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage *)message;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;
 + (void)showSmsSettings;
 + (void)registerTransportAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACChatMessageTransport *))success failure:(void (^)(NSError*))failure;
-+ (void)getTransportsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACChatMessageTransport*/ ))success failure:(void (^)(NSError*))failure;
-+ (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore *))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage *)message;
++ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACChatMessageTransport*))success failure:(void (^)(NSError*))failure;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;
 + (void)showSmsSettings;
 @end
 
@@ -644,7 +646,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageNotificationTriggerDetails : RTObject
-@property (readonly) WACChatMessage * chatMessage;
+@property (readonly) WACChatMessage* chatMessage;
 @property (readonly) BOOL shouldDisplayToast;
 @property (readonly) BOOL shouldUpdateActionCenter;
 @property (readonly) BOOL shouldUpdateBadge;
@@ -670,8 +672,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatCapabilitiesManager : RTObject
-+ (void)getCachedCapabilitiesAsync:(NSString *)address success:(void (^)(WACChatCapabilities *))success failure:(void (^)(NSError*))failure;
-+ (void)getCapabilitiesFromNetworkAsync:(NSString *)address success:(void (^)(WACChatCapabilities *))success failure:(void (^)(NSError*))failure;
++ (void)getCachedCapabilitiesAsync:(NSString *)address success:(void (^)(WACChatCapabilities*))success failure:(void (^)(NSError*))failure;
++ (void)getCapabilitiesFromNetworkAsync:(NSString *)address success:(void (^)(WACChatCapabilities*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatCapabilitiesManager_DEFINED__
@@ -682,10 +684,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsManager : RTObject
-+ (WACRcsEndUserMessageManager *)getEndUserMessageManager;
-+ (void)getTransportsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACRcsTransport*/ ))success failure:(void (^)(NSError*))failure;
-+ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACRcsTransport *))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)leaveConversationAsync:(WACChatConversation *)conversation;
++ (WACRcsEndUserMessageManager*)getEndUserMessageManager;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACRcsTransport*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)leaveConversationAsync:(WACChatConversation*)conversation;
 @end
 
 #endif // __WACRcsManager_DEFINED__

@@ -57,6 +57,7 @@ typedef struct
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UIGestureRecognizer : NSObject {
 @protected
     __unsafe_unretained id _delegate;

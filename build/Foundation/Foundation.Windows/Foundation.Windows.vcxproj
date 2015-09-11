@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -158,12 +158,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -184,12 +184,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -210,12 +210,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -236,12 +236,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -262,12 +262,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -288,12 +288,12 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

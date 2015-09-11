@@ -83,6 +83,11 @@ public:
                         _components[i].atp.x2, _components[i].atp.y2, _components[i].atp.radius);
                     break;
 
+                case pathComponentArcAngle:
+                    CGContextAddArc(context, _components[i].aa.x, _components[i].aa.y,
+                        _components[i].aa.radius, _components[i].aa.startAngle, _components[i].aa.endAngle, _components[i].aa.clockwise);
+                    break;
+
                 case pathComponentCurve:
                     CGContextAddCurveToPoint(context, _components[i].ctp.x1, _components[i].ctp.y1,
                                             _components[i].ctp.x2, _components[i].ctp.y2,
@@ -162,6 +167,11 @@ public:
                     bbox.addPoint(_components[i].ctp.x1, _components[i].ctp.y1);
                     bbox.addPoint(_components[i].ctp.x2, _components[i].ctp.y2);
                     bbox.addPoint(_components[i].ctp.x, _components[i].ctp.y);
+                    break;
+
+                case pathComponentArcAngle:
+                    bbox.addPoint(_components[i].aa.x - _components[i].aa.radius, _components[i].aa.y - _components[i].aa.radius);
+                    bbox.addPoint(_components[i].aa.x + _components[i].aa.radius, _components[i].aa.y + _components[i].aa.radius);
                     break;
 
                 case pathComponentQuadCurve:
@@ -272,9 +282,26 @@ void CGPathAddArcToPoint(CGMutablePathRef  path, const CGAffineTransform *m, flo
     pathObj->_count ++;
 }
 
-void CGPathAddArc(CGMutablePathRef path, const CGAffineTransform *m, float x, float y, float radius, float startAngle, float endAngle, BOOL clockwise)
+void CGPathAddArc(CGMutablePathRef path, const CGAffineTransform *m, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, bool clockwise)
 {
-    EbrDebugLog("CGPathAddArc not supported\n");
+    assert(!m);
+
+    CGPath* pathObj = path;
+
+    if ( pathObj->_count + 1 >= pathObj->_max ) {
+        pathObj->_max += 32;
+        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+    }
+
+    pathObj->_components[pathObj->_count].type = pathComponentArcAngle;
+    pathObj->_components[pathObj->_count].aa.x = x;
+    pathObj->_components[pathObj->_count].aa.y = y;
+    pathObj->_components[pathObj->_count].aa.radius = radius;
+    pathObj->_components[pathObj->_count].aa.startAngle = startAngle;
+    pathObj->_components[pathObj->_count].aa.endAngle = endAngle;
+    pathObj->_components[pathObj->_count].aa.clockwise = clockwise;
+
+    pathObj->_count ++;
 }
 
 void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform *m, float x, float y)
@@ -373,7 +400,6 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform *m, CGPathRef 
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform *m, CGRect rect)
 {
     CGPathCloseSubpath(path);
-    CGPathMoveToPoint(path, m, rect.origin.x, rect.origin.y);
 
     if ( m ) {
         assert(0);
@@ -392,7 +418,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform *m, C
     pathObj->_count ++;
 
     CGPathCloseSubpath(path);
-    CGPathMoveToPoint(path, m, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+    CGPathMoveToPoint(path, m, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2.0f);
 }
 
 void CGPathCloseSubpath(CGMutablePathRef path)

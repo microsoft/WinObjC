@@ -56,6 +56,7 @@ UIView::UIView()
     _contentMode = 0;
     _backgroundColor = NULL;
     _clearsContextBeforeDrawing = true;
+    _enabled = true;
 }
 
 void UIView::InitFromXIB(XIBObject *obj)

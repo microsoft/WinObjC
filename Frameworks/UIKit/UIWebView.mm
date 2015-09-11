@@ -25,27 +25,22 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
 
-#include "QuartzCore/CALayer.h"
-
 #include "UIKit/UIWebView.h"
-
-#include "CACompositor.h"
-
-CA_EXPORT_CLASS
-@interface CAWebLayer : CALayer
-    -(WebViewControl *) innerControl;
-@end
+typedef wchar_t WCHAR;
+#include "UWP/WindowsUIXamlControls.h"
 
 #include <algorithm>
 
 @implementation UIWebView {
     id       _delegate;
-    idretain _request;
-    idretain _delayLoadURL;
+    idretaintype(NSURLRequest) _request;
+    idretaintype(NSURLRequest) _delayLoadURL;
     bool     _isLoading;
     bool     _isVisible;
     UIScrollView *_scrollView;
-    WebViewControl *_innerControl;
+    WXCWebView *_xamlWebControl;
+	EventRegistrationToken _xamlLoadCompletedEventCookie;
+	EventRegistrationToken _xamlLoadStartedEventCookie;
 }
 
     -(void) setScalesPageToFit: (BOOL)scaleToFit {
@@ -74,28 +69,35 @@ CA_EXPORT_CLASS
             _delayLoadURL = urlStr;
         } else {
             _delayLoadURL = nil;
-            if ( _innerControl ) _innerControl->LoadURL(urlStr);
-            //EbrWebViewLoadURL(_webView, urlStr);
+			[_xamlWebControl navigate: [[WFUri createUri: urlStr] autorelease]];
         }
     }
 
     static void initWebKit(UIWebView *self)
     {
-        self->_innerControl = [(CAWebLayer *) [self layer] innerControl];
+		self->_xamlWebControl = [WXCWebView create];
+		[self layer].contentsElement = self->_xamlWebControl;
+		self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent: ^void(RTObject * sender, WUXNNavigationEventArgs * e) {
+            self->_isLoading = false;
+
+            if ( [self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)] ) {
+                [self->_delegate webViewDidFinishLoad:self];
+            }
+			
+		}];
+		self->_xamlLoadStartedEventCookie = [self->_xamlWebControl addNavigationStartingEvent: ^void(RTObject * sender, WXCWebViewNavigationStartingEventArgs * e) {
+            if ( [self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)] ) {
+                [self->_delegate webViewDidStartLoad:self];
+            }
+		}];
 
         CGRect bounds;
         bounds = [self bounds];
+
+		//  For compatibility only
         self->_scrollView = [[UIScrollView alloc] initWithFrame:bounds];
-        /*
-        [self->_scrollView setShowsVerticalScrollIndicator:FALSE];
-        [self->_scrollView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-        [self addSubview:self->_scrollView];
-        [self->_scrollView setBackgroundColor:[UIColor colorWithRed:0.f green:0.f blue:0.f alpha:0.f]];
-        [self->_scrollView release];
-        */
 
         [self setNeedsLayout];
-        [self setContentMode: UIViewContentModeRedraw];
     }
 
     -(instancetype) initWithCoder:(NSCoder *)coder {
@@ -106,18 +108,8 @@ CA_EXPORT_CLASS
         return self;
     }
 
-    /* annotate with type */ -(id) initWithFrame:(CGRect)rect {
+    -(instancetype) initWithFrame:(CGRect)rect {
         [super initWithFrame:rect];
-
-#if defined(USE_SIMPLE_UIWEBVIEW)
-        rect.origin.x = 0.f;
-        rect.origin.y = 0.f;
-
-        _textView = [[UITextView alloc] initWithFrame:rect];
-        [self addSubview:(id)_textView];
-//        [_textView setFont:[UIFont systemFontOfSize:12.f]];
-        [_textView release];
-#endif
 
         initWebKit(self);
 
@@ -129,9 +121,7 @@ CA_EXPORT_CLASS
         _delayLoadURL = nil;
 
         NSString *urlStr = [baseURL absoluteString];
-        if ( _innerControl ) _innerControl->LoadHTMLString(string, urlStr);
-        //EbrWebViewLoadHTMLString(_webView, string, baseURL);
-        //[_scrollView setContentSize:estimateContentSize(string)];
+		[_xamlWebControl navigateToString: string];
 
         [self sizeToFit];
     }
@@ -140,48 +130,43 @@ CA_EXPORT_CLASS
         _isLoading = true;
         _delayLoadURL = nil;
 
-        //EbrWebViewLoadData(_webView, data, mimeType, encoding, baseURL);
-        //[_scrollView setContentSize:estimateContentSize(data)];
-
-        [self sizeToFit];
+		assert(0 && "loadData:mimeTime:textEncodingName: not implemented");
     }
 
     -(void) stopLoading {
         _isLoading = false;
-
-        //EbrWebViewStopLoading(_webView);
+		[_xamlWebControl stop];
     }
 
     -(void) setDetectsPhoneNumbers:(BOOL)detect {
     }
 
     -(NSString *) stringByEvaluatingJavaScriptFromString: (NSString *)string {
-        //return EbrWebViewEvaluateJavascript(_webView, string);
+		NSString *ret = [_xamlWebControl invokeScript: @"eval" arguments: [NSArray arrayWithObject: string]];
+		return ret;
     }
 
     -(void) setDataDetectorTypes:(UIDataDetectorTypes)types {
     }
 
     -(BOOL) canGoBack {
-        //return EbrWebViewCanGoBack(_webView);
-        return FALSE;
+		return _xamlWebControl.canGoBack;
     }
 
     -(BOOL) canGoForward {
-        return FALSE;
-        //return EbrWebViewCanGoForward(_webView);
+		return _xamlWebControl.canGoForward;
     }
 
     -(void) reload {
-         //EbrWebViewReload(_webView);
+		[_xamlWebControl refresh];
     }
 
     -(void) goBack {
-        //EbrWebViewGoBack(_webView);
+		[_xamlWebControl goBack];
     }
 
     -(void) goForward {
-        //EbrWebViewGoForward(_webView);
+		[_xamlWebControl goForward];
     }
 
     -(NSURLRequest *) request {
@@ -189,9 +174,10 @@ CA_EXPORT_CLASS
     }
 
     -(void) dealloc {
-        //EbrWebViewSetDelegate(_webView, nil);
-        //_webView = nil;
         _delayLoadURL = nil;
+		[_xamlWebControl removeLoadCompletedEvent: _xamlLoadCompletedEventCookie];
+		[_xamlWebControl removeNavigationStartingEvent: _xamlLoadStartedEventCookie];
+		[_xamlWebControl release];
 
         [super dealloc];
     }
@@ -203,152 +189,9 @@ CA_EXPORT_CLASS
     -(void) setScrollsToTop:(BOOL)scrollsToTop {
     }
 
-    +(Class) layerClass {
-        return [CAWebLayer class];
-    }
-
-    #if 0
-    /* annotate with type */ -(id) _webViewEvent:(EbrNativeWebViewEvent*)params {
-        switch ( params->_event ) {
-            case nativeWebViewShouldStartLoad: {
-                id url = [NSURL URLWithString:(id) params->_url];
-                id request = [NSURLRequest requestWithURL:url];
-                BOOL ret = true;
-
-                if ( [_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)] ) {
-                    EbrDebugLog("Should start load request (%s)?\n", [params->_url UTF8String]);
-                    ret = [_delegate webView:self shouldStartLoadWithRequest:request navigationType:(DWORD) params->_navigationType];
-                    EbrDebugLog(" - %s\n", ret ? "true" : "false");
-                }
-                params->_result = ret;
-            }
-                break;
-
-            case nativeWebViewDidStartLoad: {
-                if ( [_delegate respondsToSelector:@selector(webViewDidStartLoad:)] ) {
-                    [_delegate webViewDidStartLoad:self];
-                }
-            }
-                break;
-
-            case nativeWebViewDidFinishLoad: {
-                _isLoading = false;
-
-                if ( [_delegate respondsToSelector:@selector(webViewDidFinishLoad:)] ) {
-                    [_delegate webViewDidFinishLoad:self];
-                }
-            }
-                break;
-
-            case nativeWebViewDidFailLoad: {
-                _isLoading = false;
-
-                if ( [_delegate respondsToSelector:@selector(webView:didFailLoadWithError:)] ) {
-                    [_delegate webView:self didFailLoadWithError:(id) params->_error];
-                }
-            }
-                break;
-        }
-
-        return self;
-    }
-
-    /* annotate with type */ -(id) setHidden:(DWORD)hide {
-        [super setHidden:hide];
-#ifndef NO_WEBVIEW
-#if defined(USE_SIMPLE_UIWEBVIEW)
-        [_textView setHidden:hide];
-#else 
-        if ( hide ) {
-            if ( _webView ) EbrWebViewHide(_webView);
-        }
-#endif 
-#endif // NO_WEBVIEW
-        return (DWORD) self;
-    }
-    #endif
-
     -(void) setAllowsInlineMediaPlayback:(BOOL)allow {
     }
         
     -(void) setMediaPlaybackRequiresUserAction:(BOOL)allow {
     }
-
-    #if 0
-    /* annotate with type */ -(id) _webViewHidden {
-        _isVisible = false;
-        return self;
-    }
-
-    /* annotate with type */ -(id) layoutSubviews {
-        initClipRegion(self);
-        return self;
-    }
-    
-    /* annotate with type */ -(id) _webViewVisible {
-        if ( _delayLoadURL ) {
-            idretain url = _delayLoadURL;
-            _delayLoadURL = nil;
-#if !defined(NO_WEBVIEW)
-#if defined(USE_SIMPLE_UIWEBVIEW)
-            // TODO: implement me!
-            EbrDebugLog("Ack! USE_SIMPLE_UIWEBVIEW doesn't implement this yet!\n");
-#else
-            EbrWebViewLoadURL(_webView, url);
-#endif             
-#endif
-        }
-        return self;
-    }
-
-    /* annotate with type */ -(id) _nativeDidFail {
-        EbrNativeWebViewEvent* params = [EbrNativeWebViewEvent alloc];
-        params->_event = nativeWebViewDidFailLoad;
-        params->_error = [NSError errorWithDomain:@"NSURLErrorDomain" code:50 userInfo:nil];
-
-        [self performSelectorOnMainThread:@selector(_webViewEvent:) withObject:(id) params waitUntilDone:FALSE];
-        [params release];
-        return self;
-    }
-    
-    /* annotate with type */ -(id) _nativeDidFinishLoad {
-        EbrNativeWebViewEvent* params = [EbrNativeWebViewEvent alloc];
-        params->_event = nativeWebViewDidFinishLoad;
-        params->_result = 0;
-
-        params->_navigationType = UIWebViewNavigationTypeOther;
-        EbrDebugLog("Nav type %d\n", params->_navigationType);
-
-        [self performSelectorOnMainThread:@selector(_webViewEvent:) withObject:(id) params waitUntilDone:FALSE];
-        [params release];
-        return self;
-    }
-    
-    /* annotate with type */ -(id) _nativeNavigating:(id)url {
-        EbrNativeWebViewEvent* params = [EbrNativeWebViewEvent alloc];
-        params->_event = nativeWebViewShouldStartLoad;
-        params->_url = url;
-        params->_result = 0;
-
-        params->_navigationType = UIWebViewNavigationTypeOther;
-        EbrDebugLog("Nav type %d\n", params->_navigationType);
-
-        BOOL success = [self _performSelectorOnMainThreadAbortIfBackground:@selector(_webViewEvent:) withObject:(id) params waitUntilDone:TRUE];
-        int result = 0;
-        if ( success ) {
-            result = params->_result;
-        } else {
-            //  App switched to background - queue up a failure
-            EbrNativeWebViewEvent* failparams = [EbrNativeWebViewEvent alloc];
-            failparams->_event = nativeWebViewDidFailLoad;
-            failparams->_error = [NSError errorWithDomain:@"NSURLErrorDomain" code:50 userInfo:nil];
-
-            [self performSelectorOnMainThread:@selector(_webViewEvent:) withObject:(id) failparams waitUntilDone:FALSE];
-            [failparams release];
-        }
-        [params release];
-        return result;
-    }
-    #endif
-    
 @end

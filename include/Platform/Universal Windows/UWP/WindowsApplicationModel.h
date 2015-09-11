@@ -31,6 +31,8 @@
 #include "WindowsStorageStreams.h"
 #include "WindowsStorage.h"
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.ApplicationModel.PackageVersion
 WINRT_EXPORT
 @interface WAPackageVersion : NSObject
@@ -56,8 +58,8 @@ WINRT_EXPORT
 #define __WAISuspendingOperation_DEFINED__
 
 @protocol WAISuspendingOperation
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WAISuspendingOperation_DEFINED__
@@ -67,7 +69,7 @@ WINRT_EXPORT
 #define __WAISuspendingEventArgs_DEFINED__
 
 @protocol WAISuspendingEventArgs
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WAISuspendingEventArgs_DEFINED__
@@ -80,7 +82,7 @@ WINRT_EXPORT
 @interface WAAppDisplayInfo : RTObject
 @property (readonly) NSString * description;
 @property (readonly) NSString * displayName;
-- (WSSRandomAccessStreamReference *)getLogo:(WFSize *)size;
+- (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
 @end
 
 #endif // __WAAppDisplayInfo_DEFINED__
@@ -92,7 +94,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAppInfo : RTObject
 @property (readonly) NSString * appUserModelId;
-@property (readonly) WAAppDisplayInfo * displayInfo;
+@property (readonly) WAAppDisplayInfo* displayInfo;
 @property (readonly) NSString * id;
 @property (readonly) NSString * packageFamilyName;
 @end
@@ -105,7 +107,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WASuspendingEventArgs_DEFINED__
@@ -127,8 +129,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingOperation : RTObject <WAISuspendingOperation>
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WASuspendingOperation_DEFINED__
@@ -168,7 +170,7 @@ WINRT_EXPORT
 @property (readonly) NSString * publisher;
 @property (readonly) NSString * publisherId;
 @property (readonly) NSString * resourceId;
-@property (readonly) WAPackageVersion * version;
+@property (readonly) WAPackageVersion* version;
 @property (readonly) NSString * author;
 @property (readonly) NSString * productId;
 @end
@@ -181,22 +183,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackage : RTObject
-@property (readonly) NSArray* /*WAPackage*/  dependencies;
-@property (readonly) WAPackageId * id;
-@property (readonly) WSStorageFolder * installedLocation;
+@property (readonly) NSArray* dependencies;
+@property (readonly) WAPackageId* id;
+@property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
 @property (readonly) NSString * description;
 @property (readonly) NSString * displayName;
 @property (readonly) BOOL isBundle;
 @property (readonly) BOOL isDevelopmentMode;
 @property (readonly) BOOL isResourcePackage;
-@property (readonly) WFUri * logo;
+@property (readonly) WFUri* logo;
 @property (readonly) NSString * publisherDisplayName;
-@property (readonly) WFDateTime * installedDate;
-@property (readonly) WAPackageStatus * status;
-@property (readonly) WFDateTime * installDate;
-+ (WAPackage *)current;
-- (void)getAppListEntriesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACAppListEntry*/ ))success failure:(void (^)(NSError*))failure;
+@property (readonly) WFDateTime* installedDate;
+@property (readonly) WAPackageStatus* status;
+@property (readonly) WFDateTime* installDate;
++ (WAPackage*)current;
+- (void)getAppListEntriesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 - (NSString *)getThumbnailToken;
 - (void)launch:(NSString *)parameters;
 @end

@@ -11,16 +11,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @class NSDate;
 
 @protocol NSLocking
--(id)lock;
--(id)unlock;
+-(void)lock;
+-(void)unlock;
 @end
 
 FOUNDATION_EXPORT_CLASS
-@interface NSLock : NSObject <NSLocking> {
-    uint32_t _lock;
-    NSString *_name;
-}
-
+@interface NSLock : NSObject <NSLocking>
 -(NSString *)name;
 -(void)setName:(NSString *)value;
 
@@ -30,19 +26,15 @@ FOUNDATION_EXPORT_CLASS
 @end
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCondition : NSObject <NSLocking> {
-    NSString *name;
-}
+@interface NSCondition : NSObject <NSLocking>
+- (void)broadcast;
+- (void)signal;
 
-- (id)broadcast;
-- (id)signal;
-
-- (id)wait;
+- (void)wait;
 - (BOOL)waitUntilDate:(NSDate *)limit;
 
 - (NSString *)name;
 - (void)setName:(NSString *)newName;
-
 @end
 
 #import <Foundation/NSConditionLock.h>

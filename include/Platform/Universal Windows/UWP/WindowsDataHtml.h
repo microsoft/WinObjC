@@ -24,6 +24,8 @@
 @protocol WDHIHtmlUtilities;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.Data.Html.HtmlUtilities
 #ifndef __WDHHtmlUtilities_DEFINED__
 #define __WDHHtmlUtilities_DEFINED__

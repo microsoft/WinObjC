@@ -38,12 +38,6 @@
 #include "VCProject.h"
 #include "VCProjectConfiguration.h"
 
-static String genVSGUID(const String& id)
-{
-  assert(id.length() == 24);
-  return id.substr(0, 8) + "-" + id.substr(8, 4) + "-4B1D-BEEF-" + id.substr(12); 
-}
-
 SBTarget::~SBTarget() {}
 
 SBTarget::SBTarget(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject)
@@ -198,7 +192,7 @@ String SBTarget::makeRelativePath(const String& path, const String& absRoot) con
 
 SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
 {
-  static const char* const _productWildcards[] = {"lib*.a", "*.app"};
+  static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework"};
   static StringVec productWildcards(_productWildcards, _productWildcards + sizeof(_productWildcards) / sizeof(char*));
 
   sbAssert(buildFile);
@@ -267,8 +261,7 @@ SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
 VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
 {
   // Create the project
-  String projId = genVSGUID(getId());
-  VCProject* proj = new VCProject(projTemplate, projId);
+  VCProject* proj = new VCProject(projTemplate);
 
   // Set global properties on the project
   const BuildSettings& projBS = m_parentProject.getBuildSettings();

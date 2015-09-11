@@ -22,52 +22,52 @@
 #include "interopBase.h"
 @class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
 @class WFPoint, WFSize, WFRect, WFDateTime, WFTimeSpan;
-@class NSArray_C_WFIWwwFormUrlDecoderEntry;
+@class RTArray_C_RTObject_WFIWwwFormUrlDecoderEntry;
 @protocol WFIClosable, WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction, WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIUriRuntimeClass, WFIUriRuntimeClassWithAbsoluteCanonicalUri, WFIUriEscapeStatics, WFIUriRuntimeClassFactory, WFIWwwFormUrlDecoderEntry, WFIWwwFormUrlDecoderRuntimeClass, WFIWwwFormUrlDecoderRuntimeClassFactory, WFIGetActivationFactory, WFIMemoryBufferReference, WFIMemoryBuffer, WFIMemoryBufferFactory;
 
 // Windows.Foundation.PropertyType
 enum _WFPropertyType {
-    WFPropertyTypeEmpty = 0,
-    WFPropertyTypeUInt8 = 1,
-    WFPropertyTypeInt16 = 2,
-    WFPropertyTypeUInt16 = 3,
-    WFPropertyTypeInt32 = 4,
-    WFPropertyTypeUInt32 = 5,
-    WFPropertyTypeInt64 = 6,
-    WFPropertyTypeUInt64 = 7,
-    WFPropertyTypeSingle = 8,
-    WFPropertyTypeDouble = 9,
-    WFPropertyTypeChar16 = 10,
-    WFPropertyTypeBoolean = 11,
-    WFPropertyTypeString = 12,
-    WFPropertyTypeInspectable = 13,
-    WFPropertyTypeDateTime = 14,
-    WFPropertyTypeTimeSpan = 15,
-    WFPropertyTypeGuid = 16,
-    WFPropertyTypePoint = 17,
-    WFPropertyTypeSize = 18,
-    WFPropertyTypeRect = 19,
-    WFPropertyTypeOtherType = 20,
-    WFPropertyTypeUInt8Array = 1025,
-    WFPropertyTypeInt16Array = 1026,
-    WFPropertyTypeUInt16Array = 1027,
-    WFPropertyTypeInt32Array = 1028,
-    WFPropertyTypeUInt32Array = 1029,
-    WFPropertyTypeInt64Array = 1030,
-    WFPropertyTypeUInt64Array = 1031,
-    WFPropertyTypeSingleArray = 1032,
-    WFPropertyTypeDoubleArray = 1033,
-    WFPropertyTypeChar16Array = 1034,
-    WFPropertyTypeBooleanArray = 1035,
-    WFPropertyTypeStringArray = 1036,
-    WFPropertyTypeInspectableArray = 1037,
-    WFPropertyTypeDateTimeArray = 1038,
-    WFPropertyTypeTimeSpanArray = 1039,
-    WFPropertyTypeGuidArray = 1040,
-    WFPropertyTypePointArray = 1041,
-    WFPropertyTypeSizeArray = 1042,
-    WFPropertyTypeRectArray = 1043,
-    WFPropertyTypeOtherTypeArray = 1044,
+	WFPropertyTypeEmpty = 0,
+	WFPropertyTypeUInt8 = 1,
+	WFPropertyTypeInt16 = 2,
+	WFPropertyTypeUInt16 = 3,
+	WFPropertyTypeInt32 = 4,
+	WFPropertyTypeUInt32 = 5,
+	WFPropertyTypeInt64 = 6,
+	WFPropertyTypeUInt64 = 7,
+	WFPropertyTypeSingle = 8,
+	WFPropertyTypeDouble = 9,
+	WFPropertyTypeChar16 = 10,
+	WFPropertyTypeBoolean = 11,
+	WFPropertyTypeString = 12,
+	WFPropertyTypeInspectable = 13,
+	WFPropertyTypeDateTime = 14,
+	WFPropertyTypeTimeSpan = 15,
+	WFPropertyTypeGuid = 16,
+	WFPropertyTypePoint = 17,
+	WFPropertyTypeSize = 18,
+	WFPropertyTypeRect = 19,
+	WFPropertyTypeOtherType = 20,
+	WFPropertyTypeUInt8Array = 1025,
+	WFPropertyTypeInt16Array = 1026,
+	WFPropertyTypeUInt16Array = 1027,
+	WFPropertyTypeInt32Array = 1028,
+	WFPropertyTypeUInt32Array = 1029,
+	WFPropertyTypeInt64Array = 1030,
+	WFPropertyTypeUInt64Array = 1031,
+	WFPropertyTypeSingleArray = 1032,
+	WFPropertyTypeDoubleArray = 1033,
+	WFPropertyTypeChar16Array = 1034,
+	WFPropertyTypeBooleanArray = 1035,
+	WFPropertyTypeStringArray = 1036,
+	WFPropertyTypeInspectableArray = 1037,
+	WFPropertyTypeDateTimeArray = 1038,
+	WFPropertyTypeTimeSpanArray = 1039,
+	WFPropertyTypeGuidArray = 1040,
+	WFPropertyTypePointArray = 1041,
+	WFPropertyTypeSizeArray = 1042,
+	WFPropertyTypeRectArray = 1043,
+	WFPropertyTypeOtherTypeArray = 1044,
 };
 typedef unsigned WFPropertyType;
 
@@ -171,10 +171,10 @@ typedef void(^WFDeferralCompletedHandler)();
 @property (readonly) BOOL isNumericScalar;
 @property (readonly) WFPropertyType type;
 - (uint8_t)getUInt8;
-- (short)getInt16;
+- (int16_t)getInt16;
 - (unsigned short)getUInt16;
 - (int)getInt32;
-- (unsigned)getUInt32;
+- (unsigned int)getUInt32;
 - (int64_t)getInt64;
 - (uint64_t)getUInt64;
 - (float)getSingle;
@@ -182,31 +182,31 @@ typedef void(^WFDeferralCompletedHandler)();
 - (WCHAR)getChar16;
 - (BOOL)getBoolean;
 - (NSString *)getString;
-- (WFGUID *)getGuid;
-- (WFDateTime *)getDateTime;
-- (WFTimeSpan *)getTimeSpan;
-- (WFPoint *)getPoint;
-- (WFSize *)getSize;
-- (WFRect *)getRect;
-- (void)getUInt8Array:(id<NSFastEnumeration> /*UInt8*/ *)value;
-- (void)getInt16Array:(id<NSFastEnumeration> /*Int16*/ *)value;
-- (void)getUInt16Array:(id<NSFastEnumeration> /*UInt16*/ *)value;
-- (void)getInt32Array:(id<NSFastEnumeration> /*Int32*/ *)value;
-- (void)getUInt32Array:(id<NSFastEnumeration> /*UInt32*/ *)value;
-- (void)getInt64Array:(id<NSFastEnumeration> /*Int64*/ *)value;
-- (void)getUInt64Array:(id<NSFastEnumeration> /*UInt64*/ *)value;
-- (void)getSingleArray:(id<NSFastEnumeration> /*Single*/ *)value;
-- (void)getDoubleArray:(id<NSFastEnumeration> /*Double*/ *)value;
-- (void)getChar16Array:(id<NSFastEnumeration> /*Char16*/ *)value;
-- (void)getBooleanArray:(id<NSFastEnumeration> /*Boolean*/ *)value;
-- (void)getStringArray:(id<NSFastEnumeration> /*String*/ *)value;
-// Failed to generate member GetInspectableArray (Cannot marshal contained object of unknown type System.Object)
-// Failed to generate member GetGuidArray (Can't marshal output array of type WinRT_Array<GUID>)
-- (void)getDateTimeArray:(id<NSFastEnumeration> /*WFDateTime*/ *)value;
-- (void)getTimeSpanArray:(id<NSFastEnumeration> /*WFTimeSpan*/ *)value;
-- (void)getPointArray:(id<NSFastEnumeration> /*WFPoint*/ *)value;
-- (void)getSizeArray:(id<NSFastEnumeration> /*WFSize*/ *)value;
-- (void)getRectArray:(id<NSFastEnumeration> /*WFRect*/ *)value;
+- (WFGUID*)getGuid;
+- (WFDateTime*)getDateTime;
+- (WFTimeSpan*)getTimeSpan;
+- (WFPoint*)getPoint;
+- (WFSize*)getSize;
+- (WFRect*)getRect;
+- (void)getUInt8Array:(id<NSFastEnumeration> /* uint8_t */*)value;
+- (void)getInt16Array:(id<NSFastEnumeration> /* int16_t */*)value;
+- (void)getUInt16Array:(id<NSFastEnumeration> /* unsigned short */*)value;
+- (void)getInt32Array:(id<NSFastEnumeration> /* int */*)value;
+- (void)getUInt32Array:(id<NSFastEnumeration> /* unsigned int */*)value;
+- (void)getInt64Array:(id<NSFastEnumeration> /* int64_t */*)value;
+- (void)getUInt64Array:(id<NSFastEnumeration> /* uint64_t */*)value;
+- (void)getSingleArray:(id<NSFastEnumeration> /* float */*)value;
+- (void)getDoubleArray:(id<NSFastEnumeration> /* double */*)value;
+- (void)getChar16Array:(id<NSFastEnumeration> /* WCHAR */*)value;
+- (void)getBooleanArray:(id<NSFastEnumeration> /* BOOL */*)value;
+- (void)getStringArray:(id<NSFastEnumeration> /* NSString * */*)value;
+- (void)getInspectableArray:(id<NSFastEnumeration> /* RTObject* */*)value;
+- (void)getGuidArray:(id<NSFastEnumeration> /* WFGUID* */*)value;
+- (void)getDateTimeArray:(id<NSFastEnumeration> /* WFDateTime* */*)value;
+- (void)getTimeSpanArray:(id<NSFastEnumeration> /* WFTimeSpan* */*)value;
+- (void)getPointArray:(id<NSFastEnumeration> /* WFPoint* */*)value;
+- (void)getSizeArray:(id<NSFastEnumeration> /* WFSize* */*)value;
+- (void)getRectArray:(id<NSFastEnumeration> /* WFRect* */*)value;
 @end
 
 #endif // __WFIPropertyValue_DEFINED__
@@ -227,7 +227,7 @@ typedef void(^WFDeferralCompletedHandler)();
 
 @protocol WFIAsyncInfo
 @property (readonly) HRESULT errorCode;
-@property (readonly) unsigned id;
+@property (readonly) unsigned int id;
 @property (readonly) WFAsyncStatus status;
 - (void)cancel;
 - (void)close;
@@ -264,7 +264,7 @@ typedef void(^WFDeferralCompletedHandler)();
 #define __WFIGetActivationFactory_DEFINED__
 
 @protocol WFIGetActivationFactory
-- (RTObject *)getActivationFactory:(NSString *)activatableClassId;
+- (RTObject*)getActivationFactory:(NSString *)activatableClassId;
 @end
 
 #endif // __WFIGetActivationFactory_DEFINED__
@@ -274,8 +274,8 @@ typedef void(^WFDeferralCompletedHandler)();
 #define __WFIMemoryBufferReference_DEFINED__
 
 @protocol WFIMemoryBufferReference <WFIClosable>
-@property (readonly) unsigned capacity;
-- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WFIMemoryBufferReference>*, RTObject *))del;
+@property (readonly) unsigned int capacity;
+- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WFIMemoryBufferReference>*, RTObject*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -299,45 +299,45 @@ typedef void(^WFDeferralCompletedHandler)();
 
 WINRT_EXPORT
 @interface WFPropertyValue : RTObject
-+ (RTObject *)createEmpty;
-+ (RTObject *)createUInt8:(uint8_t)value;
-+ (RTObject *)createInt16:(short)value;
-+ (RTObject *)createUInt16:(unsigned short)value;
-+ (RTObject *)createInt32:(int)value;
-+ (RTObject *)createUInt32:(unsigned)value;
-+ (RTObject *)createInt64:(int64_t)value;
-+ (RTObject *)createUInt64:(uint64_t)value;
-+ (RTObject *)createSingle:(float)value;
-+ (RTObject *)createDouble:(double)value;
-+ (RTObject *)createChar16:(WCHAR)value;
-+ (RTObject *)createBoolean:(BOOL)value;
-+ (RTObject *)createString:(NSString *)value;
-+ (RTObject *)createInspectable:(RTObject *)value;
-+ (RTObject *)createGuid:(WFGUID *)value;
-+ (RTObject *)createDateTime:(WFDateTime *)value;
-+ (RTObject *)createTimeSpan:(WFTimeSpan *)value;
-+ (RTObject *)createPoint:(WFPoint *)value;
-+ (RTObject *)createSize:(WFSize *)value;
-+ (RTObject *)createRect:(WFRect *)value;
-+ (RTObject *)createUInt8Array:(id<NSFastEnumeration> /*UInt8*/ )value;
-+ (RTObject *)createInt16Array:(id<NSFastEnumeration> /*Int16*/ )value;
-+ (RTObject *)createUInt16Array:(id<NSFastEnumeration> /*UInt16*/ )value;
-+ (RTObject *)createInt32Array:(id<NSFastEnumeration> /*Int32*/ )value;
-+ (RTObject *)createUInt32Array:(id<NSFastEnumeration> /*UInt32*/ )value;
-+ (RTObject *)createInt64Array:(id<NSFastEnumeration> /*Int64*/ )value;
-+ (RTObject *)createUInt64Array:(id<NSFastEnumeration> /*UInt64*/ )value;
-+ (RTObject *)createSingleArray:(id<NSFastEnumeration> /*Single*/ )value;
-+ (RTObject *)createDoubleArray:(id<NSFastEnumeration> /*Double*/ )value;
-+ (RTObject *)createChar16Array:(id<NSFastEnumeration> /*Char16*/ )value;
-+ (RTObject *)createBooleanArray:(id<NSFastEnumeration> /*Boolean*/ )value;
-+ (RTObject *)createStringArray:(id<NSFastEnumeration> /*String*/ )value;
-// Failed to generate member CreateInspectableArray (Cannot marshal contained object of unknown type System.Object)
-// Failed to generate member CreateGuidArray (Can't marshal output array of type WinRT_Array<GUID>)
-+ (RTObject *)createDateTimeArray:(id<NSFastEnumeration> /*WFDateTime*/ )value;
-+ (RTObject *)createTimeSpanArray:(id<NSFastEnumeration> /*WFTimeSpan*/ )value;
-+ (RTObject *)createPointArray:(id<NSFastEnumeration> /*WFPoint*/ )value;
-+ (RTObject *)createSizeArray:(id<NSFastEnumeration> /*WFSize*/ )value;
-+ (RTObject *)createRectArray:(id<NSFastEnumeration> /*WFRect*/ )value;
++ (RTObject*)createEmpty;
++ (RTObject*)createUInt8:(uint8_t)value;
++ (RTObject*)createInt16:(int16_t)value;
++ (RTObject*)createUInt16:(unsigned short)value;
++ (RTObject*)createInt32:(int)value;
++ (RTObject*)createUInt32:(unsigned int)value;
++ (RTObject*)createInt64:(int64_t)value;
++ (RTObject*)createUInt64:(uint64_t)value;
++ (RTObject*)createSingle:(float)value;
++ (RTObject*)createDouble:(double)value;
++ (RTObject*)createChar16:(WCHAR)value;
++ (RTObject*)createBoolean:(BOOL)value;
++ (RTObject*)createString:(NSString *)value;
++ (RTObject*)createInspectable:(RTObject*)value;
++ (RTObject*)createGuid:(WFGUID*)value;
++ (RTObject*)createDateTime:(WFDateTime*)value;
++ (RTObject*)createTimeSpan:(WFTimeSpan*)value;
++ (RTObject*)createPoint:(WFPoint*)value;
++ (RTObject*)createSize:(WFSize*)value;
++ (RTObject*)createRect:(WFRect*)value;
++ (RTObject*)createUInt8Array:(id<NSFastEnumeration> /* uint8_t */)value;
++ (RTObject*)createInt16Array:(id<NSFastEnumeration> /* int16_t */)value;
++ (RTObject*)createUInt16Array:(id<NSFastEnumeration> /* unsigned short */)value;
++ (RTObject*)createInt32Array:(id<NSFastEnumeration> /* int */)value;
++ (RTObject*)createUInt32Array:(id<NSFastEnumeration> /* unsigned int */)value;
++ (RTObject*)createInt64Array:(id<NSFastEnumeration> /* int64_t */)value;
++ (RTObject*)createUInt64Array:(id<NSFastEnumeration> /* uint64_t */)value;
++ (RTObject*)createSingleArray:(id<NSFastEnumeration> /* float */)value;
++ (RTObject*)createDoubleArray:(id<NSFastEnumeration> /* double */)value;
++ (RTObject*)createChar16Array:(id<NSFastEnumeration> /* WCHAR */)value;
++ (RTObject*)createBooleanArray:(id<NSFastEnumeration> /* BOOL */)value;
++ (RTObject*)createStringArray:(id<NSFastEnumeration> /* NSString * */)value;
++ (RTObject*)createInspectableArray:(id<NSFastEnumeration> /* RTObject* */)value;
++ (RTObject*)createGuidArray:(id<NSFastEnumeration> /* WFGUID* */)value;
++ (RTObject*)createDateTimeArray:(id<NSFastEnumeration> /* WFDateTime* */)value;
++ (RTObject*)createTimeSpanArray:(id<NSFastEnumeration> /* WFTimeSpan* */)value;
++ (RTObject*)createPointArray:(id<NSFastEnumeration> /* WFPoint* */)value;
++ (RTObject*)createSizeArray:(id<NSFastEnumeration> /* WFSize* */)value;
++ (RTObject*)createRectArray:(id<NSFastEnumeration> /* WFRect* */)value;
 @end
 
 #endif // __WFPropertyValue_DEFINED__
@@ -348,7 +348,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDeferral : RTObject <WFIClosable>
-+ (WFDeferral *)create:(WFDeferralCompletedHandler)handler ACTIVATOR;
++ (WFDeferral*)create:(WFDeferralCompletedHandler)handler ACTIVATOR;
 - (void)complete;
 - (void)close;
 @end
@@ -361,8 +361,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
-+ (WFWwwFormUrlDecoder *)createWwwFormUrlDecoder:(NSString *)query ACTIVATOR;
-@property (readonly) unsigned size;
++ (WFWwwFormUrlDecoder*)createWwwFormUrlDecoder:(NSString *)query ACTIVATOR;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -382,8 +382,8 @@ WINRT_EXPORT
 @interface WFUri : RTObject <WFIStringable>
 + (NSString *)unescapeComponent:(NSString *)toUnescape;
 + (NSString *)escapeComponent:(NSString *)toEscape;
-+ (WFUri *)createUri:(NSString *)uri ACTIVATOR;
-+ (WFUri *)createWithRelativeUri:(NSString *)baseUri relativeUri:(NSString *)relativeUri ACTIVATOR;
++ (WFUri*)createUri:(NSString *)uri ACTIVATOR;
++ (WFUri*)createWithRelativeUri:(NSString *)baseUri relativeUri:(NSString *)relativeUri ACTIVATOR;
 @property (readonly) NSString * absoluteUri;
 @property (readonly) NSString * displayUri;
 @property (readonly) NSString * domain;
@@ -394,15 +394,15 @@ WINRT_EXPORT
 @property (readonly) NSString * path;
 @property (readonly) int port;
 @property (readonly) NSString * query;
-@property (readonly) WFWwwFormUrlDecoder * queryParsed;
+@property (readonly) WFWwwFormUrlDecoder* queryParsed;
 @property (readonly) NSString * rawUri;
 @property (readonly) NSString * schemeName;
 @property (readonly) BOOL suspicious;
 @property (readonly) NSString * userName;
 @property (readonly) NSString * absoluteCanonicalUri;
 @property (readonly) NSString * displayIri;
-- (BOOL)equals:(WFUri *)pUri;
-- (WFUri *)combineUri:(NSString *)relativeUri;
+- (BOOL)equals:(WFUri*)pUri;
+- (WFUri*)combineUri:(NSString *)relativeUri;
 - (NSString *)toString;
 @end
 
@@ -426,7 +426,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
-+ (WFMemoryBuffer *)create:(unsigned)capacity ACTIVATOR;
++ (WFMemoryBuffer*)create:(unsigned int)capacity ACTIVATOR;
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
 @end

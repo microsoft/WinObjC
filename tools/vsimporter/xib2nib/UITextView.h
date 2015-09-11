@@ -32,10 +32,12 @@ private:
     int _dataDetectorTypes;
     int _autoCorrectionType;
     int _returnKeyType;
+    int _lineBreakMode;
 
 public:
     UITextView();
     virtual void InitFromXIB(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void UITextView::InitFromStory(XIBObject *obj);
 };
 

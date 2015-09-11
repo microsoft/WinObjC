@@ -13,9 +13,7 @@
   </ItemGroup>
    
   <PropertyGroup>
-	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' != 'SwapChain'">true</IncludeXamlCompositor>
-	<IncludeSwapChainCompositor Condition="'$(AppContainerApplication)' == 'true' And '$(WSCompositor)' == 'SwapChain'">true</IncludeSwapChainCompositor>	
-	<IncludeDXCompositor Condition="'$(AppContainerApplication)' == '' Or '$(WSCompositor)' == 'SwapChain'">true</IncludeDXCompositor>
+	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
@@ -40,9 +38,11 @@
 		<IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
 		<IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
 		<IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+		<IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
 		<IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
 		<IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
 		<IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+		<IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
 		<IncludeObjcrt>true</IncludeObjcrt>
 		<IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
 	</PropertyGroup>
@@ -57,7 +57,9 @@
 	  <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
 	  <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
 	  <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
+	  <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
+	  <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
 	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
 	  <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
 
@@ -79,11 +81,8 @@
 	  <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
 
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libEGL.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libGLESv2.dll" />
-
-	  <SBResourceCopy Condition="'$(IncludeDXCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\DXCompositor.dll" />
-	  <SBResourceCopy Condition="'$(IncludeSwapChainCompositor)' == 'true' And '$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\StarboardSwapChain.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
+	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
     </ItemGroup>
   </Target>
 
@@ -117,13 +116,13 @@
       <ClangCompile Remove="@(ClangCompile)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
     </ItemGroup>
 
-    <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
+      <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
     <Clang
       Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
       InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
       Autocomplete="$(ClangAutocomplete)"
       AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
-      CommandLineTemplate="%(ClangCompile.CommandLineTemplate)"
+      CommandLineTemplate="%(ClangCompile.WOCStdlibOptions) %(ClangCompile.CommandLineTemplate)"
       CommandTLogFile="%(ClangCompile.CommandTLogFile)"
       CompileAs="%(ClangCompile.CompileAs)"
       DebugInformation="%(ClangCompile.DebugInformation)"
@@ -243,13 +242,6 @@
       </ClangCompile>
     </ItemGroup>
 	
-	<ItemGroup>
-	  <ClangCompile Condition="'$(IWCompat)' == 'true'">
-	    <AdditionalOptions>%(ClangCompile.AdditionalOptions) -D__ISLANDWOOD_COMPAT</AdditionalOptions>
-		<IncludePaths>$(StarboardExtraIncludePath);$(StarboardSdkRoot)\include\compat;%(ClangCompile.IncludePaths)</IncludePaths>
-	  </ClangCompile>
-	</ItemGroup>
-	
     <!-- Figure out language-specific flags -->
     <ItemGroup>
       <ClangCompile>
@@ -267,6 +259,14 @@
         <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Combined'">-I"$(CombinedHMapFilename).hmap"</HeaderMapInclude>
       </ClangCompile>
     </ItemGroup>
+    
+    <!-- Figure out WOCStdlib options to use -->
+    <ItemGroup>
+      <ClangCompile>
+        <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem $(StarboardSdkRoot)\include\WOCStdLib -include WOCStdlib.h</WOCStdlibOptions>
+      </ClangCompile>
+    </ItemGroup>
+
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
@@ -286,7 +286,6 @@
 
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
 	<PropertyGroup>
-	  <StarboardRuntimeLib Condition="'$(AppContainerApplication)' == ''">StarboardWin32.lib</StarboardRuntimeLib>
 	  <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
 	  <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
 	</PropertyGroup>

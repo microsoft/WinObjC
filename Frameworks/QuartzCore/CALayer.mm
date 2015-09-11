@@ -294,7 +294,21 @@ public:
 
 static LockingBufferInterface _globallockingBufferInterface;
 
-@implementation CALayer
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height)
+{
+    DisplayTexture *tex = NULL;
+                        
+    if ( [NSThread isMainThread] ) tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+    CGContextRef ret = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
+    if ( tex ) _globallockingBufferInterface.ReleaseDisplayTexture(tex);
+
+    return ret;
+}
+
+@implementation CALayer {
+	WXFrameworkElement *_contentsElement;
+}
+
     -(instancetype) init {
         assert(priv == NULL);
         priv = new CAPrivateInfo(self);
@@ -320,12 +334,41 @@ static LockingBufferInterface _globallockingBufferInterface;
     }
 
 
-    -(void) _renderContents:(CGContextRef)ctx withOrigin:(CGPoint)origin {
+    -(void) renderInContext:(CGContextRef)ctx {
         if ( priv->hidden ) return;
 
-        [self displayIfNeeded];
+        [self layoutIfNeeded];
 
-        if ( priv->contents != NULL ) {
+        CGContextSaveGState(ctx);
+        CGContextTranslateCTM(ctx, priv->position.x, priv->position.y);
+        CGContextTranslateCTM(ctx, -priv->bounds.size.width * priv->anchorPoint.x,
+                                -priv->bounds.size.height * priv->anchorPoint.y);
+        CGRect destRect;
+
+        destRect.origin.x = 0;
+        destRect.origin.y = 0;
+        destRect.size.width = priv->bounds.size.width;
+        destRect.size.height = priv->bounds.size.height;
+
+        if ( priv->masksToBounds ) {
+            CGContextClipToRect(ctx, destRect);
+        }
+        if (priv->contents == NULL ) {
+            if ( [priv->delegate respondsToSelector:@selector(displayLayer:)] ) {
+                [priv->delegate displayLayer:self];
+            }
+        }
+
+        if (priv->contents == NULL ) {
+            if ( priv->_backgroundColor != nil ) {
+                [priv->_backgroundColor setFill];
+                CGContextFillRect(ctx, destRect);
+            }
+            [self drawInContext:ctx];
+            if ( ![priv->delegate respondsToSelector:@selector(displayLayer:)] ) {
+                [priv->delegate drawLayer:self inContext:ctx];
+            }
+        } else {
             CGRect rect;
 
             rect.origin.x = 0;
@@ -333,50 +376,30 @@ static LockingBufferInterface _globallockingBufferInterface;
             rect.size.width = priv->bounds.size.width * priv->contentsScale;
             rect.size.height = -priv->bounds.size.height * priv->contentsScale;
 
-            CGRect destRect;
-
-            destRect.origin.x = -priv->bounds.size.width * priv->anchorPoint.x;
-            destRect.origin.y = -priv->bounds.size.height * priv->anchorPoint.y;
-            destRect.size.width = priv->bounds.size.width;
-            destRect.size.height = priv->bounds.size.height;
-
             CGContextDrawImageRect(ctx, priv->contents, rect, destRect );
         }
 
-        origin.x = priv->bounds.size.width * priv->anchorPoint.x;
-        origin.y = priv->bounds.size.height * priv->anchorPoint.y;
-
         //  Draw sublayers
         LLTREE_FOREACH(curLayer, priv) {
-            CGAffineTransform oldTransform = CGContextGetCTM(ctx);
-
-            /* Note: should do other transforms */
-            CGContextTranslateCTM(ctx, curLayer->position.x - origin.x,
-                                  curLayer->position.y - origin.y);
-
-            [curLayer->self _renderContents:ctx withOrigin:origin];
-
-            CGContextSetCTM(ctx, oldTransform);
+            [curLayer->self renderInContext:ctx];
         }
-    }
 
-
-    -(void) renderInContext:(CGContextRef)ctx {
-        CGPoint origin;
-        origin.x = 0;
-        origin.y = 0;
-        CGContextTranslateCTM(ctx, priv->bounds.size.width * priv->anchorPoint.x,
-                                priv->bounds.size.height * priv->anchorPoint.y);
-
-        [self _renderContents:ctx withOrigin:origin];
+        CGContextRestoreGState(ctx);
     }
 
 
     -(void) drawInContext:(CGContextRef)ctx {
     }
 
-    -(void) setContentsElement: (WXFrameworkElement *) element
-    {
+    -(WXFrameworkElement *) contentsElement {
+		return _contentsElement;
+    }
+
+    -(void) setContentsElement: (WXFrameworkElement *) element {
+		[element retain];
+		[_contentsElement release];
+		_contentsElement = element;
+
         if ( priv->_textureOverride ) {
             GetCACompositor()->ReleaseDisplayTexture(priv->_textureOverride);
         }
@@ -415,11 +438,6 @@ static LockingBufferInterface _globallockingBufferInterface;
             int width = (int)(ceilf(priv->bounds.size.width) * priv->contentsScale);
             int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
 
-            if ( priv->forceOverrideBounds ) {
-                width = ceilf(priv->overrideBounds.size.width) * priv->contentsScale;
-                height = ceilf(priv->overrideBounds.size.height) * priv->contentsScale;
-            }
-
             if ( width <= 0 || height <= 0 ) {
                 return;
             }
@@ -431,11 +449,21 @@ static LockingBufferInterface _globallockingBufferInterface;
             priv->contentsSize.height = (float)height;
 
             // nothing to do?
-            if ( (priv->delegate != nil && 
-                 object_isMethodFromClass(priv->delegate, @selector(drawRect:), "UIView") ) ||
-                 (priv->delegate == nil && object_isMethodFromClass(self, @selector(drawInContext:), "CALayer") ) ) {
+            bool hasDrawingMethod = false;
+            if ( priv->delegate != nil && 
+                 (!object_isMethodFromClass(priv->delegate, @selector(drawRect:), "UIView") || 
+                  !object_isMethodFromClass(priv->delegate, @selector(drawLayer:inContext:), "UIView") ||
+                  [priv->delegate respondsToSelector:@selector(displayLayer:)]
+                 ) ) {
+                 hasDrawingMethod = true;
+            }
+            if ( !object_isMethodFromClass(self, @selector(drawInContext:), "CALayer") ) {
+                hasDrawingMethod = true;
+            }
+            if ( !hasDrawingMethod ) {
                 return;
             }
+
             bool useVector = false;
 
             //  Create the contents 
@@ -466,9 +494,7 @@ static LockingBufferInterface _globallockingBufferInterface;
                         //target = new CGVectorImage(width, height, _ColorARGB);
                     }
                     else {
-                        DisplayTexture *tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
-                        drawContext = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
-                        if ( tex ) _globallockingBufferInterface.ReleaseDisplayTexture(tex);
+                        drawContext = CreateLayerContentsBitmapContext32(width, height);
                     }
                     priv->drewOpaque = FALSE;
                 }
@@ -1782,6 +1808,8 @@ static LockingBufferInterface _globallockingBufferInterface;
         while ( priv->firstChild ) {
             [priv->firstChild->self removeFromSuperlayer];
         }
+
+		[_contentsElement release];
 
         delete priv;
         priv = NULL;

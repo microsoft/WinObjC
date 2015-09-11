@@ -17,7 +17,7 @@
 #ifndef ShaderSource_H_
 #define ShaderSource_H_
 
-#include "EbrOpenglIncludes.h"
+#include "GLES2\gl2.h"
 #include <string>
 
 namespace OpenGLES {

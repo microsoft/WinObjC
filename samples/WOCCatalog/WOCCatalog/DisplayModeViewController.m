@@ -20,8 +20,9 @@
 @implementation SBDisplayModeViewController {
     NSArray *_informationLabels;
     NSArray *_presetNames;
+    NSArray *_orientationNames;
     UITextField *fixedWidth, *fixedHeight, *magnification, *fixedAspect;
-    UIPickerView *presets;
+    UIPickerView *presets, *orientations;
 }
 
 -(void) toggleFitToWindow: (UISwitch *) sender
@@ -109,12 +110,20 @@
 
 -(NSInteger) pickerView: (UIPickerView *) view numberOfRowsInComponent: (NSInteger) component
 {
-    return [_presetNames count];
+    if ( view == presets ) {
+        return [_presetNames count];
+    } else if ( view == orientations ) {
+        return [_orientationNames count];
+    } else return 0;
 }
 
 -(NSString *) pickerView: (UIPickerView *) view titleForRow: (NSInteger) row forComponent: (NSInteger) component
 {
-    return _presetNames[row];
+    if ( view == presets ) {
+        return _presetNames[row];
+    } else if ( view == orientations ) {
+        return _orientationNames[row];
+    } else return nil;
 }
 
 -(NSInteger) numberOfComponentsInPickerView: (UIPickerView *) view
@@ -124,10 +133,31 @@
 
 -(void) pickerView: (UIPickerView *) view didSelectRow: (NSInteger) row inComponent: (NSInteger) component
 {
-    if ( row == 0 ) return;
+    if ( view == presets ) {
+        if ( row == 0 ) return;
 
-    [UIApplication.displayMode setDisplayPreset: (WOCDisplayPreset) (row - 1)];
-    [UIApplication.displayMode updateDisplaySettings];
+        [UIApplication.displayMode setDisplayPreset: (WOCDisplayPreset) (row - 1)];
+        [UIApplication.displayMode updateDisplaySettings];
+    } else if ( view == orientations ) {
+        switch ( row ) {
+            case 0: 
+                UIApplication.displayMode.presentationTransform = UIInterfaceOrientationPortrait;
+                break;
+
+            case 1: 
+                UIApplication.displayMode.presentationTransform = UIInterfaceOrientationLandscapeLeft;
+                break;
+            
+            case 2: 
+                UIApplication.displayMode.presentationTransform = UIInterfaceOrientationLandscapeRight;
+                break;
+            
+            case 3: 
+                UIApplication.displayMode.presentationTransform = UIInterfaceOrientationPortraitUpsideDown;
+                break;
+        }
+        [UIApplication.displayMode updateDisplaySettings];
+    }
 }
 
 - (id) init {
@@ -157,6 +187,22 @@
 
     [presets selectRow: 4 inComponent: 0 animated: FALSE];
     presets.delegate = self;
+
+    orientations = [[UIPickerView alloc] initWithFrame: CGRectMake(0, 0, 200, 200)];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    cell.accessoryView = orientations;
+    cell.textLabel.text = @"Presentation Transform";
+    [self.rows addObject: cell];
+    orientations.dataSource = self;
+
+    _orientationNames = @[
+        @"Portrait",
+        @"LandscapeLeft",
+        @"LandscapeRight",
+        @"PortraitUpsideDown" ];
+
+    [orientations selectRow: 0 inComponent: 0 animated: FALSE];
+    orientations.delegate = self;
 
     UISwitch *fitToWindow = [UISwitch new];
     fitToWindow.on = UIApplication.displayMode.autoMagnification;
@@ -266,7 +312,7 @@
 }
 
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ( indexPath.row == 0 ) {
+    if ( indexPath.row == 0 || indexPath.row == 1 ) {
         //  Picker view
         return 240.0f;
     }

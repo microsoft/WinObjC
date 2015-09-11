@@ -26,16 +26,18 @@
 #include "WindowsFoundation.h"
 #include "WindowsSystemPower.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Devices.Power.BatteryReport
 #ifndef __WDPBatteryReport_DEFINED__
 #define __WDPBatteryReport_DEFINED__
 
 WINRT_EXPORT
 @interface WDPBatteryReport : RTObject
-@property (readonly) NSNumber* chargeRateInMilliwatts;
-@property (readonly) NSNumber* designCapacityInMilliwattHours;
-@property (readonly) NSNumber* fullChargeCapacityInMilliwattHours;
-@property (readonly) NSNumber* remainingCapacityInMilliwattHours;
+@property (readonly) id chargeRateInMilliwatts;
+@property (readonly) id designCapacityInMilliwattHours;
+@property (readonly) id fullChargeCapacityInMilliwattHours;
+@property (readonly) id remainingCapacityInMilliwattHours;
 @property (readonly) WSPBatteryStatus status;
 @end
 
@@ -47,13 +49,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBattery : RTObject
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBattery *))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 @property (readonly) NSString * deviceId;
-+ (WDPBattery *)aggregateBattery;
-- (EventRegistrationToken)addReportUpdatedEvent:(void(^)(WDPBattery *, RTObject *))del;
++ (WDPBattery*)aggregateBattery;
+- (EventRegistrationToken)addReportUpdatedEvent:(void(^)(WDPBattery*, RTObject*))del;
 - (void)removeReportUpdatedEvent:(EventRegistrationToken)tok;
-- (WDPBatteryReport *)getReport;
+- (WDPBatteryReport*)getReport;
 @end
 
 #endif // __WDPBattery_DEFINED__

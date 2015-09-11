@@ -9,9 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSDate;
 
-@interface NSConditionLock : NSObject <NSLocking> {
-}
-
+FOUNDATION_EXPORT_CLASS
+@interface NSConditionLock : NSObject <NSLocking>
 -initWithCondition:(NSInteger)condition;
 
 -(NSString *)name;

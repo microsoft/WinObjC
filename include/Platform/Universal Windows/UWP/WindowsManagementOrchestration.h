@@ -25,14 +25,16 @@
 
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Management.Orchestration.CurrentAppOrchestration
 #ifndef __WMOCurrentAppOrchestration_DEFINED__
 #define __WMOCurrentAppOrchestration_DEFINED__
 
 WINRT_EXPORT
 @interface WMOCurrentAppOrchestration : RTObject
-+ (WMOCurrentAppOrchestration *)getForCurrentView;
-- (WMOSingleAppModeContext *)startSingleAppMode;
++ (WMOCurrentAppOrchestration*)getForCurrentView;
+- (WMOSingleAppModeContext*)startSingleAppMode;
 @end
 
 #endif // __WMOCurrentAppOrchestration_DEFINED__

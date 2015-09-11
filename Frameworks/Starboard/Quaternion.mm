@@ -1,16 +1,12 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Adapted from: http://xith.org/archive/JavaCoolDude/JWS/Lwjgl/MagicRoom/source/MathUtils/Quaternion.java
 //
-// This code is licensed under the MIT License (MIT).
+// http://www.xith.org/
+// Xith3D is released under the BSD license making its use feasible for both commercial and non-commercial
+// (freeware/open-source) projects.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// http://opensource.org/licenses/bsd-license.php
 //
 //******************************************************************************
 

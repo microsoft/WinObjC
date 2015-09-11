@@ -25,16 +25,16 @@
 
 // Windows.Web.Http.Filters.HttpCacheReadBehavior
 enum _WWHFHttpCacheReadBehavior {
-    WWHFHttpCacheReadBehaviorDefault = 0,
-    WWHFHttpCacheReadBehaviorMostRecent = 1,
-    WWHFHttpCacheReadBehaviorOnlyFromCache = 2,
+	WWHFHttpCacheReadBehaviorDefault = 0,
+	WWHFHttpCacheReadBehaviorMostRecent = 1,
+	WWHFHttpCacheReadBehaviorOnlyFromCache = 2,
 };
 typedef unsigned WWHFHttpCacheReadBehavior;
 
 // Windows.Web.Http.Filters.HttpCacheWriteBehavior
 enum _WWHFHttpCacheWriteBehavior {
-    WWHFHttpCacheWriteBehaviorDefault = 0,
-    WWHFHttpCacheWriteBehaviorNoCache = 1,
+	WWHFHttpCacheWriteBehaviorDefault = 0,
+	WWHFHttpCacheWriteBehaviorNoCache = 1,
 };
 typedef unsigned WWHFHttpCacheWriteBehavior;
 
@@ -43,6 +43,8 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #include "WindowsWebHttp.h"
 #include "WindowsSecurityCredentials.h"
 #include "WindowsFoundationCollections.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -59,7 +61,7 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #define __WWHFIHttpFilter_DEFINED__
 
 @protocol WWHFIHttpFilter <WFIClosable>
-- (void)sendRequestAsync:(WWHHttpRequestMessage *)request success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -85,18 +87,18 @@ WINRT_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)create ACTIVATOR;
 @property BOOL useProxy;
-@property (copy) WSCPasswordCredential * serverCredential;
-@property (copy) WSCPasswordCredential * proxyCredential;
-@property unsigned maxConnectionsPerServer;
-@property (copy) WSCCCertificate * clientCertificate;
+@property (copy) WSCPasswordCredential* serverCredential;
+@property (copy) WSCPasswordCredential* proxyCredential;
+@property unsigned int maxConnectionsPerServer;
+@property (copy) WSCCCertificate* clientCertificate;
 @property BOOL automaticDecompression;
 @property BOOL allowUI;
 @property BOOL allowAutoRedirect;
-@property (readonly) WWHHttpCookieManager * cookieManager;
-@property (readonly) NSMutableArray* /*WSCCChainValidationResult*/  ignorableServerCertificateErrors;
-@property (readonly) WWHFHttpCacheControl * cacheControl;
+@property (readonly) WWHHttpCookieManager* cookieManager;
+@property (readonly) NSMutableArray* ignorableServerCertificateErrors;
+@property (readonly) WWHFHttpCacheControl* cacheControl;
 @property WWHHttpVersion maxVersion;
-- (void)sendRequestAsync:(WWHHttpRequestMessage *)request success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 

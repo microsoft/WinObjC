@@ -28,7 +28,7 @@
 // Windows.System.Threading.Core.SignalHandler
 #ifndef __WSTCSignalHandler__DEFINED
 #define __WSTCSignalHandler__DEFINED
-typedef void(^WSTCSignalHandler)(WSTCSignalNotifier * signalNotifier, BOOL timedOut);
+typedef void(^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
 #endif // __WSTCSignalHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
@@ -38,10 +38,12 @@ typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #endif // __WSTWorkItemHandler__DEFINED
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Threading.Core.SignalHandler
 #ifndef __WSTCSignalHandler__DEFINED
 #define __WSTCSignalHandler__DEFINED
-typedef void(^WSTCSignalHandler)(WSTCSignalNotifier * signalNotifier, BOOL timedOut);
+typedef void(^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
 #endif // __WSTCSignalHandler__DEFINED
 
 // Windows.System.Threading.Core.SignalNotifier
@@ -50,10 +52,10 @@ typedef void(^WSTCSignalHandler)(WSTCSignalNotifier * signalNotifier, BOOL timed
 
 WINRT_EXPORT
 @interface WSTCSignalNotifier : RTObject
-+ (WSTCSignalNotifier *)attachToEvent:(NSString *)name handler:(WSTCSignalHandler)handler;
-+ (WSTCSignalNotifier *)attachToEventWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan *)timeout;
-+ (WSTCSignalNotifier *)attachToSemaphore:(NSString *)name handler:(WSTCSignalHandler)handler;
-+ (WSTCSignalNotifier *)attachToSemaphoreWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan *)timeout;
++ (WSTCSignalNotifier*)attachToEvent:(NSString *)name handler:(WSTCSignalHandler)handler;
++ (WSTCSignalNotifier*)attachToEventWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
++ (WSTCSignalNotifier*)attachToSemaphore:(NSString *)name handler:(WSTCSignalHandler)handler;
++ (WSTCSignalNotifier*)attachToSemaphoreWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
 - (void)enable;
 - (void)terminate;
 @end
@@ -66,9 +68,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSTCPreallocatedWorkItem : RTObject
-+ (WSTCPreallocatedWorkItem *)createWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
-+ (WSTCPreallocatedWorkItem *)createWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;
-+ (WSTCPreallocatedWorkItem *)createWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority options:(WSTWorkItemOptions)options ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)createWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)createWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)createWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority options:(WSTWorkItemOptions)options ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)runAsync;
 @end
 

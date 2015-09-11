@@ -57,8 +57,10 @@ void UIRuntimeEventConnection::InitFromStory(XIBObject *obj)
         const char *type = getAttrib("eventType");
 
         if ( type ) {
-            if ( strcmp(type, "touchUpInside") == 0 ) {
+            if (strcmp(type, "touchUpInside") == 0) {
                 _eventMask = UIControlEventTouchUpInside;
+            } else if (strcmp(type, "touchDown") == 0) {
+                _eventMask = UIControlEventTouchDown;
             } else {
                 assert(0);
             }

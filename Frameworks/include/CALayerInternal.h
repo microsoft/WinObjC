@@ -40,9 +40,6 @@ public:
     BOOL    drewOpaque;
     BOOL    positionSet, sizeSet, originSet;
 
-    BOOL forceOverrideBounds;
-    CGRect overrideBounds;
-
     CATransform3D transform;
     CATransform3D sublayerTransform;
     ColorQuad backgroundColor, borderColor, contentColor;
@@ -93,4 +90,9 @@ public:
     CAPrivateInfo(CALayer *self, bool bPresentationLayer = false);
     ~CAPrivateInfo();
 };
+
+@interface CALayer(Internal)
+- (int)_pixelWidth;
+- (int)_pixelHeight;
+@end
 #endif /* _CALAYERPRIVATE_H_ */

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -26,6 +26,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\winrt-interop.mm" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\category.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\class.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\exception.cpp">
+      <CompileAsWinRT>true</CompileAsWinRT>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\hashtable.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\init.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\lookup.c" />

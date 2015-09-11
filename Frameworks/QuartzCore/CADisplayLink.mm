@@ -22,7 +22,7 @@
 #include "Foundation/NSTimer.h"
 #include "Foundation/NSRunLoop.h"
 #include "../Foundation/NSRunLoopState.h"
-#include "../Foundation/NSRunLoopSource.h"
+#include "NSRunLoopSource.h"
 #include "Quartzcore/CADisplayLink.h"
 
 EbrLock _displaySyncSocketLock = EBRLOCK_INITIALIZE;

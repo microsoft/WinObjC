@@ -24,6 +24,8 @@
 @protocol WSPDIBackgroundEnergyDiagnosticsStatics, WSPDIForegroundEnergyDiagnosticsStatics;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Power.Diagnostics.BackgroundEnergyDiagnostics
 #ifndef __WSPDBackgroundEnergyDiagnostics_DEFINED__
 #define __WSPDBackgroundEnergyDiagnostics_DEFINED__

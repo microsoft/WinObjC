@@ -36,9 +36,19 @@ void XIBObjectDataWriter::WriteData(NIBWriter *writer)
     writer->WriteBytes(_binVal, _binLen);
 }
 
+XIBObjectString::XIBObjectString()
+{
+    _strVal = NULL;
+}
+
 XIBObjectString::XIBObjectString(const char *str)
 {
     _strVal = str;
+}
+
+void XIBObjectString::InitFromStory(XIBObject *obj)
+{
+    _strVal = _strdup(obj->_node.text().as_string());
 }
 
 const char *XIBObjectString::stringValue() {

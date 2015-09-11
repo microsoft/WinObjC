@@ -38,3 +38,8 @@ CFRunLoopRef CFRunLoopGetCurrent()
     return (CFRunLoopRef) [_LazyNSRunLoop currentRunLoop];
 }
 
+CFRunLoopRef CFRunLoopGetMain()
+{
+    return (CFRunLoopRef) [_LazyNSRunLoop mainRunLoop];
+}
+

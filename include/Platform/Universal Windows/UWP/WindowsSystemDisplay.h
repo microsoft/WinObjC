@@ -24,6 +24,8 @@
 @protocol WSDIDisplayRequest;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Display.DisplayRequest
 #ifndef __WSDDisplayRequest_DEFINED__
 #define __WSDDisplayRequest_DEFINED__

@@ -1,0 +1,322 @@
+.\" Copyright (c) 2008-2009 Apple Inc. All rights reserved.
+.Dd May 1, 2008
+.Dt dispatch_queue_create 3
+.Os Darwin
+.Sh NAME
+.Nm dispatch_queue_create ,
+.Nm dispatch_queue_get_label ,
+.Nm dispatch_get_current_queue ,
+.Nm dispatch_get_global_queue ,
+.Nm dispatch_get_main_queue ,
+.Nm dispatch_main ,
+.Nm dispatch_set_target_queue
+.Nd where blocks are scheduled for execution
+.Sh SYNOPSIS
+.Fd #include <dispatch/dispatch.h>
+.Ft dispatch_queue_t
+.Fo dispatch_queue_create
+.Fa "const char *label" "dispatch_queue_attr_t attr"
+.Fc
+.Ft "const char *"
+.Fo dispatch_queue_get_label
+.Fa "dispatch_queue_t queue"
+.Fc
+.Ft dispatch_queue_t
+.Fo dispatch_get_current_queue
+.Fa void
+.Fc
+.Ft dispatch_queue_t
+.Fo dispatch_get_global_queue
+.Fa "long priority"
+.Fa "unsigned long flags"
+.Fc
+.Ft dispatch_queue_t
+.Fo dispatch_get_main_queue
+.Fa void
+.Fc
+.Ft void
+.Fo dispatch_main
+.Fa void
+.Fc
+.Ft void
+.Fo dispatch_set_target_queue
+.Fa "dispatch_object_t object"
+.Fa "dispatch_queue_t target"
+.Fc
+.Sh DESCRIPTION
+Queues are the fundamental mechanism for scheduling blocks for execution within
+the
+.Xr dispatch 3
+framework.
+.Pp
+All blocks submitted to dispatch queues are dequeued in FIFO order.
+By default, queues created with
+.Fn dispatch_queue_create
+wait for the previously dequeued block to complete before dequeuing the next
+block. This FIFO completion behavior is sometimes simply described as a "serial queue."
+Queues are not bound to any specific thread of execution and blocks submitted
+to independent queues may execute concurrently.
+Queues, like all dispatch objects, are reference counted and newly created
+queues have a reference count of one.
+.Pp
+The optional
+.Fa label
+argument is used to describe the purpose of the queue and is useful during
+debugging and performance analysis. By convention, clients should pass a
+reverse DNS style label.
+If a label is provided, it is copied. If a label is not provided, then
+.Fn dispatch_queue_get_label
+returns an empty C string.
+For example:
+.Pp
+.Bd -literal
+my_queue = dispatch_queue_create("com.example.subsystem.taskXYZ", NULL);
+.Ed
+.Pp
+The
+.Fa attr
+argument is reserved for future use and must be NULL.
+.Pp
+Queues may be temporarily suspended and resumed with the functions
+.Fn dispatch_suspend
+and
+.Fn dispatch_resume 
+respectively. Suspension is checked prior to block execution and is
+.Em not
+preemptive.
+.Sh MAIN QUEUE
+The dispatch framework provides a default serial queue for the application to use.
+This queue is accessed via
+.Fn dispatch_get_main_queue .
+Programs must call
+.Fn dispatch_main
+at the end of
+.Fn main
+in order to process blocks submitted to the main queue. (See the compatibility
+section for exceptions.)
+.Sh GLOBAL CONCURRENT QUEUES
+Unlike the main queue or queues allocated with
+.Fn dispatch_queue_create ,
+the global concurrent queues schedule blocks as soon as threads become
+available (non-FIFO completion order). The global concurrent queues represent
+three priority bands:
+.Bl -bullet -compact -offset indent
+.It
+DISPATCH_QUEUE_PRIORITY_HIGH
+.It
+DISPATCH_QUEUE_PRIORITY_DEFAULT
+.It
+DISPATCH_QUEUE_PRIORITY_LOW
+.El
+.Pp
+Blocks submitted to the high priority global queue will be invoked before those
+submitted to the default or low priority global queues. Blocks submitted to the
+low priority global queue will only be invoked if no blocks are pending on the
+default or high priority queues.
+.Pp
+.Sh RETURN VALUES
+The
+.Fn dispatch_queue_create
+function returns NULL on failure.
+.Pp
+The
+.Fn dispatch_queue_get_label
+function always returns a valid C string. An empty C string is returned if the
+.Fa label
+was NULL creation time.
+.Pp
+The
+.Fn dispatch_get_main_queue
+function returns the default main queue.
+.Pp
+The
+.Fn dispatch_get_current_queue
+function always returns a valid queue. When called from within a block submitted
+to a dispatch queue, that queue will be returned. If this function is called from
+the main thread before
+.Fn dispatch_main
+is called, then the result of
+.Fn dispatch_get_main_queue
+is returned.  Otherwise, the result of
+.Fo dispatch_get_global_queue
+.Fa DISPATCH_QUEUE_PRIORITY_DEFAULT
+.Fa 0
+.Fc
+will be returned in all other cases.
+.Pp
+The
+.Fn dispatch_main
+function never returns.
+.Sh TARGET QUEUE
+The
+.Fn dispatch_set_target_queue
+function updates the target queue of the given dispatch object. The target
+queue of an object is responsible for processing the object. Currently only
+dispatch queues and dispatch sources are supported by this function. The result
+of using
+.Fn dispatch_set_target_queue
+with any other dispatch object type is undefined.
+.Pp
+The new target queue is retained by the given object before the previous target
+queue is released. The new target queue will take effect between block
+executions, but not in the middle of any existing block executions
+(non-preemptive).
+.Pp
+The priority of a dispatch queue is inherited by its target queue. 
+In order to change the priority of a queue created with
+.Fn dispatch_queue_create ,
+use the
+.Fn dispatch_get_global_queue
+function to obtain a target queue of the desired priority. The
+.Fa flags
+argument is reserved for future use and must be zero. Passing any value other
+than zero may result in a
+.Vt NULL
+return value.
+.Pp
+The target queue of a dispatch source specifies where its event handler and
+cancellation handler blocks will be submitted. See
+.Xr dispatch_source_create 3
+for more information about dispatch sources.
+.Pp
+The result of passing the main queue or a global concurrent queue to the first
+argument of
+.Fn dispatch_set_target_queue
+is undefined.
+.Pp
+Directly or indirectly setting the target queue of a dispatch queue to itself is undefined.
+.Sh CAVEATS
+Code cannot make any assumptions about the queue returned by
+.Fn dispatch_get_current_queue .
+The returned queue may have arbitrary policies that may surprise code that tries
+to schedule work with the queue. The list of policies includes, but is not
+limited to, queue width (i.e. serial vs. concurrent), scheduling priority,
+security credential or filesystem configuration. Therefore,
+.Fn dispatch_get_current_queue
+.Em MUST
+only be used for identity tests or debugging.
+.Sh COMPATIBILITY
+Cocoa applications need not call
+.Fn dispatch_main .
+Blocks submitted to the main queue will be executed as part of the "common modes"
+of the application's main NSRunLoop or CFRunLoop.
+However, blocks submitted to the main queue in applications using
+.Fn dispatch_main
+are not guaranteed to execute on the main thread.
+.Pp
+The dispatch framework is a pure C level API. As a result, it does not catch
+exceptions generated by higher level languages such as Objective-C or C++.
+Applications
+.Em MUST
+catch all exceptions before returning from a block submitted to a dispatch
+queue; otherwise the internal data structures of the dispatch framework will be
+left in an inconsistent state.
+.Pp
+The dispatch framework manages the relationship between dispatch queues and
+threads of execution. As a result, applications
+.Em MUST NOT
+delete or mutate objects that they did not create. The following interfaces
+.Em MUST NOT
+be called by blocks submitted to a dispatch queue:
+.Bl -bullet -offset indent
+.It
+.Fn pthread_cancel
+.It
+.Fn pthread_detach
+.It
+.Fn pthread_join
+.It
+.Fn pthread_kill
+.It
+.Fn pthread_exit
+.El
+.Pp
+Applications
+.Em MAY
+call the following interfaces from a block submitted to a dispatch queue if
+and only if they restore the thread to its original state before returning:
+.Bl -bullet -offset indent
+.It
+.Fn pthread_setcancelstate
+.It
+.Fn pthread_setcanceltype
+.It
+.Fn pthread_setschedparam
+.It
+.Fn pthread_sigmask
+.It
+.Fn pthread_setugid_np
+.It
+.Fn pthread_chdir
+.It
+.Fn pthread_fchdir
+.El
+.Pp
+Applications
+.Em MUST NOT
+rely on the following interfaces returning predictable results between
+invocations of blocks submitted to a dispatch queue:
+.Bl -bullet -offset indent
+.It
+.Fn pthread_self
+.It
+.Fn pthread_getschedparam
+.It
+.Fn pthread_get_stacksize_np
+.It
+.Fn pthread_get_stackaddr_np
+.It
+.Fn pthread_mach_thread_np
+.It
+.Fn pthread_from_mach_thread_np
+.El
+.Pp
+While the result of
+.Fn pthread_self
+may change between invocations of blocks, the value will not change during the
+execution of any single block. Because the underlying thread may change beteween
+block invocations on a single queue, using per-thread data as an out-of-band
+return value is error prone. In other words, the result of calling
+.Fn pthread_setspecific
+and
+.Fn pthread_getspecific
+is well defined within a signle block, but not across multiple blocks. Also,
+one cannot make any assumptions about when the destructor passed to
+.Fn pthread_key_create
+is called. The destructor may be called between the invocation of blocks on
+the same queue, or during the idle state of a process.
+.Pp
+The following example code correctly handles per-thread return values:
+.Bd -literal -offset indent
+__block int r;
+__block int e;
+dispatch_sync(queue, ^{
+	r = kill(1, 0);
+	// Copy the per-thread return value to the callee thread
+	e = errno;
+});
+printf("kill(1,0) returned %d and errno %d\n", r, e);
+.Ed
+.Pp
+Note that in the above example
+.Va errno
+is a per-thread variable and must be copied out explicitly as the block may be
+invoked on different thread of execution than the caller. Another example of
+per-thread data that would need to be copied is the use of 
+.Fn getpwnam
+instead of
+.Fn getpwnam_r .
+.Pp
+As an optimization,
+.Fn dispatch_sync
+invokes the block on the current thread when possible. In this case, the thread
+specific data such as
+.Va errno
+may persist from the block until back to the caller. Great care should be taken
+not to accidentally rely on this side-effect.
+.Pp
+.Sh SEE ALSO
+.Xr dispatch 3 ,
+.Xr dispatch_async 3 ,
+.Xr dispatch_object 3 ,
+.Xr dispatch_source_create 3

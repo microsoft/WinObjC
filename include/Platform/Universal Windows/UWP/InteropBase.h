@@ -35,11 +35,16 @@ WINRT_EXPORT
 @interface RTObject : NSObject {
 #ifdef _WRL_CLIENT_H_
 @public
-    ComPtr<IInspectable> comObj;
+	Microsoft::WRL::ComPtr<IInspectable> comObj;
+
+    // For composable objects, this is the original interface.
+	Microsoft::WRL::ComPtr<IInspectable> innerInterface;
 #endif
 }
-
 - (id)internalObject;
+#ifdef _WRL_CLIENT_H_
+- (void)setComObj: (Microsoft::WRL::ComPtr<IInspectable>) obj;
+#endif
 @end
 
 #ifndef GUID_DEFINED
@@ -62,13 +67,18 @@ typedef struct _GUID {
 #endif
 
 @interface WFGUID : RTObject
-@property unsigned long  Data1;
+@property unsigned long	 Data1;
 @property unsigned short Data2;
 @property unsigned short Data3;
 @property (readonly) unsigned char* Data4;
 @property (readonly) GUID guidValue;
 + (WFGUID*)guidWithGUID:(const GUID)guid;
 - initWithGUID:(const GUID)guid;
+@end
+
+@interface RTKeyValuePair : RTObject
+@property (readonly) id Key;
+@property (readonly) id Value;
 @end
 
 #ifndef __eventtoken_h__
@@ -80,8 +90,8 @@ extern "C" {
 
 typedef struct EventRegistrationToken
 {
-    __int64 value;
-}   EventRegistrationToken;
+	__int64 value;
+} 	EventRegistrationToken;
 
 #ifdef __cplusplus
 }
@@ -99,10 +109,24 @@ typedef _Return_type_success_(return >= 0) long HRESULT;
 #endif // !_HRESULT_DEFINED
 
 enum _WFAsyncStatus {
-    WFAsyncStatusStarted = 0,
-    WFAsyncStatusCompleted,
-    WFAsyncStatusCanceled,
-    WFAsyncStatusError,
+	WFAsyncStatusStarted = 0,
+	WFAsyncStatusCompleted,
+	WFAsyncStatusCanceled,
+	WFAsyncStatusError,
 };
 typedef unsigned WFAsyncStatus;
 
+enum _RTCollectionOperation {
+    COItemChanged,
+    COItemInserted,
+    COItemRemoved,
+    COReset
+};
+typedef unsigned RTCollectionOperation;
+
+typedef void (^RTCollectionListener)(NSObject* srcCollection, RTCollectionOperation op, id loc);
+
+@protocol RTObservableCollection
+- (EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+- (void)removeObserver: (EventRegistrationToken)receiverToken;
+@end

@@ -26,26 +26,28 @@
 
 // Windows.Devices.Input.PointerDeviceType
 enum _WDIPointerDeviceType {
-    WDIPointerDeviceTypeTouch = 0,
-    WDIPointerDeviceTypePen = 1,
-    WDIPointerDeviceTypeMouse = 2,
+	WDIPointerDeviceTypeTouch = 0,
+	WDIPointerDeviceTypePen = 1,
+	WDIPointerDeviceTypeMouse = 2,
 };
 typedef unsigned WDIPointerDeviceType;
 
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.Devices.Input.PointerDeviceUsage
 WINRT_EXPORT
 @interface WDIPointerDeviceUsage : NSObject
 + (instancetype)new;
-@property unsigned usagePage;
-@property unsigned usage;
+@property unsigned int usagePage;
+@property unsigned int usage;
 @property int minLogical;
 @property int maxLogical;
 @property int minPhysical;
 @property int maxPhysical;
-@property unsigned unit;
+@property unsigned int unit;
 @property float physicalMultiplier;
 @end
 
@@ -63,15 +65,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIPointerDevice : RTObject
-+ (WDIPointerDevice *)getPointerDevice:(unsigned)pointerId;
-+ (NSArray* /*WDIPointerDevice*/ )getPointerDevices;
++ (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
++ (NSArray*)getPointerDevices;
 @property (readonly) BOOL isIntegrated;
-@property (readonly) unsigned maxContacts;
-@property (readonly) WFRect * physicalDeviceRect;
+@property (readonly) unsigned int maxContacts;
+@property (readonly) WFRect* physicalDeviceRect;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFRect * screenRect;
-@property (readonly) NSArray* /*WDIPointerDeviceUsage*/  supportedUsages;
-@property (readonly) unsigned maxPointersWithZDistance;
+@property (readonly) WFRect* screenRect;
+@property (readonly) NSArray* supportedUsages;
+@property (readonly) unsigned int maxPointersWithZDistance;
 @end
 
 #endif // __WDIPointerDevice_DEFINED__
@@ -82,8 +84,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseDevice : RTObject
-+ (WDIMouseDevice *)getForCurrentView;
-- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice *, WDIMouseEventArgs *))del;
++ (WDIMouseDevice*)getForCurrentView;
+- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -95,7 +97,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseEventArgs : RTObject
-@property (readonly) WDIMouseDelta * mouseDelta;
+@property (readonly) WDIMouseDelta* mouseDelta;
 @end
 
 #endif // __WDIMouseEventArgs_DEFINED__
@@ -109,7 +111,7 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) int horizontalWheelPresent;
 @property (readonly) int mousePresent;
-@property (readonly) unsigned numberOfButtons;
+@property (readonly) unsigned int numberOfButtons;
 @property (readonly) int swapButtons;
 @property (readonly) int verticalWheelPresent;
 @end
@@ -135,7 +137,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDITouchCapabilities : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned contacts;
+@property (readonly) unsigned int contacts;
 @property (readonly) int touchPresent;
 @end
 

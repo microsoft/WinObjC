@@ -28,9 +28,6 @@
 #include <deque>
 #include <map>
 #include <memory>
-#include <d3d11.h>
-#include <d3d11_1.h>
-#include <Dxgi1_3.h>
 #include "CompositorInterface.h"
 
 @class RTObject;
@@ -54,13 +51,9 @@ winobjc::Id CreateBitmapFromImageData(const void *ptr, int len);
 winobjc::Id CreateWritableBitmap(int width, int height);
 void *LockWritableBitmap(winobjc::Id &bitmap, void **ptr, int *stride);
 void UnlockWritableBitmap(winobjc::Id &bitmap, void *byteAccess);
-winobjc::Id CreateSwapchainElement(ID3D11Device1 *device, IDXGISwapChain1 *swapChain, int width, int height);
 void SetSwapchainScale(winobjc::Id &panel, float scale);
 
-winobjc::Id CreateWebView();
-void WebViewLoadURL(winobjc::Id &webView, const char *url);
-void WebViewLoadHTML(winobjc::Id &webView, const char *html, const char *url);
-void SetScreenParameters(float width, float height, float magnification);
+void SetScreenParameters(float width, float height, float magnification, float rotation);
 void SetRootGrid(winobjc::Id& root);
 
 void EnableRenderingListener(void (*callback)());
@@ -145,45 +138,6 @@ DisplayTexture::~DisplayTexture()
 {
 }
 
-class WebViewControlXaml : public DisplayTexture,
-                           public WebViewControl                
-{
-public:
-    winobjc::Id _xamlWebView;
-
-    WebViewControlXaml()
-    {
-        IncrementCounter("WebViewXaml");
-        _xamlWebView = CreateWebView();
-    }
-
-    ~WebViewControlXaml()
-    {
-        DecrementCounter("WebViewXaml");
-    }
-
-    DisplayTexture *GetDisplayTexture() 
-    {
-        return this;
-    }
-
-    void LoadURL(NSString *url)
-    {
-        if ( url ) WebViewLoadURL(_xamlWebView, [url UTF8String]);
-    }
-
-    void LoadHTMLString(NSString *html, NSString *baseUrl)
-    {
-        if ( html ) WebViewLoadHTML(_xamlWebView, [html UTF8String], [baseUrl UTF8String]);
-    }
-
-
-    void SetNodeContent(DisplayNode *node, float width, float height, float scale)
-    {
-        node->SetContentsElement(_xamlWebView, width, height, scale);
-    }
-};
-
 class GenericControlXaml : public DisplayTexture
 {
 public:
@@ -201,147 +155,6 @@ public:
     void SetNodeContent(DisplayNode *node, float width, float height, float scale)
     {
         node->SetContentsElement(_xamlView);
-    }
-};
-
-class DisplayTextureD3D : public DisplayTexture
-{
-private:
-    winobjc::Id _xamlPanel;
-
-    ID3D11Texture2D *_tex;
-    ID3D11Device1 *_device;
-    ID3D11DeviceContext1 *_context;
-    int _width, _height;
-
-    EbrComPtr<IDXGIAdapter> dxgiAdapter;
-    EbrComPtr<IDXGIFactory2> dxgiFactory;
-    EbrComPtr<IDXGISwapChain1>  m_swapChain;
-    EbrComPtr<ID3D11RenderTargetView> _renderTargetView;
-
-    HANDLE m_hRenderTargetHandle;
-    EbrComPtr<IDXGIKeyedMutex> m_renderTargetMutex;
-    EbrComPtr<ID3D11Texture2D> m_sharedTargetTexture;
-    EbrComPtr<ID3D11Texture2D> m_masterTexture;
-    EbrComPtr<IDXGIKeyedMutex> m_sharedTargetMutex;
-    bool locked;
-
-public:
-    ~DisplayTextureD3D()
-    {
-        DecrementCounter("D3DTextureXaml");
-
-        locked = false;
-        _tex->Release();
-        _device->Release();
-        _context->Release();
-    }
-
-    DisplayTextureD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *tex, int width, int height)
-    {
-        IncrementCounter("D3DTextureXaml");
-
-        _width = width;
-        _height = height;
-        _device = device;
-        _device->AddRef();
-        _context = context;
-        _context->AddRef();
-
-        m_masterTexture = tex;
-        EbrComPtr<IDXGIResource1> sharePtr;
-        m_masterTexture.As(&sharePtr);
-        sharePtr->CreateSharedHandle(NULL, DXGI_SHARED_RESOURCE_READ, NULL, &m_hRenderTargetHandle);
-        m_masterTexture.As(&m_renderTargetMutex);
-
-        device->OpenSharedResource1(m_hRenderTargetHandle, __uuidof(ID3D11Texture2D), (void **) m_sharedTargetTexture.GetAddressOf());
-        m_sharedTargetTexture.As(&m_sharedTargetMutex);
-
-        // Otherwise, create a new one using the same adapter as the existing Direct3D device.
-        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
-
-        swapChainDesc.Width = width;
-        swapChainDesc.Height = height;
-        swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // This is the most common swap chain format.
-        swapChainDesc.Stereo = false;
-        swapChainDesc.SampleDesc.Count = 1; // Don't use multi-sampling.
-        swapChainDesc.SampleDesc.Quality = 0;
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.BufferCount = 2; // Use double-buffering to minimize latency.
-        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // All Windows Store apps must use this SwapEffect.
-        swapChainDesc.Flags = 0;
-        swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-        swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-
-        EbrComPtr<ID3D11Device1> _d3dDevice;
-        _d3dDevice = device;
-
-        // This sequence obtains the DXGI factory that was used to create the Direct3D device above.
-        EbrComPtr<IDXGIDevice> dxgiDevice;
-        _d3dDevice.As(&dxgiDevice);
-
-        dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf());
-        dxgiAdapter->GetParent(IID_PPV_ARGS(dxgiFactory.GetAddressOf()));
-
-        dxgiFactory->CreateSwapChainForComposition(
-            _d3dDevice.Get(),
-            &swapChainDesc,
-            nullptr,
-            m_swapChain.GetAddressOf()
-            );
-        _xamlPanel = CreateSwapchainElement(device, m_swapChain, _width, _height);
-
-        DXGI_MATRIX_3X2_F mirror = { 0 };
-        mirror._11 = 1.0f;
-        mirror._22 = -1.0f;
-        mirror._32 = height;
-        EbrComPtr<IDXGISwapChain2> spSwapChain2;
-        m_swapChain.As<IDXGISwapChain2>(&spSwapChain2);
-        spSwapChain2->SetMatrixTransform(&mirror);
-
-        // Create a render target view of the swap chain back buffer.
-        EbrComPtr<ID3D11Texture2D> backBuffer;
-        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-
-        _d3dDevice->CreateRenderTargetView(
-            backBuffer.Get(),
-            nullptr,
-            _renderTargetView.GetAddressOf()
-            );
-    }
-
-    void Lock()
-    {
-        if ( !locked ) {
-            locked = true;
-            m_renderTargetMutex->AcquireSync(0, INFINITE);
-        }
-    }
-
-    void Update()
-    {
-        if ( locked ) {
-            locked = false;
-            m_renderTargetMutex->ReleaseSync(0);
-        }
-
-        m_sharedTargetMutex->AcquireSync(0, INFINITE);
-        float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-        EbrComPtr<ID3D11Texture2D> backBuffer;
-        m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-
-        _context->ClearRenderTargetView(_renderTargetView.Get(), color);
-        _context->CopySubresourceRegion1(backBuffer.Get(), 0, 0, 0, 0, m_sharedTargetTexture.Get(), 0, NULL, 0);
-        m_swapChain->Present(1, 0);
-        m_sharedTargetMutex->ReleaseSync(0);
-
-    }
-
-    void SetNodeContent(DisplayNode *node, float width, float height, float scale)
-    {
-        SetSwapchainScale(_xamlPanel, scale);
-        node->SetContentsElement(_xamlPanel, width, height, scale);
     }
 };
 
@@ -776,18 +589,10 @@ void DisplayNode::SetContents(DisplayTexture *tex, float width, float height, fl
 
 class DisplayNodeXaml : public DisplayNode
 {
-    CGRect overrideBounds;
-    CGPoint curPosition;
-    bool forceOverrideBounds;
-
 public:
     DisplayNodeXaml()
     {
         IncrementCounter("DisplayNodeXaml");
-
-        forceOverrideBounds = false;
-        curPosition.x = 0;
-        curPosition.y = 0;
     }
     
     ~DisplayNodeXaml()
@@ -873,11 +678,6 @@ public:
             SetProperty(L"anchorPoint.y", value.y);
         } else if ( strcmp(name, "position") == 0 ) {
             CGPoint position = [(NSValue *) newValue CGPointValue];
-            curPosition = position;
-            if ( forceOverrideBounds ) {
-                position.x += overrideBounds.origin.x;
-                position.y += overrideBounds.origin.y;
-            }
             SetProperty(L"position.x", position.x);
             SetProperty(L"position.y", position.y);
         } else if ( strcmp(name, "bounds.origin") == 0 ) {
@@ -886,9 +686,6 @@ public:
             SetProperty(L"origin.y", value.y);
         } else if ( strcmp(name, "bounds.size") == 0 ) {
             CGSize size = [(NSValue *) newValue CGSizeValue];
-            if ( forceOverrideBounds ) {
-                size = overrideBounds.size;
-            }
             SetProperty(L"size.width", size.width);
             SetProperty(L"size.height", size.height);
         } else if ( strcmp(name, "opacity") == 0 ) {
@@ -920,20 +717,6 @@ public:
             SetProperty(L"transform.scale.y", scale[1]);
             SetProperty(L"transform.translation.x", translation[0]);
             SetProperty(L"transform.translation.y", translation[1]);
-        } else if ( strcmp(name, "overrideBounds") == 0 ) {
-            overrideBounds = [(NSValue *) newValue CGRectValue];
-            CGPoint position = curPosition;
-            forceOverrideBounds = true;
-
-            position.x += overrideBounds.origin.x;
-            position.y += overrideBounds.origin.y;
-
-            SetProperty(L"position.x", position.x);
-            SetProperty(L"position.y", position.y);
-            CGSize size = overrideBounds.size;
-
-            SetProperty(L"size.width", size.width);
-            SetProperty(L"size.height", size.height);
         } else if ( strcmp(name, "contentsScale") == 0 ) {
             //  [TODO: Update contents scale in Xaml node]
             //contentScale = [(NSNumber *) newValue floatValue];
@@ -1040,7 +823,7 @@ public:
     {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = strdup("contents");
+        _propertyName = _strdup("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;
@@ -1461,23 +1244,6 @@ public:
         tex->Release();
     }
 
-    void LockD3DDisplayTexture(DisplayTexture *tex)
-    {
-        if ( !tex ) return;
-
-        ((DisplayTextureD3D *) tex)->Lock();
-    }
-    void UnlockD3DDisplayTexture(DisplayTexture *tex)
-    {
-        ((DisplayTextureD3D *) tex)->Update();
-    }
-
-    DisplayTexture *GetDisplayTextureForD3D(ID3D11Device1 *device, ID3D11DeviceContext1 *context, ID3D11Texture2D *tex, int width, int height) 
-    {
-        DisplayTexture *ret = new DisplayTextureD3D(device, context, tex, width, height);
-        return ret;
-    }
-
     void SortWindowLevels()
     {
     }
@@ -1530,11 +1296,11 @@ public:
         CASignalDisplayLink();
     }
 
-    virtual void setScreenSize(float width, float height, float scale) {
+    virtual void setScreenSize(float width, float height, float scale, float rotation) {
         ::screenWidth = width;
         ::screenHeight = height;
         ::screenMagnification = scale;
-        SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification);
+        SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification, rotation);
     }
 
     virtual void setDeviceSize(int width, int height) 
@@ -1562,12 +1328,6 @@ public:
     void DisableDisplaySyncNotification() 
     {
         DisableRenderingListener();
-    }
-
-    virtual WebViewControl * CreateWebViewDisplayTexture()
-    {
-        WebViewControlXaml *ret = new WebViewControlXaml();
-        return ret;
     }
 
     NSObject *getDisplayProperty(DisplayNode *node, const char *propertyName)

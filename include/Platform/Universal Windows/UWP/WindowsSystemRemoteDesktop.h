@@ -24,6 +24,8 @@
 @protocol WSRIInteractiveSessionStatics;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.RemoteDesktop.InteractiveSession
 #ifndef __WSRInteractiveSession_DEFINED__
 #define __WSRInteractiveSession_DEFINED__

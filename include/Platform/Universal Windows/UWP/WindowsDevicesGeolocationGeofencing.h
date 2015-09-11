@@ -25,37 +25,37 @@
 
 // Windows.Devices.Geolocation.Geofencing.MonitoredGeofenceStates
 enum _WDGGMonitoredGeofenceStates {
-    WDGGMonitoredGeofenceStatesNone = 0,
-    WDGGMonitoredGeofenceStatesEntered = 1,
-    WDGGMonitoredGeofenceStatesExited = 2,
-    WDGGMonitoredGeofenceStatesRemoved = 4,
+	WDGGMonitoredGeofenceStatesNone = 0,
+	WDGGMonitoredGeofenceStatesEntered = 1,
+	WDGGMonitoredGeofenceStatesExited = 2,
+	WDGGMonitoredGeofenceStatesRemoved = 4,
 };
 typedef unsigned WDGGMonitoredGeofenceStates;
 
 // Windows.Devices.Geolocation.Geofencing.GeofenceState
 enum _WDGGGeofenceState {
-    WDGGGeofenceStateNone = 0,
-    WDGGGeofenceStateEntered = 1,
-    WDGGGeofenceStateExited = 2,
-    WDGGGeofenceStateRemoved = 4,
+	WDGGGeofenceStateNone = 0,
+	WDGGGeofenceStateEntered = 1,
+	WDGGGeofenceStateExited = 2,
+	WDGGGeofenceStateRemoved = 4,
 };
 typedef unsigned WDGGGeofenceState;
 
 // Windows.Devices.Geolocation.Geofencing.GeofenceMonitorStatus
 enum _WDGGGeofenceMonitorStatus {
-    WDGGGeofenceMonitorStatusReady = 0,
-    WDGGGeofenceMonitorStatusInitializing = 1,
-    WDGGGeofenceMonitorStatusNoData = 2,
-    WDGGGeofenceMonitorStatusDisabled = 3,
-    WDGGGeofenceMonitorStatusNotInitialized = 4,
-    WDGGGeofenceMonitorStatusNotAvailable = 5,
+	WDGGGeofenceMonitorStatusReady = 0,
+	WDGGGeofenceMonitorStatusInitializing = 1,
+	WDGGGeofenceMonitorStatusNoData = 2,
+	WDGGGeofenceMonitorStatusDisabled = 3,
+	WDGGGeofenceMonitorStatusNotInitialized = 4,
+	WDGGGeofenceMonitorStatusNotAvailable = 5,
 };
 typedef unsigned WDGGGeofenceMonitorStatus;
 
 // Windows.Devices.Geolocation.Geofencing.GeofenceRemovalReason
 enum _WDGGGeofenceRemovalReason {
-    WDGGGeofenceRemovalReasonUsed = 0,
-    WDGGGeofenceRemovalReasonExpired = 1,
+	WDGGGeofenceRemovalReasonUsed = 0,
+	WDGGGeofenceRemovalReasonExpired = 1,
 };
 typedef unsigned WDGGGeofenceRemovalReason;
 
@@ -63,23 +63,25 @@ typedef unsigned WDGGGeofenceRemovalReason;
 #include "WindowsDevicesGeolocation.h"
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Devices.Geolocation.Geofencing.Geofence
 #ifndef __WDGGGeofence_DEFINED__
 #define __WDGGGeofence_DEFINED__
 
 WINRT_EXPORT
 @interface WDGGGeofence : RTObject
-+ (WDGGGeofence *)create:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
-+ (WDGGGeofence *)createWithMonitorStates:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse ACTIVATOR;
-+ (WDGGGeofence *)createWithMonitorStatesAndDwellTime:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan *)dwellTime ACTIVATOR;
-+ (WDGGGeofence *)createWithMonitorStatesDwellTimeStartTimeAndDuration:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan *)dwellTime startTime:(WFDateTime *)startTime duration:(WFTimeSpan *)duration ACTIVATOR;
-@property (readonly) WFTimeSpan * duration;
-@property (readonly) WFTimeSpan * dwellTime;
++ (WDGGGeofence*)create:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
++ (WDGGGeofence*)createWithMonitorStates:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse ACTIVATOR;
++ (WDGGGeofence*)createWithMonitorStatesAndDwellTime:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan*)dwellTime ACTIVATOR;
++ (WDGGGeofence*)createWithMonitorStatesDwellTimeStartTimeAndDuration:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan*)dwellTime startTime:(WFDateTime*)startTime duration:(WFTimeSpan*)duration ACTIVATOR;
+@property (readonly) WFTimeSpan* duration;
+@property (readonly) WFTimeSpan* dwellTime;
 @property (readonly) RTObject<WDGIGeoshape>* geoshape;
 @property (readonly) NSString * id;
 @property (readonly) WDGGMonitoredGeofenceStates monitoredStates;
 @property (readonly) BOOL singleUse;
-@property (readonly) WFDateTime * startTime;
+@property (readonly) WFDateTime* startTime;
 @end
 
 #endif // __WDGGGeofence_DEFINED__
@@ -90,15 +92,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
-@property (readonly) NSMutableArray* /*WDGGGeofence*/  geofences;
-@property (readonly) WDGGeoposition * lastKnownGeoposition;
+@property (readonly) NSMutableArray* geofences;
+@property (readonly) WDGGeoposition* lastKnownGeoposition;
 @property (readonly) WDGGGeofenceMonitorStatus status;
-+ (WDGGGeofenceMonitor *)current;
-- (EventRegistrationToken)addGeofenceStateChangedEvent:(void(^)(WDGGGeofenceMonitor *, RTObject *))del;
++ (WDGGGeofenceMonitor*)current;
+- (EventRegistrationToken)addGeofenceStateChangedEvent:(void(^)(WDGGGeofenceMonitor*, RTObject*))del;
 - (void)removeGeofenceStateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStatusChangedEvent:(void(^)(WDGGGeofenceMonitor *, RTObject *))del;
+- (EventRegistrationToken)addStatusChangedEvent:(void(^)(WDGGGeofenceMonitor*, RTObject*))del;
 - (void)removeStatusChangedEvent:(EventRegistrationToken)tok;
-- (NSArray* /*WDGGGeofenceStateChangeReport*/ )readReports;
+- (NSArray*)readReports;
 @end
 
 #endif // __WDGGGeofenceMonitor_DEFINED__
@@ -109,8 +111,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGGeofenceStateChangeReport : RTObject
-@property (readonly) WDGGGeofence * geofence;
-@property (readonly) WDGGeoposition * geoposition;
+@property (readonly) WDGGGeofence* geofence;
+@property (readonly) WDGGeoposition* geoposition;
 @property (readonly) WDGGGeofenceState newState;
 @property (readonly) WDGGGeofenceRemovalReason removalReason;
 @end

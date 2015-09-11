@@ -20,11 +20,10 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdio.h>
-
-#define USE_OLD_DISPATCH
+#include <MacTypes.h>
 
 struct EbrTimeval {
-     unsigned int tv_sec;   /* seconds since Jan. 1, 1970 */
+     unsigned __int64 tv_sec;   /* seconds since Jan. 1, 1970 */
      unsigned int tv_usec;  /* and microseconds */
 };
 

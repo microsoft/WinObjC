@@ -15,7 +15,7 @@
  */
 
 #define GL_GLEXT_PROTOTYPES
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
 #include "OpenGLES20Context.h"
 #include "ShaderProgram.h"
 #include "../OpenGLESUtil.h"
@@ -40,7 +40,7 @@ OpenGLES20Context::~OpenGLES20Context()
 void OpenGLES20Context::glActiveTexture (GLenum texture)
 {
     openGLESState.setActiveTexture(texture - GL_TEXTURE0);
-    ::ANGLE_glActiveTexture(texture);
+    ::glActiveTexture(texture);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -59,25 +59,25 @@ void OpenGLES20Context::glBindTexture (GLenum target, GLuint texture)
 {
     openGLESState.setBoundTexture(texture);
     openGLESState.setTextureFormat();
-    ::ANGLE_glBindTexture(target, texture);
+    ::glBindTexture(target, texture);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBlendFunc (GLenum sfactor, GLenum dfactor)
 {
-    ::ANGLE_glBlendFunc(sfactor, dfactor);
+    ::glBlendFunc(sfactor, dfactor);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glClear(GLbitfield mask)
 {
-    ::ANGLE_glClear(mask);
+    ::glClear(mask);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glClearColor (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
 {
-    ::ANGLE_glClearColor(red, green, blue, alpha);
+    ::glClearColor(red, green, blue, alpha);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -88,7 +88,7 @@ void OpenGLES20Context::glClearColorx (GLclampx red, GLclampx green, GLclampx bl
 
 void OpenGLES20Context::glClearDepthf (GLclampf depth)
 {
-    ::ANGLE_glClearDepthf(depth);
+    ::glClearDepthf(depth);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -99,7 +99,7 @@ void OpenGLES20Context::glClearDepthx (GLclampx depth)
 
 void OpenGLES20Context::glClearStencil (GLint s)
 {
-    ::ANGLE_glClearStencil(s);
+    ::glClearStencil(s);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -121,7 +121,7 @@ void OpenGLES20Context::glColor4x (GLfixed red, GLfixed green, GLfixed blue, GLf
 
 void OpenGLES20Context::glColorMask (GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
-    ::ANGLE_glColorMask(red, green, blue, alpha);
+    ::glColorMask(red, green, blue, alpha);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -132,55 +132,55 @@ void OpenGLES20Context::glColorPointer (GLint size, GLenum type, GLsizei stride,
 
 void OpenGLES20Context::glCompressedTexImage2D (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid *data)
 {
-    ::ANGLE_glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+    ::glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glCompressedTexSubImage2D (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const GLvoid *data)
 {
-    ::ANGLE_glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+    ::glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glCopyTexImage2D (GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border)
 {
-    ::ANGLE_glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
+    ::glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glCopyTexSubImage2D (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    ::ANGLE_glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+    ::glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glCullFace (GLenum mode)
 {
-    ::ANGLE_glCullFace(mode);
+    ::glCullFace(mode);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDeleteTextures (GLsizei n, const GLuint *textures)
 {
-    ::ANGLE_glDeleteTextures(n, textures);
+    ::glDeleteTextures(n, textures);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDepthFunc (GLenum func)
 {
-    ::ANGLE_glDepthFunc(func);
+    ::glDepthFunc(func);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDepthMask (GLboolean flag)
 {
-    ::ANGLE_glDepthMask(flag);
+    ::glDepthMask(flag);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDepthRangef (GLclampf zNear, GLclampf zFar)
 {
-    ::ANGLE_glDepthRangef(zNear, zFar);
+    ::glDepthRangef(zNear, zFar);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -217,7 +217,7 @@ void OpenGLES20Context::glDisable (GLenum cap)
         case GL_POLYGON_OFFSET_FILL:
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
         case GL_SAMPLE_COVERAGE:
-            ::ANGLE_glDisable(cap);
+            ::glDisable(cap);
             break;
         case GL_NORMALIZE:
             openGLESState.setNormalize(false);
@@ -317,7 +317,7 @@ void OpenGLES20Context::glDrawArrays(GLenum mode, GLint first, GLsizei count)
     if (shaderProgramId == 0) {
         prepareToDraw();
     }
-    ::ANGLE_glDrawArrays(mode, first, count);
+    ::glDrawArrays(mode, first, count);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -326,7 +326,7 @@ void OpenGLES20Context::glDrawElements (GLenum mode, GLsizei count, GLenum type,
     if (shaderProgramId == 0) {
         prepareToDraw();
     }
-    ::ANGLE_glDrawElements(mode, count, type, indices);
+    ::glDrawElements(mode, count, type, indices);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -360,7 +360,7 @@ void OpenGLES20Context::glEnable (GLenum cap)
         case GL_POLYGON_OFFSET_FILL:
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
         case GL_SAMPLE_COVERAGE:
-            ::ANGLE_glEnable(cap);
+            ::glEnable(cap);
             break;
         case GL_NORMALIZE:
             openGLESState.setNormalize(true);
@@ -411,13 +411,13 @@ void OpenGLES20Context::glEnableClientState (GLenum array)
 
 void OpenGLES20Context::glFinish (void)
 {
-    ::ANGLE_glFinish();
+    ::glFinish();
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glFlush (void)
 {
-    ::ANGLE_glFlush();
+    ::glFlush();
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -475,7 +475,7 @@ void OpenGLES20Context::glFogxv (GLenum pname, const GLfixed *params)
 
 void OpenGLES20Context::glFrontFace (GLenum mode)
 {
-    ::ANGLE_glFrontFace(mode);
+    ::glFrontFace(mode);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -491,24 +491,24 @@ void OpenGLES20Context::glFrustumx (GLfixed left, GLfixed right, GLfixed bottom,
 
 void OpenGLES20Context::glGenTextures (GLsizei n, GLuint *textures)
 {
-    ::ANGLE_glGenTextures(n, textures);
+    ::glGenTextures(n, textures);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 GLenum OpenGLES20Context::glGetError (void)
 {
-    return ::ANGLE_glGetError();
+    return ::glGetError();
 }
 
 void OpenGLES20Context::glGetIntegerv (GLenum pname, GLint *params)
 {
-    ::ANGLE_glGetIntegerv(pname, params);
+    ::glGetIntegerv(pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 const GLubyte *OpenGLES20Context::glGetString (GLenum name)
 {
-    return ::ANGLE_glGetString(name);
+    return ::glGetString(name);
 }
 
 void OpenGLES20Context::glHint (GLenum target, GLenum mode)
@@ -521,7 +521,7 @@ void OpenGLES20Context::glHint (GLenum target, GLenum mode)
             openGLESState.setLightingHint(mode);
             break;
         default:
-            ::ANGLE_glHint(target, mode);
+            ::glHint(target, mode);
             CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
             break;
     }
@@ -659,7 +659,7 @@ void OpenGLES20Context::glLightxv (GLenum light, GLenum pname, const GLfixed *pa
 
 void OpenGLES20Context::glLineWidth (GLfloat width)
 {
-    ::ANGLE_glLineWidth(width);
+    ::glLineWidth(width);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -795,7 +795,7 @@ void OpenGLES20Context::glOrthox (GLfixed left, GLfixed right, GLfixed bottom, G
 
 void OpenGLES20Context::glPixelStorei (GLenum pname, GLint param)
 {
-    ::ANGLE_glPixelStorei(pname, param);
+    ::glPixelStorei(pname, param);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -811,7 +811,7 @@ void OpenGLES20Context::glPointSizex (GLfixed size)
 
 void OpenGLES20Context::glPolygonOffset (GLfloat factor, GLfloat units)
 {
-    ::ANGLE_glPolygonOffset(factor, units);
+    ::glPolygonOffset(factor, units);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -832,7 +832,7 @@ void OpenGLES20Context::glPushMatrix (void)
 
 void OpenGLES20Context::glReadPixels (GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels)
 {
-    ::ANGLE_glReadPixels(x, y, width, height, format, type, pixels);
+    ::glReadPixels(x, y, width, height, format, type, pixels);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -848,7 +848,7 @@ void OpenGLES20Context::glRotatex (GLfixed angle, GLfixed x, GLfixed y, GLfixed 
 
 void OpenGLES20Context::glSampleCoverage (GLclampf value, GLboolean invert)
 {
-    ::ANGLE_glSampleCoverage(value, invert);
+    ::glSampleCoverage(value, invert);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -869,7 +869,7 @@ void OpenGLES20Context::glScalex (GLfixed x, GLfixed y, GLfixed z)
 
 void OpenGLES20Context::glScissor (GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    ::ANGLE_glScissor(x, y, width, height);
+    ::glScissor(x, y, width, height);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -880,19 +880,19 @@ void OpenGLES20Context::glShadeModel (GLenum mode)
 
 void OpenGLES20Context::glStencilFunc (GLenum func, GLint ref, GLuint mask)
 {
-    ::ANGLE_glStencilFunc(func, ref, mask);
+    ::glStencilFunc(func, ref, mask);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glStencilMask (GLuint mask)
 {
-    ::ANGLE_glStencilMask(mask);
+    ::glStencilMask(mask);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glStencilOp (GLenum fail, GLenum zfail, GLenum zpass)
 {
-    ::ANGLE_glStencilOp(fail, zfail, zpass);
+    ::glStencilOp(fail, zfail, zpass);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -939,13 +939,13 @@ void OpenGLES20Context::glTexImage2D (GLenum target, GLint level, GLint internal
 {
     openGLESState.setBoundTextureFormat(internalformat);
     openGLESState.setTextureFormat();
-    ::ANGLE_glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+    ::glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glTexParameterf (GLenum target, GLenum pname, GLfloat param)
 {
-    ::ANGLE_glTexParameterf(target, pname, param);
+    ::glTexParameterf(target, pname, param);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -956,7 +956,7 @@ void OpenGLES20Context::glTexParameterx (GLenum target, GLenum pname, GLfixed pa
 
 void OpenGLES20Context::glTexSubImage2D (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels)
 {
-    ::ANGLE_glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+    ::glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -977,7 +977,7 @@ void OpenGLES20Context::glVertexPointer (GLint size, GLenum type, GLsizei stride
 
 void OpenGLES20Context::glViewport (GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    ::ANGLE_glViewport(x, y, width, height);
+    ::glViewport(x, y, width, height);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -986,19 +986,19 @@ void OpenGLES20Context::glViewport (GLint x, GLint y, GLsizei width, GLsizei hei
 // OpenGL ES 1.1 functions
 void OpenGLES20Context::glBindBuffer (GLenum target, GLuint buffer)
 {
-    ::ANGLE_glBindBuffer(target, buffer);
+    ::glBindBuffer(target, buffer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBufferData (GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage)
 {
-    ::ANGLE_glBufferData(target, size, data, usage);
+    ::glBufferData(target, size, data, usage);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBufferSubData (GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data)
 {
-    ::ANGLE_glBufferSubData(target, offset, size, data);
+    ::glBufferSubData(target, offset, size, data);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -1025,13 +1025,13 @@ void OpenGLES20Context::glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLu
 
 void OpenGLES20Context::glDeleteBuffers (GLsizei n, const GLuint *buffers)
 {
-    ::ANGLE_glDeleteBuffers(n, buffers);
+    ::glDeleteBuffers(n, buffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGenBuffers (GLsizei n, GLuint *buffers)
 {
-    ::ANGLE_glGenBuffers(n, buffers);
+    ::glGenBuffers(n, buffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -1060,7 +1060,7 @@ void OpenGLES20Context::glGetFloatv(GLenum pname, GLfloat *params)
             }
             break;
         default:
-            ::ANGLE_glGetFloatv(pname, params);
+            ::glGetFloatv(pname, params);
             break;
     }
     
@@ -1104,13 +1104,13 @@ void OpenGLES20Context::glGetTexEnvxv (GLenum env, GLenum pname, GLfixed *params
 
 void OpenGLES20Context::glGetTexParameterfv (GLenum target, GLenum pname, GLfloat *params)
 {
-    ::ANGLE_glGetTexParameterfv(target, pname, params);
+    ::glGetTexParameterfv(target, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetTexParameteriv (GLenum target, GLenum pname, GLint *params)
 {
-    ::ANGLE_glGetTexParameteriv(target, pname, params);
+    ::glGetTexParameteriv(target, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -1141,17 +1141,17 @@ void OpenGLES20Context::glGetPointerv (GLenum pname, void **params)
 
 GLboolean OpenGLES20Context::glIsBuffer (GLuint buffer)
 {
-    return ::ANGLE_glIsBuffer(buffer);
+    return ::glIsBuffer(buffer);
 }
 
 GLboolean OpenGLES20Context::glIsEnabled (GLenum cap)
 {
-    return ::ANGLE_glIsEnabled(cap);
+    return ::glIsEnabled(cap);
 }
 
 GLboolean OpenGLES20Context::glIsTexture (GLuint texture)
 {
-    return ::ANGLE_glIsTexture(texture);
+    return ::glIsTexture(texture);
 }
 
 void OpenGLES20Context::glPointParameterf (GLenum pname, GLfloat param)
@@ -1276,13 +1276,13 @@ void OpenGLES20Context::glTexEnviv (GLenum target, GLenum pname, const GLint *pa
 
 void OpenGLES20Context::glTexParameteri (GLenum target, GLenum pname, GLint param)
 {
-    ::ANGLE_glTexParameteri(target, pname, param);
+    ::glTexParameteri(target, pname, param);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glTexParameteriv (GLenum target, GLenum pname, const GLint *params)
 {
-    ::ANGLE_glTexParameteriv(target, pname, params);
+    ::glTexParameteriv(target, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -1354,503 +1354,503 @@ void OpenGLES20Context::glPointSizePointerOES (GLenum type, GLsizei stride, cons
 
 void OpenGLES20Context::glAttachShader (GLuint program, GLuint shader)
 {
-    ::ANGLE_glAttachShader(program, shader);
+    ::glAttachShader(program, shader);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBindAttribLocation (GLuint program, GLuint index, const GLchar* name)
 {
-    ::ANGLE_glBindAttribLocation(program, index, name);
+    ::glBindAttribLocation(program, index, name);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBindFramebuffer (GLenum target, GLuint framebuffer)
 {
-    ::ANGLE_glBindFramebuffer(target, framebuffer);
+    ::glBindFramebuffer(target, framebuffer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBindRenderbuffer (GLenum target, GLuint renderbuffer)
 {
-    ::ANGLE_glBindRenderbuffer(target, renderbuffer);
+    ::glBindRenderbuffer(target, renderbuffer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBlendColor (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
 {
-    ::ANGLE_glBlendColor(red, green, blue, alpha);
+    ::glBlendColor(red, green, blue, alpha);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBlendEquation ( GLenum mode )
 {
-    ::ANGLE_glBlendEquation(mode);
+    ::glBlendEquation(mode);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBlendEquationSeparate (GLenum modeRGB, GLenum modeAlpha)
 {
-    ::ANGLE_glBlendEquationSeparate(modeRGB, modeAlpha);
+    ::glBlendEquationSeparate(modeRGB, modeAlpha);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glBlendFuncSeparate (GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
-    ::ANGLE_glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
+    ::glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 GLenum OpenGLES20Context::glCheckFramebufferStatus (GLenum target)
 {
-    return ::ANGLE_glCheckFramebufferStatus(target);
+    return ::glCheckFramebufferStatus(target);
 }
 
 void OpenGLES20Context::glCompileShader (GLuint shader)
 {
-    ::ANGLE_glCompileShader(shader);
+    ::glCompileShader(shader);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 GLuint OpenGLES20Context::glCreateProgram (void)
 {
-    return ::ANGLE_glCreateProgram();
+    return ::glCreateProgram();
 }
 
 GLuint OpenGLES20Context::glCreateShader (GLenum type)
 {
-    return ::ANGLE_glCreateShader(type);
+    return ::glCreateShader(type);
 }
 
 void OpenGLES20Context::glDeleteFramebuffers (GLsizei n, const GLuint* framebuffers)
 {
-    ::ANGLE_glDeleteFramebuffers(n, framebuffers);
+    ::glDeleteFramebuffers(n, framebuffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDeleteProgram (GLuint program)
 {
-    ::ANGLE_glDeleteProgram(program);
+    ::glDeleteProgram(program);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDeleteRenderbuffers (GLsizei n, const GLuint* renderbuffers)
 {
-    ::ANGLE_glDeleteRenderbuffers(n, renderbuffers);
+    ::glDeleteRenderbuffers(n, renderbuffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDeleteShader (GLuint shader)
 {
-    ::ANGLE_glDeleteShader(shader);
+    ::glDeleteShader(shader);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDetachShader (GLuint program, GLuint shader)
 {
-    ::ANGLE_glDetachShader(program, shader);
+    ::glDetachShader(program, shader);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glDisableVertexAttribArray (GLuint index)
 {
-    ::ANGLE_glDisableVertexAttribArray(index);
+    ::glDisableVertexAttribArray(index);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glEnableVertexAttribArray (GLuint index)
 {
-    ::ANGLE_glEnableVertexAttribArray(index);
+    ::glEnableVertexAttribArray(index);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glFramebufferRenderbuffer (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
 {
-    ::ANGLE_glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
+    ::glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glFramebufferTexture2D (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level)
 {
-    ::ANGLE_glFramebufferTexture2D(target, attachment, textarget, texture, level);
+    ::glFramebufferTexture2D(target, attachment, textarget, texture, level);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGenerateMipmap (GLenum target)
 {
-    ::ANGLE_glGenerateMipmap(target);
+    ::glGenerateMipmap(target);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGenFramebuffers (GLsizei n, GLuint* framebuffers)
 {
-    ::ANGLE_glGenFramebuffers(n, framebuffers);
+    ::glGenFramebuffers(n, framebuffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGenRenderbuffers (GLsizei n, GLuint* renderbuffers)
 {
-    ::ANGLE_glGenRenderbuffers(n, renderbuffers);
+    ::glGenRenderbuffers(n, renderbuffers);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetActiveAttrib (GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
 {
-    ::ANGLE_glGetActiveAttrib(program, index, bufsize, length, size, type, name);
+    ::glGetActiveAttrib(program, index, bufsize, length, size, type, name);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetActiveUniform (GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
 {
-    ::ANGLE_glGetActiveUniform(program, index, bufsize, length, size, type, name);
+    ::glGetActiveUniform(program, index, bufsize, length, size, type, name);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetAttachedShaders (GLuint program, GLsizei maxcount, GLsizei* count, GLuint* shaders)
 {
-    ::ANGLE_glGetAttachedShaders(program, maxcount, count, shaders);
+    ::glGetAttachedShaders(program, maxcount, count, shaders);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 int OpenGLES20Context::glGetAttribLocation (GLuint program, const GLchar* name)
 {
-    return ::ANGLE_glGetAttribLocation(program, name);
+    return ::glGetAttribLocation(program, name);
 }
 
 void OpenGLES20Context::glGetFramebufferAttachmentParameteriv (GLenum target, GLenum attachment, GLenum pname, GLint* params)
 {
-    ::ANGLE_glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
+    ::glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetProgramiv (GLuint program, GLenum pname, GLint* params)
 {
-    ::ANGLE_glGetProgramiv(program, pname, params);
+    ::glGetProgramiv(program, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetProgramInfoLog (GLuint program, GLsizei bufsize, GLsizei* length, GLchar* infolog)
 {
-    ::ANGLE_glGetProgramInfoLog(program, bufsize, length, infolog);
+    ::glGetProgramInfoLog(program, bufsize, length, infolog);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetRenderbufferParameteriv (GLenum target, GLenum pname, GLint* params)
 {
-    ::ANGLE_glGetRenderbufferParameteriv(target, pname, params);
+    ::glGetRenderbufferParameteriv(target, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetShaderiv (GLuint shader, GLenum pname, GLint* params)
 {
-    ::ANGLE_glGetShaderiv(shader, pname, params);
+    ::glGetShaderiv(shader, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetShaderInfoLog (GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* infolog)
 {
-    ::ANGLE_glGetShaderInfoLog(shader, bufsize, length, infolog);
+    ::glGetShaderInfoLog(shader, bufsize, length, infolog);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetShaderPrecisionFormat (GLenum shadertype, GLenum precisiontype, GLint* range, GLint* precision)
 {
-    ::ANGLE_glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
+    ::glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetShaderSource (GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
 {
-    ::ANGLE_glGetShaderSource(shader, bufsize, length, source);
+    ::glGetShaderSource(shader, bufsize, length, source);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetUniformfv (GLuint program, GLint location, GLfloat* params)
 {
-    ::ANGLE_glGetUniformfv(program, location, params);
+    ::glGetUniformfv(program, location, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetUniformiv (GLuint program, GLint location, GLint* params)
 {
-    ::ANGLE_glGetUniformiv(program, location, params);
+    ::glGetUniformiv(program, location, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 int OpenGLES20Context::glGetUniformLocation (GLuint program, const GLchar* name)
 {
-    return ::ANGLE_glGetUniformLocation(program, name);
+    return ::glGetUniformLocation(program, name);
 }
 
 void OpenGLES20Context::glGetVertexAttribfv (GLuint index, GLenum pname, GLfloat* params)
 {
-    ::ANGLE_glGetVertexAttribfv(index, pname, params);
+    ::glGetVertexAttribfv(index, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetVertexAttribiv (GLuint index, GLenum pname, GLint* params)
 {
-    ::ANGLE_glGetVertexAttribiv(index, pname, params);
+    ::glGetVertexAttribiv(index, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glGetVertexAttribPointerv (GLuint index, GLenum pname, GLvoid** pointer)
 {
-    ::ANGLE_glGetVertexAttribPointerv(index, pname, pointer);
+    ::glGetVertexAttribPointerv(index, pname, pointer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 GLboolean OpenGLES20Context::glIsFramebuffer (GLuint framebuffer)
 {
-    return ::ANGLE_glIsFramebuffer(framebuffer);
+    return ::glIsFramebuffer(framebuffer);
 }
 
 GLboolean OpenGLES20Context::glIsProgram (GLuint program)
 {
-    return ::ANGLE_glIsProgram(program);
+    return ::glIsProgram(program);
 }
 
 GLboolean OpenGLES20Context::glIsRenderbuffer (GLuint renderbuffer)
 {
-    return ::ANGLE_glIsRenderbuffer(renderbuffer);
+    return ::glIsRenderbuffer(renderbuffer);
 }
 
 GLboolean OpenGLES20Context::glIsShader (GLuint shader)
 {
-    return ::ANGLE_glIsShader(shader);
+    return ::glIsShader(shader);
 }
 
 void OpenGLES20Context::glLinkProgram (GLuint program)
 {
-    ::ANGLE_glLinkProgram(program);
+    ::glLinkProgram(program);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glReleaseShaderCompiler (void)
 {
-    ::ANGLE_glReleaseShaderCompiler();
+    ::glReleaseShaderCompiler();
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glRenderbufferStorage (GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    ::ANGLE_glRenderbufferStorage(target, internalformat, width, height);
+    ::glRenderbufferStorage(target, internalformat, width, height);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glShaderBinary (GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length)
 {
-    ::ANGLE_glShaderBinary(n,shaders,binaryformat,binary,length);
+    ::glShaderBinary(n,shaders,binaryformat,binary,length);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glShaderSource (GLuint shader, GLsizei count, const GLchar** string, const GLint* length)
 {
-    ::ANGLE_glShaderSource(shader, count, string, length);
+    ::glShaderSource(shader, count, string, length);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glStencilFuncSeparate (GLenum face, GLenum func, GLint ref, GLuint mask)
 {
-    ::ANGLE_glStencilFuncSeparate(face, func, ref, mask);
+    ::glStencilFuncSeparate(face, func, ref, mask);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glStencilMaskSeparate (GLenum face, GLuint mask)
 {
-    ::ANGLE_glStencilMaskSeparate(face, mask);
+    ::glStencilMaskSeparate(face, mask);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glStencilOpSeparate (GLenum face, GLenum fail, GLenum zfail, GLenum zpass)
 {
-    ::ANGLE_glStencilOpSeparate(face,fail,zfail,zpass);
+    ::glStencilOpSeparate(face,fail,zfail,zpass);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glTexParameterfv (GLenum target, GLenum pname, const GLfloat* params)
 {
-    ::ANGLE_glTexParameterfv(target, pname, params);
+    ::glTexParameterfv(target, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform1f (GLint location, GLfloat x)
 {
-    ::ANGLE_glUniform1f(location, x);
+    ::glUniform1f(location, x);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform1fv (GLint location, GLsizei count, const GLfloat* v)
 {
-    ::ANGLE_glUniform1fv(location, count, v);
+    ::glUniform1fv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform1i (GLint location, GLint x)
 {
-    ::ANGLE_glUniform1i(location, x);
+    ::glUniform1i(location, x);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform1iv (GLint location, GLsizei count, const GLint* v)
 {
-    ::ANGLE_glUniform1iv(location, count, v);
+    ::glUniform1iv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform2f (GLint location, GLfloat x, GLfloat y)
 {
-    ::ANGLE_glUniform2f(location, x, y);
+    ::glUniform2f(location, x, y);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform2fv (GLint location, GLsizei count, const GLfloat* v)
 {
-    ::ANGLE_glUniform2fv(location, count, v);
+    ::glUniform2fv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform2i (GLint location, GLint x, GLint y)
 {
-    ::ANGLE_glUniform2i(location, x, y);
+    ::glUniform2i(location, x, y);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform2iv (GLint location, GLsizei count, const GLint* v)
 {
-    ::ANGLE_glUniform2iv(location, count, v);
+    ::glUniform2iv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform3f (GLint location, GLfloat x, GLfloat y, GLfloat z)
 {
-    ::ANGLE_glUniform3f(location, x, y, z);
+    ::glUniform3f(location, x, y, z);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform3fv (GLint location, GLsizei count, const GLfloat* v)
 {
-    ::ANGLE_glUniform3fv(location, count, v);
+    ::glUniform3fv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform3i (GLint location, GLint x, GLint y, GLint z)
 {
-    ::ANGLE_glUniform3i(location, x, y, z);
+    ::glUniform3i(location, x, y, z);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform3iv (GLint location, GLsizei count, const GLint* v)
 {
-    ::ANGLE_glUniform3iv(location, count, v);
+    ::glUniform3iv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform4f (GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
-    ::ANGLE_glUniform4f(location, x, y, z, w);
+    ::glUniform4f(location, x, y, z, w);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform4fv (GLint location, GLsizei count, const GLfloat* v)
 {
-    ::ANGLE_glUniform4fv(location, count, v);
+    ::glUniform4fv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform4i (GLint location, GLint x, GLint y, GLint z, GLint w)
 {
-    ::ANGLE_glUniform4i(location, x, y, z, w);
+    ::glUniform4i(location, x, y, z, w);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniform4iv (GLint location, GLsizei count, const GLint* v)
 {
-    ::ANGLE_glUniform4iv(location, count, v);
+    ::glUniform4iv(location, count, v);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniformMatrix2fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    ::ANGLE_glUniformMatrix2fv(location, count, transpose, value);
+    ::glUniformMatrix2fv(location, count, transpose, value);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniformMatrix3fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    ::ANGLE_glUniformMatrix3fv(location, count, transpose, value);
+    ::glUniformMatrix3fv(location, count, transpose, value);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUniformMatrix4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    ::ANGLE_glUniformMatrix4fv(location, count, transpose, value);
+    ::glUniformMatrix4fv(location, count, transpose, value);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glUseProgram (GLuint program)
 {
-    ::ANGLE_glUseProgram(program);
+    ::glUseProgram(program);
     shaderProgramId = program;
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glValidateProgram (GLuint program)
 {
-    ::ANGLE_glValidateProgram(program);
+    ::glValidateProgram(program);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib1f (GLuint indx, GLfloat x)
 {
-    ::ANGLE_glVertexAttrib1f(indx, x);
+    ::glVertexAttrib1f(indx, x);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib1fv (GLuint indx, const GLfloat* values)
 {
-    ::ANGLE_glVertexAttrib1fv(indx, values);
+    ::glVertexAttrib1fv(indx, values);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib2f (GLuint indx, GLfloat x, GLfloat y)
 {
-    ::ANGLE_glVertexAttrib2f(indx, x, y);
+    ::glVertexAttrib2f(indx, x, y);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib2fv (GLuint indx, const GLfloat* values)
 {
-    ::ANGLE_glVertexAttrib2fv(indx, values);
+    ::glVertexAttrib2fv(indx, values);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib3f (GLuint indx, GLfloat x, GLfloat y, GLfloat z)
 {
-    ::ANGLE_glVertexAttrib3f(indx, x, y, z);
+    ::glVertexAttrib3f(indx, x, y, z);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib3fv (GLuint indx, const GLfloat* values)
 {
-    ::ANGLE_glVertexAttrib3fv(indx, values);
+    ::glVertexAttrib3fv(indx, values);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib4f (GLuint indx, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
-    ::ANGLE_glVertexAttrib4f(indx, x, y, z, w);
+    ::glVertexAttrib4f(indx, x, y, z, w);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttrib4fv (GLuint indx, const GLfloat* values)
 {
-    ::ANGLE_glVertexAttrib4fv(indx, values);
+    ::glVertexAttrib4fv(indx, values);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
 void OpenGLES20Context::glVertexAttribPointer (GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr)
 {
-    ::ANGLE_glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
+    ::glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
@@ -1859,7 +1859,7 @@ void OpenGLES20Context::glVertexAttribPointer (GLuint indx, GLint size, GLenum t
 void OpenGLES20Context::glGetBufferPointervOES (GLenum target, GLenum pname, GLvoid **params)
 {
 #if GL_OES_mapbuffer
-    //::ANGLE_glGetBufferPointervOES(target, pname, params);
+    //::glGetBufferPointervOES(target, pname, params);
     assert(0);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 #else
@@ -1871,7 +1871,7 @@ GLvoid * OpenGLES20Context::glMapBufferOES (GLenum target, GLenum access)
 {
 #if GL_OES_mapbuffer
     assert(0);
-    //return ::ANGLE_glMapBufferOES(target, access);
+    //return ::glMapBufferOES(target, access);
     return 0;
 #else
     LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
@@ -1883,7 +1883,7 @@ GLboolean OpenGLES20Context::glUnmapBufferOES (GLenum target)
 {
 #if GL_OES_mapbuffer
     assert(0);
-    //return ::ANGLE_glUnmapBufferOES(target);
+    //return ::glUnmapBufferOES(target);
     return 0;
 #else
     LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");

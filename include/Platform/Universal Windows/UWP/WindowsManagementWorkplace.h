@@ -24,6 +24,8 @@
 @protocol WMWIMdmAllowPolicyStatics;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.Management.Workplace.MdmPolicy
 #ifndef __WMWMdmPolicy_DEFINED__
 #define __WMWMdmPolicy_DEFINED__

@@ -34,8 +34,30 @@
 #include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
 
-@interface _TransitionNotifier
+@interface _TransitionNotifier : NSObject
 @end
+
+@implementation _TransitionNotifier {
+	idretain _animDelegate;
+	SEL _selector;
+}
+
+	+(instancetype) _transitionTrampoline: (id) delegate withSelector: (SEL) selector
+	{
+		_TransitionNotifier *ret = [self alloc];
+		ret->_animDelegate = delegate;
+		ret->_selector = selector;
+		return [ret autorelease];
+	}
+
+	-(void) animationDidStop: (CAAnimation *) animation finished: (BOOL) finished
+	{
+        void (*imp)(id, SEL, CAAnimation *, BOOL) = (void(*)(id, SEL, CAAnimation *, BOOL))[_animDelegate methodForSelector: _selector];
+		imp(_animDelegate, _selector, animation, finished);
+		_animDelegate = nil;
+	}
+@end
+
 #import <UIKit/UIStoryboardPushSegueTemplate.h>
 
 #include "..\include\CACompositor.h"
@@ -902,7 +924,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             [controller view];
             controller->priv->_parentViewController = self;
             controller->priv->_presentingViewController = self;
-            [controller performSelector:@selector(_addToTop) withObject:[NSNumber numberWithInt:animated] afterDelay:0.0];
+            [controller performSelector:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] afterDelay:0.0];
         }
 
         /*

@@ -17,7 +17,7 @@
 #ifndef ShaderFile_H_
 #define ShaderFile_H_
 
-#include "EbrOpenglIncludes.h"
+#include "GLES2/gl2.h"
 #include <string>
 #include "../OpenGLESFile.h"
 

@@ -311,12 +311,19 @@
     }
 #endif
 
-    -(void) setImage:(UIImage*)image forState:(UIControlState)state {
-        if ( state > 16 ) {
-            EbrDebugLog("setImageState: bad mask %x\n", state);
-            return;
+    static bool validateState(UIControlState state)
+    {
+        if ( state >= 16 ) {
+            EbrDebugLog("UIButton: bad control state %x\n", state);
+            return false;
         }
-        assert(state < 16);
+
+        return true;
+    }
+
+    -(void) setImage:(UIImage*)image forState:(UIControlState)state {
+        if ( !validateState(state) ) return;
+
         _states[state].image = image;
         [self setNeedsDisplay];
         [self setNeedsLayout];
@@ -324,7 +331,8 @@
     }
 
     -(void) setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return;
+
         _states[state].backgroundImage = image;
         [self setNeedsDisplay];
         [self setNeedsLayout];
@@ -332,7 +340,8 @@
     }
 
     -(UIImage*) backgroundImageForState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return nil;
+
         return _states[state].backgroundImage;
     }
 
@@ -341,30 +350,35 @@
     }
 
     -(void) setTitle:(NSString*)title forState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return;
+
         _states[state].title.attach([title copy]);
         [self setNeedsLayout];
         [self layoutSubviews];
     }
 
     -(NSString*) titleForState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return nil;
+
         return _states[state].title;
     }
 
     -(UIImage*) imageForState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return nil;
+
         return _states[state].image;
     }
 
     -(void) setTitleColor:(UIColor*)color forState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return;
+
         _states[state].textColor = color;
         [self setNeedsLayout];
     }
 
     -(UIColor*) titleColorForState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return nil;
+
         return _states[state].textColor;
     }
 
@@ -372,17 +386,19 @@
     }
 
     -(void) setTitleShadowColor:(UIColor*)color forState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return;
+
         _states[state].titleShadowColor = color;
         [self setNeedsLayout];
     }
 
     -(UIColor*) titleShadowColorForState:(UIControlState)state {
-        assert(state < 16);
+        if ( !validateState(state) ) return nil;
+
         return _states[state].titleShadowColor;
     }
 
-    /* annotate with type */ -(id) currentTitleShadowColor {
+    -(UIColor *) currentTitleShadowColor {
         return getTitleShadowColor(self);
     }
 

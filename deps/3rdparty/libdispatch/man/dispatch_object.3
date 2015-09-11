@@ -1,0 +1,102 @@
+.\" Copyright (c) 2008-2009 Apple Inc. All rights reserved.
+.Dd May 1, 2009
+.Dt dispatch_object 3
+.Os Darwin
+.Sh NAME
+.Nm dispatch_object
+.Nd General manipulation of dispatch objects
+.Sh SYNOPSIS
+.Fd #include <dispatch/dispatch.h>
+.Ft void
+.Fo dispatch_retain
+.Fa "dispatch_object_t object"
+.Fc
+.Ft void
+.Fo dispatch_release
+.Fa "dispatch_object_t object"
+.Fc
+.Ft void
+.Fo dispatch_suspend
+.Fa "dispatch_object_t object"
+.Fc
+.Ft void
+.Fo dispatch_resume
+.Fa "dispatch_object_t object"
+.Fc
+.Ft "void *"
+.Fo dispatch_get_context
+.Fa "dispatch_object_t object"
+.Fc
+.Ft void
+.Fo dispatch_set_context
+.Fa "dispatch_object_t object"
+.Fa "void *context"
+.Fc
+.Ft void
+.Fo dispatch_set_finalizer_f
+.Fa "dispatch_object_t object"
+.Fa "dispatch_function_t finalizer"
+.Fc
+.Sh DESCRIPTION
+Dispatch objects share functions for coordinating memory management, suspension,
+cancellation and context pointers. While all dispatch objects are retainable,
+not all objects support suspension, context pointers or finalizers (currently
+only queues and sources support these additional interfaces).
+.Sh MEMORY MANGEMENT
+Objects returned by creation functions in the dispatch framework may be
+uniformly retained and released with the functions
+.Fn dispatch_retain
+and
+.Fn dispatch_release
+respectively.
+.Pp
+The dispatch framework does not guarantee that any given client has the last or
+only reference to a given object. Objects may be retained internally by the
+system.
+.Sh SUSPENSION
+The invocation of blocks on dispatch queues or dispatch sources may be suspended
+or resumed with the functions
+.Fn dispatch_suspend
+and
+.Fn dispatch_resume 
+respectively.
+The dispatch framework always checks the suspension status before executing a
+block, but such changes never affect a block during execution (non-preemptive).
+Therefore the suspension of an object is asynchronous, unless it is performed
+from the context of the target queue for the given object.
+The result of suspending or resuming an object that is not a dispatch queue or
+a dispatch source is undefined.
+.Pp
+.Em Important :
+suspension applies to all aspects of the dispatch object life cycle, including
+the finalizer function and cancellation handler. Therefore it is important to
+balance calls to
+.Fn dispatch_suspend
+and
+.Fn dispatch_resume
+such that the dispatch object is fully resumed when the last reference is
+released. The result of releasing all references to a dispatch object while in
+a suspended state is undefined.
+.Sh CONTEXT POINTERS
+Dispatch queues and sources support supplemental context pointers. The value of
+the context pointer may be retrieved and updated with
+.Fn dispatch_get_context
+and
+.Fn dispatch_set_context
+respectively.
+The
+.Fn dispatch_set_finalizer_f
+specifies an optional per-object finalizer function that is invoked
+asynchronously if the context pointer is not NULL when the last
+reference to the object is released.
+This gives the
+application an opportunity to free the context data associated with the object.
+.Pp
+The result of getting or setting the context of an object that is not a
+dispatch queue or a dispatch source is undefined.
+.Sh SEE ALSO
+.Xr dispatch 3 ,
+.Xr dispatch_group_create 3 ,
+.Xr dispatch_queue_create 3 ,
+.Xr dispatch_semaphore_create 3 ,
+.Xr dispatch_source_create 3

@@ -25,22 +25,22 @@
 
 // Windows.UI.ApplicationSettings.WebAccountAction
 enum _WUAWebAccountAction {
-    WUAWebAccountActionReconnect = 0,
-    WUAWebAccountActionRemove = 1,
-    WUAWebAccountActionViewDetails = 2,
-    WUAWebAccountActionManage = 3,
-    WUAWebAccountActionMore = 4,
+	WUAWebAccountActionReconnect = 0,
+	WUAWebAccountActionRemove = 1,
+	WUAWebAccountActionViewDetails = 2,
+	WUAWebAccountActionManage = 3,
+	WUAWebAccountActionMore = 4,
 };
 typedef unsigned WUAWebAccountAction;
 
 // Windows.UI.ApplicationSettings.SupportedWebAccountActions
 enum _WUASupportedWebAccountActions {
-    WUASupportedWebAccountActionsNone = 0,
-    WUASupportedWebAccountActionsReconnect = 1,
-    WUASupportedWebAccountActionsRemove = 2,
-    WUASupportedWebAccountActionsViewDetails = 4,
-    WUASupportedWebAccountActionsManage = 8,
-    WUASupportedWebAccountActionsMore = 16,
+	WUASupportedWebAccountActionsNone = 0,
+	WUASupportedWebAccountActionsReconnect = 1,
+	WUASupportedWebAccountActionsRemove = 2,
+	WUASupportedWebAccountActionsViewDetails = 4,
+	WUASupportedWebAccountActionsManage = 8,
+	WUASupportedWebAccountActionsMore = 16,
 };
 typedef unsigned WUASupportedWebAccountActions;
 
@@ -51,19 +51,19 @@ typedef unsigned WUASupportedWebAccountActions;
 // Windows.UI.ApplicationSettings.CredentialCommandCredentialDeletedHandler
 #ifndef __WUACredentialCommandCredentialDeletedHandler__DEFINED
 #define __WUACredentialCommandCredentialDeletedHandler__DEFINED
-typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand * command);
+typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand* command);
 #endif // __WUACredentialCommandCredentialDeletedHandler__DEFINED
 
 // Windows.UI.ApplicationSettings.WebAccountCommandInvokedHandler
 #ifndef __WUAWebAccountCommandInvokedHandler__DEFINED
 #define __WUAWebAccountCommandInvokedHandler__DEFINED
-typedef void(^WUAWebAccountCommandInvokedHandler)(WUAWebAccountCommand * command, WUAWebAccountInvokedArgs * args);
+typedef void(^WUAWebAccountCommandInvokedHandler)(WUAWebAccountCommand* command, WUAWebAccountInvokedArgs* args);
 #endif // __WUAWebAccountCommandInvokedHandler__DEFINED
 
 // Windows.UI.ApplicationSettings.WebAccountProviderCommandInvokedHandler
 #ifndef __WUAWebAccountProviderCommandInvokedHandler__DEFINED
 #define __WUAWebAccountProviderCommandInvokedHandler__DEFINED
-typedef void(^WUAWebAccountProviderCommandInvokedHandler)(WUAWebAccountProviderCommand * command);
+typedef void(^WUAWebAccountProviderCommandInvokedHandler)(WUAWebAccountProviderCommand* command);
 #endif // __WUAWebAccountProviderCommandInvokedHandler__DEFINED
 
 // Windows.UI.Popups.UICommandInvokedHandler
@@ -73,22 +73,24 @@ typedef void(^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #endif // __WUPUICommandInvokedHandler__DEFINED
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.UI.ApplicationSettings.WebAccountProviderCommandInvokedHandler
 #ifndef __WUAWebAccountProviderCommandInvokedHandler__DEFINED
 #define __WUAWebAccountProviderCommandInvokedHandler__DEFINED
-typedef void(^WUAWebAccountProviderCommandInvokedHandler)(WUAWebAccountProviderCommand * command);
+typedef void(^WUAWebAccountProviderCommandInvokedHandler)(WUAWebAccountProviderCommand* command);
 #endif // __WUAWebAccountProviderCommandInvokedHandler__DEFINED
 
 // Windows.UI.ApplicationSettings.WebAccountCommandInvokedHandler
 #ifndef __WUAWebAccountCommandInvokedHandler__DEFINED
 #define __WUAWebAccountCommandInvokedHandler__DEFINED
-typedef void(^WUAWebAccountCommandInvokedHandler)(WUAWebAccountCommand * command, WUAWebAccountInvokedArgs * args);
+typedef void(^WUAWebAccountCommandInvokedHandler)(WUAWebAccountCommand* command, WUAWebAccountInvokedArgs* args);
 #endif // __WUAWebAccountCommandInvokedHandler__DEFINED
 
 // Windows.UI.ApplicationSettings.CredentialCommandCredentialDeletedHandler
 #ifndef __WUACredentialCommandCredentialDeletedHandler__DEFINED
 #define __WUACredentialCommandCredentialDeletedHandler__DEFINED
-typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand * command);
+typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand* command);
 #endif // __WUACredentialCommandCredentialDeletedHandler__DEFINED
 
 // Windows.UI.Popups.IUICommand
@@ -96,7 +98,7 @@ typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand
 #define __WUPIUICommand_DEFINED__
 
 @protocol WUPIUICommand
-@property (copy) RTObject * id;
+@property (copy) RTObject* id;
 @property (copy) WUPUICommandInvokedHandler invoked;
 @property (copy) NSString * label;
 @end
@@ -109,11 +111,11 @@ typedef void(^WUACredentialCommandCredentialDeletedHandler)(WUACredentialCommand
 
 WINRT_EXPORT
 @interface WUASettingsCommand : RTObject <WUPIUICommand>
-+ (WUASettingsCommand *)createSettingsCommand:(RTObject *)settingsCommandId label:(NSString *)label handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
++ (WUASettingsCommand*)createSettingsCommand:(RTObject*)settingsCommandId label:(NSString *)label handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
 @property (copy) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
-@property (copy) RTObject * id;
-+ (WUASettingsCommand *)accountsCommand;
+@property (copy) RTObject* id;
++ (WUASettingsCommand*)accountsCommand;
 @end
 
 #endif // __WUASettingsCommand_DEFINED__
@@ -124,9 +126,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAWebAccountProviderCommand : RTObject
-+ (WUAWebAccountProviderCommand *)createWebAccountProviderCommand:(WSCWebAccountProvider *)webAccountProvider invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
++ (WUAWebAccountProviderCommand*)createWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
 @property (readonly) WUAWebAccountProviderCommandInvokedHandler invoked;
-@property (readonly) WSCWebAccountProvider * webAccountProvider;
+@property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
 #endif // __WUAWebAccountProviderCommand_DEFINED__
@@ -137,10 +139,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAWebAccountCommand : RTObject
-+ (WUAWebAccountCommand *)createWebAccountCommand:(WSCWebAccount *)webAccount invoked:(WUAWebAccountCommandInvokedHandler)invoked actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
++ (WUAWebAccountCommand*)createWebAccountCommand:(WSCWebAccount*)webAccount invoked:(WUAWebAccountCommandInvokedHandler)invoked actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
 @property (readonly) WUASupportedWebAccountActions actions;
 @property (readonly) WUAWebAccountCommandInvokedHandler invoked;
-@property (readonly) WSCWebAccount * webAccount;
+@property (readonly) WSCWebAccount* webAccount;
 @end
 
 #endif // __WUAWebAccountCommand_DEFINED__
@@ -162,10 +164,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUACredentialCommand : RTObject
-+ (WUACredentialCommand *)createCredentialCommand:(WSCPasswordCredential *)passwordCredential ACTIVATOR;
-+ (WUACredentialCommand *)createCredentialCommandWithHandler:(WSCPasswordCredential *)passwordCredential deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
++ (WUACredentialCommand*)createCredentialCommand:(WSCPasswordCredential*)passwordCredential ACTIVATOR;
++ (WUACredentialCommand*)createCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
 @property (readonly) WUACredentialCommandCredentialDeletedHandler credentialDeleted;
-@property (readonly) WSCPasswordCredential * passwordCredential;
+@property (readonly) WSCPasswordCredential* passwordCredential;
 @end
 
 #endif // __WUACredentialCommand_DEFINED__
@@ -188,11 +190,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUAAccountsSettingsPaneCommandsRequestedEventArgs : RTObject
 @property (copy) NSString * headerText;
-@property (readonly) NSMutableArray* /*WUASettingsCommand*/  commands;
-@property (readonly) NSMutableArray* /*WUACredentialCommand*/  credentialCommands;
-@property (readonly) NSMutableArray* /*WUAWebAccountCommand*/  webAccountCommands;
-@property (readonly) NSMutableArray* /*WUAWebAccountProviderCommand*/  webAccountProviderCommands;
-- (WUAAccountsSettingsPaneEventDeferral *)getDeferral;
+@property (readonly) NSMutableArray* commands;
+@property (readonly) NSMutableArray* credentialCommands;
+@property (readonly) NSMutableArray* webAccountCommands;
+@property (readonly) NSMutableArray* webAccountProviderCommands;
+- (WUAAccountsSettingsPaneEventDeferral*)getDeferral;
 @end
 
 #endif // __WUAAccountsSettingsPaneCommandsRequestedEventArgs_DEFINED__
@@ -203,9 +205,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAAccountsSettingsPane : RTObject
-+ (WUAAccountsSettingsPane *)getForCurrentView;
++ (WUAAccountsSettingsPane*)getForCurrentView;
 + (void)show;
-- (EventRegistrationToken)addAccountCommandsRequestedEvent:(void(^)(WUAAccountsSettingsPane *, WUAAccountsSettingsPaneCommandsRequestedEventArgs *))del;
+- (EventRegistrationToken)addAccountCommandsRequestedEvent:(void(^)(WUAAccountsSettingsPane*, WUAAccountsSettingsPaneCommandsRequestedEventArgs*))del;
 - (void)removeAccountCommandsRequestedEvent:(EventRegistrationToken)tok;
 @end
 

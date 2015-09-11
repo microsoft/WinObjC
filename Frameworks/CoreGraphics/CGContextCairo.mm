@@ -719,6 +719,8 @@ void CGContextCairo::CGContextClosePath()
 
     LOCK_CAIRO();
     cairo_close_path(_drawContext);
+	cairo_new_sub_path(_drawContext);
+
     UNLOCK_CAIRO();
 }
 
@@ -789,10 +791,8 @@ void CGContextCairo::CGContextAddArc(float x, float y, float radius, float start
     LOCK_CAIRO();
     if ( clockwise ) {
         cairo_arc_negative(_drawContext, x, y, radius, startAngle, endAngle);
-        CGContextAddLineToPoint(x + radius * cos(endAngle), y + radius * sin(endAngle));
     } else {
         cairo_arc(_drawContext, x, y, radius, startAngle, endAngle);
-        CGContextAddLineToPoint(x + radius * cos(endAngle), y + radius * sin(endAngle));
     }
     UNLOCK_CAIRO();
 }

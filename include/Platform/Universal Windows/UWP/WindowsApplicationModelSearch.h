@@ -27,15 +27,17 @@
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.ApplicationModel.Search.SearchPaneQueryLinguisticDetails
 #ifndef __WASSearchPaneQueryLinguisticDetails_DEFINED__
 #define __WASSearchPaneQueryLinguisticDetails_DEFINED__
 
 WINRT_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
-@property (readonly) NSArray* /*String*/  queryTextAlternatives;
-@property (readonly) unsigned queryTextCompositionLength;
-@property (readonly) unsigned queryTextCompositionStart;
+@property (readonly) NSArray* queryTextAlternatives;
+@property (readonly) unsigned int queryTextCompositionLength;
+@property (readonly) unsigned int queryTextCompositionStart;
 @end
 
 #endif // __WASSearchPaneQueryLinguisticDetails_DEFINED__
@@ -46,9 +48,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (void)appendQuerySuggestion:(NSString *)text;
-- (void)appendQuerySuggestions:(id<NSFastEnumeration> /*String*/ )suggestions;
+- (void)appendQuerySuggestions:(id<NSFastEnumeration> /* NSString * */)suggestions;
 - (void)appendResultSuggestion:(NSString *)text detailText:(NSString *)detailText tag:(NSString *)tag image:(RTObject<WSSIRandomAccessStreamReference>*)image imageAlternateText:(NSString *)imageAlternateText;
 - (void)appendSearchSeparator:(NSString *)label;
 @end
@@ -64,8 +66,8 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property BOOL enabled;
 @property (copy) NSString * aqsFilter;
-@property (readonly) NSMutableArray* /*WSStorageFolder*/  locations;
-@property (readonly) NSMutableArray* /*String*/  propertiesToMatch;
+@property (readonly) NSMutableArray* locations;
+@property (readonly) NSMutableArray* propertiesToMatch;
 @end
 
 #endif // __WASLocalContentSuggestionSettings_DEFINED__
@@ -76,10 +78,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
-+ (WASSearchQueryLinguisticDetails *)createInstance:(id<NSFastEnumeration> /*String*/ )queryTextAlternatives queryTextCompositionStart:(unsigned)queryTextCompositionStart queryTextCompositionLength:(unsigned)queryTextCompositionLength ACTIVATOR;
-@property (readonly) NSArray* /*String*/  queryTextAlternatives;
-@property (readonly) unsigned queryTextCompositionLength;
-@property (readonly) unsigned queryTextCompositionStart;
++ (WASSearchQueryLinguisticDetails*)createInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives queryTextCompositionStart:(unsigned int)queryTextCompositionStart queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
+@property (readonly) NSArray* queryTextAlternatives;
+@property (readonly) unsigned int queryTextCompositionLength;
+@property (readonly) unsigned int queryTextCompositionStart;
 @end
 
 #endif // __WASSearchQueryLinguisticDetails_DEFINED__
@@ -102,8 +104,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 @property (readonly) BOOL isCanceled;
-@property (readonly) WASSearchSuggestionCollection * searchSuggestionCollection;
-- (WASSearchSuggestionsRequestDeferral *)getDeferral;
+@property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
+- (WASSearchSuggestionsRequestDeferral*)getDeferral;
 @end
 
 #endif // __WASSearchSuggestionsRequest_DEFINED__

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
+  <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.targets" />
+  </ImportGroup>
+
+  <Target
+    Name="SBRemoveAppContainer"
+    AfterTargets="SBResourceCopy"
+    Inputs="@(SBResourceCopy)"
+    Outputs="@(SBResourceCopy->'%(OutputFile).bitremoved')">
+    <Message Importance="high"
+      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
+      Text="Removing AppContainer bit from %(SBResourceCopy.OutputFile)" />
+
+    <Exec
+      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
+      Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
+      
+    <WriteLinesToFile
+        File="%(SBResourceCopy.OutputFile).bitremoved" Lines="AppContainer bit removed"/>
+  </Target>
+</Project>

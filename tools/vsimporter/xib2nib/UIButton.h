@@ -29,5 +29,6 @@ public:
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    void WriteStatefulContent(NIBWriter *writer, XIBObject *obj);
 };
 

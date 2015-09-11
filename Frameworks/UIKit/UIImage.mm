@@ -27,6 +27,11 @@
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 
+#include "Windows.h"
+#include "COMIncludes.h"
+#include "Wincodec.h"
+#include "COMIncludes_End.h"
+
 #include "BMPDecode.h"
 
 typedef struct insetInfo {
@@ -219,19 +224,144 @@ imageCacheInfo imageInfo;
         return [[[self alloc] initWithCGImage:image scale:scaleFactor orientation:orientation] autorelease];
     }
 
-    static bool loadGIF(void *bytes, int length)
+    static bool loadImageFromWICFrame(UIImage *dest, IWICImagingFactory *pFactory, IWICBitmapFrameDecode *pFrame)
     {
-        return false;
+        bool ret = false;
+        IWICFormatConverter *pFormatConverter = NULL;
+        UINT width = 0, height = 0;
+        HRESULT hr = S_OK;
+
+        hr = pFrame->GetSize(&width, &height);
+
+        if ( SUCCEEDED(hr) ) {
+            CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
+            dest->m_pImage = CGImageCreate(width, height, 8, 32, width * 4, clrRgb, kCGImageAlphaFirst, nil, NULL, false, kCGRenderingIntentDefault);
+            CGColorSpaceRelease(clrRgb);
+            
+            hr = pFactory->CreateFormatConverter(&pFormatConverter);
+            if ( SUCCEEDED(hr) ) {
+                hr = pFormatConverter->Initialize(pFrame, GUID_WICPixelFormat32bppRGB, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeCustom);
+                if ( SUCCEEDED(hr) ) {
+                    BYTE *imageData = (BYTE *) dest->m_pImage->Backing()->LockImageData();
+                    hr = pFormatConverter->CopyPixels(NULL, dest->m_pImage->Backing()->BytesPerRow(), dest->m_pImage->Backing()->BytesPerRow() * dest->m_pImage->Backing()->Height(), imageData);
+                    dest->m_pImage->Backing()->ReleaseImageData();
+
+                    if ( SUCCEEDED(hr) ) {
+                        ret = true;
+                    } else {
+                        EbrDebugLog("IWICFormatConverter::CopyPixels failed hr=%x\n", hr);
+                        ret = false;
+                    }
+                } else {
+                    EbrDebugLog("IWICFormatConverter::Initialize failed hr=%x\n", hr);
+                    ret = false;
+                }
+            } else {
+                EbrDebugLog("IWICImagingFactory::CreateFormatConverter failed hr=%x\n", hr);
+                ret = false;
+            }
+        } else {
+            EbrDebugLog("IWICBitmapDecoder::GetFrame failed hr=%x\n", hr);
+            ret = false;
+        }
+
+        if ( pFormatConverter ) {
+            pFormatConverter->Release();
+        }
+        
+        return ret;
     }
 
-    static bool loadBMP(void *bytes, size_t length)
+    static bool loadImageWithWICDecoder(UIImage *dest, REFGUID decoderCls, void *bytes, int length)
     {
-        return false;
+        IWICImagingFactory *pFactory = NULL;
+        IWICBitmapDecoder *pDecoder = NULL; 
+        IStream *spStream = NULL;
+        IWICBitmapFrameDecode *pFrame = NULL;
+        HRESULT hr = S_OK;
+
+        hr = CoCreateInstance(
+            CLSID_WICImagingFactory,
+            NULL,
+            CLSCTX_INPROC_SERVER,
+            IID_IWICImagingFactory,
+            (LPVOID*)&pFactory
+            );
+
+        if (SUCCEEDED(hr))
+        {
+            hr = pFactory->CreateDecoder(
+                            decoderCls,
+                            NULL,
+                            &pDecoder);
+        } 
+
+        if (SUCCEEDED(hr))
+        {
+            hr = ::CreateStreamOnHGlobal(NULL, FALSE, &spStream);
+            if ( SUCCEEDED(hr) ) {
+                ULONG written = 0;
+                hr = spStream->Write(bytes, length, &written);
+                if ( SUCCEEDED(hr) && written == length ) {
+                    hr = pDecoder->Initialize(spStream, WICDecodeMetadataCacheOnLoad);
+
+                    if ( SUCCEEDED(hr) ) {
+                        hr = pDecoder->GetFrame(0, &pFrame);
+                        if ( SUCCEEDED(hr) ) {
+                            if ( !loadImageFromWICFrame(dest, pFactory, pFrame) ) {
+                                EbrDebugLog("loadImageFromWICFrame failed\n");
+                                hr = E_FAIL;
+                            }
+                        } else {
+                            EbrDebugLog("IWICBitmapDecoder::GetFrame failed hr=%x\n", hr);
+                        }
+                    } else {
+                        EbrDebugLog("IWICBitmapDecoder::Initialize failed hr=%x\n", hr);
+                    }
+                } else {
+                    EbrDebugLog("IStream::Write failed hr=%x len=%d written=%d\n", hr, length, written);
+                }
+            } else {
+                EbrDebugLog("CreateStreamOnHGlobal failed hr=%x\n", hr);
+            }
+        } 
+
+        if ( pFactory )
+        {
+            pFactory->Release();
+        }
+
+        if ( pDecoder )
+        {
+            pDecoder->Release();
+        }
+
+        if ( spStream )
+        {
+            spStream->Release();
+        }
+
+        if ( pFrame )
+        {
+            pFrame->Release();
+        }
+
+        return SUCCEEDED(hr);
     }
 
-    static bool loadTIFF(void *bytes, int length)
+    static bool loadGIF(UIImage *dest, void *bytes, int length)
     {
-        return false;
+        return loadImageWithWICDecoder(dest, GUID_ContainerFormatGif, bytes, length);
+    }
+
+    static bool loadBMP(UIImage *dest, void *bytes, size_t length)
+    {
+        return loadImageWithWICDecoder(dest, GUID_ContainerFormatBmp, bytes, length);
+    }
+
+    static bool loadTIFF(UIImage *dest, void *bytes, int length)
+    {
+        return loadImageWithWICDecoder(dest, GUID_ContainerFormatTiff, bytes, length);
     }
 
     -(instancetype) initWithContentsOfFile:(NSString*)pathAddr {
@@ -387,9 +517,9 @@ imageCacheInfo imageInfo;
 
             EbrFclose(fpIn);
 
-            if ( !loadTIFF(in, len) ) {
-                if ( !loadGIF(in, len) ) {
-                    if ( !loadBMP(in, len) ) {
+            if ( !loadTIFF(self, in, len) ) {
+                if ( !loadGIF(self, in, len) ) {
+                    if ( !loadBMP(self, in, len) ) {
                         EbrDebugLog("Unrecognized image\n");
                         for ( int i = 0; i < 64; i ++ ) {
                             EbrDebugLog("%02x ", in[i]);
@@ -1019,20 +1149,20 @@ imageCacheInfo imageInfo;
             int   len = [self->_deferredImageData length];
 
             if ( in[0] == 'G' && in[1] == 'I' && in[2] == 'F' ) {
-                if ( !loadGIF(in, len) ) {
+                if ( !loadGIF(self, in, len) ) {
                     EbrDebugLog("Something looked like a GIF but wasn't!\n");
                 }
             }
 
             if ( (in[0] == 'I' && in[1] == 'I') ||
                  (in[0] == 'M' && in[1] == 'M') ) {
-                if ( !loadTIFF(in, len) ) {
+                if ( !loadTIFF(self, in, len) ) {
                     EbrDebugLog("Something looked like a TIFF but wasn't!\n");
                 }
             }
 
             if ( in[0] == 'B' && in[1] == 'M' ) {
-                if ( !loadBMP(in, len) ) {
+                if ( !loadBMP(self, in, len) ) {
                     EbrDebugLog("Something looked like a BMP but wasn't!\n");
                 }
             }

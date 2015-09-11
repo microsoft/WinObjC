@@ -11,12 +11,8 @@
 #import <Foundation/NSThread.h>
 #import <Foundation/NSString.h>
 
-@interface NSRecursiveLock : NSObject <NSLocking> {
-    NSLock *_lock;
-    volatile NSThread *_lockingThread;
-    volatile int _numberOfLocks;
-    NSString *_name;
-}
+FOUNDATION_EXPORT_CLASS
+@interface NSRecursiveLock : NSObject <NSLocking> 
 -(NSString *)name;
 -(void)setName:(NSString *)value;
 

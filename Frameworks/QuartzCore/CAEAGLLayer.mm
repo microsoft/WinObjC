@@ -16,49 +16,64 @@
 
 #include "Starboard.h"
 
+typedef wchar_t WCHAR;
+#include "UWP/WindowsUIXamlControls.h"
+#include "UWP/WindowsUIXamlMedia.h"
 #include "QuartzCore/CALayer.h"
 #include "CALayerInternal.h"
 #include "UIKit/UIView.h"
 #include "QuartzCore/CAEAGLLayer.h"
 #include "CACompositor.h"
 
-@implementation CAEAGLLayer : CALayer
-    -(void) setDrawableProperties:(id)propertiesDict {
-        properties = [propertiesDict retain];
+#include <d3d11.h>
+#include <d3d11_1.h>
+
+#include <COMIncludes.h>
+#include "Windows.ui.xaml.media.dxinterop.h"
+#include <COMIncludes_End.h>
+
+@implementation CAEAGLLayer {
+    NSDictionary *_properties;
+	WXCSwapChainPanel *_swapChainPanel;
+}
+
+    -(void) setDrawableProperties: (NSDictionary *)propertiesDict {
+		[_properties release];
+        _properties = [propertiesDict copy];
     }
 
-    -(void) setOpaque:(BOOL)opaque {
-        [super setOpaque:opaque];
-    }
+	-(void) setContentsScale: (float) factor
+	{
+		[super setContentsScale: factor];
 
-    -(void) _setDisplayTexture:(DisplayTexture *)tex {
-        if ( _glTexture != NULL ) {
-            _globalCompositor->ReleaseDisplayTexture(_glTexture);
-            _glTexture = NULL;
-        } 
+		WUXMScaleTransform *scaleTransform = [WUXMScaleTransform create];
+		scaleTransform.scaleX = 1.0 / factor;
+		scaleTransform.scaleY = 1.0 / factor;
 
-        _glTexture = tex;
-        _globalCompositor->RetainDisplayTexture(_glTexture);
-        double fadeDuration = 0.25f;
+		_swapChainPanel.renderTransform = scaleTransform;
+		[scaleTransform release];
+	}
 
-        [self setNeedsDisplay];
+	-(instancetype) init
+	{
+		_swapChainPanel = [WXCSwapChainPanel create];
+		[super init];
+		self.contentsElement = _swapChainPanel;
+
+		return self;
+	}
+
+    -(WXCSwapChainPanel *) swapChainPanel
+    {
+        return _swapChainPanel;
     }
 
     -(DisplayTexture *) _getDisplayTexture {
-        priv->contentsSize.width = ceilf(priv->bounds.size.width) * priv->contentsScale;
-        priv->contentsSize.height = ceilf(priv->bounds.size.height) * priv->contentsScale;
-
-        if ( _glTexture == NULL ) {
-            return NULL;
-        }
-
-        _globalCompositor->RetainDisplayTexture(_glTexture);
-
-        return _glTexture;
+        return NULL;
     }
     
     -(NSDictionary*) drawableProperties {
-        return properties;
+        return _properties;
     }
 
     -(void) display {
@@ -67,18 +82,9 @@
     -(void) _releaseContents {
     }
 
-    -(void) _unlockTexture {
-        if ( _glTexture ) {
-            GetCACompositor()->UnlockD3DDisplayTexture(_glTexture);
-        }
-    }
-
     -(void) dealloc {
-        if ( _glTexture ) {
-            GetCACompositor()->UnlockD3DDisplayTexture(_glTexture);
-            GetCACompositor()->ReleaseDisplayTexture(_glTexture);
-        }
-        _glTexture = NULL;
+		[_properties release];
+		[_swapChainPanel release];
         [super dealloc];
     }
 @end

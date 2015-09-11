@@ -26,103 +26,103 @@
 
 // Windows.Web.Http.HttpVersion
 enum _WWHHttpVersion {
-    WWHHttpVersionNone = 0,
-    WWHHttpVersionHttp10 = 1,
-    WWHHttpVersionHttp11 = 2,
-    WWHHttpVersionHttp20 = 3,
+	WWHHttpVersionNone = 0,
+	WWHHttpVersionHttp10 = 1,
+	WWHHttpVersionHttp11 = 2,
+	WWHHttpVersionHttp20 = 3,
 };
 typedef unsigned WWHHttpVersion;
 
 // Windows.Web.Http.HttpCompletionOption
 enum _WWHHttpCompletionOption {
-    WWHHttpCompletionOptionResponseContentRead = 0,
-    WWHHttpCompletionOptionResponseHeadersRead = 1,
+	WWHHttpCompletionOptionResponseContentRead = 0,
+	WWHHttpCompletionOptionResponseHeadersRead = 1,
 };
 typedef unsigned WWHHttpCompletionOption;
 
 // Windows.Web.Http.HttpStatusCode
 enum _WWHHttpStatusCode {
-    WWHHttpStatusCodeNone = 0,
-    WWHHttpStatusCodeContinue = 100,
-    WWHHttpStatusCodeSwitchingProtocols = 101,
-    WWHHttpStatusCodeProcessing = 102,
-    WWHHttpStatusCodeOk = 200,
-    WWHHttpStatusCodeCreated = 201,
-    WWHHttpStatusCodeAccepted = 202,
-    WWHHttpStatusCodeNonAuthoritativeInformation = 203,
-    WWHHttpStatusCodeNoContent = 204,
-    WWHHttpStatusCodeResetContent = 205,
-    WWHHttpStatusCodePartialContent = 206,
-    WWHHttpStatusCodeMultiStatus = 207,
-    WWHHttpStatusCodeAlreadyReported = 208,
-    WWHHttpStatusCodeIMUsed = 226,
-    WWHHttpStatusCodeMultipleChoices = 300,
-    WWHHttpStatusCodeMovedPermanently = 301,
-    WWHHttpStatusCodeFound = 302,
-    WWHHttpStatusCodeSeeOther = 303,
-    WWHHttpStatusCodeNotModified = 304,
-    WWHHttpStatusCodeUseProxy = 305,
-    WWHHttpStatusCodeTemporaryRedirect = 307,
-    WWHHttpStatusCodePermanentRedirect = 308,
-    WWHHttpStatusCodeBadRequest = 400,
-    WWHHttpStatusCodeUnauthorized = 401,
-    WWHHttpStatusCodePaymentRequired = 402,
-    WWHHttpStatusCodeForbidden = 403,
-    WWHHttpStatusCodeNotFound = 404,
-    WWHHttpStatusCodeMethodNotAllowed = 405,
-    WWHHttpStatusCodeNotAcceptable = 406,
-    WWHHttpStatusCodeProxyAuthenticationRequired = 407,
-    WWHHttpStatusCodeRequestTimeout = 408,
-    WWHHttpStatusCodeConflict = 409,
-    WWHHttpStatusCodeGone = 410,
-    WWHHttpStatusCodeLengthRequired = 411,
-    WWHHttpStatusCodePreconditionFailed = 412,
-    WWHHttpStatusCodeRequestEntityTooLarge = 413,
-    WWHHttpStatusCodeRequestUriTooLong = 414,
-    WWHHttpStatusCodeUnsupportedMediaType = 415,
-    WWHHttpStatusCodeRequestedRangeNotSatisfiable = 416,
-    WWHHttpStatusCodeExpectationFailed = 417,
-    WWHHttpStatusCodeUnprocessableEntity = 422,
-    WWHHttpStatusCodeLocked = 423,
-    WWHHttpStatusCodeFailedDependency = 424,
-    WWHHttpStatusCodeUpgradeRequired = 426,
-    WWHHttpStatusCodePreconditionRequired = 428,
-    WWHHttpStatusCodeTooManyRequests = 429,
-    WWHHttpStatusCodeRequestHeaderFieldsTooLarge = 431,
-    WWHHttpStatusCodeInternalServerError = 500,
-    WWHHttpStatusCodeNotImplemented = 501,
-    WWHHttpStatusCodeBadGateway = 502,
-    WWHHttpStatusCodeServiceUnavailable = 503,
-    WWHHttpStatusCodeGatewayTimeout = 504,
-    WWHHttpStatusCodeHttpVersionNotSupported = 505,
-    WWHHttpStatusCodeVariantAlsoNegotiates = 506,
-    WWHHttpStatusCodeInsufficientStorage = 507,
-    WWHHttpStatusCodeLoopDetected = 508,
-    WWHHttpStatusCodeNotExtended = 510,
-    WWHHttpStatusCodeNetworkAuthenticationRequired = 511,
+	WWHHttpStatusCodeNone = 0,
+	WWHHttpStatusCodeContinue = 100,
+	WWHHttpStatusCodeSwitchingProtocols = 101,
+	WWHHttpStatusCodeProcessing = 102,
+	WWHHttpStatusCodeOk = 200,
+	WWHHttpStatusCodeCreated = 201,
+	WWHHttpStatusCodeAccepted = 202,
+	WWHHttpStatusCodeNonAuthoritativeInformation = 203,
+	WWHHttpStatusCodeNoContent = 204,
+	WWHHttpStatusCodeResetContent = 205,
+	WWHHttpStatusCodePartialContent = 206,
+	WWHHttpStatusCodeMultiStatus = 207,
+	WWHHttpStatusCodeAlreadyReported = 208,
+	WWHHttpStatusCodeIMUsed = 226,
+	WWHHttpStatusCodeMultipleChoices = 300,
+	WWHHttpStatusCodeMovedPermanently = 301,
+	WWHHttpStatusCodeFound = 302,
+	WWHHttpStatusCodeSeeOther = 303,
+	WWHHttpStatusCodeNotModified = 304,
+	WWHHttpStatusCodeUseProxy = 305,
+	WWHHttpStatusCodeTemporaryRedirect = 307,
+	WWHHttpStatusCodePermanentRedirect = 308,
+	WWHHttpStatusCodeBadRequest = 400,
+	WWHHttpStatusCodeUnauthorized = 401,
+	WWHHttpStatusCodePaymentRequired = 402,
+	WWHHttpStatusCodeForbidden = 403,
+	WWHHttpStatusCodeNotFound = 404,
+	WWHHttpStatusCodeMethodNotAllowed = 405,
+	WWHHttpStatusCodeNotAcceptable = 406,
+	WWHHttpStatusCodeProxyAuthenticationRequired = 407,
+	WWHHttpStatusCodeRequestTimeout = 408,
+	WWHHttpStatusCodeConflict = 409,
+	WWHHttpStatusCodeGone = 410,
+	WWHHttpStatusCodeLengthRequired = 411,
+	WWHHttpStatusCodePreconditionFailed = 412,
+	WWHHttpStatusCodeRequestEntityTooLarge = 413,
+	WWHHttpStatusCodeRequestUriTooLong = 414,
+	WWHHttpStatusCodeUnsupportedMediaType = 415,
+	WWHHttpStatusCodeRequestedRangeNotSatisfiable = 416,
+	WWHHttpStatusCodeExpectationFailed = 417,
+	WWHHttpStatusCodeUnprocessableEntity = 422,
+	WWHHttpStatusCodeLocked = 423,
+	WWHHttpStatusCodeFailedDependency = 424,
+	WWHHttpStatusCodeUpgradeRequired = 426,
+	WWHHttpStatusCodePreconditionRequired = 428,
+	WWHHttpStatusCodeTooManyRequests = 429,
+	WWHHttpStatusCodeRequestHeaderFieldsTooLarge = 431,
+	WWHHttpStatusCodeInternalServerError = 500,
+	WWHHttpStatusCodeNotImplemented = 501,
+	WWHHttpStatusCodeBadGateway = 502,
+	WWHHttpStatusCodeServiceUnavailable = 503,
+	WWHHttpStatusCodeGatewayTimeout = 504,
+	WWHHttpStatusCodeHttpVersionNotSupported = 505,
+	WWHHttpStatusCodeVariantAlsoNegotiates = 506,
+	WWHHttpStatusCodeInsufficientStorage = 507,
+	WWHHttpStatusCodeLoopDetected = 508,
+	WWHHttpStatusCodeNotExtended = 510,
+	WWHHttpStatusCodeNetworkAuthenticationRequired = 511,
 };
 typedef unsigned WWHHttpStatusCode;
 
 // Windows.Web.Http.HttpProgressStage
 enum _WWHHttpProgressStage {
-    WWHHttpProgressStageNone = 0,
-    WWHHttpProgressStageDetectingProxy = 10,
-    WWHHttpProgressStageResolvingName = 20,
-    WWHHttpProgressStageConnectingToServer = 30,
-    WWHHttpProgressStageNegotiatingSsl = 40,
-    WWHHttpProgressStageSendingHeaders = 50,
-    WWHHttpProgressStageSendingContent = 60,
-    WWHHttpProgressStageWaitingForResponse = 70,
-    WWHHttpProgressStageReceivingHeaders = 80,
-    WWHHttpProgressStageReceivingContent = 90,
+	WWHHttpProgressStageNone = 0,
+	WWHHttpProgressStageDetectingProxy = 10,
+	WWHHttpProgressStageResolvingName = 20,
+	WWHHttpProgressStageConnectingToServer = 30,
+	WWHHttpProgressStageNegotiatingSsl = 40,
+	WWHHttpProgressStageSendingHeaders = 50,
+	WWHHttpProgressStageSendingContent = 60,
+	WWHHttpProgressStageWaitingForResponse = 70,
+	WWHHttpProgressStageReceivingHeaders = 80,
+	WWHHttpProgressStageReceivingContent = 90,
 };
 typedef unsigned WWHHttpProgressStage;
 
 // Windows.Web.Http.HttpResponseMessageSource
 enum _WWHHttpResponseMessageSource {
-    WWHHttpResponseMessageSourceNone = 0,
-    WWHHttpResponseMessageSourceCache = 1,
-    WWHHttpResponseMessageSourceNetwork = 2,
+	WWHHttpResponseMessageSourceNone = 0,
+	WWHHttpResponseMessageSourceCache = 1,
+	WWHHttpResponseMessageSourceNetwork = 2,
 };
 typedef unsigned WWHHttpResponseMessageSource;
 
@@ -134,16 +134,18 @@ typedef unsigned WWHHttpResponseMessageSource;
 #include "WindowsStorageStreams.h"
 #include "WindowsWebHttpHeaders.h"
 
+#import <Foundation/Foundation.h>
+
 // [struct] Windows.Web.Http.HttpProgress
 WINRT_EXPORT
 @interface WWHHttpProgress : NSObject
 + (instancetype)new;
 @property WWHHttpProgressStage stage;
 @property uint64_t bytesSent;
-@property (copy) NSNumber* totalBytesToSend;
+@property (copy) id /* uint64_t */ totalBytesToSend;
 @property uint64_t bytesReceived;
-@property (copy) NSNumber* totalBytesToReceive;
-@property unsigned retries;
+@property (copy) id /* uint64_t */ totalBytesToReceive;
+@property unsigned int retries;
 @end
 
 // Windows.Foundation.IClosable
@@ -161,7 +163,7 @@ WINRT_EXPORT
 #define __WWHIHttpContent_DEFINED__
 
 @protocol WWHIHttpContent <WFIClosable>
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -190,13 +192,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)create ACTIVATOR;
-+ (WWHHttpRequestMessage *)create:(WWHHttpMethod *)method uri:(WFUri *)uri ACTIVATOR;
-@property (copy) WFUri * requestUri;
-@property (copy) WWHHttpMethod * method;
++ (WWHHttpRequestMessage*)create:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
+@property (copy) WFUri* requestUri;
+@property (copy) WWHHttpMethod* method;
 @property (copy) RTObject<WWHIHttpContent>* content;
-@property (readonly) WWHHHttpRequestHeaderCollection * headers;
-@property (readonly) NSDictionary * /*String, SObject*/  properties;
-@property (readonly) WWHHttpTransportInformation * transportInformation;
+@property (readonly) WWHHHttpRequestHeaderCollection* headers;
+@property (readonly) NSMutableDictionary* properties;
+@property (readonly) WWHHttpTransportInformation* transportInformation;
 - (void)close;
 - (NSString *)toString;
 @end
@@ -209,17 +211,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpResponseMessage *)create:(WWHHttpStatusCode)statusCode ACTIVATOR;
++ (WWHHttpResponseMessage*)create:(WWHHttpStatusCode)statusCode ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @property WWHHttpVersion version;
 @property WWHHttpStatusCode statusCode;
 @property WWHHttpResponseMessageSource source;
-@property (copy) WWHHttpRequestMessage * requestMessage;
+@property (copy) WWHHttpRequestMessage* requestMessage;
 @property (copy) NSString * reasonPhrase;
 @property (copy) RTObject<WWHIHttpContent>* content;
-@property (readonly) WWHHHttpResponseHeaderCollection * headers;
+@property (readonly) WWHHHttpResponseHeaderCollection* headers;
 @property (readonly) BOOL isSuccessStatusCode;
-- (WWHHttpResponseMessage *)ensureSuccessStatusCode;
+- (WWHHttpResponseMessage*)ensureSuccessStatusCode;
 - (void)close;
 - (NSString *)toString;
 @end
@@ -232,19 +234,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpClient *)create:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
++ (WWHHttpClient*)create:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (readonly) WWHHHttpRequestHeaderCollection * defaultRequestHeaders;
-- (void)deleteAsync:(WFUri *)uri success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)getAsync:(WFUri *)uri success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)getWithOptionAsync:(WFUri *)uri completionOption:(WWHHttpCompletionOption)completionOption success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)getBufferAsync:(WFUri *)uri success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)getInputStreamAsync:(WFUri *)uri success:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)getStringAsync:(WFUri *)uri success:(void (^)(NSString *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)postAsync:(WFUri *)uri content:(RTObject<WWHIHttpContent>*)content success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)putAsync:(WFUri *)uri content:(RTObject<WWHIHttpContent>*)content success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)sendRequestAsync:(WWHHttpRequestMessage *)request success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
-- (void)sendRequestWithOptionAsync:(WWHHttpRequestMessage *)request completionOption:(WWHHttpCompletionOption)completionOption success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
+@property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
+- (void)deleteAsync:(WFUri*)uri success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getAsync:(WFUri*)uri success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getWithOptionAsync:(WFUri*)uri completionOption:(WWHHttpCompletionOption)completionOption success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getBufferAsync:(WFUri*)uri success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getInputStreamAsync:(WFUri*)uri success:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getStringAsync:(WFUri*)uri success:(void (^)(NSString *))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)postAsync:(WFUri*)uri content:(RTObject<WWHIHttpContent>*)content success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)putAsync:(WFUri*)uri content:(RTObject<WWHIHttpContent>*)content success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestWithOptionAsync:(WWHHttpRequestMessage*)request completionOption:(WWHHttpCompletionOption)completionOption success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 - (NSString *)toString;
 @end
@@ -257,11 +259,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
-+ (WWHHttpCookie *)create:(NSString *)name domain:(NSString *)domain path:(NSString *)path ACTIVATOR;
++ (WWHHttpCookie*)create:(NSString *)name domain:(NSString *)domain path:(NSString *)path ACTIVATOR;
 @property (copy) NSString * value;
 @property BOOL secure;
 @property BOOL httpOnly;
-@property (copy) WFDateTime * expires;
+@property (copy) id expires;
 @property (readonly) NSString * domain;
 @property (readonly) NSString * name;
 @property (readonly) NSString * path;
@@ -276,7 +278,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookieCollection : RTObject
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
@@ -293,15 +295,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
-+ (WWHHttpMethod *)create:(NSString *)method ACTIVATOR;
++ (WWHHttpMethod*)create:(NSString *)method ACTIVATOR;
 @property (readonly) NSString * method;
-+ (WWHHttpMethod *)Delete;
-+ (WWHHttpMethod *)get;
-+ (WWHHttpMethod *)head;
-+ (WWHHttpMethod *)options;
-+ (WWHHttpMethod *)patch;
-+ (WWHHttpMethod *)post;
-+ (WWHHttpMethod *)put;
++ (WWHHttpMethod*)Delete;
++ (WWHHttpMethod*)get;
++ (WWHHttpMethod*)head;
++ (WWHHttpMethod*)options;
++ (WWHHttpMethod*)patch;
++ (WWHHttpMethod*)post;
++ (WWHHttpMethod*)put;
 - (NSString *)toString;
 @end
 
@@ -313,10 +315,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
-@property (readonly) WSCCCertificate * serverCertificate;
+@property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
-@property (readonly) NSArray* /*WSCCChainValidationResult*/  serverCertificateErrors;
-@property (readonly) NSArray* /*WSCCCertificate*/  serverIntermediateCertificates;
+@property (readonly) NSArray* serverCertificateErrors;
+@property (readonly) NSArray* serverIntermediateCertificates;
 - (NSString *)toString;
 @end
 
@@ -328,10 +330,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpStringContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpStringContent *)createFromString:(NSString *)content ACTIVATOR;
-+ (WWHHttpStringContent *)createFromStringWithEncoding:(NSString *)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
-+ (WWHHttpStringContent *)createFromStringWithEncodingAndMediaType:(NSString *)content encoding:(WSSUnicodeEncoding)encoding mediaType:(NSString *)mediaType ACTIVATOR;
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
++ (WWHHttpStringContent*)createFromString:(NSString *)content ACTIVATOR;
++ (WWHHttpStringContent*)createFromStringWithEncoding:(NSString *)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
++ (WWHHttpStringContent*)createFromStringWithEncodingAndMediaType:(NSString *)content encoding:(WSSUnicodeEncoding)encoding mediaType:(NSString *)mediaType ACTIVATOR;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -350,9 +352,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpBufferContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpBufferContent *)createFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
-+ (WWHHttpBufferContent *)createFromBufferWithOffset:(RTObject<WSSIBuffer>*)content offset:(unsigned)offset count:(unsigned)count ACTIVATOR;
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
++ (WWHHttpBufferContent*)createFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
++ (WWHHttpBufferContent*)createFromBufferWithOffset:(RTObject<WSSIBuffer>*)content offset:(unsigned int)offset count:(unsigned int)count ACTIVATOR;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -371,8 +373,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpStreamContent *)createFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
++ (WWHHttpStreamContent*)createFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -391,8 +393,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-// Could not generate Create (Cannot marshal contained object of unknown type Windows.Foundation.Collections.IKeyValuePair`2<String,String>)
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
++ (WWHHttpFormUrlEncodedContent*)create:(id<NSFastEnumeration> /* RTKeyValuePair* */)content ACTIVATOR;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -411,10 +413,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMultipartContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpMultipartContent *)createWithSubtype:(NSString *)subtype ACTIVATOR;
-+ (WWHHttpMultipartContent *)createWithSubtypeAndBoundary:(NSString *)subtype boundary:(NSString *)boundary ACTIVATOR;
++ (WWHHttpMultipartContent*)createWithSubtype:(NSString *)subtype ACTIVATOR;
++ (WWHHttpMultipartContent*)createWithSubtypeAndBoundary:(NSString *)subtype boundary:(NSString *)boundary ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -434,9 +436,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpMultipartFormDataContent *)createWithBoundary:(NSString *)boundary ACTIVATOR;
++ (WWHHttpMultipartFormDataContent*)createWithBoundary:(NSString *)boundary ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (readonly) WWHHHttpContentHeaderCollection * headers;
+@property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsInputStreamAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -458,10 +460,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookieManager : RTObject
-- (BOOL)setCookie:(WWHHttpCookie *)cookie;
-- (BOOL)setCookieWithThirdParty:(WWHHttpCookie *)cookie thirdParty:(BOOL)thirdParty;
-- (void)deleteCookie:(WWHHttpCookie *)cookie;
-- (WWHHttpCookieCollection *)getCookies:(WFUri *)uri;
+- (BOOL)setCookie:(WWHHttpCookie*)cookie;
+- (BOOL)setCookieWithThirdParty:(WWHHttpCookie*)cookie thirdParty:(BOOL)thirdParty;
+- (void)deleteCookie:(WWHHttpCookie*)cookie;
+- (WWHHttpCookieCollection*)getCookies:(WFUri*)uri;
 @end
 
 #endif // __WWHHttpCookieManager_DEFINED__

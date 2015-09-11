@@ -17,17 +17,13 @@
 #import <QuartzCore/CALayer.h>
 #import <OpenGLES/EAGLDrawable.h>
 
-#ifdef __cplusplus
-class DisplayTexture;
-#else
-struct __DisplayTexture;
-typedef struct DisplayTexture DisplayTexture;
-#endif
 CA_EXPORT_CLASS
 @interface CAEAGLLayer : CALayer
-{
-    NSDictionary *properties;
-    DisplayTexture *_glTexture;
-}
 @property(copy) NSDictionary *drawableProperties;
+@end
+
+@class WXCSwapChainPanel;
+
+@interface CAEAGLLayer(WinObjC)
+@property(readonly) WXCSwapChainPanel *swapChainPanel;
 @end

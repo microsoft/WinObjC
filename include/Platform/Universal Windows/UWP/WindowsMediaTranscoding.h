@@ -25,17 +25,17 @@
 
 // Windows.Media.Transcoding.MediaVideoProcessingAlgorithm
 enum _WMTMediaVideoProcessingAlgorithm {
-    WMTMediaVideoProcessingAlgorithmDefault = 0,
-    WMTMediaVideoProcessingAlgorithmMrfCrf444 = 1,
+	WMTMediaVideoProcessingAlgorithmDefault = 0,
+	WMTMediaVideoProcessingAlgorithmMrfCrf444 = 1,
 };
 typedef unsigned WMTMediaVideoProcessingAlgorithm;
 
 // Windows.Media.Transcoding.TranscodeFailureReason
 enum _WMTTranscodeFailureReason {
-    WMTTranscodeFailureReasonNone = 0,
-    WMTTranscodeFailureReasonUnknown = 1,
-    WMTTranscodeFailureReasonInvalidProfile = 2,
-    WMTTranscodeFailureReasonCodecNotFound = 3,
+	WMTTranscodeFailureReasonNone = 0,
+	WMTTranscodeFailureReasonUnknown = 1,
+	WMTTranscodeFailureReasonInvalidProfile = 2,
+	WMTTranscodeFailureReasonCodecNotFound = 3,
 };
 typedef unsigned WMTTranscodeFailureReason;
 
@@ -45,6 +45,8 @@ typedef unsigned WMTTranscodeFailureReason;
 #include "WindowsMediaCore.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.Media.Transcoding.PrepareTranscodeResult
 #ifndef __WMTPrepareTranscodeResult_DEFINED__
@@ -66,8 +68,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMTMediaTranscoder : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFTimeSpan * trimStopTime;
-@property (copy) WFTimeSpan * trimStartTime;
+@property (copy) WFTimeSpan* trimStopTime;
+@property (copy) WFTimeSpan* trimStartTime;
 @property BOOL hardwareAccelerationEnabled;
 @property BOOL alwaysReencode;
 @property WMTMediaVideoProcessingAlgorithm videoProcessingAlgorithm;
@@ -76,9 +78,9 @@ WINRT_EXPORT
 - (void)addVideoEffect:(NSString *)activatableClassId;
 - (void)addVideoEffectWithSettings:(NSString *)activatableClassId effectRequired:(BOOL)effectRequired configuration:(RTObject<WFCIPropertySet>*)configuration;
 - (void)clearEffects;
-- (void)prepareFileTranscodeAsync:(RTObject<WSIStorageFile>*)source destination:(RTObject<WSIStorageFile>*)destination profile:(WMMMediaEncodingProfile *)profile success:(void (^)(WMTPrepareTranscodeResult *))success failure:(void (^)(NSError*))failure;
-- (void)prepareStreamTranscodeAsync:(RTObject<WSSIRandomAccessStream>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile *)profile success:(void (^)(WMTPrepareTranscodeResult *))success failure:(void (^)(NSError*))failure;
-- (void)prepareMediaStreamSourceTranscodeAsync:(RTObject<WMCIMediaSource>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile *)profile success:(void (^)(WMTPrepareTranscodeResult *))success failure:(void (^)(NSError*))failure;
+- (void)prepareFileTranscodeAsync:(RTObject<WSIStorageFile>*)source destination:(RTObject<WSIStorageFile>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)prepareStreamTranscodeAsync:(RTObject<WSSIRandomAccessStream>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)prepareMediaStreamSourceTranscodeAsync:(RTObject<WMCIMediaSource>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMTMediaTranscoder_DEFINED__

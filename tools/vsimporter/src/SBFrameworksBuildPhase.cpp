@@ -41,6 +41,9 @@ SBFrameworksBuildPhase::SBFrameworksBuildPhase(const PBXFrameworksBuildPhase* ph
   : SBBuildPhase(phase, parentTarget),
     m_phase(phase)
 {
+  if (!m_phase)
+    return;
+
   // Figure out if any of the frameworks are built from source
   for (auto buildFile : m_phase->getBuildFileList()) {
     m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
@@ -59,13 +62,15 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
 
   // Get paths to all the build files (frameworks)
   StringVec buildFilePaths;
-  const BuildFileList& buildFiles = m_phase->getBuildFileList();
-  sbAssert(buildFiles.size() == m_buildFileTargets.size());
-  for (size_t i = 0; i < buildFiles.size(); i++) {
-    const PBXFile* file = buildFiles[i]->getFile();
-    // Ignore any frameworks build from source (they will be added as project references)
-    if (file && !m_buildFileTargets[i])
-      buildFilePaths.push_back(file->getFullPath());
+  if (m_phase) {
+    const BuildFileList& buildFiles = m_phase->getBuildFileList();
+    sbAssert(buildFiles.size() == m_buildFileTargets.size());
+    for (size_t i = 0; i < buildFiles.size(); i++) {
+      const PBXFile* file = buildFiles[i]->getFile();
+      // Ignore any frameworks build from source (they will be added as project references)
+      if (file && !m_buildFileTargets[i])
+        buildFilePaths.push_back(file->getFullPath());
+    }
   }
 
   for (auto bs : m_parentTarget.getBuildSettings()) {

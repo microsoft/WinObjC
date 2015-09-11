@@ -24,6 +24,8 @@
 @protocol WSEIEasClientDeviceInformation, WSEIEasClientDeviceInformation2;
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.Security.ExchangeActiveSyncProvisioning.EasClientDeviceInformation
 #ifndef __WSEEasClientDeviceInformation_DEFINED__
 #define __WSEEasClientDeviceInformation_DEFINED__
@@ -32,7 +34,7 @@ WINRT_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)create ACTIVATOR;
 @property (readonly) NSString * friendlyName;
-@property (readonly) WFGUID * id;
+@property (readonly) WFGUID* id;
 @property (readonly) NSString * operatingSystem;
 @property (readonly) NSString * systemManufacturer;
 @property (readonly) NSString * systemProductName;

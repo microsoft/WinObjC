@@ -25,14 +25,16 @@
 
 // Windows.ApplicationModel.UserDataAccounts.SystemAccess.DeviceAccountServerType
 enum _WAUSDeviceAccountServerType {
-    WAUSDeviceAccountServerTypeExchange = 0,
-    WAUSDeviceAccountServerTypePop = 1,
-    WAUSDeviceAccountServerTypeImap = 2,
+	WAUSDeviceAccountServerTypeExchange = 0,
+	WAUSDeviceAccountServerTypePop = 1,
+	WAUSDeviceAccountServerTypeImap = 2,
 };
 typedef unsigned WAUSDeviceAccountServerType;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
+
+#import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.UserDataAccounts.SystemAccess.DeviceAccountConfiguration
 #ifndef __WAUSDeviceAccountConfiguration_DEFINED__
@@ -67,7 +69,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAUSUserDataAccountSystemAccessManager : RTObject
-+ (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /*WAUSDeviceAccountConfiguration*/ )accounts success:(void (^)(id<NSFastEnumeration> /*String*/ ))success failure:(void (^)(NSError*))failure;
++ (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /* WAUSDeviceAccountConfiguration* */)accounts success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAUSUserDataAccountSystemAccessManager_DEFINED__

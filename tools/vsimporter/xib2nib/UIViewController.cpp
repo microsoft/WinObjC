@@ -135,8 +135,8 @@ void UIViewController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
 
             char szOutputName[255];
             sprintf(szOutputName, "%s.nib", szNibName);
-            printf("Writing %s\n", szOutputName);
-            FILE *fpOut = fopen(szOutputName, "wb");
+            printf("Writing %s\n", GetOutputFilename(szOutputName).c_str());
+            FILE *fpOut = fopen(GetOutputFilename(szOutputName).c_str(), "wb");
     
             NIBWriter *viewWriter = new NIBWriter(fpOut, externalObjects, _view);
             viewWriter->ExportObject(_view);

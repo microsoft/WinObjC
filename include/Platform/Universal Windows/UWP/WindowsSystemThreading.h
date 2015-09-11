@@ -25,16 +25,16 @@
 
 // Windows.System.Threading.WorkItemPriority
 enum _WSTWorkItemPriority {
-    WSTWorkItemPriorityLow = -1,
-    WSTWorkItemPriorityNormal = 0,
-    WSTWorkItemPriorityHigh = 1,
+	WSTWorkItemPriorityLow = -1,
+	WSTWorkItemPriorityNormal = 0,
+	WSTWorkItemPriorityHigh = 1,
 };
 typedef unsigned WSTWorkItemPriority;
 
 // Windows.System.Threading.WorkItemOptions
 enum _WSTWorkItemOptions {
-    WSTWorkItemOptionsNone = 0,
-    WSTWorkItemOptionsTimeSliced = 1,
+	WSTWorkItemOptionsNone = 0,
+	WSTWorkItemOptionsTimeSliced = 1,
 };
 typedef unsigned WSTWorkItemOptions;
 
@@ -42,13 +42,13 @@ typedef unsigned WSTWorkItemOptions;
 // Windows.System.Threading.TimerDestroyedHandler
 #ifndef __WSTTimerDestroyedHandler__DEFINED
 #define __WSTTimerDestroyedHandler__DEFINED
-typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer * timer);
+typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerDestroyedHandler__DEFINED
 
 // Windows.System.Threading.TimerElapsedHandler
 #ifndef __WSTTimerElapsedHandler__DEFINED
 #define __WSTTimerElapsedHandler__DEFINED
-typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer * timer);
+typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerElapsedHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
@@ -58,16 +58,18 @@ typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #endif // __WSTWorkItemHandler__DEFINED
 
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Threading.TimerElapsedHandler
 #ifndef __WSTTimerElapsedHandler__DEFINED
 #define __WSTTimerElapsedHandler__DEFINED
-typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer * timer);
+typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerElapsedHandler__DEFINED
 
 // Windows.System.Threading.TimerDestroyedHandler
 #ifndef __WSTTimerDestroyedHandler__DEFINED
 #define __WSTTimerDestroyedHandler__DEFINED
-typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer * timer);
+typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerDestroyedHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
@@ -82,12 +84,12 @@ typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 
 WINRT_EXPORT
 @interface WSTThreadPoolTimer : RTObject
-+ (WSTThreadPoolTimer *)createPeriodicTimer:(WSTTimerElapsedHandler)handler period:(WFTimeSpan *)period;
-+ (WSTThreadPoolTimer *)createTimer:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan *)delay;
-+ (WSTThreadPoolTimer *)createPeriodicTimerWithCompletion:(WSTTimerElapsedHandler)handler period:(WFTimeSpan *)period destroyed:(WSTTimerDestroyedHandler)destroyed;
-+ (WSTThreadPoolTimer *)createTimerWithCompletion:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan *)delay destroyed:(WSTTimerDestroyedHandler)destroyed;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * period;
++ (WSTThreadPoolTimer*)createPeriodicTimer:(WSTTimerElapsedHandler)handler period:(WFTimeSpan*)period;
++ (WSTThreadPoolTimer*)createTimer:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan*)delay;
++ (WSTThreadPoolTimer*)createPeriodicTimerWithCompletion:(WSTTimerElapsedHandler)handler period:(WFTimeSpan*)period destroyed:(WSTTimerDestroyedHandler)destroyed;
++ (WSTThreadPoolTimer*)createTimerWithCompletion:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan*)delay destroyed:(WSTTimerDestroyedHandler)destroyed;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* period;
 - (void)cancel;
 @end
 

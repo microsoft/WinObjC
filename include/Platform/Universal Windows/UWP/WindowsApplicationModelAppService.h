@@ -25,29 +25,29 @@
 
 // Windows.ApplicationModel.AppService.AppServiceClosedStatus
 enum _WAAAppServiceClosedStatus {
-    WAAAppServiceClosedStatusCompleted = 0,
-    WAAAppServiceClosedStatusCanceled = 1,
-    WAAAppServiceClosedStatusResourceLimitsExceeded = 2,
-    WAAAppServiceClosedStatusUnknown = 3,
+	WAAAppServiceClosedStatusCompleted = 0,
+	WAAAppServiceClosedStatusCanceled = 1,
+	WAAAppServiceClosedStatusResourceLimitsExceeded = 2,
+	WAAAppServiceClosedStatusUnknown = 3,
 };
 typedef unsigned WAAAppServiceClosedStatus;
 
 // Windows.ApplicationModel.AppService.AppServiceConnectionStatus
 enum _WAAAppServiceConnectionStatus {
-    WAAAppServiceConnectionStatusSuccess = 0,
-    WAAAppServiceConnectionStatusAppNotInstalled = 1,
-    WAAAppServiceConnectionStatusAppUnavailable = 2,
-    WAAAppServiceConnectionStatusAppServiceUnavailable = 3,
-    WAAAppServiceConnectionStatusUnknown = 4,
+	WAAAppServiceConnectionStatusSuccess = 0,
+	WAAAppServiceConnectionStatusAppNotInstalled = 1,
+	WAAAppServiceConnectionStatusAppUnavailable = 2,
+	WAAAppServiceConnectionStatusAppServiceUnavailable = 3,
+	WAAAppServiceConnectionStatusUnknown = 4,
 };
 typedef unsigned WAAAppServiceConnectionStatus;
 
 // Windows.ApplicationModel.AppService.AppServiceResponseStatus
 enum _WAAAppServiceResponseStatus {
-    WAAAppServiceResponseStatusSuccess = 0,
-    WAAAppServiceResponseStatusFailure = 1,
-    WAAAppServiceResponseStatusResourceLimitsExceeded = 2,
-    WAAAppServiceResponseStatusUnknown = 3,
+	WAAAppServiceResponseStatusSuccess = 0,
+	WAAAppServiceResponseStatusFailure = 1,
+	WAAAppServiceResponseStatusResourceLimitsExceeded = 2,
+	WAAAppServiceResponseStatusUnknown = 3,
 };
 typedef unsigned WAAAppServiceResponseStatus;
 
@@ -55,14 +55,16 @@ typedef unsigned WAAAppServiceResponseStatus;
 #include "WindowsFoundation.h"
 #include "WindowsApplicationModel.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.ApplicationModel.AppService.AppServiceRequest
 #ifndef __WAAAppServiceRequest_DEFINED__
 #define __WAAAppServiceRequest_DEFINED__
 
 WINRT_EXPORT
 @interface WAAAppServiceRequest : RTObject
-@property (readonly) WFCValueSet * message;
-- (void)sendResponseAsync:(WFCValueSet *)message success:(void (^)(WAAAppServiceResponseStatus))success failure:(void (^)(NSError*))failure;
+@property (readonly) WFCValueSet* message;
+- (void)sendResponseAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponseStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceRequest_DEFINED__
@@ -84,7 +86,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceResponse : RTObject
-@property (readonly) WFCValueSet * message;
+@property (readonly) WFCValueSet* message;
 @property (readonly) WAAAppServiceResponseStatus status;
 @end
 
@@ -109,12 +111,12 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (copy) NSString * packageFamilyName;
 @property (copy) NSString * appServiceName;
-- (EventRegistrationToken)addRequestReceivedEvent:(void(^)(WAAAppServiceConnection *, WAAAppServiceRequestReceivedEventArgs *))del;
+- (EventRegistrationToken)addRequestReceivedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
 - (void)removeRequestReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addServiceClosedEvent:(void(^)(WAAAppServiceConnection *, WAAAppServiceClosedEventArgs *))del;
+- (EventRegistrationToken)addServiceClosedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;
 - (void)removeServiceClosedEvent:(EventRegistrationToken)tok;
 - (void)openAsyncWithSuccess:(void (^)(WAAAppServiceConnectionStatus))success failure:(void (^)(NSError*))failure;
-- (void)sendMessageAsync:(WFCValueSet *)message success:(void (^)(WAAAppServiceResponse *))success failure:(void (^)(NSError*))failure;
+- (void)sendMessageAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponse*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -126,8 +128,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceRequestReceivedEventArgs : RTObject
-@property (readonly) WAAAppServiceRequest * request;
-- (WAAAppServiceDeferral *)getDeferral;
+@property (readonly) WAAAppServiceRequest* request;
+- (WAAAppServiceDeferral*)getDeferral;
 @end
 
 #endif // __WAAAppServiceRequestReceivedEventArgs_DEFINED__
@@ -149,7 +151,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
-@property (readonly) WAAAppServiceConnection * appServiceConnection;
+@property (readonly) WAAAppServiceConnection* appServiceConnection;
 @property (readonly) NSString * callerPackageFamilyName;
 @property (readonly) NSString * name;
 @end
@@ -162,7 +164,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceCatalog : RTObject
-+ (void)findAppServiceProvidersAsync:(NSString *)appServiceName success:(void (^)(id<NSFastEnumeration> /*WAAppInfo*/ ))success failure:(void (^)(NSError*))failure;
++ (void)findAppServiceProvidersAsync:(NSString *)appServiceName success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceCatalog_DEFINED__

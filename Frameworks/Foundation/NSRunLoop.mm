@@ -1,18 +1,10 @@
-//******************************************************************************
-//
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-//
-// This code is licensed under the MIT License (MIT).
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-//******************************************************************************
+/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #include "Starboard.h"
 #include "CoreFoundation/CFRunLoop.h"
@@ -29,14 +21,23 @@
 #include "Foundation/NSNotificationCenter.h"
 #include "Foundation/NSOperationQueue.h"
 
-#ifndef USE_OLD_DISPATCH
- #include "dispatch/dispatch.h"
-#endif
+#include "dispatch/dispatch.h"
+#include <Windows.h>
 
 FOUNDATION_EXPORT NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
 FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
+static void DispatchMainRunLoopWakeup(void *arg)
+{
+	[[NSRunLoop mainRunLoop] _wakeUp];
+}
+
 @implementation NSRunLoop : NSObject
+	+(void) initialize
+	{
+		dispatch_set_wakeup_callback(DispatchMainRunLoopWakeup, NULL);
+	}
+
     +(NSRunLoop*) currentRunLoop {
         return [[NSThread currentThread] _runLoop];
     }
@@ -225,6 +226,9 @@ FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes
         }
 
         NSAutoreleasePool* pool = [NSAutoreleasePool new];
+        if ( [NSThread currentThread] == [NSThread mainThread] ) {
+		    dispatch_main_queue_callback();
+		}
         NSDate* limitDate = [self limitDateForMode:mode];
 
         if ( limitDate != nil ) {
@@ -234,9 +238,7 @@ FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes
    
         if ( [NSThread currentThread] == [NSThread mainThread] ) {
             [[NSOperationQueue mainQueue] _doMainWork];
-#ifndef USE_OLD_DISPATCH
-            dispatch_main_drain();
-#endif
+	        dispatch_main_queue_callback();
         }
 
         [pool release];

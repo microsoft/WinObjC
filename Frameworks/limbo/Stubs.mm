@@ -25,6 +25,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #include <inttypes.h>
 #include <mach/mach.h>
+#include <dispatch/dispatch.h>
 
 typedef unsigned int mach_port_t;
 
@@ -79,9 +80,6 @@ void EbrResumeSound(void)
     }
 @end
 
-@implementation _TransitionNotifier
-@end
-
 @implementation __UIGroupEdgeView
 @end
 
@@ -112,23 +110,10 @@ void EbrResumeSound(void)
 }
 @end
 
-#undef dispatch_once
-/*
-void dispatch_once(dispatch_once_t *predicate, dispatch_block_t block)
-{
-    if ( *predicate == 0 ) {
-        *predicate = 1;
-        block();
-    }
-}
-*/
-
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation)
 {
     return false;
 }
-
-#import <UIKit/UIStoryboardPushSegueTemplate.h>
 
 @implementation UIPageControl
 @end
@@ -188,7 +173,10 @@ extern "C" unsigned random()
 
 __declspec(dllexport)
 extern "C" int gettimeofday(struct timeval *tv, void *restrict) {
-    EbrGetTimeOfDay((EbrTimeval *) tv);
+	EbrTimeval curtime;
+    EbrGetTimeOfDay(&curtime);
+	tv->tv_sec = curtime.tv_sec;
+	tv->tv_usec = curtime.tv_usec;
     return 0;
 }
 
@@ -229,22 +217,9 @@ DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize)
 DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect)
 {
     CGRect ret;
-
+	
     char *str = (char *) [strRect UTF8String];
     sscanf(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
-    return ret;
-}
-
-__declspec(dllexport) extern "C" uint64_t mach_absolute_time()
-{
-    static uint32_t start;
-
-    if (start == 0) {
-        start = EbrGetAbsoluteTime();
-    }
-    uint32_t ret = EbrGetAbsoluteTime();
-    ret -= start;
-
     return ret;
 }
 

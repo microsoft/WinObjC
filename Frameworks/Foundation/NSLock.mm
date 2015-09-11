@@ -18,14 +18,17 @@
 
 #include "Starboard.h"
 #include "Foundation/NSLock.h"
+#include "Foundation/NSRecursiveLock.h"
 
-@implementation NSLock : NSObject
-    +(id) alloc {
-        NSLock* ret = [super alloc];
+@implementation NSLock {
+    uint32_t _lock;
+    idretaintype(NSString) _name;
+}
+	-(instancetype) init {
+        EbrLockInit(&_lock);
 
-        EbrLockInit(&ret->_lock);
-        return ret;
-    }
+		return self;
+	}
 
     -(void) lock {
         EbrLockEnter(_lock);
@@ -50,7 +53,40 @@
     -(NSString*) name {
         return _name;
     }
-
-    
 @end
 
+@implementation NSRecursiveLock {
+    uint32_t _lock;
+    idretaintype(NSString) _name;
+}
+
+	-(instancetype) init {
+        EbrLockInit(&_lock);
+
+		return self;
+	}
+
+    -(void) lock {
+        EbrLockEnter(_lock);
+    }
+
+    -(BOOL) tryLock {
+        BOOL ret = EbrLockTryEnter(_lock);
+
+        return ret;
+    }
+
+    -(void) unlock {
+        EbrLockLeave(_lock);
+    }
+
+    -(void) setName:(NSString*)name {
+        [name retain];
+        [_name release];
+        _name = name;
+    }
+
+    -(NSString*) name {
+        return _name;
+    }
+@end

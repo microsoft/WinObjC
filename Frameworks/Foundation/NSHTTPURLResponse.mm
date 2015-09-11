@@ -29,7 +29,12 @@ CFHashCode CFHTTPHeaderHash(const void *obj1)
     return [[(id) obj1 lowercaseString] hash];
 }
 
-@implementation NSHTTPURLResponse : NSURLResponse
+@implementation NSHTTPURLResponse {
+   NSInteger     _statusCode;
+   NSDictionary *_allHeaderFields;
+
+   idretain _statusLine, _statusVersion;
+}
     /* annotate with type */ +(id) localizedStringForStatusCode:(int)code {
         return @"HTTP error";
     }

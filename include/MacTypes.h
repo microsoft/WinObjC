@@ -29,7 +29,11 @@ typedef uint8_t       UInt8;
 typedef int64_t       SInt64;
 typedef uint64_t      UInt64;
 typedef uint8_t        Byte;
+typedef unsigned int   u_int;
 typedef unsigned long  u_long;
+typedef unsigned short u_short;
 typedef uint16_t      mode_t;
+
+enum { kNilOptions = 0 };
 #endif
 

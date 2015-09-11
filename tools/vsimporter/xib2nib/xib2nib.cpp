@@ -20,17 +20,31 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include <direct.h>
 #include <assert.h>
+#include <map>
 
 #include "XIBObject.h"
 #include "XIBObjectTypes.h"
+#include "XIBDocument.h"
 #include "NIBWriter.h"
+#include "Plist.hpp"
+
+static char _g_outputDirectory[4096];
+std::string GetOutputFilename(const char *filename)
+{
+    std::string ret = std::string(_g_outputDirectory) + "\\" + std::string(filename);
+
+    return ret;
+}
+
+extern std::map<std::string, std::string> _g_exportedControllers;
 
 void ConvertStoryboard(pugi::xml_document& doc)
 {
     pugi::xml_node curNode = doc.first_child();
 
-    //  Get topmost
+    //  Storyboard XIB file - get topmost controller, then export it
     const char *initialController = curNode.attribute("initialViewController").value();
 
     for (; curNode; curNode = curNode.next_sibling()) {
@@ -44,9 +58,42 @@ void ConvertStoryboard(pugi::xml_document& doc)
 
     NIBWriter::ExportController(initialController);
 
-    return;
+    Plist::dictionary_type viewControllerInfo;
+    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] = std::string("UIViewController-") + std::string(initialController);
+    viewControllerInfo[std::string("UIStoryboardVersion")] = (int)1;
+
+    Plist::dictionary_type viewControllerMappings;
+    for (auto curController : _g_exportedControllers) {
+        viewControllerMappings[curController.first] = curController.second;
+    }
+    viewControllerInfo[std::string("UIViewControllerIdentifiersToNibNames")] = viewControllerMappings;
+
+    printf("Writing %s\n", GetOutputFilename("Info.plist").c_str());
+    Plist::writePlistBinary(GetOutputFilename("Info.plist").c_str(), viewControllerInfo);
 }
 
+void ConvertXIB3ToNib(FILE *fpOut, pugi::xml_document& doc)
+{
+    pugi::xml_node curNode = doc.first_child();
+
+    //  XIB3 file
+    XIBDocument *rootDocument = new XIBDocument(curNode);
+    XIBObject::ParseAllStoryMembers();
+
+    XIBArray *viewObjects = rootDocument->Objects();
+    if (viewObjects) {
+        NIBWriter *writer = new NIBWriter(fpOut, NULL, NULL);
+
+        XIBArray *arr = (XIBArray *)viewObjects;
+        for (int i = 0; i < arr->count(); i++) {
+            XIBObject *curObj = arr->objectAtIndex(i);
+
+            writer->ExportObject(curObj);
+        }
+
+        writer->WriteObjects();
+    }
+}
 void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
 {
     pugi::xml_node dataNode = doc.first_element_by_path("/archive/data");
@@ -188,7 +235,20 @@ int main(int argc, char* argv[])
         exit(3);
         return -1;
     }
-    if ( strstr(type, "Storyboard.XIB") != NULL ) {
+    if ( strcmp(rootNode.name(), "document") == 0 && strcmp(type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB") == 0 ) {
+        if (argc < 3) {
+            printf("Usage: xib2nib input.storyboard <outputdir>\n");
+            exit(1);
+            return -1;
+        }
+
+        struct stat st = { 0 };
+        stat(argv[2], &st);
+        if (!(((st.st_mode)& S_IFMT) == S_IFDIR) && _mkdir(argv[2]) != 0) {
+            printf("Unable to create directory %s err=%d\n", argv[2], errno);
+            return -1;
+        }
+        strcpy(_g_outputDirectory, argv[2]);
         ConvertStoryboard(doc);
     } else if ( strstr(type, ".XIB") != NULL) {
         if ( argc < 3 ) {
@@ -204,7 +264,12 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        ConvertXIBToNib(fpOut, doc);
+        if (strcmp(rootNode.name(), "document") == 0) {
+            ConvertXIB3ToNib(fpOut, doc);
+        }
+        else {
+            ConvertXIBToNib(fpOut, doc);
+        }
         fclose(fpOut);
     } else {
         printf("Unable to determine input type type=\"%s\"\n", type);

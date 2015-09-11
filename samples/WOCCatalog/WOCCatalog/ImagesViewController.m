@@ -30,8 +30,8 @@
                             [UIImage imageNamed:@"photo4.jpg"],
                             [UIImage imageNamed:@"photo5.jpg"],
                             [UIImage imageNamed:@"photo6.jpg"],
-                            [UIImage imageNamed:@"photo7.jpg"],
-                            [UIImage imageNamed:@"photo8.jpg"],
+                            [UIImage imageNamed:@"photo7.gif"],
+                            [UIImage imageNamed:@"photo8.tif"],
                                                             nil];
     imagesView.animationDuration = 10.0;
 

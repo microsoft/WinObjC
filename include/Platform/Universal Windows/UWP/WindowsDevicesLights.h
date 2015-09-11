@@ -26,6 +26,8 @@
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
 #define __WFIClosable_DEFINED__
@@ -43,14 +45,14 @@
 WINRT_EXPORT
 @interface WDLLamp : RTObject <WFIClosable>
 + (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDLLamp *))success failure:(void (^)(NSError*))failure;
-+ (void)getDefaultAsyncWithSuccess:(void (^)(WDLLamp *))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 @property BOOL isEnabled;
-@property (copy) WUColor * color;
+@property (copy) WUColor* color;
 @property float brightnessLevel;
 @property (readonly) NSString * deviceId;
 @property (readonly) BOOL isColorSettable;
-- (EventRegistrationToken)addAvailabilityChangedEvent:(void(^)(WDLLamp *, WDLLampAvailabilityChangedEventArgs *))del;
+- (EventRegistrationToken)addAvailabilityChangedEvent:(void(^)(WDLLamp*, WDLLampAvailabilityChangedEventArgs*))del;
 - (void)removeAvailabilityChangedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end

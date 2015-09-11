@@ -28,6 +28,8 @@
 #include "WindowsFoundationCollections.h"
 #include "WindowsGlobalization.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.UserProfile.AdvertisingManager
 #ifndef __WSUAdvertisingManager_DEFINED__
 #define __WSUAdvertisingManager_DEFINED__
@@ -46,9 +48,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
-+ (WSUUserProfilePersonalizationSettings *)current;
-- (void)trySetLockScreenImageAsync:(WSStorageFile *)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)trySetWallpaperImageAsync:(WSStorageFile *)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (WSUUserProfilePersonalizationSettings*)current;
+- (void)trySetLockScreenImageAsync:(WSStorageFile*)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)trySetWallpaperImageAsync:(WSStorageFile*)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSUUserProfilePersonalizationSettings_DEFINED__
@@ -59,11 +61,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUGlobalizationPreferences : RTObject
-+ (NSArray* /*String*/ )calendars;
-+ (NSArray* /*String*/ )clocks;
-+ (NSArray* /*String*/ )currencies;
++ (NSArray*)calendars;
++ (NSArray*)clocks;
++ (NSArray*)currencies;
 + (NSString *)homeGeographicRegion;
-+ (NSArray* /*String*/ )languages;
++ (NSArray*)languages;
 + (WGDayOfWeek)weekStartsOn;
 @end
 
@@ -75,10 +77,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUFirstSignInSettings : RTObject
-+ (WSUFirstSignInSettings *)getDefault;
-@property (readonly) unsigned size;
-// Could not find base class Windows.Foundation.Collections.IMapView`2<String,System.Object> type information
-// Could not find base class Windows.Foundation.Collections.IMapView`2<String,System.Object> type information
++ (WSUFirstSignInSettings*)getDefault;
+@property (readonly) unsigned int size;
+- (id)objectForKey: (id)key;
+- (NSArray*)allKeys;
+- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allValues;
+- (id)keyEnumerator;
+- (unsigned int)count;
+
 @end
 
 #endif // __WSUFirstSignInSettings_DEFINED__

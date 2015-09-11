@@ -30,6 +30,8 @@
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
 #define __WFIClosable_DEFINED__
@@ -46,16 +48,16 @@
 
 WINRT_EXPORT
 @interface WDBRRfcommDeviceService : RTObject <WFIClosable>
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector:(WDBRRfcommServiceId *)serviceId;
-@property (readonly) WNHostName * connectionHostName;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
+@property (readonly) WNHostName* connectionHostName;
 @property (readonly) NSString * connectionServiceName;
 @property (readonly) WNSSocketProtectionLevel maxProtectionLevel;
 @property (readonly) WNSSocketProtectionLevel protectionLevel;
-@property (readonly) WDBRRfcommServiceId * serviceId;
-@property (readonly) WDBBluetoothDevice * device;
-- (void)getSdpRawAttributesAsyncWithSuccess:(void (^)(NSDictionary * /*UInt32, WSSIBuffer*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(NSDictionary * /*UInt32, WSSIBuffer*/ ))success failure:(void (^)(NSError*))failure;
+@property (readonly) WDBRRfcommServiceId* serviceId;
+@property (readonly) WDBBluetoothDevice* device;
+- (void)getSdpRawAttributesAsyncWithSuccess:(void (^)(NSDictionary*))success failure:(void (^)(NSError*))failure;
+- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(NSDictionary*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -67,16 +69,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBRRfcommServiceId : RTObject
-+ (WDBRRfcommServiceId *)fromUuid:(WFGUID *)uuid;
-+ (WDBRRfcommServiceId *)fromShortId:(unsigned)shortId;
-@property (readonly) WFGUID * uuid;
-+ (WDBRRfcommServiceId *)genericFileTransfer;
-+ (WDBRRfcommServiceId *)obexFileTransfer;
-+ (WDBRRfcommServiceId *)obexObjectPush;
-+ (WDBRRfcommServiceId *)phoneBookAccessPce;
-+ (WDBRRfcommServiceId *)phoneBookAccessPse;
-+ (WDBRRfcommServiceId *)serialPort;
-- (unsigned)asShortId;
++ (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
++ (WDBRRfcommServiceId*)fromShortId:(unsigned int)shortId;
+@property (readonly) WFGUID* uuid;
++ (WDBRRfcommServiceId*)genericFileTransfer;
++ (WDBRRfcommServiceId*)obexFileTransfer;
++ (WDBRRfcommServiceId*)obexObjectPush;
++ (WDBRRfcommServiceId*)phoneBookAccessPce;
++ (WDBRRfcommServiceId*)phoneBookAccessPse;
++ (WDBRRfcommServiceId*)serialPort;
+- (unsigned int)asShortId;
 - (NSString *)asString;
 @end
 
@@ -88,10 +90,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBRRfcommServiceProvider : RTObject
-+ (void)createAsync:(WDBRRfcommServiceId *)serviceId success:(void (^)(WDBRRfcommServiceProvider *))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSDictionary * /*UInt32, WSSIBuffer*/  sdpRawAttributes;
-@property (readonly) WDBRRfcommServiceId * serviceId;
-- (void)startAdvertising:(WNSStreamSocketListener *)listener;
++ (void)createAsync:(WDBRRfcommServiceId*)serviceId success:(void (^)(WDBRRfcommServiceProvider*))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSMutableDictionary* sdpRawAttributes;
+@property (readonly) WDBRRfcommServiceId* serviceId;
+- (void)startAdvertising:(WNSStreamSocketListener*)listener;
 - (void)stopAdvertising;
 @end
 

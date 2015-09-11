@@ -36,7 +36,7 @@
 @class UIRefreshControl, UITableViewDataSource;
 
 UIKIT_EXPORT_CLASS
-@interface UITableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface UITableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, NSCoding>
 
 - (id)initWithStyle:(UITableViewStyle)style;
 

@@ -30,6 +30,7 @@
 #import "OpenGLES11Controller.h"
 #import "OpenGLES20Controller.h"
 #import "PhotogridViewController.h"
+#import "BezierViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -165,7 +166,14 @@ static NSString *viewTitleKeyName = @"ViewName";
                                @"CollectionView", viewTitleKeyName,
                                photoGridViewController, controllerKeyName,
                                nil]];
- }
+
+    // CollectionView
+    BezierViewController *bezierViewController = [[BezierViewController alloc] init];
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               @"Beizier Paths", viewTitleKeyName,
+                               bezierViewController, controllerKeyName,
+                               nil]];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

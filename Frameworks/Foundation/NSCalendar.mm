@@ -149,14 +149,43 @@
         return ret;
     }
 
+	static Calendar *calendarCopyWithTZ(NSCalendar *self)
+	{
+        UErrorCode status = U_ZERO_ERROR;
+        Calendar *copy = self->_cal->clone();
+		if ( self->_timeZone != nil ) {
+			icu::TimeZone* tz;
+			[self->_timeZone _getICUTimezone:&tz];
+			copy->setTimeZone(*tz);
+		}
+
+		return copy;
+	}
+
+	static Calendar *calendarCopyWithTZAndDate(NSCalendar *self, NSDate *date)
+	{
+        UErrorCode status = U_ZERO_ERROR;
+        Calendar *copy = self->_cal->clone();
+        copy->setTime([date timeIntervalSince1970] * 1000.0, status);
+        if ( U_SUCCESS(status) ) {
+			if ( self->_timeZone != nil ) {
+				icu::TimeZone* tz;
+				[self->_timeZone _getICUTimezone:&tz];
+				copy->setTimeZone(*tz);
+			}
+
+			return copy;
+		} else {
+			delete copy;
+			return NULL;
+		}
+	}
+
     -(NSDate*) dateFromComponents:(NSDateComponents*)components {
         NSInteger check;
 
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = _cal->clone();
-        icu::TimeZone* tz;
-        [_timeZone _getICUTimezone:&tz];
-        copy->setTimeZone(*tz);
+        Calendar *copy = calendarCopyWithTZ(self);
         copy->clear();
 
         if ( (check=[components year]) != NSUndefinedDateComponent )
@@ -193,15 +222,10 @@
         double time = [date timeIntervalSince1970];
 
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = _cal->clone();
-        copy->setTime(time * 1000.0, status);
+        Calendar *copy = calendarCopyWithTZAndDate(self, date);
 
-        icu::TimeZone *tz;
-        [_timeZone _getICUTimezone:&tz];
-        copy->setTimeZone(*tz);
-
-        id ret = nil;
-        if ( U_SUCCESS(status) ) {
+        NSDateComponents *ret = nil;
+        if ( copy ) {
             ret = [NSDateComponents new];
             if ( unitFlags & NSDayCalendarUnit ) [ret setDay:copy->get(UCAL_DATE, status)];
             if ( unitFlags & NSMonthCalendarUnit ) [ret setMonth:copy->get(UCAL_MONTH, status) + 1];
@@ -210,8 +234,8 @@
             if ( unitFlags & NSMinuteCalendarUnit ) [ret setMinute:copy->get(UCAL_MINUTE, status)];
             if ( unitFlags & NSHourCalendarUnit ) [ret setHour:copy->get(UCAL_HOUR_OF_DAY, status)];
             if ( unitFlags & NSWeekdayCalendarUnit ) [ret setWeekday:copy->get(UCAL_DAY_OF_WEEK, status)];
+			delete copy;
         }
-        delete copy;
 
         return [ret autorelease];
     }
@@ -222,56 +246,23 @@
     }
 
     -(NSDateComponents*) components:(NSUInteger)unitFlags fromDate:(NSDate*)fromDate toDate:(NSDate*)toDate options:(NSUInteger)options {
-        double time = [fromDate timeIntervalSince1970];
-        double time2 = [toDate timeIntervalSince1970];
+        UErrorCode status = U_ZERO_ERROR;
+        Calendar *copy = calendarCopyWithTZAndDate(self, fromDate);
+		UDate toDateICU = (double) [toDate timeIntervalSince1970] * 1000.0;
 
-        double diff = time2 - time;
-        id ret = nil;
+        NSDateComponents *ret = nil;
+		if ( copy ) {
+            ret = [NSDateComponents new];
 
-        ret = [NSDateComponents new];
+            if ( unitFlags & NSYearCalendarUnit ) [ret setYear:copy->fieldDifference(toDateICU, UCAL_YEAR, status)];
+            if ( unitFlags & NSMonthCalendarUnit ) [ret setMonth:copy->fieldDifference(toDateICU, UCAL_MONTH, status)];
+            if ( unitFlags & NSDayCalendarUnit ) [ret setDay:copy->fieldDifference(toDateICU, UCAL_DATE, status)];
+            if ( unitFlags & NSHourCalendarUnit ) [ret setHour:copy->fieldDifference(toDateICU, UCAL_HOUR_OF_DAY, status)];
+            if ( unitFlags & NSMinuteCalendarUnit ) [ret setMinute:copy->fieldDifference(toDateICU, UCAL_MINUTE, status)];
+            if ( unitFlags & NSSecondCalendarUnit ) [ret setSecond:copy->fieldDifference(toDateICU, UCAL_SECOND, status)];
 
-#define SECONDS_PER_MIN     (60.0)
-#define SECONDS_PER_HOUR    (SECONDS_PER_MIN * 60.0)
-#define SECONDS_PER_DAY     (SECONDS_PER_HOUR * 24.0)
-#define SECONDS_PER_WEEK    (SECONDS_PER_DAY * 7.0)
-#define SECONDS_PER_MONTH   (SECONDS_PER_DAY * 30.42)
-#define SECONDS_PER_YEAR    (SECONDS_PER_DAY * 365.0)
-
-        if ( unitFlags & NSYearCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_YEAR);
-            diff -= ((double) timeDiff) * SECONDS_PER_YEAR;
-            [ret setYear:timeDiff];
-        }
-        if ( unitFlags & NSMonthCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_MONTH);
-            diff -= ((double) timeDiff) * SECONDS_PER_MONTH;
-            [ret setMonth:timeDiff];
-        }
-        if ( unitFlags & NSWeekCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_WEEK);
-            diff -= ((double) timeDiff) * SECONDS_PER_WEEK;
-            [ret setWeek:timeDiff];
-        }
-        if ( unitFlags & NSDayCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_DAY);
-            diff -= ((double) timeDiff) * SECONDS_PER_DAY;
-            [ret setDay:timeDiff];
-        }
-        if ( unitFlags & NSHourCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_HOUR);
-            diff -= ((double) timeDiff) * SECONDS_PER_HOUR;
-            [ret setHour:timeDiff];
-        }
-        if ( unitFlags & NSMinuteCalendarUnit ) {
-            int timeDiff = (int)(diff / SECONDS_PER_MIN);
-            diff -= ((double) timeDiff) * SECONDS_PER_MIN;
-            [ret setMinute:timeDiff];
-        }
-        if ( unitFlags & NSSecondCalendarUnit ) {
-            int timeDiff = (int)diff;
-            diff -= ((double) timeDiff);
-            [ret setSecond:timeDiff];
-        }
+			delete copy;
+		}
 
         return [ret autorelease];
     }

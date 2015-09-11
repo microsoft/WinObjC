@@ -60,6 +60,8 @@ SC_EXPORT Boolean SCNetworkReachabilityUnscheduleFromRunLoop (SCNetworkReachabil
 
 SC_EXPORT Boolean SCNetworkReachabilitySetCallback (SCNetworkReachabilityRef, SCNetworkReachabilityCallBack, SCNetworkReachabilityContext*);
 
+SC_EXPORT Boolean SCNetworkReachabilitySetDispatchQueue (SCNetworkReachabilityRef, dispatch_queue_t);
+
 __END_DECLS
 
 #endif

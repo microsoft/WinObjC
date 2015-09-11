@@ -29,9 +29,11 @@ class XIBObjectString : public XIBObject
 public:
     const char *_strVal;
     XIBObjectString(const char *str);
+    XIBObjectString();
     const char *stringValue();
     bool EqualToString(const char *str);;
     void EmitObject(NIBWriter *writer);
+    void InitFromStory(XIBObject *obj);
 };
 
 class XIBObjectData : public XIBObject
@@ -82,4 +84,6 @@ class XIBAccessibilityArray : public XIBArray
 {
     void EmitObject(NIBWriter *writer);
 };
+
+std::string GetOutputFilename(const char *filename);
 #endif

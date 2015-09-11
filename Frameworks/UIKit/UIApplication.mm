@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-// Include D3D11 headers before Starboard.h
-#include <D3D11.h>
-#include <D3D11_1.h>
-
 #include "Starboard.h"
 @interface UIKeyboardRotationView : UIView {
 }
@@ -25,7 +21,6 @@
 @class _UISettings;
 
 #include "Platform/EbrPlatform.h"
-#include "EbrGLES.h"
 #include "EbrRemoteNotifications.h"
 
 #include "CoreFoundation/CFArray.h"
@@ -34,12 +29,13 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
-#include "../Foundation/NSRunLoopSource.h"
+#include "NSRunLoopSource.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
+typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
 
 #include "UIEmptyController.h"
@@ -199,7 +195,7 @@ static idretaintype(NSMutableArray) _curNotifications;
         g_NewMouseEvent = (EbrEvent) [newMouseEvent eventHandle];
 
         shutdownEvent = [NSRunLoopSource new];
-        [shutdownEvent setSourceDelegate:sharedApplication selector:@selector(_shutdownEvent)];
+        [shutdownEvent setSourceDelegate:[UIApplication class] selector:@selector(_shutdownEvent)];
         g_shutdownEvent = (EbrEvent) [shutdownEvent eventHandle];
 
         [[NSRunLoop mainRunLoop] addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
@@ -705,7 +701,7 @@ static idretaintype(NSMutableArray) _curNotifications;
         }
     }
 
-    -(void) _shutdownEvent {
+    +(void) _shutdownEvent {
         _doShutdown = TRUE;
         [[NSRunLoop mainRunLoop] _stop];
     }
@@ -2034,7 +2030,7 @@ void UIRequestTransactionProcessing()
 
 void UIShutdown()
 {
-    [[UIApplication sharedApplication] _shutdownEvent];
+    [UIApplication _shutdownEvent];
     [[NSRunLoop mainRunLoop] _wakeUp];
 }
 
@@ -2049,6 +2045,7 @@ void UIShutdown()
     CGSize _hostScreenSize;
     float  _hostScale;
     CGSize _hostScreenDpi;
+    UIInterfaceOrientation _presentationTransform;
 }
 @synthesize magnification = _magnification;
 @synthesize fixedWidth = _fixedWidth;
@@ -2057,6 +2054,7 @@ void UIShutdown()
 @synthesize autoMagnification = _autoMagnification;
 @synthesize sizeUIWindowToFit = _sizeUIWindowToFit;
 @synthesize operationMode = _operationMode;
+@synthesize presentationTransform = _presentationTransform;
 
 -(instancetype) init
 {
@@ -2067,6 +2065,7 @@ void UIShutdown()
     _autoMagnification = TRUE;
     _sizeUIWindowToFit = TRUE;
     _operationMode = WOCOperationModePhone;
+    _presentationTransform = UIInterfaceOrientationPortrait;
     return self;
 }
 
@@ -2080,11 +2079,23 @@ void UIShutdown()
     return CGSizeMake([self currentWidth], [self currentHeight]);
 }
 
+-(CGSize)_currentOrientationWindowSize
+{
+    switch ( _presentationTransform ) {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            return CGSizeMake(_windowSize.height, _windowSize.width);
+
+        default:
+            return CGSizeMake(_windowSize.width, _windowSize.height);
+    }
+}
+
 -(float)currentWidth
 {
     if ( _fixedAspectRatio > 0.0f ) {
-        float totalWidth = _windowSize.width / _magnification;
-        float totalHeight = _windowSize.height / _magnification;
+        float totalWidth = self._currentOrientationWindowSize.width / _magnification;
+        float totalHeight = self._currentOrientationWindowSize.height / _magnification;
         
         float newWidth = totalWidth;
         float newHeight = totalWidth / _fixedAspectRatio;
@@ -2100,9 +2111,9 @@ void UIShutdown()
         return _fixedWidth;
     } else {
         if ( _fixedHeight > 0 && _autoMagnification) {
-            return round(_windowSize.width * _fixedHeight / _windowSize.height);
+            return round(self._currentOrientationWindowSize.width * _fixedHeight / self._currentOrientationWindowSize.height);
         } else {
-            return round(_windowSize.width / _magnification);
+            return round(self._currentOrientationWindowSize.width / _magnification);
         }
     }
 }
@@ -2110,8 +2121,8 @@ void UIShutdown()
 -(float)currentHeight
 {
     if ( _fixedAspectRatio > 0.0f ) {
-        float totalWidth = _windowSize.width / _magnification;
-        float totalHeight = _windowSize.height / _magnification;
+        float totalWidth = self._currentOrientationWindowSize.width / _magnification;
+        float totalHeight = self._currentOrientationWindowSize.height / _magnification;
         
         float newWidth = totalWidth;
         float newHeight = totalWidth / _fixedAspectRatio;
@@ -2127,9 +2138,9 @@ void UIShutdown()
         return _fixedHeight;
     } else {
         if ( _fixedWidth > 0 && _autoMagnification ) {
-            return round(_windowSize.height * _fixedWidth / _windowSize.width);
+            return round(self._currentOrientationWindowSize.height * _fixedWidth / self._currentOrientationWindowSize.width);
         } else {
-            return round(_windowSize.height / _magnification);
+            return round(self._currentOrientationWindowSize.height / _magnification);
         }
     }
 }
@@ -2140,8 +2151,8 @@ void UIShutdown()
         //  Calculate magnification as a function of the screen width/height and aspect-fit it
         float width = [self currentWidth];
         float height = [self currentHeight];
-        float aspectX = _windowSize.width / width;
-        float aspectY = _windowSize.height / height;
+        float aspectX = self._currentOrientationWindowSize.width / width;
+        float aspectY = self._currentOrientationWindowSize.height / height;
         return aspectX > aspectY ? aspectY : aspectX;
     } else {
         //  Simply magnify the window as specified
@@ -2161,8 +2172,23 @@ void UIShutdown()
     float newWidth = [self currentWidth];
     float newHeight = [self currentHeight];
     float newMagnification = [self currentMagnification];
+    float newRotation = CACompositorRotationNone;
 
-    GetCACompositor()->setScreenSize(newWidth, newHeight, newMagnification);
+    switch ( _presentationTransform ) {
+        case UIInterfaceOrientationPortraitUpsideDown:
+            newRotation = CACompositorRotation180;
+            break;
+
+        case UIInterfaceOrientationLandscapeLeft:
+            newRotation = CACompositorRotation90CounterClockwise;
+            break;
+
+        case UIInterfaceOrientationLandscapeRight:
+            newRotation = CACompositorRotation90Clockwise;
+            break;
+    }
+
+    GetCACompositor()->setScreenSize(newWidth, newHeight, newMagnification, newRotation);
     GetCACompositor()->setDeviceSize(newWidth, newHeight);
 
     //  Adjust size of all UIWindows
@@ -2191,7 +2217,7 @@ void UIShutdown()
 
 -(CGSize) hostWindowSizePixels
 {
-    return CGSizeMake(_windowSize.width * self.hostScreenScale, _windowSize.height * self.hostScreenScale);
+    return CGSizeMake(self._currentOrientationWindowSize.width * self.hostScreenScale, self._currentOrientationWindowSize.height * self.hostScreenScale);
 }
 
 -(float) hostScreenScale
@@ -2211,7 +2237,7 @@ void UIShutdown()
 -(CGSize) hostScreenSizePoints
 {
     if ( _hostScreenSize.width == 0 || _hostScreenSize.height == 0 ) {
-        _hostScreenSize = _windowSize;
+        _hostScreenSize = self._currentOrientationWindowSize;
     }
 
     return CGSizeMake(_hostScreenSize.width, _hostScreenSize.height);

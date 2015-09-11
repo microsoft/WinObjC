@@ -17,7 +17,7 @@
 #pragma once
 #include "ObjectConverter.h"
 
-typedef enum colorSpace
+enum colorSpace
 {
     colorSpaceFull,
     colorSpaceWhite,

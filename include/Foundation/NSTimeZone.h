@@ -15,21 +15,8 @@ typedef NSInteger NSTimeZoneNameStyle;
 
 FOUNDATION_EXPORT NSString * const NSSystemTimeZoneDidChangeNotification;
 
-#if defined( STARBOARD_PORT ) && defined( __cplusplus )
-namespace icu_48 {
-    class TimeZone;
-}
-#endif
-
 FOUNDATION_EXPORT_CLASS
 @interface NSTimeZone : NSObject <NSCoding,NSCopying>
-{
-#if defined( STARBOARD_PORT ) && defined( __cplusplus )
-    icu_48::TimeZone* _icuTZ;
-#else
-    void *_icuTZ;
-#endif
-}
 
 +(NSTimeZone *)localTimeZone;
 +(NSTimeZone *)systemTimeZone;

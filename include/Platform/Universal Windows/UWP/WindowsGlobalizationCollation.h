@@ -21,7 +21,7 @@
 
 #include "interopBase.h"
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@class NSArray_C_WGCCharacterGrouping;
+@class RTArray_C_WGCCharacterGrouping;
 @protocol WGCICharacterGrouping, WGCICharacterGroupings;
 
 #include "WindowsFoundationCollections.h"
@@ -47,7 +47,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) unsigned size;
+@property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state

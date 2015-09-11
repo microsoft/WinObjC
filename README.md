@@ -7,7 +7,7 @@ The following sections will help you get started and you can view our wiki for m
 
 ##Where to get it
 
-Download the Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1-preview/winobjc.zip)
+Download the latest Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.150903/winobjc.zip)
 
 ##Getting started with WinObjC
 To use WinObjC, there are a few requirements. You need:

@@ -47,6 +47,9 @@ bool SBNativeTarget::init()
   // Verify that target's build type is valid
   if (m_target->getProductType() == "com.apple.product-type.library.static") {
     m_type = TargetStaticLib;
+  } else if (m_target->getProductType() == "com.apple.product-type.framework") {
+    m_type = TargetStaticLib;
+    SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library. This is experimental behaviour." << std::endl;
   } else if (m_target->getProductType() == "com.apple.product-type.application") {
     m_type = TargetApplication;
   } else {

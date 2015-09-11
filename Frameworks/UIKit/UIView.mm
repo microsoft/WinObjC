@@ -2573,7 +2573,7 @@ int viewCount = 0;
 
     -(void) setNativeElement:(WXFrameworkElement *) nativeElement
     {
-        [[self layer] setContentsElement: nativeElement];
+        [self layer].contentsElement = nativeElement;
     }
 @end
 

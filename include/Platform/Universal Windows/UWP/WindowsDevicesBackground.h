@@ -25,6 +25,8 @@
 
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Devices.Background.DeviceUseDetails
 #ifndef __WDBDeviceUseDetails_DEFINED__
 #define __WDBDeviceUseDetails_DEFINED__
@@ -45,7 +47,7 @@ WINRT_EXPORT
 @interface WDBDeviceServicingDetails : RTObject
 @property (readonly) NSString * arguments;
 @property (readonly) NSString * deviceId;
-@property (readonly) WFTimeSpan * expectedDuration;
+@property (readonly) WFTimeSpan* expectedDuration;
 @end
 
 #endif // __WDBDeviceServicingDetails_DEFINED__

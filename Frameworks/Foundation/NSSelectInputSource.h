@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "../Foundation/NSInputSource.h"
+#include "NSInputSource.h"
 
 enum {
    NSSelectReadEvent=0x01,

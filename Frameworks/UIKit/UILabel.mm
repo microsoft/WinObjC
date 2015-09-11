@@ -327,7 +327,9 @@
     }
 
     -(void) drawRect:(CGRect)rect {
-        [self drawTextInRect:rect];
+        CGRect bounds = self.bounds;
+        CGRect drawArea = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
+        [self drawTextInRect: drawArea];
     }
 
     -(void) drawTextInRect:(CGRect)rect {

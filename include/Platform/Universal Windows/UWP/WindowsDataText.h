@@ -26,55 +26,55 @@
 
 // Windows.Data.Text.UnicodeGeneralCategory
 enum _WDTUnicodeGeneralCategory {
-    WDTUnicodeGeneralCategoryUppercaseLetter = 0,
-    WDTUnicodeGeneralCategoryLowercaseLetter = 1,
-    WDTUnicodeGeneralCategoryTitlecaseLetter = 2,
-    WDTUnicodeGeneralCategoryModifierLetter = 3,
-    WDTUnicodeGeneralCategoryOtherLetter = 4,
-    WDTUnicodeGeneralCategoryNonspacingMark = 5,
-    WDTUnicodeGeneralCategorySpacingCombiningMark = 6,
-    WDTUnicodeGeneralCategoryEnclosingMark = 7,
-    WDTUnicodeGeneralCategoryDecimalDigitNumber = 8,
-    WDTUnicodeGeneralCategoryLetterNumber = 9,
-    WDTUnicodeGeneralCategoryOtherNumber = 10,
-    WDTUnicodeGeneralCategorySpaceSeparator = 11,
-    WDTUnicodeGeneralCategoryLineSeparator = 12,
-    WDTUnicodeGeneralCategoryParagraphSeparator = 13,
-    WDTUnicodeGeneralCategoryControl = 14,
-    WDTUnicodeGeneralCategoryFormat = 15,
-    WDTUnicodeGeneralCategorySurrogate = 16,
-    WDTUnicodeGeneralCategoryPrivateUse = 17,
-    WDTUnicodeGeneralCategoryConnectorPunctuation = 18,
-    WDTUnicodeGeneralCategoryDashPunctuation = 19,
-    WDTUnicodeGeneralCategoryOpenPunctuation = 20,
-    WDTUnicodeGeneralCategoryClosePunctuation = 21,
-    WDTUnicodeGeneralCategoryInitialQuotePunctuation = 22,
-    WDTUnicodeGeneralCategoryFinalQuotePunctuation = 23,
-    WDTUnicodeGeneralCategoryOtherPunctuation = 24,
-    WDTUnicodeGeneralCategoryMathSymbol = 25,
-    WDTUnicodeGeneralCategoryCurrencySymbol = 26,
-    WDTUnicodeGeneralCategoryModifierSymbol = 27,
-    WDTUnicodeGeneralCategoryOtherSymbol = 28,
-    WDTUnicodeGeneralCategoryNotAssigned = 29,
+	WDTUnicodeGeneralCategoryUppercaseLetter = 0,
+	WDTUnicodeGeneralCategoryLowercaseLetter = 1,
+	WDTUnicodeGeneralCategoryTitlecaseLetter = 2,
+	WDTUnicodeGeneralCategoryModifierLetter = 3,
+	WDTUnicodeGeneralCategoryOtherLetter = 4,
+	WDTUnicodeGeneralCategoryNonspacingMark = 5,
+	WDTUnicodeGeneralCategorySpacingCombiningMark = 6,
+	WDTUnicodeGeneralCategoryEnclosingMark = 7,
+	WDTUnicodeGeneralCategoryDecimalDigitNumber = 8,
+	WDTUnicodeGeneralCategoryLetterNumber = 9,
+	WDTUnicodeGeneralCategoryOtherNumber = 10,
+	WDTUnicodeGeneralCategorySpaceSeparator = 11,
+	WDTUnicodeGeneralCategoryLineSeparator = 12,
+	WDTUnicodeGeneralCategoryParagraphSeparator = 13,
+	WDTUnicodeGeneralCategoryControl = 14,
+	WDTUnicodeGeneralCategoryFormat = 15,
+	WDTUnicodeGeneralCategorySurrogate = 16,
+	WDTUnicodeGeneralCategoryPrivateUse = 17,
+	WDTUnicodeGeneralCategoryConnectorPunctuation = 18,
+	WDTUnicodeGeneralCategoryDashPunctuation = 19,
+	WDTUnicodeGeneralCategoryOpenPunctuation = 20,
+	WDTUnicodeGeneralCategoryClosePunctuation = 21,
+	WDTUnicodeGeneralCategoryInitialQuotePunctuation = 22,
+	WDTUnicodeGeneralCategoryFinalQuotePunctuation = 23,
+	WDTUnicodeGeneralCategoryOtherPunctuation = 24,
+	WDTUnicodeGeneralCategoryMathSymbol = 25,
+	WDTUnicodeGeneralCategoryCurrencySymbol = 26,
+	WDTUnicodeGeneralCategoryModifierSymbol = 27,
+	WDTUnicodeGeneralCategoryOtherSymbol = 28,
+	WDTUnicodeGeneralCategoryNotAssigned = 29,
 };
 typedef unsigned WDTUnicodeGeneralCategory;
 
 // Windows.Data.Text.UnicodeNumericType
 enum _WDTUnicodeNumericType {
-    WDTUnicodeNumericTypeNone = 0,
-    WDTUnicodeNumericTypeDecimal = 1,
-    WDTUnicodeNumericTypeDigit = 2,
-    WDTUnicodeNumericTypeNumeric = 3,
+	WDTUnicodeNumericTypeNone = 0,
+	WDTUnicodeNumericTypeDecimal = 1,
+	WDTUnicodeNumericTypeDigit = 2,
+	WDTUnicodeNumericTypeNumeric = 3,
 };
 typedef unsigned WDTUnicodeNumericType;
 
 // Windows.Data.Text.AlternateNormalizationFormat
 enum _WDTAlternateNormalizationFormat {
-    WDTAlternateNormalizationFormatNotNormalized = 0,
-    WDTAlternateNormalizationFormatNumber = 1,
-    WDTAlternateNormalizationFormatCurrency = 3,
-    WDTAlternateNormalizationFormatDate = 4,
-    WDTAlternateNormalizationFormatTime = 5,
+	WDTAlternateNormalizationFormatNotNormalized = 0,
+	WDTAlternateNormalizationFormatNumber = 1,
+	WDTAlternateNormalizationFormatCurrency = 3,
+	WDTAlternateNormalizationFormatDate = 4,
+	WDTAlternateNormalizationFormatTime = 5,
 };
 typedef unsigned WDTAlternateNormalizationFormat;
 
@@ -83,13 +83,13 @@ typedef unsigned WDTAlternateNormalizationFormat;
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTSelectableWordSegment*/  words);
+typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTWordSegment*/  words);
+typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTWordSegment* */ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
 
 
@@ -99,20 +99,20 @@ typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordS
 WINRT_EXPORT
 @interface WDTTextSegment : NSObject
 + (instancetype)new;
-@property unsigned startPosition;
-@property unsigned length;
+@property unsigned int startPosition;
+@property unsigned int length;
 @end
 
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTWordSegment*/  words);
+typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTWordSegment* */ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTSelectableWordSegment*/  words);
+typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SemanticTextQuery
@@ -121,10 +121,10 @@ typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> 
 
 WINRT_EXPORT
 @interface WDTSemanticTextQuery : RTObject
-+ (WDTSemanticTextQuery *)create:(NSString *)aqsFilter ACTIVATOR;
-+ (WDTSemanticTextQuery *)createWithLanguage:(NSString *)aqsFilter filterLanguage:(NSString *)filterLanguage ACTIVATOR;
-- (NSArray* /*WDTTextSegment*/ )find:(NSString *)content;
-- (NSArray* /*WDTTextSegment*/ )findInProperty:(NSString *)propertyContent propertyName:(NSString *)propertyName;
++ (WDTSemanticTextQuery*)create:(NSString *)aqsFilter ACTIVATOR;
++ (WDTSemanticTextQuery*)createWithLanguage:(NSString *)aqsFilter filterLanguage:(NSString *)filterLanguage ACTIVATOR;
+- (NSArray*)find:(NSString *)content;
+- (NSArray*)findInProperty:(NSString *)propertyContent propertyName:(NSString *)propertyName;
 @end
 
 #endif // __WDTSemanticTextQuery_DEFINED__
@@ -135,23 +135,23 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTUnicodeCharacters : RTObject
-+ (unsigned)getCodepointFromSurrogatePair:(unsigned)highSurrogate lowSurrogate:(unsigned)lowSurrogate;
-+ (void)getSurrogatePairFromCodepoint:(unsigned)codepoint highSurrogate:(WCHAR*)highSurrogate lowSurrogate:(WCHAR*)lowSurrogate;
-+ (BOOL)isHighSurrogate:(unsigned)codepoint;
-+ (BOOL)isLowSurrogate:(unsigned)codepoint;
-+ (BOOL)isSupplementary:(unsigned)codepoint;
-+ (BOOL)isNoncharacter:(unsigned)codepoint;
-+ (BOOL)isWhitespace:(unsigned)codepoint;
-+ (BOOL)isAlphabetic:(unsigned)codepoint;
-+ (BOOL)isCased:(unsigned)codepoint;
-+ (BOOL)isUppercase:(unsigned)codepoint;
-+ (BOOL)isLowercase:(unsigned)codepoint;
-+ (BOOL)isIdStart:(unsigned)codepoint;
-+ (BOOL)isIdContinue:(unsigned)codepoint;
-+ (BOOL)isGraphemeBase:(unsigned)codepoint;
-+ (BOOL)isGraphemeExtend:(unsigned)codepoint;
-+ (WDTUnicodeNumericType)getNumericType:(unsigned)codepoint;
-+ (WDTUnicodeGeneralCategory)getGeneralCategory:(unsigned)codepoint;
++ (unsigned int)getCodepointFromSurrogatePair:(unsigned int)highSurrogate lowSurrogate:(unsigned int)lowSurrogate;
++ (void)getSurrogatePairFromCodepoint:(unsigned int)codepoint highSurrogate:(WCHAR*)highSurrogate lowSurrogate:(WCHAR*)lowSurrogate;
++ (BOOL)isHighSurrogate:(unsigned int)codepoint;
++ (BOOL)isLowSurrogate:(unsigned int)codepoint;
++ (BOOL)isSupplementary:(unsigned int)codepoint;
++ (BOOL)isNoncharacter:(unsigned int)codepoint;
++ (BOOL)isWhitespace:(unsigned int)codepoint;
++ (BOOL)isAlphabetic:(unsigned int)codepoint;
++ (BOOL)isCased:(unsigned int)codepoint;
++ (BOOL)isUppercase:(unsigned int)codepoint;
++ (BOOL)isLowercase:(unsigned int)codepoint;
++ (BOOL)isIdStart:(unsigned int)codepoint;
++ (BOOL)isIdContinue:(unsigned int)codepoint;
++ (BOOL)isGraphemeBase:(unsigned int)codepoint;
++ (BOOL)isGraphemeExtend:(unsigned int)codepoint;
++ (WDTUnicodeNumericType)getNumericType:(unsigned int)codepoint;
++ (WDTUnicodeGeneralCategory)getGeneralCategory:(unsigned int)codepoint;
 @end
 
 #endif // __WDTUnicodeCharacters_DEFINED__
@@ -164,7 +164,7 @@ WINRT_EXPORT
 @interface WDTAlternateWordForm : RTObject
 @property (readonly) NSString * alternateText;
 @property (readonly) WDTAlternateNormalizationFormat normalizationFormat;
-@property (readonly) WDTTextSegment * sourceTextSegment;
+@property (readonly) WDTTextSegment* sourceTextSegment;
 @end
 
 #endif // __WDTAlternateWordForm_DEFINED__
@@ -175,8 +175,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTWordSegment : RTObject
-@property (readonly) NSArray* /*WDTAlternateWordForm*/  alternateForms;
-@property (readonly) WDTTextSegment * sourceTextSegment;
+@property (readonly) NSArray* alternateForms;
+@property (readonly) WDTTextSegment* sourceTextSegment;
 @property (readonly) NSString * text;
 @end
 
@@ -188,11 +188,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTWordsSegmenter : RTObject
-+ (WDTWordsSegmenter *)createWithLanguage:(NSString *)language ACTIVATOR;
++ (WDTWordsSegmenter*)createWithLanguage:(NSString *)language ACTIVATOR;
 @property (readonly) NSString * resolvedLanguage;
-- (WDTWordSegment *)getTokenAt:(NSString *)text startIndex:(unsigned)startIndex;
-- (NSArray* /*WDTWordSegment*/ )getTokens:(NSString *)text;
-- (void)tokenize:(NSString *)text startIndex:(unsigned)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
+- (WDTWordSegment*)getTokenAt:(NSString *)text startIndex:(unsigned int)startIndex;
+- (NSArray*)getTokens:(NSString *)text;
+- (void)tokenize:(NSString *)text startIndex:(unsigned int)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTWordsSegmenter_DEFINED__
@@ -203,7 +203,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTSelectableWordSegment : RTObject
-@property (readonly) WDTTextSegment * sourceTextSegment;
+@property (readonly) WDTTextSegment* sourceTextSegment;
 @property (readonly) NSString * text;
 @end
 
@@ -215,11 +215,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
-+ (WDTSelectableWordsSegmenter *)createWithLanguage:(NSString *)language ACTIVATOR;
++ (WDTSelectableWordsSegmenter*)createWithLanguage:(NSString *)language ACTIVATOR;
 @property (readonly) NSString * resolvedLanguage;
-- (WDTSelectableWordSegment *)getTokenAt:(NSString *)text startIndex:(unsigned)startIndex;
-- (NSArray* /*WDTSelectableWordSegment*/ )getTokens:(NSString *)text;
-- (void)tokenize:(NSString *)text startIndex:(unsigned)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
+- (WDTSelectableWordSegment*)getTokenAt:(NSString *)text startIndex:(unsigned int)startIndex;
+- (NSArray*)getTokens:(NSString *)text;
+- (void)tokenize:(NSString *)text startIndex:(unsigned int)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTSelectableWordsSegmenter_DEFINED__
@@ -230,11 +230,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTTextPredictionGenerator : RTObject
-+ (WDTTextPredictionGenerator *)create:(NSString *)languageTag ACTIVATOR;
++ (WDTTextPredictionGenerator*)create:(NSString *)languageTag ACTIVATOR;
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString * resolvedLanguage;
-- (void)getCandidatesAsync:(NSString *)input success:(void (^)(id<NSFastEnumeration> /*String*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned)maxCandidates success:(void (^)(id<NSFastEnumeration> /*String*/ ))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesAsync:(NSString *)input success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned int)maxCandidates success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDTTextPredictionGenerator_DEFINED__
@@ -245,11 +245,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTTextConversionGenerator : RTObject
-+ (WDTTextConversionGenerator *)create:(NSString *)languageTag ACTIVATOR;
++ (WDTTextConversionGenerator*)create:(NSString *)languageTag ACTIVATOR;
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString * resolvedLanguage;
-- (void)getCandidatesAsync:(NSString *)input success:(void (^)(id<NSFastEnumeration> /*String*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned)maxCandidates success:(void (^)(id<NSFastEnumeration> /*String*/ ))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesAsync:(NSString *)input success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned int)maxCandidates success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDTTextConversionGenerator_DEFINED__
@@ -260,7 +260,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTTextReverseConversionGenerator : RTObject
-+ (WDTTextReverseConversionGenerator *)create:(NSString *)languageTag ACTIVATOR;
++ (WDTTextReverseConversionGenerator*)create:(NSString *)languageTag ACTIVATOR;
 @property (readonly) BOOL languageAvailableButNotInstalled;
 @property (readonly) NSString * resolvedLanguage;
 - (void)convertBackAsync:(NSString *)input success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;

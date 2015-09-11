@@ -1,0 +1,22 @@
+# Test name             Source files
+
+objcrt_sanity           test_src\objcrt_sanity.m
+corefoundation           test_src\corefoundation.m
+foundation              test_src\foundation.m
+dispatch                test_src\dispatch.m
+
+dispatch_after          test_src\dispatch\dispatch_after.c test_src\dispatch\dispatch_test.c
+dispatch_api            test_src\dispatch\dispatch_api.c test_src\dispatch\dispatch_test.c
+dispatch_apply          test_src\dispatch\dispatch_apply.c test_src\dispatch\dispatch_test.c
+dispatch_c99            test_src\dispatch\dispatch_c99.c test_src\dispatch\dispatch_test.c
+dispatch_cascade        test_src\dispatch\dispatch_cascade.c test_src\dispatch\dispatch_test.c
+dispatch_debug          test_src\dispatch\dispatch_debug.c test_src\dispatch\dispatch_test.c
+dispatch_drift          test_src\dispatch\dispatch_drift.c test_src\dispatch\dispatch_test.c
+dispatch_group          test_src\dispatch\dispatch_group.c test_src\dispatch\dispatch_test.c
+dispatch_pingpong       test_src\dispatch\dispatch_pingpong.c test_src\dispatch\dispatch_test.c
+dispatch_priority       test_src\dispatch\dispatch_priority.c test_src\dispatch\dispatch_test.c
+dispatch_sema           test_src\dispatch\dispatch_sema.c test_src\dispatch\dispatch_test.c
+dispatch_starfish       test_src\dispatch\dispatch_starfish.c test_src\dispatch\dispatch_test.c
+dispatch_timer_bit31    test_src\dispatch\dispatch_timer_bit31.c test_src\dispatch\dispatch_test.c
+dispatch_timer_bit63    test_src\dispatch\dispatch_timer_bit63.c test_src\dispatch\dispatch_test.c
+dispatch_timer_set_time test_src\dispatch\dispatch_timer_set_time.c test_src\dispatch\dispatch_test.c

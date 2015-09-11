@@ -14,8 +14,6 @@
 //
 //******************************************************************************
 
-#include <D3D11.h>
-#include <D3D11_1.h>
 #include "Starboard.h"
 #include "_TableCellAnimationHelper.h"
 
@@ -2153,15 +2151,6 @@ void UITableViewPriv::removeReusableCell(ReusableCell *cell)
         tablePriv->_externalObjects = nil;
         delete tablePriv;
         [super dealloc];
-    }
-
-    -(instancetype) retain {
-        return [super retain];
-    }
-
-    -(void) release {
-        EbrDebugLog("%x: Table view release count: %d\n", self, CFGetRetainCount(self));
-        [super release];
     }
 
     -(UITableViewStyle) style {

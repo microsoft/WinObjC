@@ -15,6 +15,8 @@
 }
 @end
 
+#include "NSObjectInternal.h"
+
 @implementation NSObject
     -(id) init
     {
@@ -90,9 +92,19 @@
         return class_respondsToSelector(self, selector);
     }
 
+    + (void)_raiseSelectorNotFoundError:(SEL)selector format: (const char *)format, ...
+    {
+        abort();
+    }
+
     - (id)performSelector: (SEL)selector
     {
         id (*imp)(id, SEL) = (id(*)(id, SEL))[self methodForSelector: selector];
+        if (imp == NULL)
+        {
+            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x)",
+                sel_getName(selector), object_getClassName(self), self];
+        }
 
         return imp(self, selector);
     }
@@ -101,6 +113,12 @@
     {
         id (*imp)(id, SEL, id) = (id(*)(id, SEL, id))[self methodForSelector: selector];
 
+        if (imp == NULL)
+        {
+            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%x)",
+                sel_getName(selector), object_getClassName(self), self, obj1];
+        }
+
         return imp(self, selector, obj1);
     }
 
@@ -108,12 +126,24 @@
     {
         id (*imp)(id, SEL, id, id) = (id(*)(id, SEL, id, id))[self methodForSelector: selector];
 
+        if (imp == NULL)
+        {
+            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x)", 
+                sel_getName(selector), object_getClassName(self), self, obj1, obj2];
+        }
+
         return imp(self, selector, obj1, obj2);
     }
 
     - (id)performSelector: (SEL)selector withObject: (id) obj1 withObject: (id) obj2 withObject: (id) obj3
     {
         id (*imp)(id, SEL, id, id, id) = (id(*)(id, SEL, id, id, id))[self methodForSelector: selector];
+
+        if (imp == NULL)
+        {
+            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x 0x%x)",
+                sel_getName(selector), object_getClassName(self), self, obj1, obj2, obj3];
+        }
 
         return imp(self, selector, obj1, obj2, obj3);
     }

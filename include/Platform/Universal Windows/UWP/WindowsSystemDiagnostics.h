@@ -26,21 +26,23 @@
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.System.Diagnostics.ProcessDiagnosticInfo
 #ifndef __WSDProcessDiagnosticInfo_DEFINED__
 #define __WSDProcessDiagnosticInfo_DEFINED__
 
 WINRT_EXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
-+ (NSArray* /*WSDProcessDiagnosticInfo*/ )getForProcesses;
-+ (WSDProcessDiagnosticInfo *)getForCurrentProcess;
-@property (readonly) WSDProcessCpuUsage * cpuUsage;
-@property (readonly) WSDProcessDiskUsage * diskUsage;
++ (NSArray*)getForProcesses;
++ (WSDProcessDiagnosticInfo*)getForCurrentProcess;
+@property (readonly) WSDProcessCpuUsage* cpuUsage;
+@property (readonly) WSDProcessDiskUsage* diskUsage;
 @property (readonly) NSString * executableFileName;
-@property (readonly) WSDProcessMemoryUsage * memoryUsage;
-@property (readonly) WSDProcessDiagnosticInfo * parent;
-@property (readonly) unsigned processId;
-@property (readonly) WFDateTime * processStartTime;
+@property (readonly) WSDProcessMemoryUsage* memoryUsage;
+@property (readonly) WSDProcessDiagnosticInfo* parent;
+@property (readonly) unsigned int processId;
+@property (readonly) WFDateTime* processStartTime;
 @end
 
 #endif // __WSDProcessDiagnosticInfo_DEFINED__
@@ -51,7 +53,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessDiskUsage : RTObject
-- (WSDProcessDiskUsageReport *)getReport;
+- (WSDProcessDiskUsageReport*)getReport;
 @end
 
 #endif // __WSDProcessDiskUsage_DEFINED__
@@ -62,7 +64,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessMemoryUsage : RTObject
-- (WSDProcessMemoryUsageReport *)getReport;
+- (WSDProcessMemoryUsageReport*)getReport;
 @end
 
 #endif // __WSDProcessMemoryUsage_DEFINED__
@@ -73,7 +75,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsage : RTObject
-- (WSDProcessCpuUsageReport *)getReport;
+- (WSDProcessCpuUsageReport*)getReport;
 @end
 
 #endif // __WSDProcessCpuUsage_DEFINED__
@@ -85,7 +87,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
 @property (readonly) uint64_t nonPagedPoolSizeInBytes;
-@property (readonly) unsigned pageFaultCount;
+@property (readonly) unsigned int pageFaultCount;
 @property (readonly) uint64_t pageFileSizeInBytes;
 @property (readonly) uint64_t pagedPoolSizeInBytes;
 @property (readonly) uint64_t peakNonPagedPoolSizeInBytes;
@@ -122,8 +124,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSDProcessCpuUsageReport : RTObject
-@property (readonly) WFTimeSpan * kernelTime;
-@property (readonly) WFTimeSpan * userTime;
+@property (readonly) WFTimeSpan* kernelTime;
+@property (readonly) WFTimeSpan* userTime;
 @end
 
 #endif // __WSDProcessCpuUsageReport_DEFINED__

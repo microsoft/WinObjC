@@ -33,13 +33,15 @@
 		4EE861EF1B5997AD00682BDB /* photo4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E21B5997AD00682BDB /* photo4.jpg */; };
 		4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E31B5997AD00682BDB /* photo5.jpg */; };
 		4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E41B5997AD00682BDB /* photo6.jpg */; };
-		4EE861F21B5997AD00682BDB /* photo7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E51B5997AD00682BDB /* photo7.jpg */; };
-		4EE861F31B5997AD00682BDB /* photo8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E61B5997AD00682BDB /* photo8.jpg */; };
+		4EE861F21B5997AD00682BDB /* photo7.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E51B5997AD00682BDB /* photo7.gif */; };
+		4EE861F31B5997AD00682BDB /* photo8.tif in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E61B5997AD00682BDB /* photo8.tif */; };
 		4EE861F41B5997AD00682BDB /* segment_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E71B5997AD00682BDB /* segment_check.png */; };
 		4EE861F51B5997AD00682BDB /* segment_search.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E81B5997AD00682BDB /* segment_search.png */; };
 		4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E91B5997AD00682BDB /* segment_tools.png */; };
 		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
 		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
+		7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B42BCF41B90ECFE00D45782 /* BezierViewController.m */; };
+		7B42BCF71B90FFD200D45782 /* BezierViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B42BCF61B90FFD200D45782 /* BezierViewController.xib */; };
 		7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */; };
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
@@ -104,14 +106,17 @@
 		4EE861E21B5997AD00682BDB /* photo4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo4.jpg; path = WOCCatalog/Images/photo4.jpg; sourceTree = "<group>"; };
 		4EE861E31B5997AD00682BDB /* photo5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo5.jpg; path = WOCCatalog/Images/photo5.jpg; sourceTree = "<group>"; };
 		4EE861E41B5997AD00682BDB /* photo6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo6.jpg; path = WOCCatalog/Images/photo6.jpg; sourceTree = "<group>"; };
-		4EE861E51B5997AD00682BDB /* photo7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo7.jpg; path = WOCCatalog/Images/photo7.jpg; sourceTree = "<group>"; };
-		4EE861E61B5997AD00682BDB /* photo8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo8.jpg; path = WOCCatalog/Images/photo8.jpg; sourceTree = "<group>"; };
+		4EE861E51B5997AD00682BDB /* photo7.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = photo7.gif; path = WOCCatalog/Images/photo7.gif; sourceTree = "<group>"; };
+		4EE861E61B5997AD00682BDB /* photo8.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = photo8.tif; path = WOCCatalog/Images/photo8.tif; sourceTree = "<group>"; };
 		4EE861E71B5997AD00682BDB /* segment_check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_check.png; path = WOCCatalog/Images/segment_check.png; sourceTree = "<group>"; };
 		4EE861E81B5997AD00682BDB /* segment_search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_search.png; path = WOCCatalog/Images/segment_search.png; sourceTree = "<group>"; };
 		4EE861E91B5997AD00682BDB /* segment_tools.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = segment_tools.png; path = WOCCatalog/Images/segment_tools.png; sourceTree = "<group>"; };
 		4EE861EA1B5997AD00682BDB /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = WOCCatalog/Images/whiteButton.png; sourceTree = "<group>"; };
 		4EE861F81B5997E400682BDB /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesViewController.h; sourceTree = "<group>"; };
 		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
+		7B42BCF31B90ECFE00D45782 /* BezierViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezierViewController.h; sourceTree = "<group>"; };
+		7B42BCF41B90ECFE00D45782 /* BezierViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezierViewController.m; sourceTree = "<group>"; };
+		7B42BCF61B90FFD200D45782 /* BezierViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BezierViewController.xib; sourceTree = "<group>"; };
 		7BCEEE451B70220300C31CF5 /* DisplayModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayModeViewController.h; sourceTree = "<group>"; };
 		7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayModeViewController.m; sourceTree = "<group>"; };
 		7BCEEE471B70220300C31CF5 /* OpenGLES11Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES11Controller.h; sourceTree = "<group>"; };
@@ -206,6 +211,9 @@
 				4ED640221B717E470092921E /* SingleImageViewController.m */,
 				4ED640241B717E530092921E /* SingleImageViewController.h */,
 				4EE861581B5996BF00682BDB /* Supporting Files */,
+				7B42BCF31B90ECFE00D45782 /* BezierViewController.h */,
+				7B42BCF41B90ECFE00D45782 /* BezierViewController.m */,
+				7B42BCF61B90FFD200D45782 /* BezierViewController.xib */,
 			);
 			path = WOCCatalog;
 			sourceTree = "<group>";
@@ -246,8 +254,8 @@
 				4EE861E21B5997AD00682BDB /* photo4.jpg */,
 				4EE861E31B5997AD00682BDB /* photo5.jpg */,
 				4EE861E41B5997AD00682BDB /* photo6.jpg */,
-				4EE861E51B5997AD00682BDB /* photo7.jpg */,
-				4EE861E61B5997AD00682BDB /* photo8.jpg */,
+				4EE861E51B5997AD00682BDB /* photo7.gif */,
+				4EE861E61B5997AD00682BDB /* photo8.tif */,
 				4EE861E71B5997AD00682BDB /* segment_check.png */,
 				4EE861E81B5997AD00682BDB /* segment_search.png */,
 				4EE861E91B5997AD00682BDB /* segment_tools.png */,
@@ -337,11 +345,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EE861EF1B5997AD00682BDB /* photo4.jpg in Resources */,
-				4EE861F31B5997AD00682BDB /* photo8.jpg in Resources */,
+				7B42BCF71B90FFD200D45782 /* BezierViewController.xib in Resources */,
+				4EE861F31B5997AD00682BDB /* photo8.tif in Resources */,
 				4EE861F41B5997AD00682BDB /* segment_check.png in Resources */,
 				4EE861F51B5997AD00682BDB /* segment_search.png in Resources */,
 				4EE861EC1B5997AD00682BDB /* photo1.jpg in Resources */,
-				4EE861F21B5997AD00682BDB /* photo7.jpg in Resources */,
+				4EE861F21B5997AD00682BDB /* photo7.gif in Resources */,
 				4EE861ED1B5997AD00682BDB /* photo2.jpg in Resources */,
 				4EE861EE1B5997AD00682BDB /* photo3.jpg in Resources */,
 				4EE861F01B5997AD00682BDB /* photo5.jpg in Resources */,
@@ -370,6 +379,7 @@
 				4EE861DB1B5997A500682BDB /* ViewController.m in Sources */,
 				4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */,
 				4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */,
+				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
 				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
 				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,

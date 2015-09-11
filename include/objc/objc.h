@@ -22,6 +22,9 @@
 #include <stddef.h>
 
 #define nil     NULL
+#ifndef Nil
+ #define Nil    nil
+#endif
 
 #define NO      (BOOL)0
 #define YES     (BOOL)1

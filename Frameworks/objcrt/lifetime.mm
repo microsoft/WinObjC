@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include "Etc.h"
 #include "Hash.h"
+#include "runtime-private.h"
 
 @interface NSObject {
 @public
@@ -271,7 +272,7 @@ void objc_deallocateObject(id obj)
     if ( hdr->magic == NSOBJECT_MAGIC ) {
         freeAddr = (void *) ((char *) obj - 8);
     } else {
-        assert(0);
+        OBJC_ERROR("Object @ 0x%x corrupt or was not allocated by objc_allocObject! (magic=0x%x)", obj, hdr->magic);
     }
 
     //  BUG: There's a small window for a loadWeak call to happen before the weak reference is removed below

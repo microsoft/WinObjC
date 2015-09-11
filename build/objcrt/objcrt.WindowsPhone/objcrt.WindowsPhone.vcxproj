@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -134,7 +134,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -160,7 +160,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -185,7 +185,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib;WindowsPhoneCore.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>

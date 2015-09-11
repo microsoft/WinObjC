@@ -331,7 +331,7 @@ _Block_copy(const void *block_)
     return block;
 }
 
-void
+OBJCRT_EXPORT void
 _Block_release(const void *block_)
 {
     of_block_literal_t *block = (of_block_literal_t*)block_;
@@ -398,12 +398,12 @@ _Block_object_assign(void *dst_, const void *src_, const int flags_)
                 assert(0);
             }
 
-            if (src->forwarding == src)
-                (*dst)->forwarding = *dst;
+            src->forwarding = (*dst);
+            (*dst)->forwarding = *dst;
 
             memcpy(*dst, src, src->size);
 
-            if (src->size >= sizeof(of_block_byref_t))
+            if (src->size >= sizeof(of_block_byref_t) && (src->flags & OF_BLOCK_HAS_COPY_DISPOSE) )
                 src->byref_keep(*dst, src);
         } else
             *dst = src;
@@ -436,7 +436,7 @@ _Block_object_dispose(const void *obj_, const int flags_)
         of_block_byref_t *obj = (of_block_byref_t*)obj_;
 
         if ((--obj->flags & OF_BLOCK_REFCOUNT_MASK) == 0) {
-            if (obj->size >= sizeof(of_block_byref_t))
+            if (obj->size >= sizeof(of_block_byref_t) && (obj->flags & OF_BLOCK_HAS_COPY_DISPOSE) )
                 obj->byref_dispose(obj);
 
             free(obj);
@@ -447,42 +447,7 @@ _Block_object_dispose(const void *obj_, const int flags_)
 
 #if 1
 @implementation OFBlock
-#if defined(OF_APPLE_RUNTIME) && !defined(__OBJC2__)
 + (void)load
-{
-    Class tmp;
-
-    /*
-     * There is no objc_initializeClassPair in 10.5.
-     * However, objc_allocateClassPair does not register the new class with
-     * the subclass in the ObjC1 runtime like the ObjC2 runtime does, so
-     * this workaround should be fine.
-     */
-    if ((tmp = objc_allocateClassPair(self, "OFStackBlock", 0)) == NULL)
-        @throw [OFInitializationFailedException
-            exceptionWithClass: self];
-    memcpy(&_NSConcreteStackBlockCls, tmp, sizeof(_NSConcreteStackBlockCls));
-    free(tmp);
-    objc_registerClassPair((Class)&_NSConcreteStackBlockCls);
-
-    if ((tmp = objc_allocateClassPair(self, "OFGlobalBlock", 0)) == NULL)
-        @throw [OFInitializationFailedException
-            exceptionWithClass: self];
-    memcpy(&_NSConcreteGlobalBlockCls, tmp, sizeof(_NSConcreteGlobalBlockCls));
-    free(tmp);
-    objc_registerClassPair((Class)&_NSConcreteGlobalBlockCls);
-
-    if ((tmp = objc_allocateClassPair(self, "OFMallocBlock", 0)) == NULL)
-        @throw [OFInitializationFailedException
-            exceptionWithClass: self];
-    memcpy(&_NSConcreteMallocBlockCls, tmp, sizeof(_NSConcreteMallocBlockCls));
-    free(tmp);
-    objc_registerClassPair((Class)&_NSConcreteMallocBlockCls);
-}
-#endif
-
-#if !defined(OF_ATOMIC_OPS)
-+ (void)initialize
 {
     size_t i;
 
@@ -491,7 +456,6 @@ _Block_object_dispose(const void *obj_, const int flags_)
             @throw [OFInitializationFailedException
                 exceptionWithClass: self];
 }
-#endif
 
 + alloc
 {

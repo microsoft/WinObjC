@@ -263,9 +263,9 @@ void CGGraphicBufferImageBacking::GetPixel(int x, int y, float &r, float &g, flo
             WORD srcPixel = *(((WORD *) LockImageData()) + (Height() - y - 1) * (BytesPerRow() >> 1) + x);
             ReleaseImageData();
 
-            r = ((float) (srcPixel & 0x1F)) / 32.0f;
-            g = (float) ((srcPixel >> 5) & 0x3F) / 64.0f;
-            b = (float) ((srcPixel >> 11) & 0x1F) / 32.0f;
+            r = ((float) (srcPixel & 0x1F)) / 31.0f;
+            g = (float) ((srcPixel >> 5) & 0x3F) / 63.0f;
+            b = (float) ((srcPixel >> 11) & 0x1F) / 31.0f;
             a = 1.0f;
             }
             break;

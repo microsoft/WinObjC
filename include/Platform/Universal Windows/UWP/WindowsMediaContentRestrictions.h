@@ -25,21 +25,21 @@
 
 // Windows.Media.ContentRestrictions.RatedContentCategory
 enum _WMCRatedContentCategory {
-    WMCRatedContentCategoryGeneral = 0,
-    WMCRatedContentCategoryApplication = 1,
-    WMCRatedContentCategoryGame = 2,
-    WMCRatedContentCategoryMovie = 3,
-    WMCRatedContentCategoryTelevision = 4,
-    WMCRatedContentCategoryMusic = 5,
+	WMCRatedContentCategoryGeneral = 0,
+	WMCRatedContentCategoryApplication = 1,
+	WMCRatedContentCategoryGame = 2,
+	WMCRatedContentCategoryMovie = 3,
+	WMCRatedContentCategoryTelevision = 4,
+	WMCRatedContentCategoryMusic = 5,
 };
 typedef unsigned WMCRatedContentCategory;
 
 // Windows.Media.ContentRestrictions.ContentAccessRestrictionLevel
 enum _WMCContentAccessRestrictionLevel {
-    WMCContentAccessRestrictionLevelAllow = 0,
-    WMCContentAccessRestrictionLevelWarn = 1,
-    WMCContentAccessRestrictionLevelBlock = 2,
-    WMCContentAccessRestrictionLevelHide = 3,
+	WMCContentAccessRestrictionLevelAllow = 0,
+	WMCContentAccessRestrictionLevelWarn = 1,
+	WMCContentAccessRestrictionLevelBlock = 2,
+	WMCContentAccessRestrictionLevelHide = 3,
 };
 typedef unsigned WMCContentAccessRestrictionLevel;
 
@@ -47,15 +47,17 @@ typedef unsigned WMCContentAccessRestrictionLevel;
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 
+#import <Foundation/Foundation.h>
+
 // Windows.Media.ContentRestrictions.RatedContentDescription
 #ifndef __WMCRatedContentDescription_DEFINED__
 #define __WMCRatedContentDescription_DEFINED__
 
 WINRT_EXPORT
 @interface WMCRatedContentDescription : RTObject
-+ (WMCRatedContentDescription *)create:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
++ (WMCRatedContentDescription*)create:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
 @property (copy) NSString * title;
-@property (copy) NSMutableArray* /*String*/  ratings;
+@property (copy) NSMutableArray* ratings;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* image;
 @property (copy) NSString * id;
 @property WMCRatedContentCategory category;
@@ -70,8 +72,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
 @property (readonly) NSString * geographicRegion;
-@property (readonly) NSNumber* maxBrowsableAgeRating;
-@property (readonly) NSNumber* preferredAgeRating;
+@property (readonly) id maxBrowsableAgeRating;
+@property (readonly) id preferredAgeRating;
 @end
 
 #endif // __WMCContentRestrictionsBrowsePolicy_DEFINED__
@@ -83,12 +85,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WMCRatedContentRestrictions *)createWithMaxAgeRating:(unsigned)maxAgeRating ACTIVATOR;
-- (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (WMCRatedContentRestrictions*)createWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
+- (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;
-- (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy *))success failure:(void (^)(NSError*))failure;
-- (void)getRestrictionLevelAsync:(WMCRatedContentDescription *)RatedContentDescription success:(void (^)(WMCContentAccessRestrictionLevel))success failure:(void (^)(NSError*))failure;
-- (void)requestContentAccessAsync:(WMCRatedContentDescription *)RatedContentDescription success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy*))success failure:(void (^)(NSError*))failure;
+- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(WMCContentAccessRestrictionLevel))success failure:(void (^)(NSError*))failure;
+- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCRatedContentRestrictions_DEFINED__

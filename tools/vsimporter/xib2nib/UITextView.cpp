@@ -54,6 +54,9 @@ UITextView::UITextView()
     _dataDetectorTypes = 0;
     _autoCorrectionType = 0;
     _returnKeyType = 0;
+    _textAlignment = 0;
+    _text = NULL;
+    _textColor = NULL;
 }
 
 void UITextView::InitFromXIB(XIBObject *obj)
@@ -74,6 +77,21 @@ void UITextView::InitFromXIB(XIBObject *obj)
         _autoCorrectionType = inputTraits->GetInt("IBUIAutocorrectionType", 0);
         _returnKeyType = inputTraits->GetInt("IBUIReturnKeyType", 0);
     }
+    obj->_outputClassName = "UITextView";
+}
+
+void UITextView::InitFromStory(XIBObject *obj)
+{
+    UIScrollView::InitFromStory(obj);
+
+    //  Text must be done as an object because the string will not be initialized until
+    //  InitFromStory is called on it
+    XIBObject *textNode = (XIBObject *) obj->FindMember("text");
+    if (textNode) {
+        _text = _strdup(textNode->_node.text().as_string());
+    }
+    _font = (UIFont *)obj->FindMember("fontDescription");
+
     obj->_outputClassName = "UITextView";
 }
 

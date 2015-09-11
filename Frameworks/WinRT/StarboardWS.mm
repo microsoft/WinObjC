@@ -91,13 +91,8 @@ int UIApplicationMainStart(int argc,
     float defaultHeight = GetCACompositor()->screenHeight();
     float defaultScale = GetCACompositor()->screenScale();
     bool  defaultTablet = false;
-    bool  bLandscape = false;
 
     [NSBundle setMainBundlePath:@"."];
-
-    if ( [UIApplication respondsToSelector:@selector(setStartupDisplayMode:)] ) {
-        [UIApplication setStartupDisplayMode: displayMode];
-    }
 
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
@@ -135,9 +130,17 @@ int UIApplicationMainStart(int argc,
         }
     }
 
+    //  Setup default landscape presentation transform on desktop only, 
+    //  based on the declared default application orientations
+#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
     if ( defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
          defaultOrientation == UIInterfaceOrientationLandscapeRight ) {
-        bLandscape = true;
+        displayMode.presentationTransform = defaultOrientation;
+    }
+#endif
+
+    if ( [UIApplication respondsToSelector:@selector(setStartupDisplayMode:)] ) {
+        [UIApplication setStartupDisplayMode: displayMode];
     }
 
     applicationProperties.appWidth = defaultWidth;
@@ -145,11 +148,9 @@ int UIApplicationMainStart(int argc,
     applicationProperties.appScale = defaultScale;
     applicationProperties.appName = strdup(GetAppNameFromPList());
     applicationProperties.isTablet = defaultTablet;
-    applicationProperties.bLandscape = bLandscape;
 
     [displayMode _updateDisplaySettings];
     GetCACompositor()->setTablet(applicationProperties.isTablet);
-    if ( _compositorClient ) _compositorClient->SetLandscape(applicationProperties.bLandscape);
 
     UIApplicationMainInit(argc, argv, principalClassName, delegateClassName, defaultOrientation);
     return UIApplicationMainLoop();

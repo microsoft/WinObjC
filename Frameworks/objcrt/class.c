@@ -512,6 +512,30 @@ class_getInstanceVariable(Class cls, const char *name)
     return NULL;
 }
 
+Method 
+class_getInstanceMethod(Class cls, SEL name)
+{
+    objc_initialize_class(cls);
+
+    while ( cls != NULL ) {
+        struct objc_method_list *methodList = cls->methodlist;
+
+        while ( methodList != NULL ) {
+            for ( unsigned i = 0; i < methodList->count; i ++ ) {
+                if ( &methodList->methods[i].sel == name ) {
+                        return &methodList->methods[i];
+                }
+            }
+
+            methodList = methodList->next;
+        }
+
+        cls = cls->superclass;
+    }
+
+    return NULL;
+}
+
 ptrdiff_t ivar_getOffset(Ivar ivar)
 {
     return ivar->offset;
@@ -826,6 +850,15 @@ SEL method_getName(Method m)
     return &m->sel;
 }
 
+void method_exchangeImplementations(Method m1, Method m2)
+{
+    objc_global_mutex_lock();
+    IMP tmp = m1->imp;
+    m1->imp = m2->imp;
+    m2->imp = tmp;
+    objc_global_mutex_unlock();
+}
+
 char *method_copyReturnType(Method m)
 {
     const char *curArg = m->sel.types;
@@ -987,12 +1020,6 @@ OBJCRT_EXPORT void
 objc_enumerationMutation(id object)
 {
     //enumeration_mutation_handler(object);
-    assert(0);
-}
-
-OBJCRT_EXPORT void objc_exception_throw(id exception)
-{
-    printf("Exception %s thrown!\n", object_getClassName(exception));
     assert(0);
 }
 

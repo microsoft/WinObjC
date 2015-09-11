@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.Threading;
+using System.Globalization;
 
 namespace ClangCompile
 {
@@ -377,11 +378,14 @@ namespace ClangCompile
 
         string DecorateFile(string path, string extension)
         {
-            return Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + "_" + Path.GetFullPath(path).GetHashCode().ToString("X") + extension;
+            return Path.GetFileNameWithoutExtension(path) + "_" + Path.GetFullPath(path).GetHashCode().ToString("X") + extension;
         }
 
         string GetSpecial(string name, object value, ITaskItem input)
         {
+            // ToLower is affected by localization. Need to be careful here.
+            name = name.ToLower(new CultureInfo("en-US", false));
+
             if (value == null)
             {
                 if (name == "inputfilename")
@@ -406,7 +410,7 @@ namespace ClangCompile
             {
                 if (value.ToString().Last() == '\\' || value.ToString().Last() == '/')
                 {
-                    return DecorateFile(value + Path.GetFileName(input.ItemSpec), ".obj");
+                    return value + DecorateFile(input.ItemSpec, ".obj");
                 }
             }
             else if (name == "input")
@@ -656,13 +660,50 @@ namespace ClangCompile
         [ResolvePath()]
         public string[] InternalSystemIncludePaths { get; set; }
 
+        private void dirSearch(string dirPath, ref List<string> outPaths)
+        {
+            int maxCount = outPaths.Count + 2048;
+            outPaths.Add(dirPath);
+            for (var i = outPaths.Count - 1; i < Math.Min(outPaths.Count, maxCount); i++)
+            {
+                try
+                {
+                    foreach (string d in Directory.GetDirectories(outPaths[i]))
+                    {
+                        outPaths.Add(d);
+                    }
+                }
+                catch (System.Exception e) { }
+            }
+        }
+
+        private string[] expandPathGlobs(string[] inPaths)
+        {
+            List<string> outPaths = new List<string>();
+            foreach (string path in inPaths)
+            {
+                string winPath = path.Replace('/', '\\');
+                if (winPath.EndsWith("\\**"))
+                    dirSearch(winPath.Substring(0, path.Length - 3), ref outPaths);
+                else
+                    outPaths.Add(winPath);
+            }
+            return outPaths.ToArray();
+        }
+
         [PropertyPage(
             Category = "Paths",
             DisplayName = "User Include Paths",
             Description = "User header search paths.",
             Switch = "-iquote ")]
         [ResolvePath()]
-        public string[] UserIncludePaths { get; set; }
+        public string[] UserIncludePaths
+        {
+            get { return UserIncludePathsValue; }
+            set { UserIncludePathsValue = expandPathGlobs(value); }
+        }
+
+        string[] UserIncludePathsValue;
 
         [PropertyPage(
             Category = "Paths",
@@ -670,7 +711,13 @@ namespace ClangCompile
             Description = "Header search paths.",
             Switch = "-I")]
         [ResolvePath()]
-        public string[] IncludePaths { get; set; }
+        public string[] IncludePaths
+        {
+            get { return IncludePathsValue; }
+            set { IncludePathsValue = expandPathGlobs(value); }
+        }
+
+        string[] IncludePathsValue;
 
         [PropertyPage(
             Category = "Paths",
@@ -855,6 +902,8 @@ namespace ClangCompile
         #endregion
 
         #region ToolTask Overrides
+        // ToLower() is affected by localization.
+        // Be VERY careful when adding static strings to the dictionary, since lookup is also done with ToLower.
         static Dictionary<string, PropertyInfo> AllProps = typeof(Clang).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToDictionary(x => x.Name.ToLower());
 
         protected override string GenerateFullPathToTool()
@@ -885,7 +934,7 @@ namespace ClangCompile
                     PropertyPageAttribute ppAttr = (PropertyPageAttribute)Attribute.GetCustomAttribute(pInfo, typeof(PropertyPageAttribute));
                     string propSwitch = ppAttr.Switch;
                     object value = pInfo.GetValue(this);                        
-                    string propVal = GetSpecial(autoSubst.ToLower(), value, input);
+                    string propVal = GetSpecial(autoSubst, value, input);
 
                     if (propVal != null && propVal != "")
                     {
