@@ -85,14 +85,20 @@
     }
 }
 
--(void) _renderFrame {
+-(BOOL) _renderFrame {
+    BOOL res = FALSE;
     [EAGLContext setCurrentContext: self.context];
-    [self.delegate glkView: self drawInRect: self.frame];
-        
+    if ([self.delegate respondsToSelector: @selector(glkView:drawInRect:)]) {
+        [self.delegate glkView: self drawInRect: self.frame];
+        res = TRUE;
+    }
+
     [self.context presentRenderbuffer: GL_RENDERBUFFER];
     if (self.enableSetNeedsDisplay) {
         [_link removeFromRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     }
+
+    return res;
 }
 
 -(void) layoutSubviews {
