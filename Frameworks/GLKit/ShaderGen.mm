@@ -89,7 +89,7 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
     return final;
 }
 
-void ShaderContext::addTempFunc(ShaderVarType type, const string& name, const string& body)
+void ShaderContext::addTempFunc(GLKShaderVarType type, const string& name, const string& body)
 {
     if (vertexStage) {
         vsTemps[name] = TempInfo(type, body);
@@ -98,7 +98,7 @@ void ShaderContext::addTempFunc(ShaderVarType type, const string& name, const st
     }
 }
 
-void ShaderContext::addTempVal(ShaderVarType type, const string& name, const string& body)
+void ShaderContext::addTempVal(GLKShaderVarType type, const string& name, const string& body)
 {
     if (vertexStage) {
         vsTempVals[name] = TempInfo(type, body);
@@ -330,7 +330,7 @@ bool ShaderAttenuator::generate(string& out, ShaderContext& c, ShaderLayout& v)
     if (!toLight->generate(lightStr, c, v) ||
         !atten->generate(attenStr, c, v)) return false;
 
-    c.addTempFunc(SVT_FLOAT, "performAttenuation",
+    c.addTempFunc(GLKS_FLOAT, "performAttenuation",
                   "float performAttenuation(vec4 toLight, vec4 atten) {\n"
                   "    float dist = length(vec3(toLight));\n"
                   "    return min(1.0, 1.0 / (atten.x + atten.y * dist + atten.z * dist * dist));\n"
@@ -348,7 +348,7 @@ bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !color->generate(clrStr, c, v) ||
         !atten->generate(attenStr, c, v)) return false;
 
-    c.addTempFunc(SVT_FLOAT4, "performLighting",
+    c.addTempFunc(GLKS_FLOAT4, "performLighting",
                   "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color, float distAtten) {\n"
                   "    vec3 lightNorm = normalize(vec3(toLight));\n"
                   "    float intensity = max(0.0, dot(lightNorm, vec3(normal))) * distAtten;\n"
@@ -368,7 +368,7 @@ bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !color->generate(clrStr, c, v) ||
         !atten->generate(attenStr, c, v)) return false;
 
-    c.addTempFunc(SVT_FLOAT4, "performSpecular",
+    c.addTempFunc(GLKS_FLOAT4, "performSpecular",
                   "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color, float distAtten) {\n"
                   "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal)));\n"
                   "    vec3 camNorm = normalize(vec3(toCam));\n"

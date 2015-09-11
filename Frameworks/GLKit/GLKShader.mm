@@ -145,3 +145,75 @@ static GLKShaderCache* imp = nil;
   
 @end
 
+@implementation GLKShaderMaterial {
+    ShaderMaterial* _mat;
+}
+
+-(id)initWith: (GLKShaderMaterialPtr)ptr {
+    [super init];
+    _mat = (ShaderMaterial*)ptr;
+    return self;
+}
+
+-(void)reset {
+    _mat->reset();
+}
+
+-(void)addVec2: (GLKVector2)val named: (NSString*)name {
+    _mat->addvar([name cString], val);
+}
+
+-(void)addVec3: (GLKVector3)val named: (NSString*)name {
+    _mat->addvar([name cString], val);
+}
+
+-(void)addVec4: (GLKVector4)val named: (NSString*)name {
+    _mat->addvar([name cString], val);
+}
+
+-(void)addTexture: (GLuint)texHandle named: (NSString*)name {
+    _mat->addtex([name cString], texHandle);
+}
+
+-(void)addTexCube: (GLuint)texHandle named: (NSString*)name {
+    _mat->addtexcube([name cString], texHandle);
+}
+
+
+@end
+
+@implementation GLKShaderLayout {
+    ShaderLayout* _layout;
+}
+
+-(id)initWith: (GLKShaderLayoutPtr)ptr {
+    [super init];
+    _layout = (ShaderLayout*)ptr;
+    return self;
+}
+
+-(NSArray /*NSString*/*)variables {
+    NSMutableArray* res = [[NSMutableArray alloc] init];
+    for(const auto p : _layout->vars) {
+        [res addObject: [NSString stringWithCString: p.first.c_str()]];
+    }
+    return res;
+}
+
+-(int)getLocationOf: (NSString*)var {
+    auto it = _layout->vars.find([var cString]);
+    if (it == _layout->vars.end()) return -1;
+
+    return it->second.loc;
+}
+
+-(GLKShaderVarType)getTypeOf: (NSString*)var {
+    auto it = _layout->vars.find([var cString]);
+    if (it == _layout->vars.end()) return GLKS_INVALID;
+
+    if (it->second.texture) return GLKS_SAMPLER2D;
+    return (it->second.size == 4) ? GLKS_MAT4 : GLKS_FLOAT4;
+}
+
+
+@end

@@ -38,8 +38,8 @@
 ShaderNode* mklighter(const string& toLightTemp, const string& attenTemp, const string& pos,
                       const string& clr, const string& attenName)
 {
-    ShaderNode* toLight = new ShaderTempRef(SVT_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
-    ShaderNode* atten = new ShaderTempRef(SVT_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
+    ShaderNode* toLight = new ShaderTempRef(GLKS_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    ShaderNode* atten = new ShaderTempRef(GLKS_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
   
     return new ShaderLighter(toLight, new ShaderVarRef(GLKSH_NORMAL_NAME), new ShaderVarRef(clr), atten);
 }
@@ -48,11 +48,11 @@ ShaderNode* mkspeclighter(const string& toLightTemp, const string& attenTemp, co
                           const string& clr, const string& attenName)
 {
     // These two nodes will reuse the temps created in mklighter above.
-    ShaderNode* toLight = new ShaderTempRef(SVT_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
-    ShaderNode* atten = new ShaderTempRef(SVT_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
+    ShaderNode* toLight = new ShaderTempRef(GLKS_FLOAT4, toLightTemp, new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    ShaderNode* atten = new ShaderTempRef(GLKS_FLOAT, attenTemp, new ShaderAttenuator(toLight, new ShaderVarRef(attenName)));
 
     // This gets reused across the 3 active lights.
-    ShaderNode* toCam = new ShaderTempRef(SVT_FLOAT4, TO_CAM_TMP, new ShaderOp(new ShaderVarRef(GLKSH_CAMERA), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
+    ShaderNode* toCam = new ShaderTempRef(GLKS_FLOAT4, TO_CAM_TMP, new ShaderOp(new ShaderVarRef(GLKSH_CAMERA), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true));
     return new ShaderSpecLighter(toLight, toCam, new ShaderVarRef(GLKSH_NORMAL_NAME), new ShaderVarRef(clr), atten);
 }
 
