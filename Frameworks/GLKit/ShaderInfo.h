@@ -28,27 +28,20 @@ using namespace std;
 
 string getTypeStr(GLKShaderVarType t);
 
-// TODO: integrate above into below.
-
 struct VarInfo {
-    VarInfo() : loc(-1), size(1), texture(false), vertexAttr(false), intermediate(false), used(false) {}
+    VarInfo() : type(GLKS_INVALID), loc(-1), vertexAttr(false), intermediate(false), used(false) {}
+    explicit VarInfo(GLKShaderVarType vt) : type(vt), loc(-1), vertexAttr(false), intermediate(false), used(false) {}
 
     // when in a layout, used for variable location.
     // when in a shader mat, used for constant location in the array.
+    GLKShaderVarType type;
     int loc;
-    int size;
-    bool texture;
     bool vertexAttr;
     bool intermediate;
     bool used;
 
-    inline string vtype() const {
-        if (texture) return "sampler2D";
-        if (size == 1) return "vec4";
-        if (size == 4) return "mat4";
-        assert(!"unknown size!");
-        return "";
-    }
+    inline string vtype() const { return getTypeStr(type); }
+    inline bool isTexture() const { return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE); }
 };
 
 struct ShaderLayout {
@@ -62,33 +55,33 @@ struct ShaderLayout {
         return &it->second;
     }
 
-    inline void add(const string& var, int loc, int size, bool attr, bool texture = false) {
+    inline void defvar(const string& var, GLKShaderVarType type, int loc, bool attr = false) {
+        if (type == GLKS_INVALID) return;
         if (vars.find(var) != vars.end()) return;
 
         VarInfo v;
-        v.texture = texture;
+        v.type = type;
         v.loc = loc;
-        v.size = size;
         v.vertexAttr = attr;
         vars[var] = v;
     }
 
-    inline void vertattr(const string& var) { add(var, -1, 1, true); }
-    inline void constant(const string& var) { add(var, -1, 1, false); }
-    inline void texture(const string& var) { add(var, -1, 1, false, true); }
-    inline void texcube(const string& var) { add(var, -1, 1, false, true); }
-    inline void mat(const string& var) { add(var, -1, 4, false); }
+    inline void defvattr(const string& var) { defvar(var, GLKS_FLOAT4, -1, true); }
+    inline void defvattr3(const string& var) { defvar(var, GLKS_FLOAT3, -1, true); }
+    inline void defvattr2(const string& var) { defvar(var, GLKS_FLOAT2, -1, true); }
+    inline void defmat(const string& var) { defvar(var, GLKS_MAT4, -1, false); }    
 };
 
 struct ShaderMaterial : public ShaderLayout {
     vector<float> values;
 
-    void addvar(const string& var, float* data, int size);
-    inline void addvar(const string& var, GLKVector4 vec) { addvar(var, (float*)&vec, 4); }
-    void addvar(const string& var, GLKVector3 vec);
-    void addvar(const string& var, GLKVector2 vec);
-    void addtex(const string& var, GLuint name);
-    void addtexcube(const string& var, GLuint name);
+    void addvar(const string& var, GLKShaderVarType type, float* data);
+    inline void addvar(const string& var, const GLKVector4& vec) { addvar(var, GLKS_FLOAT4, (float*)&vec); }
+    inline void addvar(const string& var, const GLKVector3& vec) { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addvar(const string& var, const GLKVector2& vec) { addvar(var, GLKS_FLOAT2, (float*)&vec); }
+    inline void addvar3(const string& var, const GLKVector4& vec) { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    void addtex(const string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
+    inline void addtexcube(const string& var, GLuint name) { addtex(var, name, GLKS_SAMPLERCUBE); }
 
     inline void reset() {
         vars.clear();

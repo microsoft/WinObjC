@@ -79,7 +79,7 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
             }
         }
         if (it.second->generate(res, *this, inputs)) {
-            outputs.vars[it.first] = VarInfo();
+            outputs.vars[it.first] = VarInfo(it.second->getType());
             final += "\t" + it.first + " = " + res + ";\n";
         } else {
             final += "\t// " + desc + ": Cannot generate output for " + it.first + ", skipping...\n";
@@ -142,13 +142,11 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 
     // Add constants available to the vertex shader program.
     for(auto vp : inputs.vars) {
-        VarInfo& vd = vp.second;
-        if (vd.vertexAttr) continue;
-        if (vd.texture) {
-            intermediates.texture(vp.first);
-        } else {
-            intermediates.constant(vp.first);
-        }
+        if (vp.second.vertexAttr) continue;
+        VarInfo vd = vp.second;
+        vd.intermediate = false;
+        vd.used = false;
+        intermediates.vars[vp.first] = vd;
     }
 
     vertexStage = false;
@@ -161,7 +159,7 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
             VarInfo& vd = vp.second;
             if (vd.used) {
                 string res = vd.intermediate ? "varying " : "uniform ";
-                if (vd.texture == false) res += "lowp ";
+                if (!vd.isTexture()) res += "lowp ";
                 res += vd.vtype() + " " + vp.first + ";\n";
                 pixvars += res;
             }
@@ -200,6 +198,7 @@ bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto var = v.find(name);
     if(var) {
+        type = var->type;
         out = name;
         return true;
     }
@@ -212,12 +211,14 @@ bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto v1 = v.find(first);
     if(v1) {
+        type = v1->type;
         out = first;
         return true;
     }
 
     auto v2 = v.find(second);
     if (v2) {
+        type = v2->type;
         out = second;
         return true;
     }
@@ -266,6 +267,7 @@ bool ShaderAdditiveCombiner::generate(string& out, ShaderContext& c, ShaderLayou
         if (n->generate(res, c, v) && !res.empty()) {
             if (numGenerated == 0) {
                 out = res;
+                type = n->getType();
             } else if(numGenerated == 1) {
                 out = '(' + out + " + " + res;
             } else {
@@ -295,6 +297,7 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
         if (!a) {
             if (b) {
                 out = res2;
+                type = n2->getType();
                 return true;
             }
             return false;
@@ -302,22 +305,30 @@ bool ShaderOp::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
         if (!b) {
             out = res1;
+            type = n1->getType();
             return true;
         }
     }
-            
+
+    // cast second result if need be.  assume this rule will always magically work out.  (hint: it won't).
+    if (n2->getType() != n1->getType()) {
+        res2 = getTypeStr(n1->getType()) + '(' + res2 + ')';
+    }
+    
     if (isOperator) {
         out = '(' + res1 + ' ' + op + ' ' + res2 + ')';
     } else {
         out = op + '(' + res1 + ", " + res2 + ')';
     }
-    return true;
+    type = n1->getType();
+    return true;    
 }
 
 bool ShaderTempRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     string res;
     if (!body->generate(res, c, v)) return false;
+    type = body->getType();
     c.addTempVal(type, name, res);
     out = name;
     return true;
@@ -331,8 +342,8 @@ bool ShaderAttenuator::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !atten->generate(attenStr, c, v)) return false;
 
     c.addTempFunc(GLKS_FLOAT, "performAttenuation",
-                  "float performAttenuation(vec4 toLight, vec4 atten) {\n"
-                  "    float dist = length(vec3(toLight));\n"
+                  "float performAttenuation(vec3 toLight, vec3 atten) {\n"
+                  "    float dist = length(toLight);\n"
                   "    return min(1.0, 1.0 / (atten.x + atten.y * dist + atten.z * dist * dist));\n"
                   "}\n");
 
@@ -349,9 +360,9 @@ bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !atten->generate(attenStr, c, v)) return false;
 
     c.addTempFunc(GLKS_FLOAT4, "performLighting",
-                  "vec4 performLighting(vec4 toLight, vec4 normal, vec4 color, float distAtten) {\n"
-                  "    vec3 lightNorm = normalize(vec3(toLight));\n"
-                  "    float intensity = max(0.0, dot(lightNorm, vec3(normal))) * distAtten;\n"
+                  "vec4 performLighting(vec3 toLight, vec3 normal, vec4 color, float distAtten) {\n"
+                  "    vec3 lightNorm = normalize(toLight);\n"
+                  "    float intensity = max(0.0, dot(lightNorm, normal)) * distAtten;\n"
                   "    return vec4(color.xyz * intensity, 1.0);\n"
                   "}\n");
 
@@ -369,11 +380,11 @@ bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
         !atten->generate(attenStr, c, v)) return false;
 
     c.addTempFunc(GLKS_FLOAT4, "performSpecular",
-                  "vec4 performSpecular(vec4 toLight, vec4 toCam, vec4 normal, vec4 color, float distAtten) {\n"
-                  "    vec3 lightRefl = normalize(reflect(vec3(toLight), vec3(normal)));\n"
+                  "vec4 performSpecular(vec3 toLight, vec3 toCam, vec3 normal, vec4 color, float distAtten) {\n"
+                  "    vec3 lightRefl = normalize(reflect(toLight, normal));\n"
                   "    vec3 camNorm = normalize(vec3(toCam));\n"
                   "    float specular = distAtten * pow(max(0.0, dot(camNorm, lightRefl)), color.w);\n"
-                  "    return vec4(color.x * specular, color.y * specular, color.z * specular, 1.0);\n"
+                  "    return vec4(color.xyz * specular, 1.0);\n"
                   "}\n");
 
     out = "performSpecular(" + ldStr + ", " + cdStr + ", " + normStr + ", " + clrStr + ", " + attenStr + ")";
