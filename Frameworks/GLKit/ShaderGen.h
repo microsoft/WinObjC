@@ -66,11 +66,17 @@ public:
 
 // --------------------------------------------------------------------------------
 
-struct ShaderNode {
+class ShaderNode {
+protected:
+    GLKShaderVarType type;
+public:
+    inline ShaderNode() : type(GLKS_FLOAT4) {}
+
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) { return false; }
+    inline GLKShaderVarType getType() const { return type; }
 };
 
-class ShaderVarRef : public ShaderNode {    
+class ShaderVarRef : public ShaderNode {
     string name;
     string constantResult;
 public:
@@ -135,13 +141,12 @@ public:
 
 // Used to save stuff into a temp.  Only valuable if reused > 1 time.
 class ShaderTempRef : public ShaderNode {
-    GLKShaderVarType type;
     string name;
     ShaderNode* body;
 
 public:
-    inline ShaderTempRef(GLKShaderVarType type, const string& name, ShaderNode* n) :
-        type(type), name(name), body(n) {}
+    inline ShaderTempRef(GLKShaderVarType t, const string& name, ShaderNode* n) :
+        name(name), body(n) { type = t; }
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -151,7 +156,7 @@ class ShaderAttenuator : public ShaderNode {
     ShaderNode* atten;
 public:
     inline ShaderAttenuator(ShaderNode* toLight, ShaderNode* atten) :
-        toLight(toLight), atten(atten) {}
+        toLight(toLight), atten(atten) { type = GLKS_FLOAT; }
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

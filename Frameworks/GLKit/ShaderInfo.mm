@@ -33,46 +33,31 @@ string getTypeStr(GLKShaderVarType t)
     return string(types[t]);
 }
 
-void ShaderMaterial::addvar(const string& var, float* data, int size)
+void ShaderMaterial::addvar(const string& var, GLKShaderVarType type, float* data)
 {
-    assert((size & 3) == 0);
     assert(vars.find(var) == vars.end());
+    assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
     
     VarInfo v;
+    v.type = type;
     v.loc = values.size();
-    v.size = size / 4;
 
+    const size_t size = GLKShaderVarSizes[type];
+    
     for(int i = 0; i < size; i ++) {
         values.push_back(data[i]);
     }
     vars[var] = v;
 }
 
-void ShaderMaterial::addvar(const string& var, GLKVector3 vec)
-{
-    float vals[4] = { vec.x, vec.y, vec.z, 1.f };
-    addvar(var, vals, 4);
-}
-
-void ShaderMaterial::addvar(const string& var, GLKVector2 vec)
-{
-    float vals[4] = { vec.x, vec.y, 0.f, 1.f };
-    addvar(var, vals, 4);    
-}
-
-void ShaderMaterial::addtex(const string& var, GLuint name)
+void ShaderMaterial::addtex(const string& var, GLuint name, GLKShaderVarType type)
 {
     assert(vars.find(var) == vars.end());
+    assert(type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
 
     VarInfo v;
-    v.texture = true;
+    v.type = type;
     v.loc = name;
-    v.size = 0;
 
     vars[var] = v;
-}
-
-void ShaderMaterial::addtexcube(const string& var, GLuint name)
-{
-    
 }

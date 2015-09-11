@@ -25,6 +25,22 @@
 
 #import "ShaderInfo.h"
 
+size_t GLKShaderVarSizes[] = { 0, 0, 0, 1, 2, 3, 4, 16 }; // See GLKS_* in GLKShader.h
+
+static GLKShaderVarType getShaderType(GLenum type)
+{
+    switch(type) {
+      case GL_FLOAT:        return GLKS_FLOAT;
+      case GL_FLOAT_VEC2:   return GLKS_FLOAT2;
+      case GL_FLOAT_VEC3:   return GLKS_FLOAT3;
+      case GL_FLOAT_VEC4:   return GLKS_FLOAT4;
+      case GL_FLOAT_MAT4:   return GLKS_MAT4;
+      case GL_SAMPLER_2D:   return GLKS_SAMPLER2D;
+      case GL_SAMPLER_CUBE: return GLKS_SAMPLERCUBE;
+    }
+    return GLKS_INVALID;
+}
+
 @implementation GLKShaderPair
 @end
 
@@ -102,7 +118,7 @@ static GLKShaderCache* imp = nil;
 @end
 
 @implementation GLKShader {
-    ShaderLayout vars;
+    ShaderLayout _vars;
 }
 
 -(id)initWith: (GLuint)prog {
@@ -123,7 +139,7 @@ static GLKShaderCache* imp = nil;
     for(int i = 0; i < numAttrs; i ++) {
         glGetActiveAttrib(prog, i, sizeof(buf), &len, &size, &type, buf);
         GLint loc = glGetAttribLocation(prog, buf);
-        vars.add(buf, loc, size, true);
+        _vars.defvar(buf, getShaderType(type), loc, true);
     }
 
     for(int i = 0; i < numUniforms; i ++) {
@@ -132,7 +148,7 @@ static GLKShaderCache* imp = nil;
         if (strcmp(buf, GLKSH_MVP_NAME) == 0) {
             _mvploc = loc;
         } else {
-            vars.add(buf, loc, size, false, type == GL_SAMPLER_2D); // TODO: BK: more types go here.
+            _vars.defvar(buf, getShaderType(type), loc);
         }
     }
     
@@ -140,7 +156,7 @@ static GLKShaderCache* imp = nil;
 }
 
 -(GLKShaderLayoutPtr)layout {
-    return &vars;
+    return &_vars;
 }
   
 @end
@@ -192,7 +208,7 @@ static GLKShaderCache* imp = nil;
     return self;
 }
 
--(NSArray /*NSString*/*)variables {
+-(NSArray*)variables {
     NSMutableArray* res = [[NSMutableArray alloc] init];
     for(const auto p : _layout->vars) {
         [res addObject: [NSString stringWithCString: p.first.c_str()]];
@@ -210,9 +226,8 @@ static GLKShaderCache* imp = nil;
 -(GLKShaderVarType)getTypeOf: (NSString*)var {
     auto it = _layout->vars.find([var cString]);
     if (it == _layout->vars.end()) return GLKS_INVALID;
-
-    if (it->second.texture) return GLKS_SAMPLER2D;
-    return (it->second.size == 4) ? GLKS_MAT4 : GLKS_FLOAT4;
+ 
+    return it->second.type;
 }
 
 

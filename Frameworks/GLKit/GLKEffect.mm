@@ -74,13 +74,34 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             if (mv == nullptr) {
                 NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
             } else {
-                if (mv->texture) {
+                switch(mv->type) {
+                case GLKS_SAMPLER2D:
                     glActiveTexture(GL_TEXTURE0 + curTexUnit);
                     glBindTexture(GL_TEXTURE_2D, mv->loc);
                     glUniform1i(v.second.loc, curTexUnit);
                     curTexUnit ++;
-                } else {
+                    break;
+                case GLKS_SAMPLERCUBE:
+                    glActiveTexture(GL_TEXTURE0 + curTexUnit);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, mv->loc);
+                    glUniform1i(v.second.loc, curTexUnit);
+                    curTexUnit ++;
+                    break;
+                case GLKS_FLOAT:
+                    glUniform1fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                    break;
+                case GLKS_FLOAT2:
+                    glUniform2fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                    break;
+                case GLKS_FLOAT3:
+                    glUniform3fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                    break;
+                case GLKS_FLOAT4:
                     glUniform4fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                    break;
+                case GLKS_MAT4:
+                    glUniformMatrix4fv(v.second.loc, 1, 0, &_mat.values[mv->loc]);
+                    break;
                 }
             }
         }
@@ -191,14 +212,14 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         m->reset();
 
         // We need these.
-        m->mat(GLKSH_MVP_NAME);
-        m->vertattr(GLKSH_POS_NAME);
+        m->defmat(GLKSH_MVP_NAME);
+        m->defvattr(GLKSH_POS_NAME);
 
         if (self.useConstantColor) {
             shaderName += 'C';
             m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
         } else if (self.colorMaterialEnabled) {
-            m->vertattr(GLKSH_COLOR_NAME);
+            m->defvattr(GLKSH_COLOR_NAME);
             shaderName += 'V';
         } else {
             shaderName += 'N';
@@ -206,10 +227,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         shaderName += '_';
         
-        // Add these for now.  See if we can figure out if something is bound to them.
-        m->vertattr(GLKSH_NORMAL_NAME);
-        m->vertattr(GLKSH_UV0_NAME);
-        m->vertattr(GLKSH_UV1_NAME);
+        // Always add these for now.  See if we can figure out if something is bound to them.
+        m->defvattr3(GLKSH_NORMAL_NAME);
+        m->defvattr2(GLKSH_UV0_NAME);
+        m->defvattr2(GLKSH_UV1_NAME);
 
         // Process texture variables.
         for(GLKEffectPropertyTexture* t in _textures) {
@@ -242,7 +263,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                     char ltype = 'L';
                     if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
                         m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
-                        m->addvar(lightVarNames[lightNum].pos, l.position);
+                        m->addvar3(lightVarNames[lightNum].pos, l.position);
                         m->addvar(lightVarNames[lightNum].atten, l.attenuation);
                         if (shininess > 0.f) {
                             GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
@@ -284,7 +305,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         if (cameraRequired) {
             // TODO: actual camera pos.
-            m->addvar(GLKSH_CAMERA, GLKVector4Make(0, 0, 0, 1.f));
+            m->addvar(GLKSH_CAMERA, GLKVector3Make(0, 0, 0));
         }
 
         // Save final shader name.
