@@ -17,7 +17,7 @@
 #import <Starboard.h>
 #include "ShaderInfo.h"
 
-string getTypeStr(ShaderVarType t)
+string getTypeStr(GLKShaderVarType t)
 {
     static const char* types[] = {
         "void",
@@ -70,4 +70,9 @@ void ShaderMaterial::addtex(const string& var, GLuint name)
     v.size = 0;
 
     vars[var] = v;
+}
+
+void ShaderMaterial::addtexcube(const string& var, GLuint name)
+{
+    
 }

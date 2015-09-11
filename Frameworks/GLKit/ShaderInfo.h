@@ -18,6 +18,7 @@
 
 #import <Foundation/NSDictionary.h>
 #import <GLKit/GLKit.h>
+#import <GLKit/GLKShader.h>
 
 #include <assert.h>
 #include <map>
@@ -25,19 +26,7 @@
 
 using namespace std;
 
-enum _ShaderVarType {
-    SVT_INVALID,
-    SVT_SAMPLER2D,
-    SVT_SAMPLERCUBE,
-    SVT_FLOAT,
-    SVT_FLOAT2,
-    SVT_FLOAT3,
-    SVT_FLOAT4,
-    SVT_MAT4
-};
-typedef unsigned int ShaderVarType;
-
-string getTypeStr(ShaderVarType t);
+string getTypeStr(GLKShaderVarType t);
 
 // TODO: integrate above into below.
 
@@ -87,6 +76,7 @@ struct ShaderLayout {
     inline void vertattr(const string& var) { add(var, -1, 1, true); }
     inline void constant(const string& var) { add(var, -1, 1, false); }
     inline void texture(const string& var) { add(var, -1, 1, false, true); }
+    inline void texcube(const string& var) { add(var, -1, 1, false, true); }
     inline void mat(const string& var) { add(var, -1, 4, false); }
 };
 
@@ -98,6 +88,7 @@ struct ShaderMaterial : public ShaderLayout {
     void addvar(const string& var, GLKVector3 vec);
     void addvar(const string& var, GLKVector2 vec);
     void addtex(const string& var, GLuint name);
+    void addtexcube(const string& var, GLuint name);
 
     inline void reset() {
         vars.clear();

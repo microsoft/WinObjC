@@ -22,10 +22,23 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKShaderDefs.h>
 
+enum _GLKShaderVarType {
+    GLKS_INVALID,
+    GLKS_SAMPLER2D,
+    GLKS_SAMPLERCUBE,
+    GLKS_FLOAT,
+    GLKS_FLOAT2,
+    GLKS_FLOAT3,
+    GLKS_FLOAT4,
+    GLKS_MAT4
+};
+typedef unsigned int GLKShaderVarType;
+
 @class GLKShaderEffect;
 @class GLKShader;
 
 typedef void* GLKShaderLayoutPtr;
+typedef void* GLKShaderMaterialPtr;
 
 GLKIT_EXPORT_CLASS
 @interface GLKShaderPair : NSObject
@@ -55,3 +68,26 @@ GLKIT_EXPORT_CLASS
 -(id)initWith: (GLuint)program;
 @end
 
+// The next two classes wrap some internal C++ classes.  It isn't necessary to know about/use them
+// for GLKit apps, but they're provided for those who want to add their own shaders to the pipeline.
+
+GLKIT_EXPORT_CLASS
+@interface GLKShaderMaterial : NSObject
+-(id)initWith: (GLKShaderMaterialPtr)ptr;
+
+-(void)reset;
+-(void)addVec2: (GLKVector2)val named: (NSString*)name;
+-(void)addVec3: (GLKVector3)val named: (NSString*)name;
+-(void)addVec4: (GLKVector4)val named: (NSString*)name;
+-(void)addTexture: (GLuint)texHandle named: (NSString*)name;
+-(void)addTexCube: (GLuint)texHandle named: (NSString*)name;
+
+@end
+
+GLKIT_EXPORT_CLASS
+@interface GLKShaderLayout : NSObject
+-(id)initWith: (GLKShaderLayoutPtr)ptr;
+-(NSArray /*NSString*/*)variables;
+-(int)getLocationOf: (NSString*)var;
+-(GLKShaderVarType)getTypeOf: (NSString*)var;
+@end

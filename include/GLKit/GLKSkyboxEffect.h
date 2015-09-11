@@ -28,6 +28,9 @@ GLKIT_EXPORT_CLASS
 @property(assign) float ySize;
 @property(assign) float zSize;
 
+@property(retain) GLKShader* shader;
+@property(retain) NSString* shaderName;
+
 -(void)prepareToDraw;
 -(void)draw;
 

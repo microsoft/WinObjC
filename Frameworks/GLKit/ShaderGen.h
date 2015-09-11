@@ -25,12 +25,12 @@ typedef set<string> StrSet;
 typedef vector<ShaderNode*> ShaderNodes;
 
 struct TempInfo {
-    inline TempInfo() : type(SVT_INVALID) {}
-    inline TempInfo(ShaderVarType type, const string& body) : type(type), body(body) {}
+    inline TempInfo() : type(GLKS_INVALID) {}
+    inline TempInfo(GLKShaderVarType type, const string& body) : type(type), body(body) {}
 
     bool dependsOn(const StrSet& set) const;
     
-    ShaderVarType type;
+    GLKShaderVarType type;
     string body;
 };
 typedef map<string, TempInfo> TempMap;
@@ -58,8 +58,8 @@ public:
         vs(vert), ps(pixel), vertexStage(false) {}
 
     // NOTE: neither of these check for interdependencies or overwriting.
-    void addTempFunc(ShaderVarType type, const string& name, const string& body);
-    void addTempVal(ShaderVarType type, const string& name, const string& body);
+    void addTempFunc(GLKShaderVarType type, const string& name, const string& body);
+    void addTempVal(GLKShaderVarType type, const string& name, const string& body);
 
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
@@ -135,12 +135,12 @@ public:
 
 // Used to save stuff into a temp.  Only valuable if reused > 1 time.
 class ShaderTempRef : public ShaderNode {
-    ShaderVarType type;
+    GLKShaderVarType type;
     string name;
     ShaderNode* body;
 
 public:
-    inline ShaderTempRef(ShaderVarType type, const string& name, ShaderNode* n) :
+    inline ShaderTempRef(GLKShaderVarType type, const string& name, ShaderNode* n) :
         type(type), name(name), body(n) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
