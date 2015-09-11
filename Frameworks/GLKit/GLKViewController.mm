@@ -60,12 +60,28 @@
     [_link removeFromRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
--(void)_renderFrame {
-    [self.delegate glkViewControllerUpdate: self];
+-(BOOL)_renderFrame {
+    id dest = self;
+    if (self.delegate != nil) dest = self.delegate;
 
-    if([self.view respondsToSelector: @selector(_renderFrame)]) {
-        [self.view _renderFrame];
+    if ([dest respondsToSelector: @selector(glkViewControllerUpdate:)]) {
+        [dest glkViewControllerUpdate: self];
+    } else if ([dest respondsToSelector: @selector(update)]) {
+        [dest update];
     }
+
+    bool tryDirectRender = true;
+    if([self.view respondsToSelector: @selector(_renderFrame)]) {
+        if ([self.view _renderFrame]) tryDirectRender = false;
+    }
+
+    if (tryDirectRender) {
+        if ([dest respondsToSelector: @selector(glkView:drawInRect:)]) {
+            [dest glkView: self.view drawInRect: self.view.frame];
+        }
+    }
+
+    return TRUE;
 }
 
 @end
