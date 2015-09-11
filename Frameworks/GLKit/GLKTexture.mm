@@ -83,7 +83,7 @@ static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& a
 }
 
 +(GLKTextureInfo*)textureWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err {
-    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname cString]);
+    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
     
     return [self textureWithCGImage: img options: opts error: err];
@@ -132,7 +132,7 @@ static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& a
 
 +(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err
 {
-    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname cString]);
+    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     if (!provider) return nil;
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
     if (!img) return nil;
@@ -202,7 +202,7 @@ static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& a
 
     GLKTextureInfoAlphaState as;
     for(NSString* fn in fnames) {
-        CGDataProviderRef provider = CGDataProviderCreateWithFilename([fn cString]);
+        CGDataProviderRef provider = CGDataProviderCreateWithFilename([fn UTF8String]);
         if (!provider) {
             NSLog(@"Unable to open cube side texture %@", fn);
             curSide ++;

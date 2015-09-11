@@ -161,7 +161,9 @@
         if (self.drawableDepthFormat == GLKViewDrawableDepthFormat16) {
             fmt = GL_DEPTH_COMPONENT16;
         } else if (self.drawableDepthFormat == GLKViewDrawableDepthFormat24) {
-            fmt = GL_DEPTH_COMPONENT24_OES;
+            // TODO: fix me.
+            //fmt = GL_DEPTH_COMPONENT24_OES;
+            fmt = GL_DEPTH_COMPONENT16;
         }
         assert(fmt);
         

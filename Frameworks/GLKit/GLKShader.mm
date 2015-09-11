@@ -176,23 +176,23 @@ static GLKShaderCache* imp = nil;
 }
 
 -(void)addVec2: (GLKVector2)val named: (NSString*)name {
-    _mat->addvar([name cString], val);
+    _mat->addvar([name UTF8String], val);
 }
 
 -(void)addVec3: (GLKVector3)val named: (NSString*)name {
-    _mat->addvar([name cString], val);
+    _mat->addvar([name UTF8String], val);
 }
 
 -(void)addVec4: (GLKVector4)val named: (NSString*)name {
-    _mat->addvar([name cString], val);
+    _mat->addvar([name UTF8String], val);
 }
 
 -(void)addTexture: (GLuint)texHandle named: (NSString*)name {
-    _mat->addtex([name cString], texHandle);
+    _mat->addtex([name UTF8String], texHandle);
 }
 
 -(void)addTexCube: (GLuint)texHandle named: (NSString*)name {
-    _mat->addtexcube([name cString], texHandle);
+    _mat->addtexcube([name UTF8String], texHandle);
 }
 
 
@@ -217,14 +217,14 @@ static GLKShaderCache* imp = nil;
 }
 
 -(int)getLocationOf: (NSString*)var {
-    auto it = _layout->vars.find([var cString]);
+    auto it = _layout->vars.find([var UTF8String]);
     if (it == _layout->vars.end()) return -1;
 
     return it->second.loc;
 }
 
 -(GLKShaderVarType)getTypeOf: (NSString*)var {
-    auto it = _layout->vars.find([var cString]);
+    auto it = _layout->vars.find([var UTF8String]);
     if (it == _layout->vars.end()) return GLKS_INVALID;
  
     return it->second.type;
