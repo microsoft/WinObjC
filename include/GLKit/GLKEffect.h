@@ -115,7 +115,8 @@ GLKIT_EXPORT_CLASS
 @property(readonly) GLKShaderMaterialPtr        shaderMat;
 @property(retain)   GLKShader*                  shader;
 @property(retain)   NSString*                   shaderName;
-@property           BOOL                        effectChanged; 
+@property           BOOL                        effectChanged;
+@property           BOOL                        trackEffectChanges;
 
 -(id)init;
 -(void)prepareToDraw;
