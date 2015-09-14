@@ -27,17 +27,17 @@ GLKMatrix3 GLKMatrix3MakeIdentity()
 {
     GLKMatrix3 res;
 
+    res.m00 = 1.f;
+    res.m01 = 0.f;
+    res.m02 = 0.f;
+
+    res.m10 = 0.f;
     res.m11 = 1.f;
     res.m12 = 0.f;
-    res.m13 = 0.f;
 
+    res.m20 = 0.f;
     res.m21 = 0.f;
     res.m22 = 1.f;
-    res.m23 = 0.f;
-
-    res.m31 = 0.f;
-    res.m32 = 0.f;
-    res.m33 = 1.f;
 
     return res;
 }
@@ -46,17 +46,17 @@ GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m)
 {
     GLKMatrix3 res;
 
+    res.m00 = m.m00;
+    res.m01 = m.m01;
+    res.m02 = m.m02;
+
+    res.m10 = m.m10;
     res.m11 = m.m11;
     res.m12 = m.m12;
-    res.m13 = m.m13;
 
+    res.m20 = m.m20;
     res.m21 = m.m21;
     res.m22 = m.m22;
-    res.m23 = m.m23;
-
-    res.m31 = m.m31;
-    res.m32 = m.m32;
-    res.m33 = m.m33;
 
     return res;
 }
@@ -65,25 +65,25 @@ GLKMatrix4 GLKMatrix4MakeIdentity()
 {
     GLKMatrix4 res;
 
+    res.m00 = 1.f;
+    res.m01 = 0.f;
+    res.m02 = 0.f;
+    res.m03 = 0.f;
+
+    res.m10 = 0.f;
     res.m11 = 1.f;
     res.m12 = 0.f;
     res.m13 = 0.f;
-    res.m14 = 0.f;
 
+    res.m20 = 0.f;
     res.m21 = 0.f;
     res.m22 = 1.f;
     res.m23 = 0.f;
-    res.m24 = 0.f;
 
+    res.m30 = 0.f;
     res.m31 = 0.f;
     res.m32 = 0.f;
     res.m33 = 1.f;
-    res.m34 = 0.f;
-
-    res.m41 = 0.f;
-    res.m42 = 0.f;
-    res.m43 = 0.f;
-    res.m44 = 1.f;
 
     return res;
 }
@@ -95,37 +95,37 @@ GLKMatrix4 GLKMatrix4Make(float m00, float m01, float m02, float m03,
 {
     GLKMatrix4 res;
 
-    res.m11 = m00;
-    res.m12 = m01;
-    res.m13 = m02;
-    res.m14 = m03;
+    res.m00 = m00;
+    res.m01 = m01;
+    res.m02 = m02;
+    res.m03 = m03;
 
-    res.m21 = m10;
-    res.m22 = m11;
-    res.m23 = m12;
-    res.m24 = m13;
+    res.m10 = m10;
+    res.m11 = m11;
+    res.m12 = m12;
+    res.m13 = m13;
 
-    res.m31 = m20;
-    res.m32 = m21;
-    res.m33 = m22;
-    res.m34 = m23;
+    res.m20 = m20;
+    res.m21 = m21;
+    res.m22 = m22;
+    res.m23 = m23;
 
-    res.m41 = m30;
-    res.m42 = m31;
-    res.m43 = m32;
-    res.m44 = m33;
+    res.m30 = m30;
+    res.m31 = m31;
+    res.m32 = m32;
+    res.m33 = m33;
 
     return res;
 }
 
 GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat)
 {
+    std::swap(mat.m01, mat.m10);
+    std::swap(mat.m02, mat.m20);
+    std::swap(mat.m03, mat.m30);
     std::swap(mat.m12, mat.m21);
-    std::swap(mat.m13, mat.m31);
-    std::swap(mat.m14, mat.m41);
+    std::swap(mat.m13, mat.m31);                     
     std::swap(mat.m23, mat.m32);
-    std::swap(mat.m24, mat.m42);                     
-    std::swap(mat.m34, mat.m43);
                      
     return mat;
 }
@@ -137,25 +137,25 @@ GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00, float m01, float m02, float m03
 {
     GLKMatrix4 res;
 
-    res.m11 = m00;
-    res.m21 = m01;
-    res.m31 = m02;
-    res.m41 = m03;
+    res.m00 = m00;
+    res.m10 = m01;
+    res.m20 = m02;
+    res.m30 = m03;
            
-    res.m12 = m10;
-    res.m22 = m11;
-    res.m32 = m12;
-    res.m42 = m13;
+    res.m01 = m10;
+    res.m11 = m11;
+    res.m21 = m12;
+    res.m31 = m13;
            
-    res.m13 = m20;
-    res.m23 = m21;
-    res.m33 = m22;
-    res.m43 = m23;
+    res.m02 = m20;
+    res.m12 = m21;
+    res.m22 = m22;
+    res.m32 = m23;
            
-    res.m14 = m30;
-    res.m24 = m31;
-    res.m34 = m32;
-    res.m44 = m33;
+    res.m03 = m30;
+    res.m13 = m31;
+    res.m23 = m32;
+    res.m33 = m33;
 
     return res;    
 }
@@ -164,25 +164,25 @@ GLKMatrix4 GLKMatrix4MakeWithArray(float* values)
 {
     GLKMatrix4 res;
 
-    res.m11 = values[0];
-    res.m12 = values[1];
-    res.m13 = values[2];
-    res.m14 = values[3];
+    res.m00 = values[0];
+    res.m01 = values[1];
+    res.m02 = values[2];
+    res.m03 = values[3];
 
-    res.m21 = values[4];
-    res.m22 = values[5];
-    res.m23 = values[6];
-    res.m24 = values[7];
+    res.m10 = values[4];
+    res.m11 = values[5];
+    res.m12 = values[6];
+    res.m13 = values[7];
 
-    res.m31 = values[8];
-    res.m32 = values[9];
-    res.m33 = values[10];
-    res.m34 = values[11];
+    res.m20 = values[8];
+    res.m21 = values[9];
+    res.m22 = values[10];
+    res.m23 = values[11];
 
-    res.m41 = values[12];
-    res.m42 = values[13];
-    res.m43 = values[14];
-    res.m44 = values[15];
+    res.m30 = values[12];
+    res.m31 = values[13];
+    res.m32 = values[14];
+    res.m33 = values[15];
 
     return res;
 }
@@ -191,25 +191,25 @@ GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values)
 {
     GLKMatrix4 res;
 
-    res.m11 = values[0];
-    res.m21 = values[1];
-    res.m31 = values[2];
-    res.m41 = values[3];
+    res.m00 = values[0];
+    res.m10 = values[1];
+    res.m20 = values[2];
+    res.m30 = values[3];
            
-    res.m12 = values[4];
-    res.m22 = values[5];
-    res.m32 = values[6];
-    res.m42 = values[7];
+    res.m01 = values[4];
+    res.m11 = values[5];
+    res.m21 = values[6];
+    res.m31 = values[7];
            
-    res.m13 = values[8];
-    res.m23 = values[9];
-    res.m33 = values[10];
-    res.m43 = values[11];
+    res.m02 = values[8];
+    res.m12 = values[9];
+    res.m22 = values[10];
+    res.m32 = values[11];
            
-    res.m14 = values[12];
-    res.m24 = values[13];
-    res.m34 = values[14];
-    res.m44 = values[15];
+    res.m03 = values[12];
+    res.m13 = values[13];
+    res.m23 = values[14];
+    res.m33 = values[15];
 
     return res;
 }
@@ -218,25 +218,25 @@ GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2
 {
     GLKMatrix4 res;
 
-    res.m11 = r0.x;
-    res.m21 = r0.y;
-    res.m31 = r0.z;
-    res.m41 = r0.w;
+    res.m00 = r0.x;
+    res.m10 = r0.y;
+    res.m20 = r0.z;
+    res.m30 = r0.w;
            
-    res.m12 = r1.x;
-    res.m22 = r1.y;
-    res.m32 = r1.z;
-    res.m42 = r1.w;
+    res.m01 = r1.x;
+    res.m11 = r1.y;
+    res.m21 = r1.z;
+    res.m31 = r1.w;
            
-    res.m13 = r2.x;
-    res.m23 = r2.y;
-    res.m33 = r2.z;
-    res.m43 = r2.w;
+    res.m02 = r2.x;
+    res.m12 = r2.y;
+    res.m22 = r2.z;
+    res.m32 = r2.w;
            
-    res.m14 = r3.x;
-    res.m24 = r3.y;
-    res.m34 = r3.z;
-    res.m44 = r3.w;
+    res.m03 = r3.x;
+    res.m13 = r3.y;
+    res.m23 = r3.z;
+    res.m33 = r3.w;
 
     return res;    
 }
@@ -245,25 +245,25 @@ GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, G
 {
     GLKMatrix4 res;
 
-    res.m11 = r0.x;
-    res.m12 = r0.y;
-    res.m13 = r0.z;
-    res.m14 = r0.w;
+    res.m00 = r0.x;
+    res.m01 = r0.y;
+    res.m02 = r0.z;
+    res.m03 = r0.w;
 
-    res.m21 = r1.x;
-    res.m22 = r1.y;
-    res.m23 = r1.z;
-    res.m24 = r1.w;
+    res.m10 = r1.x;
+    res.m11 = r1.y;
+    res.m12 = r1.z;
+    res.m13 = r1.w;
 
-    res.m31 = r2.x;
-    res.m32 = r2.y;
-    res.m33 = r2.z;
-    res.m34 = r2.w;
+    res.m20 = r2.x;
+    res.m21 = r2.y;
+    res.m22 = r2.z;
+    res.m23 = r2.w;
 
-    res.m41 = r3.x;
-    res.m42 = r3.y;
-    res.m43 = r3.z;
-    res.m44 = r3.w;
+    res.m30 = r3.x;
+    res.m31 = r3.y;
+    res.m32 = r3.z;
+    res.m33 = r3.w;
 
     return res;    
 }
@@ -272,25 +272,25 @@ GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVe
 {
     GLKMatrix4 res;
 
-    res.m11 = right.x;
-    res.m12 = up.x;
-    res.m13 = forward.x;
-    res.m14 = pos.x;
+    res.m00 = right.x;
+    res.m01 = up.x;
+    res.m02 = forward.x;
+    res.m03 = pos.x;
 
-    res.m21 = right.y;
-    res.m22 = up.y;
-    res.m23 = forward.y;
-    res.m24 = pos.y;
+    res.m10 = right.y;
+    res.m11 = up.y;
+    res.m12 = forward.y;
+    res.m13 = pos.y;
 
-    res.m31 = right.z;
-    res.m32 = up.z;
-    res.m33 = forward.z;
-    res.m34 = pos.z;
+    res.m20 = right.z;
+    res.m21 = up.z;
+    res.m22 = forward.z;
+    res.m23 = pos.z;
 
-    res.m41 = 0.f;
-    res.m42 = 0.f;
-    res.m43 = 0.f;
-    res.m44 = 1.f;
+    res.m30 = 0.f;
+    res.m31 = 0.f;
+    res.m32 = 0.f;
+    res.m33 = 1.f;
 
     return res;    
 }
@@ -311,25 +311,25 @@ GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, fl
 {
     GLKMatrix4 res;
 
-    res.m11 = 2.f / (right - left);
+    res.m00 = 2.f / (right - left);
+    res.m01 = 0.f;
+    res.m02 = 0.f;
+    res.m03 = (0.f - right - left) / (right - left);
+
+    res.m10 = 0.f;
+    res.m11 = 2.f / (top - bot);
     res.m12 = 0.f;
-    res.m13 = 0.f;
-    res.m14 = (0.f - right - left) / (right - left);
+    res.m13 = (0.f - top - bot) / (top - bot);
 
+    res.m20 = 0.f;
     res.m21 = 0.f;
-    res.m22 = 2.f / (top - bot);
-    res.m23 = 0.f;
-    res.m24 = (0.f - top - bot) / (top - bot);
+    res.m22 = -2.f / (far - near);
+    res.m23 = (far + near) / (far - near);
 
+    res.m30 = 0.f;
     res.m31 = 0.f;
     res.m32 = 0.f;
-    res.m33 = -2.f / (far - near);
-    res.m34 = (far + near) / (far - near);
-
-    res.m41 = 0.f;
-    res.m42 = 0.f;
-    res.m43 = 0.f;
-    res.m44 = 1.f;
+    res.m33 = 1.f;
 
     return res;
 }
@@ -346,25 +346,25 @@ GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float to
 {
     GLKMatrix4 res;
 
-    res.m11 = (2.f * near) / (right - left);
-    res.m12 = 0.f;
-    res.m13 = (right + left) / (right - left);
-    res.m14 = 0.f;
-
-    res.m21 = 0.f;
-    res.m22 = (2.f * near) / (top - bottom);
-    res.m23 = (top + bottom) / (top - bottom);
-    res.m24 = 0.f;
-
+    res.m00 = (2.f * near) / (right - left);
+    res.m10 = 0.f;
+    res.m20 = (right + left) / (right - left);
+    res.m30 = 0.f;
+           
+    res.m01 = 0.f;
+    res.m11 = (2.f * near) / (top - bottom);
+    res.m21 = (top + bottom) / (top - bottom);
     res.m31 = 0.f;
-    res.m32 = 0.f;
-    res.m33 = (far + near) / (near - far);
-    res.m34 = (2.f * far * near) / (near - far);
-
-    res.m41 = 0.f;
-    res.m42 = 0.f;
-    res.m43 = -1.f;
-    res.m44 = 0.f;
+           
+    res.m02 = 0.f;
+    res.m12 = 0.f;
+    res.m22 = (far + near) / (near - far);
+    res.m32 = (2.f * far * near) / (near - far);
+           
+    res.m03 = 0.f;
+    res.m13 = 0.f;
+    res.m23 = -1.f;
+    res.m33 = 0.f;
     
     return res;
 }
@@ -373,25 +373,25 @@ GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2)
 {
     GLKMatrix4 res;
 
-    res.m11 = m1.m11 * m2.m11 + m1.m12 * m2.m21 + m1.m13 * m2.m31 + m1.m14 * m2.m41;
-    res.m12 = m1.m11 * m2.m12 + m1.m12 * m2.m22 + m1.m13 * m2.m32 + m1.m14 * m2.m42;
-    res.m13 = m1.m11 * m2.m13 + m1.m12 * m2.m23 + m1.m13 * m2.m33 + m1.m14 * m2.m43;
-    res.m14 = m1.m11 * m2.m14 + m1.m12 * m2.m24 + m1.m13 * m2.m34 + m1.m14 * m2.m44;
+    res.m00 = m2.m00 * m1.m00 + m2.m01 * m1.m10 + m2.m02 * m1.m20 + m2.m03 * m1.m30;
+    res.m01 = m2.m00 * m1.m01 + m2.m01 * m1.m11 + m2.m02 * m1.m21 + m2.m03 * m1.m31;
+    res.m02 = m2.m00 * m1.m02 + m2.m01 * m1.m12 + m2.m02 * m1.m22 + m2.m03 * m1.m32;
+    res.m03 = m2.m00 * m1.m03 + m2.m01 * m1.m13 + m2.m02 * m1.m23 + m2.m03 * m1.m33;
 
-    res.m21 = m1.m21 * m2.m11 + m1.m22 * m2.m21 + m1.m23 * m2.m31 + m1.m24 * m2.m41;
-    res.m22 = m1.m21 * m2.m12 + m1.m22 * m2.m22 + m1.m23 * m2.m32 + m1.m24 * m2.m42;
-    res.m23 = m1.m21 * m2.m13 + m1.m22 * m2.m23 + m1.m23 * m2.m33 + m1.m24 * m2.m43;
-    res.m24 = m1.m21 * m2.m14 + m1.m22 * m2.m24 + m1.m23 * m2.m34 + m1.m24 * m2.m44;
+    res.m10 = m2.m10 * m1.m00 + m2.m11 * m1.m10 + m2.m12 * m1.m20 + m2.m13 * m1.m30;
+    res.m11 = m2.m10 * m1.m01 + m2.m11 * m1.m11 + m2.m12 * m1.m21 + m2.m13 * m1.m31;
+    res.m12 = m2.m10 * m1.m02 + m2.m11 * m1.m12 + m2.m12 * m1.m22 + m2.m13 * m1.m32;
+    res.m13 = m2.m10 * m1.m03 + m2.m11 * m1.m13 + m2.m12 * m1.m23 + m2.m13 * m1.m33;
 
-    res.m31 = m1.m31 * m2.m11 + m1.m32 * m2.m21 + m1.m33 * m2.m31 + m1.m34 * m2.m41;
-    res.m32 = m1.m31 * m2.m12 + m1.m32 * m2.m22 + m1.m33 * m2.m32 + m1.m34 * m2.m42;
-    res.m33 = m1.m31 * m2.m13 + m1.m32 * m2.m23 + m1.m33 * m2.m33 + m1.m34 * m2.m43;
-    res.m34 = m1.m31 * m2.m14 + m1.m32 * m2.m24 + m1.m33 * m2.m34 + m1.m34 * m2.m44;
+    res.m20 = m2.m20 * m1.m00 + m2.m21 * m1.m10 + m2.m22 * m1.m20 + m2.m23 * m1.m30;
+    res.m21 = m2.m20 * m1.m01 + m2.m21 * m1.m11 + m2.m22 * m1.m21 + m2.m23 * m1.m31;
+    res.m22 = m2.m20 * m1.m02 + m2.m21 * m1.m12 + m2.m22 * m1.m22 + m2.m23 * m1.m32;
+    res.m23 = m2.m20 * m1.m03 + m2.m21 * m1.m13 + m2.m22 * m1.m23 + m2.m23 * m1.m33;
 
-    res.m41 = m1.m41 * m2.m11 + m1.m42 * m2.m21 + m1.m43 * m2.m31 + m1.m44 * m2.m41;
-    res.m42 = m1.m41 * m2.m12 + m1.m42 * m2.m22 + m1.m43 * m2.m32 + m1.m44 * m2.m42;
-    res.m43 = m1.m41 * m2.m13 + m1.m42 * m2.m23 + m1.m43 * m2.m33 + m1.m44 * m2.m43;
-    res.m44 = m1.m41 * m2.m14 + m1.m42 * m2.m24 + m1.m43 * m2.m34 + m1.m44 * m2.m44;
+    res.m30 = m2.m30 * m1.m00 + m2.m31 * m1.m10 + m2.m32 * m1.m20 + m2.m33 * m1.m30;
+    res.m31 = m2.m30 * m1.m01 + m2.m31 * m1.m11 + m2.m32 * m1.m21 + m2.m33 * m1.m31;
+    res.m32 = m2.m30 * m1.m02 + m2.m31 * m1.m12 + m2.m32 * m1.m22 + m2.m33 * m1.m32;
+    res.m33 = m2.m30 * m1.m03 + m2.m31 * m1.m13 + m2.m32 * m1.m23 + m2.m33 * m1.m33;
     
     return res;
 }
@@ -402,26 +402,26 @@ GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02,
 {
     GLKMatrix3 res;
 
-    res.m11 = m00;
-    res.m12 = m01;
-    res.m13 = m02;
+    res.m00 = m00;
+    res.m01 = m01;
+    res.m02 = m02;
 
-    res.m21 = m10;
-    res.m22 = m11;
-    res.m23 = m12;
+    res.m10 = m10;
+    res.m11 = m11;
+    res.m12 = m12;
 
-    res.m31 = m20;
-    res.m32 = m21;
-    res.m33 = m22;
+    res.m20 = m20;
+    res.m21 = m21;
+    res.m22 = m22;
 
     return res;
 }
 
 GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat)
 {
+    std::swap(mat.m01, mat.m10);
+    std::swap(mat.m02, mat.m20);
     std::swap(mat.m12, mat.m21);
-    std::swap(mat.m13, mat.m31);
-    std::swap(mat.m23, mat.m32);
 
     return mat;
 }
@@ -432,17 +432,17 @@ GLKMatrix3 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02,
 {
     GLKMatrix3 res;
 
-    res.m11 = m00;
-    res.m21 = m01;
-    res.m31 = m02;
+    res.m00 = m00;
+    res.m10 = m01;
+    res.m20 = m02;
            
-    res.m12 = m10;
-    res.m22 = m11;
-    res.m32 = m12;
+    res.m01 = m10;
+    res.m11 = m11;
+    res.m21 = m12;
            
-    res.m13 = m20;
-    res.m23 = m21;
-    res.m33 = m22;
+    res.m02 = m20;
+    res.m12 = m21;
+    res.m22 = m22;
 
     return res;
 }
@@ -451,17 +451,17 @@ GLKMatrix3 GLKMatrix3MakeWithArray(float* values)
 {
     GLKMatrix3 res;
 
-    res.m11 = values[0];
-    res.m12 = values[1];
-    res.m13 = values[2];
+    res.m00 = values[0];
+    res.m01 = values[1];
+    res.m02 = values[2];
            
-    res.m21 = values[3];
-    res.m22 = values[4];
-    res.m23 = values[5];
+    res.m10 = values[3];
+    res.m11 = values[4];
+    res.m12 = values[5];
            
-    res.m31 = values[6];
-    res.m32 = values[7];
-    res.m33 = values[8];
+    res.m20 = values[6];
+    res.m21 = values[7];
+    res.m22 = values[8];
 
     return res;
 }
@@ -470,17 +470,17 @@ GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values)
 {
     GLKMatrix3 res;
 
-    res.m11 = values[0];
-    res.m21 = values[1];
-    res.m31 = values[2];
+    res.m00 = values[0];
+    res.m10 = values[1];
+    res.m20 = values[2];
            
-    res.m12 = values[3];
-    res.m22 = values[4];
-    res.m32 = values[5];
+    res.m01 = values[3];
+    res.m11 = values[4];
+    res.m21 = values[5];
            
-    res.m13 = values[6];
-    res.m23 = values[7];
-    res.m33 = values[8];
+    res.m02 = values[6];
+    res.m12 = values[7];
+    res.m22 = values[8];
 
     return res;
 }
@@ -489,17 +489,17 @@ GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2
 {
     GLKMatrix3 res;
 
-    res.m11 = r0.x;
-    res.m21 = r0.y;
-    res.m31 = r0.z;
+    res.m00 = r0.x;
+    res.m10 = r0.y;
+    res.m20 = r0.z;
            
-    res.m12 = r1.x;
-    res.m22 = r1.y;
-    res.m32 = r1.z;
+    res.m01 = r1.x;
+    res.m11 = r1.y;
+    res.m21 = r1.z;
            
-    res.m13 = r2.x;
-    res.m23 = r2.y;
-    res.m33 = r2.z;
+    res.m02 = r2.x;
+    res.m12 = r2.y;
+    res.m22 = r2.z;
 
     return res;
 }
@@ -508,17 +508,17 @@ GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2)
 {
     GLKMatrix3 res;
 
-    res.m11 = r0.x;
-    res.m12 = r0.y;
-    res.m13 = r0.z;
+    res.m00 = r0.x;
+    res.m01 = r0.y;
+    res.m02 = r0.z;
            
-    res.m21 = r1.x;
-    res.m22 = r1.y;
-    res.m23 = r1.z;
+    res.m10 = r1.x;
+    res.m11 = r1.y;
+    res.m12 = r1.z;
            
-    res.m31 = r2.x;
-    res.m32 = r2.y;
-    res.m33 = r2.z;
+    res.m20 = r2.x;
+    res.m21 = r2.y;
+    res.m22 = r2.z;
 
     return res;
 }
@@ -564,9 +564,9 @@ GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec)
 {
     GLKVector3 res;
 
-    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z;
-    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z;
-    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z;
+    res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z;
+    res.y = m.m01 * vec.x + m.m11 * vec.y + m.m21 * vec.z;
+    res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z;
 
     return res;
 }
@@ -575,9 +575,9 @@ GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec
 {
     GLKVector3 res;
 
-    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z + m.m41;
-    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z + m.m42;
-    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z + m.m43;
+    res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z + m.m30;
+    res.y = m.m01 * vec.x + m.m11 * vec.y + m.m21 * vec.z + m.m31;
+    res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z + m.m32;
 
     return res;
 }
@@ -591,10 +591,10 @@ GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec)
 {
     GLKVector4 res;
 
-    res.x = m.m11 * vec.x + m.m21 * vec.y + m.m31 * vec.z + m.m41 * vec.w;
-    res.y = m.m12 * vec.x + m.m22 * vec.y + m.m32 * vec.z + m.m42 * vec.w;
-    res.z = m.m13 * vec.x + m.m23 * vec.y + m.m33 * vec.z + m.m43 * vec.w;
-    res.w = m.m14 * vec.x + m.m24 * vec.y + m.m34 * vec.z + m.m44 * vec.w;
+    res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z + m.m30 * vec.w;
+    res.y = m.m01 * vec.x + m.m11 * vec.y + m.m21 * vec.z + m.m31 * vec.w;
+    res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z + m.m32 * vec.w;
+    res.w = m.m03 * vec.x + m.m13 * vec.y + m.m23 * vec.z + m.m33 * vec.w;
 
     return res;
 }
@@ -616,12 +616,95 @@ GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible)
     // This is only going to work in very limited circumstances.
     *isInvertible = true;
 
+    std::swap(res.m01, res.m10);
+    std::swap(res.m02, res.m20);
     std::swap(res.m12, res.m21);
-    std::swap(res.m13, res.m31);
-    std::swap(res.m23, res.m32);
-    res.m14 = -res.m14;
-    res.m24 = -res.m24;
-    res.m34 = -res.m34;
+    res.m30 = -res.m30;
+    res.m31 = -res.m31;
+    res.m32 = -res.m32;
+    
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)
+{
+    GLKMatrix4 res = { 0 };
+
+    res.m00 = 1.0f + (1 - cosf(rad)) * (x * x - 1);
+    res.m10 = -z * sinf(rad) + (1.0f - cosf(rad)) * x *y;
+    res.m20 = y * sinf(rad) + (1.0f - cosf(rad)) * x * z;
+    res.m01 = z * sinf(rad) + (1.0f - cosf(rad)) * x * y;
+    res.m11 = 1.0f + (1.0f - cosf(rad)) * (y * y - 1.0f);
+    res.m21 = -x * sinf(rad) + (1.0f - cosf(rad)) * y * z;
+    res.m02 = -y * sinf(rad) + (1.0f - cosf(rad)) * x * z;
+    res.m12 = x * sinf(rad) + (1.0f - cosf(rad)) * y * z;
+    res.m22 = 1.0f + (1.0f - cosf(rad)) * (z * z - 1.0f);
+    res.m33 = 1.0f;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeXRotation(float rad)
+{
+    rad = -rad;
+    GLKMatrix4 res = { 0 };
+
+    res.m00 = 1.f;
+    res.m11 = res.m22 = cosf(rad);
+    res.m12 = -sinf(rad);
+    res.m21 = sinf(rad);
+    res.m33 = 1.0f;
+    
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeYRotation(float rad)
+{
+    rad = -rad;
+    GLKMatrix4 res = { 0 };
+
+    res.m11 = 1.f;
+    res.m00 = res.m22 = cosf(rad);
+    res.m02 = -sinf(rad);
+    res.m20 = sinf(rad);
+    res.m33 = 1.0f;
+    
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeZRotation(float rad)
+{
+    rad = -rad;
+    GLKMatrix4 res = { 0 };
+
+    res.m00 = res.m11 = cosf(rad);
+    res.m01 = -sinf(rad);
+    res.m10 = sinf(rad);
+    res.m22 = 1.f;
+    res.m33 = 1.0f;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z)
+{
+    GLKMatrix4 res = GLKMatrix4Identity;
+
+    res.m30 = x;
+    res.m31 = y;
+    res.m32 = z;
+
+    return res;
+}
+
+GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z)
+{
+    GLKMatrix4 res = { 0 };
+
+    res.m00 = x;
+    res.m11 = y;
+    res.m22 = z;
+    res.m33 = 1.f;
     
     return res;
 }

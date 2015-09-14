@@ -16,9 +16,6 @@
 
 #pragma once
 
-#import <CoreGraphics/CGAffineTransform.h>
-#import <QuartzCore/CATransform3D.h>
-
 #define COMPARISON_EPSILON 0.0000001f
 
 typedef struct _GLKVector2 {
@@ -50,15 +47,25 @@ typedef struct _GLKVector4 {
 typedef struct _GLKMatrix3 {
     union {
         struct {
-            float m11, m12, m13;
-            float m21, m22, m23;
-            float m31, m32, m33;
+            float m00, m01, m02;
+            float m10, m11, m12;
+            float m20, m21, m22;
         };
-        float m[3][3];
+        float m[9];
     };
 } GLKMatrix3;
 
-typedef CATransform3D GLKMatrix4;
+typedef struct _GLKMatrix4 {
+    union {
+        struct {
+            float m00, m01, m02, m03;
+            float m10, m11, m12, m13;
+            float m20, m21, m22, m23;
+            float m30, m31, m32, m33;
+        };
+        float m[16];
+    };
+} GLKMatrix4;
 
 extern GLKIT_EXPORT GLKMatrix3 GLKMatrix3Identity;
 extern GLKIT_EXPORT GLKMatrix4 GLKMatrix4Identity;
@@ -101,13 +108,12 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 
-inline GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)  { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, x, y, z)); }
-inline GLKMatrix4 GLKMatrix4MakeXRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 1.f, 0.f, 0.f)); }
-inline GLKMatrix4 GLKMatrix4MakeYRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 0.f, 1.f, 0.f)); }
-inline GLKMatrix4 GLKMatrix4MakeZRotation(float rad)                            { return GLKMatrix4Transpose(CATransform3DMakeRotation(rad, 0.f, 0.f, 1.f)); }
-
-inline GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z)          { return GLKMatrix4Transpose(CATransform3DMakeTranslation(x, y, z)); }
-inline GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z)                { return GLKMatrix4Transpose(CATransform3DMakeScale(x, y, z)); }
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeYRotation(float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeZRotation(float rad);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z);
 
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
                                              float lookX, float lookY, float lookZ,
