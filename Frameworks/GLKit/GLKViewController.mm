@@ -87,9 +87,9 @@ typedef wchar_t WCHAR;
     _timeSinceLastResume = static_cast<NSTimeInterval>(frameTime - _lastStart) * 0.0000001;
     _timeSinceLastUpdate = static_cast<NSTimeInterval>(frameTime - _lastFrame) * 0.0000001;
     _timeSinceLastDraw = _timeSinceLastUpdate;
-    
+
     _lastFrame = frameTime;
-    
+
     id dest = self;
     if (self.delegate != nil) dest = self.delegate;
 
