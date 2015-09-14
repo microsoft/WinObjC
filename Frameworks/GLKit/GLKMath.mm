@@ -634,6 +634,11 @@ GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible)
 
 GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)
 {
+    float magn = 1.0f / sqrtf(x * x + y * y + z * z);
+    x *= magn;
+    y *= magn;
+    z *= magn;
+    
     GLKMatrix4 res = { 0 };
 
     res.m00 = 1.0f + (1 - cosf(rad)) * (x * x - 1);
