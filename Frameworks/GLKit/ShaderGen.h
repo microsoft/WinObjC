@@ -34,11 +34,13 @@ struct TempInfo {
     string body;
 };
 typedef map<string, TempInfo> TempMap;
+typedef map<string, unsigned int> InputVars;
 
 @class GLKShaderPair;
 
 class ShaderContext {
     ShaderLayout            shaderVars;
+    InputVars               ivars;
 
     ShaderDef               vs;
     ShaderDef               ps;
@@ -52,14 +54,17 @@ protected:
     
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc, ShaderLayout* usedOutputs = NULL);
-
+    
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
         vs(vert), ps(pixel), vertexStage(false) {}
 
-    // NOTE: neither of these check for interdependencies or overwriting.
+    // NOTE: neither of these check for overwriting.
     void addTempFunc(GLKShaderVarType type, const string& name, const string& body);
     void addTempVal(GLKShaderVarType type, const string& name, const string& body);
+
+    int getIVar(const string& name, int def = 0);
+    void setIVar(const string& name, int value);
 
     GLKShaderPair* generate(ShaderLayout& inputs);
 };
@@ -103,12 +108,13 @@ struct ShaderPosRef : public ShaderNode {
 
 class ShaderTexRef : public ShaderNode {
     string texVar;
+    string modeVar;
     ShaderNode* uvRef;
     ShaderNode* nextRef;
 
 public:
-    ShaderTexRef(const string& tex, ShaderNode* uvRef, ShaderNode* nextRef) :
-        texVar(tex), uvRef(uvRef), nextRef(nextRef) {}
+    ShaderTexRef(const string& tex, const string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
+        texVar(tex), modeVar(mode), uvRef(uvRef), nextRef(nextRef) {}
     
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

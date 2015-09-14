@@ -82,7 +82,7 @@ ShaderDef standardVsh{
 
 ShaderDef standardPsh{
     {"gl_FragColor", new ShaderOp(new ShaderVarRef("_specular"), 
-                                  new ShaderTexRef(GLKSH_TEX0_NAME, new ShaderVarRef("_texCoord"),
+                                  new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
                                       new ShaderOp(new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
                                                    new ShaderVarRef("_lighting"), "*", true)),
                                   "+", true)}
