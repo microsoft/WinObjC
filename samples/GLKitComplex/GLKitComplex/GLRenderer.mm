@@ -144,6 +144,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
+        _effect.colorMaterialEnabled = TRUE;
         break;
 
     case DM_LitTextured:
@@ -153,6 +154,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;        
+        _effect.colorMaterialEnabled = TRUE;
         break;
         
     case DM_VertexColor:
@@ -161,6 +163,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
+        _effect.colorMaterialEnabled = TRUE;
         break;
           
     case DM_SolidColor:
@@ -169,6 +172,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
+        _effect.colorMaterialEnabled = FALSE;
         break;
           
     case DM_TexturedVertexColor:
@@ -177,6 +181,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
+        _effect.colorMaterialEnabled = TRUE;
         break;
           
     case DM_TexturedSolidColor:
@@ -185,6 +190,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
+        _effect.colorMaterialEnabled = FALSE;
         break;
     };
 }

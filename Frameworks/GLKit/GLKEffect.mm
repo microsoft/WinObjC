@@ -58,7 +58,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (_shader != nil) glUseProgram(_shader.program);
 
     // Projection matrix.
-    GLKMatrix4 mvp = GLKMatrix4Transpose(self.transform.mvp);
+    GLKMatrix4 mvp = self.transform.mvp;
     GLint loc = _shader.mvploc;
     glUniformMatrix4fv(loc, 1, 0, (const GLfloat*)&mvp);
 
