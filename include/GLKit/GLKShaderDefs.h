@@ -36,7 +36,9 @@
 #define GLKSH_MVP_NAME          "_mvp"
 
 #define GLKSH_TEX0_NAME         "_tex0"
+#define GLKSH_TEX0_MODE         "_tex0mode"
 #define GLKSH_TEX1_NAME         "_tex1"
+#define GLKSH_TEX1_MODE         "_tex1mode"
 
 #define GLKSH_CAMERA            "_camera"
 

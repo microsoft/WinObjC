@@ -107,6 +107,18 @@ void ShaderContext::addTempVal(GLKShaderVarType type, const string& name, const 
     }
 }
 
+int ShaderContext::getIVar(const string& name, int def)
+{
+    auto v = ivars.find(name);
+    if (v == ivars.end()) return def;
+    return v->second;
+}
+
+void ShaderContext::setIVar(const string& name, int value)
+{
+    ivars[name] = value;
+}
+
 GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 {
     ShaderLayout intermediates;
@@ -240,21 +252,31 @@ bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    // TODO: BK: texture2D + "*" should be params.
+    GLKTextureEnvMode mode = c.getIVar(modeVar, GLKTextureEnvModeModulate);
 
-    string next;
-    if (nextRef) nextRef->generate(next, c, v);
-
+    // Get what we need for the texture, just passthrough next if not there.
     string uv;
     auto v1 = v.find(texVar);
-    if (!v1 || !uvRef || !uvRef->generate(uv, c, v)) {
-        out = next;
-        return !next.empty();
+    if (!v1 || !uvRef->generate(uv, c, v)) {
+        if (nextRef) nextRef->generate(out, c, v);
+        return !out.empty();
     }
 
+    // Do our texture lookup.
     out = "texture2D(" + texVar + ", vec2(" + uv + "))";
+    if (mode == GLKTextureEnvModeReplace) return true;
+
+    // Build result with next string.
+    string next;
+    if (nextRef) nextRef->generate(next, c, v);
     if (!next.empty()) {
-        out = "(" + out + " * " + next + ")";
+        if (mode == GLKTextureEnvModeModulate) { // TODO: additional blend modes could go here.
+            out = "(" + out + " * " + next + ")";
+        } else {
+            string tmpname = texVar + "_val";
+            c.addTempVal(type, tmpname, out);
+            out = "mix(" + next + ", " + tmpname + ", " + tmpname + ".a)";
+        }
     }
     return true;
 }

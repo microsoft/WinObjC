@@ -74,6 +74,7 @@ static void dumpMat(const GLKMatrix4& mat)
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
         _effect.texture2d0.name = _tex1.name;
+        _effect.texture2d0.envMode = GLKTextureEnvModeModulate;
     }
     
     // Set up lights.
