@@ -46,6 +46,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     self = [super init];
     if (!self) return nil;
     _effectChanged = TRUE;
+    _trackEffectChanges = FALSE;
     
     _transform = [[GLKEffectPropertyTransform alloc] initWith: self];
 
@@ -64,7 +65,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     // Set up shader constants.
     int curTexUnit = 0;
-    if (_effectChanged) {
+    if (!_trackEffectChanges || _effectChanged) {
         _effectChanged = FALSE;
 
         ShaderLayout* l = (ShaderLayout*)self.shader.layout;
@@ -209,7 +210,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     
     // Assemble material, calculate name.
     ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;    
-    if (self.effectChanged) {
+    if (!self.trackEffectChanges || self.effectChanged) {
         _cameraRequired = false;
 
         auto modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
