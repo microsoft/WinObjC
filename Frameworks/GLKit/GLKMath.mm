@@ -312,23 +312,23 @@ GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, fl
     GLKMatrix4 res;
 
     res.m00 = 2.f / (right - left);
-    res.m01 = 0.f;
-    res.m02 = 0.f;
-    res.m03 = (0.f - right - left) / (right - left);
-
     res.m10 = 0.f;
-    res.m11 = 2.f / (top - bot);
-    res.m12 = 0.f;
-    res.m13 = (0.f - top - bot) / (top - bot);
-
     res.m20 = 0.f;
+    res.m30 = (0.f - right - left) / (right - left);
+           
+    res.m01 = 0.f;
+    res.m11 = 2.f / (top - bot);
     res.m21 = 0.f;
+    res.m31 = (0.f - top - bot) / (top - bot);
+           
+    res.m02 = 0.f;
+    res.m12 = 0.f;
     res.m22 = -2.f / (far - near);
-    res.m23 = (far + near) / (far - near);
-
-    res.m30 = 0.f;
-    res.m31 = 0.f;
-    res.m32 = 0.f;
+    res.m32 = (far + near) / (far - near);
+           
+    res.m03 = 0.f;
+    res.m13 = 0.f;
+    res.m23 = 0.f;
     res.m33 = 1.f;
 
     return res;
