@@ -215,12 +215,15 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         m->defmat(GLKSH_MVP_NAME);
         m->defvattr(GLKSH_POS_NAME);
 
-        if (self.useConstantColor) {
-            shaderName += 'C';
-            m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
-        } else if (self.colorMaterialEnabled) {
+        if (self.colorMaterialEnabled) {
             m->defvattr(GLKSH_COLOR_NAME);
             shaderName += 'V';
+        } else if (self.useConstantColor) {
+            shaderName += 'C';
+            m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
+        } else if(!GLKVector4XYZEqualToScalar(self.material.diffuseColor, 0.f)) {
+            shaderName += 'C';
+            m->addvar(GLKSH_CONSTCOLOR_NAME, self.material.diffuseColor);
         } else {
             shaderName += 'N';
         }
