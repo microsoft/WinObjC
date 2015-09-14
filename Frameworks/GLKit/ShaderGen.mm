@@ -383,7 +383,7 @@ bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
                   "vec4 performSpecular(vec3 toLight, vec3 toCam, vec3 normal, vec4 color, float distAtten) {\n"
                   "    vec3 lightRefl = normalize(reflect(toLight, normal));\n"
                   "    vec3 camNorm = normalize(vec3(toCam));\n"
-                  "    float specular = distAtten * pow(max(0.0, dot(camNorm, lightRefl)), color.w);\n"
+                  "    float specular = distAtten * pow(max(0.0, -dot(camNorm, lightRefl)), color.w);\n"
                   "    return vec4(color.xyz * specular, 1.0);\n"
                   "}\n");
 

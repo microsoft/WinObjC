@@ -611,19 +611,25 @@ void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs, size_t numVe
 
 GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible)
 {
-    GLKMatrix4 res = m;
+    GLKMatrix4 rotated = m;
+    GLKMatrix4 translated = GLKMatrix4Identity;
     
     // This is only going to work in very limited circumstances.
+    // (ie, m is of the form translate(rotate(m))
     *isInvertible = true;
 
-    std::swap(res.m01, res.m10);
-    std::swap(res.m02, res.m20);
-    std::swap(res.m12, res.m21);
-    res.m30 = -res.m30;
-    res.m31 = -res.m31;
-    res.m32 = -res.m32;
+    std::swap(rotated.m01, rotated.m10);
+    std::swap(rotated.m02, rotated.m20);
+    std::swap(rotated.m12, rotated.m21);
+    rotated.m30 = 0.f;
+    rotated.m31 = 0.f;
+    rotated.m32 = 0.f;
+
+    translated.m30 = -m.m30;
+    translated.m31 = -m.m31;
+    translated.m32 = -m.m32;
     
-    return res;
+    return GLKMatrix4Multiply(rotated, translated);
 }
 
 GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)

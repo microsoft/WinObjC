@@ -35,19 +35,27 @@ string getTypeStr(GLKShaderVarType t)
 
 void ShaderMaterial::addvar(const string& var, GLKShaderVarType type, float* data)
 {
-    assert(vars.find(var) == vars.end());
     assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
-    
-    VarInfo v;
-    v.type = type;
-    v.loc = values.size();
 
-    const size_t size = GLKShaderVarSizes[type];
+    auto it = vars.find(var);
+    if (it == vars.end()) {
+        VarInfo v;
+        v.type = type;
+        v.loc = values.size();
+
+        const size_t size = GLKShaderVarSizes[type];
     
-    for(int i = 0; i < size; i ++) {
-        values.push_back(data[i]);
+        for(int i = 0; i < size; i ++) {
+            values.push_back(data[i]);
+        }
+        vars[var] = v;
+    } else {
+        // TODO: check size before updating material.
+        const size_t size = GLKShaderVarSizes[type];        
+        for(int i = 0; i < size; i ++) {
+            values[it->second.loc + i] = data[i];
+        }
     }
-    vars[var] = v;
 }
 
 void ShaderMaterial::addtex(const string& var, GLuint name, GLKShaderVarType type)
