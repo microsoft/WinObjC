@@ -133,7 +133,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     _lightingType = GLKLightingTypePerPixel;
     _lightModelTwoSided = FALSE;
-    _lightingEnabled = FALSE;
+    _lightingEnabled = TRUE;
 
     _textures = [[NSMutableArray alloc] init];
     [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];

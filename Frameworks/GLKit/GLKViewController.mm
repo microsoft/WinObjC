@@ -19,8 +19,16 @@
 #import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
 
+typedef wchar_t WCHAR;
+#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsGlobalization.h>
+
 @implementation GLKViewController {
-    CADisplayLink *_link;
+    CADisplayLink*  _link;
+    int64_t         _firstStart;
+    int64_t         _lastStart;
+    int64_t         _lastFrame;
+    WGCalendar*     _calendar;
 }
 
 -(void) viewWillLayoutSubviews
@@ -38,6 +46,12 @@
     NSLog(@"GLKViewController got viewDidLoad.");
     
     _link = [CADisplayLink displayLinkWithTarget: self selector: @selector(_renderFrame)];
+
+    _calendar = [WGCalendar create];
+    [_calendar setToNow];
+    WFDateTime* dt = [_calendar getDateTime];
+    _firstStart = dt.universalTime;
+    _lastFrame = dt.universalTime;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -47,7 +61,11 @@
     [super viewWillAppear: animated];
     [self.delegate glkViewController: self willPause: FALSE];
 
-    [_link addToRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];    
+    [_link addToRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+
+    [_calendar setToNow];
+    WFDateTime* dt = [_calendar getDateTime];
+    _lastStart = dt.universalTime;
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -61,8 +79,21 @@
 }
 
 -(BOOL)_renderFrame {
+    [_calendar setToNow];
+    WFDateTime* dt = [_calendar getDateTime];
+    int64_t frameTime = dt.universalTime;
+
+    _timeSinceFirstResume = static_cast<NSTimeInterval>(frameTime - _firstStart) * 0.0000001;
+    _timeSinceLastResume = static_cast<NSTimeInterval>(frameTime - _lastStart) * 0.0000001;
+    _timeSinceLastUpdate = static_cast<NSTimeInterval>(frameTime - _lastFrame) * 0.0000001;
+    _timeSinceLastDraw = _timeSinceLastUpdate;
+    
+    _lastFrame = frameTime;
+    
     id dest = self;
     if (self.delegate != nil) dest = self.delegate;
+
+    // TODO: The view/view controller logic here is probably quite wrong.
 
     if ([dest respondsToSelector: @selector(glkViewControllerUpdate:)]) {
         [dest glkViewControllerUpdate: self];
@@ -81,8 +112,16 @@
         }
     }
 
+    _framesDisplayed++;
+    
     return TRUE;
 }
+
+// TODO: implement me!
+-(unsigned int)framesPerSecond {
+    return 30;
+}
+
 
 @end
 
