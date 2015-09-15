@@ -146,6 +146,7 @@ static void dumpMat(const GLKMatrix4& mat)
 -(void)setupMaterials {
     switch(_mode) {
     case DM_LitSolidColor:
+        _effect.lightingType = GLKLightingTypePerVertex;
         _effect.material.shininess = 0.f;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
@@ -157,6 +158,19 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
 
     case DM_LitTextured:
+        _effect.lightingType = GLKLightingTypePerVertex;
+        _effect.material.shininess = MAT_SHININESS;
+        _effect.texture2d0.enabled = TRUE;
+        _effect.texture2d1.enabled = TRUE;
+        _effect.useConstantColor = FALSE;
+        _effect.light0.enabled = TRUE;
+        _effect.lightingEnabled = TRUE;
+        _effect.material.ambientColor = AMBIENT_COLOR;        
+        _effect.colorMaterialEnabled = TRUE;
+        break;
+
+    case DM_PixelLitTextured:
+        _effect.lightingType = GLKLightingTypePerPixel;
         _effect.material.shininess = MAT_SHININESS;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
@@ -168,6 +182,7 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
         
     case DM_VertexColor:
+        _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = FALSE;
@@ -178,6 +193,7 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
           
     case DM_SolidColor:
+        _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = TRUE;
@@ -188,6 +204,7 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
           
     case DM_TexturedVertexColor:
+        _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = FALSE;
@@ -198,6 +215,7 @@ static void dumpMat(const GLKMatrix4& mat)
         break;
           
     case DM_TexturedSolidColor:
+        _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
         _effect.useConstantColor = TRUE;

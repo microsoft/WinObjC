@@ -73,6 +73,7 @@
     static NSString* modeDescriptions[]={
         @"Vertex Lit, Solid Color, Untextured",
         @"Vertex Lit, Specularity, Vertex Colors, Textured w/ Decal",
+        @"Per-pixel Diffuse & Specular lighting, Vertex Colors, Textured w/ Decal",
         @"Vertex Colors, Untextured",
         @"Solid Color, Untextured",
         @"Vertex Colors, Textured",
