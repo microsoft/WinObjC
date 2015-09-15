@@ -42,7 +42,7 @@
         _items = [coder decodeObjectForKey:@"UIItems"];
         _layoutDirty = true;
         _delegate = [coder decodeObjectForKey:@"UIDelegate"];
-        _selectionIndicatorImage = [[UIImage imageNamed:@"/img/tabbar-button-selected.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0];
+        _selectionIndicatorImage = [[UIImage imageNamed:@"/img/tabbar-button-selected.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 5, 5, 5)];
         _backgroundImage = [[UIImage imageNamed:@"/img/tabbar-background.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(2, 3, 10, 3)];
 
         [self setBackgroundColor:[UIColor blackColor]];
@@ -62,11 +62,11 @@
 
         [self setBackgroundColor:[UIColor blackColor]];
         [self setContentMode:UIViewContentModeRedraw];
-        _selectionIndicatorImage = [[UIImage imageNamed:@"/img/tabbar-button-selected.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0];
-        _backgroundImage = [[UIImage imageNamed:@"/img/tabbar-background.png"] stretchableImageWithLeftCapWidth:3 topCapHeight:5];
+        _selectionIndicatorImage = [[UIImage imageNamed:@"/img/tabbar-button-selected.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 5, 5, 5)];
+        _backgroundImage = [[UIImage imageNamed:@"/img/tabbar-background.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(2, 3, 10, 3)];
 
         if ( GetCACompositor()->isTablet() ) {
-            id background = [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+            id background = [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(2, 3, 10, 3)];
             [self __setContentsImage:background];
         }
 
