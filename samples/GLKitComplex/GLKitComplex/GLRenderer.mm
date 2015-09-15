@@ -161,7 +161,8 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = FALSE;
-        _effect.material.emissiveTex = 0;        
+        _effect.material.emissiveTex = 0;
+        _effect.material.specularTex = 0;
         break;
 
     case DM_PixSolidColor:
@@ -175,6 +176,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
+        _effect.material.specularTex = 0;
         break;
 
     case DM_LitTextured:
@@ -188,6 +190,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;
+        _effect.material.specularTex = 0;
         break;
 
     case DM_PixelLitTextured:
@@ -201,6 +204,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         if (_emissive) _effect.material.emissiveTex = _emissive.name;
+        if (_specular) _effect.material.specularTex = _specular.name;
         break;
         
     case DM_VertexColor:
@@ -213,6 +217,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;        
+        _effect.material.specularTex = 0;
         break;
           
     case DM_SolidColor:
@@ -225,6 +230,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
+        _effect.material.specularTex = 0;
         break;
           
     case DM_TexturedVertexColor:
@@ -237,6 +243,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;        
+        _effect.material.specularTex = 0;
         break;
           
     case DM_TexturedSolidColor:
@@ -249,6 +256,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
+        _effect.material.specularTex = 0;
         break;
     };
 }

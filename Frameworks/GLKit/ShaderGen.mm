@@ -298,6 +298,24 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
+bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (nextRef) nextRef->generate(out, c, v);
+
+    // No texture?  just do passthrough.
+    string uv;
+    auto v1 = v.find(texVar);
+    if (!v1 || !uvRef->generate(uv, c, v)) return !out.empty();
+
+    // Do our texture lookup.
+    string texVarTmp = texVar + "_specTmp";
+    string texMod = "texture2D(" + texVar + ", vec2(" + uv + ")).r"; // TODO: parameterize for alpha vs rgb.
+    c.addTempVal(GLKS_FLOAT, texVarTmp, texMod);
+
+    out = "vec4(" + out + ".rgb, max(1.0, " + texVarTmp + " * " + out + ".a))"; // shininess stored in .a of input.
+    return true;
+}
+
 bool ShaderAdditiveCombiner::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     int numGenerated = 0;

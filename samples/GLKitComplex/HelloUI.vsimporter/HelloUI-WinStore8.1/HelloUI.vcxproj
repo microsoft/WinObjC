@@ -89,11 +89,11 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <ClangCompile Include="..\..\GLKitComplex\Mesh.mm" />
-    <None Include="..\..\GLKitComplex\Images.xcassets\teapot_specular.pdn" />
     <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_decal.png" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_emissive.png" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_specular.png" />
     <Image Include="Assets\Logo.scale-100.png" />
     <Image Include="Assets\SmallLogo.scale-100.png" />
     <Image Include="Assets\StoreLogo.scale-100.png" />
