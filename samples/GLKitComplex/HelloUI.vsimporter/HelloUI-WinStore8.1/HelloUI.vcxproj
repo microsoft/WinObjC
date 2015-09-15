@@ -91,6 +91,7 @@
     <ClangCompile Include="..\..\GLKitComplex\Mesh.mm" />
     <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_decal.png" />
     <Image Include="Assets\Logo.scale-100.png" />
     <Image Include="Assets\SmallLogo.scale-100.png" />
     <Image Include="Assets\StoreLogo.scale-100.png" />

@@ -245,7 +245,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         // Process texture variables.
         static const char* texNames[] = { GLKSH_TEX0_NAME, GLKSH_TEX1_NAME };
-        static const char* texModes[] = { GLKSH_TEX0_MODE, GLKSH_TEX0_MODE };
+        static const char* texModes[] = { GLKSH_TEX0_MODE, GLKSH_TEX1_MODE };
         int texNum = 0;
         for(GLKEffectPropertyTexture* t in _textures) {
             if (t.enabled) {

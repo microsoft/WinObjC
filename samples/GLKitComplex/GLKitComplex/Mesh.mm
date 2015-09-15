@@ -283,14 +283,16 @@ void Mesh::bindVertexData()
 {
     glBindBuffer(GL_ARRAY_BUFFER, vb);
 
-    glEnableVertexAttribArray(GLKVertexAttribPosition);        
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, pos));
     glEnableVertexAttribArray(GLKVertexAttribNormal);
     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, norm));
     glEnableVertexAttribArray(GLKVertexAttribColor);
     glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, color));
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, uv));    
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, uv));
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord1);
+    glVertexAttribPointer(GLKVertexAttribTexCoord1, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const GLvoid*)offsetof(MeshVertex, uv));
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib);
 }

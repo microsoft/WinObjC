@@ -84,8 +84,9 @@ ShaderDef standardPsh{
     {"gl_FragColor", new ShaderOp(
                          new ShaderVarRef("_specular"),
                          new ShaderOp(
-                             new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
-                                 new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE)),
+                             new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord"),
+                                 new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
+                                     new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE))),
                              new ShaderVarRef("_lighting"),
                              "*", true),
                          "+", true)}

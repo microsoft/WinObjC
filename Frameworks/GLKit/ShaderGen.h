@@ -50,7 +50,7 @@ class ShaderContext {
     TempMap                 psTemps, psTempVals;
     
 protected:
-    string orderedTempVals(const TempMap& temps);
+    string orderedTempVals(const TempMap& temps, bool usePrecision);
     
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
                     const string& desc, ShaderLayout* usedOutputs = NULL);

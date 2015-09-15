@@ -72,11 +72,11 @@
 -(void)setLabelText {
     static NSString* modeDescriptions[]={
         @"Vertex Lit, Solid Color, Untextured",
-        @"Vertex Lit, Specularity, Vertex Colors, Textured",
+        @"Vertex Lit, Specularity, Vertex Colors, Textured w/ Decal",
         @"Vertex Colors, Untextured",
         @"Solid Color, Untextured",
         @"Vertex Colors, Textured",
-        @"Solid Color, Textured"
+        @"Solid Color, Textured w/ Decal"
     };
     
     [_welcomeLabel setText: modeDescriptions[_renderer.mode]];

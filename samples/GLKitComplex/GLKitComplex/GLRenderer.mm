@@ -38,6 +38,7 @@ static void dumpMat(const GLKMatrix4& mat)
     Mesh*           _mesh;
 
     GLKTextureInfo* _tex1;
+    GLKTextureInfo* _tex2;
 }
 
 -(void)initGLData {
@@ -76,7 +77,13 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.texture2d0.name = _tex1.name;
         _effect.texture2d0.envMode = GLKTextureEnvModeModulate;
     }
-    
+    img = [UIImage imageNamed: @"teapot_decal.png"];
+    if (img) {
+        _tex2 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+        _effect.texture2d1.name = _tex2.name;
+        _effect.texture2d1.envMode = GLKTextureEnvModeDecal;
+    }
+
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     
@@ -141,6 +148,7 @@ static void dumpMat(const GLKMatrix4& mat)
     case DM_LitSolidColor:
         _effect.material.shininess = 0.f;
         _effect.texture2d0.enabled = FALSE;
+        _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -151,6 +159,7 @@ static void dumpMat(const GLKMatrix4& mat)
     case DM_LitTextured:
         _effect.material.shininess = MAT_SHININESS;
         _effect.texture2d0.enabled = TRUE;
+        _effect.texture2d1.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -160,6 +169,7 @@ static void dumpMat(const GLKMatrix4& mat)
         
     case DM_VertexColor:
         _effect.texture2d0.enabled = FALSE;
+        _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
@@ -169,6 +179,7 @@ static void dumpMat(const GLKMatrix4& mat)
           
     case DM_SolidColor:
         _effect.texture2d0.enabled = FALSE;
+        _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
@@ -178,6 +189,7 @@ static void dumpMat(const GLKMatrix4& mat)
           
     case DM_TexturedVertexColor:
         _effect.texture2d0.enabled = TRUE;
+        _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
@@ -187,6 +199,7 @@ static void dumpMat(const GLKMatrix4& mat)
           
     case DM_TexturedSolidColor:
         _effect.texture2d0.enabled = TRUE;
+        _effect.texture2d1.enabled = TRUE;
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
