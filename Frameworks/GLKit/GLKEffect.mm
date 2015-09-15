@@ -208,15 +208,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 {
     // TODO: don't duplicate code setting light/camera positions.
     BOOL success = FALSE;
+    bool pp = (_lightingType == GLKLightingTypePerPixel);
     
     // Assemble material, calculate name.
-    ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;    
+    ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;
+    
     if (!self.trackEffectChanges || self.effectChanged) {
         _cameraRequired = false;
 
         auto modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
         
         string shaderName = GLKSH_STANDARD_SHADER "_";
+        shaderName += pp ? "PL_" : "VL_";   // TODO: don't need this if unlit.
         m->reset();
 
         // We need these.
@@ -321,7 +324,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         }
 
         if (_cameraRequired) {
-            // TODO: actual camera pos.
             auto res = GLKMatrix4MultiplyVector3WithTranslation(modelRefTrans, GLKVector3Make(0, 0, 0));
             m->addvar(GLKSH_CAMERA, res);
         }
@@ -362,7 +364,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (self.shader == nil) {
 
         // Need to generate a new shader based on the supplied material here.
-        ShaderContext shd(standardVsh, standardPsh);
+        ShaderContext shd(pp ? pixelVsh : standardVsh, pp ? pixelPsh : standardPsh);
         GLKShaderPair* p = shd.generate(*m);
         if (p) {
             NSLog(@"For shader named: %@", self.shaderName);

@@ -90,7 +90,7 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.light0.position = GLKVector4Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.9f, _mesh->getRadius() * 0.6f, 0.f);
     _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
-    _effect.light0.linearAttenuation = 10.f / _mesh->getRadius();
+    _effect.light0.linearAttenuation = 1.f / _mesh->getRadius();
 
     // Set up draw mode.
     _mode = DM_LitSolidColor;
@@ -177,7 +177,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
-        _effect.material.ambientColor = AMBIENT_COLOR;        
+        _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         break;
         
@@ -197,7 +197,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
         _effect.useConstantColor = TRUE;
-        _effect.light0.enabled = FALSE;        
+        _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = FALSE;
