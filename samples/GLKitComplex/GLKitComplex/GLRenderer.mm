@@ -21,7 +21,7 @@
 
 #define AMBIENT_COLOR   GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f)
 #define ZERO_COLOR      GLKVector4Make(0.f, 0.f, 0.f, 0.f)
-#define MAT_SHININESS   30.f
+#define MAT_SHININESS   35.f
 
 static void dumpMat(const GLKMatrix4& mat)
 {
@@ -88,7 +88,7 @@ static void dumpMat(const GLKMatrix4& mat)
     img = [UIImage imageNamed: @"teapot_emissive.png"];
     if (img) _emissive = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
     img = [UIImage imageNamed: @"teapot_specular.png"];
-    if (img) _specular = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+    //if (img) _specular = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
 
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);

@@ -312,7 +312,7 @@ bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
     string texMod = "texture2D(" + texVar + ", vec2(" + uv + ")).r"; // TODO: parameterize for alpha vs rgb.
     c.addTempVal(GLKS_FLOAT, texVarTmp, texMod);
 
-    out = "vec4(" + out + ".rgb, max(1.0, " + texVarTmp + " * " + out + ".a))"; // shininess stored in .a of input.
+    out = "vec4(" + texVarTmp + " * " + out + ".rgb, max(1.0, " + texVarTmp + " * " + out + ".a))"; // shininess stored in .a of input.
     return true;
 }
 
