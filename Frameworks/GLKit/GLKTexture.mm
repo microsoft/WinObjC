@@ -29,7 +29,34 @@ NSString* const GLKTextureLoaderOriginBottomLeft = @"BottomLeft";
 NSString* const GLKTextureLoaderGrayscaleAsAlpha = @"AlphaGrayscale";
 NSString* const GLKTextureLoaderSRGB = @"SRGB";
 
-static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int bpp)
+namespace {
+
+bool getOpt(NSDictionary* d, NSString* opt)
+{
+    if (d) {
+        NSNumber* n = [d objectForKey: opt];
+        if (n) {
+            return ([n intValue] > 0);
+        }
+    }
+    return false;
+}
+
+void swapRows(unsigned char* bytes, size_t rowSize, size_t h)
+{
+    auto tmp = (unsigned char*)_alloca(rowSize);
+    auto end = bytes + (rowSize * (h - 1));
+    while(end > bytes) {
+        memcpy(tmp, bytes, rowSize);
+        memcpy(bytes, end, rowSize);
+        memcpy(end, tmp, rowSize);
+        
+        end -= rowSize;
+        bytes += rowSize;
+    }
+}
+ 
+bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int bpp)
 {
     switch(bpp) {
       case 8:
@@ -64,6 +91,8 @@ static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& a
     return true;
 }
 
+}
+ 
 @implementation GLKTextureInfo
 -(id)initWith: (GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height
    alphaState:(GLKTextureInfoAlphaState)as
@@ -107,12 +136,16 @@ static bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& a
     CGDataProviderRef provider = CGImageGetDataProvider(img);
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
-    auto bytes = (const unsigned char*)[data bytes];
+    auto bytes = (unsigned char*)[data bytes];
 
+    if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
+        swapRows(bytes, rowSize, h);
+    }
+    
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
 
     GLint fmt, type;
