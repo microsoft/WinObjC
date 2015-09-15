@@ -118,6 +118,18 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+class ShaderSpecularTex : public ShaderNode {
+    string texVar;
+    ShaderNode* uvRef;
+    ShaderNode* nextRef;
+
+public:
+    ShaderSpecularTex(const string& tex, ShaderNode* uvRef, ShaderNode* nextRef) :
+        texVar(tex), uvRef(uvRef), nextRef(nextRef) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
 class ShaderAdditiveCombiner : public ShaderNode {
     ShaderNodes subNodes;
 

@@ -272,6 +272,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         int lightNum = 0;
         GLKVector4 ambient = GLKVector4Make(0, 0, 0, 0);
         float shininess = self.material.shininess;
+        char specType = 's';
+        GLuint specTex = self.material.specularTex;
+        if (shininess > 0 && specTex > 0 && pp) {
+            specType = 'S';
+            m->addtex(GLKSH_SPECULAR_TEX, specTex);
+        }
         GLKVector4 specBase = self.material.specularColor;
         if (GLKVector4XYZEqualToScalar(specBase, 0.f)) shininess = 0.f;
         if (self.lightingEnabled) {
@@ -313,7 +319,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             }
 
             GLuint emissiveTex = self.material.emissiveTex;
-            if (emissiveTex) {
+            if (emissiveTex && pp) {
                 shaderName += 'E';
                 m->addtex(GLKSH_EMISSIVE_TEX, emissiveTex);
             } else {
