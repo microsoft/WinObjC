@@ -20,6 +20,7 @@
 
 enum _DisplayMode {
     DM_LitSolidColor,
+    DM_PixSolidColor,
     DM_LitTextured,
     DM_PixelLitTextured,
     DM_VertexColor,

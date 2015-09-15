@@ -21,7 +21,7 @@
 
 #define AMBIENT_COLOR   GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f)
 #define ZERO_COLOR      GLKVector4Make(0.f, 0.f, 0.f, 0.f)
-#define MAT_SHININESS   5.f
+#define MAT_SHININESS   30.f
 
 static void dumpMat(const GLKMatrix4& mat)
 {
@@ -154,7 +154,19 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
-        _effect.colorMaterialEnabled = TRUE;
+        _effect.colorMaterialEnabled = FALSE;
+        break;
+
+    case DM_PixSolidColor:
+        _effect.lightingType = GLKLightingTypePerPixel;
+        _effect.material.shininess = 0.f;
+        _effect.texture2d0.enabled = FALSE;
+        _effect.texture2d1.enabled = FALSE;
+        _effect.useConstantColor = TRUE;
+        _effect.light0.enabled = TRUE;
+        _effect.lightingEnabled = TRUE;
+        _effect.material.ambientColor = AMBIENT_COLOR;
+        _effect.colorMaterialEnabled = FALSE;
         break;
 
     case DM_LitTextured:
