@@ -24,8 +24,8 @@ PBXObject::~PBXObject() {}
 
 PBXObject::PBXObject()
   : m_pbxDoc(NULL),
-    m_parseER(SB_DEBUG),
-    m_accessER(SB_DEBUG)
+    m_parseER(SB_INFO),
+    m_accessER(SB_WARN)
 {}
 
 void PBXObject::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
