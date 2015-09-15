@@ -109,21 +109,19 @@ void ShaderContext::addTempVal(GLKShaderVarType type, const string& name, const 
 
 int ShaderContext::getIVar(const string& name, int def)
 {
-    auto v = ivars.find(name);
-    if (v == ivars.end()) return def;
-    return v->second;
+    auto i = inputMaterial->ivars.find(name);
+    if (i == inputMaterial->ivars.end()) return def;
+
+    return i->second;
 }
 
-void ShaderContext::setIVar(const string& name, int value)
-{
-    ivars[name] = value;
-}
-
-GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
+GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
 {
     ShaderLayout intermediates;
     ShaderLayout outputs;
 
+    inputMaterial = &inputs;
+    
     vertexStage = true;
     
     // Perform vertex shader generation.
@@ -202,7 +200,10 @@ GLKShaderPair* ShaderContext::generate(ShaderLayout& inputs)
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
-    res.pixelShader = [NSString stringWithCString: outpix.c_str()];    
+    res.pixelShader = [NSString stringWithCString: outpix.c_str()];
+
+    inputMaterial = NULL;
+
     return res;
 }
 
@@ -252,7 +253,7 @@ bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    GLKTextureEnvMode mode = c.getIVar(modeVar, GLKTextureEnvModeModulate);
+    GLKTextureEnvMode mode = c.getIVar(modeVar, GLKTextureEnvModeDecal);
 
     // Get what we need for the texture, just passthrough next if not there.
     string uv;
@@ -267,15 +268,27 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     if (mode == GLKTextureEnvModeReplace) return true;
 
     // Build result with next string.
-    string next;
+    string next, tmpname;
     if (nextRef) nextRef->generate(next, c, v);
     if (!next.empty()) {
-        if (mode == GLKTextureEnvModeModulate) { // TODO: additional blend modes could go here.
+        switch(mode) {
+        case GLKTextureEnvModeModulate:
             out = "(" + out + " * " + next + ")";
-        } else {
-            string tmpname = texVar + "_val";
+            break;
+
+        case GLKTextureEnvModeAdditive:
+            out = "(" + out + " + " + next + ")";
+            break;
+
+        case GLKTextureEnvModeSubtractive:
+            out = "(" + out + " - " + next + ")";
+            break;
+
+        case GLKTextureEnvModeDecal:
+            tmpname = texVar + "_val";
             c.addTempVal(type, tmpname, out);
             out = "mix(" + next + ", " + tmpname + ", " + tmpname + ".a)";
+            break;
         }
     }
     return true;

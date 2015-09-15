@@ -23,7 +23,8 @@
 #import "ShaderGen.h"
 #import "ShaderProg.h"
 
-#define MAX_LIGHTS 3
+#define MAX_LIGHTS      3
+#define MAX_TEXTURES    2
 
 struct LightVars {
     const char* color;
@@ -243,16 +244,22 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         m->defvattr2(GLKSH_UV1_NAME);
 
         // Process texture variables.
+        static const char* texNames[] = { GLKSH_TEX0_NAME, GLKSH_TEX1_NAME };
+        static const char* texModes[] = { GLKSH_TEX0_MODE, GLKSH_TEX0_MODE };
+        int texNum = 0;
         for(GLKEffectPropertyTexture* t in _textures) {
             if (t.enabled) {
                 GLuint name = t.name;
                 if (name > 0) {
-                    m->addtex(GLKSH_TEX0_NAME, name);
+                    m->addtex(texNames[texNum], name);
+                    m->addivar(texModes[texNum], t.envMode);
                     shaderName += 'T';
-                    continue;
                 }
+            } else {
+                shaderName += 'U';
             }
-            shaderName += 'U';
+            texNum ++;
+            if (texNum >= MAX_TEXTURES) break;
         }
 
         shaderName += '_';

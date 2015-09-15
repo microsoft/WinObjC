@@ -74,6 +74,7 @@ struct ShaderLayout {
 
 struct ShaderMaterial : public ShaderLayout {
     vector<float> values;
+    map<string, unsigned int> ivars;
 
     void addvar(const string& var, GLKShaderVarType type, float* data);
     inline void addvar(const string& var, const GLKVector4& vec) { addvar(var, GLKS_FLOAT4, (float*)&vec); }
@@ -83,6 +84,8 @@ struct ShaderMaterial : public ShaderLayout {
     void addtex(const string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
     inline void addtexcube(const string& var, GLuint name) { addtex(var, name, GLKS_SAMPLERCUBE); }
 
+    inline void addivar(const string& var, unsigned int val) { ivars[var] = val; }
+    
     inline void reset() {
         vars.clear();
         values.resize(0);
