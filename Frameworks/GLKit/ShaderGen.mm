@@ -112,6 +112,7 @@ void ShaderContext::addTempVal(GLKShaderVarType type, const string& name, const 
 
 int ShaderContext::getIVar(const string& name, int def)
 {
+    if (name.empty()) return def;
     auto i = inputMaterial->ivars.find(name);
     if (i == inputMaterial->ivars.end()) return def;
 

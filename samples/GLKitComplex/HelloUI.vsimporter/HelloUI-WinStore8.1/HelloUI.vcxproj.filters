@@ -42,6 +42,9 @@
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_decal.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_emissive.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp" />
@@ -51,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="HelloUI_TemporaryKey.pfx" />
+    <None Include="..\..\GLKitComplex\Images.xcassets\teapot_specular.pdn">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\GLKitComplex\main.m">
