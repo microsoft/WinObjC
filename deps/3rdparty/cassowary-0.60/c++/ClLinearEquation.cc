@@ -9,4 +9,4 @@
 
 #include "ClLinearEquation.h"
 
-CASSOWARY_IMPORT class ClLinearEquation;
+class ClLinearEquation;

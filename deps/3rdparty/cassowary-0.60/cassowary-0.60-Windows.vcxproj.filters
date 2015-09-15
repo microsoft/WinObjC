@@ -15,171 +15,166 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClAbstractVariable.cc">
+    <ClCompile Include="c++\ClAbstractVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClConstraint.cc">
+    <ClCompile Include="c++\ClConstraint.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClDummyVariable.cc">
+    <ClCompile Include="c++\ClDummyVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClFloatVariable.cc">
+    <ClCompile Include="c++\ClFDVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClLinearExpression.cc">
+    <ClCompile Include="c++\ClFloatVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClSlackVariable.cc">
+    <ClCompile Include="c++\ClLinearExpression.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClSolver.cc">
+    <ClCompile Include="c++\ClSimplexSolver.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClStrength.cc">
+    <ClCompile Include="c++\ClSlackVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClSymbolicWeight.cc">
+    <ClCompile Include="c++\ClSolver.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClTableau.cc">
+    <ClCompile Include="c++\ClStrength.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClVariable.cc">
+    <ClCompile Include="c++\ClSymbolicWeight.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClSimplexSolver.cc">
+    <ClCompile Include="c++\ClTableau.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cassowary-0.60\c++\ClFDVariable.cc">
+    <ClCompile Include="c++\ClVariable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClLinearEquation.cc">
+    <ClCompile Include="c++\ClLinearEquation.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\cassowary-0.60\c++\Cassowary.h">
+    <ClInclude Include="c++\Cassowary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\Cl.h">
+    <ClInclude Include="c++\Cl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\cl_auto_ptr.h">
+    <ClInclude Include="c++\ClAbstractVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClAbstractVariable.h">
+    <ClInclude Include="c++\ClC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClC.h">
+    <ClInclude Include="c++\ClConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClConstraint.h">
+    <ClInclude Include="c++\ClConstraintHash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClConstraintHash.h">
+    <ClInclude Include="c++\ClDummyVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClDummyVariable.h">
+    <ClInclude Include="c++\ClEditConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClEditConstraint.h">
+    <ClInclude Include="c++\ClEditOrStayConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClEditOrStayConstraint.h">
+    <ClInclude Include="c++\ClErrors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClErrors.h">
+    <ClInclude Include="c++\ClFDBinaryOneWayConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFDBinaryOneWayConstraint.h">
+    <ClInclude Include="c++\ClFDConnectorVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFDConnectorVariable.h">
+    <ClInclude Include="c++\ClFDConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFDConstraint.h">
+    <ClInclude Include="c++\ClFDSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFDSolver.h">
+    <ClInclude Include="c++\ClFDVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFDVariable.h">
+    <ClInclude Include="c++\ClFloatVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClFloatVariable.h">
+    <ClInclude Include="c++\ClLinearConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClLinearConstraint.h">
+    <ClInclude Include="c++\ClLinearEquation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClLinearEquation.h">
+    <ClInclude Include="c++\ClLinearExpression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClLinearExpression.h">
+    <ClInclude Include="c++\ClLinearExpression_fwd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClLinearExpression_fwd.h">
+    <ClInclude Include="c++\ClLinearInequality.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClLinearInequality.h">
+    <ClInclude Include="c++\ClMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClMap.h">
+    <ClInclude Include="c++\ClObjectiveVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClObjectiveVariable.h">
+    <ClInclude Include="c++\ClPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClPoint.h">
+    <ClInclude Include="c++\ClReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClReader.h">
+    <ClInclude Include="c++\ClSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClSet.h">
+    <ClInclude Include="c++\ClSimplexSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClSimplexSolver.h">
+    <ClInclude Include="c++\ClSlackVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClSlackVariable.h">
+    <ClInclude Include="c++\ClSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClSolver.h">
+    <ClInclude Include="c++\ClStayConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClStayConstraint.h">
+    <ClInclude Include="c++\ClStrength.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClStrength.h">
+    <ClInclude Include="c++\ClSymbolicWeight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClSymbolicWeight.h">
+    <ClInclude Include="c++\ClTableau.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClTableau.h">
+    <ClInclude Include="c++\ClTypedefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClTypedefs.h">
+    <ClInclude Include="c++\ClVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\ClVariable.h">
+    <ClInclude Include="c++\cl_auto_ptr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\config-inline.h">
+    <ClInclude Include="c++\config-inline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\debug.h">
+    <ClInclude Include="c++\debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cassowary-0.60\c++\timer.h">
+    <ClInclude Include="c++\timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="exports.def">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>
