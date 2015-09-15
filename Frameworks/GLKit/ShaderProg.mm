@@ -56,6 +56,17 @@ ShaderNode* mkspeclighter(const string& toLightTemp, const string& attenTemp, co
     return new ShaderSpecLighter(toLight, toCam, new ShaderVarRef(GLKSH_NORMAL_NAME), new ShaderVarRef(clr), atten);
 }
 
+ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
+{
+    return new ShaderOp(
+               specularRef,
+               new ShaderOp(
+                   new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
+                       new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), colorRef)),
+                   lightRef, "*", true),
+               "+", true);
+}
+
 // Per-vertex lighting.
 
 static auto diffuseLighter =
@@ -75,21 +86,16 @@ static auto specularLighter =
 ShaderDef standardVsh{
     {GL_INPUT_POS,  new ShaderPosRef() },
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
-    {"_texCoord",   new ShaderVarRef(GLKSH_UV0_NAME) },
+    {"_texCoord0",  new ShaderVarRef(GLKSH_UV0_NAME) },
+    {"_texCoord1",  new ShaderVarRef(GLKSH_UV1_NAME) },
     {"_lighting",   new ShaderOp(new ShaderVarRef("_ambient"), diffuseLighter, "+", true) },
     {"_specular",   specularLighter }
 };
 
 ShaderDef standardPsh{
-    {"gl_FragColor", new ShaderOp(
-                         new ShaderVarRef("_specular"),
-                         new ShaderOp(
-                             new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord"),
-                                 new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
-                                     new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE))),
-                             new ShaderVarRef("_lighting"),
-                             "*", true),
-                         "+", true)}
+    {"gl_FragColor", mkStandardCombiner(new ShaderVarRef("_specular"),
+                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                        new ShaderVarRef("_lighting"))}
 };
 
 // Per-pixel lighting (SOMEDAY)
