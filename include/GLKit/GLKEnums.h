@@ -32,7 +32,9 @@ typedef unsigned int GLKFogMode;
 enum _GLKTextureEnvMode {
     GLKTextureEnvModeReplace = 0,
     GLKTextureEnvModeModulate,
-    GLKTextureEnvModeDecal
+    GLKTextureEnvModeDecal,
+    GLKTextureEnvModeAdditive,
+    GLKTextureEnvModeSubtractive
 };
 typedef unsigned int GLKTextureEnvMode;
 

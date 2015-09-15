@@ -81,11 +81,14 @@ ShaderDef standardVsh{
 };
 
 ShaderDef standardPsh{
-    {"gl_FragColor", new ShaderOp(new ShaderVarRef("_specular"), 
-                                  new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
-                                      new ShaderOp(new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
-                                                   new ShaderVarRef("_lighting"), "*", true)),
-                                  "+", true)}
+    {"gl_FragColor", new ShaderOp(
+                         new ShaderVarRef("_specular"),
+                         new ShaderOp(
+                             new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord"),
+                                 new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE)),
+                             new ShaderVarRef("_lighting"),
+                             "*", true),
+                         "+", true)}
 };
 
-// Per-pixel lighting.
+// Per-pixel lighting (SOMEDAY)

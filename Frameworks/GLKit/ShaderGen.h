@@ -34,13 +34,13 @@ struct TempInfo {
     string body;
 };
 typedef map<string, TempInfo> TempMap;
-typedef map<string, unsigned int> InputVars;
 
 @class GLKShaderPair;
 
 class ShaderContext {
     ShaderLayout            shaderVars;
-    InputVars               ivars;
+
+    ShaderMaterial*         inputMaterial;
 
     ShaderDef               vs;
     ShaderDef               ps;
@@ -57,16 +57,15 @@ protected:
     
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        vs(vert), ps(pixel), vertexStage(false) {}
+        inputMaterial(NULL), vs(vert), ps(pixel), vertexStage(false) {}
 
     // NOTE: neither of these check for overwriting.
     void addTempFunc(GLKShaderVarType type, const string& name, const string& body);
     void addTempVal(GLKShaderVarType type, const string& name, const string& body);
 
     int getIVar(const string& name, int def = 0);
-    void setIVar(const string& name, int value);
 
-    GLKShaderPair* generate(ShaderLayout& inputs);
+    GLKShaderPair* generate(ShaderMaterial& inputs);
 };
 
 // --------------------------------------------------------------------------------
