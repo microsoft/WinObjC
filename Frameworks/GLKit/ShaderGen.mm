@@ -31,10 +31,11 @@ bool TempInfo::dependsOn(const StrSet& set) const
 }
 
 // Write out a series of vars such that calculations needed later are done first.
-string ShaderContext::orderedTempVals(const TempMap& temps)
+string ShaderContext::orderedTempVals(const TempMap& temps, bool usePrecision)
 {
     string res;
     StrSet tnames;
+    string precision = usePrecision ? "lowp " : "";
 
     for(const auto& p : temps) tnames.insert(p.first);
 
@@ -43,7 +44,7 @@ string ShaderContext::orderedTempVals(const TempMap& temps)
         bool foundOne = false;
         for(const auto& p : remainingTemps) {
             if (!p.second.dependsOn(tnames)) {
-                res = res + "\t" + getTypeStr(p.second.type) + " " + p.first + " = " + p.second.body + ";\n";
+                res = res + "\t" + precision + getTypeStr(p.second.type) + " " + p.first + " = " + p.second.body + ";\n";
 
                 string name = p.first;
                 remainingTemps.erase(name);
@@ -179,7 +180,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
 
     // Regenerate the vertex shader based on the intermediates used in the pixel shader.
     // TODO: BK: This is a little messy.  I should just store the results in a dict and then
-    // calculate them only once.  Also, the vertex inputs and intermediates should be regenerated.
+    // calculate them only once.
     ShaderLayout unusedIntermediates;
     vertexStage = true;
     vsTemps.clear();
@@ -188,11 +189,11 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
 
     string vsTempFuncs;
     for(const auto& p : vsTemps) vsTempFuncs += p.second.body + '\n';
-    string vsTempValsOut = orderedTempVals(vsTempVals);
+    string vsTempValsOut = orderedTempVals(vsTempVals, false);
     
     string psTempFuncs;
     for(const auto& p : psTemps) psTempFuncs += p.second.body + '\n';
-    string psTempValsOut = orderedTempVals(psTempVals);
+    string psTempValsOut = orderedTempVals(psTempVals, true);
         
     // Perform final generation.
     outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + vsTempValsOut + outvert + "}\n";
@@ -281,7 +282,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
             break;
 
         case GLKTextureEnvModeSubtractive:
-            out = "(" + out + " - " + next + ")";
+            out = "(" + next + " - " + out + ")";
             break;
 
         case GLKTextureEnvModeDecal:

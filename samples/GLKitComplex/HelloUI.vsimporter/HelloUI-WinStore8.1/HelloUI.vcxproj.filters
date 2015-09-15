@@ -39,6 +39,9 @@
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_decal.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp" />
