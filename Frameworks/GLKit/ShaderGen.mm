@@ -21,6 +21,8 @@
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
 
+// TODO: BK: clean up lowp references.
+
 // This is really crude.  Determine if an (unparsed) expression depends on a set of variables.
 bool TempInfo::dependsOn(const StrSet& set) const
 {
@@ -83,7 +85,7 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
             outputs.vars[it.first] = VarInfo(it.second->getType());
             final += "\t" + it.first + " = " + res + ";\n";
         } else {
-            final += "\t// " + desc + ": Cannot generate output for " + it.first + ", skipping...\n";
+            final += "\t// " + desc + ": Inputs not found for " + it.first + ", skipping output calculation...\n";
         }
     }
     
@@ -197,7 +199,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
         
     // Perform final generation.
     outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + vsTempValsOut + outvert + "}\n";
-    outpix = pixvars + psTempFuncs + "void main() {\n" + psTempValsOut + outpix + "}\n";
+    outpix = "precision lowp float;\n\n" + pixvars + psTempFuncs + "void main() {\n" + psTempValsOut + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
