@@ -312,12 +312,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 shaderName += 'n';
             }
 
-            GLKVector4 emissive = self.material.emissiveColor;
-            if (!GLKVector4XYZEqualToScalar(emissive, 0.f)) {
-                shaderName += 'e';
-                m->addvar(GLKSH_EMISSIVE, emissive);
+            GLuint emissiveTex = self.material.emissiveTex;
+            if (emissiveTex) {
+                shaderName += 'E';
+                m->addtex(GLKSH_EMISSIVE_TEX, emissiveTex);
             } else {
-                shaderName += 'n';
+                GLKVector4 emissive = self.material.emissiveColor;
+                if (!GLKVector4XYZEqualToScalar(emissive, 0.f)) {
+                    shaderName += 'e';
+                    m->addvar(GLKSH_EMISSIVE, emissive);
+                } else {
+                    shaderName += 'n';
+                }
             }
         } else {
             shaderName += "UUUnn";
