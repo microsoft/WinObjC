@@ -165,7 +165,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
-        _effect.material.ambientColor = AMBIENT_COLOR;        
+        _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
         break;
 

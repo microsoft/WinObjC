@@ -20,3 +20,6 @@
 
 extern ShaderDef standardVsh;
 extern ShaderDef standardPsh;
+
+extern ShaderDef pixelVsh;
+extern ShaderDef pixelPsh;
