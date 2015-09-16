@@ -73,6 +73,15 @@ const char* psSrc =
     [super dealloc];
 }
 
+-(BOOL)updateShaderMaterialParams {
+    [super updateShaderMaterialParams];
+
+    ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
+    mat->addtexcube(skyboxTexName, _textureCubeMap.name);
+
+    return TRUE;
+}
+
 -(void)prepareToDraw {
     if (!_inited) {
         _inited = TRUE;
@@ -121,11 +130,7 @@ const char* psSrc =
         [[GLKShaderCache get] addShaderNamed: self.shaderName source: src];
     }
     
-    [super prepareToDraw];
-
-    // TODO: this will cause a single frame without the skybox when the material is reset.
-    ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
-    mat->addtexcube(skyboxTexName, _textureCubeMap.name);
+    [super prepareToDraw];   // will call updateShaderMaterialParams.
 }
 
 -(void)draw {

@@ -54,14 +54,27 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return self;
 }
 
--(void)prepareToDraw
+-(BOOL)updateShaderMaterialParams {
+    return TRUE;
+}
+
+-(BOOL)prepareShaders
 {
     _shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
     if (_shader == nil) {
         NSLog(@"Unable to find shader named %@, cannot setup for draw call!", self.shaderName);
-        return;
+        return FALSE;
     }
-    
+
+    return TRUE;
+}
+
+-(void)prepareToDraw
+{
+    // This can include the shader name, for example.
+    [self updateShaderMaterialParams];
+    if (![self prepareShaders]) return;
+        
     glUseProgram(_shader.program);
 
     // Projection matrix.
@@ -209,13 +222,15 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     }
 }
 
--(void)prepareToDraw
-{
+-(BOOL)updateShaderMaterialParams {
+    [super updateShaderMaterialParams];
+    
     // TODO: don't duplicate code setting light/camera positions.
     BOOL success = FALSE;
     bool pp = (_lightingType == GLKLightingTypePerPixel);
     
     // Assemble material, calculate name.
+    // TODO: should be done in updateShaderMaterialParams, but it is fine here for now.
     ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;
     
     if (!self.trackEffectChanges || self.effectChanged) {
@@ -375,13 +390,20 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             self.effectChanged = TRUE;
         }
     }
-    
+
+    return TRUE;
+}
+
+-(BOOL)prepareShaders
+{
     // Check for shader existence.
     self.shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
     if (self.shader == nil) {
+        bool pp = (_lightingType == GLKLightingTypePerPixel);
 
         // Need to generate a new shader based on the supplied material here.
         ShaderContext shd(pp ? pixelVsh : standardVsh, pp ? pixelPsh : standardPsh);
+        ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;
         GLKShaderPair* p = shd.generate(*m);
         if (p) {
             NSLog(@"For shader named: %@", self.shaderName);
@@ -392,12 +414,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             self.shader = [[GLKShaderCache get] addShaderNamed: self.shaderName source: p];
             if (self.shader == nil) {
                 NSLog(@"There was a problem generating a shader for material %@", self.shaderName);
-                return;
+                return FALSE;
             }
         }
     }
 
-    [super prepareToDraw];
+    return TRUE;
 }
 
 -(BOOL)useConstantColor {
@@ -565,8 +587,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return self;
 }
 
--(void)prepareToDraw {
-    [super prepareToDraw];
+-(BOOL)updateShaderMaterialParams {
+    [super updateShaderMaterialParams];
+
+    // TODO: BK: code goes here!
 }
 
 @end
