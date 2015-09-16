@@ -239,7 +239,7 @@ id objc_allocateObject(Class classRef, unsigned int extraBytes)
     uint32_t refCountOffset = 0;
     uint32_t magic = NSOBJECT_MAGIC;
     size_t extraManagementBytes = 8;
-    size_t size = class_getInstanceSize(classRef) + extraBytes + extraManagementBytes;
+    size_t size = OBJC_ID_PADDED(class_getInstanceSize(classRef)) + extraBytes + extraManagementBytes;
 #ifdef ZOMBIE_DEBUG_CLASS_TYPE
     if ( size - extraManagementBytes < 8 ) {
         size += 4;  //  Make room for storing old class type in NSDeallocateObject

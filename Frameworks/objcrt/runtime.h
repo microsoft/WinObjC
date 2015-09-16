@@ -81,13 +81,14 @@ struct objc_class {
 #endif
 
 enum objc_abi_class_info {
-    OBJC_CLASS_INFO_CLASS       = 0x001,
-    OBJC_CLASS_INFO_METACLASS   = 0x002,
-    OBJC_CLASS_INFO_NEW_ABI     = 0x010,
-    OBJC_CLASS_INFO_SETUP       = 0x100,
-    OBJC_CLASS_INFO_LOADED      = 0x200,
-    OBJC_CLASS_INFO_DTABLE      = 0x400,
-    OBJC_CLASS_INFO_INITIALIZED = 0x800
+    OBJC_CLASS_INFO_CLASS           = 0x001,
+    OBJC_CLASS_INFO_METACLASS       = 0x002,
+    OBJC_CLASS_INFO_NEW_ABI         = 0x010,
+    OBJC_CLASS_INFO_SETUP           = 0x100,
+    OBJC_CLASS_INFO_LOADED          = 0x200,
+    OBJC_CLASS_INFO_DTABLE          = 0x400,
+    OBJC_CLASS_INFO_INITIALIZED     = 0x800,
+    OBJC_CLASS_INFO_CREATED_RUNTIME = 0x1000
 };
 
 struct objc_object {
@@ -216,6 +217,11 @@ extern OBJCRT_EXPORT const char* objc_get_type_encoding(Class, SEL);
 extern OBJCRT_EXPORT IMP objc_msg_lookup(id, SEL);
 extern OBJCRT_EXPORT IMP objc_msg_lookup_super(struct objc_super*, SEL);
 extern OBJCRT_EXPORT int objc_getClassList(Class *classes, int maxCount);
+extern OBJCRT_EXPORT void *object_getIndexedIvars(id);
+
+extern OBJCRT_EXPORT Class objc_allocateClassPair(Class super, char *name, size_t extraBytes);
+extern OBJCRT_EXPORT void objc_registerClassPair(Class cls);
+extern OBJCRT_EXPORT BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char *types);
 
 extern const char* protocol_getName(Protocol*);
 extern BOOL protocol_isEqual(Protocol*, Protocol*);

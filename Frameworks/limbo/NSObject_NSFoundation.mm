@@ -384,7 +384,7 @@
 
     -(NSString *) description
     {
-        return NSStringFromClass([self class]);
+        return [NSString stringWithFormat:@"<%@: %p>", NSStringFromClass([self class]), self];
     }
 
     + (void)_raiseSelectorNotFoundError:(SEL)selector format: (const char *)format, ...

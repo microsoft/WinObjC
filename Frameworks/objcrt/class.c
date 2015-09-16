@@ -242,12 +242,22 @@ static void
 setup_class(Class cls)
 {
     const char *superclass;
+    Class metaclass = object_getClass((id) cls);
 
     if (cls->info & OBJC_CLASS_INFO_SETUP)
         return;
 
     if ((superclass = ((struct objc_abi_class*)cls)->superclass) != NULL) {
-        Class super = objc_classname_to_class(superclass);
+        Class super = Nil;
+        // Classes loaded from the image contain a superclass name instead of a superclass. Resolve it.
+        if ((cls->info & OBJC_CLASS_INFO_CREATED_RUNTIME) == 0)
+        {
+            super = objc_classname_to_class(superclass);
+        }
+        else
+        {
+            super = (Class) superclass;
+        }
 
         if (super == (Class) nil)
             return;
@@ -258,12 +268,12 @@ setup_class(Class cls)
             return;
 
         cls->superclass = super;
-        object_getClass((id) cls)->superclass = object_getClass((id) super);
+        metaclass->superclass = object_getClass((id) super);
 
         add_subclass(cls);
-        add_subclass(object_getClass((id) cls));
+        add_subclass(metaclass);
     } else
-        object_getClass((id) cls)->superclass = cls;
+        metaclass->superclass = cls;
 
     //  Calculate size based on ivars
     int slide = 0;
@@ -294,7 +304,8 @@ setup_class(Class cls)
     cls->instance_size += slide;
 
     cls->info |= OBJC_CLASS_INFO_SETUP;
-    object_getClass((id) cls)->info |= OBJC_CLASS_INFO_SETUP;
+    metaclass->info |= OBJC_CLASS_INFO_SETUP;
+    metaclass->instance_size = sizeof(struct objc_class);
 }
 
 static void
@@ -646,59 +657,69 @@ Method *class_copyMethodList(Class classRef, unsigned int *outCount)
     return ret;
 }
 
-IMP
-class_replaceMethod(Class cls, SEL sel, IMP newimp, const char *types)
-{
-    struct objc_method_list *ml;
-    struct objc_category **cats;
-    unsigned int i;
-    IMP oldimp;
+// INVARIANT: This must happen under lock.
+IMP _class_lookupMethodImplementation(Class cls, SEL sel, struct objc_method **outMethod) {
+	struct objc_method *method = NULL;
+	struct objc_method_list *ml;
+	struct objc_category **cats;
+	unsigned int i;
 
-    objc_global_mutex_lock();
-
-    for (ml = cls->methodlist; ml != NULL; ml = ml->next) {
-        for (i = 0; i < ml->count; i++) {
-            if (ml->methods[i].sel.uid == sel->uid) {
-                oldimp = ml->methods[i].imp;
-
-                ml->methods[i].imp = newimp;
-                objc_update_dtable(cls);
-
-                objc_global_mutex_unlock();
-
-                return oldimp;
+    for (ml = cls->methodlist; ml != NULL; ml = ml->next)
+    {
+        for (i = 0; i < ml->count; i++)
+        {
+            if (ml->methods[i].sel.uid == sel->uid)
+            {
+                method = &ml->methods[i];
+                goto out;
             }
         }
     }
 
-    if ((cats = objc_categories_for_class(cls)) != NULL) {
-        for (; *cats != NULL; cats++) {
+    if ((cats = objc_categories_for_class(cls)) != NULL)
+    {
+        for (; *cats != NULL; cats++)
+        {
             if (cls->info & OBJC_CLASS_INFO_METACLASS)
                 ml = (*cats)->class_methods;
             else
                 ml = (*cats)->instance_methods;
 
-            for (; ml != NULL; ml = ml->next) {
-                for (i = 0; i < ml->count; i++) {
+            for (; ml != NULL; ml = ml->next)
+            {
+                for (i = 0; i < ml->count; i++)
+                {
                     if (ml->methods[i].sel.uid ==
-                        sel->uid) {
-                        oldimp = ml->methods[i].imp;
-
-                        ml->methods[i].imp = newimp;
-                        objc_update_dtable(cls);
-
-                        objc_global_mutex_unlock();
-
-                        return oldimp;
+                        sel->uid)
+                    {
+                        method = &ml->methods[i];
+                        goto out;
                     }
                 }
             }
         }
     }
 
-    /* FIXME: We need a way to free this at objc_exit() */
-    if ((ml = malloc(sizeof(struct objc_method_list))) == NULL)
-        OBJC_ERROR("Not enough memory to replace method!");
+out:
+	if(method) {
+		if(outMethod) {
+			*outMethod = method;
+		}
+		return method->imp;
+	}
+
+	return (IMP)nil;
+}
+
+// Add a method to a class, unconditionally
+void
+_class_addMethod(Class cls, SEL sel, IMP newimp, const char *types)
+{
+	struct objc_method_list *ml;
+	/* FIXME: We need a way to free this at objc_exit() */
+	if((ml = malloc(sizeof(struct objc_method_list))) == NULL)
+		OBJC_ERROR("Not enough memory to add a new method!");
+    objc_global_mutex_lock();
 
     ml->next = cls->methodlist;
     ml->count = 1;
@@ -711,9 +732,39 @@ class_replaceMethod(Class cls, SEL sel, IMP newimp, const char *types)
     objc_update_dtable(cls);
 
     objc_global_mutex_unlock();
-
-    return (IMP)nil;
 }
+
+IMP
+class_replaceMethod(Class cls, SEL sel, IMP newimp, const char *types) {
+	struct objc_method *meth = NULL;
+	objc_global_mutex_lock();
+	IMP oldImp = _class_lookupMethodImplementation(cls, sel, &meth);
+	if(oldImp) {
+		meth->imp = newimp;
+		objc_global_mutex_unlock();
+		return oldImp;
+	} else {
+		_class_addMethod(cls, sel, newimp, types);
+		objc_global_mutex_unlock();
+		return (IMP)nil;
+	}
+}
+
+OBJCRT_EXPORT BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char *types)
+{
+    objc_global_mutex_lock();
+    IMP oldImp = _class_lookupMethodImplementation(cls, sel, NULL);
+    if ( oldImp )
+    {
+        objc_global_mutex_unlock();
+        return NO;
+    }
+
+    _class_addMethod(cls, sel, imp, types);
+    objc_global_mutex_unlock();
+    return YES;
+}
+
 
 static void
 free_class(Class rcls)
@@ -1002,4 +1053,44 @@ objc_enumerationMutation(id object)
 OBJCRT_EXPORT id objc_get_class(const char *cls)
 {
     return (id) objc_lookup_class(cls);
+}
+
+OBJCRT_EXPORT Class objc_allocateClassPair(Class super, const char *name, size_t extraBytes)
+{
+    // Per API contract: If the class name already exists,
+    // the runtime refuses to create a new one.
+    if (objc_classname_to_class(name) != Nil)
+    {
+        return Nil;
+    }
+    // allocate the metaclass and the class, back-to-back.
+    size_t size = sizeof(struct objc_class) +        // Metaclass
+        OBJC_ID_PADDED(sizeof(struct objc_class)) +  // Class + Alignment Padding
+        extraBytes;
+    Class newClasses = calloc(1, size);
+
+    newClasses[0].name = newClasses[1].name = _strdup(name);
+    newClasses[0].dtable = newClasses[1].dtable = empty_dtable;
+    newClasses[0].info |= OBJC_CLASS_INFO_METACLASS | OBJC_CLASS_INFO_CREATED_RUNTIME;
+    newClasses[1].info |= OBJC_CLASS_INFO_CLASS | OBJC_CLASS_INFO_CREATED_RUNTIME;
+    newClasses[1].superclass = super;
+    _object_setClass((id) &newClasses[1], &newClasses[0]);
+    return &newClasses[1];
+}
+
+OBJCRT_EXPORT void objc_registerClassPair(Class cls)
+{
+    objc_global_mutex_lock();
+    // metaclass super is set up by setup_class.
+    setup_class(cls);
+
+    objc_hashtable_set(classes, cls->name, cls);
+
+    initialize_class(cls);
+    objc_global_mutex_unlock();
+}
+
+OBJCRT_EXPORT void *object_getIndexedIvars(id obj)
+{
+    return (void *) ((uint8_t *) obj + OBJC_ID_PADDED(class_getInstanceSize(object_getClass(obj))));
 }

@@ -2,6 +2,7 @@
 
 objcrt_sanity           test_src\objcrt_sanity.m
 corefoundation          test_src\corefoundation.m
+objcrt_runtime          test_src\objcrt_runtime.mm
 foundation              test_src\foundation.m
 dispatch                test_src\dispatch.m
 NSString                test_src\NSString.m

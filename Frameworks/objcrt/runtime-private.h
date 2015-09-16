@@ -183,6 +183,9 @@ objc_sparsearray_get(const struct objc_sparsearray *s, uint32_t idx)
 #endif
 }
 
+#define OBJC_PADDED(len, align) ((size_t)((len) + (align) - 1) & ~((align) - 1))
+#define OBJC_ID_PADDED(len) OBJC_PADDED((len), sizeof(id))
+
 #ifdef DEBUG
 #define OBJC_ERROR(...)                         \
     {   \
