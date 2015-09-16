@@ -720,9 +720,8 @@ void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, flo
     ctx->Backing()->CGContextSetRGBStrokeColor(r, g, b, a);
 }
 
-DWORD CGContextShowText(CGContextRef ctx, char *str, int count)
+void CGContextShowText(CGContextRef ctx, char *str, int count)
 {
-    return (DWORD) 0;
 }
 
 CGContextRef CGContextRetain(CGContextRef ctx)
