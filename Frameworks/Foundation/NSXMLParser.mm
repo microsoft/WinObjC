@@ -207,7 +207,7 @@
         sax.cdataBlock = cdataCallback;
         sax.getEntity = entityCallback;
 
-        int ret = xmlSAXUserParseMemory(&sax, (void *) self, (const char*) _bytes, _length) == 0 ? YES : NO;
+        int ret = xmlSAXUserParseMemory(&sax, (void *) self, (const char*) _bytes, _length);
         [_emptyDictionary release];
 
         return ret == 0;
