@@ -186,13 +186,17 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
-    auto bytes = (const unsigned char*)[data bytes];
+    auto bytes = (unsigned char*)[data bytes];
+
+    if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
+        swapRows(bytes, rowSize, h);
+    }    
 
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -224,7 +228,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -250,7 +254,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
 
         NSData* data = (id)CGDataProviderCopyData(provider);
         [data autorelease];
-        auto bytes = (const unsigned char*)[data bytes];
+        auto bytes = (unsigned char*)[data bytes];
 
         size_t w = CGImageGetWidth(img);
         size_t h = CGImageGetHeight(img);
@@ -263,6 +267,10 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
             continue;
         }
 
+        if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
+            swapRows(bytes, rowSize, h);
+        }
+        
         if (!fmtInited) {
             fmtInited = true;
             sideW = w;
