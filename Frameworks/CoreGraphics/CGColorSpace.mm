@@ -80,7 +80,7 @@ CGColorSpaceRef CGColorSpaceCreateDeviceRGB()
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
-CGColorSpaceRef CGColorSpaceCreatePattern(id source)
+CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source)
 {
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
@@ -188,13 +188,13 @@ CGColorRef CGColorCreateGenericRGB(float r, float g, float b, float a)
     return ret;
 }
 
-DWORD CGColorEqualToColor(id color1, id color2)
+bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2)
 {
     float components1[4] = { 0.0f };
     float components2[4] = { 0.0f };
 
-    [color1 getColors:components1];
-    [color2 getColors:components2];
+    [(UIColor*) color1 getColors:components1];
+    [(UIColor*) color2 getColors:components2];
 
     for ( int i = 0; i < 4; i ++ ) {
         if ( components1[i] != components2[i] ) return FALSE;
@@ -223,16 +223,16 @@ size_t CGColorGetNumberOfComponents(CGColorRef color)
     return 4;
 }
 
-DWORD CGColorGetAlpha(id color)
+CGFloat CGColorGetAlpha(CGColorRef color)
 {
     float components[4];
 
-    [color getColors:components];
+    [(UIColor*) color getColors:components];
 
-    return *((DWORD *) &components[3]);
+    return (CGFloat)components[3];
 }
 
-CGColorSpaceRef CGColorGetColorSpace(id color)
+CGColorSpaceRef CGColorGetColorSpace(CGColorRef color)
 {
     return CGColorSpaceCreateDeviceRGB();
 }
