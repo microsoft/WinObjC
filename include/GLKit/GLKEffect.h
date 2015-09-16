@@ -156,5 +156,9 @@ GLKIT_EXPORT_CLASS
 
 GLKIT_EXPORT_CLASS
 @interface GLKReflectionMapEffect : GLKBaseEffect
+@property(readonly) GLKEffectPropertyTexture* textureCubeMap;
+
+-(id)init;
+-(void)prepareToDraw;
 @end
 
