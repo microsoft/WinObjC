@@ -22,7 +22,7 @@ string getTypeStr(GLKShaderVarType t)
     static const char* types[] = {
         "void",
         "sampler2D",
-        "samplerCUBE",
+        "samplerCube",
         "float",
         "vec2",
         "vec3",
