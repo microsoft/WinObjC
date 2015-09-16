@@ -190,6 +190,15 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+class ShaderReflNode : public ShaderNode {
+    ShaderNode* norm;
+    ShaderNode* src;
+public:
+    inline ShaderReflNode(ShaderNode* norm, ShaderNode* src) : norm(norm), src(src) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
 class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* normal;
