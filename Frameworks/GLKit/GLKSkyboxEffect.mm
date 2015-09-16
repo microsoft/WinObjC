@@ -32,13 +32,13 @@ struct SkyboxVert {
 const string skyboxTexName = "_tex0";
 
 const char* vsSrc =
- "attribute mat4 _mvp;\n"
+ "uniform mat4 _mvp;\n"
  "attribute vec4 _position;\n"
  "attribute vec3 _normal;\n"
  "varying vec3 _lookup;\n"
  "\n"
  "void main() {\n"
- "    gl_Position = _position;\n"
+ "    gl_Position = _mvp * _position;\n"
  "    _lookup = _normal;\n"
  "}\n\n";
 
@@ -123,6 +123,7 @@ const char* psSrc =
     
     [super prepareToDraw];
 
+    // TODO: this will cause a single frame without the skybox when the material is reset.
     ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
     mat->addtexcube(skyboxTexName, _textureCubeMap.name);
 }
