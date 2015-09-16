@@ -85,8 +85,8 @@ main(int argc __attribute__((unused)), char* argv[] __attribute__((unused)))
 		printf("%4d: jitter %f, drift %f\n", count, jitter, drift);
 		
 		if (count >= target) {
-            /* In WINOBJC, our timers are currently based upon 1ms resolution. */
-			test_double_less_than("average jitter", fabs(jittersum) / (double)count, 0.001);
+            /* In WINOBJC, our timers are currently based upon 10ms resolution. */
+			test_double_less_than("average jitter", fabs(jittersum) / (double)count, 0.01);
 			test_double_less_than("average drift", fabs(driftsum) / (double)count, 0.0001);
 			test_stop();
 		}
