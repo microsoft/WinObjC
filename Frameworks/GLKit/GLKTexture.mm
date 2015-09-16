@@ -184,6 +184,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         return nil;
     }
     
+    provider = CGImageGetDataProvider(img);
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
     auto bytes = (unsigned char*)[data bytes];
@@ -252,6 +253,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
             continue;
         }
 
+        provider = CGImageGetDataProvider(img);
         NSData* data = (id)CGDataProviderCopyData(provider);
         [data autorelease];
         auto bytes = (unsigned char*)[data bytes];
