@@ -44,10 +44,10 @@ const char* vsSrc =
 
 const char* psSrc =
  "uniform samplerCube _tex0;\n"
- "varying mediump vec3 _normal;\n"
+ "varying mediump vec3 _lookup;\n"
  "\n"
  "void main() {\n"
- "    gl_FragColor = textureCube(_tex, _normal);\n"
+ "    gl_FragColor = textureCube(_tex0, _lookup);\n"
  "}\n\n";
 
 @implementation GLKSkyboxEffect {
