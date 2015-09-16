@@ -305,7 +305,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 string ShaderCubeRef::genTexLookup(string texVar, string uv)
 {
-    return "textureCube(" + texVar + ", vec3(" + uv + "))";
+    return "textureCube(" + texVar + ", -vec3(" + uv + "))";
 }
 
 bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
@@ -415,6 +415,15 @@ bool ShaderAttenuator::generate(string& out, ShaderContext& c, ShaderLayout& v)
                   "}\n");
 
     out = "performAttenuation(" + lightStr + ", " + attenStr + ")";
+    return true;
+}
+
+bool ShaderReflNode::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string normStr, srcStr;
+    if (!norm->generate(normStr, c, v) || !src->generate(srcStr, c, v)) return false;
+
+    out = "normalize(reflect(" + srcStr + ", " + normStr + "))";
     return true;
 }
 

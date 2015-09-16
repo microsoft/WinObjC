@@ -92,7 +92,8 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
     return new ShaderOp(
                specularRef,
                new ShaderOp(
-                   new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE, new ShaderVarRef("_vertNorm"),
+                   new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
+                       new ShaderReflNode(new ShaderVarRef("_vertNorm"), new ShaderVarRef(GLKSH_CAMERA)),
                        new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
                            new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), colorRef))),
                    lightRef, "*", true),

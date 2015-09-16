@@ -71,10 +71,19 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(void)prepareToDraw
 {
-    // This can include the shader name, for example.
-    [self updateShaderMaterialParams];
+    BOOL success = FALSE;
+
+    _cameraRequired = FALSE;
+    _modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
+    
+    if (![self updateShaderMaterialParams]) return;
+    if (_cameraRequired) {
+        auto res = GLKMatrix4MultiplyVector3WithTranslation(_modelRefTrans, GLKVector3Make(0, 0, 0));
+        _mat.addvar(GLKSH_CAMERA, res);
+        self.effectChanged = TRUE;
+    }
     if (![self prepareShaders]) return;
-        
+    
     glUseProgram(_shader.program);
 
     // Projection matrix.
@@ -140,7 +149,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     BOOL            _useConstantColor;
     BOOL            _lightingEnabled;
     GLKLightingType _lightingType;
-    BOOL            _cameraRequired;
 }
 
 -(id)init {
@@ -226,7 +234,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [super updateShaderMaterialParams];
     
     // TODO: don't duplicate code setting light/camera positions.
-    BOOL success = FALSE;
     bool pp = (_lightingType == GLKLightingTypePerPixel);
     
     // Assemble material, calculate name.
@@ -234,10 +241,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;
     
     if (!self.trackEffectChanges || self.effectChanged) {
-        _cameraRequired = false;
 
-        auto modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
-        
         string shaderName = GLKSH_STANDARD_SHADER "_";
         shaderName += pp ? "PL_" : "VL_";   // TODO: don't need this if unlit.
         m->reset();
@@ -309,12 +313,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                     char ltype = 'L';
                     if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
                         m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
-                        m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(modelRefTrans, l.position));
+                        m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
                         m->addvar(lightVarNames[lightNum].atten, l.attenuation);
                         if (shininess > 0.f) {
                             GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
                             if (!GLKVector4XYZEqualToScalar(spec, 0.f)) {
-                                _cameraRequired = true;
+                                self.cameraRequired = true;
                                 ltype = 'S';
                                 spec.w = shininess;
                                 m->addvar(lightVarNames[lightNum].specular, spec);
@@ -355,11 +359,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             shaderName += "UUUnn";
         }
 
-        if (_cameraRequired) {
-            auto res = GLKMatrix4MultiplyVector3WithTranslation(modelRefTrans, GLKVector3Make(0, 0, 0));
-            m->addvar(GLKSH_CAMERA, res);
-        }
-
         // Save final shader name.
         NSString* s = [NSString stringWithCString: shaderName.c_str()];
         if (![s isEqualToString: self.shaderName]) {
@@ -367,7 +366,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             self.shaderName = s;
         }
     } else {
-        auto modelRefTrans = GLKMatrix4Invert(self.transform.modelviewMatrix, &success);
         if (self.lightingEnabled) {
             // TODO: sort lights so we don't get shader permutations such as LUL which is the same
             // as ULL and LLU.
@@ -375,19 +373,13 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             for(GLKEffectPropertyLight* l in _lights) {
                 if(l.enabled) {
                     if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
-                        m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(modelRefTrans, l.position));
+                        m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
                         self.effectChanged = TRUE;
                     }
                 }
                 lightNum ++;
                 if (lightNum >= MAX_LIGHTS) break;
             }
-        }
-        
-        if (_cameraRequired) {
-            auto res = GLKMatrix4MultiplyVector3WithTranslation(modelRefTrans, GLKVector3Make(0, 0, 0));
-            m->addvar(GLKSH_CAMERA, res);
-            self.effectChanged = TRUE;
         }
     }
 
@@ -596,6 +588,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
             mat->addtexcube(GLKSH_TEXCUBE, _textureCubeMap.name);
             mat->addivar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
+            self.cameraRequired = TRUE;
         }
     }
 
