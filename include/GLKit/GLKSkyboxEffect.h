@@ -34,4 +34,5 @@ GLKIT_EXPORT_CLASS
 -(void)prepareToDraw;
 -(void)draw;
 
+-(BOOL)updateShaderMaterialParams;
 @end

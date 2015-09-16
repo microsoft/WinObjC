@@ -123,6 +123,10 @@ GLKIT_EXPORT_CLASS
 -(id)init;
 -(void)prepareToDraw;
 
+
+-(BOOL)updateShaderMaterialParams;  // Used by subclasses to update all the required shader material parameters.
+-(BOOL)prepareShaders;              // Make sure shaders are ready to run.  Called after updateShaderMaterialParams.
+
 @end
 
 GLKIT_EXPORT_CLASS
@@ -149,7 +153,9 @@ GLKIT_EXPORT_CLASS
 @property(assign) GLKVector4 constantColor;
 
 -(id)init;
--(void)prepareToDraw;
+
+-(BOOL)updateShaderMaterialParams;
+-(BOOL)prepareShaders;
 @end
 
 // ----------------------------------------
@@ -157,8 +163,10 @@ GLKIT_EXPORT_CLASS
 GLKIT_EXPORT_CLASS
 @interface GLKReflectionMapEffect : GLKBaseEffect
 @property(readonly) GLKEffectPropertyTexture* textureCubeMap;
+@property(assign) GLKMatrix3 matrix;
 
 -(id)init;
--(void)prepareToDraw;
+
+-(BOOL)updateShaderMaterialParams;
 @end
 
