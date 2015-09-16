@@ -129,6 +129,8 @@ const char* psSrc =
 }
 
 -(void)draw {
+    glDisable(GL_DEPTH_TEST);
+
     glBindBuffer(GL_ARRAY_BUFFER, _vb);
     glEnableVertexAttribArray(GLKVertexAttribPosition);        
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), 0);
