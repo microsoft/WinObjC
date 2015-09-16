@@ -173,7 +173,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
             VarInfo& vd = vp.second;
             if (vd.used) {
                 string res = vd.intermediate ? "varying " : "uniform ";
-                if (!vd.isTexture()) res += "lowp ";
+                if (!vd.isTexture()) res += "highp ";
                 res += vd.vtype() + " " + vp.first + ";\n";
                 pixvars += res;
             }
