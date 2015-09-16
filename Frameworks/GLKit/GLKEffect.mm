@@ -590,7 +590,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 -(BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 
-    // TODO: BK: code goes here!
+    if (_textureCubeMap.enabled) {
+        GLuint name = _textureCubeMap.name;
+        if (name > 0) {
+            ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
+            mat->addtexcube(GLKSH_TEXCUBE, _textureCubeMap.name);
+            mat->addivar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
+        }
+    }
+
+    return TRUE;
 }
 
 @end

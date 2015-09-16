@@ -92,8 +92,9 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
     return new ShaderOp(
                specularRef,
                new ShaderOp(
-                   new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
-                       new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), colorRef)),
+                   new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE, new ShaderVarRef("_vertNorm"),
+                       new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
+                           new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), colorRef))),
                    lightRef, "*", true),
                "+", true);
 }
@@ -144,6 +145,7 @@ ShaderDef standardVsh{
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
     {"_texCoord0",  new ShaderVarRef(GLKSH_UV0_NAME) },
     {"_texCoord1",  new ShaderVarRef(GLKSH_UV1_NAME) },
+    {"_vertNorm",   new ShaderVarRef(GLKSH_NORMAL_NAME) },
     {"_lighting",   new ShaderOp(new ShaderVarRef("_ambient"), diffuseLighter, "+", true) },
     {"_specular",   specularLighter }
 };

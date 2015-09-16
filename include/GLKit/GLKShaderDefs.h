@@ -39,6 +39,8 @@
 #define GLKSH_TEX0_MODE         "_tex0mode"
 #define GLKSH_TEX1_NAME         "_tex1"
 #define GLKSH_TEX1_MODE         "_tex1mode"
+#define GLKSH_TEXCUBE           "_texcube"
+#define GLKSH_TEXCUBE_MODE      "_texcubemode"
 
 #define GLKSH_CAMERA            "_camera"
 

@@ -111,11 +111,23 @@ class ShaderTexRef : public ShaderNode {
     ShaderNode* uvRef;
     ShaderNode* nextRef;
 
+protected:
+    virtual string genTexLookup(string texVar, string uv);
+
 public:
     ShaderTexRef(const string& tex, const string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
         texVar(tex), modeVar(mode), uvRef(uvRef), nextRef(nextRef) {}
     
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderCubeRef : public ShaderTexRef {
+protected:
+    virtual string genTexLookup(string texVar, string uv) override;
+
+public:
+    ShaderCubeRef(const string& tex, const string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
+        ShaderTexRef(tex, mode, uvRef, nextRef) {}
 };
 
 class ShaderSpecularTex : public ShaderNode {

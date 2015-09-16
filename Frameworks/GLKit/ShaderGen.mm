@@ -255,6 +255,11 @@ bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
+string ShaderTexRef::genTexLookup(string texVar, string uv)
+{
+    return "texture2D(" + texVar + ", vec2(" + uv + "))";
+}
+
 bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     GLKTextureEnvMode mode = c.getIVar(modeVar, GLKTextureEnvModeDecal);
@@ -268,7 +273,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     }
 
     // Do our texture lookup.
-    out = "texture2D(" + texVar + ", vec2(" + uv + "))";
+    out = genTexLookup(texVar, uv);
     if (mode == GLKTextureEnvModeReplace) return true;
 
     // Build result with next string.
@@ -296,6 +301,11 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
         }
     }
     return true;
+}
+
+string ShaderCubeRef::genTexLookup(string texVar, string uv)
+{
+    return "textureCube(" + texVar + ", vec3(" + uv + "))";
 }
 
 bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
