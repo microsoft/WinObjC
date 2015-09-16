@@ -553,4 +553,15 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 // --------------------------------------------------------------------------------
 
 @implementation GLKReflectionMapEffect
+
+-(id)init {
+    [super init];
+    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith: self];
+    return self;
+}
+
+-(void)prepareToDraw {
+    [super prepareToDraw];
+}
+
 @end
