@@ -199,6 +199,17 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+class ShaderCustom : public ShaderNode {
+    string before, after;
+    ShaderNode* inner;
+    bool useInner;
+public:
+    inline ShaderCustom(const string& before, const string& after, ShaderNode* inner, bool useInner = true) :
+        before(before), after(after), inner(inner), useInner(useInner) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
 class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* normal;

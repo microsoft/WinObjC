@@ -427,6 +427,19 @@ bool ShaderReflNode::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
+
+bool ShaderCustom::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (!useInner) {
+        out = before + after;
+    } else {
+        string innerStr;
+        if (!inner->generate(innerStr, c, v)) return false;
+        out = before + innerStr + after;
+    }
+    return true;
+}
+
 bool ShaderLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     string ldStr, normStr, clrStr, attenStr;

@@ -101,12 +101,13 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
 }
 
 auto diffuseLighter =
-    new ShaderOp(
-        new ShaderAdditiveCombiner({
-            mkLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_NORMAL_NAME)}),
-      new ShaderVarRef(GLKSH_EMISSIVE), "max", false);
+    new ShaderCustom("", "", 
+        new ShaderOp(
+            new ShaderAdditiveCombiner({
+                mkLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_NORMAL_NAME),
+                mkLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_NORMAL_NAME),
+                mkLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_NORMAL_NAME)}),
+            new ShaderVarRef(GLKSH_EMISSIVE), "max", false));
 
 auto specularLighter =
     new ShaderAdditiveCombiner({

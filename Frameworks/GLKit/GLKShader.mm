@@ -99,6 +99,14 @@ static GLKShaderCache* imp = nil;
     glBindAttribLocation(program, GLKVertexAttribTexCoord1, GLKSH_UV1_NAME);
 
     glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &compileStatus);
+    if (!compileStatus) {
+        GLsizei len = 0;
+        char buf[1024];
+        glGetProgramInfoLog(program, sizeof(buf), &len, buf);
+        NSLog(@"Shader Link failure: %s", buf);
+        return nil;
+    }
 
     // Final object.
     s = [[GLKShader alloc] initWith: program];
