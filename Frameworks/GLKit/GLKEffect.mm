@@ -57,7 +57,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 -(void)prepareToDraw
 {
     _shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
-    if (_shader != nil) glUseProgram(_shader.program);
+    if (_shader == nil) {
+        NSLog(@"Unable to find shader named %s, cannot setup for draw call!", self.shaderName);
+        return;
+    }
+    
+    glUseProgram(_shader.program);
 
     // Projection matrix.
     GLKMatrix4 mvp = self.transform.mvp;
@@ -69,7 +74,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (!_trackEffectChanges || _effectChanged) {
         _effectChanged = FALSE;
 
-        ShaderLayout* l = (ShaderLayout*)self.shader.layout;
+        ShaderLayout* l = (ShaderLayout*)_shader.layout;
         for(const auto& v : l->vars) {
             if (v.second.vertexAttr) continue;
             auto mv = _mat.find(v.first);
