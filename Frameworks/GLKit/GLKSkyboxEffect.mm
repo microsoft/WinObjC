@@ -121,11 +121,10 @@ const char* psSrc =
         [[GLKShaderCache get] addShaderNamed: self.shaderName source: src];
     }
     
-    ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
-    mat->reset();
-    mat->addtexcube(skyboxTexName, _textureCubeMap.name);
-        
     [super prepareToDraw];
+
+    ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
+    mat->addtexcube(skyboxTexName, _textureCubeMap.name);
 }
 
 -(void)draw {
@@ -135,6 +134,11 @@ const char* psSrc =
     glEnableVertexAttribArray(GLKVertexAttribNormal);
     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), (const GLvoid*)(3 * sizeof(float)));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ib);
+
+    glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_SHORT, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 @end

@@ -58,7 +58,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 {
     _shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
     if (_shader == nil) {
-        NSLog(@"Unable to find shader named %s, cannot setup for draw call!", self.shaderName);
+        NSLog(@"Unable to find shader named %@, cannot setup for draw call!", self.shaderName);
         return;
     }
     

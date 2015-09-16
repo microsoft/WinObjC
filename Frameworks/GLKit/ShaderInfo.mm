@@ -60,7 +60,6 @@ void ShaderMaterial::addvar(const string& var, GLKShaderVarType type, float* dat
 
 void ShaderMaterial::addtex(const string& var, GLuint name, GLKShaderVarType type)
 {
-    assert(vars.find(var) == vars.end());
     assert(type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
 
     VarInfo v;
