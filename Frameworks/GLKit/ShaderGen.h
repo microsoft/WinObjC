@@ -80,6 +80,7 @@ public:
     inline GLKShaderVarType getType() const { return type; }
 };
 
+// Use a variable if present.
 class ShaderVarRef : public ShaderNode {
     string name;
     string constantResult;
@@ -89,6 +90,7 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Use the first variable that's present, or a constant if none, or nothing if there's no constant.
 class ShaderFallbackRef : public ShaderNode {
     string first;
     string second;
@@ -100,11 +102,13 @@ public:
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Use the position variable, applying the mvp matrix.
 struct ShaderPosRef : public ShaderNode {
     inline ShaderPosRef() {}
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Texture lookup node.
 class ShaderTexRef : public ShaderNode {
     string texVar;
     string modeVar;
@@ -112,21 +116,27 @@ class ShaderTexRef : public ShaderNode {
     ShaderNode* nextRef;
 
 protected:
-    virtual string genTexLookup(string texVar, string uv);
+    virtual string genTexLookup(string texVar, string uv, ShaderContext& c, ShaderLayout& v);
 
 public:
     ShaderTexRef(const string& tex, const string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
         texVar(tex), modeVar(mode), uvRef(uvRef), nextRef(nextRef) {}
-    
+    ShaderTexRef(const string& tex, ShaderNode* uvRef) :
+        texVar(tex), modeVar(""), uvRef(uvRef), nextRef(nullptr) {}
+
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Cube map lookup node.
 class ShaderCubeRef : public ShaderTexRef {
+    ShaderNode* reflAlphaNode;
+
 protected:
-    virtual string genTexLookup(string texVar, string uv) override;
+    virtual string genTexLookup(string texVar, string uv, ShaderContext& c, ShaderLayout& v) override;
 
 public:
-    ShaderCubeRef(const string& tex, const string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
+    ShaderCubeRef(const string& tex, const string& mode, ShaderNode* reflAlphaNode, ShaderNode* uvRef, ShaderNode* nextRef) :
+        reflAlphaNode(reflAlphaNode),
         ShaderTexRef(tex, mode, uvRef, nextRef) {}
 };
 

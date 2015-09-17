@@ -95,6 +95,8 @@ GLKIT_EXPORT_CLASS
 @property (assign)GLKVector4 emissiveColor;
 @property (assign)GLuint emissiveTex;
 @property (assign)GLuint specularTex;
+@property (assign)float reflectionBlendAlpha;
+@property (assign)GLuint reflectionBlendTex;
 @property float shininess;
 
 @end

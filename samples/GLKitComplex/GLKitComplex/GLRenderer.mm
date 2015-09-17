@@ -33,22 +33,34 @@ static void dumpMat(const GLKMatrix4& mat)
 }
 
 @implementation GLRenderer {
-    GLKBaseEffect*      _effect;
-    float               _cubeAngle;
-    Mesh*               _mesh;
+    GLKReflectionMapEffect* _effect;
+    float                   _cubeAngle;
+    Mesh*                   _mesh;
 
-    GLKTextureInfo*     _tex1;
-    GLKTextureInfo*     _tex2;
-    GLKTextureInfo*     _emissive;
-    GLKTextureInfo*     _specular;
+    GLKTextureInfo*         _tex1;
+    GLKTextureInfo*         _tex2;
+    GLKTextureInfo*         _emissive;
+    GLKTextureInfo*         _specular;
 
-    GLKSkyboxEffect*    _skybox;
-    GLKTextureInfo*     _skyboxTex;
-    bool                _skyboxXformInited;
+    GLKSkyboxEffect*        _skybox;
+    GLKTextureInfo*         _skyboxTex;
+    bool                    _skyboxXformInited;
+}
+
+-(void)reflBlendOn {
+    _effect.material.reflectionBlendAlpha = 0.6f;
+    if (_specular) {
+        _effect.material.reflectionBlendTex = _specular.name;
+    }
+}
+
+-(void)reflBlendOff {
+    _effect.material.reflectionBlendAlpha = 1.f;
+    _effect.material.reflectionBlendTex = 0;
 }
 
 -(void)initGLData {
-    _effect = [[GLKBaseEffect alloc] init];    
+    _effect = [[GLKReflectionMapEffect alloc] init];    
     _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
     _effect.colorMaterialEnabled = TRUE; // use vertex colors.
     _cubeAngle = 0.f;
@@ -79,7 +91,8 @@ static void dumpMat(const GLKMatrix4& mat)
         NSLog(@"Unable to create OpenGL buffer objects for mesh!");
     }
 
-    // Load the mesh's texture.
+    // Load the various textures.
+    NSDictionary* alphaTexOpts = @{ GLKTextureLoaderGrayscaleAsAlpha : @1 };
     UIImage* img = [UIImage imageNamed: @"seafloor.png"];
     if (img) {
         _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
@@ -95,7 +108,7 @@ static void dumpMat(const GLKMatrix4& mat)
     img = [UIImage imageNamed: @"teapot_emissive.png"];
     if (img) _emissive = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
     img = [UIImage imageNamed: @"teapot_specular.png"];
-    //if (img) _specular = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+    if (img) _specular = [GLKTextureLoader textureWithCGImage: img.CGImage options: alphaTexOpts error: NULL];
 
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
@@ -103,7 +116,7 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.light0.position = GLKVector4Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.9f, _mesh->getRadius() * 0.6f, 0.f);
     _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
-    _effect.light0.linearAttenuation = 1.f / _mesh->getRadius();
+    _effect.light0.linearAttenuation = 2.f / _mesh->getRadius();
 
     // Set up skybox.
     auto files = @[ @"lobbyxneg.JPG", @"lobbyxpos.JPG",
@@ -114,6 +127,10 @@ static void dumpMat(const GLKMatrix4& mat)
     _skybox.textureCubeMap.name = _skyboxTex.name;
     _skybox.textureCubeMap.enabled = TRUE;
 
+    _effect.textureCubeMap.name = _skyboxTex.name;
+    _effect.textureCubeMap.envMode = GLKTextureEnvModeDecal;
+    _effect.textureCubeMap.enabled = FALSE;
+    
     // Set up draw mode.
     _mode = DM_LitSolidColor;
 }
@@ -180,6 +197,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.shininess = 0.f;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -187,6 +205,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
 
     case DM_PixSolidColor:
@@ -194,6 +213,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.shininess = 0.f;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -201,13 +221,31 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
 
+    case DM_ReflSpecular:
+        _effect.lightingType = GLKLightingTypePerPixel;
+        _effect.material.shininess = MAT_SHININESS;
+        _effect.texture2d0.enabled = TRUE;
+        _effect.texture2d1.enabled = TRUE;
+        _effect.textureCubeMap.enabled = TRUE;
+        _effect.useConstantColor = FALSE;
+        _effect.light0.enabled = TRUE;
+        _effect.lightingEnabled = TRUE;
+        _effect.material.ambientColor = AMBIENT_COLOR;
+        _effect.colorMaterialEnabled = FALSE;
+        _effect.material.emissiveTex = 0;
+        _effect.material.specularTex = 0;
+        [self reflBlendOff];
+        break;
+        
     case DM_LitTextured:
         _effect.lightingType = GLKLightingTypePerVertex;
         _effect.material.shininess = MAT_SHININESS;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -215,6 +253,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
 
     case DM_PixelLitTextured:
@@ -222,6 +261,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.material.shininess = MAT_SHININESS;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
+        _effect.textureCubeMap.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.lightingEnabled = TRUE;
@@ -229,12 +269,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = TRUE;
         if (_emissive) _effect.material.emissiveTex = _emissive.name;
         if (_specular) _effect.material.specularTex = _specular.name;
+        [self reflBlendOn];
         break;
         
     case DM_VertexColor:
         _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
@@ -242,12 +284,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
           
     case DM_SolidColor:
         _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = FALSE;
         _effect.texture2d1.enabled = FALSE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
@@ -255,12 +299,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
           
     case DM_TexturedVertexColor:
         _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = FALSE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;        
         _effect.lightingEnabled = FALSE;
@@ -268,12 +314,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = TRUE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
           
     case DM_TexturedSolidColor:
         _effect.lightingType = GLKLightingTypePerVertex;
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
+        _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
         _effect.lightingEnabled = FALSE;
@@ -281,6 +329,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.colorMaterialEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
+        [self reflBlendOff];
         break;
     };
 }

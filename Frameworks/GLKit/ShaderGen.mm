@@ -255,7 +255,7 @@ bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
-string ShaderTexRef::genTexLookup(string texVar, string uv)
+string ShaderTexRef::genTexLookup(string texVar, string uv, ShaderContext& c, ShaderLayout& v)
 {
     return "texture2D(" + texVar + ", vec2(" + uv + "))";
 }
@@ -273,7 +273,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     }
 
     // Do our texture lookup.
-    out = genTexLookup(texVar, uv);
+    out = genTexLookup(texVar, uv, c, v);
     if (mode == GLKTextureEnvModeReplace) return true;
 
     // Build result with next string.
@@ -303,9 +303,17 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     return true;
 }
 
-string ShaderCubeRef::genTexLookup(string texVar, string uv)
+string ShaderCubeRef::genTexLookup(string texVar, string uv, ShaderContext& c, ShaderLayout& v)
 {
-    return "textureCube(" + texVar + ", -vec3(" + uv + "))";
+    string modulus;
+    string texLookup = "textureCube(" + texVar + ", -vec3(" + uv + "))";
+    
+    if (!reflAlphaNode || !reflAlphaNode->generate(modulus, c, v)) return texLookup;
+
+    if (reflAlphaNode->getType() == GLKS_FLOAT) {
+        return "(" + modulus + " * " + texLookup + ")";
+    }
+    return "(" + modulus + ".a * " + texLookup + ")";
 }
 
 bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
@@ -319,7 +327,7 @@ bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
     // Do our texture lookup.
     string texVarTmp = texVar + "_specTmp";
-    string texMod = "texture2D(" + texVar + ", vec2(" + uv + ")).r"; // TODO: parameterize for alpha vs rgb.
+    string texMod = "texture2D(" + texVar + ", vec2(" + uv + ")).a"; // TODO: parameterize this & refl tex for alpha vs rgb.
     c.addTempVal(GLKS_FLOAT, texVarTmp, texMod);
 
     out = "vec4(" + texVarTmp + " * " + out + ".rgb, max(1.0, " + texVarTmp + " * " + out + ".a))"; // shininess stored in .a of input.

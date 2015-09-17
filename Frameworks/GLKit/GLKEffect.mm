@@ -242,6 +242,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     
     if (!self.trackEffectChanges || self.effectChanged) {
 
+        auto matProps = self.material;
         string shaderName = GLKSH_STANDARD_SHADER "_";
         shaderName += pp ? "PL_" : "VL_";   // TODO: don't need this if unlit.
         m->reset();
@@ -256,9 +257,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         } else if (self.useConstantColor) {
             shaderName += 'C';
             m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
-        } else if(!GLKVector4XYZEqualToScalar(self.material.diffuseColor, 0.f)) {
+        } else if(!GLKVector4XYZEqualToScalar(matProps.diffuseColor, 0.f)) {
             shaderName += 'C';
-            m->addvar(GLKSH_CONSTCOLOR_NAME, self.material.diffuseColor);
+            m->addvar(GLKSH_CONSTCOLOR_NAME, matProps.diffuseColor);
         } else {
             shaderName += 'N';
         }
@@ -295,19 +296,20 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         int numEnabled = 0;
         int lightNum = 0;
         GLKVector4 ambient = GLKVector4Make(0, 0, 0, 0);
-        float shininess = self.material.shininess;
+        float shininess = matProps.shininess;
         char specType = 's';
-        GLuint specTex = self.material.specularTex;
+        GLuint specTex = matProps.specularTex;
         if (shininess > 0 && specTex > 0 && pp) {
             specType = 'S';
             m->addtex(GLKSH_SPECULAR_TEX, specTex);
         }
-        GLKVector4 specBase = self.material.specularColor;
+        GLKVector4 specBase = matProps.specularColor;
         if (GLKVector4XYZEqualToScalar(specBase, 0.f)) shininess = 0.f;
+
         if (self.lightingEnabled) {
             // TODO: sort lights so we don't get shader permutations such as LUL which is the same
             // as ULL and LLU.
-            ambient = GLKVector4Add(ambient, self.material.ambientColor);
+            ambient = GLKVector4Add(ambient, matProps.ambientColor);
             for(GLKEffectPropertyLight* l in _lights) {
                 if(l.enabled) {
                     char ltype = 'L';
@@ -342,12 +344,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 shaderName += 'n';
             }
 
-            GLuint emissiveTex = self.material.emissiveTex;
+            GLuint emissiveTex = matProps.emissiveTex;
             if (emissiveTex && pp) {
                 shaderName += 'E';
                 m->addtex(GLKSH_EMISSIVE_TEX, emissiveTex);
             } else {
-                GLKVector4 emissive = self.material.emissiveColor;
+                GLKVector4 emissive = matProps.emissiveColor;
                 if (!GLKVector4XYZEqualToScalar(emissive, 0.f)) {
                     shaderName += 'e';
                     m->addvar(GLKSH_EMISSIVE, emissive);
@@ -530,6 +532,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     self.specularColor = GLKVector4Black();
     self.emissiveColor = GLKVector4Black();
     self.shininess = 0.f;
+    self.reflectionBlendAlpha = 1.f;
 
     return self;
 }
@@ -583,13 +586,19 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [super updateShaderMaterialParams];
 
     if (_textureCubeMap.enabled) {
+        ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
         GLuint name = _textureCubeMap.name;
         if (name > 0) {
-            ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
             mat->addtexcube(GLKSH_TEXCUBE, _textureCubeMap.name);
             mat->addivar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
             self.cameraRequired = TRUE;
         }
+
+        auto matProps = self.material;
+        float reflAlpha = matProps.reflectionBlendAlpha;
+        if (reflAlpha != 1.f) mat->addvar(GLKSH_REFL_ALPHA, reflAlpha);
+        GLuint reflTex = matProps.reflectionBlendTex;
+        if (reflTex > 0) mat->addtex(GLKSH_REFL_TEX, reflTex);        
     }
 
     return TRUE;

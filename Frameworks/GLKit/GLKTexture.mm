@@ -136,10 +136,10 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     CGDataProviderRef provider = CGImageGetDataProvider(img);
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
-    auto bytes = (unsigned char*)[data bytes];
+    auto bytesIn = (unsigned char*)[data bytes];
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
-        swapRows(bytes, rowSize, h);
+        swapRows(bytesIn, rowSize, h);
     }
     
     GLuint tex;
@@ -152,6 +152,50 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     GLKTextureInfoAlphaState as;
     if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
 
+    auto bytes = bytesIn;
+    bool deleteBytes = false;
+    if (getOpt(opts, GLKTextureLoaderGrayscaleAsAlpha) && fmt != GL_ALPHA) {
+        deleteBytes = true;
+        int pixels = w * h;
+        bytes = new unsigned char[pixels];
+        switch(bpp)  {
+            case 16: {
+                for(int i = 0; i < pixels; i ++) {
+                    unsigned short val = *reinterpret_cast<unsigned short*>(bytesIn + 2 * i);
+                    float r = static_cast<float>(val >> 11) / 31.f;
+                    float g = static_cast<float>((val >> 5) & 0x3F) / 63.f;
+                    float b = static_cast<float>(val & 0x1F) / 31.f;
+                    bytes[i] = static_cast<unsigned char>((r * 0.6f + g * 0.3f + b * 0.1f) * 255.f);
+                }
+                break;
+            }
+          
+            case 24: {
+                for(int i = 0; i < pixels; i ++) {
+                    float r = static_cast<float>(bytesIn[3 * i]);
+                    float g = static_cast<float>(bytesIn[3 * i + 1]);
+                    float b = static_cast<float>(bytesIn[3 * i + 2]);
+                    bytes[i] = static_cast<unsigned char>(r * 0.6f + g * 0.3f + b * 0.1f);
+                }
+                break;
+            }
+          
+            case 32: {
+                for(int i = 0; i < pixels; i ++) {
+                    float r = static_cast<float>(bytesIn[4 * i]);
+                    float g = static_cast<float>(bytesIn[4 * i + 1]);
+                    float b = static_cast<float>(bytesIn[4 * i + 2]);
+                    bytes[i] = static_cast<unsigned char>(r * 0.6f + g * 0.3f + b * 0.1f);
+                }
+                break;
+            }
+        }
+
+        bpp = 8;
+        fmt = GL_ALPHA;
+        bpp = 1;
+    }
+    
     NSLog(@"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
 
     glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, type, bytes);
@@ -160,6 +204,8 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         NSLog(@"Error %d creating texture.", i);
     }
 
+    if (deleteBytes) delete [] bytes;
+    
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
 }
 
