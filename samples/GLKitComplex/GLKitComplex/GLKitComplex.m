@@ -49,8 +49,8 @@
 
     _mainWindow.rootViewController = ctl;
 
-    bounds.origin.y = bounds.size.height - 100.f;
-    bounds.size.height = 100.f;
+    bounds.origin.y = bounds.size.height - 180.f;
+    bounds.size.height = 180.f;
 
     _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
     [_welcomeLabel setBackgroundColor: nil];
@@ -73,8 +73,9 @@
     static NSString* modeDescriptions[]={
         @"Vertex Lit, Solid Color, Untextured",
         @"Pixel Lit, Solid Color, Untextured",
+        @"Reflection Map with Specularity",
         @"Vertex Lit, Specularity, Vertex Colors, Textured w/ Decal",
-        @"Per-pixel Diffuse & Specular lighting, Vertex Colors, Textured w/ Decal",
+        @"Per-pixel Diffuse & Specular lighting, Vertex Colors, Textured w/ Decal and Environment Map",
         @"Vertex Colors, Untextured",
         @"Solid Color, Untextured",
         @"Vertex Colors, Textured",

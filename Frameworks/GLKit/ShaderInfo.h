@@ -66,10 +66,10 @@ struct ShaderLayout {
         vars[var] = v;
     }
 
-    inline void defvattr(const string& var) { defvar(var, GLKS_FLOAT4, -1, true); }
-    inline void defvattr3(const string& var) { defvar(var, GLKS_FLOAT3, -1, true); }
-    inline void defvattr2(const string& var) { defvar(var, GLKS_FLOAT2, -1, true); }
-    inline void defmat(const string& var) { defvar(var, GLKS_MAT4, -1, false); }    
+    inline void defvattr(const string& var)                         { defvar(var, GLKS_FLOAT4, -1, true); }
+    inline void defvattr3(const string& var)                        { defvar(var, GLKS_FLOAT3, -1, true); }
+    inline void defvattr2(const string& var)                        { defvar(var, GLKS_FLOAT2, -1, true); }
+    inline void defmat(const string& var)                           { defvar(var, GLKS_MAT4, -1, false); }    
 };
 
 struct ShaderMaterial : public ShaderLayout {
@@ -77,14 +77,15 @@ struct ShaderMaterial : public ShaderLayout {
     map<string, unsigned int> ivars;
 
     void addvar(const string& var, GLKShaderVarType type, float* data);
-    inline void addvar(const string& var, const GLKVector4& vec) { addvar(var, GLKS_FLOAT4, (float*)&vec); }
-    inline void addvar(const string& var, const GLKVector3& vec) { addvar(var, GLKS_FLOAT3, (float*)&vec); }
-    inline void addvar(const string& var, const GLKVector2& vec) { addvar(var, GLKS_FLOAT2, (float*)&vec); }
-    inline void addvar3(const string& var, const GLKVector4& vec) { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addvar(const string& var, const GLKVector4& vec)    { addvar(var, GLKS_FLOAT4, (float*)&vec); }
+    inline void addvar(const string& var, const GLKVector3& vec)    { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addvar(const string& var, const GLKVector2& vec)    { addvar(var, GLKS_FLOAT2, (float*)&vec); }
+    inline void addvar(const string& var, float val)                { addvar(var, GLKS_FLOAT, &val); }
+    inline void addvar3(const string& var, const GLKVector4& vec)   { addvar(var, GLKS_FLOAT3, (float*)&vec); }
     void addtex(const string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
-    inline void addtexcube(const string& var, GLuint name) { addtex(var, name, GLKS_SAMPLERCUBE); }
+    inline void addtexcube(const string& var, GLuint name)          { addtex(var, name, GLKS_SAMPLERCUBE); }
 
-    inline void addivar(const string& var, unsigned int val) { ivars[var] = val; }
+    inline void addivar(const string& var, unsigned int val)        { ivars[var] = val; }
     
     inline void reset() {
         vars.clear();

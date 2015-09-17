@@ -64,3 +64,6 @@
 #define GLKSH_LIGHT2_POS        "_lightpos2"
 #define GLKSH_LIGHT2_ATTEN      "_lightatten2"
 #define GLKSH_LIGHT2_SPECULAR   "_lightspec2"
+
+#define GLKSH_REFL_TEX          "_reflBlendTex"
+#define GLKSH_REFL_ALPHA        "_reflBlendAlpha"
