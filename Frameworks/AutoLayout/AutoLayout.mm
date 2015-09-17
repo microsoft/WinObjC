@@ -256,7 +256,6 @@ public:
 - (void)autoLayoutLayoutSubviews {
     for(int i = 0; i < [self.subviews count]; i++) {
         UIView* child = (UIView*)[self.subviews objectAtIndex:i];
-        [child layoutSubviews];
 
         // XXX: translatesAutoresizingMaskIntoConstraints is kind of cheated here. We merely apply bounds 
         // (which should be subject to autolayout) to the solution, and hope for the best.
