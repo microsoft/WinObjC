@@ -169,8 +169,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_textures addObject: [[GLKEffectPropertyTexture alloc] initWith: self]];
 
     self.colorMaterialEnabled = FALSE;
-    self.useConstantColor = FALSE;
-    self.constantColor = GLKVector4Black();
+    self.useConstantColor = TRUE;
+    self.constantColor = GLKVector4White();
     self.shaderExtName = @"";
 
     _material = [[GLKEffectPropertyMaterial alloc] initWith: self];
