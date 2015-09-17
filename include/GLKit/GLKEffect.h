@@ -141,6 +141,7 @@ GLKIT_EXPORT_CLASS
 @property(copy) NSArray* lightOrder;
 
 @property(assign) GLKLightingType lightingType;
+@property(assign) GLKVector4 lightModelAmbientColor;
 @property(assign) BOOL lightModelTwoSided;
 @property(assign) BOOL lightingEnabled;
 

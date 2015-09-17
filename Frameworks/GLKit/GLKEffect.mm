@@ -159,6 +159,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
 
     _lightingType = GLKLightingTypePerPixel;
+    _lightModelAmbientColor = GLKVector4White();
     _lightModelTwoSided = FALSE;
     _lightingEnabled = TRUE;
 
@@ -303,7 +304,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (self.lightingEnabled) {
         // TODO: sort lights so we don't get shader permutations such as LUL which is the same
         // as ULL and LLU.
-        ambient = GLKVector4Add(ambient, matProps.ambientColor);
         for(GLKEffectPropertyLight* l in _lights) {
             if(l.enabled) {
                 isLit = true;
@@ -333,6 +333,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             lightNum ++;
             if (lightNum >= MAX_LIGHTS) break;
         }
+        ambient = GLKVector4Multiply(ambient, matProps.ambientColor);
+        ambient = GLKVector4Multiply(ambient, _lightModelAmbientColor);
+
         if (!GLKVector4XYZEqualToScalar(ambient, 0.f)) {
             shaderName += 'a';
             m->addvar(GLKSH_AMBIENT, ambient);
@@ -518,8 +521,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(id)initWith: (GLKShaderEffect*)parent {
     [super initWith: parent];
-    self.ambientColor = GLKVector4Black();
-    self.diffuseColor = GLKVector4Black();
+    self.ambientColor = GLKVector4White();
+    self.diffuseColor = GLKVector4White();
     self.specularColor = GLKVector4Black();
     self.emissiveColor = GLKVector4Black();
     self.shininess = 0.f;
