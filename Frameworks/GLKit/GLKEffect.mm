@@ -527,7 +527,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 -(id)initWith: (GLKShaderEffect*)parent {
     [super initWith: parent];
     self.ambientColor = GLKVector4Black();
-    self.diffuseColor = GLKVector4White();
+    self.diffuseColor = GLKVector4Black();
     self.specularColor = GLKVector4Black();
     self.emissiveColor = GLKVector4Black();
     self.shininess = 0.f;
