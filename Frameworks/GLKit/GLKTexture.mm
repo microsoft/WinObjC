@@ -223,6 +223,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
 
 +(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err
 {
+    // TODO: error handling.
     if ([fnames count] != 6) return nil;
 
     GLuint tex;
@@ -302,7 +303,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         return nil;
     }
     
-    return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: sideW height: sideH alphaState: as];
+    return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_CUBE_MAP width: sideW height: sideH alphaState: as];
 }
 
 -(id)initWithShareContext:(NSOpenGLContext*)context {

@@ -134,7 +134,10 @@ const char* psSrc =
 }
 
 -(void)draw {
-    glDisable(GL_DEPTH_TEST);
+    bool depthTest = glIsEnabled(GL_DEPTH_TEST);
+    if (depthTest) {
+        glDisable(GL_DEPTH_TEST);
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, _vb);
     glEnableVertexAttribArray(GLKVertexAttribPosition);        
@@ -148,7 +151,9 @@ const char* psSrc =
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glEnable(GL_DEPTH_TEST);
+    if (depthTest) {
+        glEnable(GL_DEPTH_TEST);
+    }
 }
 
 @end

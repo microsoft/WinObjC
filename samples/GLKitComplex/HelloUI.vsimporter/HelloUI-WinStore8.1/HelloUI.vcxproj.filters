@@ -48,6 +48,24 @@
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_specular.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyxneg.JPG">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyxpos.JPG">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyyneg.JPG">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyypos.JPG">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyzneg.JPG">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyzpos.JPG">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp" />
