@@ -130,6 +130,8 @@ LIBRARY Foundation
 	 __objc_class_name_NSKeyedArchiver	CONSTANT
      _OBJC_CLASS_NSKeyedUnarchiver DATA
 	 __objc_class_name_NSKeyedUnarchiver	CONSTANT
+     _OBJC_CLASS_NSPropertyListSerialization DATA
+	 __objc_class_name_NSPropertyListSerialization	CONSTANT
      _OBJC_CLASS_NSLocale DATA
 	 __objc_class_name_NSLocale	CONSTANT
      _OBJC_CLASS_NSUUID DATA
