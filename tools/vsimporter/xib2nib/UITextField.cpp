@@ -91,6 +91,16 @@ void UITextField::InitFromStory(XIBObject *obj)
 {
     UIControl::InitFromStory(obj);
 
+    _font = (UIFont *)obj->FindMember("fontDescription");
+    const char *borderStyle = obj->getAttrib("borderStyle");
+    if (borderStyle) {
+        if (strcmp(borderStyle, "roundedRect") == 0) {
+            _borderStyle = 2;
+        }
+        else {
+            printf("Unknown textField border style %s\n", borderStyle);
+        }
+    }
     obj->_outputClassName = "UITextField";
 }
 

@@ -61,8 +61,10 @@ void UIRuntimeEventConnection::InitFromStory(XIBObject *obj)
                 _eventMask = UIControlEventTouchUpInside;
             } else if (strcmp(type, "touchDown") == 0) {
                 _eventMask = UIControlEventTouchDown;
+            } else if (strcmp(type, "valueChanged") == 0) {
+                _eventMask = UIControlEventValueChanged;
             } else {
-                assert(0);
+                printf("Unknown UIRuntimeEventConnection event type %s\n", type);
             }
         }
     } else {

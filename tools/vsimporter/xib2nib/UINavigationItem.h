@@ -24,7 +24,7 @@ class UINavigationItem :
 {
 public:
     const char *_title;
-    XIBObject *_leftBarButtonItem;
+    XIBObject *_leftBarButtonItem, *_rightBarButtonItem;
     UINavigationBar *_navigationBar;
     UINavigationItem();
 

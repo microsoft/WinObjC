@@ -163,6 +163,8 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "constraint", NSLayoutConstraint)
     IS_CONVERTER(ret, className, "layoutGuides", XIBVariation)
     IS_CONVERTER(ret, className, "viewControllerLayoutGuide", _UILayoutGuide)
+    IS_CONVERTER(ret, className, "datePicker", UIDatePicker)
+    IS_CONVERTER(ret, className, "slider", UISlider)
 
     if ( ret == NULL ) {
 #ifdef _DEBUG

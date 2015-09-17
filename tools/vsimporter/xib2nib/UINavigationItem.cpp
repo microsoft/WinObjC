@@ -21,6 +21,7 @@ UINavigationItem::UINavigationItem()
 {
     _title = NULL;
     _leftBarButtonItem = NULL;
+    _rightBarButtonItem = NULL;
     _navigationBar = NULL;
 }
 
@@ -29,6 +30,7 @@ void UINavigationItem::InitFromXIB(XIBObject *obj)
     ObjectConverterSwapper::InitFromXIB(obj);
     _title = GetString("IBUITitle", NULL);
     _leftBarButtonItem = FindMember("IBUILeftBarButtonItem");
+    _rightBarButtonItem = FindMember("IBUIRightBarButtonItem");
     _navigationBar = (UINavigationBar *) FindMember("IBUINavigationBar");
 
     obj->_outputClassName = "UINavigationItem";
@@ -39,6 +41,7 @@ void UINavigationItem::InitFromStory(XIBObject *obj)
     ObjectConverterSwapper::InitFromStory(obj);
     _title = obj->getAttrib("title");
     _leftBarButtonItem = obj->FindMember("leftBarButtonItem");
+    _rightBarButtonItem = obj->FindMember("rightBarButtonItem");
 
     obj->_outputClassName = "UINavigationItem";
 }
@@ -49,11 +52,17 @@ void UINavigationItem::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
 
     if ( _title ) AddString(writer, "UITitle", _title);
     if ( _leftBarButtonItem ) AddOutputMember(writer, "UILeftBarButtonItem", _leftBarButtonItem);
+    if (_rightBarButtonItem) AddOutputMember(writer, "UIRightBarButtonItem", _rightBarButtonItem);
 
     XIBArray *leftItems = new XIBArray();
     if ( _leftBarButtonItem ) {
         leftItems->AddMember(NULL, _leftBarButtonItem);
         obj->AddOutputMember(writer, "UILeftBarButtonItems", leftItems);    
+    }
+    XIBArray *rightItems = new XIBArray();
+    if (_rightBarButtonItem) {
+        rightItems->AddMember(NULL, _rightBarButtonItem);
+        obj->AddOutputMember(writer, "UIRightBarButtonItems", rightItems);
     }
     if ( _navigationBar ) AddOutputMember(writer, "UINavigationBar", _navigationBar);
 }

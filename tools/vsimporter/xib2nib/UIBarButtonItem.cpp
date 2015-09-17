@@ -64,8 +64,14 @@ void UIBarButtonItem::InitFromStory(XIBObject *obj)
             _systemItem = (int) UIBarButtonSystemItemFixedSpace;
         } else if ( strcmp(sysItem, "compose") == 0 ) {
             _systemItem = (int) UIBarButtonSystemItemCompose;
+        } else if ( strcmp(sysItem, "camera") == 0 ) {
+            _systemItem = (int) UIBarButtonSystemItemCamera;
+        } else if (strcmp(sysItem, "add") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemAdd;
+        } else if (strcmp(sysItem, "done") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemDone;
         } else {
-            assert(0);
+            printf("Unknown UIBarButton item type %s\n", sysItem);
         }
     }
 
