@@ -156,6 +156,9 @@ GLKIT_EXPORT_CLASS
 @property BOOL useConstantColor;
 @property(assign) GLKVector4 constantColor;
 
+// For subclasses of GLKBaseEffect that change their own parameters.
+@property(assign) NSString* shaderExtName;
+
 -(id)init;
 
 -(BOOL)updateShaderMaterialParams;
