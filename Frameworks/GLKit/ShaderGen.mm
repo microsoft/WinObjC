@@ -211,6 +211,12 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
     return res;
 }
 
+bool ShaderIVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (!c.getIVar(name)) return false;
+    return node->generate(out, c, v);
+}
+
 bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     auto var = v.find(name);
@@ -243,6 +249,13 @@ bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
     if (constantResult.empty()) return false;
     out = constantResult;
     return true;
+}
+
+bool ShaderFallbackNode::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (first->generate(out, c, v)) return true;
+    if (second->generate(out, c, v)) return true;
+    return false;
 }
 
 bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
@@ -438,7 +451,7 @@ bool ShaderReflNode::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderCustom::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    if (!useInner) {
+    if (!inner || !useInner) {
         out = before + after;
     } else {
         string innerStr;

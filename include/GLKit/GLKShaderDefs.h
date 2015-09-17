@@ -44,6 +44,8 @@
 
 #define GLKSH_CAMERA            "_camera"
 
+#define GLKSH_LIGHTING_ENABLED  "_lightingEnabled"  // ivar only, not sent to shader.
+
 #define GLKSH_CONSTCOLOR_NAME   "_constColor"
 #define GLKSH_AMBIENT           "_ambient"
 #define GLKSH_EMISSIVE          "_emissive"

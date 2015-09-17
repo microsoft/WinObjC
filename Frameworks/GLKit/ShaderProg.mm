@@ -89,17 +89,16 @@ ShaderNode* mkSpecLighter(const string& toLightTemp, const string& attenTemp, co
 
 ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
 {
+    auto diffuseCombiner = new ShaderFallbackNode(new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, lightRef), colorRef);
     return new ShaderOp(
-               specularRef,
-               new ShaderOp(
-                   new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
-                       new ShaderOp(new ShaderVarRef(GLKSH_REFL_ALPHA),
-                                    new ShaderCustom("", ".a", new ShaderTexRef(GLKSH_REFL_TEX, new ShaderVarRef("_texCoord0"))),
-                                    "*", true),
-                       new ShaderReflNode(new ShaderVarRef("_vertNorm"), new ShaderVarRef(GLKSH_CAMERA)),
-                       new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
-                           new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), colorRef))),
-                   lightRef, "*", true),
+               new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, specularRef),
+               new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
+                   new ShaderOp(new ShaderVarRef(GLKSH_REFL_ALPHA),
+                                new ShaderCustom("", ".a", new ShaderTexRef(GLKSH_REFL_TEX, new ShaderVarRef("_texCoord0"))),
+                                "*", true),
+                   new ShaderReflNode(new ShaderVarRef("_vertNorm"), new ShaderVarRef(GLKSH_CAMERA)),
+                   new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
+                       new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), diffuseCombiner))),
                "+", true);
 }
 
@@ -122,11 +121,14 @@ auto specularLighter =
 
 auto ppdiffuseLighter =
     new ShaderOp(
-        new ShaderAdditiveCombiner({
-            mkLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, "_vertNorm"),
-            mkLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, "_vertNorm"),
-            mkLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, "_vertNorm")}),
-        new ShaderTexRef(GLKSH_EMISSIVE_TEX, "", new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_EMISSIVE)), "max", false);
+        new ShaderFallbackNode(
+            new ShaderAdditiveCombiner({
+                mkLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, "_vertNorm"),
+                mkLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, "_vertNorm"),
+                mkLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, "_vertNorm")}),
+            new ShaderCustom("vec4(0, 0, 0, 1)")),
+        new ShaderTexRef(GLKSH_EMISSIVE_TEX, "", new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_EMISSIVE)),
+        "max", false);
 
 auto ppspecularLighter =
     new ShaderAdditiveCombiner({
@@ -139,7 +141,6 @@ auto ppspecularLighter =
         mkSpecLighter(new ShaderVarRef("_toLight2"), new ShaderVarRef("_toCam"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT2_SPECULAR)),
                       GLKSH_LIGHT2_ATTEN, "_vertNorm")});
-
 }
 
 // Per-vertex lighting.
@@ -156,7 +157,7 @@ ShaderDef standardVsh{
 
 ShaderDef standardPsh{
     {"gl_FragColor", mkStandardCombiner(new ShaderVarRef("_specular"),
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_BLACK),
+                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
                                         new ShaderVarRef("_lighting"))}
 };
 
@@ -176,6 +177,6 @@ ShaderDef pixelVsh{
 
 ShaderDef pixelPsh{
     {"gl_FragColor", mkStandardCombiner(ppspecularLighter,
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_BLACK),
+                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
                                         new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true))}
 };
