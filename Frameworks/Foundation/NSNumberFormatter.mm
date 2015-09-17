@@ -22,11 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 static NSNumberFormatterBehavior  _defaultFormatterBehavior = NSNumberFormatterBehavior10_4;
 
-NSString* const NSLocaleDecimalSeparator = @"NSLocaleDecimalSeparator";
-NSString* const NSLocaleGroupingSeparator = @"NSLocaleGroupingSeparator";
-
 #if 0
-id NSLocaleDecimalSeparator, NSLocaleGroupingSeparator;
 id kCFNumberNaN;
 id kCFNumberPositiveInfinity;
 id kCFNumberNegativeInfinity;

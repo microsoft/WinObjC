@@ -13,7 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSRange.h>
 #import <CoreFoundation/CFCalendar.h>
 #import <Foundation/NSDate.h>
-#import <StarboardExport.h>
+#import <Foundation/FoundationExport.h>
 
 @class NSDateComponents, NSTimeZone, NSLocale, NSDate;
 
@@ -38,12 +38,6 @@ enum {
 typedef uint32_t NSCalendarUnit;
 
 SB_EXPORT NSString * const NSGregorianCalendar;
-
-#if defined( STARBOARD_PORT ) && defined( __cplusplus )
-namespace icu_48 {
-    class Calendar;
-}
-#endif
 
 FOUNDATION_EXPORT_CLASS
 @interface NSCalendar : NSObject <NSCopying> 

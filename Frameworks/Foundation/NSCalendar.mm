@@ -18,8 +18,9 @@
 #include "Foundation/NSDate.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSCalendar.h"
-
-#define U_STATIC_IMPLEMENTATION 1
+#include "NSCalendarInternal.h"
+#include "NSTimeZoneInternal.h"
+#include "NSLocaleInternal.h"
 
 #include <unicode/gregocal.h>
 
@@ -27,17 +28,49 @@
     NSString *_identifier;
     NSTimeZone *_timeZone;
     NSLocale *_locale;
-    icu_48::Calendar *_cal;
+    NSUInteger firstWeekDay, minimumDaysInFirstWeek;
+    BOOL firstWeekDaySet, minimumDaysInFirstWeekSet;
+    icu::Calendar *_cal;
+    BOOL _calendarNeedsRebuilding;
 }
+    -(icu::Calendar *) _getICUCalendar
+    {
+        if ( _cal == NULL || _calendarNeedsRebuilding ) {
+            _calendarNeedsRebuilding = FALSE;
+            if ( _cal ) delete _cal;
+
+            UErrorCode status = U_ZERO_ERROR;
+            icu::Locale *locale = [_locale _createICULocale];
+            icu::TimeZone *timeZone = [_timeZone _createICUTimeZone];
+
+            //  No need to delete timeZone - GregorianCalendar adopts it
+            _cal = GregorianCalendar::createInstance(timeZone, *locale, status);
+            delete locale;
+
+            if ( firstWeekDaySet ) {
+                _cal->setFirstDayOfWeek((UCalendarDaysOfWeek) firstWeekDay);
+            }
+
+            if ( minimumDaysInFirstWeekSet ) {
+                _cal->setMinimalDaysInFirstWeek(minimumDaysInFirstWeek);
+            }
+        }
+
+        return _cal;
+    }
     -(instancetype) copyWithZone:(NSZone*)zone {
         NSCalendar* result = [NSCalendar alloc];
    
         result->_identifier= [_identifier copy];
         result->_timeZone = [_timeZone copy];
         result->_locale = [_locale copy];
-        result->_cal = _cal->clone();
    
         return result;
+    }
+
+    -(icu::Calendar *) _createICUCalendar
+    {
+        return [self _getICUCalendar]->clone();
     }
 
     +(NSCalendar*) currentCalendar {
@@ -47,8 +80,7 @@
     -(instancetype) initWithCalendarIdentifier:(NSString*)identifier {
         _identifier= [identifier copy];
         _timeZone= [[NSTimeZone defaultTimeZone] copy];
-        UErrorCode status = U_ZERO_ERROR;
-        _cal = GregorianCalendar::createInstance(status);
+        _locale = [[NSLocale currentLocale] retain];
         return self;
     }
 
@@ -56,7 +88,7 @@
         [_identifier release];
         [_timeZone release];
         [_locale release];
-        delete _cal;
+        if ( _cal ) delete _cal;
 
         [super dealloc];
     }
@@ -66,11 +98,11 @@
     }
 
     -(NSUInteger) firstWeekday {
-        return (NSUInteger) _cal->getFirstDayOfWeek();
+        return (NSUInteger) [self _getICUCalendar]->getFirstDayOfWeek();
     }
 
     -(NSUInteger) minimumDaysInFirstWeek {
-        return (NSUInteger) _cal->getMinimalDaysInFirstWeek();
+        return (NSUInteger) [self _getICUCalendar]->getMinimalDaysInFirstWeek();
     }
 
     -(NSTimeZone*) timeZone {
@@ -82,30 +114,37 @@
     }
 
     -(void) setFirstWeekday:(NSUInteger)weekday {
-        _cal->setFirstDayOfWeek((UCalendarDaysOfWeek) weekday);
+        firstWeekDay = weekday;
+        firstWeekDaySet = TRUE;
+        _calendarNeedsRebuilding = TRUE;
     }
 
     -(void) setMinimumDaysInFirstWeek:(NSUInteger)days {
-        _cal->setMinimalDaysInFirstWeek(days);
+        minimumDaysInFirstWeek = days;
+        minimumDaysInFirstWeekSet = TRUE;
+        _calendarNeedsRebuilding = TRUE;
+
     }
 
     -(void) setTimeZone:(NSTimeZone*)timeZone {
         timeZone = [timeZone retain];
         [_timeZone release];
         _timeZone=timeZone;
+        _calendarNeedsRebuilding = TRUE;
     }
 
     -(void) setLocale:(NSLocale*)locale {
         locale = [locale retain];
         [_locale release];
         _locale=locale;
+        _calendarNeedsRebuilding = TRUE;
     }
 
     -(NSDate*) dateByAddingComponents:(NSDateComponents*)components toDate:(NSDate*)toDate options:(NSUInteger)options {
         double time = [toDate timeIntervalSince1970];
 
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = _cal->clone();
+        Calendar *copy = [self _getICUCalendar]->clone();
         copy->setTime(time * 1000.0, status);
 
         NSInteger check;
@@ -152,11 +191,11 @@
 	static Calendar *calendarCopyWithTZ(NSCalendar *self)
 	{
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = self->_cal->clone();
+        Calendar *copy = [self _getICUCalendar]->clone();
 		if ( self->_timeZone != nil ) {
-			icu::TimeZone* tz;
-			[self->_timeZone _getICUTimezone:&tz];
+			icu::TimeZone* tz = [self->_timeZone _createICUTimeZone];
 			copy->setTimeZone(*tz);
+            delete tz;
 		}
 
 		return copy;
@@ -165,13 +204,13 @@
 	static Calendar *calendarCopyWithTZAndDate(NSCalendar *self, NSDate *date)
 	{
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = self->_cal->clone();
+        Calendar *copy = [self _getICUCalendar]->clone();
         copy->setTime([date timeIntervalSince1970] * 1000.0, status);
         if ( U_SUCCESS(status) ) {
 			if ( self->_timeZone != nil ) {
-				icu::TimeZone* tz;
-				[self->_timeZone _getICUTimezone:&tz];
+				icu::TimeZone* tz = [self->_timeZone _createICUTimeZone];
 				copy->setTimeZone(*tz);
+                delete tz;
 			}
 
 			return copy;
@@ -312,12 +351,12 @@
         double time = [date timeIntervalSince1970];
 
         UErrorCode status = U_ZERO_ERROR;
-        Calendar *copy = _cal->clone();
+        Calendar *copy = [self _getICUCalendar]->clone();
         copy->setTime(time * 1000.0, status);
 
-        icu::TimeZone *tz;
-        [_timeZone _getICUTimezone:&tz];
+        icu::TimeZone *tz = [_timeZone _createICUTimeZone];
         copy->setTimeZone(*tz);
+        delete tz;
 
         UCalendarDateFields icuSmaller = icuFieldFromUnit(smaller);
         ret.location = copy->getActualMinimum(icuSmaller, status);

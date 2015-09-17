@@ -30,7 +30,6 @@ typedef enum {
 FOUNDATION_EXPORT_CLASS
 @interface NSDateFormatter : NSFormatter
 
-+ (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior;
 + (NSString *)dateFormatFromTemplate:(NSString *)tmplate options:(NSUInteger)opts locale:(NSLocale *)locale;
 
 - initWithDateFormat:(NSString *)format allowNaturalLanguage:(BOOL)flag; // shouldn't this be "allows" ?
@@ -39,35 +38,34 @@ FOUNDATION_EXPORT_CLASS
 // shouldn't this really exist anyway?
 - initWithDateFormat:(NSString *)format allowNaturalLanguage:(BOOL)flag locale:(NSDictionary *)locale;
 
-- (NSString *)dateFormat;
-- (BOOL)allowsNaturalLanguage;
-- (NSDateFormatterBehavior)formatterBehavior;
++(void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior;
+-(void)setFormatterBehavior:(NSDateFormatterBehavior)value;
+-(NSDateFormatterBehavior)formatterBehavior;
 
-- (NSDictionary *)locale;
-
-- (void)setDateFormat:(NSString *)format;
-
-- (NSString *)stringFromDate:(NSDate *)date;
-- (NSArray *)shortStandaloneWeekdaySymbols;
-- (NSArray *)standaloneWeekdaySymbols;
-
-- (void)setLenient:(BOOL)value;
-- (void)setFormatterBehavior:(NSDateFormatterBehavior)value;
-
+-(NSString *)stringFromDate:(NSDate *)date;
 - (NSDate *)dateFromString:(NSString *)string;
-- (NSDateFormatterStyle)dateStyle;
-- (void)setDateStyle:(NSDateFormatterStyle)style;
-- (void)setLocale:(NSLocale *)locale;
 
-- (NSCalendar *)calendar;
-- (void)setCalendar:(NSCalendar *)calendar;
-- (void)setTimeStyle:(NSDateFormatterStyle)style;
+@property BOOL lenient;
+@property BOOL allowsNaturalLanguage;
 
-- (NSTimeZone *)timeZone;
-- (void)setTimeZone:(NSTimeZone *)tz;
+@property(copy) NSString *dateFormat;
 
-- (NSArray *)monthSymbols;
+@property NSDateFormatterStyle timeStyle;
+@property NSDateFormatterStyle dateStyle;
 
+@property(copy) NSLocale *locale;
+@property(copy) NSCalendar *calendar;
+@property(copy) NSTimeZone *timeZone;
+@property(copy) NSArray *monthSymbols;
+@property(copy) NSArray *standaloneMonthSymbols;
+@property(copy) NSArray *weekdaySymbols;
+@property(copy) NSArray *shortWeekdaySymbols;
+@property(copy) NSArray *shortStandaloneWeekdaySymbols;
+@property(copy) NSArray *standaloneWeekdaySymbols;
+
+
+@property(copy) NSString *AMSymbol;
+@property(copy) NSString *PMSymbol;
 @end
 
 #endif /* _NSDATEFORMATTER_H_ */
