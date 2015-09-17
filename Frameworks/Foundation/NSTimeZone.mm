@@ -20,22 +20,57 @@
 #include "Foundation/NSArray.h"
 #include "Etc.h"
 #include "Foundation/NSTimeZone.h"
-
-#define U_STATIC_IMPLEMENTATION 1
+#include "NSTimeZoneInternal.h"
 
 #include <unicode/gregocal.h>
+#include <windows.h>
+
+static NSTimeZone *_defaultTimeZone;
+static dispatch_once_t _systemTimeZoneInit;
+static NSTimeZone *_systemTimeZone;
 
 @implementation NSTimeZone {
-    icu_48::TimeZone* _icuTZ;
+    icu::TimeZone* _icuTZ;
 }
+    +(void) _setTimeZoneToSystemSettings: (icu::TimeZone *) tz
+    {
+        /* Implement me! */
+    }
+
+    +(NSTimeZone *) _getSystemTZ
+    {
+        dispatch_once(&_systemTimeZoneInit, ^{
+            _systemTimeZone = [self alloc];
+            _systemTimeZone->_icuTZ = icu_48::TimeZone::createDefault();
+            [self _setTimeZoneToSystemSettings: _systemTimeZone->_icuTZ];
+        });
+
+        return _systemTimeZone;
+    }
+
     +(instancetype) systemTimeZone {
-        NSTimeZone* ret = [self alloc];
-        ret->_icuTZ = icu_48::TimeZone::createDefault();
-        return [ret autorelease];
+        return [self _getSystemTZ];
+    }
+
+    +(void) resetSystemTimeZone {
+        [self _setTimeZoneToSystemSettings: [self _getSystemTZ]->_icuTZ];
     }
 
     +(instancetype) defaultTimeZone {
-        return [self systemTimeZone];
+        NSTimeZone *ret;
+
+        if ( _defaultTimeZone != nil ) {
+            ret = _defaultTimeZone;
+        } else {
+            ret = [self systemTimeZone];
+        }
+        return [[ret copy] autorelease];
+    }
+
+    +(void) setDefaultTimeZone: (NSTimeZone *) zone {
+        zone = [zone retain];
+        [_defaultTimeZone release];
+        _defaultTimeZone = zone;
     }
 
     +(NSArray*) knownTimeZoneNames {
@@ -43,8 +78,9 @@
         return [NSArray arrayWithObject:@"America/Los_Angeles"];
     }
 
-    -(void) _getICUTimezone:(icu_48::TimeZone**)tz {
-        *tz = _icuTZ;
+    -(icu::TimeZone *) _createICUTimeZone
+    {
+        return _icuTZ->clone();
     }
 
     +(instancetype) timeZoneForSecondsFromGMT:(NSInteger)seconds {
@@ -55,7 +91,10 @@
     }
 
     +(instancetype) localTimeZone {
-        return [self timeZoneWithName:@"America/Toronto"];
+        if ( _defaultTimeZone != nil ) {
+            return [[_defaultTimeZone retain] autorelease];
+        }
+        return [self systemTimeZone];
     }
 
     +(instancetype) _gmtTimeZone {
@@ -112,12 +151,6 @@
 
     -(instancetype) copyWithZone:(NSZone*)zone {
         return [self retain];
-    }
-
-    +(void) resetSystemTimeZone {
-    }
-
-    +(void) setDefaultTimeZone:(NSTimeZone*)zone {
     }
 
 	-(BOOL) isDaylightSavingTimeForDate: (NSDate *) date

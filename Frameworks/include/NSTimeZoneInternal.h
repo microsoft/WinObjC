@@ -14,26 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <Foundation/NSString.h>
-#include <Windows.h>
+#pragma once
 
-void NSLogv(NSString *fmt, va_list list)
-{
-    auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
-    INT len = [str length];
-    LPWSTR terminatedBuf = (LPWSTR) calloc(len + 1, sizeof(WCHAR));
-    memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
-    OutputDebugStringW(terminatedBuf); OutputDebugStringW(L"\n");
-    free(terminatedBuf);
-    printf("%s\n", [str UTF8String]);
-    [str release];
-}
+#include <unicode/gregocal.h>
 
-void NSLog(NSString *fmt, ...)
-{
-    va_list list;
-    va_start(list, fmt);
-    NSLogv(fmt, list);
-    va_end(list);
-}
+@interface NSTimeZone(Internal)
+    -(icu::TimeZone *) _createICUTimeZone;
+@end
