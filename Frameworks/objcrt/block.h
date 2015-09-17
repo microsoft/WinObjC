@@ -1,22 +1,23 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-//#import "OFObject.h"
+#include "UIKit/UIKit.h"
 
-#if 0
 typedef struct of_block_literal_t {
     Class isa;
     int flags;
@@ -30,13 +31,24 @@ typedef struct of_block_literal_t {
         const char *signature;
     } *descriptor;
 } of_block_literal_t;
-#endif
+
+@interface NSBlock: NSObject
+@end
+
+@interface NSStackBlock: NSBlock
+@end
+
+@interface NSGlobalBlock: NSBlock
+@end
+
+@interface NSMallocBlock: NSBlock
+@end
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void* _Block_copy(const void*);
-extern void _Block_release(const void*);
+extern OBJCRT_EXPORT void* _Block_copy(const void*);
+extern OBJCRT_EXPORT void _Block_release(const void*);
 #ifdef __cplusplus
 }
 #endif
@@ -46,21 +58,4 @@ extern void _Block_release(const void*);
 #endif
 #ifndef Block_release
 # define Block_release(x) _Block_release((const void*)(x))
-#endif
-
-/**
- * \brief The class for all blocks, since all blocks are also objects.
- */
-#if 0
-@interface OFBlock: OFObject
-@end
-
-@interface OFStackBlock: OFBlock
-@end
-
-@interface OFGlobalBlock: OFBlock
-@end
-
-@interface OFMallocBlock: OFBlock
-@end
 #endif

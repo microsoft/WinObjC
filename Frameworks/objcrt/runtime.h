@@ -1,23 +1,25 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #ifndef __OBJFW_RUNTIME_H__
 #define __OBJFW_RUNTIME_H__
+
 #include <stdint.h>
-#include "objfw-defs.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +50,6 @@ typedef int BOOL;
 typedef id (*IMP)(id, SEL, ...);
 
 #ifndef __OBJC_OBJC_H
-#ifndef IW_NO_WINRT_ISA
 
 #define WINRT_ISA_REALCLS(isa) ((Class *) (isa))[-1]
 struct winrt_isa {
@@ -58,14 +59,9 @@ struct winrt_isa {
 };
 
 typedef struct winrt_isa *WinRT_isa;
-#endif
 
 struct objc_class {
-#ifdef IW_NO_WINRT_ISA
-    Class isa;
-#else
     struct winrt_isa *isa;
-#endif
     Class superclass;
     const char *name;
     unsigned long version;
@@ -95,11 +91,7 @@ enum objc_abi_class_info {
 };
 
 struct objc_object {
-#ifdef IW_NO_WINRT_ISA
-    Class isa;
-#else
     WinRT_isa isa;
-#endif
 };
 
 struct objc_selector {
@@ -197,8 +189,6 @@ struct objc_protocol_list {
 #define YES (BOOL)1
 #define NO  (BOOL)0
 
-typedef void (*objc_uncaught_exception_handler)(id);
-
 extern OBJCRT_EXPORT SEL sel_registerName(const char*);
 extern OBJCRT_EXPORT const char* sel_getName(SEL);
 extern OBJCRT_EXPORT BOOL sel_isEqual(SEL, SEL);
@@ -233,8 +223,6 @@ extern BOOL protocol_conformsToProtocol(Protocol*, Protocol*);
 extern void objc_thread_add(void);
 extern void objc_thread_remove(void);
 extern void objc_exit(void);
-extern objc_uncaught_exception_handler objc_setUncaughtExceptionHandler(
-    objc_uncaught_exception_handler);
 extern IMP (*objc_forward_handler)(id, SEL);
 extern id objc_constructInstance(Class, void*);
 extern void* objc_destructInstance(id);
@@ -267,6 +255,11 @@ object_getClassName(id obj);
 
 OBJCRT_EXPORT BOOL
 class_isMetaClass(Class cls_);
+
+extern OBJCRT_EXPORT id objc_getProperty(id, SEL, ptrdiff_t, BOOL);
+extern OBJCRT_EXPORT void objc_setProperty(id, SEL, ptrdiff_t, id, BOOL, signed char);
+extern OBJCRT_EXPORT void objc_getPropertyStruct(void*, const void*, ptrdiff_t, BOOL, BOOL);
+extern OBJCRT_EXPORT void objc_setPropertyStruct(void*, const void*, ptrdiff_t, BOOL, BOOL);
 
 #undef OBJC_UNSAFE_UNRETAINED
 #undef OBJC_BRIDGE

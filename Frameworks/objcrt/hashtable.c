@@ -1,18 +1,20 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +25,8 @@
 
 #include "runtime.h"
 #include "runtime-private.h"
+
+#include <windows.h>
 
 uint32_t
 objc_hash_string(const char *str)
