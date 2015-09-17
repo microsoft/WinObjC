@@ -33,14 +33,18 @@ static void dumpMat(const GLKMatrix4& mat)
 }
 
 @implementation GLRenderer {
-    GLKBaseEffect*  _effect;
-    float           _cubeAngle;
-    Mesh*           _mesh;
+    GLKBaseEffect*      _effect;
+    float               _cubeAngle;
+    Mesh*               _mesh;
 
-    GLKTextureInfo* _tex1;
-    GLKTextureInfo* _tex2;
-    GLKTextureInfo* _emissive;
-    GLKTextureInfo* _specular;
+    GLKTextureInfo*     _tex1;
+    GLKTextureInfo*     _tex2;
+    GLKTextureInfo*     _emissive;
+    GLKTextureInfo*     _specular;
+
+    GLKSkyboxEffect*    _skybox;
+    GLKTextureInfo*     _skyboxTex;
+    bool                _skyboxXformInited;
 }
 
 -(void)initGLData {
@@ -48,7 +52,10 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
     _effect.colorMaterialEnabled = TRUE; // use vertex colors.
     _cubeAngle = 0.f;
+    _skyboxXformInited = false;
 
+    _skybox = [[GLKSkyboxEffect alloc] init];
+    
     glClearColor(0.0, 0.35, 0.6, 1.0);
     glClearDepthf(1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -98,6 +105,15 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     _effect.light0.linearAttenuation = 1.f / _mesh->getRadius();
 
+    // Set up skybox.
+    auto files = @[ @"lobbyxneg.JPG", @"lobbyxpos.JPG",
+                    @"lobbyyneg.JPG", @"lobbyypos.JPG",
+                    @"lobbyzneg.JPG", @"lobbyzpos.JPG" ];                     
+    _skyboxTex = [GLKTextureLoader cubeMapWithContentsOfFiles: files options: nil error: nullptr];
+    NSLog(@"Have skybox tex: %d", _skyboxTex.name);
+    _skybox.textureCubeMap.name = _skyboxTex.name;
+    _skybox.textureCubeMap.enabled = TRUE;
+
     // Set up draw mode.
     _mode = DM_LitSolidColor;
 }
@@ -135,6 +151,14 @@ static void dumpMat(const GLKMatrix4& mat)
     GLKMatrix4 modelview = GLKMatrix4Multiply(translate, rotate);
     _effect.transform.modelviewMatrix = modelview;
 
+    if (!_skyboxXformInited) {
+        _skyboxXformInited = true;
+        _skybox.transform.projectionMatrix = proj;
+    }
+    
+    [_skybox prepareToDraw];
+    [_skybox draw];
+    
     [_effect prepareToDraw];
 
     _mesh->bindVertexData();

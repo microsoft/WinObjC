@@ -90,6 +90,12 @@
     </AppxManifest>
     <ClangCompile Include="..\..\GLKitComplex\Mesh.mm" />
     <None Include="HelloUI_TemporaryKey.pfx" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyxneg.JPG" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyxpos.JPG" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyyneg.JPG" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyypos.JPG" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyzneg.JPG" />
+    <Image Include="..\..\GLKitComplex\Images.xcassets\lobbyzpos.JPG" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\seafloor.png" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_decal.png" />
     <Image Include="..\..\GLKitComplex\Images.xcassets\teapot_emissive.png" />
