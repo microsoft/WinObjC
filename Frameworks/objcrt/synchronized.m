@@ -1,41 +1,41 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
-
-//#include "config.h"
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "runtime.h"
 #include "runtime-private.h"
-#include "threading.h"
+
+#include <windows.h>
 
 struct lock_s {
-    id        object;
-    int       count;
-    of_rmutex_t   rmutex;
+    id object;
+    int count;
+    CRITICAL_SECTION rmutex;
     struct lock_s *next;
 } *locks = NULL;
 
-static of_mutex_t mutex;
+static CRITICAL_SECTION mutex;
 
 __attribute__((constructor)) void sync_init(void)
 {
-    if (!of_mutex_new(&mutex))
-        OBJC_ERROR("Failed to create mutex!")
+    InitializeCriticalSectionEx(&mutex, 0, 0);
 }
 
 OBJCRT_EXPORT int
@@ -43,8 +43,7 @@ objc_sync_enter(id object)
 {
     struct lock_s *lock;
 
-    if (!of_mutex_lock(&mutex))
-        OBJC_ERROR("Failed to lock mutex!");
+    EnterCriticalSection(&mutex);
 
     /* Look if we already have a lock */
     for (lock = locks; lock != NULL; lock = lock->next) {
@@ -53,11 +52,8 @@ objc_sync_enter(id object)
 
         lock->count++;
 
-        if (!of_mutex_unlock(&mutex))
-            OBJC_ERROR("Failed to unlock mutex!");
-
-        if (!of_rmutex_lock(&lock->rmutex))
-            OBJC_ERROR("Failed to lock mutex!");
+        LeaveCriticalSection(&mutex);
+        EnterCriticalSection(&lock->rmutex);
 
         return 0;
     }
@@ -66,8 +62,7 @@ objc_sync_enter(id object)
     if ((lock = malloc(sizeof(*lock))) == NULL)
         OBJC_ERROR("Failed to allocate memory for mutex!");
 
-    if (!of_rmutex_new(&lock->rmutex))
-        OBJC_ERROR("Failed to create mutex!");
+    InitializeCriticalSectionEx(&lock->rmutex, 0, 0);
 
     lock->object = object;
     lock->count = 1;
@@ -75,11 +70,8 @@ objc_sync_enter(id object)
 
     locks = lock;
 
-    if (!of_mutex_unlock(&mutex))
-        OBJC_ERROR("Failed to unlock mutex!");
-
-    if (!of_rmutex_lock(&lock->rmutex))
-        OBJC_ERROR("Failed to lock mutex!");
+    LeaveCriticalSection(&mutex);
+    EnterCriticalSection(&lock->rmutex);
 
     return 0;
 }
@@ -89,8 +81,7 @@ objc_sync_exit(id object)
 {
     struct lock_s *lock, *last = NULL;
 
-    if (!of_mutex_lock(&mutex))
-        OBJC_ERROR("Failed to lock mutex!");
+    EnterCriticalSection(&mutex);
 
     for (lock = locks; lock != NULL; lock = lock->next) {
         if (lock->object != object) {
@@ -98,12 +89,10 @@ objc_sync_exit(id object)
             continue;
         }
 
-        if (!of_rmutex_unlock(&lock->rmutex))
-            OBJC_ERROR("Failed to unlock mutex!");
+        LeaveCriticalSection(&lock->rmutex);
 
         if (--lock->count == 0) {
-            if (!of_rmutex_free(&lock->rmutex))
-                OBJC_ERROR("Failed to destroy mutex!");
+            DeleteCriticalSection(&lock->rmutex);
 
             if (last != NULL)
                 last->next = lock->next;
@@ -113,8 +102,7 @@ objc_sync_exit(id object)
             free(lock);
         }
 
-        if (!of_mutex_unlock(&mutex))
-            OBJC_ERROR("Failed to unlock mutex!");
+        LeaveCriticalSection(&mutex);
 
         return 0;
     }

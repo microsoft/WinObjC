@@ -1,37 +1,33 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-//#include "config.h"
 #include <string.h>
 #include <assert.h>
 
 #include "runtime.h"
 #include "runtime-private.h"
 
-//#import "OFObject.h"
+#include <windows.h>
 
-#include "macros.h"
-#ifdef OF_THREADS
-#include "threading.h"
-# define NUM_SPINLOCKS 8    /* needs to be a power of 2 */
-# define SPINLOCK_HASH(p) ((unsigned)((uintptr_t)p >> 4) & (NUM_SPINLOCKS - 1))
-static of_spinlock_t spinlocks[NUM_SPINLOCKS];
-#endif
+#define NUM_LOCKS 8    /* needs to be a power of 2 */
+#define LOCK_HASH(p) ((unsigned)((uintptr_t)p >> 4) & (NUM_LOCKS - 1))
+static CRITICAL_SECTION locks[NUM_LOCKS];
 
-#ifdef OF_THREADS
 #pragma section(".CRT$XCU",read)
 static void __cdecl prop_constructor(void);
 __declspec(allocate(".CRT$XCU")) void (__cdecl*prop_fconstructor_)(void) = prop_constructor;
@@ -39,30 +35,25 @@ static void __cdecl prop_constructor(void)
 {
     size_t i;
 
-    for (i = 0; i < NUM_SPINLOCKS; i++)
-        if (!of_spinlock_new(&spinlocks[i]))
-            OBJC_ERROR("Failed to initialize spinlocks!")
+    for (i = 0; i < NUM_LOCKS; i++)
+        if (!InitializeCriticalSectionEx(&locks[i], 0, 0))
+			OBJC_ERROR("Failed to initialize spinlocks!");
 }
-#endif
 
 OBJCRT_EXPORT id
 objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic)
 {
     if (atomic) {
         id *ptr = (id*)(void*)((char*)self + offset);
-#ifdef OF_THREADS
-        unsigned hash = SPINLOCK_HASH(ptr);
+        unsigned hash = LOCK_HASH(ptr);
 
-        OF_ENSURE(of_spinlock_lock(&spinlocks[hash]));
-        //@try {
-            id ret = [[*ptr retain] autorelease];
-        //} @finally {
-            OF_ENSURE(of_spinlock_unlock(&spinlocks[hash]));
-            return ret;
-        //}
-#else
-        return [[*ptr retain] autorelease];
-#endif
+        EnterCriticalSection(&locks[hash]);
+
+        id ret = [[*ptr retain] autorelease];
+
+        LeaveCriticalSection(&locks[hash]);
+
+        return ret;
     }
 
     return *(id*)(void*)((char*)self + offset);
@@ -74,31 +65,25 @@ objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id value, BOOL atomic,
 {
     if (atomic) {
         id *ptr = (id*)(void*)((char*)self + offset);
-#ifdef OF_THREADS
-        unsigned hash = SPINLOCK_HASH(ptr);
+        unsigned hash = LOCK_HASH(ptr);
 
-        OF_ENSURE(of_spinlock_lock(&spinlocks[hash]));
-        //@try {
-#endif
-            id old = *ptr;
+        EnterCriticalSection(&locks[hash]);
 
-            switch (copy) {
-            case 0:
-                *ptr = [value retain];
-                break;
-            case 2:
-                *ptr = [value mutableCopy];
-                break;
-            default:
-                *ptr = [value copy];
-            }
+        id old = *ptr;
+        switch (copy) {
+        case 0:
+            *ptr = [value retain];
+            break;
+        case 2:
+            *ptr = [value mutableCopy];
+            break;
+        default:
+            *ptr = [value copy];
+        }
 
-            [old release];
-#ifdef OF_THREADS
-        //} @finally {
-            OF_ENSURE(of_spinlock_unlock(&spinlocks[hash]));
-        //}
-#endif
+        [old release];
+
+        LeaveCriticalSection(&locks[hash]);
 
         return;
     }
@@ -120,21 +105,18 @@ objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id value, BOOL atomic,
     [old release];
 }
 
-/* The following methods are only required for GCC >= 4.6 */
 OBJCRT_EXPORT void
 objc_getPropertyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic,
     BOOL strong)
 {
     if (atomic) {
-#ifdef OF_THREADS
-        unsigned hash = SPINLOCK_HASH(src);
+        unsigned hash = LOCK_HASH(src);
 
-        OF_ENSURE(of_spinlock_lock(&spinlocks[hash]));
-#endif
+        EnterCriticalSection(&locks[hash]);
+
         memcpy(dest, src, size);
-#ifdef OF_THREADS
-        OF_ENSURE(of_spinlock_unlock(&spinlocks[hash]));
-#endif
+
+        LeaveCriticalSection(&locks[hash]);
 
         return;
     }
@@ -147,15 +129,13 @@ objc_setPropertyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic,
     BOOL strong)
 {
     if (atomic) {
-#ifdef OF_THREADS
-        unsigned hash = SPINLOCK_HASH(src);
+        unsigned hash = LOCK_HASH(src);
 
-        OF_ENSURE(of_spinlock_lock(&spinlocks[hash]));
-#endif
+        EnterCriticalSection(&locks[hash]);
+
         memcpy(dest, src, size);
-#ifdef OF_THREADS
-        OF_ENSURE(of_spinlock_unlock(&spinlocks[hash]));
-#endif
+
+        LeaveCriticalSection(&locks[hash]);
 
         return;
     }

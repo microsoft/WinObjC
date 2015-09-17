@@ -23,11 +23,7 @@
 
 @interface NSObject {
 @public
-#ifdef IW_NO_WINRT_ISA
-    Class isa;
-#else
     WinRT_isa isa;
-#endif
 }
 @end
 

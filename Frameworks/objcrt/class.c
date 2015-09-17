@@ -1,37 +1,38 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
-
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- 
+
 #include <assert.h>
 
 #include "runtime.h"
 #include "runtime-private.h"
 
 #include "winrt-interop.h"
+#include <windows.h>
 
 static struct objc_hashtable *classes = NULL;
 static Class *load_queue = NULL;
 static size_t load_queue_cnt = 0;
 static struct objc_sparsearray *empty_dtable = NULL;
 
-#ifndef IW_NO_WINRT_ISA
 static struct objc_hashtable *isas = NULL;
 
 struct winrt_isa *class_isa_for_class(Class cls)
@@ -62,7 +63,6 @@ struct winrt_isa *class_isa_for_class(Class cls)
 
     return ret;
 }
-#endif
 
 static void
 register_class(struct objc_abi_class *cls)
@@ -76,14 +76,9 @@ register_class(struct objc_abi_class *cls)
         empty_dtable = objc_sparsearray_new();
 
     cls->dtable = empty_dtable;
-#ifdef IW_NO_WINRT_ISA
-    cls->metaclass = cls->metaclass;
-    cls->metaclass->dtable = empty_dtable;
-#else
     struct winrt_isa *isa = class_isa_for_class((Class) cls->metaclass);
     cls->metaclass = isa;
     WINRT_ISA_REALCLS(cls->metaclass)->dtable = empty_dtable;
-#endif
 }
 
 BOOL
@@ -776,14 +771,6 @@ object_getClass(id obj_)
      * to get the object of the class. 
      */
 
-#ifdef IW_NO_WINRT_ISA
-    extern void *_NSConcreteGlobalBlock;
-
-    if ( obj->isa->isa == (Class) &_NSConcreteGlobalBlock ) {
-        reutrn (Class) &_NSConcreteGlobalBlock;
-    }
-    return obj->isa;
-#else
     if ( obj->isa ) {
         extern struct winrt_isa _NSConcreteGlobalBlock;
 
@@ -794,7 +781,6 @@ object_getClass(id obj_)
     } else {
         return nil;
     }
-#endif
 }
 
 //  Sets an object's class without reading back the previous isa - needed for
@@ -803,12 +789,7 @@ void _object_setClass(id obj_, Class cls)
 {
     struct objc_object *obj = (struct objc_object*)obj_;
 
-#ifdef IW_NO_WINRT_ISA
-    old = obj->isa;
-    obj->isa = cls;
-#else
     obj->isa = class_isa_for_class(cls);
-#endif
 }
 
 Class
@@ -817,16 +798,11 @@ object_setClass(id obj_, Class cls)
     struct objc_object *obj = (struct objc_object*)obj_;
     Class old = nil;
 
-#ifdef IW_NO_WINRT_ISA
-    old = obj->isa;
-    obj->isa = cls;
-#else
     if ( obj->isa ) {
         old = WINRT_ISA_REALCLS(obj->isa);
     }
 
     obj->isa = class_isa_for_class(cls);
-#endif
 
     return old;
 }
@@ -1027,5 +1003,3 @@ OBJCRT_EXPORT id objc_get_class(const char *cls)
 {
     return (id) objc_lookup_class(cls);
 }
-
-
