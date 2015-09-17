@@ -1,34 +1,37 @@
-/*
- * Copyright (c) 2008, 2009, 2010, 2011, 2012
- *   Jonathan Schleifer <js@webkeks.org>
- *
- * All rights reserved.
- *
- * This file is part of ObjFW. It may be distributed under the terms of the
- * Q Public License 1.0, which can be found in the file LICENSE.QPL included in
- * the packaging of this file.
- *
- * Alternatively, it may be distributed under the terms of the GNU General
- * Public License, either version 2 or 3, which can be found in the file
- * LICENSE.GPLv2 or LICENSE.GPLv3 respectively included in the packaging of this
- * file.
- */
+//******************************************************************************
+//
+// Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+//   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "runtime.h"
 #include "runtime-private.h"
-#include "threading.h"
 
-static of_rmutex_t global_mutex;
+#include <windows.h>
+
+static CRITICAL_SECTION global_mutex;
 static BOOL global_mutex_init = NO;
 
 static void
 objc_global_mutex_new(void)
 {
-    if (!of_rmutex_new(&global_mutex))
-        OBJC_ERROR("Failed to create global mutex!");
+    if (!InitializeCriticalSectionEx(&global_mutex, 0, 0))
+		OBJC_ERROR("Failed to create global mutex!");
 
     global_mutex_init = YES;
 }
@@ -39,20 +42,11 @@ objc_global_mutex_lock(void)
     if (!global_mutex_init)
         objc_global_mutex_new();
 
-    if (!of_rmutex_lock(&global_mutex))
-        OBJC_ERROR("Failed to lock global mutex!");
+    EnterCriticalSection(&global_mutex);
 }
 
 void
 objc_global_mutex_unlock(void)
 {
-    if (!of_rmutex_unlock(&global_mutex))
-        OBJC_ERROR("Failed to unlock global mutex!");
-}
-
-void
-objc_global_mutex_free(void)
-{
-    if (!of_rmutex_free(&global_mutex))
-        OBJC_ERROR("Failed to free global mutex!");
+    LeaveCriticalSection(&global_mutex);
 }

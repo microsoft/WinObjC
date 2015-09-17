@@ -21,16 +21,6 @@
 #include <assert.h>
 #include "winrt-interop.h"
 
-#ifdef IW_NO_WINRT_ISA
-BOOL object_isWinRT(id obj)
-{
-    return FALSE;
-}
-IMP object_getWinRTImp(id obj, const char *selName)
-{
-    return NULL;
-}
-#else
 extern "C" struct winrt_isa _NSConcreteGlobalBlock;
 
 BOOL object_isWinRT(id obj)
@@ -66,7 +56,6 @@ IMP object_getWinRTImp(id obj, const char *selName)
     //printf("Looking up %s\n", selName);
     return NULL;
 }
-#endif
 
 namespace winobjc 
 {
