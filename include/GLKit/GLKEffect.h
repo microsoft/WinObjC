@@ -121,7 +121,6 @@ GLKIT_EXPORT_CLASS
 @property(retain)   NSString*                   shaderName;
 @property(readonly) GLKMatrix4                  modelRefTrans;
 @property           BOOL                        effectChanged;
-@property           BOOL                        trackEffectChanges;
 @property           BOOL                        cameraRequired;         // set when a subclass needs the camera position in a shader.
 
 -(id)init;

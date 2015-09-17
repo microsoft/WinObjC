@@ -80,6 +80,17 @@ public:
     inline GLKShaderVarType getType() const { return type; }
 };
 
+// Check if an ivar is present and non-zero before generating the rest.
+class ShaderIVarCheck : public ShaderNode {
+    string name;
+    ShaderNode* node;
+
+public:
+    ShaderIVarCheck(const string& name, ShaderNode* node) : name(name), node(node) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
 // Use a variable if present.
 class ShaderVarRef : public ShaderNode {
     string name;
@@ -98,6 +109,16 @@ class ShaderFallbackRef : public ShaderNode {
 public:
     ShaderFallbackRef(const string& first, const string& second, const string& constantResult = "") :
         first(first), second(second), constantResult(constantResult) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderFallbackNode : public ShaderNode {
+    ShaderNode* first;
+    ShaderNode* second;
+public:
+    ShaderFallbackNode(ShaderNode* first, ShaderNode* second) :
+        first(first), second(second) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -214,7 +235,7 @@ class ShaderCustom : public ShaderNode {
     ShaderNode* inner;
     bool useInner;
 public:
-    inline ShaderCustom(const string& before, const string& after, ShaderNode* inner, bool useInner = true) :
+    inline ShaderCustom(const string& before, const string& after = "", ShaderNode* inner = nullptr, bool useInner = true) :
         before(before), after(after), inner(inner), useInner(useInner) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
