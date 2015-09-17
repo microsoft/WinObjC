@@ -156,7 +156,7 @@ ShaderDef standardVsh{
 
 ShaderDef standardPsh{
     {"gl_FragColor", mkStandardCombiner(new ShaderVarRef("_specular"),
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_BLACK),
                                         new ShaderVarRef("_lighting"))}
 };
 
@@ -176,6 +176,6 @@ ShaderDef pixelVsh{
 
 ShaderDef pixelPsh{
     {"gl_FragColor", mkStandardCombiner(ppspecularLighter,
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_BLACK),
                                         new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true))}
 };
