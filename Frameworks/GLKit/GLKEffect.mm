@@ -361,12 +361,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             shaderName += "UUUnn";
         }
 
-        // Save final shader name.
-        NSString* s = [NSString stringWithCString: shaderName.c_str()];
-        if (![s isEqualToString: self.shaderName]) {
-            NSLog(@"Switching to shader [%@] from [%@]", s, self.shaderName);
-            self.shaderName = s;
-        }
+        self.shaderName = [NSString stringWithCString: shaderName.c_str()];
     } else {
         if (self.lightingEnabled) {
             // TODO: sort lights so we don't get shader permutations such as LUL which is the same
@@ -390,6 +385,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 -(BOOL)prepareShaders
 {
+    // Account for subclasses.
+    self.shaderName = [self.shaderName stringByAppendingString: self.shaderExtName];
+    
     // Check for shader existence.
     self.shader = [[GLKShaderCache get] shaderNamed: self.shaderName];
     if (self.shader == nil) {
@@ -585,7 +583,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 -(BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 
+    string name; // no name by default, can re-use existing shaders with no cube mapping.
+    
     if (_textureCubeMap.enabled) {
+        name = "_CM";
+
         ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
         GLuint name = _textureCubeMap.name;
         if (name > 0) {
@@ -596,11 +598,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         auto matProps = self.material;
         float reflAlpha = matProps.reflectionBlendAlpha;
-        if (reflAlpha != 1.f) mat->addvar(GLKSH_REFL_ALPHA, reflAlpha);
+        if (reflAlpha != 1.f) {
+            name += 'A';
+            mat->addvar(GLKSH_REFL_ALPHA, reflAlpha);
+        }
         GLuint reflTex = matProps.reflectionBlendTex;
-        if (reflTex > 0) mat->addtex(GLKSH_REFL_TEX, reflTex);        
+        if (reflTex > 0) {
+            name += 'T';
+            mat->addtex(GLKSH_REFL_TEX, reflTex);
+        }
     }
 
+    self.shaderExtName = [NSString stringWithCString: name.c_str()];
     return TRUE;
 }
 
