@@ -657,7 +657,6 @@ GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z)
 
 GLKMatrix4 GLKMatrix4MakeXRotation(float rad)
 {
-    rad = -rad;
     GLKMatrix4 res = { 0 };
 
     res.m00 = 1.f;
@@ -671,7 +670,6 @@ GLKMatrix4 GLKMatrix4MakeXRotation(float rad)
 
 GLKMatrix4 GLKMatrix4MakeYRotation(float rad)
 {
-    rad = -rad;
     GLKMatrix4 res = { 0 };
 
     res.m11 = 1.f;
@@ -685,7 +683,6 @@ GLKMatrix4 GLKMatrix4MakeYRotation(float rad)
 
 GLKMatrix4 GLKMatrix4MakeZRotation(float rad)
 {
-    rad = -rad;
     GLKMatrix4 res = { 0 };
 
     res.m00 = res.m11 = cosf(rad);
