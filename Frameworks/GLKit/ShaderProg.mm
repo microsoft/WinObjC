@@ -44,9 +44,13 @@ ShaderNode* mkToLight(const string& pos, const string& tmpName = "")
     return new ShaderTempRef(GLKS_FLOAT4, tmpName, toLight);
 }
 
-ShaderNode* mkAtten(const string& attenName, ShaderNode* toLight, const string& tmpName = "")
+ShaderNode* mkAtten(const string& attenName, const string& spotParams, const string& spotDir,
+                    ShaderNode* toLight, const string& tmpName = "")
 {
-    ShaderNode* attenNode = new ShaderAttenuator(toLight, new ShaderVarRef(attenName));
+    auto baseAtten = new ShaderAttenuator(toLight, new ShaderVarRef(attenName));
+    auto spotAtten = new ShaderSpotlightAtten(toLight, new ShaderVarRef(spotParams), new ShaderVarRef(spotDir));
+    auto attenNode = new ShaderOp(baseAtten, spotAtten, "*", true);
+    
     if (tmpName.empty()) return attenNode;
     return new ShaderTempRef(GLKS_FLOAT, tmpName, attenNode);
 }
@@ -55,7 +59,7 @@ ShaderNode* mkLighter(ShaderNode* toLight, const string& attenTemp, const string
                       const string& clr, const string& attenName, const string& spotParams,
                       const string& spotDir, const string& normalName)
 {
-    auto atten = new ShaderOp(mkAtten(attenName, toLight, attenTemp),
+    auto atten = new ShaderOp(mkAtten(attenName, spotParams, spotDir, toLight, attenTemp),
                               new ShaderSpotlightAtten(toLight, new ShaderVarRef(spotParams), new ShaderVarRef(spotDir)),
                               "*", true);
     return new ShaderLighter(toLight, new ShaderVarRef(normalName), new ShaderVarRef(clr), atten);
@@ -77,18 +81,20 @@ ShaderNode* mkToCam(const string& tempName = "")
 }
 
 ShaderNode* mkSpecLighter(ShaderNode* toLight, ShaderNode* toCam, const string& attenTemp, const string& pos,
-                          ShaderNode* specClrNode, const string& attenName, const string& normalName)
+                          ShaderNode* specClrNode, const string& attenName, const string& spotParams,
+                          const string& spotDir, const string& normalName)
 {
-    ShaderNode* atten = mkAtten(attenName, toLight, attenTemp);
+    ShaderNode* atten = mkAtten(attenName, spotParams, spotDir, toLight, attenTemp);
     return new ShaderSpecLighter(toLight, toCam, new ShaderVarRef(normalName), specClrNode, atten);
 }
 
 ShaderNode* mkSpecLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
-                          ShaderNode* specClrNode, const string& attenName, const string& normalName)
+                          ShaderNode* specClrNode, const string& attenName, const string& spotParams,
+                          const string& spotDir, const string& normalName)
 {
     ShaderNode* toLight = mkToLight(pos, toLightTemp);
     ShaderNode* toCam = mkToCam(TO_CAM_TMP);
-    return mkSpecLighter(toLight, toCam, attenTemp, pos, specClrNode, attenName, normalName);
+    return mkSpecLighter(toLight, toCam, attenTemp, pos, specClrNode, attenName, spotParams, spotDir, normalName);
 }
 
 ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
@@ -120,11 +126,14 @@ auto diffuseLighter =
 auto specularLighter =
     new ShaderAdditiveCombiner({
         mkSpecLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
-                      new ShaderVarRef(GLKSH_LIGHT0_SPECULAR), GLKSH_LIGHT0_ATTEN, GLKSH_NORMAL_NAME),
+                      new ShaderVarRef(GLKSH_LIGHT0_SPECULAR), GLKSH_LIGHT0_ATTEN, 
+                      GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, GLKSH_NORMAL_NAME),
         mkSpecLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
-                      new ShaderVarRef(GLKSH_LIGHT1_SPECULAR), GLKSH_LIGHT1_ATTEN, GLKSH_NORMAL_NAME),
+                      new ShaderVarRef(GLKSH_LIGHT1_SPECULAR), GLKSH_LIGHT1_ATTEN, 
+                      GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, GLKSH_NORMAL_NAME),
         mkSpecLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
-                      new ShaderVarRef(GLKSH_LIGHT2_SPECULAR), GLKSH_LIGHT2_ATTEN, GLKSH_NORMAL_NAME)});
+                      new ShaderVarRef(GLKSH_LIGHT2_SPECULAR), GLKSH_LIGHT2_ATTEN, 
+                      GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, GLKSH_NORMAL_NAME)});
 
 auto ppdiffuseLighter =
     new ShaderOp(
@@ -141,13 +150,13 @@ auto ppspecularLighter =
     new ShaderAdditiveCombiner({
         mkSpecLighter(new ShaderVarRef("_toLight0"), new ShaderVarRef("_toCam"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT0_SPECULAR)),
-                      GLKSH_LIGHT0_ATTEN, "_vertNorm"),
+                      GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, "_vertNorm"),
         mkSpecLighter(new ShaderVarRef("_toLight1"), new ShaderVarRef("_toCam"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT1_SPECULAR)),
-                      GLKSH_LIGHT1_ATTEN, "_vertNorm"),
+                      GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, "_vertNorm"),
         mkSpecLighter(new ShaderVarRef("_toLight2"), new ShaderVarRef("_toCam"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT2_SPECULAR)),
-                      GLKSH_LIGHT2_ATTEN, "_vertNorm")});
+                      GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, "_vertNorm")});
 }
 
 // Per-vertex lighting.
