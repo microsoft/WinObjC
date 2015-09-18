@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Canabalt",
+    "buildSteps": [
+      { "action": "getsource", "cmd": "git clone https://github.com/ericjohnson/canabalt-ios.git", "output": "canabalt-ios" },
+      { "action": "vsimport", "dir": "canabalt-ios", "args": "" },
+      { "action": "msbuild", "dir": "canabalt-ios", "args": "" }
+    ]
+  }
+]

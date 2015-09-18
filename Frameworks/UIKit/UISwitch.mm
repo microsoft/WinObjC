@@ -24,7 +24,7 @@
 #include "UIKit/UISwitch.h"
 #include <math.h>
 
-const float minX = 20.0f, maxX = 72.0f;
+const float minX = 21.0f, maxX = 71.0f;
 
 @implementation UISwitch {
     bool _on;

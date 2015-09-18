@@ -17,7 +17,8 @@
 #ifndef _NSLAYOUTCONSTRAINT_H_
 #define _NSLAYOUTCONSTRAINT_H_
 
-#import <StarboardExport.h>
+#import <Foundation/Foundation.h>
+#import <CoreFoundation/CoreFoundation.h>
 
 #define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
 SB_EXPORT NSDictionary *_NSDictionaryOfVariableBindings(NSString *keysString, id firstVal, ...);
@@ -41,7 +42,7 @@ enum {
 };
 typedef float NSLayoutPriority;
 
-enum {
+typedef enum {
     NSLayoutAttributeLeft = 1,
     NSLayoutAttributeRight,
     NSLayoutAttributeTop,
@@ -53,9 +54,26 @@ enum {
     NSLayoutAttributeCenterX,
     NSLayoutAttributeCenterY,
     NSLayoutAttributeBaseline,
+    NSLayoutAttributeLastBaseline = NSLayoutAttributeBaseline,
+    NSLayoutAttributeFirstBaseline,
+
+    NSLayoutAttributeLeftMargin,
+    NSLayoutAttributeRightMargin,
+    NSLayoutAttributeTopMargin,
+    NSLayoutAttributeBottomMargin,
+    NSLayoutAttributeLeadingMargin,
+    NSLayoutAttributeTrailingMargin,
+    NSLayoutAttributeCenterXWithinMargins,
+    NSLayoutAttributeCenterYWithinMargins,
+
     NSLayoutAttributeNotAnAttribute = 0
-};
-typedef int32_t NSLayoutAttribute;
+} NSLayoutAttribute;
+
+typedef enum {
+	NSLayoutConstraintOrientationHorizontal = 0,
+	NSLayoutConstraintOrientationVertical = 1
+} NSLayoutConstraintOrientation;
+
 
 enum {
     /* choose only one of these */
@@ -80,26 +98,28 @@ enum {
 };
 typedef uint32_t NSLayoutFormatOptions;
 
-enum {
+typedef enum {
     NSLayoutRelationLessThanOrEqual = -1,
     NSLayoutRelationEqual = 0,
     NSLayoutRelationGreaterThanOrEqual = 1,
-};
-typedef int32_t NSLayoutRelation;
+} NSLayoutRelation;
 
 @class NSDictionary, NSArray;
 
-@interface NSLayoutConstraint : NSObject
+UIKIT_EXPORT_CLASS
+@interface NSLayoutConstraint : NSObject<NSCoding> 
 
 @property (readonly, assign) id firstItem;
 @property (readonly, assign) id secondItem;
 @property (readonly) NSLayoutAttribute firstAttribute;
 @property (readonly) NSLayoutAttribute secondAttribute;
+@property (readonly) CGFloat multiplier;
+@property (readonly) NSLayoutRelation relation;
 @property NSLayoutPriority priority;
 @property CGFloat constant;
 
 + (NSArray *)constraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
-+ (id)constraintWithItem:(id)view1 attribute:(NSLayoutAttribute)attr1 relatedBy:(NSLayoutRelation)relation toItem:(id)view2 attribute:(NSLayoutAttribute)attr2 multiplier:(CGFloat)multiplier constant:(CGFloat)c;
++ (instancetype)constraintWithItem:(id)view1 attribute:(NSLayoutAttribute)attr1 relatedBy:(NSLayoutRelation)relation toItem:(id)view2 attribute:(NSLayoutAttribute)attr2 multiplier:(CGFloat)multiplier constant:(CGFloat)c;
 
 @end
 

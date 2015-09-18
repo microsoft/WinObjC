@@ -106,10 +106,14 @@ LIBRARY UIKit
 	 __objc_class_name_UICollectionViewFlowLayout	CONSTANT
      _OBJC_CLASS_UICollectionViewLayout	DATA
 	 __objc_class_name_UICollectionViewLayout	CONSTANT
-	 _OBJC_CLASS_UIStoryboard	DATA
+     _OBJC_CLASS_UIStoryboard	DATA
 	 __objc_class_name_UIStoryboard	CONSTANT
-	 _OBJC_CLASS_UIStoryboardSegue	DATA
+	   _OBJC_CLASS_UIStoryboardSegue	DATA
 	 __objc_class_name_UIStoryboardSegue	CONSTANT
+	   _OBJC_CLASS_NSLayoutConstraint	DATA
+	 __objc_class_name_NSLayoutConstraint	CONSTANT
+     _OBJC_CLASS__UILayoutGuide DATA
+   __objc_class_name__UILayoutGuide CONSTANT
 
      _OBJC_CLASS_GKScore	DATA
 	 __objc_class_name_GKScore	CONSTANT

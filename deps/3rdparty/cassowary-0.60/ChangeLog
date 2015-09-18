@@ -1,0 +1,1991 @@
+Sun Mar 12 13:40:44 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Give docstrings as arguments
+
+	* guile/cl-snarf.h: Added docstring as an argument to CL_PROC to
+	be like the revised Scwm documentation extraction system.
+
+Sat Feb 12 20:34:55 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* Makefile.am: Added GTL.h.patch to EXTRA_DIST
+
+Sat Feb 12 20:31:47 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: Drop
+ 	ExternalResetStayConstants, make ResetStayConstants() public.
+  	Test _fResetStayConstantsAutomatically before doing so in
+ 	Resolve().  Use _fAutosolve instead of _fOptimizeAutomatically.
+	Drop DisplayObjective (wasn't defined anyway).  Drop field
+	_fOptimizeAutomatically (use _fAutosolve from parent, instead).
+
+	* guile/cassowary_scm.hpp, guile/cassowary_scm.cc: Drop extra
+ 	include of guile/gh.h
+
+	* guile/cassowary_scm.cc: Added `cl-set-auto-solve!',
+	`cl-set-auto-reset-stay-constants!'
+
+Sat Jan 29 17:45:32 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in (CASSOWARY_VERSION): Bump to 0.55.
+
+Sat Jan 29 17:43:05 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc (Resolve): Do not comment out
+	"ResetStayConstants()" as Beurivé had done.  This was resulting in 
+	quirky behaviour whereby the windows were "rubber-banding" back to 
+	where they were at the start of an interaction (e.g., if I push a
+	window out of the way to the left with another window, as I move
+	the pushing window back to the right, the other window comes back
+	to the right with the pushing window).  Maybe that's desirable
+	behaviour in some instances, but it's not the behaviour we
+	document and sure feels weird to me.
+
+Sat Jan 29 17:38:43 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/sym.java, java/parser.java, java/Yylex.java: Added -- these 
+	are created by JavaCUP which I don't want to be necessary for
+	building.
+
+Mon Jan 24 09:34:20 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Set SymbolicWeight multiplier to
+	1000000, not 10000 (A.Beurivé)
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Added
+ 	ChangeStrength, ChangeStrengthAndWeight, ChangeWeight,
+ 	DisplayObjective, ExternalResetStayConstants fns.
+	(RemoveConstraintInternal) Avoid picking the objective row when
+	removing a constraint.  (Optimize) Pick any negative row to avoid
+	unending pivots [I think this is a work-around to avoid having to
+	implement Bland's anti-cycling rule... maybe I should just do
+	that, though].  (A.Beurivé)
+
+Thu Dec 16 11:12:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Version bumped to 0.54a
+
+Thu Dec 16 11:10:42 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.am: Force prefix ordering in SUBDIRS so that "."
+	dir gets built before the demos subdirectory.
+
+	* smalltalk/Makefile.am: Fix .dat file -- thanks Alan!
+
+Wed Dec 15 19:31:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/README: More notes re: security problems w/ Java 2.
+
+	* java/cda/Makefile.am: Added run target to ease running it.
+
+	* Makefile.am (EXTRA_DIST): Added c++/{config.h.in,stamp-h.in}
+
+	* java/cda/Makefile.am (EXTRA_DIST): Clean up install of .gif
+	files.
+
+	* java/Makefile.am (EXTRA_DIST): Added ClReader.{cup,lex}
+
+	* c++/Makefile.am: Do not make symlink to cassowary; let
+	configure.in do that.
+
+Wed Dec 15 18:13:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.am: Put SUBDIRS demo cda back in since they
+	compile now.
+
+	* scripts/recreate-symlinks: Update with links to ../../EDU from
+	demo directories for Java code.  Use ln -sf, not just ln -s, to avoid 
+	warnings.
+
+	* Makefile.am (EXTRA_DIST): Include scripts/recreate-symlinks
+
+	* configure.in: Run recreate-symlinks script.
+
+Wed Dec 15 18:07:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/cda/Makefile.am:  Put Constraint/*, Main/* files into the
+	distribution and build with them. 
+
+	* java/demos/*.java: Move everything into the
+	EDU.Washington.grad.gjb.cassowary_demos package.
+
+	* java/cda/classes/run.html, java/demos/quaddemo.htm: Fix nl
+ 	convention, name class explicitly w/ package in front, w/o
+ 	trailing .class.
+
+	* java/cda/**: Move everything into the
+	EDU.Washington.grad.noth.cda package.
+
+Wed Dec 15 17:21:08 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.am: Build java parser.
+
+	* java/ClParseTest.java: Added.
+
+	* GTL.h.patch: Added -- need by gcc-2.95 when compiling GTL-0.3.1
+
+	* java/README: Mention java parser.
+
+	* java/ClReader.lex, java/ClReader.cup: Cleanup, guard debug messages.
+
+Tue Dec 14 11:15:01 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Fix -fpermissive test to not check "cc" as well as 
+	$CC.  Eliminate the --enable-permissive flag since it is no longer 
+	necessary.
+
+Mon Dec 13 15:56:19 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Yylex.java: Added, from Will Portnoy.
+
+	* java/ClReader.cup, java/ClReader.lex: Latest version from Will,
+	cleaned up line breaks, set a tab-width for Emacs.
+
+Mon Dec 13 15:55:59 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Remove ClReader.cc -- why did I add this
+	before?
+
+Fri Dec 10 13:29:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClSimplexSolver.java (addLowerBound, addUpperBound):  Fix
+	these two functions to call addConstraint before returning.
+	Thanks Stephen Allain for catching this!  Updated exception specs
+	for those methods and for addBounds.
+
+Tue Dec  7 08:42:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* smalltalk/A991206.dat: New image from Alan. Include correct
+	version of code for "ClSimplexSolver removeConstraint:" to fix bug
+	when deleting constraints with weights other than 1.  Also
+	disallow invalid comparisons between symbolic weights and floats.
+	Replace expressions "x clApprox: 0.0" with "x clApproxZero", which
+	works correctly for both symbolic weights and floats.
+
+	* smalltalk/*.st:  Added from Alan.
+
+Mon Nov 29 16:23:06 1999    <gjb@cs.washington.edu>
+
+	* configure.in: Bump to version 0.54, added -lGTL to GTL_LIB even
+ 	when no --with-gtl option is given.  No longer create README from
+ 	README.in.  Added --enable-static-library option, off by default.
+
+	* c++/Makefile.am (sources): Added ClReader.cc
+
+	* cassowary.spec.in, cassowary-both.spec.in: No longer need the
+	--enable-guile-build option;  it's the default now.
+
+Mon Nov 29 10:52:49 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added use of AM_CONDITIONAL
+	CL_BUILD_STATIC_LIBRARY;  only buile libcassowary.a if that option 
+	was selected.
+
+	* guile/Makefile.am (libconstraints_la_LIBADD): Added @GTL_LIB@ to 
+	make the guile library work with the FD-enabled version of the library.
+
+Sat Nov 27 16:11:10 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Invert sense of --enable-guile-build and call it
+	--disable-guile-build;  build guile wrapper automatically if
+	guile-config works.
+
+Sat Nov 27 15:20:03 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Use an AM_CONDITIONAL for CL_BUILD_FD_SOLVER, not
+	an AC_DEFINE.  Also, remove duplicate AC_SUBST of GTL_LIB, and fix 
+	AM_CONDITIONAL of CL_BUILD_TESTS.
+
+Sat Nov 27 15:19:20 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Try separating out FD stuff better, and use
+	CL_BUILD_FD_SOLVER AM_CONDITIONAL to control dependence on that
+	code.
+
+	* c++/config.h.in: Drop CL_BUILD_FD_SOLVER; it's now an
+	AM_CONDITIONAL instead of a define.
+
+Wed Nov 24 15:40:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Fix typo in a throw message.
+
+	* c++/ClLinearInequality.h: Throw an editmisuse when a
+	ClLinearInequality is created w/o an inequality operator.
+
+Tue Nov 23 16:54:05 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Use guile's pkglibdir, not pkgdatadir, for
+	choosing cassoguiledir.
+
+Tue Nov 16 17:35:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClReader.lex, java/ClReader.cup: Added -- code by Will
+	Portnoy for adding a parser to the Java implementation.  Untested, 
+	and an early version that he emailed me.
+
+Tue Nov 16 17:34:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClTestColumns.java, java/ClTests.java: Put in the cassowary 
+	package, instead of importing cassowary.*;  jikes needed this
+	(discovered during testing of java-ml work).
+
+Sat Nov 13 11:43:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Timer.java (Timer): Remove return type from Timer()
+	constructor (jikes caught the bug when I used this as a test case
+	for my java-ml work).
+
+Sun Oct 24 13:17:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Updated version to 0.53, generate
+	smalltalk/Makefile from Makefile.am.
+
+	* NEWS: Updated for 0.53 release.
+
+	* Makefile.am: Added smalltalk directory to SUBDIRS.
+
+Sat Oct 23 14:34:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* COPYING.GPL: Added
+
+	* LICENSE: Added Scwm exception
+	
+
+Sat Oct 23 14:33:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Make cassowary/ directory symlink as needed.
+
+Sun Oct  3 16:50:43 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Use clvNil some places instead of NULL.
+  	This is important for newer, pickier gcc-2.95.x. Thanks Alexandre
+ 	Duret-Lutz for the patch!
+
+Thu Sep 30 08:17:16 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.cc: Added missing #include <stdarg.h> -- Thanks
+	Harry Hochheiser for bug report.
+
+Sun Sep 26 13:43:12 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (libcassowary_la_LDFLAGS): Added -version-info
+ 	flag to make libcassowary.so.0.0.1, instead of .0.0.0
+
+Sun Sep 26 13:15:32 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* README, ANNOUNCE: Removed
+
+	* README.in, ANNOUNCE.in: Added
+
+	* configure.in: Create README, ANNOUNCE, bump to 0.52post
+
+Sat Sep 25 16:02:22 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in, configure.in: Update to version 0.52.
+
+Fri Sep 24 18:51:42 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Remove first of redundant checks for HAVE_SCM_MAKE_SMOB_TYPE_MFPE.
+
+Mon Sep 20 13:36:45 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Fix `cl-int-value' to use gh_int2scm
+	instead of gh_double2scm
+
+Sun Sep 19 14:45:59 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Replace
+ 	_editVarMap with _editInfoList, a list.  Make ClEditInfo class
+ 	contain the variable since its no longer stored as values in a
+ 	hash where the key is the variable.  Drop the index from
+ 	ClEditInfo.  Rename ClVarToEditInfoMap to ClEditInfoList.
+
+Sun Sep 19 14:44:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc (multiedit2): Added this new test to check nested
+ 	edits that share an existing variable better.  This tests the fix
+ 	for the ScwmButtons auto-orientation seg-fault bug in Scwm.
+
+	* c++/ClBug0.cc: Added comment re: new bug fix.
+
+Sat Sep 18 22:31:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in:  Added GUILE_LIBS setting.
+
+	* cassowary.spec.in: Use fake_root_for_install to get the
+	cassowary guile library in proper place.
+
+	* autogen.sh: Only create symlink if not already created.
+
+	* acconfig.h, c++/config.h.in: Added HAVE_SCM_MAKE_SMOB_TYPE_MFPE
+
+	* README: Added note re: enable-permissive
+
+	* guile/cassowary_scm.cc: Use new-style (guile-1.3.2 or better)
+	SMOBs conditioning on HAVE_SCM_MAKE_SMOB_TYPE_MFPE.
+
+Wed Sep  8 20:03:25 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Bump to release 8
+
+	* cassowary-nofd.spec2.in: Bump to release 2.
+
+Wed Sep  8 19:43:53 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Drop building of config-inline.h -- let
+	configure handle that-- this was causing a double-build
+	(!!!ugh!!!) of Cassowary when building from RPMs, e.g.
+
+	* GTL.spec.in: Use install-strip target.
+
+Tue Sep  7 23:34:49 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in, Makefile.am: use cassowary-nofd.spec2.in
+
+	* cassowary-nofd.spec2.in: Renamed from cassowary-nofd.spec.in,
+	since having two *.spec files in the top level upsets rpm (it cats 
+	them together and then gets confused by the double .spec file).
+
+	* cassowary-both.spec.in: Added-- rpm doesn't support two %build
+	tags (one for a subpackage), but if it did, this is what the
+	corresponding .spec file might look like.
+
+Tue Sep  7 23:02:26 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* Makefile.am: Added cassowary-nofd.spec to EXTRA_DIST,
+	bin_SCRIPTS = cassowary-config.  Added dist-nofd target, and
+	supporting targets.
+
+	* cassowary.spec.in: Bump to 7, provide virtual package, install
+	%{prefix}/bin/* (for cassowary-config script).
+
+	* configure.in: Added CASSOWARY_VERSION variable, create
+	cassowary-config, cassowary-nofd.spec
+
+	* cassowary-config.in, cassowary-nofd.spec.in: Added
+
+Mon Sep  6 21:40:58 1999    <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Use install-strip target to remove debug
+	symbols and save disk space.  Remove %{prefix}/doc/* from the
+	%files list as they are in the %doc listing already.
+
+Mon Sep  6 12:25:14 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Use --host=alpha-linux on that platform
+	(using an %ifarch). Bump to release 6.
+
+	* GTL.spec.in: Fix the ./configure line for alpha platform (was
+	missing "--" before the "prefix" option). Bump to release 2.
+
+	* c++/ClSymbolicWeight.h, c++/ClSymbolicWeight.cc: Use int, not
+ 	unsigned, to remove ambiguity in ClSymbolicWeight constructor.
+
+Sat Sep  4 15:17:13 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* acconfig.h: Added NO_CC_PERMISSIVE flag.
+
+	* autogen.sh: Added #!/bin/sh -  to top.
+
+	* configure.in: Test for g++/gcc -fpermissive flag.  Hopefully
+	this will let it get used only where it is accepted.  Some better
+	guile tests, too.
+
+	* cassowary.spec.in: Use --enable-permissive flag, bump from
+	release 3 to 5.
+
+Sat Sep  4 14:44:14 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am, guile/Makefile.am: Added CPPEXTRAFLAGS to
+ 	AM_CPPFLAGS.
+
+	* guile/Makefile.am: Guard lib_LIBRARIES with HAVE_GUILE test so
+	that guile stuff is only built when GUILE is desired and we have
+	the libraries installed.
+
+Tue Aug 31 22:16:04 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am
+ 	(install-javaJAVA): Do not try to install .class files if no
+ 	HAVE_JAVA
+
+Tue Aug 31 21:30:24 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Do not use --disable-java-build, since that
+	still invokes the rule which is not what I want.
+
+	* java/demos/Makefile.am, java/cda/Makefile.am: Added bogus
+ 	classjava.stamp rule when no HAVE_JAVA to work around getting an
+ 	error when trying to run javac with no source files.
+
+	* configure.in: Fix some HAVE_JAVA bugs.  Still not perfect, but better.
+
+Tue Aug 31 17:07:31 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am:
+ 	Added EXTRA_DIST.
+
+Tue Aug 31 16:27:41 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in (HAVA_JAVA): AC_OUTPUT the java/*/Makefiles.
+
+	* cassowary.spec.in: Use --disable-java-build ./configure option.
+	Bump to release 3.
+
+	* Makefile.am: Do not conditionally do directories-- that is
+	really broken with automake/rpm building.
+
+Tue Aug 31 16:20:45 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am
+ 	(java_JAVA): Guard with if HAVE_JAVE.
+
+Mon Aug 30 12:03:26 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Bump to release 2
+
+	* configure.in: Drop the java/* wrappers/* from AC_OUTPUT macro--
+	this breaks java builds but make the Cassowary RPM build more
+	cleanly.  I'm going to start making a separate cassowary-java
+	distribution unless I can figure out how to make automake and Java 
+	co-exist more happily.
+
+Mon Aug 30 12:00:39 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClAbstractVariable.h: #include "cl_auto_ptr.h" and use
+ 	cl_auto_ptr, not auto_ptr.
+
+Mon Aug 30 10:06:50 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/cl_auto_ptr.h: Change the conditional inclusion sandwich to
+	CL_AUTO_PTR_H.  Added "#define cl_auto_ptr auto_ptr" for MSVC.
+
+Thu Aug 26 22:42:50 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Require guile 1.3.2, to be safe.  Require GTL 
+	>= 0.3.1, not gtl >= 0.3.1 (note capitalization)
+
+Thu Aug 26 14:12:42 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.h, c++/ClCTest.c, c++/ClC.h, c++/ClC.cc,
+ 	c++/Cassowary.h, c++/ClConstraint.h: Use LONG_MIN, not MINLONG and
+ 	#include <limits.h> not <values.h> since the latter is deprecated
+ 	(and does not work in VC++).
+
+	* THANKS: Thank Pengling He for his VC++ bug report re: values.h
+	
+Thu Aug 26 14:08:46 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in (GUILE_PKGDATA_DIR): Set cassoguiledir variable,
+	and use ${prefix} prefix of GUILE_PKGDATA_DIR to be sure that rpm
+	building succeeds (was failing because it was trying to write to
+	an absolute location that guile told it to use, instead of using
+	the prefix of $RPM_BUILD_ROOT).
+
+	* c++/Makefile.am: Fix lex/yacc building dependencies.
+
+	* guile/Makefile.am (cassoguile_LTLIBRARIES): Do not set
+	cassoguiledir here-- do it in configure.in instead.
+
+Thu Aug 26 11:02:36 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* guile/Makefile.am (EXTRA_DIST), docs/Makefile.am: Added docs to
+	EXTRA_DIST.
+
+	* c++/Makefile.am: Added ClReader.l, ClReader.y to EXTRA_DIST,
+	remove ClReader.cc from sources.  Added timer.h to
+	pkginclude_HEADERS.
+
+	* Makefile.am: Update EXTRA_DIST
+
+Thu Aug 26 08:45:08 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Write cassowary.spec, GTL.spec.  Bump version to
+	0.51.
+
+	* autogen.sh: Run configure, not config.status
+
+	* VERSION, README, NEWS, ANNOUNCE: Bump to 0.51, add date, notes.
+
+	* Makefile.am: Drop Java, Python to make easier to package.  Added 
+	EXTRA_DIST to include some doc files and the cassowary.spec file.
+
+Wed Aug 25 22:54:18 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (pkginclude_HEADERS): cl_auto_ptr.h now, not auto_ptr.h
+
+Mon Aug 23 21:26:31 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* ltmain.sh, ltconfig, libtool, configure: Removed -- these are
+	autogenerated by autogen.sh
+
+Mon Aug 23 21:23:53 1999   Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Use cl_auto_ptr, not auto_ptr.
+
+	* c++/ClAbstractVariable.h: #include <memory>, not "auto_ptr.h"
+
+	* c++/cl_auto_ptr.h: Added -- renamed from auto_ptr.h since that
+	was causing some difficulties due to the standard C++ auto_ptr template. 
+
+Mon Jul 26 10:19:35 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (libcassowary_la_SOURCES): Remove redundant
+	listing of ClFD* files from this target.
+
+Mon Jul 26 09:41:09 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Cl.h: Include ClConstraint.h, since cnLT, etc., need to be
+	defined for ClReader.y
+
+Mon Jul 26 09:22:11 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* acconfig.h, configure.in: Use CL_ prefix for BUILD_FD_SOLVER and
+ 	HAVE_GTL.
+
+Mon Jul 26 09:17:56 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/config.h.in,c++/ClC.h,c++/ClC.cc,c++/Cl.h: Use CL_ prefix on
+ 	BUILD_FD_SOLVER and HAVE_GTL so that the config-inline.h gets the
+ 	right definitions.
+
+	* c++/Makefile.am: Expanded out the sources_for_fd_solver since
+	the _OBJECTS make variable doesn't get expanded properly if this
+	step is deferred until later.  This breaks builds w/o FD solver,
+	but I have to get Amaya working ASAP.
+
+Mon Jul 19 17:08:03 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Increase multiplier to 10000 for
+	AsDouble-- works around the bug in resizing Scwm windows because
+	the medium stay constraints on width and height are too strong for 
+	the strong edit constraint.
+
+Sun Jul 11 19:37:39 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.h: Remove "class" from a typedef
+	ClMap<ClVariable,class T>.  Thanks Alexandre 'Pollux' Duret-Lutz
+	for testing against a more recent egcs (gcc-2.95) that caught this 
+	problem.
+
+	* configure.in: Improve checks for guile so that it uses --prefix
+	and --exec-prefix to --guile-prefix and --guile-exec-prefix
+
+Sat Jul 10 19:21:34 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* autogen.sh: rm libtool stuff just in case.
+
+	* README: Updated version number, notes about building it and
+	needing GTL for fd solver.
+
+	* configure.in: Added --enable-cxx-tests, --enable-fd-solver,
+	--with-gtl;  switch --disable-java-build to --enable-java-build
+
+	* acconfig.h, c++/config.h.in: Added HAVE_GTL, BUILD_FD_SOLVER options.
+
+	* c++/Makefile.am: Make only the library and ClTests get built by
+	default (other binary test programs are each big when build -g,
+	and aren't useful to the end user).  Use @SOURCES_FOR_FD_SOLVER@
+	to permit a version of the toolkit to be build without the finite
+	domain subsolver.
+
+	* c++/ClC.h, c++/ClC.cc, c++/Cl.h: Add #ifdefs for no fd subsolver.
+
+Fri May  7 17:02:09 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClC.cc (CL_ClvLookup): Return NULL if varmap is NULL instead 
+	of asserting it is non-NULL
+
+Thu May  6 19:02:38 1999  Greg J Badros  <gjb@bowman.cs.monash.edu.au>
+
+	* c++/ClFDTests.cc: Added return type to connect1.
+
+	* c++/ClFDSolver.cc: Return *this where missing.
+
+	* c++/ClFDConnectorVariable.h: Reorder mem vars to match
+	initialization order in ctr.
+
+	* c++/ClC.h, c++/ClC.cc:  Added CL_ClvIsFD.
+
+Sun May  2 10:42:00 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClReader.l: Permit "_" in identifiers (needed for env
+	variable precondition variables).
+
+	* c++/ClLinearInequality.h: Honour _fStrictInequality flag when
+	testing FIsSatisfied().
+
+	* c++/ClLinearConstraint.h: Added missing "void" return type for
+	ChangeConstant.
+
+Fri Apr 30 09:45:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDConnectorVariable.cc, c++/ClFDConnectorVariable.h:
+	Added -- support connecting the FD solver to the simplex solver
+	via a variable in the FD region that gets its value "copied" to a
+	analogous variable in the Simplex region.
+
+	* Makefile.am: Added ClFDConnectorVariable.[ch] files.
+
+	* c++/ClLinearConstraint.h: Added ChangeConstant()
+
+	* c++/ClFloatVariable.h, c++/ClFDVariable.h,
+ 	c++/ClFloatVariable.cc, c++/ClFDVariable.cc,
+ 	c++/ClAbstractVariable.h: Move _pv, SetPv(), Pv() from
+ 	ClFloatVariable, ClFDVariable, into common parent
+ 	ClAbstractVariable.  Drop ClFloatVariable::SetName().
+
+	* c++/ClFDTests.cc: Added connect1 test to test
+	ClFDConnectorVariable
+
+	* c++/ClFDSolver.cc: Use 1 + value-rhs for errors to ensure that
+	strict inequalities behave reasonably.
+
+Thu Apr 29 19:29:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Register variable in the dictionary when
+	initialized from a ClFDVariable*.  Added const ClAbstractVariable
+	*operator() const.
+
+	* c++/ClSolver.h, c++/ClSimplexSolver.h: Added _fAutosolve,
+ 	_pfnChangeClvCallback; added default ctr to initialize.  Added
+ 	SolveNoException(); Moved SetAutosolve(), FIsAutosolving(),
+ 	SetChangeClvCallback() from ClSimplexSolver up to here.
+
+	* c++/ClSolver.cc: Added PrintTo for list<FDNumber>, operator<<
+	for same.
+
+	* c++/ClSimplexSolver.cc: Test constraint with
+	FIsOkayForSimplexSolver() before trying to add it (avoids adding
+	FD constraints to the simplex solver).
+	s/_fOptimizeAutomatically/_fAutosolve/g
+
+	* c++/ClParseTest.cc: Use FCanConvertCn() before trying to.
+
+	* c++/ClFDVariable.h: Make PlfdnDomain() const and return const.
+
+	* c++/ClFDVariable.cc: PrintOn now displays value (duh!)
+
+	* c++/ClFDTests.cc: Use new ListPushOnto() instead of a bunch of
+	push_back.  Added simple2, simple3.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Added ChangeClv(),
+ 	AddConstraintInternal(), RemoveConstraintInternal(),
+ 	ListPushOnto(), fDebugFDSolve var, more debugging code.
+
+	* c++/ClConstraint.h, c++/ClFDConstraint.h: Added
+ 	FIsOkayForSimplexSolver() returning false for FDCns, true in the
+	base class.
+
+	* c++/ClFDBinaryOneWayConstraint.h,
+ 	c++/ClFDBinaryOneWayConstraint.cc: Make ctr take ClConstraint
+ 	instead of ClLinearConstraint.  Added EnsurePreconditionsForCn(),
+ 	FCanConvertCn().  Throw better exceptions instead of
+	ExCLEditMisue-- use new ExCLTooDifficultSpecial.
+
+	* c++/ClCTest.c: Use CL_ClvPrint instead of coding by hand.
+	Added CL_CldvNew() call.
+
+	* c++/ClC.cc, c++/ClC.h: Added FDN_EOL defn, typedefs for Number,
+	FDNumber, CL_CldvNew(), CL_FDCanConvertCn(), CL_FDCnFromCn(),
+	CL_ClvPrint(). Use CL_Solver for PfnChangeClvCallback, not CL_SimplexSolver.
+
+	* c++/ClAbstractVariable.h: Throw instead of assert(false) in base 
+	class IsPivotable(), IsRestricted().
+
+Wed Apr 28 19:38:46 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClC.cc: Added CL_FDSolverNew()
+
+Wed Apr 28 19:10:32 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (INCLUDES): Include @GUILE_INCLUDES@ -- actually 
+	done to get cassowary libraries (GJB:FIXME::)
+
+Wed Apr 28 18:49:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClCTest to the _PROGRAMS, and use
+	-lstdc++ on them
+
+	* c++/ClSolver.h: Expose Resolve() in base-class interface, along
+	with <<, and PrintOn.
+
+	* c++/ClSolver.cc: Added << operator.
+
+	* c++/ClC.h, c++/ClC.cc, c++/ClTest.c: Fixed bugs, use
+ 	CL_Solver... instead of CL_SimplexSolver... where appropriate.
+
+Wed Apr 28 17:15:47 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Make CLevels unsigned, not int, and
+	require all 3 args to the 3 double ctr to remove ambiguity.
+
+	* c++/ClSimplexSolver.h: Check constraint before adding and throw
+	an error if the constraint is no good for the SimplexSolver.
+
+	* c++/ClParseTest.cc: Don't assume a failed add is due to an
+	inconsistent system-- could be wrong kind of constraint was read
+	in.
+
+	* c++/ClLinearInequality.h: Store the strictness of the
+	inequality, since other solvers may be able to use strict ones.
+
+	* c++/ClFDSolver.cc: Fine-tune the exception objects thrown... use 
+	the richer hierarchy.
+
+	* c++/ClFDBinaryOneWayConstraint.c,
+	c++/ClFDBinaryOneWayConstraint.h:  Added IsStrictInequality(), get 
+	the direction of the inequality correct.
+
+	* c++/ClErrors.h: Richer hierarchy of exceptions to cope with
+	solver limitations.
+
+	* c++/ClConstraint.h: Added IsStrictInequality(); have
+	ReadOnlyVars return a const ClVarSet&, not value.
+
+Wed Apr 28 12:20:47 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClFDBinaryOneWayConstraint.cc.
+
+	* c++/ClReader.y, c++/ClReader.l: Added tokens GT, LT, and handle
+	them (for >, <, resp).
+
+	* c++/ClParseTest.cc: try converting to a FD constraint, and show
+	what that object is.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added ctr from a
+	ClLinearConstraint.  Added IsInequality().
+
+Wed Apr 28 12:08:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ro-test.in: Added for testing below.
+
+	* c++/ClFDBinaryOneWayConstraint.cc: Added -- so far just a ctr
+	from a ClLinearConstraint object (since the parser hands me a
+	constraint object that is a ClLinearConstraint object).
+
+Tue Apr 27 20:35:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h, c++/ClSymbolicWeight.cc: Drop default
+ 	ctr, and give default arg value to CLevels of 3.  Added operator*.
+
+	* c++/ClFDTests.cc: Better test.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Use SymbolicWeights for
+	errors, so hierarchy is handled (i.e., strengths on constraints
+	are honoured).
+
+	* c++/ClFDConstraint.h: Added ctr with strength, weight.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added strength, weight
+	arguments to ctr.
+
+	* c++/ClConstraint.h:  Added symbolicWeight() accessor.
+
+Tue Apr 27 15:04:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.cc (RemoveConstraint): Fix some bugs-- handle nil 
+	read-only variable properly, and clean up _mapVarToNode when
+	erasing nodes.
+
+Tue Apr 27 10:40:58 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSolver.cc: Added -- wrote PrintTo, << basic impls, and
+	simple AddConstraint.
+
+	* c++/QocaBench.cc, c++/ClTests.cc, c++/ClSubgraphTest.cc,
+ 	ClLeakTest.cc, ClC.cc: Use Solve(), not solve()
+
+	* c++/ClVariable.h:  Added DesiredValue, PlfdnDomain base-class
+	accessors, handle clvNil in PrintOn.
+
+	* c++/Makefile.am:  Added ClSolver.cc, link with -lGTL, added
+	missing and new .cc, .h files.
+
+	* c++/ClTypedefs.h: added ClVarToConstraintSetMap.
+
+	* c++/ClSolver.h: Added AddConstraint{,NoException},
+	RemoveConstraint{,NoException}, Solver here to the abstract
+	interface, also the prototypes for the PrintTo and << on the
+	ClTypedefs.h types.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Solve(), not
+ 	solve(), move some protos in abstract base class ClSolver.
+
+	* c++/ClLinearInequality.h: Use ClCnRelation, not
+	ClInequalityOperator.
+
+	* c++/ClFDVariable.h, c++/ClFDVariable.cc: More accessors,
+	settors, comment-out non-initial-domain ctr.
+
+	* c++/ClFDTests.cc: Test more.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Almost complete, but
+	largely untested implementation.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added ctrs, setters, getters.
+
+	* c++/ClErrors.h: Fixed throw message for ExCLConstraintNotFound
+	to not refer to the tableau.
+
+	* c++/ClConstraint.h: Added ClCnRelation (was ClInequalityOperator 
+	in c++/ClLinearInequality.h) and wrote StrCnRelation for printing
+	it.
+
+	* c++/Cl.h:  include ClFDSolver.h
+
+	* c++/Cassowary.h : include values.h, def FDN_NOTSET (FIXME: drop this?)
+
+Sun Apr 25 18:55:26 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClFDBinaryOneWayConstraint.h,
+	ClFDConstraint.h to pkginclude_HEADERS.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Added optional
+ 	strength argument to AddPointStays, AddPointStay fns.
+
+	* c++/ClFDVariable.h:  Set _plfdnInitialDomain to avoid a warning
+	for now.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added return xo to PrintOn.
+
+	* c++/ClConstraint.h: Fix order of initializers.
+
+	* c++/ClC.h, c++/ClC.cc: Document return value for
+ 	CL_VarMapDelete, and do proper return.
+
+	* configure.in:  Added --enable-cflags, --enable-cxxflags,
+	--enable-cppextraflags.  Not tested yet.
+
+Sun Apr 25 11:46:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Bump version to .50, for FD features.
+
+Sun Apr 25 11:37:52 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Comment out the Bug sources/builds, add the FD
+	sources.
+
+	* c++/ClSimplexSolver.h: Inherit from ClSolver, too.  Move SetPv, 
+	Pv() out into ClSolver base class.
+
+	* c++/ClSimplexSolver.cc, c++/Cl.h: Make szCassowaryVersion a const char *.
+
+	* c++/ClReadery.y, c++/ClReader.l, c++/ClReader.h: Support "?"
+ 	read-only annotations, and use Constraint::AddROVars() to track
+ 	the ro vars of a constraint expression.
+
+	* c++/ClParseTest.cc: Show whether the constraint is added
+	successfully or if it is inconsistent.
+
+	* c++/ClLinearConstraint.h: Fix BUG-- super should be
+	ClConstraint, not ClLinearConstraint.
+
+	* c++/ClFDVariable.cc: Use <, > to delimit FD vars, not [, ].
+
+	* c++/ClConstraint.h, c++/ClConstraint.cc: Added AddROVars,
+ 	FIsReadOnlyVar, ReadOnlyVars.
+
+Thu Apr 22 20:18:31 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Added ClVariable ctr that takes a
+	ClFDVariable*, this ambiguates returning NULL as a ClVariable, so
+	may not be a good idea, but it does make it less confusing than
+	having another overloaded version of ClVariable's ctr. Added
+	IsFloatVariable, IsFDVariable fwding fns.
+
+	* c++/ClSimplexSolver.cc: Disambiguate uses of NULL to be
+	(ClFloatVariable *)NULL.
+
+	* c++/ClFloatVariable.h: Added IsFloatVariable() to return true
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_ClvLookupTrim for removing ws
+ 	around the var name.
+
+	* c++/ClAbstractVariable.h: Make IsPivotable, IsRestricted both
+	assert false instead of being pure virtual -- they only need to be 
+	overridden if we want to permit them to be called.  Added
+	IsFloatVariable(), IsFDVariable() both returning false in this
+	base class.
+
+	* c++/Cassowary.h: Added FDNumber typedef to be a long.
+
+	* c++/Makefile.am: Added ClFDVariable.{cc,h}
+
+	* c++/ClFDVariable.cc, c++/ClFDVariable.h: Added, copied from
+	ClFloatVariable and modified slightly.
+
+Tue Apr 20 10:18:32 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* smalltalk/README: Note that smalltalk implementation is now in
+	the public domain.
+
+	* README: Update to version 0.43, note about smalltalk
+	implementation being in public domain.
+
+	* LICENSE: Note about not applying to smalltalk implementation
+
+	* ANNOUNCE: Update date to today.
+
+	* *: Changed copyright to be "Greg J. Badros and Alan Borning"
+	instead of "Alan Borning and Greg J. Badros".  Okayed by Alan --
+	to hopefully encourage more people to write me with their
+	questions/problems rather than Alan.
+
+Mon Apr 19 13:45:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec: Added --with-guile-prefix
+
+Mon Apr 19 13:02:46 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClReader.l: Be a bit more careful about end of string
+	handling in YY_INPUT-- only return result = 1 if we read a
+	non-null character.  Call yy_flush_buffer() before throw-ing an
+	error, so that we start anew the next time we are asked to return
+	tokens for the parser.
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_SimplexSolverAddStay. (Fix typo
+	in .cc)
+
+Fri Apr 16 16:36:24 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc, c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc, : Use "RemoveConstraintNoException", not
+	"removeConstraintNoException" (fix initial caps.)
+
+	* c++/ClReader.y: Start looking for a constraint, turn on verbose
+	warnings and DEBUG option (still need to set cldebug = 1 in
+	debugger)
+
+	* c++/ClReader.h: In operator() for the lookup proc, Return
+ 	&clvNil() if _pmapVars is still NULL
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_VariableName(..), CL_VarMapDelete(..),
+	CL_RemoveConstraint(..) 
+
+
+Wed Apr 14 16:56:05 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Bump to .43.
+
+	* c++/ClC.cc (CL_VarMapDelete, CL_VariableName): Added new functions.
+
+	* cassowary.spec: Added, for building rpms
+
+	* c++/gdbinit-cassowary: Added a bunch of guile debugging macros.
+
+	* c++/Makefile.am: Added ClC.cc to libcassowary_a_SOURCES
+
+	* c++/ClReader.y: Turn off parser debugging messages by default
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_ConstraintPrint, CL_FIsSatisfied
+ 	protos
+
+Wed Mar 31 17:23:18 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/Makefile.in: Rename PYTHON_HEADERS to PYTHON_HEADER_DIR 
+	so it does not get treated specially by automake (?).
+
+	* configure.in: Bump to .42. Added --disable-cpp-build,
+	--disable-java-build, and disable Python/Guile builds
+	automatically if directories cannot be found.  Drop the
+	cassowary from c++/cassowary/config.h -- just use c++/config.h
+
+	* autogen.sh: do not fail if config.status is not -x.
+
+	* Makefile.am: Honour the HAVE_foo flags so that not all subdirs
+	have to be built.
+
+Mon Mar 29 21:01:21 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* ltconfig, ltmain.sh: Added -- so libtool isn't broken in
+	distributions. 
+
+Mon Mar 29 20:59:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Try to undo a bash-ism.  Untested on a vendor sh,
+	but still works with bash.
+
+Sat Mar 20 19:19:37 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.41.
+
+Sat Mar 20 19:19:13 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Added config.sub and config.guess to the repo -- they were
+	symlinks before which broke the distribution.
+
+Thu Mar 18 15:20:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.4.
+
+Thu Mar 18 14:44:39 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Do not let config-inline.h get overwritten if it
+	is unchanged.  Add some extra messages to tell status of
+	config-inline.h
+
+Thu Mar 18 12:59:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README, configure.in, wrappers/Makefile.in: Added
+ 	--with-python-headers configure option.
+
+Thu Mar 18 12:48:55 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Added notes about what to do when a subdir build fails,
+	suggest -k by default.
+
+	* guile/Makefile.am (test): Added this target for easier way to
+	run cltests.scm.
+
+	* guile/README: Updated with notes about how to run cltests.scm. 
+
+	* java/Makefile.in: Fix tests build rule.
+
+Thu Mar 18 11:42:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Create config-inline.h at end of script.
+
+	* c++/Makefile.am: Do not have rule for building config-inline.h; 
+	let configure script do that.
+
+Thu Mar 18 11:05:27 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/*.h: Use #include config-inline.h incantation so that header 
+	files don't include config.h (since they may be included by
+	another package that has its own config.h)
+
+	* c++/*.cc: Use #include config.h as these are build-time-only
+	used and can thus rely on the full configure details.
+
+Thu Mar 18 10:57:08 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.hpp: Use #include config-inline.h
+	incantation.
+
+	* guile/cassowary_scm.h: Drop including config.h; it's not
+	needed. 
+
+	* guile/cassowary_scm.cc: Use cassowary/config.h, not config.h
+
+Thu Mar 18 10:29:40 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Install config-inline.h, not config.h, and
+	build config-inline.h by grepping for #define CL_ in config.h.
+	This works around the problem caused by Scwm including Cassowary
+	header files which then included cassowary's config.h and
+	conflicted with Scwm's config.h.
+
+Thu Mar 18 10:11:40 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/test-*.cc: Only #include "Cl.h"
+
+Thu Mar 18 09:50:45 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/Makefile.in (clean): use rm -f so we don't get a
+	warning if file is missing.
+
+Thu Mar 18 09:49:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.in: Use JAVA_CLASS_PATH configure variable.  Fix
+	install target to echo a message about the install happening
+	during the build.
+
+Wed Mar 17 18:54:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Use libtool, and added lib_LTLIBRARIES.  Put
+	benchmarks, bugs, and test programs all under $libdir/cassowary.
+	Drop cassoincludedir, as that's just pkginclude, and use
+	include_HEADERS for Cl.h and ClC.h, the main top-level includes.
+	Also install config.h.
+
+	* c++/Cassowary.h:  #undef PACKAGE, VERSION before #including
+	cassowary/config.h as a cheezy workaround. (Switched from "" to
+	<>, and ../ to cassowary/ also).
+
+Wed Mar 17 18:50:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Put config.h in c++/cassowary so cassowary must do 
+	#include <cassowary/config.h> so there is no filename conflict
+	with other packages including cassowary header files (e.g.,
+	Scwm).  Added AM_PROG_LIBTOOL call.  Set GUILE variables outside
+	of the guile-prefix ACE_ARG_PATH macro, and set GUILE_PKGDATA_DIR
+	use guile-config to find out where we should install the .so file.
+
+Wed Mar 17 18:43:08 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/Makefile.am: Updated to build using libtool, and to
+	install header files.  Changes name to libconstraints.* so that
+	the guile module name (cassowary constraints) works out, and set
+	it to install in the right place.
+
+Wed Mar 17 18:39:13 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cltests.scm: Added #! lines, change name of module to
+	(cassowary constraints), remove redundant `use-modules' call.
+
+	* guile/cassowary_scm.hpp: #include
+	cassowary/ClLinearExpression_fwd.h, not ClLinearExpression_fwd.h
+
+	* guile/cassowary_scm.cc: Change name of module to (cassowary
+	constraints).  Make the init_cassowary_scm fn static.
+
+Wed Mar 17 07:39:10 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h, c++/ClSimplexSolver.cc: Switch back to
+	including config.h (now ../config.h) from Cassowary.h, instead of
+	from ClSimplexSolver.cc.   
+
+Tue Mar 16 19:56:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* acconfig.h: Fix missing comment closer */
+
+	* c++/Makefile.am: Added AM_CPPFLAGS = $(CPPEXTRAFLAGS)
+
+	* configure.in: Use config.h, not c++/config.h, and permit
+	--enable-warnings option to turn on compile-time warnings (uses
+	AM_CPPFLAGS in Makefile.am)
+
+Tue Mar 16 19:26:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in, acconfig.h: Better autoconf support, including
+	several --enable options.  Added acconfig.h to support autoheader
+	doing the right thing in making config.h.in.
+
+Tue Mar 16 19:22:50 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc, c++/Cassowary.h: Include "config.h" from
+ 	here, not from Cassowary.h (still not right-- problem is scwm gets 
+	the wrong config.h.  Maybe config.h should be in ..?
+
+Tue Mar 16 19:21:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/README: Added note about common error when CLASSPATH is wrong.
+
+Tue Mar 16 15:51:15 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h: #include "config.h"
+
+	* c++/ClSimplexSolver.cc: Use VERSION to init szCassowaryVersion.
+
+Tue Mar 16 12:44:33 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/**: Updated function names to always start with an uppercase 
+	letter (follows C++ conventions, and brings API of Cassowary and 
+	QOCA closer together).  Used scripts/convert-ids to do the
+	conversion, along with scripts/ids-to-upper as the list of
+	conversions to do.
+
+Wed Mar 10 15:28:33 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.32.
+
+Wed Mar 10 11:36:37 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* **/Makefile: Removed, since these are now generated by
+	autoconf from Makefile.in (which itself is generated by
+	automake from Makefile.am [only for some directories])
+
+	* configure.in: 
+	
+	* c++/ClBug2.cc: Added to demonstrate a bug that Anthony Beurivé
+	reported.
+
+	* c++/ClSimplexSolver.cc: Fix above-mentioned bug by changing the
+	coefficient of the added in removeConstraintInternal.
+
+	* c++/ClReader.l: Reset the lexer on failed id lookup.
+
+	* c++/ClC.cc, c++/ClC.h: Added VarMap access functionality, make
+ 	CL_ParseConstraint catch exceptions and return NULL on error
+ 	parsing.
+
+	* c++/config.h.in, c++/stamp-h.in: Added, for automake/autoconf
+	support.
+
+	* c++/Makefile.am: Improve installation support, updated for
+	ClBug2
+
+	* guile/Makefile.am: Build .x using guile-snarf
+
+	* c++/Makefile.linux:  Updated for ClBug2
+
+	* c++/demos/DraggableBox.h: Do not return references to
+	ClVariable-s -- just return by value since they are a handle
+	class.
+
+	* guile/Makefile.am: changed name of library to
+ 	libcassowaryguile.a from libconstraints.a
+
+	* java/CL.h: Added a String description argument to assert() to
+	permit easier tracking of failures.
+
+	* java/ClSimplexSolver.java: Fix bug that Emmanuel Pietriga
+	reported -- use peek() to get at top element of _stkCedns stack
+	when removing edit variables in removeEditVarsTo().  Added
+	descriptions to assert()s and to throwing of ExCLInternalError.
+	Have the addBounds, addUpperBound, addLowerBound functions
+	propagate out ExCLInternalError-s instead of catching them and
+	printing an error message.  Added messages to all assertions.
+
+	* java/ClLinearExpression.java: Added description to throwing of
+	ExCLInternalError.
+
+	* java/ClLinearInequality.java: Added description to throwing of
+	ExCLInternalError.
+
+	* java/ExCLInternalError.java: Require description of the error in 
+	constructor.
+
+	* java/QuadDemo.java: Use System.err when printing errors, and
+	print the description of the exception.
+
+	* smalltalk/ClKernel.app: Fix bug with not using the weight of a
+	constraint as the negating coefficient when removing a constraint.
+
+Mon Mar  8 16:40:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Added autoconf and partial automake support.  Added numerous
+	Makefile.am's, renamed old Makefiles to Makefile.linux (and copied 
+	to Makefile.in when I did not write a Makefile.am).  Added
+	configure.in.
+
+	* guile/cassowary_scm.cc: Use ClReader.h, not creader.h (I renamed 
+	the file)
+
+Fri Mar  5 16:24:05 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile, c++/Cl.h: Fix for renaming of creader.* ->
+ 	ClReader.*; make C libraries as part of lib, shared_lib rules.
+
+	* c++/ClReader.*: Added, renamed from creader.h, creader.y,
+	creader.l
+
+	* c++/ClTableau.h, c++/ClTableau.cc: Added
+	printExternalVariablesTo() fn.
+
+	* c++/ClSimplexSolver.cc:  printExternalVariablesTo in
+	printInternalInfo.
+
+	* c++/ClParseTest.cc: DO not include ClReader.h-- Cl.h includes it
+
+	* c++/ClCTest.c: Make more like a browser-related test, use new
+	CL_TableauPrintExternalVariables()
+
+	* c++/ClC.h, ClC.cc: Added CL_Tableau,
+	CL_TableauPrintExternalVariables.  Use "ends" to terminate
+	strstreams.  Make Strong Stays use medium strength stays.  Make
+	CL_ParseConstraint call ClsFromSz instead of parsing the char *
+	itself.
+
+Thu Mar  4 19:08:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Add assert(pclv) before dereferencing through
+	ClVariable's pclv member.
+
+	* c++/Makefile: Added DYNLINK = yes/no variable for controlling
+	dynamic linking more easily.
+
+	* c++/ClSimplexSolver.h: Changed PfnChangeClvCallback to take a
+	ClVariable * instead of a ClVariable.  This make it easier for the 
+	C interface since it has "CLV" as a "ClVariable *" and cannot
+	reason about ClVariable-s because it doesn't see the struct defn.
+
+	* c++/ClC.cc, c++/ClC.h:  Added CL_SimplexSolverSetEditedValue,
+	CL_SimplexSolverPrint, CL_SimplexSolverSetChangeClvCallback,
+	CL_VariableSetPv, CL_VariablePv.
+
+	* c++/ClCTest.cc: Test CL_SimplexSolverSetEditedValue, CL_SimplexSolverPrint.
+
+Wed Mar  3 17:37:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h (UpdateExternalVariables): Added this
+	function to provide a publicly available way to get at setExternalVariables()
+
+	* c++/ClCTest.c, c++/ClC.h, c++/ClC.cc: Added for the beginnings
+ 	of a rudimentary C interface to the c++ library.
+
+	* c++/Makefile: Updated to build ClCTest, libccassowary.so (the C
+	interface to Cassowary [for Amaya, initially])
+
+Mon Mar  1  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.31
+	
+Mon Mar  1 15:11:52 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Added explict copy ctr.
+
+	* c++/ClEditConstraint.h, c++/ClStayConstraint.h: Changed output
+ 	format so parentheses started by super:: call to ClConstraint.h
+ 	are closed properly.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Undo removing a
+ 	pass by reference of ClVariable when used as an output argument.
+  	Added printing for ClEditInfo class instancesm,
+ 	ClVarToEditInfoMap.
+
+Mon Mar  1 13:46:48 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Updated for version 0.31.
+
+	* c++/Makefile: Added QocaBench.o to TEST_OBJS, comment out
+	CL_USE_HASH_MAP_AND_SET by default.
+
+	* c++/ClTestColumns.cc: Allocate constraint objects on heap, not
+	as temporaries on local stack
+
+	* c++/ClStayConstraint.h, c++/ClSimplexSolver.h,
+	c++/ClSimplexSolver.cc, c++/ClPoint.h, c++/ClLinearInequality.h,
+	c++/ClEditOrStayConstraint.h, c++/ClEditConstraint.h: Pass and
+	return ClVariable-s by value, not by reference. (Fixes bug in
+	QocaBench from re-use of a ClVariable object with the underlying
+	pointer different.
+
+	* c++/Cl.h: include creader.h
+	
+	* c++/README:  Fix spelling of deprecated, URL for WxWindows.
+
+	* c++/test-ClConstraint.cc: Comment out unused variables
+
+Mon Mar  1 12:53:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/qdemos/QuadDemoWindow.cc:  Allocate constraint objects on
+	heap, not as temporaries on local stack.
+
+Fri Feb 26 09:16:31 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/cassowary.i: Use .c_str() off of exception descriptions 
+	to get the char * (description() now returns a string)
+
+Fri Feb 26 09:11:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClConstraint.h: Added FIsInSolver()
+
+	* guile/cassowary_scm.cc: Wrap cl-constraint-is-in-solver?
+
+Thu Feb 25 18:58:55 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cltests.scm: Added (use-modules..) invocation to get the
+	dynamically-loaded module so that it can be tested outside of
+	scwm.  Updated to reflect changed behaviour in cl-add-stay.  Added 
+	some test code for make-cl-constraint-from-string.
+
+	* guile/cassowary_scm.hpp:  Added ScmMakeClConstraint(..) to
+	abstract out setting "answer" for the (now) two ClConstraint ctrs.
+
+	* guile/cassowary_scm.cc: Added make-cl-constraint-from-string for
+ 	interfacing to the parser.  Wrap
+	cl-constraint-change-{strength,weight}!. Make dynamically loadable 
+	module! Fix BUG: was returning SCM_UNDEFINED instead of
+	SCM_UNSPECIFIED.
+
+	* guile/Makefile: Build libconstraints.so, and necessary directory 
+	structure if neeeded.
+
+
+Thu Feb 25 18:41:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc:  Make constraints 
+	get told when they're added/removed from a solver.  This means
+	that constraints are no longer const params to add/remove
+	Constraint functions, and also that removeConstraint needs an
+	internal version that doesn't do the counting (since
+	removeConstraint can get called from addConstraint to clean up
+	after a failed addition).
+
+	* c++/ClSimplexSolver.cc: Clean up uses of ClConstraint &cn --
+	prefer ClConstraint *pcn even internally.
+
+	* c++/ClConstraint.h: Added ChangeStrength(..), ChangeWeight(..)
+	and _times_added memvar along w/ private (for friend
+	ClSimplexSolver) addedTo(..) and removedFrom(..) functions.  Only
+	permit strength/weight changing if constraint is in no solvers
+	presently. 
+
+	* c++/ClConstraint.cc: Output _times_added memvar in printOn(...)
+
+Thu Feb 25 15:58:27 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClErrors.h: Added parse error classes, and have description
+	return a "string" instead of a "char *"
+
+	* c++/creader.y: Use exception ExCLParseErrorMisc in clerror, Use
+	ClVarLookupFunction instead of mapVars and fAutoCreate
+
+	* c++/creader.l: Use ClVarLookupFunction instead of doing it
+	inline with mapVars and fAutoCreate;  throw exceptions on errors.
+
+	* c++/creader.h: Added ClVarLookupFunction and ClVarLookupInMap
+	and use them when parsing.
+
+	* c++/Makefile:  Added some dependencies for proper building of
+	.l,.y files
+
+	* c++/ClSimplexSolver.cc: Descend VarInVarSet from
+	unary_function<..,..>
+
+	* c++/ClParseTest.cc: Catch parse errors and display the message.
+	Use ClVarLookupInMap class
+
+Thu Feb 25 12:09:48 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Simplify removeConstraint to not use
+	references. 
+
+	* c++/ClSimplexSolver.h: Updated a comment
+
+	* c++/ClTests.cc: Use addEditVar, beginEdit, and endEdit, instead
+	of building EditConstraints directly.
+
+Tue Feb 23 18:48:21 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/creader.y, c++/creader.h: Remove old crummy lexer.  Added
+ 	fAutoCreate flag to PcnParseConstraint to allow parsing with
+ 	automatic introduction of newly-referenced variables.
+
+	* c++/creader.l: Fixed bugs in missing tokens "|", "(", ")", and
+	permit "==" as a synonym for "=".  Honour the _fAutoCreate flag by 
+	introducing variables when needed.
+
+	* c++/ClTests.cc: Display version id string at startup.
+
+	* c++/ClSimplexSolver.cc, c++/Cl.h: Added szCassowaryVersion id
+	string.
+
+	* c++/ClParseTest.cc: Test auto-addition of variable (fAutoCreate
+	= true)
+
+Tue Feb 23 18:12:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Build libcassowary.{a,so} by default, not
+	libcassowary-notrace.{a,so}.  Remove special rule for building
+	ClParseTest; list creader-lex.o, creader.o in OBJS and have them
+	be a part of the library.
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Rename pmapSzPclv to
+	pmapStrPclv.  Make it a map from "const string" not "string".
+	Make setName erase the old mapping, and add the new mapping.
+
+	* c++/ClParseTest.cc: Accept "-" option to mean "rename x to foo"
+	for testing the setName change above.
+
+	* c++/ClFloatVariable.cc: Do not output warning msg in setName --
+	instead, do the right thing in ClVariable.h
+
+Tue Feb 23 08:55:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Fix build rules for bison/flex parser so
+	dependencies are correct.  Added new targets, all-notests,
+	all-tests, make 'lib' the default target, and all really build
+	everything.
+
+	* c++/creader.h, c++/creader.l, c++/creader.y: Take address of
+	ClVariable-s from the map's values (cannot use ClVariable in the
+	union directly because union members cannot have constructors).
+	#include ClVariable.h instead of fwd decl of ClVariable so that we 
+	get the StringToVarMap typedef, too.
+
+Mon Feb 22 16:33:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Use CL_LIBRARY, not LIB_FILE, throughout. Use
+	flags for maximum performance.
+
+	* c++/ClVariable.h, c++/ClConstraintHash.h, c++/Cassowary.h:
+ 	Divide pointer address by CL_PTR_HASH_DIVISOR in hash functions
+
+	* c++/ClTests.cc:  Added CL_SHOW_CNS_IN_BENCHMARK guard protecting 
+	new displaying of constraints and listing of inconsistent constraints.
+
+Mon Feb 22 12:18:53 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc (inconsistent3): Drop extra redundant
+	inconsistency for pedagogical reasons.  Use simpler pointer-based
+	addConstraint in benchmark test
+
+	* c++/ClSimplexSolver.h: Added addConstraintNoException,
+	removeConstraintNoException taking ClConstraint &'s -- deprecated.
+	Added CL_NO_DEPRECATED guard for turning off availability of
+	deprecated functions.
+
+Mon Feb 22 11:12:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h: Added deprecated
+	FIsConstraintSatisfied(Constraint &)
+
+	* guile/cassowary_scm.cc: Use ClConstraintToVarMap for return
+	value of ConstraintMap().  Pass Constraint *'s instead of &'s.
+	Use new name printOnVerbose instead of printDebugInfo.
+
+Fri Feb 19  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.3.
+
+Fri Feb 19 18:00:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc: Updated to fix below interface.
+
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: make
+ 	addConstraint, addConstraintNoException, removeConstraint,
+ 	removeConstraintNoException take ClConstraint *'s instead of
+ 	ClConstraint &'s.  Clarifies the mental model, and simplifies the
+ 	syntax.  Old style is still accepted, but is deprecated.
+
+Fri Feb 19 17:41:45 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFloatVariable.cc, c++/ClFloatVariable.h: Added -- moved
+	here from ClVariable.h, and renamed from class ClVariableRep since 
+	they not what ClVariable wraps (ClVariable wraps
+	ClAbstractVariable)
+
+	* c++/ClAbstractVariable.h: Fatten interface to include set_value, 
+	change_value, setPv, and Pv.
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move ClVariableRep into
+	ClFloatVariable.{h,cc}, and use pclv-> for
+	set_value, change_value, SetPv, and Pv since ClAbstractVariable
+	now has a fat interface and we do not need to do the dynamic
+	down-casting. 
+
+	* c++/Makefile: Added new files to build rules.
+
+Fri Feb 19 17:08:29 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/debug.h, c++/ClTableau.h: Move operator<< out into ClTableau.h
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move some inline functions
+	into .cc so that the hash function can go in the .h file (some stl 
+	dependency issue, it seems).
+
+	* c++/ClErrors.h, c++/ClTypedefs.h: Move typedef for
+ 	ClConstraintSet from ClErrors.h into ClTypedefs.h, and have former 
+	include the latter.
+
+	* c++/Cassowary.h: #include ClConstraintHash.h
+
+	* c++/ClConstraintHash.h: Added.  The hash function needs to
+	appear before any typedef that uses a hash_map or hash_set, so
+	this file is included by Cassowary.h
+
+Fri Feb 19 08:45:24 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSubgraphTest.cc: Fix some bugs just from not testing
+	completely. 
+
+	* c++/*: Fix bugs from not-updated-code hidden by #ifdefs.  Builds 
+	w/ all compile-options except -DCL_USE_HASH_MAP_AND_SET.  Drop
+	some gratuitous appearances of ClAbstractVariable
+
+Thu Feb 18 18:53:56 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.cc: Use clvNill when returning a
+	ClVariable instead of NULL
+
+	* c++/ClVariable.h, c++/ClVariable.cc: operators ==, !=, < all should use the
+	contained pointers address, not value.  Also define global clvNil,
+	isNil(). 
+
+	* c++/ClTests.cc: BUGFIX: #if 0 removed from adding stays in
+	simple1 test
+
+	* c++/ClSimplexSolver.h:  Use ClVariable-s internally for
+	ClObjectiveVariable-s.
+
+	* c++/ClSimplexSolver.cc: Use ClVariable-s internally for
+	ClObjectiveVariable-s and replace ClAbstractVariable
+	*p{entryVar,exitVar} with ClVariable-s.  (Use clvNil and isNil()
+	to test for not yet set).
+
+Thu Feb 18  Greg J Badros  <gjb@cs.washington.edu>
+	
+	* c++/*: First compilable and almost working version with
+ 	ClVariable as a handle to ClVariableRep.  Major simplifications
+	throughout.
+
+Thu Feb 18 14:22:14 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Split out the options into += lists so they can be 
+	flipped independently more easily.
+	
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: Added output
+	operation for ClConstraintToVarSetMap;  use fFoundErrorVar flag to 
+	simplify some redundant tests in removeConstraint -- no longer use 
+	errorVarsCopy.
+
+	* c++/CLVariable.h: Fix a comment's example.
+
+	* c++/ClTypedefs.h: Use set always for ClTableauVarSet (Steve
+	Wolfman notes that it's faster as a set than as a hash_set).
+
+	* c++/debug.h: Add CtrTracer, DtrTracer fns that do nothing when
+	not CL_TRACE
+
+	* c++/ClConstraint.h:  Invoke CtrTracer, DtrTracer in ctr, dtr for 
+	finding memory problem
+
+	* c++/ClTests.cc: Fix some long-time bugs in the use of ctrs that
+	build temporary objects whose lifetime was expected to be longer
+	than it was.
+
+	* c++/*: Invert sense of CL_NO_TRACE to CL_TRACE
+
+Wed Feb 17 12:10:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTypedefs.h: Added -- factored out useful typedefs from
+	ClSimplexSolver.h, ClTableau.h and put them in this file.
+
+	* c++/ClTableau.h, c++/ClSimplexSolver.h, c++/debug.h:  Use
+	ClTypedefs.h.  Drop gdb_print (it uses printOn and printTo, now).
+	Renamed printDebugInfo to printOnVerbose (for generalized gdb
+	interface)
+
+	* c++/ClSimplexSolver.cc: Fix two bugs where I was modifying data
+	structures indirectly while iterating over them.  Remove a delete
+	that was premature to fix another bug in optimized builds.
+
+	* c++/ClLinearExpression.h, c++/ClConstraint.h,
+ 	c++/ClAbstractVariable.h: Drop gdb_print().
+
+	* c++/ClSymbolicWeight.h: Use Number instead of double more consistently.
+
+Tue Feb 16 15:04:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h,ClAbstractVariable.h,ClMap.h,ClSet.h,Makefile: Use 
+	CL_USE_HASH_MAP_AND_SET, not USE_HASH_MAP_AND_SET. 
+
+	* c++/Cl.h: #undef CL_TRACE_VERBOSE ifdef CL_NO_IO
+
+Tue Feb 16 14:55:12 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/ClVariable.java: Add setVarMap(..), getVarMap() for
+	maintaining symbol table of ClVariables.  Added
+	setAttachedObject(..), getAttachedObject() for hanging something
+	off of a variable.
+
+	* java/ClConstraint.java: Added setAttachedObject(..),
+ 	getAttachedObject() for hanging something off of a constraint.
+
+	* java/ClTests.java:  Added inconsistent3() and multiedit() tests
+
+	* java/ClSimplexSolver.java: Manage multiple (nested) edits
+	properly.  Provide access to the _markerVars var through
+	getConstraintMap() accessor.  Deprecate resolve(Vector) fn.
+
+Tue Feb 16 14:29:46 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Updated reference to swig web site.
+
+Tue Feb 16 12:45:04 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/ClSimplexSolver.java, java/ClEditInfo.java, java/Makefile: 
+	Fixed Michael Kaufmann's bug.  (See Feb 15 note for C++ version
+	two entries below.)
+
+	* java/*.java: Updated copyright to include 1999. 
+
+Tue Feb 16 10:51:01 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/*: Added CL_FIND_LEAK guard and ctr/ctr counters for
+	tracking various variable kinds.
+
+Mon Feb 15 18:38:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClAbstractVariable.{cc,h}, ClSlackVariable.{cc,h},
+	ClDummyVariable.{cc,h}: Add counters to ctr/dtr for leakage detection.
+
+	* c++/ClSimplexSolver.{cc,h}: Replace ClConstraintAndIndex with
+	ClEditInfo, and remove ugliness of parallel vectors for edit
+	constraints. Drop _editPlusErrorVars, _editMinusErrorVars,
+	_prevEditConstants, and bundle them all up in the value end of the 
+	map attached to _editVarMap.  This fixes a bug reported in the
+	Java version by Michael Kaufmann long ago, and generally cleans
+	code up a bit.  The resolve(vector<Number>) function is
+	deprecated, and now implemented in terms of the indices stored in
+	the new ClEditInfo class.
+
+	* c++/*: Updated copyright to include 1999.
+
+1999-02-15  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.{cc,h}, c++/ClAbstractVariable.h: Added
+	SetVarMap(..), VarMap(), and make variables given names get their
+	names mapped to the objects in the var map (for access when
+	parsing constraints as strings).  Make setName() virtual so
+	ClVariable can override it.
+
+1999-02-12  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/creader.{y,h}: New version from Steve Wolfman, slightly
+	updated for cleaner integration. Pass in a map<string,ClVariable
+	*> instead of an array of ClVariable; improve error handling a
+	bit.
+
+	* c++/debug.h: Use ClMap, ClSet
+
+	* c++/{ClMap.h,ClSet.h}: Added, for optionally using hash_map,
+	hash_set instead of map, set.
+
+	* c++/ClSimplexSolver.{cc,h}: Added Steve Wolfman's explanation
+	support (added back map for marker->constraint, _fExplainFailure
+	var + getter & settor).  Use ClMap, ClSet.  Cleaned up some cerr
+	output, and use DEBUG_FAILURES cpp symbol to guard some output.
+
+	* c++/Cassowary.h: Added operator() for hash<..> to support
+	hashing things used as keys in hash_map/hash_set
+
+	* c++/ClErrors.h: Added ExCLRequiredFailureWithExplanation class
+	for explanation support.
+
+	* c++/{ClLinearExpression.h,ClTableau.h}: Use ClMap, not map. Use
+	ClSet, not set.
+
+	* c++/ClSymbolicWeight.h: Return a symbolic weight even when
+	assert(false) to avoid compiler warning.
+
+1999-02-11  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Use cl-snarf.h, not scwm-snarf.h.  Use
+	CL_PROC to denote primitives, not SCWM_PROC.  Use
+	CL_VAR_INIT_PERMANENT macro for variables, and document them (the
+	strength objects only, for now).  Fix the default strength of
+	cl-add-editvar to Strong, not Weak, and update docs (was cut&paste
+	error from the cl-add-stay primitive).  Thanks Anthony Beurivé for
+	noticing this bug, too!
+
+Sat Jan 30  Greg Badros  <gjb@cs.washington.edu>
+
+	* Release v0.23.
+	
+Sat Jan 30 13:16:31 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Fixed bug in removing a stay
+	constraint.  Was editing a vector in place while iterating over
+	it.  Now I use remove_if and erase.  Thanks to Anthony Beurivé for 
+	noticing the bug.
+
+	* c++/ClBug1.cc: Added -- bug report from Anthony Beurivé.
+
+Sat Jan 23 Greg Badros  <gjb@cs.washington.edu>
+
+	* Release v0.22.
+	
+Sat Jan 23 16:46:27 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Replace iarg uses with literal argument
+	index numbers.  Use const_cast to avoid warnings when calling
+	ScmMakeClStrength on clsWeak,clsMedium,clsStrong,clsRequired objects
+
+Sat Jan 23 15:30:16 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Added some comments, some explanations
+	when exceptions are thrown, and some minor cleanups, bug-fixes
+
+	* c++/ClTests.cc: Added inconsistent3() test, and run it.
+
+	* c++/ClStrength.h: Added _pv memvar, and setPv(), Pv() -- needed
+	for tracking ClStrengths in guile
+
+	* guile/cassowary_scm.cc: Replace all iarg uses with the literal
+	number.  Point ClStrength objects at their scheme-level object
+	using their new _pv field.  Protect ClStrength objects properly.
+
+Sat Sep 19 17:08:21 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile (CPPFLAGS): Added USE_GC, commented out, and added
+	OTHER_LIBS variable for linking with the gc library
+
+Sat Sep 19 17:01:16 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTableau.h: Added AssertValid() for testing integrity of
+	Tableau
+
+	* c++/ClSymbolicWeight.h, c++/ClStrength.h, c++/ClSlackVariable.h,
+	c++/ClLinearExpression.h, c++/ClErrors.h, c++/ClDummyVariable.h,
+	c++/ClConstraint.h, c++/ClAbstractVariable.h:  Descend objects
+	from "gc" class conditioned on USE_GC* pp macros
+
+	* c++/Cassowary.h: Conditionally include gc_cpp.h ifdef USE_GC;
+	added NEWVAR and DELVAR macros for outputting debug information at 
+	new/delete sites
+
+	* c++/ClSimplexSolver.h: Call AssertValid before solving
+
+	* c++/ClSimplexSolver.cc: Remove memory leak of the artificial
+	objective variable
+
+	* c++/ClLinearExpression.h: Fix gdb_print to have a newline
+
+	* c++/ClLeakTest: Added leakTest2 which more obviously leaks, and
+	use GC_gcollect() to force a collect
+
+Tue Sep 15 16:36:20 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTableau.h, ClTableau.cc: Handle removing vars from _columns more
+	carefully, and add gdb_print(), virtual destructor
+
+	* c++/ClLinearExpression.h, c++/ClConstraint.h,
+ 	c++/ClAbstractVariable.h: Added gdb_print()
+
+Tue Sep 14  Greg Badros  <gjb@cs.washington.edu>
+
+	* Release v0.21.
+
+Wed Sep  9 09:46:35 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.h, c++/ClLinearExpression.cc: added uses
+	of 'typename' keyword as needed by egcs-1.1b's -pedantic (and the
+	C++ FDIS)
+
+Sun Sep  6 13:19:01 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h: Added _pv field, and Pv() setPv() getter
+	and setter
+	
+	* guile/cassowary_scm.cc: Use solver's _pv field to point
+	ClSimplexSolver back at the scheme object that wraps it
+
+Fri Sep  4 18:52:50 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.hpp, guile/cassowary_scm.cc: Added PvFromScm 
+	and ScmFromPv to hide the reinterpret casts used to store a scheme 
+	object as the void * Pv() attached to a cassowary object.  Attach
+	the scheme-level cl-variable to a ClVariable object.  Added
+	`clv-attach!' and `clv-attached-object' to manipulate the attached 
+	object (often better to use scheme level properties, though)
+
+Fri Sep  4 18:51:30 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/Makefile: Use "perl" from path to run extract docs instead 
+	of relying on #! line, and generate the -procedures.txt file as
+	well as the .sgml file
+
+Wed Sep  2 17:08:14 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc, guile/cassowary_scm.hpp: Added
+	ClStayConstraint wrapper.  Make cl-add-stay, cl-add-editvar take a 
+	list of variables instead of a varargs last argument and instead
+	add two optional arguments STRENGTH and FACTOR (thus those
+	primitives remain backward compatible as long as only one variable 
+	was given).
+
+Wed Sep  2 13:55:37 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClSimplexSolver.h: Added weight option to addEditVar and use it
+
+	* ClLinearExpression.h: Added PconstClAbstractVariable, use it;
+	use ClVarToCoeffMap in coefficientFor.
+
+Thu Aug  6 20:56:45 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Release v0.2.
+
+Thu Aug  6 20:41:40 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClTests.cc: Added multiedit() test for testing nested
+	  beginEdit-s
+
+	* ClSimplexSolver.h, ClSimplexSolver.cc: Support nested
+	  beginEdit-s -- use removeEditVarsTo(n), and rewrite
+	  removeAllEditVars in terms of the former;  Use FIsSatisfied on
+	  constraint and compare with testing internally for
+	  FIsConstraintSatisfied() -- untested.
+
+	* ClLinearInequality.h, ClLinearEquation.h, ClConstraint.h: Added
+	  virtual FIsSatisfied
+
+	* ClLinearExpression.h, ClLinearExpression.cc: Added evaluate()
+
+	* ClAbstractVariable.h: Return 0 for value(), and make it a
+	  virtual function.
+
+Wed Aug  5 16:10:56 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClStrength.h: Have ClStrength::symbolicWeight return a const
+	  ref, instead of by value, make clsXXX const refs.
+
+	* ClSimplexSolver.cc, ClLinearInequality.cc, ClLinearEquation.cc,
+	  ClLinearConstraint.cc: Take ClStrengths by const refs
+
+Tue Aug  4 15:22:08 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc, cassowary_scm.hpp: Move all inline
+	  functions into .hpp file.  Added cl-is-constraint-satisfied?
+	
+	* ClTableau.h: Added a rowExpression() const memfn, for
+	  FIsConstraintSatisfied()
+
+	* ClSimplexSolver.h, ClSimplexSolver.cc: Added (probably broken)
+	  FIsConstraintSatisfied(cn) memfn -- needs testing
+
+Sun Aug  2 16:49:34 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClSimplexSolver.h: Added ConstraintMap() accessor to
+	_markerVars, for cl-constraint-list guile primitive
+
+	* ClConstraint.h: Added setPv(), Pv(), and _pv field to a
+	constraint, for attaching extra information.
+
+Thu Jul 30 19:15:40 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClTests.cc: Added simple2, to test new EditMisuse exception on
+	editing a variable that is nowhere in the solver.
+
+	* ClTableau.h, ClTableau.cc:  Be more careful about inserting into
+	_externalParametricVars; add FIsBasicVar to assist that care.
+
+	* ClSimplexSolver.cc, ClSimplexSolver.h: Added pfnCnSatCallback -- 
+	does nothing for now;  throw an ExCLEditMisuse exception if an
+	edit constraint is added on a variable that is not in the tableau
+	(needs at least a stay constraint in the solver); replace some
+	calls to rowExpression with FIsBasicVar when the latter is the
+	intent.
+
+Thu Jul 21  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClVariable.h, ClVariable.cc: Added _pv field, settor and gettor.
+
+	
+ABOVE CHANGES ONLY IN C++ IMPLEMENTATION AND ITS WRAPPERS
+	
+Fri Jul 17 19:24:54 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClVariable.h, .java: Added change_value memfn, and make it virtual
+ 	instead of setValue -- thus subclasses can specialize behaviour
+ 	when the variable gets set by the solver.
+
+	* ClSimplexSolver.h, .java: Use change_value for setEditedValue if
+	the variable is not in the tableau;  call resolve() before
+	removeAllEditVars in endEdit
+
+	* ClSimplexSolver.cc, .java (setExternalVariables): Use change_value
+	instead of set_value when so subclasses can override and notice a
+	changed variable
+
+Thu Jul 16 19:49:45 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Added setEditedValue(), FContainsVariable(), and addVar() to c++ 
+	and Java implementations
+
+	* Fixed bug in C++ and Java in solvers lacking stay constraints
+ 	that was due to not-updating the external parametric variables
+ 	set.
+
+Fri Jul 10 09:00:15 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Fixed bug whereby a dummy variable was being pivoted into the
+	basis because pexpr->anyVariable() didn't guarantee the variable
+	it returned was a pivotable variable -- now it's called
+	anyPivotableVariable(), and does the right thing.
+
+	* Fixed bug whereby column mappings that had no rows remained in
+	the list of columns -- now erase the column key when its value is
+	the empty set
+
+	* Fixed bug whereby constraints that threw required failure
+	exceptions remained in the tableau (a removeConstraint on a
+	constraint that failed to be added used to succeed, now it does
+	not)
+
+Monday Jun 29 16:50:00 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Release Cassowary v0.1  --- see local/POST-ANNOUNCE-TO for
+	list of places where it was announced
+

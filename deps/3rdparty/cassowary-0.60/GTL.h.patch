@@ -1,0 +1,18 @@
+--- GTL.h	1999/12/14 19:34:53	1.1
++++ GTL.h	1999/12/14 19:35:10
+@@ -113,6 +113,7 @@
+ 
+ #ifdef __GTL_GCC
+ 
++#ifndef __SGI_STL_INTERNAL_ALLOC_H
+ #include <memory>
+ 
+ /**
+@@ -122,6 +123,7 @@
+ class allocator : public alloc
+ {
+ };
++#endif
+ 
+ #endif
+ 

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "objcrt", "objcrt", "{23A03031-6601-4236-B084-F2D15DC4C375}"
 EndProject
@@ -100,6 +100,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.
 		{B46CBD1B-CFFD-43C2-962B-C7A8DEFBD879} = {B46CBD1B-CFFD-43C2-962B-C7A8DEFBD879}
 		{F0DF962C-3DE8-449A-8955-039D7299BA29} = {F0DF962C-3DE8-449A-8955-039D7299BA29}
 		{ED0F4033-106A-432D-818F-B2AE6A251BE9} = {ED0F4033-106A-432D-818F-B2AE6A251BE9}
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB} = {C48CC570-7DE6-44AF-BFE1-03256FEA59BB}
 		{D9BBA177-5624-43BF-ACE5-CC68949598E4} = {D9BBA177-5624-43BF-ACE5-CC68949598E4}
 		{D4B2AB87-EC16-4D9C-98D5-2EBB69C72370} = {D4B2AB87-EC16-4D9C-98D5-2EBB69C72370}
 		{8F151898-CFCE-4333-BEBD-036721E64BA8} = {8F151898-CFCE-4333-BEBD-036721E64BA8}
@@ -110,11 +111,26 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.
 		{29901BE9-6238-43B8-99FA-6E381297B16C} = {29901BE9-6238-43B8-99FA-6E381297B16C}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoLayout", "AutoLayout", "{E8908BA0-C3EE-45AC-B43A-A171EED23412}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AutoLayout.Shared", "AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems", "{B15E4CDA-7696-435B-8C43-62640BCCC345}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AutoLayout.Windows", "AutoLayout\AutoLayout.Windows\AutoLayout.Windows.vcxproj", "{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemConfiguration", "SystemConfiguration", "{236AF386-3C28-4A17-99E6-5D7DC9046B04}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SystemConfiguration.Shared", "SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems", "{537D7738-F86D-471B-A5C0-C257A72069BE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SystemConfiguration.Windows", "SystemConfiguration\SystemConfiguration.Windows\SystemConfiguration.Windows.vcxproj", "{C30E62E2-9C92-472B-9D0F-E44791DA6673}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{b15e4cda-7696-435b-8c43-62640bccc345}*SharedItemsImports = 9
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{cc20fad2-8a69-4664-a010-ef5ff0253fbd}*SharedItemsImports = 13
 		UIKit\UIKit.Shared\UIKit.Shared.vcxitems*{b3177bac-2e11-4ef2-976b-2b8b4632fa4a}*SharedItemsImports = 4
+		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{c48cc570-7de6-44af-bfe1-03256fea59bb}*SharedItemsImports = 4
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{8ea9a3b0-43d2-4349-8444-77b7941482ea}*SharedItemsImports = 4
+		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{c30e62e2-9c92-472b-9d0f-e44791da6673}*SharedItemsImports = 4
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{b46cbd1b-cffd-43c2-962b-c7a8defbd879}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{8fff6d4a-429f-4926-b60c-727a0d6bb599}*SharedItemsImports = 9
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{6053551e-a1fc-4301-b0de-0cb3a7751cdc}*SharedItemsImports = 9
@@ -140,6 +156,7 @@ Global
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{77299427-3095-497d-bbbc-1345b4074840}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{8c190ec0-1493-414a-8320-c6e570a5686a}*SharedItemsImports = 9
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{dcc9debc-3518-49bb-85c8-89b7974820e0}*SharedItemsImports = 4
+		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{537d7738-f86d-471b-a5c0-c257a72069be}*SharedItemsImports = 9
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{1ccd9c7d-4f10-4ece-a783-3d03d1a375c2}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{c7c02737-7cbe-42b3-9a2c-c8814a942fa4}*SharedItemsImports = 9
 	EndGlobalSection
@@ -504,6 +521,50 @@ Global
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|x64.ActiveCfg = Release|Win32
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|x86.ActiveCfg = Release|Win32
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|x86.Build.0 = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|ARM.ActiveCfg = Debug|ARM
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|ARM.Build.0 = Debug|ARM
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|Win32.Build.0 = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|x64.ActiveCfg = Debug|x64
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|x64.Build.0 = Debug|x64
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|x86.ActiveCfg = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Debug|x86.Build.0 = Debug|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|ARM.ActiveCfg = Release|ARM
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|ARM.Build.0 = Release|ARM
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|Win32.ActiveCfg = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|Win32.Build.0 = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|x64.ActiveCfg = Release|x64
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|x64.Build.0 = Release|x64
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|x86.ActiveCfg = Release|Win32
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB}.Release|x86.Build.0 = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|ARM.ActiveCfg = Debug|ARM
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|ARM.Build.0 = Debug|ARM
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|Win32.Build.0 = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|x64.ActiveCfg = Debug|x64
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|x64.Build.0 = Debug|x64
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|x86.ActiveCfg = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Debug|x86.Build.0 = Debug|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|ARM.ActiveCfg = Release|ARM
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|ARM.Build.0 = Release|ARM
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|Win32.ActiveCfg = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|Win32.Build.0 = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|x64.ActiveCfg = Release|x64
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|x64.Build.0 = Release|x64
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|x86.ActiveCfg = Release|Win32
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -540,5 +601,9 @@ Global
 		{CC20FAD2-8A69-4664-A010-EF5FF0253FBD} = {D72ADC4D-8414-4CF3-B7D9-4B59C595BBBC}
 		{D2E58E18-41E6-4644-8C60-D7027C052441} = {D72ADC4D-8414-4CF3-B7D9-4B59C595BBBC}
 		{3389E85F-0DB7-43FF-BFA5-496338534224} = {2C7FA5BB-7585-453B-B2E9-BF4B84D0BD4F}
+		{B15E4CDA-7696-435B-8C43-62640BCCC345} = {E8908BA0-C3EE-45AC-B43A-A171EED23412}
+		{C48CC570-7DE6-44AF-BFE1-03256FEA59BB} = {E8908BA0-C3EE-45AC-B43A-A171EED23412}
+		{537D7738-F86D-471B-A5C0-C257A72069BE} = {236AF386-3C28-4A17-99E6-5D7DC9046B04}
+		{C30E62E2-9C92-472B-9D0F-E44791DA6673} = {236AF386-3C28-4A17-99E6-5D7DC9046B04}
 	EndGlobalSection
 EndGlobal

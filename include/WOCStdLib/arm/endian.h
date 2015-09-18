@@ -85,35 +85,17 @@ __bswap64(__uint64_t _x)
 static __inline __uint32_t
 __bswap32_var(__uint32_t v)
 {
-    __uint32_t t1;
-
-#if 0
-    __asm __volatile("eor %1, %0, %0, ror #16\n"
-                "bic %1, %1, #0x00ff0000\n"
-            "mov %0, %0, ror #8\n"
-            "eor %0, %0, %1, lsr #8\n"
-             : "+r" (v), "=r" (t1));
-#endif
-    assert(0);
-    
-    return (v);
+    return ((((v) & 0xff000000U) >> 24) |
+     (((v) & 0x00ff0000U) >>  8) |
+     (((v) & 0x0000ff00U) <<  8) |
+     (((v) & 0x000000ffU) << 24));
 }
 
 static __inline __uint16_t
 __bswap16_var(__uint16_t v)
 {
-    __uint32_t ret = v & 0xffff;
-
-    assert(0);
-#if 0
-    __asm __volatile(
-        "mov    %0, %0, ror #8\n"
-        "orr    %0, %0, %0, lsr #16\n"
-        "bic    %0, %0, %0, lsl #16"
-        : "+r" (ret));
-#endif
-    
-    return ((__uint16_t)ret);
+    return ((((v) & 0xff00) >> 8) |
+     (((v) & 0x00ff) << 8));
 }       
 
 #ifdef __OPTIMIZE__

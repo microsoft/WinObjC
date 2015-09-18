@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="c++\ClAbstractVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClConstraint.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClDummyVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClFDVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClFloatVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClLinearExpression.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClSimplexSolver.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClSlackVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClSolver.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClStrength.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClSymbolicWeight.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClTableau.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClVariable.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c++\ClLinearEquation.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="c++\Cassowary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\Cl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClAbstractVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClConstraintHash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClDummyVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClEditConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClEditOrStayConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClErrors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFDBinaryOneWayConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFDConnectorVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFDConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFDSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFDVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClFloatVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClLinearConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClLinearEquation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClLinearExpression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClLinearExpression_fwd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClLinearInequality.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClObjectiveVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClSimplexSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClSlackVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClStayConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClStrength.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClSymbolicWeight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClTableau.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClTypedefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\ClVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\cl_auto_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\config-inline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c++\timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

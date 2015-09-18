@@ -163,7 +163,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -189,7 +189,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -215,7 +215,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -241,7 +241,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -267,7 +267,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -293,7 +293,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) -DSC_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DNEEDTIMESPEC -DCURL_STATICLIB=1 -DFOUNDATION_IMPEXP=__declspec(dllexport) -DDISPATCH_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

@@ -1,0 +1,37 @@
+Announcing the release of a free (for research use) constraint solver:
+
+Cassowary Constraint Solver for Smalltalk, C++, and Java
+Version 0.60
+
+Web Page: http://www.cs.washington.edu/research/constraints/cassowary
+Distribution: ftp://ftp.cs.washington.edu:/pub/constraints/code/cassowary/
+Contact: cassowary@cs.washington.edu
+
+Greg J. Badros <gjb@cs.washington.edu> and
+Alan Borning <borning@cs.washington.edu>
+University of Washington
+Computer Science and Engineering
+15-December-1999
+
+with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+
+Cassowary is an incremental constraint solving toolkit that efficiently
+solves systems of linear equalities and inequalities.  Constraints may
+be either requirements or preferences.  Client code specifies the
+constraints to be maintained, and the solver updates the constrained
+variables to have values that satisfy the constraints.
+
+A technical report is included in the distribution that describes the
+algorithm, interface, and implementation of the Cassowary solver.
+Additionally, the distribution contains toy sample applications written
+in Smalltalk, C++, Java, and Python, and a more complex example Java
+applet, the "Constraint Drawing Application".
+
+More information is available on our web page:
+
+http://www.cs.washington.edu/research/constraints/cassowary
+
+See README for more details on getting started using these packages.
+See NEWS for a history of user-visible changes.
+See LICENSE for legalese regarding use of this distribution.
+

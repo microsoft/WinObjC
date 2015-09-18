@@ -1,0 +1,1316 @@
+<!-- $Id: ref-header.sgml,v 1.5 1999/09/15 20:46:38 gjb Exp $ -->
+<!-- "-//OASIS//DTD DocBook V3.1//EN" -->
+<!DOCTYPE Book PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+<book>
+  <bookinfo>
+    <title>Cassowary Constraint Solving Toolkit Guile Reference Manual</title>
+    <authorgroup>
+      <author>
+  	<firstname>Greg</firstname>
+  	<othername>J.</othername>
+  	<surname>Badros</surname>
+  	<affiliation>
+  	  <address>
+  	    <email>gjb@cs.washington.edu</email>
+  	  </address>
+  	</affiliation>
+      </author>
+    </authorgroup>
+    <releaseinfo>Release pre-1.0</releaseinfo>
+    <pubdate>12 March 2000</pubdate>
+    <copyright>
+      <year>1997-2000</year>
+      <holder>Greg J. Badros</holder>
+    </copyright>
+  </bookinfo>
+  <chapter>
+    <title>Concepts</title>
+      <sect1 id="Concepts-Introduction"><title>Introduction</title>
+	<!-- $Id: ref-concepts-intro.sgml,v 1.1 1999/03/24 04:35:58 gjb Exp $ -->
+<!-- Concepts Chapter Introduction -->
+<para>This chapter discusses some high level concepts in Cassowary/Guile.</para>
+
+      </sect1>
+    <sect1 id="Window-Style"><title>Window Style</title><para>
+</tbody></tgroup></table>
+
+    </para></sect1>
+  </chapter>
+  <chapter>
+    <title>Hooks</title>
+      <sect1 id="Hooks-Introduction"><title>Introduction</title>
+	<!-- $Id: ref-hooks-intro.sgml,v 1.1 1999/03/24 04:35:59 gjb Exp $ -->
+<!-- Hooks Chapter Introduction -->
+<para>
+This chapter lists the hooks provided by Cassowary/Guile
+ordered alphabetically by name.
+</para>
+
+      </sect1>
+  </chapter>
+  <chapter>
+    <title>User variables</title>
+      <sect1 id="Vars-Introduction"><title>Introduction</title>
+	<!-- $Id: ref-vars-intro.sgml,v 1.1 1999/03/24 04:36:00 gjb Exp $ -->
+<!-- User Variables Chapter Introduction -->
+<para>This chapter lists the user options defined by Cassowary/Guile.</para>
+
+      </sect1>
+    <sect1 id="cls-medium"><title>cls-medium</title><para>
+The "medium" predefined cl-strength object. 
+    </para></sect1>
+    <sect1 id="cls-required"><title>cls-required</title><para>
+The "required" predefined cl-strength object. 
+    </para></sect1>
+    <sect1 id="cls-strong"><title>cls-strong</title><para>
+The "strong" predefined cl-strength object. 
+    </para></sect1>
+    <sect1 id="cls-weak"><title>cls-weak</title><para>
+The "weak" predefined cl-strength object. 
+    </para></sect1>
+  </chapter>
+  <chapter>
+    <title>Procedure Synopses by Group</title>
+      <sect1 id="Procs-ByGroup-Introduction"><title>Introduction</title>
+	<!-- $Id: ref-proc-bygroup-intro.sgml,v 1.1 1999/03/24 04:36:00 gjb Exp $ -->
+<!-- Procedures-by-group Chapter Introduction -->
+<para>
+  This chapter lists the procedures supplied by Cassowary/Guile
+  grouped and ordered by the source file that they are defined in.
+</para>
+
+      </sect1>
+    <sect1><title>../cassowary_scm.cc</title> <itemizedlist>
+      <listitem><para><link linkend="cl-variable-p"><function>cl-variable?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint variable, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-variable"><function>make-cl-variable</function></link> -- Return a newly-created constraint variable.</para></listitem>
+      <listitem><para><link linkend="clv-attach-x"><function>clv-attach!</function></link> -- Attach OBJ to VAR, undoing any previous attachments.</para></listitem>
+      <listitem><para><link linkend="clv-attached-object"><function>clv-attached-object</function></link> -- Return the object attached to cl-variable VAR.</para></listitem>
+      <listitem><para><link linkend="cl-value"><function>cl-value</function></link> -- Return the current value of the constraint variable CLV.</para></listitem>
+      <listitem><para><link linkend="cl-int-value"><function>cl-int-value</function></link> -- Return the value of the constraint variable CLV as an integer.</para></listitem>
+      <listitem><para><link linkend="cl-weight-p"><function>cl-weight?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint weight object, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-weight"><function>make-cl-weight</function></link> -- Return a newly-created constraint symbolic weight object.</para></listitem>
+      <listitem><para><link linkend="cl-strength-p"><function>cl-strength?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint strength, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-strength"><function>make-cl-strength</function></link> -- Return a newly-created constraint strength object.</para></listitem>
+      <listitem><para><link linkend="make-cl-strength-3"><function>make-cl-strength-3</function></link> -- Return a newly-created constraint strength object.</para></listitem>
+      <listitem><para><link linkend="cl-expression-p"><function>cl-expression?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint expression, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-expression"><function>make-cl-expression</function></link> -- Return a newly-create constraint expression object.</para></listitem>
+      <listitem><para><link linkend="cl-plus"><function>cl-plus</function></link> -- Return the cl-expression that is the sum of EXPRA and EXPRB.</para></listitem>
+      <listitem><para><link linkend="cl-minus"><function>cl-minus</function></link> -- Return the cl-expression that is the difference of EXPRA and EXPRB.</para></listitem>
+      <listitem><para><link linkend="cl-times"><function>cl-times</function></link> -- Return the cl-expression that is the product of EXPRA and EXPRB.</para></listitem>
+      <listitem><para><link linkend="cl-divide"><function>cl-divide</function></link> -- Return the cl-expression that is the quotient of EXPRA and EXPRB.</para></listitem>
+      <listitem><para><link linkend="cl-equation-p"><function>cl-equation?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint equation, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-equation"><function>make-cl-equation</function></link> -- Return a newly-created constraint equation.</para></listitem>
+      <listitem><para><link linkend="make-cl-equality"><function>make-cl-equality</function></link> -- Return a newly-created constraint equation.</para></listitem>
+      <listitem><para><link linkend="cl-inequality-p"><function>cl-inequality?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint inequality object, <literal>#t</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-inequality"><function>make-cl-inequality</function></link> -- Return a newly-constructed constraint inequality object.</para></listitem>
+      <listitem><para><link linkend="cl-stay-constraint-p"><function>cl-stay-constraint?</function></link> -- Return <literal>#t</literal> if OBJ is a stay constraint object, <literal>#t</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-stay-constraint"><function>make-cl-stay-constraint</function></link> -- Return a stay constraint for CL-VAR to stay at its current value.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-p"><function>cl-constraint?</function></link> -- Return <literal>#t</literal> if OBJ is some kind of constraint object, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-strength"><function>cl-constraint-strength</function></link> -- Return the cl-strength object for constraint CONSTRAINT.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-weight"><function>cl-constraint-weight</function></link> -- Return the weighting factor (a number) for constraint CONSTRAINT.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-is-in-solver-p"><function>cl-constraint-is-in-solver?</function></link> -- Return <literal>#t</literal> if CONSTRAINT has been added to a solver, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-change-strength-x"><function>cl-constraint-change-strength!</function></link> -- Set CONSTRAINT's strength to STRENGTH.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-change-weight-x"><function>cl-constraint-change-weight!</function></link> -- Set CONSTRAINT's weighting factor to WEIGHT (a number).</para></listitem>
+      <listitem><para><link linkend="make-cl-constraint-from-string"><function>make-cl-constraint-from-string</function></link> -- Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.</para></listitem>
+      <listitem><para><link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> -- Return a newly-constructed constraint object.</para></listitem>
+      <listitem><para><link linkend="cl-solver-debug-print"><function>cl-solver-debug-print</function></link> -- Output a complete dump of SOLVER onto output port PORT.</para></listitem>
+      <listitem><para><link linkend="cl-solver-p"><function>cl-solver?</function></link> -- Return <literal>#t</literal> if OBJ is a constraint solver object, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="make-cl-solver"><function>make-cl-solver</function></link> -- Return a newly-created constraint solver object.</para></listitem>
+      <listitem><para><link linkend="cl-set-auto-solve-x"><function>cl-set-auto-solve!</function></link> -- Choose whether SOLVER autosolves or not.</para></listitem>
+      <listitem><para><link linkend="cl-set-auto-reset-stay-constants-x"><function>cl-set-auto-reset-stay-constants!</function></link> -- Choose whether SOLVER automatically resets stay constants or not.</para></listitem>
+      <listitem><para><link linkend="cl-add-constraint"><function>cl-add-constraint</function></link> -- Add the constraints, ARGS, to the solver SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-remove-constraint"><function>cl-remove-constraint</function></link> -- Remove the constraints, ARGS, from the solver SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> -- Add edit constraints on variables CL-VARS to SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-add-stay"><function>cl-add-stay</function></link> -- Add stay constraints on variables CL-VARS to SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> -- Begin changing values of the edit variables of SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-end-edit"><function>cl-end-edit</function></link> -- Finish changing the values of the edit variables in SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-is-constraint-satisfied-p"><function>cl-is-constraint-satisfied?</function></link> -- Return <literal>#t</literal> if CN is satisfied in SOLVER, <literal>#f</literal> otherwise.</para></listitem>
+      <listitem><para><link linkend="cl-suggest-value"><function>cl-suggest-value</function></link> -- Try to change VAR's value to VALUE within SOLVER.</para></listitem>
+      <listitem><para><link linkend="cl-resolve"><function>cl-resolve</function></link> -- Ask SOLVER to re-solve its system using the suggested values.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-list"><function>cl-constraint-list</function></link> -- Return the list of constraints in SOLVER.</para></listitem>
+    </itemizedlist> </sect1>
+  </chapter>
+  <chapter>
+    <title>Procedures in Alphabetical Order</title>
+<refentry id="cl-add-constraint">
+  <refnamediv>
+    <refname>cl-add-constraint</refname>
+    <refpurpose>Add the constraints, ARGS, to the solver SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-add-constraint solver . args)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Add the constraints, <parameter>args</parameter>, to the solver <parameter>solver</parameter>.
+Each constraint given after the <parameter>solver</parameter> argument is added to that
+solver in turn.  Once one cannot be added (e.g., due to its addition
+causing an insoluble system), this procedure will return <literal>#f</literal> without
+trying to add the remaining constraints.  If all constraints are added 
+successfully, this procedure will return <literal>#t</literal>.  (If none of the
+constraints have strength "cls-required", then the system will remain
+soluble.)  If an error is signalled because one object in the list <parameter>args</parameter>
+is not a constraint object, the preceding arguments will have already
+been added.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1353 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-add-editvar">
+  <refnamediv>
+    <refname>cl-add-editvar</refname>
+    <refpurpose>Add edit constraints on variables CL-VARS to SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-add-editvar solver cl-vars #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Add edit constraints on variables <parameter>cl-vars</parameter> to <parameter>solver</parameter>.
+<parameter>cl-vars</parameter> is a or a list of cl-variable object(s) that you wish to permit to change under
+the solver's control.  An edit-constraint for each cl-variable object
+is added in turn.   Each of the edit constraints will have strength
+<parameter>strength</parameter> (<literal>#f</literal> for default of cls-strong) and weight <parameter>factor</parameter> (<literal>#f</literal> for
+default of 1).  If any element of <parameter>cl-vars</parameter> is not a cl-variable, an error is
+thrown (after the preceding variables have been handled).  After
+selecting the edit variables with this procedure, you must call
+<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> before using <link linkend="cl-suggest-value"><function>cl-suggest-value</function></link>.  To remove the edit
+variables, use <link linkend="cl-end-edit"><function>cl-end-edit</function></link> when done changing the variables'
+values.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1432 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-add-stay">
+  <refnamediv>
+    <refname>cl-add-stay</refname>
+    <refpurpose>Add stay constraints on variables CL-VARS to SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-add-stay solver cl-vars #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Add stay constraints on variables <parameter>cl-vars</parameter> to <parameter>solver</parameter>.
+<parameter>cl-vars</parameter> is a or list of cl-variable(s) that you wish to remain (i.e., stay) at
+their current values unless another constraint forces them to change.
+In normal uses of the solver, all variables should have stay
+constraints added on them before they are used in a constraint added
+to the solver.  Each of the stay constraints will have strength
+<parameter>strength</parameter> (<literal>#f</literal> for default of cls-weak) and weight <parameter>factor</parameter> (<literal>#f</literal> for
+default of 1).
+
+Future versions of the solver may add the stay
+constraint implicitly upon a variable's first use.  Until then,
+though, be sure to add stay constraints on all the cl-variable objects
+you intend to use with the given <parameter>solver</parameter>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1492 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-begin-edit">
+  <refnamediv>
+    <refname>cl-begin-edit</refname>
+    <refpurpose>Begin changing values of the edit variables of SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-begin-edit solver)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Begin changing values of the edit variables of <parameter>solver</parameter>.
+This procedure must be invoked after adding edit variables to <parameter>solver</parameter>
+(via <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>) and before using <link linkend="cl-suggest-values"><function>cl-suggest-values</function></link> to change
+those edit variables' values.  Every <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> invocation should 
+have a matching <link linkend="cl-end-edit"><function>cl-end-edit</function></link> call.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1556 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-change-strength-x">
+  <refnamediv>
+    <refname>cl-constraint-change-strength!</refname>
+    <refpurpose>Set CONSTRAINT's strength to STRENGTH.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-change-strength! constraint strength)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Set <parameter>constraint</parameter>'s strength to <parameter>strength</parameter>.
+This is only allowed if the constraint is not in any solver.
+Returns <literal>#t</literal> if successful, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1045 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-change-weight-x">
+  <refnamediv>
+    <refname>cl-constraint-change-weight!</refname>
+    <refpurpose>Set CONSTRAINT's weighting factor to WEIGHT (a number).</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-change-weight! constraint weight)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Set <parameter>constraint</parameter>'s weighting factor to <parameter>weight</parameter> (a number).
+This is only allowed if the constraint is not in any solver.
+Returns <literal>#t</literal> if successful, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1070 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-is-in-solver-p">
+  <refnamediv>
+    <refname>cl-constraint-is-in-solver?</refname>
+    <refpurpose>Return <literal>#t</literal> if CONSTRAINT has been added to a solver, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-is-in-solver? constraint)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>constraint</parameter> has been added to a solver, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1031 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-list">
+  <refnamediv>
+    <refname>cl-constraint-list</refname>
+    <refpurpose>Return the list of constraints in SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-list solver #&amp;optional internal-also?)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the list of constraints in <parameter>solver</parameter>.
+Each object in the returned list is a cl-constraint object (i.e.,
+it is either a cl-linear-equation or a cl-inequality). If
+<parameter>internal-also?</parameter> is <literal>#f</literal> or not given, then only the constraints added via 
+the guile interface will be listed.  If <parameter>internal-also?</parameter> is <literal>#t</literal>, then all 
+constraints added to the solver (even those added by primitive code
+directly) will be listed.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1706 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-strength">
+  <refnamediv>
+    <refname>cl-constraint-strength</refname>
+    <refpurpose>Return the cl-strength object for constraint CONSTRAINT.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-strength constraint)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the cl-strength object for constraint <parameter>constraint</parameter>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1003 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-weight">
+  <refnamediv>
+    <refname>cl-constraint-weight</refname>
+    <refpurpose>Return the weighting factor (a number) for constraint CONSTRAINT.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-weight constraint)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the weighting factor (a number) for constraint <parameter>constraint</parameter>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1017 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-p">
+  <refnamediv>
+    <refname>cl-constraint?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is some kind of constraint object, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is some kind of constraint object, <literal>#f</literal> otherwise.
+There are three kinds of objects for which this procedure
+will return <literal>#t</literal>: "cl-inequality", "cl-equation", and
+"cl-stay-constraint" objects.  Since it is often useful to treat
+either as a general constraint, this procedure exists to simplify that
+test.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 989 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-divide">
+  <refnamediv>
+    <refname>cl-divide</refname>
+    <refpurpose>Return the cl-expression that is the quotient of EXPRA and EXPRB.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-divide exprA exprB)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the cl-expression that is the quotient of <parameter>expra</parameter> and <parameter>exprb</parameter>.
+Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+objects. Note that the product may not introduce non-linear terms--
+if it does (e.g., if <parameter>expra</parameter> and <parameter>exprb</parameter> both contain the same
+cl-variable), an error will result.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 628 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-end-edit">
+  <refnamediv>
+    <refname>cl-end-edit</refname>
+    <refpurpose>Finish changing the values of the edit variables in SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-end-edit solver)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Finish changing the values of the edit variables in <parameter>solver</parameter>.
+This procedure must be invoked once for every invocation of 
+<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>.   It will force a final re-solve before removing
+any edit variables that have been added via <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1576 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-equation-p">
+  <refnamediv>
+    <refname>cl-equation?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint equation, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-equation? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint equation, <literal>#f</literal> otherwise.
+Constraint equations also respond <literal>#t</literal> to <link linkend="cl-constraint-p"><function>cl-constraint?</function></link> queries,
+since they are also constraint objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 702 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-expression-p">
+  <refnamediv>
+    <refname>cl-expression?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint expression, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-expression? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint expression, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 471 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-inequality-p">
+  <refnamediv>
+    <refname>cl-inequality?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint inequality object, <literal>#t</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-inequality? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint inequality object, <literal>#t</literal> otherwise.
+Constraint inequalities also respond <literal>#t</literal> to <link linkend="cl-constraint-p"><function>cl-constraint?</function></link> queries,
+since they are also constraint objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 841 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-int-value">
+  <refnamediv>
+    <refname>cl-int-value</refname>
+    <refpurpose>Return the value of the constraint variable CLV as an integer.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-int-value clv)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the value of the constraint variable <parameter>clv</parameter> as an integer.
+Internally, the value is a double.  This rounds that real number to
+an integer before returning the value.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 231 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-is-constraint-satisfied-p">
+  <refnamediv>
+    <refname>cl-is-constraint-satisfied?</refname>
+    <refpurpose>Return <literal>#t</literal> if CN is satisfied in SOLVER, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-is-constraint-satisfied? solver cn)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>cn</parameter> is satisfied in <parameter>solver</parameter>, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1596 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-minus">
+  <refnamediv>
+    <refname>cl-minus</refname>
+    <refpurpose>Return the cl-expression that is the difference of EXPRA and EXPRB.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-minus exprA exprB)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the cl-expression that is the difference of <parameter>expra</parameter> and <parameter>exprb</parameter>.
+Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 553 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-plus">
+  <refnamediv>
+    <refname>cl-plus</refname>
+    <refpurpose>Return the cl-expression that is the sum of EXPRA and EXPRB.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-plus exprA exprB)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the cl-expression that is the sum of <parameter>expra</parameter> and <parameter>exprb</parameter>.
+Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 520 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-remove-constraint">
+  <refnamediv>
+    <refname>cl-remove-constraint</refname>
+    <refpurpose>Remove the constraints, ARGS, from the solver SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-remove-constraint solver . args)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Remove the constraints, <parameter>args</parameter>, from the solver <parameter>solver</parameter>.
+Each constraint given after the <parameter>solver</parameter> argument is removed from that
+solver in turn.  Once one cannot be removed (e.g., due to its never
+having been added to <parameter>solver</parameter>), this procedure will return <literal>#f</literal> without
+trying to remove the remaining constraints.  If all constraints are
+removed successfully, this procedure will return <literal>#t</literal>.  If an error is
+signalled because one object in the list <parameter>args</parameter> is not a constraint
+object, the preceding arguments will have already been removed.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1393 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-resolve">
+  <refnamediv>
+    <refname>cl-resolve</refname>
+    <refpurpose>Ask SOLVER to re-solve its system using the suggested values.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-resolve solver . args)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Ask <parameter>solver</parameter> to re-solve its system using the suggested values.
+You may only call this procedure between invocations of
+<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> and <link linkend="cl-end-edit"><function>cl-end-edit</function></link>.  After <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>, you may use
+<link linkend="cl-suggest-value"><function>cl-suggest-value</function></link> on <parameter>solver</parameter> to tell it the desired new values for the
+various edit variables you have added using <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>, and then
+call this procedure with only the first argument to have <parameter>solver</parameter> update
+the values of all the variables in the system.
+
+Alternatively, after adding edit-variables in a particular order, you
+may call <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> then this procedure with <parameter>args</parameter> set as
+suggested values for the edit-variables.  The order of the values in
+the <link linkend="cl-resolve"><function>cl-resolve</function></link> invocation must match the order of the variables in
+the <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> invocation(s).
+
+In either case, you must invoke <link linkend="cl-end-edit"><function>cl-end-edit</function></link> to remove the edit
+variables from the solver after you are done changing their values.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1652 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-set-auto-reset-stay-constants-x">
+  <refnamediv>
+    <refname>cl-set-auto-reset-stay-constants!</refname>
+    <refpurpose>Choose whether SOLVER automatically resets stay constants or not.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-set-auto-reset-stay-constants! solver flag)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Choose whether <parameter>solver</parameter> automatically resets stay constants or not.
+<parameter>flag</parameter> should be either <literal>#t</literal> or <literal>#f</literal>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1332 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-set-auto-solve-x">
+  <refnamediv>
+    <refname>cl-set-auto-solve!</refname>
+    <refpurpose>Choose whether SOLVER autosolves or not.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-set-auto-solve! solver flag)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Choose whether <parameter>solver</parameter> autosolves or not.
+<parameter>flag</parameter> should be either <literal>#t</literal> or <literal>#f</literal>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1313 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-solver-debug-print">
+  <refnamediv>
+    <refname>cl-solver-debug-print</refname>
+    <refpurpose>Output a complete dump of SOLVER onto output port PORT.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-solver-debug-print solver #&amp;optional port)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Output a complete dump of <parameter>solver</parameter> onto output port <parameter>port</parameter>.
+The output contains the contents of the tableau contained in <parameter>solver</parameter>,
+as well as the other internal state.  It can be useful for debugging,
+as the printable form of constraint solver objects contains only a
+brief summary of the contents of the solver.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1254 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-solver-p">
+  <refnamediv>
+    <refname>cl-solver?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint solver object, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-solver? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint solver object, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1280 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-stay-constraint-p">
+  <refnamediv>
+    <refname>cl-stay-constraint?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a stay constraint object, <literal>#t</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-stay-constraint? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a stay constraint object, <literal>#t</literal> otherwise.
+Stay constraints also respond <literal>#t</literal> to <link linkend="cl-constraint-p"><function>cl-constraint?</function></link> queries,
+since they are also constraint objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 939 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-strength-p">
+  <refnamediv>
+    <refname>cl-strength?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint strength, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-strength? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint strength, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 353 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-suggest-value">
+  <refnamediv>
+    <refname>cl-suggest-value</refname>
+    <refpurpose>Try to change VAR's value to VALUE within SOLVER.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-suggest-value solver var value)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Try to change <parameter>var</parameter>'s value to <parameter>value</parameter> within <parameter>solver</parameter>.
+You may only call this procedure after using <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> to add
+<parameter>var</parameter> as an edit variable for <parameter>solver</parameter>, and after invoking <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>
+on <parameter>solver</parameter>.  After you call <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>, you may invoke this
+procedure on all the edit variables.  The changing of the values of
+those variables (and the affect on other variables within <parameter>solver</parameter>) will
+not happen until after invoking <link linkend="cl-resolve"><function>cl-resolve</function></link> on <parameter>solver</parameter>.  Then the
+possibly changed values can be retrieved via <link linkend="cl-value"><function>cl-value</function></link> or
+<link linkend="cl-int-value"><function>cl-int-value</function></link>.  Note that the constraints that have been added to
+<parameter>solver</parameter> may not permit changing <parameter>var</parameter> to <parameter>value</parameter>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1615 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-times">
+  <refnamediv>
+    <refname>cl-times</refname>
+    <refpurpose>Return the cl-expression that is the product of EXPRA and EXPRB.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-times exprA exprB)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the cl-expression that is the product of <parameter>expra</parameter> and <parameter>exprb</parameter>.
+Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+objects.  Note that the product may not introduce non-linear terms--
+if it does (e.g., if <parameter>expra</parameter> and <parameter>exprb</parameter> both contain the same
+cl-variable), an error will result.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 586 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-value">
+  <refnamediv>
+    <refname>cl-value</refname>
+    <refpurpose>Return the current value of the constraint variable CLV.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-value clv)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the current value of the constraint variable <parameter>clv</parameter>.
+The value is a double.  Use <link linkend="cl-int-value"><function>cl-int-value</function></link> to return an integer.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 216 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-variable-p">
+  <refnamediv>
+    <refname>cl-variable?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint variable, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-variable? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint variable, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 126 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="cl-weight-p">
+  <refnamediv>
+    <refname>cl-weight?</refname>
+    <refpurpose>Return <literal>#t</literal> if OBJ is a constraint weight object, <literal>#f</literal> otherwise.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-weight? obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint weight object, <literal>#f</literal> otherwise.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 280 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="clv-attach-x">
+  <refnamediv>
+    <refname>clv-attach!</refname>
+    <refpurpose>Attach OBJ to VAR, undoing any previous attachments.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(clv-attach! var obj)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Attach <parameter>obj</parameter> to <parameter>var</parameter>, undoing any previous attachments.
+Use <link linkend="clv-attached-object"><function>clv-attached-object</function></link> to retreive <parameter>obj</parameter> later.
+Consider instead using <link linkend="set-object-property"><function>set-object-property</function></link> and <link linkend="object-property"><function>object-property</function></link>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 178 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="clv-attached-object">
+  <refnamediv>
+    <refname>clv-attached-object</refname>
+    <refpurpose>Return the object attached to cl-variable VAR.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(clv-attached-object var)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return the object attached to cl-variable <parameter>var</parameter>.
+Returns <literal>#f</literal> if no object was attached using <link linkend="clv-attach-x"><function>clv-attach!</function></link>.
+Consider instead using <link linkend="set-object-property"><function>set-object-property</function></link> and <link linkend="object-property"><function>object-property</function></link>.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 197 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-constraint">
+  <refnamediv>
+    <refname>make-cl-constraint</refname>
+    <refpurpose>Return a newly-constructed constraint object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-constraint exprA op exprB #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-constructed constraint object.
+<parameter>expra</parameter> and <parameter>exprb</parameter> are cl-expression or cl-variable objects.  <parameter>op</parameter> is one
+of `=', `<=', or `>=', anything else will signal an error.  Note that
+the arithmetic comparison procedures are just used for their identity.
+The returned object is a cl-equation constraint object if <parameter>op</parameter> is `=';
+it is a cl-inequality constraint object if <parameter>op</parameter> is `<=' or `>='.  The
+created constraint is given strength <parameter>strength</parameter>, a cl-strength, and has
+a weight factor of <parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to
+cls-required, <parameter>factor</parameter> defaults to 1.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1160 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-constraint-from-string">
+  <refnamediv>
+    <refname>make-cl-constraint-from-string</refname>
+    <refpurpose>Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-constraint-from-string str lookup-proc #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.
+<parameter>str</parameter> is a string specifying the desired constraint.  The
+created constraint is given strength <parameter>strength</parameter>, a cl-strength, and has
+a weight factor of <parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to
+cls-required, <parameter>factor</parameter> defaults to 1.  <parameter>lookup-proc</parameter> must be a procedure
+that takes a single string argument and returns either a <link linkend="cl-variable"><function>cl-variable</function></link> object
+or <literal>#f</literal> if there is no such variable with that name.  (It may choose to
+create a return a new <link linkend="cl-variable"><function>cl-variable</function></link> object.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1112 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-equality">
+  <refnamediv>
+    <refname>make-cl-equality</refname>
+    <refpurpose>Return a newly-created constraint equation.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-equality exprA exprB #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint equation.
+The resulting constraint is that <parameter>expra</parameter> is equal to <parameter>exprb</parameter>.  <parameter>expra</parameter> and
+<parameter>exprb</parameter> are cl-expression or cl-variable objects.  The constraint is
+given strength <parameter>strength</parameter>, a cl-strength, and has a weight factor of
+<parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter>
+defaults to 1.  Consider <link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> as a higher-level
+interface to building arbitrary constraints.
+
+This is a convenience procedure that has the same
+semantics as <link linkend="make-cl-equation"><function>make-cl-equation</function></link> with the difference of <parameter>expra</parameter> and
+<parameter>exprb</parameter>.  Note that if neither expression contains a variable, an
+error will be signalled.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 750 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-equation">
+  <refnamediv>
+    <refname>make-cl-equation</refname>
+    <refpurpose>Return a newly-created constraint equation.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-equation expr #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint equation.
+The resulting constraint is that <parameter>expr</parameter> is equal to 0.  <parameter>expr</parameter> is a
+cl-expression or cl-variable object.  The constraint is given strength
+<parameter>strength</parameter>, a cl-strength, and has a weight factor of <parameter>factor</parameter>, a real
+number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter> defaults to 1.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 713 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-expression">
+  <refnamediv>
+    <refname>make-cl-expression</refname>
+    <refpurpose>Return a newly-create constraint expression object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-expression clv)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-create constraint expression object.
+The expression is contains just the value <parameter>clv</parameter>.  Often constraint
+variables can be used interchangeably with constraint expressions, but
+this procedure can be used to force building a simple expression.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 480 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-inequality">
+  <refnamediv>
+    <refname>make-cl-inequality</refname>
+    <refpurpose>Return a newly-constructed constraint inequality object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-inequality exprA op exprB #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-constructed constraint inequality object.
+<parameter>expra</parameter> and <parameter>exprb</parameter> are cl-expression or cl-variable objects.  If <parameter>op</parameter> is
+`<=' then the constraint is that <parameter>expra</parameter> <= <parameter>exprb</parameter>; if <parameter>op</parameter> is `>=' then
+the constraint is that <parameter>expra</parameter> >= <parameter>exprb</parameter>.  Note that the arithmetic
+comparison procedure objects are just used for their identity. If <parameter>op</parameter>
+is any other object, an error is signalled. The constraint is given
+strength <parameter>strength</parameter>, a cl-strength, and has a weight factor of <parameter>factor</parameter>, a
+real number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter> defaults to 1.
+Consider <link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> as a higher-level interface to building
+arbitrary constraints.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 852 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-solver">
+  <refnamediv>
+    <refname>make-cl-solver</refname>
+    <refpurpose>Return a newly-created constraint solver object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-solver)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint solver object.
+Often, an application will need only one of these objects,  but
+multiple independent solvers may exist as long as they do not
+share constraint variable objects.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 1289 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-stay-constraint">
+  <refnamediv>
+    <refname>make-cl-stay-constraint</refname>
+    <refpurpose>Return a stay constraint for CL-VAR to stay at its current value.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-stay-constraint cl-var #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a stay constraint for <parameter>cl-var</parameter> to stay at its current value.
+Weight the constraint according to <parameter>strength</parameter> and <parameter>factor</parameter>.  Use
+<link linkend="cl-add-constraint"><function>cl-add-constraint</function></link> to add the resulting constraint into a solver,
+or use the <link linkend="cl-add-stay"><function>cl-add-stay</function></link> convenience function instead.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 951 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-strength">
+  <refnamediv>
+    <refname>make-cl-strength</refname>
+    <refpurpose>Return a newly-created constraint strength object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-strength name weight)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint strength object.
+The object is given the name <parameter>name</parameter>, a string, and the symbolic
+strengh <parameter>weight</parameter>, a cl-weight.  Constraint strength objects
+are used when specifying the strength of a constraint.  There are
+several predefined cl-strenght objects: "cls-required", "cls-strong",
+"cls-medium", and "cls-weak".  These four constraint strengths
+are often enough for a suitably expressive constraint-hierarchy,
+but new strengths can be introduced if necessary.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 378 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-strength-3">
+  <refnamediv>
+    <refname>make-cl-strength-3</refname>
+    <refpurpose>Return a newly-created constraint strength object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-strength-3 name w1 w2 w3)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint strength object.
+The object is given the name <parameter>name</parameter>, a string, and a symbolic weight of
+length three with the sequence of values: <parameter>w1</parameter>, <parameter>w2</parameter>, <parameter>w3</parameter>.  This is a
+convenience procedure that has the same semantics as building a
+cl-weight object with the values and using that to build a cl-strength 
+object.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 408 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-variable">
+  <refnamediv>
+    <refname>make-cl-variable</refname>
+    <refpurpose>Return a newly-created constraint variable.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-variable  #&amp;optional name value)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint variable.
+The created variable has the name <parameter>name</parameter>, and an initial
+value of <parameter>value</parameter>.  Be sure to add a stay constraint on the
+variable if you want its value to not change.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 135 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+<refentry id="make-cl-weight">
+  <refnamediv>
+    <refname>make-cl-weight</refname>
+    <refpurpose>Return a newly-created constraint symbolic weight object.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-weight w1 w2 w3)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-created constraint symbolic weight object.
+Symbolic weights are sequences of real numbers that are sorted
+in lexicographical order (e.g., 1,0,0 &gt; 0,999,999).  cl-weight
+objects are used when creating cl-strength objects.  By convention,
+the sequences are three elements long: <parameter>w1</parameter>, <parameter>w2</parameter>, and <parameter>w3</parameter>.  Longer
+cl-weight objects could be supported in the future.  See also
+<link linkend="make-cl-strength-3"><function>make-cl-strength-3</function></link> which is a convenience procedure for building a
+cl-strength object given the sequence of numbers directly.
+  </para>
+  <refsect2>
+  <title>Implementation Notes</title>
+  <para> Module: Built-in Primitive</para>
+  <para> Defined in <ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/~checkout~/../cassowary_scm.cc"><filename>../cassowary_scm.cc</filename></ulink>
+  at line 289 (<ulink url="http://scwm.mit.edu/cgi-bin/cvsweb.new/../cassowary_scm.cc">CVS log</ulink>)</para> </refsect2>
+  </refsect1>
+</refentry>
+
+  </chapter>
+</book>
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+fill-column: 10000
+sgml-omittag:nil
+sgml-shorttag:t
+End:
+-->

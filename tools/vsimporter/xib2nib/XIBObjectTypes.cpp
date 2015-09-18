@@ -226,6 +226,59 @@ XIBArray::XIBArray()
     AddMember("EncodedWithXMLCoder", new XIBObjectBool(true));
 }
 
+XIBObject *XIBArray::ApplyVariation(XIBObject *variation)
+{
+    // Variations act as a filter to include or exclude objects from an array based on a size class.
+    // NOTE: We return a new ref, and leave the original intact. This has implications if somewhere
+    //   in say, InitFromStoryboard, we change an array, or keep a ref to modify at some later point.
+    //   Variations do not apply to <XIB3.
+    if (variation) {
+        XIBArray* ret = new XIBArray();
+        ret->_parent = _parent;
+
+        for (int i = 0; i < count(); i++) {
+            bool exclude = false;
+            auto obj = objectAtIndex(i);
+            for (auto n = variation->_members.begin(); n != variation->_members.end(); n++) {
+                auto excl = (*n)->_obj;
+                if (strcmp(excl->ClassName(), "exclude") == 0) {
+                    auto objRef = obj->getAttrib("id");
+                    auto exclRef = excl->getAttrib("reference");
+                    if (objRef && exclRef && !strcmp(objRef, exclRef)) {
+                        exclude = true;
+                        break;
+                    }
+                }
+            }
+            if (!exclude) {
+                ret->AddMember(NULL, obj);
+            }
+        }
+
+        for (auto n = variation->_members.begin(); n != variation->_members.end(); n++) {
+            auto obj = (*n)->_obj;
+            if (strcmp(obj->ClassName(), "include") == 0) {
+                auto cObjRef = obj->getAttrib("reference");
+                if (cObjRef) {
+                    auto objRef = findReference(cObjRef);
+                    if (objRef) {
+                        ret->AddMember(NULL, objRef);
+                    } else {
+                        assert(0);
+                    }
+                }
+            } else if (strcmp(obj->ClassName(), "exclude") == 0) {
+                // Left blank intentionally
+            } else {
+                assert(0);
+            }
+        }
+
+        return ret;
+    }
+    return this;
+}
+
 void XIBArray::InitFromStory(XIBObject *obj)
 {
     _className = "NSArray";
@@ -289,6 +342,26 @@ int XIBArray::count()
     }       
 
     return curIdx;
+}
+
+XIBVariation::XIBVariation(pugi::xml_node node)
+{
+    ScanXIBNode(node);
+}
+
+XIBVariation::XIBVariation() 
+{
+
+}
+
+void XIBVariation::EmitObject(NIBWriter *writer)
+{
+
+}
+
+bool XIBVariation::NeedsSerialization()
+{
+    return false;
 }
 
 void XIBAccessibilityArray::EmitObject(NIBWriter *writer)

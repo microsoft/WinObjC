@@ -559,6 +559,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 #if !USE_TEXT_LAYER
         adjustTextLayerSize(self);
 #endif
+        [super layoutSubviews];
     }
 
     -(void) setContentOffset:(CGPoint)offset {

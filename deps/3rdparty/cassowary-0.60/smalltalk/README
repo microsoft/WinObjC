@@ -1,0 +1,25 @@
+This directory contains files for a Smalltalk implementation of Cassowary.  
+
+This Smalltalk implementation is released to the public domain.
+
+A990112.dat is a configuration map for Version 4.46 of Cassowary 
+(12 January 1999).  If you are using OTI Smalltalk use this.
+
+Otherwise you can try using the following fileout files:
+    ClKernel.app -  the kernel application
+    ClTests.app - some small test examples
+    ClDemos.app - some graphical demos
+You will probably need to make some changes to run these under different
+implementations of Smalltalk -- the kernel and the tests will probably port
+without too much trouble; the graphical demos would need to be redone.
+
+
+Here are some statements to execute to open up the graphical demos:
+
+(ClBinaryTreeDemo height: 5)  open.
+ClBoxesDemo new open.
+ClElasticQuadDemo new open.
+ClBoundedQuadDemo new open.
+ClQuadDemo new open.
+ClBoundedLineDemo new open.
+ClLineDemo new open.

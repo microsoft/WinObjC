@@ -28,6 +28,7 @@ FOUNDATION_EXPORT NSString * const NSLocaleCollationIdentifier;
 
 FOUNDATION_EXPORT NSString * const NSCurrentLocaleDidChangeNotification;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSLocale : NSObject <NSCoding, NSCopying>
 
 +systemLocale;

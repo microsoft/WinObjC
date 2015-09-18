@@ -1,0 +1,68 @@
+See ../README for general information and generic instructions.
+Also see ../LICENSE for legalese regarding use of this distribution.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
+Cassowary/Java was developed using the JDK 1.1.3 port for Linux.  It has 
+been tested with JDK 1.1.7 for Linux, also.
+
+Before trying to build Cassowary/Java, be sure to include the directory
+java/classes in your CLASSPATH environment variable, e.g., if you untar
+the distribution in $HOME, then add: $HOME/cassowary/java/classes to
+your $CLASSPATH.  My CLASSPATH looks like this:
+
+/usr/local/.licensed/jdk/lib/classes.zip:/homes/gws/gjb/cassowary/java/classes
+
+Be sure you give configure the '--enable-java-build' option if you want
+this directory to be processed. Then you can just use `make all' (GNU
+Make) to build the .class files.  
+
+If you want to use the Java parser, you need the JavaCup package:
+
+ http://www.cs.princeton.edu/~appel/modern/java/CUP/
+
+
+Be sure to get at least v10k-b2 or later. You'll also need JLex from:
+
+ http://www.cs.princeton.edu/~appel/modern/java/JLex/index.html
+
+Uncompress the JavaCUP package from a directory that is contained in
+your $CLASSPATH.  Also put JLex's single Main.class into a directory 
+in your $CLASSPATH and compile it.  Then run
+
+java java_cup.Main < ClReader.cup
+
+to create parser.java, sym.java.  (The makefile does this for you if
+JavaCUP and JLex .class files are in your $CLASSPATH as described above).
+
+Cassowary was tested with java_cup_v10k.tar.gz.
+
+Try running ClTests after the build completes.  Be sure your CLASSPATH
+is set correctly (as discussed above) and do:
+
+java ClTests
+
+
+The demos/ subdirectory contains the quadrilateral demo;  `make run'
+should run it using the appletviewer after building it.  If you get
+a:
+
+ java.security.AccessControlException: access denied (java.io.FilePermission ...)
+
+error with Java 2, you may need to update your $HOME/.java.policy file.
+You can try making it containt the below three lines (BEWARE: this may
+be dangerous from a security perspective):
+
+ grant {
+	permission java.security.AllPermission;
+ };
+
+
+The cda/ subdirectory contains Michael Noth's Constraint Drawing
+Application.  `make run' from the cda/ directory should run it using the
+appletviewer after building it.  For more information about the CDA,
+see:
+
+http://www.cs.washington.edu/research/constraints/cda/info.html
+
+The CDA is supplied as *unsupported* software.  Feel free to submit bug
+reports, etc., but we do not expect to maintain the code.

@@ -17,17 +17,17 @@
 #include "Starboard.h"
 #include "UIAnimationNotification.h"
 #include "QuartzCore/CABasicAnimation.h"
-#include "UIViewInternal.h"
 #include "UIAppearanceSetter.h"
+
+#import "UIViewInternal.h"
+#import "AutoLayout.h"
 
 @class UIAppearanceSetter;
 
-#if defined( USE_CASSOWARY )
-#include <ClSimplexSolver.h>
-#include <ClLinearEquation.h>
-#endif
-
 #include <math.h>
+
+// For LoadPackagedLibrary
+#include <Windows.h>
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
@@ -58,178 +58,21 @@ typedef struct {
     completionBlockFunc _completionBlock;
 } AnimationProperties;
 
-class AutoLayoutProperties;
-#if defined( USE_CASSOWARY )
-class AutoLayoutProperties
-{
-public:
-    AutoLayoutProperties(id view)  
-    {
-        memset(_contentHuggingConstraint, 0, sizeof(_contentHuggingConstraint));
-        memset(_contentCompressionResistanceConstraint, 0, sizeof(_contentCompressionResistanceConstraint));
-        _constrained = false;
-        _staysAdded = false;
-        _inSolution = false;
-        _vars[Right] = new ClVariable(0.0);
-        _vars[Bottom] = new ClVariable(0.0);
-        _vars[Left] = new ClVariable(0.0);
-        _vars[Top] = new ClVariable(0.0);
-        _contentHuggingPriority.height = 250.0f;
-        _contentHuggingPriority.width = 250.0f;
-        _contentCompressionResistancePriority.height = 750.0f;
-        _contentCompressionResistancePriority.width = 750.0f;
-    }
-
-    ~AutoLayoutProperties()
-    {
-        delete _vars[0];
-        delete _vars[1];
-        delete _vars[2];
-        delete _vars[3];
-    }
-
-    void AddStays()
-    {
-        if(!_staysAdded) {
-            for(int i = 0; i < 4; i++) {
-                solver.AddStay(*_vars[i], ClsWeak(), 1000.0);
-            }
-            _staysAdded = true;
-        }
-    }
-
-    enum {
-        Left,
-        Right,
-        Top,
-        Bottom
-    };
-
-    ClVariable* _vars[4];
-    bool _constrained;
-    bool _staysAdded;
-    bool _inSolution;
-    CGSize _contentHuggingPriority;
-    CGSize _contentCompressionResistancePriority;
-    ClConstraint* _contentHuggingConstraint[2];
-    ClConstraint* _contentCompressionResistanceConstraint[2];
-};
-
-void dumpConstraints(id constraints) {
-    int count = [constraints count];
-    if(count) {
-        for(int i = 0; i < count; i++) {
-            NSLayoutConstraint* constraint = [(id)constraints objectAtIndex:i];
-            if(constraint->_items[0] != nil) {
-                EbrDebugLog("Constraint from (%s) Type: ", E2H([[constraint->_items[0] description] UTF8String]));
-            } else {
-                EbrDebugLog("Constraint from (NONE) Type: ");
-            }
-            switch(constraint->_attributes[0]) {
-            case NSLayoutAttributeLeft:
-                EbrDebugLog("NSLayoutAttributeLeft\n");
-                break;
-            case NSLayoutAttributeRight:
-                EbrDebugLog("NSLayoutAttributeRight\n");
-                break;
-            case NSLayoutAttributeTop:
-                EbrDebugLog("NSLayoutAttributeTop\n");
-                break;
-            case NSLayoutAttributeBottom:
-                EbrDebugLog("NSLayoutAttributeBottom\n");
-                break;
-            case NSLayoutAttributeLeading:
-                EbrDebugLog("NSLayoutAttributeLeading\n");
-                break;
-            case NSLayoutAttributeTrailing:
-                EbrDebugLog("NSLayoutAttributeRight\n");
-                break;
-            case NSLayoutAttributeWidth:
-                EbrDebugLog("NSLayoutAttributeWidth\n");
-                break;
-            case NSLayoutAttributeHeight:
-                EbrDebugLog("NSLayoutAttributeHeight\n");
-                break;
-            case NSLayoutAttributeCenterX:
-                EbrDebugLog("NSLayoutAttributeCenterX\n");
-                break;
-            case NSLayoutAttributeCenterY:
-                EbrDebugLog("NSLayoutAttributeCenterY\n");
-                break;
-            case NSLayoutAttributeBaseline:
-                EbrDebugLog("NSLayoutAttributeBaseline\n");
-                break;
-            default:
-                EbrDebugLog("None\n");
-                break;
-            }
-            if(constraint->_items[1] != nil) {
-                EbrDebugLog("Constraint to   (%s) Type: ", E2H([[constraint->_items[1] description] UTF8String]));
-            } else {
-                EbrDebugLog("Constraint to   (NONE) Type: ");
-            }
-            switch(constraint->_attributes[1]) {
-            case NSLayoutAttributeLeft:
-                EbrDebugLog("NSLayoutAttributeLeft\n");
-                break;
-            case NSLayoutAttributeRight:
-                EbrDebugLog("NSLayoutAttributeRight\n");
-                break;
-            case NSLayoutAttributeTop:
-                EbrDebugLog("NSLayoutAttributeTop\n");
-                break;
-            case NSLayoutAttributeBottom:
-                EbrDebugLog("NSLayoutAttributeBottom\n");
-                break;
-            case NSLayoutAttributeLeading:
-                EbrDebugLog("NSLayoutAttributeLeading\n");
-                break;
-            case NSLayoutAttributeTrailing:
-                EbrDebugLog("NSLayoutAttributeRight\n");
-                break;
-            case NSLayoutAttributeWidth:
-                EbrDebugLog("NSLayoutAttributeWidth\n");
-                break;
-            case NSLayoutAttributeHeight:
-                EbrDebugLog("NSLayoutAttributeHeight\n");
-                break;
-            case NSLayoutAttributeCenterX:
-                EbrDebugLog("NSLayoutAttributeCenterX\n");
-                break;
-            case NSLayoutAttributeCenterY:
-                EbrDebugLog("NSLayoutAttributeCenterY\n");
-                break;
-            case NSLayoutAttributeBaseline:
-                EbrDebugLog("NSLayoutAttributeBaseline\n");
-                break;
-            default:
-                EbrDebugLog("None\n");
-                break;
-            }
-            EbrDebugLog("Deets: mult(%f) const(%f), priority(%d)\n", constraint->_multiplier, constraint->_constant, constraint->_priority);
-            if(constraint->_constant < 0) {
-                CGRect itmBounds;
-                itmBounds = [constraint->_items[0] frame];
-                EbrDebugLog("Item 1 (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
-                itmBounds = [constraint->_items[1] frame];
-                EbrDebugLog("Item 2 (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
-            }
-        }
-    }
-}
-#endif
-
 static AnimationProperties _animationProperties[32];
 static int stackLevel = 0;
 
 int viewCount = 0;
 
 @implementation UIView {
+    NSMutableArray* _constraints;
     idretaintype(CALayer) layer;
     bool _deallocating;
 }
-    static void initPriv(UIView* self)
-    {
+    -(UIViewPrivateState*) _privateState {
+        return priv;
+    }
+
+    -(void) initPriv {
         if ( self->priv ) return;
 
         viewCount ++;
@@ -237,6 +80,7 @@ int viewCount = 0;
         self->priv->setSelf(self);
         self->priv->autoresizesSubviews = TRUE;
         self->priv->autoresizingMask = UIViewAutoresizingNone;
+        self->priv->translatesAutoresizingMaskIntoConstraints = TRUE;
         self->priv->userInteractionEnabled = 1;
         self->priv->multipleTouchEnabled = 0;
         self->priv->superview = 0;
@@ -245,9 +89,19 @@ int viewCount = 0;
         self->priv->contentMode = UIViewContentModeScaleToFill;
         self->priv->gestures = [NSMutableArray new];
         self->priv->constraints = [NSMutableArray new];
-#if defined( USE_CASSOWARY )
-        self->priv->layoutProperties = new AutoLayoutProperties(self);
-#endif
+
+        static BOOL autoLayoutInit;
+        if(!autoLayoutInit) {
+            // Since we don't have any functions linking us to AutoLayout.dll, and simply
+            // linking to AutoLayout.lib isn't good enough (since objc classes are static
+            // initialized, and there's nothing linking the TU) we have to load it manually.
+            LoadPackagedLibrary(L"AutoLayout.dll", 0);
+            autoLayoutInit = true; 
+        }
+
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutAlloc];
+        }
 
         self->layer.attach([[[self class] layerClass] new]);
         [self->layer setDelegate:self];
@@ -255,11 +109,10 @@ int viewCount = 0;
         //EbrDebugLog("%d: Allocing %s (%x)\n", viewCount, object_getClassName(self), (id) self);
     }
 
-
     +(instancetype) allocWithZone:(NSZone*)zone {
         UIView* ret = [super allocWithZone:zone];
 
-        initPriv(ret);
+        [ret initPriv];
         return ret;
     }
 
@@ -267,26 +120,21 @@ int viewCount = 0;
     {
         EbrDebugLog("[%f,%f] @ %fx%f\n", (float) pos.origin.x, (float) pos.origin.y, (float) pos.size.width, (float) pos.size.height);
 
-        initPriv(self);
+        [self initPriv];
         [self setOpaque:TRUE];
         [self setFrame:pos];
         [self setNeedsDisplay];
 
-#if defined( USE_CASSOWARY )
-        priv->layoutProperties->_vars[AutoLayoutProperties::Right]->SetValue(pos.origin.x + pos.size.width);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]->SetValue(pos.origin.y + pos.size.height);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Left]->SetValue((Number)pos.origin.x);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Top]->SetValue((Number)pos.origin.y);
-#endif
-
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutSetVars: pos];
+        }
+        
         return self;
     }
-
 
     -(instancetype) initWithFrame:(CGRect)pos {
         return initInternal(self, pos);
     }
-
 
     -(instancetype) init {
         CGRect pos;
@@ -385,47 +233,44 @@ int viewCount = 0;
             }
         }
 
-#if defined( USE_CASSOWARY )
-        if([coder containsValueForKey:@"UIViewContentCompressionResistancePriority"]) {
-            id sizeObj = [coder decodeObjectForKey:@"UIViewContentCompressionResistancePriority"];
-            if ( [sizeObj isKindOfClass:[NSString class]] ) {
-                const char *stretchStr = (const char *) E2H([sizeObj UTF8String]);
-                sscanf(stretchStr, "{%f, %f}", &priv->layoutProperties->_contentCompressionResistancePriority.width, &priv->layoutProperties->_contentCompressionResistancePriority.height);
-            } else {
-                CGSize *size = (CGSize *) E2H([sizeObj bytes] + 1);
-                memcpy(&priv->layoutProperties->_contentCompressionResistancePriority, size, sizeof(CGRect));
-            }
+        if([coder containsValueForKey:@"UIViewDoesNotTranslateAutoresizingMaskIntoConstraints"]) {
+            priv->translatesAutoresizingMaskIntoConstraints = ![coder decodeInt32ForKey:@"UIViewDoesNotTranslateAutoresizingMaskIntoConstraints"];
         }
 
-        if([coder containsValueForKey:@"UIViewContentHuggingPriority"]) {
-            id sizeObj = [coder decodeObjectForKey:@"UIViewContentHuggingPriority"];
-            if ( [sizeObj isKindOfClass:[NSString class]] ) {
-                const char *stretchStr = (const char *) E2H([sizeObj UTF8String]);
-                sscanf(stretchStr, "{%f, %f}", &priv->layoutProperties->_contentHuggingPriority.width, &priv->layoutProperties->_contentHuggingPriority.height);
-            } else {
-                CGSize *size = (CGSize *) E2H([sizeObj bytes] + 1);
-                memcpy(&priv->layoutProperties->_contentHuggingPriority, size, sizeof(CGRect));
-            }
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutInitWithCoder: coder];
         }
-
-        priv->layoutProperties->_vars[AutoLayoutProperties::Right]->SetValue(bounds.origin.x + bounds.size.width);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]->SetValue(bounds.origin.y + bounds.size.height);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Left]->SetValue((Number)bounds.origin.x);
-        priv->layoutProperties->_vars[AutoLayoutProperties::Top]->SetValue((Number)bounds.origin.y);
-#endif
 
         if ( [coder containsValueForKey:@"UIViewAutolayoutConstraints"] ) {
             NSArray* constraints = [coder decodeObjectForKey:@"UIViewAutolayoutConstraints"];
+            NSArray* removeConstraints = [coder decodeObjectForKey:@"_UILayoutGuideConstraintsToRemove"];
             int count = [constraints count];
             for(int i = 0; i < count; i++) {
                 NSLayoutConstraint* constraint = [constraints objectAtIndex:i];
-                if([(id)constraint isKindOfClass:[NSLayoutConstraint class]]) {
-                    [self addConstraint:(id)constraint];
+                if([constraint isKindOfClass:[NSLayoutConstraint class]]) {
+                    bool remove = false;
+                    for(int i = 0; i < [removeConstraints count]; i++) {
+                        NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
+                        if(wayward == constraint) {
+                            EbrDebugLog("Removing constraint (%s): \n", [[wayward description] UTF8String]);
+                            [wayward printConstraint];
+                            remove = true;
+                            break;
+                        }
+                    }
+                    if(![self.constraints containsObject:constraint] && !remove) {
+                        [self.constraints addObject:constraint];
+                        if([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
+                            [constraint autoLayoutConstraintAddedToView:self];
+                        }
+                    }
                 } else {
                     EbrDebugLog("Skipping unsupported constraint type: %s\n", [[constraint description] UTF8String]);
                 }
             }
         }
+
+        [NSLayoutConstraint printConstraints:self.constraints];
 
         [self setHidden:[coder decodeInt32ForKey:@"UIHidden"]];
 
@@ -483,7 +328,6 @@ int viewCount = 0;
         [layer setPosition:center];
     }
 
-
     -(void) layoutSublayersOfLayer:(CALayer*)forLayer {
         if ( forLayer == layer ) {
             UIViewController* controller = [UIViewController controllerForView:self];
@@ -504,42 +348,9 @@ int viewCount = 0;
 
     -(void) layoutSubviews {
         if ( priv->autoresizesSubviews ) {
-#if defined( USE_CASSOWARY )
-            // Apply new bounds.
-            for(int i = 0; i < priv->childCount; i++) {
-                UIView* child = priv->childAtIndex(i)->self;
-                [(id)child layoutSubviews];
-
-                if(priv->layoutProperties->_inSolution && child->priv->layoutProperties->_constrained) {
-                    CGRect newFrame;
-                    CGPoint newPoint;
-                    CGPoint oldPoint;
-                    UIViewPrivateState* topView = priv;
-
-                    oldPoint.x = (float)child->priv->layoutProperties->_vars[AutoLayoutProperties::Left]->Value();
-                    oldPoint.y = (float)child->priv->layoutProperties->_vars[AutoLayoutProperties::Top]->Value();
-                        
-                    while(topView->parent) {
-                        if(topView->layoutProperties->_constrained) {
-                            topView = topView->parent;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    newPoint = [self convertPoint:oldPoint fromView:topView->self];
-
-                    newFrame.size.width = (float)(child->priv->layoutProperties->_vars[AutoLayoutProperties::Right]->Value() -
-                            child->priv->layoutProperties->_vars[AutoLayoutProperties::Left]->Value());
-                    newFrame.size.height = (float)(child->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]->Value() -
-                                child->priv->layoutProperties->_vars[AutoLayoutProperties::Top]->Value());
-                    newFrame.origin.x = newPoint.x;
-                    newFrame.origin.y = newPoint.y;
-
-                    [(id)child setFrame:newFrame];
-                }
+            if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+                [self autoLayoutLayoutSubviews];
             }
-#endif
         }
     }
 
@@ -684,9 +495,7 @@ int viewCount = 0;
                 UIViewAutoresizing mask = subview->priv->autoresizingMask;
 
                 if ( mask == UIViewAutoresizingNone ) continue;
-#if defined( USE_CASSOWARY )                    
-                if ( subview->priv->layoutProperties->_constrained ) continue;
-#endif
+                if ( subview->priv->_constrained ) continue;
                 
                 CGRect curFrame, origFrame;
                 curFrame = [subview frame];
@@ -807,6 +616,11 @@ int viewCount = 0;
         curBounds.size = outSize;
 
         [layer setBounds:curBounds];
+
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutSetVars: frame];
+        }
+
     }
 
 
@@ -1698,8 +1512,12 @@ int viewCount = 0;
         priv->autoresizesSubviews = autoresize;
     }
 
+    -(BOOL) translatesAutoresizingMaskIntoConstraints {
+        return self->priv->translatesAutoresizingMaskIntoConstraints;
+    }
 
     -(void) setTranslatesAutoresizingMaskIntoConstraints:(BOOL)translate {
+        self->priv->translatesAutoresizingMaskIntoConstraints = translate;
         EbrDebugLog("setTranslatesAutoresizingMaskIntoConstraints(%d) not supported\n", (int)translate);
     }
 
@@ -1708,253 +1526,120 @@ int viewCount = 0;
         return priv->constraints;
     }
 
+    -(void) addConstraint:(NSLayoutConstraint*)constraint {
+        if(constraint.firstItem != self && 
+           [constraint.firstItem superview] != self &&
+           (constraint.secondItem && (constraint.secondItem != self || [constraint.secondItem superview] != self))) {
+            EbrDebugLog("Only constraints with relations to this view and its children may be added. "
+                        "This error may occur if your view hierarchy has not yet been initialized.");
+            return;
+        }
 
-    -(void) addConstraint:(id)constraint {
         if([priv->constraints containsObject:constraint]) {
             return;
         }
 
         [priv->constraints addObject:constraint];
-        NSLayoutConstraint* layoutConstraint = constraint;
 
-#if defined( USE_CASSOWARY )
-        assert(layoutConstraint->_items[0]);
-        assert([layoutConstraint->_items[0] isKindOfClass:[UIView class]]);
-        if(layoutConstraint->_items[1]) assert([layoutConstraint->_items[1] isKindOfClass:[UIView class]]);
-
-        if(!layoutConstraint->priv->_constraint) {
-            // TODO: Care about reading direction.
-            ClLinearExpression *lex[2];
-            memset(lex, 0, sizeof(lex));
-            for(int n = 0; n < 2; n++) {
-                UIView* item = layoutConstraint->_items[n];
-                int attribute = layoutConstraint->_attributes[n];
-
-                if(layoutConstraint->_items[n] == nil) {
-                    lex[n] = new ClLinearExpression(0.0);
-                    continue;
-                }
-
-                item->priv->layoutProperties->_inSolution = true;
-
-                switch(attribute) {
-                case NSLayoutAttributeWidth:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Right]-*item->priv->layoutProperties->_vars[AutoLayoutProperties::Left]);
-                    break;
-                case NSLayoutAttributeHeight:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]-*item->priv->layoutProperties->_vars[AutoLayoutProperties::Top]);
-                    break;
-                case NSLayoutAttributeCenterX:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Right]*0.5+*item->priv->layoutProperties->_vars[AutoLayoutProperties::Left]*0.5);
-                    break;
-                case NSLayoutAttributeCenterY:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]*0.5+*item->priv->layoutProperties->_vars[AutoLayoutProperties::Top]*0.5);
-                    break;
-                case NSLayoutAttributeLeading:
-                case NSLayoutAttributeLeft:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Left]);
-                    break;
-                case NSLayoutAttributeTrailing:
-                case NSLayoutAttributeRight:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Right]);
-                    break;
-                case NSLayoutAttributeTop:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Top]);
-                    break;
-                case NSLayoutAttributeBaseline:
-                    {
-                        UIView* baseline = [item viewForBaselineLayout];
-                        if(baseline->priv->layoutProperties->_constrained || (id)item == (id)baseline) {
-                            lex[n] = new ClLinearExpression(*baseline->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]);
-                        } else {
-                            CGRect baselineFrame;
-                            CGRect itemFrame;
-                            baselineFrame = [baseline frame];
-                            itemFrame = [item frame];
-                            baselineFrame.origin.y += baselineFrame.size.height;
-                            lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom] - 6); // TODO: This is fudged.
-                        }
-                    }
-                    break;
-                case NSLayoutAttributeBottom:
-                    lex[n] = new ClLinearExpression(*item->priv->layoutProperties->_vars[AutoLayoutProperties::Bottom]);
-                    break;
-                default:
-                    assert(0);
-                    break;
-                }
-            }
-
-            ClStrength strength(layoutConstraint->_priority >= NSLayoutPriorityRequired ? ClsRequired() : ClsWeak());
-            float constant = layoutConstraint->_constant;
-            UIView* item1 = layoutConstraint->_items[0];
-            UIView* item2 = layoutConstraint->_items[1];
-
-            if((id)item2 != nil) {
-                if(item1->priv->superview == item2->priv->superview) {
-                    // Siblings shouldn't set stays.
-                    item1->priv->layoutProperties->_constrained = true;
-                } else if(item2->priv->superview == item1) {
-                    item2->priv->layoutProperties->_constrained = true;
-                } else if(item1->priv->superview == item2) {
-                    item1->priv->layoutProperties->_constrained = true;
-                } else {
-                    EbrDebugLog("Constraint set between items that don't share a direct relationship. This might be an error.\n");
-                }
-            }
-
-            if(layoutConstraint->_autoSpacing && item2 != nil &&
-              (layoutConstraint->_attributes[0] >= NSLayoutAttributeLeft && layoutConstraint->_attributes[0] <= NSLayoutAttributeTrailing)) {
-                if(item1->priv->superview == item2->priv->superview) {
-                    if(layoutConstraint->_attributes[0] != layoutConstraint->_attributes[1]) {
-                        constant = 8.0f;
-                    }
-                } else {
-                    constant = 20.0f;
-                }
-            }
-
-            if(!lex[1]) {
-                lex[1] = new ClLinearExpression(constant);
-            } else {
-                *lex[1] = lex[1]->MultiplyMe(layoutConstraint->_multiplier).Plus(constant);
-            }
-
-            switch(layoutConstraint->_relation) {
-            case NSLayoutRelationEqual:
-                layoutConstraint->priv->_constraint = new ClLinearEquation(*lex[0], *lex[1], strength, layoutConstraint->_priority);
-                break;
-            case NSLayoutRelationGreaterThanOrEqual:
-                layoutConstraint->priv->_constraint = new ClLinearInequality(*lex[0], cnGEQ, *lex[1], strength, layoutConstraint->_priority);
-                break;
-            case NSLayoutRelationLessThanOrEqual:
-                layoutConstraint->priv->_constraint = new ClLinearInequality(*lex[0], cnLEQ, *lex[1], strength, layoutConstraint->_priority);
-                break;
-            default:
-                assert(0);
-            }
-
-            solver.AddConstraint(layoutConstraint->priv->_constraint);
-
-            delete lex[0];
-            delete lex[1];
+        if([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
+            [constraint autoLayoutConstraintAddedToView:self];
         }
-#endif
     }
 
 
     -(void) removeConstraint:(id)constraint {
-#if defined( USE_CASSOWARY )
-        NSLayoutConstraint* layoutConstraint = constraint;
-        if(layoutConstraint->priv->_constraint) {
-            solver.RemoveConstraint(layoutConstraint->priv->_constraint);
-            delete layoutConstraint->priv->_constraint;
-            layoutConstraint->priv->_constraint = NULL;
-        }
-#endif
         [priv->constraints removeObject:constraint];
+
+        if([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
+            [constraint autoLayoutConstraintRemovedFromView];
+        }
     }
 
 
-    -(void) addConstraints:(id)constraints {
-        EbrDebugLog("addConstraints not supported\n");
+    -(void) addConstraints:(NSArray*)constraints {
+        for(int i = 0; i < [constraints count]; i++) {
+            [self addConstraint: (NSLayoutConstraint*)[constraints objectAtIndex: i]];
+        }
+        [self updateConstraints];
     }
 
-
-    -(void) removeConstraints:(id)constraints {
-        EbrDebugLog("removeConstraints not supported\n");
+    -(void) removeConstraints:(NSArray*)constraints {
+        for(int i = 0; i < [constraints count]; i++) {
+            [self removeConstraint: (NSLayoutConstraint*)[constraints objectAtIndex: i]];
+        }
     }
-
 
     -(void) updateConstraints {
         for(int i = 0; i < priv->childCount; i++) {
             [priv->childAtIndex(i)->self updateConstraints];
         }
 
-#if defined( USE_CASSOWARY )
-        if(priv->layoutProperties->_inSolution) {
-            CGRect bounds;
-            CGSize contentSize;
-            bounds = [self bounds];
-            contentSize = [self intrinsicContentSize];
-            if(contentSize.width == UIViewNoIntrinsicMetric) {
-                if(priv->layoutProperties->_contentHuggingConstraint[0]) {
-                    solver.RemoveConstraint(priv->layoutProperties->_contentHuggingConstraint[0]);
-                    delete priv->layoutProperties->_contentHuggingConstraint[0];
-                    priv->layoutProperties->_contentHuggingConstraint[0] = NULL;
-                    solver.RemoveConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[0]);
-                    delete priv->layoutProperties->_contentCompressionResistanceConstraint[0];
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[0] = NULL;
-                }
-            } else {
-                if(priv->layoutProperties->_contentHuggingConstraint[0] && contentSize.width != priv->layoutProperties->_contentHuggingConstraint[0]->Expression().Constant()) {
-                    solver.RemoveConstraint(priv->layoutProperties->_contentHuggingConstraint[0]);
-                    delete priv->layoutProperties->_contentHuggingConstraint[0];
-                    priv->layoutProperties->_contentHuggingConstraint[0] = NULL;
-                    solver.RemoveConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[0]);
-                    delete priv->layoutProperties->_contentCompressionResistanceConstraint[0];
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[0] = NULL;
-                }
-                if(!priv->layoutProperties->_contentHuggingConstraint[0]) {
-                    priv->layoutProperties->_contentHuggingConstraint[0] = 
-                        new ClLinearInequality(*priv->layoutProperties->_vars[AutoLayoutProperties::Right] - *priv->layoutProperties->_vars[AutoLayoutProperties::Left],
-                            cnLEQ, contentSize.width, ClsWeak(), priv->layoutProperties->_contentHuggingPriority.width);
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[0] = 
-                        new ClLinearInequality(*priv->layoutProperties->_vars[AutoLayoutProperties::Right] - *priv->layoutProperties->_vars[AutoLayoutProperties::Left],
-                            cnGEQ, contentSize.width, ClsWeak(), priv->layoutProperties->_contentCompressionResistancePriority.width);
-                    solver.AddConstraint(priv->layoutProperties->_contentHuggingConstraint[0]);
-                    solver.AddConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[0]);
-                }
-            }
-            if(contentSize.height == UIViewNoIntrinsicMetric) {
-                if(priv->layoutProperties->_contentHuggingConstraint[1]) {
-                    solver.RemoveConstraint(priv->layoutProperties->_contentHuggingConstraint[1]);
-                    delete priv->layoutProperties->_contentHuggingConstraint[1];
-                    priv->layoutProperties->_contentHuggingConstraint[1] = NULL;
-                    solver.RemoveConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[1]);
-                    delete priv->layoutProperties->_contentCompressionResistanceConstraint[1];
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[1] = NULL;
-                }
-            } else {
-                if(priv->layoutProperties->_contentHuggingConstraint[1] && contentSize.height != priv->layoutProperties->_contentHuggingConstraint[1]->Expression().Constant()) {
-                    solver.RemoveConstraint(priv->layoutProperties->_contentHuggingConstraint[1]);
-                    delete priv->layoutProperties->_contentHuggingConstraint[1];
-                    priv->layoutProperties->_contentHuggingConstraint[1] = NULL;
-                    solver.RemoveConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[1]);
-                    delete priv->layoutProperties->_contentCompressionResistanceConstraint[1];
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[1] = NULL;
-                }
-                if(!priv->layoutProperties->_contentHuggingConstraint[1]) {
-                    priv->layoutProperties->_contentHuggingConstraint[1] = 
-                        new ClLinearInequality(*priv->layoutProperties->_vars[AutoLayoutProperties::Bottom] - *priv->layoutProperties->_vars[AutoLayoutProperties::Top],
-                            cnLEQ, contentSize.height, ClsWeak(), priv->layoutProperties->_contentHuggingPriority.height);
-                    priv->layoutProperties->_contentCompressionResistanceConstraint[1] = 
-                        new ClLinearInequality(*priv->layoutProperties->_vars[AutoLayoutProperties::Bottom] - *priv->layoutProperties->_vars[AutoLayoutProperties::Top],
-                            cnGEQ, contentSize.height, ClsWeak(), priv->layoutProperties->_contentCompressionResistancePriority.height);
-                    solver.AddConstraint(priv->layoutProperties->_contentHuggingConstraint[1]);
-                    solver.AddConstraint(priv->layoutProperties->_contentCompressionResistanceConstraint[1]);
-                }
-            }
-
-            if(!priv->layoutProperties->_constrained) {
-                priv->layoutProperties->AddStays();
-
-                for(int i = 0; i < 4; i++) {
-                    solver.AddEditVar(*priv->layoutProperties->_vars[i]);
-                }
-
-                solver.BeginEdit();
-                solver.SuggestValue(*priv->layoutProperties->_vars[AutoLayoutProperties::Right], bounds.size.width);
-                solver.SuggestValue(*priv->layoutProperties->_vars[AutoLayoutProperties::Bottom], bounds.size.height);
-                solver.SuggestValue(*priv->layoutProperties->_vars[AutoLayoutProperties::Left], 0);
-                solver.SuggestValue(*priv->layoutProperties->_vars[AutoLayoutProperties::Top], 0);
-                solver.Resolve();
-                solver.EndEdit(); // Removes edit variables btw.
-            }
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutUpdateConstraints];
         }
-#endif
     }
 
+    - (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis {
+        switch(axis) {
+        case UILayoutConstraintAxisHorizontal:
+            return priv->_contentHuggingPriority.width;
+            break;
+        case UILayoutConstraintAxisVertical:
+            return priv->_contentHuggingPriority.height;
+            break;
+        default:
+            // assert?
+            EbrDebugLog("Content compression resistance for unknown axis\n");
+            return 0.0f;
+        }
+    }
+
+    - (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis {
+        switch(axis) {
+        case UILayoutConstraintAxisHorizontal:
+            priv->_contentCompressionResistancePriority.width = priority;
+            break;
+        case UILayoutConstraintAxisVertical:
+            priv->_contentCompressionResistancePriority.height = priority;
+            break;
+        default:
+            // assert?
+            EbrDebugLog("Content compression resistance set on unknown axis\n");
+            return;
+        }
+        [self invalidateContentSize];
+    }
+
+    - (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis {
+        switch(axis) {
+        case UILayoutConstraintAxisHorizontal:
+            return priv->_contentHuggingPriority.width;
+            break;
+        case UILayoutConstraintAxisVertical:
+            return priv->_contentHuggingPriority.height;
+            break;
+        default:
+            // assert?
+            EbrDebugLog("Content hugging for unknown axis\n");
+            return 0.0f;
+        }
+    }
+
+    - (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis {
+        switch(axis) {
+        case UILayoutConstraintAxisHorizontal:
+            priv->_contentHuggingPriority.width = priority;
+            break;
+        case UILayoutConstraintAxisVertical:
+            priv->_contentHuggingPriority.height = priority;
+            break;
+        default:
+            // assert?
+            EbrDebugLog("Content hugging set on unknown axis\n");
+            return;
+        }
+        [self invalidateContentSize];
+    }
 
     -(UIView*) viewWithTag:(int)tag {
         if ( priv->tag == tag ) {
@@ -2418,9 +2103,9 @@ int viewCount = 0;
         [priv->currentTouches release];
         layer = nil;
 
-#if defined( USE_CASSOWARY )
-        delete priv->layoutProperties;
-#endif
+        if([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+            [self autoLayoutDealloc];
+        }
         delete priv;
 
         [super dealloc];
@@ -2576,5 +2261,3 @@ int viewCount = 0;
         [self layer].contentsElement = nativeElement;
     }
 @end
-
-

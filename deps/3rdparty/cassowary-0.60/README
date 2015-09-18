@@ -1,0 +1,241 @@
+Cassowary Constraint Solving Toolkit for C++, Java, and Smalltalk
+Version 0.60
+
+Web Page: http://www.cs.washington.edu/research/constraints/cassowary
+Contact: cassowary@cs.washington.edu
+
+Greg J. Badros <gjb@cs.washington.edu> and
+Alan Borning <borning@cs.washington.edu>
+University of Washington
+Computer Science and Engineering
+Seattle, WA 98195-2350
+12-March-2000
+
+with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+
+See ANNOUNCE for a brief description and announcement of this distribution.
+See NEWS for a history of user-visible changes.
+See ChangeLog for a detailed listing of the changes to each source file.
+See LICENSE for legalese regarding use of this distribution.
+
+The Smalltalk implementation is in the public domain -- see smalltalk/README.
+
+Please send bug reports to cassowary@cs.washington.edu
+
+Also, send mail to cassowary@cs.washington.edu if you would like to be
+informed about bug fixes, feature enhancements, etc.  Let us know what
+implementation(s) you are using, too.
+
+------------------------------------------------------------------
+
+HOW TO GET STARTED
+
+The Cassowary library uses GNU autoconf to permit easy building on
+various platforms.  You should be able to do:
+
+./configure
+make
+
+and everything will work.  A more complex, but realistic example is:
+
+./configure --with-prefix=/usr/contrib \
+            --with-guile-prefix=/usr/contrib \
+            --with-python-headers=/usr/include/python1.5 \
+ 	    --enable-java-build \
+            --with-gtl=/usr/contrib \
+            --with-java-class-path=/usr/contrib/share/java/site \
+            --enable-warnings
+make -k
+
+Be sure to give the extra --enable-permissive flag to configure if
+you are building with gcc-2.95 or more recent.
+
+As yet another data point, I build Cassowary with:
+
+./configure --with-guile-exec-prefix=/uns/bin \
+            --with-guile-prefix=/uns/share --prefix=/uns/share \
+            --exec-prefix=/uns --enable-maintainer-mode
+
+See the file "INSTALL" for more details about
+autoconf support and the options that the "configure" takes.  You can
+also do "./configure --help" for the list of the options that configure
+accepts. 
+
+If the make in any of the subdirectories fails, you can turn on the "-k" 
+option to make, or just do make in the subdirectories that you want
+build.  E.g., if you do not have the JDK installed, the Java version of
+Cassowary might not compile; if you still want the guile version, just
+"cd guile; make -k".
+
+Be sure that configure detects the validity of using the "-fpermissive"
+flag of more recent g++/egcs compilers to work around some
+const-discrepancies between the const-challenged guile header files and
+Cassowary's more const-correct usage.  You should get a message like:
+
+  checking whether gcc understands -fpermissive option... yes
+
+when running configure if you're using, e.g., gcc-2.95 or later.
+
+You need to apply GTL.h.patch to the installed GTL.h header file for
+Cassowary to compile with recent versions of egcs/gcc (e.g., gcc-2.95).
+
+Also, you may need to change libguile/gsubr.h from:
+
+     extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
+                                       int rst, SCM (*fcn)()));
+   to
+
+     extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
+                                       int rst, void*));
+
+or patch guile's snarf.h to insert the appropriate case at each call to
+SCM_PROC and SCM_PROC1.  (Thanks to Alexandre Duret-Lutz for the above
+information about more recent g++/egcs compilers).
+
+Note that the generated Makefiles depend upon features of GNU Make.  See:
+
+ftp://ftp.gnu.org/pub/gnu/
+
+for a version of make that you can build first to then build Cassowary.
+
+Example applications exist in subdirectories of the top-level
+implementation subdirectories (e.g., c++/qdemos contains demos for C++
+that use the Qt Widget toolkit).
+
+Please send mail to cassowary@cs.washington.edu if you are using this
+toolkit so we know how to reach you for bug fixes, updates, etc.
+
+------------------------------------------------------------------
+
+WHAT THE DISTRIBUTION CONTAINS
+
+This distribution contains 3 implementations of the Cassowary constraint
+solving toolkit:
+
+o C++
+o Java
+o Smalltalk
+
+For each implementation language, there is at least one example program; 
+for some there are many.
+
+There is a wrapping of the C++ solver in Guile-Scheme -- see the guile/
+subdirectory.  Also, Anthony Beurivé has wrapped Cassowary for
+STk/Scheme.  His code is available at:
+
+  http://dept-info.labri.u-bordeaux.fr/~beurive/Code
+
+and the STk Scheme system is available at:
+
+  http://kaolin.unice.fr/STk/
+
+There is also a SWIG-generated wrapper of the C++ library making the
+solver available from the Python language.
+
+A technical report describing the solver, its interface, and its
+implementation is in cassowary-tr.ps (pdf version in cassowary-tr.pdf).
+This paper is required reading if you intend to use the solver in your
+own project(s).
+
+See also the Scwm (Scheme Constraints Window Manager) web page:
+
+http://scwm.mit.edu/scwm/
+
+Scwm, also by Greg Badros (and Maciej Stachowiak), is the most
+substantial application using this toolkit that we are aware of.
+
+------------------------------------------------------------------
+
+VARIOUS IMPLEMENTATION NOTES
+
+Cassowary/C++ needs to be compiled using a modern C++ compiler.
+At one time or another, it has compiled using:
+  o egcs-1.0.1
+  o egcs-1.0.3a
+  o egcs-1.1b
+  o egcs-1.1.1
+  o gcc-2.8.1 (needs libstdc++-2.8.x, too)
+  o Visual C++ 5.0 (not tried recently)
+
+In particular, Cassowary will *not* build with gcc-2.7.x.x!
+
+See c++/README for more details about building the C++ version.
+
+The C++ implementation of the toolkit also has an optional finite domain
+subsolver.  You need to build and install the GTL -- the Graph Template
+Library -- and use the "--with-gtl=DIR" configure option for the finite
+domain subsolver to be built.  GTL is available from:
+
+http://www.fmi.uni-passau.de/Graphlet/GTL/
+
+Cassowary was tested against GTL-0.3.1;  it may work with later
+versions, but I have not tried it.  You need to apply GTL.h.patch to
+the installed GTL.h header file for Cassowary to compile with recent
+versions of egcs/gcc (e.g., gcc-2.95).
+
+Cassowary/Java was developed using Sun's JDK-1.1.x, ported to Linux
+More recent versions should work fine.
+
+See java/README for more details about building the Java version.
+
+
+Cassowary/Smalltalk was written under OTI Smalltalk-- other versions of
+smalltalk will likely require (possibly significant) changes.
+
+See smalltalk/README for more details about the Smalltalk version.
+
+See guile/README for details about the Guile Scheme wrapper of the C++
+implementation, and for a pointer to SCWM, the Scheme Constraints Window 
+Manager which uses Cassowary.
+
+The Python bindings (by Tessa Lau) bindings for the Cassowary library
+are in the wrappers/ subdirectory.  SWIG was used in wrapping the
+library.  These bindings may no longer work, and are provided only for
+your hacking pleasure (please send back useful patches if you do get the 
+code working).
+
+For more information about SWIG, see:
+
+http://www.swig.org/
+
+
+For more information about the Python language, see:
+
+http://www.python.org/
+
+
+For more information about the Guile-Scheme language, see:
+
+http://www.red-bean.com/guile/
+http://www.fsf.org/software/guile/guile.html
+
+
+------------------------------------------------------------------
+
+DEMONSTRATION APPLICATION
+
+A standard demonstration application is included for each implementation 
+of the Cassowary solver.  The application builds a quadrilateral and
+connects the neighboring midpoints of each of the outer edges to form an 
+interior quadrilateral which is provably a parallelogram.  The
+constraint solver manages the constraints to keep the outer
+quadrilateral inside the window, keep the midpoints properly positioned, 
+and keep the outer quadrilateral from turning "inside out."  
+
+The user is able to select points (draggable boxes) and move them around 
+within the window (both midpoints and endpoints can be selected, of
+course).  The solver updates the figure, and redraws.
+
+
+------------------------------------------------------------------
+
+FUNDING ACKNOWLEDGEMENTS
+
+This work has been funded in part by the National Science Foundation under
+Grants IRI-9302249 and CCR-9402551, by Object Technology International, and
+by a Fulbright Award from the Australian-American Educational
+Foundation.
+
+Additionally, Greg Badros is supported by a National Science Foundation
+Graduate Research Fellowship.  Parts of this material are based upon
+work supported under that fellowship.

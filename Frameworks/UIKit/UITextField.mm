@@ -267,7 +267,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                     case UITextBorderStyleRoundedRect: {
                         rect = [self bounds];
-                        id image = [[UIImage imageNamed:@"/img/TextFieldRounded@2x.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(17, 17, 17, 16)];
+                        id image = [[UIImage imageNamed:@"/img/TextFieldRounded@2x.png"] resizableImageWithCapInsets: UIEdgeInsetsMake(16, 16, 16, 16)];
                         rect = [self bounds];
                         [image drawInRect:rect];
                         break;

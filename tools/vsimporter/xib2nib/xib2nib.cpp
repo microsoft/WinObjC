@@ -130,6 +130,14 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
                     const char *pCustomName = customName->stringValue();
                     obj->SetSwappedClassName(pCustomName);
                 }
+
+                for (memberList::iterator prop = properties->_members.begin(); prop != properties->_members.end(); prop++) {
+                    char szMeta[255];
+                    sprintf(szMeta, "%d.", objId);
+                    if (strncmp(szMeta, (*prop)->_name, strlen(szMeta)) == 0) {
+                        obj->AddMember(&(*prop)->_name[strlen(szMeta)], (*prop)->_obj);
+                    }
+                }
             }
         }
     }

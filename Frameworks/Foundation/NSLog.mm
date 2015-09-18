@@ -21,7 +21,11 @@
 void NSLogv(NSString *fmt, va_list list)
 {
     auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
-    OutputDebugStringA([str UTF8String]); OutputDebugStringA("\n");
+    INT len = [str length];
+    LPWSTR terminatedBuf = (LPWSTR) calloc(len + 1, sizeof(WCHAR));
+    memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
+    OutputDebugStringW(terminatedBuf); OutputDebugStringW(L"\n");
+    free(terminatedBuf);
     printf("%s\n", [str UTF8String]);
     [str release];
 }

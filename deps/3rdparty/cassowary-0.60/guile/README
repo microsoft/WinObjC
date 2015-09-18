@@ -1,0 +1,35 @@
+See ../README for general information and generic instructions.
+Also see ../LICENSE for legalese regarding use of this distribution.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
+This directory contains the source code to a wrapping of cassowary for
+use with guile scheme.
+
+Be sure to run configure in the top level directory with
+the "--enable-guile-build" option to do exactly that.
+
+See cassowary_scm-procedures.txt for a list of the scheme procedures
+that are defined, or cassowary_scm.sgml for an SGML markup of that
+documentation (follows the DocBook DTD -- use Jade to convert to HTML).
+Also see cassowary_scm-variables.txt for a list of the scheme global
+variables that are defined.
+
+cltests.scm is a test script.  *AFTER* installing the distribution, you
+can run it using "guile -s cltests.scm".  If you want to test before
+doing the install, try "make test" from this guile subdirectory.  (This
+may not be necessary with all versions of guile as "." may be implicit
+in the GUILE_LOAD_PATH already.)
+
+This wrapping was motivated by the desire to embed Cassowary in Scwm --
+the Scheme Constraints Window Managers.  See:
+
+http://scwm.mit.edu
+
+also see the guile page at:
+
+http://www.red-bean.com/guile/
+
+and the Jade page at:
+
+http://www.jclark.com/jade/
+

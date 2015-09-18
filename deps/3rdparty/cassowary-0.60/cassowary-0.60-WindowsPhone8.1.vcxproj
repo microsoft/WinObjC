@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4DA87CE9-53FD-4FA2-AB24-59EBF0C30A0D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>cassowary060Windows</RootNamespace>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <ApplicationType>Windows Phone</ApplicationType>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\WindowsPhone8.1\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\WindowsPhone8.1\</IntDir>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <TargetName>cassowary-0.60-Debug</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120_wp81</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <TargetName>cassowary-0.60</TargetName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>CL_NO_IO;CL_NO_ID;WIN32;_DEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CL_NO_IO;CL_NO_ID;WIN32;NDEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="c++\ClAbstractVariable.cc" />
+    <ClCompile Include="c++\ClConstraint.cc" />
+    <ClCompile Include="c++\ClDummyVariable.cc" />
+    <ClCompile Include="c++\ClFDVariable.cc" />
+    <ClCompile Include="c++\ClFloatVariable.cc" />
+    <ClCompile Include="c++\ClLinearExpression.cc" />
+    <ClCompile Include="c++\ClSimplexSolver.cc" />
+    <ClCompile Include="c++\ClSlackVariable.cc" />
+    <ClCompile Include="c++\ClSolver.cc" />
+    <ClCompile Include="c++\ClStrength.cc" />
+    <ClCompile Include="c++\ClSymbolicWeight.cc" />
+    <ClCompile Include="c++\ClTableau.cc" />
+    <ClCompile Include="c++\ClVariable.cc" />
+    <ClCompile Include="c++\ClLinearEquation.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="c++\Cassowary.h" />
+    <ClInclude Include="c++\Cl.h" />
+    <ClInclude Include="c++\ClAbstractVariable.h" />
+    <ClInclude Include="c++\ClC.h" />
+    <ClInclude Include="c++\ClConstraint.h" />
+    <ClInclude Include="c++\ClConstraintHash.h" />
+    <ClInclude Include="c++\ClDummyVariable.h" />
+    <ClInclude Include="c++\ClEditConstraint.h" />
+    <ClInclude Include="c++\ClEditOrStayConstraint.h" />
+    <ClInclude Include="c++\ClErrors.h" />
+    <ClInclude Include="c++\ClFDBinaryOneWayConstraint.h" />
+    <ClInclude Include="c++\ClFDConnectorVariable.h" />
+    <ClInclude Include="c++\ClFDConstraint.h" />
+    <ClInclude Include="c++\ClFDSolver.h" />
+    <ClInclude Include="c++\ClFDVariable.h" />
+    <ClInclude Include="c++\ClFloatVariable.h" />
+    <ClInclude Include="c++\ClLinearConstraint.h" />
+    <ClInclude Include="c++\ClLinearEquation.h" />
+    <ClInclude Include="c++\ClLinearExpression.h" />
+    <ClInclude Include="c++\ClLinearExpression_fwd.h" />
+    <ClInclude Include="c++\ClLinearInequality.h" />
+    <ClInclude Include="c++\ClMap.h" />
+    <ClInclude Include="c++\ClObjectiveVariable.h" />
+    <ClInclude Include="c++\ClPoint.h" />
+    <ClInclude Include="c++\ClReader.h" />
+    <ClInclude Include="c++\ClSet.h" />
+    <ClInclude Include="c++\ClSimplexSolver.h" />
+    <ClInclude Include="c++\ClSlackVariable.h" />
+    <ClInclude Include="c++\ClSolver.h" />
+    <ClInclude Include="c++\ClStayConstraint.h" />
+    <ClInclude Include="c++\ClStrength.h" />
+    <ClInclude Include="c++\ClSymbolicWeight.h" />
+    <ClInclude Include="c++\ClTableau.h" />
+    <ClInclude Include="c++\ClTypedefs.h" />
+    <ClInclude Include="c++\ClVariable.h" />
+    <ClInclude Include="c++\cl_auto_ptr.h" />
+    <ClInclude Include="c++\config-inline.h" />
+    <ClInclude Include="c++\debug.h" />
+    <ClInclude Include="c++\timer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

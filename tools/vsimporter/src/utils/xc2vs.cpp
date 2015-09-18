@@ -117,14 +117,16 @@ VCProjectItem* addRelativeFilePathToVS(const String& itemName, const String& fil
 
 void addBuildFileToVS(const String& itemHint, const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs)
 {
-  const PBXFile* file = buildFile->getFile();
   const String& compilerFlags = buildFile->getCompilerFlags();
   int attribs = buildFile->getAttributes();
-  String filePath = file->getFullPath();
+  const PBXFile* file = buildFile->getFile();
+  if (!file)
+    return;
 
   VCProjectItem* item = addFileToVSInternal(itemHint, file, proj, bs, false);
 
   // If the filetype doesn't match the file extension, specify the actual type
+  String filePath = file->getFullPath();
   String fileType = file->getFileType();
   String inferredType = PBXFile::getFileType(filePath);
   String compileAs = getVSCompileAsType(fileType);

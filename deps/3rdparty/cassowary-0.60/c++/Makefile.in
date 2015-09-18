@@ -1,0 +1,1017 @@
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AS = @AS@
+BENCH_PROGRAMS = @BENCH_PROGRAMS@
+CASSOWARY_VERSION = @CASSOWARY_VERSION@
+CC = @CC@
+CPPEXTRAFLAGS = @CPPEXTRAFLAGS@
+CXX = @CXX@
+DLLTOOL = @DLLTOOL@
+GTL_INCLUDES = @GTL_INCLUDES@
+GTL_LIB = @GTL_LIB@
+GUILE = @GUILE@
+GUILE_BIN_DIR = @GUILE_BIN_DIR@
+GUILE_CONFIG = @GUILE_CONFIG@
+GUILE_INCLUDES = @GUILE_INCLUDES@
+GUILE_LIBS = @GUILE_LIBS@
+GUILE_LIB_DIR = @GUILE_LIB_DIR@
+GUILE_PKGDATA_DIR = @GUILE_PKGDATA_DIR@
+JAVACFLAGS = @JAVACFLAGS@
+JAVA_CLASS_PATH = @JAVA_CLASS_PATH@
+LD = @LD@
+LEX = @LEX@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+MAINT = @MAINT@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
+OBJDUMP = @OBJDUMP@
+PACKAGE = @PACKAGE@
+PYTHON_HEADER_DIR = @PYTHON_HEADER_DIR@
+RANLIB = @RANLIB@
+TEST_PROGRAMS = @TEST_PROGRAMS@
+VERSION = @VERSION@
+YACC = @YACC@
+cassoguiledir = @cassoguiledir@
+
+@CL_BUILD_STATIC_LIBRARY_TRUE@lib_LIBRARIES = libcassowary.a
+lib_LTLIBRARIES = libcassowary.la
+
+libcassowary_la_LDFLAGS = -version-info 0:1:0
+
+INCLUDES = @GUILE_INCLUDES@ @GTL_INCLUDES@
+LDADD = libcassowary.a -L@prefix@/lib @GTL_LIB@
+@CL_BUILD_TESTS_TRUE@ClCTest_LDADD = $(LDADD) -lstdc++
+
+benchdir = $(libdir)/cassowary/bench
+bugsdir = $(libdir)/cassowary/bugs
+testdir = $(libdir)/cassowary/tests
+moretestdir = $(libdir)/cassowary/tests
+
+AM_CPPFLAGS = $(CPPEXTRAFLAGS)
+
+EXTRA_PROGRAMS = $(test_programs) $(bench_programs) $(bugs_programs)
+
+EXTRA_DIST = ClReader.l ClReader.y
+
+bench_programs = QocaBench
+@CL_BUILD_FD_SOLVER_TRUE@test_fd_solver = ClFDTests
+@CL_BUILD_FD_SOLVER_FALSE@test_fd_solver = 
+@CL_BUILD_FD_SOLVER_TRUE@sources_for_fd_solver = 	ClFDSolver.cc 	ClFDVariable.cc 	ClFDConnectorVariable.cc 	ClFDBinaryOneWayConstraint.cc
+@CL_BUILD_FD_SOLVER_FALSE@sources_for_fd_solver = 
+@CL_BUILD_FD_SOLVER_TRUE@headers_for_fd_solver = ClFDBinaryOneWayConstraint.h ClFDConstraint.h ClFDSolver.h
+@CL_BUILD_FD_SOLVER_FALSE@headers_for_fd_solver = 
+
+test_programs =  	ClParseTest 	ClSubgraphTest 	ClCTest 	ClLeakTest 	test-ClConstraint 	test-ClLinearExpression 	test-ClSimplexSolver 	test-ClStrength 	test-ClVariable 	$(test_fd_solver)
+
+
+test_PROGRAMS = ClTests
+@CL_BUILD_TESTS_TRUE@moretest_PROGRAMS = @TEST_PROGRAMS@
+@CL_BUILD_TESTS_TRUE@bench_PROGRAMS = @BENCH_PROGRAMS@
+
+bugs_programs =  	ClBug0 	ClBug1 	ClBug2
+
+
+ClBug0_SOURCES = ClBug0.cc
+
+ClBug1_SOURCES = ClBug1.cc
+
+ClBug2_SOURCES = ClBug2.cc
+
+sources =  	ClAbstractVariable.cc 	ClConstraint.cc 	ClLinearExpression.cc 	ClSolver.cc 	ClSimplexSolver.cc 	ClStrength.cc 	ClSymbolicWeight.cc 	ClTableau.cc 	ClVariable.cc 	ClFloatVariable.cc 	ClSlackVariable.cc 	ClDummyVariable.cc 	ClReader-lex.cc 	ClC.cc
+
+
+libcassowary_a_SOURCES =  	$(sources) 	$(sources_for_fd_solver)
+
+
+libcassowary_la_SOURCES =  	$(sources) 	$(sources_for_fd_solver)
+
+
+include_HEADERS = Cl.h ClC.h
+
+pkginclude_HEADERS =  	Cassowary.h 	ClAbstractVariable.h 	ClDummyVariable.h 	ClObjectiveVariable.h 	ClSlackVariable.h 	ClConstraint.h 	ClConstraintHash.h 	ClEditConstraint.h 	ClEditOrStayConstraint.h 	ClErrors.h 	ClLinearConstraint.h 	ClLinearEquation.h 	ClLinearExpression.h 	ClLinearExpression_fwd.h 	ClLinearInequality.h 	ClSolver.h 	ClSimplexSolver.h 	ClStayConstraint.h 	ClStrength.h 	ClSymbolicWeight.h 	ClTableau.h 	ClFDVariable.h 	ClFDConnectorVariable.h 	ClFloatVariable.h 	ClVariable.h 	ClReader.h 	ClTypedefs.h 	ClMap.h 	ClSet.h 	ClPoint.h 	cl_auto_ptr.h 	config-inline.h 	debug.h 	timer.h 	$(headers_for_fd_solver)
+
+
+ClTests_SOURCES = ClTests.cc
+
+@CL_BUILD_TESTS_TRUE@ClFDTests_SOURCES = ClFDTests.cc
+
+@CL_BUILD_TESTS_TRUE@QocaBench_SOURCES = QocaBench.cc
+
+@CL_BUILD_TESTS_TRUE@ClParseTest_SOURCES = ClParseTest.cc
+
+@CL_BUILD_TESTS_TRUE@ClSubgraphTest_SOURCES = ClSubgraphTest.cc
+
+@CL_BUILD_TESTS_TRUE@ClLeakTest_SOURCES = ClLeakTest.cc
+
+@CL_BUILD_TESTS_TRUE@test_ClConstraint_SOURCES = test-ClConstraint.cc
+
+@CL_BUILD_TESTS_TRUE@test_ClLinearExpression_SOURCES = test-ClLinearExpression.cc
+
+@CL_BUILD_TESTS_TRUE@test_ClSimplexSolver_SOURCES = test-ClSimplexSolver.cc
+
+@CL_BUILD_TESTS_TRUE@test_ClStrength_SOURCES = test-ClStrength.cc
+
+@CL_BUILD_TESTS_TRUE@test_ClVariable_SOURCES = test-ClVariable.cc
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = config.h
+CONFIG_CLEAN_FILES = 
+LIBRARIES =  $(lib_LIBRARIES)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I.
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+libcassowary_a_LIBADD = 
+@CL_BUILD_FD_SOLVER_TRUE@libcassowary_a_OBJECTS =  ClAbstractVariable.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClConstraint.o ClLinearExpression.o ClSolver.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClSimplexSolver.o ClStrength.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClSymbolicWeight.o ClTableau.o ClVariable.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClFloatVariable.o ClSlackVariable.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClDummyVariable.o ClReader-lex.o ClC.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDSolver.o ClFDVariable.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDConnectorVariable.o \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDBinaryOneWayConstraint.o
+@CL_BUILD_FD_SOLVER_FALSE@libcassowary_a_OBJECTS =  ClAbstractVariable.o \
+@CL_BUILD_FD_SOLVER_FALSE@ClConstraint.o ClLinearExpression.o \
+@CL_BUILD_FD_SOLVER_FALSE@ClSolver.o ClSimplexSolver.o ClStrength.o \
+@CL_BUILD_FD_SOLVER_FALSE@ClSymbolicWeight.o ClTableau.o ClVariable.o \
+@CL_BUILD_FD_SOLVER_FALSE@ClFloatVariable.o ClSlackVariable.o \
+@CL_BUILD_FD_SOLVER_FALSE@ClDummyVariable.o ClReader-lex.o ClC.o
+AR = ar
+LTLIBRARIES =  $(lib_LTLIBRARIES)
+
+libcassowary_la_LIBADD = 
+@CL_BUILD_FD_SOLVER_TRUE@libcassowary_la_OBJECTS =  \
+@CL_BUILD_FD_SOLVER_TRUE@ClAbstractVariable.lo ClConstraint.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClLinearExpression.lo ClSolver.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClSimplexSolver.lo ClStrength.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClSymbolicWeight.lo ClTableau.lo ClVariable.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClFloatVariable.lo ClSlackVariable.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClDummyVariable.lo ClReader-lex.lo ClC.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDSolver.lo ClFDVariable.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDConnectorVariable.lo \
+@CL_BUILD_FD_SOLVER_TRUE@ClFDBinaryOneWayConstraint.lo
+@CL_BUILD_FD_SOLVER_FALSE@libcassowary_la_OBJECTS =  \
+@CL_BUILD_FD_SOLVER_FALSE@ClAbstractVariable.lo ClConstraint.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClLinearExpression.lo ClSolver.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClSimplexSolver.lo ClStrength.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClSymbolicWeight.lo ClTableau.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClVariable.lo ClFloatVariable.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClSlackVariable.lo ClDummyVariable.lo \
+@CL_BUILD_FD_SOLVER_FALSE@ClReader-lex.lo ClC.lo
+PROGRAMS =  $(BENCH_PROGRAMS) $(TEST_PROGRAMS) $(bench_PROGRAMS) \
+$(moretest_PROGRAMS) $(test_PROGRAMS)
+
+@CL_BUILD_TESTS_TRUE@ClParseTest_OBJECTS =  ClParseTest.o
+ClParseTest_LDADD = $(LDADD)
+ClParseTest_DEPENDENCIES =  libcassowary.a
+ClParseTest_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@ClSubgraphTest_OBJECTS =  ClSubgraphTest.o
+ClSubgraphTest_LDADD = $(LDADD)
+ClSubgraphTest_DEPENDENCIES =  libcassowary.a
+ClSubgraphTest_LDFLAGS = 
+ClCTest_SOURCES = ClCTest.c
+ClCTest_OBJECTS =  ClCTest.o
+@CL_BUILD_TESTS_TRUE@ClCTest_DEPENDENCIES =  libcassowary.a
+ClCTest_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@ClLeakTest_OBJECTS =  ClLeakTest.o
+ClLeakTest_LDADD = $(LDADD)
+ClLeakTest_DEPENDENCIES =  libcassowary.a
+ClLeakTest_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@test_ClConstraint_OBJECTS =  test-ClConstraint.o
+test_ClConstraint_LDADD = $(LDADD)
+test_ClConstraint_DEPENDENCIES =  libcassowary.a
+test_ClConstraint_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@test_ClLinearExpression_OBJECTS =  \
+@CL_BUILD_TESTS_TRUE@test-ClLinearExpression.o
+test_ClLinearExpression_LDADD = $(LDADD)
+test_ClLinearExpression_DEPENDENCIES =  libcassowary.a
+test_ClLinearExpression_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@test_ClSimplexSolver_OBJECTS =  \
+@CL_BUILD_TESTS_TRUE@test-ClSimplexSolver.o
+test_ClSimplexSolver_LDADD = $(LDADD)
+test_ClSimplexSolver_DEPENDENCIES =  libcassowary.a
+test_ClSimplexSolver_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@test_ClStrength_OBJECTS =  test-ClStrength.o
+test_ClStrength_LDADD = $(LDADD)
+test_ClStrength_DEPENDENCIES =  libcassowary.a
+test_ClStrength_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@test_ClVariable_OBJECTS =  test-ClVariable.o
+test_ClVariable_LDADD = $(LDADD)
+test_ClVariable_DEPENDENCIES =  libcassowary.a
+test_ClVariable_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@ClFDTests_OBJECTS =  ClFDTests.o
+ClFDTests_LDADD = $(LDADD)
+ClFDTests_DEPENDENCIES =  libcassowary.a
+ClFDTests_LDFLAGS = 
+@CL_BUILD_TESTS_TRUE@QocaBench_OBJECTS =  QocaBench.o
+QocaBench_LDADD = $(LDADD)
+QocaBench_DEPENDENCIES =  libcassowary.a
+QocaBench_LDFLAGS = 
+ClBug0_OBJECTS =  ClBug0.o
+ClBug0_LDADD = $(LDADD)
+ClBug0_DEPENDENCIES =  libcassowary.a
+ClBug0_LDFLAGS = 
+ClBug1_OBJECTS =  ClBug1.o
+ClBug1_LDADD = $(LDADD)
+ClBug1_DEPENDENCIES =  libcassowary.a
+ClBug1_LDFLAGS = 
+ClBug2_OBJECTS =  ClBug2.o
+ClBug2_LDADD = $(LDADD)
+ClBug2_DEPENDENCIES =  libcassowary.a
+ClBug2_LDFLAGS = 
+ClTests_OBJECTS =  ClTests.o
+ClTests_LDADD = $(LDADD)
+ClTests_DEPENDENCIES =  libcassowary.a
+ClTests_LDFLAGS = 
+CXXFLAGS = @CXXFLAGS@
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+HEADERS =  $(include_HEADERS) $(pkginclude_HEADERS)
+
+DIST_COMMON =  README ./stamp-h.in Makefile.am Makefile.in config.h.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(libcassowary_a_SOURCES) $(libcassowary_la_SOURCES) $(ClParseTest_SOURCES) $(ClSubgraphTest_SOURCES) ClCTest.c $(ClLeakTest_SOURCES) $(test_ClConstraint_SOURCES) $(test_ClLinearExpression_SOURCES) $(test_ClSimplexSolver_SOURCES) $(test_ClStrength_SOURCES) $(test_ClVariable_SOURCES) $(ClFDTests_SOURCES) $(QocaBench_SOURCES) $(ClBug0_SOURCES) $(ClBug1_SOURCES) $(ClBug2_SOURCES) $(ClTests_SOURCES)
+OBJECTS = $(libcassowary_a_OBJECTS) $(libcassowary_la_OBJECTS) $(ClParseTest_OBJECTS) $(ClSubgraphTest_OBJECTS) ClCTest.o $(ClLeakTest_OBJECTS) $(test_ClConstraint_OBJECTS) $(test_ClLinearExpression_OBJECTS) $(test_ClSimplexSolver_OBJECTS) $(test_ClStrength_OBJECTS) $(test_ClVariable_OBJECTS) $(ClFDTests_OBJECTS) $(QocaBench_OBJECTS) $(ClBug0_OBJECTS) $(ClBug1_OBJECTS) $(ClBug2_OBJECTS) $(ClTests_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .cc .lo .o .s
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps c++/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+config.h: stamp-h
+	@if test ! -f $@; then \
+		rm -f stamp-h; \
+		$(MAKE) stamp-h; \
+	else :; fi
+stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES= CONFIG_HEADERS=c++/config.h \
+	     $(SHELL) ./config.status
+	@echo timestamp > stamp-h 2> /dev/null
+$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@$(srcdir)/stamp-h.in
+	@if test ! -f $@; then \
+		rm -f $(srcdir)/stamp-h.in; \
+		$(MAKE) $(srcdir)/stamp-h.in; \
+	else :; fi
+$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOHEADER)
+	@echo timestamp > $(srcdir)/stamp-h.in 2> /dev/null
+
+mostlyclean-hdr:
+
+clean-hdr:
+
+distclean-hdr:
+	-rm -f config.h
+
+maintainer-clean-hdr:
+
+mostlyclean-libLIBRARIES:
+
+clean-libLIBRARIES:
+	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+
+distclean-libLIBRARIES:
+
+maintainer-clean-libLIBRARIES:
+
+install-libLIBRARIES: $(lib_LIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+	@$(POST_INSTALL)
+	@list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(RANLIB) $(DESTDIR)$(libdir)/$$p"; \
+	    $(RANLIB) $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	list='$(lib_LIBRARIES)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.c.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+libcassowary.a: $(libcassowary_a_OBJECTS) $(libcassowary_a_DEPENDENCIES)
+	-rm -f libcassowary.a
+	$(AR) cru libcassowary.a $(libcassowary_a_OBJECTS) $(libcassowary_a_LIBADD)
+	$(RANLIB) libcassowary.a
+
+mostlyclean-libLTLIBRARIES:
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+
+distclean-libLTLIBRARIES:
+
+maintainer-clean-libLTLIBRARIES:
+
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+libcassowary.la: $(libcassowary_la_OBJECTS) $(libcassowary_la_DEPENDENCIES)
+	$(CXXLINK) -rpath $(libdir) $(libcassowary_la_LDFLAGS) $(libcassowary_la_OBJECTS) $(libcassowary_la_LIBADD) $(LIBS)
+
+mostlyclean-BENCHPROGRAMS:
+
+clean-BENCHPROGRAMS:
+	-test -z "$(BENCH_PROGRAMS)" || rm -f $(BENCH_PROGRAMS)
+
+distclean-BENCHPROGRAMS:
+
+maintainer-clean-BENCHPROGRAMS:
+
+install-BENCHPROGRAMS: $(BENCH_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(BENCHdir)
+	@list='$(BENCH_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-BENCHPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(BENCH_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(BENCHdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-TESTPROGRAMS:
+
+clean-TESTPROGRAMS:
+	-test -z "$(TEST_PROGRAMS)" || rm -f $(TEST_PROGRAMS)
+
+distclean-TESTPROGRAMS:
+
+maintainer-clean-TESTPROGRAMS:
+
+install-TESTPROGRAMS: $(TEST_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(TESTdir)
+	@list='$(TEST_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-TESTPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(TEST_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(TESTdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-benchPROGRAMS:
+
+clean-benchPROGRAMS:
+	-test -z "$(bench_PROGRAMS)" || rm -f $(bench_PROGRAMS)
+
+distclean-benchPROGRAMS:
+
+maintainer-clean-benchPROGRAMS:
+
+install-benchPROGRAMS: $(bench_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(benchdir)
+	@list='$(bench_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(benchdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(benchdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-benchPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(bench_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(benchdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-moretestPROGRAMS:
+
+clean-moretestPROGRAMS:
+	-test -z "$(moretest_PROGRAMS)" || rm -f $(moretest_PROGRAMS)
+
+distclean-moretestPROGRAMS:
+
+maintainer-clean-moretestPROGRAMS:
+
+install-moretestPROGRAMS: $(moretest_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(moretestdir)
+	@list='$(moretest_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(moretestdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(moretestdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-moretestPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(moretest_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(moretestdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+mostlyclean-testPROGRAMS:
+
+clean-testPROGRAMS:
+	-test -z "$(test_PROGRAMS)" || rm -f $(test_PROGRAMS)
+
+distclean-testPROGRAMS:
+
+maintainer-clean-testPROGRAMS:
+
+install-testPROGRAMS: $(test_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(testdir)
+	@list='$(test_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(testdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(testdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-testPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(test_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(testdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+ClParseTest: $(ClParseTest_OBJECTS) $(ClParseTest_DEPENDENCIES)
+	@rm -f ClParseTest
+	$(CXXLINK) $(ClParseTest_LDFLAGS) $(ClParseTest_OBJECTS) $(ClParseTest_LDADD) $(LIBS)
+
+ClSubgraphTest: $(ClSubgraphTest_OBJECTS) $(ClSubgraphTest_DEPENDENCIES)
+	@rm -f ClSubgraphTest
+	$(CXXLINK) $(ClSubgraphTest_LDFLAGS) $(ClSubgraphTest_OBJECTS) $(ClSubgraphTest_LDADD) $(LIBS)
+
+ClCTest: $(ClCTest_OBJECTS) $(ClCTest_DEPENDENCIES)
+	@rm -f ClCTest
+	$(LINK) $(ClCTest_LDFLAGS) $(ClCTest_OBJECTS) $(ClCTest_LDADD) $(LIBS)
+
+ClLeakTest: $(ClLeakTest_OBJECTS) $(ClLeakTest_DEPENDENCIES)
+	@rm -f ClLeakTest
+	$(CXXLINK) $(ClLeakTest_LDFLAGS) $(ClLeakTest_OBJECTS) $(ClLeakTest_LDADD) $(LIBS)
+
+test-ClConstraint: $(test_ClConstraint_OBJECTS) $(test_ClConstraint_DEPENDENCIES)
+	@rm -f test-ClConstraint
+	$(CXXLINK) $(test_ClConstraint_LDFLAGS) $(test_ClConstraint_OBJECTS) $(test_ClConstraint_LDADD) $(LIBS)
+
+test-ClLinearExpression: $(test_ClLinearExpression_OBJECTS) $(test_ClLinearExpression_DEPENDENCIES)
+	@rm -f test-ClLinearExpression
+	$(CXXLINK) $(test_ClLinearExpression_LDFLAGS) $(test_ClLinearExpression_OBJECTS) $(test_ClLinearExpression_LDADD) $(LIBS)
+
+test-ClSimplexSolver: $(test_ClSimplexSolver_OBJECTS) $(test_ClSimplexSolver_DEPENDENCIES)
+	@rm -f test-ClSimplexSolver
+	$(CXXLINK) $(test_ClSimplexSolver_LDFLAGS) $(test_ClSimplexSolver_OBJECTS) $(test_ClSimplexSolver_LDADD) $(LIBS)
+
+test-ClStrength: $(test_ClStrength_OBJECTS) $(test_ClStrength_DEPENDENCIES)
+	@rm -f test-ClStrength
+	$(CXXLINK) $(test_ClStrength_LDFLAGS) $(test_ClStrength_OBJECTS) $(test_ClStrength_LDADD) $(LIBS)
+
+test-ClVariable: $(test_ClVariable_OBJECTS) $(test_ClVariable_DEPENDENCIES)
+	@rm -f test-ClVariable
+	$(CXXLINK) $(test_ClVariable_LDFLAGS) $(test_ClVariable_OBJECTS) $(test_ClVariable_LDADD) $(LIBS)
+
+ClFDTests: $(ClFDTests_OBJECTS) $(ClFDTests_DEPENDENCIES)
+	@rm -f ClFDTests
+	$(CXXLINK) $(ClFDTests_LDFLAGS) $(ClFDTests_OBJECTS) $(ClFDTests_LDADD) $(LIBS)
+
+QocaBench: $(QocaBench_OBJECTS) $(QocaBench_DEPENDENCIES)
+	@rm -f QocaBench
+	$(CXXLINK) $(QocaBench_LDFLAGS) $(QocaBench_OBJECTS) $(QocaBench_LDADD) $(LIBS)
+
+ClBug0: $(ClBug0_OBJECTS) $(ClBug0_DEPENDENCIES)
+	@rm -f ClBug0
+	$(CXXLINK) $(ClBug0_LDFLAGS) $(ClBug0_OBJECTS) $(ClBug0_LDADD) $(LIBS)
+
+ClBug1: $(ClBug1_OBJECTS) $(ClBug1_DEPENDENCIES)
+	@rm -f ClBug1
+	$(CXXLINK) $(ClBug1_LDFLAGS) $(ClBug1_OBJECTS) $(ClBug1_LDADD) $(LIBS)
+
+ClBug2: $(ClBug2_OBJECTS) $(ClBug2_DEPENDENCIES)
+	@rm -f ClBug2
+	$(CXXLINK) $(ClBug2_LDFLAGS) $(ClBug2_OBJECTS) $(ClBug2_LDADD) $(LIBS)
+
+ClTests: $(ClTests_OBJECTS) $(ClTests_DEPENDENCIES)
+	@rm -f ClTests
+	$(CXXLINK) $(ClTests_LDFLAGS) $(ClTests_OBJECTS) $(ClTests_LDADD) $(LIBS)
+.cc.o:
+	$(CXXCOMPILE) -c $<
+.cc.lo:
+	$(LTCXXCOMPILE) -c $<
+
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(includedir)
+	@list='$(include_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(includedir)/$$p"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(includedir)/$$p; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	list='$(include_HEADERS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(includedir)/$$p; \
+	done
+
+install-pkgincludeHEADERS: $(pkginclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pkgincludedir)
+	@list='$(pkginclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincludedir)/$$p"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincludedir)/$$p; \
+	done
+
+uninstall-pkgincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	list='$(pkginclude_HEADERS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pkgincludedir)/$$p; \
+	done
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)config.h.in$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = c++
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+ClAbstractVariable.lo ClAbstractVariable.o : ClAbstractVariable.cc \
+	ClAbstractVariable.h cassowary/config-inline.h Cassowary.h \
+	ClConstraintHash.h ClErrors.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h cl_auto_ptr.h cassowary/config.h
+ClC.lo ClC.o : ClC.cc ClC.h cassowary/config-inline.h Cl.h \
+	cassowary/ClVariable.h cassowary/Cassowary.h \
+	cassowary/ClConstraintHash.h cassowary/ClFloatVariable.h \
+	cassowary/ClAbstractVariable.h cassowary/ClErrors.h \
+	cassowary/ClSet.h cassowary/ClTypedefs.h cassowary/ClMap.h \
+	cassowary/ClLinearExpression_fwd.h cassowary/cl_auto_ptr.h \
+	cassowary/ClFDVariable.h cassowary/ClSimplexSolver.h \
+	cassowary/ClSolver.h cassowary/ClTableau.h \
+	cassowary/ClLinearExpression.h cassowary/debug.h \
+	cassowary/ClLinearInequality.h cassowary/ClLinearConstraint.h \
+	cassowary/ClConstraint.h cassowary/ClStrength.h \
+	cassowary/ClSymbolicWeight.h cassowary/ClStayConstraint.h \
+	cassowary/ClEditOrStayConstraint.h cassowary/ClEditConstraint.h \
+	cassowary/ClSlackVariable.h cassowary/ClObjectiveVariable.h \
+	cassowary/ClLinearEquation.h cassowary/ClReader.h \
+	cassowary/config.h
+ClConstraint.lo ClConstraint.o : ClConstraint.cc ClConstraint.h \
+	cassowary/config-inline.h debug.h Cassowary.h \
+	ClConstraintHash.h ClLinearExpression.h ClMap.h ClVariable.h \
+	ClFloatVariable.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	ClFDVariable.h ClStrength.h ClSymbolicWeight.h \
+	cassowary/config.h ClTableau.h
+ClDummyVariable.lo ClDummyVariable.o : ClDummyVariable.cc \
+	ClDummyVariable.h cassowary/config-inline.h Cassowary.h \
+	ClConstraintHash.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClMap.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	cassowary/config.h
+ClFDBinaryOneWayConstraint.lo ClFDBinaryOneWayConstraint.o : \
+	ClFDBinaryOneWayConstraint.cc cassowary/config.h \
+	ClFDBinaryOneWayConstraint.h Cassowary.h ClConstraintHash.h \
+	ClFDConstraint.h ClConstraint.h debug.h ClLinearExpression.h \
+	ClMap.h ClVariable.h ClFloatVariable.h ClAbstractVariable.h \
+	ClErrors.h ClSet.h ClTypedefs.h ClLinearExpression_fwd.h \
+	cl_auto_ptr.h ClFDVariable.h ClStrength.h ClSymbolicWeight.h \
+	ClLinearConstraint.h
+ClFDConnectorVariable.lo ClFDConnectorVariable.o : \
+	ClFDConnectorVariable.cc ClFDConnectorVariable.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClVariable.h ClFloatVariable.h ClAbstractVariable.h ClErrors.h \
+	ClSet.h ClTypedefs.h ClMap.h ClLinearExpression_fwd.h \
+	cl_auto_ptr.h ClFDVariable.h ClLinearEquation.h \
+	ClLinearConstraint.h ClConstraint.h debug.h \
+	ClLinearExpression.h ClStrength.h ClSymbolicWeight.h \
+	ClSimplexSolver.h ClSolver.h ClTableau.h ClLinearInequality.h \
+	ClStayConstraint.h ClEditOrStayConstraint.h ClEditConstraint.h \
+	ClSlackVariable.h ClObjectiveVariable.h cassowary/config.h
+ClFDSolver.lo ClFDSolver.o : ClFDSolver.cc cassowary/config.h \
+	Cassowary.h ClConstraintHash.h ClFDSolver.h ClSolver.h \
+	ClErrors.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h ClVariable.h ClFloatVariable.h \
+	ClAbstractVariable.h cl_auto_ptr.h ClFDVariable.h \
+	ClSymbolicWeight.h ClFDBinaryOneWayConstraint.h \
+	ClFDConstraint.h ClConstraint.h debug.h ClLinearExpression.h \
+	ClStrength.h
+ClFDVariable.lo ClFDVariable.o : ClFDVariable.cc ClFDVariable.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClAbstractVariable.h ClErrors.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h cl_auto_ptr.h ClSolver.h \
+	cassowary/config.h
+ClFloatVariable.lo ClFloatVariable.o : ClFloatVariable.cc \
+	ClFloatVariable.h cassowary/config-inline.h Cassowary.h \
+	ClConstraintHash.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClMap.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	cassowary/config.h
+ClLinearExpression.lo ClLinearExpression.o : ClLinearExpression.cc \
+	ClLinearExpression.h cassowary/config-inline.h ClMap.h \
+	Cassowary.h ClConstraintHash.h debug.h ClVariable.h \
+	ClFloatVariable.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	ClFDVariable.h ClSymbolicWeight.h ClTableau.h \
+	cassowary/config.h
+ClReader-lex.lo ClReader-lex.o : ClReader-lex.cc ClReader.h \
+	cassowary/config-inline.h ClErrors.h Cassowary.h \
+	ClConstraintHash.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h ClVariable.h ClFloatVariable.h \
+	ClAbstractVariable.h cl_auto_ptr.h ClFDVariable.h ClStrength.h \
+	ClSymbolicWeight.h ClReader.cc.h Cl.h cassowary/ClVariable.h \
+	cassowary/ClSimplexSolver.h cassowary/Cassowary.h \
+	cassowary/ClSolver.h cassowary/ClErrors.h \
+	cassowary/ClTypedefs.h cassowary/ClTableau.h \
+	cassowary/ClLinearExpression.h cassowary/ClMap.h \
+	cassowary/debug.h cassowary/ClLinearExpression_fwd.h \
+	cassowary/ClLinearInequality.h cassowary/ClLinearConstraint.h \
+	cassowary/ClConstraint.h cassowary/ClStrength.h \
+	cassowary/ClStayConstraint.h cassowary/ClEditOrStayConstraint.h \
+	cassowary/ClEditConstraint.h cassowary/ClSlackVariable.h \
+	cassowary/ClAbstractVariable.h cassowary/ClObjectiveVariable.h \
+	cassowary/ClLinearEquation.h cassowary/ClReader.h \
+	cassowary/config.h
+ClReader.lo ClReader.o : ClReader.cc Cl.h cassowary/config-inline.h \
+	cassowary/ClVariable.h cassowary/Cassowary.h \
+	cassowary/ClConstraintHash.h cassowary/ClFloatVariable.h \
+	cassowary/ClAbstractVariable.h cassowary/ClErrors.h \
+	cassowary/ClSet.h cassowary/ClTypedefs.h cassowary/ClMap.h \
+	cassowary/ClLinearExpression_fwd.h cassowary/cl_auto_ptr.h \
+	cassowary/ClFDVariable.h cassowary/ClSimplexSolver.h \
+	cassowary/ClSolver.h cassowary/ClTableau.h \
+	cassowary/ClLinearExpression.h cassowary/debug.h \
+	cassowary/ClLinearInequality.h cassowary/ClLinearConstraint.h \
+	cassowary/ClConstraint.h cassowary/ClStrength.h \
+	cassowary/ClSymbolicWeight.h cassowary/ClStayConstraint.h \
+	cassowary/ClEditOrStayConstraint.h cassowary/ClEditConstraint.h \
+	cassowary/ClSlackVariable.h cassowary/ClObjectiveVariable.h \
+	cassowary/ClLinearEquation.h cassowary/ClReader.h \
+	cassowary/config.h
+ClSimplexSolver.lo ClSimplexSolver.o : ClSimplexSolver.cc debug.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClSimplexSolver.h ClSolver.h ClErrors.h ClSet.h ClTypedefs.h \
+	ClMap.h ClLinearExpression_fwd.h ClTableau.h \
+	ClLinearExpression.h ClVariable.h ClFloatVariable.h \
+	ClAbstractVariable.h cl_auto_ptr.h ClFDVariable.h \
+	ClLinearInequality.h ClLinearConstraint.h ClConstraint.h \
+	ClStrength.h ClSymbolicWeight.h ClStayConstraint.h \
+	ClEditOrStayConstraint.h ClEditConstraint.h ClSlackVariable.h \
+	ClObjectiveVariable.h ClPoint.h ClDummyVariable.h \
+	cassowary/config.h
+ClSlackVariable.lo ClSlackVariable.o : ClSlackVariable.cc \
+	ClSlackVariable.h cassowary/config-inline.h Cassowary.h \
+	ClConstraintHash.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClMap.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	cassowary/config.h
+ClSolver.lo ClSolver.o : ClSolver.cc cassowary/config.h Cassowary.h \
+	ClConstraintHash.h ClSolver.h ClErrors.h ClSet.h ClTypedefs.h \
+	ClMap.h ClLinearExpression_fwd.h ClConstraint.h debug.h \
+	ClLinearExpression.h ClVariable.h ClFloatVariable.h \
+	ClAbstractVariable.h cl_auto_ptr.h ClFDVariable.h ClStrength.h \
+	ClSymbolicWeight.h
+ClStrength.lo ClStrength.o : ClStrength.cc ClStrength.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClSymbolicWeight.h ClErrors.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h cassowary/config.h
+ClSymbolicWeight.lo ClSymbolicWeight.o : ClSymbolicWeight.cc Cassowary.h \
+	cassowary/config-inline.h ClConstraintHash.h ClSymbolicWeight.h \
+	ClErrors.h ClSet.h ClTypedefs.h ClMap.h \
+	ClLinearExpression_fwd.h cassowary/config.h
+ClTableau.lo ClTableau.o : ClTableau.cc ClTableau.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClLinearExpression.h ClMap.h debug.h ClVariable.h \
+	ClFloatVariable.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	ClFDVariable.h cassowary/config.h
+ClTests.o: ClTests.cc Cl.h cassowary/config-inline.h \
+	cassowary/ClVariable.h cassowary/Cassowary.h \
+	cassowary/ClConstraintHash.h cassowary/ClFloatVariable.h \
+	cassowary/ClAbstractVariable.h cassowary/ClErrors.h \
+	cassowary/ClSet.h cassowary/ClTypedefs.h cassowary/ClMap.h \
+	cassowary/ClLinearExpression_fwd.h cassowary/cl_auto_ptr.h \
+	cassowary/ClFDVariable.h cassowary/ClSimplexSolver.h \
+	cassowary/ClSolver.h cassowary/ClTableau.h \
+	cassowary/ClLinearExpression.h cassowary/debug.h \
+	cassowary/ClLinearInequality.h cassowary/ClLinearConstraint.h \
+	cassowary/ClConstraint.h cassowary/ClStrength.h \
+	cassowary/ClSymbolicWeight.h cassowary/ClStayConstraint.h \
+	cassowary/ClEditOrStayConstraint.h cassowary/ClEditConstraint.h \
+	cassowary/ClSlackVariable.h cassowary/ClObjectiveVariable.h \
+	cassowary/ClLinearEquation.h cassowary/ClReader.h timer.h
+ClVariable.lo ClVariable.o : ClVariable.cc ClVariable.h \
+	cassowary/config-inline.h Cassowary.h ClConstraintHash.h \
+	ClFloatVariable.h ClAbstractVariable.h ClErrors.h ClSet.h \
+	ClTypedefs.h ClMap.h ClLinearExpression_fwd.h cl_auto_ptr.h \
+	ClFDVariable.h cassowary/config.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+all-recursive-am: config.h
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+
+install-exec-am: install-libLIBRARIES install-libLTLIBRARIES
+install-exec: install-exec-am
+
+install-data-am: install-BENCHPROGRAMS install-TESTPROGRAMS \
+		install-benchPROGRAMS install-moretestPROGRAMS \
+		install-testPROGRAMS install-includeHEADERS \
+		install-pkgincludeHEADERS
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-libLIBRARIES uninstall-libLTLIBRARIES \
+		uninstall-BENCHPROGRAMS uninstall-TESTPROGRAMS \
+		uninstall-benchPROGRAMS uninstall-moretestPROGRAMS \
+		uninstall-testPROGRAMS uninstall-includeHEADERS \
+		uninstall-pkgincludeHEADERS
+uninstall: uninstall-am
+all-am: Makefile $(LIBRARIES) $(LTLIBRARIES) $(PROGRAMS) $(HEADERS) \
+		config.h
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(libdir) \
+		$(DESTDIR)$(BENCHdir) $(DESTDIR)$(TESTdir) \
+		$(DESTDIR)$(benchdir) $(DESTDIR)$(moretestdir) \
+		$(DESTDIR)$(testdir) $(DESTDIR)$(includedir) \
+		$(DESTDIR)$(pkgincludedir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-hdr mostlyclean-libLIBRARIES \
+		mostlyclean-compile mostlyclean-libtool \
+		mostlyclean-libLTLIBRARIES mostlyclean-BENCHPROGRAMS \
+		mostlyclean-TESTPROGRAMS mostlyclean-benchPROGRAMS \
+		mostlyclean-moretestPROGRAMS mostlyclean-testPROGRAMS \
+		mostlyclean-tags mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-hdr clean-libLIBRARIES clean-compile clean-libtool \
+		clean-libLTLIBRARIES clean-BENCHPROGRAMS \
+		clean-TESTPROGRAMS clean-benchPROGRAMS \
+		clean-moretestPROGRAMS clean-testPROGRAMS clean-tags \
+		clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-hdr distclean-libLIBRARIES distclean-compile \
+		distclean-libtool distclean-libLTLIBRARIES \
+		distclean-BENCHPROGRAMS distclean-TESTPROGRAMS \
+		distclean-benchPROGRAMS distclean-moretestPROGRAMS \
+		distclean-testPROGRAMS distclean-tags distclean-generic \
+		clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-hdr maintainer-clean-libLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-libLTLIBRARIES \
+		maintainer-clean-BENCHPROGRAMS \
+		maintainer-clean-TESTPROGRAMS \
+		maintainer-clean-benchPROGRAMS \
+		maintainer-clean-moretestPROGRAMS \
+		maintainer-clean-testPROGRAMS maintainer-clean-tags \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-hdr distclean-hdr clean-hdr maintainer-clean-hdr \
+mostlyclean-libLIBRARIES distclean-libLIBRARIES clean-libLIBRARIES \
+maintainer-clean-libLIBRARIES uninstall-libLIBRARIES \
+install-libLIBRARIES mostlyclean-compile distclean-compile \
+clean-compile maintainer-clean-compile mostlyclean-libtool \
+distclean-libtool clean-libtool maintainer-clean-libtool \
+mostlyclean-libLTLIBRARIES distclean-libLTLIBRARIES \
+clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
+uninstall-libLTLIBRARIES install-libLTLIBRARIES \
+mostlyclean-BENCHPROGRAMS distclean-BENCHPROGRAMS clean-BENCHPROGRAMS \
+maintainer-clean-BENCHPROGRAMS uninstall-BENCHPROGRAMS \
+install-BENCHPROGRAMS mostlyclean-TESTPROGRAMS distclean-TESTPROGRAMS \
+clean-TESTPROGRAMS maintainer-clean-TESTPROGRAMS uninstall-TESTPROGRAMS \
+install-TESTPROGRAMS mostlyclean-benchPROGRAMS distclean-benchPROGRAMS \
+clean-benchPROGRAMS maintainer-clean-benchPROGRAMS \
+uninstall-benchPROGRAMS install-benchPROGRAMS \
+mostlyclean-moretestPROGRAMS distclean-moretestPROGRAMS \
+clean-moretestPROGRAMS maintainer-clean-moretestPROGRAMS \
+uninstall-moretestPROGRAMS install-moretestPROGRAMS \
+mostlyclean-testPROGRAMS distclean-testPROGRAMS clean-testPROGRAMS \
+maintainer-clean-testPROGRAMS uninstall-testPROGRAMS \
+install-testPROGRAMS uninstall-includeHEADERS install-includeHEADERS \
+uninstall-pkgincludeHEADERS install-pkgincludeHEADERS tags \
+mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
+distdir info-am info dvi-am dvi check check-am installcheck-am \
+installcheck all-recursive-am install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+ClReader-lex.cc: ClReader.l ClReader.h ClReader.cc.h
+	$(LEX) -Pcl -o$@ $<
+
+ClReader.cc.h ClReader.cc: ClReader.y ClReader.h
+	$(YACC) -d -pcl --output-file $@ $<
+
+cassowary/config-inline.h: cassowary
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

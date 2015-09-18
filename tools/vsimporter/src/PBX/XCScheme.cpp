@@ -70,7 +70,7 @@ XCScheme* XCScheme::createFromFile(const String& schemePath, const PBXProject* o
 bool XCScheme::initFromXML(const pugi::xml_document& doc)
 {
   // Create an error reporter for parsing
-  ErrorReporter reporter(SB_DEBUG, "Error parsing \"" + m_name + "\" scheme for \"" + m_parentProject->getName() + "\" project. ");
+  ErrorReporter reporter(SB_INFO, "Error parsing \"" + m_name + "\" scheme for \"" + m_parentProject->getName() + "\" project. ");
   
   // Find and process all BuildActionEntry nodes
   pugi::xpath_node_set baSet = doc.select_nodes("/Scheme/BuildAction/BuildActionEntries/BuildActionEntry");

@@ -1,0 +1,420 @@
+(cl-add-constraint solver . args)
+- Built-in Primitive
+Add the constraints, ARGS, to the solver SOLVER.
+Each constraint given after the SOLVER argument is added to that
+solver in turn.  Once one cannot be added (e.g., due to its addition
+causing an insoluble system), this procedure will return #f without
+trying to add the remaining constraints.  If all constraints are added 
+successfully, this procedure will return #t.  (If none of the
+constraints have strength "cls-required", then the system will remain
+soluble.)  If an error is signalled because one object in the list ARGS
+is not a constraint object, the preceding arguments will have already
+been added.
+[From ../cassowary_scm.cc:1353]
+
+(cl-add-editvar solver cl-vars #&optional strength factor)
+- Built-in Primitive
+Add edit constraints on variables CL-VARS to SOLVER.
+CL-VARS is a or a list of cl-variable object(s) that you wish to permit to change under
+the solver's control.  An edit-constraint for each cl-variable object
+is added in turn.   Each of the edit constraints will have strength
+STRENGTH (#f for default of cls-strong) and weight FACTOR (#f for
+default of 1).  If any element of CL-VARS is not a cl-variable, an error is
+thrown (after the preceding variables have been handled).  After
+selecting the edit variables with this procedure, you must call
+`cl-begin-edit' before using `cl-suggest-value'.  To remove the edit
+variables, use `cl-end-edit' when done changing the variables'
+values.
+[From ../cassowary_scm.cc:1432]
+
+(cl-add-stay solver cl-vars #&optional strength factor)
+- Built-in Primitive
+Add stay constraints on variables CL-VARS to SOLVER.
+CL-VARS is a or list of cl-variable(s) that you wish to remain (i.e., stay) at
+their current values unless another constraint forces them to change.
+In normal uses of the solver, all variables should have stay
+constraints added on them before they are used in a constraint added
+to the solver.  Each of the stay constraints will have strength
+STRENGTH (#f for default of cls-weak) and weight FACTOR (#f for
+default of 1).
+
+Future versions of the solver may add the stay
+constraint implicitly upon a variable's first use.  Until then,
+though, be sure to add stay constraints on all the cl-variable objects
+you intend to use with the given SOLVER.
+[From ../cassowary_scm.cc:1492]
+
+(cl-begin-edit solver)
+- Built-in Primitive
+Begin changing values of the edit variables of SOLVER.
+This procedure must be invoked after adding edit variables to SOLVER
+(via `cl-add-editvar') and before using `cl-suggest-values' to change
+those edit variables' values.  Every `cl-begin-edit' invocation should 
+have a matching `cl-end-edit' call.
+[From ../cassowary_scm.cc:1556]
+
+(cl-constraint-change-strength! constraint strength)
+- Built-in Primitive
+Set CONSTRAINT's strength to STRENGTH.
+This is only allowed if the constraint is not in any solver.
+Returns #t if successful, #f otherwise.
+[From ../cassowary_scm.cc:1045]
+
+(cl-constraint-change-weight! constraint weight)
+- Built-in Primitive
+Set CONSTRAINT's weighting factor to WEIGHT (a number).
+This is only allowed if the constraint is not in any solver.
+Returns #t if successful, #f otherwise.
+[From ../cassowary_scm.cc:1070]
+
+(cl-constraint-is-in-solver? constraint)
+- Built-in Primitive
+Return #t if CONSTRAINT has been added to a solver, #f otherwise.
+[From ../cassowary_scm.cc:1031]
+
+(cl-constraint-list solver #&optional internal-also?)
+- Built-in Primitive
+Return the list of constraints in SOLVER.
+Each object in the returned list is a cl-constraint object (i.e.,
+it is either a cl-linear-equation or a cl-inequality). If
+INTERNAL-ALSO? is #f or not given, then only the constraints added via 
+the guile interface will be listed.  If INTERNAL-ALSO? is #t, then all 
+constraints added to the solver (even those added by primitive code
+directly) will be listed.
+[From ../cassowary_scm.cc:1706]
+
+(cl-constraint-strength constraint)
+- Built-in Primitive
+Return the cl-strength object for constraint CONSTRAINT.
+[From ../cassowary_scm.cc:1003]
+
+(cl-constraint-weight constraint)
+- Built-in Primitive
+Return the weighting factor (a number) for constraint CONSTRAINT.
+[From ../cassowary_scm.cc:1017]
+
+(cl-constraint? obj)
+- Built-in Primitive
+Return #t if OBJ is some kind of constraint object, #f otherwise.
+There are three kinds of objects for which this procedure
+will return #t: "cl-inequality", "cl-equation", and
+"cl-stay-constraint" objects.  Since it is often useful to treat
+either as a general constraint, this procedure exists to simplify that
+test.
+[From ../cassowary_scm.cc:989]
+
+(cl-divide exprA exprB)
+- Built-in Primitive
+Return the cl-expression that is the quotient of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects. Note that the product may not introduce non-linear terms--
+if it does (e.g., if EXPRA and EXPRB both contain the same
+cl-variable), an error will result.
+[From ../cassowary_scm.cc:628]
+
+(cl-end-edit solver)
+- Built-in Primitive
+Finish changing the values of the edit variables in SOLVER.
+This procedure must be invoked once for every invocation of 
+`cl-begin-edit'.   It will force a final re-solve before removing
+any edit variables that have been added via `cl-add-editvar'.
+[From ../cassowary_scm.cc:1576]
+
+(cl-equation? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint equation, #f otherwise.
+Constraint equations also respond #t to `cl-constraint?' queries,
+since they are also constraint objects.
+[From ../cassowary_scm.cc:702]
+
+(cl-expression? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint expression, #f otherwise.
+[From ../cassowary_scm.cc:471]
+
+(cl-inequality? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint inequality object, #t otherwise.
+Constraint inequalities also respond #t to `cl-constraint?' queries,
+since they are also constraint objects.
+[From ../cassowary_scm.cc:841]
+
+(cl-int-value clv)
+- Built-in Primitive
+Return the value of the constraint variable CLV as an integer.
+Internally, the value is a double.  This rounds that real number to
+an integer before returning the value.
+[From ../cassowary_scm.cc:231]
+
+(cl-is-constraint-satisfied? solver cn)
+- Built-in Primitive
+Return #t if CN is satisfied in SOLVER, #f otherwise.
+[From ../cassowary_scm.cc:1596]
+
+(cl-minus exprA exprB)
+- Built-in Primitive
+Return the cl-expression that is the difference of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects.
+[From ../cassowary_scm.cc:553]
+
+(cl-plus exprA exprB)
+- Built-in Primitive
+Return the cl-expression that is the sum of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects.
+[From ../cassowary_scm.cc:520]
+
+(cl-remove-constraint solver . args)
+- Built-in Primitive
+Remove the constraints, ARGS, from the solver SOLVER.
+Each constraint given after the SOLVER argument is removed from that
+solver in turn.  Once one cannot be removed (e.g., due to its never
+having been added to SOLVER), this procedure will return #f without
+trying to remove the remaining constraints.  If all constraints are
+removed successfully, this procedure will return #t.  If an error is
+signalled because one object in the list ARGS is not a constraint
+object, the preceding arguments will have already been removed.
+[From ../cassowary_scm.cc:1393]
+
+(cl-resolve solver . args)
+- Built-in Primitive
+Ask SOLVER to re-solve its system using the suggested values.
+You may only call this procedure between invocations of
+`cl-begin-edit' and `cl-end-edit'.  After `cl-begin-edit', you may use
+`cl-suggest-value' on SOLVER to tell it the desired new values for the
+various edit variables you have added using `cl-add-editvar', and then
+call this procedure with only the first argument to have SOLVER update
+the values of all the variables in the system.
+
+Alternatively, after adding edit-variables in a particular order, you
+may call `cl-begin-edit' then this procedure with ARGS set as
+suggested values for the edit-variables.  The order of the values in
+the `cl-resolve' invocation must match the order of the variables in
+the `cl-add-editvar' invocation(s).
+
+In either case, you must invoke `cl-end-edit' to remove the edit
+variables from the solver after you are done changing their values.
+[From ../cassowary_scm.cc:1652]
+
+(cl-set-auto-reset-stay-constants! solver flag)
+- Built-in Primitive
+Choose whether SOLVER automatically resets stay constants or not.
+FLAG should be either #t or #f.
+[From ../cassowary_scm.cc:1332]
+
+(cl-set-auto-solve! solver flag)
+- Built-in Primitive
+Choose whether SOLVER autosolves or not.
+FLAG should be either #t or #f.
+[From ../cassowary_scm.cc:1313]
+
+(cl-solver-debug-print solver #&optional port)
+- Built-in Primitive
+Output a complete dump of SOLVER onto output port PORT.
+The output contains the contents of the tableau contained in SOLVER,
+as well as the other internal state.  It can be useful for debugging,
+as the printable form of constraint solver objects contains only a
+brief summary of the contents of the solver.
+[From ../cassowary_scm.cc:1254]
+
+(cl-solver? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint solver object, #f otherwise.
+[From ../cassowary_scm.cc:1280]
+
+(cl-stay-constraint? obj)
+- Built-in Primitive
+Return #t if OBJ is a stay constraint object, #t otherwise.
+Stay constraints also respond #t to `cl-constraint?' queries,
+since they are also constraint objects.
+[From ../cassowary_scm.cc:939]
+
+(cl-strength? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint strength, #f otherwise.
+[From ../cassowary_scm.cc:353]
+
+(cl-suggest-value solver var value)
+- Built-in Primitive
+Try to change VAR's value to VALUE within SOLVER.
+You may only call this procedure after using `cl-add-editvar' to add
+VAR as an edit variable for SOLVER, and after invoking `cl-begin-edit'
+on SOLVER.  After you call `cl-begin-edit', you may invoke this
+procedure on all the edit variables.  The changing of the values of
+those variables (and the affect on other variables within SOLVER) will
+not happen until after invoking `cl-resolve' on SOLVER.  Then the
+possibly changed values can be retrieved via `cl-value' or
+`cl-int-value'.  Note that the constraints that have been added to
+SOLVER may not permit changing VAR to VALUE.
+[From ../cassowary_scm.cc:1615]
+
+(cl-times exprA exprB)
+- Built-in Primitive
+Return the cl-expression that is the product of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects.  Note that the product may not introduce non-linear terms--
+if it does (e.g., if EXPRA and EXPRB both contain the same
+cl-variable), an error will result.
+[From ../cassowary_scm.cc:586]
+
+(cl-value clv)
+- Built-in Primitive
+Return the current value of the constraint variable CLV.
+The value is a double.  Use `cl-int-value' to return an integer.
+[From ../cassowary_scm.cc:216]
+
+(cl-variable? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint variable, #f otherwise.
+[From ../cassowary_scm.cc:126]
+
+(cl-weight? obj)
+- Built-in Primitive
+Return #t if OBJ is a constraint weight object, #f otherwise.
+[From ../cassowary_scm.cc:280]
+
+(clv-attach! var obj)
+- Built-in Primitive
+Attach OBJ to VAR, undoing any previous attachments.
+Use `clv-attached-object' to retreive OBJ later.
+Consider instead using `set-object-property' and `object-property'.
+[From ../cassowary_scm.cc:178]
+
+(clv-attached-object var)
+- Built-in Primitive
+Return the object attached to cl-variable VAR.
+Returns #f if no object was attached using `clv-attach!'.
+Consider instead using `set-object-property' and `object-property'.
+[From ../cassowary_scm.cc:197]
+
+(make-cl-constraint exprA op exprB #&optional strength factor)
+- Built-in Primitive
+Return a newly-constructed constraint object.
+EXPRA and EXPRB are cl-expression or cl-variable objects.  OP is one
+of `=', `<=', or `>=', anything else will signal an error.  Note that
+the arithmetic comparison procedures are just used for their identity.
+The returned object is a cl-equation constraint object if OP is `=';
+it is a cl-inequality constraint object if OP is `<=' or `>='.  The
+created constraint is given strength STRENGTH, a cl-strength, and has
+a weight factor of FACTOR, a real number.  STRENGTH defaults to
+cls-required, FACTOR defaults to 1.
+[From ../cassowary_scm.cc:1160]
+
+(make-cl-constraint-from-string str lookup-proc #&optional strength factor)
+- Built-in Primitive
+Return a newly-constructed constraint object or #f if parse fails.
+STR is a string specifying the desired constraint.  The
+created constraint is given strength STRENGTH, a cl-strength, and has
+a weight factor of FACTOR, a real number.  STRENGTH defaults to
+cls-required, FACTOR defaults to 1.  LOOKUP-PROC must be a procedure
+that takes a single string argument and returns either a `cl-variable' object
+or #f if there is no such variable with that name.  (It may choose to
+create a return a new `cl-variable' object.
+[From ../cassowary_scm.cc:1112]
+
+(make-cl-equality exprA exprB #&optional strength factor)
+- Built-in Primitive
+Return a newly-created constraint equation.
+The resulting constraint is that EXPRA is equal to EXPRB.  EXPRA and
+EXPRB are cl-expression or cl-variable objects.  The constraint is
+given strength STRENGTH, a cl-strength, and has a weight factor of
+FACTOR, a real number.  STRENGTH defaults to cls-required, FACTOR
+defaults to 1.  Consider `make-cl-constraint' as a higher-level
+interface to building arbitrary constraints.
+
+This is a convenience procedure that has the same
+semantics as `make-cl-equation' with the difference of EXPRA and
+EXPRB.  Note that if neither expression contains a variable, an
+error will be signalled.
+[From ../cassowary_scm.cc:750]
+
+(make-cl-equation expr #&optional strength factor)
+- Built-in Primitive
+Return a newly-created constraint equation.
+The resulting constraint is that EXPR is equal to 0.  EXPR is a
+cl-expression or cl-variable object.  The constraint is given strength
+STRENGTH, a cl-strength, and has a weight factor of FACTOR, a real
+number.  STRENGTH defaults to cls-required, FACTOR defaults to 1.
+[From ../cassowary_scm.cc:713]
+
+(make-cl-expression clv)
+- Built-in Primitive
+Return a newly-create constraint expression object.
+The expression is contains just the value CLV.  Often constraint
+variables can be used interchangeably with constraint expressions, but
+this procedure can be used to force building a simple expression.
+[From ../cassowary_scm.cc:480]
+
+(make-cl-inequality exprA op exprB #&optional strength factor)
+- Built-in Primitive
+Return a newly-constructed constraint inequality object.
+EXPRA and EXPRB are cl-expression or cl-variable objects.  If OP is
+`<=' then the constraint is that EXPRA <= EXPRB; if OP is `>=' then
+the constraint is that EXPRA >= EXPRB.  Note that the arithmetic
+comparison procedure objects are just used for their identity. If OP
+is any other object, an error is signalled. The constraint is given
+strength STRENGTH, a cl-strength, and has a weight factor of FACTOR, a
+real number.  STRENGTH defaults to cls-required, FACTOR defaults to 1.
+Consider `make-cl-constraint' as a higher-level interface to building
+arbitrary constraints.
+[From ../cassowary_scm.cc:852]
+
+(make-cl-solver)
+- Built-in Primitive
+Return a newly-created constraint solver object.
+Often, an application will need only one of these objects,  but
+multiple independent solvers may exist as long as they do not
+share constraint variable objects.
+[From ../cassowary_scm.cc:1289]
+
+(make-cl-stay-constraint cl-var #&optional strength factor)
+- Built-in Primitive
+Return a stay constraint for CL-VAR to stay at its current value.
+Weight the constraint according to STRENGTH and FACTOR.  Use
+`cl-add-constraint' to add the resulting constraint into a solver,
+or use the `cl-add-stay' convenience function instead.
+[From ../cassowary_scm.cc:951]
+
+(make-cl-strength name weight)
+- Built-in Primitive
+Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and the symbolic
+strengh WEIGHT, a cl-weight.  Constraint strength objects
+are used when specifying the strength of a constraint.  There are
+several predefined cl-strenght objects: "cls-required", "cls-strong",
+"cls-medium", and "cls-weak".  These four constraint strengths
+are often enough for a suitably expressive constraint-hierarchy,
+but new strengths can be introduced if necessary.
+[From ../cassowary_scm.cc:378]
+
+(make-cl-strength-3 name w1 w2 w3)
+- Built-in Primitive
+Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and a symbolic weight of
+length three with the sequence of values: W1, W2, W3.  This is a
+convenience procedure that has the same semantics as building a
+cl-weight object with the values and using that to build a cl-strength 
+object.
+[From ../cassowary_scm.cc:408]
+
+(make-cl-variable  #&optional name value)
+- Built-in Primitive
+Return a newly-created constraint variable.
+The created variable has the name NAME, and an initial
+value of VALUE.  Be sure to add a stay constraint on the
+variable if you want its value to not change.
+[From ../cassowary_scm.cc:135]
+
+(make-cl-weight w1 w2 w3)
+- Built-in Primitive
+Return a newly-created constraint symbolic weight object.
+Symbolic weights are sequences of real numbers that are sorted
+in lexicographical order (e.g., 1,0,0 > 0,999,999).  cl-weight
+objects are used when creating cl-strength objects.  By convention,
+the sequences are three elements long: W1, W2, and W3.  Longer
+cl-weight objects could be supported in the future.  See also
+`make-cl-strength-3' which is a convenience procedure for building a
+cl-strength object given the sequence of numbers directly.
+[From ../cassowary_scm.cc:289]
+

@@ -33,6 +33,7 @@
 #import "UIResponder.h"
 #import "UIGeometry.h"
 #import "UIAppearance.h"
+#import "NSLayoutConstraint.h"
 
 enum {
     UIViewAutoresizingNone                 = 0,
@@ -44,6 +45,12 @@ enum {
     UIViewAutoresizingFlexibleBottomMargin = 1 << 5
 };
 typedef NSUInteger UIViewAutoresizing;
+
+enum {
+	UILayoutConstraintAxisHorizontal = 0,
+	UILayoutConstraintAxisVertical = 1
+};
+typedef NSInteger UILayoutConstraintAxis;
 
 typedef enum {
     UIViewContentModeScaleToFill,
@@ -105,16 +112,9 @@ UIKIT_EXPORT const CGFloat UIViewNoIntrinsicMetric;
 
 @class UIColor, CALayer, UIViewController, UIGestureRecognizer, NSLayoutConstraint, UIMotionEffect, WXFrameworkElement;
 
-#if defined( __cplusplus )
-class UIViewPrivateState;
-#else
-typedef void *UIViewPrivateState;
-#endif
-
 UIKIT_EXPORT_CLASS
 @interface UIView : UIResponder<NSCoding, UIAppearance, UIAppearanceContainer>  {
 @public
-    UIViewPrivateState *priv;
     id _backButtonDelegate;
     SEL _backButtonSelector;
     id _backButtonArg;
@@ -164,12 +164,18 @@ UIKIT_EXPORT_CLASS
 
 - (BOOL)translatesAutoresizingMaskIntoConstraints;
 - (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
+- (UIView *)viewForBaselineLayout;
 
 - (NSArray *)constraints;
+- (void)updateConstraints;
 - (void)addConstraint:(NSLayoutConstraint *)constraint;
 - (void)addConstraints:(NSArray *)constraints;
 - (void)removeConstraint:(NSLayoutConstraint *)constraint;
 - (void)removeConstraints:(NSArray *)constraints;
+- (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
+- (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+- (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
+- (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
 
 - (void)invalidateIntrinsicContentSize;
 

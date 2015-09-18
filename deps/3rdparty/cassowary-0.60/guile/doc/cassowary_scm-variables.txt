@@ -1,0 +1,24 @@
+cls-medium
+- 
+The "medium" predefined cl-strength object. 
+[From ../cassowary_scm.cc:1791]
+
+
+cls-required
+- 
+The "required" predefined cl-strength object. 
+[From ../cassowary_scm.cc:1797]
+
+
+cls-strong
+- 
+The "strong" predefined cl-strength object. 
+[From ../cassowary_scm.cc:1794]
+
+
+cls-weak
+- 
+The "weak" predefined cl-strength object. 
+[From ../cassowary_scm.cc:1788]
+
+

@@ -27,6 +27,7 @@ class ObjectConverter : public XIBObject
 {
 public:
     XIBArray *_connections;
+    XIBArray *_variations;
 
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);

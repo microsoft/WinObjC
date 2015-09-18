@@ -48,12 +48,14 @@ class UIView : public ObjectConverterSwapper
 {
 public:
     XIBArray *_subviews;
+    XIBArray *_constraints;
     UIColor *_backgroundColor;
     UIRect  _bounds;
     UIRect  _contentStretch;
     UIPoint  _center;
     bool     _autoresizeSubviews;
     bool     _hidden;
+    bool     _translatesAutoresizeToConstraints;
     int      _autoresizingMask;
     int      _contentMode;
     bool     _opaque;

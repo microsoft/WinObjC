@@ -1,0 +1,26 @@
+Cassowary/C++ needs to be compiled using a modern C++ compiler.
+At one time or another, it has compiled using:
+  o egcs-1.0.1, egcs-1.0.3, egcs-1.1b, gcc-2.8.1, gcc-2.95.2
+  o Visual C++ 5.0
+
+Cassowary/Java was developed using Sun's JDK-1.1.3, ported to Linux
+More recent versions should work fine, and it has been tested
+with JDK-1.2pre2.
+
+The included Makefiles depend upon features of GNU Make.  See:
+
+ftp://ftp.gnu.org/pub/gnu/
+
+for a version that you can build.
+
+
+To build the c++/qdemos/QuadDemo application, you'll need TrollTech's Qt
+widget set for X11, available from:
+
+http://www.troll.no/dl/qtfree-dl.html
+
+
+See also the Scwm (Scheme Constraints Window Manager) web page for a use 
+of Cassowary in a substantial application:
+
+http://scwm.mit.edu/scwm/

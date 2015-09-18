@@ -34,9 +34,14 @@
 #import "UIApplication.h"
 #import "UISearchDisplayController.h"
 #import "UITabBarItem.h"
+#import "UIView.h"
 
 @class UITabBarController;
 @class UIStoryboardSegue;
+
+@protocol UILayoutSupport
+@property(nonatomic, readonly) CGFloat length;
+@end
 
 typedef enum {
     UIModalPresentationFullScreen = 0,
@@ -123,6 +128,8 @@ UIKIT_EXPORT_CLASS
 - (void)viewWillDisappear:(BOOL)animated;
 - (void)viewDidDisappear:(BOOL)animated;
 
+@property(nonatomic, readonly) id<UILayoutSupport> topLayoutGuide;
+@property(nonatomic, readonly) id<UILayoutSupport> bottomLayoutGuide;
 - (void)viewWillLayoutSubviews;
 - (void)viewDidLayoutSubviews;
 

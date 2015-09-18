@@ -42,6 +42,25 @@
 
 float screenWidth = 320.0f, screenHeight = 460.0f;
 
+static XIBObject* findBestVariation(XIBObject* obj) {
+    XIBObject* variation = NULL;
+    for (auto var = obj->_variations.begin(); var != obj->_variations.end(); var++) {
+        XIBObject *varObj = *var;
+        XIBObject *widthClass = varObj->FindMember("widthClass");
+
+        // TODO: A way to control this. We've decided the first widthClass=compact beats out all others, 
+        // since we're expecting a phone sized screen, and "default" wins otherwise.
+        if (widthClass && strcmp(widthClass->stringValue(), "compact") == 0) {
+            return varObj;
+        }
+        else if (!variation) {
+            variation = varObj;
+        }
+    }
+
+    return variation;
+}
+
 XIBMember::XIBMember()
 {
     _name = NULL;
@@ -119,6 +138,15 @@ const char *getNodeAttrib(pugi::xml_node node, const char *name)
 
 const char *XIBObject::getAttrib(const char *name)
 {
+    XIBObject *bestVar = findBestVariation(this);
+    const char* variation = NULL;
+
+    if (bestVar) {
+        variation = bestVar->getAttrib(name);
+    }
+
+    if (variation) return variation;
+
     return getNodeAttrib(_node, name);
 }
 
@@ -256,10 +284,44 @@ void XIBObject::ScanStoryObjects(pugi::xml_node node)
         if (curNode.type() == pugi::xml_node_type::node_element) {
             XIBObject *subObj = NULL;
             subObj = ObjectConverter::ConverterForStoryObject(curNode.name(), curNode);
-            subObj->_parent = this;
 
+            // Variations are special case that selectively override the node's objects, or mask items out of an array
+            if (strcmp(subObj->ClassName(), "variation") == 0) {
+                // At the time of writing, size classes are of the form (width|height)Class=(regular|compact)(-(width|height)Class=(regular|compact))*
+                std::string key(subObj->getAttrib("key"));
+                while (1) {
+                    auto hcpos = key.find('=');
+                    if (hcpos == std::string::npos) {
+                        break;
+                    }
+                    auto className = key.substr(0, hcpos);
+                    auto hdpos = key.find('-');
+                    if (hdpos == std::string::npos) {
+                        hdpos = key.length();
+                    }
+                    hcpos++; // Skip the '='
+
+                    // Here come some memory leaks. But someone decided const char* for all string storage was the way to go. 
+                    char *cClassName = new char[className.length()+1];
+                    std::string classStr = key.substr(hcpos, hdpos - hcpos);
+                    char *cClassStr = new char[classStr.length()+1];
+                    
+                    memcpy(cClassName, className.c_str(), className.length() + 1);
+                    memcpy(cClassStr, classStr.c_str(), classStr.length() + 1);
+
+                    subObj->AddMember(cClassName, new XIBObjectString(cClassStr));
+                    if (hdpos == key.length()) {
+                        break;
+                    }
+                    key = key.substr(hdpos+1);
+                }
+                _variations.push_back(subObj);
+            } 
+
+            subObj->_parent = this;
             const char *keyName = getNodeAttrib(curNode, "key");
             AddMember(keyName, subObj);
+
         }
     }
 }
@@ -294,29 +356,71 @@ void XIBObject::AddMember(const char *keyName, XIBObject *member)
     _members.push_back(newMember);
 }
 
+XIBObject *XIBObject::ApplyVariation(XIBObject *variation)
+{
+    if (variation) {
+        return variation;
+    } else {
+        return this;
+    }
+}
+
 XIBObject *XIBObject::FindMember(char *keyName)
 {
+    XIBObject *bestVar = findBestVariation(this);
+    XIBObject* variation = NULL;
+
+    if (bestVar) {
+        for (auto i = bestVar->_members.begin(); i != bestVar->_members.end(); i++) {
+            if ((*i)->_obj->getAttrib("key") && strcmp((*i)->_obj->getAttrib("key"), keyName) == 0) {
+                variation = (*i)->_obj;
+                break;
+            }
+        }
+    }
+
     memberList::iterator cur = _members.begin();
     for (; cur != _members.end(); cur ++ ) {
         XIBMember *member = *cur;
         if ( member->_name && strcmp(member->_name, keyName) == 0 ) {
-            return member->_obj;
+            if (member->_obj) {
+                return member->_obj->ApplyVariation(variation);
+            }
         }
     }
 
+    // TODO: If the object doesn't exist, but a variation does, do we return it?
     return NULL;
 }
 
 XIBObject *XIBObject::FindMemberClass(char *className)
 {
+    XIBObject *bestVar = findBestVariation(this);
+    XIBObject* variation = NULL;
+
+    if (bestVar) {
+        for (auto i = bestVar->_members.begin(); i != bestVar->_members.end(); i++) {
+            if ((*i)->_obj->_className && strcmp((*i)->_obj->_className, "mask") == 0) {
+                auto classKey = (*i)->_obj->getAttrib("key");
+                if (classKey && (strcmp(classKey, className) == 0)) {
+                    variation = (*i)->_obj;
+                    break;
+                }
+            }
+        }
+    }
+
     memberList::iterator cur = _members.begin();
     for (; cur != _members.end(); cur ++ ) {
         XIBMember *member = *cur;
         if ( member->_obj->_className && strcmp(member->_obj->_className, className) == 0 ) {
-            return member->_obj;
+            if( member->_obj ) {
+                return member->_obj->ApplyVariation(variation);
+            }
         }
     }
 
+    // TODO: If the object doesn't exist, but a variation does, do we return it?
     return NULL;
 }
 

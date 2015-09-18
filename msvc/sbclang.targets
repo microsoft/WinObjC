@@ -33,6 +33,7 @@
 	
 	<PropertyGroup>
 		<IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+		<IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
 		<IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
 		<IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib'))">true</IncludeOpenGLES>
 		<IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
@@ -42,6 +43,7 @@
 		<IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
 		<IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
 		<IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+		<IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
 		<IncludeObjcrt>true</IncludeObjcrt>
 		<IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
 	</PropertyGroup>
@@ -56,6 +58,7 @@
 	  <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
 	  <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
 	  <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
+	  <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
 	  <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
 	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
@@ -77,6 +80,7 @@
 	  <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
 	  <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
 	  <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
+	  <SBResourceCopy Condition="'$(IncludeAutoLayout)' == 'true'" Include="$(StarboardLibDirs)\AutoLayout.dll" />
 
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
 	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />

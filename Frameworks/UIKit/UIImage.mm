@@ -715,36 +715,47 @@ imageCacheInfo imageInfo;
 
         if(img->_imageInsets.top) {     
             CGContextDrawImageRect(context, getImage(img), 
-                makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.top),
-                makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.top));
-            CGContextDrawImageRect(context, getImage(img), 
-                makeRect(img->_imageInsets.left, 0, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top), 
-                makeRect(img->_imageInsets.left, 0, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top));
-            CGContextDrawImageRect(context, getImage(img), 
-                makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.top), 
-                makeRect(ii->size.size.width - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.top));
-        }
-
-        CGContextDrawImageRect(context, getImage(img), 
-            makeRect(0, img->_imageInsets.top, img->_imageInsets.left, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom),
-            makeRect(0, img->_imageInsets.top, img->_imageInsets.left, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
-        CGContextDrawImageRect(context, getImage(img), 
-            makeRect(img->_imageInsets.left, img->_imageInsets.top, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom), 
-            makeRect(img->_imageInsets.left, img->_imageInsets.top, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
-        CGContextDrawImageRect(context, getImage(img), 
-            makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, img->_imageInsets.top, img->_imageInsets.right, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom), 
-            makeRect(ii->size.size.width - img->_imageInsets.right, img->_imageInsets.top, img->_imageInsets.right, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
-
-        if(img->_imageInsets.bottom) {      
-            CGContextDrawImageRect(context, getImage(img), 
                 makeRect(0, getImage(img)->Backing()->Height() - img->_imageInsets.top, img->_imageInsets.left, img->_imageInsets.top),
                 makeRect(0, ii->size.size.height - img->_imageInsets.top, img->_imageInsets.left, img->_imageInsets.top));
-            CGContextDrawImageRect(context, getImage(img), 
-                makeRect(img->_imageInsets.left, getImage(img)->Backing()->Height() - img->_imageInsets.top, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top), 
-                makeRect(img->_imageInsets.left, ii->size.size.height - img->_imageInsets.top, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top));
+            if(getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+                CGContextDrawImageRect(context, getImage(img), 
+                    makeRect(img->_imageInsets.left, getImage(img)->Backing()->Height() - img->_imageInsets.top, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top), 
+                    makeRect(img->_imageInsets.left, ii->size.size.height - img->_imageInsets.top, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.top));
+            }
             CGContextDrawImageRect(context, getImage(img), 
                 makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, getImage(img)->Backing()->Height() - img->_imageInsets.top, img->_imageInsets.right, img->_imageInsets.top), 
                 makeRect(ii->size.size.width - img->_imageInsets.right, ii->size.size.height - img->_imageInsets.top, img->_imageInsets.right, img->_imageInsets.top));
+        }
+
+        // Coordinates flipped on Y
+        if(getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom > 0) {
+            CGContextDrawImageRect(context, getImage(img), 
+                makeRect(0, img->_imageInsets.bottom, img->_imageInsets.left, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom),
+                makeRect(0, img->_imageInsets.bottom, img->_imageInsets.left, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
+            if(getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+                CGContextDrawImageRect(context, getImage(img), 
+                    makeRect(img->_imageInsets.left, img->_imageInsets.bottom, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom), 
+                    makeRect(img->_imageInsets.left, img->_imageInsets.bottom, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
+            } else {
+            assert(0);
+            }
+            CGContextDrawImageRect(context, getImage(img), 
+                makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, img->_imageInsets.bottom, img->_imageInsets.right, getImage(img)->Backing()->Height() - img->_imageInsets.top - img->_imageInsets.bottom), 
+                makeRect(ii->size.size.width - img->_imageInsets.right, img->_imageInsets.bottom, img->_imageInsets.right, ii->size.size.height - img->_imageInsets.top - img->_imageInsets.bottom));
+        }
+
+        if(img->_imageInsets.bottom) {      
+            CGContextDrawImageRect(context, getImage(img), 
+                makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.bottom),
+                makeRect(0, 0, img->_imageInsets.left, img->_imageInsets.bottom));
+            if(getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right > 0) {
+                CGContextDrawImageRect(context, getImage(img), 
+                    makeRect(img->_imageInsets.left, 0, getImage(img)->Backing()->Width() - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.bottom), 
+                    makeRect(img->_imageInsets.left, 0, ii->size.size.width - img->_imageInsets.left - img->_imageInsets.right, img->_imageInsets.bottom));
+            }
+            CGContextDrawImageRect(context, getImage(img), 
+                makeRect(getImage(img)->Backing()->Width() - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.bottom), 
+                makeRect(ii->size.size.width - img->_imageInsets.right, 0, img->_imageInsets.right, img->_imageInsets.bottom));
         }
     }
 
