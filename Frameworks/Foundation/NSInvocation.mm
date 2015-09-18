@@ -593,46 +593,10 @@ bool getTypeSize(char type, int* size) {
     return false;
 }
 
-int getArgumentSize(char* type) {
+int getArgumentSize(const char* type) {
     int size = objc_sizeof_type(type);
     assert(size != -1);
     return size;
-    /*
-    int ret = 0;
-
-    if ( getTypeSize(type[0], &ret) ) {
-    return ret;
-    } else {
-    switch ( type[0] ) {
-    case '{':
-    {
-    //  Scan for equals
-    char *pMembersStart = strchr(type, '=') + 1;
-    char *pMembersEnd = strchr(pMembersStart, '}');
-
-    int ret = 0;
-
-    while ( pMembersStart < pMembersEnd ) {
-    int size;
-
-    bool success = getTypeSize(*pMembersStart, &size);
-    assert(success);
-    ret += size;
-
-    pMembersStart ++;
-    }
-    return ret;
-    }
-
-    default:
-    EbrDebugLog("unknown argument type - %s\n", type);
-    assert(0);
-    break;
-    }
-    }
-
-    return 0;
-    */
 }
 
 @implementation NSInvocation : NSObject

@@ -19,7 +19,7 @@
 #include "Foundation/NSMethodSignature.h"
 
 bool getTypeSize(char type, int* size);
-int getArgumentSize(char* type);
+int getArgumentSize(const char* type);
 
 @implementation NSMethodSignature : NSObject
 + (NSMethodSignature*)signatureWithObjCTypes:(char*)funcTypes {

@@ -13,7 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define MAX_ARGUMENTS   16
 
 bool getTypeSize(char type, int *size);
-int getArgumentSize(char *type);
+int getArgumentSize(const char *type);
 
 @interface NSMethodSignature : NSObject {
     char       *returnType;
