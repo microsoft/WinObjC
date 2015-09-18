@@ -17,7 +17,6 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-#include <GLKit/GLKEnums.h>
 #include "Mesh.h"
 
 #include <math.h>
