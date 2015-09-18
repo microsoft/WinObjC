@@ -61,7 +61,7 @@
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>Disabled</OptimizationLevel>
-      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG=1;STARBOARD=1</PreprocessorDefinitions>
     </ClangCompile>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
