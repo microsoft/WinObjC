@@ -275,21 +275,22 @@ GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVe
     res.m00 = right.x;
     res.m01 = up.x;
     res.m02 = forward.x;
-    res.m03 = pos.x;
-
+           
     res.m10 = right.y;
     res.m11 = up.y;
     res.m12 = forward.y;
-    res.m13 = pos.y;
-
+           
     res.m20 = right.z;
     res.m21 = up.z;
     res.m22 = forward.z;
-    res.m23 = pos.z;
-
-    res.m30 = 0.f;
-    res.m31 = 0.f;
-    res.m32 = 0.f;
+           
+    res.m30 = pos.x;
+    res.m31 = pos.y;
+    res.m32 = pos.z;
+           
+    res.m03 = 0.f;
+    res.m13 = 0.f;
+    res.m23 = 0.f;
     res.m33 = 1.f;
 
     return res;    
@@ -300,11 +301,14 @@ GLKMatrix4 GLKMatrix4MakeLookAt(float eyeX, float eyeY, float eyeZ,
                                 float upX, float upY, float upZ)
 {
     GLKVector3 eye = GLKVector3Make(eyeX, eyeY, eyeZ);
+    GLKVector3 initialUp = GLKVector3Make(upX, upY, upZ);
     GLKVector3 fwd = GLKVector3Normalize(GLKVector3Subtract(GLKVector3Make(lookX, lookY, lookZ), eye));
-    GLKVector3 up = GLKVector3Normalize(GLKVector3Make(upX, upY, upZ));
-    GLKVector3 right = GLKVector3CrossProduct(up, fwd);
-    
-    return GLKMatrix4MakeOrthonormalXform(right, up, fwd, GLKVector3Negate(eye));
+    GLKVector3 right = GLKVector3Normalize(GLKVector3CrossProduct(fwd, initialUp));
+    GLKVector3 up = GLKVector3CrossProduct(right, fwd);
+
+    GLKMatrix4 trans = GLKMatrix4MakeTranslation(-eyeX, -eyeY, -eyeZ);    
+    return GLKMatrix4Multiply(GLKMatrix4MakeOrthonormalXform(right, up, GLKVector3Negate(fwd),
+                                                             GLKVector3Origin()), trans);
 }
 
 GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far)
