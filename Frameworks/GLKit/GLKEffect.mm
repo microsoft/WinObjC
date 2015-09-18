@@ -385,7 +385,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     // Set constant color if lighting is not on.
     if (!isLit) {
-        if (self.useConstantColor && !GLKVector4XYZEqualToScalar(matProps.diffuseColor, 1.f)) {
+        if (self.useConstantColor && !GLKVector4XYZEqualToScalar(_constantColor, 1.f)) {
             shaderName += "_CC";
             m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
         } else if(!GLKVector4XYZEqualToScalar(matProps.diffuseColor, 0.f) &&
