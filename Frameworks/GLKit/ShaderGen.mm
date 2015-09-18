@@ -500,3 +500,24 @@ bool ShaderSpecLighter::generate(string& out, ShaderContext& c, ShaderLayout& v)
     out = "performSpecular(" + ldStr + ", " + cdStr + ", " + normStr + ", " + clrStr + ", " + attenStr + ")";
     return true;
 }
+
+bool ShaderSpotlightAtten::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string ldStr;
+    string paramRef;
+    string dirRef;
+
+    if (!lightDir->generate(ldStr, c, v) ||
+        !params->generate(paramRef, c, v) ||
+        !dir->generate(dirRef, c, v)) return false;
+
+    c.addTempFunc(GLKS_FLOAT, "spotlightAtten",
+                  "float spotlightAtten(vec3 toLight, vec3 spotDir, vec3 spotAtten) {"
+                  "    float dp = -dot(normalize(toLight), spotDir);\n"
+                  "    float intens = max(0.0, min(dp, spotAtten.y) - spotAtten.x) * spotAtten.z;\n"
+                  "    return intens;\n"
+                  "}\n");
+    
+    out = "spotlightAtten(" + ldStr + ", " + dirRef + ", " + paramRef + ")";
+    return true;
+}
