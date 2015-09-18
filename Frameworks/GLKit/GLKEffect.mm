@@ -324,9 +324,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                     m->addvar(lightVarNames[lightNum].atten, l.attenuation);
                     float spot = l.spotCutoff;
                     if (spot < 180.f) {
+                        spot = std::max(spot, 0.25f);
                         ltype = spotType;
-                        float exp = spot - std::min(l.spotExponent, spot);
-                        m->addvar(lightVarNames[lightNum].spotlight, GLKVector2Make(cosf(DEG2RAD(spot)), cosf(DEG2RAD(exp))));
+                        float exp = std::max(spot - l.spotExponent - 0.01f, 0.01f);
+
+                        // The difference between the cosines is used to find the spotlight attenuation.
+                        spot = cosf(DEG2RAD(spot));
+                        exp = cosf(DEG2RAD(exp));
+                        float multiplier = 1.f / (exp - spot);
+                        
+                        m->addvar(lightVarNames[lightNum].spotlight, GLKVector3Make(spot, exp, multiplier));
                         m->addvar(lightVarNames[lightNum].spotlightDir, GLKMatrix4MultiplyVector3(self.modelRefTrans, l.spotDirection));
                     }
                     if (shininess > 0.f) {

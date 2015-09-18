@@ -268,3 +268,15 @@ public:
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
+
+class ShaderSpotlightAtten : public ShaderNode {
+    ShaderNode* lightDir;
+    ShaderNode* params;
+    ShaderNode* dir;
+
+public:
+    inline ShaderSpotlightAtten(ShaderNode* lightDir, ShaderNode* params, ShaderNode* dir) :
+        lightDir(lightDir), params(params), dir(dir) { type = GLKS_FLOAT; }
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};

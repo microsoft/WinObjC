@@ -52,17 +52,21 @@ ShaderNode* mkAtten(const string& attenName, ShaderNode* toLight, const string& 
 }
 
 ShaderNode* mkLighter(ShaderNode* toLight, const string& attenTemp, const string& pos,
-                      const string& clr, const string& attenName, const string& normalName)
+                      const string& clr, const string& attenName, const string& spotParams,
+                      const string& spotDir, const string& normalName)
 {
-    ShaderNode* atten = mkAtten(attenName, toLight, attenTemp);
+    auto atten = new ShaderOp(mkAtten(attenName, toLight, attenTemp),
+                              new ShaderSpotlightAtten(toLight, new ShaderVarRef(spotParams), new ShaderVarRef(spotDir)),
+                              "*", true);
     return new ShaderLighter(toLight, new ShaderVarRef(normalName), new ShaderVarRef(clr), atten);
 }
  
 ShaderNode* mkLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
-                      const string& clr, const string& attenName, const string& normalName)
+                      const string& clr, const string& attenName, const string& spotParams,
+                      const string& spotDir, const string& normalName)
 {
     ShaderNode* toLight = mkToLight(pos, toLightTemp);
-    return mkLighter(toLight, attenTemp, pos, clr, attenName, normalName);
+    return mkLighter(toLight, attenTemp, pos, clr, attenName, spotParams, spotDir, normalName);
 }
 
 ShaderNode* mkToCam(const string& tempName = "")
@@ -89,6 +93,7 @@ ShaderNode* mkSpecLighter(const string& toLightTemp, const string& attenTemp, co
 
 ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
 {
+    // TODO: specular doesn't account for diffuse/spotlight atten.
     auto diffuseCombiner = new ShaderFallbackNode(new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, lightRef), colorRef);
     return new ShaderOp(
                new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, specularRef),
@@ -105,9 +110,9 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
 auto diffuseLighter =
     new ShaderOp(
         new ShaderAdditiveCombiner({
-            mkLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_NORMAL_NAME)}),
+            mkLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, GLKSH_NORMAL_NAME),
+            mkLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, GLKSH_NORMAL_NAME),
+            mkLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, GLKSH_NORMAL_NAME)}),
         new ShaderVarRef(GLKSH_EMISSIVE), "max", false);
 
 auto specularLighter =
@@ -123,9 +128,9 @@ auto ppdiffuseLighter =
     new ShaderOp(
         new ShaderFallbackNode(
             new ShaderAdditiveCombiner({
-                mkLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, "_vertNorm"),
-                mkLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, "_vertNorm"),
-                mkLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, "_vertNorm")}),
+                mkLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, "_vertNorm"),
+                mkLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, "_vertNorm"),
+                mkLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, "_vertNorm")}),
             new ShaderCustom("vec4(0, 0, 0, 1)")),
         new ShaderTexRef(GLKSH_EMISSIVE_TEX, "", new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_EMISSIVE)),
         "max", false);
