@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import <Etc.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
@@ -22,6 +23,8 @@
 #import "ShaderInfo.h"
 #import "ShaderGen.h"
 #import "ShaderProg.h"
+
+#include <algorithm>
 
 #define MAX_LIGHTS      3
 #define MAX_TEXTURES    2
@@ -31,12 +34,17 @@ struct LightVars {
     const char* pos;
     const char* atten;
     const char* specular;
+    const char* spotlight;
+    const char* spotlightDir;
 };
 
 static LightVars lightVarNames[MAX_LIGHTS] = {
-    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPECULAR },
-    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPECULAR },
-    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPECULAR },
+    { GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPECULAR,
+      GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR },
+    { GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPECULAR,
+      GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR },
+    { GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPECULAR,
+      GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR },
 };
 
 @implementation GLKShaderEffect {
@@ -159,7 +167,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
 
     _lightingType = GLKLightingTypePerPixel;
-    _lightModelAmbientColor = GLKVector4White();
+    _lightModelAmbientColor = GLKVector4Make(0.5f, 0.5f, 0.5f, 1.f);
     _lightModelTwoSided = FALSE;
     _lightingEnabled = TRUE;
 
@@ -293,6 +301,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     GLKVector4 ambient = GLKVector4Make(0, 0, 0, 0);
     float shininess = matProps.shininess;
     char specType = 's';
+    char spotType = 't';
     GLuint specTex = matProps.specularTex;
     if (shininess > 0 && specTex > 0 && pp) {
         specType = 'S';
@@ -313,11 +322,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                     m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
                     m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
                     m->addvar(lightVarNames[lightNum].atten, l.attenuation);
+                    float spot = l.spotCutoff;
+                    if (spot < 180.f) {
+                        ltype = spotType;
+                        float exp = spot - std::min(l.spotExponent, spot);
+                        m->addvar(lightVarNames[lightNum].spotlight, GLKVector2Make(cosf(DEG2RAD(spot)), cosf(DEG2RAD(exp))));
+                        m->addvar(lightVarNames[lightNum].spotlightDir, GLKMatrix4MultiplyVector3(self.modelRefTrans, l.spotDirection));
+                    }
                     if (shininess > 0.f) {
                         GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
                         if (!GLKVector4XYZEqualToScalar(spec, 0.f)) {
                             self.cameraRequired = true;
-                            ltype = 'S';
+                            ltype = specType;
                             spec.w = shininess;
                             m->addvar(lightVarNames[lightNum].specular, spec);
                         }
@@ -503,9 +519,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     self.linearAttenuation = 0.f;
     self.quadraticAttenuation = 0.f;
     
-    self.spotDirection = GLKVector3Make(0.f, -1.f, 0.f);
+    self.spotDirection = GLKVector3Make(0.f, 0.f, -1.f);
     self.spotCutoff = 180.f;
-    self.spotExponent = 0.f;
+    self.spotExponent = 0.f; // means super-sharp.
 
     return self;
 }   
