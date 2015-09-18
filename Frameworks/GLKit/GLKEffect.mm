@@ -167,7 +167,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     [_lights addObject: [[GLKEffectPropertyLight alloc] initWith: self]];
 
     _lightingType = GLKLightingTypePerPixel;
-    _lightModelAmbientColor = GLKVector4Make(0.5f, 0.5f, 0.5f, 1.f);
+    _lightModelAmbientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
     _lightModelTwoSided = FALSE;
     _lightingEnabled = TRUE;
 

@@ -70,6 +70,8 @@ static void dumpMat(const GLKMatrix4& mat)
     _cubeAngle = 0.f;
     _skyboxXformInited = false;
 
+    _effect.lightModelAmbientColor = GLKVector4Make(0.5f, 0.5f, 0.5f, 1.f);
+    
     _skybox = [[GLKSkyboxEffect alloc] init];
     
     glClearColor(0.0, 0.35, 0.6, 1.0);
