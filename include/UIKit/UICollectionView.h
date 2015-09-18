@@ -17,6 +17,7 @@
 #ifndef _UICOLLECTIONVIEW_H_
 #define _UICOLLECTIONVIEW_H_
 
+#import "UIKitExport.h"
 #import <stdint.h> // uint32_t
 
 enum {

@@ -17,6 +17,8 @@
 #ifndef _UILOCALNOTIFICATION_H_
 #define _UILOCALNOTIFICATION_H_
 
+#import "UIKitExport.h"
+
 UIKIT_EXPORT_CLASS
 @interface UILocalNotification : NSObject {
 }

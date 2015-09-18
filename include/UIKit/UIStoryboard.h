@@ -17,6 +17,8 @@
 #ifndef _UISTORYBOARD_H_
 #define _UISTORYBOARD_H_
 
+#import "UIKitExport.h"
+
 UIKIT_EXPORT_CLASS
 @interface UIStoryboard : NSObject
 

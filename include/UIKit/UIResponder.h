@@ -28,6 +28,7 @@
  */
 
 #import "UIEvent.h"
+#import "UIKitExport.h"
 
 UIKIT_EXPORT_CLASS
 @interface UIResponder : NSObject

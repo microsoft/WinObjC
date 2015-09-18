@@ -30,6 +30,7 @@
 #ifndef _UIGESTURERECOGNIZER_H_
 #define _UIGESTURERECOGNIZER_H_
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 typedef enum {

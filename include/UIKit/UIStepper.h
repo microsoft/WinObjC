@@ -17,6 +17,8 @@
 #ifndef _UISTEPPER_H_
 #define _UISTEPPER_H_
 
+#import "UIKitExport.h"
+
 UIKIT_EXPORT_CLASS
 @interface UIStepper : UIControl
 

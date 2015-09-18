@@ -17,6 +17,8 @@
 #ifndef _UICOLLECTIONVIEWCELL_H_
 #define _UICOLLECTIONVIEWCELL_H_
 
+#import "UIKitExport.h"
+
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewCell : UICollectionReusableView 
 

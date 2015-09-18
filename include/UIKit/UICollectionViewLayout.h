@@ -17,6 +17,8 @@
 #ifndef _UICOLLECTIONVIEWCLAYOUT_H_
 #define _UICOLLECTIONVIEWCLAYOUT_H_
 
+#import "UIKitExport.h"
+
 enum _UICollectionViewItemType {
     UICollectionViewItemTypeCell,
     UICollectionViewItemTypeSupplementaryView,

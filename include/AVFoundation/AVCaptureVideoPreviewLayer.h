@@ -18,6 +18,7 @@
 #define _AVCAPTUREVIDEOPREVIEWLAYER_H_
 
 #import <QuartzCore/QuartzCore.h>
+#include "AVExport.h"
 
 @interface AVCaptureVideoPreviewLayer : CALayer
 

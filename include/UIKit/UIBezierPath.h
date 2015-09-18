@@ -27,6 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 enum {

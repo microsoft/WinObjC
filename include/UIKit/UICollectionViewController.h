@@ -17,6 +17,8 @@
 #ifndef _UICOLLECTIONVIEWCONTROLLER_H_
 #define _UICOLLECTIONVIEWCONTROLLER_H_
 
+#import "UIKitExport.h"
+
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewController : UIViewController
 

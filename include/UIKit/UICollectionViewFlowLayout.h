@@ -17,6 +17,8 @@
 #ifndef _UICOLLECTIONVIEWFLOWLAYOUT_H_
 #define _UICOLLECTIONVIEWFLOWLAYOUT_H_
 
+#import "UIKitExport.h"
+
 enum {
    UICollectionViewScrollDirectionVertical,
    UICollectionViewScrollDirectionHorizontal

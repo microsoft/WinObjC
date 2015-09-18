@@ -30,6 +30,7 @@
 #ifndef _UIACCELEROMETER_H_
 #define _UIACCELEROMETER_H_
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 @class UIAccelerometer, UIAcceleration;

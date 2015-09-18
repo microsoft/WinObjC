@@ -17,6 +17,7 @@
 #ifndef _NSLAYOUTCONSTRAINT_H_
 #define _NSLAYOUTCONSTRAINT_H_
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
 

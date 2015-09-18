@@ -17,6 +17,7 @@
 #ifndef _UISTORYBOARDSEGUE_H_
 #define _UISTORYBOARDSEGUE_H_
 
+#import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 UIKIT_EXPORT_CLASS
