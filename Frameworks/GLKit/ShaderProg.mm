@@ -97,13 +97,15 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
     auto diffuseCombiner = new ShaderFallbackNode(new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, lightRef), colorRef);
     return new ShaderOp(
                new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, specularRef),
-               new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
-                   new ShaderOp(new ShaderVarRef(GLKSH_REFL_ALPHA),
-                                new ShaderCustom("", ".a", new ShaderTexRef(GLKSH_REFL_TEX, new ShaderVarRef("_texCoord0"))),
-                                "*", true),
-                   new ShaderReflNode(new ShaderVarRef("_vertNorm"), new ShaderVarRef(GLKSH_CAMERA)),
-                   new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
-                       new ShaderTexRef(GLKSH_TEX0_NAME, GLKSH_TEX0_MODE, new ShaderVarRef("_texCoord0"), diffuseCombiner))),
+               new ShaderOp(diffuseCombiner, 
+                   new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
+                       new ShaderOp(new ShaderVarRef(GLKSH_REFL_ALPHA),
+                                    new ShaderCustom("", ".a", new ShaderTexRef(GLKSH_REFL_TEX, new ShaderVarRef("_texCoord0"))),
+                                    "*", true),
+                                     new ShaderReflNode(new ShaderVarRef("_vertNorm"), new ShaderVarRef(GLKSH_CAMERA)),
+                       new ShaderTexRef(GLKSH_TEX1_NAME, GLKSH_TEX1_MODE, new ShaderVarRef("_texCoord1"),
+                                        new ShaderTexRef(GLKSH_TEX0_NAME, new ShaderVarRef("_texCoord0")))),
+                   "*", true),
                "+", true);
 }
 
