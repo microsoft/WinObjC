@@ -12,50 +12,51 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "NSSocket.h"
 #include "NSInputStream_socket.h"
 #include "NSOutputStream_socket.h"
+#include "NSStreamInternal.h"
 
-@implementation NSStream : NSObject
-    +(void) /* use typed version */ initialize {
-        
-    }
+@implementation NSStream
 
-    -(unsigned) streamStatus {
-        return _status;
-    }
++(void) initialize {
+}
 
-    /* annotate with type */ -(void) close {
-        if ( fp ) {
-            EbrFclose(fp);
-            fp = NULL;
-        }
-        _status = NSStreamStatusClosed;
-    }
+-(unsigned) streamStatus {
+	return _status;
+}
 
-    -(void) dealloc {
-        if ( fp ) {
-            EbrFclose(fp);
-            fp = NULL;
-        }
-        _data = nil;
+-(void) close {
+	if ( fp ) {
+		EbrFclose(fp);
+		fp = NULL;
+	}
+	_status = NSStreamStatusClosed;
+}
 
-        [super dealloc];
-    }
+-(void) dealloc {
+	if ( fp ) {
+		EbrFclose(fp);
+		fp = NULL;
+	}
+	_data = nil;
 
-    /* annotate with type */ +(void) getStreamsToHost:(id)host port:(int)port inputStream:(NSInputStream **)inputStreamp outputStream:(NSOutputStream **)outputStreamp {
-        id socket = [[[NSSocket alloc] initTCPStream] autorelease];
-        id error;
-        BOOL                   immediate;
-        id input;
-        id output;
+	[super dealloc];
+}
 
-        if((error=[socket connectToHost:host port:port immediate:&immediate])!=nil) {
-            *inputStreamp=nil;
-            *outputStreamp=nil;
-            return;
-        }
++(void) getStreamsToHost:(id)host port:(int)port inputStream:(NSInputStream **)inputStreamp outputStream:(NSOutputStream **)outputStreamp {
+	id socket = [[[NSSocket alloc] initTCPStream] autorelease];
+	id error;
+	BOOL                   immediate;
+	id input;
+	id output;
 
-        *inputStreamp=input=[[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-        *outputStreamp=output=[[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-    }
+	if((error=[socket connectToHost:host port:port immediate:&immediate])!=nil) {
+		*inputStreamp=nil;
+		*outputStreamp=nil;
+		return;
+	}
+
+	*inputStreamp=input=[[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+	*outputStreamp=output=[[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+}
 
     
 @end

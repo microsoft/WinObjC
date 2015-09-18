@@ -109,7 +109,25 @@ static id makeReference(unsigned ref)
   return d;
 }
 
-@implementation NSKeyedArchiver : NSCoder
+@implementation NSKeyedArchiver : NSCoder {
+    NSMutableData       *_data;
+    NSMutableArray      *_plistStack;
+    NSMutableArray      *_objects;
+    NSMutableDictionary *_top;
+    id                   _delegate;
+    NSPropertyListFormat _outputFormat;
+    NSMapTable          *_nameToClass;
+    NSUInteger             _pass;
+    NSMapTable          *_objectToUid;
+
+    NSPropertyListFormat _format;
+    unsigned _keyNum;
+    id _enc, _obj, _retainList;
+
+    struct NSKeyedArchiverPriv *_priv;
+}
+
+
     -(void) _encodeArrayOfObjects:(NSArray*)anArray forKey:(NSString*)aKey {
         id      o;
         CHECKKEY

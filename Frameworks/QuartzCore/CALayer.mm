@@ -36,6 +36,7 @@
 #include "QuartzCore/CAEAGLLayer.h"
 
 #include "..\include\CACompositor.h"
+#include "CAAnimationInternal.h"
 
 NSString *_opacityAction = @"opacity";
 NSString *_positionAction = @"position";

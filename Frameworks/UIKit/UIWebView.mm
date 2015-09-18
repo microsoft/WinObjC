@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include "Starboard.h"
 #include "UIKit/UIKit.h"
 #include "UIKit/UIView.h"
 #include "CoreGraphics/CGContext.h"

@@ -24,17 +24,7 @@ enum {
 typedef uint32_t NSURLRequestCachePolicy;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLRequest : NSObject <NSCopying,NSMutableCopying> {
-    idretain _url;
-    idretain _method;
-    idretain _body;
-    idretain _bodyStream;
-    double _timeoutInterval;
-    id _headerFields;
-    bool _shouldHandleCookies;
-    bool _shouldDiscardData;
-    NSURLRequestCachePolicy _cachePolicy;
-}
+@interface NSURLRequest : NSObject <NSCopying,NSMutableCopying>
 
 -initWithURL:(NSURL *)url;
 -initWithURL:(NSURL *)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeout;

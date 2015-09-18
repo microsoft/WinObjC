@@ -15,8 +15,9 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "UIBarItemInternal.h"
 
-@implementation UIBarButtonItem : UIBarItem {
+@implementation UIBarButtonItem {
     idretaintype(NSString) _title;
     idretaintype(UIFont) _font;
     idretaintype(UIImage) _backImage;

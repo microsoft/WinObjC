@@ -19,11 +19,13 @@
 #include "UIKit/UILabel.h"
 #include "UIViewInternal.h"
 #include "_UIGroupEdgeView.h"
+#include "UITableViewInternal.h"
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-@implementation UITableViewCell : UIView
+@implementation UITableViewCell
+
     static UIImageView* getImageView(UITableViewCell* self)
     {
         if ( self->_imageView == nil ) {

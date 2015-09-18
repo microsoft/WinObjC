@@ -39,7 +39,16 @@ DEFN_STR(NSFileTypeDirectory) DEFN_STR(NSFileTypeRegular) DEFN_STR(NSFileType) D
 DEFN_STR(NSFileOwnerAccountName) DEFN_STR(NSFileSystemFreeSize) DEFN_STR(NSFileSystemSize) DEFN_STR(NSFilePosixPermissions) DEFN_STR(NSFileSystemFileNumber) DEFN_STR(NSFilePathErrorKey)
 DEFN_STR(NSFileProtectionKey) DEFN_STR(NSFileProtectionComplete) DEFN_STR(NSFileProtectionCompleteUnlessOpen)
 
-@implementation NSDirectoryEnumerator : NSEnumerator
+@implementation NSDirectoryEnumerator : NSEnumerator {
+    idretain rootFiles;
+    idretain curFile;
+    idretain enumerators;
+    idretain curEnumerator[32];
+    int curDepth;
+    bool _skipDescendents;
+    idretain searchPath;
+}
+
     -(instancetype) init {
         return self;
     }

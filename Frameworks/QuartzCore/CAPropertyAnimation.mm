@@ -18,6 +18,7 @@
 
 #include "Quartzcore/CAPropertyAnimation.h"
 #include "QuartzCore/CATransaction.h"
+#include "CAAnimationInternal.h"
 
 @interface _BlockAnimationCompletion : NSObject {
 @public
@@ -34,7 +35,7 @@
     
 @end
 
-@implementation CAPropertyAnimation : CAAnimation
+@implementation CAPropertyAnimation
     -(void) setKeyPath:(NSString*)path {
         _keyPath = [path copy];
     }

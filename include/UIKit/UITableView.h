@@ -123,12 +123,7 @@ typedef enum {
 struct UITableViewPriv;
 
 UIKIT_EXPORT_CLASS
-@interface UITableView : UIScrollView <UIScrollViewDelegate> {
-@public
-    struct UITableViewPriv *tablePriv;
-    idretain _indexPathsForSelectedItems, _indexPathsForHighlightedItems;
-    idretain _currentIndexPath, _touchingIndexPath;
-}
+@interface UITableView : UIScrollView <UIScrollViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
 - (void)reloadData;

@@ -21,7 +21,16 @@
 #include "UIKit/UICollectionReusableView.h"
 #include "UIKit/UICollectionViewCell.h"
 
-@implementation UICollectionReusableView : UIView
+@implementation UICollectionReusableView : UIView {
+@private
+    id _collectionView;
+    idretain _reuseIdentifier;
+    BOOL _needsRefresh;
+
+@public
+    idretaintype(UICollectionViewLayoutAttributes) _layoutAttributes;
+}
+
     /* annotate with type */ -(id) setCollectionView:(id)view {
         _collectionView = view;
         return 0;

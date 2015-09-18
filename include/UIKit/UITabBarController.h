@@ -56,15 +56,8 @@
 
 UIKIT_EXPORT_CLASS
 @interface UITabBarController : UIViewController {
-    @public
-    idretain _tabBar;
-    idretain _viewControllers;
+@public
     unsigned _selectedIndex;
-    idretaintype(UITabPane) _tabPane;
-    id _mainView;
-    idretain _customizableControllers;
-    idretaintype(UIViewController) _moreNavigationController;
-    id _delegate;
     bool _hideTabBar;
     bool _tabBarChanged;
     bool _layoutForRotation;

@@ -45,13 +45,6 @@ typedef enum {
 
 @class UILabel, UIImageView, UIImage;
 
-typedef struct
-{
-    idretaintype(UIImage) image, backgroundImage;
-    idretaintype(UIColor) textColor, titleShadowColor;
-    idretaintype(NSString) title;
-} buttonState;
-
 UIKIT_EXPORT_CLASS
 @interface UIButton : UIControl <NSCoding> 
 

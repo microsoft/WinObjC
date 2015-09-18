@@ -15,8 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
-
 #import <UIKit/UIView.h>
+#include "UIViewControllerInternal.h"
 
 extern float statusBarHeight;
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);

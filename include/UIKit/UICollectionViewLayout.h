@@ -57,18 +57,7 @@ UIKIT_EXPORT_CLASS
 
 @end
 
-@interface UICollectionViewLayoutAttributes : NSObject <NSCopying> {
-    UICollectionViewItemType _elementCategory;
-    idretain                 _elementKind;
-    idretain                 _indexPath;
-    CGRect                   _frame;
-    CGSize                   _size;
-    CGPoint                  _center;
-    BOOL                     _hidden;
-    NSInteger                _zIndex;
-    float                    _alpha;
-    CATransform3D            _transform3D;
-}
+@interface UICollectionViewLayoutAttributes : NSObject <NSCopying>
 
 -(UICollectionViewItemType) representedElementCategory;
 

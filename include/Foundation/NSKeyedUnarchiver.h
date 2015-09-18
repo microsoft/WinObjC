@@ -14,22 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 FOUNDATION_EXPORT NSString* NSInvalidUnarchiveOperationException;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSKeyedUnarchiver : NSCoder {
-   id                   _delegate;
-   idretaintype(NSMutableDictionary) _nameToReplacementClass;
-   NSDictionary        *_propertyList;
-   NSArray             *_objects;
-   idretaintype(NSMutableArray)   _plistStack;
-   idretaintype(NSDictionary)     _uidToObject;
-   idretaintype(NSDictionary)     _objectToUid;
-   idretaintype(NSDictionary)     _classVersions;
-    
-   int                  _unnamedKeyIndex;
-
-   idretain _dataObjects;
-   idretain _bundle;
-   int      _curUid;
-}
+@interface NSKeyedUnarchiver : NSCoder
 
 -initForReadingWithData:(NSData *)data;
 

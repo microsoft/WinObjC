@@ -19,19 +19,9 @@ FOUNDATION_EXPORT NSString * const NSWillBecomeMultiThreadedNotification;
 FOUNDATION_EXPORT NSString * const NSThreadWillExitNotification;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSThread : NSObject {
+@interface NSThread : NSObject{
 @public
-    NSObject *_target;
-    bool          _retainTarget;
-    SEL           _selector;
-    NSObject *_object;
-    double        _priority;
-    NSUInteger    _stackSize;
-    BOOL           _cancelled;
-    NSRunLoop *_runLoop;
     BOOL           _isFinished;
-    idretain _threadDictionary;
-    idretain _name;
 }
 
 +(BOOL)isMultiThreaded;

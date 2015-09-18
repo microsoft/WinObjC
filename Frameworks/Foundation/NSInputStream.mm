@@ -18,6 +18,7 @@
 #include "Foundation/NSStream.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSInputStream.h"
+#include "NSStreamInternal.h"
 
 #ifdef WIN32
  #include <io.h>

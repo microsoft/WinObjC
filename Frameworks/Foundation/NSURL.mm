@@ -284,7 +284,12 @@ struct EbrURL
     }
 };
 
-@implementation NSURL : NSObject
+@implementation NSURL : NSObject {
+   struct EbrURL *_uri, *_fullUri;
+   id _baseURL;
+   idretain _absoluteString;
+}
+
     static void buildURIs(NSURL* self, const char *pStr, id baseURL)
     {
         self->_uri = new EbrURL(pStr);

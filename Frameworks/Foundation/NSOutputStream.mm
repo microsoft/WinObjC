@@ -19,6 +19,7 @@
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSNumber.h"
 #include "Foundation/NSOutputStream.h"
+#include "NSStreamInternal.h"
 
 @implementation NSOutputStream : NSStream
     /* annotate with type */ +(id) outputStreamToFileAtPath:(id)file append:(BOOL)append {

@@ -17,7 +17,17 @@
 #include "Starboard.h"
 #include "UIAppearanceSetter.h"
 
-@implementation UINavigationItem : NSObject
+@implementation UINavigationItem : NSObject {
+    idretaintype(NSString) _title;
+    idretaintype(UIView) _titleView;
+    idretaintype(NSString) _prompt;
+    idretaintype(UIBarButtonItem) _rightBarButtonItem, _leftBarButtonItem, _backBarButtonItem;
+    idretaintype(NSArray) _rightBarButtonItems, _leftBarButtonItems;
+    idretaintype(UIBarButtonItem) _rightSegmentedControlItem;
+    BOOL _hidesBackButton;
+    id _delegate;
+}
+
     -(UINavigationItem*) initWithTitle:(NSString*)title {
         _title.attach([title copy]);
 

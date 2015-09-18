@@ -17,8 +17,12 @@
 #include "Starboard.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UITabBar.h"
+#include "UIBarItemInternal.h"
 
-@implementation UITabBarItem : UIBarItem
+@implementation UITabBarItem {
+    idretaintype(NSString) _title, _badgeValue;
+}
+
     -(NSObject*) initWithCoder:(NSCoder*)coder {
         _title = [coder decodeObjectForKey:@"UITitle"];
         _tag = [coder decodeIntegerForKey:@"UITag"];

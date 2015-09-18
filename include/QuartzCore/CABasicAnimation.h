@@ -17,9 +17,7 @@
 #import <QuartzCore/CAPropertyAnimation.h>
 
 CA_EXPORT_CLASS
-@interface CABasicAnimation : CAPropertyAnimation  {
-    idretain _from, _to;
-}
+@interface CABasicAnimation : CAPropertyAnimation
 
 @property(retain) id fromValue;
 @property(retain) id toValue;

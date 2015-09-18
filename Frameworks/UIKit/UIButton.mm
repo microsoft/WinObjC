@@ -16,6 +16,13 @@
 
 #include "Starboard.h"
 
+struct buttonState
+{
+    idretaintype(UIImage) image, backgroundImage;
+    idretaintype(UIColor) textColor, titleShadowColor;
+    idretaintype(NSString) title;
+};
+
 @interface UIRoundedRectButton : UIButton {
 }
 @end

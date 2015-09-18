@@ -19,12 +19,7 @@
 
 #include "UICollectionViewLayout.h"
 
-@interface UICollectionReusableView : UIView {
-    id _collectionView;
-    idretain _reuseIdentifier;
-    idretaintype(UICollectionViewLayoutAttributes) _layoutAttributes;
-    BOOL _needsRefresh;
-}
+@interface UICollectionReusableView : UIView
 -(void) prepareForReuse;
 @end
 

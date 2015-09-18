@@ -12,11 +12,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "NSURLProtocol_file.h"
 #include "NSURLProtocol_http.h"
 #include "Foundation/NSMutableArray.h"
+#include "NSURLProtocolInternal.h"
 
 static id _registeredClasses = nil;
 
-@implementation NSURLProtocol : NSObject
-    /* annotate with type */ +(void) initialize {
+@implementation NSURLProtocol
+
+    +(void) initialize {
         if ( self == [NSURLProtocol class] ) {
             _registeredClasses = [NSMutableArray new];
             [_registeredClasses addObject:[NSURLProtocol_http class]];
@@ -24,7 +26,7 @@ static id _registeredClasses = nil;
         }
     }
 
-    /* annotate with type */ +(id) _registeredClasses {
+    +(id) _registeredClasses {
         return _registeredClasses;
     }
 

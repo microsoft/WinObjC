@@ -25,7 +25,19 @@
 #include "UISegment.h"
 #include <math.h>
 
-@implementation UISegmentedControl : UIControl
+@implementation UISegmentedControl : UIControl  {
+    idretain _segments;
+    id _tintColor;
+    idretain _backgroundImages[16];
+    idretain _segmentAttributes[16];
+    idretain _dividerImage;
+    unsigned _curSelected;
+    BOOL _shouldResizeToSuper;
+    BOOL _isMomentary;
+    BOOL _apportionsSegmentWidthsByContent;
+    BOOL _customImages;
+}
+
     /* annotate with type */ -(id) initWithCoder:(id)coder {
         id result = [super initWithCoder:coder];
 

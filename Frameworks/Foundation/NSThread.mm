@@ -74,7 +74,19 @@ void *selectorThread(void *param)
     return NULL;
 }
 
-@implementation NSThread : NSObject
+@implementation NSThread : NSObject {
+    NSObject *_target;
+    bool          _retainTarget;
+    SEL           _selector;
+    NSObject *_object;
+    double        _priority;
+    NSUInteger    _stackSize;
+    BOOL           _cancelled;
+    NSRunLoop *_runLoop;
+    idretain _threadDictionary;
+    idretain _name;
+}
+
     +(void) detachNewThreadSelector:(SEL)selector toTarget:(NSObject*)obj withObject:(NSObject*)objParam {
         NSThread* ret = [[self alloc] initWithTarget:obj selector:selector object:objParam];
         [ret start];

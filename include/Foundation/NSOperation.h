@@ -112,9 +112,7 @@ FOUNDATION_EXPORT_CLASS
 @end
 
 FOUNDATION_EXPORT_CLASS
-@interface NSBlockOperation : NSOperation {
-    idretaintype(NSMutableArray) _executionBlocks;
-}
+@interface NSBlockOperation : NSOperation
 
 + (id)blockOperationWithBlock:(void (^)(void))block;
 

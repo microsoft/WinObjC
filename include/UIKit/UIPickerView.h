@@ -43,21 +43,7 @@
 @class UIPickerSubView;
 
 UIKIT_EXPORT_CLASS
-@interface UIPickerView : UIView {
-    id    _delegate;
-    id    _dataSource;
-    idretain _shadow;
-    idretain _selectionBar;
-    idretain _background;
-
-    float   _defaultRowHeight;
-
-    UIPickerSubView * __unsafe_unretained *_subSections;
-    int               _numSections;
-    BOOL             _needsReload;
-    int              _selectedRowInComponents[16];
-    UITextAlignment  _componentAlignments[16];
-}
+@interface UIPickerView : UIView 
 
 @property (nonatomic, assign) id<UIPickerViewDataSource> dataSource;
 @property (nonatomic, assign) id<UIPickerViewDelegate>   delegate;

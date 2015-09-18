@@ -23,19 +23,7 @@ enum CADisplayLinkRunMode
 @class NSRunLoopSource;
 
 CA_EXPORT_CLASS
-@interface CADisplayLink : NSObject {
-    idretain _target;
-    SEL _selector;
-    idretaintype(NSTimer) _timer;
-    bool _isPaused;
-    bool _addedToUpdateList;
-    idretaintype(NSRunLoopSource) _displaySyncEvent;
-    int _frameInterval;
-
-    enum CADisplayLinkRunMode _runMode;
-    NSMutableDictionary * _addedRunLoops;
-    double _timestamp;
-}
+@interface CADisplayLink : NSObject
 
 @property(nonatomic) NSInteger frameInterval;
 @property(readonly, nonatomic) CFTimeInterval timestamp;

@@ -22,7 +22,16 @@
 #include "CoreFoundation/CFType.h"
 #include "CACompositor.h"
 
-@implementation CAAnimation : NSObject
+#include "CAAnimationInternal.h"
+
+@implementation CAAnimation : NSObject  {
+    idretain                _delegate;
+    SEL                     _finishedSelector;
+    id                      _name;
+    idretain                _undefinedKeys;
+    BOOL                    _wasRemoved, _wasAborted;
+}
+
     +(CAAnimation*) animation {
         CAAnimation* ret = [self alloc];
         ret->_timingProperties._duration = 1.0;

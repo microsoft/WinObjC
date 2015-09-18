@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "NSOutputStream_socket.h"
 #include "NSSelectInputSource.h"
 #include "NSSelectSet.h"
+#include "NSStreamInternal.h"
 
 static BOOL socketHasSpaceAvailable(id socket) {
    NSSelectSet* selectSet = [[[NSSelectSet alloc] init] autorelease];

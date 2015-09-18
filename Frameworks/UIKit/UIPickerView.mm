@@ -260,7 +260,7 @@ struct RowData
 
     /* annotate with type */ -(id) scrollViewDidScroll:(id)scrollView {
         //  Once we scroll near our target, count is as selected
-        int selIdx = findNearestRow(self, _contentOffset);
+        int selIdx = findNearestRow(self, [self contentOffset]);
 
         if ( _targetSelectedRow != -1 && selIdx == _targetSelectedRow ) {
             notifySetSelected(self, _targetSelectedRow);
@@ -277,11 +277,11 @@ struct RowData
     }
 
     /* annotate with type */ -(id) scrollViewDidEndDecelerating:(id)scrollView {
-        int selIdx = findNearestRow(self, _contentOffset);
+        int selIdx = findNearestRow(self, [self contentOffset]);
         CGPoint dest = { 0, getRowContentPos(self, selIdx) };
 
         _targetSelectedRow = -1;
-        if ( dest != _contentOffset ) {
+        if ( dest != [self contentOffset] ) {
             [self setContentOffset:dest animated:YES];
         }
 
@@ -332,7 +332,7 @@ struct RowData
         int selIdx = [cell tag];
         CGPoint dest = { 0, getRowContentPos(self, selIdx) };
 
-        if ( dest != _contentOffset ) {
+        if ( dest != [self contentOffset] ) {
             [self setContentOffset:dest animated:YES];
             _targetSelectedRow = selIdx;
         }
@@ -340,12 +340,25 @@ struct RowData
         return self;
     }
 
-    
-    
 @end
 
-@implementation UIPickerView : UIView
-    /* annotate with type */ +(id) allocWithZone:(NSZone*)zone {
+@implementation UIPickerView : UIView {
+    id    _delegate;
+    id    _dataSource;
+    idretain _shadow;
+    idretain _selectionBar;
+    idretain _background;
+
+    float   _defaultRowHeight;
+
+    UIPickerSubView * __unsafe_unretained *_subSections;
+    int               _numSections;
+    BOOL             _needsReload;
+    int              _selectedRowInComponents[16];
+    UITextAlignment  _componentAlignments[16];
+}
+
+    +(id) allocWithZone:(NSZone*)zone {
         UIPickerView* ret = [super allocWithZone:zone];
 
         ret->_defaultRowHeight = 50.0f;

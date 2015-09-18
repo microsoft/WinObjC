@@ -22,12 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 -(void)URLProtocolDidFinishLoading:(NSURLProtocol *)urlProtocol;
 @end
 
-@interface NSURLProtocol : NSObject {
-@public
-    idretaintype(NSURLRequest) _request;
-    id _cachedResponse;
-    id _client;
-}
+@interface NSURLProtocol : NSObject
 
 +(BOOL)registerClass:(Class)cls;
 +(void)unregisterClass:(Class)cls;

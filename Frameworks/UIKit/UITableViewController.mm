@@ -18,6 +18,7 @@
 #include "UIKit/UITableViewController.h"
 #include "UIKit/UITableView.h"
 #include "UITableViewDataSource.h"
+#include "UIViewControllerInternal.h"
 
 @implementation UITableViewController {
     UITableViewStyle _style;

@@ -17,7 +17,12 @@
 #include "Starboard.h"
 #include "Foundation/NSSortDescriptor.h"
 
-@implementation NSSortDescriptor : NSObject
+@implementation NSSortDescriptor : NSObject {
+    SEL _selector;
+    idretaintype(NSString) _keyPath;
+    BOOL  _ascending;
+}
+
     -(instancetype) initWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
         _selector = @selector(compare:);
         _keyPath = keyPath;

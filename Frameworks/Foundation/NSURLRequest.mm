@@ -19,8 +19,10 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableURLRequest.h"
+#include "NSURLRequestInternal.h"
 
-@implementation NSURLRequest : NSObject
+@implementation NSURLRequest
+
     /* annotate with type */ -(id) initWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
         _url = [url absoluteURL];
         _timeoutInterval = timeout;

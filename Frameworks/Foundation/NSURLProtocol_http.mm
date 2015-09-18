@@ -43,6 +43,8 @@
 #include "NSSelectInputSource.h"
 #include "NSSSLHandler.h"
 
+#include "NSURLProtocolInternal.h"
+
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
@@ -581,7 +583,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
     [self->_newEventSignal _trigger];
 }
 
-@implementation NSURLProtocol_http : NSURLProtocol
+@implementation NSURLProtocol_http
     /* annotate with type */ -(id) _processEvents {
         for ( ;; ) {
             URLEvent e;

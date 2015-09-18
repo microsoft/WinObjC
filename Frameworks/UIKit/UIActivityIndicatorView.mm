@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include "Starboard.h"
 #include "UIKit/UIKit.h"
 
 @implementation UIActivityIndicatorView {

@@ -12,11 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSObject.h>
 
 FOUNDATION_EXPORT_CLASS
-@interface NSSortDescriptor : NSObject <NSCoding, NSCopying> {
-    SEL _selector;
-    idretaintype(NSString) _keyPath;
-    BOOL  _ascending;
-}
+@interface NSSortDescriptor : NSObject <NSCoding, NSCopying>
 
 + sortDescriptorWithKey:(NSString *)key ascending:(BOOL)ascending;
 + sortDescriptorWithKey:(NSString *)key ascending:(BOOL)ascending selector:(SEL)selector;

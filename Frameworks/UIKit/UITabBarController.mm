@@ -21,10 +21,11 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "UIKit/UINavigationController.h"
+#include "UIViewControllerInternal.h"
 
 #include "UITabPane.h"
 
-@implementation UITabMoreTableView : UITableViewController
+@implementation UITabMoreTableView
     -(unsigned) numberOfSectionsInTableView:(UITableView*)tableview {
         return 0;
     }
@@ -32,7 +33,7 @@
     
 @end
 
-@implementation UITabMoreController : UINavigationController
+@implementation UITabMoreController
     -(instancetype) init {
         [super init];
 
@@ -45,7 +46,17 @@
     
 @end
 
-@implementation UITabBarController : UIViewController
+@implementation UITabBarController {
+@public
+    idretain _tabBar;
+    idretain _viewControllers;
+    idretaintype(UITabPane) _tabPane;
+    id _mainView;
+    idretain _customizableControllers;
+    idretaintype(UIViewController) _moreNavigationController;
+    id _delegate;
+}
+
     -(instancetype) initWithCoder:(NSCoder*)coder {
         [super initWithCoder:coder];
 

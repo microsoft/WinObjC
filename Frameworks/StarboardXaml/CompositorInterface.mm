@@ -29,6 +29,7 @@
 #include <map>
 #include <memory>
 #include "CompositorInterface.h"
+#include "CAAnimationInternal.h"
 
 @class RTObject;
 

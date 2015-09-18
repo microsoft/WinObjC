@@ -49,12 +49,7 @@ SB_EXPORT NSString * const NSStreamSocketSecurityLevelNegotiatedSSL;
 @end
 
 struct EbrFile;
-@interface NSStream : NSObject {
-@public
-    unsigned _status;
-    struct EbrFile *fp;
-    idretain _data;
-}
+@interface NSStream : NSObject
 
 +(void)getStreamsToHost:(NSHost *)host port:(NSInteger)port inputStream:(NSInputStream **)inputStream outputStream:(NSOutputStream **)outputStream;
 

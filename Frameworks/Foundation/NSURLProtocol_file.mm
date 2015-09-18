@@ -23,10 +23,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Foundation/NSHTTPURLResponse.h"
 #include "NSURLProtocol_file.h"
 #include "NSURLProtocol_http.h"
+#include "NSURLProtocolInternal.h"
 
 #define MIN(x, y) ((x)<(y) ? (x):(y))
 
-@implementation NSURLProtocol_file : NSURLProtocol
+@implementation NSURLProtocol_file
     +(BOOL) canInitWithRequest:(id)request {
         id scheme= [[request URL] scheme];
       

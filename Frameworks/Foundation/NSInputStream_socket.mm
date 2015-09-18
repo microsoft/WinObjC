@@ -11,6 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "NSInputStream_socket.h"
 #include "NSSelectInputSource.h"
 #include "NSSSLHandler.h"
+#include "NSStreamInternal.h"
 
 @implementation NSInputStream_socket : NSStream
     /* annotate with type */ -(id) initWithSocket:(id)socket streamStatus:(DWORD)status {

@@ -18,6 +18,7 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSHTTPURLResponse.h"
 #include "CoreFoundation/CFDictionary.h"
+#include "NSURLResponseInternal.h"
 
 Boolean CFHTTPHeaderEqual(const void *obj1, const void *obj2)
 {

@@ -8,8 +8,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "Starboard.h"
 #include "Foundation/NSURLResponse.h"
+#include "NSURLResponseInternal.h"
 
-@implementation NSURLResponse : NSObject
+@implementation NSURLResponse
+
     /* annotate with type */ -(id) initWithURL:(id)url MIMEType:(id)mimeType expectedContentLength:(int)expectedContentLength textEncodingName:(id)textEncodingName {
         _expectedContentLength = expectedContentLength;
         _url = url;

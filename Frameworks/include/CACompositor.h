@@ -21,6 +21,7 @@ class DisplayNode;
 class DisplayAnimation;
 class DisplayTexture;
 class DisplayTransaction;
+struct CAMediaTimingProperties;
 
 #define CACompositorRotationNone                0.0f
 #define CACompositorRotation90Clockwise         90.0f

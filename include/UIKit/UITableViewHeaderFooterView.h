@@ -17,11 +17,7 @@
 #ifndef _UITABLEVIEWHEADERFOOTERVIEW_H_
 #define _UITABLEVIEWHEADERFOOTERVIEW_H_
 
-@interface UITableViewHeaderFooterView : UIView {
-@public
-    idretaintype(UIView) _backgroundView, _contentView;
-    idretaintype(UILabel) _textLabel;
-}
+@interface UITableViewHeaderFooterView : UIView
 
 @property(nonatomic, retain) UIView *backgroundView;
 @property(nonatomic, readonly, retain) UILabel *textLabel;

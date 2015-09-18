@@ -27,7 +27,10 @@
 static IWLazyClassLookup _LazyUIProxyObject("UIProxyObject");
 static IWLazyClassLookup _LazyUIWindow("UIWindow");
 
-@implementation NSNib : NSObject
+@implementation NSNib {
+   idretain _bundle;
+}
+
     -(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject {
         return [self loadNib:filename withOwner:ownerObject proxies:nil];
     }

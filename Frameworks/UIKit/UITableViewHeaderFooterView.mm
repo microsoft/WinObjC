@@ -18,7 +18,12 @@
 #include "UIKit/UILabel.h"
 #include "UIKit/UITableViewHeaderFooterView.h"
 
-@implementation UITableViewHeaderFooterView : UIView
+@implementation UITableViewHeaderFooterView {
+@public
+    idretaintype(UIView) _backgroundView, _contentView;
+    idretaintype(UILabel) _textLabel;
+}
+
     -(instancetype) initWithReuseIdentifier:(NSString*)identifier {
         CGRect pos;
 

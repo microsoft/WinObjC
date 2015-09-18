@@ -19,6 +19,7 @@
 #include "QuartzCore/CATransition.h"
 #include "CALayerInternal.h"
 #include "CACompositor.h"
+#include "CAAnimationInternal.h"
 
 @implementation CATransition : CAAnimation
     +(instancetype) animation {

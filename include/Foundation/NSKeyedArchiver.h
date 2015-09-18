@@ -16,23 +16,7 @@ FOUNDATION_EXPORT NSString * const NSInvalidArchiveOperationException;
 struct NSKeyedArchiverPriv;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSKeyedArchiver : NSCoder {
-    NSMutableData       *_data;
-    NSMutableArray      *_plistStack;
-    NSMutableArray      *_objects;
-    NSMutableDictionary *_top;
-    id                   _delegate;
-    NSPropertyListFormat _outputFormat;
-    NSMapTable          *_nameToClass;
-    NSUInteger             _pass;
-    NSMapTable          *_objectToUid;
-
-    NSPropertyListFormat _format;
-    unsigned _keyNum;
-    id _enc, _obj, _retainList;
-
-    struct NSKeyedArchiverPriv *_priv;
-}
+@interface NSKeyedArchiver : NSCoder
 
 +(NSData *)archivedDataWithRootObject:rootObject;
 +(BOOL)archiveRootObject:rootObject toFile:(NSString *)path;

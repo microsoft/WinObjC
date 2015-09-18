@@ -17,6 +17,7 @@
 #include "Starboard.h"
 #include "UIKit/UIBarItem.h"
 #include "UIKit/UIView.h"
+#include "UIBarItemInternal.h"
 
 @implementation UIBarItem {
     idretaintype(NSString) __title;
@@ -31,7 +32,10 @@
     UIBarButtonSystemItem _systemItem;
     bool _pressed;
     UIBarButtonItemStyle _style;
+
+    idretaintype(UIColor) _tintColor;
 }
+
     -(void) awakeFromNib {
     }
     

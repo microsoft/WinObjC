@@ -44,6 +44,7 @@
 #include "UIKit/UIScrollView.h"
 
 @implementation __UIScrollerPosition : CALayer
+
     -(instancetype) init {
         [super init];
 
@@ -87,7 +88,75 @@
 
 #include "Etc.h"
 
-@implementation UIScrollView : UIView
+@implementation UIScrollView : UIView {
+    id _delegate;
+    id       _pressTimer;
+    idretain _savedTouch, _savedEvent;
+    idretain _zoomView;
+    CGPoint  _lastTouchPos;
+    double   _lastTouchTime;
+
+    BOOL     _showsVerticalScrollIndicator;
+    idretain _verticalScroller;
+    bool     _shouldShowScroller;
+    bool     _scrollerVisible;
+
+    CGPoint  _panStart;
+
+    CGPoint  _contentOffset;
+    CGSize   _contentSize;
+    UIEdgeInsets _contentInset;
+    UIEdgeInsets _scrollIndicatorInsets;
+    BOOL     _isDragging;
+    BOOL     _pagingEnabled;
+    BOOL     _bounces;
+    BOOL     _alwaysBounceVertical;
+    BOOL     _alwaysBounceHorizontal;
+    BOOL     _canCancelContentTouches;
+    BOOL     _delaysContentTouches;
+    BOOL     _scrollEnabled;
+    BOOL     _forwardingTouch;
+    BOOL     _forwardsToSuperview;
+    BOOL     _scrollAnimation;
+    bool     _cancellableAnim;
+
+    BOOL     _sendingScrollEvent;
+
+    float    _zoomScale, _maximumZoomScale, _minimumZoomScale;
+    float    _savedZoomDistance, _savedZoomScale;
+    CGRect   _originalZoomRect;
+
+    bool _xStuck, _yStuck;
+    
+    idretain _panGesture, _pinchGesture;
+
+    float   _enterPos, _enterDir;
+
+    BOOL    _isZooming, _isZoomingToRect;
+    bool    _lockVertical, _lockHorizontal;
+
+    enum AnimationReason 
+    { 
+        ANIMATION_DECELERATING, 
+        ANIMATION_DECELERATING_TARGET,
+        ANIMATION_BOUNCING,
+        ANIMATION_PAGING, 
+        ANIMATION_USER
+    };
+    
+    enum AnimationReason _animationReason;
+
+    idretain _displayLink;
+
+    double   _scrollStartTime;
+    int      _scrollFrame;
+    CGPoint  _scrollVelocity, _scrollPosition;
+    CGPoint  _scrollDirection;
+
+    CGPoint  _scrollAnimStart, _scrollAnimDest;
+    double   _scrollAnimStartTime, _scrollAnimDecaySpeed;
+}
+
     static void commonInit(UIScrollView* self)
     {
         // Set up our defaults:

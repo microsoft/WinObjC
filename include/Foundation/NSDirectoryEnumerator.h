@@ -9,15 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSEnumerator.h>
 @class NSDictionary;
 
-@interface NSDirectoryEnumerator : NSEnumerator {
-    idretain rootFiles;
-    idretain curFile;
-    idretain enumerators;
-    idretain curEnumerator[32];
-    int curDepth;
-    bool _skipDescendents;
-    idretain searchPath;
-}
+@interface NSDirectoryEnumerator : NSEnumerator
 -(void)skipDescendents;
 -(void)skipDescendants;
 -(NSDictionary *)directoryAttributes;

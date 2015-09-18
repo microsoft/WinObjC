@@ -32,13 +32,7 @@
 
 @class UIImage;
 
-@interface UIBarItem : NSObject<UIAppearance> {
-@protected
-    idretaintype(UIImage) _image;
-    idretaintype(UIColor) _tintColor;
-    NSInteger _tag;
-    BOOL _isDisabled, _enabled; // fixme
-}
+@interface UIBarItem : NSObject<UIAppearance>
 
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, retain) UIImage *image;

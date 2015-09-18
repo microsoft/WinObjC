@@ -34,6 +34,7 @@
 #include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
 #include "AutoLayout.h"
+#include "UIViewControllerInternal.h"
 
 @interface _TransitionNotifier : NSObject
 @end

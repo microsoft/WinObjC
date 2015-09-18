@@ -33,6 +33,7 @@
     idretaintype(NSMutableDictionary) _finalAnimationLayoutAttributesDict;
     idretaintype(NSMutableIndexSet) _insertedSectionsSet, _deletedSectionsSet;
 }
+
     -(instancetype) init {
         _decorationViewClassDict = [[NSMutableDictionary new] autorelease];
         _decorationViewNibDict = [[NSMutableDictionary new] autorelease];
@@ -190,7 +191,19 @@
     
 @end
 
-@implementation UICollectionViewLayoutAttributes : NSObject
+@implementation UICollectionViewLayoutAttributes {
+    UICollectionViewItemType _elementCategory;
+    idretain                 _elementKind;
+    idretain                 _indexPath;
+    CGRect                   _frame;
+    CGSize                   _size;
+    CGPoint                  _center;
+    BOOL                     _hidden;
+    NSInteger                _zIndex;
+    float                    _alpha;
+    CATransform3D            _transform3D;
+}
+
     /* annotate with type */ -(id) init {
         _alpha = 1.0f;
         _transform3D = CATransform3DMakeTranslation(0, 0, 0);

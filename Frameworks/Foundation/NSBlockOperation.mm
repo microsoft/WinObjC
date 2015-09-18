@@ -23,7 +23,10 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSOperation.h"
 
-@implementation NSBlockOperation : NSOperation
+@implementation NSBlockOperation {
+    idretaintype(NSMutableArray) _executionBlocks;
+}
+
     -(void) dealloc {
         _executionBlocks = nil;
         [super dealloc];

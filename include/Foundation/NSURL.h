@@ -57,11 +57,7 @@ SB_EXPORT NSString * const NSURLFileSizeKey;
 struct EbrURL;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURL : NSObject <NSCopying, NSCoding> {
-   struct EbrURL *_uri, *_fullUri;
-   id _baseURL;
-   idretain _absoluteString;
-}
+@interface NSURL : NSObject <NSCopying, NSCoding>
 
 - initWithScheme:(NSString *)scheme host:(NSString *)host path:(NSString *)path;
 - initFileURLWithPath:(NSString *)path;

@@ -15,7 +15,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 
-@implementation NSOperation : NSObject
+@implementation NSOperation
+
     /* annotate with type */ +(id) allocWithZone:(NSZone*)zone {
         NSOperation* ret = [super allocWithZone:zone];
 

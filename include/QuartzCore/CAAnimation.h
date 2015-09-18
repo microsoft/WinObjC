@@ -46,16 +46,6 @@ enum CAMediaFillMode
     fillModeBoth
 };
 
-struct CAMediaTimingProperties
-{
-    BOOL _removedOnCompletion;
-    double _beginTime, _duration, _timeOffset, _delay, _speed;
-    BOOL _autoReverses;
-    float _repeatCount;
-    double _repeatDuration;
-    __unsafe_unretained id _timingFunction;
-    enum CAMediaFillMode _fillMode;
-};
 #ifdef __cplusplus
 class DisplayAnimation;
 #else
@@ -63,18 +53,7 @@ typedef void *DisplayAnimation;
 #endif
 
 CA_EXPORT_CLASS
-@interface CAAnimation : NSObject <NSCopying, CAMediaTiming, CAAction> {
-@public
-    struct CAMediaTimingProperties _timingProperties;
-    idretain                _delegate;
-    idretaintype(NSString)  _keyName;
-    id                      _attachedLayer;
-    DisplayAnimation        *_runningAnimation, *_runningAnimation2;
-    SEL                     _finishedSelector;
-    id                      _name;
-    idretain                _undefinedKeys;
-    BOOL                    _wasRemoved, _wasAborted;
-}
+@interface CAAnimation : NSObject <NSCopying, CAMediaTiming, CAAction>
 
 +animation;
 

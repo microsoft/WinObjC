@@ -20,8 +20,12 @@
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CABasicAnimation.h"
 #include "CACompositor.h"
+#include "CAAnimationInternal.h"
 
-@implementation CABasicAnimation : CAPropertyAnimation
+@implementation CABasicAnimation {
+    idretain _from, _to;
+}
+
     -(void) setFromValue:(id)value {
         _from.attach([value copy]);
     }

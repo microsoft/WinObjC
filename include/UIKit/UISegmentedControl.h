@@ -30,18 +30,7 @@ enum {
 };
 
 UIKIT_EXPORT_CLASS
-@interface UISegmentedControl : UIControl {
-    idretain _segments;
-    id _tintColor;
-    idretain _backgroundImages[16];
-    idretain _segmentAttributes[16];
-    idretain _dividerImage;
-    unsigned _curSelected;
-    BOOL _shouldResizeToSuper;
-    BOOL _isMomentary;
-    BOOL _apportionsSegmentWidthsByContent;
-    BOOL _customImages;
-}
+@interface UISegmentedControl : UIControl
 
 @property (nonatomic) UISegmentedControlStyle segmentedControlStyle; // stub
 @property (nonatomic,retain) UIColor *tintColor; // stub
