@@ -1474,20 +1474,16 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         }
     }
 
-    -(BOOL) viewWillAppear:(BOOL)isAnimated {
-        return TRUE;
+    -(void) viewWillAppear:(BOOL)isAnimated {
     }
 
-    -(BOOL) viewDidAppear:(BOOL)isAnimated {
-        return TRUE;
+    -(void) viewDidAppear:(BOOL)isAnimated {
     }
 
-    -(BOOL) viewWillDisappear:(BOOL)isAnimated {
-        return TRUE;
+    -(void) viewWillDisappear:(BOOL)isAnimated {
     }
 
-    -(BOOL) viewDidDisappear:(BOOL)isAnimated {
-        return TRUE;
+    -(void) viewDidDisappear:(BOOL)isAnimated {
     }
 
     -(void) setTitle:(NSString*)title {
@@ -1516,22 +1512,17 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return priv->_isEditing;
     }
 
-    -(BOOL) viewDidLoad {
-        return true;
+    -(void) viewDidLoad {
     }
 
-    -(BOOL) viewDidUnload {
-        return TRUE;
+    -(void) viewDidUnload {
     }
 
-    -(BOOL) viewWillUnload {
-        return TRUE;
+    -(void) viewWillUnload {
     }
 
-    -(BOOL) viewDidLayoutSubviews {
-        return TRUE;
+    -(void) viewDidLayoutSubviews {
     }
-
 
     -(BOOL) isViewLoaded {
         return priv->view != nil;
@@ -1545,12 +1536,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return orientation == UIInterfaceOrientationPortrait;
     }
 
-    -(BOOL) willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
-        return TRUE;
+    -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     }
 
-    -(BOOL) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
-        return TRUE;
+    -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     }
 
     -(int) _edgesForExtendedLayout {
@@ -1565,16 +1554,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return priv->_curOrientation;
     }
 
-    -(BOOL) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
-        return TRUE;
+    -(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
     }
 
-    -(BOOL) willMoveToParentViewController:(UIViewController*)parent {
-        return TRUE;
+    -(void) willMoveToParentViewController:(UIViewController*)parent {
     }
 
-    -(BOOL) didMoveToParentViewController:(UIViewController*)parent {
-        return TRUE;
+    -(void) didMoveToParentViewController:(UIViewController*)parent {
     }
 
     +(UIViewController*) controllerForView:(UIView*)view {
@@ -1880,8 +1866,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         return nil;//priv->_bottomLayoutGuide;
     }
 
-    -(BOOL) viewWillLayoutSubviews {
-        return TRUE;
+    -(void) viewWillLayoutSubviews {
     }
 
     -(void) updateViewConstraints {
