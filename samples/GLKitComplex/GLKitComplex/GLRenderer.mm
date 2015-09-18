@@ -47,6 +47,8 @@ static void dumpMat(const GLKMatrix4& mat)
     bool                    _skyboxXformInited;
 }
 
+#ifdef STARBOARD
+
 -(void)reflBlendOn {
     _effect.material.reflectionBlendAlpha = 0.6f;
     if (_specular) {
@@ -58,6 +60,8 @@ static void dumpMat(const GLKMatrix4& mat)
     _effect.material.reflectionBlendAlpha = 1.f;
     _effect.material.reflectionBlendTex = 0;
 }
+
+#endif 
 
 -(void)initGLData {
     _effect = [[GLKReflectionMapEffect alloc] init];    
@@ -199,12 +203,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
-        _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = FALSE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = TRUE;
         _effect.material.emissiveTex = 0;
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
 
     case DM_PixSolidColor:
@@ -215,12 +221,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = TRUE;
-        _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = FALSE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = TRUE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
 
     case DM_ReflSpecular:
@@ -231,12 +239,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
-        _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = FALSE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = TRUE;
         _effect.material.emissiveTex = 0;
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
         
     case DM_LitTextured:
@@ -247,12 +257,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
-        _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = TRUE;
         _effect.material.emissiveTex = 0;
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
 
     case DM_PixelLitTextured:
@@ -263,12 +275,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = TRUE;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
-        _effect.lightingEnabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
         _effect.colorMaterialEnabled = TRUE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = TRUE;
         if (_emissive) _effect.material.emissiveTex = _emissive.name;
         if (_specular) _effect.material.specularTex = _specular.name;
         [self reflBlendOn];
+#endif 
         break;
         
     case DM_VertexColor:
@@ -278,12 +292,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;
-        _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = TRUE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
           
     case DM_SolidColor:
@@ -293,12 +309,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
-        _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = FALSE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
           
     case DM_TexturedVertexColor:
@@ -308,12 +326,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = FALSE;        
-        _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = TRUE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
           
     case DM_TexturedSolidColor:
@@ -323,12 +343,14 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.textureCubeMap.enabled = FALSE;        
         _effect.useConstantColor = TRUE;
         _effect.light0.enabled = FALSE;
-        _effect.lightingEnabled = FALSE;
         _effect.material.ambientColor = ZERO_COLOR;
         _effect.colorMaterialEnabled = FALSE;
+#ifdef STARBOARD
+        _effect.lightingEnabled = FALSE;
         _effect.material.emissiveTex = 0;        
         _effect.material.specularTex = 0;
         [self reflBlendOff];
+#endif 
         break;
     };
 }
