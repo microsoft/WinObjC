@@ -19,7 +19,7 @@
 #import "GLRenderer.h"
 #import <GLKit/GLKit.h>
 
-#define AMBIENT_COLOR   GLKVector4Make(0.1f, 0.2f, 0.2f, 1.f)
+#define AMBIENT_COLOR   GLKVector4Make(0.25f, 0.45f, 0.45f, 1.f)
 #define ZERO_COLOR      GLKVector4Make(0.f, 0.f, 0.f, 0.f)
 #define MAT_SHININESS   35.f
 
@@ -113,10 +113,9 @@ static void dumpMat(const GLKMatrix4& mat)
     // Set up lights.
     _effect.material.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
     
-    _effect.light0.position = GLKVector4Make(-_mesh->getRadius() * 1.5f, _mesh->getRadius() * 0.9f, _mesh->getRadius() * 0.6f, 0.f);
-    _effect.light0.diffuseColor = GLKVector4Make(2.0f, 1.8f, 0.7f, 1.f);
+    _effect.light0.position = GLKVector4Make(-_mesh->getRadius() * 3.0f, _mesh->getRadius() * 1.8f, _mesh->getRadius() * 0.3f, 0.f);
+    _effect.light0.diffuseColor = GLKVector4Make(1.0f, 0.8f, 0.35f, 1.f);
     _effect.light0.specularColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);
-    _effect.light0.linearAttenuation = 2.f / _mesh->getRadius();
 
     // Set up skybox.
     auto files = @[ @"lobbyxneg.JPG", @"lobbyxpos.JPG",

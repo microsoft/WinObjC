@@ -298,7 +298,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     bool isLit = false;
     int numEnabled = 0;
     int lightNum = 0;
-    GLKVector4 ambient = GLKVector4Make(0, 0, 0, 0);
+    GLKVector4 ambient = matProps.ambientColor;
     float shininess = matProps.shininess;
     char specType = 's';
     char spotType = 't';
@@ -356,7 +356,6 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             lightNum ++;
             if (lightNum >= MAX_LIGHTS) break;
         }
-        ambient = GLKVector4Multiply(ambient, matProps.ambientColor);
         ambient = GLKVector4Multiply(ambient, _lightModelAmbientColor);
 
         if (!GLKVector4XYZEqualToScalar(ambient, 0.f)) {
