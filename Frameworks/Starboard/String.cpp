@@ -25,12 +25,12 @@ std::string woc::string::format[[gnu::format(printf, 1, 2)]](const char* format,
     va_start(arguments, format);
     // Compiler Issue: va_copy is emitted as __vacopy, and is an undefined external.
     // stdarg.h specifies va_copy as ((dest)=(src)). As such, we inline it here.
-    // va_copy(arguments2, arguments); // unresolved external ??
+    // va_copy(arguments2, arguments);
     arguments2 = arguments;
-    size_t n = _vscprintf(format, arguments);
+    size_t size = _vscprintf(format, arguments);
     va_end(arguments);
-    std::string ret(n + 1, '\0');
-    _vsnprintf(&ret[0], n, format, arguments2);
+    std::string ret(size + 1, '\0');
+    _vsnprintf(&ret[0], size, format, arguments2);
     va_end(arguments2);
     return ret;
 }

@@ -17,81 +17,130 @@
 #include <stdio.h>
 #include <stdlib.h>
 #import "Foundation/Foundation.h"
+#include <Starboard/String.h>
 #import "NSObjectInternal.h"
+#include "../Foundation/NSValueTransformers.h"
 #include "../objcrt/runtime.h"
 
 #include "CoreGraphics/CGAffineTransform.h"
 #include "QuartzCore/CATransform3D.h"
 
+#include <memory>
+#include <vector>
+#include <unordered_set>
+#include <functional>
+
 @implementation NSObject (Foundation)
-static bool tryGetAccessor(NSObject* self, NSString* key, id* ret) {
-    SEL sel = sel_registerName([key UTF8String]);
-    IMP foo = class_getMethodImplementation(object_getClass(self), sel);
-    if (!foo) {
++ (BOOL)accessInstanceVariablesDirectly {
+    return YES;
+}
+
+static struct objc_ivar* ivarForPropertyName(Class cls, const char* propName) {
+    // For a given property x, our search order should be:
+    // _x, _isX, x, isX.
+    // If none of these is found, we don't support KVC for this key.
+    // Key length is caller-checked.
+    std::vector<std::string> searchIvars{
+        woc::string::format("_%s", propName),
+        woc::string::format("_is%c%s", toupper(propName[0]), &propName[1]),
+        propName,
+        woc::string::format("is%c%s", toupper(propName[0]), &propName[1]),
+    };
+
+    // Walk up the class hierarchy looking for matching ivars.
+    for (; cls; cls = class_getSuperclass(cls)) {
+        unsigned int ivarCount = 0;
+        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), free);
+        auto foundIvar = std::find_if(
+            ivars.get(),
+            ivars.get() + ivarCount,
+            [&searchIvars](const Ivar ivar) {
+                // by using find_if, we avoid constructing a very short-lived std::string
+                // for every ivar we iterate over.
+                return std::find_if(
+                    searchIvars.cbegin(),
+                    searchIvars.cend(),
+                    [&ivar](const std::string &wantedIvarName) -> bool {
+                        return strcmp(ivar_getName(ivar), wantedIvarName.c_str()) == 0;
+                    }
+                ) != searchIvars.cend();
+            });
+        if (foundIvar != ivars.get() + ivarCount) {
+            return *foundIvar;
+        }
+    }
+    return nullptr;
+}
+
+static bool tryGetViaAccessor(NSObject* self, const char* key, id* ret) {
+    // The possible getter selectors for a key x are -getX, -x, and -isX.
+    // If we can't find any of these, we fall back to ivar lookup.
+    // Key length is caller-checked.
+    std::vector<std::string> possibleSelectors{
+        woc::string::format("get%c%s", toupper(key[0]), &key[1]),
+        key,
+        woc::string::format("is%c%s", toupper(key[0]), &key[1]),
+    };
+
+    SEL selector = nullptr;
+    for (auto& possibleSelString : possibleSelectors) {
+        auto possibleSelector = sel_registerName(possibleSelString.c_str());
+        if ([object_getClass(self) instancesRespondToSelector:possibleSelector]) {
+            selector = possibleSelector;
+            break;
+        }
+    }
+
+    if (!selector) {
         return false;
     }
 
-    NSMethodSignature* sig = [self methodSignatureForSelector:sel];
+    NSMethodSignature* sig = [self methodSignatureForSelector:selector];
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
     [invocation setTarget:self];
-    [invocation setSelector:sel];
+    [invocation setSelector:selector];
     [invocation invoke];
 
-    const char* returnType = [sig methodReturnType];
+    const char* valueType = [sig methodReturnType];
+    NSInteger len = [sig methodReturnLength];
 
-    if (strcmp(returnType, "@") == 0) {
-        [invocation getReturnValue:&ret];
-        return true;
-    } else if (strcmp(returnType, "f") == 0) {
-        float retVal;
-        [invocation getReturnValue:&retVal];
+    std::vector<uint8_t> data(static_cast<size_t>(len));
+    [invocation getReturnValue:data.data()];
 
-        *ret = [NSNumber numberWithFloat:retVal];
-        return true;
-    } else if (strcmp(returnType, "d") == 0) {
-        double retVal = 0.0f;
-        [invocation getReturnValue:&retVal];
-
-        *ret = [NSNumber numberWithDouble:retVal];
-        return true;
-    } else if (strncmp(returnType, "{CATransform3D" /*"=ffffffffffffffff}"*/, 10) == 0) {
-        CATransform3D transform;
-        [invocation getReturnValue:&transform];
-
-        *ret = [NSValue valueWithCATransform3DPtr:&transform];
-        return true;
-    } else if (strncmp(returnType, "{CGPoint=", 9) == 0) {
-        CGPoint point;
-        [invocation getReturnValue:&point];
-
-        CGPoint p = { point.x, point.y };
-        *ret = [NSValue valueWithCGPoint:p];
-        return true;
-    } else if (strncmp(returnType, "{CGRect=", 8) == 0) {
-        CGRect rect;
-        [invocation getReturnValue:&rect];
-
-        *ret = [NSValue valueWithCGRect:rect];
-        return true;
-    } else if (strncmp(returnType, "{CGSize=", 8) == 0) {
-        CGSize rect;
-        [invocation getReturnValue:&rect];
-
-        *ret = [NSValue valueWithCGSize:rect];
-        return true;
-    } else if (strcmp(returnType, "i") == 0 || strcmp(returnType, "c") == 0 || strcmp(returnType, "I") == 0) {
-        int retVal = 0;
-        [invocation getReturnValue:&retVal];
-
-        *ret = [NSNumber numberWithInt:retVal];
-        return true;
-    } else {
-        printf("Unknown return type on %s, %s\n", [key UTF8String], returnType);
-        assert(0);
+    // We can't box or unbox char* or arbitrary pointers.
+    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+        return false;
     }
 
-    return false;
+    id val = woc::valueFromDataWithType(data.data(), valueType);
+
+    if (val) {
+        *ret = val;
+    }
+
+    // The return value here signals that an accessor was found, not that it produced a value.
+    // That is to say: a getter can return nil and not be considered a failure.
+    return true;
+}
+
+static bool tryGetViaIvar(id self, const char* propName, id* ret) {
+    Class cls = object_getClass(self);
+    auto curIvar = ivarForPropertyName(cls, propName);
+    if (!curIvar) {
+        return false;
+    }
+
+    const char* ivarType = curIvar->type;
+    void* data = reinterpret_cast<char*>(self) + curIvar->offset;
+
+    // We can't box or unbox char* or arbitrary pointers.
+    if (ivarType[0] == '*' || ivarType[0] == '^' || ivarType[0] == '?') {
+        return false;
+    }
+
+    *ret = woc::valueFromDataWithType(data, ivarType);
+    return true;
 }
 
 - (id)valueForKeyPath:(NSString*)path {
@@ -107,13 +156,7 @@ static bool tryGetAccessor(NSObject* self, NSString* key, id* ret) {
     id ret = self;
 
     while (curPath) {
-        if (strcmp(curPath, "@count") == 0) {
-            ret = [NSNumber numberWithInt:[ret count]];
-            break;
-        }
-
-        ret = [ret valueForKey:[NSString stringWithCString:curPath]];
-
+        ret = [ret valueForKey:[NSString stringWithUTF8String:curPath]];
         curPath = strtok_s(NULL, ".", &save);
     }
 
@@ -123,97 +166,163 @@ static bool tryGetAccessor(NSObject* self, NSString* key, id* ret) {
 }
 
 - (id)valueForKey:(NSString*)key {
-    id ret = nil;
-    if (!tryGetAccessor(self, key, &ret)) {
-        ret = [self valueForUndefinedKey:key];
+    if ([key length] == 0) {
+        // Bail quickly
+        return [self valueForUndefinedKey:key];
     }
 
-    if (!ret)
-        printf("Failed to find getter %s::%s\n", object_getClassName(self), [key UTF8String]);
+    const char* rawKey = [key UTF8String];
+    id ret = nil;
+    if (tryGetViaAccessor(self, rawKey, &ret)) {
+        return ret;
+    }
 
-    return ret;
+    // TODO: Add NSMutableArray and NSMutableSet adapters and their support machinery.
+
+    if ([[self class] accessInstanceVariablesDirectly] && tryGetViaIvar(self, rawKey, &ret)) {
+        return ret;
+    }
+
+    return [self valueForUndefinedKey:key];
 }
 
-static bool setDirectProperty(id var, const char* propName, id newVal) {
-    Class cls = object_getClass(var);
+- (id)valueForUndefinedKey:(NSString*)key {
+    [NSException raise:NSInvalidArgumentException
+                format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
+    return nil;
+}
 
-    while (cls != NULL) {
-        struct objc_ivar_list* list = (struct objc_ivar_list*)cls->ivars;
+static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
+    auto accessorName(woc::string::format("set%c%s:", toupper(key[0]), &key[1]));
+    auto sel = sel_registerName(accessorName.c_str());
+    NSMethodSignature* sig = [self methodSignatureForSelector:sel];
 
-        char propName2[255];
-        sprintf(propName2, "_%s", propName);
+    // 3 arguments: self, selector, new value.
+    if (sig && [sig numberOfArguments] == 3) {
+        NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
-        if (list) {
-            for (unsigned int i = 0; i < list->count; i++) {
-                struct objc_ivar* curIvar = &list->ivars[i];
-                if (strcmp(curIvar->name, propName) == 0 || strcmp(curIvar->name, propName2) == 0) {
-                    uint32_t offset = curIvar->offset;
-                    char* argType = (char*)curIvar->type;
-
-                    if (argType[0] == '@') {
-                        uint32_t oldVal = *((uint32_t*)((char*)var + offset));
-
-                        *((id*)((char*)var + offset)) = newVal;
-                        [newVal retain];
-                        if (oldVal)
-                            [oldVal release];
-                    } else if (strcmp(argType, "i") == 0) {
-                        int param;
-
-                        param = [(NSNumber*)newVal intValue];
-                        *((uint32_t*)((char*)var + offset)) = param;
-                    } else if (strcmp(argType, "c") == 0) {
-                        int param;
-
-                        param = [(NSNumber*)newVal intValue];
-                        *((char*)((char*)var + offset)) = param & 0xFF;
-                    } else {
-                        assert(0);
-                    }
-                    printf("Setting property %s@%d to 0x%08x\n", propName, offset, newVal);
-
-                    return true;
-                }
-            }
-
-            // assert(0);
+        const char* valueType = [sig getArgumentTypeAtIndex:2];
+        std::vector<uint8_t> data(getArgumentSize(valueType));
+        if (valueType[0] == '@') { // Method is expecting an object: give it the object directly
+            memcpy(data.data(), &value, sizeof(id));
+        }
+        else if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+            // We can't box or unbox char* or arbitrary pointers.
+            return false;
+        }
+        else if ([value isKindOfClass:[NSValue class]]) {
+            [static_cast<NSValue*>(value) getValue:data.data()];
         }
 
-        cls = cls->superclass;
+        [invocation setTarget:self];
+        [invocation setSelector:sel];
+        [invocation setArgument:data.data() atIndex:2];
+        [invocation invoke];
+        return true;
     }
-
-    printf("Object %s has no ivar %s\n", class_getName(object_getClass(var)), propName);
-
     return false;
 }
 
-- (void)setValue:(id)val forKey:(NSString*)key {
-    const char* pKeyName = [key UTF8String];
-
-    char keyName[255];
-    char szAccessorName[255];
-
-    strcpy(keyName, pKeyName);
-
-    //  Try set<Key>
-    keyName[0] = toupper(keyName[0]);
-    sprintf(szAccessorName, "set%s:", keyName);
-    /*
-    if ( trySetAccessor(self, szAccessorName, val) ) {
-    return self;
+static bool trySetViaIvar(NSObject* self, const char* key, id value) {
+    Class cls = object_getClass(self);
+    auto curIvar = ivarForPropertyName(cls, key);
+    if (!curIvar) {
+        return false;
     }
-    */
 
-    SEL sel = sel_registerName(szAccessorName);
-    IMP foo = class_getMethodImplementation(object_getClass(self), sel);
-    if (!foo) {
-        if (!setDirectProperty(self, pKeyName, val)) {
-            printf("Failed to find setter %s::%s\n", object_getClassName(self), pKeyName);
-        }
+    uint32_t offset = curIvar->offset;
+    const char* argType = curIvar->type;
+
+    void* destination = reinterpret_cast<char*>(self) + offset;
+    switch (argType[0]) {
+        case '@':
+            [*reinterpret_cast<id*>(destination) release];
+            woc::ValueTransformer<id>::store(value, destination);
+            break;
+        case '#':
+            woc::ValueTransformer<Class>::store(value, destination);
+            break;
+        case 'c':
+            woc::ValueTransformer<char>::store(value, destination);
+            break;
+        case 'i':
+            woc::ValueTransformer<int>::store(value, destination);
+            break;
+        case 's':
+            woc::ValueTransformer<short>::store(value, destination);
+            break;
+        case 'l':
+            woc::ValueTransformer<long>::store(value, destination);
+            break;
+        case 'q':
+            woc::ValueTransformer<long long>::store(value, destination);
+            break;
+        case 'C':
+            woc::ValueTransformer<unsigned char>::store(value, destination);
+            break;
+        case 'I':
+            woc::ValueTransformer<unsigned int>::store(value, destination);
+            break;
+        case 'S':
+            woc::ValueTransformer<unsigned short>::store(value, destination);
+            break;
+        case 'L':
+            woc::ValueTransformer<unsigned long>::store(value, destination);
+            break;
+        case 'Q':
+            woc::ValueTransformer<unsigned long long>::store(value, destination);
+            break;
+        case 'f':
+            woc::ValueTransformer<float>::store(value, destination);
+            break;
+        case 'd':
+            woc::ValueTransformer<double>::store(value, destination);
+            break;
+        case 'B':
+            woc::ValueTransformer<bool>::store(value, destination);
+            break;
+        case '*':
+        case '^':
+        case '?':
+            // We cannot box/unbox arbitrary pointers or char*.
+            return false;
+        default:
+            NSValue* nsv = static_cast<NSValue*>(value);
+            if (getArgumentSize(argType) == getArgumentSize([nsv objCType])) {
+                [nsv getValue:destination];
+            } else {
+                // If the argument types don't match in size, we just say
+                // that this key can't be coded.
+                return false;
+            }
+            break;
+    }
+
+    return true;
+}
+
+- (void)setValue:(id)val forKey:(NSString*)key {
+    if ([key length] == 0) {
+        // Bail quickly
+        [self setValue:val forUndefinedKey:key];
         return;
     }
 
-    foo(self, sel, val);
+    const char* rawKey = [key UTF8String];
+    if (trySetViaAccessor(self, rawKey, val)) {
+        return;
+    }
+
+    if ([[self class] accessInstanceVariablesDirectly] && trySetViaIvar(self, rawKey, val)) {
+        return;
+    }
+
+    [self setValue:val forUndefinedKey:key];
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString*)key {
+    [NSException raise:NSInvalidArgumentException
+                format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
 }
 
 - (Class)classForArchiver {
