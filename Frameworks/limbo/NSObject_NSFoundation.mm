@@ -313,8 +313,19 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
         return;
     }
 
-    if ([[self class] accessInstanceVariablesDirectly] && trySetViaIvar(self, rawKey, val)) {
-        return;
+    if ([[self class] accessInstanceVariablesDirectly]) {
+        BOOL shouldNotify = [[self class] automaticallyNotifiesObserversForKey:key];
+
+        if (shouldNotify) {
+            [self willChangeValueForKey:key];
+        }
+
+        if (trySetViaIvar(self, rawKey, val)) {
+            if (shouldNotify) {
+                [self didChangeValueForKey:key];
+            }
+            return;
+        }
     }
 
     [self setValue:val forUndefinedKey:key];
@@ -357,12 +368,6 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
 
 + (void)performSelectorInBackground:(SEL)selector withObject:(id)obj {
     [NSThread detachNewThreadSelector:selector toTarget:self withObject:obj];
-}
-
-- (void)willChangeValueForKey:(NSString*)key {
-}
-
-- (void)didChangeValueForKey:(NSString*)key {
 }
 
 - (void)_performSelectorAndSignal:(NSArray*)args {
@@ -481,15 +486,6 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     }
 
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
-}
-
-- (void)addObserver:(NSObject*)anObserver
-         forKeyPath:(NSString*)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void*)context {
-}
-
-- (void)removeObserver:(NSObject*)anObserver forKeyPath:(NSString*)keyPath {
 }
 
 + (NSString*)description {
