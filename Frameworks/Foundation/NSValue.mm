@@ -19,372 +19,583 @@
 #include "Foundation/NSValue.h"
 #include "Foundation/NSMethodSignature.h"
 
-@implementation NSValue : NSObject
-- (id)initWithCoder:(NSCoder*)coder {
+#include <type_traits>
+
+static NSValueType valueTypeFromObjCType(const char* objcType) {
+    if (strncmp(objcType, "{CGSize", 7) == 0) {
+        return NSValueTypeCGSize;
+    } else if (strncmp(objcType, "{CGPoint", 8) == 0) {
+        return NSValueTypeCGPoint;
+    } else if (strncmp(objcType, "{UIOffset", 9) == 0) {
+        return NSValueTypeUIOffset;
+    } else if (strncmp(objcType, "{CGRect", 7) == 0) {
+        return NSValueTypeCGRect;
+    } else if (strncmp(objcType, "{CATransform3D", 14) == 0) {
+        return NSValueTypeCATransform3D;
+    } else if (strncmp(objcType, "{CGAffineTransform", 18) == 0) {
+        return NSValueTypeCGAffineTransform;
+    } else if (strncmp(objcType, "{_NSRange", 9) == 0) {
+        return NSValueTypeNSRange;
+    } else if (strcmp(objcType, "^v") == 0) {
+        return NSValueTypePointer;
+    } else if (strcmp(objcType, "@") == 0) {
+        return NSValueTypeNonretainedObject;
+    }
+    return NSValueTypeGeneric;
+}
+
+@interface _NSValue_CGSize : NSValue {
+    CGSize _val;
+}
+- (id)initWithCGSize:(CGSize)value;
+@end
+
+@implementation _NSValue_CGSize
+- (id)initWithCGSize:(CGSize)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeCGSize;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(CGSize);
+}
+
+- (CGSize)sizeValue {
+    return _val;
+}
+
+- (CGSize)CGSizeValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(CGSize));
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"{%f, %f}", _val.width, _val.height];
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_CGPoint : NSValue {
+    CGPoint _val;
+}
+- (id)initWithCGPoint:(CGPoint)value;
+@end
+
+@implementation _NSValue_CGPoint
+- (id)initWithCGPoint:(CGPoint)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeCGPoint;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(CGPoint);
+}
+
+- (CGPoint)pointValue {
+    return _val;
+}
+
+- (CGPoint)CGPointValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(CGPoint));
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"{%f, %f}", _val.x, _val.y];
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_CGRect : NSValue {
+    CGRect _val;
+}
+- (id)initWithCGRect:(CGRect)value;
+@end
+
+@implementation _NSValue_CGRect
+- (id)initWithCGRect:(CGRect)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeCGRect;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(CGRect);
+}
+
+- (CGRect)rectValue {
+    return _val;
+}
+
+- (CGRect)CGRectValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(CGRect));
+}
+
+- (NSString*)description {
+    return [NSString
+        stringWithFormat:@"{{%f, %f} {%f, %f}}", _val.origin.x, _val.origin.y, _val.size.width, _val.size.height];
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_UIOffset : NSValue {
+    UIOffset _val;
+}
+- (id)initWithUIOffset:(UIOffset)value;
+@end
+
+@implementation _NSValue_UIOffset
+- (id)initWithUIOffset:(UIOffset)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeUIOffset;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(UIOffset);
+}
+
+- (UIOffset)UIOffsetValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(UIOffset));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_CATransform3D : NSValue {
+    CATransform3D _val;
+}
+- (id)initWithCATransform3D:(CATransform3D)value;
+@end
+
+@implementation _NSValue_CATransform3D
+- (id)initWithCATransform3D:(CATransform3D)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeCATransform3D;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(CATransform3D);
+}
+
+- (CATransform3D)CATransform3DValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(CATransform3D));
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"{%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}}",
+                                      _val.m11, _val.m12, _val.m13, _val.m14,
+                                      _val.m21, _val.m22, _val.m23, _val.m24,
+                                      _val.m31, _val.m32, _val.m33, _val.m34,
+                                      _val.m41, _val.m42, _val.m43, _val.m44];
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_CGAffineTransform : NSValue {
+    CGAffineTransform _val;
+}
+- (id)initWithCGAffineTransform:(CGAffineTransform)value;
+@end
+
+@implementation _NSValue_CGAffineTransform
+- (id)initWithCGAffineTransform:(CGAffineTransform)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeCGAffineTransform;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(CGAffineTransform);
+}
+
+- (CGAffineTransform)affineTransformValue {
+    return _val;
+}
+
+- (CGAffineTransform)CGAffineTransformValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(CGAffineTransform));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_NSRange : NSValue {
+    NSRange _val;
+}
+- (id)initWithNSRange:(NSRange)value;
+@end
+
+@implementation _NSValue_NSRange
+- (id)initWithNSRange:(NSRange)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeNSRange;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(NSRange);
+}
+
+- (NSRange)NSRangeValue {
+    return _val;
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"{%d, %d}", _val.location, _val.length];
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(NSRange));
+}
+@end
+
+@interface _NSValue_Pointer : NSValue {
+    const void* _val;
+}
+- (id)initWithPointer:(const void*)value;
+@end
+
+@implementation _NSValue_Pointer
+- (id)initWithPointer:(const void*)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypePointer;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(void*);
+}
+
+- (const void*)pointerValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(_val));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_NRO : NSValue {
+    __unsafe_unretained id _val;
+}
+- (id)initWithNonretainedObject:(__unsafe_unretained id)value;
+@end
+
+@implementation _NSValue_NRO
+- (id)initWithNonretainedObject:(__unsafe_unretained id)value {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeNonretainedObject;
+        _val = value;
+    }
+    return self;
+}
+
+- (const char*)objCType {
+    return @encode(id);
+}
+
+- (__unsafe_unretained id)nonretainedObjectValue {
+    return _val;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, (char*)&_val, sizeof(id));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+- (size_t)_rawSize {
+    return sizeof(_val);
+}
+@end
+
+@interface _NSValue_Generic : NSValue {
+    void* _valPtr;
+    const char* _objcType;
+}
+- (id)initWithBytes:(const void*)bytes objCType:(const char*)objCType;
+@end
+
+@implementation _NSValue_Generic
+- (NSValue*)initWithBytes:(const void*)ptr objCType:(const char*)ocType {
+    if ((self = [super init]) != nil) {
+        _valueType = NSValueTypeGeneric;
+        _objcType = _strdup(ocType);
+        size_t size = getArgumentSize(ocType);
+        _valPtr = malloc(size);
+        memcpy(_valPtr, ptr, size);
+    }
+    return self;
+}
+
+- (void)dealloc {
+    if (_objcType)
+        free((void*)_objcType);
+    if (_valPtr)
+        free(_valPtr);
+    [super dealloc];
+}
+
+- (const char*)objCType {
+    return _objcType;
+}
+
+- (const void*)pointerValue {
+    return _valPtr;
+}
+
+- (void)getValue:(void*)dest {
+    memcpy(dest, _valPtr, getArgumentSize(_objcType));
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<NSValue: %p; %s at %p>", self, _objcType, _valPtr];
+}
+
+- (const void*)_rawBytes {
+    return _valPtr;
+}
+- (size_t)_rawSize {
+    return getArgumentSize(_objcType);
+}
+@end
+
+@implementation NSValue
++ (NSValue*)newWithZone:(NSZone*)zone
+                  bytes:(const void*)bytes
+              valueType:(NSValueType)valueType
+               objCType:(const char*)objCType {
+    if (valueType == NSValueTypeUnknown) {
+        valueType = valueTypeFromObjCType(objCType);
+    }
+
+    switch (valueType) {
+        case NSValueTypeCGSize: {
+            CGSize value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_CGSize alloc] initWithCGSize:value];
+        }
+        case NSValueTypeCGPoint: {
+            CGPoint value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_CGPoint alloc] initWithCGPoint:value];
+        }
+        case NSValueTypeCGRect: {
+            CGRect value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_CGRect alloc] initWithCGRect:value];
+        }
+        case NSValueTypeUIOffset: {
+            UIOffset value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_UIOffset alloc] initWithUIOffset:value];
+        }
+        case NSValueTypeCATransform3D: {
+            CATransform3D value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_CATransform3D alloc] initWithCATransform3D:value];
+        }
+        case NSValueTypeCGAffineTransform: {
+            CGAffineTransform value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_CGAffineTransform alloc] initWithCGAffineTransform:value];
+        }
+        case NSValueTypeNSRange: {
+            NSRange value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[_NSValue_NSRange alloc] initWithNSRange:value];
+        }
+
+        case NSValueTypeNonretainedObject:
+            return [[_NSValue_NRO allocWithZone:zone] initWithNonretainedObject:*(id*)bytes];
+
+        case NSValueTypePointer:
+            return [[_NSValue_Pointer allocWithZone:zone] initWithPointer:*(void**)bytes];
+
+        default:
+            assert(objCType != nullptr);
+            return [[_NSValue_Generic allocWithZone:zone] initWithBytes:bytes objCType:objCType];
+    }
+}
+
+- (NSValue*)initWithBytes:(const void*)bytes objCType:(const char*)objCType {
+    [self release];
+    return [NSValue newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType];
+}
+
++ (NSValue*)valueWithBytes:(const void*)bytes objCType:(const char*)objCType {
+    return [[self newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType] autorelease];
+}
+
++ (NSValue*)value:(const void*)bytes withObjCType:(const char*)objCType {
+    return [[self newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType] autorelease];
+}
+
++ (NSValue*)valueWithCGSize:(CGSize)value {
+    return [[[_NSValue_CGSize alloc] initWithCGSize:value] autorelease];
+}
+
++ (NSValue*)valueWithCGPoint:(CGPoint)value {
+    return [[[_NSValue_CGPoint alloc] initWithCGPoint:value] autorelease];
+}
+
++ (NSValue*)valueWithCGRect:(CGRect)value {
+    return [[[_NSValue_CGRect alloc] initWithCGRect:value] autorelease];
+}
+
++ (NSValue*)valueWithRange:(NSRange)value {
+    return [[[_NSValue_NSRange alloc] initWithNSRange:value] autorelease];
+}
+
+- (NSValue*)initWithCGSize:(CGSize)value {
+    [self release];
+    return [[_NSValue_CGSize alloc] initWithCGSize:value];
+}
+
+- (NSValue*)initWithCGPoint:(CGPoint)value {
+    [self release];
+    return [[_NSValue_CGPoint alloc] initWithCGPoint:value];
+}
+
+- (NSValue*)initWithCGRect:(CGRect)value {
+    [self release];
+    return [[_NSValue_CGRect alloc] initWithCGRect:value];
+}
+
+- (NSValue*)initWithCATransform3D:(CATransform3D)value {
+    [self release];
+    return [[_NSValue_CATransform3D alloc] initWithCATransform3D:value];
+}
+
++ (NSValue*)valueWithPointer:(const void*)pointer {
+    return [[[_NSValue_Pointer alloc] initWithPointer:pointer] autorelease];
+}
+
++ (NSValue*)valueWithNonretainedObject:(__unsafe_unretained id)object {
+    return [[[_NSValue_NRO alloc] initWithNonretainedObject:object] autorelease];
+}
+
+- (NSValue*)initWithCoder:(NSKeyedUnarchiver*)coder {
     _valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
     unsigned size;
     void* data = (void*)[coder decodeBytesForKey:@"NSV.data" returnedLength:&size];
     assert(size != 0 && data != NULL);
 
-    switch (_valueType) {
-        case pointType:
-            memcpy(&v.pointValue, data, sizeof(CGPoint));
-            break;
+    const char* objcType = [[coder decodeObjectForKey:@"NSV.objcType"] UTF8String];
 
-        case sizeType:
-            memcpy(&v.sizeValue, data, sizeof(CGSize));
-            break;
-
-        case rectType:
-            memcpy(&v.rectValue, data, sizeof(CGRect));
-            break;
-
-        case transformType:
-            memcpy(&v.transformValue, data, sizeof(CATransform3D));
-            break;
-
-        case pointerType:
-            assert(0);
-            break;
-
-        case objcType:
-            v.genericValue.copy = (void*)malloc(size);
-            memcpy(v.genericValue.copy, data, size);
-            v.genericValue.size = size;
-            break;
-
-        case nonRetainedObjectType:
-            memcpy(&v.pointerValue, data, 4);
-            break;
-
-        default:
-            assert(0);
-    }
-
-    return self;
+    [self release];
+    return [NSValue newWithZone:nil bytes:data valueType:_valueType objCType:objcType];
 }
 
-- (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeInt:_valueType forKey:@"NSV.type"];
-    void* data = NULL;
-    DWORD size = 0;
-
-    switch (_valueType) {
-        case pointType:
-            data = &v.pointValue;
-            size = sizeof(CGPoint);
-            break;
-
-        case sizeType:
-            data = &v.sizeValue;
-            size = sizeof(CGSize);
-            break;
-
-        case rectType:
-            data = &v.rectValue;
-            size = sizeof(CGRect);
-            break;
-
-        case transformType:
-            data = &v.transformValue;
-            size = sizeof(CATransform3D);
-            break;
-
-        case pointerType:
-            assert(0);
-            break;
-
-        case objcType:
-            data = v.genericValue.copy;
-            size = v.genericValue.size;
-            break;
-
-        case nonRetainedObjectType:
-            data = &v.pointerValue;
-            size = 4;
-            break;
-
-        default:
-            data = NULL;
-            size = 0;
-            assert(0);
-            break;
-    }
-    [coder encodeBytes:(const uint8_t*)data length:size forKey:@"NSV.data"];
+- (void)encodeWithCoder:(NSKeyedArchiver*)coder {
+    [coder encodeInt:(int)_valueType forKey:@"NSV.type"];
+    [coder encodeObject:[NSString stringWithUTF8String:[self objCType]] forKey:@"NSV.objcType"];
+    [coder encodeBytes:[self _rawBytes] length:[self _rawSize] forKey:@"NSV.data"];
 }
 
-- (NSValue*)initWithCGPoint:(CGPoint)point {
-    memcpy(&v.pointValue, &point, sizeof(CGPoint));
-    _valueType = pointType;
-
-    return self;
+- (const char*)objCType {
+    return nullptr;
 }
 
-+ (NSValue*)valueWithCGPoint:(CGPoint)point {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.pointValue, &point, sizeof(CGPoint));
-    ret->_valueType = pointType;
-
-    return [ret autorelease];
+- (const void*)_rawBytes {
+    return nullptr;
+}
+- (size_t)_rawSize {
+    return 0;
 }
 
-+ (NSValue*)valueWithUIOffset:(UIOffset)point {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.pointValue, &point, sizeof(CGPoint));
-    ret->_valueType = offsetType;
-
-    return [ret autorelease];
+- (BOOL)isEqualToValue:(NSValue*)other {
+    return [self class] == [other class]
+        && _valueType == other->_valueType
+        && [self _rawSize] == [other _rawSize]
+        && memcmp([self _rawBytes], [other _rawBytes], [self _rawSize]) == 0;
 }
 
-- (NSValue*)initWithCGSize:(CGSize)size {
-    memcpy(&v.sizeValue, &size, sizeof(CGSize));
-    _valueType = sizeType;
-
-    return self;
-}
-
-+ (NSValue*)valueWithCGSize:(CGSize)size {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.sizeValue, &size, sizeof(CGSize));
-    ret->_valueType = sizeType;
-
-    return [ret autorelease];
-}
-
-- (NSValue*)initWithCGRect:(CGRect)rect {
-    memcpy(&v.rectValue, &rect, sizeof(CGRect));
-    _valueType = rectType;
-
-    return self;
-}
-
-+ (NSValue*)valueWithCGRect:(CGRect)rect {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.rectValue, &rect, sizeof(CGRect));
-    ret->_valueType = rectType;
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)valueWithPointer:(void*)ptr {
-    NSValue* ret = [self alloc];
-
-    ret->v.pointerValue = ptr;
-    ret->_valueType = pointerType;
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)valueWithNonretainedObject:(id)obj {
-    NSValue* ret = [self alloc];
-
-    ret->v.pointerValue = (void*)obj;
-    ret->_valueType = nonRetainedObjectType;
-    EbrDebugLog("Nonretained object: %s (0x%08x)\n", object_getClassName(obj), obj);
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)valueWithCATransform3DPtr:(CATransform3D*)pTransform {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.transformValue, pTransform, sizeof(CATransform3D));
-    ret->_valueType = transformType;
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)valueWithBytes:(void*)value objCType:(char*)objCType {
-    if (strcmp(objCType, "{CGPoint=ff}") == 0) {
-        return [self valueWithCGPoint:*((CGPoint*)value)];
-    }
-
-    NSValue* ret = [self alloc];
-
-    ret->v.genericValue.pType = _strdup(objCType);
-    int size = getArgumentSize(ret->v.genericValue.pType);
-    ret->v.genericValue.size = size;
-
-    ret->v.genericValue.copy = (void*)malloc(ret->v.genericValue.size);
-    memcpy(ret->v.genericValue.copy, value, ret->v.genericValue.size);
-    ret->_valueType = objcType;
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)value:(void*)value withObjCType:(char*)objCType {
-    if (strcmp(objCType, "{CGPoint=ff}") == 0) {
-        return [self valueWithCGPoint:*((CGPoint*)value)];
-    }
-
-    NSValue* ret = [self alloc];
-
-    ret->v.genericValue.pType = _strdup(objCType);
-    ret->v.genericValue.size = getArgumentSize(ret->v.genericValue.pType);
-    ret->v.genericValue.copy = (void*)malloc(ret->v.genericValue.size);
-    memcpy(ret->v.genericValue.copy, value, ret->v.genericValue.size);
-    ret->_valueType = objcType;
-
-    return [ret autorelease];
-}
-
-- (NSValue*)initWithCATransform3D:(CATransform3D)transform {
-    memcpy(&v.transformValue, &transform, sizeof(CATransform3D));
-    _valueType = transformType;
-
-    return self;
-}
-
-+ (NSValue*)valueWithCATransform3D:(CATransform3D)transform {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.transformValue, &transform, sizeof(CATransform3D));
-    ret->_valueType = transformType;
-
-    return [ret autorelease];
-}
-
-+ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform {
-    NSValue* ret = [self alloc];
-
-    memcpy(&ret->v.affineTransformValue, &transform, sizeof(CGAffineTransform));
-    ret->_valueType = affineTransformType;
-
-    return [ret autorelease];
-}
-
-- (CGPoint)CGPointValue {
-    assert(_valueType == pointType);
-    return v.pointValue;
-}
-
-- (CGSize)CGSizeValue {
-    assert(_valueType == sizeType);
-    return v.sizeValue;
-}
-
-- (CGRect)CGRectValue {
-    assert(_valueType == rectType);
-    return v.rectValue;
-}
-
-- (CATransform3D)CATransform3DValue {
-    assert(_valueType == transformType);
-    return *((CATransform3D*)&v.transformValue);
-}
-
-- (CGAffineTransform)CGAffineTransformValue {
-    assert(_valueType == affineTransformType);
-    return *((CGAffineTransform*)&v.affineTransformValue);
-}
-
-- (void*)pointerValue {
-    if (_valueType != pointerType && _valueType != nonRetainedObjectType) {
-        assert(0);
-    }
-    return v.pointerValue;
-}
-
-- (id)nonretainedObjectValue {
-    assert(_valueType == nonRetainedObjectType);
-    return (id)v.pointerValue;
-}
-
-- (void)getValue:(void*)dest {
-    switch (_valueType) {
-        case pointType:
-            memcpy(dest, &v.pointValue, sizeof(CGPoint));
-            break;
-
-        case objcType:
-            memcpy(dest, v.genericValue.copy, v.genericValue.size);
-            break;
-
-        case rectType:
-            memcpy(dest, &v.rectValue, sizeof(CGRect));
-            break;
-
-        default:
-            assert(0);
-    }
-}
-
-- (BOOL)isEqualToValue:(NSValue*)toValue {
-    if (![toValue isKindOfClass:[NSValue class]]) {
-        return FALSE;
-    }
-    NSValue* otherValue = toValue;
-
-    if (_valueType != otherValue->_valueType)
-        return FALSE;
-
-    switch (_valueType) {
-        case pointType:
-            if (memcmp(&v.pointValue, &otherValue->v.pointValue, sizeof(CGPoint)) != 0) {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-            break;
-
-        case sizeType:
-            if (memcmp(&v.sizeValue, &otherValue->v.sizeValue, sizeof(CGSize)) != 0) {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-            break;
-
-        case rectType:
-            if (memcmp(&v.rectValue, &otherValue->v.rectValue, sizeof(CGRect)) != 0) {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-            break;
-
-        case transformType:
-            if (memcmp(&v.transformValue, &otherValue->v.transformValue, sizeof(CATransform3D)) != 0) {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-            break;
-
-        case affineTransformType:
-            if (memcmp(&v.affineTransformValue, &otherValue->v.affineTransformValue, sizeof(CGAffineTransform)) != 0) {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-            break;
-
-        case pointerType:
-            return v.pointerValue == otherValue->v.pointerValue;
-
-        case objcType:
-            if (v.genericValue.size == otherValue->v.genericValue.size) {
-                if (memcmp(v.genericValue.copy, otherValue->v.genericValue.copy, v.genericValue.size) == 0) {
-                    return TRUE;
-                }
-            }
-            return FALSE;
-
-        case nonRetainedObjectType:
-            return v.pointerValue == otherValue->v.pointerValue;
-
-        default:
-            assert(0);
-    }
-
-    return FALSE;
-}
-
-static unsigned hashBytes(void* bytes, int len) {
+static unsigned hashBytes(const void* bytes, size_t len) {
     unsigned ret = 0;
     char* cur = (char*)bytes;
 
@@ -398,121 +609,95 @@ static unsigned hashBytes(void* bytes, int len) {
 }
 
 - (unsigned)hash {
-    switch (_valueType) {
-        case pointType:
-            return hashBytes(&v.pointValue, sizeof(CGPoint));
-
-        case sizeType:
-            return hashBytes(&v.sizeValue, sizeof(CGSize));
-
-        case rectType:
-            return hashBytes(&v.rectValue, sizeof(CGRect));
-
-        case transformType:
-            return hashBytes(&v.transformValue, sizeof(CATransform3D));
-
-        case affineTransformType:
-            return hashBytes(&v.affineTransformValue, sizeof(CGAffineTransform));
-
-        case pointerType:
-        case nonRetainedObjectType:
-            return (unsigned)v.pointerValue;
-
-        case objcType:
-            return hashBytes(v.genericValue.copy, v.genericValue.size);
-
-        default:
-            assert(0);
-    }
-
-    return 0;
+    return hashBytes([self _rawBytes], [self _rawSize]);
 }
 
 - (NSObject*)copyWithZone:(NSZone*)zone {
-    NSValue* ret = [NSValue alloc];
-    ret->_valueType = _valueType;
-    ret->v = v;
-
-    return ret;
+    return [NSValue newWithZone:zone bytes:[self _rawBytes] valueType:_valueType objCType:[self objCType]];
 }
 
-- (NSString*)description {
-    char szDescription[1024];
-    switch (_valueType) {
-        case pointType:
-            sprintf(szDescription, "{%f, %f}", v.pointValue.x, v.pointValue.y);
-            return [NSString stringWithCString:szDescription];
-
-        case sizeType:
-            sprintf(szDescription, "{%f, %f}", v.sizeValue.width, v.sizeValue.height);
-            return [NSString stringWithCString:szDescription];
-
-        case rectType:
-            sprintf(szDescription,
-                    "{%f, %f} {%f, %f}}",
-                    v.rectValue.origin.x,
-                    v.rectValue.origin.y,
-                    v.rectValue.size.width,
-                    v.rectValue.size.height);
-            return [NSString stringWithCString:szDescription];
-
-        case transformType:
-            sprintf(szDescription,
-                    "{%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}}",
-                    v.transformValue.m11,
-                    v.transformValue.m12,
-                    v.transformValue.m13,
-                    v.transformValue.m14,
-                    v.transformValue.m21,
-                    v.transformValue.m22,
-                    v.transformValue.m23,
-                    v.transformValue.m24,
-                    v.transformValue.m31,
-                    v.transformValue.m32,
-                    v.transformValue.m33,
-                    v.transformValue.m34,
-                    v.transformValue.m41,
-                    v.transformValue.m42,
-                    v.transformValue.m43,
-                    v.transformValue.m44);
-
-            return [NSString stringWithCString:szDescription];
-
-        default:
-            assert(0);
-    }
-
-    return nil;
+- (CGSize)sizeValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGSize."
+                                 userInfo:nil];
 }
 
-- (const char*)objCType {
-    char* ret = NULL;
-
-    switch (_valueType) {
-        case pointType:
-            ret = "{CGPoint=ff}";
-            break;
-
-        case objcType:
-            ret = v.genericValue.pType;
-            break;
-
-        default:
-            assert(0);
-    }
-
-    return ret;
+- (CGSize)CGSizeValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGSize."
+                                 userInfo:nil];
 }
 
-- (void)dealloc {
-    switch (_valueType) {
-        case objcType:
-            free(v.genericValue.copy);
-            if (v.genericValue.pType) {
-                free(v.genericValue.pType);
-            }
-            break;
-    }
-    [super dealloc];
+- (CGPoint)pointValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGPoint."
+                                 userInfo:nil];
 }
+
+- (CGPoint)CGPointValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGPoint."
+                                 userInfo:nil];
+}
+
+- (CGRect)rectValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGRect."
+                                 userInfo:nil];
+}
+
+- (CGRect)CGRectValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGRect."
+                                 userInfo:nil];
+}
+
+- (UIOffset)UIOffsetValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a UIOffset."
+                                 userInfo:nil];
+}
+
+- (CATransform3D)CATransform3DValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CATransform3D."
+                                 userInfo:nil];
+}
+
+- (CGAffineTransform)affineTransformValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGAffineTransform."
+                                 userInfo:nil];
+}
+
+- (CGAffineTransform)CGAffineTransformValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a CGAffineTransform."
+                                 userInfo:nil];
+}
+
+- (NSRange)rangeValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a NSRange."
+                                 userInfo:nil];
+}
+
+- (__unsafe_unretained id)nonretainedObjectValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store a nonretained object."
+                                 userInfo:nil];
+}
+
+- (const void*)pointerValue {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"This value does not store an unguarded pointer."
+                                 userInfo:nil];
+}
+
+- (void)getValue:(void* __attribute__((unused)))dest {
+    @throw [NSException exceptionWithName:NSDestinationInvalidException
+                                   reason:@"Attempted to get raw data from a non-specialized NSValue instance."
+                                 userInfo:nil];
+}
+
 @end

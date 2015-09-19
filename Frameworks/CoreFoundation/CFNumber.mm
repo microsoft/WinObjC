@@ -29,16 +29,6 @@ extern "C" id _OBJC_CLASS_NSCFBoolean;
 struct CFStaticNumber {
     id* isa;
     NSValueType _valueType;
-
-    union {
-        CGPoint pointValue;
-        CGSize sizeValue;
-        CGRect rectValue;
-        CATransform3D transformValue;
-        CGAffineTransform affineTransformValue;
-        void* pointerValue;
-        objcValue genericValue;
-    } v;
     union {
         uint64_t i;
         double f;
@@ -49,8 +39,7 @@ struct CFStaticNumber {
 };
 
 static CFStaticNumber cftrue = { NULL,
-                                 notSetType,
-                                 {},
+                                 NSValueTypeUnknown,
                                  {
                                      1,
                                  },
@@ -59,8 +48,7 @@ static CFStaticNumber cftrue = { NULL,
                                  true };
 
 static CFStaticNumber cffalse = { NULL,
-                                  notSetType,
-                                  {},
+                                  NSValueTypeUnknown,
                                   {
                                       0,
                                   },

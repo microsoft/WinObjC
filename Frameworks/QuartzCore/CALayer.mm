@@ -36,6 +36,12 @@
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
 
+@interface NSValue (CATransform3D)
+// This is defined in Foundation/NSValue.mm
+- (NSValue*)initWithCATransform3D:(CATransform3D)val;
+@end
+
+
 NSString* _opacityAction = @"opacity";
 NSString* _positionAction = @"position";
 NSString* _boundsAction = @"bounds";

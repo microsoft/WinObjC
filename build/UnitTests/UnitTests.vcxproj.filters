@@ -24,6 +24,9 @@
     <ClangCompile Include="..\..\tests\unittests\foundation.m">
       <Filter>Source Files</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm">
+      <Filter>Source Files</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m">
       <Filter>Source Files\dispatch</Filter>
     </ClangCompile>
