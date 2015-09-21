@@ -168,6 +168,7 @@ UIKIT_EXPORT_CLASS
 
 - (NSArray *)constraints;
 - (void)updateConstraints;
+- (void)updateConstraintsIfNeeded;
 - (void)addConstraint:(NSLayoutConstraint *)constraint;
 - (void)addConstraints:(NSArray *)constraints;
 - (void)removeConstraint:(NSLayoutConstraint *)constraint;
@@ -176,6 +177,8 @@ UIKIT_EXPORT_CLASS
 - (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
 - (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
 - (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+- (BOOL)needsUpdateConstraints;
+- (void)setNeedsUpdateConstraints;
 
 - (void)invalidateIntrinsicContentSize;
 

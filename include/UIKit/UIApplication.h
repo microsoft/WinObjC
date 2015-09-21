@@ -80,6 +80,12 @@ enum {
 typedef uint32_t UIStatusBarAnimation;
 
 enum {
+    UIUserInterfaceLayoutDirectionLeftToRight,
+    UIUserInterfaceLayoutDirectionRightToLeft
+};
+typedef NSInteger UIUserInterfaceLayoutDirection;
+
+enum {
     UIStatusBarStyleDefault,
     UIStatusBarStyleLightContent,
     UIStatusBarStyleBlackTranslucent,
@@ -221,6 +227,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) NSTimeInterval backgroundTimeRemaining;     // always 0
 @property (nonatomic) NSInteger applicationIconBadgeNumber;                 // no effect, but does set/get the number correctly
 @property (nonatomic, copy) NSArray *scheduledLocalNotifications;           // no effect, returns nil
+@property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection;
 
 @end
 

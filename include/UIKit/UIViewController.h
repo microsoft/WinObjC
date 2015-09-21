@@ -59,16 +59,6 @@ typedef enum {
 
 @class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController, UIStoryboard;
 
-enum ControllerVisibiltyState
-{
-    controllerNotVisible,
-    controllerWillAppear,
-    controllerWillAppearAnimated,
-    controllerVisible,
-    controllerWillDisappear,
-    controllerWillDisappearAnimated
-} ;
-
 UIKIT_EXPORT_CLASS
 @interface UIViewController : UIResponder
 
@@ -90,6 +80,7 @@ UIKIT_EXPORT_CLASS
 @property(nonatomic, readonly) id<UILayoutSupport> bottomLayoutGuide;
 - (void)viewWillLayoutSubviews;
 - (void)viewDidLayoutSubviews;
+- (void)updateViewConstraints;
 
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated;     // works, but not exactly correctly.
 - (void)dismissModalViewControllerAnimated:(BOOL)animated;                                              // see comments in dismissModalViewController

@@ -37,6 +37,7 @@ public:
     id gestures;
     NSMutableArray* constraints;
     bool _isChangingParent;
+    bool _constraintsNeedUpdate;
 
     UIViewAutoresizing autoresizingMask;
     CGSize             _contentHuggingPriority;
@@ -63,6 +64,7 @@ public:
         translatesAutoresizingMaskIntoConstraints = TRUE;
         layoutProperties = NULL;
         _isChangingParent = false;
+        _constraintsNeedUpdate = false;
         _constrained = false;
         _contentHuggingPriority.height = 250.0f;
         _contentHuggingPriority.width = 250.0f;

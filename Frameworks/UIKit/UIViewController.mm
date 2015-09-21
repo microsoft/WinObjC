@@ -33,6 +33,7 @@
 #include "CoreGraphics/CGAffineTransform.h"
 #include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
+#include "UIViewControllerInternal.h"
 #include "AutoLayout.h"
 #include "UIViewControllerInternal.h"
 
@@ -226,8 +227,14 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 @implementation _UILayoutGuide
 {
+@public
     CGFloat _length;
     NSString* _identifier;
+}
+
+-(instancetype)initWithIdentifier:(NSString*)identifier {
+    _identifier = identifier;
+    return self;
 }
 
 -(NSString*) description {
@@ -1856,14 +1863,56 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ( parent != nil ) [parent->priv->_childViewControllers removeObject:self];
     }
 
-    -(id<UILayoutSupport>) getTopLayoutGuide
+    -(id<UILayoutSupport>) topLayoutGuide
     {
-        return nil;//priv->_topLayoutGuide;
+        UIView* view = priv->view;
+
+        if(!view) {
+            return nil;
+        }
+
+        for(int i = 0; i < [view.subviews count]; i++) {
+            UIView* child = (UIView*)[view.subviews objectAtIndex: i];
+            if([child isKindOfClass:[_UILayoutGuide class]]) {
+                _UILayoutGuide* guide = (_UILayoutGuide*)child;
+                if([guide->_identifier isEqual:@"_UIViewControllerTop"]) {
+                    return guide;
+                }
+            }
+        }
+
+        _UILayoutGuide* tlg = [[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerTop"];
+        [view addSubview: tlg];
+        [view addConstraint: [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:tlg attribute:NSLayoutAttributeTop multiplier:1.0f constant:0]];
+        [view addConstraint: [_UILayoutSupportConstraint constraintWithItem:tlg attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0]];
+
+        return tlg;
     }
 
-    -(id<UILayoutSupport>) getBottomLayoutGuide
+    -(id<UILayoutSupport>) bottomLayoutGuide
     {
-        return nil;//priv->_bottomLayoutGuide;
+        UIView* view = priv->view;
+
+        if(!view) {
+            return nil;
+        }
+
+        for(int i = 0; i < [view.subviews count]; i++) {
+            UIView* child = (UIView*)[view.subviews objectAtIndex: i];
+            if([child isKindOfClass:[_UILayoutGuide class]]) {
+                _UILayoutGuide* guide = (_UILayoutGuide*)child;
+                if([guide->_identifier isEqual:@"_UIViewControllerBottom"]) {
+                    return guide;
+                }
+            }
+        }
+
+        _UILayoutGuide* blg = [[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerBottom"];
+        [view addSubview: blg];
+        [view addConstraint: [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:blg attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0]];
+        [view addConstraint: [_UILayoutSupportConstraint constraintWithItem:blg attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:0]];
+
+        return blg;
     }
 
     -(void) viewWillLayoutSubviews {

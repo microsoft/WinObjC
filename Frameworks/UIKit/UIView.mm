@@ -1579,6 +1579,21 @@ int viewCount = 0;
         }
     }
 
+    - (void)updateConstraintsIfNeeded {
+        if(priv->_constraintsNeedUpdate) {
+            priv->_constraintsNeedUpdate = false;
+            [self updateConstraints];
+        }
+    }
+
+    - (BOOL)needsUpdateConstraints {
+        return priv->_constraintsNeedUpdate;
+    }
+
+    - (void)setNeedsUpdateConstraints {
+        priv->_constraintsNeedUpdate = true;
+    }
+
     - (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis {
         switch(axis) {
         case UILayoutConstraintAxisHorizontal:

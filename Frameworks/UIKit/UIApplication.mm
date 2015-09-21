@@ -436,6 +436,10 @@ static idretaintype(NSMutableArray) _curNotifications;
         [self setStatusBarOrientation:orientation animated:FALSE];
     }
 
+    - (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirection {
+        return UIUserInterfaceLayoutDirectionLeftToRight;
+    }
+
     -(void) setStatusBarOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
         CGRect rect, appFrame;
 
