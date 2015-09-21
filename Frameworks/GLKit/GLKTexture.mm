@@ -38,15 +38,16 @@ public:
     static const int sizeBytes = C;
     static const int channels = C;
 
-    template<int CHANNEL> inline float getCh() const { return (float)bytes[CHANNEL]; }
+    template<int CHANNEL> inline float getCh() const { return static_cast<float>(bytes[CHANNEL]) / 255.f; }
 
     template<int CHANNEL> inline void setChan(float* vals) {
         setChan<CHANNEL - 1>(vals);
-        bytes[CHANNEL - 1] = (unsigned char)vals[CHANNEL - 1];
+        bytes[CHANNEL - 1] = (unsigned char)(vals[CHANNEL - 1] * 255.f);
     }
     template<> inline void setChan<0>(float* vals) {}
 
     inline void setCh(float* vals) { setChan<C>(vals); }
+    inline void setCh0(float val) { bytes[0] = (unsigned char)(255.f * val); }
     
 private:
     unsigned char bytes[sizeBytes];
@@ -58,20 +59,28 @@ public:
     static const int channels = 3;
 
     template<int C> inline float getCh() const {}
-    template<> inline float getCh<0>() const { return (float)((val >> 11) & 0x1F); }
-    template<> inline float getCh<1>() const { return (float)((val >> 5) & 0x3F); }
-    template<> inline float getCh<2>() const { return (float)(val & 0x1F); }
+    template<> inline float getCh<0>() const { return static_cast<float>((val >> 11) & 0x1F) / 31.f; }
+    template<> inline float getCh<1>() const { return static_cast<float>((val >> 5) & 0x3F) / 63.f; }
+    template<> inline float getCh<2>() const { return static_cast<float>(val & 0x1F) / 31.f; }
 
     inline void setCh(float* vals) {
-        val = ((unsigned short)(vals[0]) << 11) |
-              ((unsigned short)(vals[1]) << 5) |
-              ((unsigned short)(vals[2]));
+        val = ((unsigned short)(vals[0] * 31.f) << 11) |
+              ((unsigned short)(vals[1] * 63.f) << 5) |
+              ((unsigned short)(vals[2] * 31.f));
     }
     
 private:
     unsigned short int val;
 };
 
+template<class PSRC> void GreyscaleConvert(PixelByteChannel<1>* pdst, PSRC* psrc, int pixels)
+{
+    for(int i = 0; i < pixels; i ++) {
+        float grey = (psrc[i].template getCh<0>() * 0.6f) + (psrc[i].template getCh<1>() * 0.3f) + (psrc[i].template getCh<2>() * 0.1f);
+        pdst[i].setCh0(grey);
+    }
+}
+ 
 bool getOpt(NSDictionary* d, NSString* opt)
 {
     if (d) {
@@ -229,8 +238,13 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 +(GLKTextureInfo*)textureWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
-    
-    return [self textureWithCGImage: img options: opts error: err];
+
+    GLKTextureInfo* res = [self textureWithCGImage: img options: opts error: err];
+
+    CGImageRelease(img);
+    CGDataProviderRelease(provider);
+
+    return res;
 }
 
 +(GLKTextureInfo*)textureWithContentsOfData: (NSData*)data options: (NSDictionary*)opts error: (NSError**)err {
@@ -273,45 +287,23 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
-    if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
-
+    if (!getBitmapFormat(fmt, type, as, bpp)) {
+        CGDataProviderRelease(provider);
+        return nil;
+    }
+    
     auto bytes = bytesIn;
     bool deleteBytes = false;
     if (getOpt(opts, GLKTextureLoaderGrayscaleAsAlpha) && fmt != GL_ALPHA) {
         deleteBytes = true;
         int pixels = w * h;
         bytes = new unsigned char[pixels];
-        switch(bpp)  {
-            case 16: {
-                for(int i = 0; i < pixels; i ++) {
-                    unsigned short val = *reinterpret_cast<unsigned short*>(bytesIn + 2 * i);
-                    float r = static_cast<float>(val >> 11) / 31.f;
-                    float g = static_cast<float>((val >> 5) & 0x3F) / 63.f;
-                    float b = static_cast<float>(val & 0x1F) / 31.f;
-                    bytes[i] = static_cast<unsigned char>((r * 0.6f + g * 0.3f + b * 0.1f) * 255.f);
-                }
-                break;
-            }
-          
-            case 24: {
-                for(int i = 0; i < pixels; i ++) {
-                    float r = static_cast<float>(bytesIn[3 * i]);
-                    float g = static_cast<float>(bytesIn[3 * i + 1]);
-                    float b = static_cast<float>(bytesIn[3 * i + 2]);
-                    bytes[i] = static_cast<unsigned char>(r * 0.6f + g * 0.3f + b * 0.1f);
-                }
-                break;
-            }
-          
-            case 32: {
-                for(int i = 0; i < pixels; i ++) {
-                    float r = static_cast<float>(bytesIn[4 * i]);
-                    float g = static_cast<float>(bytesIn[4 * i + 1]);
-                    float b = static_cast<float>(bytesIn[4 * i + 2]);
-                    bytes[i] = static_cast<unsigned char>(r * 0.6f + g * 0.3f + b * 0.1f);
-                }
-                break;
-            }
+        if (bpp == 16) {
+            GreyscaleConvert<PixelRGB16>((PixelByteChannel<1>*)bytes, (PixelRGB16*)bytesIn, pixels);
+        } else if(bpp == 24) {
+            GreyscaleConvert<PixelByteChannel<3>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<3>*)bytesIn, pixels);
+        } else if(bpp == 32) {
+            GreyscaleConvert<PixelByteChannel<4>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<4>*)bytesIn, pixels);
         }
 
         bpp = 8;
@@ -333,7 +325,8 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     }
     
     if (deleteBytes) delete [] bytes;
-    
+    CGDataProviderRelease(provider);
+
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
 }
 
@@ -342,7 +335,10 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     if (!provider) return nil;
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
-    if (!img) return nil;
+    if (!img) {
+        CGDataProviderRelease(provider);
+        return nil;
+    }
     
     size_t w = CGImageGetWidth(img);
     size_t h = CGImageGetHeight(img);
@@ -355,9 +351,12 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
     if (h != 6 * w) {
         NSLog(@"ERROR - Unexpected cube map format, expected 6 square textures aligned vertically.");
+        CGImageRelease(img);
+        CGDataProviderRelease(provider);
         return nil;
     }
-    
+
+    CGDataProviderRelease(provider);    
     provider = CGImageGetDataProvider(img);
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
@@ -365,7 +364,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
         swapRows(bytes, rowSize, h);
-    }    
+    }
 
     GLuint tex;
     glGenTextures(1, &tex);
@@ -384,7 +383,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
-    if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
+    if (!getBitmapFormat(fmt, type, as, bpp)) {
+        CGImageRelease(img);
+        CGDataProviderRelease(provider);        
+        return nil;
+    }
 
     NSLog(@"Creating %dx%d cube map texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
 
@@ -403,6 +406,8 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         bytes += rowSize * sideh;
     }
 
+    CGImageRelease(img);
+    CGDataProviderRelease(provider);
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: sideh alphaState: as];
 }
 
@@ -439,11 +444,13 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         }
         CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
         if (!img) {
+            CGDataProviderRelease(provider);
             NSLog(@"Unable to create image from cube side texture %@", fn);            
             curSide ++;
             continue;
         }
 
+        CGDataProviderRelease(provider);
         provider = CGImageGetDataProvider(img);
         NSData* data = (id)CGDataProviderCopyData(provider);
         [data autorelease];
@@ -457,6 +464,8 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         if(w != h || rowSize != expectedRowSize) {
             NSLog(@"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
             curSide ++;
+            CGDataProviderRelease(provider);
+            CGImageRelease(img);
             continue;
         }
 
@@ -474,12 +483,18 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             if ((w != sideW) || (h != sideH) || (imgBpp != bpp)) {
                 NSLog(@"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
                 curSide ++;
+                CGDataProviderRelease(provider);
+                CGImageRelease(img);
                 continue;
             }
         }
 
         GLint fmt, type;
-        if (!getBitmapFormat(fmt, type, as, bpp)) return nil;
+        if (!getBitmapFormat(fmt, type, as, bpp)) {
+            CGDataProviderRelease(provider);            
+            CGImageRelease(img);
+            return nil;
+        }
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, 0, fmt, w, h, 0, fmt, type, bytes);
         GLint err = glGetError();
@@ -491,10 +506,12 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             createMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, fmt, type, w, h, bytes);
         }
         
+        CGDataProviderRelease(provider);            
+        CGImageRelease(img);
         curSide ++;
     }
     if (!fmtInited) {
-        NSLog(@"Unable to create cube map.");
+        NSLog(@"Unable to create cube map.");        
         return nil;
     }
     
