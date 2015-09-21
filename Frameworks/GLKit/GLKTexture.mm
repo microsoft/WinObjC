@@ -291,6 +291,19 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         CGDataProviderRelease(provider);
         return nil;
     }
+
+    if (bpp == 32 && getOpt(opts, GLKTextureLoaderApplyPremultiplication)) {
+        size_t pixelCount = w * h;
+        
+        PixelByteChannel<4>* pixels = (PixelByteChannel<4>*)bytesIn;
+        for(size_t i = 0; i < pixelCount; i ++) {
+            float alpha = pixels[i].template getCh<3>();
+            float vals[3] = { pixels[i].template getCh<0>() * alpha,
+                              pixels[i].template getCh<1>() * alpha,
+                              pixels[i].template getCh<2>() * alpha };
+            pixels[i].template setChan<3>(vals);
+        }
+    }
     
     auto bytes = bytesIn;
     bool deleteBytes = false;
@@ -309,7 +322,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         bpp = 8;
         fmt = GL_ALPHA;
         type = GL_UNSIGNED_BYTE;
-        bpp = 1;
     }
     
     NSLog(@"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
@@ -360,10 +372,10 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     provider = CGImageGetDataProvider(img);
     NSData* data = (id)CGDataProviderCopyData(provider);
     [data autorelease];
-    auto bytes = (unsigned char*)[data bytes];
+    auto bytesIn = (unsigned char*)[data bytes];
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
-        swapRows(bytes, rowSize, h);
+        swapRows(bytesIn, rowSize, h);
     }
 
     GLuint tex;
@@ -385,8 +397,41 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     GLKTextureInfoAlphaState as;
     if (!getBitmapFormat(fmt, type, as, bpp)) {
         CGImageRelease(img);
-        CGDataProviderRelease(provider);        
+        CGDataProviderRelease(provider);
         return nil;
+    }
+
+    if (bpp == 32 && getOpt(opts, GLKTextureLoaderApplyPremultiplication)) {
+        size_t pixelCount = w * h;
+        
+        PixelByteChannel<4>* pixels = (PixelByteChannel<4>*)bytesIn;
+        for(size_t i = 0; i < pixelCount; i ++) {
+            float alpha = pixels[i].template getCh<3>();
+            float vals[3] = { pixels[i].template getCh<0>() * alpha,
+                              pixels[i].template getCh<1>() * alpha,
+                              pixels[i].template getCh<2>() * alpha };
+            pixels[i].template setChan<3>(vals);
+        }
+    }
+    
+    auto bytes = bytesIn;
+    bool deleteBytes = false;
+    if (getOpt(opts, GLKTextureLoaderGrayscaleAsAlpha) && fmt != GL_ALPHA) {
+        deleteBytes = true;
+        int pixels = w * h;
+        bytes = new unsigned char[pixels];
+        if (bpp == 16) {
+            GreyscaleConvert<PixelRGB16>((PixelByteChannel<1>*)bytes, (PixelRGB16*)bytesIn, pixels);
+        } else if(bpp == 24) {
+            GreyscaleConvert<PixelByteChannel<3>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<3>*)bytesIn, pixels);
+        } else if(bpp == 32) {
+            GreyscaleConvert<PixelByteChannel<4>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<4>*)bytesIn, pixels);
+        }
+
+        bpp = 8;
+        fmt = GL_ALPHA;
+        type = GL_UNSIGNED_BYTE;
+        bpp = 1;
     }
 
     NSLog(@"Creating %dx%d cube map texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
@@ -406,6 +451,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         bytes += rowSize * sideh;
     }
 
+    if (deleteBytes) delete [] bytes;
     CGImageRelease(img);
     CGDataProviderRelease(provider);
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: sideh alphaState: as];
@@ -454,7 +500,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         provider = CGImageGetDataProvider(img);
         NSData* data = (id)CGDataProviderCopyData(provider);
         [data autorelease];
-        auto bytes = (unsigned char*)[data bytes];
+        auto bytesIn = (unsigned char*)[data bytes];
 
         size_t w = CGImageGetWidth(img);
         size_t h = CGImageGetHeight(img);
@@ -470,9 +516,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         }
 
         if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
-            swapRows(bytes, rowSize, h);
+            swapRows(bytesIn, rowSize, h);
         }
-        
+
         if (!fmtInited) {
             fmtInited = true;
             sideW = w;
@@ -496,6 +542,38 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             return nil;
         }
 
+        if (bpp == 32 && getOpt(opts, GLKTextureLoaderApplyPremultiplication)) {
+            size_t pixelCount = w * h;
+        
+            PixelByteChannel<4>* pixels = (PixelByteChannel<4>*)bytesIn;
+            for(size_t i = 0; i < pixelCount; i ++) {
+                float alpha = pixels[i].template getCh<3>();
+                float vals[3] = { pixels[i].template getCh<0>() * alpha,
+                                  pixels[i].template getCh<1>() * alpha,
+                                  pixels[i].template getCh<2>() * alpha };
+                pixels[i].template setChan<3>(vals);
+            }
+        }
+    
+        auto bytes = bytesIn;
+        bool deleteBytes = false;
+        if (getOpt(opts, GLKTextureLoaderGrayscaleAsAlpha) && fmt != GL_ALPHA) {
+            deleteBytes = true;
+            int pixels = w * h;
+            bytes = new unsigned char[pixels];
+            if (bpp == 16) {
+                GreyscaleConvert<PixelRGB16>((PixelByteChannel<1>*)bytes, (PixelRGB16*)bytesIn, pixels);
+            } else if(bpp == 24) {
+                GreyscaleConvert<PixelByteChannel<3>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<3>*)bytesIn, pixels);
+            } else if(bpp == 32) {
+                GreyscaleConvert<PixelByteChannel<4>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<4>*)bytesIn, pixels);
+            }
+
+            bpp = 8;
+            fmt = GL_ALPHA;
+            type = GL_UNSIGNED_BYTE;
+        }
+        
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, 0, fmt, w, h, 0, fmt, type, bytes);
         GLint err = glGetError();
         if (err != 0) {
@@ -506,6 +584,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             createMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, fmt, type, w, h, bytes);
         }
         
+        if (deleteBytes) delete [] bytes;
         CGDataProviderRelease(provider);            
         CGImageRelease(img);
         curSide ++;
