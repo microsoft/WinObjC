@@ -413,6 +413,11 @@ public:
         return _val;
     }
 
+    explicit operator bool() const
+    {
+        return _val != nil;
+    }
+
     void attach(id val)
     {
         id newVal = val;

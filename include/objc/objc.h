@@ -106,6 +106,7 @@ unsigned long class_getInstanceSize(Class);
 Class object_setClass(id obj_, Class cls);
 Class object_getClass(id obj_);
 Method *class_copyMethodList(Class classRef, unsigned int *outCount);
+IMP class_getMethodImplementation(Class, SEL);
 const char* class_getName(Class cls);
 Class class_getSuperclass(Class);
 BOOL class_conformsToProtocol(Class, Protocol*);
@@ -136,6 +137,7 @@ void objc_deallocateObject(id obj);
 
 Class objc_allocateClassPair(Class super, char *name, size_t extraBytes);
 void objc_registerClassPair(Class cls);
+IMP class_replaceMethod(Class cls, SEL sel, IMP imp, const char *types);
 BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char *types);
 
 __END_DECLS

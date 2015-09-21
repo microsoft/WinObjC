@@ -65,6 +65,7 @@ enum {
     _C_OUT = 'o',
     _C_BYCOPY = 'R',
     _C_ONEWAY = 'V',
+    _C_COMPLEX = 'j',
 };
 
 #define _C_BOOL 'B'
@@ -112,6 +113,11 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
         case _C_LNG_LNG:
         case _C_ULNG_LNG:
             ++type;
+            break;
+
+        case _C_COMPLEX:
+            ++type;
+            type = objc_skip_type_specifier(type, skipDigits);
             break;
 
         case _C_BFLD:
@@ -313,6 +319,10 @@ size_t objc_alignof_type(const char* type) {
             return __alignof__(unsigned long long);
 #endif
 
+        case _C_COMPLEX:
+            ++type;
+            return objc_alignof_type(type);
+
         case _C_ARY_B:
             while (isdigit(*++type)) /* do nothing */
                 ;
@@ -457,6 +467,10 @@ size_t objc_sizeof_type(const char* type) {
         case _C_ATOM:
 #endif
             return sizeof(char*);
+
+        case _C_COMPLEX: // A complex is stored as two back-to-back copies of the same type.
+            ++type;
+            return 2 * objc_sizeof_type(type);
 
         case _C_ARY_B: {
             size_t len = atoi(type + 1);

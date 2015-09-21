@@ -274,4 +274,24 @@ extern OBJCRT_EXPORT void objc_setPropertyStruct(void*, const void*, ptrdiff_t, 
 }
 #endif
 
+#ifdef __cplusplus
+#include <algorithm>
+namespace std {
+// These specializations allow for the use of SEL in STL collections.
+template<>
+struct equal_to<SEL> {
+    bool operator()(const SEL &lhs, const SEL &rhs) const {
+        return sel_isEqual(lhs, rhs) == YES;
+    }
+};
+
+template<>
+struct hash<SEL> {
+    std::size_t operator()(const SEL &s) const {
+        return std::hash<decltype(s->uid)>()(s->uid);
+    }
+};
+}
+#endif
+
 #endif

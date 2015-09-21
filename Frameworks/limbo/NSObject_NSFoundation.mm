@@ -349,23 +349,10 @@ static bool setDirectProperty(id var, const char* propName, id newVal) {
 }
 
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
-    const char* methodTypes = NULL;
-
-    Class cls = object_getClass(self);
-    while (!methodTypes && cls) {
-        methodTypes = objc_get_type_encoding(cls, selector);
-        cls = cls->superclass;
-    }
-
-    if (!methodTypes) {
-        printf("Cannot find selector %s::%s\n", object_getClassName(self), sel_getName(selector));
-        return nil;
-    }
-
-    return [NSMethodSignature signatureWithObjCTypes:methodTypes];
+    return [[self class] instanceMethodSignatureForSelector:selector];
 }
 
-- (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
     id cls = self;
     const char* methodTypes;
     while (cls) {
@@ -378,6 +365,12 @@ static bool setDirectProperty(id var, const char* propName, id newVal) {
         if (!cls)
             return nil;
     }
+
+    if (!methodTypes) {
+        printf("Cannot find selector %s::%s\n", class_getName(self), sel_getName(selector));
+        return nil;
+    }
+
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
 }
 

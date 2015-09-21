@@ -455,12 +455,7 @@ objc_lookup_class(const char *name)
 id
 objc_getClass(const char *name)
 {
-    Class cls;
-
-    if ((cls = objc_lookup_class(name)) == Nil)
-        OBJC_ERROR("Class %s not found!", name);
-
-    return (id) cls;
+    return objc_lookup_class(name);
 }
 
 const char*
@@ -513,30 +508,6 @@ class_getInstanceVariable(Class cls, const char *name)
                 return curIvar;
             }
         }
-    }
-
-    return NULL;
-}
-
-Method 
-class_getInstanceMethod(Class cls, SEL name)
-{
-    objc_initialize_class(cls);
-
-    while ( cls != NULL ) {
-        struct objc_method_list *methodList = cls->methodlist;
-
-        while ( methodList != NULL ) {
-            for ( unsigned i = 0; i < methodList->count; i ++ ) {
-                if ( &methodList->methods[i].sel == name ) {
-                        return &methodList->methods[i];
-                }
-            }
-
-            methodList = methodList->next;
-        }
-
-        cls = cls->superclass;
     }
 
     return NULL;
@@ -709,6 +680,17 @@ out:
 	}
 
 	return (IMP)nil;
+}
+
+Method 
+class_getInstanceMethod(Class cls, SEL name)
+{
+    objc_global_mutex_lock();
+    objc_initialize_class(cls);
+    Method m = NULL;
+    _class_lookupMethodImplementation(cls, name, &m);
+    objc_global_mutex_unlock();
+    return m;
 }
 
 // Add a method to a class, unconditionally
