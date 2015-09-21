@@ -17,6 +17,8 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+#include <utility>
+
 #import <Starboard.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
@@ -30,6 +32,45 @@ NSString* const GLKTextureLoaderGrayscaleAsAlpha = @"AlphaGrayscale";
 NSString* const GLKTextureLoaderSRGB = @"SRGB";
 
 namespace {
+
+template<int C> class PixelByteChannel {
+public:
+    static const int sizeBytes = C;
+    static const int channels = C;
+
+    template<int CHANNEL> inline float getCh() const { return (float)bytes[CHANNEL]; }
+
+    template<int CHANNEL> inline void setChan(float* vals) {
+        setChan<CHANNEL - 1>(vals);
+        bytes[CHANNEL - 1] = (unsigned char)vals[CHANNEL - 1];
+    }
+    template<> inline void setChan<0>(float* vals) {}
+
+    inline void setCh(float* vals) { setChan<C>(vals); }
+    
+private:
+    unsigned char bytes[sizeBytes];
+};
+
+class PixelRGB16 {
+public:
+    static const int sizeBytes = 2;
+    static const int channels = 3;
+
+    template<int C> inline float getCh() const {}
+    template<> inline float getCh<0>() const { return (float)((val >> 11) & 0x1F); }
+    template<> inline float getCh<1>() const { return (float)((val >> 5) & 0x3F); }
+    template<> inline float getCh<2>() const { return (float)(val & 0x1F); }
+
+    inline void setCh(float* vals) {
+        val = ((unsigned short)(vals[0]) << 11) |
+              ((unsigned short)(vals[1]) << 5) |
+              ((unsigned short)(vals[2]));
+    }
+    
+private:
+    unsigned short int val;
+};
 
 bool getOpt(NSDictionary* d, NSString* opt)
 {
@@ -91,6 +132,80 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     return true;
 }
 
+template <typename PIX> class BoxGen {
+    template<int C> struct BoxCalc {
+        inline static void apply(const PIX& s0, const PIX& s1, const PIX& s2, const PIX& s3, float* out) {
+            out[C] = 0.25f * (s0.template getCh<C>() + s1.template getCh<C>() + 
+                              s2.template getCh<C>() + s3.template getCh<C>());
+            BoxCalc<C+1>::apply(s0, s1, s2, s3, out);
+        }        
+    };
+
+    template<> struct BoxCalc<PIX::channels> {
+        inline static void apply(const PIX&, const PIX&, const PIX&, const PIX&, float*) {}
+    };
+    
+public:
+    inline static void calculate(const PIX* in, PIX* out, size_t w, size_t mipW, size_t x, size_t y) {
+        size_t ix = x << 1;
+        size_t iy = y << 1;
+        
+        const PIX& src0 = in[iy * w + ix];
+        const PIX& src1 = in[iy * w + ix + 1];
+        const PIX& src2 = in[(iy + 1) * w + ix];
+        const PIX& src3 = in[(iy + 1) * w + ix + 1];
+
+        float outChans[PIX::channels];
+        BoxCalc<0>::apply(src0, src1, src2, src3, outChans);
+        out[y * mipW + x].setCh(outChans);
+    }
+};
+
+template <typename PIX, typename FC> void boxMipGen(GLenum targ, GLint fmt, GLint type, GLint level, size_t w, size_t h, const PIX* input)
+{
+    size_t nw = w / 2;
+    size_t nh = h / 2;
+
+    if (nw == 0 || nh == 0) {
+        return;
+    }
+
+    PIX* output = new PIX[nw * nh];
+    for(size_t y = 0; y < nh; y ++) {
+        for(size_t x = 0; x < nw; x ++) {
+            FC::calculate(input, output, w, nw, x, y);
+        }
+    }
+
+    glTexImage2D(targ, level, fmt, nw, nh, 0, fmt, type, output);
+    GLint err = glGetError();
+    if (err) {
+        NSLog(@"Problem %d generating mip.", err);
+    }
+    
+    boxMipGen<PIX, FC>(targ, fmt, type, level + 1, nw, nh, output);
+    delete [] output;
+}
+ 
+void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsigned char* bytes)
+{
+    if (fmt == GL_ALPHA) {
+        const PixelByteChannel<1>* pix = (PixelByteChannel<1>*)bytes;
+        boxMipGen<PixelByteChannel<1>, BoxGen<PixelByteChannel<1>>>(targ, fmt, type, 1, w, h, pix);
+    } else if(fmt == GL_RGB) {
+        if (type == GL_UNSIGNED_SHORT_5_6_5) {
+            const PixelRGB16* pix = (PixelRGB16*)bytes;
+            boxMipGen<PixelRGB16, BoxGen<PixelRGB16>>(targ, fmt, type, 1, w, h, pix);
+        } else {
+            const PixelByteChannel<3>* pix = (PixelByteChannel<3>*)bytes;
+            boxMipGen<PixelByteChannel<3>, BoxGen<PixelByteChannel<3>>>(targ, fmt, type, 1, w, h, pix);
+        }
+    } else if(fmt == GL_RGBA) {
+        const PixelByteChannel<4>* pix = (PixelByteChannel<4>*)bytes;
+        boxMipGen<PixelByteChannel<4>, BoxGen<PixelByteChannel<4>>>(targ, fmt, type, 1, w, h, pix);
+    }
+}
+
 }
  
 @implementation GLKTextureInfo
@@ -144,9 +259,17 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     
     GLuint tex;
     glGenTextures(1, &tex);
+
+    // NOTE: Mips appear wonky, although they appear to be generated correctly.    
+    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
+    if (!genMips) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    } else {        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    }
 
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
@@ -193,6 +316,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
 
         bpp = 8;
         fmt = GL_ALPHA;
+        type = GL_UNSIGNED_BYTE;
         bpp = 1;
     }
     
@@ -204,6 +328,10 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         NSLog(@"Error %d creating texture.", i);
     }
 
+    if (genMips) {
+        createMipmaps(GL_TEXTURE_2D, fmt, type, w, h, bytes);
+    }
+    
     if (deleteBytes) delete [] bytes;
     
     return [[GLKTextureInfo alloc] initWith: tex target: GL_TEXTURE_2D width: w height: h alphaState: as];
@@ -243,8 +371,14 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
+    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    if (!genMips) {
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    } else {
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
@@ -261,6 +395,11 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         if (err != 0) {
             NSLog(@"Error %d creating cube face %d.", err, i);
         }
+
+        if (genMips) {
+            createMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, fmt, type, w, h, bytes);
+        }
+
         bytes += rowSize * sideh;
     }
 
@@ -269,15 +408,20 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
 
 +(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err
 {
-    // TODO: error handling.
     if ([fnames count] != 6) return nil;
 
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
+    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    if (!genMips) {
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    } else {
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
@@ -342,6 +486,11 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
         if (err != 0) {
             NSLog(@"Error %d creating cube face %d.", err, curSide);
         }
+
+        if (genMips) {
+            createMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, fmt, type, w, h, bytes);
+        }
+        
         curSide ++;
     }
     if (!fmtInited) {

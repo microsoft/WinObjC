@@ -98,21 +98,23 @@ static void dumpMat(const GLKMatrix4& mat)
     }
 
     // Load the various textures.
-    NSDictionary* alphaTexOpts = @{ GLKTextureLoaderGrayscaleAsAlpha : @1 };
+    NSDictionary* baseOpts = @{ GLKTextureLoaderGenerateMipmaps : @1 };
+    NSDictionary* alphaTexOpts = @{ GLKTextureLoaderGenerateMipmaps : @1, 
+                                    GLKTextureLoaderGrayscaleAsAlpha : @1 };
     UIImage* img = [UIImage imageNamed: @"seafloor.png"];
     if (img) {
-        _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+        _tex1 = [GLKTextureLoader textureWithCGImage: img.CGImage options: baseOpts error: NULL];
         _effect.texture2d0.name = _tex1.name;
         _effect.texture2d0.envMode = GLKTextureEnvModeModulate;
     }
     img = [UIImage imageNamed: @"teapot_decal.png"];
     if (img) {
-        _tex2 = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+        _tex2 = [GLKTextureLoader textureWithCGImage: img.CGImage options: baseOpts error: NULL];
         _effect.texture2d1.name = _tex2.name;
         _effect.texture2d1.envMode = GLKTextureEnvModeDecal;
     }
     img = [UIImage imageNamed: @"teapot_emissive.png"];
-    if (img) _emissive = [GLKTextureLoader textureWithCGImage: img.CGImage options: nil error: NULL];
+    if (img) _emissive = [GLKTextureLoader textureWithCGImage: img.CGImage options: baseOpts error: NULL];
     img = [UIImage imageNamed: @"teapot_specular.png"];
     if (img) _specular = [GLKTextureLoader textureWithCGImage: img.CGImage options: alphaTexOpts error: NULL];
 
@@ -127,7 +129,7 @@ static void dumpMat(const GLKMatrix4& mat)
     auto files = @[ @"lobbyxneg.JPG", @"lobbyxpos.JPG",
                     @"lobbyyneg.JPG", @"lobbyypos.JPG",
                     @"lobbyzneg.JPG", @"lobbyzpos.JPG" ];                     
-    _skyboxTex = [GLKTextureLoader cubeMapWithContentsOfFiles: files options: nil error: nullptr];
+    _skyboxTex = [GLKTextureLoader cubeMapWithContentsOfFiles: files options: baseOpts error: nullptr];
     NSLog(@"Have skybox tex: %d", _skyboxTex.name);
     _skybox.textureCubeMap.name = _skyboxTex.name;
     _skybox.textureCubeMap.enabled = TRUE;
