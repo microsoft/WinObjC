@@ -384,31 +384,36 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     // Setup fog parameters.
     auto fog = self.fog;
-    auto mode = fog.mode;
-    if (mode == GLKFogModeExp || mode == GLKFogModeExp2) {
-        float density = fog.density;
-        if (density > 0) {
-            m->addvar(GLKSH_FOG_COLOR, fog.color);
-            if (mode == GLKFogModeExp) {
-                shaderName += "eF";
-                m->addvar(GLKSH_FOG_DENSITY, density);
+    if (fog.enabled) {
+        auto mode = fog.mode;
+        if (mode == GLKFogModeExp || mode == GLKFogModeExp2) {
+            float density = fog.density;
+            if (density > 0) {
+                m->addvar(GLKSH_FOG_COLOR, fog.color);
+                if (mode == GLKFogModeExp) {
+                    shaderName += "eF";
+                    m->addvar(GLKSH_FOG_DENSITY, -density);
+                } else {
+                    shaderName += "EF";
+                    m->addvar(GLKSH_FOG_DENSITY2, -(density * density));
+                }
             } else {
-                shaderName += "EF";
-                m->addvar(GLKSH_FOG_DENSITY2, density);
+                shaderName += "NF";
             }
         } else {
-            shaderName += "NF";
+            float start = fog.start;
+            float end = fog.end;
+            //if (start >= 0 && end > start) { // OH GOD
+            if (start >= 0) {
+                shaderName += "LF";
+                m->addvar(GLKSH_FOG_COLOR, fog.color);
+                m->addvar(GLKSH_FOG_DISTANCES, GLKVector2Make(end, 1.f / (end - start)));
+            } else {
+                shaderName += "NF";
+            }
         }
     } else {
-        float start = fog.start;
-        float end = fog.end;
-        if (start > 0 && end > start) {
-            shaderName += "LF";
-            m->addvar(GLKSH_FOG_COLOR, fog.color);
-            m->addvar(GLKSH_FOG_DISTANCES, GLKVector2Make(start, end));
-        } else {
-            shaderName += "NF";
-        }
+        shaderName += "NF";
     }
     
     // Set constant color if lighting is not on.

@@ -417,7 +417,6 @@ bool ShaderTempRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
     string res;
     if (!body->generate(res, c, v)) return false;
-    type = body->getType();
     c.addTempVal(type, name, res);
     out = name;
     return true;
@@ -541,6 +540,32 @@ bool ShaderAffineBlend::generate(string& out, ShaderContext& c, ShaderLayout& v)
     }
 
     // Blend!
-    out = "((blend * " + n1src + ") + (1 - blend) * " + n2src + ")";
+    out = "(((1.0 - " + blend + ") * (" + n1src + ")) + " + blend + " * (" + n2src + "))";
+    return true;
+}
+
+// fogParams.x = end distance, fogParams.y = 1 / (end - start).
+bool ShaderLinearFog::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string params, depth;
+    if (!fogParams->generate(params, c, v)) return false;
+    if (!depthRef->generate(depth, c, v)) return false;
+
+    out = "clamp((" + params + ".x - " + depth + ") * " + params + ".y, 0.0, 1.0)";
+    return true;
+}
+
+bool ShaderExpFog::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string dens, depth;
+    if (!densityRef->generate(dens, c, v)) return false;
+    if (!depthRef->generate(depth, c, v)) return false;
+
+    if (squared) {
+        out = "clamp(exp(" + depth + " * " + depth + " * " + dens + "), 0.0, 1.0)";
+    } else {
+        out = "clamp(exp(" + depth + " * " + dens + "), 0.0, 1.0)";
+    }
+    
     return true;
 }

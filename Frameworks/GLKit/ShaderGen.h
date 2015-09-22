@@ -235,6 +235,8 @@ class ShaderCustom : public ShaderNode {
 public:
     inline ShaderCustom(const string& before, const string& after = "", ShaderNode* inner = nullptr, bool useInner = true) :
         before(before), after(after), inner(inner), useInner(useInner) {}
+    inline ShaderCustom(GLKShaderVarType t, const string& before) :
+        before(before), after(""), inner(NULL), useInner(false) { type = t; }
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -288,6 +290,29 @@ class ShaderAffineBlend : public ShaderNode {
 public:
     inline ShaderAffineBlend(ShaderNode* blendNode, ShaderNode* n1, ShaderNode* n2) :
         blendNode(blendNode), n1(n1), n2(n2) {}
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderLinearFog : public ShaderNode {
+    ShaderNode* depthRef;
+    ShaderNode* fogParams;
+
+public:
+    inline ShaderLinearFog(ShaderNode* depthRef, ShaderNode* fogParams) :
+        depthRef(depthRef), fogParams(fogParams) { type = GLKS_FLOAT; }
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderExpFog : public ShaderNode {
+    ShaderNode* depthRef;
+    ShaderNode* densityRef;
+    bool squared;
+
+public:
+    inline ShaderExpFog(ShaderNode* depthRef, ShaderNode* densityRef, bool squared) :
+        depthRef(depthRef), densityRef(densityRef), squared(squared) { type = GLKS_FLOAT; }
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
