@@ -114,11 +114,9 @@ public:
 };
 
 class ShaderFallbackNode : public ShaderNode {
-    ShaderNode* first;
-    ShaderNode* second;
+    std::vector<ShaderNode*> nodes;
 public:
-    ShaderFallbackNode(ShaderNode* first, ShaderNode* second) :
-        first(first), second(second) {}
+    ShaderFallbackNode(std::vector<ShaderNode*> nodes) : nodes(nodes) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -277,6 +275,19 @@ class ShaderSpotlightAtten : public ShaderNode {
 public:
     inline ShaderSpotlightAtten(ShaderNode* lightDir, ShaderNode* params, ShaderNode* dir) :
         lightDir(lightDir), params(params), dir(dir) { type = GLKS_FLOAT; }
+
+    virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+// Combine n1 and n2, if blend/n1 is not found, only n2 is used.
+class ShaderAffineBlend : public ShaderNode {
+    ShaderNode* blendNode;
+    ShaderNode* n1;
+    ShaderNode* n2;
+
+public:
+    inline ShaderAffineBlend(ShaderNode* blendNode, ShaderNode* n1, ShaderNode* n2) :
+        blendNode(blendNode), n1(n1), n2(n2) {}
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

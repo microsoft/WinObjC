@@ -75,3 +75,8 @@
 
 #define GLKSH_REFL_TEX          "_reflBlendTex"
 #define GLKSH_REFL_ALPHA        "_reflBlendAlpha"
+
+#define GLKSH_FOG_COLOR         "_fogColor"
+#define GLKSH_FOG_DENSITY       "_fogDens"
+#define GLKSH_FOG_DENSITY2      "_fogDens2"
+#define GLKSH_FOG_DISTANCES     "_fogDist"

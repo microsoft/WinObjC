@@ -382,6 +382,35 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         shaderName += "UUUnn";
     }
 
+    // Setup fog parameters.
+    auto fog = self.fog;
+    auto mode = fog.mode;
+    if (mode == GLKFogModeExp || mode == GLKFogModeExp2) {
+        float density = fog.density;
+        if (density > 0) {
+            m->addvar(GLKSH_FOG_COLOR, fog.color);
+            if (mode == GLKFogModeExp) {
+                shaderName += "eF";
+                m->addvar(GLKSH_FOG_DENSITY, density);
+            } else {
+                shaderName += "EF";
+                m->addvar(GLKSH_FOG_DENSITY2, density);
+            }
+        } else {
+            shaderName += "NF";
+        }
+    } else {
+        float start = fog.start;
+        float end = fog.end;
+        if (start > 0 && end > start) {
+            shaderName += "LF";
+            m->addvar(GLKSH_FOG_COLOR, fog.color);
+            m->addvar(GLKSH_FOG_DISTANCES, GLKVector2Make(start, end));
+        } else {
+            shaderName += "NF";
+        }
+    }
+    
     // Set constant color if lighting is not on.
     if (!isLit) {
         if (self.useConstantColor && !GLKVector4XYZEqualToScalar(_constantColor, 1.f)) {

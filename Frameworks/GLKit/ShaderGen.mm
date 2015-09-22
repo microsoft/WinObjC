@@ -253,8 +253,9 @@ bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderFallbackNode::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    if (first->generate(out, c, v)) return true;
-    if (second->generate(out, c, v)) return true;
+    for(auto n : nodes) {
+        if (n->generate(out, c, v)) return true;
+    }
     return false;
 }
 
@@ -519,5 +520,27 @@ bool ShaderSpotlightAtten::generate(string& out, ShaderContext& c, ShaderLayout&
                   "}\n");
     
     out = "spotlightAtten(" + ldStr + ", " + dirRef + ", " + paramRef + ")";
+    return true;
+}
+
+bool ShaderAffineBlend::generate(string& out, ShaderContext& c, ShaderLayout& v)
+{
+    string blend;
+    string n1src;
+    string n2src;
+
+    // Can we even blend?
+    if (!blendNode->generate(blend, c, v) ||
+        !n1->generate(n1src, c, v)) {
+        return n2->generate(out, c, v);
+    }
+
+    if (!n2->generate(n2src, c, v)) {
+        out = n1src;
+        return true;
+    }
+
+    // Blend!
+    out = "((blend * " + n1src + ") + (1 - blend) * " + n2src + ")";
     return true;
 }
