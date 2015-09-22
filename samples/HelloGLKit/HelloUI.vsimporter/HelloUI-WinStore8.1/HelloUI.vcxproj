@@ -94,7 +94,7 @@
     <Image Include="Assets\StoreLogo.scale-100.png" />
     <Image Include="Assets\SplashScreen.scale-100.png" />
     <ClangCompile Include="..\..\HelloGLKit\GLRenderer.mm" />
-    <ClangCompile Include="..\..\HelloGLKit\HelloGLKit.m" />
+    <ClangCompile Include="..\..\HelloGLKit\HelloGLKit.mm" />
     <ClangCompile Include="..\..\HelloGLKit\main.m" />
     <AssetCatalogCompile Include="..\..\HelloGLKit\Images.xcassets" />
     <SBInfoPlistCopy Include="..\..\HelloGLKit\Info.plist">

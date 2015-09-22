@@ -66,6 +66,8 @@ static void dumpMat(const GLKMatrix4& mat)
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
     _effect = [[GLKBaseEffect alloc] init];    
+    _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
+    _effect.colorMaterialEnabled = TRUE; // use vertex colors.
     _cubeAngle = 0.f;
 
     glClearColor(0.0, 0.3, 0.7, 1.0);

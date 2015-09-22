@@ -50,10 +50,10 @@
     <ClangCompile Include="..\..\HelloGLKit\main.m">
       <Filter>HelloGLKit\Supporting Files</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\HelloGLKit\HelloGLKit.m">
+    <ClangCompile Include="..\..\HelloGLKit\GLRenderer.mm">
       <Filter>HelloGLKit</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\HelloGLKit\GLRenderer.mm">
+    <ClangCompile Include="..\..\HelloGLKit\HelloGLKit.mm">
       <Filter>HelloGLKit</Filter>
     </ClangCompile>
   </ItemGroup>
