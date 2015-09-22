@@ -16,7 +16,7 @@
 
 #pragma once
 
-#import <GLES2/gl2.h>
+#import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/EAGL.h>
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKEnums.h>

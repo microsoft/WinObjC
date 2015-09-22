@@ -16,7 +16,7 @@
 
 #pragma once
 
-#import "GLES2/gl2.h"
+#import "OpenGLES/ES2/gl.h"
 #import "Foundation/NSObject.h"
 #import "Foundation/NSData.h"
 #import "CoreGraphics/CGImage.h"
