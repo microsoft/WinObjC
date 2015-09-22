@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <algorithm>
+
 #define COMPARISON_EPSILON 0.0000001f
 
 typedef struct _GLKVector2 {
@@ -491,11 +493,187 @@ inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar)
     return FALSE;
 }
 
+inline BOOL GLKVector3AllEqualToScalar(GLKVector3 v, float scalar)
+{
+    GLKVector3 o = GLKVector3SubtractScalar(v, scalar);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
+inline BOOL GLKVector2AllEqualToScalar(GLKVector2 v, float scalar)
+{
+    GLKVector2 o = GLKVector2SubtractScalar(v, scalar);
+    if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
+inline BOOL GLKVector4AllEqualToVector4(GLKVector4 v1, GLKVector4 v2)
+{
+    GLKVector4 o = GLKVector4Subtract(v1, v2);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
+inline BOOL GLKVector3AllEqualToVector3(GLKVector3 v1, GLKVector3 v2)
+{
+    GLKVector3 o = GLKVector3Subtract(v1, v2);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
+inline BOOL GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2)
+{
+    GLKVector2 o = GLKVector2Subtract(v1, v2);
+    if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON)) return TRUE;
+    return FALSE;
+}
+
 inline BOOL GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar)
 {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON)) return TRUE;
     return FALSE;
+}
+
+inline GLKVector2 GLKVector2Maximum(GLKVector2 a, GLKVector2 b)
+{
+    GLKVector2 res;
+
+    res.x = std::max(a.x, b.x);
+    res.y = std::max(a.y, b.y);
+    
+    return res;
+}
+
+inline GLKVector2 GLKVector2Minimum(GLKVector2 a, GLKVector2 b)
+{
+    GLKVector2 res;
+
+    res.x = std::min(a.x, b.x);
+    res.y = std::min(a.y, b.y);
+    
+    return res;
+}
+
+inline GLKVector3 GLKVector3Maximum(GLKVector3 a, GLKVector3 b)
+{
+    GLKVector3 res;
+
+    res.x = std::max(a.x, b.x);
+    res.y = std::max(a.y, b.y);
+    res.z = std::max(a.z, b.z);
+    
+    return res;
+}
+
+inline GLKVector3 GLKVector3Minimum(GLKVector3 a, GLKVector3 b)
+{
+    GLKVector3 res;
+
+    res.x = std::min(a.x, b.x);
+    res.y = std::min(a.y, b.y);
+    res.z = std::min(a.z, b.z);
+    
+    return res;
+}
+
+inline GLKVector4 GLKVector4Maximum(GLKVector4 a, GLKVector4 b)
+{
+    GLKVector4 res;
+
+    res.x = std::max(a.x, b.x);
+    res.y = std::max(a.y, b.y);
+    res.z = std::max(a.z, b.z);
+    res.w = std::max(a.w, b.w);
+    
+    return res;
+}
+
+inline GLKVector4 GLKVector4Minimum(GLKVector4 a, GLKVector4 b)
+{
+    GLKVector4 res;
+
+    res.x = std::min(a.x, b.x);
+    res.y = std::min(a.y, b.y);
+    res.z = std::min(a.z, b.z);
+    res.w = std::min(a.w, b.w);
+    
+    return res;
+}
+
+inline GLKVector2 GLKVector2Project(GLKVector2 v, GLKVector2 proj)
+{
+    return GLKVector2MultiplyScalar(proj, GLKVector2DotProduct(v, proj) / GLKVector2Length(proj));
+}
+
+inline GLKVector3 GLKVector3Project(GLKVector3 v, GLKVector3 proj)
+{
+    return GLKVector3MultiplyScalar(proj, GLKVector3DotProduct(v, proj) / GLKVector3Length(proj));
+}
+
+inline GLKVector4 GLKVector4Project(GLKVector4 v, GLKVector4 proj)
+{
+    return GLKVector4MultiplyScalar(proj, GLKVector4DotProduct(v, proj) / GLKVector4Length(proj));
+}
+
+inline BOOL GLKVector2AllGreaterThanOrEqualToScalar(GLKVector2 v, float scalar)
+{
+    return ((v.x >= scalar) && (v.y >= scalar));
+}
+
+inline BOOL GLKVector3AllGreaterThanOrEqualToScalar(GLKVector3 v, float scalar)
+{
+    return ((v.x >= scalar) && (v.y >= scalar) && (v.z >= scalar));
+}
+
+inline BOOL GLKVector4AllGreaterThanOrEqualToScalar(GLKVector4 v, float scalar)
+{
+    return ((v.x >= scalar) && (v.y >= scalar) && (v.z >= scalar) && (v.w >= scalar));
+}
+
+inline BOOL GLKVector2AllGreaterThanScalar(GLKVector2 v, float scalar)
+{
+    return ((v.x > scalar) && (v.y > scalar));
+}
+
+inline BOOL GLKVector3AllGreaterThanScalar(GLKVector3 v, float scalar)
+{
+    return ((v.x > scalar) && (v.y > scalar) && (v.z > scalar));
+}
+
+inline BOOL GLKVector4AllGreaterThanScalar(GLKVector4 v, float scalar)
+{
+    return ((v.x > scalar) && (v.y > scalar) && (v.z > scalar) && (v.w > scalar));
+}
+
+inline BOOL GLKVector2AllGreaterThanOrEqualToVector2(GLKVector2 v, GLKVector2 v2)
+{
+    return ((v.x >= v2.x) && (v.y >= v2.y));
+}
+
+inline BOOL GLKVector3AllGreaterThanOrEqualToVector3(GLKVector3 v, GLKVector3 v2)
+{
+    return ((v.x >= v2.x) && (v.y >= v2.y) && (v.z >= v2.z));
+}
+
+inline BOOL GLKVector4AllGreaterThanOrEqualToVector4(GLKVector4 v, GLKVector4 v2)
+{
+    return ((v.x >= v2.x) && (v.y >= v2.y) && (v.z >= v2.z) && (v.w >= v2.w));
+}
+
+inline BOOL GLKVector2AllGreaterThanVector2(GLKVector2 v, GLKVector2 v2)
+{
+    return ((v.x > v2.x) && (v.y > v2.y));
+}
+
+inline BOOL GLKVector3AllGreaterThanVector3(GLKVector3 v, GLKVector3 v2)
+{
+    return ((v.x > v2.x) && (v.y > v2.y) && (v.z > v2.z));
+}
+
+inline BOOL GLKVector4AllGreaterThanVector4(GLKVector4 v, GLKVector4 v2)
+{
+    return ((v.x > v2.x) && (v.y > v2.y) && (v.z > v2.z) && (v.w > v2.w));
 }
 
 // --------------------------------------------------------------------------------
