@@ -83,10 +83,10 @@
     <ClangCompile Include="..\..\GLKitComplex\GLRenderer.mm">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.m">
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
+    <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.mm">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
   </ItemGroup>

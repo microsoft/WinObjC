@@ -55,7 +55,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GLKit.lib;OpenGLES.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLKit.lib;OpenGLES.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
@@ -106,7 +106,7 @@
     <Image Include="Assets\StoreLogo.scale-100.png" />
     <Image Include="Assets\SplashScreen.scale-100.png" />
     <ClangCompile Include="..\..\GLKitComplex\GLRenderer.mm" />
-    <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.m" />
+    <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.mm" />
     <ClangCompile Include="..\..\GLKitComplex\main.m" />
     <AssetCatalogCompile Include="..\..\GLKitComplex\Images.xcassets" />
     <SBInfoPlistCopy Include="..\..\GLKitComplex\Info.plist">
