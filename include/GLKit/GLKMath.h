@@ -16,9 +16,10 @@
 
 #pragma once
 
-#include <algorithm>
-
 #define COMPARISON_EPSILON 0.0000001f
+
+#define _GLK_MIN(a,b)   ((a) < (b) ? (a) : (b))
+#define _GLK_MAX(a, b)  ((a) > (b) ? (a) : (b))
 
 typedef struct _GLKVector2 {
     union {
@@ -543,8 +544,8 @@ inline GLKVector2 GLKVector2Maximum(GLKVector2 a, GLKVector2 b)
 {
     GLKVector2 res;
 
-    res.x = std::max(a.x, b.x);
-    res.y = std::max(a.y, b.y);
+    res.x = _GLK_MAX(a.x, b.x);
+    res.y = _GLK_MAX(a.y, b.y);
     
     return res;
 }
@@ -553,8 +554,8 @@ inline GLKVector2 GLKVector2Minimum(GLKVector2 a, GLKVector2 b)
 {
     GLKVector2 res;
 
-    res.x = std::min(a.x, b.x);
-    res.y = std::min(a.y, b.y);
+    res.x = _GLK_MIN(a.x, b.x);
+    res.y = _GLK_MIN(a.y, b.y);
     
     return res;
 }
@@ -563,9 +564,9 @@ inline GLKVector3 GLKVector3Maximum(GLKVector3 a, GLKVector3 b)
 {
     GLKVector3 res;
 
-    res.x = std::max(a.x, b.x);
-    res.y = std::max(a.y, b.y);
-    res.z = std::max(a.z, b.z);
+    res.x = _GLK_MAX(a.x, b.x);
+    res.y = _GLK_MAX(a.y, b.y);
+    res.z = _GLK_MAX(a.z, b.z);
     
     return res;
 }
@@ -574,9 +575,9 @@ inline GLKVector3 GLKVector3Minimum(GLKVector3 a, GLKVector3 b)
 {
     GLKVector3 res;
 
-    res.x = std::min(a.x, b.x);
-    res.y = std::min(a.y, b.y);
-    res.z = std::min(a.z, b.z);
+    res.x = _GLK_MIN(a.x, b.x);
+    res.y = _GLK_MIN(a.y, b.y);
+    res.z = _GLK_MIN(a.z, b.z);
     
     return res;
 }
@@ -585,10 +586,10 @@ inline GLKVector4 GLKVector4Maximum(GLKVector4 a, GLKVector4 b)
 {
     GLKVector4 res;
 
-    res.x = std::max(a.x, b.x);
-    res.y = std::max(a.y, b.y);
-    res.z = std::max(a.z, b.z);
-    res.w = std::max(a.w, b.w);
+    res.x = _GLK_MAX(a.x, b.x);
+    res.y = _GLK_MAX(a.y, b.y);
+    res.z = _GLK_MAX(a.z, b.z);
+    res.w = _GLK_MAX(a.w, b.w);
     
     return res;
 }
@@ -597,10 +598,10 @@ inline GLKVector4 GLKVector4Minimum(GLKVector4 a, GLKVector4 b)
 {
     GLKVector4 res;
 
-    res.x = std::min(a.x, b.x);
-    res.y = std::min(a.y, b.y);
-    res.z = std::min(a.z, b.z);
-    res.w = std::min(a.w, b.w);
+    res.x = _GLK_MIN(a.x, b.x);
+    res.y = _GLK_MIN(a.y, b.y);
+    res.z = _GLK_MIN(a.z, b.z);
+    res.w = _GLK_MIN(a.w, b.w);
     
     return res;
 }
