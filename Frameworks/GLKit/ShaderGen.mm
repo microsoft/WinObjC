@@ -70,7 +70,7 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
                                const string& desc, ShaderLayout* usedOutputs)
 {
     string final;
-    for(const auto& it : shader) {
+    for(const auto& it : shader.getDef()) {
         string res;
         if (usedOutputs) {
             auto used = usedOutputs->vars.find(it.first);

@@ -175,7 +175,7 @@ auto ppspecularLighter =
 
 // Per-vertex lighting.
 
-ShaderDef standardVsh{
+ShaderDef standardVsh({
     {GL_INPUT_POS,  new ShaderTempRef(GLKS_FLOAT4, TRANSFORMED_POS, new ShaderPosRef()) },
     {Z_DEPTH,       new ShaderCustom(GLKS_FLOAT, TRANSFORMED_POS ".z") },
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
@@ -184,17 +184,17 @@ ShaderDef standardVsh{
     {"_vertNorm",   new ShaderVarRef(GLKSH_NORMAL_NAME) },
     {"_lighting",   new ShaderOp(new ShaderVarRef("_ambient"), diffuseLighter, "+", true) },
     {"_specular",   specularLighter }
-};
+});
 
-ShaderDef standardPsh{
+ShaderDef standardPsh({
     {"gl_FragColor", mkStandardCombiner(new ShaderVarRef("_specular"),
                                         new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
                                         new ShaderVarRef("_lighting"))}
-};
+});
 
 // Per-pixel lighting.
 
-ShaderDef pixelVsh{
+ShaderDef pixelVsh({
     {GL_INPUT_POS,  new ShaderTempRef(GLKS_FLOAT4, TRANSFORMED_POS, new ShaderPosRef()) },
     {Z_DEPTH,       new ShaderCustom(GLKS_FLOAT, TRANSFORMED_POS ".z") },
     {"_outColor",   new ShaderVarRef(GLKSH_COLOR_NAME) },
@@ -205,10 +205,10 @@ ShaderDef pixelVsh{
     {"_toLight0",   mkToLight(GLKSH_LIGHT0_POS) },
     {"_toLight1",   mkToLight(GLKSH_LIGHT1_POS) },
     {"_toLight2",   mkToLight(GLKSH_LIGHT2_POS) },
-};
+});
 
-ShaderDef pixelPsh{
+ShaderDef pixelPsh({
     {"gl_FragColor", mkStandardCombiner(ppspecularLighter,
                                         new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
                                         new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true))}
-};
+});

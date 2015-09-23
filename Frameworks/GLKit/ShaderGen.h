@@ -19,10 +19,19 @@
 #include "ShaderInfo.h"
 #include <set>
 
-struct ShaderNode;
-typedef map<string, ShaderNode*> ShaderDef;
+class ShaderNode;
 typedef set<string> StrSet;
 typedef vector<ShaderNode*> ShaderNodes;
+
+class ShaderDef {
+    ShaderDef(const ShaderDef&); // no copy
+    void operator=(const ShaderDef&);
+
+    map<string, ShaderNode*> def;
+public:
+    ShaderDef(const map<string, ShaderNode*>& def) : def(def) {}
+    inline const map<string, ShaderNode*>& getDef() const { return def; }
+};
 
 struct TempInfo {
     inline TempInfo() : type(GLKS_INVALID) {}
@@ -42,8 +51,8 @@ class ShaderContext {
 
     ShaderMaterial*         inputMaterial;
 
-    ShaderDef               vs;
-    ShaderDef               ps;
+    const ShaderDef&        vs;
+    const ShaderDef&        ps;
 
     bool                    vertexStage;
     TempMap                 vsTemps, vsTempVals;
@@ -71,6 +80,9 @@ public:
 // --------------------------------------------------------------------------------
 
 class ShaderNode {
+    ShaderNode(const ShaderNode&); // no copy
+    void operator=(const ShaderNode&);
+
 protected:
     GLKShaderVarType type;
 public:
