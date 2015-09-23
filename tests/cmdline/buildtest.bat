@@ -15,3 +15,4 @@ if "%~1" neq "" (
 
 echo Building %TESTNAME%
 msbuild /verbosity:quiet /nologo cmdline.vcxproj.template /property:TestName="%TESTNAME%" /property:TestFilenames="%TESTFILES%" /property:LinkLibraries="%LIBS%"
+

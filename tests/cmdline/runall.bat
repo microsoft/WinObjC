@@ -43,3 +43,6 @@ echo.
 :done
 echo See test_results.txt for logs
 echo.
+
+echo Running GoogleTests
+..\..\build\debug\UnitTests.exe
