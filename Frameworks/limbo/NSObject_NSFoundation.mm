@@ -41,7 +41,7 @@
         const char* returnType = [sig methodReturnType];
 
         if (strcmp(returnType, "@") == 0) {
-            [invocation getReturnValue:&ret];
+            [invocation getReturnValue:ret];
             return true;
         } else if (strcmp(returnType, "f") == 0) {
             float retVal;
