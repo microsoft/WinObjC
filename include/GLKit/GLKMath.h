@@ -69,6 +69,10 @@ typedef struct _GLKMatrix4 {
     };
 } GLKMatrix4;
 
+typedef struct _GLKQuaternion {
+    float x, y, z, w;
+} GLKQuaternion;
+
 extern GLKIT_EXPORT GLKMatrix3 GLKMatrix3Identity;
 extern GLKIT_EXPORT GLKMatrix4 GLKMatrix4Identity;
 
@@ -674,6 +678,203 @@ inline BOOL GLKVector3AllGreaterThanVector3(GLKVector3 v, GLKVector3 v2)
 inline BOOL GLKVector4AllGreaterThanVector4(GLKVector4 v, GLKVector4 v2)
 {
     return ((v.x > v2.x) && (v.y > v2.y) && (v.z > v2.z) && (v.w > v2.w));
+}
+
+// --------------------------------------------------------------------------------
+// Quaternions
+
+inline GLKQuaternion GLKQuaternionMake(float x, float y, float z, float w)
+{
+    GLKQuaternion res;
+
+    res.x = x;
+    res.y = y;
+    res.z = z;
+    res.w = w;
+
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionMakeWithArray(float* vals)
+{
+    GLKQuaternion res;
+
+    res.x = vals[0];
+    res.y = vals[1];
+    res.z = vals[2];
+    res.w = vals[3];
+
+    return res;
+}
+
+
+inline GLKQuaternion GLKQuaternionMakeWithVector3(GLKVector3 v, float w)
+{
+    GLKQuaternion res;
+
+    res.x = v.x;
+    res.y = v.y;
+    res.z = v.z;
+    res.w = w;
+
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionMakeWithAngleAndAxis(float angle, float x, float y, float z)
+{
+    GLKQuaternion res;
+
+    float halfAng = angle * 0.5f;
+    float sa = sinf(halfAng);
+    res.x = sa * x;
+    res.y = sa * y;
+    res.z = sa * z;
+    res.w = cosf(halfAng);
+    
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionMakeWithAngleAndVector3Axis(float angle, GLKVector3 axis)
+{
+    GLKQuaternion res;
+
+    float halfAng = angle * 0.5f;
+    float sa = sinf(halfAng);
+    res.x = sa * axis.x;
+    res.y = sa * axis.y;
+    res.z = sa * axis.z;
+    res.w = cosf(halfAng);
+
+    return res;
+}
+
+inline float GLKQuaternionLength(GLKQuaternion quat)
+{
+    return sqrtf(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
+}
+
+inline float GLKQuaternionDot(GLKQuaternion q1, GLKQuaternion q2)
+{
+    return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+}
+
+inline GLKQuaternion GLKQuaternionMultiply(GLKQuaternion q1, GLKQuaternion q2)
+{
+    GLKQuaternion res;
+
+    res.x = q1.w * q2.x + q1.x + q2.w + q1.y * q2.z - q1.z * q2.y;
+    res.y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z + q2.x;
+    res.z = q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w;
+    res.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+    
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionMultiplyByScalar(float t, GLKQuaternion q)
+{
+    GLKQuaternion res;
+
+    res.x = t * q.x;
+    res.y = t * q.y;
+    res.z = t * q.z;
+    res.w = t * q.w;
+    
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionAdd(GLKQuaternion q1, GLKQuaternion q2)
+{
+    GLKQuaternion res;
+
+    res.x = q1.x + q2.x;
+    res.y = q1.y + q2.y;
+    res.z = q1.z + q2.z;
+    res.w = q1.w + q2.w;
+
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionSubtract(GLKQuaternion q1, GLKQuaternion q2)
+{
+    GLKQuaternion res;
+
+    res.x = q1.x - q2.x;
+    res.y = q1.y - q2.y;
+    res.z = q1.z - q2.z;
+    res.w = q1.w - q2.w;
+
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionConjugate(GLKQuaternion q)
+{
+    GLKQuaternion res;
+
+    res.x = -q.x;
+    res.y = -q.y;
+    res.z = -q.z;
+    res.w = q.w;
+    
+    return res;    
+}
+
+inline GLKQuaternion GLKQuaternionNormalize(GLKQuaternion q)
+{
+    GLKQuaternion res;
+
+    float invmag = 1.f / GLKQuaternionLength(q);
+    res.x = q.x * invmag;
+    res.y = q.y * invmag;
+    res.z = q.z * invmag;
+    res.w = q.w * invmag;
+
+    return res;
+}
+
+inline float GLKQuaternionAngle(GLKQuaternion quat)
+{
+    return 2.f * acosf(quat.w);
+}
+
+inline GLKVector3 GLKQuaternionAxis(GLKQuaternion quat)
+{
+    GLKVector3 res;
+
+    float mf = 1.f / sinf(acosf(quat.w));
+    res.x = mf * quat.x;
+    res.y = mf * quat.x;
+    res.z = mf * quat.x;
+    
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionInvert(GLKQuaternion q)
+{
+    GLKQuaternion res;
+
+    float lsq = 1.f / (q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+
+    res.x = -q.x * lsq;
+    res.y = -q.y * lsq;
+    res.z = -q.z * lsq;
+    res.w = q.w * lsq;
+    
+    return res;
+}
+
+inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion q1, GLKQuaternion q2, float t)
+{
+    
+    float mq1 = GLKQuaternionLength(q1);
+    float mq2 = GLKQuaternionLength(q2);
+    float dp = GLKQuaternionDot(q1, q2);
+    
+    float cang = dp / (mq1 * mq2);
+    float ang = acosf(cang);
+    float invsang = 1.f / sinf(ang);
+    
+    return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(sinf((1.f - t) * ang) * invsang, q1),
+                            GLKQuaternionMultiplyByScalar(sinf(t * ang) * invsang, q2));
 }
 
 // --------------------------------------------------------------------------------
