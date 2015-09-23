@@ -53,11 +53,11 @@ protected:
     string orderedTempVals(const TempMap& temps, bool usePrecision);
     
     string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
-                    const string& desc, ShaderLayout* usedOutputs = NULL);
+                    const string& desc, ShaderLayout* usedOutputs = nullptr);
     
 public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        inputMaterial(NULL), vs(vert), ps(pixel), vertexStage(false) {}
+        inputMaterial(nullptr), vs(vert), ps(pixel), vertexStage(false) {}
 
     // NOTE: neither of these check for overwriting.
     void addTempFunc(GLKShaderVarType type, const string& name, const string& body);
@@ -236,7 +236,7 @@ public:
     inline ShaderCustom(const string& before, const string& after = "", ShaderNode* inner = nullptr, bool useInner = true) :
         before(before), after(after), inner(inner), useInner(useInner) {}
     inline ShaderCustom(GLKShaderVarType t, const string& before) :
-        before(before), after(""), inner(NULL), useInner(false) { type = t; }
+        before(before), after(""), inner(nullptr), useInner(false) { type = t; }
 
     virtual bool generate(string& out, ShaderContext& c, ShaderLayout& v) override;
 };

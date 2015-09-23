@@ -116,6 +116,5 @@ typedef wchar_t WCHAR;
     return 30;
 }
 
-
 @end
 

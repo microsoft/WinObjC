@@ -50,7 +50,7 @@ struct ShaderLayout {
 
     inline VarInfo* find(const string& name) {
         auto it = vars.find(name);
-        if (it == vars.end()) return NULL;
+        if (it == vars.end()) return nullptr;
         it->second.used = true;
         return &it->second;
     }

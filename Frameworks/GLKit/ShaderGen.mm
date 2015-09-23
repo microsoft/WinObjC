@@ -206,7 +206,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
     res.pixelShader = [NSString stringWithCString: outpix.c_str()];
 
-    inputMaterial = NULL;
+    inputMaterial = nullptr;
 
     return res;
 }
