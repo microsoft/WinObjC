@@ -251,18 +251,20 @@ bool Mesh::createOGLBuffers()
     glBindBuffer(GL_ARRAY_BUFFER, vb);
     glBufferData(GL_ARRAY_BUFFER, sizeof(MeshVertex) * verts.size(), &verts[0], GL_STATIC_DRAW);
     
-    GLint i = glGetError();
-    if (i) return false;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Face) * faces.size(), &faces[0], GL_STATIC_DRAW);
 
-    i = glGetError();
-    if (i) return false;
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
+    GLint i = glGetError();
+    if (i) {
+        NSLog(@"GL Error 0x%x creating mesh.", i);
+        return false;
+    }
+
     return true;
 }
 

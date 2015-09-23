@@ -64,6 +64,8 @@ static void dumpMat(const GLKMatrix4& mat)
 #endif 
 
 -(void)initGLData {
+    GLint curErr;
+
     _effect = [[GLKReflectionMapEffect alloc] init];    
     _effect.constantColor = GLKVector4Make(1.f, 0.7f, 0.f, 1.f);
     _effect.colorMaterialEnabled = TRUE; // use vertex colors.
@@ -77,13 +79,19 @@ static void dumpMat(const GLKMatrix4& mat)
     glClearColor(0.0, 0.35, 0.6, 1.0);
     glClearDepthf(1.0f);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    
     glDepthFunc(GL_LEQUAL);
+
+    curErr = glGetError();
+    if (curErr) {
+        NSLog(@"GL Error 0x%x before creating mesh.", curErr);
+    }
 
     // Load the mesh.
     _mesh = new Mesh();
+    curErr = glGetError();
+    if (curErr) {
+        NSLog(@"GL Error 0x%x before creating mesh.", curErr);
+    }
 
     NSString *file = [[NSBundle mainBundle] pathForResource:@"utah-teapot" ofType:@"obj"];
     NSString *str = [NSString stringWithContentsOfFile: file encoding:NSUTF8StringEncoding error:NULL];
