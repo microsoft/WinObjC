@@ -2564,6 +2564,14 @@ static void *_conversionTempStr(int size)
         return ret;
    }
 
+    -(NSString*) stringByRemovingPercentEncoding {
+
+        // This method always replaces the percent encoded characters with matching UTF8 characters.
+        // Call stringByReplacingPercentEscapesUsingEncoding with NSUTF8StringEncoding option to
+        // to perform the conversion.
+        return [self stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   }
+
     -(BOOL) canBeConvertedToEncoding:(DWORD)encoding {
         return TRUE;    //  [BUG: Blatant lie]
     }

@@ -248,6 +248,7 @@ FOUNDATION_EXPORT_CLASS
 
 -(NSString *)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)encoding;
 -(NSString *)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding;
+-(NSString *)stringByRemovingPercentEncoding;
 
 -(NSString *)stringByTrimmingCharactersInSet:(NSCharacterSet *)set;
 

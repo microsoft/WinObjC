@@ -1,9 +1,10 @@
 # Test name             Source files
 
 objcrt_sanity           test_src\objcrt_sanity.m
-corefoundation           test_src\corefoundation.m
+corefoundation          test_src\corefoundation.m
 foundation              test_src\foundation.m
 dispatch                test_src\dispatch.m
+NSString                test_src\NSString.m
 
 dispatch_after          test_src\dispatch\dispatch_after.c test_src\dispatch\dispatch_test.c
 dispatch_api            test_src\dispatch\dispatch_api.c test_src\dispatch\dispatch_test.c
