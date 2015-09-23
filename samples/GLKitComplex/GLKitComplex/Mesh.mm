@@ -24,6 +24,9 @@
 #include <algorithm>
 #include <sstream>
 
+#define POS_EPSILON 0.001f
+#define UV_EPSILON 0.01f
+
 bool operator==(const MeshVertex& a, const MeshVertex& b)
 {
     float dist = 0.f;
@@ -31,15 +34,20 @@ bool operator==(const MeshVertex& a, const MeshVertex& b)
     dist += fabsf(a.pos[1] - b.pos[1]);
     dist += fabsf(a.pos[2] - b.pos[2]);
 
-    // Deliberately ignore normal contributions and color contributions.
-
-    dist += fabsf(a.uv[0] - b.uv[0]);
-    dist += fabsf(a.uv[1] - b.uv[1]);
-
-    if (dist < 0.01f) {
+    if (dist < POS_EPSILON) {
         return true;
     }
     return false;
+}
+
+bool MeshVertex::uvsMatch(const MeshVertex& other) const 
+{
+    float dist = 0.f;
+
+    dist += fabsf(uv[0] - other.uv[0]);
+    dist += fabsf(uv[1] - other.uv[1]);
+
+    return dist < UV_EPSILON;
 }
 
 namespace {
@@ -100,14 +108,30 @@ Mesh::~Mesh()
 short int Mesh::add(const MeshVertex& v)
 {
     auto it = std::find(verts.begin(), verts.end(), v);
+    bool orig = true;
     if (it != verts.end()) {
+
+        // Add normal.
         it->norm[0] += v.norm[0];
         it->norm[1] += v.norm[1];
         it->norm[2] += v.norm[2];
-        return it - verts.begin();
+
+        // Check UV coords, add a separate new vert if needed.
+        int idx = it - verts.begin();
+        int lastIdx = idx;
+        while(idx >= 0) {
+            if(v.uvsMatch(verts[idx])) return idx;
+            lastIdx = idx;
+            idx = vertInfos[idx].nextVertInList;
+        }
+        
+        // No UV match.  Add it to pos match list.
+        vertInfos[lastIdx].nextVertInList = verts.size();
+        orig = false;
     }
 
     verts.push_back(v);
+    vertInfos.push_back(MeshVertexBuildInfo(orig));
     return verts.size() - 1;
 }
 
@@ -180,15 +204,36 @@ void Mesh::testMesh()
 
 void Mesh::calcNormals()
 {
-    for(auto& v : verts) {
-        float magn = sqrtf(v.norm[0] * v.norm[0] + v.norm[1] * v.norm[1] +v.norm[2] * v.norm[2]);
-        if (magn) {
-            magn = 1.f / magn;
-            v.norm[0] *= magn;
-            v.norm[1] *= magn;
-            v.norm[2] *= magn;
-        }
+    if (!vertInfos.size()) {
+        NSLog(@"Not performing final build step, no auxiliary vertex information.");
+        return;
     }
+
+    // Normalize vertex normals, and propagate to all the other vert normals in the same position.
+    auto inf = vertInfos.begin();
+    for(auto& v : verts) {
+        if (inf->isOrigVert) {
+            float magn = sqrtf(v.norm[0] * v.norm[0] + v.norm[1] * v.norm[1] +v.norm[2] * v.norm[2]);
+            if (magn) {
+                magn = 1.f / magn;
+                v.norm[0] *= magn;
+                v.norm[1] *= magn;
+                v.norm[2] *= magn;
+            }
+            int idx = inf->nextVertInList;
+            while(idx > 0) {
+                verts[idx].norm[0] = v.norm[0];
+                verts[idx].norm[1] = v.norm[1];
+                verts[idx].norm[2] = v.norm[2];
+                
+                idx = vertInfos[idx].nextVertInList;
+            }
+        }
+
+        inf ++;
+    }
+
+    vertInfos.clear();
 }
 
 void Mesh::calcBounding()

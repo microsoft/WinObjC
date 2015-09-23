@@ -34,6 +34,14 @@ struct MeshVertex {
     float norm[3];
     float color[4];
     float uv[2];
+
+    bool uvsMatch(const MeshVertex& other) const;
+};
+
+struct MeshVertexBuildInfo {
+    explicit inline MeshVertexBuildInfo(bool orig) : isOrigVert(orig) {}
+    bool isOrigVert = true;
+    int nextVertInList = -1;
 };
 
 bool operator==(const MeshVertex& v, const MeshVertex& b);
@@ -43,11 +51,13 @@ struct Face {
 };
 
 typedef std::vector<MeshVertex> Vertices;
+typedef std::vector<MeshVertexBuildInfo> BuildInfos;
 typedef std::vector<Face> Faces;
 
 class Mesh {
-    Vertices verts;
-    Faces faces;
+    Vertices    verts;
+    BuildInfos  vertInfos;
+    Faces       faces;
 
     GLuint vb, ib;
 
