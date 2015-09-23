@@ -33,7 +33,6 @@ typedef wchar_t WCHAR;
 
 -(void) viewWillLayoutSubviews
 {
-    NSLog(@"GLKViewController got viewWillLayoutSubviews.");
 }
 
 -(void) viewDidLoad
@@ -43,7 +42,6 @@ typedef wchar_t WCHAR;
         GLKView* kv = (GLKView*)self.view;
         kv.enableSetNeedsDisplay = FALSE;
     }
-    NSLog(@"GLKViewController got viewDidLoad.");
     
     _link = [CADisplayLink displayLinkWithTarget: self selector: @selector(_renderFrame)];
 
@@ -56,8 +54,6 @@ typedef wchar_t WCHAR;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"GLKViewController got viewWillAppear.");
-
     [super viewWillAppear: animated];
     [self.delegate glkViewController: self willPause: FALSE];
 
@@ -70,8 +66,6 @@ typedef wchar_t WCHAR;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    NSLog(@"GLKViewController got viewWillDisappear.");
-
     [super viewWillDisappear: animated];
     [self.delegate glkViewController: self willPause: TRUE];
 

@@ -46,8 +46,6 @@
 }
 
 -(void) commonInit {
-    NSLog(@"GLKView common init called.");
-
     self.enableSetNeedsDisplay = TRUE;
 
     self.contentMode = UIViewContentModeRedraw;
@@ -61,8 +59,6 @@
 }
 
 -(id) initWithFrame: (CGRect)rect {
-    NSLog(@"initWithFrame: %@", NSStringFromCGRect(rect));
-
     self = [super initWithFrame: rect];
     if (self) {
         [self commonInit];
@@ -105,7 +101,6 @@
     [super layoutSubviews];
 
     CGRect rect = [self frame];
-    NSLog(@"Frame: %@", NSStringFromCGRect(rect));
 
     EAGLContext* ctx = self.context;
     [EAGLContext setCurrentContext: ctx];
