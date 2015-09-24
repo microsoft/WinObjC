@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.23023.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "objcrt", "objcrt", "{23A03031-6601-4236-B084-F2D15DC4C375}"
 EndProject
@@ -112,6 +112,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SystemConfiguration.Shared"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SystemConfiguration.Universal", "SystemConfiguration\SystemConfiguration.Universal\SystemConfiguration.Universal.vcxproj", "{D14F485E-B029-44D3-A65D-FE6340B1EBCD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKit.Universal", "GLKit\GLKit.Universal\GLKit.Universal.vcxproj", "{679D3DA0-B218-44EE-9C73-FE6262773772}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2FB40E04-969C-4484-AE3B-CBD6620A8256} = {2FB40E04-969C-4484-AE3B-CBD6620A8256}
+		{49AA9208-07ED-4F9C-94AC-C6CF9097E809} = {49AA9208-07ED-4F9C-94AC-C6CF9097E809}
+		{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5} = {BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}
+		{E0749361-45DB-4346-9D41-9F570B258B0E} = {E0749361-45DB-4346-9D41-9F570B258B0E}
+		{35D64778-265E-478C-9B17-687C9C1EAD3B} = {35D64778-265E-478C-9B17-687C9C1EAD3B}
+		{43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D} = {43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLKit", "GLKit", "{DB6BD6F2-85B4-4A2E-B704-6244E4EFC6C0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKit.Shared", "GLKit\GLKit.Shared\GLKit.Shared.vcxitems", "{3B9BAA3E-22F1-48AF-97F4-7A0C3BF93E1F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{49aa9208-07ed-4f9c-94ac-c6cf9097e809}*SharedItemsImports = 4
@@ -137,6 +151,7 @@ Global
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{2377da3d-6d87-433d-ae72-49f94e020525}*SharedItemsImports = 9
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{646a824a-87d9-4a11-ab72-f2cb4b8977ba}*SharedItemsImports = 9
 		OpenGLES\OpenGLES.Shared\OpenGLES.Shared.vcxitems*{08473230-c9e2-4759-b69c-de5f26f325cc}*SharedItemsImports = 9
+		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{679d3da0-b218-44ee-9c73-fe6262773772}*SharedItemsImports = 4
 		UIKit\UIKit.Shared\UIKit.Shared.vcxitems*{43ecb8c4-2c55-4eba-a0a8-5e511789fa6d}*SharedItemsImports = 4
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{c6f2fb00-05db-47c6-b1a0-f73060b89c1b}*SharedItemsImports = 4
 		OpenGLES\OpenGLES.Shared\OpenGLES.Shared.vcxitems*{e0749361-45db-4346-9d41-9f570b258b0e}*SharedItemsImports = 4
@@ -408,6 +423,20 @@ Global
 		{D14F485E-B029-44D3-A65D-FE6340B1EBCD}.Release|Win32.Build.0 = Release|Win32
 		{D14F485E-B029-44D3-A65D-FE6340B1EBCD}.Release|x64.ActiveCfg = Release|x64
 		{D14F485E-B029-44D3-A65D-FE6340B1EBCD}.Release|x64.Build.0 = Release|x64
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|ARM.ActiveCfg = Debug|ARM
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|ARM.Build.0 = Debug|ARM
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|Win32.ActiveCfg = Debug|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|Win32.Build.0 = Debug|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|x64.ActiveCfg = Debug|x64
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Debug|x64.Build.0 = Debug|x64
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|Any CPU.ActiveCfg = Release|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|ARM.ActiveCfg = Release|ARM
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|ARM.Build.0 = Release|ARM
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|Win32.ActiveCfg = Release|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|Win32.Build.0 = Release|Win32
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|x64.ActiveCfg = Release|x64
+		{679D3DA0-B218-44EE-9C73-FE6262773772}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -448,5 +477,7 @@ Global
 		{00D9C3E9-F324-4FD0-A857-61122339E726} = {2B93076E-15E3-4B65-A8C4-B9B0E7546414}
 		{537D7738-F86D-471B-A5C0-C257A72069BE} = {EB2B18D8-7B29-4585-A264-7057D8A2CA5B}
 		{D14F485E-B029-44D3-A65D-FE6340B1EBCD} = {EB2B18D8-7B29-4585-A264-7057D8A2CA5B}
+		{679D3DA0-B218-44EE-9C73-FE6262773772} = {DB6BD6F2-85B4-4A2E-B704-6244E4EFC6C0}
+		{3B9BAA3E-22F1-48AF-97F4-7A0C3BF93E1F} = {DB6BD6F2-85B4-4A2E-B704-6244E4EFC6C0}
 	EndGlobalSection
 EndGlobal

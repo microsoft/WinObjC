@@ -114,7 +114,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>WindowsApp.lib;UIKit.lib;OpenGLES.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
