@@ -25,34 +25,35 @@ using namespace std;
 
 // TODO: clean up lowp references.
 
-// This is really crude.  Determine if an (unparsed) expression depends on a set of variables.
-bool TempInfo::dependsOn(const StrSet& set) const
+// This is really crude.  Determine if this (unparsed) expression depends on a set of variables
+// by string searching the body for variables.  Beats parsing the entire thing though.
+bool TempInfo::dependsOn(const StrSet& variables) const
 {
-    for(const auto& s : set) {
-        if (body.find(s) != string::npos) return true;
+    for(const auto& var : variables) {
+        if (body.find(var) != string::npos) return true;
     }
     return false;
 }
 
 // Write out a series of vars such that calculations needed later are done first.
-string ShaderContext::orderedTempVals(const TempMap& temps, bool usePrecision)
+string ShaderContext::orderedTempVals(const TempMap& tempDefs, bool usePrecision)
 {
     string res;
-    StrSet tnames;
+    StrSet tempNames;
     string precision = usePrecision ? "lowp " : "";
 
-    for(const auto& p : temps) tnames.insert(p.first);
+    for(const auto& def : tempDefs) tempNames.insert(def.first);
 
-    TempMap remainingTemps = temps;
+    TempMap remainingTemps = tempDefs;
     while(!remainingTemps.empty()) {
         bool foundOne = false;
-        for(const auto& p : remainingTemps) {
-            if (!p.second.dependsOn(tnames)) {
-                res = res + "\t" + precision + getTypeStr(p.second.type) + " " + p.first + " = " + p.second.body + ";\n";
+        for(const auto& tempDef : remainingTemps) {
+            if (!tempDef.second.dependsOn(tempNames)) {
+                string name = tempDef.first;
+                res = res + "\t" + precision + getTypeStr(tempDef.second.type) + " " + name + " = " + tempDef.second.body + ";\n";
 
-                string name = p.first;
                 remainingTemps.erase(name);
-                tnames.erase(name);
+                tempNames.erase(name);
                 foundOne = true;
                 break;
             }
@@ -97,9 +98,9 @@ string ShaderContext::generate(ShaderLayout& outputs, ShaderLayout& inputs, cons
 void ShaderContext::addTempFunc(GLKShaderVarType type, const string& name, const string& body)
 {
     if (vertexStage) {
-        vsTemps[name] = TempInfo(type, body);
+        vsTempFuncs[name] = TempInfo(type, body);
     } else {
-        psTemps[name] = TempInfo(type, body);
+        psTempFuncs[name] = TempInfo(type, body);
     }
 }
 
@@ -112,15 +113,17 @@ void ShaderContext::addTempVal(GLKShaderVarType type, const string& name, const 
     }
 }
 
-int ShaderContext::getIVar(const string& name, int def)
+int ShaderContext::getInputVar(const string& name, int defaultVal)
 {
-    if (name.empty()) return def;
-    auto i = inputMaterial->ivars.find(name);
-    if (i == inputMaterial->ivars.end()) return def;
+    if (name.empty()) return defaultVal;
+    auto i = inputMaterial->inputVars.find(name);
+    if (i == inputMaterial->inputVars.end()) return defaultVal;
 
     return i->second;
 }
 
+// Main shader program generation.  Returns a full vertex/pixel shader pair corresponding
+// to the shader definition for the given material.
 GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
 {
     ShaderLayout intermediates;
@@ -188,21 +191,23 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
     // calculate them only once.
     ShaderLayout unusedIntermediates;
     vertexStage = true;
-    vsTemps.clear();
+
+    vsTempFuncs.clear();
     vsTempVals.clear();
+    
     outvert = generate(unusedIntermediates, inputs, vs, "VS", &intermediates);
 
-    string vsTempFuncs;
-    for(const auto& p : vsTemps) vsTempFuncs += p.second.body + '\n';
+    string vsTempFuncsOut;
+    for(const auto& p : vsTempFuncs) vsTempFuncsOut += p.second.body + '\n';
     string vsTempValsOut = orderedTempVals(vsTempVals, false);
-    
-    string psTempFuncs;
-    for(const auto& p : psTemps) psTempFuncs += p.second.body + '\n';
+
+    string psTempFuncsOut;
+    for(const auto& p : psTempFuncs) psTempFuncsOut += p.second.body + '\n';
     string psTempValsOut = orderedTempVals(psTempVals, true);
-        
+
     // Perform final generation.
-    outvert = vertinvars + vertoutvars + vsTempFuncs + "void main() {\n" + vsTempValsOut + outvert + "}\n";
-    outpix = "precision lowp float;\n\n" + pixvars + psTempFuncs + "void main() {\n" + psTempValsOut + outpix + "}\n";
+    outvert = vertinvars + vertoutvars + vsTempFuncsOut + "void main() {\n" + vsTempValsOut + outvert + "}\n";
+    outpix = "precision lowp float;\n\n" + pixvars + psTempFuncsOut + "void main() {\n" + psTempValsOut + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString: outvert.c_str()];
@@ -213,9 +218,9 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
     return res;
 }
 
-bool ShaderIVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& v)
+bool ShaderInputVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    if (!c.getIVar(name)) return false;
+    if (!c.getInputVar(name)) return false;
     return node->generate(out, c, v);
 }
 
@@ -278,7 +283,7 @@ string ShaderTexRef::genTexLookup(string texVar, string uv, ShaderContext& c, Sh
 
 bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    GLKTextureEnvMode mode = c.getIVar(modeVar, GLKTextureEnvModeDecal);
+    GLKTextureEnvMode mode = c.getInputVar(modeVar, GLKTextureEnvModeDecal);
 
     // Get what we need for the texture, just passthrough next if not there.
     string uv;

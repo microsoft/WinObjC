@@ -18,8 +18,10 @@
 
 #include "ShaderGen.h"
 
+// Vertex lit shader pair.
 extern ShaderDef standardVsh;
 extern ShaderDef standardPsh;
 
+// Per-pixel lighting variant.
 extern ShaderDef pixelVsh;
 extern ShaderDef pixelPsh;

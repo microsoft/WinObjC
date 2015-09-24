@@ -23,6 +23,9 @@ class ShaderNode;
 typedef std::set<std::string> StrSet;
 typedef std::vector<ShaderNode*> ShaderNodes;
 
+// Contains the definition of either a vertex or pixel shader program, as a map
+// of shader program outputs to a tree of ShaderNode objects responsible for building
+// that part of the program.
 class ShaderDef {
     ShaderDef(const ShaderDef&); // no copy
     void operator=(const ShaderDef&);
@@ -33,11 +36,12 @@ public:
     inline const std::map<std::string, ShaderNode*>& getDef() const { return def; }
 };
 
+// Information on a temporary value for the shader program.  Contains its type and definition body.
 struct TempInfo {
     inline TempInfo() : type(GLKS_INVALID) {}
     inline TempInfo(GLKShaderVarType type, const std::string& body) : type(type), body(body) {}
 
-    bool dependsOn(const StrSet& set) const;
+    bool dependsOn(const StrSet& variables) const;
     
     GLKShaderVarType type;
     std::string body;
@@ -46,17 +50,22 @@ typedef std::map<std::string, TempInfo> TempMap;
 
 @class GLKShaderPair;
 
+// Main class responsible for shader generation.  Tracks temporary data and builds the final
+// output vertex/pixel shader program pair.
 class ShaderContext {
     ShaderLayout            shaderVars;
-
     ShaderMaterial*         inputMaterial;
 
     const ShaderDef&        vs;
     const ShaderDef&        ps;
 
-    bool                    vertexStage;
-    TempMap                 vsTemps, vsTempVals;
-    TempMap                 psTemps, psTempVals;
+    bool                    vertexStage; // are we generating VS or PS code?
+
+    TempMap                 vsTempFuncs;
+    TempMap                 vsTempVals;
+
+    TempMap                 psTempFuncs;
+    TempMap                 psTempVals;
     
 protected:
     std::string orderedTempVals(const TempMap& temps, bool usePrecision);
@@ -68,17 +77,29 @@ public:
     ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
         inputMaterial(nullptr), vs(vert), ps(pixel), vertexStage(false) {}
 
-    // NOTE: neither of these check for overwriting.
+    // Used by ShaderNodes to NOTE: neither of these check for overwriting.
     void addTempFunc(GLKShaderVarType type, const std::string& name, const std::string& body);
     void addTempVal(GLKShaderVarType type, const std::string& name, const std::string& body);
 
-    int getIVar(const std::string& name, int def = 0);
+    int getInputVar(const std::string& name, int def = 0);
 
     GLKShaderPair* generate(ShaderMaterial& inputs);
 };
 
 // --------------------------------------------------------------------------------
+// Shader nodes: a tree of nodes generates an output for a particular shader program.
+// A tree of shader nodes can be thought of roughly as a parse tree, except less granular
+// and more usable.
 
+// The ShaderContext class goes to some effort to do dead code elimination based on shader inputs/outputs
+// that are unused.  In general, ShaderNodes should not expect all their inputs to be their (or all their
+// child classes to successfully generate code) and should fail intelligently when this happens.  For instance,
+// the texture reference classes just pass through their inputs instead of modulating them if the texture
+// is not present.  This allows a single set of nodes that can generate everything from a VS/PS pair
+// consisting of a single instruction each, to a per-pixel lit shader with 3 input lights.  Maintaining
+// this single node set is easier than dealing with a whole pile of shader programs.
+
+// Base class.  Defines generation interface.
 class ShaderNode {
     ShaderNode(const ShaderNode&); // no copy
     void operator=(const ShaderNode&);
@@ -92,18 +113,18 @@ public:
     inline GLKShaderVarType getType() const { return type; }
 };
 
-// Check if an ivar is present and non-zero before generating the rest.
-class ShaderIVarCheck : public ShaderNode {
+// Check if an input variable is present and non-zero before generating the child node.
+class ShaderInputVarCheck : public ShaderNode {
     std::string name;
     ShaderNode* node;
 
 public:
-    ShaderIVarCheck(const std::string& name, ShaderNode* node) : name(name), node(node) {}
+    ShaderInputVarCheck(const std::string& name, ShaderNode* node) : name(name), node(node) {}
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// Use a variable if present.
+// Generates a reference to a variable if the variable is present, nothing if not.
 class ShaderVarRef : public ShaderNode {
     std::string name;
     std::string constantResult;
@@ -113,9 +134,10 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// Use the first variable that's present, or a constant if none, or nothing if there's no constant.
+// Use the first variable that's present in a list of variables, or fall back to a constant if
+// none of them are present, or generate nothing if there's no constant.
 class ShaderFallbackRef : public ShaderNode {
-    std::string first;
+    std::string first;  // TODO: generalize to array.
     std::string second;
     std::string constantResult;
 public:
@@ -126,6 +148,8 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Use the first node in a list of nodes that generates code successfully.  This is a more general
+// version of the FallbackRef above.
 class ShaderFallbackNode : public ShaderNode {
     std::vector<ShaderNode*> nodes;
 public:
@@ -140,7 +164,9 @@ struct ShaderPosRef : public ShaderNode {
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// Texture lookup node.
+// Texture lookup node.  This blends the texture lookup (if present) with the given child node
+// using the blend mode specified in an input variable.  If the texture is not present, this node
+// just passes through the child node's code.
 class ShaderTexRef : public ShaderNode {
     std::string texVar;
     std::string modeVar;
@@ -159,7 +185,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// Cube map lookup node.
+// Cube map lookup node.  Same as for the texture node, but with cube maps.
 class ShaderCubeRef : public ShaderTexRef {
     ShaderNode* reflAlphaNode;
 
@@ -173,6 +199,9 @@ public:
         ShaderTexRef(tex, mode, uvRef, nextRef) {}
 };
 
+// Modulate the specular parameters for a light with the given specular texture.  Passes through code
+// if the specular texture is not present.  This works only with a light's specular parameter, which is
+// a float4 of the form (r, g, b, shininess).
 class ShaderSpecularTex : public ShaderNode {
     std::string texVar;
     ShaderNode* uvRef;
@@ -185,6 +214,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// All child nodes that generate code will be added together.
 class ShaderAdditiveCombiner : public ShaderNode {
     ShaderNodes subNodes;
 
@@ -197,6 +227,8 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Perform a binary operation on two subnodes.  Can also generate a function with two params if
+// isOperator is null.
 class ShaderOp : public ShaderNode {
     ShaderNode* n1;
     ShaderNode* n2;
@@ -211,7 +243,9 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
-// Used to save stuff into a temp.  Only valuable if reused > 1 time.
+// Used to save an expression off to a temporary variable, which prevents repeating the expression
+// multiple times in the shader program.  The code generated is just the temporary variable name,
+// but the child node's expression will be added to the shader as a temporary value.
 class ShaderTempRef : public ShaderNode {
     std::string name;
     ShaderNode* body;
@@ -223,6 +257,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Perform diffuse attenuation given a vector to a light, and the light's diffuse attenuation parameters.
 class ShaderAttenuator : public ShaderNode {
     ShaderNode* toLight;
     ShaderNode* atten;
@@ -233,6 +268,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Calculate a normalized reflection vector given a source vector and a normal about which to reflect.
 class ShaderReflNode : public ShaderNode {
     ShaderNode* norm;
     ShaderNode* src;
@@ -242,6 +278,8 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Adds custom code to the child node's code.  Useful for debugging and other catch-all code that
+// doesn't need its own node type.
 class ShaderCustom : public ShaderNode {
     std::string before, after;
     ShaderNode* inner;
@@ -255,6 +293,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Perform the diffuse lighting calculations for a light.
 class ShaderLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* normal;
@@ -268,6 +307,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Perform the specular calculations for a light.
 class ShaderSpecLighter : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* cameraDir;
@@ -283,6 +323,7 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Perform spotlight attenuation for a light.
 class ShaderSpotlightAtten : public ShaderNode {
     ShaderNode* lightDir;
     ShaderNode* params;
@@ -308,6 +349,8 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Calculate a linear fog blend value, given a depth and the fog parameters.  See the
+// GLES 1.1 or GLKit docs for the exact calculations.
 class ShaderLinearFog : public ShaderNode {
     ShaderNode* depthRef;
     ShaderNode* fogParams;
@@ -319,6 +362,8 @@ public:
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
+// Calculate an exponentialfog blend value, given a depth and the fog parameters.  See the
+// GLES 1.1 or GLKit docs for the exact calculations.
 class ShaderExpFog : public ShaderNode {
     ShaderNode* depthRef;
     ShaderNode* densityRef;

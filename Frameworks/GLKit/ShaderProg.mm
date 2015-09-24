@@ -42,14 +42,22 @@ using namespace std;
 
 namespace {
 
-ShaderNode* mkToLight(const string& pos, const string& tmpName = "")
+// --------------------------------------------------------------------------------
+// The functions below are for creating standard, reused combinations of nodes.
+
+// Vector from vertex to given position.
+ShaderNode* buildToLight(const string& pos, const string& tmpName = "")
 {
     ShaderNode* toLight = new ShaderOp(new ShaderVarRef(pos), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true);
     if (tmpName.empty()) return toLight;
     return new ShaderTempRef(GLKS_FLOAT3, tmpName, toLight);
 }
 
-ShaderNode* mkAtten(const string& attenName, const string& spotParams, const string& spotDir,
+// NOTE: for the lighting nodes below, temps are used so that common diffuse/specular calculations
+// are reused, and common calculations between lights are reused.
+ 
+// Build final diffuse attenuation node.
+ShaderNode* buildAtten(const string& attenName, const string& spotParams, const string& spotDir,
                     ShaderNode* toLight, const string& tmpName = "")
 {
     auto baseAtten = new ShaderAttenuator(toLight, new ShaderVarRef(attenName));
@@ -60,49 +68,51 @@ ShaderNode* mkAtten(const string& attenName, const string& spotParams, const str
     return new ShaderTempRef(GLKS_FLOAT, tmpName, attenNode);
 }
 
-ShaderNode* mkLighter(ShaderNode* toLight, const string& attenTemp, const string& pos,
+// Build diffuse lighting node.  Two variants on input.
+ShaderNode* buildLighter(ShaderNode* toLight, const string& attenTemp, const string& pos,
                       const string& clr, const string& attenName, const string& spotParams,
                       const string& spotDir, const string& normalName)
 {
-    auto atten = new ShaderOp(mkAtten(attenName, spotParams, spotDir, toLight, attenTemp),
-                              new ShaderSpotlightAtten(toLight, new ShaderVarRef(spotParams), new ShaderVarRef(spotDir)),
-                              "*", true);
+    auto atten = buildAtten(attenName, spotParams, spotDir, toLight, attenTemp);
     return new ShaderLighter(toLight, new ShaderVarRef(normalName), new ShaderVarRef(clr), atten);
 }
  
-ShaderNode* mkLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
+ShaderNode* buildLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
                       const string& clr, const string& attenName, const string& spotParams,
                       const string& spotDir, const string& normalName)
 {
-    ShaderNode* toLight = mkToLight(pos, toLightTemp);
-    return mkLighter(toLight, attenTemp, pos, clr, attenName, spotParams, spotDir, normalName);
+    ShaderNode* toLight = buildToLight(pos, toLightTemp);
+    return buildLighter(toLight, attenTemp, pos, clr, attenName, spotParams, spotDir, normalName);
 }
 
-ShaderNode* mkToCam(const string& tempName = "")
+// Build a shader node returning the vector to camera.
+ShaderNode* buildToCam(const string& tempName = "")
 {
     ShaderNode* n = new ShaderOp(new ShaderVarRef(GLKSH_CAMERA), new ShaderVarRef(GLKSH_POS_NAME), "-", true, true);
     if (tempName.empty()) return n;
     return new ShaderTempRef(GLKS_FLOAT3, TO_CAM_TMP, n);     
 }
 
-ShaderNode* mkSpecLighter(ShaderNode* toLight, ShaderNode* toCam, const string& attenTemp, const string& pos,
+// Build the final specularity lighting node.
+ShaderNode* buildSpecLighter(ShaderNode* toLight, ShaderNode* toCam, const string& attenTemp, const string& pos,
                           ShaderNode* specClrNode, const string& attenName, const string& spotParams,
                           const string& spotDir, const string& normalName)
 {
-    ShaderNode* atten = mkAtten(attenName, spotParams, spotDir, toLight, attenTemp);
+    ShaderNode* atten = buildAtten(attenName, spotParams, spotDir, toLight, attenTemp);
     return new ShaderSpecLighter(toLight, toCam, new ShaderVarRef(normalName), specClrNode, atten);
 }
 
-ShaderNode* mkSpecLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
+ShaderNode* buildSpecLighter(const string& toLightTemp, const string& attenTemp, const string& pos,
                           ShaderNode* specClrNode, const string& attenName, const string& spotParams,
                           const string& spotDir, const string& normalName)
 {
-    ShaderNode* toLight = mkToLight(pos, toLightTemp);
-    ShaderNode* toCam = mkToCam(TO_CAM_TMP);
-    return mkSpecLighter(toLight, toCam, attenTemp, pos, specClrNode, attenName, spotParams, spotDir, normalName);
+    ShaderNode* toLight = buildToLight(pos, toLightTemp);
+    ShaderNode* toCam = buildToCam(TO_CAM_TMP);
+    return buildSpecLighter(toLight, toCam, attenTemp, pos, specClrNode, attenName, spotParams, spotDir, normalName);
 }
 
-ShaderNode* mkFog(ShaderNode* colorSrc)
+// Build fog node, based on the type of fog desired.
+ShaderNode* buildFog(ShaderNode* colorSrc)
 {
     return new ShaderAffineBlend(
                new ShaderTempRef(GLKS_FLOAT, FOG_BLEND,
@@ -114,11 +124,12 @@ ShaderNode* mkFog(ShaderNode* colorSrc)
                colorSrc);
 }
 
-ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
+// Combine all the diffuse, specular, and texture inputs into the final pixel color.
+ShaderNode* buildStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, ShaderNode* lightRef)
 {
-    auto diffuseCombiner = new ShaderFallbackNode({new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, lightRef), colorRef});
-    return mkFog(new ShaderOp(
-                     new ShaderIVarCheck(GLKSH_LIGHTING_ENABLED, specularRef),
+    auto diffuseCombiner = new ShaderFallbackNode({new ShaderInputVarCheck(GLKSH_LIGHTING_ENABLED, lightRef), colorRef});
+    return buildFog(new ShaderOp(
+                     new ShaderInputVarCheck(GLKSH_LIGHTING_ENABLED, specularRef),
                      new ShaderOp(diffuseCombiner, 
                          new ShaderCubeRef(GLKSH_TEXCUBE, GLKSH_TEXCUBE_MODE,
                              new ShaderOp(new ShaderVarRef(GLKSH_REFL_ALPHA),
@@ -131,46 +142,53 @@ ShaderNode* mkStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef, Sh
                      "+", true));
 }
 
+// Node that calculates diffuse lighting for up to 3 lights.
 auto diffuseLighter =
     new ShaderOp(
         new ShaderAdditiveCombiner({
-            mkLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, GLKSH_NORMAL_NAME),
-            mkLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, GLKSH_NORMAL_NAME)}),
+            buildLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN,
+                         GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, GLKSH_NORMAL_NAME),
+            buildLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN,
+                         GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, GLKSH_NORMAL_NAME),
+            buildLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN,
+                         GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, GLKSH_NORMAL_NAME)}),
         new ShaderVarRef(GLKSH_EMISSIVE), "max", false);
 
+// Node that calculates specular lighting for up to 3 lights.
 auto specularLighter =
     new ShaderAdditiveCombiner({
-        mkSpecLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
+        buildSpecLighter(TO_LIGHT0_TMP, ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
                       new ShaderVarRef(GLKSH_LIGHT0_SPECULAR), GLKSH_LIGHT0_ATTEN, 
                       GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, GLKSH_NORMAL_NAME),
-        mkSpecLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
+        buildSpecLighter(TO_LIGHT1_TMP, ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
                       new ShaderVarRef(GLKSH_LIGHT1_SPECULAR), GLKSH_LIGHT1_ATTEN, 
                       GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, GLKSH_NORMAL_NAME),
-        mkSpecLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
+        buildSpecLighter(TO_LIGHT2_TMP, ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
                       new ShaderVarRef(GLKSH_LIGHT2_SPECULAR), GLKSH_LIGHT2_ATTEN, 
                       GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, GLKSH_NORMAL_NAME)});
 
+// Per-pixel diffuse lighter.  Differs from diffuseLighter in that it has support for an emissive map.
 auto ppdiffuseLighter =
     new ShaderOp(
         new ShaderFallbackNode({
             new ShaderAdditiveCombiner({
-                mkLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, "_vertNorm"),
-                mkLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, "_vertNorm"),
-                mkLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, "_vertNorm")}),
+                buildLighter(new ShaderVarRef("_toLight0"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS, GLKSH_LIGHT0_COLOR, GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, "_vertNorm"),
+                buildLighter(new ShaderVarRef("_toLight1"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS, GLKSH_LIGHT1_COLOR, GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, "_vertNorm"),
+                buildLighter(new ShaderVarRef("_toLight2"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS, GLKSH_LIGHT2_COLOR, GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, "_vertNorm")}),
             new ShaderCustom("vec4(0, 0, 0, 1)")}),
         new ShaderTexRef(GLKSH_EMISSIVE_TEX, "", new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_EMISSIVE)),
         "max", false);
 
+// Per-pixel specular lighter.  Differs from specularLighter in that it has support for a specular map.
 auto ppspecularLighter =
     new ShaderAdditiveCombiner({
-        mkSpecLighter(new ShaderVarRef("_toLight0"), new ShaderVarRef("_toCam"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
+        buildSpecLighter(new ShaderVarRef("_toLight0"), new ShaderVarRef("_toCam"), ATTEN_LIGHT0_TMP, GLKSH_LIGHT0_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT0_SPECULAR)),
                       GLKSH_LIGHT0_ATTEN, GLKSH_LIGHT0_SPOT, GLKSH_LIGHT0_SPOTDIR, "_vertNorm"),
-        mkSpecLighter(new ShaderVarRef("_toLight1"), new ShaderVarRef("_toCam"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
+        buildSpecLighter(new ShaderVarRef("_toLight1"), new ShaderVarRef("_toCam"), ATTEN_LIGHT1_TMP, GLKSH_LIGHT1_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT1_SPECULAR)),
                       GLKSH_LIGHT1_ATTEN, GLKSH_LIGHT1_SPOT, GLKSH_LIGHT1_SPOTDIR, "_vertNorm"),
-        mkSpecLighter(new ShaderVarRef("_toLight2"), new ShaderVarRef("_toCam"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
+        buildSpecLighter(new ShaderVarRef("_toLight2"), new ShaderVarRef("_toCam"), ATTEN_LIGHT2_TMP, GLKSH_LIGHT2_POS,
                       new ShaderSpecularTex(GLKSH_SPECULAR_TEX, new ShaderVarRef("_texCoord0"), new ShaderVarRef(GLKSH_LIGHT2_SPECULAR)),
                       GLKSH_LIGHT2_ATTEN, GLKSH_LIGHT2_SPOT, GLKSH_LIGHT2_SPOTDIR, "_vertNorm")});
 } // namespace
@@ -189,9 +207,9 @@ ShaderDef standardVsh({
 });
 
 ShaderDef standardPsh({
-    {"gl_FragColor", mkStandardCombiner(new ShaderVarRef("_specular"),
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
-                                        new ShaderVarRef("_lighting"))}
+    {"gl_FragColor", buildStandardCombiner(new ShaderVarRef("_specular"),
+                                           new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                           new ShaderVarRef("_lighting"))}
 });
 
 // Per-pixel lighting.
@@ -203,14 +221,14 @@ ShaderDef pixelVsh({
     {"_texCoord0",  new ShaderVarRef(GLKSH_UV0_NAME) },
     {"_texCoord1",  new ShaderVarRef(GLKSH_UV1_NAME) },
     {"_vertNorm",   new ShaderVarRef(GLKSH_NORMAL_NAME) },
-    {"_toCam",      mkToCam() },
-    {"_toLight0",   mkToLight(GLKSH_LIGHT0_POS) },
-    {"_toLight1",   mkToLight(GLKSH_LIGHT1_POS) },
-    {"_toLight2",   mkToLight(GLKSH_LIGHT2_POS) },
+    {"_toCam",      buildToCam() },
+    {"_toLight0",   buildToLight(GLKSH_LIGHT0_POS) },
+    {"_toLight1",   buildToLight(GLKSH_LIGHT1_POS) },
+    {"_toLight2",   buildToLight(GLKSH_LIGHT2_POS) },
 });
 
 ShaderDef pixelPsh({
-    {"gl_FragColor", mkStandardCombiner(ppspecularLighter,
-                                        new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
-                                        new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true))}
+    {"gl_FragColor", buildStandardCombiner(ppspecularLighter,
+                                           new ShaderFallbackRef("_outColor", GLKSH_CONSTCOLOR_NAME, COLOR_WHITE),
+                                           new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true))}
 });

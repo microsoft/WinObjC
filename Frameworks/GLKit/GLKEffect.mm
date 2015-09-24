@@ -256,13 +256,13 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     m->reset();
 
     // We need these.
-    m->defmat(GLKSH_MVP_NAME);
-    m->defvattr(GLKSH_POS_NAME);
+    m->defMatrix(GLKSH_MVP_NAME);
+    m->defVertexAttr(GLKSH_POS_NAME);
 
     bool haveCM = false;
     if (self.colorMaterialEnabled) {
         haveCM = true;
-        m->defvattr(GLKSH_COLOR_NAME);
+        m->defVertexAttr(GLKSH_COLOR_NAME);
         shaderName += 'V';
     } else {
         shaderName += 'N';
@@ -271,9 +271,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     shaderName += '_';
         
     // Always add these for now.  See if we can figure out if something is bound to them.
-    m->defvattr3(GLKSH_NORMAL_NAME);
-    m->defvattr2(GLKSH_UV0_NAME);
-    m->defvattr2(GLKSH_UV1_NAME);
+    m->defVertexAttr3(GLKSH_NORMAL_NAME);
+    m->defVertexAttr2(GLKSH_UV0_NAME);
+    m->defVertexAttr2(GLKSH_UV1_NAME);
 
     // Process texture variables.
     static const char* texNames[] = { GLKSH_TEX0_NAME, GLKSH_TEX1_NAME };
@@ -284,7 +284,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             GLuint name = t.name;
             if (name > 0) {
                 m->addtex(texNames[texNum], name);
-                m->addivar(texModes[texNum], t.envMode);
+                m->addInputVar(texModes[texNum], t.envMode);
                 shaderName += 'T';
             }
         } else {
@@ -429,7 +429,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             m->addvar(GLKSH_CONSTCOLOR_NAME, matProps.diffuseColor);
         }
     } else {
-        m->addivar(GLKSH_LIGHTING_ENABLED, 1);
+        m->addInputVar(GLKSH_LIGHTING_ENABLED, 1);
     }
 
     self.shaderName = [NSString stringWithCString: shaderName.c_str()];
@@ -646,7 +646,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         GLuint name = _textureCubeMap.name;
         if (name > 0) {
             mat->addtexcube(GLKSH_TEXCUBE, _textureCubeMap.name);
-            mat->addivar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
+            mat->addInputVar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
             self.cameraRequired = TRUE;
         }
 
