@@ -140,7 +140,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
         VarInfo& vd = vp.second;
         if (vd.used) {
             string res = (vd.vertexAttr) ? "attribute " : "uniform ";
-            res += vd.vtype() + " " + vp.first + ";\n";
+            res += vd.getTypeStr() + " " + vp.first + ";\n";
             vertinvars += res;
         }
     }
@@ -153,7 +153,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
             VarInfo& vd = vp.second;
             vd.intermediate = true;
             vd.used = false;
-            string res = "varying " + vd.vtype() + " " + vp.first + ";\n";
+            string res = "varying " + vd.getTypeStr() + " " + vp.first + ";\n";
             vertoutvars += res;
         }
     }
@@ -179,7 +179,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
             if (vd.used) {
                 string res = vd.intermediate ? "varying " : "uniform ";
                 if (!vd.isTexture()) res += "highp ";
-                res += vd.vtype() + " " + vp.first + ";\n";
+                res += vd.getTypeStr() + " " + vp.first + ";\n";
                 pixvars += res;
             }
         }

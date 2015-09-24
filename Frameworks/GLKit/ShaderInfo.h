@@ -39,7 +39,7 @@ struct VarInfo {
     bool intermediate;
     bool used;
 
-    inline std::string vtype() const { return getTypeStr(type); }
+    inline std::string getTypeStr() const { return ::getTypeStr(type); }
     inline bool isTexture() const { return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE); }
 };
 
