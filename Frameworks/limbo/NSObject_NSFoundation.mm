@@ -136,6 +136,85 @@
         return ret;
     }
 
+    static bool unwrapValue(id value, const char* type, void** buffer)
+    {
+        void *buf;
+        if ( strcmp(type, "f") == 0 ) {
+            buf = malloc(sizeof(float));
+            *(float*)buf = [value floatValue];
+        } else if ( strcmp(type, "d") == 0 ) {
+            buf = malloc(sizeof(double));
+            *(double*)buf = [value doubleValue];
+        } else if (strcmp(type, "c") == 0 || strcmp(type, "C") == 0 ) {
+            buf = malloc(sizeof(char));
+            *(char*)buf = [value charValue];
+        } else if ( strcmp(type, "s") == 0 || strcmp(type, "S") == 0 ) {
+            buf = malloc(sizeof(short));
+            *(short*)buf = [value shortValue];
+        } else if ( strcmp(type, "i") == 0 || strcmp(type, "I") == 0 ) {
+            buf = malloc(sizeof(int));
+            *(int*)buf = [value intValue];
+        } else if ( strcmp(type, "l") == 0 || strcmp(type, "L") == 0 ) {
+            buf = malloc(sizeof(long));
+            *(long*)buf = [value longValue];
+        } else if ( strcmp(type, "q") == 0 || strcmp(type, "Q") == 0 ) {
+            buf = malloc(sizeof(long long));
+            *(long long*)buf = [value longLongValue];
+        } else {
+            return false;
+        }
+    
+        *buffer = buf;
+    
+        return true;
+    }
+
+    static bool trySetAccessor(NSObject* self, const char *propName, id newVal)
+    {
+        char keyName[255];
+        char szAccessorName[255];
+    
+        strcpy(keyName, propName);
+    
+        keyName[0] = toupper(keyName[0]);
+        sprintf(szAccessorName, "set%s:", keyName);
+    
+        SEL sel = sel_registerName(szAccessorName);
+        NSMethodSignature* sig = [self methodSignatureForSelector:sel];
+        const char* type = [sig getArgumentTypeAtIndex:2];
+        if (!sig) {
+            printf("Failed to find setter %s::%s\n", object_getClassName(self), propName);
+            return false;
+        }
+    
+        if (strcmp(type, "@") == 0 || strcmp(type, "#") == 0) {
+            [self performSelector:sel withObject:newVal];
+            return true;
+        }
+    
+        if (!newVal) {
+            [self setNilValueForKey:[NSString stringWithCString:propName]];
+            return true;
+        }
+    
+        void* buffer = NULL;
+        if (unwrapValue(newVal, type, &buffer)) {
+            NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
+        
+            [invocation setTarget:self];
+            [invocation setSelector:sel];
+            [invocation setArgument:buffer atIndex:2];
+            [invocation invoke];
+        
+            free(buffer);
+        
+            return true;
+        }
+    
+        printf("Failed to unwrap value for %s::%s (type '%s')\n", object_getClassName(self), propName, type);
+        return false;
+    }
+
     static bool setDirectProperty(id var, const char *propName, id newVal)
     {
         Class cls = object_getClass(var);
@@ -192,30 +271,12 @@
     -(void) setValue:(id)val forKey:(NSString*)key {
         const char *pKeyName = [key UTF8String];
 
-        char keyName[255];
-        char szAccessorName[255];
-
-        strcpy(keyName, pKeyName);
-
-        //  Try set<Key>
-        keyName[0] = toupper(keyName[0]);
-        sprintf(szAccessorName, "set%s:", keyName);
-        /*
-        if ( trySetAccessor(self, szAccessorName, val) ) {
-            return self;
-        }
-        */
-
-        SEL sel = sel_registerName(szAccessorName);
-        IMP foo = class_getMethodImplementation(object_getClass(self), sel);
-        if (!foo) {
+        if ( !trySetAccessor(self, pKeyName, val) ) {
             if ( !setDirectProperty(self, pKeyName, val) ) {
                 printf("Failed to find setter %s::%s\n", object_getClassName(self), pKeyName);
             }
             return;
         }
-
-        foo(self, sel, val);
     }
 
     -(Class) classForArchiver {
