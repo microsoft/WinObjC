@@ -20,8 +20,6 @@
 #include <set>
 
 class ShaderNode;
-typedef std::set<std::string> StrSet;
-typedef std::vector<ShaderNode*> ShaderNodes;
 
 // Contains the definition of either a vertex or pixel shader program, as a map
 // of shader program outputs to a tree of ShaderNode objects responsible for building
@@ -41,7 +39,7 @@ struct TempInfo {
     inline TempInfo() : type(GLKS_INVALID) {}
     inline TempInfo(GLKShaderVarType type, const std::string& body) : type(type), body(body) {}
 
-    bool dependsOn(const StrSet& variables) const;
+    bool dependsOn(const std::set<std::string>& variables) const;
     
     GLKShaderVarType type;
     std::string body;
@@ -216,11 +214,11 @@ public:
 
 // All child nodes that generate code will be added together.
 class ShaderAdditiveCombiner : public ShaderNode {
-    ShaderNodes subNodes;
+    std::vector<ShaderNode*> subNodes;
 
 public:
     inline ShaderAdditiveCombiner() {}
-    inline ShaderAdditiveCombiner(const ShaderNodes& n) : subNodes(n) {}
+    inline ShaderAdditiveCombiner(const std::vector<ShaderNode*>& n) : subNodes(n) {}
 
     inline void addNode(ShaderNode* n) { subNodes.push_back(n); }
     

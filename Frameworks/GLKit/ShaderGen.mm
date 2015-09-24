@@ -27,7 +27,7 @@ using namespace std;
 
 // This is really crude.  Determine if this (unparsed) expression depends on a set of variables
 // by string searching the body for variables.  Beats parsing the entire thing though.
-bool TempInfo::dependsOn(const StrSet& variables) const
+bool TempInfo::dependsOn(const std::set<std::string>& variables) const
 {
     for(const auto& var : variables) {
         if (body.find(var) != string::npos) return true;
@@ -39,7 +39,7 @@ bool TempInfo::dependsOn(const StrSet& variables) const
 string ShaderContext::orderedTempVals(const TempMap& tempDefs, bool usePrecision)
 {
     string res;
-    StrSet tempNames;
+    std::set<std::string> tempNames;
     string precision = usePrecision ? "lowp " : "";
 
     for(const auto& def : tempDefs) tempNames.insert(def.first);
