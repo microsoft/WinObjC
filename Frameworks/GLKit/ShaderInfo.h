@@ -46,7 +46,6 @@ struct VarInfo {
 // Lists vertex attributes and shader variables for the vertex/pixel shader pair.
 struct ShaderLayout {
     std::map<std::string, VarInfo> vars;
-    inline void clear() { for(auto it : vars) it.second.used = false; }
 
     inline GLKShaderVarType findVariable(const std::string& name, int* loc = NULL) {
         auto it = vars.find(name);
