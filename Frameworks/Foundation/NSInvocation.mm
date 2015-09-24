@@ -810,7 +810,10 @@ int getArgumentSize(char *type)
                 assert(stackParamsLen == 2);
                 *(float*) returnValue = impFloat(target, sel);
             } else if (strcmp(type, "d") == 0) {
-                assert(!"implement double ret calling convention");
+                double (*impDouble)(id, SEL, ...) = (double (*)(id, SEL, ...))[target methodForSelector: sel];
+                returnValue = malloc(sizeof(double));
+                assert(stackParamsLen == 2);
+                *(double*) returnValue = impDouble(target, sel);
             } else switch ( stackParamsLen ) {
                 case 2: {
                     unsigned retVal;
