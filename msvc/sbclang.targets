@@ -265,7 +265,7 @@
     <!-- Figure out WOCStdlib options to use -->
     <ItemGroup>
       <ClangCompile>
-        <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem $(StarboardSdkRoot)\include\WOCStdLib -include WOCStdlib.h</WOCStdlibOptions>
+        <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem "$(StarboardSdkRoot)\include\WOCStdLib" -include WOCStdlib.h</WOCStdlibOptions>
       </ClangCompile>
     </ItemGroup>
 
