@@ -23,7 +23,7 @@
 #import <GLKit/GLKShaderDefs.h>
 
 enum _GLKShaderVarType {
-    GLKS_INVALID,
+    GLKS_INVALID = 0,
     GLKS_SAMPLER2D,
     GLKS_SAMPLERCUBE,
     GLKS_FLOAT,

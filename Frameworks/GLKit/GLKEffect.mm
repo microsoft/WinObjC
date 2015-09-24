@@ -107,38 +107,43 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
     ShaderLayout* l = (ShaderLayout*)_shader.layout;
     for(const auto& v : l->vars) {
-        if (v.second.vertexAttr) continue;
-        auto mv = _mat.find(v.first);
-        if (mv == nullptr) {
+        if (v.second.vertexAttr) {
+            continue;
+        }
+
+        int loc;
+        GLKShaderVarType type = _mat.findVariable(v.first, &loc);
+
+        if (!type) {
             NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
         } else {
-            switch(mv->type) {
+            switch(type) {
               case GLKS_SAMPLER2D:
                   glActiveTexture(GL_TEXTURE0 + curTexUnit);
-                  glBindTexture(GL_TEXTURE_2D, mv->loc);
+                  glBindTexture(GL_TEXTURE_2D, loc);
                   glUniform1i(v.second.loc, curTexUnit);
                   curTexUnit ++;
                   break;
               case GLKS_SAMPLERCUBE:
                   glActiveTexture(GL_TEXTURE0 + curTexUnit);
-                  glBindTexture(GL_TEXTURE_CUBE_MAP, mv->loc);
+                  glBindTexture(GL_TEXTURE_CUBE_MAP, loc);
                   glUniform1i(v.second.loc, curTexUnit);
                   curTexUnit ++;
                   break;
               case GLKS_FLOAT:
-                  glUniform1fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                  glUniform1fv(v.second.loc, 1, &_mat.values[loc]);
                   break;
               case GLKS_FLOAT2:
-                  glUniform2fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                  glUniform2fv(v.second.loc, 1, &_mat.values[loc]);
                   break;
               case GLKS_FLOAT3:
-                  glUniform3fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                  glUniform3fv(v.second.loc, 1, &_mat.values[loc]);
                   break;
               case GLKS_FLOAT4:
-                  glUniform4fv(v.second.loc, 1, &_mat.values[mv->loc]);
+                  glUniform4fv(v.second.loc, 1, &_mat.values[loc]);
                   break;
               case GLKS_MAT4:
-                  glUniformMatrix4fv(v.second.loc, 1, 0, &_mat.values[mv->loc]);
+                  glUniformMatrix4fv(v.second.loc, 1, 0, &_mat.values[loc]);
                   break;
             }
         }

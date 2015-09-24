@@ -48,11 +48,14 @@ struct ShaderLayout {
     std::map<std::string, VarInfo> vars;
     inline void clear() { for(auto it : vars) it.second.used = false; }
 
-    inline VarInfo* find(const std::string& name) {
+    inline GLKShaderVarType findVariable(const std::string& name, int* loc = NULL) {
         auto it = vars.find(name);
-        if (it == vars.end()) return nullptr;
+        if (it == vars.end()) return GLKS_INVALID;
+
         it->second.used = true;
-        return &it->second;
+        if(loc) *loc = it->second.loc;
+
+        return it->second.type;
     }
 
     // Define shader variable, can be either a vertex attribute or a shader constant.

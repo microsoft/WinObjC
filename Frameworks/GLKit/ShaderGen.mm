@@ -228,12 +228,12 @@ bool ShaderInputVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& 
 
 bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    auto var = v.find(name);
-    if(var) {
-        type = var->type;
+    type = v.findVariable(name);
+    if (type) {
         out = name;
         return true;
     }
+
     if (constantResult.empty()) return false;
     out = constantResult;
     return true;
@@ -241,16 +241,14 @@ bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
 bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    auto v1 = v.find(first);
-    if(v1) {
-        type = v1->type;
+    type = v.findVariable(first);
+    if (type) {
         out = first;
         return true;
     }
 
-    auto v2 = v.find(second);
-    if (v2) {
-        type = v2->type;
+    type = v.findVariable(second);
+    if (type) {
         out = second;
         return true;
     }
@@ -270,9 +268,7 @@ bool ShaderFallbackNode::generate(string& out, ShaderContext& c, ShaderLayout& v
 
 bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 {
-    auto pos = v.find(GLKSH_POS_NAME);
-    auto mat = v.find(GLKSH_MVP_NAME);
-    if (!pos || !mat) return false;
+    if (!v.findVariable(GLKSH_POS_NAME) || !v.findVariable(GLKSH_MVP_NAME)) return false;
 
     out = GLKSH_MVP_NAME " * " GLKSH_POS_NAME;
     return true;
@@ -289,8 +285,7 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
     // Get what we need for the texture, just passthrough next if not there.
     string uv;
-    auto v1 = v.find(texVar);
-    if (!v1 || !uvRef->generate(uv, c, v)) {
+    if (!v.findVariable(texVar) || !uvRef->generate(uv, c, v)) {
         if (nextRef) nextRef->generate(out, c, v);
         return !out.empty();
     }
@@ -345,8 +340,7 @@ bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
     // No texture?  just do passthrough.
     string uv;
-    auto v1 = v.find(texVar);
-    if (!v1 || !uvRef->generate(uv, c, v)) return !out.empty();
+    if (!v.findVariable(texVar) || !uvRef->generate(uv, c, v)) return !out.empty();
 
     // Do our texture lookup.
     string texVarTmp = texVar + "_specTmp";
