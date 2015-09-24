@@ -33,7 +33,7 @@ std::string getTypeStr(GLKShaderVarType t)
     return std::string(types[t]);
 }
 
-void ShaderMaterial::addvar(const std::string& var, GLKShaderVarType type, float* data)
+void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType type, float* data)
 {
     assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
 
@@ -58,7 +58,7 @@ void ShaderMaterial::addvar(const std::string& var, GLKShaderVarType type, float
     }
 }
 
-void ShaderMaterial::addtex(const std::string& var, GLuint name, GLKShaderVarType type)
+void ShaderMaterial::addTexture(const std::string& var, GLuint name, GLKShaderVarType type)
 {
     assert(type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
 

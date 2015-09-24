@@ -57,8 +57,9 @@ struct ShaderLayout {
         return it->second.type;
     }
 
-    // Define shader variable, can be either a vertex attribute or a shader constant.
-    inline void defvar(const std::string& var, GLKShaderVarType type, int loc, bool attr = false) {
+    // Define shader variable, can be either a vertex attribute or a shader constant.  These are used
+    // to define shader variables not related to the material, such as the vertex layout and the MVP matrix.
+    inline void defVariable(const std::string& var, GLKShaderVarType type, int loc, bool attr = false) {
         if (type == GLKS_INVALID) return;
         if (vars.find(var) != vars.end()) return;
 
@@ -69,30 +70,35 @@ struct ShaderLayout {
         vars[var] = v;
     }
 
-    // Convenience functions.
-    inline void defVertexAttr(const std::string& var)                    { defvar(var, GLKS_FLOAT4, -1, true); }
-    inline void defVertexAttr3(const std::string& var)                   { defvar(var, GLKS_FLOAT3, -1, true); }
-    inline void defVertexAttr2(const std::string& var)                   { defvar(var, GLKS_FLOAT2, -1, true); }
-    inline void defMatrix(const std::string& var)                        { defvar(var, GLKS_MAT4, -1, false); }    
+    // Convenience functions for the above.
+    inline void defVertexAttr(const std::string& var)                    { defVariable(var, GLKS_FLOAT4, -1, true); }
+    inline void defVertexAttr3(const std::string& var)                   { defVariable(var, GLKS_FLOAT3, -1, true); }
+    inline void defVertexAttr2(const std::string& var)                   { defVariable(var, GLKS_FLOAT2, -1, true); }
+    inline void defMatrix(const std::string& var)                        { defVariable(var, GLKS_MAT4, -1, false); }
 };
 
+// A shader material is just a list of shader variables and their values.  Materials can be over-specified, but
+// generally aren't.
 struct ShaderMaterial : public ShaderLayout {
     std::vector<float> values;
     std::map<std::string, unsigned int> inputVars;
 
-    // Add shader material variables to the material definition.
-    void addvar(const std::string& var, GLKShaderVarType type, float* data);
-    inline void addvar(const std::string& var, const GLKVector4& vec)    { addvar(var, GLKS_FLOAT4, (float*)&vec); }
-    inline void addvar(const std::string& var, const GLKVector3& vec)    { addvar(var, GLKS_FLOAT3, (float*)&vec); }
-    inline void addvar(const std::string& var, const GLKVector2& vec)    { addvar(var, GLKS_FLOAT2, (float*)&vec); }
-    inline void addvar(const std::string& var, float val)                { addvar(var, GLKS_FLOAT, &val); }
+    // These define the shader material variables.  These are just arbitrary shader variables and their values
+    // coalesced into a single object.  Shader materials control shader generation in that if a value is present in
+    // the material, it can be used by the shader, and if it is not, the code using it can be eliminated from the
+    // shader entirely.
+    void addMaterialVar(const std::string& var, GLKShaderVarType type, float* data);
+    inline void addMaterialVar(const std::string& var, const GLKVector4& vec)    { addMaterialVar(var, GLKS_FLOAT4, (float*)&vec); }
+    inline void addMaterialVar(const std::string& var, const GLKVector3& vec)    { addMaterialVar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addMaterialVar(const std::string& var, const GLKVector2& vec)    { addMaterialVar(var, GLKS_FLOAT2, (float*)&vec); }
+    inline void addMaterialVar(const std::string& var, float val)                { addMaterialVar(var, GLKS_FLOAT, &val); }
 
     // Adds a float4 as a float3 for convenience.
-    inline void addvar3(const std::string& var, const GLKVector4& vec)   { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addMaterialVar3(const std::string& var, const GLKVector4& vec)   { addMaterialVar(var, GLKS_FLOAT3, (float*)&vec); }
 
     // Add texture references to the shader material.
-    void addtex(const std::string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
-    inline void addtexcube(const std::string& var, GLuint name)          { addtex(var, name, GLKS_SAMPLERCUBE); }
+    void addTexture(const std::string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
+    inline void addTexCube(const std::string& var, GLuint name)          { addTexture(var, name, GLKS_SAMPLERCUBE); }
 
     // Adds an input variable to the shader material.  These can alter shader generation, but are not used
     // by the shader itself.

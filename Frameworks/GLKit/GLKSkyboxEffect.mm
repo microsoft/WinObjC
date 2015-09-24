@@ -77,7 +77,7 @@ const char* psSrc =
     [super updateShaderMaterialParams];
 
     ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
-    mat->addtexcube(skyboxTexName, _textureCubeMap.name);
+    mat->addTexCube(skyboxTexName, _textureCubeMap.name);
 
     return TRUE;
 }

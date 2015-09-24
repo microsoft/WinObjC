@@ -88,7 +88,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (![self updateShaderMaterialParams]) return;
     if (_cameraRequired) {
         auto res = GLKMatrix4MultiplyVector3WithTranslation(_modelRefTrans, GLKVector3Make(0, 0, 0));
-        _mat.addvar(GLKSH_CAMERA, res);
+        _mat.addMaterialVar(GLKSH_CAMERA, res);
         self.effectChanged = TRUE;
     }
     if (![self prepareShaders]) return;
@@ -288,7 +288,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         if (t.enabled) {
             GLuint name = t.name;
             if (name > 0) {
-                m->addtex(texNames[texNum], name);
+                m->addTexture(texNames[texNum], name);
                 m->addInputVar(texModes[texNum], t.envMode);
                 shaderName += 'T';
             }
@@ -312,7 +312,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     GLuint specTex = matProps.specularTex;
     if (shininess > 0 && specTex > 0 && pp) {
         specType = 'S';
-        m->addtex(GLKSH_SPECULAR_TEX, specTex);
+        m->addTexture(GLKSH_SPECULAR_TEX, specTex);
     }
     GLKVector4 specBase = matProps.specularColor;
     if (GLKVector4XYZEqualToScalar(specBase, 0.f)) shininess = 0.f;
@@ -326,9 +326,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                 char ltype = 'U';
                 if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
                     ltype = 'L';
-                    m->addvar(lightVarNames[lightNum].color, l.diffuseColor);
-                    m->addvar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
-                    m->addvar(lightVarNames[lightNum].atten, l.attenuation);
+                    m->addMaterialVar(lightVarNames[lightNum].color, l.diffuseColor);
+                    m->addMaterialVar3(lightVarNames[lightNum].pos, GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
+                    m->addMaterialVar(lightVarNames[lightNum].atten, l.attenuation);
                     float spot = l.spotCutoff;
                     if (spot < 180.f) {
                         spot = std::max(spot, 0.25f);
@@ -340,8 +340,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                         exp = cosf(DEG2RAD(exp));
                         float multiplier = 1.f / (exp - spot);
                         
-                        m->addvar(lightVarNames[lightNum].spotlight, GLKVector3Make(spot, exp, multiplier));
-                        m->addvar(lightVarNames[lightNum].spotlightDir, GLKMatrix4MultiplyVector3(self.modelRefTrans, l.spotDirection));
+                        m->addMaterialVar(lightVarNames[lightNum].spotlight, GLKVector3Make(spot, exp, multiplier));
+                        m->addMaterialVar(lightVarNames[lightNum].spotlightDir, GLKMatrix4MultiplyVector3(self.modelRefTrans, l.spotDirection));
                     }
                     if (shininess > 0.f) {
                         GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
@@ -349,7 +349,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
                             self.cameraRequired = true;
                             ltype = specType;
                             spec.w = shininess;
-                            m->addvar(lightVarNames[lightNum].specular, spec);
+                            m->addMaterialVar(lightVarNames[lightNum].specular, spec);
                         }
                     }
                 }
@@ -367,7 +367,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         if (!GLKVector4XYZEqualToScalar(ambient, 0.f)) {
             shaderName += 'a';
-            m->addvar(GLKSH_AMBIENT, ambient);
+            m->addMaterialVar(GLKSH_AMBIENT, ambient);
         } else {
             shaderName += 'n';
         }
@@ -375,12 +375,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         GLuint emissiveTex = matProps.emissiveTex;
         if (emissiveTex && pp) {
             shaderName += 'E';
-            m->addtex(GLKSH_EMISSIVE_TEX, emissiveTex);
+            m->addTexture(GLKSH_EMISSIVE_TEX, emissiveTex);
         } else {
             GLKVector4 emissive = matProps.emissiveColor;
             if (!GLKVector4XYZEqualToScalar(emissive, 0.f)) {
                 shaderName += 'e';
-                m->addvar(GLKSH_EMISSIVE, emissive);
+                m->addMaterialVar(GLKSH_EMISSIVE, emissive);
             } else {
                 shaderName += 'n';
             }
@@ -396,13 +396,13 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         if (mode == GLKFogModeExp || mode == GLKFogModeExp2) {
             float density = fog.density;
             if (density > 0) {
-                m->addvar(GLKSH_FOG_COLOR, fog.color);
+                m->addMaterialVar(GLKSH_FOG_COLOR, fog.color);
                 if (mode == GLKFogModeExp) {
                     shaderName += "eF";
-                    m->addvar(GLKSH_FOG_DENSITY, -density);
+                    m->addMaterialVar(GLKSH_FOG_DENSITY, -density);
                 } else {
                     shaderName += "EF";
-                    m->addvar(GLKSH_FOG_DENSITY2, -(density * density));
+                    m->addMaterialVar(GLKSH_FOG_DENSITY2, -(density * density));
                 }
             } else {
                 shaderName += "NF";
@@ -413,8 +413,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             //if (start >= 0 && end > start) { // OH GOD
             if (start >= 0) {
                 shaderName += "LF";
-                m->addvar(GLKSH_FOG_COLOR, fog.color);
-                m->addvar(GLKSH_FOG_DISTANCES, GLKVector2Make(end, 1.f / (end - start)));
+                m->addMaterialVar(GLKSH_FOG_COLOR, fog.color);
+                m->addMaterialVar(GLKSH_FOG_DISTANCES, GLKVector2Make(end, 1.f / (end - start)));
             } else {
                 shaderName += "NF";
             }
@@ -427,11 +427,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     if (!isLit) {
         if (self.useConstantColor && !GLKVector4XYZEqualToScalar(_constantColor, 1.f)) {
             shaderName += "_CC";
-            m->addvar(GLKSH_CONSTCOLOR_NAME, _constantColor);
+            m->addMaterialVar(GLKSH_CONSTCOLOR_NAME, _constantColor);
         } else if(!GLKVector4XYZEqualToScalar(matProps.diffuseColor, 0.f) &&
                   !GLKVector4XYZEqualToScalar(matProps.diffuseColor, 1.f)) {
             shaderName += "_CC";
-            m->addvar(GLKSH_CONSTCOLOR_NAME, matProps.diffuseColor);
+            m->addMaterialVar(GLKSH_CONSTCOLOR_NAME, matProps.diffuseColor);
         }
     } else {
         m->addInputVar(GLKSH_LIGHTING_ENABLED, 1);
@@ -650,7 +650,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
         GLuint name = _textureCubeMap.name;
         if (name > 0) {
-            mat->addtexcube(GLKSH_TEXCUBE, _textureCubeMap.name);
+            mat->addTexCube(GLKSH_TEXCUBE, _textureCubeMap.name);
             mat->addInputVar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
             self.cameraRequired = TRUE;
         }
@@ -659,12 +659,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         float reflAlpha = matProps.reflectionBlendAlpha;
         if (reflAlpha != 1.f) {
             name += 'A';
-            mat->addvar(GLKSH_REFL_ALPHA, reflAlpha);
+            mat->addMaterialVar(GLKSH_REFL_ALPHA, reflAlpha);
         }
         GLuint reflTex = matProps.reflectionBlendTex;
         if (reflTex > 0) {
             name += 'T';
-            mat->addtex(GLKSH_REFL_TEX, reflTex);
+            mat->addTexture(GLKSH_REFL_TEX, reflTex);
         }
     }
 

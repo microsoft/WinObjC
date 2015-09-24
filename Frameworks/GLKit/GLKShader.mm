@@ -147,7 +147,7 @@ static GLKShaderCache* imp = nil;
     for(int i = 0; i < numAttrs; i ++) {
         glGetActiveAttrib(prog, i, sizeof(buf), &len, &size, &type, buf);
         GLint loc = glGetAttribLocation(prog, buf);
-        _vars.defvar(buf, getShaderType(type), loc, true);
+        _vars.defVariable(buf, getShaderType(type), loc, true);
     }
 
     for(int i = 0; i < numUniforms; i ++) {
@@ -156,7 +156,7 @@ static GLKShaderCache* imp = nil;
         if (strcmp(buf, GLKSH_MVP_NAME) == 0) {
             _mvploc = loc;
         } else {
-            _vars.defvar(buf, getShaderType(type), loc);
+            _vars.defVariable(buf, getShaderType(type), loc);
         }
     }
     
@@ -184,25 +184,24 @@ static GLKShaderCache* imp = nil;
 }
 
 -(void)addVec2: (GLKVector2)val named: (NSString*)name {
-    _mat->addvar([name UTF8String], val);
+    _mat->addMaterialVar([name UTF8String], val);
 }
 
 -(void)addVec3: (GLKVector3)val named: (NSString*)name {
-    _mat->addvar([name UTF8String], val);
+    _mat->addMaterialVar([name UTF8String], val);
 }
 
 -(void)addVec4: (GLKVector4)val named: (NSString*)name {
-    _mat->addvar([name UTF8String], val);
+    _mat->addMaterialVar([name UTF8String], val);
 }
 
 -(void)addTexture: (GLuint)texHandle named: (NSString*)name {
-    _mat->addtex([name UTF8String], texHandle);
+    _mat->addTexture([name UTF8String], texHandle);
 }
 
 -(void)addTexCube: (GLuint)texHandle named: (NSString*)name {
-    _mat->addtexcube([name UTF8String], texHandle);
+    _mat->addTexCube([name UTF8String], texHandle);
 }
-
 
 @end
 
