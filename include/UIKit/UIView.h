@@ -180,8 +180,6 @@ UIKIT_EXPORT_CLASS
 - (BOOL)needsUpdateConstraints;
 - (void)setNeedsUpdateConstraints;
 
-- (void)invalidateIntrinsicContentSize;
-
 - (void)removeMotionEffect:(UIMotionEffect *)effect;
 - (void)addMotionEffect:(UIMotionEffect *)effect;
 
@@ -211,12 +209,6 @@ UIKIT_EXPORT_CLASS
 + (void)setAnimationWillStartSelector:(SEL)selector;
 + (BOOL)areAnimationsEnabled;
 + (void)setAnimationsEnabled:(BOOL)enabled;
-
-// -- internal --
--(void) _setShouldLayout;
-
-+(void) _setNestedAnimationsEnabled:(BOOL)enable;
-// --------------
 
 @property (nonatomic) CGRect frame;
 @property (nonatomic) CGRect bounds;

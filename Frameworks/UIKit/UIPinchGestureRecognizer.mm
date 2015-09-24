@@ -17,6 +17,8 @@
 #include <math.h>
 #include "UIKit/UIKit.h"
 
+#include "UIGestureRecognizerInternal.h"
+
 @implementation UIPinchGestureRecognizer {
     struct TrackingTouch
     {

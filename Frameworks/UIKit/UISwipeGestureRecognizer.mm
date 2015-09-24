@@ -17,6 +17,8 @@
 #include "UIKit/UIKit.h"
 #include <math.h>
 
+#include "UIGestureRecognizerInternal.h"
+
 @implementation UISwipeGestureRecognizer  {
 @public
     UISwipeGestureRecognizerDirection _direction;

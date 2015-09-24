@@ -26,7 +26,7 @@ class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView>
 {
 public:
     id superview;   //  id
-    idretain backgroundColor;
+    idretaint<UIColor> backgroundColor;
     id curTouch, curTouchEvent, curTouchSet;
     uint32_t tag;
     BOOL userInteractionEnabled;
@@ -88,12 +88,17 @@ public:
     ConstraintProperties* _constraints;
 };
 
+// This is a bit of a hack (since didMoveToWindow should only be in UIView-derived classes)
+// but we use this to resign firstResponder-ship so carets stop blinking when moving between windows.
+@interface UIResponder ()
+-(void)didMoveToWindow;
+@end
+
 @interface UIView() {
 @public
     UIViewPrivateState* priv;
 }
 -(void) initPriv;
--(void) initInternal;
 -(UIViewPrivateState*) _privateState;
 @end
 
@@ -101,8 +106,11 @@ public:
     NSLayoutConstraintPrivateState* priv;
 }
 -(NSLayoutConstraintPrivateState*) _privateState;
--(void)printConstraint;
-+(void)printConstraints:(NSArray*)constraints;
+- (void)printConstraint;
++ (void)printConstraints:(NSArray*)constraints;
+
+- (void)_setShouldLayout;
++ (void)_setNestedAnimationsEnabled:(BOOL)enable;
 @end
 
 @interface _UILayoutGuide : UIView<UILayoutSupport>

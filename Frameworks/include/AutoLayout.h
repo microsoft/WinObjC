@@ -38,4 +38,5 @@
 @end
 
 @interface UIView (AutoLayout) <AutoLayoutView>
+-(void) invalidateContentSize;
 @end

@@ -86,6 +86,7 @@ CA_EXPORT_CLASS
 @property(retain) id contents;
 @property CATransform3D transform;
 @property CATransform3D sublayerTransform;
+@property CGRect contentsCenter;
 @property(copy) NSString *contentsGravity;
 @property(copy) NSString *name;
 @property BOOL drawsAsynchronously;

@@ -22,6 +22,8 @@
 #include "UIKit/UIGestureRecognizer.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 
+#include "UIGestureRecognizerInternal.h"
+
 extern NSMutableDictionary* curGesturesDict;
 
 @implementation UIGestureRecognizer : NSObject

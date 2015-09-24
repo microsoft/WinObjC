@@ -22,7 +22,9 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSTimer.h"
 #include "UIKit/UITapGestureRecognizer.h"
-#include "..\include\CACompositor.h"
+
+#include "CACompositor.h"
+#include "UIGestureRecognizerInternal.h"
 
 #include <math.h>
 

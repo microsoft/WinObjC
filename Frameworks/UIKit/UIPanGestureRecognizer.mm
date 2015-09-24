@@ -25,6 +25,8 @@
 #include "UIKit/UIPanGestureRecognizer.h"
 #include "UIKit/UITouch.h"
 
+#include "UIGestureRecognizerInternal.h"
+
 // So we can allocate explicitly because otherwise constructors aren't called:
 struct TouchInfo
 {

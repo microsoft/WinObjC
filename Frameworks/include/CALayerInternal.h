@@ -92,7 +92,20 @@ public:
 };
 
 @interface CALayer(Internal)
+- (NSObject*)presentationValueForKey:(NSString *)key;
+
 - (int)_pixelWidth;
 - (int)_pixelHeight;
+
+- (void)setOrigin:(CGPoint)origin;
+- (void)_setShouldLayout;
+
+- (void)_releaseContents:(BOOL)immediately;
+
+// Some additional non-standard layer swapping functionality:
+- (void)exchangeSublayer:(CALayer*)layer1 withLayer:(CALayer*)layer2;
+- (void)exchangeSubviewAtIndex:(int)index1 withSubviewAtIndex:(int)index2;
+- (void)sendSublayerToBack:(CALayer*)sublayer;
+- (void)bringSublayerToFront:(CALayer*)sublayer;
 @end
 #endif /* _CALAYERPRIVATE_H_ */

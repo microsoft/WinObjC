@@ -59,27 +59,7 @@ typedef struct
 @end
 
 UIKIT_EXPORT_CLASS
-@interface UIGestureRecognizer : NSObject {
-@protected
-    __unsafe_unretained id _delegate;
-    BOOL _delaysTouchesBegan;
-    BOOL _delaysTouchesEnded;
-    BOOL _cancelsTouchesInView;
-    BOOL _disabled;
-    UIGestureRecognizerState _state;
-    UIView *_view;
-    NSMutableArray *_registeredActions;
-    NSMutableArray *_trackingTouches;
-
-    gestureTarget _targets[32];
-    int _numTargets;
-    
-    struct {
-        unsigned shouldBegin : 1;
-        unsigned shouldReceiveTouch : 1;
-        unsigned shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
-    } _delegateHas; 
-}
+@interface UIGestureRecognizer : NSObject
 
 - (id)initWithTarget:(id)target action:(SEL)action;
 

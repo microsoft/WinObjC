@@ -16,24 +16,28 @@
 
 #pragma once
 
-struct CAMediaTimingProperties
-{
-    BOOL _removedOnCompletion;
-    double _beginTime, _duration, _timeOffset, _delay, _speed;
-    BOOL _autoReverses;
-    float _repeatCount;
-    double _repeatDuration;
-    __unsafe_unretained id _timingFunction;
-    enum CAMediaFillMode _fillMode;
-};
+@interface UIGestureRecognizer () {
+@protected
+    __unsafe_unretained id _delegate;
+    BOOL _delaysTouchesBegan;
+    BOOL _delaysTouchesEnded;
+    BOOL _cancelsTouchesInView;
+    BOOL _disabled;
+    UIGestureRecognizerState _state;
+    UIView *_view;
+    NSMutableArray *_registeredActions;
+    NSMutableArray *_trackingTouches;
 
-@interface CAAnimation () {
-@public
-    CAMediaTimingProperties _timingProperties;
-    DisplayAnimation        *_runningAnimation, *_runningAnimation2;
-    id                      _attachedLayer;
-    idretaintype(NSString)  _keyName;
+    gestureTarget _targets[32];
+    int _numTargets;
+    
+    struct {
+        unsigned shouldBegin : 1;
+        unsigned shouldReceiveTouch : 1;
+        unsigned shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
+    } _delegateHas; 
 }
 
-- (void)setDelay:(double)delay;
+-(void) _setView:(UIView*)view;
+-(void) cancelIfActive;
 @end

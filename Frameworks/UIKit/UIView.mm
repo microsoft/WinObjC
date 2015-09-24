@@ -20,6 +20,11 @@
 #include "UIAppearanceSetter.h"
 
 #import "UIViewInternal.h"
+#import "UIWindowInternal.h"
+#import "UIViewControllerInternal.h"
+#import "UIGestureRecognizerInternal.h"
+#import "CALayerInternal.h"
+#import "CAAnimationInternal.h"
 #import "AutoLayout.h"
 
 @class UIAppearanceSetter;
@@ -46,7 +51,7 @@ typedef struct {
     double _animationDuration;
     double _animationDelay;
     id     _animationDelegate;
-    idretain _animationCurve;
+    idretaint<CAMediaTimingFunction> _animationCurve;
     id     _animationID;
     void  *_context;
     SEL _animationWillStartSelector;
@@ -154,14 +159,12 @@ int viewCount = 0;
     -(id) initWithCoder:(NSCoder*)coder {
         CGRect bounds;
 
-        NSString* boundsObj = [coder decodeObjectForKey:@"UIBounds"];
+        id boundsObj = [coder decodeObjectForKey:@"UIBounds"];
         if ( boundsObj != nil ) {
             if ( [boundsObj isKindOfClass:[NSString class]] ) {
-                const char *boundsStr = (const char *) [boundsObj UTF8String];
-                sscanf(boundsStr, "{{%f, %f}, {%f, %f}}", &bounds.origin.x, &bounds.origin.y, &bounds.size.width, &bounds.size.height);
+                bounds = CGRectFromString(boundsObj);
             } else {
-                CGRect *pRect = (CGRect *) ((char *) [boundsObj bytes] + 1);
-                memcpy(&bounds, pRect, sizeof(CGRect));
+                memcpy(&bounds, reinterpret_cast<const char*>([boundsObj bytes]) + 1, sizeof(CGRect));
             }
         } else {
             bounds.origin.x = 0;
@@ -172,14 +175,12 @@ int viewCount = 0;
 
         CGPoint center;
 
-        NSObject* centerObj = [coder decodeObjectForKey:@"UICenter"];
+        id centerObj = [coder decodeObjectForKey:@"UICenter"];
         if ( centerObj ) {
             if ( [centerObj isKindOfClass:[NSString class]] ) {
-                const char *centerStr = (const char *) [centerObj UTF8String];
-                sscanf(centerStr, "{%f, %f}", &center.x, &center.y);
+                center = CGPointFromString(centerObj);
             } else {
-                CGPoint *pPoint = (CGPoint *) ((char *) [centerObj bytes] + 1);
-                memcpy(&center, pPoint, sizeof(CGPoint));
+                memcpy(&center, reinterpret_cast<const char*>([centerObj bytes]) + 1, sizeof(CGPoint));
             }
         } else {
             center.x = 0;
@@ -195,13 +196,11 @@ int viewCount = 0;
             [self setAlpha:val];
         }
         if ( [coder containsValueForKey:@"UIContentStretch"] ) {
-
             CGRect rect;
 
-            NSObject* obj = [coder decodeObjectForKey:@"UIContentStretch"];
+            id obj = [coder decodeObjectForKey:@"UIContentStretch"];
             if ( [obj isKindOfClass:[NSString class]] ) {
-                const char *stretchStr = (const char *) [obj UTF8String];
-                sscanf(stretchStr, "{{%f, %f}, {%f, %f}}", &rect.origin.x, &rect.origin.y, &rect.size.width, &rect.size.height);
+                rect = CGRectFromString(obj);
             } else {
                 memcpy(&rect, (char *) [obj bytes] + 1, sizeof(CGRect));
             }
@@ -215,12 +214,15 @@ int viewCount = 0;
             priv->userInteractionEnabled = FALSE;
         }
 
-        UIViewContentMode contentMode = (UIViewContentMode) [coder decodeInt32ForKey:@"UIContentMode"];
-        [self setContentMode:contentMode];
+        self.contentMode = (UIViewContentMode) [coder decodeInt32ForKey:@"UIContentMode"];
 
-        id uidelegate = [coder decodeObjectForKey:@"UIDelegate"];
-        if ( uidelegate != nil ) {
-            [self setDelegate:uidelegate];
+        id uiDelegate = [coder decodeObjectForKey:@"UIDelegate"];
+        if ( uiDelegate != nil ) {
+            if ([self respondsToSelector:@selector(setDelegate:)]) {
+                [self performSelector:@selector(setDelegate:) withObject:uiDelegate];
+            } else {
+                EbrDebugLog("UIDelegate decoded but %s doens't support setDelegate!\n", object_getClassName(self));
+            }
         }
 
         NSArray* subviewsObj = [coder decodeObjectForKey:@"UISubviews"];
@@ -258,8 +260,9 @@ int viewCount = 0;
                             break;
                         }
                     }
-                    if(![self.constraints containsObject:constraint] && !remove) {
-                        [self.constraints addObject:constraint];
+
+                    if(![_constraints containsObject:constraint] && !remove) {
+                        [_constraints addObject:constraint];
                         if([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
                             [constraint autoLayoutConstraintAddedToView:self];
                         }
@@ -283,7 +286,9 @@ int viewCount = 0;
         [self setClipsToBounds:[coder decodeInt32ForKey:@"UIClipsToBounds"]];
 
         UIColor* backgroundColor = [coder decodeObjectForKey:@"UIBackgroundColor"];
-        if ( backgroundColor != nil ) [self setBackgroundColor:backgroundColor];
+        if ( backgroundColor != nil ) {
+            self.backgroundColor = backgroundColor;
+		}
 
         NSArray* gestures = [coder decodeObjectForKey:@"gestureRecognizers"];
         if ( gestures != nil ) {
@@ -294,33 +299,28 @@ int viewCount = 0;
         return self;
     }
 
+    - (void)encodeWithCoder:(NSCoder*)coder {
+        EbrDebugLog("Unsupported attempt to encode a UIView\n");
+    }
+
 
     -(CGRect) bounds {
-        CGRect ret;
-        ret = [layer bounds];
-        return ret;
+        return [layer bounds];
     }
 
 
     -(CGPoint) center {
-        CGPoint ret;
-        ret = [layer position];
-        return ret;
+        return [layer position];
     }
 
 
     -(CGAffineTransform) transform {
-        CGAffineTransform transform;
-        transform = [layer affineTransform];
-        return transform;
+        return [layer affineTransform];
     }
 
 
     -(CGRect) frame {
-        CGRect ret;
-        ret = [layer frame];
-        ret = CGRectStandardize(ret);
-        return ret;
+        return CGRectStandardize([layer frame]);
     }
 
 
@@ -649,13 +649,11 @@ int viewCount = 0;
         curFrame.origin = origin;
     
         [layer setFrame:curFrame];
-  }
-
+    }
 
     -(void) setBoundsOrigin:(CGPoint)origin {
         [layer setOrigin:origin];
     }
-
 
     -(NSArray*) subviews {
         return priv->subnodesArray();
@@ -1140,9 +1138,6 @@ int viewCount = 0;
 
         if ( [self isHidden] ) return nil;
         if ( ![self isUserInteractionEnabled] ) return nil;
-        if ( [self respondsToSelector:@selector(ignoresMouseEvents)] ) {
-            if ( [self ignoresMouseEvents] ) return nil;
-        }
         if ( [self alpha] <= 0.01f ) { 
             return nil;
         }
@@ -1373,12 +1368,8 @@ int viewCount = 0;
 
 
     -(void) setBackgroundColor:(UIColor*)color {
-        if ( color != nil ) {
-            priv->backgroundColor = color;
-        } else {
-            priv->backgroundColor = nil;
-        }
-        [layer setBackgroundColor:[(UIColor*) priv->backgroundColor CGColor]];
+		priv->backgroundColor = color;
+        [layer setBackgroundColor:[color CGColor]];
     }
 
 
@@ -1481,20 +1472,18 @@ int viewCount = 0;
     }
 
 
-    /* annotate with type */ -(void) setContentStretch:(CGRect)stretch {
+    -(void) setContentStretch:(CGRect)stretch {
         [layer setContentsCenter:stretch];
     }
 
 
-    /* annotate with type */ -(void) setOpaque:(BOOL)opaque {
+    -(void) setOpaque:(BOOL)opaque {
         [layer setOpaque:opaque];
     }
 
 
     -(BOOL) isOpaque {
-        BOOL ret = [layer isOpaque];
-
-        return ret;
+        return [layer opaque];
     }
 
 
@@ -1592,6 +1581,14 @@ int viewCount = 0;
 
     - (void)setNeedsUpdateConstraints {
         priv->_constraintsNeedUpdate = true;
+    }
+
+    - (void)removeMotionEffect:(UIMotionEffect *)effect {
+        EbrDebugLog("Unsupported use of motion effects in removeMotionEffect:\n");
+    }
+
+    - (void)addMotionEffect:(UIMotionEffect *)effect {
+        EbrDebugLog("Unsupported use of motion effects in addMotionEffect:\n");
     }
 
     - (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis {
@@ -1731,24 +1728,22 @@ int viewCount = 0;
     }
 
 
-    -(id<CAAction>) actionForLayer:(CALayer*)layer forKey:(NSString*)key {
+    -(id<CAAction>) actionForLayer:(CALayer*)actionLayer forKey:(NSString*)key {
         if ( stackLevel > 0 && g_animationsDisabled == 0 && g_nestedAnimationsDisabled == 0 ) {
-            char *keyName = (char *) [key UTF8String];
-            if ( strcmp(keyName, "opacity") == 0 ||
-                 strcmp(keyName, "position") == 0 ||
-                 strcmp(keyName, "bounds") == 0 ||
-                 strcmp(keyName, "bounds.origin") == 0 ||
-                 strcmp(keyName, "bounds.size") == 0 ||
-                 strcmp(keyName, "transform") == 0 ) {
+            if ( [key isEqualToString:@"opacity"] ||
+                 [key isEqualToString:@"position"] ||
+                 [key isEqualToString:@"bounds"] ||
+                 [key isEqualToString:@"bounds.origin"] ||
+                 [key isEqualToString:@"bounds.size"] ||
+                 [key isEqualToString:@"transform"] ) {
                 CABasicAnimation* ret = [CABasicAnimation animationWithKeyPath:key];
 
-                if ( _animationProperties[stackLevel]._beginsFromCurrentState && strcmp(keyName, "opacity") != 0 ) {
-                    NSObject *fromValue = [layer presentationValueForKey:key];
-                    [ret setFromValue: fromValue];
+                if ( _animationProperties[stackLevel]._beginsFromCurrentState && ![key isEqualToString:@"opacity"] ) {
+                    [ret setFromValue:[actionLayer presentationValueForKey:key]];
                 } else {
-                    id fromValue = [layer valueForKey:key];
-                    [ret setFromValue:fromValue];
+                    [ret setFromValue:[actionLayer valueForKey:key]];
                 }
+
                 if ( _animationProperties[stackLevel]._animationCurve != nil ) {
                     [ret setTimingFunction:_animationProperties[stackLevel]._animationCurve];
                 }
@@ -1836,6 +1831,10 @@ int viewCount = 0;
         CALLBLOCK(animationBlock);
         [self commitAnimations];
         //EbrCall(E2H(completion)[3], "dd", completion, TRUE);
+    }
+
+    +(void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay usingSpringWithDamping:(CGFloat)dampingRatio initialSpringVelocity:(CGFloat)velocity options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion {
+        EbrDebugLog("%s not supported\n", __func__);
     }
 
 
@@ -1947,7 +1946,7 @@ int viewCount = 0;
     +(void) setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView*)view cache:(BOOL)cache {
         if ( stackLevel > 0 && transition != UIViewAnimationTransitionNone ) {
             _animationProperties[stackLevel]._numAnimations ++;
-            CABasicAnimation* ret = [CATransition animation];
+            CATransition* ret = [CATransition animation];
             [ret setDuration:_animationProperties[stackLevel]._animationDuration];
             [ret setAutoreverses:_animationProperties[stackLevel]._autoReverses];
             [ret setRepeatCount:_animationProperties[stackLevel]._repeatCount];
@@ -2039,7 +2038,10 @@ int viewCount = 0;
     }
 
 
-    -(void) willMoveToWindow:(UIWindow*)window {
+    - (void)willMoveToWindow:(UIWindow*)window {
+    }
+
+    - (void)willRemoveSubview:(UIView *)subview {
     }
 
 
@@ -2065,6 +2067,9 @@ int viewCount = 0;
 
 
     -(void) didMoveToSuperview {
+    }
+
+    -(void) didAddSubview:(UIView*)subview {
     }
 
 
@@ -2206,25 +2211,14 @@ int viewCount = 0;
     }
 
 
-    +(UIAppearanceSetter*) appearance {
-        return [UIAppearanceSetter appearanceWhenContainedIn:nil forUIClass:self];
+    +(id) appearance {
+        EbrDebugLog("Unimplemented method %s on UIView called\n", __func__);
+        return nil;
     }
 
-    +(UIAppearanceSetter*) appearanceWhenContainedIn:(id)containedClass , ...{
-        id curClass = [self class];
-    
-        va_list pReader; va_start(pReader, containedClass);
-
-        id curVal = va_arg(pReader, id);
-
-        while ( curVal  != nil ) {
-            assert(0);
-            curVal = va_arg(pReader, id);
-        }
-
-        va_end(pReader);
-
-        return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+    +(id) appearanceWhenContainedIn:(id)containedClass , ...{
+        EbrDebugLog("Unimplemented method %s on UIView called\n", __func__);
+        return nil;
     }
 
 
@@ -2262,6 +2256,10 @@ int viewCount = 0;
 
     -(UIView*) viewForBaselineLayout {
         return self;
+    }
+
+    - (void)invalidateIntrinsicContentSize {
+        EbrDebugLog("invalidateIntrinsicContentSize not supported\n");
     }
 
     -(CGSize) intrinsicContentSize {

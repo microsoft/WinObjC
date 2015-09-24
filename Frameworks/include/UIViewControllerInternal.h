@@ -67,11 +67,15 @@ struct UIViewControllerPriv
     idretaintype(NSMutableArray) _childViewControllers;
 };
 
-@interface UIViewController() {
+@interface UIViewController () {
 @public
     struct UIViewControllerPriv* priv;
 }
 
+-(void) notifyViewWillAppear:(BOOL)isAnimated;
+-(void) notifyViewDidAppear:(BOOL)isAnimated;
+-(void) notifyViewWillDisappear:(BOOL)isAnimated;
+-(void) notifyViewDidDisappear:(BOOL)isAnimated;
 @end
 
 #endif
