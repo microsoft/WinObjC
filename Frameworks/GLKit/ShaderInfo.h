@@ -24,9 +24,7 @@
 #include <map>
 #include <vector>
 
-using namespace std;
-
-string getTypeStr(GLKShaderVarType t);
+std::string getTypeStr(GLKShaderVarType t);
 
 struct VarInfo {
     VarInfo() : type(GLKS_INVALID), loc(-1), vertexAttr(false), intermediate(false), used(false) {}
@@ -40,22 +38,22 @@ struct VarInfo {
     bool intermediate;
     bool used;
 
-    inline string vtype() const { return getTypeStr(type); }
+    inline std::string vtype() const { return getTypeStr(type); }
     inline bool isTexture() const { return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE); }
 };
 
 struct ShaderLayout {
-    map<string, VarInfo> vars;
+    std::map<std::string, VarInfo> vars;
     inline void clear() { for(auto it : vars) it.second.used = false; }
 
-    inline VarInfo* find(const string& name) {
+    inline VarInfo* find(const std::string& name) {
         auto it = vars.find(name);
         if (it == vars.end()) return nullptr;
         it->second.used = true;
         return &it->second;
     }
 
-    inline void defvar(const string& var, GLKShaderVarType type, int loc, bool attr = false) {
+    inline void defvar(const std::string& var, GLKShaderVarType type, int loc, bool attr = false) {
         if (type == GLKS_INVALID) return;
         if (vars.find(var) != vars.end()) return;
 
@@ -66,26 +64,26 @@ struct ShaderLayout {
         vars[var] = v;
     }
 
-    inline void defvattr(const string& var)                         { defvar(var, GLKS_FLOAT4, -1, true); }
-    inline void defvattr3(const string& var)                        { defvar(var, GLKS_FLOAT3, -1, true); }
-    inline void defvattr2(const string& var)                        { defvar(var, GLKS_FLOAT2, -1, true); }
-    inline void defmat(const string& var)                           { defvar(var, GLKS_MAT4, -1, false); }    
+    inline void defvattr(const std::string& var)                         { defvar(var, GLKS_FLOAT4, -1, true); }
+    inline void defvattr3(const std::string& var)                        { defvar(var, GLKS_FLOAT3, -1, true); }
+    inline void defvattr2(const std::string& var)                        { defvar(var, GLKS_FLOAT2, -1, true); }
+    inline void defmat(const std::string& var)                           { defvar(var, GLKS_MAT4, -1, false); }    
 };
 
 struct ShaderMaterial : public ShaderLayout {
-    vector<float> values;
-    map<string, unsigned int> ivars;
+    std::vector<float> values;
+    std::map<std::string, unsigned int> ivars;
 
-    void addvar(const string& var, GLKShaderVarType type, float* data);
-    inline void addvar(const string& var, const GLKVector4& vec)    { addvar(var, GLKS_FLOAT4, (float*)&vec); }
-    inline void addvar(const string& var, const GLKVector3& vec)    { addvar(var, GLKS_FLOAT3, (float*)&vec); }
-    inline void addvar(const string& var, const GLKVector2& vec)    { addvar(var, GLKS_FLOAT2, (float*)&vec); }
-    inline void addvar(const string& var, float val)                { addvar(var, GLKS_FLOAT, &val); }
-    inline void addvar3(const string& var, const GLKVector4& vec)   { addvar(var, GLKS_FLOAT3, (float*)&vec); }
-    void addtex(const string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
-    inline void addtexcube(const string& var, GLuint name)          { addtex(var, name, GLKS_SAMPLERCUBE); }
+    void addvar(const std::string& var, GLKShaderVarType type, float* data);
+    inline void addvar(const std::string& var, const GLKVector4& vec)    { addvar(var, GLKS_FLOAT4, (float*)&vec); }
+    inline void addvar(const std::string& var, const GLKVector3& vec)    { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addvar(const std::string& var, const GLKVector2& vec)    { addvar(var, GLKS_FLOAT2, (float*)&vec); }
+    inline void addvar(const std::string& var, float val)                { addvar(var, GLKS_FLOAT, &val); }
+    inline void addvar3(const std::string& var, const GLKVector4& vec)   { addvar(var, GLKS_FLOAT3, (float*)&vec); }
+    void addtex(const std::string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
+    inline void addtexcube(const std::string& var, GLuint name)          { addtex(var, name, GLKS_SAMPLERCUBE); }
 
-    inline void addivar(const string& var, unsigned int val)        { ivars[var] = val; }
+    inline void addivar(const std::string& var, unsigned int val)        { ivars[var] = val; }
     
     inline void reset() {
         vars.clear();

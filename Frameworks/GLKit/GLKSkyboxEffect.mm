@@ -29,7 +29,7 @@ struct SkyboxVert {
     GLKVector3 norm;
 };
 
-const string skyboxTexName = "_tex0";
+const std::string skyboxTexName = "_tex0";
 
 const char* vsSrc =
  "uniform mat4 _mvp;\n"

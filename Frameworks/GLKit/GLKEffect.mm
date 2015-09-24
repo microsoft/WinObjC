@@ -29,6 +29,8 @@
 #define MAX_LIGHTS      3
 #define MAX_TEXTURES    2
 
+using namespace std;
+
 struct LightVars {
     const char* color;
     const char* pos;

@@ -21,7 +21,9 @@
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
 
-// TODO: BK: clean up lowp references.
+using namespace std;
+
+// TODO: clean up lowp references.
 
 // This is really crude.  Determine if an (unparsed) expression depends on a set of variables.
 bool TempInfo::dependsOn(const StrSet& set) const

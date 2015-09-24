@@ -17,7 +17,7 @@
 #import <Starboard.h>
 #include "ShaderInfo.h"
 
-string getTypeStr(GLKShaderVarType t)
+std::string getTypeStr(GLKShaderVarType t)
 {
     static const char* types[] = {
         "void",
@@ -30,10 +30,10 @@ string getTypeStr(GLKShaderVarType t)
         "mat4"
     };
 
-    return string(types[t]);
+    return std::string(types[t]);
 }
 
-void ShaderMaterial::addvar(const string& var, GLKShaderVarType type, float* data)
+void ShaderMaterial::addvar(const std::string& var, GLKShaderVarType type, float* data)
 {
     assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
 
@@ -58,7 +58,7 @@ void ShaderMaterial::addvar(const string& var, GLKShaderVarType type, float* dat
     }
 }
 
-void ShaderMaterial::addtex(const string& var, GLuint name, GLKShaderVarType type)
+void ShaderMaterial::addtex(const std::string& var, GLuint name, GLKShaderVarType type)
 {
     assert(type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
 

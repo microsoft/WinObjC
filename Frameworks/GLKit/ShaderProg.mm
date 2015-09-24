@@ -38,6 +38,8 @@
 #define FOG_BLEND "fogBlendFactor"
 #define TRANSFORMED_POS "_xformPos"
 
+using namespace std;
+
 namespace {
 
 ShaderNode* mkToLight(const string& pos, const string& tmpName = "")
