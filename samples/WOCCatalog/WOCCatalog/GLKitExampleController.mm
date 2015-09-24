@@ -37,14 +37,24 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear: animated];
+
+    glClearColor(0.0, 0.35, 0.6, 1.0);
+    glClearDepthf(1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 }
 
--(void)viewWillDisappear:(BOOL)animated
+-(void)update 
 {
 }
 
--(void)render
+-(void)glkView:(GLKView*)src drawInRect:(CGRect)rect
 {
+    glClearColor(0.0, 0.35, 0.6, 1.0);
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 @end
  

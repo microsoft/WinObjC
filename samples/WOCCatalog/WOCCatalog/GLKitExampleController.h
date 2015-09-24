@@ -17,4 +17,7 @@
 #import <GLKit/GLKit.h>
 
 @interface GLKitExampleController : GLKViewController
+-(void)glkView: (GLKView*)src drawInRect: (CGRect)rect;
+-(void)update;
+
 @end
