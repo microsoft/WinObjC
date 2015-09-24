@@ -249,6 +249,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
         _effect.textureCubeMap.enabled = TRUE;
+        _effect.textureCubeMap.envMode = GLKTextureEnvModeReplace;
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
@@ -285,6 +286,7 @@ static void dumpMat(const GLKMatrix4& mat)
         _effect.texture2d0.enabled = TRUE;
         _effect.texture2d1.enabled = TRUE;
         _effect.textureCubeMap.enabled = TRUE;
+        _effect.textureCubeMap.envMode = GLKTextureEnvModeDecal;        
         _effect.useConstantColor = FALSE;
         _effect.light0.enabled = TRUE;
         _effect.material.ambientColor = AMBIENT_COLOR;
