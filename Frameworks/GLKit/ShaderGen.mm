@@ -161,7 +161,9 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs)
 
     // Add constants available to the vertex shader program.
     for(auto vp : inputs.vars) {
-        if (vp.second.vertexAttr) continue;
+        if (vp.second.vertexAttr) {
+            continue;
+        }
         VarInfo vd = vp.second;
         vd.intermediate = false;
         vd.used = false;
