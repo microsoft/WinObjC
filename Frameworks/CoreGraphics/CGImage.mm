@@ -134,11 +134,11 @@ const CGFloat *CGColorGetComponents(CGColorRef color)
 }
 
 
-CGImageRef CGImageCreateWithJPEGDataProvider(id data, float *decode, BOOL shouldInterpolate, DWORD intent)
+CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source, const CGFloat decode[], bool shouldInterpolate, CGColorRenderingIntent intent)
 {
     assert(decode == NULL);
 
-    id img = [[_LazyUIImage alloc] initWithData:data];
+    id img = [[_LazyUIImage alloc] initWithData:(NSData*) source];
     return (CGImageRef) [img CGImage];
 }
 
@@ -334,7 +334,7 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask)
     return (CGImageRef) newImage;
 }
 
-CGImageRef CGImageMaskCreate(DWORD width, DWORD height, DWORD bitsPerComponent, DWORD bitsPerPixel, DWORD bytesPerRow, id provider, float *decode, DWORD shouldInterpolate)
+CGImageRef CGImageMaskCreate(size_t width, size_t height, size_t bitsPerComponent, size_t bitsPerPixel, size_t bytesPerRow, CGDataProviderRef provider, const CGFloat *decode, bool shouldInterpolate)
 {
     assert(bitsPerComponent == 8 && bitsPerPixel == 32);
 

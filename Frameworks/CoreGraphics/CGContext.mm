@@ -295,7 +295,7 @@ void CGContextAddRect(CGContextRef ctx, CGRect rct)
     ctx->Backing()->CGContextAddRect(rct);
 }
 
-void CGContextAddRects(CGContextRef ctx, CGRect *rct, unsigned count)
+void CGContextAddRects(CGContextRef ctx, const CGRect *rct, unsigned count)
 {
     for ( unsigned i = 0; i < count; i ++ ) {
         CGContextAddRect(ctx, rct[i]);
@@ -535,14 +535,14 @@ void CGContextClipToRect(CGContextRef ctx, CGRect rct)
     CGContextClip(ctx);
 }
 
-void CGContextClipToRects(CGContextRef ctx, CGRect *rects, unsigned count)
+void CGContextClipToRects(CGContextRef ctx, const CGRect *rects, unsigned count)
 {
     CGContextBeginPath(ctx);
     CGContextAddRects(ctx, rects, count);
     CGContextClip(ctx);
 }
 
-void CGContextAddLines(CGContextRef pContext, CGPoint *pt, unsigned count)
+void CGContextAddLines(CGContextRef pContext, const CGPoint *pt, unsigned count)
 {
     CGContextMoveToPoint (pContext, pt[0].x, pt[0].y);
     for ( unsigned i = 1; i < count; i++) {
@@ -643,7 +643,7 @@ CGContextRef CGBitmapContextCreate(void *data, size_t width, size_t height, size
     return ret;
 }
 
-void CGContextStrokeLineSegments(CGContextRef ctx, CGPoint *segments, unsigned count)
+void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint *segments, unsigned count)
 {
     CGContextBeginPath (ctx);
     for ( unsigned k = 0; k < count; k += 2) {
@@ -720,9 +720,8 @@ void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, flo
     ctx->Backing()->CGContextSetRGBStrokeColor(r, g, b, a);
 }
 
-DWORD CGContextShowText(CGContextRef ctx, char *str, int count)
+void CGContextShowText(CGContextRef ctx, const char *str, unsigned count)
 {
-    return (DWORD) 0;
 }
 
 CGContextRef CGContextRetain(CGContextRef ctx)
