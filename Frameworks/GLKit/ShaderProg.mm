@@ -42,6 +42,13 @@ using namespace std;
 
 namespace {
 
+// NOTE: This file dynamically allocates a fair amount of ShaderNode objects.  This occurs once as startup
+// as part of the static constructors for the standardVsh/Psh and pixelVsh/Psh objects.  These allocations
+// creates the master shader program from which all the individual shader programs are created.  ShaderNode
+// objects are never (and should never) be allocated outside of this particular situation.  Technically, this
+// is a memory leak, but we can revisit this and use smart pointers or statically allocate everything in
+// this situation should it arise.
+    
 // --------------------------------------------------------------------------------
 // The functions below are for creating standard, reused combinations of nodes.
 

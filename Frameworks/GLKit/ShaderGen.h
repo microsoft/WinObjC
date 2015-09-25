@@ -25,8 +25,8 @@ class ShaderNode;
 // of shader program outputs to a tree of ShaderNode objects responsible for building
 // that part of the program.
 class ShaderDef {
-    ShaderDef(const ShaderDef&); // no copy
-    void operator=(const ShaderDef&);
+    ShaderDef(const ShaderDef&) = delete; // no copy
+    void operator=(const ShaderDef&) = delete;
 
     std::map<std::string, ShaderNode*> def;
 public:
@@ -99,8 +99,8 @@ public:
 
 // Base class.  Defines generation interface.
 class ShaderNode {
-    ShaderNode(const ShaderNode&); // no copy
-    void operator=(const ShaderNode&);
+    ShaderNode(const ShaderNode&) = delete; // no copy
+    void operator=(const ShaderNode&) = delete;
 
 protected:
     GLKShaderVarType type;
