@@ -17,11 +17,49 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\Empty.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKViewController.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm">
+      <FileType>Document</FileType>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm">
       <FileType>Document</FileType>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\Empty.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKViewController.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm" />
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -56,7 +56,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
@@ -67,6 +67,10 @@
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
+    <Manifest>
+      <AdditionalManifestFiles>
+      </AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -95,6 +99,7 @@
     <Image Include="Assets\SmallLogo.scale-100.png" />
     <Image Include="Assets\StoreLogo.scale-100.png" />
     <Image Include="Assets\SplashScreen.scale-100.png" />
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />

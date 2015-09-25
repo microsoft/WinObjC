@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -151,5 +151,16 @@
     <Text Include="WOCCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WOCCatalog_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

@@ -29,6 +29,7 @@
 #import "ImagesViewController.h"
 #import "OpenGLES11Controller.h"
 #import "OpenGLES20Controller.h"
+#import "GLKitExampleController.h"
 #import "PhotogridViewController.h"
 #import "BezierViewController.h"
 

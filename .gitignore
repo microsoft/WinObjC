@@ -12,4 +12,10 @@ Packages.dgml
 packages
 bin
 .nuget
-
+*~
+TAGS
+build/XamlCompositorCS/XamlCompositorCS.Universal/project.lock.json
+dirlistout
+filelist.bat
+filelistout
+files.eld

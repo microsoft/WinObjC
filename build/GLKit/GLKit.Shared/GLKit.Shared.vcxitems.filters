@@ -1,6 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\Empty.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKEffect.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKSkyboxEffect.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKTexture.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKView.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKViewController.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMath.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKShader.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm" />
   </ItemGroup>
 </Project>

@@ -36,7 +36,8 @@
 		<IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
 		<IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
 		<IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib'))">true</IncludeOpenGLES>
-		<IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
+        <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
+        <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
 		<IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
 		<IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
 		<IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
@@ -76,6 +77,8 @@
 	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
 	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
 	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
 
 	  <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
 	  <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
