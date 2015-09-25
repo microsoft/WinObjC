@@ -26,384 +26,386 @@
 
 @implementation UIActionSheet {
     id _delegate;
-    NSString *_title;
-    UILabel *_titleLabel;
+    NSString* _title;
+    UILabel* _titleLabel;
     UIView* _darkView;
     CGRect _hidePosition;
     int _dismissIndex;
     BOOL _delegateSupportsDidDismiss;
 
     ActionSheetButton _buttons[16];
-    int          _numButtons;
+    int _numButtons;
 
-    float        _totalHeight;
-    int          _cancelButtonIndex, _cancelCustomIndex;
-    int          _destructiveIndex;
-    int          _otherButtonIndex;
+    float _totalHeight;
+    int _cancelButtonIndex, _cancelCustomIndex;
+    int _destructiveIndex;
+    int _otherButtonIndex;
 }
-    static int addButton(UIActionSheet* self, id text)
-    {
+static int addButton(UIActionSheet* self, id text) {
+    CGRect frame;
+
+    frame.origin.x = 10.0f;
+    frame.origin.y = self->_totalHeight;
+    frame.size.width = 300.0f;
+    frame.size.height = 30.0f;
+
+    self->_totalHeight += 40.0f;
+
+    id buttonBackground =
+        [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+    id buttonPressed =
+        [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+
+    id ret = [[UIButton alloc] initWithFrame:frame];
+    [ret setTitle:text forState:0];
+    [ret setTitleColor:[UIColor whiteColor] forState:0];
+    [ret setBackgroundImage:buttonBackground forState:0];
+    [ret setBackgroundImage:buttonPressed forState:1];
+    [ret setTag:self->_numButtons];
+    [ret addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
+    self->_buttons[self->_numButtons].button = ret;
+    self->_buttons[self->_numButtons].buttonPos = frame;
+
+    return self->_numButtons++;
+}
+
+- (id)init {
+    _cancelButtonIndex = _cancelCustomIndex = -1;
+    _otherButtonIndex = -1;
+    _destructiveIndex = -1;
+
+    id image;
+    image =
+        [[UIImage imageNamed:@"/img/alertsheet-background@2x.png"] stretchableImageWithLeftCapWidth:70 topCapHeight:18];
+
+    UIImageSetLayerContents([self layer], image);
+
+    _totalHeight += 20.0f;
+
+    EbrOnShowKeyboardInternal();
+
+    return self;
+}
+
+- (id)initWithTitle:(id)title
+                  delegate:(id)delegate
+         cancelButtonTitle:(id)cancelButtonTitle
+    destructiveButtonTitle:(id)destructiveButtonTitle
+         otherButtonTitles:(id)otherButtonTitles, ... {
+    va_list pReader;
+    va_start(pReader, otherButtonTitles);
+    [self init];
+
+    _totalHeight = 0.0f;
+
+    [self setDelegate:delegate];
+    _title = title;
+    _cancelButtonIndex = _cancelCustomIndex = -1;
+    _otherButtonIndex = -1;
+    _destructiveIndex = -1;
+
+    if (_title != nil) {
         CGRect frame;
 
         frame.origin.x = 10.0f;
-        frame.origin.y = self->_totalHeight;
+        frame.origin.y = 0.0f;
         frame.size.width = 300.0f;
-        frame.size.height = 30.0f;
+        frame.size.height = 50.0f;
 
-        self->_totalHeight += 40.0f;
+        _titleLabel = [[UILabel alloc] initWithFrame:frame];
+        [_titleLabel setText:_title];
+        [_titleLabel setTextColor:[UIColor whiteColor]];
+        [_titleLabel setBackgroundColor:nil];
 
-        id buttonBackground = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-        id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-
-        id ret = [[UIButton alloc] initWithFrame:frame];
-        [ret setTitle:text forState:0];
-        [ret setTitleColor:[UIColor whiteColor] forState:0];
-        [ret setBackgroundImage:buttonBackground forState:0];
-        [ret setBackgroundImage:buttonPressed forState:1];
-        [ret setTag:self->_numButtons];
-        [ret addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-
-        self->_buttons[self->_numButtons].button = ret;
-        self->_buttons[self->_numButtons].buttonPos = frame;
-
-        return self->_numButtons ++;
-    }
-
-    /* annotate with type */ -(id) init {
-        _cancelButtonIndex = _cancelCustomIndex = -1;
-        _otherButtonIndex = -1;
-        _destructiveIndex = -1;
-
-        id image;
-        image = [[UIImage imageNamed:@"/img/alertsheet-background@2x.png"] stretchableImageWithLeftCapWidth:70 topCapHeight:18];
-
-        UIImageSetLayerContents([self layer], image);
-
+        _totalHeight += 50.0f;
+    } else {
         _totalHeight += 20.0f;
-
-        EbrOnShowKeyboardInternal();
-
-        return self;
     }
 
-    /* annotate with type */ -(id) initWithTitle:(id)title delegate:(id)delegate cancelButtonTitle:(id)cancelButtonTitle destructiveButtonTitle:(id)destructiveButtonTitle otherButtonTitles:(id)otherButtonTitles , ...{
-        va_list pReader; va_start(pReader, otherButtonTitles);
-        [self init];
-
-        _totalHeight = 0.0f;
-
-        [self setDelegate:delegate];
-        _title = title;
-        _cancelButtonIndex = _cancelCustomIndex = -1;
-        _otherButtonIndex = -1;
-        _destructiveIndex = -1;
-
-        if ( _title != nil ) {
-            CGRect frame;
-
-            frame.origin.x = 10.0f;
-            frame.origin.y = 0.0f;
-            frame.size.width = 300.0f;
-            frame.size.height = 50.0f;
-
-            _titleLabel = [[UILabel alloc] initWithFrame:frame];
-            [_titleLabel setText:_title];
-            [_titleLabel setTextColor:[UIColor whiteColor]];
-            [_titleLabel setBackgroundColor:nil];
-
-            _totalHeight += 50.0f;
-        } else {
-            _totalHeight += 20.0f;
-        }
-
-        if ( destructiveButtonTitle != nil ) {
-            _destructiveIndex = addButton(self, destructiveButtonTitle);
-        }
-
-        id otherButtonTitle = otherButtonTitles; // va_arg(pReader, id);
-        while ( otherButtonTitle != nil ) {
-            int idx = addButton(self, otherButtonTitle);
-            if ( _otherButtonIndex == -1 ) {
-                _otherButtonIndex = idx;
-            }
-
-            otherButtonTitle = va_arg(pReader, id);
-        }
-
-        va_end(pReader);
-
-        if ( cancelButtonTitle != nil ) {
-            _totalHeight += 10.0f;
-            _cancelButtonIndex = _cancelCustomIndex = addButton(self, cancelButtonTitle);
-        }
-
-        if ( cancelButtonTitle != nil ) {
-            [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
-        } else if ( destructiveButtonTitle != nil ) {
-            [_buttons[_destructiveIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
-        }
-
-        _totalHeight += 10.0f;
-
-        if ( _titleLabel != nil ) {
-            [self addSubview:_titleLabel];
-        }
-
-        for ( int i = 0; i < _numButtons; i ++ ) {
-            [self addSubview:_buttons[i].button];
-        }
-
-        return self;
+    if (destructiveButtonTitle != nil) {
+        _destructiveIndex = addButton(self, destructiveButtonTitle);
     }
 
-    /* annotate with type */ -(id) showInView:(id)view {
-        if ( [_delegate respondsToSelector:@selector(willPresentActionSheet:)] ) {
-            [_delegate willPresentActionSheet:self];
-        }
-
-        CGRect frame;
-        frame = [view bounds];
-
-        UIWindow* popupWindow = [[UIApplication sharedApplication] _popupWindow];
-
-        CGPoint pt1, pt2;
-
-        pt1.x = frame.origin.x;
-        pt1.y = frame.origin.y + frame.size.height;
-        pt2.x = frame.origin.x + frame.size.width;
-        pt2.y = frame.origin.y + frame.size.height;
-        pt1 = [view convertPoint:pt1 toView:popupWindow];
-        pt2 = [view convertPoint:pt2 toView:popupWindow];
-
-        CGRect fullScreen;
-        fullScreen = [[UIScreen mainScreen] applicationFrame];
-        _darkView = [[UIView alloc] initWithFrame:fullScreen];
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-        [_darkView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        [_darkView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.5f]];
-        [_darkView setAlpha:0.0f];
-
-        if ( pt1.y == pt2.y ) {
-            frame.origin = pt1;
-            frame.size.height = 0;
-            frame.size.width = pt2.x - pt1.x;
-
-            [self setFrame:frame];
-
-            [popupWindow addSubview:_darkView];
-            [popupWindow addSubview:self];
-
-            [UIView beginAnimations:@"ShowAlert" context:nil];
-            [UIView setAnimationDuration:0.25f];
-            [_darkView setAlpha:1.0f];
-
-            memcpy(&_hidePosition, &frame, sizeof(CGRect));
-            frame.origin.y -= _totalHeight;
-            frame.size.height = _totalHeight;
-            [self setFrame:frame];
-            [UIView commitAnimations];
-        } else {
-            CGAffineTransform trans;
-
-            trans = CGAffineTransformMakeRotation(kPi / 2);
-            [self setTransform:trans];
-
-            //  Rotate
-            frame.origin = pt1;
-            frame.size.width = 0;
-            frame.size.height = pt2.y - pt1.y;
-
-            [self setFrame:frame];
-
-            [popupWindow addSubview:_darkView];
-            [popupWindow addSubview:self];
-
-            [UIView beginAnimations:@"ShowAlert" context:nil];
-            [UIView setAnimationDuration:0.25f];
-            [_darkView setAlpha:1.0f];
-
-            memcpy(&_hidePosition, &frame, sizeof(CGRect));
-            frame.size.width = _totalHeight;
-            [self setFrame:frame];
-            [UIView commitAnimations];
-        }
-
-        if ( [_delegate respondsToSelector:@selector(didPresentActionSheet:)] ) {
-            [_delegate didPresentActionSheet:self];
-        }
-
-        return self;
-    }
-
-    -(void) showFromToolbar:(id)toolbar {
-        [self showInView:[toolbar superview]];
-    }
-
-    -(void) showFromTabBar:(id)tabbar {
-        [self showInView:[tabbar window]];
-    }
-
-    -(void) showFromBarButtonItem:(id)item animated:(BOOL)animated {
-        [self showInView:[[[item _getView] superview] superview]];
-    }
-
-    -(void) /* use typed version */ layoutSubviews {
-        CGRect bounds;
-
-        bounds = [self bounds];
-
-        for ( int i = 0; i < _numButtons; i ++ ) {
-            CGRect frame = _buttons[i].buttonPos;
-
-            frame.size.width = bounds.size.width - frame.origin.x * 2.0f;
-            [_buttons[i].button setFrame:frame];
-        }
-    }
-
-    /* annotate with type */ -(void) setTitle:(NSString*)title {
-        _title = [title copy];
-        // TODO: Questionable return type and/or value here
-    }
-
-    -(id) /* use typed version */ title {
-        return _title;
-    }
-
-    /* annotate with type */ -(id) addButtonWithTitle:(NSString*)title {
-        int idx = addButton(self, title);
-        if ( _otherButtonIndex == -1 ) {
+    id otherButtonTitle = otherButtonTitles; // va_arg(pReader, id);
+    while (otherButtonTitle != nil) {
+        int idx = addButton(self, otherButtonTitle);
+        if (_otherButtonIndex == -1) {
             _otherButtonIndex = idx;
         }
-        [self addSubview:_buttons[idx].button];
-        [self setNeedsLayout];
 
-        return self;
+        otherButtonTitle = va_arg(pReader, id);
     }
 
-    /* annotate with type */ -(void) setDestructiveButtonIndex:(int)destructiveIndex {
-        _destructiveIndex = destructiveIndex;
+    va_end(pReader);
+
+    if (cancelButtonTitle != nil) {
+        _totalHeight += 10.0f;
+        _cancelButtonIndex = _cancelCustomIndex = addButton(self, cancelButtonTitle);
     }
 
-    /* annotate with type */ -(void) setDelegate:(id)delegate {
-        _delegate = delegate;
-        _delegateSupportsDidDismiss = [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)];
+    if (cancelButtonTitle != nil) {
+        [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
+    } else if (destructiveButtonTitle != nil) {
+        [_buttons[_destructiveIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
     }
 
-    /* annotate with type */ -(id) delegate {
-        return _delegate;
+    _totalHeight += 10.0f;
+
+    if (_titleLabel != nil) {
+        [self addSubview:_titleLabel];
     }
 
-    /* annotate with type */ -(void) setActionSheetStyle:(UIActionSheetStyle)style {
-
+    for (int i = 0; i < _numButtons; i++) {
+        [self addSubview:_buttons[i].button];
     }
 
-    /* annotate with type */ -(id) _didHideAlert {
-        if ( _dismissIndex != -1 ) {
-            if ( _delegateSupportsDidDismiss ) {
-                [_delegate actionSheet:self didDismissWithButtonIndex:_dismissIndex];
-            }
-        }
-        [_darkView removeFromSuperview];
-        [self removeFromSuperview];
+    return self;
+}
 
-        return 0;
+- (id)showInView:(id)view {
+    if ([_delegate respondsToSelector:@selector(willPresentActionSheet:)]) {
+        [_delegate willPresentActionSheet:self];
     }
 
-    static void dismissView(UIActionSheet* self, int index)
-    {
-        [UIView beginAnimations:@"HideAlert" context:nil];
+    CGRect frame;
+    frame = [view bounds];
+
+    UIWindow* popupWindow = [[UIApplication sharedApplication] _popupWindow];
+
+    CGPoint pt1, pt2;
+
+    pt1.x = frame.origin.x;
+    pt1.y = frame.origin.y + frame.size.height;
+    pt2.x = frame.origin.x + frame.size.width;
+    pt2.y = frame.origin.y + frame.size.height;
+    pt1 = [view convertPoint:pt1 toView:popupWindow];
+    pt2 = [view convertPoint:pt2 toView:popupWindow];
+
+    CGRect fullScreen;
+    fullScreen = [[UIScreen mainScreen] applicationFrame];
+    _darkView = [[UIView alloc] initWithFrame:fullScreen];
+    [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+    [_darkView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    [_darkView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.5f]];
+    [_darkView setAlpha:0.0f];
+
+    if (pt1.y == pt2.y) {
+        frame.origin = pt1;
+        frame.size.height = 0;
+        frame.size.width = pt2.x - pt1.x;
+
+        [self setFrame:frame];
+
+        [popupWindow addSubview:_darkView];
+        [popupWindow addSubview:self];
+
+        [UIView beginAnimations:@"ShowAlert" context:nil];
         [UIView setAnimationDuration:0.25f];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(_didHideAlert)];
-        self->_dismissIndex = index;
-        [self->_darkView setAlpha:0.0f];
-        CGRect frame = self->_hidePosition;
+        [_darkView setAlpha:1.0f];
+
+        memcpy(&_hidePosition, &frame, sizeof(CGRect));
+        frame.origin.y -= _totalHeight;
+        frame.size.height = _totalHeight;
         [self setFrame:frame];
         [UIView commitAnimations];
+    } else {
+        CGAffineTransform trans;
 
-        EbrOnHideKeyboardInternal();
+        trans = CGAffineTransformMakeRotation(kPi / 2);
+        [self setTransform:trans];
+
+        //  Rotate
+        frame.origin = pt1;
+        frame.size.width = 0;
+        frame.size.height = pt2.y - pt1.y;
+
+        [self setFrame:frame];
+
+        [popupWindow addSubview:_darkView];
+        [popupWindow addSubview:self];
+
+        [UIView beginAnimations:@"ShowAlert" context:nil];
+        [UIView setAnimationDuration:0.25f];
+        [_darkView setAlpha:1.0f];
+
+        memcpy(&_hidePosition, &frame, sizeof(CGRect));
+        frame.size.width = _totalHeight;
+        [self setFrame:frame];
+        [UIView commitAnimations];
     }
 
-    -(void) buttonClicked:(id)button {
-        [[self retain] autorelease];
-        [_delegate retain];
-        [_delegate autorelease];
-        int index = [button tag];
+    if ([_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+        [_delegate didPresentActionSheet:self];
+    }
 
-        if ( index == _cancelButtonIndex ) index = _cancelCustomIndex;
+    return self;
+}
 
-        if ( [_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)] ) {
-            [_delegate actionSheet:self clickedButtonAtIndex:index];
-        } else if ( [_delegate respondsToSelector:@selector(alertSheet:buttonClicked:)] ) {
-            [_delegate alertSheet:self buttonClicked:index];
+- (void)showFromToolbar:(id)toolbar {
+    [self showInView:[toolbar superview]];
+}
+
+- (void)showFromTabBar:(id)tabbar {
+    [self showInView:[tabbar window]];
+}
+
+- (void)showFromBarButtonItem:(id)item animated:(BOOL)animated {
+    [self showInView:[[[item _getView] superview] superview]];
+}
+
+- (void) /* use typed version */ layoutSubviews {
+    CGRect bounds;
+
+    bounds = [self bounds];
+
+    for (int i = 0; i < _numButtons; i++) {
+        CGRect frame = _buttons[i].buttonPos;
+
+        frame.size.width = bounds.size.width - frame.origin.x * 2.0f;
+        [_buttons[i].button setFrame:frame];
+    }
+}
+
+- (void)setTitle:(NSString*)title {
+    _title = [title copy];
+    // TODO: Questionable return type and/or value here
+}
+
+- (id) /* use typed version */ title {
+    return _title;
+}
+
+- (id)addButtonWithTitle:(NSString*)title {
+    int idx = addButton(self, title);
+    if (_otherButtonIndex == -1) {
+        _otherButtonIndex = idx;
+    }
+    [self addSubview:_buttons[idx].button];
+    [self setNeedsLayout];
+
+    return self;
+}
+
+- (void)setDestructiveButtonIndex:(int)destructiveIndex {
+    _destructiveIndex = destructiveIndex;
+}
+
+- (void)setDelegate:(id)delegate {
+    _delegate = delegate;
+    _delegateSupportsDidDismiss = [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)];
+}
+
+- (id)delegate {
+    return _delegate;
+}
+
+- (void)setActionSheetStyle:(UIActionSheetStyle)style {
+}
+
+- (id)_didHideAlert {
+    if (_dismissIndex != -1) {
+        if (_delegateSupportsDidDismiss) {
+            [_delegate actionSheet:self didDismissWithButtonIndex:_dismissIndex];
         }
+    }
+    [_darkView removeFromSuperview];
+    [self removeFromSuperview];
 
-        if ( [_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)] ) {
-            [_delegate actionSheet:self willDismissWithButtonIndex:index];
-        }
+    return 0;
+}
 
-        dismissView(self, index);
+static void dismissView(UIActionSheet* self, int index) {
+    [UIView beginAnimations:@"HideAlert" context:nil];
+    [UIView setAnimationDuration:0.25f];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(_didHideAlert)];
+    self->_dismissIndex = index;
+    [self->_darkView setAlpha:0.0f];
+    CGRect frame = self->_hidePosition;
+    [self setFrame:frame];
+    [UIView commitAnimations];
+
+    EbrOnHideKeyboardInternal();
+}
+
+- (void)buttonClicked:(id)button {
+    [[self retain] autorelease];
+    [_delegate retain];
+    [_delegate autorelease];
+    int index = [button tag];
+
+    if (index == _cancelButtonIndex)
+        index = _cancelCustomIndex;
+
+    if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
+        [_delegate actionSheet:self clickedButtonAtIndex:index];
+    } else if ([_delegate respondsToSelector:@selector(alertSheet:buttonClicked:)]) {
+        [_delegate alertSheet:self buttonClicked:index];
     }
 
-    /* annotate with type */ -(void) touchesEnded:(id)touches withEvent:(id)event {
-        /*
-        [[self retain] autorelease];
-        [_delegate retain];
-        [_delegate autorelease];
-        int index = -1;
-
-        if ( [_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)] ) {
-            [_delegate actionSheet:self willDismissWithButtonIndex:index];
-        }
-
-        dismissView(self, index);
-
-        if ( [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)] ) {
-            [_delegate actionSheet:self didDismissWithButtonIndex:index];
-        }
-        */
+    if ([_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
+        [_delegate actionSheet:self willDismissWithButtonIndex:index];
     }
 
-    /* annotate with type */ -(id) buttonTitleAtIndex:(int)index {
-        assert(_buttons[index].button != nil);
+    dismissView(self, index);
+}
 
-        return [_buttons[index].button currentTitle];
+- (void)touchesEnded:(id)touches withEvent:(id)event {
+    /*
+    [[self retain] autorelease];
+    [_delegate retain];
+    [_delegate autorelease];
+    int index = -1;
+
+    if ( [_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)] ) {
+    [_delegate actionSheet:self willDismissWithButtonIndex:index];
     }
 
-    -(int) numberOfButtons {
-        return _numButtons;
+    dismissView(self, index);
+
+    if ( [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)] ) {
+    [_delegate actionSheet:self didDismissWithButtonIndex:index];
     }
+    */
+}
 
-    -(int) cancelButtonIndex {
-        return _cancelCustomIndex;
-    }
+- (id)buttonTitleAtIndex:(int)index {
+    assert(_buttons[index].button != nil);
 
-    /* annotate with type */ -(void) setCancelButtonIndex:(NSInteger)index {
-        _cancelCustomIndex = index;
-        [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
-    }
+    return [_buttons[index].button currentTitle];
+}
 
-    -(int) firstOtherButtonIndex {
-        return _otherButtonIndex;
-    }
+- (int)numberOfButtons {
+    return _numButtons;
+}
 
-    -(id) /* use typed version */ dismiss {
-        dismissView(self, -1);
+- (int)cancelButtonIndex {
+    return _cancelCustomIndex;
+}
 
-        return self;
-    }
+- (void)setCancelButtonIndex:(NSInteger)index {
+    _cancelCustomIndex = index;
+    [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
+}
 
-    -(BOOL) isVisible {
-        return [self superview] != nil;
-    }
+- (int)firstOtherButtonIndex {
+    return _otherButtonIndex;
+}
 
-    /* annotate with type */ -(id) dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
-        EbrDebugLog("dismissWithClicked .. fire an event?\n");
-        return self;
-    }
+- (id) /* use typed version */ dismiss {
+    dismissView(self, -1);
 
-        
-        
-    
+    return self;
+}
+
+- (BOOL)isVisible {
+    return [self superview] != nil;
+}
+
+- (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
+    EbrDebugLog("dismissWithClicked .. fire an event?\n");
+    return self;
+}
+
 @end
-

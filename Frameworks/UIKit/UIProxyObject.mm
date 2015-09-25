@@ -22,56 +22,54 @@
 id proxyObjects;
 
 @implementation UIProxyObject : NSObject
-    +(void) addProxyObject:(id)proxyObject withName:(id)objectName forCoder:(id)coder {
-        if ( proxyObjects == 0 ) {
-            proxyObjects = [[NSMutableArray alloc] initWithCapacity:64];
++ (void)addProxyObject:(id)proxyObject withName:(id)objectName forCoder:(id)coder {
+    if (proxyObjects == 0) {
+        proxyObjects = [[NSMutableArray alloc] initWithCapacity:64];
+    }
+
+    UIProxyObjectPair* newPair = [UIProxyObjectPair alloc];
+    newPair->proxiedObject = proxyObject;
+    newPair->proxiedObjectCoder = coder;
+    newPair->proxiedObjectName = objectName;
+
+    [proxyObjects addObject:newPair];
+    [newPair release];
+}
+
++ (void)clearProxyObjects:(id)coder {
+    int count = [proxyObjects count];
+
+    for (int i = count - 1; i >= 0; i--) {
+        UIProxyObjectPair* curObj = [proxyObjects objectAtIndex:i];
+
+        if (curObj->proxiedObjectCoder == coder) {
+            [proxyObjects removeObjectAtIndex:i];
         }
-
-        UIProxyObjectPair* newPair = [UIProxyObjectPair alloc];
-        newPair->proxiedObject = proxyObject;
-        newPair->proxiedObjectCoder = coder;
-        newPair->proxiedObjectName = objectName;
-
-        [proxyObjects addObject:newPair];
-        [newPair release];
     }
+}
 
-    +(void) clearProxyObjects:(id)coder {
-        int count = [proxyObjects count];
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    id proxiedObjectIdentifier = [coder decodeObjectForKey:@"UIProxiedObjectIdentifier"];
 
-        for ( int i = count - 1; i >= 0; i -- ) {
-            UIProxyObjectPair* curObj = [proxyObjects objectAtIndex:i];
+    int count = [proxyObjects count];
 
-            if ( curObj->proxiedObjectCoder == coder ) {
-                [proxyObjects removeObjectAtIndex:i];
-            }
+    for (int i = 0; i < count; i++) {
+        UIProxyObjectPair* curObj = [proxyObjects objectAtIndex:i];
+
+        if (curObj->proxiedObjectCoder == coder && [curObj->proxiedObjectName isEqual:proxiedObjectIdentifier]) {
+            _obj = curObj->proxiedObject;
+
+            [self autorelease];
+            return [curObj->proxiedObject retain];
         }
     }
 
-    -(instancetype) initWithCoder:(NSCoder*)coder {
-        id proxiedObjectIdentifier = [coder decodeObjectForKey:@"UIProxiedObjectIdentifier"];
+    EbrDebugLog("Proxy object not found: %s\n", [proxiedObjectIdentifier UTF8String]);
+    return self;
+}
 
-        int count = [proxyObjects count];
+- (id)_getObject {
+    return _obj;
+}
 
-        for ( int i = 0; i < count; i ++ ) {
-            UIProxyObjectPair* curObj = [proxyObjects objectAtIndex:i];
-
-            if ( curObj->proxiedObjectCoder == coder && [curObj->proxiedObjectName isEqual:proxiedObjectIdentifier] ) {
-                _obj = curObj->proxiedObject;
-
-                [self autorelease];
-                return [curObj->proxiedObject retain];
-            }
-        }
-
-        EbrDebugLog("Proxy object not found: %s\n", [proxiedObjectIdentifier UTF8String]);
-        return self;
-    }
-
-    -(id) _getObject {
-        return _obj;
-    }
-
-    
 @end
-

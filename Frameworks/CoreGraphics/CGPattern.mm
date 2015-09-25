@@ -18,105 +18,111 @@
 #include "CGPatternInternal.h"
 #include "CGContextInternal.h"
 
-@implementation CGPattern
-{
+@implementation CGPattern {
     CGImageRef generatedImage;
     CGImageRef simpleImage;
 }
-    +(instancetype)patternWithImage:(CGImageRef)img {
-        CGPattern* ret = [CGPattern new];
++ (instancetype)patternWithImage:(CGImageRef)img {
+    CGPattern* ret = [CGPattern new];
 
-        ret->matrix = CGAffineTransformIdentity;
-        ret->simpleImage = img;
-        CFRetain((id) img);
+    ret->matrix = CGAffineTransformIdentity;
+    ret->simpleImage = img;
+    CFRetain((id)img);
 
-        return ret;
+    return ret;
+}
+
+- (CGImageRef)getPatternImage {
+    if (simpleImage) {
+        CGImageRetain(simpleImage);
+        return simpleImage;
     }
 
-    -(CGImageRef) getPatternImage {
-        if(simpleImage) {
-            CGImageRetain(simpleImage);
-            return simpleImage;
-        }
+    float width = bounds.size.width;
+    float height = bounds.size.height;
 
-        float width = bounds.size.width;
-        float height = bounds.size.height;
-
-        if (width <= 0.0f || height <= 0.0f) {
-            return nil;
-        }
-
-        // TODO: Take into account x/yStep, to justify the two calls here.
-        CGContextRef patternCtx;
-        if(isColored) {
-            patternCtx = CGBitmapContextCreate32((DWORD)ceilf(width), (DWORD)ceilf(height));
-        } else {
-            patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(width), (DWORD)ceilf(height), 8, 0, NULL, 0);
-        }
-     
-        CGContextTranslateCTM(patternCtx, 0.0f, height);
-        CGContextScaleCTM(patternCtx, 1.0f, -1.0f);
-
-        EbrCall(callbacks.drawPattern, "dd", info, patternCtx);
-
-        CGImageRef tilePattern = CGBitmapContextCreateImage(patternCtx);
-
-        CGContextRelease(patternCtx);
-
-        float outWidth = width, outHeight = height;
-        // TODO: Min limit on tiling or something?
-/*      while (outWidth < 256) {
-            outWidth += width;
-        }
-        while (outHeight < 256) {
-            outHeight += height;
-        }*/
-
-        if(isColored) {
-            patternCtx = CGBitmapContextCreate32((DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight));
-        } else {
-            patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight), 8, 0, NULL, 0);
-        }
-
-        CGRect rect = { 0, 0, width, height };
-        CGContextDrawTiledImage(patternCtx, rect, tilePattern);
-
-        CGImageRelease(tilePattern);
-
-        if(generatedImage) {
-            CGImageRelease(generatedImage);
-        }
-
-        // TODO: Caching.
-        generatedImage = CGBitmapContextCreateImage(patternCtx);
-        CGImageRetain(generatedImage);
-
-        CGContextRelease(patternCtx);
-
-        return generatedImage;
+    if (width <= 0.0f || height <= 0.0f) {
+        return nil;
     }
 
-    -(CGAffineTransform) getPatternTransform {
-        return matrix;
+    // TODO: Take into account x/yStep, to justify the two calls here.
+    CGContextRef patternCtx;
+    if (isColored) {
+        patternCtx = CGBitmapContextCreate32((DWORD)ceilf(width), (DWORD)ceilf(height));
+    } else {
+        patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(width), (DWORD)ceilf(height), 8, 0, NULL, 0);
     }
 
-    -(void) dealloc {
-        if(generatedImage) {
-            CGImageRelease(generatedImage);
-        }
-        if(simpleImage) {
-            CGImageRelease(simpleImage);
-        }
-        if(callbacks.releaseInfo) {
-            EbrCall(callbacks.releaseInfo, "dd", info);
-        }
-        [super dealloc];
+    CGContextTranslateCTM(patternCtx, 0.0f, height);
+    CGContextScaleCTM(patternCtx, 1.0f, -1.0f);
+
+    EbrCall(callbacks.drawPattern, "dd", info, patternCtx);
+
+    CGImageRef tilePattern = CGBitmapContextCreateImage(patternCtx);
+
+    CGContextRelease(patternCtx);
+
+    float outWidth = width, outHeight = height;
+    // TODO: Min limit on tiling or something?
+    /*      while (outWidth < 256) {
+    outWidth += width;
     }
+    while (outHeight < 256) {
+    outHeight += height;
+    }*/
+
+    if (isColored) {
+        patternCtx = CGBitmapContextCreate32((DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight));
+    } else {
+        patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight), 8, 0, NULL, 0);
+    }
+
+    CGRect rect = { 0, 0, width, height };
+    CGContextDrawTiledImage(patternCtx, rect, tilePattern);
+
+    CGImageRelease(tilePattern);
+
+    if (generatedImage) {
+        CGImageRelease(generatedImage);
+    }
+
+    // TODO: Caching.
+    generatedImage = CGBitmapContextCreateImage(patternCtx);
+    CGImageRetain(generatedImage);
+
+    CGContextRelease(patternCtx);
+
+    return generatedImage;
+}
+
+- (CGAffineTransform)getPatternTransform {
+    return matrix;
+}
+
+- (void)dealloc {
+    if (generatedImage) {
+        CGImageRelease(generatedImage);
+    }
+    if (simpleImage) {
+        CGImageRelease(simpleImage);
+    }
+    if (callbacks.releaseInfo) {
+        EbrCall(callbacks.releaseInfo, "dd", info);
+    }
+    [super dealloc];
+}
 @end
 
-CGPatternRef CGPatternCreateColorspace(void *info, CGRect bounds, CGAffineTransform matrix, CGFloat xStep, CGFloat yStep, CGPatternTiling tiling, bool isColored, const CGPatternCallbacks *callbacks, surfaceFormat fmt)
-{
-    CGPattern *ret = [CGPattern new];
+CGPatternRef CGPatternCreateColorspace(void* info,
+                                       CGRect bounds,
+                                       CGAffineTransform matrix,
+                                       CGFloat xStep,
+                                       CGFloat yStep,
+                                       CGPatternTiling tiling,
+                                       bool isColored,
+                                       const CGPatternCallbacks* callbacks,
+                                       surfaceFormat fmt) {
+    CGPattern* ret = [CGPattern new];
 
     // TODO: Obey the colorspace.
     ret->info = (DWORD)info;
@@ -132,18 +138,22 @@ CGPatternRef CGPatternCreateColorspace(void *info, CGRect bounds, CGAffineTransf
     return ret;
 }
 
-CGPatternRef CGPatternCreate(void *info, CGRect bounds, CGAffineTransform matrix, CGFloat xStep, CGFloat yStep, CGPatternTiling tiling, bool isColored, const CGPatternCallbacks *callbacks)
-{
-    return CGPatternCreateColorspace(info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
+CGPatternRef CGPatternCreate(void* info,
+                             CGRect bounds,
+                             CGAffineTransform matrix,
+                             CGFloat xStep,
+                             CGFloat yStep,
+                             CGPatternTiling tiling,
+                             bool isColored,
+                             const CGPatternCallbacks* callbacks) {
+    return CGPatternCreateColorspace(
+        info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
 }
 
-void CGPatternRelease(CGPatternRef pattern)
-{
+void CGPatternRelease(CGPatternRef pattern) {
     CFRelease(pattern);
 }
 
-CGPatternRef CGPatternCreateFromImage(CGImageRef img)
-{
-    return [CGPattern patternWithImage: img];
+CGPatternRef CGPatternCreateFromImage(CGImageRef img) {
+    return [CGPattern patternWithImage:img];
 }
-

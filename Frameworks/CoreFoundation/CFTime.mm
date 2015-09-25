@@ -17,7 +17,6 @@
 #include "Starboard.h"
 #import <CoreFoundation/CoreFoundation.h>
 
-CFAbsoluteTime CFAbsoluteTimeGetCurrent()
-{
+CFAbsoluteTime CFAbsoluteTimeGetCurrent() {
     return EbrGetMediaTime();
 }

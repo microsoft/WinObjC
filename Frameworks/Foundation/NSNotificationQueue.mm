@@ -18,8 +18,7 @@
 #include "Foundation/NSNotificationQueue.h"
 
 @implementation NSNotificationQueue
-    +(instancetype) defaultQueue
-    {
-        return nil;
-    }
++ (instancetype)defaultQueue {
+    return nil;
+}
 @end

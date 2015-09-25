@@ -18,72 +18,70 @@
 #include "UIKit/UIRuntimeEventConnection.h"
 
 @implementation UIRuntimeEventConnection : NSObject
-    -(id) initWithCoder:(NSCoder*)coder {
-        targetControl = [coder decodeObjectForKey:@"UISource"];
-        obj = [coder decodeObjectForKey:@"UIDestination"];
-        selector = (SEL) NSSelectorFromString([coder decodeObjectForKey:@"UILabel"]);
-        mask = [coder decodeInt32ForKey:@"UIEventMask"];
+- (id)initWithCoder:(NSCoder*)coder {
+    targetControl = [coder decodeObjectForKey:@"UISource"];
+    obj = [coder decodeObjectForKey:@"UIDestination"];
+    selector = (SEL)NSSelectorFromString([coder decodeObjectForKey:@"UILabel"]);
+    mask = [coder decodeInt32ForKey:@"UIEventMask"];
 
-        return self;
-    }
+    return self;
+}
 
-    -(void) _makeConnection {
-        EbrDebugLog("Source: %s\n", object_getClassName(targetControl));
-        EbrDebugLog("Dest: %s\n", obj != nil ? object_getClassName(obj) : "nil (first responder?)");
-        EbrDebugLog("Event label: %s\n", selector);
-        EbrDebugLog("Event mask: %x\n", mask);
+- (void)_makeConnection {
+    EbrDebugLog("Source: %s\n", object_getClassName(targetControl));
+    EbrDebugLog("Dest: %s\n", obj != nil ? object_getClassName(obj) : "nil (first responder?)");
+    EbrDebugLog("Event label: %s\n", selector);
+    EbrDebugLog("Event mask: %x\n", mask);
 
-        valid = TRUE;
+    valid = TRUE;
 
-        if ( obj != nil ) {
-            if ( strcmp(object_getClassName(obj), "UIProxyObject") == 0 ) {
-                obj = [obj _getObject];
-            }
+    if (obj != nil) {
+        if (strcmp(object_getClassName(obj), "UIProxyObject") == 0) {
+            obj = [obj _getObject];
         }
-
-        [targetControl addEventConnection:self];
     }
 
-    -(instancetype) initWithTarget:(id)target sel:(id)targetsel eventMask:(uint32_t)targetmask {
-        obj = target;
-        selector = (SEL) NSSelectorFromString(targetsel);
-        mask = targetmask;
+    [targetControl addEventConnection:self];
+}
 
-        valid = TRUE;
+- (instancetype)initWithTarget:(id)target sel:(id)targetsel eventMask:(uint32_t)targetmask {
+    obj = target;
+    selector = (SEL)NSSelectorFromString(targetsel);
+    mask = targetmask;
 
-        return self;
-    }
+    valid = TRUE;
 
-    -(instancetype) initWithTarget:(id)target selector:(SEL)targetSel eventMask:(uint32_t)targetmask {
-        obj = target;
-        selector = targetSel;
-        mask = targetmask;
+    return self;
+}
 
-        valid = TRUE;
+- (instancetype)initWithTarget:(id)target selector:(SEL)targetSel eventMask:(uint32_t)targetmask {
+    obj = target;
+    selector = targetSel;
+    mask = targetmask;
 
-        return self;
-    }
+    valid = TRUE;
 
-    -(id) obj {
-        return obj;
-    }
+    return self;
+}
 
-    -(SEL) sel {
-        return selector;
-    }
+- (id)obj {
+    return obj;
+}
 
-    -(uint32_t) mask {
-        return mask;
-    }
+- (SEL)sel {
+    return selector;
+}
 
-    -(BOOL) isValid {
-        return valid;
-    }
+- (uint32_t)mask {
+    return mask;
+}
 
-    -(void) invalidate {
-        valid = FALSE;
-    }
+- (BOOL)isValid {
+    return valid;
+}
 
-    
+- (void)invalidate {
+    valid = FALSE;
+}
+
 @end
-

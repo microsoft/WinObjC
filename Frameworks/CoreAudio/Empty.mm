@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
 
-__declspec(dllexport) void __COREAUDIO_EMPTY()
-{
+__declspec(dllexport) void __COREAUDIO_EMPTY() {
 }

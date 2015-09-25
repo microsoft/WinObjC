@@ -20,133 +20,132 @@
 #include "UIKit/UIView.h"
 
 @implementation UITouch : NSObject
-    +(UITouch*) createWithPoint:(CGPoint)point tapCount:(int)tapCount {
-        UITouch* newObj = [self new];
-        UITouch *us = (UITouch *) newObj;
-        us->touchX = point.x;
-        us->touchY = point.y;
-        us->previousTouchX = point.x;
-        us->previousTouchY = point.y;
-        us->timeStamp = 0.0f;
-        us->tapCount = tapCount;
++ (UITouch*)createWithPoint:(CGPoint)point tapCount:(int)tapCount {
+    UITouch* newObj = [self new];
+    UITouch* us = (UITouch*)newObj;
+    us->touchX = point.x;
+    us->touchY = point.y;
+    us->previousTouchX = point.x;
+    us->previousTouchY = point.y;
+    us->timeStamp = 0.0f;
+    us->tapCount = tapCount;
 
-        return newObj;
-    }
+    return newObj;
+}
 
-    -(CGPoint) locationInView:(UIView*)viewAddr {
-        CGPoint ret;
-        CGPoint location;
+- (CGPoint)locationInView:(UIView*)viewAddr {
+    CGPoint ret;
+    CGPoint location;
 
-        location.x = touchX;
-        location.y = touchY;
+    location.x = touchX;
+    location.y = touchY;
 
-        if ( viewAddr != 0 ) {
-            id window = [((UIView*)(viewAddr)) _getWindowInternal];
+    if (viewAddr != 0) {
+        id window = [((UIView*)(viewAddr))_getWindowInternal];
 
-            if ( window != nil ) {
-                ret = [window convertPoint:location fromView:window toView:viewAddr];
-            } else {
-                CGRect rect = { 0 };
-
-                rect = [viewAddr frame];
-
-                ret.x = touchX - rect.origin.x;
-                ret.y = touchY - rect.origin.y;
-            }
-            //EbrDebugLog("Mapping %s (%f, %f -> %f, %f)\n", object_getClassName(viewAddr), touchX, touchY, ret->x, ret->y);
-        } else {
-            ret.x = touchX;
-            ret.y = touchY;
-        }
-
-        return ret;
-    }
-
-    -(CGPoint) previousLocationInView:(UIView*)viewAddr {
-        CGPoint ret;
-        CGPoint location;
-
-        location.x = previousTouchX;
-        location.y = previousTouchY;
-
-        UIWindow* window = [viewAddr window];
-
-        if ( window != nil ) {
+        if (window != nil) {
             ret = [window convertPoint:location fromView:window toView:viewAddr];
         } else {
             CGRect rect = { 0 };
 
             rect = [viewAddr frame];
 
-            ret.x = location.x - rect.origin.x;
-            ret.y = location.y - rect.origin.y;
+            ret.x = touchX - rect.origin.x;
+            ret.y = touchY - rect.origin.y;
         }
-
-        return ret;
+        // EbrDebugLog("Mapping %s (%f, %f -> %f, %f)\n", object_getClassName(viewAddr), touchX, touchY, ret->x,
+        // ret->y);
+    } else {
+        ret.x = touchX;
+        ret.y = touchY;
     }
 
-    -(NSUInteger) tapCount {
-        return tapCount;
+    return ret;
+}
+
+- (CGPoint)previousLocationInView:(UIView*)viewAddr {
+    CGPoint ret;
+    CGPoint location;
+
+    location.x = previousTouchX;
+    location.y = previousTouchY;
+
+    UIWindow* window = [viewAddr window];
+
+    if (window != nil) {
+        ret = [window convertPoint:location fromView:window toView:viewAddr];
+    } else {
+        CGRect rect = { 0 };
+
+        rect = [viewAddr frame];
+
+        ret.x = location.x - rect.origin.x;
+        ret.y = location.y - rect.origin.y;
     }
 
-    -(UITouchPhase) phase {
-        return phase;
-    }
+    return ret;
+}
 
-    -(UIView*) view {
-        return inView;
-    }
+- (NSUInteger)tapCount {
+    return tapCount;
+}
 
-    -(void) _redirectTouch:(UIView*)view {
-        /*
-        //  Remove the touch from the view
-        UIView* curView = inView;
+- (UITouchPhase)phase {
+    return phase;
+}
 
-        [curView->priv->currentTouches removeObject:self];
-        */
+- (UIView*)view {
+    return inView;
+}
 
-        [inView autorelease];
-        inView = view;
-        [inView retain];
-    }
+- (void)_redirectTouch:(UIView*)view {
+    /*
+    //  Remove the touch from the view
+    UIView* curView = inView;
 
-    -(void) _redirectPhase:(UITouchPhase)newPhase {
-        phase = newPhase;
-    }
+    [curView->priv->currentTouches removeObject:self];
+    */
 
-    -(double) timestamp {
-        assert(timeStamp != 0.0f);
-        double ret = timeStamp;
-        return ret;
-    }
+    [inView autorelease];
+    inView = view;
+    [inView retain];
+}
 
-    -(CGPoint) velocity {
-        CGPoint ret;
-        ret.x = velocityX;
-        ret.y = velocityY;
-        return ret;
-    }
+- (void)_redirectPhase:(UITouchPhase)newPhase {
+    phase = newPhase;
+}
 
-    -(id) copyWithZone:(NSZone*)zone {
-        UITouch* ret = [[self class] allocWithZone:zone];
+- (double)timestamp {
+    assert(timeStamp != 0.0f);
+    double ret = timeStamp;
+    return ret;
+}
 
-        ret->touchX = touchX;
-        ret->touchY = touchY;
-        ret->previousTouchX = previousTouchX;
-        ret->previousTouchY = previousTouchY;
-        ret->timeStamp = timeStamp;
-        ret->inView = [inView retain];
-        ret->tapCount = tapCount;
-        ret->phase = phase;
-        
-        return ret;
-    }
+- (CGPoint)velocity {
+    CGPoint ret;
+    ret.x = velocityX;
+    ret.y = velocityY;
+    return ret;
+}
 
-    -(void) dealloc {
-        [inView autorelease];
-        [super dealloc];
-    }
+- (id)copyWithZone:(NSZone*)zone {
+    UITouch* ret = [[self class] allocWithZone:zone];
 
-    
+    ret->touchX = touchX;
+    ret->touchY = touchY;
+    ret->previousTouchX = previousTouchX;
+    ret->previousTouchY = previousTouchY;
+    ret->timeStamp = timeStamp;
+    ret->inView = [inView retain];
+    ret->tapCount = tapCount;
+    ret->phase = phase;
+
+    return ret;
+}
+
+- (void)dealloc {
+    [inView autorelease];
+    [super dealloc];
+}
+
 @end
-

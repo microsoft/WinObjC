@@ -29,49 +29,38 @@ class __CFArray;
 
 static IWLazyClassLookup _LazyNSArray("NSArray"), _LazyNSMutableArray("NSMutableArray");
 static IWLazyIvarLookup<uint8_t[]> _LazyArraySpaceOffset(_LazyNSArray, "_arraySpace");
-static IWLazyIvarLookup<__CFArray *> _LazyArrOffset(_LazyNSArray, "arr");
+static IWLazyIvarLookup<__CFArray*> _LazyArrOffset(_LazyNSArray, "arr");
 
-const void *CFNSRetain(CFAllocatorRef allocator, const void *obj);
-void CFNSRelease(CFAllocatorRef allocator, const void *obj);
-Boolean CFNSEqual(const void *obj1, const void *obj2);
+const void* CFNSRetain(CFAllocatorRef allocator, const void* obj);
+void CFNSRelease(CFAllocatorRef allocator, const void* obj);
+Boolean CFNSEqual(const void* obj1, const void* obj2);
 
-const CFArrayCallBacks kCFTypeArrayCallBacks = { 
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
+const CFArrayCallBacks kCFTypeArrayCallBacks = {
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
 };
 const CFArrayCallBacks kNSTypeArrayCallBacks = {
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
 };
 
-class __CFArray
-{
+class __CFArray {
 public:
     CFArrayCallBacks callbacks;
     CFAllocatorRef allocator;
-    uint32_t                   objCount;
-    bool                       heapAlloced;
+    uint32_t objCount;
+    bool heapAlloced;
 
-#define INPLACE_CAPACITY    4
-    union
-    {
+#define INPLACE_CAPACITY 4
+    union {
         id objs[INPLACE_CAPACITY];
         struct {
-            id *objsArray;
+            id* objsArray;
             uint32_t objsCapacity;
         } heap;
     } contents;
 
 public:
-    __CFArray(const CFArrayCallBacks *c)
-    {
-        if ( c ) {
+    __CFArray(const CFArrayCallBacks* c) {
+        if (c) {
             callbacks = *c;
         } else {
             memset(&callbacks, 0, sizeof(callbacks));
@@ -81,12 +70,11 @@ public:
         heapAlloced = false;
     }
 
-    __CFArray(const CFArrayCallBacks *c, id *objs, int count, bool retain)
-    {
+    __CFArray(const CFArrayCallBacks* c, id* objs, int count, bool retain) {
         objCount = 0;
         heapAlloced = false;
 
-        if ( c ) {
+        if (c) {
             callbacks = *c;
         } else {
             memset(&callbacks, 0, sizeof(callbacks));
@@ -95,53 +83,52 @@ public:
         setCapacity(count);
         memcpy(objsPtr(), objs, count * sizeof(id));
         objCount = count;
-        
-        if ( retain && callbacks.retain != 0 && count > 0 ) {
-            id *objStart = objsPtr();
-            for ( unsigned i = 0; i < objCount; i ++ ) {
+
+        if (retain && callbacks.retain != 0 && count > 0) {
+            id* objStart = objsPtr();
+            for (unsigned i = 0; i < objCount; i++) {
                 objStart[i] = retainObj(objStart[i]);
             }
         }
     }
 
-    ~__CFArray()
-    {
-        if ( heapAlloced ) {
+    ~__CFArray() {
+        if (heapAlloced) {
             free(contents.heap.objsArray);
         }
         heapAlloced = false;
         objCount = 0;
     }
 
-    void setCapacity(uint32_t capacity)
-    {
-        if ( capacity <= INPLACE_CAPACITY ) {
+    void setCapacity(uint32_t capacity) {
+        if (capacity <= INPLACE_CAPACITY) {
             return;
         }
-        if ( heapAlloced && capacity <= contents.heap.objsCapacity ) {
-            if ( contents.heap.objsCapacity <= 256 ) {
+        if (heapAlloced && capacity <= contents.heap.objsCapacity) {
+            if (contents.heap.objsCapacity <= 256) {
                 return;
             }
 
             //  Shrink the size of our object capacity?
             uint32_t newCapacity = contents.heap.objsCapacity;
-            while ( (newCapacity >> 1) >= capacity + 16 ) {
+            while ((newCapacity >> 1) >= capacity + 16) {
                 newCapacity >>= 1;
             }
 
-            if ( newCapacity != contents.heap.objsCapacity ) {
+            if (newCapacity != contents.heap.objsCapacity) {
                 contents.heap.objsCapacity = newCapacity;
-                contents.heap.objsArray = (id *) realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
+                contents.heap.objsArray =
+                    (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
             }
             return;
         }
 
-        if ( !heapAlloced ) {
-            if ( capacity < 8 ) {
+        if (!heapAlloced) {
+            if (capacity < 8) {
                 capacity = 8;
             }
-            id *heapArr = (id *) malloc(sizeof(id) * capacity);
-            for ( unsigned i = 0; i < objCount; i ++ ) {
+            id* heapArr = (id*)malloc(sizeof(id) * capacity);
+            for (unsigned i = 0; i < objCount; i++) {
                 heapArr[i] = contents.objs[i];
             }
             heapAlloced = true;
@@ -149,37 +136,35 @@ public:
             contents.heap.objsCapacity = capacity;
             return;
         } else {
-            while ( contents.heap.objsCapacity < capacity ) {
+            while (contents.heap.objsCapacity < capacity) {
                 contents.heap.objsCapacity *= 2;
             }
-            contents.heap.objsArray = (id *) realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
+            contents.heap.objsArray = (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
         }
     }
 
-    id *objsPtr()
-    {
-        if ( heapAlloced ) {
+    id* objsPtr() {
+        if (heapAlloced) {
             return contents.heap.objsArray;
         } else {
             return contents.objs;
         }
     }
 
-    uint32_t getCount()
-    {
+    uint32_t getCount() {
         return objCount;
     }
 
-    void removeAllObjects()
-    {
-        if ( objCount == 0 ) return;
+    void removeAllObjects() {
+        if (objCount == 0)
+            return;
 
         int count = objCount;
         id localValues[INPLACE_CAPACITY];
         bool freeValues;
-        id *values;
+        id* values;
 
-        if ( !heapAlloced ) {
+        if (!heapAlloced) {
             memcpy(localValues, contents.objs, count * sizeof(id));
             values = localValues;
             freeValues = false;
@@ -191,28 +176,27 @@ public:
         heapAlloced = false;
         objCount = 0;
 
-        if ( callbacks.release != 0 )  {
-            for ( int i = 0; i < count; i ++ ) {
+        if (callbacks.release != 0) {
+            for (int i = 0; i < count; i++) {
                 releaseObj(values[i]);
             }
         }
 
-        if ( freeValues ) free(values);
+        if (freeValues)
+            free(values);
     }
 
-    id retainObj(id object)
-    {
-        if ( callbacks.retain == kNSTypeArrayCallBacks.retain ) {
-            return (id) CFNSRetain(allocator, (void *) object);
+    id retainObj(id object) {
+        if (callbacks.retain == kNSTypeArrayCallBacks.retain) {
+            return (id)CFNSRetain(allocator, (void*)object);
         } else {
             return EbrCall(callbacks.retain, "dd", allocator, object);
         }
     }
 
-    id releaseObj(id object)
-    {
-        if ( callbacks.release == kNSTypeArrayCallBacks.release ) {
-            CFNSRelease(allocator, (void *) object);
+    id releaseObj(id object) {
+        if (callbacks.release == kNSTypeArrayCallBacks.release) {
+            CFNSRelease(allocator, (void*)object);
         } else {
             EbrCall(callbacks.release, "dd", allocator, object);
         }
@@ -220,302 +204,280 @@ public:
         return object;
     }
 
-    void addObject(id object, bool retain = true)
-    {
-        if ( object == 0 ) {
+    void addObject(id object, bool retain = true) {
+        if (object == 0) {
             assert(0);
         }
 
         //  Call retain function on object
-        if ( retain && callbacks.retain != 0 ) object = retainObj(object);
+        if (retain && callbacks.retain != 0)
+            object = retainObj(object);
 
         assert(object != 0);
 
         setCapacity(objCount + 1);
         objsPtr()[objCount] = object;
-        objCount ++;
+        objCount++;
     }
 
-    void replaceObject(id object, uint32_t index)
-    {
-        if ( object == 0 ) {
+    void replaceObject(id object, uint32_t index) {
+        if (object == 0) {
             assert(0);
         }
 
-        assert(index <= objCount );
+        assert(index <= objCount);
 
         //  Call retain function on new object
-        if ( callbacks.retain != 0 ) object = retainObj(object);
+        if (callbacks.retain != 0)
+            object = retainObj(object);
 
         assert(object != 0);
 
         //  Call release function on old object
         id oldObj = objsPtr()[index];
-        if ( callbacks.release != 0 ) releaseObj(oldObj);
+        if (callbacks.release != 0)
+            releaseObj(oldObj);
 
         objsPtr()[index] = object;
     }
 
-    void addObjectAtIndex(id object, uint32_t index)
-    {
-        if ( object == 0 ) {
+    void addObjectAtIndex(id object, uint32_t index) {
+        if (object == 0) {
             assert(0);
         }
-        assert(index <= objCount );
+        assert(index <= objCount);
 
         //  Call retain function on object
-        if ( callbacks.retain != 0 ) object = retainObj(object);
+        if (callbacks.retain != 0)
+            object = retainObj(object);
 
         assert(object != 0);
 
         setCapacity(objCount + 1);
         memmove(&objsPtr()[index + 1], &objsPtr()[index], (objCount - index) * sizeof(id));
         objsPtr()[index] = object;
-        objCount ++;
+        objCount++;
     }
 
-    id objectFromIndex(uint32_t idx)
-    {
-        if ( idx >= objCount ) {
+    id objectFromIndex(uint32_t idx) {
+        if (idx >= objCount) {
             assert(0);
         }
 
         return objsPtr()[idx];
     }
 
-    void removeObject(uint32_t idx)
-    {
+    void removeObject(uint32_t idx) {
         assert(idx < objCount);
 
         id obj = objsPtr()[idx];
 
         memmove(&objsPtr()[idx], &objsPtr()[idx + 1], (objCount - idx - 1) * sizeof(id));
-        objCount --;
+        objCount--;
         setCapacity(objCount);
 
-        if ( callbacks.release != 0 ) releaseObj(obj);
+        if (callbacks.release != 0)
+            releaseObj(obj);
     }
 
-    void moveObjectAtIndexToEnd(uint32_t idx)
-    {
+    void moveObjectAtIndexToEnd(uint32_t idx) {
         assert(idx < objCount);
 
         id obj = objsPtr()[idx];
         memmove(&objsPtr()[idx], &objsPtr()[idx + 1], (objCount - idx - 1) * sizeof(id));
         objsPtr()[objCount - 1] = obj;
-    }   
+    }
 
-    BOOL doesContainValue(uint32_t start, uint32_t length, id value)
-    {
+    BOOL doesContainValue(uint32_t start, uint32_t length, id value) {
         assert(start + length <= objCount);
         uint32_t cur = 0;
 
-        id *objs = objsPtr();
-        while ( cur < objCount && length > 0 ) {
+        id* objs = objsPtr();
+        while (cur < objCount && length > 0) {
             id curValue = objs[cur];
 
-            if ( callbacks.equal != 0 ) {
-                if ( EbrCall(callbacks.equal, "dd", value, curValue) ) {
+            if (callbacks.equal != 0) {
+                if (EbrCall(callbacks.equal, "dd", value, curValue)) {
                     return TRUE;
                 }
             } else {
-                if ( value == curValue ) {
+                if (value == curValue) {
                     return TRUE;
                 }
             }
 
             length--;
-            cur ++;
+            cur++;
         }
 
         return FALSE;
     }
 };
 
-CFMutableArrayRef CFArrayCreateMutable(CFAllocatorRef allocator, CFIndex max, const CFArrayCallBacks *valueCallbacks)
-{
+CFMutableArrayRef CFArrayCreateMutable(CFAllocatorRef allocator, CFIndex max, const CFArrayCallBacks* valueCallbacks) {
     static int numCreated;
-    numCreated ++;
+    numCreated++;
 
     NSArray* ret = [_LazyNSMutableArray alloc];
-    _LazyArrOffset.member(ret) = new(_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
+    _LazyArrOffset.member(ret) = new (_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
 
-    return (CFMutableArrayRef) ret;
+    return (CFMutableArrayRef)ret;
 }
 
-CFMutableArrayRef CFArrayCreateMutableCopy(CFAllocatorRef allocator, CFIndex max, CFArrayRef array)
-{
-    id ret = [(NSArray*) array mutableCopy];
+CFMutableArrayRef CFArrayCreateMutableCopy(CFAllocatorRef allocator, CFIndex max, CFArrayRef array) {
+    id ret = [(NSArray*)array mutableCopy];
 
-    return (CFMutableArrayRef) ret;
+    return (CFMutableArrayRef)ret;
 }
 
-CFArrayRef CFArrayCreateCopy(CFAllocatorRef allocator, CFArrayRef array)
-{
-    id ret = [(NSArray*) array copy];
+CFArrayRef CFArrayCreateCopy(CFAllocatorRef allocator, CFArrayRef array) {
+    id ret = [(NSArray*)array copy];
 
-    return (CFArrayRef) ret;
+    return (CFArrayRef)ret;
 }
 
-CFArrayRef CFArrayCreate(CFAllocatorRef allocator, const void **values, CFIndex numValues, const CFArrayCallBacks *valueCallbacks)
-{
+CFArrayRef CFArrayCreate(CFAllocatorRef allocator,
+                         const void** values,
+                         CFIndex numValues,
+                         const CFArrayCallBacks* valueCallbacks) {
     NSArray* ret = [_LazyNSArray alloc];
-    __CFArray *cfarr = new(_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
+    __CFArray* cfarr = new (_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
     _LazyArrOffset.member(ret) = cfarr;
 
-    for ( CFIndex i = 0; i < numValues; i ++ ) {
-        cfarr->addObject(((id *)values)[i]);
+    for (CFIndex i = 0; i < numValues; i++) {
+        cfarr->addObject(((id*)values)[i]);
     }
 
-    return (CFArrayRef) ret;
+    return (CFArrayRef)ret;
 }
 
-CFIndex CFArrayGetCount(CFArrayRef array)
-{
+CFIndex CFArrayGetCount(CFArrayRef array) {
     return _LazyArrOffset.member(array)->getCount();
 }
 
-void CFArraySortValues(CFMutableArrayRef array, CFRange range, id comparator, id context)
-{
-    [(NSArray*) array sortUsingFunction:comparator context:context range:range];
+void CFArraySortValues(CFMutableArrayRef array, CFRange range, id comparator, id context) {
+    [(NSArray*)array sortUsingFunction:comparator context:context range:range];
 }
 
-const void *CFArrayGetValueAtIndex(CFArrayRef array, CFIndex index)
-{
-    return (const void *) _LazyArrOffset.member(array)->objectFromIndex(index);
+const void* CFArrayGetValueAtIndex(CFArrayRef array, CFIndex index) {
+    return (const void*)_LazyArrOffset.member(array)->objectFromIndex(index);
 }
 
-void CFArrayGetValues(CFArrayRef array, CFRange range, void **values)
-{
-    for ( unsigned i = range.location; i < range.location + range.length; i ++ ) {
-        values[i] = (void *) _LazyArrOffset.member(array)->objectFromIndex(i);
+void CFArrayGetValues(CFArrayRef array, CFRange range, void** values) {
+    for (unsigned i = range.location; i < range.location + range.length; i++) {
+        values[i] = (void*)_LazyArrOffset.member(array)->objectFromIndex(i);
     }
 }
 
-void CFArrayAppendValue(CFMutableArrayRef array, const void *value)
-{
-    _LazyArrOffset.member(array)->addObject((id) value, true);
+void CFArrayAppendValue(CFMutableArrayRef array, const void* value) {
+    _LazyArrOffset.member(array)->addObject((id)value, true);
 }
 
-void CFArrayAppendValueUnretained(CFMutableArrayRef array, const void *value)
-{
-    _LazyArrOffset.member(array)->addObject((id) value, false);
+void CFArrayAppendValueUnretained(CFMutableArrayRef array, const void* value) {
+    _LazyArrOffset.member(array)->addObject((id)value, false);
 }
 
-void CFArrayAppendValueExport(CFMutableArrayRef array, const void *value)
-{
+void CFArrayAppendValueExport(CFMutableArrayRef array, const void* value) {
     CFArrayAppendValue(array, value);
 }
 
-void CFArrayAppendArray(CFMutableArrayRef array, CFArrayRef arrayToAppend, CFRange range)
-{
-    for ( unsigned i = range.location; i < range.location + range.length; i ++ ) {
-        const void *curVal = CFArrayGetValueAtIndex(arrayToAppend, i);
+void CFArrayAppendArray(CFMutableArrayRef array, CFArrayRef arrayToAppend, CFRange range) {
+    for (unsigned i = range.location; i < range.location + range.length; i++) {
+        const void* curVal = CFArrayGetValueAtIndex(arrayToAppend, i);
         CFArrayAppendValue(array, curVal);
     }
 }
 
-Boolean CFArrayContainsValue(CFArrayRef array, CFRange range, const void *value)
-{
-    return _LazyArrOffset.member(array)->doesContainValue(range.location, range.length, (id) value) != FALSE;
+Boolean CFArrayContainsValue(CFArrayRef array, CFRange range, const void* value) {
+    return _LazyArrOffset.member(array)->doesContainValue(range.location, range.length, (id)value) != FALSE;
 }
 
-Boolean CFArrayDoesContainValue(CFArrayRef array, const void *value)
-{
-    return _LazyArrOffset.member(array)->doesContainValue(0, CFArrayGetCount(array), (id) value) != FALSE;
+Boolean CFArrayDoesContainValue(CFArrayRef array, const void* value) {
+    return _LazyArrOffset.member(array)->doesContainValue(0, CFArrayGetCount(array), (id)value) != FALSE;
 }
 
-void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const void *value)
-{
-    _LazyArrOffset.member(array)->addObjectAtIndex((id) value, index);
+void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const void* value) {
+    _LazyArrOffset.member(array)->addObjectAtIndex((id)value, index);
 }
 
-void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void **values, CFIndex newCount)
-{
+void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** values, CFIndex newCount) {
     CFIndex curPos = range.location;
-    const id *newValues = (const id *) values;
+    const id* newValues = (const id*)values;
 
     //  Replace/remove items
-    for ( unsigned i = 0; i < range.length; i ++ ) {
-        if ( newCount > 0 ) {
+    for (unsigned i = 0; i < range.length; i++) {
+        if (newCount > 0) {
             _LazyArrOffset.member(array)->replaceObject(*newValues, curPos);
 
-            curPos ++;
-            newValues ++;
-            newCount --;
+            curPos++;
+            newValues++;
+            newCount--;
         } else {
             _LazyArrOffset.member(array)->removeObject(curPos);
         }
     }
 
     //  Insert any leftover
-    while ( newCount > 0 ) {
+    while (newCount > 0) {
         _LazyArrOffset.member(array)->addObjectAtIndex(*newValues, curPos);
 
-        curPos ++;
-        newValues ++;
-        newCount --;
+        curPos++;
+        newValues++;
+        newCount--;
     }
 }
 
-void CFArrayRemoveAllValues(CFMutableArrayRef array)
-{
-    if ( _LazyArrOffset.member(array) == nil ) return;
+void CFArrayRemoveAllValues(CFMutableArrayRef array) {
+    if (_LazyArrOffset.member(array) == nil)
+        return;
 
     _LazyArrOffset.member(array)->removeAllObjects();
 }
 
-void CFArrayRemoveValueAtIndex(CFMutableArrayRef array, CFIndex idx)
-{
+void CFArrayRemoveValueAtIndex(CFMutableArrayRef array, CFIndex idx) {
     _LazyArrOffset.member(array)->removeObject(idx);
 }
 
-void CFArrayMoveValueAtIndexToEnd(CFMutableArrayRef array, CFIndex idx)
-{
+void CFArrayMoveValueAtIndexToEnd(CFMutableArrayRef array, CFIndex idx) {
     _LazyArrOffset.member(array)->moveObjectAtIndexToEnd(idx);
 }
 
-void CFArrayGetValueEnumerator(CFArrayRef arr, void *enumeratorHolder)
-{
-    *((id *) enumeratorHolder) = 0;
+void CFArrayGetValueEnumerator(CFArrayRef arr, void* enumeratorHolder) {
+    *((id*)enumeratorHolder) = 0;
 }
 
-int CFArrayGetNextValue(CFArrayRef arr, void *enumeratorHolder, id *ret, int count)
-{
+int CFArrayGetNextValue(CFArrayRef arr, void* enumeratorHolder, id* ret, int count) {
     unsigned size = _LazyArrOffset.member(arr)->getCount();
     int i;
 
-    for ( i = 0; i < count; i ++ ) {
-        if ( *((uint32_t *) enumeratorHolder) >= size ) break;
-        ret[i] = _LazyArrOffset.member(arr)->objectFromIndex(*((uint32_t *) enumeratorHolder));
+    for (i = 0; i < count; i++) {
+        if (*((uint32_t*)enumeratorHolder) >= size)
+            break;
+        ret[i] = _LazyArrOffset.member(arr)->objectFromIndex(*((uint32_t*)enumeratorHolder));
 
-        (*((uint32_t *) enumeratorHolder)) ++;
+        (*((uint32_t*)enumeratorHolder))++;
     }
 
     return i;
 }
 
-void _CFArrayInitInternal(CFArrayRef arr)
-{
+void _CFArrayInitInternal(CFArrayRef arr) {
     assert(sizeof(__CFArray) <= __CFARRAY_SIZE_BYTES);
-    NSArray* pArr = (NSArray*) arr;
-    _LazyArrOffset.member(arr) = new(_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks);
+    NSArray* pArr = (NSArray*)arr;
+    _LazyArrOffset.member(arr) = new (_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks);
 }
 
-void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void **objects, int count, bool retain)
-{
-    NSArray* pArr = (NSArray*) arr;
-    _LazyArrOffset.member(arr) = new(_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks, (id *) objects, count, retain);
+void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void** objects, int count, bool retain) {
+    NSArray* pArr = (NSArray*)arr;
+    _LazyArrOffset.member(arr) =
+        new (_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks, (id*)objects, count, retain);
 }
 
-void _CFArrayDestroyInternal(CFArrayRef arr)
-{
+void _CFArrayDestroyInternal(CFArrayRef arr) {
     _LazyArrOffset.member(arr)->~__CFArray();
     _LazyArrOffset.member(arr) = NULL;
 }
 
-void **_CFArrayGetPtr(CFArrayRef array)
-{
-    return (void **) _LazyArrOffset.member(array)->objsPtr();
+void** _CFArrayGetPtr(CFArrayRef array) {
+    return (void**)_LazyArrOffset.member(array)->objsPtr();
 }
-

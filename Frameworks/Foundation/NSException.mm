@@ -17,13 +17,13 @@
 #include "Starboard.h"
 #include "Foundation/NSException.h"
 
-NSString *const NSRangeException = @"NSRangeExcepton";
-NSString *const NSGenericException = @"NSGenericException";
-NSString *const NSInvalidArgumentException = @"NSInvalidArgumentException";
-NSString *const NSInternalInconsistencyException = @"NSInternalInconsistencyException";
-NSString *const NSObjectNotAvailableException = @"NSObjectNotAvailableException";
-NSString *const NSDestinationInvalidException = @"NSDestinationInvalidException";
-NSString *const NSURLErrorDomain = @"NSURLErrorDomain";
+NSString* const NSRangeException = @"NSRangeExcepton";
+NSString* const NSGenericException = @"NSGenericException";
+NSString* const NSInvalidArgumentException = @"NSInvalidArgumentException";
+NSString* const NSInternalInconsistencyException = @"NSInternalInconsistencyException";
+NSString* const NSObjectNotAvailableException = @"NSObjectNotAvailableException";
+NSString* const NSDestinationInvalidException = @"NSDestinationInvalidException";
+NSString* const NSURLErrorDomain = @"NSURLErrorDomain";
 
 @implementation NSException {
     idretaintype(NSString) _name;
@@ -31,75 +31,67 @@ NSString *const NSURLErrorDomain = @"NSURLErrorDomain";
     idretaintype(NSDictionary) _userInfo;
 }
 
-    -(instancetype) initWithName: (NSString *) name reason: (NSString *) reason  userInfo: (NSDictionary *) userInfo
-    {
-        _name.attach([name copy]);
-        _reason.attach([reason copy]);
-        _userInfo.attach([userInfo copy]);
+- (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
+    _name.attach([name copy]);
+    _reason.attach([reason copy]);
+    _userInfo.attach([userInfo copy]);
 
-        return self;
-    }
+    return self;
+}
 
-    +(instancetype) exceptionWithName: (NSString *) name reason: (NSString *) reason  userInfo: (NSDictionary *) userInfo
-    {
-        NSException *ret = [[self alloc] initWithName: name reason: reason userInfo: userInfo];
++ (instancetype)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
+    NSException* ret = [[self alloc] initWithName:name reason:reason userInfo:userInfo];
 
-        return [ret autorelease];
-    }
+    return [ret autorelease];
+}
 
-    +(void) raise:(NSString *) name format: (NSString *) format,  ...
-    {
-        va_list reader;
-        va_start(reader, format);
++ (void)raise:(NSString*)name format:(NSString*)format, ... {
+    va_list reader;
+    va_start(reader, format);
 
-        NSString *reason = [[NSString alloc] initWithFormat: format arguments: reader];
-        va_end(reader);
+    NSString* reason = [[NSString alloc] initWithFormat:format arguments:reader];
+    va_end(reader);
 
-        NSException *exception = [self exceptionWithName: name reason: reason userInfo: nil];
-        [reason release];
-        [exception raise];
-    }
+    NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
+    [reason release];
+    [exception raise];
+}
 
-    +(void) raiseWithLogging:(NSString *) name format: (NSString *) format,  ...
-    {
-        va_list reader;
-        va_start(reader, format);
++ (void)raiseWithLogging:(NSString*)name format:(NSString*)format, ... {
+    va_list reader;
+    va_start(reader, format);
 
-        NSString *reason = [[NSString alloc] initWithFormat: format arguments: reader];
-        va_end(reader);
+    NSString* reason = [[NSString alloc] initWithFormat:format arguments:reader];
+    va_end(reader);
 
-        NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
+    NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
 
-        NSException *exception = [self exceptionWithName: name reason: reason userInfo: nil];
-        [reason release];
+    NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
+    [reason release];
 
-        [exception raise];
-    }
+    [exception raise];
+}
 
-    +(void) raise:(NSString *) name format: (NSString *) format arguments: (va_list) args
-    {
-        NSString *reason = [[NSString alloc] initWithFormat: format arguments: args];
-        NSException *exception = [self exceptionWithName: name reason: reason userInfo: nil];
-        [reason release];
-        [exception raise];
-    }
++ (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)args {
+    NSString* reason = [[NSString alloc] initWithFormat:format arguments:args];
+    NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
+    [reason release];
+    [exception raise];
+}
 
-    -(void) raise {
-        @throw self;
-    }
+- (void)raise {
+    @throw self;
+}
 
-    -(NSString *) name
-    {
-        return _name;
-    }
+- (NSString*)name {
+    return _name;
+}
 
-    -(NSDictionary *) userInfo
-    {
-        return _userInfo;
-    }
+- (NSDictionary*)userInfo {
+    return _userInfo;
+}
 
-    -(NSString *) reason
-    {
-        return _reason;
-    }
+- (NSString*)reason {
+    return _reason;
+}
 @end

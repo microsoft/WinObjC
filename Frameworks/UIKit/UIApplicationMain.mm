@@ -36,57 +36,59 @@
 @end
 
 @implementation NSAutoreleasePoolWarn : NSAutoreleasePool
--(void) addObject:(id)obj {
+- (void)addObject:(id)obj {
     EbrDebugLog("Autoreleasing a %s in the toplevel pool that will never be freed\n", object_getClassName(obj));
     [super addObject:obj];
 }
 @end
 
-void UIBecomeInactive()
-{
+void UIBecomeInactive() {
     UIApplication* app = [UIApplication sharedApplication];
     id<UIApplicationDelegate> curDelegate = [app delegate];
 
-    if ( [curDelegate respondsToSelector:@selector(applicationWillResignActive:)] ) {
+    if ([curDelegate respondsToSelector:@selector(applicationWillResignActive:)]) {
         [curDelegate applicationWillResignActive:app];
     }
 
     // Drain global dispatch queue before ceding control.
-    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{});
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                  ^{
+                  });
 }
 
-int UIOrientationFromString(int curOrientation, NSString* str)
-{
-    char *pOrientation = (char *) [str UTF8String];
+int UIOrientationFromString(int curOrientation, NSString* str) {
+    char* pOrientation = (char*)[str UTF8String];
 
-    if ( strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0 ) {
+    if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0) {
         return UIInterfaceOrientationLandscapeRight;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0 ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0) {
         return UIInterfaceOrientationLandscapeRight;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationLandscapeDefault") == 0 ) {
-        if ( curOrientation == UIInterfaceOrientationLandscapeLeft || curOrientation == UIInterfaceOrientationLandscapeRight ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeDefault") == 0) {
+        if (curOrientation == UIInterfaceOrientationLandscapeLeft ||
+            curOrientation == UIInterfaceOrientationLandscapeRight) {
             return curOrientation;
         }
 
         return UIInterfaceOrientationLandscapeRight;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationPortrait") == 0 ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationPortrait") == 0) {
         return UIInterfaceOrientationPortrait;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationPortraitRight") == 0 ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationPortraitRight") == 0) {
         return UIInterfaceOrientationPortrait;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationLandscapeLeft") == 0 ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeLeft") == 0) {
         return UIInterfaceOrientationLandscapeLeft;
-    } else if ( strcmp(pOrientation, "UIDeviceOrientationLandscapeLeft") == 0 ) {
+    } else if (strcmp(pOrientation, "UIDeviceOrientationLandscapeLeft") == 0) {
         return UIInterfaceOrientationLandscapeLeft;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationLandscape") == 0 ) {
-        if ( curOrientation == UIInterfaceOrientationLandscapeLeft || curOrientation == UIInterfaceOrientationLandscapeRight ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscape") == 0) {
+        if (curOrientation == UIInterfaceOrientationLandscapeLeft ||
+            curOrientation == UIInterfaceOrientationLandscapeRight) {
             return curOrientation;
         }
 
         return UIInterfaceOrientationLandscapeRight;
-    } else if ( strcmp(pOrientation, "") == 0 ) {
+    } else if (strcmp(pOrientation, "") == 0) {
         EbrDebugLog("Warning: orientation is blank\n");
         return UIInterfaceOrientationLandscapeRight;
-    } else if ( strcmp(pOrientation, "UIInterfaceOrientationPortraitUpsideDown") == 0 ) {
+    } else if (strcmp(pOrientation, "UIInterfaceOrientationPortraitUpsideDown") == 0) {
         return UIInterfaceOrientationPortraitUpsideDown;
     } else {
         EbrDebugLog("Warning: Unsupported orientation %s\n", pOrientation);
@@ -101,12 +103,8 @@ int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
-int UIApplicationMainInit(int argc,
-   char *argv[],
-   NSString* principalClassName,
-   NSString* delegateClassName,
-   int defaultOrientation)
-{
+int UIApplicationMainInit(
+    int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, int defaultOrientation) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -119,12 +117,12 @@ int UIApplicationMainInit(int argc,
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
     UIApplication* uiApplication;
 
-    if ( principalClassName == nil ) {
+    if (principalClassName == nil) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
     }
 
-    if ( principalClassName != nil ) { 
-        char *pClassName = (char *) [principalClassName UTF8String];
+    if (principalClassName != nil) {
+        char* pClassName = (char*)[principalClassName UTF8String];
         uiApplication = [objc_getClass(pClassName) new];
     } else {
         uiApplication = [UIApplication new];
@@ -132,8 +130,8 @@ int UIApplicationMainInit(int argc,
 
     id<UIApplicationDelegate> delegateApp;
 
-    if ( delegateClassName != nil ) { 
-        char *pClassName = (char *) [delegateClassName UTF8String];
+    if (delegateClassName != nil) {
+        char* pClassName = (char*)[delegateClassName UTF8String];
         delegateApp = [objc_getClass(pClassName) new];
     } else {
         delegateApp = [uiApplication delegate];
@@ -142,33 +140,33 @@ int UIApplicationMainInit(int argc,
     [uiApplication setDelegate:delegateApp];
     idretain rootController(nil);
 
-    if ( infoDict != nil ) {
+    if (infoDict != nil) {
         NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
-        if ( fonts != nil ) {
+        if (fonts != nil) {
             for (NSString* curFontName in fonts) {
                 NSString* path = [[NSBundle mainBundle] pathForResource:curFontName ofType:nil];
-                if ( path != nil ) {
+                if (path != nil) {
                     NSData* data = [NSData dataWithContentsOfFile:path];
-                    if ( data != nil ) {
+                    if (data != nil) {
                         UIFont* font = [UIFont fontWithData:data];
-                        if ( font != nil ) {
+                        if (font != nil) {
                             [font _setName:[[path lastPathComponent] stringByDeletingPathExtension]];
-                            CTFontManagerRegisterGraphicsFont((CGFontRef) font, NULL);
+                            CTFontManagerRegisterGraphicsFont((CGFontRef)font, NULL);
                         }
                     }
                 }
             }
         }
 
-        if ( defaultOrientation != UIInterfaceOrientationUnknown ) {
+        if (defaultOrientation != UIInterfaceOrientationUnknown) {
             [uiApplication setStatusBarOrientation:defaultOrientation];
             [uiApplication _setInternalOrientation:defaultOrientation];
         }
 
         NSNumber* statusBarHidden = [infoDict objectForKey:@"UIStatusBarHidden"];
         int hideStatusBar = 0;
-        if ( statusBarHidden != nil ) {
-            if ( [statusBarHidden intValue] != 0 ) {
+        if (statusBarHidden != nil) {
+            if ([statusBarHidden intValue] != 0) {
                 hideStatusBar = 1;
             }
         }
@@ -176,23 +174,24 @@ int UIApplicationMainInit(int argc,
 
         NSString* mainNibFile;
 
-        if ( GetCACompositor()->isTablet() ) {
+        if (GetCACompositor()->isTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
-            if ( mainNibFile == nil ) mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
+            if (mainNibFile == nil)
+                mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
         } else {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
         }
 
-        if ( mainNibFile != nil ) {
+        if (mainNibFile != nil) {
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
-            if ( nibPath != nil ) {
+            if (nibPath != nil) {
                 NSArray* obj = [[[NSNib alloc] loadNib:nibPath withOwner:uiApplication] retain];
                 int count = [obj count];
 
-                for ( int i = 0; i < count; i ++ ) {
+                for (int i = 0; i < count; i++) {
                     NSObject* curObj = [obj objectAtIndex:i];
 
-                    if ( [curObj isKindOfClass:[UIViewController class]] ) {
+                    if ([curObj isKindOfClass:[UIViewController class]]) {
                         [curObj setResizeToScreen:1];
                         [curObj _doResizeToScreen];
                     }
@@ -200,16 +199,18 @@ int UIApplicationMainInit(int argc,
             }
         } else {
             NSString* storyBoardName = nil;
-            if ( GetCACompositor()->isTablet() ) {
+            if (GetCACompositor()->isTablet()) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
             }
 
-            if ( storyBoardName == nil ) storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile"];
+            if (storyBoardName == nil)
+                storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile"];
 
-            if ( storyBoardName != nil ) {
-                UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
+            if (storyBoardName != nil) {
+                UIStoryboard* storyBoard =
+                    [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
-                if ( viewController != nil ) {
+                if (viewController != nil) {
                     [viewController setResizeToScreen:1];
                     rootController = viewController;
                 }
@@ -218,46 +219,54 @@ int UIApplicationMainInit(int argc,
     }
 
     id<UIApplicationDelegate> curDelegate = [uiApplication delegate];
-    if ( curDelegate == nil ) {
+    if (curDelegate == nil) {
         [uiApplication setDelegate:uiApplication];
     }
 
-    if ( [curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)] ) {
+    if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
         NSMutableDictionary* options = [NSMutableDictionary dictionary];
 
         [curDelegate application:uiApplication didFinishLaunchingWithOptions:nil];
-    } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)] ) {
+    } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
         [curDelegate applicationDidFinishLaunching:uiApplication];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification" object:uiApplication];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification"
+                                                        object:uiApplication];
 
-    if ( rootController != nil ) {
+    if (rootController != nil) {
         [[uiApplication _popupWindow] setRootViewController:rootController];
         [rootController _doResizeToScreen];
         rootController = nil;
     }
 
-    if ( [curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)] ) {
+    if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
         [curDelegate applicationDidBecomeActive:uiApplication];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification"
+                                                        object:uiApplication];
 
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(setOrientation:) withObject:0 waitUntilDone:FALSE];
-    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
+    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation)
+                                               withObject:0
+                                            waitUntilDone:FALSE];
     g_uiMainRunning = true;
 
-    if ( newDeviceOrientation != 0 ) {
-        [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
+    if (newDeviceOrientation != 0) {
+        [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation)
+                                                   withObject:nil
+                                                waitUntilDone:FALSE];
     }
 #ifdef SHOW_OPTIONS_ON_STARTUP
-    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions) withObject:0 waitUntilDone:FALSE];
+    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions)
+                                                        withObject:0
+                                                     waitUntilDone:FALSE];
 #endif
 
     //  Make windows visible
     NSArray* windows = [[UIApplication sharedApplication] windows];
 
     int windowCount = [windows count];
-    for ( int i = 0; i < windowCount; i ++ ) {
+    for (int i = 0; i < windowCount; i++) {
         UIWindow* curWindow = [windows objectAtIndex:i];
         [curWindow setHidden:FALSE];
     }
@@ -271,21 +280,22 @@ int UIApplicationMainInit(int argc,
     return 0;
 }
 
-int UIApplicationMainLoop()
-{
+int UIApplicationMainLoop() {
     [[NSThread currentThread] associateWithCurrentThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
-    for ( ;; ) {
+    for (;;) {
         [runLoop run];
         EbrDebugLog("Warning: CFRunLoop stopped\n");
-        if ( _doShutdown ) break;
+        if (_doShutdown)
+            break;
     }
     UIBecomeInactive();
-    if ( [[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(applicationWillTerminate:)] ) {
-        [[[UIApplication sharedApplication]  delegate] applicationWillTerminate:[UIApplication sharedApplication]];
+    if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(applicationWillTerminate:)]) {
+        [[[UIApplication sharedApplication] delegate] applicationWillTerminate:[UIApplication sharedApplication]];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillTerminateNotification" object:[UIApplication sharedApplication]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillTerminateNotification"
+                                                        object:[UIApplication sharedApplication]];
 
     EbrDebugLog("Exiting uncleanly.\n");
     EbrShutdownAV();
@@ -293,4 +303,3 @@ int UIApplicationMainLoop()
 
     return 0;
 }
-

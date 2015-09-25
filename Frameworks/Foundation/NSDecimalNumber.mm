@@ -18,23 +18,22 @@
 
 @implementation NSDecimalNumber : NSNumber
 
-    +(NSDecimalNumber*) decimalNumberWithString:(NSString*) str {
-        NSDecimalNumber* ret = [self alloc];
-        const char *pStr = [str UTF8String];
-        if ( strstr(pStr, ".") != NULL ) {
-            double fVal = strtod(pStr, NULL);
-            ret->val.f = fVal;
-            ret->type = floatType;
-            ret->objCType = "f";
-        } else {
-            int64_t val;
-            val = _strtoi64(pStr, NULL, 10);
-            ret->val.i = val;
-            ret->type = int64Type;
-            ret->objCType = "q";
-        }
-        return ret;
++ (NSDecimalNumber*)decimalNumberWithString:(NSString*)str {
+    NSDecimalNumber* ret = [self alloc];
+    const char* pStr = [str UTF8String];
+    if (strstr(pStr, ".") != NULL) {
+        double fVal = strtod(pStr, NULL);
+        ret->val.f = fVal;
+        ret->type = floatType;
+        ret->objCType = "f";
+    } else {
+        int64_t val;
+        val = _strtoi64(pStr, NULL, 10);
+        ret->val.i = val;
+        ret->type = int64Type;
+        ret->objCType = "q";
     }
+    return ret;
+}
 
 @end
-

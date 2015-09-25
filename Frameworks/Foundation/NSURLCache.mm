@@ -20,42 +20,37 @@
 static idretain sharedURLCache;
 
 @implementation NSURLCache : NSObject
-    /* annotate with type */ +(id) sharedURLCache {
-        return sharedURLCache;
-    }
++ (id)sharedURLCache {
+    return sharedURLCache;
+}
 
-    /* annotate with type */ -(id) cachedResponseForRequest:(id)request {
-        return nil;
-    }
+- (id)cachedResponseForRequest:(id)request {
+    return nil;
+}
 
-    /* annotate with type */ +(void) setSharedURLCache:(id)cache {
-        sharedURLCache = cache;
-    }
++ (void)setSharedURLCache:(id)cache {
+    sharedURLCache = cache;
+}
 
-    /* annotate with type */ -(void) removeAllCachedResponses {
+- (void)removeAllCachedResponses {
+}
 
-    }
++ (void)initialize {
+    sharedURLCache.attach([self new]);
+}
 
-    /* annotate with type */ +(void) initialize {
-        sharedURLCache.attach([self new]);
-    }
+- (void)setMemoryCapacity:(NSUInteger)capacity {
+}
 
-    /* annotate with type */ -(void) setMemoryCapacity:(NSUInteger)capacity {
-    
-    }
+- (void)setDiskCapacity:(NSUInteger)capacity {
+}
 
-    /* annotate with type */ -(void) setDiskCapacity:(NSUInteger)capacity {
+- (unsigned)diskCapacity {
+    return 1024 * 1024 * 1024;
+}
 
-    }
+- (id)initWithMemoryCapacity:(NSUInteger)memCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(id)path {
+    return self;
+}
 
-    -(unsigned) diskCapacity {
-        return 1024 * 1024 * 1024;
-    }
-
-    /* annotate with type */ -(id) initWithMemoryCapacity:(NSUInteger)memCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(id)path {
-        return self;
-    }
-
-    
 @end
-

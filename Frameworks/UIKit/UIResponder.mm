@@ -20,175 +20,173 @@ id _curFirstResponder;
 static int _changingResponder = 0;
 
 @implementation UIResponder : NSObject
-    -(BOOL) resignFirstResponder {
-        if ( _curFirstResponder == self ) {
-            _curFirstResponder = nil;
-            if ( _changingResponder == 0 ) [[UIApplication sharedApplication] _evaluateKeyboard];
-        }
+- (BOOL)resignFirstResponder {
+    if (_curFirstResponder == self) {
+        _curFirstResponder = nil;
+        if (_changingResponder == 0)
+            [[UIApplication sharedApplication] _evaluateKeyboard];
+    }
 
+    return TRUE;
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return FALSE;
+}
+
+- (BOOL)canResignFirstResponder {
+    return TRUE;
+}
+
+- (void)reloadInputViews {
+}
+
+- (UIView*)inputView {
+    return nil;
+}
+
+- (BOOL)isFirstResponder {
+    return _curFirstResponder == self;
+}
+
+- (BOOL)becomeFirstResponder {
+    if (_curFirstResponder == self)
         return TRUE;
+    if ([self respondsToSelector:@selector(window)]) {
+        if ([self window] == nil)
+            return FALSE;
     }
 
-    -(BOOL) canBecomeFirstResponder {
-        return FALSE;
-    }
-
-    -(BOOL) canResignFirstResponder {
-        return TRUE;
-    }
-
-    -(void) reloadInputViews {
-    }
-
-    -(UIView*) inputView {
-        return nil;
-    }
-
-    -(BOOL) isFirstResponder {
-        return _curFirstResponder == self;
-    }
-
-    -(BOOL) becomeFirstResponder {
-        if ( _curFirstResponder == self ) return TRUE;
-        if ( [self respondsToSelector:@selector(window)] ) {
-            if ( [self window] == nil ) return FALSE;
+    _changingResponder++;
+    if (_curFirstResponder != nil) {
+        if ([_curFirstResponder resignFirstResponder] == FALSE) {
+            _changingResponder--;
+            return FALSE;
         }
-
-        _changingResponder ++;
-        if ( _curFirstResponder != nil ) {
-            if ( [_curFirstResponder resignFirstResponder] == FALSE ) {
-                _changingResponder --;
-                return FALSE;
-            }
-        }
-        _curFirstResponder = self;
-        _changingResponder --;
-
-        return TRUE;
     }
+    _curFirstResponder = self;
+    _changingResponder--;
 
-    +(void) keyPressed:(unsigned)key {
-        if ( _curFirstResponder != nil ) {
-            [_curFirstResponder keyPressed:key];
+    return TRUE;
+}
+
++ (void)keyPressed:(unsigned)key {
+    if (_curFirstResponder != nil) {
+        [_curFirstResponder keyPressed:key];
+    }
+}
+
++ (id)_deleteRange:(id)num {
+    if (_curFirstResponder != nil) {
+        if ([_curFirstResponder respondsToSelector:@selector(_deleteRange:)]) {
+            [_curFirstResponder _deleteRange:num];
         }
     }
 
-    /* annotate with type */ +(id) _deleteRange:(id)num {
-        if ( _curFirstResponder != nil ) {
-            if ( [_curFirstResponder respondsToSelector:@selector(_deleteRange:)] ) {
-                [_curFirstResponder _deleteRange:num];
-            }
-        }
+    return self;
+}
 
-        return self;
-    }
+- (void)keyPressed:(unsigned)key {
+}
 
-    -(void) keyPressed:(unsigned)key {
-    }
+- (UIResponder*)nextResponder {
+    return nil;
+}
 
-    -(UIResponder*) nextResponder {
-        return nil;
-    }
+- (UIView*)inputAccessoryView {
+    return nil;
+}
 
-    -(UIView*) inputAccessoryView {
-        return nil;
-    }
-
-    -(void) dealloc {
-        if ( _curFirstResponder == self ) {
-            _curFirstResponder = nil;
-        }
-
-        [super dealloc];
-    }
-
-    -(void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-        UIResponder* nextResponder = [self nextResponder];
-
-        if ( nextResponder != nil ) {
-            [nextResponder touchesBegan:touches withEvent:event];
-            return;
-        }
-
-        EbrDebugLog("Unhandled touchesBegan!\n");
-    }
-
-    -(void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-        EbrDebugLog("Clicked: %s\n", object_getClassName(self));
-        id nextResponder = [self nextResponder];
-
-        if ( nextResponder != nil ) {
-            [nextResponder touchesMoved:touches withEvent:event];
-            return;
-        }
-
-        EbrDebugLog("Unhandled touchesMoved!\n");
-    }
-
-    -(void) touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-        id nextResponder = [self nextResponder];
-
-        if ( nextResponder != nil ) {
-            [nextResponder touchesEnded:touches withEvent:event];
-            return;
-        }
-
-        EbrDebugLog("Unhandled touchesEnded!\n");
-    }
-
-    -(void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
-        id nextResponder = [self nextResponder];
-
-        if ( nextResponder != nil ) {
-            [nextResponder touchesCancelled:touches withEvent:event];
-            return;
-        }
-
-        EbrDebugLog("Unhandled touchesCancelled!\n");
-    }
-
-    -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
-        id curTarget = self;
-        while ( curTarget != nil ) {
-            if ( [curTarget respondsToSelector:action] ) {
-                return TRUE;
-            }
-            curTarget = [curTarget nextResponder];
-        }
-
-        return FALSE;
-    }
-
-    -(void) didMoveToWindow {
-        if ( _curFirstResponder == self && [self window] == nil ) {
-            [self resignFirstResponder];
-            _curFirstResponder = nil;
-        }
-    }
-
-    +(void) _resignCurResponder {
-        [_curFirstResponder resignFirstResponder];
+- (void)dealloc {
+    if (_curFirstResponder == self) {
         _curFirstResponder = nil;
     }
 
-    -(void) setAccessibilityLabel:(NSString*)label {
+    [super dealloc];
+}
+
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    UIResponder* nextResponder = [self nextResponder];
+
+    if (nextResponder != nil) {
+        [nextResponder touchesBegan:touches withEvent:event];
+        return;
     }
 
-    -(void) setAccessibilityHint:(NSString*)hint {
+    EbrDebugLog("Unhandled touchesBegan!\n");
+}
+
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    EbrDebugLog("Clicked: %s\n", object_getClassName(self));
+    id nextResponder = [self nextResponder];
+
+    if (nextResponder != nil) {
+        [nextResponder touchesMoved:touches withEvent:event];
+        return;
     }
 
-    -(void) setAccessibilityTraits:(unsigned)traits {
-    }       
+    EbrDebugLog("Unhandled touchesMoved!\n");
+}
 
-    -(void) setIsAccessibilityElement:(BOOL)enabled {
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    id nextResponder = [self nextResponder];
+
+    if (nextResponder != nil) {
+        [nextResponder touchesEnded:touches withEvent:event];
+        return;
     }
 
-    -(void) setShouldGroupAccessibilityChildren:(BOOL)group {
+    EbrDebugLog("Unhandled touchesEnded!\n");
+}
+
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
+    id nextResponder = [self nextResponder];
+
+    if (nextResponder != nil) {
+        [nextResponder touchesCancelled:touches withEvent:event];
+        return;
     }
 
-        
-        
-        
-        
+    EbrDebugLog("Unhandled touchesCancelled!\n");
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    id curTarget = self;
+    while (curTarget != nil) {
+        if ([curTarget respondsToSelector:action]) {
+            return TRUE;
+        }
+        curTarget = [curTarget nextResponder];
+    }
+
+    return FALSE;
+}
+
+- (void)didMoveToWindow {
+    if (_curFirstResponder == self && [self window] == nil) {
+        [self resignFirstResponder];
+        _curFirstResponder = nil;
+    }
+}
+
++ (void)_resignCurResponder {
+    [_curFirstResponder resignFirstResponder];
+    _curFirstResponder = nil;
+}
+
+- (void)setAccessibilityLabel:(NSString*)label {
+}
+
+- (void)setAccessibilityHint:(NSString*)hint {
+}
+
+- (void)setAccessibilityTraits:(unsigned)traits {
+}
+
+- (void)setIsAccessibilityElement:(BOOL)enabled {
+}
+
+- (void)setShouldGroupAccessibilityChildren:(BOOL)group {
+}
+
 @end
-

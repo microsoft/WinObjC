@@ -17,14 +17,13 @@
 #include "Starboard.h"
 #include "Foundation/NSValue.h"
 
-@implementation NSValue(UIKitAdditions)
-    -(float) scale {
-        CATransform3D value = [self CATransform3DValue];
+@implementation NSValue (UIKitAdditions)
+- (float)scale {
+    CATransform3D value = [self CATransform3DValue];
 
-        float scale[3];
-        CATransform3DGetScale(value, scale);
+    float scale[3];
+    CATransform3DGetScale(value, scale);
 
-        return (scale[0] + scale[1] + scale[2]) / 3.0f;
-    }
+    return (scale[0] + scale[1] + scale[2]) / 3.0f;
+}
 @end
-

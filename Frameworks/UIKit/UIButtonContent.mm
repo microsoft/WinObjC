@@ -18,42 +18,39 @@
 
 @interface UIButtonContent : NSObject {
 @public
-   id image, backgroundImage, title, titleColor, shadowColor;
+    id image, backgroundImage, title, titleColor, shadowColor;
 }
 @end
 
-
 @implementation UIButtonContent : NSObject
-    -(instancetype) initWithCoder:(id)coder {
-        image = [coder decodeObjectForKey:@"UIImage"];
-        backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-        title = [coder decodeObjectForKey:@"UITitle"];
-        titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-        shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
+- (instancetype)initWithCoder:(id)coder {
+    image = [coder decodeObjectForKey:@"UIImage"];
+    backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
+    title = [coder decodeObjectForKey:@"UITitle"];
+    titleColor = [coder decodeObjectForKey:@"UITitleColor"];
+    shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
 
-        return self;
-    }
+    return self;
+}
 
-    -(id) /* use typed version */ image {
-        return image;
-    }
+- (id) /* use typed version */ image {
+    return image;
+}
 
-    -(id) /* use typed version */ backgroundImage {
-        return backgroundImage;
-    }
+- (id) /* use typed version */ backgroundImage {
+    return backgroundImage;
+}
 
-    -(id) /* use typed version */ titleColor {
-        return titleColor;
-    }
+- (id) /* use typed version */ titleColor {
+    return titleColor;
+}
 
-    -(id) /* use typed version */ shadowColor {
-        return shadowColor;
-    }
+- (id) /* use typed version */ shadowColor {
+    return shadowColor;
+}
 
-    -(id) /* use typed version */ title {
-        return title;
-    }
+- (id) /* use typed version */ title {
+    return title;
+}
 
-    
 @end
-

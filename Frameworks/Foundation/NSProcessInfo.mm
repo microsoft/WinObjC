@@ -25,9 +25,8 @@ static id _processInfo;
 
 static IWLazyClassLookup _LazyUIDevice("UIDevice");
 
-static inline OSVERSIONINFO winOsVersion()
-{
-    OSVERSIONINFO result = { sizeof(OSVERSIONINFO), 0, 0, 0, 0, {'\0'}};
+static inline OSVERSIONINFO winOsVersion() {
+    OSVERSIONINFO result = { sizeof(OSVERSIONINFO), 0, 0, 0, 0, { '\0' } };
 
     MEMORY_BASIC_INFORMATION mbi = { 0 };
     if (VirtualQuery(VirtualQuery, &mbi, sizeof(mbi)) == 0)
@@ -37,9 +36,9 @@ static inline OSVERSIONINFO winOsVersion()
     if (!kernelModule)
         return result;
 
-    typedef HMODULE(WINAPI *GetModuleHandleFunction)(LPCTSTR);
-    GetModuleHandleFunction pGetModuleHandle = reinterpret_cast<GetModuleHandleFunction>(
-        GetProcAddress(kernelModule, "GetModuleHandleW"));
+    typedef HMODULE(WINAPI * GetModuleHandleFunction)(LPCTSTR);
+    GetModuleHandleFunction pGetModuleHandle =
+        reinterpret_cast<GetModuleHandleFunction>(GetProcAddress(kernelModule, "GetModuleHandleW"));
     if (!pGetModuleHandle)
         return result;
 
@@ -48,9 +47,9 @@ static inline OSVERSIONINFO winOsVersion()
         return result;
 
     // NTSTATUS is not defined on WinRT
-    typedef LONG /* NTSTATUS */(NTAPI *RtlGetVersionFunction)(LPOSVERSIONINFO);
-    RtlGetVersionFunction pRtlGetVersion = reinterpret_cast<RtlGetVersionFunction>(
-        GetProcAddress(ntdll, "RtlGetVersion"));
+    typedef LONG /* NTSTATUS */ (NTAPI * RtlGetVersionFunction)(LPOSVERSIONINFO);
+    RtlGetVersionFunction pRtlGetVersion =
+        reinterpret_cast<RtlGetVersionFunction>(GetProcAddress(ntdll, "RtlGetVersion"));
     if (!pRtlGetVersion)
         return result;
 
@@ -61,31 +60,31 @@ static inline OSVERSIONINFO winOsVersion()
 }
 
 @implementation NSProcessInfo : NSObject
-    +(NSProcessInfo*) processInfo {
-        return _processInfo;
-    }
++ (NSProcessInfo*)processInfo {
+    return _processInfo;
+}
 
-    +(void) initialize {
-        _processInfo = [self new];
-    }
++ (void)initialize {
+    _processInfo = [self new];
+}
 
-    -(instancetype) init {
-        _environment = [NSMutableDictionary new];
+- (instancetype)init {
+    _environment = [NSMutableDictionary new];
 
-        [_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
-        [_environment setObject:@"/tmp" forKey:@"TMPDIR"];
+    [_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
+    [_environment setObject:@"/tmp" forKey:@"TMPDIR"];
 
-        return self;
-    }
+    return self;
+}
 
-    -(NSString*) globallyUniqueString {
-        CFUUIDRef uuid = CFUUIDCreate(nil);
-        NSString* ret = (NSString*) CFUUIDCreateString(nil, uuid);
+- (NSString*)globallyUniqueString {
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    NSString* ret = (NSString*)CFUUIDCreateString(nil, uuid);
 
-        CFRelease(uuid);
+    CFRelease(uuid);
 
-        return [ret autorelease];
-    }
+    return [ret autorelease];
+}
 
 - (NSOperatingSystemVersion)operatingSystemVersion {
     const OSVERSIONINFO info = winOsVersion();
@@ -103,34 +102,32 @@ static inline OSVERSIONINFO winOsVersion()
     return systemVersion.majorVersion >= version.majorVersion;
 }
 
-    -(NSString*) operatingSystemVersionString {
-        return @"iOS 3.2";
-    }
+- (NSString*)operatingSystemVersionString {
+    return @"iOS 3.2";
+}
 
-    -(NSString*) processName {
-        return @"MainProcess";
-    }
+- (NSString*)processName {
+    return @"MainProcess";
+}
 
-    -(int) processIdentifier {
-        return 12345;
-    }
+- (int)processIdentifier {
+    return 12345;
+}
 
-    -(double) systemUptime {
-        return 60.0 * 5.0;
-    }
+- (double)systemUptime {
+    return 60.0 * 5.0;
+}
 
-    -(NSDictionary*) environment {
-        return _environment;
-    }
+- (NSDictionary*)environment {
+    return _environment;
+}
 
-    -(unsigned) processorCount {
-        return 2;
-    }
+- (unsigned)processorCount {
+    return 2;
+}
 
-    -(uint64_t) physicalMemory {
-        return [_LazyUIDevice _deviceTotalMemory];
-    }
+- (uint64_t)physicalMemory {
+    return [_LazyUIDevice _deviceTotalMemory];
+}
 
-    
 @end
-

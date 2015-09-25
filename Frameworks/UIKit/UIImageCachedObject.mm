@@ -20,13 +20,11 @@
 extern CFMutableDictionaryRef g_imageCache;
 
 @implementation UIImageCachedObject : NSObject
-    -(void) dealloc {
-        [(id)g_imageCache removeObjectForKey:_cacheName];
-        [_cacheName release];
+- (void)dealloc {
+    [(id)g_imageCache removeObjectForKey:_cacheName];
+    [_cacheName release];
 
-        [super dealloc];
-    }
+    [super dealloc];
+}
 
-    
 @end
-

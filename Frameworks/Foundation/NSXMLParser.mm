@@ -27,217 +27,210 @@
 //#define LOG_PARSED
 
 @implementation NSXMLParser : NSObject
-    -(instancetype) initWithContentsOfURL:(id)URL {
-        return [self initWithContentsOfFile:[URL path]];
+- (instancetype)initWithContentsOfURL:(id)URL {
+    return [self initWithContentsOfFile:[URL path]];
+}
+
+- (instancetype)initWithContentsOfFile:(id)path {
+    id data = [[NSData alloc] initWithContentsOfFile:path];
+    if (data == nil) {
+        [self dealloc];
+        return nil;
     }
 
-    -(instancetype) initWithContentsOfFile:(id)path {
-        id data = [[NSData alloc] initWithContentsOfFile:path];
-        if ( data == nil ) {
-            [self dealloc];
-            return nil;
-        }
+    id ret = [self initWithData:data];
+    [data release];
 
-        id ret = [self initWithData:data];
-        [data release];
+    return ret;
+}
 
-        return ret;
-    }
-        
-    -(instancetype) initWithData:(id)data {
-        _data = [data retain];
+- (instancetype)initWithData:(id)data {
+    _data = [data retain];
 
-        return self;
-    }
+    return self;
+}
 
-    -(void) dealloc {
-        [_data release];
-        [super dealloc];
-    }
+- (void)dealloc {
+    [_data release];
+    [super dealloc];
+}
 
-    -(void) setDelegate:(id)delegate {
-        _delegate = delegate;
-        _hasDidStartElement = [_delegate respondsToSelector:@selector(parser:didStartElement:namespaceURI:qualifiedName:attributes:)] != FALSE;
-        _hasDidEndElement = [_delegate respondsToSelector:@selector(parser:didEndElement:namespaceURI:qualifiedName:)] != FALSE;
-        _hasFoundCharacters = [_delegate respondsToSelector:@selector(parser:foundCharacters:)] != FALSE;
-        _hasFoundCData = [_delegate respondsToSelector:@selector(parser:foundCDATA:)] != FALSE;
-    }
+- (void)setDelegate:(id)delegate {
+    _delegate = delegate;
+    _hasDidStartElement =
+        [_delegate respondsToSelector:@selector(parser:didStartElement:namespaceURI:qualifiedName:attributes:)] !=
+        FALSE;
+    _hasDidEndElement =
+        [_delegate respondsToSelector:@selector(parser:didEndElement:namespaceURI:qualifiedName:)] != FALSE;
+    _hasFoundCharacters = [_delegate respondsToSelector:@selector(parser:foundCharacters:)] != FALSE;
+    _hasFoundCData = [_delegate respondsToSelector:@selector(parser:foundCDATA:)] != FALSE;
+}
 
-    -(id) delegate {
-        return _delegate;
-    }
+- (id)delegate {
+    return _delegate;
+}
 
-    -(void) setShouldProcessNamespaces:(BOOL)flag {
-        _shouldProcessNamespaces = flag;
-    }
+- (void)setShouldProcessNamespaces:(BOOL)flag {
+    _shouldProcessNamespaces = flag;
+}
 
-    -(void) setShouldReportNamespacePrefixes:(BOOL)flag {
-        _shouldReportNamespacePrefixes = flag;
-    }
+- (void)setShouldReportNamespacePrefixes:(BOOL)flag {
+    _shouldReportNamespacePrefixes = flag;
+}
 
-    -(BOOL) shouldProcessNamespaces {
-        return _shouldProcessNamespaces;
-    }
+- (BOOL)shouldProcessNamespaces {
+    return _shouldProcessNamespaces;
+}
 
-    -(BOOL) shouldReportNamespacePrefixes {
-        return _shouldReportNamespacePrefixes;
-    }
+- (BOOL)shouldReportNamespacePrefixes {
+    return _shouldReportNamespacePrefixes;
+}
 
-    -(void) setShouldResolveExternalEntities:(BOOL)flag {
-        _shouldResolveExternalEntities=flag;
-    }
+- (void)setShouldResolveExternalEntities:(BOOL)flag {
+    _shouldResolveExternalEntities = flag;
+}
 
-    -(BOOL) shouldResolveExternalEntities {
-        return _shouldResolveExternalEntities;
-    }
+- (BOOL)shouldResolveExternalEntities {
+    return _shouldResolveExternalEntities;
+}
 
-    static void startDocumentCallback(void* ctx)
-    {
-        NSXMLParser* self = (NSXMLParser*)ctx;
+static void startDocumentCallback(void* ctx) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( [self->_delegate respondsToSelector:@selector(parserDidStartDocument:)] )
-            [self->_delegate parserDidStartDocument:self];
-    }
+    if ([self->_delegate respondsToSelector:@selector(parserDidStartDocument:)])
+        [self->_delegate parserDidStartDocument:self];
+}
 
-    static void endDocumentCallback(void* ctx)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void endDocumentCallback(void* ctx) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( [self->_delegate respondsToSelector:@selector(parserDidEndDocument:)] )
-            [self->_delegate parserDidEndDocument:self];
-    }
+    if ([self->_delegate respondsToSelector:@selector(parserDidEndDocument:)])
+        [self->_delegate parserDidEndDocument:self];
+}
 
-    static void warningCallback(void* ctx, const char* msg, ...)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void warningCallback(void* ctx, const char* msg, ...) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        va_list args;
-        va_start(args, msg);
-        vprintf(msg, args);
-        va_end(args);
-    }
+    va_list args;
+    va_start(args, msg);
+    vprintf(msg, args);
+    va_end(args);
+}
 
-    static void startElementCallback(void* ctx, const xmlChar* name, const xmlChar** atts)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void startElementCallback(void* ctx, const xmlChar* name, const xmlChar** atts) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( self->_hasDidStartElement ) {
-            const xmlChar** currAttr = atts;
+    if (self->_hasDidStartElement) {
+        const xmlChar** currAttr = atts;
 
-            id attrs = nil;
+        id attrs = nil;
 
-            if ( !currAttr || !*currAttr ) {
-                attrs = [self->_emptyDictionary retain];
-            } else {
-                attrs = [NSMutableDictionary new];
-                while ( currAttr && *currAttr ) {
-                    id key = [[NSString alloc] initWithUTF8String:(const char *) currAttr[0]];
-                    id val = [[NSString alloc] initWithUTF8String:(const char *) currAttr[1]];
+        if (!currAttr || !*currAttr) {
+            attrs = [self->_emptyDictionary retain];
+        } else {
+            attrs = [NSMutableDictionary new];
+            while (currAttr && *currAttr) {
+                id key = [[NSString alloc] initWithUTF8String:(const char*)currAttr[0]];
+                id val = [[NSString alloc] initWithUTF8String:(const char*)currAttr[1]];
 
-                    [attrs setObject:val forKey:key];
-                    [key release];
-                    [val release];
+                [attrs setObject:val forKey:key];
+                [key release];
+                [val release];
 
-                    currAttr += 2;
-                }
+                currAttr += 2;
             }
-
-            id nameString = [[NSString alloc] initWithUTF8String:(const char *) name];
-
-            [self->_delegate parser:self didStartElement:nameString namespaceURI:nil qualifiedName:nil attributes:attrs];
-
-            [nameString release];
-            [attrs release];
         }
+
+        id nameString = [[NSString alloc] initWithUTF8String:(const char*)name];
+
+        [self->_delegate parser:self didStartElement:nameString namespaceURI:nil qualifiedName:nil attributes:attrs];
+
+        [nameString release];
+        [attrs release];
     }
+}
 
-    static void endElementCallback(void* ctx, const xmlChar* name)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void endElementCallback(void* ctx, const xmlChar* name) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( self->_hasDidEndElement ) {
-            id nameString = [[NSString alloc] initWithUTF8String:(const char *) name];
-            [self->_delegate parser:self didEndElement:nameString namespaceURI:nil qualifiedName:nil];
-            [nameString release];
-        }
+    if (self->_hasDidEndElement) {
+        id nameString = [[NSString alloc] initWithUTF8String:(const char*)name];
+        [self->_delegate parser:self didEndElement:nameString namespaceURI:nil qualifiedName:nil];
+        [nameString release];
     }
+}
 
-    static void charactersCallback(void* ctx, const xmlChar* ch, int len)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void charactersCallback(void* ctx, const xmlChar* ch, int len) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( self->_hasFoundCharacters ) {
-            id str = [[NSString alloc] initWithBytes:ch length:len encoding:NSUTF8StringEncoding];
-            [self->_delegate parser:self foundCharacters:str];
-            [str release];
-        }
+    if (self->_hasFoundCharacters) {
+        id str = [[NSString alloc] initWithBytes:ch length:len encoding:NSUTF8StringEncoding];
+        [self->_delegate parser:self foundCharacters:str];
+        [str release];
     }
+}
 
-    static void cdataCallback(void* ctx, const xmlChar* value, int len)
-    {
-        NSXMLParser* self = (NSXMLParser*) ctx;
+static void cdataCallback(void* ctx, const xmlChar* value, int len) {
+    NSXMLParser* self = (NSXMLParser*)ctx;
 
-        if ( self->_hasFoundCData ) {
-            id data = [NSData dataWithBytes:value length:len];
-            [self->_delegate parser:self foundCDATA:data];
-        }
+    if (self->_hasFoundCData) {
+        id data = [NSData dataWithBytes:value length:len];
+        [self->_delegate parser:self foundCDATA:data];
     }
+}
 
-    static xmlEntityPtr entityCallback(void *user_data, const xmlChar *name)
-    {
-        return xmlGetPredefinedEntity(name);
-    }
+static xmlEntityPtr entityCallback(void* user_data, const xmlChar* name) {
+    return xmlGetPredefinedEntity(name);
+}
 
-    -(BOOL) parse {
-        _bytes = (uint8_t *) [_data bytes];
-        _length = [_data length];
-        _emptyDictionary = [NSDictionary new];
+- (BOOL)parse {
+    _bytes = (uint8_t*)[_data bytes];
+    _length = [_data length];
+    _emptyDictionary = [NSDictionary new];
 
-        xmlSubstituteEntitiesDefault(1);
+    xmlSubstituteEntitiesDefault(1);
 
-        xmlSAXHandler sax;
-        memset(&sax, 0, sizeof(sax));
-        sax.initialized = XML_SAX2_MAGIC;
-        sax.startDocument = startDocumentCallback;
-        sax.endDocument = endDocumentCallback;
-        sax.warning = warningCallback;
-        sax.startElement = startElementCallback;
-        sax.endElement = endElementCallback;
-        sax.characters = charactersCallback;
-        sax.cdataBlock = cdataCallback;
-        sax.getEntity = entityCallback;
+    xmlSAXHandler sax;
+    memset(&sax, 0, sizeof(sax));
+    sax.initialized = XML_SAX2_MAGIC;
+    sax.startDocument = startDocumentCallback;
+    sax.endDocument = endDocumentCallback;
+    sax.warning = warningCallback;
+    sax.startElement = startElementCallback;
+    sax.endElement = endElementCallback;
+    sax.characters = charactersCallback;
+    sax.cdataBlock = cdataCallback;
+    sax.getEntity = entityCallback;
 
-        int ret = xmlSAXUserParseMemory(&sax, (void *) self, (const char*) _bytes, _length);
-        [_emptyDictionary release];
+    int ret = xmlSAXUserParseMemory(&sax, (void*)self, (const char*)_bytes, _length);
+    [_emptyDictionary release];
 
-        return ret == 0;
-    }
+    return ret == 0;
+}
 
-    void abortParsing__unused() {
-        //NSUnimplementedMethod();
-        assert(0);
-    }
+void abortParsing__unused() {
+    // NSUnimplementedMethod();
+    assert(0);
+}
 
-    -(NSError*) parserError {
-        return _parserError;
-    }
+- (NSError*)parserError {
+    return _parserError;
+}
 
-    -(NSString*) systemID {
-        return _systemID;
-    }
+- (NSString*)systemID {
+    return _systemID;
+}
 
-    -(NSString*) publicID {
-        return _publicID;
-    }
+- (NSString*)publicID {
+    return _publicID;
+}
 
-    -(int) columnNumber {
-        return xmlSAX2GetColumnNumber((void *) self);
-    }
+- (int)columnNumber {
+    return xmlSAX2GetColumnNumber((void*)self);
+}
 
-    -(int) lineNumber {
-        return xmlSAX2GetColumnNumber((void *) self);
-    }
+- (int)lineNumber {
+    return xmlSAX2GetColumnNumber((void*)self);
+}
 
-    
 @end
-

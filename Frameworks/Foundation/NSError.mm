@@ -23,91 +23,91 @@
 @implementation NSError {
     idretaintype(NSString) _domain;
     idretaintype(NSDictionary) _userInfo;
-    int      _code;
+    int _code;
     idretaintype(NSString) _description;
 }
-    +(instancetype) errorWithDomain:(NSString *)domain code:(NSInteger)code userInfo:(NSDictionary *)dict {
-        NSError* ret = [self alloc];
-        ret = [ret initWithDomain:domain code:code userInfo:dict];
++ (instancetype)errorWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
+    NSError* ret = [self alloc];
+    ret = [ret initWithDomain:domain code:code userInfo:dict];
 
-        return [ret autorelease];
+    return [ret autorelease];
+}
+
+- (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
+    _domain.attach([domain copy]);
+    _code = code;
+
+    const char* err = [domain UTF8String];
+
+    EbrDebugLog("failure %s: %d\n", err, code);
+
+    _userInfo = dict;
+
+    id values = [dict allValues];
+    id keys = [dict allKeys];
+
+    DWORD count = [dict count];
+
+    for (int i = 0; i < count; i++) {
+        const char* pVal = [[[values objectAtIndex:i] description] UTF8String];
+        const char* pKey = [[[keys objectAtIndex:i] description] UTF8String];
+
+        EbrDebugLog("%d: Key=%s Val=%s\n", i, pVal, pKey);
     }
 
-    -(instancetype) initWithDomain:(NSString *)domain code:(NSInteger)code userInfo:(NSDictionary *)dict {
-        _domain.attach([domain copy]);
-        _code = code;
+    return self;
+}
 
-        const char *err = [domain UTF8String];
+- (NSString*)domain {
+    return _domain;
+}
 
-        EbrDebugLog("failure %s: %d\n", err, code);
+- (int)code {
+    return _code;
+}
 
-        _userInfo = dict;
+- (NSDictionary*)userInfo {
+    return _userInfo;
+}
 
-        id values = [dict allValues];
-        id keys = [dict allKeys];
+- (NSString*)localizedDescription {
+    id ret;
 
-        DWORD count = [dict count];
-
-        for ( int i = 0; i < count; i ++ ) {
-            const char *pVal = [[[values objectAtIndex:i] description] UTF8String];
-            const char *pKey = [[[keys objectAtIndex:i] description] UTF8String];
-
-            EbrDebugLog("%d: Key=%s Val=%s\n", i, pVal, pKey);
-        }
-
-        return self;
+    if ((ret = [_userInfo objectForKey:@"NSLocalizedDescriptionKey"]) != nil) {
+        return ret;
     }
 
-    -(NSString *) domain {
-        return _domain;
+    if (_description)
+        return _description;
+    return @"Generic error";
+}
+
+- (NSString*)localizedFailureReason {
+    id ret;
+
+    if ((ret = [_userInfo objectForKey:@"NSLocalizedFailureReasonErrorKey"]) != nil) {
+        return ret;
     }
 
-    -(int) code {
-        return _code;
-    }
+    return @"Generic failure";
+}
 
-    -(NSDictionary *) userInfo {
-        return _userInfo;
-    }
+- (NSString*)description {
+    return [self localizedDescription];
+}
 
-    -(NSString *) localizedDescription {
-        id ret;
+- (void)_setDescription:(id)description {
+    _description.attach([description copy]);
+}
 
-        if ( (ret = [_userInfo objectForKey:@"NSLocalizedDescriptionKey"]) != nil ) {
-            return ret;
-        }
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
 
-        if ( _description ) return _description;
-        return @"Generic error";
-    }
-
-    -(NSString *) localizedFailureReason {
-        id ret;
-
-        if ( (ret = [_userInfo objectForKey:@"NSLocalizedFailureReasonErrorKey"]) != nil ) {
-            return ret;
-        }
-
-        return @"Generic failure";
-    }
-
-    -(NSString *) description {
-        return [self localizedDescription];
-    }
-
-    -(void) _setDescription:(id)description {
-        _description.attach([description copy]);
-    }
-
-    -(instancetype) copyWithZone: (NSZone *) zone {
-        return [self retain];
-    }
-
-    -(void) dealloc {
-        _domain = nil;
-        _userInfo = nil;
-        _description = nil;
-        [super dealloc];
-    }
+- (void)dealloc {
+    _domain = nil;
+    _userInfo = nil;
+    _description = nil;
+    [super dealloc];
+}
 @end
-

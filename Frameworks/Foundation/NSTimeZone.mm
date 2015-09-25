@@ -25,153 +25,145 @@
 #include <unicode/gregocal.h>
 #include <windows.h>
 
-static NSTimeZone *_defaultTimeZone;
+static NSTimeZone* _defaultTimeZone;
 static dispatch_once_t _systemTimeZoneInit;
-static NSTimeZone *_systemTimeZone;
+static NSTimeZone* _systemTimeZone;
 
 @implementation NSTimeZone {
     icu::TimeZone* _icuTZ;
 }
-    +(void) _setTimeZoneToSystemSettings: (icu::TimeZone *) tz
-    {
-        /* Implement me! */
++ (void)_setTimeZoneToSystemSettings:(icu::TimeZone*)tz {
+    /* Implement me! */
+}
+
++ (NSTimeZone*)_getSystemTZ {
+    dispatch_once(&_systemTimeZoneInit,
+                  ^{
+                      _systemTimeZone = [self alloc];
+                      _systemTimeZone->_icuTZ = icu_48::TimeZone::createDefault();
+                      [self _setTimeZoneToSystemSettings:_systemTimeZone->_icuTZ];
+                  });
+
+    return _systemTimeZone;
+}
+
++ (instancetype)systemTimeZone {
+    return [self _getSystemTZ];
+}
+
++ (void)resetSystemTimeZone {
+    [self _setTimeZoneToSystemSettings:[self _getSystemTZ]->_icuTZ];
+}
+
++ (instancetype)defaultTimeZone {
+    NSTimeZone* ret;
+
+    if (_defaultTimeZone != nil) {
+        ret = _defaultTimeZone;
+    } else {
+        ret = [self systemTimeZone];
     }
+    return [[ret copy] autorelease];
+}
 
-    +(NSTimeZone *) _getSystemTZ
-    {
-        dispatch_once(&_systemTimeZoneInit, ^{
-            _systemTimeZone = [self alloc];
-            _systemTimeZone->_icuTZ = icu_48::TimeZone::createDefault();
-            [self _setTimeZoneToSystemSettings: _systemTimeZone->_icuTZ];
-        });
++ (void)setDefaultTimeZone:(NSTimeZone*)zone {
+    zone = [zone retain];
+    [_defaultTimeZone release];
+    _defaultTimeZone = zone;
+}
 
-        return _systemTimeZone;
++ (NSArray*)knownTimeZoneNames {
+    //  TODO
+    return [NSArray arrayWithObject:@"America/Los_Angeles"];
+}
+
+- (icu::TimeZone*)_createICUTimeZone {
+    return _icuTZ->clone();
+}
+
++ (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds {
+    NSTimeZone* ret = [self alloc];
+    ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
+    ret->_icuTZ->setRawOffset(seconds * 1000);
+    return [ret autorelease];
+}
+
++ (instancetype)localTimeZone {
+    if (_defaultTimeZone != nil) {
+        return [[_defaultTimeZone retain] autorelease];
     }
+    return [self systemTimeZone];
+}
 
-    +(instancetype) systemTimeZone {
-        return [self _getSystemTZ];
-    }
++ (instancetype)_gmtTimeZone {
+    NSTimeZone* ret = [self alloc];
+    ret->_icuTZ = icu_48::TimeZone::getGMT()->clone();
+    return [ret autorelease];
+}
 
-    +(void) resetSystemTimeZone {
-        [self _setTimeZoneToSystemSettings: [self _getSystemTZ]->_icuTZ];
-    }
++ (instancetype)timeZoneWithName:(NSString*)name {
+    NSTimeZone* ret = [self alloc];
+    ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
+    return [ret autorelease];
+}
 
-    +(instancetype) defaultTimeZone {
-        NSTimeZone *ret;
++ (instancetype)timeZoneWithAbbreviation:(NSString*)name {
+    NSTimeZone* ret = [self alloc];
+    const char* nameStr = [name UTF8String];
+    icu_48::TimeZone* tz = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString(nameStr));
+    int foo = tz->getRawOffset();
+    ret->_icuTZ = tz;
+    return [ret autorelease];
+}
 
-        if ( _defaultTimeZone != nil ) {
-            ret = _defaultTimeZone;
-        } else {
-            ret = [self systemTimeZone];
-        }
-        return [[ret copy] autorelease];
-    }
+- (NSString*)name {
+    icu_48::UnicodeString n;
+    _icuTZ->getDisplayName(n);
+    return NSStringFromICU(n);
+}
 
-    +(void) setDefaultTimeZone: (NSTimeZone *) zone {
-        zone = [zone retain];
-        [_defaultTimeZone release];
-        _defaultTimeZone = zone;
-    }
+- (NSString*)abbreviation {
+    icu_48::UnicodeString n;
+    _icuTZ->getID(n);
+    return NSStringFromICU(n);
+}
 
-    +(NSArray*) knownTimeZoneNames {
-		//  TODO
-        return [NSArray arrayWithObject:@"America/Los_Angeles"];
-    }
+- (NSString*)description {
+    icu_48::UnicodeString n;
+    _icuTZ->getDisplayName(n);
+    return NSStringFromICU(n);
+}
 
-    -(icu::TimeZone *) _createICUTimeZone
-    {
-        return _icuTZ->clone();
-    }
+- (NSString*)localizedName:(NSTimeZoneNameStyle)name locale:(NSLocale*)locale {
+    return [self description];
+}
 
-    +(instancetype) timeZoneForSecondsFromGMT:(NSInteger)seconds {
-        NSTimeZone* ret = [self alloc];
-        ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
-		ret->_icuTZ->setRawOffset(seconds * 1000);
-        return [ret autorelease];
-    }
+- (NSInteger)secondsFromGMT {
+    return _icuTZ->getRawOffset() / 1000;
+}
 
-    +(instancetype) localTimeZone {
-        if ( _defaultTimeZone != nil ) {
-            return [[_defaultTimeZone retain] autorelease];
-        }
-        return [self systemTimeZone];
-    }
+- (NSInteger)secondsFromGMTForDate:(NSDate*)date {
+    assert(0);
+    return 0;
+}
 
-    +(instancetype) _gmtTimeZone {
-        NSTimeZone* ret = [self alloc];
-        ret->_icuTZ = icu_48::TimeZone::getGMT()->clone();
-        return [ret autorelease];
-    }
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
 
-    +(instancetype) timeZoneWithName:(NSString*)name {
-        NSTimeZone* ret = [self alloc];
-        ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
-        return [ret autorelease];
-    }
+- (BOOL)isDaylightSavingTimeForDate:(NSDate*)date {
+    UErrorCode status = U_ZERO_ERROR;
 
-    +(instancetype) timeZoneWithAbbreviation:(NSString*)name {
-        NSTimeZone* ret = [self alloc];
-        const char* nameStr = [name UTF8String];
-        icu_48::TimeZone* tz = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString(nameStr));
-        int foo = tz->getRawOffset();
-        ret->_icuTZ = tz;
-        return [ret autorelease];
-    }
+    return _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status);
+}
 
-    -(NSString*) name {
-        icu_48::UnicodeString n;
-        _icuTZ->getDisplayName(n);
-        return NSStringFromICU(n);
-    }
+- (BOOL)isDaylightSavingTime {
+    return [self isDaylightSavingTimeForDate:[NSDate date]];
+}
 
-    -(NSString*) abbreviation {
-        icu_48::UnicodeString n;
-        _icuTZ->getID(n);
-        return NSStringFromICU(n);
-    }
+- (void)dealloc {
+    delete _icuTZ;
+    [super dealloc];
+}
 
-    -(NSString*) description {
-        icu_48::UnicodeString n;
-        _icuTZ->getDisplayName(n);
-        return NSStringFromICU(n);
-    }
-
-    -(NSString*) localizedName:(NSTimeZoneNameStyle)name locale:(NSLocale*)locale {
-        return [self description];
-    }
-
-    -(NSInteger) secondsFromGMT {
-        return _icuTZ->getRawOffset() / 1000;
-    }
-
-    -(NSInteger) secondsFromGMTForDate:(NSDate*)date {
-        assert(0);
-        return 0;
-    }
-
-    -(instancetype) copyWithZone:(NSZone*)zone {
-        return [self retain];
-    }
-
-	-(BOOL) isDaylightSavingTimeForDate: (NSDate *) date
-	{
-		UErrorCode status = U_ZERO_ERROR;
-
-        return _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status);
-	}
-
-    -(BOOL) isDaylightSavingTime {
-		return [self isDaylightSavingTimeForDate: [NSDate date]];
-    }
-
-    -(void) dealloc {
-        delete _icuTZ;
-        [super dealloc];
-    }
-
-        
-        
-        
-    
 @end
-

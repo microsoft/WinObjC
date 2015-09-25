@@ -19,8 +19,7 @@
 #import <CoreGraphics/CGAffineTransform.h>
 #import <QuartzCore/CATransform3D.h>
 
-CFNumberType CFNumberGetType(CFNumberRef self)
-{
+CFNumberType CFNumberGetType(CFNumberRef self) {
     assert(0);
     return kCFNumberIntType;
 }
@@ -37,7 +36,7 @@ struct CFStaticNumber {
         CGRect rectValue;
         CATransform3D transformValue;
         CGAffineTransform affineTransformValue;
-        void*  pointerValue;
+        void* pointerValue;
         objcValue genericValue;
     } v;
     union {
@@ -45,33 +44,29 @@ struct CFStaticNumber {
         double f;
     } val;
     NSNumberType type;
-    const char *objCType;
+    const char* objCType;
     bool isBool;
 };
 
-static CFStaticNumber cftrue = {
-    NULL,
-    notSetType,
-    {},
-    {
-        1,
-    },
-    integerType,
-    "c",
-    true
-};
+static CFStaticNumber cftrue = { NULL,
+                                 notSetType,
+                                 {},
+                                 {
+                                     1,
+                                 },
+                                 integerType,
+                                 "c",
+                                 true };
 
-static CFStaticNumber cffalse = {
-    NULL,
-    notSetType,
-    {},
-    {
-        0,
-    },
-    integerType,
-    "c",
-    true
-};
+static CFStaticNumber cffalse = { NULL,
+                                  notSetType,
+                                  {},
+                                  {
+                                      0,
+                                  },
+                                  integerType,
+                                  "c",
+                                  true };
 
-const CFBooleanRef kCFBooleanTrue = (const CFBooleanRef) &cftrue;
-const CFBooleanRef kCFBooleanFalse = (const CFBooleanRef) &cffalse;
+const CFBooleanRef kCFBooleanTrue = (const CFBooleanRef)&cftrue;
+const CFBooleanRef kCFBooleanFalse = (const CFBooleanRef)&cffalse;

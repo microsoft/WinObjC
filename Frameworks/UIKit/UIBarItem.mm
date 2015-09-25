@@ -36,30 +36,28 @@
     idretaintype(UIColor) _tintColor;
 }
 
-    -(void) awakeFromNib {
-    }
-    
-    -(void) setTintColor:(UIColor*)color {
-        _tintColor = color;
-    }
+- (void)awakeFromNib {
+}
 
-    -(UIColor*) tintColor {
-        return _tintColor;
-    }
+- (void)setTintColor:(UIColor*)color {
+    _tintColor = color;
+}
 
-    -(void) setImage:(UIImage*)image {
-        _image = image;
-    }
+- (UIColor*)tintColor {
+    return _tintColor;
+}
 
-    -(UIImage*) image {
-        return _image;
-    }
+- (void)setImage:(UIImage*)image {
+    _image = image;
+}
 
-    -(void) dealloc {
-        _tintColor = nil;
-        [super dealloc];
-    }
+- (UIImage*)image {
+    return _image;
+}
 
-    
+- (void)dealloc {
+    _tintColor = nil;
+    [super dealloc];
+}
+
 @end
-

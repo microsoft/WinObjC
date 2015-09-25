@@ -16,7 +16,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#define REGISTER_STRING(name)  CA_EXPORT NSString* const name = @#name;
+#define REGISTER_STRING(name) CA_EXPORT NSString* const name = @ #name;
 
 REGISTER_STRING(kCAGravityCenter)
 REGISTER_STRING(kCAGravityTop)

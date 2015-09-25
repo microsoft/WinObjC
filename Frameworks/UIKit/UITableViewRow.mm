@@ -18,25 +18,23 @@
 #include "UITableViewRow.h"
 
 @implementation UITableViewRow : NSObject
-    -(id) initWithCoder:(NSCoder*)coder {
-        _height = [coder decodeFloatForKey:@"UITableRowHeight"];
-        _cell = [coder decodeObjectForKey:@"UITableRowCell"];
-        return self;
-    }
+- (id)initWithCoder:(NSCoder*)coder {
+    _height = [coder decodeFloatForKey:@"UITableRowHeight"];
+    _cell = [coder decodeObjectForKey:@"UITableRowCell"];
+    return self;
+}
 
-    -(float) rowHeight {
-        return _height;
-    }
+- (float)rowHeight {
+    return _height;
+}
 
-    -(UITableViewCell*) cell {
-        return _cell;
-    }
+- (UITableViewCell*)cell {
+    return _cell;
+}
 
-    -(void) dealloc {
-        _cell = nil;
-        [super dealloc];
-    }
+- (void)dealloc {
+    _cell = nil;
+    [super dealloc];
+}
 
-    
 @end
-

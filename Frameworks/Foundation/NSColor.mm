@@ -19,6 +19,5 @@
 #include "NSColor.h"
 
 @implementation NSColor : NSObject
-    
-@end
 
+@end

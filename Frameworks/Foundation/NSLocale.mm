@@ -21,85 +21,76 @@
 #include <unicode/dtfmtsym.h>
 #include <unicode/locid.h>
 
-NSString * const NSLocaleCountryCode = @"NSLocaleCountryCode";
-NSString * const NSLocaleLanguageCode = @"NSLocaleLanguageCode";
-NSString * const NSLocaleVariantCode = @"NSLocaleVariantCode";
-NSString * const NSLocaleIdentifier = @"NSLocaleIdentifier";
+NSString* const NSLocaleCountryCode = @"NSLocaleCountryCode";
+NSString* const NSLocaleLanguageCode = @"NSLocaleLanguageCode";
+NSString* const NSLocaleVariantCode = @"NSLocaleVariantCode";
+NSString* const NSLocaleIdentifier = @"NSLocaleIdentifier";
 
-NSString * const NSLocaleGroupingSeparator = @"NSLocaleGroupingSeparator";
-NSString * const NSLocaleDecimalSeparator = @"NSLocaleDecimalSeparator";
-NSString * const NSLocaleCalendar = @"NSLocaleCalendar";
-NSString * const NSLocaleCurrencyCode = @"NSLocaleCurrencyCode";
-NSString * const NSLocaleCurrencySymbol = @"NSLocaleCurrencySymbol";
-NSString * const NSLocaleUsesMetricSystem = @"NSLocaleUsesMetricSystem";
-NSString * const NSLocaleMeasurementSystem = @"NSLocaleMeasurementSystem";
+NSString* const NSLocaleGroupingSeparator = @"NSLocaleGroupingSeparator";
+NSString* const NSLocaleDecimalSeparator = @"NSLocaleDecimalSeparator";
+NSString* const NSLocaleCalendar = @"NSLocaleCalendar";
+NSString* const NSLocaleCurrencyCode = @"NSLocaleCurrencyCode";
+NSString* const NSLocaleCurrencySymbol = @"NSLocaleCurrencySymbol";
+NSString* const NSLocaleUsesMetricSystem = @"NSLocaleUsesMetricSystem";
+NSString* const NSLocaleMeasurementSystem = @"NSLocaleMeasurementSystem";
 
-NSString * const NSLocaleScriptCode = @"NSLocaleScriptCode";
-NSString * const NSLocaleExemplarCharacterSet = @"NSLocaleExemplarCharacterSet";
-NSString * const NSLocaleCollationIdentifier = @"NSLocaleCollationIdentifier";
+NSString* const NSLocaleScriptCode = @"NSLocaleScriptCode";
+NSString* const NSLocaleExemplarCharacterSet = @"NSLocaleExemplarCharacterSet";
+NSString* const NSLocaleCollationIdentifier = @"NSLocaleCollationIdentifier";
 
-NSString * const NSCurrentLocaleDidChangeNotification = @"NSCurrentLocaleDidChangeNotification";
+NSString* const NSCurrentLocaleDidChangeNotification = @"NSCurrentLocaleDidChangeNotification";
 
-static NSLocale *_currentLocale;
+static NSLocale* _currentLocale;
 
 @implementation NSLocale {
     icu::Locale _locale;
 }
 
-    -(icu::Locale *) _createICULocale
-    {
-        return _locale.clone();
+- (icu::Locale*)_createICULocale {
+    return _locale.clone();
+}
+
+- (instancetype)init {
+    _locale = icu::Locale();
+
+    return self;
+}
+
+- (instancetype)initWithLocaleIdentifier:(NSString*)identifier {
+    _locale = icu::Locale::createFromName([identifier UTF8String]);
+
+    return self;
+}
+
++ (instancetype)localeWithLocaleIdentifier:(NSString*)identifier {
+    return [[[self alloc] initWithLocaleIdentifier:identifier] autorelease];
+}
+
+- (NSString*)localeIdentifier {
+    return [NSString stringWithUTF8String:_locale.getName()];
+}
+
+- (NSString*)displayNameForKey:(id)key value:(id)value {
+    if ([NSLocaleIdentifier isEqualToString:key]) {
+        icu::Locale displayLocale = icu::Locale::createFromName([value UTF8String]);
+
+        UnicodeString retStr;
+        displayLocale.getDisplayName(_locale, retStr);
+
+        return NSStringFromICU(retStr);
+    } else {
+        [NSException raiseWithLogging:@"NSLocaleException" format:@"displayNameForKey: Unknown key %@", key];
+        return nil;
     }
+}
 
-    -(instancetype) init
-    {
-        _locale = icu::Locale();
-
-        return self;
++ (void)initialize {
+    if (self == [NSLocale class]) {
+        _currentLocale = [self new];
     }
+}
 
-    -(instancetype) initWithLocaleIdentifier: (NSString *) identifier
-    {
-        _locale = icu::Locale::createFromName([identifier UTF8String]);
-
-        return self;
-    }
-
-    +(instancetype) localeWithLocaleIdentifier: (NSString *) identifier
-    {
-        return [[[self alloc] initWithLocaleIdentifier: identifier] autorelease];
-    }
-
-    -(NSString *) localeIdentifier
-    {
-        return [NSString stringWithUTF8String: _locale.getName()];
-    }
-
-    -(NSString *)displayNameForKey: (id) key value: (id) value
-    {
-        if ( [NSLocaleIdentifier isEqualToString: key] ) {
-            icu::Locale displayLocale = icu::Locale::createFromName([value UTF8String]);
-
-            UnicodeString retStr;
-            displayLocale.getDisplayName(_locale, retStr);
-
-            return NSStringFromICU(retStr);
-        } else {
-            [NSException raiseWithLogging: @"NSLocaleException" format: @"displayNameForKey: Unknown key %@", key];
-            return nil;
-        }
-    }
-
-    +(void) initialize
-    {
-        if ( self == [NSLocale class] )
-        {
-            _currentLocale = [self new];
-        }
-    }
-
-    +(instancetype) currentLocale
-    {
-        return _currentLocale;
-    }
++ (instancetype)currentLocale {
+    return _currentLocale;
+}
 @end

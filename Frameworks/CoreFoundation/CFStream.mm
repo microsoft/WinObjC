@@ -18,4 +18,3 @@
 #include "CFNetwork/CFSocketStream.h"
 
 const CFStringRef kCFStreamPropertySSLSettings = (CFStringRef) @"kCFStreamPropertySSLSettings";
-

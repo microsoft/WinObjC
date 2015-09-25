@@ -18,6 +18,5 @@
 #include "UIProxyObjectPair.h"
 
 @implementation UIProxyObjectPair : NSObject
-    
-@end
 
+@end

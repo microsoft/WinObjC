@@ -16,19 +16,16 @@
 
 #import <Foundation/Foundation.h>
 
-void CFStringAppendCharacters(CFMutableStringRef str, const UniChar *append, CFIndex length)
-{
+void CFStringAppendCharacters(CFMutableStringRef str, const UniChar* append, CFIndex length) {
     [(NSMutableString*)str __appendCharacters:append length:length];
 }
 
-void CFStringAppend(CFMutableStringRef str, CFStringRef append)
-{
-    [(NSMutableString*)str appendString: (NSString *) append];
+void CFStringAppend(CFMutableStringRef str, CFStringRef append) {
+    [(NSMutableString*)str appendString:(NSString*)append];
 }
 
-CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding)
-{
-    switch ( encoding ) {
+CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) {
+    switch (encoding) {
         case kCFStringEncodingASCII:
             return (CFStringRef) @"ANSI_X3.4-1968";
 
@@ -40,9 +37,8 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding)
     return 0;
 }
 
-CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding)
-{
-    switch ( encoding ) {
+CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
+    switch (encoding) {
         case NSASCIIStringEncoding:
         case NSUTF8StringEncoding:
         case NSWindowsCP1252StringEncoding:
@@ -60,16 +56,13 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding)
     return 0;
 }
 
-const char *CFStringGetCStringPtr(CFStringRef self,CFStringEncoding encoding)
-{
-    
-    assert(encoding == 0x600 || encoding == 0 );
-    return [(NSString *)self UTF8String];
+const char* CFStringGetCStringPtr(CFStringRef self, CFStringEncoding encoding) {
+    assert(encoding == 0x600 || encoding == 0);
+    return [(NSString*)self UTF8String];
 }
 
-CFComparisonResult CFStringCompare(CFStringRef self,CFStringRef other,CFOptionFlags options)
-{
-    return (CFComparisonResult) [(NSString*)self compare: (NSString *) other options: options];
+CFComparisonResult CFStringCompare(CFStringRef self, CFStringRef other, CFOptionFlags options) {
+    return (CFComparisonResult)[(NSString*)self compare:(NSString*)other options:options];
 }
 
 CFIndex CFStringGetLength(CFStringRef self) {

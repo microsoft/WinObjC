@@ -30,42 +30,39 @@
 #include "cairo-ft.h"
 
 extern "C" {
-    #include <ft2build.h>
-    #include FT_FREETYPE_H
-    #include <ftglyph.h>
-    #include <tttables.h>
-    #include <ftadvanc.h>
-    #include <ftsizes.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <ftglyph.h>
+#include <tttables.h>
+#include <ftadvanc.h>
+#include <ftsizes.h>
 }
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
-static IWLazyIvarLookup<void *> _LazyUIFontHandle(_LazyUIFont, "_font");
-static IWLazyIvarLookup<void *> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
+static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
+static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
-CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) :
-    CGContextImpl(base, destinationImage), _drawContext(0)
-{
+CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
+    : CGContextImpl(base, destinationImage), _drawContext(0) {
 }
 
-CGContextCairo::~CGContextCairo()
-{
+CGContextCairo::~CGContextCairo() {
     ReleaseLock();
 }
 
-void CGContextCairo::ObtainLock()
-{
-    if ( _drawContext != NULL ) return;
+void CGContextCairo::ObtainLock() {
+    if (_drawContext != NULL)
+        return;
 
     LOCK_CAIRO();
     _drawContext = cairo_create(_imgDest->Backing()->LockCairoSurface());
     UNLOCK_CAIRO();
-    //cairo_set_antialias(_drawContext, CAIRO_ANTIALIAS_NONE);
+    // cairo_set_antialias(_drawContext, CAIRO_ANTIALIAS_NONE);
 }
 
-void CGContextCairo::ReleaseLock()
-{
-    if ( _drawContext ) {
+void CGContextCairo::ReleaseLock() {
+    if (_drawContext) {
         LOCK_CAIRO();
         cairo_destroy(_drawContext);
         UNLOCK_CAIRO();
@@ -74,8 +71,7 @@ void CGContextCairo::ReleaseLock()
     }
 }
 
-void CGContextCairo::Clear(float r, float g, float b, float a)
-{
+void CGContextCairo::Clear(float r, float g, float b, float a) {
     ObtainLock();
 
     CGRect rct;
@@ -89,32 +85,28 @@ void CGContextCairo::Clear(float r, float g, float b, float a)
     cairo_new_path(_drawContext);
     cairo_rectangle(_drawContext, rct.origin.x, rct.origin.y, rct.size.width, rct.size.height);
 
-    cairo_set_source_rgba(_drawContext, 
-        r, 
-        g,
-        b,
-        a);
+    cairo_set_source_rgba(_drawContext, r, g, b, a);
     cairo_fill(_drawContext);
 
     cairo_restore(_drawContext);
 }
 
-void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled)
-{
+void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled) {
     ObtainLock();
 
-    if ( dest.size.width == 0.0f || dest.size.height == 0.0f ) return;
+    if (dest.size.width == 0.0f || dest.size.height == 0.0f)
+        return;
 
     LOCK_CAIRO();
     _isDirty = true;
 
-    if ( !tiled && img->Backing()->DrawDirectlyToContext(this, src, dest) ) {
+    if (!tiled && img->Backing()->DrawDirectlyToContext(this, src, dest)) {
         UNLOCK_CAIRO();
         return;
     }
-    if ( src.size.width == 1 && dest.size.height == 1 ) { /* [BUG: Cairo doesn't like 1x1 source images] */
+    if (src.size.width == 1 && dest.size.height == 1) { /* [BUG: Cairo doesn't like 1x1 source images] */
         EbrDebugLog("1x1 source image\n");
-        cairo_path_t *curPath = cairo_copy_path(_drawContext);
+        cairo_path_t* curPath = cairo_copy_path(_drawContext);
         cairo_save(_drawContext);
 
         cairo_matrix_t m;
@@ -144,13 +136,13 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         cairo_append_path(_drawContext, curPath);
         cairo_path_destroy(curPath);
     } else {
-        cairo_path_t *curPath = cairo_copy_path(_drawContext);
+        cairo_path_t* curPath = cairo_copy_path(_drawContext);
         cairo_save(_drawContext);
 
         cairo_matrix_t srcMatrix;
-        cairo_pattern_t *p = cairo_pattern_create_for_surface(img->Backing()->LockCairoSurface());
+        cairo_pattern_t* p = cairo_pattern_create_for_surface(img->Backing()->LockCairoSurface());
 
-        if ( tiled ) {
+        if (tiled) {
             cairo_pattern_set_extend(p, CAIRO_EXTEND_REPEAT);
 
             double x, y, x2, y2;
@@ -162,7 +154,13 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
             dest.size.width = float(x2 - x);
             dest.size.height = float(y2 - y);
         } else {
-            cairo_matrix_init(&srcMatrix, src.size.width / dest.size.width, 0, 0, src.size.height / dest.size.height, src.origin.x, src.origin.y);
+            cairo_matrix_init(&srcMatrix,
+                              src.size.width / dest.size.width,
+                              0,
+                              0,
+                              src.size.height / dest.size.height,
+                              src.origin.x,
+                              src.origin.y);
             cairo_pattern_set_matrix(p, &srcMatrix);
         }
 
@@ -184,7 +182,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         cairo_rectangle(_drawContext, 0, 0, dest.size.width, dest.size.height);
         cairo_clip(_drawContext);
 
-        if ( curState->_imgMask == NULL ) {
+        if (curState->_imgMask == NULL) {
             cairo_paint(_drawContext);
         } else {
             cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
@@ -204,38 +202,37 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
 }
 
 cairo_operator_t blendMapping[] = {
-   CAIRO_OPERATOR_OVER,         //kCGBlendModeNormal,
-   CAIRO_OPERATOR_MULTIPLY,     //kCGBlendModeMultiply,
-   CAIRO_OPERATOR_SCREEN,       //kCGBlendModeScreen,
-   CAIRO_OPERATOR_OVERLAY,      //kCGBlendModeOverlay,
-   CAIRO_OPERATOR_DARKEN,       //kCGBlendModeDarken,
-   CAIRO_OPERATOR_DARKEN,       //kCGBlendModeLighten,
-   CAIRO_OPERATOR_COLOR_DODGE,  //kCGBlendModeColorDodge,
-   CAIRO_OPERATOR_COLOR_BURN,   //kCGBlendModeColorBurn,
-   CAIRO_OPERATOR_SOFT_LIGHT,   //kCGBlendModeSoftLight,
-   CAIRO_OPERATOR_HARD_LIGHT,   //kCGBlendModeHardLight,
-   CAIRO_OPERATOR_DIFFERENCE,   //kCGBlendModeDifference,
-   CAIRO_OPERATOR_EXCLUSION,    //kCGBlendModeExclusion,
-   CAIRO_OPERATOR_HSL_HUE,      //kCGBlendModeHue,
-   CAIRO_OPERATOR_HSL_SATURATION,   //kCGBlendModeSaturation,
-   CAIRO_OPERATOR_HSL_COLOR,        //kCGBlendModeColor,
-   CAIRO_OPERATOR_HSL_LUMINOSITY,   //kCGBlendModeLuminosity,
-   CAIRO_OPERATOR_CLEAR,            //kCGBlendModeClear,
-   CAIRO_OPERATOR_SOURCE,           //kCGBlendModeCopy,
-   CAIRO_OPERATOR_IN,               //kCGBlendModeSourceIn,
-   CAIRO_OPERATOR_OUT,              //kCGBlendModeSourceOut,
-   CAIRO_OPERATOR_ATOP,             //kCGBlendModeSourceAtop,
-   CAIRO_OPERATOR_DEST_OVER,        //kCGBlendModeDestinationOver,
-   CAIRO_OPERATOR_DEST_IN,          //kCGBlendModeDestinationIn,
-   CAIRO_OPERATOR_DEST_OUT,     //kCGBlendModeDestinationOut,
-   CAIRO_OPERATOR_DEST_ATOP,    //kCGBlendModeDestinationAtop,
-   CAIRO_OPERATOR_XOR,  //kCGBlendModeXOR,
-   CAIRO_OPERATOR_ADD,  //kCGBlendModePlusDarker,   [BUG: Not implemented]
-   CAIRO_OPERATOR_ADD   //kCGBlendModePlusLighter,
+    CAIRO_OPERATOR_OVER, // kCGBlendModeNormal,
+    CAIRO_OPERATOR_MULTIPLY, // kCGBlendModeMultiply,
+    CAIRO_OPERATOR_SCREEN, // kCGBlendModeScreen,
+    CAIRO_OPERATOR_OVERLAY, // kCGBlendModeOverlay,
+    CAIRO_OPERATOR_DARKEN, // kCGBlendModeDarken,
+    CAIRO_OPERATOR_DARKEN, // kCGBlendModeLighten,
+    CAIRO_OPERATOR_COLOR_DODGE, // kCGBlendModeColorDodge,
+    CAIRO_OPERATOR_COLOR_BURN, // kCGBlendModeColorBurn,
+    CAIRO_OPERATOR_SOFT_LIGHT, // kCGBlendModeSoftLight,
+    CAIRO_OPERATOR_HARD_LIGHT, // kCGBlendModeHardLight,
+    CAIRO_OPERATOR_DIFFERENCE, // kCGBlendModeDifference,
+    CAIRO_OPERATOR_EXCLUSION, // kCGBlendModeExclusion,
+    CAIRO_OPERATOR_HSL_HUE, // kCGBlendModeHue,
+    CAIRO_OPERATOR_HSL_SATURATION, // kCGBlendModeSaturation,
+    CAIRO_OPERATOR_HSL_COLOR, // kCGBlendModeColor,
+    CAIRO_OPERATOR_HSL_LUMINOSITY, // kCGBlendModeLuminosity,
+    CAIRO_OPERATOR_CLEAR, // kCGBlendModeClear,
+    CAIRO_OPERATOR_SOURCE, // kCGBlendModeCopy,
+    CAIRO_OPERATOR_IN, // kCGBlendModeSourceIn,
+    CAIRO_OPERATOR_OUT, // kCGBlendModeSourceOut,
+    CAIRO_OPERATOR_ATOP, // kCGBlendModeSourceAtop,
+    CAIRO_OPERATOR_DEST_OVER, // kCGBlendModeDestinationOver,
+    CAIRO_OPERATOR_DEST_IN, // kCGBlendModeDestinationIn,
+    CAIRO_OPERATOR_DEST_OUT, // kCGBlendModeDestinationOut,
+    CAIRO_OPERATOR_DEST_ATOP, // kCGBlendModeDestinationAtop,
+    CAIRO_OPERATOR_XOR, // kCGBlendModeXOR,
+    CAIRO_OPERATOR_ADD, // kCGBlendModePlusDarker,   [BUG: Not implemented]
+    CAIRO_OPERATOR_ADD // kCGBlendModePlusLighter,
 };
 
-void CGContextCairo::CGContextSetBlendMode(CGBlendMode mode)
-{
+void CGContextCairo::CGContextSetBlendMode(CGBlendMode mode) {
     ObtainLock();
 
     assert(mode < sizeof(blendMapping) / sizeof(cairo_operator_t));
@@ -246,19 +243,17 @@ void CGContextCairo::CGContextSetBlendMode(CGBlendMode mode)
     UNLOCK_CAIRO();
 }
 
-CGBlendMode CGContextCairo::CGContextGetBlendMode()
-{
+CGBlendMode CGContextCairo::CGContextGetBlendMode() {
     return curState->curBlendMode;
 }
 
-void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char *str, DWORD length)
-{
-    WORD *glyphs = (WORD *) EbrMalloc(length * sizeof(WORD));
+void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
+    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
     DWORD i;
 
     _isDirty = true;
 
-    for ( i = 0; i < length; i ++ ) {
+    for (i = 0; i < length; i++) {
         glyphs[i] = str[i];
     }
 
@@ -268,13 +263,12 @@ void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char *str,
     EbrFree(glyphs);
 }
 
-void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD *glyphs, int count)
-{
+void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
     CGSize size;
-    
+
     _isDirty = true;
 
-    switch ( curState->textDrawingMode ) {
+    switch (curState->textDrawingMode) {
         case kCGTextFill:
         case kCGTextStroke:
         case kCGTextFillStroke:
@@ -294,12 +288,11 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD *glyphs, 
     curState->curTextPosition.y = y;
 }
 
-void CGContextCairo::CGContextShowGlyphsWithAdvances(WORD *glyphs, CGSize *advances, int count)
-{
+void CGContextCairo::CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count) {
     CGPoint curPos = { curState->curTextPosition.x, curState->curTextPosition.y };
     _isDirty = true;
 
-    for ( int i = 0; i < count; i ++ ) {
+    for (int i = 0; i < count; i++) {
         CGFontDrawGlyphsToContext(&glyphs[i], 1, curPos.x, curPos.y);
         curPos.x += advances[i].width;
         curPos.y += advances[i].height;
@@ -307,44 +300,36 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(WORD *glyphs, CGSize *advan
     curState->curTextPosition = curPos;
 }
 
-void CGContextCairo::CGContextShowGlyphs(WORD *glyphs, int count)
-{
+void CGContextCairo::CGContextShowGlyphs(WORD* glyphs, int count) {
     CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
 }
 
-void CGContextCairo::CGContextSetFont(id font)
-{
+void CGContextCairo::CGContextSetFont(id font) {
     curState->setCurFont(font);
 }
 
-void CGContextCairo::CGContextSetFontSize(float ptSize)
-{
+void CGContextCairo::CGContextSetFontSize(float ptSize) {
     curState->fontSize = ptSize;
 }
 
-void CGContextCairo::CGContextSetTextMatrix(CGAffineTransform matrix)
-{
+void CGContextCairo::CGContextSetTextMatrix(CGAffineTransform matrix) {
     curState->curTextMatrix = matrix;
 }
 
-void CGContextCairo::CGContextGetTextMatrix(CGAffineTransform *ret)
-{
+void CGContextCairo::CGContextGetTextMatrix(CGAffineTransform* ret) {
     *ret = curState->curTextMatrix;
 }
 
-void CGContextCairo::CGContextSetTextPosition(float x, float y)
-{
+void CGContextCairo::CGContextSetTextPosition(float x, float y) {
     curState->curTextPosition.x = x;
     curState->curTextPosition.y = y;
 }
 
-void CGContextCairo::CGContextSetTextDrawingMode(CGTextDrawingMode mode)
-{
+void CGContextCairo::CGContextSetTextDrawingMode(CGTextDrawingMode mode) {
     curState->textDrawingMode = mode;
 }
 
-void CGContextCairo::CGContextTranslateCTM(float x, float y)
-{
+void CGContextCairo::CGContextTranslateCTM(float x, float y) {
     ObtainLock();
 
     curState->curTransform = CGAffineTransformTranslate(curState->curTransform, x, y);
@@ -365,11 +350,10 @@ void CGContextCairo::CGContextTranslateCTM(float x, float y)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextScaleCTM(float sx, float sy)
-{
+void CGContextCairo::CGContextScaleCTM(float sx, float sy) {
     ObtainLock();
 
-    curState->curTransform = CGAffineTransformScale(curState->curTransform, sx, sy); 
+    curState->curTransform = CGAffineTransformScale(curState->curTransform, sx, sy);
     cairo_matrix_t m;
     float trans[6];
     memcpy(trans, &curState->curTransform, sizeof(curState->curTransform));
@@ -386,11 +370,10 @@ void CGContextCairo::CGContextScaleCTM(float sx, float sy)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextRotateCTM(float angle)
-{
+void CGContextCairo::CGContextRotateCTM(float angle) {
     ObtainLock();
 
-    curState->curTransform = CGAffineTransformRotate(curState->curTransform, angle); 
+    curState->curTransform = CGAffineTransformRotate(curState->curTransform, angle);
     cairo_matrix_t m;
     float trans[6];
     memcpy(trans, &curState->curTransform, sizeof(curState->curTransform));
@@ -407,12 +390,11 @@ void CGContextCairo::CGContextRotateCTM(float angle)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextConcatCTM(CGAffineTransform t)
-{
+void CGContextCairo::CGContextConcatCTM(CGAffineTransform t) {
     ObtainLock();
 
-    //CGAffineTransformConcat(&curState->curTransform, curState->curTransform, t); 
-    curState->curTransform = CGAffineTransformConcat(t, curState->curTransform); 
+    // CGAffineTransformConcat(&curState->curTransform, curState->curTransform, t);
+    curState->curTransform = CGAffineTransformConcat(t, curState->curTransform);
     cairo_matrix_t m;
     float trans[6];
     memcpy(trans, &curState->curTransform, sizeof(curState->curTransform));
@@ -429,13 +411,11 @@ void CGContextCairo::CGContextConcatCTM(CGAffineTransform t)
     UNLOCK_CAIRO();
 }
 
-CGAffineTransform CGContextCairo::CGContextGetCTM()
-{
+CGAffineTransform CGContextCairo::CGContextGetCTM() {
     return curState->curTransform;
 }
 
-void CGContextCairo::CGContextSetCTM(CGAffineTransform transform)
-{
+void CGContextCairo::CGContextSetCTM(CGAffineTransform transform) {
     ObtainLock();
 
     curState->curTransform = transform;
@@ -456,9 +436,8 @@ void CGContextCairo::CGContextSetCTM(CGAffineTransform transform)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextDrawImage(CGRect rct, CGImageRef img)
-{
-    if ( img == NULL ) {
+void CGContextCairo::CGContextDrawImage(CGRect rct, CGImageRef img) {
+    if (img == NULL) {
         EbrDebugLog("Img == NULL!\n");
         return;
     }
@@ -471,39 +450,38 @@ void CGContextCairo::CGContextDrawImage(CGRect rct, CGImageRef img)
     src = rct;
     src.origin.x = 0;
     src.origin.y = 0;
-    src.size.width = (float) img->Backing()->Width();
-    src.size.height = (float) img->Backing()->Height();
+    src.size.width = (float)img->Backing()->Width();
+    src.size.height = (float)img->Backing()->Height();
 
-    //rct.origin.y = (_imgDest->_height - rct.origin.y) - img->_height;
+    // rct.origin.y = (_imgDest->_height - rct.origin.y) - img->_height;
 
     DrawImage(img, src, rct);
 }
 
-void CGContextCairo::CGContextClipToMask(CGRect dest, CGImageRef img)
-{
+void CGContextCairo::CGContextClipToMask(CGRect dest, CGImageRef img) {
     ObtainLock();
 
-    if ( curState->_imgMask != NULL ) {
+    if (curState->_imgMask != NULL) {
         delete curState->_imgMask;
         curState->_imgMask = NULL;
     }
 
-    if ( img->Backing()->SurfaceFormat() != _ColorGrayscale ) {
+    if (img->Backing()->SurfaceFormat() != _ColorGrayscale) {
         curState->_imgMask = img->Backing()->Copy();
     } else {
-        CGBitmapImage *pNewImage = new CGBitmapImage(img->Backing()->Width(), img->Backing()->Height(), _ColorRGBA);
+        CGBitmapImage* pNewImage = new CGBitmapImage(img->Backing()->Width(), img->Backing()->Height(), _ColorRGBA);
 
-        BYTE *imgData = (BYTE *) img->Backing()->LockImageData();
-        BYTE *newImgData = (BYTE *) pNewImage->Backing()->LockImageData();
+        BYTE* imgData = (BYTE*)img->Backing()->LockImageData();
+        BYTE* newImgData = (BYTE*)pNewImage->Backing()->LockImageData();
 
-        for ( int y = 0; y < img->Backing()->Height(); y ++ ) {
-            BYTE *imageIn = ((BYTE *) imgData) + y * img->Backing()->BytesPerRow();
-            BYTE *curScanline = ((BYTE *) newImgData) + y * pNewImage->Backing()->BytesPerRow();
-            for ( int x = 0; x < img->Backing()->Width(); x ++ ) {
-                *curScanline ++ = 0;
-                *curScanline ++ = 0;
-                *curScanline ++ = 0;
-                *curScanline ++ = *imageIn ++;
+        for (int y = 0; y < img->Backing()->Height(); y++) {
+            BYTE* imageIn = ((BYTE*)imgData) + y * img->Backing()->BytesPerRow();
+            BYTE* curScanline = ((BYTE*)newImgData) + y * pNewImage->Backing()->BytesPerRow();
+            for (int x = 0; x < img->Backing()->Width(); x++) {
+                *curScanline++ = 0;
+                *curScanline++ = 0;
+                *curScanline++ = 0;
+                *curScanline++ = *imageIn++;
             }
         }
 
@@ -514,30 +492,26 @@ void CGContextCairo::CGContextClipToMask(CGRect dest, CGImageRef img)
     }
 }
 
-void CGContextCairo::CGContextSetGrayFillColor(float gray, float alpha)
-{
+void CGContextCairo::CGContextSetGrayFillColor(float gray, float alpha) {
     curState->curFillColor.r = gray;
     curState->curFillColor.g = gray;
     curState->curFillColor.b = gray;
     curState->curFillColor.a = alpha;
 }
 
-void CGContextCairo::CGContextSetStrokeColor(float *components)
-{
+void CGContextCairo::CGContextSetStrokeColor(float* components) {
     curState->curStrokeColor.r = components[0];
     curState->curStrokeColor.g = components[1];
     curState->curStrokeColor.b = components[2];
     curState->curStrokeColor.a = components[3];
 }
 
-void CGContextCairo::CGContextSetStrokeColorWithColor(id color)
-{
+void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
     [color getColors:&curState->curStrokeColor];
 }
 
-void CGContextCairo::CGContextSetFillColorWithColor(id color)
-{
-    if ( (int) [color _type] == solidBrush ) {
+void CGContextCairo::CGContextSetFillColorWithColor(id color) {
+    if ((int)[color _type] == solidBrush) {
         [color getColors:&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
@@ -545,31 +519,27 @@ void CGContextCairo::CGContextSetFillColorWithColor(id color)
     }
 }
 
-void CGContextCairo::CGContextSetFillColor(float *components)
-{
+void CGContextCairo::CGContextSetFillColor(float* components) {
     curState->curFillColor.r = components[0];
     curState->curFillColor.g = components[1];
     curState->curFillColor.b = components[2];
     curState->curFillColor.a = components[3];
 }
 
-void CGContextCairo::CGContextSelectFont(char *name, float size, DWORD encoding)
-{
-    //curState->curFont = [UIFont class]("fontWithName:size:", @name, size);
+void CGContextCairo::CGContextSelectFont(char* name, float size, DWORD encoding) {
+    // curState->curFont = [UIFont class]("fontWithName:size:", @name, size);
     curState->fontSize = size;
 }
 
-void CGContextCairo::CGContextGetTextPosition(CGPoint *pos)
-{
+void CGContextCairo::CGContextGetTextPosition(CGPoint* pos) {
     pos->x = curState->curTextPosition.x;
     pos->y = curState->curTextPosition.y;
 }
 
-void CGContextCairo::CGContextSaveGState()
-{
+void CGContextCairo::CGContextSaveGState() {
     ObtainLock();
 
-    curStateNum ++;
+    curStateNum++;
     assert(curStateNum < MAX_CG_STATES);
 
     LOCK_CAIRO();
@@ -591,10 +561,10 @@ void CGContextCairo::CGContextSaveGState()
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
 
-    if ( curState->_imgClip ) {
+    if (curState->_imgClip) {
         states[curStateNum]._imgClip = curState->_imgClip->Backing()->Copy();
     }
-    if ( curState->_imgMask ) {
+    if (curState->_imgMask) {
         states[curStateNum]._imgMask = curState->_imgMask->Backing()->Copy();
     }
 
@@ -603,22 +573,21 @@ void CGContextCairo::CGContextSaveGState()
     curState = &states[curStateNum];
 }
 
-void CGContextCairo::CGContextRestoreGState()
-{
+void CGContextCairo::CGContextRestoreGState() {
     ObtainLock();
 
-    if ( curStateNum == 0 ) {
+    if (curStateNum == 0) {
         EbrDebugLog("CGContextRestoreGState: no state to restore!\n");
         return;
     }
 
-    if ( curState->_imgClip ) {
+    if (curState->_imgClip) {
         delete curState->_imgClip;
     }
-    if ( curState->_imgMask ) {
+    if (curState->_imgMask) {
         delete curState->_imgMask;
     }
-    curStateNum --;
+    curStateNum--;
     curState = &states[curStateNum];
 
     cairo_matrix_t m;
@@ -639,8 +608,7 @@ void CGContextCairo::CGContextRestoreGState()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextClearRect(CGRect rct)
-{
+void CGContextCairo::CGContextClearRect(CGRect rct) {
     ObtainLock();
 
     _isDirty = true;
@@ -662,11 +630,7 @@ void CGContextCairo::CGContextClearRect(CGRect rct)
     m.y0 = trans[5];
 
     cairo_set_matrix(_drawContext, &m);
-    cairo_set_source_rgba(_drawContext, 
-        1, 
-        1,
-        1,
-        1);
+    cairo_set_source_rgba(_drawContext, 1, 1, 1, 1);
     cairo_operator_t oldOp = cairo_get_operator(_drawContext);
     cairo_set_operator(_drawContext, CAIRO_OPERATOR_CLEAR);
     cairo_fill(_drawContext);
@@ -676,8 +640,7 @@ void CGContextCairo::CGContextClearRect(CGRect rct)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextFillRect(CGRect rct)
-{
+void CGContextCairo::CGContextFillRect(CGRect rct) {
     ObtainLock();
 
     _isDirty = true;
@@ -713,19 +676,17 @@ void CGContextCairo::CGContextFillRect(CGRect rct)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextClosePath()
-{
+void CGContextCairo::CGContextClosePath() {
     ObtainLock();
 
     LOCK_CAIRO();
     cairo_close_path(_drawContext);
-	cairo_new_sub_path(_drawContext);
+    cairo_new_sub_path(_drawContext);
 
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddRect(CGRect rct)
-{
+void CGContextCairo::CGContextAddRect(CGRect rct) {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -733,8 +694,7 @@ void CGContextCairo::CGContextAddRect(CGRect rct)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddLineToPoint(float x, float y)
-{
+void CGContextCairo::CGContextAddLineToPoint(float x, float y) {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -745,8 +705,7 @@ void CGContextCairo::CGContextAddLineToPoint(float x, float y)
     curPathPosition.y = y;
 }
 
-void CGContextCairo::CGContextAddCurveToPoint(float cp1x, float cp1y, float cp2x, float cp2y, float x, float y)
-{
+void CGContextCairo::CGContextAddCurveToPoint(float cp1x, float cp1y, float cp2x, float cp2y, float x, float y) {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -757,22 +716,23 @@ void CGContextCairo::CGContextAddCurveToPoint(float cp1x, float cp1y, float cp2x
     curPathPosition.y = y;
 }
 
-void CGContextCairo::CGContextAddQuadCurveToPoint(float cpx, float cpy, float x, float y)
-{
+void CGContextCairo::CGContextAddQuadCurveToPoint(float cpx, float cpy, float x, float y) {
     ObtainLock();
 
     CGPoint curr = curPathPosition;
 
-    CGContextAddCurveToPoint((curr.x/3.f) + (2*cpx/3), (curr.y/3) + (2*cpy/3),
-                                (2.f*cpx/3.f) + (x/3.f), (2*cpy/3) + (y/3),
-                                x, y);
+    CGContextAddCurveToPoint((curr.x / 3.f) + (2 * cpx / 3),
+                             (curr.y / 3) + (2 * cpy / 3),
+                             (2.f * cpx / 3.f) + (x / 3.f),
+                             (2 * cpy / 3) + (y / 3),
+                             x,
+                             y);
 
     curPathPosition.x = x;
     curPathPosition.y = y;
 }
 
-void CGContextCairo::CGContextMoveToPoint(float x, float y)
-{
+void CGContextCairo::CGContextMoveToPoint(float x, float y) {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -783,13 +743,12 @@ void CGContextCairo::CGContextMoveToPoint(float x, float y)
     curPathPosition.y = y;
 }
 
-void CGContextCairo::CGContextAddArc(float x, float y, float radius, float startAngle, float endAngle, int clockwise)
-{
+void CGContextCairo::CGContextAddArc(float x, float y, float radius, float startAngle, float endAngle, int clockwise) {
     ObtainLock();
 
     CGContextAddLineToPoint(x + radius * cos(startAngle), y + radius * sin(startAngle));
     LOCK_CAIRO();
-    if ( clockwise ) {
+    if (clockwise) {
         cairo_arc_negative(_drawContext, x, y, radius, startAngle, endAngle);
     } else {
         cairo_arc(_drawContext, x, y, radius, startAngle, endAngle);
@@ -797,8 +756,7 @@ void CGContextCairo::CGContextAddArc(float x, float y, float radius, float start
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddArcToPoint(float x1, float y1, float x2, float y2, float radius)
-{
+void CGContextCairo::CGContextAddArcToPoint(float x1, float y1, float x2, float y2, float radius) {
     ObtainLock();
 
     float x0, y0;
@@ -810,14 +768,15 @@ void CGContextCairo::CGContextAddArcToPoint(float x1, float y1, float x2, float 
 
     dx0 = x0 - x1;
     dy0 = y0 - y1;
-    xl0 = sqrt(dx0*dx0 + dy0*dy0);
-    if (xl0 == 0) return;
+    xl0 = sqrt(dx0 * dx0 + dy0 * dy0);
+    if (xl0 == 0)
+        return;
 
     dx2 = x2 - x1;
     dy2 = y2 - y1;
-    xl2 = sqrt(dx2*dx2 + dy2*dy2);
+    xl2 = sqrt(dx2 * dx2 + dy2 * dy2);
 
-    san = dx2*dy0 - dx0*dy2;
+    san = dx2 * dy0 - dx0 * dy2;
     if (san == 0) {
         CGContextAddLineToPoint(x1, y1);
         return;
@@ -834,42 +793,45 @@ void CGContextCairo::CGContextAddArcToPoint(float x1, float y1, float x2, float 
         n2x = -dy2 / xl2;
         n2y = dx2 / xl2;
     }
-    t = (dx2*n2y - dx2*n0y - dy2*n2x + dy2*n0x) / san;
-    CGContextAddArc(x1 + radius * (t * dx0 + n0x), y1 + radius * (t * dy0 + n0y), radius, atan2f(-n0y, -n0x), atan2(-n2y, -n2x), (san < 0));
+    t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
+    CGContextAddArc(x1 + radius * (t * dx0 + n0x),
+                    y1 + radius * (t * dy0 + n0y),
+                    radius,
+                    atan2f(-n0y, -n0x),
+                    atan2(-n2y, -n2x),
+                    (san < 0));
 }
 
-void CGContextCairo::CGContextAddEllipseInRect(CGRect rct)
-{
+void CGContextCairo::CGContextAddEllipseInRect(CGRect rct) {
     ObtainLock();
 
     LOCK_CAIRO();
-    cairo_save (_drawContext);
-    cairo_translate (_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
-    cairo_scale (_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
-    cairo_arc (_drawContext, 0., 0., 1., 0., 2 * kPi);
-    cairo_restore (_drawContext);
+    cairo_save(_drawContext);
+    cairo_translate(_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
+    cairo_scale(_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
+    cairo_arc(_drawContext, 0., 0., 1., 0., 2 * kPi);
+    cairo_restore(_drawContext);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::setFillColorSource()
-{
+void CGContextCairo::setFillColorSource() {
     if (curState->curFillColorObject == 0) {
         cairo_set_source_rgba(_drawContext,
-            curState->curFillColor.r,
-            curState->curFillColor.g,
-            curState->curFillColor.b,
-            curState->curFillColor.a);
+                              curState->curFillColor.r,
+                              curState->curFillColor.g,
+                              curState->curFillColor.b,
+                              curState->curFillColor.a);
     } else {
-        // TODO: Patterns are supposed to take "isColored" into account by either replacing/multiplying 
-        //       the alpha channel or filling the with the colour using the pattern as a mask. 
+        // TODO: Patterns are supposed to take "isColored" into account by either replacing/multiplying
+        //       the alpha channel or filling the with the colour using the pattern as a mask.
         // TODO: Refactor UIColor. Image and pattern are the same concept, and BrushType is superfluous.
         CGImageRef pattern = (CGImageRef)[curState->curFillColorObject getPatternImage];
         CGAffineTransform patTrans = CGAffineTransformIdentity;
-        if([curState->curFillColorObject isKindOfClass: [CGPattern class]]) {
+        if ([curState->curFillColorObject isKindOfClass:[CGPattern class]]) {
             patTrans = [(CGPattern*)curState->curFillColorObject getPatternTransform];
         }
 
-        cairo_pattern_t *p = cairo_pattern_create_for_surface(pattern->Backing()->LockCairoSurface());
+        cairo_pattern_t* p = cairo_pattern_create_for_surface(pattern->Backing()->LockCairoSurface());
         cairo_pattern_set_extend(p, CAIRO_EXTEND_REPEAT);
 
         cairo_matrix_t m = { 0 };
@@ -893,8 +855,7 @@ void CGContextCairo::setFillColorSource()
     }
 }
 
-void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct)
-{
+void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct) {
     ObtainLock();
 
     _isDirty = true;
@@ -904,9 +865,9 @@ void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct)
 
     cairo_new_path(_drawContext);
 
-    cairo_translate (_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
-    cairo_scale (_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
-    cairo_arc (_drawContext, 0., 0., 1., 0., 2 * kPi);
+    cairo_translate(_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
+    cairo_scale(_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
+    cairo_arc(_drawContext, 0., 0., 1., 0., 2 * kPi);
 
     cairo_matrix_t m;
     float trans[6];
@@ -923,13 +884,11 @@ void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct)
     setFillColorSource();
     cairo_stroke(_drawContext);
 
-    cairo_restore (_drawContext);
+    cairo_restore(_drawContext);
     UNLOCK_CAIRO();
 }
 
-
-void CGContextCairo::CGContextFillEllipseInRect(CGRect rct)
-{
+void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
     ObtainLock();
 
     _isDirty = true;
@@ -939,9 +898,9 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct)
 
     cairo_new_path(_drawContext);
 
-    cairo_translate (_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
-    cairo_scale (_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
-    cairo_arc (_drawContext, 0.f, 0.f, 1.f, 0.f, 2 * kPi);
+    cairo_translate(_drawContext, rct.origin.x + rct.size.width / 2.0f, rct.origin.y + rct.size.height / 2.0f);
+    cairo_scale(_drawContext, rct.size.width / 2.0f, rct.size.height / 2.0f);
+    cairo_arc(_drawContext, 0.f, 0.f, 1.f, 0.f, 2 * kPi);
 
     cairo_matrix_t m;
     float trans[6];
@@ -958,19 +917,17 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct)
     setFillColorSource();
     cairo_fill(_drawContext);
 
-    cairo_restore (_drawContext);
+    cairo_restore(_drawContext);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddPath(id path)
-{
+void CGContextCairo::CGContextAddPath(id path) {
     ObtainLock();
 
     [path _applyPath:_rootContext];
 }
 
-void CGContextCairo::CGContextStrokePath()
-{
+void CGContextCairo::CGContextStrokePath() {
     ObtainLock();
 
     _isDirty = true;
@@ -978,20 +935,19 @@ void CGContextCairo::CGContextStrokePath()
     LOCK_CAIRO();
     cairo_save(_drawContext);
 
-    cairo_set_source_rgba(_drawContext, 
-        curState->curStrokeColor.r, 
-        curState->curStrokeColor.g,
-        curState->curStrokeColor.b,
-        curState->curStrokeColor.a);
+    cairo_set_source_rgba(_drawContext,
+                          curState->curStrokeColor.r,
+                          curState->curStrokeColor.g,
+                          curState->curStrokeColor.b,
+                          curState->curStrokeColor.a);
 
-    //cairo_set_operator(_drawContext, CAIRO_OPERATOR_SCREEN);
+    // cairo_set_operator(_drawContext, CAIRO_OPERATOR_SCREEN);
     cairo_stroke(_drawContext);
     cairo_restore(_drawContext);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextStrokeRect(CGRect rct)
-{
+void CGContextCairo::CGContextStrokeRect(CGRect rct) {
     ObtainLock();
 
     _isDirty = true;
@@ -1013,19 +969,18 @@ void CGContextCairo::CGContextStrokeRect(CGRect rct)
     m.y0 = trans[5];
 
     cairo_set_matrix(_drawContext, &m);
-    cairo_set_source_rgba(_drawContext, 
-        curState->curStrokeColor.r, 
-        curState->curStrokeColor.g,
-        curState->curStrokeColor.b,
-        curState->curStrokeColor.a);
+    cairo_set_source_rgba(_drawContext,
+                          curState->curStrokeColor.r,
+                          curState->curStrokeColor.g,
+                          curState->curStrokeColor.b,
+                          curState->curStrokeColor.a);
     cairo_stroke(_drawContext);
 
     cairo_restore(_drawContext);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextStrokeRectWithWidth(CGRect rct, float width)
-{
+void CGContextCairo::CGContextStrokeRectWithWidth(CGRect rct, float width) {
     ObtainLock();
 
     _isDirty = true;
@@ -1055,8 +1010,7 @@ void CGContextCairo::CGContextStrokeRectWithWidth(CGRect rct, float width)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextFillPath()
-{
+void CGContextCairo::CGContextFillPath() {
     ObtainLock();
 
     _isDirty = true;
@@ -1084,8 +1038,7 @@ void CGContextCairo::CGContextFillPath()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextEOFillPath()
-{
+void CGContextCairo::CGContextEOFillPath() {
     ObtainLock();
 
     _isDirty = true;
@@ -1113,8 +1066,7 @@ void CGContextCairo::CGContextEOFillPath()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextEOClip()
-{
+void CGContextCairo::CGContextEOClip() {
     ObtainLock();
 
     EbrDebugLog("CGContextEOClip not supported\n");
@@ -1124,8 +1076,7 @@ void CGContextCairo::CGContextEOClip()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode)
-{
+void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode) {
     ObtainLock();
 
     _isDirty = true;
@@ -1147,7 +1098,7 @@ void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode)
     cairo_set_matrix(_drawContext, &m);
     setFillColorSource();
 
-    switch ( mode ) {
+    switch (mode) {
         case kCGPathFill:
             cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_WINDING);
             cairo_fill(_drawContext);
@@ -1162,11 +1113,11 @@ void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode)
             cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_WINDING);
             cairo_fill_preserve(_drawContext);
 
-            cairo_set_source_rgba(_drawContext, 
-                curState->curStrokeColor.r, 
-                curState->curStrokeColor.g,
-                curState->curStrokeColor.b,
-                curState->curStrokeColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curStrokeColor.r,
+                                  curState->curStrokeColor.g,
+                                  curState->curStrokeColor.b,
+                                  curState->curStrokeColor.a);
             cairo_stroke(_drawContext);
             break;
 
@@ -1174,20 +1125,20 @@ void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode)
             cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
             cairo_fill_preserve(_drawContext);
 
-            cairo_set_source_rgba(_drawContext, 
-                curState->curStrokeColor.r, 
-                curState->curStrokeColor.g,
-                curState->curStrokeColor.b,
-                curState->curStrokeColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curStrokeColor.r,
+                                  curState->curStrokeColor.g,
+                                  curState->curStrokeColor.b,
+                                  curState->curStrokeColor.a);
             cairo_stroke(_drawContext);
             break;
 
         case kCGPathStroke:
-            cairo_set_source_rgba(_drawContext, 
-                curState->curStrokeColor.r, 
-                curState->curStrokeColor.g,
-                curState->curStrokeColor.b,
-                curState->curStrokeColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curStrokeColor.r,
+                                  curState->curStrokeColor.g,
+                                  curState->curStrokeColor.b,
+                                  curState->curStrokeColor.a);
             cairo_stroke(_drawContext);
             break;
 
@@ -1199,8 +1150,7 @@ void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode)
     UNLOCK_CAIRO();
 }
 
-BOOL CGContextCairo::CGContextIsPathEmpty()
-{
+BOOL CGContextCairo::CGContextIsPathEmpty() {
     ObtainLock();
 
     double x1, y1, x2, y2;
@@ -1209,15 +1159,14 @@ BOOL CGContextCairo::CGContextIsPathEmpty()
     cairo_path_extents(_drawContext, &x1, &y1, &x2, &y2);
     UNLOCK_CAIRO();
 
-    if ( x1 == 0.0 && y1 == 0.0 && x2 == 0.0 && y2 == 0.0 ) {
+    if (x1 == 0.0 && y1 == 0.0 && x2 == 0.0 && y2 == 0.0) {
         return TRUE;
     }
 
     return FALSE;
 }
 
-void CGContextCairo::CGContextBeginPath()
-{
+void CGContextCairo::CGContextBeginPath() {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -1227,39 +1176,31 @@ void CGContextCairo::CGContextBeginPath()
     curPathPosition.y = 0;
 }
 
-void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, DWORD options)
-{
+void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient,
+                                                 CGPoint startPoint,
+                                                 CGPoint endPoint,
+                                                 DWORD options) {
     ObtainLock();
 
     _isDirty = true;
 
     LOCK_CAIRO();
-    cairo_pattern_t *pattern = cairo_pattern_create_linear(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+    cairo_pattern_t* pattern = cairo_pattern_create_linear(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
 
-    switch ( gradient->_colorSpace ) {
+    switch (gradient->_colorSpace) {
         case _ColorRGBA:
-            for ( unsigned i = 0; i < gradient->_count; i++ )
-            {
-                float *curColor = &gradient->_components[i * 4];
-                cairo_pattern_add_color_stop_rgba(pattern, 
-                    gradient->_locations[i], 
-                    curColor[0],
-                    curColor[1],
-                    curColor[2],
-                    curColor[3]);
+            for (unsigned i = 0; i < gradient->_count; i++) {
+                float* curColor = &gradient->_components[i * 4];
+                cairo_pattern_add_color_stop_rgba(
+                    pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
             }
             break;
 
         case _ColorGrayscale:
-            for ( unsigned i = 0; i < gradient->_count; i++ )
-            {
-                float *curColor = &gradient->_components[i * 2];
-                cairo_pattern_add_color_stop_rgba(pattern, 
-                    gradient->_locations[i], 
-                    curColor[0],
-                    curColor[0],
-                    curColor[0],
-                    curColor[1]);
+            for (unsigned i = 0; i < gradient->_count; i++) {
+                float* curColor = &gradient->_components[i * 2];
+                cairo_pattern_add_color_stop_rgba(
+                    pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
             }
             break;
 
@@ -1268,9 +1209,8 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
             break;
     }
 
-  
     cairo_set_source(_drawContext, pattern);
-    if ( curState->_imgMask != NULL ) {
+    if (curState->_imgMask != NULL) {
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();
     } else {
@@ -1280,39 +1220,30 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextDrawRadialGradient(CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options)
-{
+void CGContextCairo::CGContextDrawRadialGradient(
+    CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options) {
     ObtainLock();
 
     _isDirty = true;
 
     LOCK_CAIRO();
-    cairo_pattern_t *pattern = cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
+    cairo_pattern_t* pattern =
+        cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
 
-    switch ( gradient->_colorSpace ) {
+    switch (gradient->_colorSpace) {
         case _ColorRGBA:
-            for ( unsigned i = 0; i < gradient->_count; i++ )
-            {
-                float *curColor = &gradient->_components[i * 4];
-                cairo_pattern_add_color_stop_rgba(pattern, 
-                    gradient->_locations[i], 
-                    curColor[0],
-                    curColor[1],
-                    curColor[2],
-                    curColor[3]);
+            for (unsigned i = 0; i < gradient->_count; i++) {
+                float* curColor = &gradient->_components[i * 4];
+                cairo_pattern_add_color_stop_rgba(
+                    pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
             }
             break;
 
         case _ColorGrayscale:
-            for ( unsigned i = 0; i < gradient->_count; i++ )
-            {
-                float *curColor = &gradient->_components[i * 2];
-                cairo_pattern_add_color_stop_rgba(pattern, 
-                    gradient->_locations[i], 
-                    curColor[0],
-                    curColor[0],
-                    curColor[0],
-                    curColor[1]);
+            for (unsigned i = 0; i < gradient->_count; i++) {
+                float* curColor = &gradient->_components[i * 2];
+                cairo_pattern_add_color_stop_rgba(
+                    pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
             }
             break;
 
@@ -1321,9 +1252,8 @@ void CGContextCairo::CGContextDrawRadialGradient(CGGradientRef gradient, CGPoint
             break;
     }
 
-  
     cairo_set_source(_drawContext, pattern);
-    if ( curState->_imgMask != NULL ) {
+    if (curState->_imgMask != NULL) {
         cairo_mask_surface(_drawContext, curState->_imgMask->Backing()->LockCairoSurface(), 0.0, 0.0);
         curState->_imgMask->Backing()->ReleaseCairoSurface();
     } else {
@@ -1333,52 +1263,50 @@ void CGContextCairo::CGContextDrawRadialGradient(CGGradientRef gradient, CGPoint
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextDrawLayerInRect(CGRect destRect, CGLayerRef layer)
-{
+void CGContextCairo::CGContextDrawLayerInRect(CGRect destRect, CGLayerRef layer) {
 #if 0
-    ObtainLock();
+ObtainLock();
 
-    _isDirty = true;
+_isDirty = true;
 
-    CGRect src;
+CGRect src;
 
-    src.origin.x = 0;
-    src.origin.y = 0;
-    src.size.width = (float) layer->_layerBacking->Backing()->Width();
-    src.size.height = (float) layer->_layerBacking->Backing()->Height();
+src.origin.x = 0;
+src.origin.y = 0;
+src.size.width = (float) layer->_layerBacking->Backing()->Width();
+src.size.height = (float) layer->_layerBacking->Backing()->Height();
 
-    DrawImage(layer->_layerBacking, src, destRect);
+DrawImage(layer->_layerBacking, src, destRect);
 #endif
 }
 
-void CGContextCairo::CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer)
-{
+void CGContextCairo::CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer) {
 #if 0
-    ObtainLock();
+ObtainLock();
 
-    _isDirty = true;
+_isDirty = true;
 
-    CGRect src, destRect;
+CGRect src, destRect;
 
-    src.origin.x = 0;
-    src.origin.y = 0;
-    src.size.width = (float) layer->_layerBacking->Backing()->Width();
-    src.size.height = (float) layer->_layerBacking->Backing()->Height();
+src.origin.x = 0;
+src.origin.y = 0;
+src.size.width = (float) layer->_layerBacking->Backing()->Width();
+src.size.height = (float) layer->_layerBacking->Backing()->Height();
 
-    destRect.origin = destPoint;
-    destRect.size.width = (float) layer->_layerBacking->Backing()->Width();
-    destRect.size.height = (float) layer->_layerBacking->Backing()->Height();
+destRect.origin = destPoint;
+destRect.size.width = (float) layer->_layerBacking->Backing()->Width();
+destRect.size.height = (float) layer->_layerBacking->Backing()->Height();
 
-    DrawImage(layer->_layerBacking, src, destRect);
+DrawImage(layer->_layerBacking, src, destRect);
 #endif
 }
 
-void CGContextCairo::CGContextSetLineDash(float phase, float *lengths, DWORD count)
-{
+void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
     ObtainLock();
 
-    double *dLengths = (double *) EbrMalloc(count * sizeof(double));
-    for ( unsigned i = 0; i < count; i ++ ) dLengths[i] = lengths[i];
+    double* dLengths = (double*)EbrMalloc(count * sizeof(double));
+    for (unsigned i = 0; i < count; i++)
+        dLengths[i] = lengths[i];
 
     LOCK_CAIRO();
     cairo_set_dash(_drawContext, dLengths, count, phase);
@@ -1387,8 +1315,7 @@ void CGContextCairo::CGContextSetLineDash(float phase, float *lengths, DWORD cou
     EbrFree(dLengths);
 }
 
-void CGContextCairo::CGContextSetMiterLimit(float limit)
-{
+void CGContextCairo::CGContextSetMiterLimit(float limit) {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -1396,27 +1323,24 @@ void CGContextCairo::CGContextSetMiterLimit(float limit)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextSetLineJoin(DWORD lineJoin)
-{
+void CGContextCairo::CGContextSetLineJoin(DWORD lineJoin) {
     ObtainLock();
 
     LOCK_CAIRO();
-    cairo_set_line_join(_drawContext, (cairo_line_join_t) lineJoin);
+    cairo_set_line_join(_drawContext, (cairo_line_join_t)lineJoin);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextSetLineCap(DWORD lineCap)
-{
+void CGContextCairo::CGContextSetLineCap(DWORD lineCap) {
     ObtainLock();
 
     curState->lineCap = lineCap;
     LOCK_CAIRO();
-    cairo_set_line_cap(_drawContext, (cairo_line_cap_t) curState->lineCap);
+    cairo_set_line_cap(_drawContext, (cairo_line_cap_t)curState->lineCap);
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextSetLineWidth(float width)
-{
+void CGContextCairo::CGContextSetLineWidth(float width) {
     ObtainLock();
 
     curState->lineWidth = width;
@@ -1425,12 +1349,11 @@ void CGContextCairo::CGContextSetLineWidth(float width)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextSetShouldAntialias(DWORD shouldAntialias)
-{
+void CGContextCairo::CGContextSetShouldAntialias(DWORD shouldAntialias) {
     ObtainLock();
 
     LOCK_CAIRO();
-    if ( shouldAntialias ) {
+    if (shouldAntialias) {
         cairo_set_antialias(_drawContext, CAIRO_ANTIALIAS_DEFAULT);
     } else {
         cairo_set_antialias(_drawContext, CAIRO_ANTIALIAS_NONE);
@@ -1438,8 +1361,7 @@ void CGContextCairo::CGContextSetShouldAntialias(DWORD shouldAntialias)
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextClip()
-{
+void CGContextCairo::CGContextClip() {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -1448,8 +1370,7 @@ void CGContextCairo::CGContextClip()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextGetClipBoundingBox(CGRect *ret)
-{
+void CGContextCairo::CGContextGetClipBoundingBox(CGRect* ret) {
     ObtainLock();
 
     double x, y, x2, y2;
@@ -1463,8 +1384,7 @@ void CGContextCairo::CGContextGetClipBoundingBox(CGRect *ret)
     ret->size.height = float(y2 - y);
 }
 
-void CGContextCairo::CGContextGetPathBoundingBox(CGRect *ret)
-{
+void CGContextCairo::CGContextGetPathBoundingBox(CGRect* ret) {
     ObtainLock();
 
     double x, y, x2, y2;
@@ -1478,11 +1398,10 @@ void CGContextCairo::CGContextGetPathBoundingBox(CGRect *ret)
     ret->size.height = float(y2 - y);
 }
 
-void CGContextCairo::CGContextClipToRect(CGRect rect)
-{
+void CGContextCairo::CGContextClipToRect(CGRect rect) {
     ObtainLock();
     LOCK_CAIRO();
-    cairo_path_t *oldPath = cairo_copy_path(_drawContext);
+    cairo_path_t* oldPath = cairo_copy_path(_drawContext);
     cairo_new_path(_drawContext);
     cairo_rectangle(_drawContext, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
     cairo_clip(_drawContext);
@@ -1491,17 +1410,14 @@ void CGContextCairo::CGContextClipToRect(CGRect rect)
     cairo_append_path(_drawContext, oldPath);
     cairo_path_destroy(oldPath);
     UNLOCK_CAIRO();
-
 }
 
-void CGContextCairo::CGContextBeginTransparencyLayer(id auxInfo)
-{
+void CGContextCairo::CGContextBeginTransparencyLayer(id auxInfo) {
     //  [To future blamb, next time you comment this out, make a note as to why]
     cairo_push_group(_drawContext);
 }
 
-void CGContextCairo::CGContextEndTransparencyLayer()
-{
+void CGContextCairo::CGContextEndTransparencyLayer() {
     ObtainLock();
 
     LOCK_CAIRO();
@@ -1529,49 +1445,44 @@ void CGContextCairo::CGContextEndTransparencyLayer()
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextSetGrayStrokeColor(float gray, float alpha)
-{
+void CGContextCairo::CGContextSetGrayStrokeColor(float gray, float alpha) {
     curState->curStrokeColor.r = gray;
     curState->curStrokeColor.g = gray;
     curState->curStrokeColor.b = gray;
     curState->curStrokeColor.a = alpha;
 }
 
-void CGContextCairo::CGContextSetAlpha(float a)
-{
+void CGContextCairo::CGContextSetAlpha(float a) {
     curState->curFillColor.a = a;
 }
 
-void CGContextCairo::CGContextSetRGBFillColor(float r, float g, float b, float a)
-{
+void CGContextCairo::CGContextSetRGBFillColor(float r, float g, float b, float a) {
     curState->curFillColor.r = r;
     curState->curFillColor.g = g;
     curState->curFillColor.b = b;
     curState->curFillColor.a = a;
 }
 
-void CGContextCairo::CGContextSetRGBStrokeColor(float r, float g, float b, float a)
-{
+void CGContextCairo::CGContextSetRGBStrokeColor(float r, float g, float b, float a) {
     curState->curStrokeColor.r = r;
     curState->curStrokeColor.g = g;
     curState->curStrokeColor.b = b;
     curState->curStrokeColor.a = a;
 }
 
-CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, float x, float y)
-{
+CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y) {
     ObtainLock();
 
     LOCK_CAIRO();
 
     CGSize ret = { 0.0f, 0.0f };
 
-    cairo_glyph_t *cairoGlyphs = (cairo_glyph_t *) EbrMalloc(sizeof(cairo_glyph_t) * length);
+    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)EbrMalloc(sizeof(cairo_glyph_t) * length);
 
     _CGFontLock();
 
     //  Get the font
-    FT_Face face = (FT_Face) _LazyUISizingFontHandle.member(curState->getCurFont());
+    FT_Face face = (FT_Face)_LazyUISizingFontHandle.member(curState->getCurFont());
     if (!face) {
         _CGFontUnlock();
         UNLOCK_CAIRO();
@@ -1589,14 +1500,14 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, flo
     CGPoint curOff = { 0, 0 };
 
     //  Lookup each glyph
-    for ( unsigned i = 0; i < length; i ++ ) {
-        error = FT_Load_Glyph( face, glyphs[i], FT_LOAD_NO_HINTING );
-        if ( error != 0 ) {
+    for (unsigned i = 0; i < length; i++) {
+        error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_HINTING);
+        if (error != 0) {
             cairoGlyphs[i].index = -1;
-            curOff.x = (((float) penX) / 64.0f);
-        } else {    
+            curOff.x = (((float)penX) / 64.0f);
+        } else {
             cairoGlyphs[i].index = glyphs[i];
-            curOff.x = (((float) penX) / 64.0f);
+            curOff.x = (((float)penX) / 64.0f);
 
             /* increment pen position */
             penX += slot->advance.x;
@@ -1609,13 +1520,13 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, flo
         cairoGlyphs[i].y = out.y + y;
     }
 
-    ret.width = ((float) penX) / 64.0f;
-    ret.height = ((float) (face->size->metrics.ascender - face->size->metrics.descender)) / 64.0f;
+    ret.width = ((float)penX) / 64.0f;
+    ret.height = ((float)(face->size->metrics.ascender - face->size->metrics.descender)) / 64.0f;
 
-    FT_Face fontFace = (FT_Face) _LazyUIFontHandle.member(curState->getCurFont());
-    cairo_font_face_t *cairoFace = cairo_ft_font_face_create_for_ft_face(fontFace, 0);
+    FT_Face fontFace = (FT_Face)_LazyUIFontHandle.member(curState->getCurFont());
+    cairo_font_face_t* cairoFace = cairo_ft_font_face_create_for_ft_face(fontFace, 0);
     cairo_save(_drawContext);
-    cairo_path_t *curPath = cairo_copy_path(_drawContext);
+    cairo_path_t* curPath = cairo_copy_path(_drawContext);
 
     cairo_matrix_t fontCTM, fontSizeMatrix;
 
@@ -1641,20 +1552,22 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, flo
 
     cairo_matrix_init_identity(&fontSizeMatrix);
     cairo_matrix_scale(&fontSizeMatrix, 1, -1);
-    //cairo_matrix_translate(&fontSizeMatrix, 0, -1);
+    // cairo_matrix_translate(&fontSizeMatrix, 0, -1);
 
-    cairo_matrix_scale(&fontSizeMatrix, curState->fontSize * _LazyUIFontHorizontalScale.member(uiFont), curState->fontSize);
+    cairo_matrix_scale(
+        &fontSizeMatrix, curState->fontSize * _LazyUIFontHorizontalScale.member(uiFont), curState->fontSize);
     cairo_matrix_multiply(&fontSizeMatrix, &fontSizeMatrix, &fontCTM);
 
     cairo_set_font_matrix(_drawContext, &fontSizeMatrix);
     cairo_set_font_face(_drawContext, cairoFace);
 
-    switch ( curState->textDrawingMode ) {
+    switch (curState->textDrawingMode) {
         case kCGTextFill:
-            cairo_set_source_rgba(_drawContext, curState->curFillColor.r, 
-                curState->curFillColor.g,
-                curState->curFillColor.b,
-                curState->curFillColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curFillColor.r,
+                                  curState->curFillColor.g,
+                                  curState->curFillColor.b,
+                                  curState->curFillColor.a);
 
             cairo_show_glyphs(_drawContext, cairoGlyphs, length);
             break;
@@ -1662,32 +1575,35 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, flo
         case kCGTextStroke: {
             cairo_new_path(_drawContext);
             cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext, curState->curStrokeColor.r, 
-                curState->curStrokeColor.g,
-                curState->curStrokeColor.b,
-                curState->curStrokeColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curStrokeColor.r,
+                                  curState->curStrokeColor.g,
+                                  curState->curStrokeColor.b,
+                                  curState->curStrokeColor.a);
             cairo_stroke(_drawContext);
             break;
-            }
+        }
 
         case kCGTextFillStroke: {
             cairo_new_path(_drawContext);
             cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext, curState->curFillColor.r, 
-                curState->curFillColor.g,
-                curState->curFillColor.b,
-                curState->curFillColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curFillColor.r,
+                                  curState->curFillColor.g,
+                                  curState->curFillColor.b,
+                                  curState->curFillColor.a);
             cairo_fill(_drawContext);
 
             cairo_new_path(_drawContext);
             cairo_glyph_path(_drawContext, cairoGlyphs, length);
-            cairo_set_source_rgba(_drawContext, curState->curStrokeColor.r, 
-                curState->curStrokeColor.g,
-                curState->curStrokeColor.b,
-                curState->curStrokeColor.a);
+            cairo_set_source_rgba(_drawContext,
+                                  curState->curStrokeColor.r,
+                                  curState->curStrokeColor.g,
+                                  curState->curStrokeColor.b,
+                                  curState->curStrokeColor.a);
             cairo_stroke(_drawContext);
             break;
-            }
+        }
 
         case kCGTextFillClip:
         case kCGTextStrokeClip:
@@ -1709,4 +1625,3 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, flo
 
     return ret;
 }
-

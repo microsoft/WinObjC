@@ -28,23 +28,22 @@ typedef wchar_t WCHAR;
 @end
 
 @implementation SKPayment : NSObject
-+(SKPayment*) paymentWithProduct:(SKProduct*)product {
-    return [[self alloc]  initWithProductIdentifier:product.productIdentifier];
++ (SKPayment*)paymentWithProduct:(SKProduct*)product {
+    return [[self alloc] initWithProductIdentifier:product.productIdentifier];
 }
 
-+(instancetype) paymentWithProductIdentifier:(NSString *) identifier
-{
-    return [[self alloc] initWithProductIdentifier: identifier];
++ (instancetype)paymentWithProductIdentifier:(NSString*)identifier {
+    return [[self alloc] initWithProductIdentifier:identifier];
 }
 
--(instancetype) initWithProductIdentifier:(NSString*)identifier {
+- (instancetype)initWithProductIdentifier:(NSString*)identifier {
     _productIdentifier = [identifier copy];
     return self;
 }
 @end
 
 @implementation SKProduct : NSObject
--(instancetype) initWithTitle:(NSString*)title identifier:(NSString*)ident price:(NSString*)price {
+- (instancetype)initWithTitle:(NSString*)title identifier:(NSString*)ident price:(NSString*)price {
     _productIdentifier = ident;
     _localizedTitle = title;
 
@@ -59,7 +58,7 @@ typedef wchar_t WCHAR;
 @end
 
 @implementation SKProductsResponse : NSObject
--(instancetype) init {
+- (instancetype)init {
     _products = [[NSMutableArray alloc] init];
     return self;
 }
@@ -70,42 +69,42 @@ typedef wchar_t WCHAR;
     SKProductsResponse* _response;
 }
 
--(instancetype) initWithProductIdentifiers:(NSArray*)identifiers {
+- (instancetype)initWithProductIdentifiers:(NSArray*)identifiers {
     _identifiers = [identifiers mutableCopy];
     return [super init];
 }
 
--(void) addProduct:(SKProduct*) product {
-    for (NSString *identifier in _identifiers) {
+- (void)addProduct:(SKProduct*)product {
+    for (NSString* identifier in _identifiers) {
         NSLog(@"%@", identifier);
-        if ([identifier caseInsensitiveCompare: product.productIdentifier] == 0) {
+        if ([identifier caseInsensitiveCompare:product.productIdentifier] == 0) {
             [_response.products addObject:product];
             break;
         }
     }
 }
 
--(void) start {
+- (void)start {
     _response = [[SKProductsResponse alloc] init];
 
     [self retain];
-    [WSCurrentAppSimulator loadListingInformationAsyncWithSuccess: ^void(WSListingInformation *listings)
-    {
-        for(NSString *prodKey in listings.productListings)
-        {
-            WSProductListing *curListing = listings.productListings[prodKey];
+    [WSCurrentAppSimulator loadListingInformationAsyncWithSuccess:^void(WSListingInformation* listings) {
+        for (NSString* prodKey in listings.productListings) {
+            WSProductListing* curListing = listings.productListings[prodKey];
 
-            [self addProduct:[[SKProduct alloc] initWithTitle: curListing.name identifier:curListing.productId price: curListing.formattedPrice]];
-            
+            [self addProduct:[[SKProduct alloc] initWithTitle:curListing.name
+                                                   identifier:curListing.productId
+                                                        price:curListing.formattedPrice]];
         }
 
         [self.delegate productsRequest:self didReceiveResponse:_response];
 
         [self release];
-    } failure:nil];
+    }
+                                                          failure:nil];
 }
 
--(void) dealloc {
+- (void)dealloc {
     [_identifiers release];
     [_response release];
     [super dealloc];

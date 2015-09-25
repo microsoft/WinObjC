@@ -19,8 +19,7 @@
 
 #include "runtime.h"
 
-class ObjCrtMutex
-{
+class ObjCrtMutex {
 public:
     virtual void lock() = 0;
     virtual void unlock() = 0;
@@ -34,9 +33,9 @@ public:
 
 @interface NSAutoreleasePool : NSObject {
 @public
-    NSAutoreleasePool*_parent;
-    NSAutoreleasePool *_childPool;
-    id                 _lastItem;
+    NSAutoreleasePool* _parent;
+    NSAutoreleasePool* _childPool;
+    id _lastItem;
     std::deque<id*> pages;
     unsigned nextSlot;
 }
@@ -48,150 +47,146 @@ public:
 static bool _AutoReleasePoolInitialized = false;
 typedef HashSet<id> WeakObjectsSet;
 extern WeakObjectsSet _weak_objects;
-extern ObjCrtMutex &_objLifetimeLock;
+extern ObjCrtMutex& _objLifetimeLock;
 
 @class NSAutoreleasePool;
 __declspec(thread) id tlsAutorelease;
 
 #define PAGESIZE 1024
 
-NSAutoreleasePool* NSThreadCurrentPool()
-{
+NSAutoreleasePool* NSThreadCurrentPool() {
     return tlsAutorelease;
 }
 
-void NSThreadSetCurrentPool(id pool)
-{
+void NSThreadSetCurrentPool(id pool) {
     tlsAutorelease = pool;
 }
 
-#define NSOBJECT_MAGIC  0x234BC09A
-#define NSOBJECT_MANAGED_MAGIC  0x234BA55E
+#define NSOBJECT_MAGIC 0x234BC09A
+#define NSOBJECT_MANAGED_MAGIC 0x234BA55E
 
-@implementation NSAutoreleasePool 
-    -(void) insert:(id)object {
-        if ( object != nil ) {
-            if ( *((uint32_t *) ((char *) object - 4)) == NSOBJECT_MAGIC || *((uint32_t *) ((char *) object - 4)) == NSOBJECT_MANAGED_MAGIC ) {
-                //  Objects being dellocated should not be autoreleased
-                if ( (*((volatile int *) (uint32_t *) ((char *) object - 8)) & 0xF0000000) != 0x00000000 ) {
-                    return;
-                }
+@implementation NSAutoreleasePool
+- (void)insert:(id)object {
+    if (object != nil) {
+        if (*((uint32_t*)((char*)object - 4)) == NSOBJECT_MAGIC ||
+            *((uint32_t*)((char*)object - 4)) == NSOBJECT_MANAGED_MAGIC) {
+            //  Objects being dellocated should not be autoreleased
+            if ((*((volatile int*)(uint32_t*)((char*)object - 8)) & 0xF0000000) != 0x00000000) {
+                return;
             }
         }
-
-        if ( self->pages.empty() || nextSlot >= PAGESIZE ) {
-            id* newPage = new id[PAGESIZE];
-            self->pages.push_back(newPage);
-            nextSlot = 0;
-        }
-
-        self->pages.back()[nextSlot++] = object;
     }
 
-    +(void) load {
-        _AutoReleasePoolInitialized = true;
+    if (self->pages.empty() || nextSlot >= PAGESIZE) {
+        id* newPage = new id[PAGESIZE];
+        self->pages.push_back(newPage);
+        nextSlot = 0;
     }
 
-    -(instancetype) init {
-        NSAutoreleasePool* current = NSThreadCurrentPool();
+    self->pages.back()[nextSlot++] = object;
+}
 
-        _parent=current;
++ (void)load {
+    _AutoReleasePoolInitialized = true;
+}
 
-        if(current!=nil)
-            current->_childPool = self;
+- (instancetype)init {
+    NSAutoreleasePool* current = NSThreadCurrentPool();
 
-        _childPool=nil;
+    _parent = current;
 
-        NSThreadSetCurrentPool(self);
+    if (current != nil)
+        current->_childPool = self;
 
-        return self;
+    _childPool = nil;
+
+    NSThreadSetCurrentPool(self);
+
+    return self;
+}
+
+- (void)addObject:(id)object {
+    if (self->_lastItem != nil) {
+        id item = self->_lastItem;
+        self->_lastItem = nil;
+        [self insert:item];
     }
 
-    -(void) addObject:(id)object {
-        if ( self->_lastItem != nil ) {
-            id item = self->_lastItem;
-            self->_lastItem = nil;
-            [self insert: item];
-        }
+    self->_lastItem = object;
+}
 
-        self->_lastItem = object;
++ (void)addObject:(id)object {
+    // EbrDebugLog("Autoreleasing object %x \"%s\"\n", object, object_getClassName(object));
+    NSAutoreleasePool* curPool = NSThreadCurrentPool();
+    if (!curPool) {
+        // dbg_printf("No autorelease pool for this thread!");
     }
+    [curPool addObject:object];
+}
 
-    +(void) addObject:(id)object {
-        //EbrDebugLog("Autoreleasing object %x \"%s\"\n", object, object_getClassName(object));
-        NSAutoreleasePool *curPool = NSThreadCurrentPool();
-        if (!curPool) {
-            //dbg_printf("No autorelease pool for this thread!");
-        }
-        [curPool addObject:object];
-    }
+- (void)drain {
+    [self release];
+}
 
-    -(void) drain {
-        [self release];
-    }
+- (void)dealloc {
+    [_childPool release];
 
-    -(void) dealloc {
-        [_childPool release];
+    while (_lastItem || pages.size()) {
+        if (_lastItem) {
+            id item = _lastItem;
+            _lastItem = nil;
+            [item release];
+        } else {
+            id* page = pages.front();
 
-        while (_lastItem || pages.size()) {
-            if (_lastItem) {
-                id item = _lastItem;
-                _lastItem = nil;
-                [item release];
+            // If we aren't the last page in the list, we have to assume it's full because the
+            // subsequent page wouldn't have been created.
+
+            size_t count;
+            if (pages.size() == 1) {
+                count = nextSlot;
+                nextSlot = 0;
             } else {
-                id* page = pages.front();
-
-                // If we aren't the last page in the list, we have to assume it's full because the
-                // subsequent page wouldn't have been created.
-
-                size_t count;
-                if ( pages.size() == 1 )
-                {
-                    count = nextSlot;
-                    nextSlot = 0;
-                }
-                else
-                {
-                    count = PAGESIZE;
-                }
-
-                pages.pop_front();
-
-                for (size_t i = 0; i < count; ++i) {
-                    [page[i] release];
-                }
-                delete page;
+                count = PAGESIZE;
             }
+
+            pages.pop_front();
+
+            for (size_t i = 0; i < count; ++i) {
+                [page[i] release];
+            }
+            delete page;
         }
-
-        NSThreadSetCurrentPool(_parent);
-
-        if(_parent!=nil)
-            _parent->_childPool=nil;
-
-        [super dealloc];
     }
 
-    
+    NSThreadSetCurrentPool(_parent);
+
+    if (_parent != nil)
+        _parent->_childPool = nil;
+
+    [super dealloc];
+}
+
 @end
 
 OBJCRT_EXPORT
 extern "C" id objc_autorelease(id value) {
-    if (value != nil) [value autorelease];
+    if (value != nil)
+        [value autorelease];
     return value;
 }
 
 OBJCRT_EXPORT
-extern "C" void objc_autoreleasePoolPop(void *pool) {
+extern "C" void objc_autoreleasePoolPop(void* pool) {
     [pool release];
 }
 
-
 OBJCRT_EXPORT
-extern "C" void * objc_autoreleasePoolPush() {
-    if ( !_AutoReleasePoolInitialized ) return NULL;
+extern "C" void* objc_autoreleasePoolPush() {
+    if (!_AutoReleasePoolInitialized)
+        return NULL;
 
-    return (void *) [[NSAutoreleasePool alloc] init];
+    return (void*)[[NSAutoreleasePool alloc] init];
 }
 
 OBJCRT_EXPORT
@@ -210,8 +205,7 @@ extern "C" id objc_retainAutorelease(id value) {
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_autoreleaseReturnValue(id obj)
-{
+extern "C" id objc_autoreleaseReturnValue(id obj) {
     return objc_autorelease(obj);
 }
 
@@ -223,7 +217,7 @@ extern "C" id objc_retainAutoreleaseReturnValue(id value) {
 OBJCRT_EXPORT
 extern "C" id objc_retainAutoreleasedReturnValue(id value) {
     NSAutoreleasePool* pool = NSThreadCurrentPool();
-    if ( pool && pool->_lastItem == value ) {
+    if (pool && pool->_lastItem == value) {
         pool->_lastItem = nil;
         return value;
     } else {
@@ -232,16 +226,17 @@ extern "C" id objc_retainAutoreleasedReturnValue(id value) {
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_storeStrong(id *object, id value) {
+extern "C" id objc_storeStrong(id* object, id value) {
     id oldValue = *object;
-    if (oldValue == value)  return 0;
+    if (oldValue == value)
+        return 0;
 
     /*
-        Atomic update: it is imperative that *object never holds a non-owning
-        reference. Ensuring that we have owning references to both the new and
-        the old value when the change is made ensures this on strongly-ordered
-        architextures like x86.
-        FIXME: do we need barriers for, say,s PPC?
+    Atomic update: it is imperative that *object never holds a non-owning
+    reference. Ensuring that we have owning references to both the new and
+    the old value when the change is made ensures this on strongly-ordered
+    architextures like x86.
+    FIXME: do we need barriers for, say,s PPC?
     */
     value = objc_retain(value);
     *object = value;
@@ -251,33 +246,32 @@ extern "C" id objc_storeStrong(id *object, id value) {
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_storeWeak(id *addr, id obj) {
+extern "C" id objc_storeWeak(id* addr, id obj) {
     id old = *addr;
-    if (nil == obj)
-    {
+    if (nil == obj) {
         *addr = obj;
         return nil;
     }
     obj = objc_retainAutorelease(obj);
     *addr = obj;
 
-    if ( obj != nil ) {
+    if (obj != nil) {
         _objLifetimeLock.lock();
         _weak_objects.insert(obj);
         _objLifetimeLock.unlock();
     }
-    
+
     return obj;
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_getWeak(id *addr) {
+extern "C" id objc_getWeak(id* addr) {
     id ret = nil;
 
     _objLifetimeLock.lock();
     id obj = *addr;
-    
-    if ( _weak_objects.exists(obj) ) {
+
+    if (_weak_objects.exists(obj)) {
         ret = obj;
     }
     _objLifetimeLock.unlock();
@@ -286,13 +280,13 @@ extern "C" id objc_getWeak(id *addr) {
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_loadWeakRetained(id *addr) {
+extern "C" id objc_loadWeakRetained(id* addr) {
     id ret = nil;
 
     _objLifetimeLock.lock();
     id obj = *addr;
-    
-    if ( _weak_objects.exists(obj) ) {
+
+    if (_weak_objects.exists(obj)) {
         obj = objc_retain(obj);
         ret = obj;
     }
@@ -302,31 +296,28 @@ extern "C" id objc_loadWeakRetained(id *addr) {
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_loadWeak(id *object) {
+extern "C" id objc_loadWeak(id* object) {
     return objc_autorelease(objc_loadWeakRetained(object));
 }
 
 OBJCRT_EXPORT
-extern "C" void objc_destroyWeak(id *obj) {
+extern "C" void objc_destroyWeak(id* obj) {
     objc_storeWeak(obj, nil);
 }
 
 OBJCRT_EXPORT
-extern "C" id objc_initWeak(id *object, id value)
-{
+extern "C" id objc_initWeak(id* object, id value) {
     *object = nil;
     return objc_storeWeak(object, value);
 }
 
 OBJCRT_EXPORT
-extern "C" void objc_copyWeak(id *dest, id *src)
-{
+extern "C" void objc_copyWeak(id* dest, id* src) {
     objc_release(objc_initWeak(dest, objc_loadWeakRetained(src)));
 }
 
 OBJCRT_EXPORT
-extern "C" void objc_moveWeak(id *dest, id *src)
-{
+extern "C" void objc_moveWeak(id* dest, id* src) {
     objc_release(objc_initWeak(dest, objc_loadWeakRetained(src)));
     objc_storeWeak(src, nil);
 }

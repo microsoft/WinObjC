@@ -18,18 +18,17 @@
 #import "CFConstantString.h"
 
 @implementation CFConstantString
-    -(instancetype) retain {
-        return self;
-    }
+- (instancetype)retain {
+    return self;
+}
 
-    -(void) release {
-    }
+- (void)release {
+}
 
-    -(instancetype) autorelease {
-        return self;
-    }
+- (instancetype)autorelease {
+    return self;
+}
 
-    -(void) dealloc {
-    }
+- (void)dealloc {
+}
 @end
-

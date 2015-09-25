@@ -19,31 +19,28 @@
 #include "CoreGraphics/CGContext.h"
 #include "UIKit/UIColor.h"
 
-struct GroupBackgroundTexture
-{
+struct GroupBackgroundTexture {
     idretain _image;
     CGColorRef _backgroundColor; // should be retained/released
-    DWORD    _style;
+    DWORD _style;
 };
 
-#define MAX_GROUPBACKGROUND_TEXTURES    32
+#define MAX_GROUPBACKGROUND_TEXTURES 32
 static GroupBackgroundTexture _backgroundTextures[MAX_GROUPBACKGROUND_TEXTURES];
-static int                    _numGroupBackgroundTextures;
+static int _numGroupBackgroundTextures;
 
-static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color)
-{
-    for ( int i = 0; i < _numGroupBackgroundTextures; i ++ ) {
-        if ( _backgroundTextures[i]._style == style &&
-             (_backgroundTextures[i]._backgroundColor == color ||
-              [_backgroundTextures[i]._backgroundColor isEqual:color]) ) {
+static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color) {
+    for (int i = 0; i < _numGroupBackgroundTextures; i++) {
+        if (_backgroundTextures[i]._style == style && (_backgroundTextures[i]._backgroundColor == color ||
+                                                       [_backgroundTextures[i]._backgroundColor isEqual:color])) {
             return _backgroundTextures[i]._image;
         }
     }
 
-    if ( _numGroupBackgroundTextures < MAX_GROUPBACKGROUND_TEXTURES ) {
-        GroupBackgroundTexture *newBackgroundTexture = &_backgroundTextures[_numGroupBackgroundTextures ++];
+    if (_numGroupBackgroundTextures < MAX_GROUPBACKGROUND_TEXTURES) {
+        GroupBackgroundTexture* newBackgroundTexture = &_backgroundTextures[_numGroupBackgroundTextures++];
         newBackgroundTexture->_style = style;
-        newBackgroundTexture->_backgroundColor = (CGColorRef) color;
+        newBackgroundTexture->_backgroundColor = (CGColorRef)color;
 
         CGSize size = CGSizeMake(16.0f, 16.0f);
 
@@ -58,32 +55,32 @@ static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color)
         rect.origin.y += 0.5f;
         rect.size.width -= 0.5f;
         rect.size.height -= 0.5f;
-        CGContextSetStrokeColorWithColor(ctx, (CGColorRef) [UIColor grayColor]);
+        CGContextSetStrokeColorWithColor(ctx, (CGColorRef)[UIColor grayColor]);
         CGContextSetFillColorWithColor(ctx, newBackgroundTexture->_backgroundColor);
         CGContextBeginPath(ctx);
 
-        if ( newBackgroundTexture->_style & 0x04 ) {  //  Rounded bottom
+        if (newBackgroundTexture->_style & 0x04) { //  Rounded bottom
             CGContextMoveToPoint(ctx, rect.origin.x + 5.0f, rect.size.height);
             CGContextAddArc(ctx, rect.origin.x + 5.0f, rect.size.height - 5.0f, 5.0f, kPi / 2.0f, kPi, 0);
         } else {
             CGContextMoveToPoint(ctx, rect.origin.x, rect.size.height);
         }
 
-        if ( newBackgroundTexture->_style & 0x02 ) { //  Rounded top
+        if (newBackgroundTexture->_style & 0x02) { //  Rounded top
             CGContextAddLineToPoint(ctx, rect.origin.x, rect.origin.y + 5.0f);
             CGContextAddArc(ctx, rect.origin.x + 5.0f, rect.origin.y + 5.0f, 5.0f, kPi, kPi + kPi / 2.0f, 0);
         } else {
             CGContextAddLineToPoint(ctx, rect.origin.x, rect.origin.y - 5.0f);
         }
 
-        if ( newBackgroundTexture->_style & 0x02 ) { //  Rounded top
+        if (newBackgroundTexture->_style & 0x02) { //  Rounded top
             CGContextAddLineToPoint(ctx, rect.size.width - 5.0f, rect.origin.y);
             CGContextAddArc(ctx, rect.size.width - 5.0f, rect.origin.y + 5.0f, 5.0f, kPi + kPi / 2.0f, kPi * 2.0f, 0);
         } else {
             CGContextAddLineToPoint(ctx, rect.size.width, rect.origin.y - 5.0f);
         }
 
-        if ( newBackgroundTexture->_style & 0x04 ) {
+        if (newBackgroundTexture->_style & 0x04) {
             CGContextAddLineToPoint(ctx, rect.size.width, rect.size.height - 5.0f);
             CGContextAddArc(ctx, rect.size.width - 5.0f, rect.size.height - 5.0f, 5.0f, 0, kPi / 2.0f, 0);
         } else {
@@ -108,28 +105,26 @@ static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color)
 }
 
 @implementation _UIGroupEdgeView : UIView
-    -(void) _setStyle:(int)style {
-        if ( _style != style ) {
-            _style = style;
-            [self setNeedsLayout];
-        }
+- (void)_setStyle:(int)style {
+    if (_style != style) {
+        _style = style;
+        [self setNeedsLayout];
     }
+}
 
-    -(void) _setStyleColor:(UIColor*)background {
-        if ( ![_backgroundColor isEqual:background] ) {
-            _backgroundColor = background;
-            [self setNeedsLayout];
-        }
+- (void)_setStyleColor:(UIColor*)background {
+    if (![_backgroundColor isEqual:background]) {
+        _backgroundColor = background;
+        [self setNeedsLayout];
     }
+}
 
-    -(void) layoutSubviews {
-        if ( _style != 0 ) {
-            [self __setContentsImage:findGroupBackgroundTexture(_style, _backgroundColor)];
-        } else {
-            [[self layer] setContents:nil];
-        }
+- (void)layoutSubviews {
+    if (_style != 0) {
+        [self __setContentsImage:findGroupBackgroundTexture(_style, _backgroundColor)];
+    } else {
+        [[self layer] setContents:nil];
     }
+}
 
-    
 @end
-

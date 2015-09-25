@@ -22,23 +22,21 @@
 @synthesize numberOfLoops;
 @synthesize volume;
 
-- (id)initWithContentsOfURL:(NSURL *)url error:(NSError **)outError
-{
-    if ( outError ) *outError = [NSError errorWithDomain: @"AVAudioPlayer" code: 100 userInfo: nil];
+- (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError {
+    if (outError)
+        *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
     return nil;
 }
 
-- (id)initWithData:(NSData *)data error:(NSError **)outError
-{
-    if ( outError ) *outError = [NSError errorWithDomain: @"AVAudioPlayer" code: 100 userInfo: nil];
+- (id)initWithData:(NSData*)data error:(NSError**)outError {
+    if (outError)
+        *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
     return nil;
 }
 @end
 
 @implementation AVAudioSession
-    +(AVAudioSession *) sharedInstance
-    {
-        return nil;
-    }
++ (AVAudioSession*)sharedInstance {
+    return nil;
+}
 @end
-

@@ -22,7 +22,7 @@
 #import <GLKit/GLKSkyboxEffect.h>
 #import "ShaderInfo.h"
 
-#define NM 0.5773502691896258f          // 1 / sqrtf(3)
+#define NM 0.5773502691896258f // 1 / sqrtf(3)
 
 struct SkyboxVert {
     GLKVector3 pos;
@@ -32,23 +32,23 @@ struct SkyboxVert {
 const std::string skyboxTexName = "_tex0";
 
 const char* vsSrc =
- "uniform mat4 _mvp;\n"
- "attribute vec4 _position;\n"
- "attribute vec3 _normal;\n"
- "varying vec3 _lookup;\n"
- "\n"
- "void main() {\n"
- "    gl_Position = _mvp * _position;\n"
- "    _lookup = _normal;\n"
- "}\n\n";
+    "uniform mat4 _mvp;\n"
+    "attribute vec4 _position;\n"
+    "attribute vec3 _normal;\n"
+    "varying vec3 _lookup;\n"
+    "\n"
+    "void main() {\n"
+    "    gl_Position = _mvp * _position;\n"
+    "    _lookup = _normal;\n"
+    "}\n\n";
 
 const char* psSrc =
- "uniform samplerCube _tex0;\n"
- "varying mediump vec3 _lookup;\n"
- "\n"
- "void main() {\n"
- "    gl_FragColor = textureCube(_tex0, _lookup);\n"
- "}\n\n";
+    "uniform samplerCube _tex0;\n"
+    "varying mediump vec3 _lookup;\n"
+    "\n"
+    "void main() {\n"
+    "    gl_FragColor = textureCube(_tex0, _lookup);\n"
+    "}\n\n";
 
 @implementation GLKSkyboxEffect {
     BOOL _inited;
@@ -56,16 +56,16 @@ const char* psSrc =
     GLuint _vb, _ib;
 }
 
--(id)init {
+- (id)init {
     [super init];
-    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith: self];
+    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
     _inited = FALSE;
     _shaderInited = FALSE;
     self.shaderName = @"StandardSkybox";
     return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
     if (_inited) {
         glDeleteBuffers(1, &_vb);
         glDeleteBuffers(1, &_ib);
@@ -73,7 +73,7 @@ const char* psSrc =
     [super dealloc];
 }
 
--(BOOL)updateShaderMaterialParams {
+- (BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 
     ShaderMaterial* mat = (ShaderMaterial*)self.shaderMat;
@@ -82,38 +82,22 @@ const char* psSrc =
     return TRUE;
 }
 
--(void)prepareToDraw {
+- (void)prepareToDraw {
     if (!_inited) {
         _inited = TRUE;
-        
+
         glGenBuffers(1, &_vb);
         glGenBuffers(1, &_ib);
-        
+
         static SkyboxVert skyboxVerts[] = {
-            {{-1.0f, -1.0f, -1.0f}, {-NM, -NM, -NM}},
-            {{ 1.0f, -1.0f, -1.0f}, { NM, -NM, -NM}},
-            {{ 1.0f,  1.0f, -1.0f}, { NM,  NM, -NM}},
-            {{-1.0f,  1.0f, -1.0f}, {-NM,  NM, -NM}},
-            {{-1.0f, -1.0f,  1.0f}, {-NM, -NM,  NM}},
-            {{ 1.0f, -1.0f,  1.0f}, { NM, -NM,  NM}},
-            {{ 1.0f,  1.0f,  1.0f}, { NM,  NM,  NM}},
-            {{-1.0f,  1.0f,  1.0f}, {-NM,  NM,  NM}}
+            { { -1.0f, -1.0f, -1.0f }, { -NM, -NM, -NM } }, { { 1.0f, -1.0f, -1.0f }, { NM, -NM, -NM } },
+            { { 1.0f, 1.0f, -1.0f }, { NM, NM, -NM } },     { { -1.0f, 1.0f, -1.0f }, { -NM, NM, -NM } },
+            { { -1.0f, -1.0f, 1.0f }, { -NM, -NM, NM } },   { { 1.0f, -1.0f, 1.0f }, { NM, -NM, NM } },
+            { { 1.0f, 1.0f, 1.0f }, { NM, NM, NM } },       { { -1.0f, 1.0f, 1.0f }, { -NM, NM, NM } }
         };
 
-        static short int faces[] = {
-             5, 4, 0,
-             1, 5, 0,
-             6, 5, 1,
-             2, 6, 1,
-             7, 6, 2,
-             3, 7, 2,
-             4, 7, 3,
-             0, 4, 3,
-             6, 7, 4,
-             5, 6, 4,
-             1, 0, 3,
-             2, 1, 3
-        };
+        static short int faces[] = { 5, 4, 0, 1, 5, 0, 6, 5, 1, 2, 6, 1, 7, 6, 2, 3, 7, 2,
+                                     4, 7, 3, 0, 4, 3, 6, 7, 4, 5, 6, 4, 1, 0, 3, 2, 1, 3 };
 
         glBindBuffer(GL_ARRAY_BUFFER, _vb);
         glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVerts), skyboxVerts, GL_STATIC_DRAW);
@@ -124,26 +108,27 @@ const char* psSrc =
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         GLKShaderPair* src = [[GLKShaderPair alloc] init];
-        src.vertexShader = [NSString stringWithCString: vsSrc];
-        src.pixelShader = [NSString stringWithCString: psSrc];
+        src.vertexShader = [NSString stringWithCString:vsSrc];
+        src.pixelShader = [NSString stringWithCString:psSrc];
 
-        [[GLKShaderCache get] addShaderNamed: self.shaderName source: src];
+        [[GLKShaderCache get] addShaderNamed:self.shaderName source:src];
     }
-    
-    [super prepareToDraw];   // will call updateShaderMaterialParams.
+
+    [super prepareToDraw]; // will call updateShaderMaterialParams.
 }
 
--(void)draw {
+- (void)draw {
     bool depthTest = glIsEnabled(GL_DEPTH_TEST);
     if (depthTest) {
         glDisable(GL_DEPTH_TEST);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, _vb);
-    glEnableVertexAttribArray(GLKVertexAttribPosition);        
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), 0);
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), (const GLvoid*)(3 * sizeof(float)));
+    glVertexAttribPointer(
+        GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), (const GLvoid*)(3 * sizeof(float)));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ib);
 
     glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_SHORT, 0);
@@ -157,4 +142,3 @@ const char* psSrc =
 }
 
 @end
-

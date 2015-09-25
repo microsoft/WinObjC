@@ -24,257 +24,262 @@
 #include <algorithm>
 
 @implementation UIGridLayoutSection : NSObject
-    /* annotate with type */ -(id) init {
-        _items.attach([NSMutableArray new]);
-        _rows.attach([NSMutableArray new]);
-        return self;
-    }
+- (id)init {
+    _items.attach([NSMutableArray new]);
+    _rows.attach([NSMutableArray new]);
+    return self;
+}
 
-    /* annotate with type */ -(id) setRowAlignmentOptions:(id)options {
-        _rowAlignmentOptions.attach([options copy]);
-        return self;
-    }
+- (id)setRowAlignmentOptions:(id)options {
+    _rowAlignmentOptions.attach([options copy]);
+    return self;
+}
 
-    /* annotate with type */ -(id) rowAlignmentOptions {
-        return _rowAlignmentOptions;
-    }
+- (id)rowAlignmentOptions {
+    return _rowAlignmentOptions;
+}
 
-    /* annotate with type */ -(id) setLayoutInfo:(id)info {
-        _layoutInfo = info;
-        return self;
-    }
+- (id)setLayoutInfo:(id)info {
+    _layoutInfo = info;
+    return self;
+}
 
-    /* annotate with type */ -(id) setVerticalInterstice:(float)vertical {
-        _verticalInterstice = vertical;
-        return self;
-    }
+- (id)setVerticalInterstice:(float)vertical {
+    _verticalInterstice = vertical;
+    return self;
+}
 
-    -(float) verticalInterstice {
-        return _verticalInterstice;
-    }
+- (float)verticalInterstice {
+    return _verticalInterstice;
+}
 
-    /* annotate with type */ -(id) setHorizontalInterstice:(float)horizontal {
-        _horizontalInterstice = horizontal;
-        return self;
-    }
+- (id)setHorizontalInterstice:(float)horizontal {
+    _horizontalInterstice = horizontal;
+    return self;
+}
 
-    -(float) horizontalInterstice {
-        return _horizontalInterstice;
-    }
+- (float)horizontalInterstice {
+    return _horizontalInterstice;
+}
 
-    /* annotate with type */ -(id) setSectionMargins:(UIEdgeInsets)margins {
-        _sectionMargins = margins;
-        return self;
-    }
+- (id)setSectionMargins:(UIEdgeInsets)margins {
+    _sectionMargins = margins;
+    return self;
+}
 
-    -(UIEdgeInsets) sectionMargins {
-        return _sectionMargins;
-    }
+- (UIEdgeInsets)sectionMargins {
+    return _sectionMargins;
+}
 
-    -(CGSize) itemSize {
-        return _itemSize;
-    }
+- (CGSize)itemSize {
+    return _itemSize;
+}
 
-    /* annotate with type */ -(id) setItemSize:(CGSize)size {
-        memcpy(&_itemSize, &size, sizeof(CGSize));
-        return 0;
-    }
+- (id)setItemSize:(CGSize)size {
+    memcpy(&_itemSize, &size, sizeof(CGSize));
+    return 0;
+}
 
-    -(CGRect) frame {
-        return _frame;
-    }
+- (CGRect)frame {
+    return _frame;
+}
 
-    -(CGRect) headerFrame {
-        return _headerFrame;
-    }
+- (CGRect)headerFrame {
+    return _headerFrame;
+}
 
-    -(CGRect) footerFrame {
-        return _footerFrame;
-    }
+- (CGRect)footerFrame {
+    return _footerFrame;
+}
 
-    /* annotate with type */ -(id) setFrame:(CGRect)frame {
-        _frame = frame;
-        return self;
-    }
+- (id)setFrame:(CGRect)frame {
+    _frame = frame;
+    return self;
+}
 
-    /* annotate with type */ -(id) setHeaderDimension:(float)dim {
-        _headerDimension = dim;
-        return self;
-    }
+- (id)setHeaderDimension:(float)dim {
+    _headerDimension = dim;
+    return self;
+}
 
-    /* annotate with type */ -(id) setFooterDimension:(float)dim {
-        _footerDimension = dim;
-        return self;
-    }
+- (id)setFooterDimension:(float)dim {
+    _footerDimension = dim;
+    return self;
+}
 
-    /* annotate with type */ -(id) addItem {
-        id item = [UIGridLayoutItem new];
-        [item setSection:self];
-        [_items addObject:item];
-        return item;
-    }
+- (id)addItem {
+    id item = [UIGridLayoutItem new];
+    [item setSection:self];
+    [_items addObject:item];
+    return item;
+}
 
-    /* annotate with type */ -(id) addRow {
-        id row = [UIGridLayoutRow new];
-        [row setSection:self];
-        [_rows addObject:row];
-        return row; 
-    }
+- (id)addRow {
+    id row = [UIGridLayoutRow new];
+    [row setSection:self];
+    [_rows addObject:row];
+    return row;
+}
 
-    -(unsigned) itemsCount {
-        return _fixedItemSize ? _itemsCount : [_items count];
-    }
+- (unsigned)itemsCount {
+    return _fixedItemSize ? _itemsCount : [_items count];
+}
 
-    /* annotate with type */ -(id) setItemsCount:(int)itemsCount {
-        _itemsCount = itemsCount;
-        return 0;
-    }
+- (id)setItemsCount:(int)itemsCount {
+    _itemsCount = itemsCount;
+    return 0;
+}
 
-    -(unsigned) itemsByRowCount {
-        return _itemsByRowCount;
-    }
+- (unsigned)itemsByRowCount {
+    return _itemsByRowCount;
+}
 
-    /* annotate with type */ -(id) setFixedItemSize:(BOOL)fixed {
-        _fixedItemSize = fixed;
+- (id)setFixedItemSize:(BOOL)fixed {
+    _fixedItemSize = fixed;
 
-        return 0;
-    }
+    return 0;
+}
 
-    -(int) indexOfIncompleteRow {
-        return _indexOfIncompleteRow;
-    }
+- (int)indexOfIncompleteRow {
+    return _indexOfIncompleteRow;
+}
 
-    -(BOOL) fixedItemSize {
-        return _fixedItemSize;
-    }
+- (BOOL)fixedItemSize {
+    return _fixedItemSize;
+}
 
-    -(UIGridLayoutInfo*) layoutInfo {
-        return _layoutInfo;
-    }
+- (UIGridLayoutInfo*)layoutInfo {
+    return _layoutInfo;
+}
 
-    /* annotate with type */ -(id) rows {
-        return _rows;
-    }
+- (id)rows {
+    return _rows;
+}
 
-    /* annotate with type */ -(id) items {
-        return _items;
-    }
+- (id)items {
+    return _items;
+}
 
-    /* annotate with type */ -(id) computeLayout {
-        if (!_isValid) {
-            assert([_rows count] == 0);
+- (id)computeLayout {
+    if (!_isValid) {
+        assert([_rows count] == 0);
 
-            // iterate over all items, turning them into rows.
-            CGSize sectionSize = CGSizeMake(0, 0);
-            NSInteger rowIndex = 0;
-            NSUInteger itemIndex = 0;
-            NSInteger itemsByRowCount = 0;
-            CGFloat dimensionLeft = 0;
-            id row = nil;
+        // iterate over all items, turning them into rows.
+        CGSize sectionSize = CGSizeMake(0, 0);
+        NSInteger rowIndex = 0;
+        NSUInteger itemIndex = 0;
+        NSInteger itemsByRowCount = 0;
+        CGFloat dimensionLeft = 0;
+        id row = nil;
 
-            // get dimension and compensate for section margin
-            CGFloat headerFooterDimension = [_layoutInfo dimension];
-            CGFloat dimension = headerFooterDimension;
+        // get dimension and compensate for section margin
+        CGFloat headerFooterDimension = [_layoutInfo dimension];
+        CGFloat dimension = headerFooterDimension;
 
-            if ( [_layoutInfo horizontal] ) {
-                dimension -= _sectionMargins.top + _sectionMargins.bottom;
+        if ([_layoutInfo horizontal]) {
+            dimension -= _sectionMargins.top + _sectionMargins.bottom;
 
-                _headerFrame = CGRectMake(sectionSize.width, 0, _headerDimension, headerFooterDimension);
-                sectionSize.width += _headerDimension + _sectionMargins.left;
-            }else {
-                dimension -= _sectionMargins.left + _sectionMargins.right;
-                _headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, _headerDimension);
-                sectionSize.height += _headerDimension + _sectionMargins.top;
-            }
-
-            CGFloat spacing = [_layoutInfo horizontal] ? _verticalInterstice : _horizontalInterstice;
-
-            do {
-                bool finishCycle = itemIndex >= [self itemsCount];
-                // TODO: fast path could even remove row creation and just calculate on the fly
-                id item = nil;
-                if (!finishCycle) item = _fixedItemSize ? nil : [_items objectAtIndex:itemIndex];
-
-                CGSize itemSize;
-                
-                if ( _fixedItemSize ) {
-                    itemSize = _itemSize;
-                } else {
-                    CGRect rect;
-                    rect = [item itemFrame];
-                    itemSize = rect.size;
-                }
-                CGFloat itemDimension = [_layoutInfo horizontal] ? itemSize.height : itemSize.width;
-
-                // first item of each row does not add spacing
-                if (itemsByRowCount > 0) itemDimension += spacing;
-                if (dimensionLeft < itemDimension || finishCycle) {
-                    // finish current row
-                    if (row) {
-                        // compensate last row
-                        _itemsByRowCount = std::max(itemsByRowCount, _itemsByRowCount);
-                        [row setItemCount:itemsByRowCount];
-
-                        // if current row is done but there are still items left, increase the incomplete row counter
-                        if (!finishCycle) _indexOfIncompleteRow = rowIndex;
-
-                        [row layoutRow];
-
-                        if ([_layoutInfo horizontal]) {
-                            CGSize rowSize;
-                            rowSize = [row rowSize];
-                            [row setRowFrame:CGRectMake(sectionSize.width, _sectionMargins.top, rowSize.width, rowSize.height)];
-                            sectionSize.height = std::max(rowSize.height, sectionSize.height);
-                            sectionSize.width += rowSize.width + (finishCycle ? 0 : _horizontalInterstice);
-                        }else {
-                            CGSize rowSize;
-                            rowSize = [row rowSize];
-                            [row setRowFrame:CGRectMake(_sectionMargins.left, sectionSize.height, rowSize.width, rowSize.height)];
-                            sectionSize.height += rowSize.height + (finishCycle ? 0 : _verticalInterstice);
-                            sectionSize.width = std::max(rowSize.width, sectionSize.width);
-                        }
-                    }
-                    // add new rows until the section is fully laid out
-                    if (!finishCycle) {
-                        // create new row
-                        [row setComplete:YES]; // finish up current row
-                        row = [self addRow];
-                        [row setFixedItemSize:_fixedItemSize];
-                        [row setIndex:rowIndex];
-                        _indexOfIncompleteRow = rowIndex;
-                        rowIndex++;
-                        // convert an item from previous row to current, remove spacing for first item
-                        if (itemsByRowCount > 0) itemDimension -= spacing;
-                        dimensionLeft = dimension - itemDimension;
-                        itemsByRowCount = 0;
-                    }
-                }else {
-                    dimensionLeft -= itemDimension;
-                }
-
-                // add item on slow path
-                if (item) [row addItem:item];
-
-                itemIndex++;
-                itemsByRowCount++;
-            } while (itemIndex <= [self itemsCount]); // cycle once more to finish last row
-
-            if ([_layoutInfo horizontal]) {
-                sectionSize.width += _sectionMargins.right;
-                _footerFrame = CGRectMake(sectionSize.width, 0, _footerDimension, headerFooterDimension);
-                sectionSize.width += _footerDimension;
-            }else {
-                sectionSize.height += _sectionMargins.bottom;
-                _footerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, _footerDimension);
-                sectionSize.height += _footerDimension;
-            }
-
-            _frame = CGRectMake(0, 0, sectionSize.width, sectionSize.height);
-            _isValid = YES;
+            _headerFrame = CGRectMake(sectionSize.width, 0, _headerDimension, headerFooterDimension);
+            sectionSize.width += _headerDimension + _sectionMargins.left;
+        } else {
+            dimension -= _sectionMargins.left + _sectionMargins.right;
+            _headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, _headerDimension);
+            sectionSize.height += _headerDimension + _sectionMargins.top;
         }
-        return 0;
+
+        CGFloat spacing = [_layoutInfo horizontal] ? _verticalInterstice : _horizontalInterstice;
+
+        do {
+            bool finishCycle = itemIndex >= [self itemsCount];
+            // TODO: fast path could even remove row creation and just calculate on the fly
+            id item = nil;
+            if (!finishCycle)
+                item = _fixedItemSize ? nil : [_items objectAtIndex:itemIndex];
+
+            CGSize itemSize;
+
+            if (_fixedItemSize) {
+                itemSize = _itemSize;
+            } else {
+                CGRect rect;
+                rect = [item itemFrame];
+                itemSize = rect.size;
+            }
+            CGFloat itemDimension = [_layoutInfo horizontal] ? itemSize.height : itemSize.width;
+
+            // first item of each row does not add spacing
+            if (itemsByRowCount > 0)
+                itemDimension += spacing;
+            if (dimensionLeft < itemDimension || finishCycle) {
+                // finish current row
+                if (row) {
+                    // compensate last row
+                    _itemsByRowCount = std::max(itemsByRowCount, _itemsByRowCount);
+                    [row setItemCount:itemsByRowCount];
+
+                    // if current row is done but there are still items left, increase the incomplete row counter
+                    if (!finishCycle)
+                        _indexOfIncompleteRow = rowIndex;
+
+                    [row layoutRow];
+
+                    if ([_layoutInfo horizontal]) {
+                        CGSize rowSize;
+                        rowSize = [row rowSize];
+                        [row setRowFrame:CGRectMake(
+                                             sectionSize.width, _sectionMargins.top, rowSize.width, rowSize.height)];
+                        sectionSize.height = std::max(rowSize.height, sectionSize.height);
+                        sectionSize.width += rowSize.width + (finishCycle ? 0 : _horizontalInterstice);
+                    } else {
+                        CGSize rowSize;
+                        rowSize = [row rowSize];
+                        [row setRowFrame:CGRectMake(
+                                             _sectionMargins.left, sectionSize.height, rowSize.width, rowSize.height)];
+                        sectionSize.height += rowSize.height + (finishCycle ? 0 : _verticalInterstice);
+                        sectionSize.width = std::max(rowSize.width, sectionSize.width);
+                    }
+                }
+                // add new rows until the section is fully laid out
+                if (!finishCycle) {
+                    // create new row
+                    [row setComplete:YES]; // finish up current row
+                    row = [self addRow];
+                    [row setFixedItemSize:_fixedItemSize];
+                    [row setIndex:rowIndex];
+                    _indexOfIncompleteRow = rowIndex;
+                    rowIndex++;
+                    // convert an item from previous row to current, remove spacing for first item
+                    if (itemsByRowCount > 0)
+                        itemDimension -= spacing;
+                    dimensionLeft = dimension - itemDimension;
+                    itemsByRowCount = 0;
+                }
+            } else {
+                dimensionLeft -= itemDimension;
+            }
+
+            // add item on slow path
+            if (item)
+                [row addItem:item];
+
+            itemIndex++;
+            itemsByRowCount++;
+        } while (itemIndex <= [self itemsCount]); // cycle once more to finish last row
+
+        if ([_layoutInfo horizontal]) {
+            sectionSize.width += _sectionMargins.right;
+            _footerFrame = CGRectMake(sectionSize.width, 0, _footerDimension, headerFooterDimension);
+            sectionSize.width += _footerDimension;
+        } else {
+            sectionSize.height += _sectionMargins.bottom;
+            _footerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, _footerDimension);
+            sectionSize.height += _footerDimension;
+        }
+
+        _frame = CGRectMake(0, 0, sectionSize.width, sectionSize.height);
+        _isValid = YES;
     }
+    return 0;
+}
 
-    
 @end
-

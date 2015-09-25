@@ -19,44 +19,28 @@
 
 @implementation UITableViewSection : NSObject
 
-    -(id) initWithCoder:(NSCoder*)coder {
-        _headerTitle = [coder decodeObjectForKey:@"UITableSectionHeaderTitle"];
-        _rows = [coder decodeObjectForKey:@"UITableSectionRows"];
-        return self;
-    }
+- (id)initWithCoder:(NSCoder*)coder {
+    _headerTitle = [coder decodeObjectForKey:@"UITableSectionHeaderTitle"];
+    _rows = [coder decodeObjectForKey:@"UITableSectionRows"];
+    return self;
+}
 
+- (unsigned)numberOfRows {
+    return [_rows count];
+}
 
-    -(unsigned) numberOfRows {
-        return [_rows count];
-    }
+- (NSString*)title {
+    return _headerTitle;
+}
 
+- (void)dealloc {
+    _headerTitle = nil;
+    _rows = nil;
+    [super dealloc];
+}
 
-    -(NSString*) title {
-        return _headerTitle;
-    }
+- (UITableViewRow*)rowForIndex:(unsigned)idx {
+    return [_rows objectAtIndex:idx];
+}
 
-
-    -(void) dealloc {
-        _headerTitle = nil;
-        _rows = nil;
-        [super dealloc];
-    }
-
-
-    -(UITableViewRow*) rowForIndex:(unsigned)idx {
-        return [_rows objectAtIndex:idx];
-    }
-
-
-
-
-
-
-
-
-
-
-    
 @end
-
-

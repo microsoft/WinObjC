@@ -18,41 +18,39 @@
 #include "UIRuntimeOutletConnection.h"
 
 @implementation UIRuntimeOutletConnection : NSObject
-    -(instancetype) initWithCoder:(NSCoder*)coder {
-        source = [coder decodeObjectForKey:@"UISource"];
-        dest = [coder decodeObjectForKey:@"UIDestination"];
-        label = [coder decodeObjectForKey:@"UILabel"];
-        return self;
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    source = [coder decodeObjectForKey:@"UISource"];
+    dest = [coder decodeObjectForKey:@"UIDestination"];
+    label = [coder decodeObjectForKey:@"UILabel"];
+    return self;
+}
+
+- (void)_makeConnection {
+    const char* labelName = [label UTF8String];
+    if (source != nil) {
+        EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), labelName);
+    } else {
+        EbrDebugLog("Source = nil, can't set property %s\n", labelName);
     }
 
-    -(void) _makeConnection {
-        const char *labelName = [label UTF8String];
-        if ( source != nil ) {
-            EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), labelName);
-        } else {
-            EbrDebugLog("Source = nil, can't set property %s\n", labelName);
-        }
+    [source setValue:dest forKey:label];
 
-        [source setValue:dest forKey:label];
+    /*
+    char labelLowerName[255];
+    strcpy(labelLowerName, labelName);
+    labelLowerName[0] = toupper(labelLowerName[0]);
+    char setName[255];
+    sprintf(setName, "set%s:", labelLowerName);
 
-        /*
-        char labelLowerName[255];
-        strcpy(labelLowerName, labelName);
-        labelLowerName[0] = toupper(labelLowerName[0]);
-        char setName[255];
-        sprintf(setName, "set%s:", labelLowerName);
-
-        if ( !setProperty(source, labelName, dest) ) {
-            if ( [source respondsToSelector:setName] ) {
-                EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), setName);
-                MSGSEND1(source, setName, dest);
-            } else {
-                assert(0);
-            }
-        }
-        */
+    if ( !setProperty(source, labelName, dest) ) {
+    if ( [source respondsToSelector:setName] ) {
+    EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), setName);
+    MSGSEND1(source, setName, dest);
+    } else {
+    assert(0);
     }
+    }
+    */
+}
 
-    
 @end
-

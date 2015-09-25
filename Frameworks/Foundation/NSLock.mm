@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
- #include <process.h>
+#include <process.h>
 
 #include "Starboard.h"
 #include "Foundation/NSLock.h"
@@ -24,35 +24,35 @@
     uint32_t _lock;
     idretaintype(NSString) _name;
 }
-	-(instancetype) init {
-        EbrLockInit(&_lock);
+- (instancetype)init {
+    EbrLockInit(&_lock);
 
-		return self;
-	}
+    return self;
+}
 
-    -(void) lock {
-        EbrLockEnter(_lock);
-    }
+- (void)lock {
+    EbrLockEnter(_lock);
+}
 
-    -(BOOL) tryLock {
-        BOOL ret = EbrLockTryEnter(_lock);
+- (BOOL)tryLock {
+    BOOL ret = EbrLockTryEnter(_lock);
 
-        return ret;
-    }
+    return ret;
+}
 
-    -(void) unlock {
-        EbrLockLeave(_lock);
-    }
+- (void)unlock {
+    EbrLockLeave(_lock);
+}
 
-    -(void) setName:(NSString*)name {
-        [name retain];
-        [_name release];
-        _name = name;
-    }
+- (void)setName:(NSString*)name {
+    [name retain];
+    [_name release];
+    _name = name;
+}
 
-    -(NSString*) name {
-        return _name;
-    }
+- (NSString*)name {
+    return _name;
+}
 @end
 
 @implementation NSRecursiveLock {
@@ -60,33 +60,33 @@
     idretaintype(NSString) _name;
 }
 
-	-(instancetype) init {
-        EbrLockInit(&_lock);
+- (instancetype)init {
+    EbrLockInit(&_lock);
 
-		return self;
-	}
+    return self;
+}
 
-    -(void) lock {
-        EbrLockEnter(_lock);
-    }
+- (void)lock {
+    EbrLockEnter(_lock);
+}
 
-    -(BOOL) tryLock {
-        BOOL ret = EbrLockTryEnter(_lock);
+- (BOOL)tryLock {
+    BOOL ret = EbrLockTryEnter(_lock);
 
-        return ret;
-    }
+    return ret;
+}
 
-    -(void) unlock {
-        EbrLockLeave(_lock);
-    }
+- (void)unlock {
+    EbrLockLeave(_lock);
+}
 
-    -(void) setName:(NSString*)name {
-        [name retain];
-        [_name release];
-        _name = name;
-    }
+- (void)setName:(NSString*)name {
+    [name retain];
+    [_name release];
+    _name = name;
+}
 
-    -(NSString*) name {
-        return _name;
-    }
+- (NSString*)name {
+    return _name;
+}
 @end

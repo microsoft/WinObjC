@@ -26,46 +26,42 @@
 }
 @end
 
-
 @implementation _BlockAnimationCompletion : NSObject
-    -(void) animationDidStop:(CAAnimation*)anim finished:(BOOL)finished {
-        EbrCallBlock(_completionBlock, "d", _completionBlock);
-    }
+- (void)animationDidStop:(CAAnimation*)anim finished:(BOOL)finished {
+    EbrCallBlock(_completionBlock, "d", _completionBlock);
+}
 
-    
 @end
 
 @implementation CAPropertyAnimation
-    -(void) setKeyPath:(NSString*)path {
-        _keyPath = [path copy];
+- (void)setKeyPath:(NSString*)path {
+    _keyPath = [path copy];
+}
+
+- (NSString*)keyPath {
+    return _keyPath;
+}
+
++ (instancetype)animationWithKeyPath:(NSString*)path {
+    CAPropertyAnimation* ret = [self alloc];
+    ret->_timingProperties._speed = 1.0f;
+    ret->_timingProperties._removedOnCompletion = TRUE;
+
+    id completion = [CATransaction completionBlock];
+    if (completion != nil) {
+        _BlockAnimationCompletion* completionHandler = [_BlockAnimationCompletion alloc];
+        completionHandler->_completionBlock = completion;
     }
+    [ret setKeyPath:path];
 
-    -(NSString*) keyPath {
-        return _keyPath;
-    }
+    return [ret autorelease];
+}
 
-    +(instancetype) animationWithKeyPath:(NSString*)path {
-        CAPropertyAnimation* ret = [self alloc];
-        ret->_timingProperties._speed = 1.0f;
-        ret->_timingProperties._removedOnCompletion = TRUE;
+- (id)copyWithZone:(NSZone*)zone {
+    CAPropertyAnimation* ret = [super copyWithZone:zone];
 
-        id completion = [CATransaction completionBlock];
-        if ( completion != nil ) {
-            _BlockAnimationCompletion* completionHandler = [_BlockAnimationCompletion alloc];
-            completionHandler->_completionBlock = completion;
-        }
-        [ret setKeyPath:path];
+    ret->_keyPath = [_keyPath copy];
+    return ret;
+}
 
-        return [ret autorelease];
-    }
-
-    -(id) copyWithZone:(NSZone*)zone {
-        CAPropertyAnimation* ret = [super copyWithZone:zone];
-
-        ret->_keyPath = [_keyPath copy];
-        return ret;
-    }
-
-    
 @end
-

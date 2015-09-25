@@ -33,166 +33,170 @@ typedef wchar_t WCHAR;
 #include <algorithm>
 
 @implementation UIWebView {
-    id       _delegate;
+    id _delegate;
     idretaintype(NSURLRequest) _request;
     idretaintype(NSURLRequest) _delayLoadURL;
-    bool     _isLoading;
-    bool     _isVisible;
-    UIScrollView *_scrollView;
-    WXCWebView *_xamlWebControl;
-	EventRegistrationToken _xamlLoadCompletedEventCookie;
-	EventRegistrationToken _xamlLoadStartedEventCookie;
+    bool _isLoading;
+    bool _isVisible;
+    UIScrollView* _scrollView;
+    WXCWebView* _xamlWebControl;
+    EventRegistrationToken _xamlLoadCompletedEventCookie;
+    EventRegistrationToken _xamlLoadStartedEventCookie;
 }
 
-    -(void) setScalesPageToFit: (BOOL)scaleToFit {
+- (void)setScalesPageToFit:(BOOL)scaleToFit {
+}
+
+- (void)setDelegate:(id)delegate {
+    _delegate = delegate;
+}
+
+- (id)delegate {
+    return _delegate;
+}
+
+- (BOOL)isLoading {
+    return _isLoading;
+}
+
+- (void)loadRequest:(NSURLRequest*)request {
+    _request = request;
+    NSURL* url = [request URL];
+    NSString* urlStr = [url absoluteString];
+
+    _isLoading = true;
+    _isVisible = true;
+    if (!_isVisible) {
+        _delayLoadURL = urlStr;
+    } else {
+        _delayLoadURL = nil;
+        [_xamlWebControl navigate:[[WFUri createUri:urlStr] autorelease]];
     }
+}
 
-    -(void) setDelegate:(id)delegate {
-        _delegate = delegate;
-    }
-
-    -(id) delegate {
-        return _delegate;
-    }
-
-    -(BOOL) isLoading {
-        return _isLoading;
-    }
-
-    -(void) loadRequest:(NSURLRequest *)request {
-        _request = request;
-        NSURL *url = [request URL];
-        NSString *urlStr = [url absoluteString];
-
-        _isLoading = true;
-        _isVisible = true;
-        if ( !_isVisible ) {
-            _delayLoadURL = urlStr;
-        } else {
-            _delayLoadURL = nil;
-			[_xamlWebControl navigate: [[WFUri createUri: urlStr] autorelease]];
-        }
-    }
-
-    static void initWebKit(UIWebView *self)
-    {
-		self->_xamlWebControl = [WXCWebView create];
-		[self layer].contentsElement = self->_xamlWebControl;
-		self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent: ^void(RTObject * sender, WUXNNavigationEventArgs * e) {
+static void initWebKit(UIWebView* self) {
+    self->_xamlWebControl = [WXCWebView create];
+    [self layer].contentsElement = self->_xamlWebControl;
+    self->_xamlLoadCompletedEventCookie =
+        [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
             self->_isLoading = false;
 
-            if ( [self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)] ) {
+            if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
                 [self->_delegate webViewDidFinishLoad:self];
             }
-			
-		}];
-		self->_xamlLoadStartedEventCookie = [self->_xamlWebControl addNavigationStartingEvent: ^void(RTObject * sender, WXCWebViewNavigationStartingEventArgs * e) {
-            if ( [self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)] ) {
+
+        }];
+    self->_xamlLoadStartedEventCookie = [self->_xamlWebControl
+        addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
+            if ([self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
                 [self->_delegate webViewDidStartLoad:self];
             }
-		}];
+        }];
 
-        CGRect bounds;
-        bounds = [self bounds];
+    CGRect bounds;
+    bounds = [self bounds];
 
-		//  For compatibility only
-        self->_scrollView = [[UIScrollView alloc] initWithFrame:bounds];
+    //  For compatibility only
+    self->_scrollView = [[UIScrollView alloc] initWithFrame:bounds];
 
-        [self setNeedsLayout];
-    }
+    [self setNeedsLayout];
+}
 
-    -(instancetype) initWithCoder:(NSCoder *)coder {
-        [super initWithCoder:coder];
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    [super initWithCoder:coder];
 
-        initWebKit(self);
+    initWebKit(self);
 
-        return self;
-    }
+    return self;
+}
 
-    -(instancetype) initWithFrame:(CGRect)rect {
-        [super initWithFrame:rect];
+- (instancetype)initWithFrame:(CGRect)rect {
+    [super initWithFrame:rect];
 
-        initWebKit(self);
+    initWebKit(self);
 
-        return self;
-    }
-    
-    -(void) loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL {
-        _isLoading = true;
-        _delayLoadURL = nil;
+    return self;
+}
 
-        NSString *urlStr = [baseURL absoluteString];
-		[_xamlWebControl navigateToString: string];
+- (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL {
+    _isLoading = true;
+    _delayLoadURL = nil;
 
-        [self sizeToFit];
-    }
+    NSString* urlStr = [baseURL absoluteString];
+    [_xamlWebControl navigateToString:string];
 
-    -(void) loadData: (NSData *)data MIMEType: (NSString *)mimeType textEncodingName: (NSString *)encoding baseURL: (NSURL *)baseURL {
-        _isLoading = true;
-        _delayLoadURL = nil;
+    [self sizeToFit];
+}
 
-		assert(0 && "loadData:mimeTime:textEncodingName: not implemented");
-    }
+- (void)loadData:(NSData*)data
+        MIMEType:(NSString*)mimeType
+textEncodingName:(NSString*)encoding
+         baseURL:(NSURL*)baseURL {
+    _isLoading = true;
+    _delayLoadURL = nil;
 
-    -(void) stopLoading {
-        _isLoading = false;
-		[_xamlWebControl stop];
-    }
+    assert(0 && "loadData:mimeTime:textEncodingName: not implemented");
+}
 
-    -(void) setDetectsPhoneNumbers:(BOOL)detect {
-    }
+- (void)stopLoading {
+    _isLoading = false;
+    [_xamlWebControl stop];
+}
 
-    -(NSString *) stringByEvaluatingJavaScriptFromString: (NSString *)string {
-		NSString *ret = [_xamlWebControl invokeScript: @"eval" arguments: [NSArray arrayWithObject: string]];
-		return ret;
-    }
+- (void)setDetectsPhoneNumbers:(BOOL)detect {
+}
 
-    -(void) setDataDetectorTypes:(UIDataDetectorTypes)types {
-    }
+- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
+    NSString* ret = [_xamlWebControl invokeScript:@"eval" arguments:[NSArray arrayWithObject:string]];
+    return ret;
+}
 
-    -(BOOL) canGoBack {
-		return _xamlWebControl.canGoBack;
-    }
+- (void)setDataDetectorTypes:(UIDataDetectorTypes)types {
+}
 
-    -(BOOL) canGoForward {
-		return _xamlWebControl.canGoForward;
-    }
+- (BOOL)canGoBack {
+    return _xamlWebControl.canGoBack;
+}
 
-    -(void) reload {
-		[_xamlWebControl refresh];
-    }
+- (BOOL)canGoForward {
+    return _xamlWebControl.canGoForward;
+}
 
-    -(void) goBack {
-		[_xamlWebControl goBack];
-    }
+- (void)reload {
+    [_xamlWebControl refresh];
+}
 
-    -(void) goForward {
-		[_xamlWebControl goForward];
-    }
+- (void)goBack {
+    [_xamlWebControl goBack];
+}
 
-    -(NSURLRequest *) request {
-        return _request;
-    }
+- (void)goForward {
+    [_xamlWebControl goForward];
+}
 
-    -(void) dealloc {
-        _delayLoadURL = nil;
-		[_xamlWebControl removeLoadCompletedEvent: _xamlLoadCompletedEventCookie];
-		[_xamlWebControl removeNavigationStartingEvent: _xamlLoadStartedEventCookie];
-		[_xamlWebControl release];
+- (NSURLRequest*)request {
+    return _request;
+}
 
-        [super dealloc];
-    }
+- (void)dealloc {
+    _delayLoadURL = nil;
+    [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
+    [_xamlWebControl removeNavigationStartingEvent:_xamlLoadStartedEventCookie];
+    [_xamlWebControl release];
 
-    -(UIScrollView *) scrollView {
-        return _scrollView;
-    }
+    [super dealloc];
+}
 
-    -(void) setScrollsToTop:(BOOL)scrollsToTop {
-    }
+- (UIScrollView*)scrollView {
+    return _scrollView;
+}
 
-    -(void) setAllowsInlineMediaPlayback:(BOOL)allow {
-    }
-        
-    -(void) setMediaPlaybackRequiresUserAction:(BOOL)allow {
-    }
+- (void)setScrollsToTop:(BOOL)scrollsToTop {
+}
+
+- (void)setAllowsInlineMediaPlayback:(BOOL)allow {
+}
+
+- (void)setMediaPlaybackRequiresUserAction:(BOOL)allow {
+}
 @end

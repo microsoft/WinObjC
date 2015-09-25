@@ -22,116 +22,114 @@
 #include "NSStreamInternal.h"
 
 @implementation NSOutputStream : NSStream
-    /* annotate with type */ +(id) outputStreamToFileAtPath:(id)file append:(BOOL)append {
-        id ret = [self alloc];
++ (id)outputStreamToFileAtPath:(id)file append:(BOOL)append {
+    id ret = [self alloc];
 
-        [ret initToFileAtPath:file append:append];
+    [ret initToFileAtPath:file append:append];
 
-        return [ret autorelease];
+    return [ret autorelease];
+}
+
++ (id)outputStreamToMemory {
+    id ret = [self alloc];
+
+    [ret initToMemory];
+
+    return [ret autorelease];
+}
+
+- (id)initToFileAtPath:(id)file append:(BOOL)append {
+    _append = append;
+
+    filename = file;
+    EbrDebugLog("NSOutputStream opening %s\n", [file UTF8String]);
+
+    return self;
+}
+
+- (id)initToMemory {
+    data = [NSMutableData new];
+
+    return self;
+}
+
+- (NSInteger)write:(char*)buf maxLength:(NSUInteger)maxLength {
+    if (data) {
+        [data appendBytes:buf length:maxLength];
+
+        return maxLength;
+    } else {
+        return EbrFwrite(buf, 1, maxLength, fp);
     }
+}
 
-    /* annotate with type */ +(id) outputStreamToMemory {
-        id ret = [self alloc];
+- (id)_setAppend:(BOOL)append {
+    _append = append;
+    return 0;
+}
 
-        [ret initToMemory];
+- (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
+}
 
-        return [ret autorelease];
-    }
-
-    /* annotate with type */ -(id) initToFileAtPath:(id)file append:(BOOL)append {
-        _append = append;
-
-        filename = file;
-        EbrDebugLog("NSOutputStream opening %s\n", [file UTF8String]);
-
-        return self;
-    }
-
-    /* annotate with type */ -(id) initToMemory {
-        data = [NSMutableData new];
-
-        return self;
-    }
-
-    -(NSInteger) write:(char*)buf maxLength:(NSUInteger)maxLength {
-        if ( data ) {
-            [data appendBytes:buf length:maxLength];
-
-            return maxLength;
+- (id)propertyForKey:(id)key {
+    if ([key isEqualToString:@"NSStreamFileCurrentOffsetKey"]) {
+        if (data) {
+            return [NSNumber numberWithInteger:[data length]];
         } else {
-            return EbrFwrite(buf, 1, maxLength, fp);
+            return [NSNumber numberWithInteger:(int)EbrFtell(fp)];
         }
-    }
-
-    /* annotate with type */ -(id) _setAppend:(BOOL)append {
-        _append = append;
-        return 0;
-    }
-
-    /* annotate with type */ -(void) scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-        
-    }
-
-    /* annotate with type */ -(id) propertyForKey:(id)key {
-        if ( [key isEqualToString:@"NSStreamFileCurrentOffsetKey"] ) {
-            if ( data ) {
-                return [NSNumber numberWithInteger:[data length]];
-            } else {
-                return [NSNumber numberWithInteger:(int) EbrFtell(fp)];
-            }
-        } else if ( [key isEqualToString:@"NSStreamDataWrittenToMemoryStreamKey"] ) {
-            if ( data ) {
-                return data;
-            } else {
-                assert(0);
-            }
+    } else if ([key isEqualToString:@"NSStreamDataWrittenToMemoryStreamKey"]) {
+        if (data) {
+            return data;
         } else {
             assert(0);
         }
-        return 0;
+    } else {
+        assert(0);
     }
+    return 0;
+}
 
-    /* annotate with type */ -(BOOL) setProperty:(id)prop forKey:(id)key {
-        if ( [key isEqualToString:@"NSStreamFileCurrentOffsetKey"] ) {
-            if ( data ) {
-                [data setLength:[prop intValue]];
-            } else {
-                assert(0);
-            }
+- (BOOL)setProperty:(id)prop forKey:(id)key {
+    if ([key isEqualToString:@"NSStreamFileCurrentOffsetKey"]) {
+        if (data) {
+            [data setLength:[prop intValue]];
         } else {
             assert(0);
         }
-        return 0;
+    } else {
+        assert(0);
     }
+    return 0;
+}
 
-    -(void) dealloc {
-        [data release];
-        [super dealloc];
-    }
+- (void)dealloc {
+    [data release];
+    [super dealloc];
+}
 
-    -(BOOL) hasSpaceAvailable {
-        return YES;
-    }
+- (BOOL)hasSpaceAvailable {
+    return YES;
+}
 
-    -(void) /* use typed version */ open {
-        if ( data ) {
+- (void) /* use typed version */ open {
+    if (data) {
+        _status = NSStreamStatusOpen;
+    } else {
+        char* mode = "wb";
+
+        if (_append)
+            mode = "ab";
+
+        EbrDebugLog("Opening %s for writing\n", [filename UTF8String]);
+        fp = EbrFopen([filename UTF8String], mode);
+        if (!fp) {
+            EbrDebugLog("Open of %s failed\n", [filename UTF8String]);
+            _status = NSStreamStatusNotOpen;
+        } else {
             _status = NSStreamStatusOpen;
-        } else {
-            char *mode = "wb";
-
-            if ( _append ) mode = "ab";
-
-            EbrDebugLog("Opening %s for writing\n", [filename UTF8String]);
-            fp = EbrFopen([filename UTF8String], mode);
-            if ( !fp ) {
-                EbrDebugLog("Open of %s failed\n", [filename UTF8String]);
-                _status = NSStreamStatusNotOpen;
-            } else {
-                _status = NSStreamStatusOpen;
-            }
         }
     }
+}
 
-    
 @end
-

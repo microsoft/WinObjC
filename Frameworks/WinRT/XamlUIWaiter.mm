@@ -16,12 +16,11 @@
 
 #include "UIKit/UIKit.h"
 
-typedef void *EbrEvent;
+typedef void* EbrEvent;
 struct SocketWait;
 
-int XamlTimedMultipleWait(EbrEvent *events, int numEvents, double timeout, SocketWait *sockets);
+int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 
-void SetXamlUIWaiter()
-{
-    [NSRunLoop setUIThreadWaitFunction: &XamlTimedMultipleWait];
+void SetXamlUIWaiter() {
+    [NSRunLoop setUIThreadWaitFunction:&XamlTimedMultipleWait];
 }

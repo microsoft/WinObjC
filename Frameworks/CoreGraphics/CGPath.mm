@@ -19,20 +19,17 @@
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGGeometry.h"
 
-class BBox
-{
+class BBox {
 public:
     float x, y, x1, y1;
     bool xset, yset, x1set, y1set;
 
-    BBox()
-    {
+    BBox() {
         x = y = x1 = y1 = 0;
         xset = yset = x1set = y1set = false;
     }
 
-    void addPoint(float ptX, float ptY)
-    {
+    void addPoint(float ptX, float ptY) {
         if (ptX < x || !xset) {
             x = ptX;
             xset = true;
@@ -42,12 +39,12 @@ public:
             yset = true;
         }
 
-        if (ptX > x1 || !x1set)  {
+        if (ptX > x1 || !x1set) {
             x1 = ptX;
             x1set = true;
         }
 
-        if (ptY > y1 || !y1set)  {
+        if (ptY > y1 || !y1set) {
             y1 = ptY;
             y1set = true;
         }
@@ -55,185 +52,199 @@ public:
 };
 
 @implementation CGPath : NSObject
-    -(void) dealloc {
-        if ( _components ) EbrFree(_components);
+- (void)dealloc {
+    if (_components)
+        EbrFree(_components);
 
-        [super dealloc];
+    [super dealloc];
+}
+
+- (void)_applyPath:(CGContextRef)context {
+    for (unsigned i = 0; i < _count; i++) {
+        switch (_components[i].type) {
+            case pathComponentRectangle:
+                CGContextAddRect(context, _components[i].rect);
+                break;
+
+            case pathComponentMove:
+                EbrDebugLog("Move to %d, %d\n", (int)_components[i].point.x, (int)_components[i].point.y);
+                CGContextMoveToPoint(context, _components[i].point.x, _components[i].point.y);
+                break;
+
+            case pathComponentLineTo:
+                EbrDebugLog("Line to %d, %d\n", (int)_components[i].point.x, (int)_components[i].point.y);
+                CGContextAddLineToPoint(context, _components[i].point.x, _components[i].point.y);
+                break;
+
+            case pathComponentArcToPoint:
+                CGContextAddArcToPoint(context,
+                                       _components[i].atp.x1,
+                                       _components[i].atp.y1,
+                                       _components[i].atp.x2,
+                                       _components[i].atp.y2,
+                                       _components[i].atp.radius);
+                break;
+
+            case pathComponentArcAngle:
+                CGContextAddArc(context,
+                                _components[i].aa.x,
+                                _components[i].aa.y,
+                                _components[i].aa.radius,
+                                _components[i].aa.startAngle,
+                                _components[i].aa.endAngle,
+                                _components[i].aa.clockwise);
+                break;
+
+            case pathComponentCurve:
+                CGContextAddCurveToPoint(context,
+                                         _components[i].ctp.x1,
+                                         _components[i].ctp.y1,
+                                         _components[i].ctp.x2,
+                                         _components[i].ctp.y2,
+                                         _components[i].ctp.x,
+                                         _components[i].ctp.y);
+                break;
+
+            case pathComponentEllipseInRect:
+                CGContextAddEllipseInRect(context, _components[i].eir.rect);
+                break;
+
+            case pathComponentQuadCurve:
+                CGContextAddQuadCurveToPoint(context,
+                                             _components[i].qtp.cpx,
+                                             _components[i].qtp.cpy,
+                                             _components[i].qtp.x,
+                                             _components[i].qtp.y);
+                break;
+
+            case pathComponentClose:
+                CGContextClosePath(context);
+                break;
+
+            default:
+                assert(0);
+                break;
+        }
     }
+}
 
-    -(void) _applyPath:(CGContextRef)context {
-        for ( unsigned i = 0; i < _count; i ++ ) {
-            switch ( _components[i].type ) {
-                case pathComponentRectangle:
-                    CGContextAddRect(context, _components[i].rect);
-                    break;
+- (void)_measurePath:(CGSize*)sizeOut {
+    sizeOut->width = 0;
+    sizeOut->height = 0;
 
-                case pathComponentMove:
-                    EbrDebugLog("Move to %d, %d\n", (int) _components[i].point.x, (int) _components[i].point.y);
-                    CGContextMoveToPoint(context, _components[i].point.x, _components[i].point.y);
-                    break;
+    for (unsigned i = 0; i < _count; i++) {
+        switch (_components[i].type) {
+            case pathComponentRectangle:
+                if (_components[i].rect.origin.x + _components[i].rect.size.width > sizeOut->width)
+                    sizeOut->width = _components[i].rect.origin.x + _components[i].rect.size.width;
+                if (_components[i].rect.origin.y + _components[i].rect.size.height > sizeOut->height)
+                    sizeOut->height = _components[i].rect.origin.y + _components[i].rect.size.height;
+                break;
 
-                case pathComponentLineTo:
-                    EbrDebugLog("Line to %d, %d\n", (int) _components[i].point.x, (int) _components[i].point.y);
-                    CGContextAddLineToPoint(context, _components[i].point.x, _components[i].point.y);
-                    break;
+            case pathComponentMove:
+                if (_components[i].point.x > sizeOut->width)
+                    sizeOut->width = _components[i].point.x;
+                if (_components[i].point.y > sizeOut->height)
+                    sizeOut->height = _components[i].point.y;
+                break;
 
-                case pathComponentArcToPoint:
-                    CGContextAddArcToPoint(context, _components[i].atp.x1, _components[i].atp.y1,
-                        _components[i].atp.x2, _components[i].atp.y2, _components[i].atp.radius);
-                    break;
+            case pathComponentLineTo:
+                if (_components[i].point.x > sizeOut->width)
+                    sizeOut->width = _components[i].point.x;
+                if (_components[i].point.y > sizeOut->height)
+                    sizeOut->height = _components[i].point.y;
+                break;
 
-                case pathComponentArcAngle:
-                    CGContextAddArc(context, _components[i].aa.x, _components[i].aa.y,
-                        _components[i].aa.radius, _components[i].aa.startAngle, _components[i].aa.endAngle, _components[i].aa.clockwise);
-                    break;
+            default:
+                assert(0);
+                break;
+        }
+    }
+}
 
-                case pathComponentCurve:
-                    CGContextAddCurveToPoint(context, _components[i].ctp.x1, _components[i].ctp.y1,
-                                            _components[i].ctp.x2, _components[i].ctp.y2,
-                                            _components[i].ctp.x, _components[i].ctp.y);
-                    break;
+- (void)_getBoundingBox:(CGRect*)rectOut {
+    BBox bbox;
 
-                case pathComponentEllipseInRect:
-                    CGContextAddEllipseInRect(context, _components[i].eir.rect);
-                    break;
+    for (unsigned i = 0; i < _count; i++) {
+        switch (_components[i].type) {
+            case pathComponentMove:
+            case pathComponentLineTo:
+                bbox.addPoint(_components[i].point.x, _components[i].point.y);
+                break;
 
-                case pathComponentQuadCurve:
-                    CGContextAddQuadCurveToPoint(context, _components[i].qtp.cpx, _components[i].qtp.cpy, _components[i].qtp.x, _components[i].qtp.y);
-                    break;
+            case pathComponentArcToPoint:
+                bbox.addPoint(_components[i].atp.x1, _components[i].atp.y1);
+                bbox.addPoint(_components[i].atp.x2, _components[i].atp.y2);
+                break;
 
-                case pathComponentClose:
-                    CGContextClosePath(context);
-                    break;
+            case pathComponentCurve:
+                bbox.addPoint(_components[i].ctp.x1, _components[i].ctp.y1);
+                bbox.addPoint(_components[i].ctp.x2, _components[i].ctp.y2);
+                bbox.addPoint(_components[i].ctp.x, _components[i].ctp.y);
+                break;
 
-                default:
-                    assert(0);
-                    break;
-            }
+            case pathComponentArcAngle:
+                bbox.addPoint(_components[i].aa.x - _components[i].aa.radius,
+                              _components[i].aa.y - _components[i].aa.radius);
+                bbox.addPoint(_components[i].aa.x + _components[i].aa.radius,
+                              _components[i].aa.y + _components[i].aa.radius);
+                break;
+
+            case pathComponentQuadCurve:
+                bbox.addPoint(_components[i].qtp.cpx, _components[i].qtp.cpy);
+                bbox.addPoint(_components[i].qtp.x, _components[i].qtp.y);
+                break;
+
+            case pathComponentEllipseInRect:
+                bbox.addPoint(_components[i].eir.rect.origin.x, _components[i].eir.rect.origin.y);
+                bbox.addPoint(_components[i].eir.rect.origin.x + _components[i].eir.rect.size.width,
+                              _components[i].eir.rect.origin.y + _components[i].eir.rect.size.height);
+                break;
+
+            case pathComponentClose:
+                break;
+
+            default:
+                assert(false);
         }
     }
 
-    -(void) _measurePath:(CGSize *)sizeOut {
-        sizeOut->width = 0;
-        sizeOut->height = 0;
+    rectOut->origin.x = bbox.x;
+    rectOut->origin.y = bbox.y;
+    rectOut->size.width = bbox.x1 - bbox.x;
+    rectOut->size.height = bbox.y1 - bbox.y;
+}
 
-        for ( unsigned i = 0; i < _count; i ++ ) {
-            switch ( _components[i].type ) {
-                case pathComponentRectangle:
-                    if ( _components[i].rect.origin.x + _components[i].rect.size.width > sizeOut->width ) 
-                        sizeOut->width = _components[i].rect.origin.x + _components[i].rect.size.width;
-                    if ( _components[i].rect.origin.y + _components[i].rect.size.height > sizeOut->height ) 
-                        sizeOut->height = _components[i].rect.origin.y + _components[i].rect.size.height;
-                    break;
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self mutableCopyWithZone:zone];
+}
 
-                case pathComponentMove:
-                    if ( _components[i].point.x  > sizeOut->width ) 
-                        sizeOut->width = _components[i].point.x;
-                    if ( _components[i].point.y > sizeOut->height ) 
-                        sizeOut->height = _components[i].point.y;
-                    break;
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    CGPath* ret = [CGPath alloc];
+    ret->_max = _max;
+    ret->_count = _count;
+    ret->_components = (pathComponent*)EbrRealloc(ret->_components, ret->_max * sizeof(pathComponent));
+    memcpy(ret->_components, _components, _count * sizeof(pathComponent));
 
-                case pathComponentLineTo:
-                    if ( _components[i].point.x  > sizeOut->width ) 
-                        sizeOut->width = _components[i].point.x;
-                    if ( _components[i].point.y > sizeOut->height ) 
-                        sizeOut->height = _components[i].point.y;
-                    break;
+    return ret;
+}
 
-
-                default:
-                    assert(0);
-                    break;
-            }
-        }
-    }
-
-    -(void) _getBoundingBox:(CGRect *)rectOut {
-        BBox bbox;
-
-        for ( unsigned i = 0; i < _count; i ++ ) {
-            switch ( _components[i].type ) {
-                case pathComponentMove:
-                case pathComponentLineTo:
-                    bbox.addPoint(_components[i].point.x, _components[i].point.y);
-                    break;
-
-                case pathComponentArcToPoint:
-                    bbox.addPoint(_components[i].atp.x1, _components[i].atp.y1);
-                    bbox.addPoint(_components[i].atp.x2, _components[i].atp.y2);
-                    break;
-
-                case pathComponentCurve:
-                    bbox.addPoint(_components[i].ctp.x1, _components[i].ctp.y1);
-                    bbox.addPoint(_components[i].ctp.x2, _components[i].ctp.y2);
-                    bbox.addPoint(_components[i].ctp.x, _components[i].ctp.y);
-                    break;
-
-                case pathComponentArcAngle:
-                    bbox.addPoint(_components[i].aa.x - _components[i].aa.radius, _components[i].aa.y - _components[i].aa.radius);
-                    bbox.addPoint(_components[i].aa.x + _components[i].aa.radius, _components[i].aa.y + _components[i].aa.radius);
-                    break;
-
-                case pathComponentQuadCurve:
-                    bbox.addPoint(_components[i].qtp.cpx, _components[i].qtp.cpy);
-                    bbox.addPoint(_components[i].qtp.x, _components[i].qtp.y);
-                    break;
-
-                case pathComponentEllipseInRect:
-                    bbox.addPoint(_components[i].eir.rect.origin.x, _components[i].eir.rect.origin.y);
-                    bbox.addPoint(_components[i].eir.rect.origin.x + _components[i].eir.rect.size.width,
-                        _components[i].eir.rect.origin.y + _components[i].eir.rect.size.height);
-                    break;
-
-                case pathComponentClose:
-                    break;
-
-                default:
-                    assert(false);
-            }
-        }
-
-        rectOut->origin.x = bbox.x;
-        rectOut->origin.y = bbox.y;
-        rectOut->size.width = bbox.x1 - bbox.x;
-        rectOut->size.height = bbox.y1 - bbox.y;
-    }
-
-    -(instancetype) copyWithZone:(NSZone*)zone {
-        return [self mutableCopyWithZone:zone];
-    }
-
-    -(instancetype) mutableCopyWithZone:(NSZone*)zone {
-        CGPath* ret = [CGPath alloc];
-        ret->_max = _max;
-        ret->_count = _count;
-        ret->_components = (pathComponent *) EbrRealloc(ret->_components, ret->_max * sizeof(pathComponent));
-        memcpy(ret->_components, _components, _count * sizeof(pathComponent));
-
-        return ret;
-    }
-
-    
 @end
 
-CGMutablePathRef CGPathCreateMutable()
-{
+CGMutablePathRef CGPathCreateMutable() {
     return [CGPath new];
 }
 
-CGPathRef CGPathCreateCopy(CGPathRef path)
-{
+CGPathRef CGPathCreateCopy(CGPathRef path) {
     return [path mutableCopy];
 }
 
-CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path)
-{
+CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     return [path mutableCopy];
 }
 
-void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform *m, float x, float y)
-{
-    if ( m ) {
+void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+    if (m) {
         CGPoint pt;
 
         pt.x = x;
@@ -247,29 +258,29 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform *m, flo
 
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentLineTo;
     pathObj->_components[pathObj->_count].point.x = x;
     pathObj->_components[pathObj->_count].point.y = y;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-void CGPathAddArcToPoint(CGMutablePathRef  path, const CGAffineTransform *m, float x1, float y1, float x2, float y2, float radius)
-{
-    if ( m ) {
+void CGPathAddArcToPoint(
+    CGMutablePathRef path, const CGAffineTransform* m, float x1, float y1, float x2, float y2, float radius) {
+    if (m) {
         assert(0);
     }
 
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcToPoint;
@@ -279,18 +290,24 @@ void CGPathAddArcToPoint(CGMutablePathRef  path, const CGAffineTransform *m, flo
     pathObj->_components[pathObj->_count].atp.y2 = y2;
     pathObj->_components[pathObj->_count].atp.radius = radius;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-void CGPathAddArc(CGMutablePathRef path, const CGAffineTransform *m, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, bool clockwise)
-{
+void CGPathAddArc(CGMutablePathRef path,
+                  const CGAffineTransform* m,
+                  CGFloat x,
+                  CGFloat y,
+                  CGFloat radius,
+                  CGFloat startAngle,
+                  CGFloat endAngle,
+                  bool clockwise) {
     assert(!m);
 
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcAngle;
@@ -301,12 +318,11 @@ void CGPathAddArc(CGMutablePathRef path, const CGAffineTransform *m, CGFloat x, 
     pathObj->_components[pathObj->_count].aa.endAngle = endAngle;
     pathObj->_components[pathObj->_count].aa.clockwise = clockwise;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform *m, float x, float y)
-{
-    if ( m ) {
+void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x, float y) {
+    if (m) {
         CGPoint pt;
 
         pt.x = x;
@@ -320,31 +336,30 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform *m, float 
 
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentMove;
     pathObj->_components[pathObj->_count].point.x = x;
     pathObj->_components[pathObj->_count].point.y = y;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform *m, CGPoint *points, int count)
-{
-    if ( count == 0 ) return;
+void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* points, int count) {
+    if (count == 0)
+        return;
 
     CGPathMoveToPoint(path, m, points[0].x, points[0].y);
-    for ( int i = 1; i < count; i++) {
+    for (int i = 1; i < count; i++) {
         CGPathAddLineToPoint(path, m, points[i].x, points[i].y);
     }
 }
 
-void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform *m, CGRect rect)
-{
-    if ( m ) { 
+void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+    if (m) {
         rect = CGRectApplyAffineTransform(rect, *m);
     }
 
@@ -352,8 +367,8 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform *m, CGRect rec
     CGPath* pathObj = path;
 
     if ( pathObj->_count + 1 >= pathObj->_max ) {
-        pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+    pathObj->_max += 32;
+    pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentRectangle;
@@ -363,28 +378,27 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform *m, CGRect rec
     */
 
     CGPathMoveToPoint(path, m, CGRectGetMinX(rect), CGRectGetMinY(rect));
- 
+
     CGPathAddLineToPoint(path, m, CGRectGetMaxX(rect), CGRectGetMinY(rect));
     CGPathAddLineToPoint(path, m, CGRectGetMaxX(rect), CGRectGetMaxY(rect));
     CGPathAddLineToPoint(path, m, CGRectGetMinX(rect), CGRectGetMaxY(rect));
     CGPathAddLineToPoint(path, m, CGRectGetMinX(rect), CGRectGetMinY(rect));
 }
 
-void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform *m, CGPathRef toAdd)
-{
+void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef toAdd) {
     CGPath* pathObj = path;
     CGPath* copyObj = toAdd;
 
-    if ( pathObj->_count + copyObj->_count >= pathObj->_max ) {
+    if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
-    for ( unsigned i = 0; i < copyObj->_count; i ++ ) {
+    for (unsigned i = 0; i < copyObj->_count; i++) {
         pathComponent c = copyObj->_components[i];
 
-        if ( m ) {
-            switch ( c.type ) {
+        if (m) {
+            switch (c.type) {
                 case pathComponentMove:
                 case pathComponentLineTo:
                     c.point = CGPointApplyAffineTransform(c.point, *m);
@@ -393,50 +407,47 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform *m, CGPathRef 
         }
 
         pathObj->_components[pathObj->_count] = c;
-        pathObj->_count ++;
+        pathObj->_count++;
     }
 }
 
-void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform *m, CGRect rect)
-{
+void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
     CGPathCloseSubpath(path);
 
-    if ( m ) {
+    if (m) {
         assert(0);
     }
 
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentEllipseInRect;
     pathObj->_components[pathObj->_count].eir.rect = rect;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 
     CGPathCloseSubpath(path);
     CGPathMoveToPoint(path, m, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2.0f);
 }
 
-void CGPathCloseSubpath(CGMutablePathRef path)
-{
+void CGPathCloseSubpath(CGMutablePathRef path) {
     CGPath* pathObj = path;
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentClose;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-CGRect CGPathGetBoundingBox(CGPathRef path)
-{
+CGRect CGPathGetBoundingBox(CGPathRef path) {
     CGRect ret;
 
     auto context = CGBitmapContextCreate(0, 1, 1, 1, 1, 0, 0);
@@ -447,35 +458,32 @@ CGRect CGPathGetBoundingBox(CGPathRef path)
     return ret;
 }
 
- bool CGPathIsEmpty(CGPathRef path)
-{
+bool CGPathIsEmpty(CGPathRef path) {
     CGPath* pathObj = path;
     return pathObj->_count == 0;
 }
 
-void CGPathRelease(CGPathRef path)
-{
+void CGPathRelease(CGPathRef path) {
     CFRelease(path);
 }
 
-CGPathRef CGPathRetain(CGPathRef path)
-{
+CGPathRef CGPathRetain(CGPathRef path) {
     CFRetain(path);
 
     return path;
 }
 
-void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y)
-{
+void CGPathAddQuadCurveToPoint(
+    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     assert(!m);
     CGPath* pathObj = path;
 
     CGPoint p = { x, y };
     CGPoint cp = { cpx, cpy };
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;
@@ -486,18 +494,24 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
     pathObj->_components[count].qtp.x = p.x;
     pathObj->_components[count].qtp.y = p.y;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-void CGPathAddCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y)
-{
+void CGPathAddCurveToPoint(CGMutablePathRef path,
+                           const CGAffineTransform* m,
+                           CGFloat cp1x,
+                           CGFloat cp1y,
+                           CGFloat cp2x,
+                           CGFloat cp2y,
+                           CGFloat x,
+                           CGFloat y) {
     CGPath* pathObj = path;
 
     assert(!m);
 
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
+    if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;
@@ -510,25 +524,21 @@ void CGPathAddCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CG
     pathObj->_components[count].ctp.x = x;
     pathObj->_components[count].ctp.y = y;
 
-    pathObj->_count ++;
+    pathObj->_count++;
 }
 
-CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform *trans)
-{
-    CGMutablePathRef ret = (CGMutablePathRef) [CGPath new];
+CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform* trans) {
+    CGMutablePathRef ret = (CGMutablePathRef)[CGPath new];
     CGPathAddRect(ret, trans, rect);
 
-    return (CGPathRef) ret;
+    return (CGPathRef)ret;
 }
 
-
-CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform *transform)
-{
+CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* transform) {
     printf("Tried to create an ellipse, not implemented, creating rect..\n");
 
-    CGMutablePathRef ret = (CGMutablePathRef) [CGPath new];
+    CGMutablePathRef ret = (CGMutablePathRef)[CGPath new];
     CGPathAddRect(ret, 0, rect);
 
-    return (CGPathRef) ret;
+    return (CGPathRef)ret;
 }
-

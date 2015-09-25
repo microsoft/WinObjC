@@ -26,70 +26,68 @@
     idretain _from, _to;
 }
 
-    -(void) setFromValue:(id)value {
-        _from.attach([value copy]);
+- (void)setFromValue:(id)value {
+    _from.attach([value copy]);
+}
+
+- (void)setToValue:(id)value {
+    _to.attach([value copy]);
+}
+
+- (void)setByValue:(id)value {
+    EbrDebugLog("CABasicAnimation::setByValue not supported\n");
+}
+
+- (id)toValue {
+    return _to;
+}
+
++ (instancetype)animationWithKeyPath:(NSString*)path {
+    CABasicAnimation* ret = [self alloc];
+    ret->_timingProperties._duration = 1.0;
+    ret->_timingProperties._speed = 1.0;
+    ret->_timingProperties._removedOnCompletion = TRUE;
+    [ret setKeyPath:path];
+
+    return [ret autorelease];
+}
+
+- (id)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
+    if (_to == nil) {
+        _to = [object valueForKey:_keyPath];
     }
 
-    -(void) setToValue:(id)value {
-        _to.attach([value copy]);
+    [object addAnimation:self forKey:key];
+
+    return self;
+}
+
+- (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey {
+    _attachedLayer = layer;
+
+    if (_keyPath == nil) {
+        _keyPath = forKey;
     }
 
-    -(void) setByValue:(id)value {
-        EbrDebugLog("CABasicAnimation::setByValue not supported\n");
-    }
+    _runningAnimation = _globalCompositor->GetBasicDisplayAnimation(self, _keyPath, _from, _to, &_timingProperties);
 
-    -(id) toValue {
-        return _to;
-    }
+    return _runningAnimation;
+}
 
-    +(instancetype) animationWithKeyPath:(NSString*)path {
-        CABasicAnimation* ret = [self alloc];
-        ret->_timingProperties._duration = 1.0;
-        ret->_timingProperties._speed = 1.0;
-        ret->_timingProperties._removedOnCompletion = TRUE;
-        [ret setKeyPath:path];
+- (id)copyWithZone:(NSZone*)zone {
+    CABasicAnimation* ret = [super copyWithZone:zone];
 
-        return [ret autorelease];
-    }
+    assert(_runningAnimation == NULL);
+    ret->_from.attach([_from copy]);
+    ret->_to.attach([_to copy]);
 
-    /* annotate with type */ -(id) runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
-        if ( _to == nil ) {
-            _to = [object valueForKey:_keyPath];
-        }
+    return ret;
+}
 
-        [object addAnimation:self forKey:key];
+- (void)dealloc {
+    _from = nil;
+    _to = nil;
+    [super dealloc];
+}
 
-        return self;
-    }
-
-    -(DisplayAnimation *) _createAnimation:(CALayer*)layer forKey:(id)forKey {
-        _attachedLayer = layer;
-
-        if ( _keyPath == nil ) {
-            _keyPath = forKey;
-        }
-
-        _runningAnimation = _globalCompositor->GetBasicDisplayAnimation(self, _keyPath, _from, _to, &_timingProperties);
-
-        return _runningAnimation;
-    }
-
-    -(id) copyWithZone:(NSZone*)zone {
-        CABasicAnimation* ret = [super copyWithZone:zone];
-
-        assert( _runningAnimation == NULL );
-        ret->_from.attach([_from copy]);
-        ret->_to.attach([_to copy]);
-
-        return ret;
-    }
-
-    -(void) dealloc {
-        _from = nil;
-        _to = nil;
-        [super dealloc];
-    }
-
-    
 @end
-

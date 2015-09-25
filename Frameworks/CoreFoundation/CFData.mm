@@ -17,8 +17,6 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/NSData.h>
 
-const uint8_t *CFDataGetBytePtr(CFDataRef data)
-{
-    return (uint8_t *) [(NSData *) data bytes];
+const uint8_t* CFDataGetBytePtr(CFDataRef data) {
+    return (uint8_t*)[(NSData*)data bytes];
 }
-

@@ -24,26 +24,24 @@ typedef wchar_t WCHAR;
 #import <UWP/WindowsGlobalization.h>
 
 @implementation GLKViewController {
-    CADisplayLink*  _link;
-    int64_t         _firstStart;
-    int64_t         _lastStart;
-    int64_t         _lastFrame;
-    WGCalendar*     _calendar;
+    CADisplayLink* _link;
+    int64_t _firstStart;
+    int64_t _lastStart;
+    int64_t _lastFrame;
+    WGCalendar* _calendar;
 }
 
--(void) viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
 }
 
--(void) viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    if ([self.view isKindOfClass: [GLKView class]]) {
+    if ([self.view isKindOfClass:[GLKView class]]) {
         GLKView* kv = (GLKView*)self.view;
         kv.enableSetNeedsDisplay = FALSE;
     }
-    
-    _link = [CADisplayLink displayLinkWithTarget: self selector: @selector(_renderFrame)];
+
+    _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
 
     _calendar = [WGCalendar create];
     [_calendar setToNow];
@@ -52,27 +50,25 @@ typedef wchar_t WCHAR;
     _lastFrame = dt.universalTime;
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear: animated];
-    [self.delegate glkViewController: self willPause: FALSE];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.delegate glkViewController:self willPause:FALSE];
 
-    [_link addToRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 
     [_calendar setToNow];
     WFDateTime* dt = [_calendar getDateTime];
     _lastStart = dt.universalTime;
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear: animated];
-    [self.delegate glkViewController: self willPause: TRUE];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.delegate glkViewController:self willPause:TRUE];
 
-    [_link removeFromRunLoop: [NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_link removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 }
 
--(BOOL)_renderFrame {
+- (BOOL)_renderFrame {
     [_calendar setToNow];
     WFDateTime* dt = [_calendar getDateTime];
     int64_t frameTime = dt.universalTime;
@@ -85,36 +81,37 @@ typedef wchar_t WCHAR;
     _lastFrame = frameTime;
 
     id dest = self;
-    if (self.delegate != nil) dest = self.delegate;
+    if (self.delegate != nil)
+        dest = self.delegate;
 
     // TODO: The view/view controller logic here is probably quite wrong.
 
-    if ([dest respondsToSelector: @selector(glkViewControllerUpdate:)]) {
-        [dest glkViewControllerUpdate: self];
-    } else if ([dest respondsToSelector: @selector(update)]) {
+    if ([dest respondsToSelector:@selector(glkViewControllerUpdate:)]) {
+        [dest glkViewControllerUpdate:self];
+    } else if ([dest respondsToSelector:@selector(update)]) {
         [dest update];
     }
 
     bool tryDirectRender = true;
-    if([self.view respondsToSelector: @selector(_renderFrame)]) {
-        if ([self.view _renderFrame]) tryDirectRender = false;
+    if ([self.view respondsToSelector:@selector(_renderFrame)]) {
+        if ([self.view _renderFrame])
+            tryDirectRender = false;
     }
 
     if (tryDirectRender) {
-        if ([dest respondsToSelector: @selector(glkView:drawInRect:)]) {
-            [dest glkView: self.view drawInRect: self.view.frame];
+        if ([dest respondsToSelector:@selector(glkView:drawInRect:)]) {
+            [dest glkView:self.view drawInRect:self.view.frame];
         }
     }
 
     _framesDisplayed++;
-    
+
     return TRUE;
 }
 
 // TODO: implement me!
--(unsigned int)framesPerSecond {
+- (unsigned int)framesPerSecond {
     return 30;
 }
 
 @end
-

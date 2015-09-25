@@ -25,77 +25,90 @@
 #include "CACompositor.h"
 
 @implementation CATextLayer {
-    BOOL     _shouldRasterize;
+    BOOL _shouldRasterize;
     idretain __font;
     idretain _text;
     idretain _color, _shadowColor;
-    CGSize   _shadowOffset;
-    unsigned    _alignment, _lineBreakMode;
-    int      _numLines;
+    CGSize _shadowOffset;
+    unsigned _alignment, _lineBreakMode;
+    int _numLines;
     UIEdgeInsets _edgeInsets;
-    BOOL     _centerVertically;
+    BOOL _centerVertically;
 }
 
-    -(instancetype) init {
-        if ([super init] == nil) return nil;
-        __font = nil;
-        _centerVertically = true;
-        return self;
-    }
+- (instancetype)init {
+    if ([super init] == nil)
+        return nil;
+    __font = nil;
+    _centerVertically = true;
+    return self;
+}
 
-    -(void) dealloc {
-        __font = nil;
-        _text = nil;
-        _color = nil;
-        _shadowColor = nil;
+- (void)dealloc {
+    __font = nil;
+    _text = nil;
+    _color = nil;
+    _shadowColor = nil;
 
-        [super dealloc];
-    }
+    [super dealloc];
+}
 
-    -(DisplayTexture *) _getDisplayTexture {
-        if ( _shouldRasterize ) return (DisplayTexture *) [super _getDisplayTexture];
+- (DisplayTexture*)_getDisplayTexture {
+    if (_shouldRasterize)
+        return (DisplayTexture*)[super _getDisplayTexture];
 
-        priv->contentsSize.width = ceilf(priv->bounds.size.width) * priv->contentsScale;
-        priv->contentsSize.height = ceilf(priv->bounds.size.height) * priv->contentsScale;
+    priv->contentsSize.width = ceilf(priv->bounds.size.width) * priv->contentsScale;
+    priv->contentsSize.height = ceilf(priv->bounds.size.height) * priv->contentsScale;
 
-        if ( __font == nil || _text == nil ) return nullptr;
+    if (__font == nil || _text == nil)
+        return nullptr;
 
-        DisplayTexture *textLayer = _globalCompositor->CreateDisplayTextureForText();
-        GetCACompositor()->SetTextDisplayTextureParams(textLayer, __font, _text, _color, _alignment, _lineBreakMode, _shadowColor, _shadowOffset, _numLines, _edgeInsets, _centerVertically);
+    DisplayTexture* textLayer = _globalCompositor->CreateDisplayTextureForText();
+    GetCACompositor()->SetTextDisplayTextureParams(textLayer,
+                                                   __font,
+                                                   _text,
+                                                   _color,
+                                                   _alignment,
+                                                   _lineBreakMode,
+                                                   _shadowColor,
+                                                   _shadowOffset,
+                                                   _numLines,
+                                                   _edgeInsets,
+                                                   _centerVertically);
 
-        return textLayer;
-    }
+    return textLayer;
+}
 
-    -(void) _setDisplayParams:(UIFont*)font :(NSString*)text :(UIColor*)color :(unsigned)alignment :(unsigned)lineBreak :(UIColor*)shadowColor :(CGSize)shadowOffset :(int)numLines {
-        __font = font;
-        _text = text;
-        _alignment = alignment;
-        _color = color;
-        _shadowColor = shadowColor;
-        _shadowOffset = shadowOffset;
-        _lineBreakMode = lineBreak;
-        _numLines = numLines;
-    }
+- (void)_setDisplayParams:(UIFont*)
+                     font:(NSString*)
+                     text:(UIColor*)
+                    color:(unsigned)
+                alignment:(unsigned)
+                lineBreak:(UIColor*)
+              shadowColor:(CGSize)
+             shadowOffset:(int)numLines {
+    __font = font;
+    _text = text;
+    _alignment = alignment;
+    _color = color;
+    _shadowColor = shadowColor;
+    _shadowOffset = shadowOffset;
+    _lineBreakMode = lineBreak;
+    _numLines = numLines;
+}
 
-    -(void) _setEdgeInsets:(UIEdgeInsets)edgeInsets {
-        _edgeInsets = edgeInsets;
-    }
+- (void)_setEdgeInsets:(UIEdgeInsets)edgeInsets {
+    _edgeInsets = edgeInsets;
+}
 
-    -(void) _setCenterVertically:(BOOL)centerVertically {
-        _centerVertically = centerVertically;
-    }
+- (void)_setCenterVertically:(BOOL)centerVertically {
+    _centerVertically = centerVertically;
+}
 
-    -(void) _setShouldRasterize:(BOOL)shouldRasterize {
-        _shouldRasterize = shouldRasterize;
-    }
+- (void)_setShouldRasterize:(BOOL)shouldRasterize {
+    _shouldRasterize = shouldRasterize;
+}
 
-    
-    
-    
-    
-    
-    
-
-@end                            
+@end
 
 ;

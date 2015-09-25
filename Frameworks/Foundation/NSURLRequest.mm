@@ -23,136 +23,134 @@
 
 @implementation NSURLRequest
 
-    /* annotate with type */ -(id) initWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
-        _url = [url absoluteURL];
-        _timeoutInterval = timeout;
-        _headerFields = [NSMutableDictionary new];
+- (id)initWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
+    _url = [url absoluteURL];
+    _timeoutInterval = timeout;
+    _headerFields = [NSMutableDictionary new];
+    _method = @"GET";
+    _shouldHandleCookies = true;
+    _cachePolicy = cachePolicy;
+    return self;
+}
+
+- (id)init {
+    _url = nil;
+    _timeoutInterval = 30.0;
+    _headerFields = [NSMutableDictionary new];
+    _method = @"GET";
+    _shouldHandleCookies = true;
+    return self;
+}
+
+- (id)initWithURL:(id)url {
+    return [self initWithURL:url cachePolicy:nil timeoutInterval:30.0];
+}
+
++ (id)requestWithURL:(id)url {
+    id ret = [[self alloc] initWithURL:url cachePolicy:nil timeoutInterval:30.0];
+
+    return [ret autorelease];
+}
+
+- (id)URL {
+    return _url;
+}
+
+- (id)allHTTPHeaderFields {
+    return _headerFields;
+}
+
+- (id)HTTPBody {
+    return _body;
+}
+
+- (id)HTTPBodyStream {
+    return _bodyStream;
+}
+
+- (id)HTTPMethod {
+    if (_method == nil) {
         _method = @"GET";
-        _shouldHandleCookies = true;
-        _cachePolicy = cachePolicy;
-        return self;
     }
 
-    /* annotate with type */ -(id) init {
-        _url = nil;
-        _timeoutInterval = 30.0;
-        _headerFields = [NSMutableDictionary new];
-        _method = @"GET";
-        _shouldHandleCookies = true;
-        return self;
-    }
+    return _method;
+}
 
-    /* annotate with type */ -(id) initWithURL:(id)url {
-        return [self initWithURL:url cachePolicy:nil timeoutInterval:30.0];
-    }
+- (BOOL)HTTPShouldHandleCookies {
+    return _shouldHandleCookies;
+}
 
-    /* annotate with type */ +(id) requestWithURL:(id)url {
-        id ret = [[self alloc] initWithURL:url cachePolicy:nil timeoutInterval:30.0];
++ (id)requestWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
+    id ret = [[self alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:timeout];
 
-        return [ret autorelease];
-    }
+    return [ret autorelease];
+}
 
-    /* annotate with type */ -(id) URL {
-        return _url;
-    }
+- (id)mutableCopy {
+    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:0 timeoutInterval:30.0];
+    ret->_headerFields = [_headerFields mutableCopy];
+    ret->_method.attach([_method copy]);
+    ret->_body.attach([_body copy]);
+    ret->_shouldHandleCookies = _shouldHandleCookies;
+    ret->_shouldDiscardData = _shouldDiscardData;
+    ret->_cachePolicy = _cachePolicy;
+    ret->_bodyStream = _bodyStream;
 
-    /* annotate with type */ -(id) allHTTPHeaderFields {
-        return _headerFields;
-    }
+    return ret;
+}
 
-    /* annotate with type */ -(id) HTTPBody {
-        return _body;
-    }
+- (id)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
 
-    /* annotate with type */ -(id) HTTPBodyStream {
-        return _bodyStream;
-    }
+- (double)timeoutInterval {
+    return _timeoutInterval;
+}
 
-    /* annotate with type */ -(id) HTTPMethod {
-        if ( _method == nil ) {
-            _method = @"GET";
-        }
+- (id)valueForHTTPHeaderField:(id)field {
+    id ret = [_headerFields objectForKey:field];
+    const char* pName = [field UTF8String];
 
-        return _method;
-    }
-
-    -(BOOL) HTTPShouldHandleCookies {
-        return _shouldHandleCookies;
-    }
-
-    /* annotate with type */ +(id) requestWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
-        id ret = [[self alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:timeout];
-
-        return [ret autorelease];
-    }
-
-    /* annotate with type */ -(id) mutableCopy {
-        NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id) _url cachePolicy:0 timeoutInterval:30.0];
-        ret->_headerFields = [_headerFields mutableCopy];
-        ret->_method.attach([_method copy]);
-        ret->_body.attach([_body copy]);
-        ret->_shouldHandleCookies = _shouldHandleCookies;
-        ret->_shouldDiscardData = _shouldDiscardData;
-        ret->_cachePolicy = _cachePolicy;
-        ret->_bodyStream = _bodyStream;
-
-        return ret;
-    }
-
-    /* annotate with type */ -(id) copyWithZone:(NSZone *)zone {
-        return [self retain];
-    }
-
-    -(double) timeoutInterval {
-        return _timeoutInterval;
-    }
-
-    /* annotate with type */ -(id) valueForHTTPHeaderField:(id)field {
-        id ret = [_headerFields objectForKey:field];
-        const char *pName = [field UTF8String];
-
-        if (strcmp(pName, "Accept-Language") == 0 ) {
-            return @"en-us";
-        } else if ( strcmp(pName, "X-HTTP-Method-Override") == 0 ) {
-            return nil;
-        } else {
-            if ( ret ) {
-                return ret;
-            }
-
-            if ( strcmp(pName, "User-Agent") == 0 ) {
-                return nil;
-            }
-            assert(0);
-        }
-
+    if (strcmp(pName, "Accept-Language") == 0) {
+        return @"en-us";
+    } else if (strcmp(pName, "X-HTTP-Method-Override") == 0) {
         return nil;
+    } else {
+        if (ret) {
+            return ret;
+        }
+
+        if (strcmp(pName, "User-Agent") == 0) {
+            return nil;
+        }
+        assert(0);
     }
 
-    /* annotate with type */ -(id) _setShouldDiscardData:(BOOL)shouldDiscardData {
-        _shouldDiscardData = shouldDiscardData != FALSE;
+    return nil;
+}
 
-        return 0;
-    }
+- (id)_setShouldDiscardData:(BOOL)shouldDiscardData {
+    _shouldDiscardData = shouldDiscardData != FALSE;
 
-    -(BOOL) _shouldDiscardData {
-        return _shouldDiscardData;
-    }
+    return 0;
+}
 
-    -(NSURLRequestCachePolicy) cachePolicy {
-        return _cachePolicy;
-    }
+- (BOOL)_shouldDiscardData {
+    return _shouldDiscardData;
+}
 
-    -(void) dealloc {
-        _bodyStream = nil;
-        _url = nil;
-        _method = nil;
-        _body = nil;
-        [_headerFields release];
+- (NSURLRequestCachePolicy)cachePolicy {
+    return _cachePolicy;
+}
 
-        [super dealloc];
-    }
+- (void)dealloc {
+    _bodyStream = nil;
+    _url = nil;
+    _method = nil;
+    _body = nil;
+    [_headerFields release];
 
-    
+    [super dealloc];
+}
+
 @end
-

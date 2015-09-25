@@ -36,48 +36,41 @@ UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
 const float UIScrollViewDecelerationRateFast = 1.0f;
 
 // Strings:
-#define REGISTER_STRING(name)  UIKIT_EXPORT NSString* const name = @#name;
+#define REGISTER_STRING(name) UIKIT_EXPORT NSString* const name = @ #name;
 
 REGISTER_STRING(NSUnderlyingErrorKey)
 REGISTER_STRING(NSLocalizedDescriptionKey)
 
-void EbrSetKeyboardType(int)
-{
+void EbrSetKeyboardType(int) {
 }
 
-void EbrPlatformShowKeyboard(void)
-{
+void EbrPlatformShowKeyboard(void) {
 }
 
-void EbrPlatformHideKeyboard(void)
-{
+void EbrPlatformHideKeyboard(void) {
 }
 
-void EbrSetApplicationBadgeNumber(int)
-{
+void EbrSetApplicationBadgeNumber(int) {
 }
 
-void EbrOpenURL(const char *url)
-{
+void EbrOpenURL(const char* url) {
 }
 
-void EbrPauseSound(void)
-{
+void EbrPauseSound(void) {
 }
 
-void EbrResumeSound(void)
-{
+void EbrResumeSound(void) {
 }
 
 @implementation UIKeyboardRotationView : UIView
-    -(UIView *) hitTest: (CGPoint) point withEvent: (UIEvent *) event
-    {
-        UIView *ret = [super hitTest: point withEvent: event];
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    UIView* ret = [super hitTest:point withEvent:event];
 
-        if ( ret == self ) return nil;
+    if (ret == self)
+        return nil;
 
-        return ret;
-    }
+    return ret;
+}
 @end
 
 @implementation __UIGroupEdgeView
@@ -93,22 +86,18 @@ void EbrResumeSound(void)
 @end
 
 @implementation UIAppearanceSetter
-+(void) _applyAppearance: (UIView *) view
-{
++ (void)_applyAppearance:(UIView*)view {
 }
-+(void) _applyAppearance: (UIView *) view withAppearanceClass:(Class) cls withBaseView:(UIView *) baseView
-{
++ (void)_applyAppearance:(UIView*)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView {
 }
 @end
 
 @implementation _UILoading
-+(void) hideLoadingScreen
-{
++ (void)hideLoadingScreen {
 }
 @end
 
-bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation)
-{
+bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation) {
     return false;
 }
 
@@ -119,12 +108,13 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation UIAccelerometer : NSObject
-    +(id) sharedAccelerometer { return nil; }
++ (id)sharedAccelerometer {
+    return nil;
+}
 @end
 
 @implementation GKAchievement
-+(id) alloc
-{
++ (id)alloc {
     return nil;
 }
 @end
@@ -133,160 +123,138 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation GKAchievementViewController
-+(id) alloc
-{
++ (id)alloc {
     return nil;
 }
 @end
 
 @implementation GKLeaderboardViewController
-+(id) alloc
-{
++ (id)alloc {
     return nil;
 }
 @end
 
 @implementation GKLocalPlayer
-+(GKLocalPlayer *) localPlayer
-{
++ (GKLocalPlayer*)localPlayer {
     return nil;
 }
 @end
 
 @implementation GKScore
-+(id) alloc
-{
++ (id)alloc {
     return nil;
 }
 @end
 
-extern "C" NSString * const UIDeviceOrientationDidChangeNotification = (NSString * const) @"UIDeviceOrientationDidChangeNotification";
+extern "C" NSString* const UIDeviceOrientationDidChangeNotification =
+    (NSString * const) @"UIDeviceOrientationDidChangeNotification";
 
-__declspec(dllexport)
-extern "C" unsigned random()
-{
+__declspec(dllexport) extern "C" unsigned random() {
     return rand();
 }
 
-__declspec(dllexport)
-extern "C" int gettimeofday(struct timeval *tv, void *restrict) {
-	EbrTimeval curtime;
+__declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* restrict) {
+    EbrTimeval curtime;
     EbrGetTimeOfDay(&curtime);
-	tv->tv_sec = curtime.tv_sec;
-	tv->tv_usec = curtime.tv_usec;
+    tv->tv_sec = curtime.tv_sec;
+    tv->tv_usec = curtime.tv_usec;
     return 0;
 }
 
-__declspec(dllexport)
-extern "C" void srandom(unsigned val)
-{
+__declspec(dllexport) extern "C" void srandom(unsigned val) {
     return srand(val);
 }
 
-NSData *UIImagePNGRepresentation(UIImage *img)
-{
+NSData* UIImagePNGRepresentation(UIImage* img) {
     return [NSData data];
 }
 
-NSData *UIImageJPEGRepresentation(UIImage *img, CGFloat quality)
-{
+NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     return [NSData data];
 }
 
-DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt)
-{
+DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt) {
     CGPoint ret;
 
-    char *str = (char *) [strPt UTF8String];
+    char* str = (char*)[strPt UTF8String];
     sscanf(str, "{%f, %f}", &ret.x, &ret.y);
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize)
-{
+DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize) {
     CGSize ret;
 
-    char *str = (char *) [strSize UTF8String];
+    char* str = (char*)[strSize UTF8String];
     sscanf(str, "{%f, %f}", &ret.width, &ret.height);
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect)
-{
+DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect) {
     CGRect ret;
-	
-    char *str = (char *) [strRect UTF8String];
+
+    char* str = (char*)[strRect UTF8String];
     sscanf(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
     return ret;
 }
 
-void EbrRefreshKeyboard(void) {}
-void EbrShowKeyboard(void) {}
-void EbrHideKeyboard(void) {}
+void EbrRefreshKeyboard(void) {
+}
+void EbrShowKeyboard(void) {
+}
+void EbrHideKeyboard(void) {
+}
 
-NSString *const SLServiceTypeTwitter = @"SLServiceTypeTwitter";
-NSString *const SLServiceTypeFacebook = @"SLServiceTypeFacebook";
+NSString* const SLServiceTypeTwitter = @"SLServiceTypeTwitter";
+NSString* const SLServiceTypeFacebook = @"SLServiceTypeFacebook";
 
 @implementation SLComposeViewController
 @end
 
-__declspec(dllexport)
-extern "C" mach_port_t mach_host_self(void)
-{
-    return (mach_port_t) 0xBAADF00D;
+__declspec(dllexport) extern "C" mach_port_t mach_host_self(void) {
+    return (mach_port_t)0xBAADF00D;
 }
 
-__declspec(dllexport)
-extern "C" int host_page_size(mach_port_t port, vm_size_t *sizeOut)
-{
+__declspec(dllexport) extern "C" int host_page_size(mach_port_t port, vm_size_t* sizeOut) {
     return 65536;
 }
 int vm_page_size = 65536;
 
-__declspec(dllexport)
-extern "C"  int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t *dataOutSize)
-{
+__declspec(dllexport) extern "C" int host_statistics(mach_port_t port,
+                                                     int type,
+                                                     host_info_t dataOut,
+                                                     mach_msg_type_number_t* dataOutSize) {
     assert(type == HOST_VM_INFO);
     assert(*dataOutSize >= sizeof(vm_statistics));
     *dataOutSize = sizeof(vm_statistics);
 
-    vm_statistics *ret = (vm_statistics *) dataOut;
+    vm_statistics* ret = (vm_statistics*)dataOut;
     memset(ret, 0, sizeof(vm_statistics));
 
     ret->free_count = 512 * 1024 * 1024 / 65536;
     return 0;
 }
 
-__declspec(dllexport)
-extern "C" const char *strnstr(const char *a, const char *b, int len)
-{
+__declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* b, int len) {
     assert(0);
     return NULL;
 }
 
-__declspec(dllexport)
-int CC_MD5_Init(CC_MD5_CTX *ctx)
-{
+__declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
     assert(0);
     return 0;
 }
 
-__declspec(dllexport)
-int CC_MD5_Update(CC_MD5_CTX *ctx, const void *data, unsigned int len)
-{
+__declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
     assert(0);
     return 0;
 }
 
-__declspec(dllexport)
-int CC_MD5_Final(unsigned char *out, CC_MD5_CTX *ctx)
-{
+__declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
     assert(0);
     return 0;
 }
 
-EbrPlatformInfo *EbrGetDeviceInfo()
-{
+EbrPlatformInfo* EbrGetDeviceInfo() {
     static EbrPlatformInfo info;
     static bool infoInited = false;
 
@@ -311,24 +279,22 @@ EbrPlatformInfo *EbrGetDeviceInfo()
 }
 
 extern "C" {
-    #include "md5.h"
+#include "md5.h"
 
-    __declspec(dllexport)
-    unsigned char *CC_MD5(const void *data, long len, unsigned char *md)
-    {
-        MD5_CTX ctx;
+__declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned char* md) {
+    MD5_CTX ctx;
 
-        MD5Init(&ctx);
-        MD5Update(&ctx, (unsigned char *) data, len);
-        MD5Final(&ctx);
+    MD5Init(&ctx);
+    MD5Update(&ctx, (unsigned char*)data, len);
+    MD5Final(&ctx);
 
-        memcpy(md, ctx.digest, 16);
-        return md;
-    }
+    memcpy(md, ctx.digest, 16);
+    return md;
+}
 }
 
-extern "C" void UIImageWriteToSavedPhotosAlbum( UIImage *image, id completionTarget, SEL completionSelector, void *contextInfo )
-{
+extern "C" void
+UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
 }
 
 @implementation CBCentralManager
@@ -341,44 +307,84 @@ typedef void* DNSServiceRef;
 typedef unsigned DNSServiceErrorType;
 typedef unsigned DNSServiceFlags;
 typedef unsigned DNSServiceProtocol;
-typedef void (*DNSServiceBrowseReply) (DNSServiceRef sdRef, DNSServiceFlags flags, unsigned interfaceIndex, DNSServiceErrorType errorCode, const char *serviceName, const char *regtype, const char *replyDomain, void *context);
-typedef void (*DNSServiceResolveReply) (DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *fullname, const char *hosttarget, uint16_t port, /* In network byte order */ uint16_t txtLen, const unsigned char *txtRecord, void *context);
-typedef void (*DNSServiceGetAddrInfoReply) (DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceErrorType errorCode, const char *hostname, const struct sockaddr *address, uint32_t ttl, void *context);
-typedef void (*DNSServiceRegisterReply) (DNSServiceRef sdRef, DNSServiceFlags flags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context);
+typedef void (*DNSServiceBrowseReply)(DNSServiceRef sdRef,
+                                      DNSServiceFlags flags,
+                                      unsigned interfaceIndex,
+                                      DNSServiceErrorType errorCode,
+                                      const char* serviceName,
+                                      const char* regtype,
+                                      const char* replyDomain,
+                                      void* context);
+typedef void (*DNSServiceResolveReply)(DNSServiceRef sdRef,
+                                       DNSServiceFlags flags,
+                                       uint32_t interfaceIndex,
+                                       DNSServiceErrorType errorCode,
+                                       const char* fullname,
+                                       const char* hosttarget,
+                                       uint16_t port,
+                                       /* In network byte order */ uint16_t txtLen,
+                                       const unsigned char* txtRecord,
+                                       void* context);
+typedef void (*DNSServiceGetAddrInfoReply)(DNSServiceRef sdRef,
+                                           DNSServiceFlags flags,
+                                           uint32_t interfaceIndex,
+                                           DNSServiceErrorType errorCode,
+                                           const char* hostname,
+                                           const struct sockaddr* address,
+                                           uint32_t ttl,
+                                           void* context);
+typedef void (*DNSServiceRegisterReply)(DNSServiceRef sdRef,
+                                        DNSServiceFlags flags,
+                                        DNSServiceErrorType errorCode,
+                                        const char* name,
+                                        const char* regtype,
+                                        const char* domain,
+                                        void* context);
 
 UIKIT_EXPORT
-extern "C" void DNSServiceRefDeallocate( DNSServiceRef sdRef )
-{
+extern "C" void DNSServiceRefDeallocate(DNSServiceRef sdRef) {
     [sdRef dealloc];
 }
 
 UIKIT_EXPORT
-extern "C" DNSServiceErrorType DNSServiceSetDispatchQueue( DNSServiceRef service, dispatch_queue_t queue )
-{
+extern "C" DNSServiceErrorType DNSServiceSetDispatchQueue(DNSServiceRef service, dispatch_queue_t queue) {
     assert(!"DNSServiceSetDispatchQueue");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C"
-DNSServiceErrorType DNSServiceBrowse( DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, const char *regtype, const char *domain, /* may be NULL */ DNSServiceBrowseReply callBack, void *context /* may be NULL */)
-{
+extern "C" DNSServiceErrorType DNSServiceBrowse(DNSServiceRef* sdRef,
+                                                DNSServiceFlags flags,
+                                                uint32_t interfaceIndex,
+                                                const char* regtype,
+                                                const char* domain,
+                                                /* may be NULL */ DNSServiceBrowseReply callBack,
+                                                void* context /* may be NULL */) {
     assert(!"DNSServiceBrowse");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C"
-DNSServiceErrorType DNSServiceGetAddrInfo( DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, DNSServiceProtocol protocol, const char *hostname, DNSServiceGetAddrInfoReply callBack, void *context /* may be NULL */)
-{
+extern "C" DNSServiceErrorType DNSServiceGetAddrInfo(DNSServiceRef* sdRef,
+                                                     DNSServiceFlags flags,
+                                                     uint32_t interfaceIndex,
+                                                     DNSServiceProtocol protocol,
+                                                     const char* hostname,
+                                                     DNSServiceGetAddrInfoReply callBack,
+                                                     void* context /* may be NULL */) {
     assert(!"DNSServiceGetAddrInfo");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C"
-DNSServiceErrorType DNSServiceResolve(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, const char *name, const char *regtype, const char *domain, DNSServiceResolveReply callBack, void *context /* may be NULL */)
-{
+extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
+                                                 DNSServiceFlags flags,
+                                                 uint32_t interfaceIndex,
+                                                 const char* name,
+                                                 const char* regtype,
+                                                 const char* domain,
+                                                 DNSServiceResolveReply callBack,
+                                                 void* context /* may be NULL */) {
     assert(!"DNSServiceResolve");
 }
 
@@ -397,27 +403,31 @@ DNSServiceErrorType DNSServiceResolve(DNSServiceRef *sdRef, DNSServiceFlags flag
 #include <Windows.h>
 #include <inaddr.h>
 
-UIKIT_EXPORT extern "C"
-char *__inet_ntoa(struct in_addr addr)
-{
+UIKIT_EXPORT extern "C" char* __inet_ntoa(struct in_addr addr) {
     assert(!"__inet_ntoa");
     return 0;
 }
 
-UIKIT_EXPORT extern "C"
-char *if_indextoname(unsigned int ifindex, char *ifname)
-{
+UIKIT_EXPORT extern "C" char* if_indextoname(unsigned int ifindex, char* ifname) {
     assert(!"if_indextoname");
     return 0;
 }
 
-UIKIT_EXPORT extern "C"
-DNSServiceErrorType DNSServiceRegister(DNSServiceRef *sdRef, DNSServiceFlags flags, uint32_t interfaceIndex, const char *name, /* may be NULL */ const char *regtype, const char *domain, /* may be NULL */ const char *host, /* may be NULL */ uint16_t port, /* In network byte order */ uint16_t txtLen, const void *txtRecord, /* may be NULL */ DNSServiceRegisterReply callBack, /* may be NULL */ void *context /* may be NULL */)
-{
+UIKIT_EXPORT extern "C" DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sdRef,
+                                                               DNSServiceFlags flags,
+                                                               uint32_t interfaceIndex,
+                                                               const char* name,
+                                                               /* may be NULL */ const char* regtype,
+                                                               const char* domain,
+                                                               /* may be NULL */ const char* host,
+                                                               /* may be NULL */ uint16_t port,
+                                                               /* In network byte order */ uint16_t txtLen,
+                                                               const void* txtRecord,
+                                                               /* may be NULL */ DNSServiceRegisterReply callBack,
+                                                               /* may be NULL */ void* context /* may be NULL */) {
     assert(!"DNSServiceRegister");
     return 0;
 }
 
 @implementation NSPredicate
 @end
-

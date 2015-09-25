@@ -35,8 +35,7 @@ void NSObjForceinclude();
 void NSStringForceinclude();
 
 // Make sure things are compiled in:
-void ForceInclusion()
-{
+void ForceInclusion() {
     [UIRuntimeEventConnection class];
     [UIRuntimeOutletConnection class];
     [UIClassSwapper class];

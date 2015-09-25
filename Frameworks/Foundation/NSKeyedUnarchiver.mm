@@ -1,10 +1,17 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #include "Starboard.h"
 
@@ -24,411 +31,398 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
 
 @implementation NSKeyedUnarchiver : NSCoder {
-   id                   _delegate;
-   idretaintype(NSMutableDictionary) _nameToReplacementClass;
-   NSDictionary        *_propertyList;
-   NSArray             *_objects;
-   idretaintype(NSMutableArray)   _plistStack;
-   idretaintype(NSDictionary)     _uidToObject;
-   idretaintype(NSDictionary)     _objectToUid;
-   idretaintype(NSDictionary)     _classVersions;
-    
-   int                  _unnamedKeyIndex;
+    id _delegate;
+    idretaintype(NSMutableDictionary) _nameToReplacementClass;
+    NSDictionary* _propertyList;
+    NSArray* _objects;
+    idretaintype(NSMutableArray) _plistStack;
+    idretaintype(NSDictionary) _uidToObject;
+    idretaintype(NSDictionary) _objectToUid;
+    idretaintype(NSDictionary) _classVersions;
 
-   idretain _dataObjects;
-   idretain _bundle;
-   int      _curUid;
+    int _unnamedKeyIndex;
+
+    idretain _dataObjects;
+    idretain _bundle;
+    int _curUid;
 }
 
-    -(instancetype) initForReadingWithData:(NSData*)data {
-        if ( data == nil ) return nil;
+- (instancetype)initForReadingWithData:(NSData*)data {
+    if (data == nil)
+        return nil;
 
-        _nameToReplacementClass.attach([NSMutableDictionary new]);
+    _nameToReplacementClass.attach([NSMutableDictionary new]);
 
-        char *bytes = (char *) [data bytes];
-        if ( memcmp(bytes, "<?xml", 5) == 0 ) {
-            bool returnNow = false;
+    char* bytes = (char*)[data bytes];
+    if (memcmp(bytes, "<?xml", 5) == 0) {
+        bool returnNow = false;
 
-            if ( returnNow ) return nil;
-            _propertyList = [NSXMLPropertyList propertyListFromData:data];
-        } else {
-            NSPropertyListReaderA read;
-            read.init(data);
-            _propertyList = read.read();
-        }
-        _objects = [_propertyList objectForKey:@"$objects"];
-        _plistStack.attach([NSMutableArray new]);
+        if (returnNow)
+            return nil;
+        _propertyList = [NSXMLPropertyList propertyListFromData:data];
+    } else {
+        NSPropertyListReaderA read;
+        read.init(data);
+        _propertyList = read.read();
+    }
+    _objects = [_propertyList objectForKey:@"$objects"];
+    _plistStack.attach([NSMutableArray new]);
 
-        if ( [_propertyList objectForKey:@"$top"] != nil ) {
-            [_plistStack addObject:[_propertyList objectForKey:@"$top"]];
-        }
-
-        _uidToObject.attach((NSDictionary*) CFDictionaryCreateMutable(nil, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
-
-        _dataObjects.attach([NSMutableArray new]);
-
-        return self;
+    if ([_propertyList objectForKey:@"$top"] != nil) {
+        [_plistStack addObject:[_propertyList objectForKey:@"$top"]];
     }
 
-    static id decodeClassFromDictionary(NSKeyedUnarchiver* self, id classReference)
-    {
-        id plist   = [classReference objectForKey:@"$class"];
-        id uid     = [plist objectForKey:@"CF$UID"];
-        id profile = [self->_objects objectAtIndex:[uid intValue]];
-        id classes = [profile objectForKey:@"$classes"];
-        id className = [profile objectForKey:@"$classname"];
+    _uidToObject.attach((NSDictionary*)CFDictionaryCreateMutable(nil, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
 
-        return className;
-    }
+    _dataObjects.attach([NSMutableArray new]);
 
-    static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid)
-    {
-        DWORD uidIntValue = [uid intValue];
-        id result = [self->_uidToObject objectForKey:uid];
+    return self;
+}
 
-        if(result==NULL)
-        {
-            id plist = [self->_objects objectAtIndex:uidIntValue];
+static id decodeClassFromDictionary(NSKeyedUnarchiver* self, id classReference) {
+    id plist = [classReference objectForKey:@"$class"];
+    id uid = [plist objectForKey:@"CF$UID"];
+    id profile = [self->_objects objectAtIndex:[uid intValue]];
+    id classes = [profile objectForKey:@"$classes"];
+    id className = [profile objectForKey:@"$classname"];
 
-            if([plist isKindOfClass:[NSString class]])
-            {
-                if([plist isEqualToString:@"$null"])
-                    result=NULL;
-                else {
-                    result=plist;
-                    [self->_uidToObject setObject:result forKey:uid];
-                }
-            } else if([plist isKindOfClass:[NSDictionary class]])
-            {
-                id className = decodeClassFromDictionary(self, plist);
+    return className;
+}
 
-                const char *pClassName = [className UTF8String];
+static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
+    DWORD uidIntValue = [uid intValue];
+    id result = [self->_uidToObject objectForKey:uid];
 
-                static int indentCount = 0;
+    if (result == NULL) {
+        id plist = [self->_objects objectAtIndex:uidIntValue];
 
-                [self->_plistStack addObject:plist];
+        if ([plist isKindOfClass:[NSString class]]) {
+            if ([plist isEqualToString:@"$null"])
+                result = NULL;
+            else {
+                result = plist;
+                [self->_uidToObject setObject:result forKey:uid];
+            }
+        } else if ([plist isKindOfClass:[NSDictionary class]]) {
+            id className = decodeClassFromDictionary(self, plist);
 
-                id classType = objc_getClass(pClassName);
+            const char* pClassName = [className UTF8String];
 
-                if ( classType != nil ) {
-                    result = [classType alloc];
+            static int indentCount = 0;
 
-                    if ( [result isKindOfClass:[_LazyUIClassSwapper class]] ) {
-                        [self->_uidToObject setObject:result forKey:uid];
+            [self->_plistStack addObject:plist];
 
-                        int curPos = self->_curUid;
+            id classType = objc_getClass(pClassName);
 
-                        self->_curUid = 0;
+            if (classType != nil) {
+                result = [classType alloc];
 
-                        id orig = result;
-                        result = [result instantiateWithCoder:self];
-                        [orig autorelease];
-
-                        self->_curUid = curPos;
-                    }
-
+                if ([result isKindOfClass:[_LazyUIClassSwapper class]]) {
                     [self->_uidToObject setObject:result forKey:uid];
 
                     int curPos = self->_curUid;
 
                     self->_curUid = 0;
-                    if ( [result respondsToSelector:@selector(initWithCoder:)] ) {
-                        result = [result initWithCoder:self];
-                    } else {
-                        if ( result != nil ) EbrDebugLog("%s does not respond to initWithCoder\n", object_getClassName(result));
-                    }
+
+                    id orig = result;
+                    result = [result instantiateWithCoder:self];
+                    [orig autorelease];
 
                     self->_curUid = curPos;
-
-                    if ( result != nil ) {
-                        [self->_uidToObject setObject:result forKey:uid];
-                        if ( [result respondsToSelector:@selector(awakeAfterUsingCoder:)] ) {
-                            result = [result awakeAfterUsingCoder:self];
-                        }
-
-                        [result autorelease];
-                        [self->_uidToObject setObject:result forKey:uid];
-                    } else {
-                        EbrDebugLog("NSKeyedUnarchiver: Object initialization failed\n");
-                    }
-                } else {
-                    EbrDebugLog("Class %s not found\n", pClassName);
                 }
 
-                [self->_plistStack removeLastObject];
+                [self->_uidToObject setObject:result forKey:uid];
 
-                indentCount --;
-            } else if([plist isKindOfClass:[NSNumber class]])
-            {
-                result = plist;
-                [self->_uidToObject setObject:result forKey:uid];
-            } else if ([plist isKindOfClass:[NSData class]])
-            {
-                result=plist;
-                [self->_uidToObject setObject:result forKey:uid];
-            } else if ([plist isKindOfClass:[NSDate class]]) 
-            {
-                result=plist;
-                [self->_uidToObject setObject:result forKey:uid];
+                int curPos = self->_curUid;
+
+                self->_curUid = 0;
+                if ([result respondsToSelector:@selector(initWithCoder:)]) {
+                    result = [result initWithCoder:self];
+                } else {
+                    if (result != nil)
+                        EbrDebugLog("%s does not respond to initWithCoder\n", object_getClassName(result));
+                }
+
+                self->_curUid = curPos;
+
+                if (result != nil) {
+                    [self->_uidToObject setObject:result forKey:uid];
+                    if ([result respondsToSelector:@selector(awakeAfterUsingCoder:)]) {
+                        result = [result awakeAfterUsingCoder:self];
+                    }
+
+                    [result autorelease];
+                    [self->_uidToObject setObject:result forKey:uid];
+                } else {
+                    EbrDebugLog("NSKeyedUnarchiver: Object initialization failed\n");
+                }
             } else {
-                EbrDebugLog("plist of class %s\n", object_getClassName(plist));
-                assert(0);
+                EbrDebugLog("Class %s not found\n", pClassName);
             }
-        } else 
-        {
-            //EbrDebugLog("Found existing item uid=%d\n", uidIntValue);
+
+            [self->_plistStack removeLastObject];
+
+            indentCount--;
+        } else if ([plist isKindOfClass:[NSNumber class]]) {
+            result = plist;
+            [self->_uidToObject setObject:result forKey:uid];
+        } else if ([plist isKindOfClass:[NSData class]]) {
+            result = plist;
+            [self->_uidToObject setObject:result forKey:uid];
+        } else if ([plist isKindOfClass:[NSDate class]]) {
+            result = plist;
+            [self->_uidToObject setObject:result forKey:uid];
+        } else {
+            EbrDebugLog("plist of class %s\n", object_getClassName(plist));
+            assert(0);
+        }
+    } else {
+        // EbrDebugLog("Found existing item uid=%d\n", uidIntValue);
+    }
+
+    return result;
+}
+
+- (id)decodeRootObject {
+    id top = [_propertyList objectForKey:@"$top"];
+    id values = [top allValues];
+
+    if ([values count] != 1) {
+        // NSLog(@"multiple values=%@",values);
+        assert(0);
+        return nil;
+    } else {
+        id object = [values objectAtIndex:0];
+        id uid = [object objectForKey:@"CF$UID"];
+
+        return decodeObjectForUID(self, uid);
+    }
+}
+
+static id unarchiveObjectWithData(id data) {
+    id unarchiver = [NSKeyedUnarchiver alloc];
+    [unarchiver initForReadingWithData:data];
+
+    return [unarchiver decodeRootObject];
+}
+
+static BOOL containsValueForKey(NSKeyedUnarchiver* self, NSString* key) {
+    return [[self->_plistStack lastObject] objectForKey:key] != NULL ? TRUE : FALSE;
+}
+
+static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
+    if ([plist isKindOfClass:[NSString class]] || [plist isKindOfClass:[NSData class]]) {
+        return plist;
+    }
+
+    if ([plist isKindOfClass:[NSDictionary class]]) {
+        id uid = [plist objectForKey:@"CF$UID"];
+
+        return decodeObjectForUID(self, uid);
+    } else if ([plist isKindOfClass:[NSArray class]]) {
+        id result = [NSMutableArray array];
+        DWORD i, count = [plist count];
+
+        for (i = 0; i < count; i++) {
+            id sibling = [plist objectAtIndex:i];
+            id objValue = _decodeObjectWithPropertyList(self, sibling);
+
+            if (objValue != nil) {
+                [result addObject:objValue];
+            } else {
+                EbrDebugLog("**** Failed to unarchive object *****\n");
+            }
         }
 
         return result;
+    } else if ([plist isKindOfClass:[NSNumber class]]) {
+        return plist;
     }
 
-    -(id) decodeRootObject {
-        id top = [_propertyList objectForKey:@"$top"];
-        id values = [top allValues];
+    EbrDebugLog("Object type: %s\n", object_getClassName(plist));
+    assert(0);
+    //(NSException raise:@"NSKeyedUnarchiverException" format:@"Unable to decode property list with class %@",(plist
+    //class]];
+    return nil;
+}
 
-        if ([values count] != 1){
-            //NSLog(@"multiple values=%@",values);
-            assert(0);
-            return nil;
-        } else {
-            id object = [values objectAtIndex:0];
-            id uid = [object objectForKey:@"CF$UID"];
+- (id)decodeObjectForKey:(NSString*)key {
+    id result;
 
-            return decodeObjectForUID(self, uid);
-        }   
-    }
+    id plist = [[_plistStack lastObject] objectForKey:key];
 
-    static id unarchiveObjectWithData(id data)
-    {
-        id unarchiver = [NSKeyedUnarchiver alloc];
-        [unarchiver initForReadingWithData:data];
+    if (plist == nil)
+        result = nil;
+    else
+        result = _decodeObjectWithPropertyList(self, plist);
 
-        return [unarchiver decodeRootObject];
-    }
+    return result;
+}
 
-    static BOOL containsValueForKey(NSKeyedUnarchiver* self, NSString* key) 
-    {
-        return [[self->_plistStack lastObject] objectForKey:key] != NULL ? TRUE: FALSE;
-    }
+static id _numberForKey(NSKeyedUnarchiver* self, id key) {
+    id result = [[self->_plistStack lastObject] objectForKey:key];
 
-    static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist)
-    {
-        if ([plist isKindOfClass:[NSString class]] || [plist isKindOfClass:[NSData class]] ) {
-            return plist;
-        }
+    if (result == nil || [result isKindOfClass:[NSNumber class]])
+        return result;
 
-        if( [plist isKindOfClass:[NSDictionary class]] )
-        {
-            id uid = [plist objectForKey:@"CF$UID"];
+    assert(0);
+    //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
+    return nil;
+}
 
-            return decodeObjectForUID(self, uid);
-        } else if([plist isKindOfClass:[NSArray class]])
-        {
-            id result = [NSMutableArray array];
-            DWORD           i,count=[plist count];
+static id _valueForKey(NSKeyedUnarchiver* self, id key) {
+    id result = [[self->_plistStack lastObject] objectForKey:key];
 
-            for (i = 0;i < count; i++)
-            {
-                id sibling = [plist objectAtIndex:i];
-                id objValue = _decodeObjectWithPropertyList(self, sibling);
+    if (result == nil || [result isKindOfClass:[NSValue class]])
+        return result;
 
-                if ( objValue != nil ) {
-                    [result addObject:objValue];
-                } else {
-                    EbrDebugLog("**** Failed to unarchive object *****\n");
-                }
-            }
+    assert(0);
+    //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
+    return nil;
+}
 
-            return result;
-        } else if ([plist isKindOfClass:[NSNumber class]])
-        {
-            return plist;
-        }
+- (BOOL)containsValueForKey:(NSString*)key {
+    return ([[_plistStack lastObject] objectForKey:key] != nil) ? TRUE : FALSE;
+}
 
-        EbrDebugLog("Object type: %s\n", object_getClassName(plist));
-        assert(0);
-        //(NSException raise:@"NSKeyedUnarchiverException" format:@"Unable to decode property list with class %@",(plist class]];
-        return nil;
-    }
+- (id)decodeObject {
+    NSString* idNum = [NSString stringWithFormat:@"$%d", _curUid++];
+    return [self decodeObjectForKey:idNum];
+}
 
-    -(id) decodeObjectForKey:(NSString*)key {
-        id result;
+- (int)decodeIntForKey:(NSString*)key {
+    id number = _numberForKey(self, key);
 
-        id plist = [[_plistStack lastObject] objectForKey:key];
-
-        if(plist == nil)
-            result = nil;
-        else
-            result = _decodeObjectWithPropertyList(self, plist);
-
-       return result;
-    }
-
-    static id _numberForKey(NSKeyedUnarchiver* self, id key)
-    {
-        id result=[[self->_plistStack lastObject] objectForKey:key];
-
-        if(result==nil || [result isKindOfClass:[NSNumber class]])
-            return result;
-
-        assert(0);
-        //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
-        return nil;
-    }
-
-    static id _valueForKey(NSKeyedUnarchiver* self,id key)
-    {
-        id result=[[self->_plistStack lastObject] objectForKey:key];
-
-        if(result==nil || [result isKindOfClass:[NSValue class]])
-            return result;
-
-        assert(0);
-        //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
-        return nil;
-    }
-
-    -(BOOL) containsValueForKey:(NSString*)key {
-        return ([[_plistStack lastObject] objectForKey:key]!=nil) ? TRUE : FALSE;
-    }
-
-    -(id) decodeObject {
-        NSString* idNum = [NSString stringWithFormat:@"$%d", _curUid++];
-        return [self decodeObjectForKey:idNum];
-    }
-        
-    -(int) decodeIntForKey:(NSString*)key {
-       id number = _numberForKey(self, key);
-
-       if ( number == nil ) return 0;
-
-       return [number intValue];
-    }
-
-    -(int) decodeInt32ForKey:(NSString*)key {
-        return [self decodeIntForKey:key];
-    }
-
-    -(int) decodeIntegerForKey:(NSString*)key {
-        return [self decodeIntForKey:key];
-    }
-
-    -(BOOL) decodeBoolForKey:(NSString*)key {
-        return [self decodeIntForKey:key];
-    }
-
-    -(__int64) decodeInt64ForKey:(NSString*)key {
-       id number=_numberForKey(self, key);
-
-       if(number==nil)
+    if (number == nil)
         return 0;
 
-       unsigned __int64 val;
+    return [number intValue];
+}
 
-       [number _copyInt64Value:&val];
+- (int)decodeInt32ForKey:(NSString*)key {
+    return [self decodeIntForKey:key];
+}
 
-       return val;
-    }
+- (int)decodeIntegerForKey:(NSString*)key {
+    return [self decodeIntForKey:key];
+}
 
-    -(float) decodeFloatForKey:(id)key {
-       id number=_numberForKey(self, key);
+- (BOOL)decodeBoolForKey:(NSString*)key {
+    return [self decodeIntForKey:key];
+}
 
-       if(number==nil)
+- (__int64)decodeInt64ForKey:(NSString*)key {
+    id number = _numberForKey(self, key);
+
+    if (number == nil)
         return 0;
 
-       float ret = [number floatValue];
+    unsigned __int64 val;
 
-       return ret;
-    }
+    [number _copyInt64Value:&val];
 
-    -(double) decodeDoubleForKey:(id)key {
-       id number=_numberForKey(self, key);
+    return val;
+}
 
-       if(number==nil)
+- (float)decodeFloatForKey:(id)key {
+    id number = _numberForKey(self, key);
+
+    if (number == nil)
         return 0;
 
-       double ret = [number doubleValue];
+    float ret = [number floatValue];
 
-       return ret;
+    return ret;
+}
+
+- (double)decodeDoubleForKey:(id)key {
+    id number = _numberForKey(self, key);
+
+    if (number == nil)
+        return 0;
+
+    double ret = [number doubleValue];
+
+    return ret;
+}
+
+- (CGPoint)decodeCGPointForKey:(id)key {
+    CGPoint ret = { 0, 0 };
+    id value = _valueForKey(self, key);
+
+    if (value != nil) {
+        ret = [value CGPointValue];
     }
 
-    -(CGPoint) decodeCGPointForKey:(id)key {
-        CGPoint ret = { 0, 0 };
-        id value = _valueForKey(self, key);
+    return ret;
+}
 
-        if (value != nil) {
-            ret = [value CGPointValue];
-        }
++ (id)unarchiveObjectWithFile:(NSString*)file {
+    id data = [NSData dataWithContentsOfFile:file];
 
-       return ret;
+    if ([data length] == 0)
+        return nil;
+
+    NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
+    [unarchiver initForReadingWithData:data];
+
+    id ret = [unarchiver decodeRootObject];
+    [unarchiver autorelease];
+
+    return ret;
+}
+
++ (id)unarchiveObjectWithData:(NSData*)data {
+    if ([data length] == 0)
+        return nil;
+
+    NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
+    [unarchiver initForReadingWithData:data];
+
+    id ret = [unarchiver decodeRootObject];
+    [unarchiver autorelease];
+
+    return ret;
+}
+
+- (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)length {
+    *length = 0;
+
+    id data = [self decodeObjectForKey:key];
+    if (data != nil) {
+        [_dataObjects addObject:data];
+        *length = [data length];
+        return (const uint8_t*)[data bytes];
+    } else {
+        return 0;
     }
+}
 
-    +(id) unarchiveObjectWithFile:(NSString*)file {
-        id data = [NSData dataWithContentsOfFile:file];
+- (void)finishDecoding {
+}
 
-        if ( [data length] == 0 ) return nil;
+- (BOOL)allowsKeyedCoding {
+    return TRUE;
+}
 
-        NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
-        [unarchiver initForReadingWithData:data];
+- (void)_setBundle:(id)bundle {
+    _bundle = bundle;
+}
 
-        id ret = [unarchiver decodeRootObject];
-        [unarchiver autorelease];
+- (NSBundle*)_bundle {
+    return _bundle;
+}
 
-        return ret;
-    }
+- (void)dealloc {
+    _nameToReplacementClass = nil;
+    _propertyList = nil;
+    _objects = nil;
+    _plistStack = nil;
+    _uidToObject = nil;
+    _dataObjects = nil;
+    _bundle = nil;
 
-    +(id) unarchiveObjectWithData:(NSData*)data {
-        if ( [data length] == 0 ) return nil;
+    [super dealloc];
+}
 
-        NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
-        [unarchiver initForReadingWithData:data];
-
-        id ret = [unarchiver decodeRootObject];
-        [unarchiver autorelease];
-
-        return ret;
-    }
-
-    -(const uint8_t*) decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger *)length {
-        *length = 0;
-
-        id data = [self decodeObjectForKey:key];
-        if ( data != nil ) {
-            [_dataObjects addObject:data];
-            *length = [data length];
-            return (const uint8_t *) [data bytes];
-        } else {
-            return 0;
-        }
-    }
-
-    -(void) finishDecoding {
-    }
-
-    -(BOOL) allowsKeyedCoding {
-        return TRUE;
-    }
-
-    -(void) _setBundle:(id)bundle {
-        _bundle = bundle;
-    }
-
-    -(NSBundle*) _bundle {
-        return _bundle;
-    }
-
-    -(void) dealloc {
-        _nameToReplacementClass = nil;
-        _propertyList = nil;
-        _objects = nil;
-        _plistStack = nil;
-        _uidToObject = nil;
-        _dataObjects = nil;
-        _bundle = nil;
-
-        [super dealloc];
-    }
-
-    
 @end
-

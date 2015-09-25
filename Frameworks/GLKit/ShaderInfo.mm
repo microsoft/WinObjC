@@ -17,24 +17,13 @@
 #import <Starboard.h>
 #include "ShaderInfo.h"
 
-std::string getTypeStr(GLKShaderVarType t)
-{
-    static const char* types[] = {
-        "void",
-        "sampler2D",
-        "samplerCube",
-        "float",
-        "vec2",
-        "vec3",
-        "vec4",
-        "mat4"
-    };
+std::string getTypeStr(GLKShaderVarType t) {
+    static const char* types[] = { "void", "sampler2D", "samplerCube", "float", "vec2", "vec3", "vec4", "mat4" };
 
     return std::string(types[t]);
 }
 
-void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType type, float* data)
-{
+void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType type, float* data) {
     assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
 
     auto it = vars.find(var);
@@ -44,22 +33,21 @@ void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType typ
         v.loc = values.size();
 
         const size_t size = GLKShaderVarSizes[type];
-    
-        for(int i = 0; i < size; i ++) {
+
+        for (int i = 0; i < size; i++) {
             values.push_back(data[i]);
         }
         vars[var] = v;
     } else {
         // TODO: check size before updating material.
-        const size_t size = GLKShaderVarSizes[type];        
-        for(int i = 0; i < size; i ++) {
+        const size_t size = GLKShaderVarSizes[type];
+        for (int i = 0; i < size; i++) {
             values[it->second.loc + i] = data[i];
         }
     }
 }
 
-void ShaderMaterial::addTexture(const std::string& var, GLuint name, GLKShaderVarType type)
-{
+void ShaderMaterial::addTexture(const std::string& var, GLuint name, GLKShaderVarType type) {
     assert(type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
 
     VarInfo v;

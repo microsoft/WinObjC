@@ -20,107 +20,106 @@
 #include "CoreFoundation/CFDictionary.h"
 #include "NSURLResponseInternal.h"
 
-Boolean CFHTTPHeaderEqual(const void *obj1, const void *obj2)
-{
-    return [(id) obj1 caseInsensitiveCompare:(NSString*) obj2] == 0;
+Boolean CFHTTPHeaderEqual(const void* obj1, const void* obj2) {
+    return [(id)obj1 caseInsensitiveCompare:(NSString*)obj2] == 0;
 }
 
-CFHashCode CFHTTPHeaderHash(const void *obj1)
-{
-    return [[(id) obj1 lowercaseString] hash];
+CFHashCode CFHTTPHeaderHash(const void* obj1) {
+    return [[(id)obj1 lowercaseString] hash];
 }
 
 @implementation NSHTTPURLResponse {
-   NSInteger     _statusCode;
-   NSDictionary *_allHeaderFields;
+    NSInteger _statusCode;
+    NSDictionary* _allHeaderFields;
 
-   idretain _statusLine, _statusVersion;
+    idretain _statusLine, _statusVersion;
 }
-    /* annotate with type */ +(id) localizedStringForStatusCode:(int)code {
-        return @"HTTP error";
++ (id)localizedStringForStatusCode:(int)code {
+    return @"HTTP error";
+}
+
+- (id)initWithURL:(id)url
+               statusCode:(DWORD)statusCode
+                  headers:(id)headers
+    expectedContentLength:(int)expectedContentLength {
+    CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+
+    caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
+    caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
+
+    _allHeaderFields = (NSDictionary*)CFDictionaryCreateMutable(
+        NULL, [headers count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+
+    //  Case insensitive dictionary
+    for (id key in [headers allKeys]) {
+        id val = [headers objectForKey:key];
+        [_allHeaderFields setObject:val forKey:key];
     }
 
-    /* annotate with type */ -(id) initWithURL:(id)url statusCode:(DWORD)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength {
-        CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+    _expectedContentLength = expectedContentLength;
+    _url = url;
+    _statusCode = statusCode;
 
-        caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
-        caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
+    return self;
+}
 
-        _allHeaderFields = (NSDictionary*) CFDictionaryCreateMutable(NULL, [headers count],
-            &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+- (int)statusCode {
+    return _statusCode;
+}
 
-        //  Case insensitive dictionary
-        for (id key in [headers allKeys]) {
-            id val = [headers objectForKey:key];
-            [_allHeaderFields setObject:val forKey:key];
-        }
+- (id)MIMEType {
+    id ret = [[[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@";"] objectAtIndex:0];
+    return ret;
+}
 
-        _expectedContentLength = expectedContentLength;
-        _url = url;
-        _statusCode=statusCode;
-
-        return self;
+- (id)textEncodingName {
+    id contentTypeFields = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
+    if ([contentTypeFields count] > 1) {
+        return [contentTypeFields objectAtIndex:1];
+    } else {
+        return nil;
     }
+}
 
-    -(int) statusCode {
-        return _statusCode;
+- (NSStringEncoding)encoding {
+    id encodingList = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
+
+    if ([encodingList count] > 1) {
+        id type = [encodingList objectAtIndex:1];
+        assert(0);
+        return NSUTF8StringEncoding;
+    } else {
+        return NSUTF8StringEncoding;
     }
+}
 
-    /* annotate with type */ -(id) MIMEType {
-        id ret = [[[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@";"] objectAtIndex:0];
-        return ret;
-    }
+- (id)allHeaderFields {
+    return _allHeaderFields;
+}
 
-    /* annotate with type */ -(id) textEncodingName {
-        id contentTypeFields = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
-        if ( [contentTypeFields count] > 1 ) {
-            return [contentTypeFields objectAtIndex:1];
-        } else {
-            return nil;
-        }
-    }
+- (id)setStatusLine:(id)status {
+    _statusLine = status;
+    return self;
+}
 
-    -(NSStringEncoding) encoding {
-        id encodingList = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
-    
-        if ( [encodingList count] > 1 ) {
-            id type = [encodingList objectAtIndex:1];
-            assert(0);
-            return NSUTF8StringEncoding;
-        } else {
-            return NSUTF8StringEncoding;
-        }
-    }
+- (id)statusLine {
+    return _statusLine;
+}
 
-    /* annotate with type */ -(id) allHeaderFields {
-        return _allHeaderFields;
-    }
+- (id)setStatusVersion:(id)version {
+    _statusVersion = version;
+    return self;
+}
 
-    /* annotate with type */ -(id) setStatusLine:(id)status {
-        _statusLine = status;
-        return self;
-    }
+- (id)statusVersion {
+    return _statusVersion;
+}
 
-    /* annotate with type */ -(id) statusLine {
-        return _statusLine;
-    }
+- (void)dealloc {
+    _statusLine = nil;
+    _statusVersion = nil;
+    [_allHeaderFields release];
+    [super dealloc];
+}
 
-    /* annotate with type */ -(id) setStatusVersion:(id)version {
-        _statusVersion = version;
-        return self;
-    }
-
-    /* annotate with type */ -(id) statusVersion {
-        return _statusVersion;
-    }
-
-    -(void) dealloc {
-        _statusLine = nil;
-        _statusVersion = nil;
-        [_allHeaderFields release];
-        [super dealloc];
-    }
-
-    
 @end
-

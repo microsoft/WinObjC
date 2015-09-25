@@ -21,33 +21,31 @@
 #include "UIGridLayoutItem.h"
 
 @implementation UIGridLayoutItem : NSObject
-    /* annotate with type */ -(id) setSection:(id)section {
-        _section = section;
-        return 0;
-    }
+- (id)setSection:(id)section {
+    _section = section;
+    return 0;
+}
 
-    /* annotate with type */ -(id) section {
-        return _section;
-    }
+- (id)section {
+    return _section;
+}
 
-    /* annotate with type */ -(id) setRowObject:(id)rowObject {
-        _rowObject = rowObject;
-        return 0;
-    }
+- (id)setRowObject:(id)rowObject {
+    _rowObject = rowObject;
+    return 0;
+}
 
-    /* annotate with type */ -(id) rowObject {
-        return _rowObject;
-    }
+- (id)rowObject {
+    return _rowObject;
+}
 
-    /* annotate with type */ -(id) setItemFrame:(CGRect)frame {
-        _itemFrame = frame;
-        return 0;
-    }
+- (id)setItemFrame:(CGRect)frame {
+    _itemFrame = frame;
+    return 0;
+}
 
-    -(CGRect) itemFrame {
-        return _itemFrame;
-    }
+- (CGRect)itemFrame {
+    return _itemFrame;
+}
 
-    
 @end
-

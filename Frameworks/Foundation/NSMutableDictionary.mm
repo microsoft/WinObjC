@@ -20,94 +20,92 @@
 #include "CoreFoundation/CFDictionary.h"
 
 @implementation NSMutableDictionary : NSDictionary
-    +(instancetype) dictionary {
-        return [[self new] autorelease];
++ (instancetype)dictionary {
+    return [[self new] autorelease];
+}
+
++ (instancetype)dictionaryWithCapacity:(unsigned)capacity {
+    return [[[self alloc] initWithCapacity:capacity] autorelease];
+}
+
++ (instancetype)dictionaryWithDictionary:(NSDictionary*)dictionary {
+    return [[[self alloc] initWithDictionary:dictionary] autorelease];
+}
+
+- (instancetype)init {
+    return [super init];
+}
+
+- (instancetype)initWithCapacity:(unsigned)capacity {
+    return [self init];
+}
+
+- (void)setValue:(id)value forKey:(NSString*)key {
+    // EbrDebugLog("Setting %s to %x\n", E2H([key UTF8String]), value);
+    if (value != nil) {
+        [self setObject:value forKey:key];
+    } else {
+        [self removeObjectForKey:key];
     }
+}
 
-    +(instancetype) dictionaryWithCapacity:(unsigned)capacity {
-        return [[[self alloc] initWithCapacity:capacity] autorelease];
+- (void)removeObjectForKey:(id)key {
+    CFDictionaryRemoveValue((CFMutableDictionaryRef)self, (void*)key);
+}
+
+- (void)removeAllObjects {
+    CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
+}
+
+- (void)removeObjectsForKeys:(NSArray*)keys {
+    NSEnumerator* enumerator = [keys objectEnumerator];
+
+    id curKey = [enumerator nextObject];
+
+    while (curKey != nil) {
+        [self removeObjectForKey:curKey];
+
+        curKey = [enumerator nextObject];
     }
+}
 
-    +(instancetype) dictionaryWithDictionary:(NSDictionary*)dictionary {
-        return [[[self alloc] initWithDictionary:dictionary] autorelease];
+- (void)setObject:(id)object forKey:(id)key {
+    key = [key copy];
+    CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
+    [key release];
+}
+
+- (void)setObject:(id)object forKeyedSubscript:(id)key {
+    [self setObject:object forKey:key];
+}
+
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict {
+    for (id curKey in otherDict) {
+        id obj = [otherDict objectForKey:curKey];
+        [self setObject:obj forKey:curKey];
     }
+}
 
-    -(instancetype) init {
-        return [super init];
-    }
-
-    -(instancetype) initWithCapacity:(unsigned)capacity {
-        return [self init];
-    }
-
-    -(void) setValue:(id)value forKey:(NSString*)key {
-        //EbrDebugLog("Setting %s to %x\n", E2H([key UTF8String]), value);
-        if ( value != nil ) {
-            [self setObject:value forKey:key];
-        } else {
-            [self removeObjectForKey:key];
-        }
-    }
-
-    -(void) removeObjectForKey:(id)key {
-        CFDictionaryRemoveValue((CFMutableDictionaryRef) self, (void *)key);
-    }
-
-    -(void) removeAllObjects {
-        CFDictionaryRemoveAllValues((CFMutableDictionaryRef) self);
-    }
-
-    -(void) removeObjectsForKeys:(NSArray*)keys {
-        NSEnumerator* enumerator = [keys objectEnumerator];
-
-        id curKey = [enumerator nextObject];
-
-        while ( curKey != nil ) {
-            [self removeObjectForKey:curKey];
-            
-            curKey = [enumerator nextObject];
-        }
-    }
-
-    -(void) setObject:(id)object forKey:(id)key {
-        key = [key copy];
-        CFDictionarySetValue((CFMutableDictionaryRef) self, (const void *)key, (void*) object);
-        [key release];
-    }
-
-    -(void) setObject:(id)object forKeyedSubscript:(id)key {
-        [self setObject:object forKey:key];
-    }
-
-    -(void) addEntriesFromDictionary:(NSDictionary*)otherDict {
-        for (id curKey in otherDict) {
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict {
+    for (id curKey in otherDict) {
+        if ([self objectForKey:curKey] == nil) {
             id obj = [otherDict objectForKey:curKey];
             [self setObject:obj forKey:curKey];
         }
     }
+}
 
-    -(void) addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict {
-        for (id curKey in otherDict) {
-            if ( [self objectForKey:curKey] == nil ) {
-                id obj = [otherDict objectForKey:curKey];
-                [self setObject:obj forKey:curKey];
-            }
-        }
-    }
+- (void)setDictionary:(NSDictionary*)otherDict {
+    [self removeAllObjects];
+    [self addEntriesFromDictionary:otherDict];
+}
 
-    -(void) setDictionary:(NSDictionary*)otherDict {
-        [self removeAllObjects];
-        [self addEntriesFromDictionary:otherDict];
-    }
+- (id)classForArchiver {
+    return [NSMutableDictionary class];
+}
 
-    -(id) classForArchiver {
-        return [NSMutableDictionary class];
-    }
+- (id)copyWithZone:(NSZone*)zone {
+    return [[NSDictionary alloc] initWithDictionary:self];
+}
 
-    -(id) copyWithZone:(NSZone*)zone {
-        return [[NSDictionary alloc] initWithDictionary:self];
-    }
-
-    
 @end
-

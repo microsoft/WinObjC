@@ -24,81 +24,82 @@
 #include "UIKit/UIViewController.h"
 
 @implementation UICollectionViewController : UIViewController
-    /* annotate with type */ -(id) initWithCoder:(id)coder {
-        return [super initWithCoder:coder];
+- (id)initWithCoder:(id)coder {
+    return [super initWithCoder:coder];
+}
+
+- (void)loadView {
+    [super loadView];
+
+    if ([[self view] isKindOfClass:[UICollectionView class]]) {
+        _collectionView = [self view];
+        CGRect curBounds = { 0 };
+        curBounds = [[self view] bounds];
+
+        [self setView:[[UIView alloc] initWithFrame:curBounds]];
+        [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     }
 
-    /* annotate with type */ -(void) loadView {
-        [super loadView];
+    if ([_collectionView delegate] == nil)
+        [_collectionView setDelegate:(id<UIScrollViewDelegate>)self];
+    if ([_collectionView dataSource] == nil)
+        [_collectionView setDataSource:(UICollectionViewDataSource*)self];
 
-        if ( [[self view] isKindOfClass:[UICollectionView class]] ) {
-            _collectionView = [self view];
-            CGRect curBounds = { 0 };
-            curBounds = [[self view] bounds];
+    // only create the collection view if it is not already created (by IB)
+    if (!_collectionView) {
+        CGRect curBounds = { 0 };
+        curBounds = [[self view] bounds];
 
-            [self setView:[[UIView alloc] initWithFrame:curBounds]];
-            [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-        }
+        _collectionView = [[UICollectionView alloc] initWithFrame:curBounds collectionViewLayout:[self layout]];
+        [_collectionView setDelegate:(id<UIScrollViewDelegate>)self];
+        [_collectionView setDataSource:(UICollectionViewDataSource*)self];
+    }
+}
 
-        if ( [_collectionView delegate] == nil ) [_collectionView setDelegate:(id<UIScrollViewDelegate>) self];
-        if ( [_collectionView dataSource] == nil ) [_collectionView setDataSource:(UICollectionViewDataSource*) self];
+- (BOOL)viewDidLoad {
+    [super viewDidLoad];
 
-        // only create the collection view if it is not already created (by IB)
-        if (!_collectionView) {
-            CGRect curBounds = { 0 };
-            curBounds = [[self view] bounds];
-
-            _collectionView = [[UICollectionView alloc] initWithFrame:curBounds collectionViewLayout:[self layout]];
-            [_collectionView setDelegate:(id<UIScrollViewDelegate>) self];
-            [_collectionView setDataSource:(UICollectionViewDataSource*) self];
-        }
+    // This seems like a hack, but is needed for real compatibility
+    // There can be implementations of loadView that don't call super and don't set the view, yet it works in
+    // UICollectionViewController.
+    if (![self isViewLoaded]) {
+        [self setView:[[UIView alloc] initWithFrame:CGRectZero]];
     }
 
-    /* annotate with type */ -(BOOL) viewDidLoad {
-        [super viewDidLoad];
+    // Attach the view
+    if ([self view] != [self collectionView]) {
+        [[self view] addSubview:[self collectionView]];
 
-        // This seems like a hack, but is needed for real compatibility
-        // There can be implementations of loadView that don't call super and don't set the view, yet it works in UICollectionViewController.
-        if ( ![self isViewLoaded] ) {
-            [self setView:[[UIView alloc] initWithFrame:CGRectZero]];
-        }
+        CGRect curBounds = { 0 };
+        curBounds = [[self view] bounds];
 
-        // Attach the view
-        if ( [self view] != [self collectionView] ) {
-            [[self view] addSubview:[self collectionView]];
+        [_collectionView setFrame:curBounds];
+        [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    }
+    return 0;
+}
+
+- (id)collectionView {
+    if (!_collectionView) {
+        CGRect mainScreenBounds;
+
+        mainScreenBounds = [[UIScreen mainScreen] bounds];
+        _collectionView = [[UICollectionView alloc] initWithFrame:mainScreenBounds collectionViewLayout:[self layout]];
+        [_collectionView setDelegate:(id<UIScrollViewDelegate>)self];
+        [_collectionView setDataSource:(UICollectionViewDataSource*)self];
+
+        // If the collection view isn't the main view, add it.
+        if ([self isViewLoaded] && [self view] != _collectionView) {
+            [[self view] addSubview:(id)_collectionView];
 
             CGRect curBounds = { 0 };
             curBounds = [[self view] bounds];
 
             [_collectionView setFrame:curBounds];
-            [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+            [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         }
-        return 0;
     }
+    return _collectionView;
+}
 
-    /* annotate with type */ -(id) collectionView {
-        if (!_collectionView) {
-            CGRect mainScreenBounds;
-
-            mainScreenBounds = [[UIScreen mainScreen] bounds];
-            _collectionView = [[UICollectionView alloc] initWithFrame:mainScreenBounds collectionViewLayout:[self layout]];
-            [_collectionView setDelegate:(id<UIScrollViewDelegate>) self];
-            [_collectionView setDataSource:(UICollectionViewDataSource*) self];
-
-            // If the collection view isn't the main view, add it.
-            if ( [self isViewLoaded] && [self view] != _collectionView ) {
-                [[self view] addSubview:(id) _collectionView];
-
-                CGRect curBounds = { 0 };
-                curBounds = [[self view] bounds];
-
-                [_collectionView setFrame:curBounds];
-                [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-            }
-        }
-        return _collectionView;
-    }
-
-    
 @end
-

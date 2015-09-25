@@ -20,34 +20,32 @@
 #include "Foundation/NSURLProtectionSpace.h"
 
 @implementation NSURLProtectionSpace : NSObject
-    
+
 @end
 
 @implementation NSURLAuthenticationChallenge : NSObject
-    -(NSUInteger) previousFailureCount {
-        return 0;
-    }
+- (NSUInteger)previousFailureCount {
+    return 0;
+}
 
-    /* annotate with type */ -(id) protectionSpace {
-        return _protectionSpace;
-    }
+- (id)protectionSpace {
+    return _protectionSpace;
+}
 
-    /* annotate with type */ -(id) init {
-        _protectionSpace = [NSURLProtectionSpace new];
+- (id)init {
+    _protectionSpace = [NSURLProtectionSpace new];
 
-        return self;
-    }
+    return self;
+}
 
-    /* annotate with type */ -(id) sender {
-        return _sender;
-    }
+- (id)sender {
+    return _sender;
+}
 
-    /* annotate with type */ -(id) setSender:(id)sender {
-        _sender = sender;
+- (id)setSender:(id)sender {
+    _sender = sender;
 
-        return self;
-    }
+    return self;
+}
 
-    
 @end
-

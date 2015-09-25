@@ -18,24 +18,22 @@
 #include "UITableViewDataSource.h"
 
 @implementation UITableViewDataSource : NSObject
-    -(id) initWithCoder:(NSCoder*)coder {
-        _tableSections = [coder decodeObjectForKey:@"UITableSections"];
-        return self;
-    }
+- (id)initWithCoder:(NSCoder*)coder {
+    _tableSections = [coder decodeObjectForKey:@"UITableSections"];
+    return self;
+}
 
-    -(void) dealloc {
-        _tableSections = nil;
-        [super dealloc];
-    }
+- (void)dealloc {
+    _tableSections = nil;
+    [super dealloc];
+}
 
-    -(unsigned) numberOfSections {
-        return [_tableSections count];
-    }
+- (unsigned)numberOfSections {
+    return [_tableSections count];
+}
 
-    -(UITableViewSection*) sectionForIndex:(unsigned)idx {
-        return [_tableSections objectAtIndex:idx];
-    }
+- (UITableViewSection*)sectionForIndex:(unsigned)idx {
+    return [_tableSections objectAtIndex:idx];
+}
 
-    
 @end
-

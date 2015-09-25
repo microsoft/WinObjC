@@ -27,35 +27,33 @@
     idretaintype(NSMutableArray) _executionBlocks;
 }
 
-    -(void) dealloc {
-        _executionBlocks = nil;
-        [super dealloc];
+- (void)dealloc {
+    _executionBlocks = nil;
+    [super dealloc];
+}
+
++ (instancetype)blockOperationWithBlock:(void (^)())block {
+    id ret = [self new];
+    [ret addExecutionBlock:block];
+
+    return [ret autorelease];
+}
+
+- (instancetype)init {
+    _executionBlocks.attach([NSMutableArray new]);
+    return self;
+}
+
+- (void)addExecutionBlock:(id)block {
+    [_executionBlocks addObject:[[block copy] autorelease]];
+}
+
+- (void)main {
+    for (void (^curblock)() in(NSArray*)_executionBlocks) {
+        curblock();
     }
+    _executionBlocks = nil;
+    _executionBlocks.attach([NSMutableArray new]);
+}
 
-    +(instancetype) blockOperationWithBlock:(void(^)())block {
-        id ret = [self new];
-        [ret addExecutionBlock:block];
-
-        return [ret autorelease];
-    }
-
-    -(instancetype) init {
-        _executionBlocks.attach([NSMutableArray new]);
-        return self;
-    }
-
-    -(void) addExecutionBlock:(id)block {
-        [_executionBlocks addObject:[[block copy] autorelease]];
-    }
-
-    -(void) main {
-        for (void (^curblock)() in (NSArray*) _executionBlocks) {
-            curblock();
-        }
-        _executionBlocks = nil;
-        _executionBlocks.attach([NSMutableArray new]);
-    }
-
-    
 @end
-

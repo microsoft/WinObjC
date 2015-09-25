@@ -30,17 +30,18 @@
     idretaintype(NSString) _path;
 }
 
-+(instancetype) storyboardWithName:(NSString*)name bundle:(NSBundle*)bundle {
++ (instancetype)storyboardWithName:(NSString*)name bundle:(NSBundle*)bundle {
     UIStoryboard* ret = [self alloc];
 
     ret->_path = [name stringByAppendingString:@".storyboardc"];
 
-    if ( bundle == nil ) bundle = [NSBundle mainBundle];
-    id storyInfoPath = [bundle pathForResource:@"Info" ofType:@"plist" inDirectory:(id) ret->_path];
+    if (bundle == nil)
+        bundle = [NSBundle mainBundle];
+    id storyInfoPath = [bundle pathForResource:@"Info" ofType:@"plist" inDirectory:(id)ret->_path];
 
-    if ( storyInfoPath != nil ) {
+    if (storyInfoPath != nil) {
         id storyInfo = [NSDictionary dictionaryWithContentsOfFile:storyInfoPath];
-        if ( storyInfo ) {
+        if (storyInfo) {
             ret->_entryPoint = [storyInfo objectForKey:@"UIStoryboardDesignatedEntryPointIdentifier"];
             ret->_fileMap = [storyInfo objectForKey:@"UIViewControllerIdentifiersToNibNames"];
 
@@ -51,20 +52,20 @@
     return nil;
 }
 
--(UIViewController*) instantiateInitialViewController {
+- (UIViewController*)instantiateInitialViewController {
     id fileName = [_fileMap objectForKey:_entryPoint];
 
     id uiApplication = [UIApplication sharedApplication];
 
     id pathToNib = nil;
-    
-    NSString* runtimePath = [_path stringByAppendingPathComponent:(id) fileName];
+
+    NSString* runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
     EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
     pathToNib = [[NSBundle mainBundle] pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
-    if ( pathToNib == nil ) {
-        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id) _path];
+    if (pathToNib == nil) {
+        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
     }
     EbrDebugLog("Found %s\n", [pathToNib UTF8String]);
 
@@ -80,10 +81,10 @@
     id obj = [[NSNib alloc] loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
     int count = [obj count];
 
-    for ( int i = 0; i < count; i ++ ) {
+    for (int i = 0; i < count; i++) {
         id curObj = [obj objectAtIndex:i];
 
-        if ( [curObj isKindOfClass:[UIViewController class]] ) {
+        if ([curObj isKindOfClass:[UIViewController class]]) {
             return curObj;
         }
     }
@@ -91,21 +92,21 @@
     return nil;
 }
 
--(UIViewController*) instantiateViewControllerWithIdentifier:(id)identifier {
+- (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
-    id fileName = [_fileMap objectForKey:(id) identifier];
+    id fileName = [_fileMap objectForKey:(id)identifier];
 
     id uiApplication = [UIApplication sharedApplication];
 
     id pathToNib = nil;
-    
-    id runtimePath = [_path stringByAppendingPathComponent:(id) fileName];
+
+    id runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:(id) @".nib"];
 
     EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
     pathToNib = [[NSBundle mainBundle] pathForResource:(id) @"runtime" ofType:@"nib" inDirectory:runtimePath];
-    if ( pathToNib == nil ) {
-        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id) _path];
+    if (pathToNib == nil) {
+        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
     }
 
     id proxyObjects[2];
@@ -122,10 +123,10 @@
     [nib release];
     int count = [obj count];
 
-    for ( int i = 0; i < count; i ++ ) {
+    for (int i = 0; i < count; i++) {
         id curObj = [obj objectAtIndex:i];
 
-        if ( [curObj isKindOfClass:[UIViewController class]] ) {
+        if ([curObj isKindOfClass:[UIViewController class]]) {
             return curObj;
         }
     }
@@ -133,10 +134,8 @@
     return nil;
 }
 
--(NSString*) _path {
+- (NSString*)_path {
     return _path;
 }
 
 @end
-
-

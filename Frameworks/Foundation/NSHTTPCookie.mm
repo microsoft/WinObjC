@@ -28,8 +28,8 @@
 #include <cctype>
 #include <ctype.h>
 
-#define CFREGISTER_STRING(name) const CFStringRef name = (const CFStringRef) @#name;
-#define REGISTER_STRING(name) NSString* const name = @#name;
+#define CFREGISTER_STRING(name) const CFStringRef name = (const CFStringRef) @ #name;
+#define REGISTER_STRING(name) NSString* const name = @ #name;
 
 REGISTER_STRING(NSHTTPCookieDiscard)
 REGISTER_STRING(NSHTTPCookieSecure)
@@ -61,31 +61,28 @@ Set-Cookie header)"
 #define MAX_NAME 1024
 #define MAX_NAME_TXT "1023"
 
-#define ISBLANK(x)  ((((unsigned char)x) == ' ') || (((unsigned char)x) == '\t'))
+#define ISBLANK(x) ((((unsigned char)x) == ' ') || (((unsigned char)x) == '\t'))
 
 // This is a simple case-independent string comparison. In CURL this is implemented by hand
 // because locales on POSIX make stricmp do nasty things. We're on Windows so don't care. For
 // more information see CURL's rawstr.c:88.
-bool Curl_raw_equal(const char *a, const char *b)
-{
+bool Curl_raw_equal(const char* a, const char* b) {
     return strcasecmp(a, b) == 0;
 }
 
 // Read things from the cookies line and add them to the dictionary
-void parseCookies(const char *lineptr, id dict)
-{
+void parseCookies(const char* lineptr, id dict) {
     char name[MAX_NAME], what[MAX_COOKIE_LINE];
 
-    const char *ptr = lineptr;
-    const char *nextptr = strchr(ptr, ';');
+    const char* ptr = lineptr;
+    const char* nextptr = strchr(ptr, ';');
 
     do {
         name[0] = what[0] = '\0';
-        if (sscanf(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]",
-            name, what) > 0) {
-
-            const char *endOfName = ptr + strlen(name);
-            while (*endOfName && ISBLANK(*endOfName)) ++endOfName;
+        if (sscanf(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]", name, what) > 0) {
+            const char* endOfName = ptr + strlen(name);
+            while (*endOfName && ISBLANK(*endOfName))
+                ++endOfName;
 
             bool sep = *endOfName == '=';
 
@@ -94,8 +91,9 @@ void parseCookies(const char *lineptr, id dict)
             while (whatLen && ISBLANK(what[whatLen - 1])) {
                 what[--whatLen] = 0;
             }
-            char *whatptr = what;
-            while (ISBLANK(*whatptr)) ++whatptr;
+            char* whatptr = what;
+            while (ISBLANK(*whatptr))
+                ++whatptr;
 
             bool done = false;
             if (whatLen == 0) {
@@ -119,7 +117,8 @@ void parseCookies(const char *lineptr, id dict)
                 // CURL validates based on the number of dots in the domain, but this doesn't seem
                 // necessary for us.
 
-                if (whatptr[0] == '.') ++whatptr;
+                if (whatptr[0] == '.')
+                    ++whatptr;
 
                 // We should eventually validate this against the domain we're expecting but this wasn't
                 // in the original impl so we should do it as needed.
@@ -140,7 +139,7 @@ void parseCookies(const char *lineptr, id dict)
             } else if (Curl_raw_equal("port", name)) {
                 ADD_COOKIE_VALUE(NSHTTPCookiePort, whatptr);
             } else if (Curl_raw_equal("discard", name)) {
-                    [dict setObject:[NSNumber numberWithBool:YES] forKey:NSHTTPCookieDiscard];
+                [dict setObject:[NSNumber numberWithBool:YES] forKey:NSHTTPCookieDiscard];
             } else if (Curl_raw_equal("expires", name)) {
                 EbrDebugLog("Should parse and set cookie expiration dates!");
             } else {
@@ -156,7 +155,8 @@ void parseCookies(const char *lineptr, id dict)
 
             // We're done with this one, advance to the next.
             ptr = nextptr + 1;
-            while (ISBLANK(*ptr)) ++ptr;
+            while (ISBLANK(*ptr))
+                ++ptr;
 
             nextptr = strchr(ptr, ';');
             if (!nextptr && *ptr) {
@@ -168,146 +168,152 @@ void parseCookies(const char *lineptr, id dict)
 }
 
 @implementation NSHTTPCookie : NSObject
-    /* annotate with type */ +(id) _parseField:(id)field forHeader:(id)header andURL:(id)url {
++ (id)_parseField:(id)field forHeader:(id)header andURL:(id)url {
+    // The default path settings:
+    id defaultPath = [url path];
+    if ([[url absoluteString] hasSuffix:@"/"] == NO)
+        defaultPath = [defaultPath stringByDeletingLastPathComponent];
+    if (defaultPath == nil)
+        defaultPath = @"/";
 
-        // The default path settings:
-        id defaultPath = [url path];
-        if ( [[url absoluteString] hasSuffix:@"/"] == NO)
-            defaultPath = [defaultPath stringByDeletingLastPathComponent];
-        if (defaultPath == nil) defaultPath = @"/";
+    id cookieDict = [[NSMutableDictionary alloc] initWithCapacity:0];
+    parseCookies([field UTF8String], cookieDict);
 
-        id cookieDict = [[NSMutableDictionary alloc] initWithCapacity:0];
-        parseCookies([field UTF8String], cookieDict);
+    id cookies = [NSMutableArray array];
+    if ([cookieDict count] > 0) {
+        // Fill in some extra information if we didn't get it in the HTTP request:
+        if ([cookieDict objectForKey:NSHTTPCookiePath] == nil)
+            [cookieDict setObject:defaultPath forKey:NSHTTPCookiePath];
+        if ([cookieDict objectForKey:NSHTTPCookieDomain] == nil)
+            [cookieDict setObject:[url host] forKey:NSHTTPCookieDomain];
 
-        id cookies = [NSMutableArray array];
-        if ([cookieDict count] > 0) {
-            // Fill in some extra information if we didn't get it in the HTTP request:
-            if ([cookieDict objectForKey:NSHTTPCookiePath] == nil)
-                [cookieDict setObject:defaultPath forKey:NSHTTPCookiePath];
-            if ([cookieDict objectForKey:NSHTTPCookieDomain] == nil)
-                [cookieDict setObject:[url host] forKey:NSHTTPCookieDomain];
+        id cookie = [NSHTTPCookie cookieWithProperties:cookieDict];
 
-            id cookie = [NSHTTPCookie cookieWithProperties:cookieDict];
-
-            if (cookie) {
-                EbrDebugLog("Added cookie with name=%s value=%s domain=%s\n", [[cookie name] UTF8String], [[cookie value] UTF8String], [[cookie domain] UTF8String]);
-                [cookies addObject:cookie];
-            }
+        if (cookie) {
+            EbrDebugLog("Added cookie with name=%s value=%s domain=%s\n",
+                        [[cookie name] UTF8String],
+                        [[cookie value] UTF8String],
+                        [[cookie domain] UTF8String]);
+            [cookies addObject:cookie];
         }
-
-        return cookies;
     }
 
-    /* annotate with type */ +(id) cookiesWithResponseHeaderFields:(id)headerFields forURL:(id)url {
-        id cookies = [NSMutableArray array];
+    return cookies;
+}
 
-        for (id header in [headerFields keyEnumerator]) {
-            [cookies addObjectsFromArray:[self _parseField:[headerFields objectForKey:header] forHeader:header andURL:url]];
-        }
-  
-        return cookies; 
++ (id)cookiesWithResponseHeaderFields:(id)headerFields forURL:(id)url {
+    id cookies = [NSMutableArray array];
+
+    for (id header in [headerFields keyEnumerator]) {
+        [cookies addObjectsFromArray:[self _parseField:[headerFields objectForKey:header] forHeader:header andURL:url]];
     }
 
-    /* annotate with type */ +(id) cookieWithProperties:(id)properties {
-        return [[[self alloc] initWithProperties:properties] autorelease];
-    }
+    return cookies;
+}
 
-    /* annotate with type */ +(id) requestHeaderFieldsWithCookies:(id)cookies {
-        // redo me using FOREACH_BEGIN for DD
-        id s = nil;
-        id e = [cookies objectEnumerator];
++ (id)cookieWithProperties:(id)properties {
+    return [[[self alloc] initWithProperties:properties] autorelease];
+}
 
-        id c;
-        while((c=[e nextObject]))
-        {
-            id ss = [NSString stringWithFormat:@"%@=%@", [c name], [c value]];  // On MacOS this method is not protected against = and ; characters in cookie name or value - only \n can't occur
-            if(s)
-                s = [s stringByAppendingFormat:@"; %@", ss];
++ (id)requestHeaderFieldsWithCookies:(id)cookies {
+    // redo me using FOREACH_BEGIN for DD
+    id s = nil;
+    id e = [cookies objectEnumerator];
+
+    id c;
+    while ((c = [e nextObject])) {
+        id ss = [NSString stringWithFormat:@"%@=%@", [c name], [c value]]; // On MacOS this method is not protected
+                                                                           // against = and ; characters in cookie name
+                                                                           // or value - only \n can't occur
+        if (s)
+            s = [s stringByAppendingFormat:@"; %@", ss];
         else
-            s=ss;   // first
-        }
-        if(s) {
-            EbrDebugLog("Cookies are %s\n", [s UTF8String]);
-            return [NSDictionary dictionaryWithObject:s forKey:@"Cookie"];  // put them all into a single header line
-        }
-        else
-            return [NSDictionary dictionary];   // empty
+            s = ss; // first
     }
+    if (s) {
+        EbrDebugLog("Cookies are %s\n", [s UTF8String]);
+        return [NSDictionary dictionaryWithObject:s forKey:@"Cookie"]; // put them all into a single header line
+    } else
+        return [NSDictionary dictionary]; // empty
+}
 
-    // Generate these with a macro:
+// Generate these with a macro:
 
-#define GEN_FIELD_GETTER(name, fieldName) \
- \
-    /* annotate with type */ -(id) name { \
+#define GEN_FIELD_GETTER(name, fieldName)            \
+                                                     \
+    -(id)name {                                      \
         return [_properties objectForKey:fieldName]; \
-    } \
+    }
 
-    GEN_FIELD_GETTER(comment, NSHTTPCookieComment)
-    GEN_FIELD_GETTER(commentURL, NSHTTPCookieCommentURL)
-    GEN_FIELD_GETTER(domain, NSHTTPCookieDomain)
-    GEN_FIELD_GETTER(expiresDate, NSHTTPCookieExpires)
-    GEN_FIELD_GETTER(name, NSHTTPCookieName)
-    GEN_FIELD_GETTER(path, NSHTTPCookiePath)
-    GEN_FIELD_GETTER(value, NSHTTPCookieValue)
+GEN_FIELD_GETTER(comment, NSHTTPCookieComment)
+GEN_FIELD_GETTER(commentURL, NSHTTPCookieCommentURL)
+GEN_FIELD_GETTER(domain, NSHTTPCookieDomain)
+GEN_FIELD_GETTER(expiresDate, NSHTTPCookieExpires)
+GEN_FIELD_GETTER(name, NSHTTPCookieName)
+GEN_FIELD_GETTER(path, NSHTTPCookiePath)
+GEN_FIELD_GETTER(value, NSHTTPCookieValue)
 
 #undef GEN_FIELD_GETTER
 
-    -(unsigned) version {
-        return [[_properties objectForKey:NSHTTPCookieVersion] unsignedIntValue];
-    }
+- (unsigned)version {
+    return [[_properties objectForKey:NSHTTPCookieVersion] unsignedIntValue];
+}
 
-    /* annotate with type */ -(id) portList {
-        return [[_properties objectForKey:NSHTTPCookiePort] componentsSeparatedByString:@","];
-    }
+- (id)portList {
+    return [[_properties objectForKey:NSHTTPCookiePort] componentsSeparatedByString:@","];
+}
 
-    -(BOOL) isSecure {
-        //return [[_properties objectForKey:NSHTTPCookieSecure] intValue], @"TRUE");
-        return TRUE;
-    }
+- (BOOL)isSecure {
+    // return [[_properties objectForKey:NSHTTPCookieSecure] intValue], @"TRUE");
+    return TRUE;
+}
 
-    /* annotate with type */ -(id) isSessionOnly {
-        return NO;
-    }
+- (id)isSessionOnly {
+    return NO;
+}
 
-    /* annotate with type */ -(id) properties {
-        return _properties;
-    }
+- (id)properties {
+    return _properties;
+}
 
-    /* annotate with type */ -(id) initWithProperties:(id)properties {
-        self = [super init];
+- (id)initWithProperties:(id)properties {
+    self = [super init];
 
-        // The following are necessary fields 
-        assert([[properties objectForKey:NSHTTPCookieName] length] > 0 && [properties objectForKey:NSHTTPCookieValue] &&
-            [properties objectForKey:NSHTTPCookiePath] && [properties objectForKey:NSHTTPCookieDomain]);
+    // The following are necessary fields
+    assert([[properties objectForKey:NSHTTPCookieName] length] > 0 && [properties objectForKey:NSHTTPCookieValue] &&
+           [properties objectForKey:NSHTTPCookiePath] && [properties objectForKey:NSHTTPCookieDomain]);
 
-        NSRange nameNLOffset, valueNLOffset;
-        nameNLOffset = [[properties objectForKey:NSHTTPCookieName] rangeOfString:@"\n"];
-        valueNLOffset = [[properties objectForKey:NSHTTPCookieValue] rangeOfString:@"\n"];
+    NSRange nameNLOffset, valueNLOffset;
+    nameNLOffset = [[properties objectForKey:NSHTTPCookieName] rangeOfString:@"\n"];
+    valueNLOffset = [[properties objectForKey:NSHTTPCookieValue] rangeOfString:@"\n"];
 
-        assert(nameNLOffset.length == 0 && valueNLOffset.length == 0);
+    assert(nameNLOffset.length == 0 && valueNLOffset.length == 0);
 
-        _properties= [properties mutableCopy];
-        [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
-        if(! [_properties objectForKey:NSHTTPCookieDiscard])
-            [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 && ![_properties objectForKey:NSHTTPCookieMaximumAge]) ? @"TRUE" : @"FALSE" forKey:NSHTTPCookieDiscard];
-        if(![_properties objectForKey:NSHTTPCookieDomain])
-            [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
+    _properties = [properties mutableCopy];
+    [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
+    if (![_properties objectForKey:NSHTTPCookieDiscard])
+        [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
+                                ![_properties objectForKey:NSHTTPCookieMaximumAge])
+                                   ? @"TRUE"
+                                   : @"FALSE"
+                        forKey:NSHTTPCookieDiscard];
+    if (![_properties objectForKey:NSHTTPCookieDomain])
+        [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
 
-        return self;
-    }
+    return self;
+}
 
-    -(void) dealloc {
-        [_properties release];
-        [super dealloc];
-    }
+- (void)dealloc {
+    [_properties release];
+    [super dealloc];
+}
 
-    /* annotate with type */ -(id) _setExternal:(bool)external {
-        _external = external;
-        return self;
-    }
+- (id)_setExternal:(bool)external {
+    _external = external;
+    return self;
+}
 
-    -(BOOL) _isExternal {
-        return _external;
-    }
+- (BOOL)_isExternal {
+    return _external;
+}
 @end
-

@@ -30,67 +30,56 @@
 #include "UIApplicationInternal.h"
 #include "winobjc\winobjc.h"
 
-static CACompositorClientInterface *_compositorClient = NULL;
+static CACompositorClientInterface* _compositorClient = NULL;
 
-__declspec(dllexport) 
-void SetCACompositorClient(CACompositorClientInterface *client)
-{
+__declspec(dllexport) void SetCACompositorClient(CACompositorClientInterface* client) {
     _compositorClient = client;
 }
 
-struct ApplicationProperties
-{
+struct ApplicationProperties {
 public:
-    float       appWidth, appHeight, appScale;
-    const char *appName;
-    bool        isTablet;
-    bool        bLandscape;
+    float appWidth, appHeight, appScale;
+    const char* appName;
+    bool isTablet;
+    bool bLandscape;
 };
 
 ApplicationProperties applicationProperties;
 
-const char *GetAppNameFromPList()
-{
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleDisplayName"];
-    if ( appName != nil ) {
+const char* GetAppNameFromPList() {
+    NSString* appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    if (appName != nil) {
         return [appName UTF8String];
     }
 
     return "Starboard";
 }
 
-const char *_StringFromNSString(void *str)
-{
-    return [(NSString *) str UTF8String];
+const char* _StringFromNSString(void* str) {
+    return [(NSString*)str UTF8String];
 }
 
-extern "C" void *_WideStringFromNSString(void *str)
-{
-    NSString *_str = (NSString *) str;
-    wchar_t *ret = (wchar_t *) malloc(([_str length] + 1) * sizeof(wchar_t));
-    memcpy(ret, (void *) [_str rawCharacters], [_str length] * sizeof(wchar_t));
+extern "C" void* _WideStringFromNSString(void* str) {
+    NSString* _str = (NSString*)str;
+    wchar_t* ret = (wchar_t*)malloc(([_str length] + 1) * sizeof(wchar_t));
+    memcpy(ret, (void*)[_str rawCharacters], [_str length] * sizeof(wchar_t));
     ret[[_str length]] = 0;
 
     return ret;
 }
 
-int UIApplicationMainStart(int argc,
-   char *argv[],
-   const char* pName,
-   const char* dName,
-   float windowWidth,
-   float windowHeight)
-{
-    NSString* principalClassName = pName ? [[NSString alloc] initWithCString: pName] : nil;
-    NSString* delegateClassName = dName ? [[NSString alloc] initWithCString: dName] : nil;
+int UIApplicationMainStart(
+    int argc, char* argv[], const char* pName, const char* dName, float windowWidth, float windowHeight) {
+    NSString* principalClassName = pName ? [[NSString alloc] initWithCString:pName] : nil;
+    NSString* delegateClassName = dName ? [[NSString alloc] initWithCString:dName] : nil;
 
-    WOCDisplayMode *displayMode = [UIApplication displayMode];
-    [displayMode _setWindowSize: CGSizeMake(windowWidth, windowHeight)];
+    WOCDisplayMode* displayMode = [UIApplication displayMode];
+    [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
 
     float defaultWidth = GetCACompositor()->screenWidth();
     float defaultHeight = GetCACompositor()->screenHeight();
     float defaultScale = GetCACompositor()->screenScale();
-    bool  defaultTablet = false;
+    bool defaultTablet = false;
 
     [NSBundle setMainBundlePath:@"."];
 
@@ -98,28 +87,29 @@ int UIApplicationMainStart(int argc,
 
     //  Figure out what our initial default orientation should be from Info.plist
     int defaultOrientation = UIInterfaceOrientationUnknown;
-    if ( infoDict != nil ) {
+    if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
         NSObject* orientation;
         orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
-        if ( orientation == nil ) orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
+        if (orientation == nil)
+            orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
 
-        if ( [orientation isKindOfClass:[NSString class]] ) {
+        if ([orientation isKindOfClass:[NSString class]]) {
             defaultOrientation = UIOrientationFromString(defaultOrientation, orientation);
-        } else if ( [orientation isKindOfClass:[NSArray class]]) {
+        } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*) orientation) {
+            for (NSString* curstr in(NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
-                if ( newOrientation == defaultOrientation ) {
+                if (newOrientation == defaultOrientation) {
                     found = true;
                     break;
                 }
             }
 
-            if ( !found ) {
-                if ( [orientation count] > 0 ) {
+            if (!found) {
+                if ([orientation count] > 0) {
                     defaultOrientation = UIOrientationFromString(defaultOrientation, [orientation objectAtIndex:0]);
                 } else {
                     defaultOrientation = UIInterfaceOrientationPortrait;
@@ -130,17 +120,17 @@ int UIApplicationMainStart(int argc,
         }
     }
 
-    //  Setup default landscape presentation transform on desktop only, 
-    //  based on the declared default application orientations
-#if WINAPI_FAMILY!=WINAPI_FAMILY_PHONE_APP
-    if ( defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
-         defaultOrientation == UIInterfaceOrientationLandscapeRight ) {
+//  Setup default landscape presentation transform on desktop only,
+//  based on the declared default application orientations
+#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
+    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
+        defaultOrientation == UIInterfaceOrientationLandscapeRight) {
         displayMode.presentationTransform = defaultOrientation;
     }
 #endif
 
-    if ( [UIApplication respondsToSelector:@selector(setStartupDisplayMode:)] ) {
-        [UIApplication setStartupDisplayMode: displayMode];
+    if ([UIApplication respondsToSelector:@selector(setStartupDisplayMode:)]) {
+        [UIApplication setStartupDisplayMode:displayMode];
     }
 
     applicationProperties.appWidth = defaultWidth;
@@ -156,7 +146,6 @@ int UIApplicationMainStart(int argc,
     return UIApplicationMainLoop();
 }
 
-void IWSetTemporaryFolder(const char *folder)
-{
-    NSSetTemporaryDirectory([NSString stringWithCString: folder]);
+void IWSetTemporaryFolder(const char* folder) {
+    NSSetTemporaryDirectory([NSString stringWithCString:folder]);
 }

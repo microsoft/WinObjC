@@ -32,180 +32,183 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     CGPathRef _path;
     float _lineWidth;
     CGColorRef _strokeColor, _fillColor;
-    CALayer *_shapeImage;
+    CALayer* _shapeImage;
     BOOL _needsRender;
 }
-    -(id<CAAction>) actionForLayer: (CALayer *) layer forKey: (NSString*)key {
-        if ( layer == _shapeImage ) {
-            //  We do not want any animations on our shape bitmap sublayer
-            return (id<CAAction>) [NSNull null];
-        }
-
-        return nil;
+- (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key {
+    if (layer == _shapeImage) {
+        //  We do not want any animations on our shape bitmap sublayer
+        return (id<CAAction>)[NSNull null];
     }
 
-    //  Performed in layoutSublayers because we need to reposition _shapeImage
-    -(void) layoutSublayers
-    {
-        if ( _needsRender == NO ) return;
+    return nil;
+}
 
-        if ( _path == nil ) {
-            _shapeImage.contents = nil;
-            return;
-        }
+//  Performed in layoutSublayers because we need to reposition _shapeImage
+- (void)layoutSublayers {
+    if (_needsRender == NO)
+        return;
 
-        CGRect bbox = CGPathGetBoundingBox(_path);
-        if ( bbox.size.width == 0 || bbox.size.height == 0 ) {
-            _shapeImage.contents = nil;
-            return;
-        }
-
-        bbox.size.width += _lineWidth * 2.0f;
-        bbox.size.height += _lineWidth * 2.0f;
-        bbox.origin.x -= _lineWidth;
-        bbox.origin.y -= _lineWidth;
-
-        bbox = CGRectStandardize(bbox);
-        bbox = CGRectIntegral(bbox);
-
-        float scale = _shapeImage.contentsScale;
-        int width = (int) (bbox.size.width * scale);
-        int height = (int) (bbox.size.height * scale);
-
-        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
-
-        CGContextTranslateCTM(drawContext, 0, height);
-        if ( scale != 1.0f ) {
-            CGContextScaleCTM(drawContext, scale, scale);
-        }
-
-        CGContextScaleCTM(drawContext, 1.0f, -1.0f);
-        CGContextTranslateCTM(drawContext, -bbox.origin.x, -bbox.origin.y);
-
-        _shapeImage.position = bbox.origin;
-
-        CGContextAddPath(drawContext, _path);
-
-        if ( _fillColor ) {
-            CGContextSetFillColorWithColor(drawContext, _fillColor);
-            CGContextEOFillPath(drawContext);
-        }
-
-        if ( _strokeColor ) {
-            CGContextSetStrokeColorWithColor(drawContext, _strokeColor);
-            CGContextSetLineWidth(drawContext, _lineWidth);
-            CGContextStrokePath(drawContext);
-        }
-
-        CGImageRef target = CGBitmapContextGetImage(drawContext);
-
-        _shapeImage.contents = (id) target;
-
-        CGContextRelease(drawContext);
+    if (_path == nil) {
+        _shapeImage.contents = nil;
+        return;
     }
 
-    -(void) setPath:(CGPathRef)path {
-        if ( _path == path ) return;
-
-        path = [path copy];
-        [_path release];
-        _path = path;
-        _needsRender = TRUE;
-        [self setNeedsLayout];
+    CGRect bbox = CGPathGetBoundingBox(_path);
+    if (bbox.size.width == 0 || bbox.size.height == 0) {
+        _shapeImage.contents = nil;
+        return;
     }
 
-    -(CGPathRef) path {
-        return _path;
+    bbox.size.width += _lineWidth * 2.0f;
+    bbox.size.height += _lineWidth * 2.0f;
+    bbox.origin.x -= _lineWidth;
+    bbox.origin.y -= _lineWidth;
+
+    bbox = CGRectStandardize(bbox);
+    bbox = CGRectIntegral(bbox);
+
+    float scale = _shapeImage.contentsScale;
+    int width = (int)(bbox.size.width * scale);
+    int height = (int)(bbox.size.height * scale);
+
+    CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
+
+    CGContextTranslateCTM(drawContext, 0, height);
+    if (scale != 1.0f) {
+        CGContextScaleCTM(drawContext, scale, scale);
     }
 
-    -(void) setFillColor:(CGColorRef)color {
-        if ( _fillColor == color ) return;
+    CGContextScaleCTM(drawContext, 1.0f, -1.0f);
+    CGContextTranslateCTM(drawContext, -bbox.origin.x, -bbox.origin.y);
 
-        CGColorRetain(color);
-        CGColorRelease(_fillColor);
-        _fillColor = color;
+    _shapeImage.position = bbox.origin;
 
-        _needsRender = TRUE;
-        [self setNeedsLayout];
+    CGContextAddPath(drawContext, _path);
+
+    if (_fillColor) {
+        CGContextSetFillColorWithColor(drawContext, _fillColor);
+        CGContextEOFillPath(drawContext);
     }
 
-    -(CGColorRef) fillColor {
-        return _fillColor;
+    if (_strokeColor) {
+        CGContextSetStrokeColorWithColor(drawContext, _strokeColor);
+        CGContextSetLineWidth(drawContext, _lineWidth);
+        CGContextStrokePath(drawContext);
     }
 
-    -(void) setStrokeColor:(CGColorRef)color {
-        if ( _strokeColor == color ) return;
+    CGImageRef target = CGBitmapContextGetImage(drawContext);
 
-        CGColorRetain(color);
-        CGColorRelease(_strokeColor);
-        _strokeColor = color;
+    _shapeImage.contents = (id)target;
 
-        _needsRender = TRUE;
-        [self setNeedsDisplay];
-    }
+    CGContextRelease(drawContext);
+}
 
-    -(CGColorRef) strokeColor {
-        return _strokeColor;
-    }
+- (void)setPath:(CGPathRef)path {
+    if (_path == path)
+        return;
 
-    -(void) setLineWidth:(float)width {
-        if ( _lineWidth == width ) return;
+    path = [path copy];
+    [_path release];
+    _path = path;
+    _needsRender = TRUE;
+    [self setNeedsLayout];
+}
 
-        _lineWidth = width;
+- (CGPathRef)path {
+    return _path;
+}
 
-        _needsRender = TRUE;
-        [self setNeedsLayout];
-    }
+- (void)setFillColor:(CGColorRef)color {
+    if (_fillColor == color)
+        return;
 
-    -(CGFloat) lineWidth {
-        return _lineWidth;
-    }
+    CGColorRetain(color);
+    CGColorRelease(_fillColor);
+    _fillColor = color;
 
-    -(void) setLineDashPattern:(id)pattern {
-    }
+    _needsRender = TRUE;
+    [self setNeedsLayout];
+}
 
-    -(void) setLineCap:(NSString *)cap {
-    }
+- (CGColorRef)fillColor {
+    return _fillColor;
+}
 
-    -(void) setLineJoin:(id)join {
-    }
+- (void)setStrokeColor:(CGColorRef)color {
+    if (_strokeColor == color)
+        return;
 
-    -(void) setFillRule:(id)rule {
-    }
+    CGColorRetain(color);
+    CGColorRelease(_strokeColor);
+    _strokeColor = color;
 
-    -(instancetype) init {
-        [super init];
+    _needsRender = TRUE;
+    [self setNeedsDisplay];
+}
 
-        _shapeImage = [CALayer new];
-        _shapeImage.anchorPoint = CGPointMake(0.0f, 0.0f);
-        _shapeImage.contentsGravity = kCAGravityBottomLeft;
-        _shapeImage.contentsScale = self.contentsScale;
-        _shapeImage.delegate = self;
+- (CGColorRef)strokeColor {
+    return _strokeColor;
+}
 
-        [self addSublayer: _shapeImage];
-        _fillColor = (CGColorRef) CGColorGetConstantColor((CFStringRef) @"BLACK");
-        CGColorRetain(_fillColor);
-        _lineWidth = 1.0f;
+- (void)setLineWidth:(float)width {
+    if (_lineWidth == width)
+        return;
 
-        return self;
-    }
+    _lineWidth = width;
 
-    -(void) setContentsScale: (float) scale
-    {
-        [super setContentsScale: scale];
-        [_shapeImage setContentsScale: scale];
-    }
+    _needsRender = TRUE;
+    [self setNeedsLayout];
+}
 
-    -(void) dealloc{
-        CGPathRelease(_path);
-        _path = nil;
-        CGColorRelease(_strokeColor);
-        _strokeColor = nil;
-        CGColorRelease(_fillColor);
-        _fillColor = nil;
-        [_shapeImage release];
-        _shapeImage = nil;
+- (CGFloat)lineWidth {
+    return _lineWidth;
+}
 
-        [super dealloc];
-    }
+- (void)setLineDashPattern:(id)pattern {
+}
+
+- (void)setLineCap:(NSString*)cap {
+}
+
+- (void)setLineJoin:(id)join {
+}
+
+- (void)setFillRule:(id)rule {
+}
+
+- (instancetype)init {
+    [super init];
+
+    _shapeImage = [CALayer new];
+    _shapeImage.anchorPoint = CGPointMake(0.0f, 0.0f);
+    _shapeImage.contentsGravity = kCAGravityBottomLeft;
+    _shapeImage.contentsScale = self.contentsScale;
+    _shapeImage.delegate = self;
+
+    [self addSublayer:_shapeImage];
+    _fillColor = (CGColorRef)CGColorGetConstantColor((CFStringRef) @"BLACK");
+    CGColorRetain(_fillColor);
+    _lineWidth = 1.0f;
+
+    return self;
+}
+
+- (void)setContentsScale:(float)scale {
+    [super setContentsScale:scale];
+    [_shapeImage setContentsScale:scale];
+}
+
+- (void)dealloc {
+    CGPathRelease(_path);
+    _path = nil;
+    CGColorRelease(_strokeColor);
+    _strokeColor = nil;
+    CGColorRelease(_fillColor);
+    _fillColor = nil;
+    [_shapeImage release];
+    _shapeImage = nil;
+
+    [super dealloc];
+}
 @end

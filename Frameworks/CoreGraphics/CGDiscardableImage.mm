@@ -20,13 +20,11 @@
 #include "CoreGraphics/CGContext.h"
 #include "CGContextImpl.h"
 
-CGContextImpl *CGDiscardableImageBacking::CreateDrawingContext(CGContextRef base)
-{
+CGContextImpl* CGDiscardableImageBacking::CreateDrawingContext(CGContextRef base) {
     return _forward->CreateDrawingContext(base);
 }
 
-CGDiscardableImageBacking::CGDiscardableImageBacking()
-{
+CGDiscardableImageBacking::CGDiscardableImageBacking() {
     _forward = NULL;
     _hasCachedInfo = false;
     _cachedSurfaceFormat = _Color565;
@@ -34,41 +32,36 @@ CGDiscardableImageBacking::CGDiscardableImageBacking()
     _cachedHeight = -1;
 }
 
-CGDiscardableImageBacking::~CGDiscardableImageBacking()
-{
-    if ( _forward ) {
+CGDiscardableImageBacking::~CGDiscardableImageBacking() {
+    if (_forward) {
         delete _forward;
     }
 }
 
-void CGDiscardableImageBacking::ConstructIfNeeded()
-{
-    if ( _forward == NULL ) {
+void CGDiscardableImageBacking::ConstructIfNeeded() {
+    if (_forward == NULL) {
         _forward = ConstructBacking();
         _cachedWidth = _forward->Width();
         _cachedHeight = _forward->Height();
     }
 }
 
-void CGDiscardableImageBacking::DiscardIfPossible()
-{
-    if ( _forward != NULL && _cairoLocks == 0 && _imageLocks == 0 ) {
+void CGDiscardableImageBacking::DiscardIfPossible() {
+    if (_forward != NULL && _cairoLocks == 0 && _imageLocks == 0) {
         delete _forward;
         _forward = NULL;
     }
 }
 
-CGImageRef CGDiscardableImageBacking::Copy()
-{
+CGImageRef CGDiscardableImageBacking::Copy() {
     ConstructIfNeeded();
 
     return _forward->Copy();
 }
 
-int CGDiscardableImageBacking::Width()
-{
-    if ( !_forward ) {
-        if ( _cachedWidth != -1 ) {
+int CGDiscardableImageBacking::Width() {
+    if (!_forward) {
+        if (_cachedWidth != -1) {
             return _cachedWidth;
         }
     }
@@ -77,10 +70,9 @@ int CGDiscardableImageBacking::Width()
     return _forward->Width();
 }
 
-int CGDiscardableImageBacking::Height()
-{
-    if ( !_forward ) {
-        if ( _cachedHeight != -1 ) {
+int CGDiscardableImageBacking::Height() {
+    if (!_forward) {
+        if (_cachedHeight != -1) {
             return _cachedHeight;
         }
     }
@@ -89,38 +81,33 @@ int CGDiscardableImageBacking::Height()
     return _forward->Height();
 }
 
-int CGDiscardableImageBacking::InternalWidth()
-{
+int CGDiscardableImageBacking::InternalWidth() {
     ConstructIfNeeded();
 
     return _forward->InternalWidth();
 }
 
-int CGDiscardableImageBacking::InternalHeight()
-{
+int CGDiscardableImageBacking::InternalHeight() {
     ConstructIfNeeded();
 
     return _forward->InternalHeight();
 }
 
-int CGDiscardableImageBacking::BytesPerRow()
-{
+int CGDiscardableImageBacking::BytesPerRow() {
     ConstructIfNeeded();
 
     return _forward->BytesPerRow();
 }
 
-int CGDiscardableImageBacking::BytesPerPixel()
-{
+int CGDiscardableImageBacking::BytesPerPixel() {
     ConstructIfNeeded();
 
     return _forward->BytesPerPixel();
 }
 
-surfaceFormat CGDiscardableImageBacking::SurfaceFormat()
-{
-    if ( !_forward ) {
-        if ( _hasCachedInfo ) {
+surfaceFormat CGDiscardableImageBacking::SurfaceFormat() {
+    if (!_forward) {
+        if (_hasCachedInfo) {
             return _cachedSurfaceFormat;
         }
     }
@@ -130,80 +117,68 @@ surfaceFormat CGDiscardableImageBacking::SurfaceFormat()
     return _forward->SurfaceFormat();
 }
 
-void *CGDiscardableImageBacking::LockImageData()
-{
+void* CGDiscardableImageBacking::LockImageData() {
     ConstructIfNeeded();
 
     return _forward->LockImageData();
 }
 
-void *CGDiscardableImageBacking::StaticImageData()
-{
+void* CGDiscardableImageBacking::StaticImageData() {
     ConstructIfNeeded();
 
     return _forward->StaticImageData();
 }
 
-void CGDiscardableImageBacking::ReleaseImageData()
-{
+void CGDiscardableImageBacking::ReleaseImageData() {
     ConstructIfNeeded();
 
     return _forward->ReleaseImageData();
 }
 
-cairo_surface_t *CGDiscardableImageBacking::LockCairoSurface() 
-{
+cairo_surface_t* CGDiscardableImageBacking::LockCairoSurface() {
     ConstructIfNeeded();
 
     return _forward->LockCairoSurface();
 }
 
-void CGDiscardableImageBacking::ReleaseCairoSurface() 
-{
+void CGDiscardableImageBacking::ReleaseCairoSurface() {
     ConstructIfNeeded();
 
     return _forward->ReleaseCairoSurface();
 }
 
-void CGDiscardableImageBacking::SetFreeWhenDone(bool freeWhenDone)
-{
+void CGDiscardableImageBacking::SetFreeWhenDone(bool freeWhenDone) {
     ConstructIfNeeded();
 
     _forward->SetFreeWhenDone(freeWhenDone);
 }
 
-void CGDiscardableImageBacking::GetPixel(int x, int y, float &r, float &g, float &b, float &a)
-{
+void CGDiscardableImageBacking::GetPixel(int x, int y, float& r, float& g, float& b, float& a) {
     ConstructIfNeeded();
 
     _forward->GetPixel(x, y, r, g, b, a);
 }
 
-ImageDataStreamFile::ImageDataStreamFile(EbrFile *in)
-{
+ImageDataStreamFile::ImageDataStreamFile(EbrFile* in) {
     fpIn = in;
 }
 
-ImageDataStreamFile::~ImageDataStreamFile()
-{
+ImageDataStreamFile::~ImageDataStreamFile() {
     EbrFclose(fpIn);
 }
 
-int ImageDataStreamFile::readData(void *in, int len)
-{
+int ImageDataStreamFile::readData(void* in, int len) {
     int ret = EbrFread(in, 1, len, fpIn);
 
     return ret;
 }
 
-ImageDataStreamMemory::ImageDataStreamMemory(const void *in, int len)
-{
-    data = (char *) in;
+ImageDataStreamMemory::ImageDataStreamMemory(const void* in, int len) {
+    data = (char*)in;
     dataLeft = len;
 }
 
-int ImageDataStreamMemory::readData(void *in, int len)
-{
+int ImageDataStreamMemory::readData(void* in, int len) {
     int toCopy = dataLeft > len ? len : dataLeft;
 
     memcpy(in, data, toCopy);

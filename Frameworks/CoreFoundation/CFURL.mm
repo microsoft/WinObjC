@@ -21,64 +21,67 @@ static IWLazyClassLookup _LazyNSString("NSString");
 
 // Won't work so great with continuations... FIXME sometime
 
-static bool charInNSString(CFStringRef str, short ch)
-{
+static bool charInNSString(CFStringRef str, short ch) {
     unsigned length = [(NSString*)str length];
-    if ( length == 0 ) return false;
-    
+    if (length == 0)
+        return false;
+
     const char* cstring = [(NSString*)str UTF8String];
-    for ( size_t i = 0; i < length; ++i ) {
-        if ( cstring[i] == ch ) return true;
+    for (size_t i = 0; i < length; ++i) {
+        if (cstring[i] == ch)
+            return true;
     }
     return false;
 }
 
-CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator, CFStringRef origString, CFStringRef charactersToLeaveUnescaped, CFStringRef legalURLCharactersToBeEscaped, CFStringEncoding encoding)
-{
+CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
+                                                    CFStringRef origString,
+                                                    CFStringRef charactersToLeaveUnescaped,
+                                                    CFStringRef legalURLCharactersToBeEscaped,
+                                                    CFStringEncoding encoding) {
     const char* utf8String = [(NSString*)origString UTF8String];
 
-    NSUInteger length = [(NSString*)origString lengthOfBytesUsingEncoding:encoding], resultLength=0;
-    char* result = (char *) EbrMalloc(length * 3 * 2 + 1);
+    NSUInteger length = [(NSString *)origString lengthOfBytesUsingEncoding:encoding], resultLength = 0;
+    char* result = (char*)EbrMalloc(length * 3 * 2 + 1);
 
     const char hex[] = "0123456789ABCDEF";
-    const char legalURLCharacters[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=" };
+    const char legalURLCharacters[] = {
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;="
+    };
 
-    for ( size_t i = 0; i < length; ++i ) {
+    for (size_t i = 0; i < length; ++i) {
         char code = utf8String[i];
 
         bool legalCharacter = charInNSString(charactersToLeaveUnescaped, code);
 
-        for ( size_t n = 0; n < sizeof(legalURLCharacters) && !legalCharacter; ++n ) {
-            if ( code == legalURLCharacters[n] && !charInNSString(legalURLCharactersToBeEscaped, code) )
+        for (size_t n = 0; n < sizeof(legalURLCharacters) && !legalCharacter; ++n) {
+            if (code == legalURLCharacters[n] && !charInNSString(legalURLCharactersToBeEscaped, code))
                 legalCharacter = true;
         }
 
-        if ( !legalCharacter ) {
+        if (!legalCharacter) {
             result[resultLength++] = '%';
-            result[resultLength++] = hex[(code>>4)&0xF];
-            result[resultLength++] = hex[code&0xF];
-        }
-        else {
+            result[resultLength++] = hex[(code >> 4) & 0xF];
+            result[resultLength++] = hex[code & 0xF];
+        } else {
             result[resultLength++] = code;
         }
     }
 
     NSString* ret;
-    if ( length == resultLength ) {
+    if (length == resultLength) {
         EbrFree(result);
         ret = [(NSString*)origString retain];
     } else {
         result[resultLength] = 0;
 
-        NSString *ret = [[_LazyNSString alloc] initWithCString:result];
+        NSString* ret = [[_LazyNSString alloc] initWithCString:result];
         EbrFree(result);
     }
 
-    return (__bridge CFStringRef) ret;
+    return (__bridge CFStringRef)ret;
 }
 
-CFStringRef CFURLCopyPathExtension(CFURLRef self)
-{
-    return (CFStringRef) [[[(NSURL*)self path] pathExtension] retain];
+CFStringRef CFURLCopyPathExtension(CFURLRef self) {
+    return (CFStringRef)[[[(NSURL*)self path] pathExtension] retain];
 }
-

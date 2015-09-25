@@ -20,22 +20,20 @@
 #include "CGFontInternal.h"
 #include "AlphaFontGenerator.h"
 
-void AlphaFontGenerator::init(FT_Face face, size_t size)
-{
+void AlphaFontGenerator::init(FT_Face face, size_t size) {
     FontGenerator::init(NULL, face, size);
 }
 
-void AlphaFontGenerator::renderGlyph(int c)
-{
+void AlphaFontGenerator::renderGlyph(int c) {
     rep.clear();
-    
+
     int ci = FT_Get_Char_Index(face, c);
     int error = FT_Load_Glyph(face, ci, FT_LOAD_DEFAULT);
-    if (error) return;
+    if (error)
+        return;
     error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
-    if (error) return;
+    if (error)
+        return;
 
     rep.reinit(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows);
 }
-
-

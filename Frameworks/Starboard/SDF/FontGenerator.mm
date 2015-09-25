@@ -25,14 +25,12 @@
 
 #include "FontGenerator.h"
 
-void FontGenerator::init(void* mem, FT_Face newFace, size_t newSize)
-{
+void FontGenerator::init(void* mem, FT_Face newFace, size_t newSize) {
     rep.reinit((unsigned char*)mem, 0, 0);
     init(newFace, newSize);
 }
 
-void FontGenerator::init(FT_Face newFace, size_t newSize)
-{
+void FontGenerator::init(FT_Face newFace, size_t newSize) {
     face = newFace;
-    faceSize = newSize;    
+    faceSize = newSize;
 }

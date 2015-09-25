@@ -19,13 +19,11 @@
 #include "UIKit/UINavigationController.h"
 
 @implementation UINavigationPane : UIView
-    -(void) layoutSubviews {
-        if ( _parentController == nil ) {
-            EbrDebugLog("UINavigationPane: parent destroyed?\n");
-        }
-        [_parentController layoutContainer];
+- (void)layoutSubviews {
+    if (_parentController == nil) {
+        EbrDebugLog("UINavigationPane: parent destroyed?\n");
     }
+    [_parentController layoutContainer];
+}
 
-    
 @end
-

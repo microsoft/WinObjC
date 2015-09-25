@@ -20,54 +20,53 @@
 @implementation NSSortDescriptor : NSObject {
     SEL _selector;
     idretaintype(NSString) _keyPath;
-    BOOL  _ascending;
+    BOOL _ascending;
 }
 
-    -(instancetype) initWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
+- (instancetype)initWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
+    _selector = @selector(compare:);
+    _keyPath = keyPath;
+    _ascending = ascending;
+    return self;
+}
+
++ (instancetype)sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
+    id ret = [[self alloc] initWithKey:keyPath ascending:ascending];
+    return [ret autorelease];
+}
+
++ (instancetype)sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
+    id ret = [[self alloc] initWithKey:keyPath ascending:ascending selector:selector];
+    return [ret autorelease];
+}
+
+- (instancetype)initWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
+    const char* keyName = (const char*)[keyPath UTF8String];
+
+    if (selector == NULL) {
         _selector = @selector(compare:);
-        _keyPath = keyPath;
-        _ascending = ascending;
-        return self;
+    } else {
+        _selector = selector;
     }
+    _keyPath = keyPath;
+    _ascending = ascending;
+    return self;
+}
 
-    +(instancetype) sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
-        id ret = [[self alloc] initWithKey:keyPath ascending:ascending];
-        return [ret autorelease];
-    }
+- (NSString*)key {
+    return _keyPath;
+}
 
-    +(instancetype) sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
-        id ret = [[self alloc] initWithKey:keyPath ascending:ascending selector:selector];
-        return [ret autorelease];
-    }
+- (NSInteger)compareObject:(NSObject*)object1 toObject:(NSObject*)object2 {
+    id val1 = [object1 valueForKeyPath:_keyPath];
+    id val2 = [object2 valueForKeyPath:_keyPath];
 
-    -(instancetype) initWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
-        const char *keyName = (const char *) [keyPath UTF8String];
+    int result = (NSInteger)[val1 performSelector:_selector withObject:val2];
 
-        if ( selector == NULL ) {
-            _selector = @selector(compare:);
-        } else {
-            _selector = selector;
-        }
-        _keyPath = keyPath;
-        _ascending = ascending;
-        return self;
-    }
+    if (!_ascending)
+        result = -result;
 
-    -(NSString*) key {
-        return _keyPath;
-    }
+    return result;
+}
 
-    -(NSInteger) compareObject:(NSObject*)object1 toObject:(NSObject*)object2 {
-        id val1 = [object1 valueForKeyPath:_keyPath];
-        id val2 = [object2 valueForKeyPath:_keyPath];
-
-        int result = (NSInteger) [val1 performSelector:_selector withObject:val2];
-
-        if ( !_ascending ) result = -result;
-
-        return result;
-    }
-
-    
 @end
-

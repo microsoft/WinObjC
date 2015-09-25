@@ -22,61 +22,59 @@
 #include "UIGridLayoutSection.h"
 
 @implementation UIGridLayoutInfo : NSObject
-    /* annotate with type */ -(id) setHorizontal:(BOOL)horizontal {
-        _horizontal = horizontal;
-        return 0;
-    }
+- (id)setHorizontal:(BOOL)horizontal {
+    _horizontal = horizontal;
+    return 0;
+}
 
-    -(BOOL) horizontal {
-        return _horizontal;
-    }
+- (BOOL)horizontal {
+    return _horizontal;
+}
 
-    /* annotate with type */ -(id) setDimension:(float)dimension {
-        _dimension = dimension;
-        return 0;
-    }
+- (id)setDimension:(float)dimension {
+    _dimension = dimension;
+    return 0;
+}
 
-    -(float) dimension {
-        return _dimension;
-    }
+- (float)dimension {
+    return _dimension;
+}
 
-    /* annotate with type */ -(id) setRowAlignmentOptions:(id)options {
-        _rowAlignmentOptions = [options copy];
-        return 0;
-    }
+- (id)setRowAlignmentOptions:(id)options {
+    _rowAlignmentOptions = [options copy];
+    return 0;
+}
 
-    /* annotate with type */ -(id) init {
-        _sections.attach([NSMutableArray new]);
-        return self;
-    }
+- (id)init {
+    _sections.attach([NSMutableArray new]);
+    return self;
+}
 
-    /* annotate with type */ -(id) sections {
-        return _sections;
-    }
+- (id)sections {
+    return _sections;
+}
 
-    /* annotate with type */ -(id) addSection {
-        id section = [UIGridLayoutSection new];
-        [section setRowAlignmentOptions:(id) _rowAlignmentOptions];
-        [section setLayoutInfo:self];
-        [_sections addObject:section];
-        [self invalidate:NO];
-        return section;
-    }
+- (id)addSection {
+    id section = [UIGridLayoutSection new];
+    [section setRowAlignmentOptions:(id)_rowAlignmentOptions];
+    [section setLayoutInfo:self];
+    [_sections addObject:section];
+    [self invalidate:NO];
+    return section;
+}
 
-    /* annotate with type */ -(id) invalidate:(BOOL)arg {
-        _isValid = NO;
-        return 0;
-    }
+- (id)invalidate:(BOOL)arg {
+    _isValid = NO;
+    return 0;
+}
 
-    /* annotate with type */ -(id) setContentSize:(CGSize)size {
-        _contentSize = size;
-        return 0;
-    }
+- (id)setContentSize:(CGSize)size {
+    _contentSize = size;
+    return 0;
+}
 
-    -(CGSize) contentSize {
-        return _contentSize;
-    }
+- (CGSize)contentSize {
+    return _contentSize;
+}
 
-    
 @end
-

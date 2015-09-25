@@ -28,99 +28,98 @@ static IWLazyClassLookup _LazyUIProxyObject("UIProxyObject");
 static IWLazyClassLookup _LazyUIWindow("UIWindow");
 
 @implementation NSNib {
-   idretain _bundle;
+    idretain _bundle;
 }
 
-    -(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject {
-        return [self loadNib:filename withOwner:ownerObject proxies:nil];
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject {
+    return [self loadNib:filename withOwner:ownerObject proxies:nil];
+}
+
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
+    NSData* data = [NSData dataWithContentsOfFile:filename];
+    if (data == nil) {
+        data = [NSData dataWithContentsOfFile:[filename stringByAppendingPathComponent:@"/runtime.nib"]];
     }
 
-    -(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
-        NSData* data = [NSData dataWithContentsOfFile:filename];
-        if ( data == nil ) {
-            data = [NSData dataWithContentsOfFile:[filename stringByAppendingPathComponent:@"/runtime.nib"]];
-        }
+    return [self loadNibWithData:data withOwner:ownerObject proxies:proxies];
+}
 
-        return [self loadNibWithData:data withOwner:ownerObject proxies:proxies];
+- (NSArray*)loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
+    char* bytes = (char*)[data bytes];
+    if (!bytes)
+        return nil;
+
+    id prop;
+
+    if (memcmp(bytes, "NIBArchive", 10) == 0) {
+        prop = [NSNibUnarchiver alloc];
+    } else {
+        prop = [NSKeyedUnarchiver alloc];
     }
 
-    -(NSArray*) loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
-        char *bytes = (char *) [data bytes];
-        if (!bytes) return nil;
+    [_LazyUIProxyObject addProxyObject:nil withName:@"IBFirstResponder" forCoder:prop];
+    [_LazyUIProxyObject addProxyObject:ownerObject withName:@"IBFilesOwner" forCoder:prop];
 
-        id prop;
+    for (id key in proxies) {
+        id curObj = [proxies objectForKey:key];
 
-        if ( memcmp(bytes, "NIBArchive", 10) == 0 ) {
-            prop = [NSNibUnarchiver alloc];
-        } else {
-            prop = [NSKeyedUnarchiver alloc];
+        [_LazyUIProxyObject addProxyObject:curObj withName:key forCoder:prop];
+    }
+
+    [prop _setBundle:(id)_bundle];
+    [prop initForReadingWithData:data];
+    // id allObjects = prop("decodeObjectForKey:", @"UINibObjectsKey");
+    NSArray* connections = [prop decodeObjectForKey:@"UINibConnectionsKey"];
+    NSArray* topLevelObjects = [prop decodeObjectForKey:@"UINibTopLevelObjectsKey"];
+    NSArray* visibleObjects = [prop decodeObjectForKey:@"UINibVisibleWindowsKey"];
+    NSArray* allObjects = [prop decodeObjectForKey:@"UINibObjectsKey"];
+
+    for (UIRuntimeEventConnection* curconnection in connections) {
+        [curconnection _makeConnection];
+    }
+
+    for (UIView* curobject in visibleObjects) {
+        [curobject setHidden:FALSE];
+
+        if ([curobject isKindOfClass:[_LazyUIWindow class]]) {
+            [curobject makeKeyAndVisible];
         }
+    };
 
-        [_LazyUIProxyObject addProxyObject:nil withName:@"IBFirstResponder" forCoder:prop];
-        [_LazyUIProxyObject addProxyObject:ownerObject withName:@"IBFilesOwner" forCoder:prop];
-
-        for (id key in proxies) {
-            id curObj = [proxies objectForKey:key];
-
-            [_LazyUIProxyObject addProxyObject:curObj withName:key forCoder:prop];
-        }
-
-        [prop _setBundle:(id) _bundle];
-        [prop initForReadingWithData:data];
-        //id allObjects = prop("decodeObjectForKey:", @"UINibObjectsKey");
-        NSArray* connections = [prop decodeObjectForKey:@"UINibConnectionsKey"];
-        NSArray* topLevelObjects = [prop decodeObjectForKey:@"UINibTopLevelObjectsKey"];
-        NSArray* visibleObjects = [prop decodeObjectForKey:@"UINibVisibleWindowsKey"];
-        NSArray* allObjects = [prop decodeObjectForKey:@"UINibObjectsKey"];
-
-        for (UIRuntimeEventConnection* curconnection in connections) {
-            [curconnection _makeConnection];
-        }
-
-        for (UIView* curobject in visibleObjects) {
-            [curobject setHidden:FALSE];
-
-            if ( [curobject isKindOfClass:[_LazyUIWindow class]] ) {
-                [curobject makeKeyAndVisible];
-            }
-        };
-
-        for (id curobject in allObjects) {
-            if ( curobject != ownerObject ) {
-                if ( [curobject respondsToSelector:@selector(awakeFromNib)] ) {
-                    [curobject awakeFromNib];
-                }
-            }
-        }
-
-        [prop autorelease];
-
-        //  Grab TLO's, excluding owner
-        NSMutableArray* ret = [NSMutableArray array];
-        for (id curobject in topLevelObjects) {
-            if ( curobject != ownerObject ) {
-                [ret addObject:curobject];
+    for (id curobject in allObjects) {
+        if (curobject != ownerObject) {
+            if ([curobject respondsToSelector:@selector(awakeFromNib)]) {
+                [curobject awakeFromNib];
             }
         }
-
-        [_LazyUIProxyObject clearProxyObjects:prop];
-
-        return ret;
     }
 
-    -(void) _setBundle:(NSBundle*)bundle {
-        _bundle = bundle;
+    [prop autorelease];
+
+    //  Grab TLO's, excluding owner
+    NSMutableArray* ret = [NSMutableArray array];
+    for (id curobject in topLevelObjects) {
+        if (curobject != ownerObject) {
+            [ret addObject:curobject];
+        }
     }
 
-    -(NSBundle*) _bundle {
-        return _bundle;
-    }
+    [_LazyUIProxyObject clearProxyObjects:prop];
 
-    -(void) dealloc {
-        _bundle = nil;
-        [super dealloc];
-    }
+    return ret;
+}
 
-    
+- (void)_setBundle:(NSBundle*)bundle {
+    _bundle = bundle;
+}
+
+- (NSBundle*)_bundle {
+    return _bundle;
+}
+
+- (void)dealloc {
+    _bundle = nil;
+    [super dealloc];
+}
+
 @end
-

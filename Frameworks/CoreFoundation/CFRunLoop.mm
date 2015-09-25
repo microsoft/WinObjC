@@ -19,27 +19,23 @@
 
 static IWLazyClassLookup _LazyNSRunLoop("NSRunLoop"), _LazyNSDate("NSDate");
 
-SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnAfterSource)
-{
-    id stopDate = [_LazyNSDate dateWithTimeIntervalSinceNow: time];
+SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnAfterSource) {
+    id stopDate = [_LazyNSDate dateWithTimeIntervalSinceNow:time];
     id runLoop = [_LazyNSRunLoop currentRunLoop];
 
-    while ( [runLoop runMode: (NSString *) mode beforeDate: stopDate]) {
-        if ( [stopDate timeIntervalSinceNow] <= 0 ) {
+    while ([runLoop runMode:(NSString*)mode beforeDate:stopDate]) {
+        if ([stopDate timeIntervalSinceNow] <= 0) {
             break;
         }
     }
-    
+
     return kCFRunLoopRunTimedOut;
 }
 
-CFRunLoopRef CFRunLoopGetCurrent()
-{
-    return (CFRunLoopRef) [_LazyNSRunLoop currentRunLoop];
+CFRunLoopRef CFRunLoopGetCurrent() {
+    return (CFRunLoopRef)[_LazyNSRunLoop currentRunLoop];
 }
 
-CFRunLoopRef CFRunLoopGetMain()
-{
-    return (CFRunLoopRef) [_LazyNSRunLoop mainRunLoop];
+CFRunLoopRef CFRunLoopGetMain() {
+    return (CFRunLoopRef)[_LazyNSRunLoop mainRunLoop];
 }
-

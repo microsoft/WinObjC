@@ -24,61 +24,63 @@
     idretaintype(UITouch) touchEvent;
     double _timestamp;
 }
-    +(UIEvent *) createWithTouches:(NSSet*)touchUISet touchEvent:(UIEvent*)touch {
-        UIEvent *us = (UIEvent *) [self new];
-        us->touches = touchUISet;
-        us->touchEvent = touch;
++ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UIEvent*)touch {
+    UIEvent* us = (UIEvent*)[self new];
+    us->touches = touchUISet;
+    us->touchEvent = touch;
 
-        return us;
-    }
+    return us;
+}
 
-    - (NSSet *)touchesForWindow:(UIWindow *)window { return nil;}
-    - (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture { return nil;}
+- (NSSet*)touchesForWindow:(UIWindow*)window {
+    return nil;
+}
+- (NSSet*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture {
+    return nil;
+}
 
-    -(NSSet*) allTouches {
-        return touches;
-    }
+- (NSSet*)allTouches {
+    return touches;
+}
 
-    -(UITouch*) _touchEvent {
-        return touchEvent;
-    }
+- (UITouch*)_touchEvent {
+    return touchEvent;
+}
 
-    -(NSSet*) touchesForView:(UIView*)view {
-        NSEnumerator* curEnum = [touches objectEnumerator];
-        NSMutableSet* ret = [NSMutableSet set];
+- (NSSet*)touchesForView:(UIView*)view {
+    NSEnumerator* curEnum = [touches objectEnumerator];
+    NSMutableSet* ret = [NSMutableSet set];
 
-        UITouch* curTouch;
-        while ( (curTouch = [curEnum nextObject]) != nil ) {
-            if ( [curTouch view] == view ) {
-                [ret addObject:curTouch];
-            }
-        }
-
-        if ( [ret count] > 0 ) {            
-            return ret;
-        } else {
-            return nil;
+    UITouch* curTouch;
+    while ((curTouch = [curEnum nextObject]) != nil) {
+        if ([curTouch view] == view) {
+            [ret addObject:curTouch];
         }
     }
 
-    -(void) setTimestamp:(double)time {
-        _timestamp = time;
+    if ([ret count] > 0) {
+        return ret;
+    } else {
+        return nil;
     }
+}
 
-    -(UIEventType) type {
-        return UIEventTypeTouches;
-    }
+- (void)setTimestamp:(double)time {
+    _timestamp = time;
+}
 
-    -(void) dealloc {
-        touches = nil;
-        touchEvent = nil;
-        [super dealloc];
-    }
+- (UIEventType)type {
+    return UIEventTypeTouches;
+}
 
-    -(double) timestamp {
-        return _timestamp;
-    }
+- (void)dealloc {
+    touches = nil;
+    touchEvent = nil;
+    [super dealloc];
+}
 
-    
+- (double)timestamp {
+    return _timestamp;
+}
+
 @end
-

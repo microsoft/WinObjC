@@ -20,7 +20,7 @@
 @end
 
 @implementation UITableViewCellContentView
-    -(id) initWithCoder:(NSCoder*)coder {
-        return [super initWithCoder:coder];
-    }
+- (id)initWithCoder:(NSCoder*)coder {
+    return [super initWithCoder:coder];
+}
 @end

@@ -18,17 +18,15 @@
 #include "NSInputSource.h"
 
 @implementation NSInputSource : NSObject
-    -(BOOL) isValid {
-        return YES;
-    }
+- (BOOL)isValid {
+    return YES;
+}
 
-    -(void) invalidate {
-    }
+- (void)invalidate {
+}
 
-    -(BOOL) processInputImmediately {
-        return NO;
-    }
+- (BOOL)processInputImmediately {
+    return NO;
+}
 
-    
 @end
-

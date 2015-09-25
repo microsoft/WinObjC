@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#if defined( WIN32 ) || defined( QNX )
- #include <process.h>
+#if defined(WIN32) || defined(QNX)
+#include <process.h>
 #endif
 
 #include <math.h>
@@ -35,15 +35,14 @@
 #include "CACompositorClient.h"
 #include "DXCompositor.h"
 
-#pragma comment (lib, "d3d11.lib")
+#pragma comment(lib, "d3d11.lib")
 
-struct ApplicationProperties
-{
+struct ApplicationProperties {
 public:
-    float       appWidth, appHeight, appScale;
-    const char *appName;
-    bool        isTablet;
-    bool        bLandscape;
+    float appWidth, appHeight, appScale;
+    const char* appName;
+    bool isTablet;
+    bool bLandscape;
 };
 
 ApplicationProperties applicationProperties;
@@ -55,22 +54,18 @@ IDXGISwapChain* existingChain = NULL;
 ID3D11RenderTargetView* existingRtv = NULL;
 static HANDLE _hNewFrameAvailable;
 
-DXCompositorInterface *_dxCompositor;
+DXCompositorInterface* _dxCompositor;
 
-#define EVENT_DOWN  0x64
-#define EVENT_MOVE  0x65
-#define EVENT_UP    0x66
+#define EVENT_DOWN 0x64
+#define EVENT_MOVE 0x65
+#define EVENT_UP 0x66
 
 float windowWidth, windowHeight;
 
 DWORD windowStyle = (WS_OVERLAPPEDWINDOW);
 
-static LRESULT CALLBACK CompositorWindowProc(HWND hWnd,
-                         UINT message,
-                         WPARAM wParam,
-                         LPARAM lParam)
-{
-    switch ( message ) {
+static LRESULT CALLBACK CompositorWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    switch (message) {
         case WM_DESTROY:
             PostQuitMessage(0);
             UIShutdown();
@@ -86,31 +81,30 @@ static LRESULT CALLBACK CompositorWindowProc(HWND hWnd,
             windowWidth = newWidth;
             windowHeight = newHeight;
 
-            if ( _dxCompositor ) {
+            if (_dxCompositor) {
                 _dxCompositor->SetRenderSize(newWidth, newHeight);
 
-                if ( existingRtv && existingChain && existingDevice && existingContext ) {
+                if (existingRtv && existingChain && existingDevice && existingContext) {
                     existingRtv->Release();
                     existingRtv = NULL;
 
                     HRESULT hr = S_OK;
                     hr = existingChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
                     assert(hr == S_OK);
-                    
-                    ID3D11Texture2D *pBackBuffer;
+
+                    ID3D11Texture2D* pBackBuffer;
                     hr = existingChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
                     assert(hr == S_OK);
 
                     hr = existingDevice->CreateRenderTargetView(pBackBuffer, NULL, &existingRtv);
                     assert(hr == S_OK);
-                    
+
                     pBackBuffer->Release();
                     existingContext->OMSetRenderTargets(1, &existingRtv, NULL);
                 }
                 SetEvent(_hNewFrameAvailable);
             }
-        }
-            break;
+        } break;
 
         case WM_CHAR:
             UIQueueKeyInput(wParam);
@@ -122,16 +116,15 @@ static LRESULT CALLBACK CompositorWindowProc(HWND hWnd,
         case WM_LBUTTONDOWN:
         case WM_LBUTTONUP:
         case WM_MOUSEMOVE: {
-            float x = (float) (signed short) LOWORD(lParam);
-            float y = (float) (signed short) HIWORD(lParam);
+            float x = (float)(signed short)LOWORD(lParam);
+            float y = (float)(signed short)HIWORD(lParam);
             uint64_t timestamp;
 
             int touchID = 0;
-            if ( message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_MOUSEMOVE ) {
+            if (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_MOUSEMOVE) {
                 touchID = 0x7FFFFFFF;
                 timestamp = GetTickCount64() * 1000000LL;
-            } else 
-            {
+            } else {
                 POINT pt;
 
                 pt.x = x;
@@ -148,26 +141,48 @@ static LRESULT CALLBACK CompositorWindowProc(HWND hWnd,
                 timestamp = pi.dwTime * 1000000LL;
             }
 
-            if ( touchID == -1 ) break;
+            if (touchID == -1)
+                break;
 
-            switch ( message ) {
+            switch (message) {
                 case WM_LBUTTONDOWN:
                 case WM_LBUTTONDBLCLK:
                 case WM_POINTERDOWN:
                     SetFocus(hWnd);
                     SetCapture(hWnd);
-                    UIQueueTouchInput(x, y, touchID, EVENT_DOWN, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
+                    UIQueueTouchInput(x,
+                                      y,
+                                      touchID,
+                                      EVENT_DOWN,
+                                      windowWidth,
+                                      windowHeight,
+                                      timestamp,
+                                      applicationProperties.bLandscape);
                     break;
 
                 case WM_LBUTTONUP:
                 case WM_POINTERUP:
                     ReleaseCapture();
-                    UIQueueTouchInput(x, y, touchID, EVENT_UP, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
+                    UIQueueTouchInput(x,
+                                      y,
+                                      touchID,
+                                      EVENT_UP,
+                                      windowWidth,
+                                      windowHeight,
+                                      timestamp,
+                                      applicationProperties.bLandscape);
                     break;
 
                 case WM_MOUSEMOVE:
                 case WM_POINTERUPDATE:
-                    UIQueueTouchInput(x, y, touchID, EVENT_MOVE, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
+                    UIQueueTouchInput(x,
+                                      y,
+                                      touchID,
+                                      EVENT_MOVE,
+                                      windowWidth,
+                                      windowHeight,
+                                      timestamp,
+                                      applicationProperties.bLandscape);
                     break;
             }
         }
@@ -179,35 +194,30 @@ static LRESULT CALLBACK CompositorWindowProc(HWND hWnd,
 
 static HANDLE compositorReady;
 
-class DXWin32CompositorClient : public CACompositorClientInterface
-{
+class DXWin32CompositorClient : public CACompositorClientInterface {
 public:
-    DXWin32CompositorClient()
-    {
+    DXWin32CompositorClient() {
         _hNewFrameAvailable = CreateEvent(NULL, FALSE, FALSE, NULL);
     }
 
-    void RequestRedraw() 
-    { 
+    void RequestRedraw() {
         SetEvent(_hNewFrameAvailable);
     }
 
-    void RequestTransactionProcessing() 
-    {
+    void RequestTransactionProcessing() {
         UIRequestTransactionProcessing();
     }
 
-    void SetLandscape(bool isLandscape) 
-    {
+    void SetLandscape(bool isLandscape) {
         applicationProperties.bLandscape = isLandscape;
-        if ( _dxCompositor ) _dxCompositor->SetLandscape(isLandscape);
+        if (_dxCompositor)
+            _dxCompositor->SetLandscape(isLandscape);
     }
 };
 
-DXWin32CompositorClient *_client;
+DXWin32CompositorClient* _client;
 
-static DWORD WINAPI CompositorThread(LPVOID thread)
-{
+static DWORD WINAPI CompositorThread(LPVOID thread) {
     // the handle for the window, filled by a function
     HWND hWnd = NULL;
 
@@ -234,7 +244,7 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
     int windowWidth = applicationProperties.appWidth;
     int windowHeight = applicationProperties.appHeight;
 
-    if ( applicationProperties.bLandscape ) {
+    if (applicationProperties.bLandscape) {
         int tmp = windowWidth;
         windowWidth = windowHeight;
         windowHeight = tmp;
@@ -242,17 +252,17 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
 
     // create the window and use the result as the handle
     hWnd = CreateWindowEx(NULL,
-        "DX Compositor",    // name of the window class
-        applicationProperties.appName,   // title of the window
-        windowStyle,    // window style
-        100,    // x-position of the window
-        100,    // y-position of the window
-        windowWidth,    // width of the window
-        windowHeight,    // height of the window
-        NULL,    // we have no parent window, NULL
-        NULL,    // we aren't using menus, NULL
-        GetModuleHandle(NULL),    // application handle
-        NULL);    // used with multiple windows, NULL
+                          "DX Compositor", // name of the window class
+                          applicationProperties.appName, // title of the window
+                          windowStyle, // window style
+                          100, // x-position of the window
+                          100, // y-position of the window
+                          windowWidth, // width of the window
+                          windowHeight, // height of the window
+                          NULL, // we have no parent window, NULL
+                          NULL, // we aren't using menus, NULL
+                          GetModuleHandle(NULL), // application handle
+                          NULL); // used with multiple windows, NULL
 
     RegisterTouchWindow(hWnd, 0);
 
@@ -276,26 +286,26 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
     // fill the swap chain description struct
-    scd.BufferCount = 1;                                    // one back buffer
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-    scd.OutputWindow = hWnd;                                // the window to be used
-    scd.SampleDesc.Count = 1;                               // how many multisamples
-    scd.Windowed = TRUE;                                    // windowed/full-screen mode
+    scd.BufferCount = 1; // one back buffer
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // use 32-bit color
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // how swap chain is to be used
+    scd.OutputWindow = hWnd; // the window to be used
+    scd.SampleDesc.Count = 1; // how many multisamples
+    scd.Windowed = TRUE; // windowed/full-screen mode
 
     // create a device, device context and swap chain using the information in the scd struct
     HRESULT rc = D3D11CreateDeviceAndSwapChain(NULL,
-        D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        D3D11_SDK_VERSION,
-        &scd,
-        &existingChain,
-        (ID3D11Device **) &existingDevice,
-        NULL,
-        (ID3D11DeviceContext **) &existingContext);
+                                               D3D_DRIVER_TYPE_HARDWARE,
+                                               NULL,
+                                               NULL,
+                                               NULL,
+                                               NULL,
+                                               D3D11_SDK_VERSION,
+                                               &scd,
+                                               &existingChain,
+                                               (ID3D11Device**)&existingDevice,
+                                               NULL,
+                                               (ID3D11DeviceContext**)&existingContext);
     if (FAILED(rc)) {
         char buf[512];
         sprintf(buf, "HRESULT IS 0x%x\n", rc);
@@ -304,7 +314,7 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
 
     existingChain->ResizeBuffers(0, windowWidth, windowHeight, DXGI_FORMAT_UNKNOWN, 0);
 
-    ID3D11Texture2D *pBackBuffer;
+    ID3D11Texture2D* pBackBuffer;
     existingChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
     existingDevice->CreateRenderTargetView(pBackBuffer, NULL, &existingRtv);
     pBackBuffer->Release();
@@ -316,14 +326,13 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
     _dxCompositor->SetLandscape(applicationProperties.bLandscape);
     SetEvent(compositorReady);
 
-    for ( ;; ) {
-        if( PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )
-        {
+    for (;;) {
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         } else {
-            DWORD result = MsgWaitForMultipleObjectsEx(1, &_hNewFrameAvailable, INFINITE, QS_ALLEVENTS, MWMO_ALERTABLE); 
-            if ( result == WAIT_OBJECT_0 ) {
+            DWORD result = MsgWaitForMultipleObjectsEx(1, &_hNewFrameAvailable, INFINITE, QS_ALLEVENTS, MWMO_ALERTABLE);
+            if (result == WAIT_OBJECT_0) {
                 _dxCompositor->RenderFrame(existingContext, existingRtv);
                 existingChain->Present(1, 0);
             }
@@ -333,11 +342,9 @@ static DWORD WINAPI CompositorThread(LPVOID thread)
     return 0;
 }
 
-
-const char *GetAppNameFromPList()
-{
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleDisplayName"];
-    if ( appName != nil ) {
+const char* GetAppNameFromPList() {
+    NSString* appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    if (appName != nil) {
         return [appName UTF8String];
     }
 
@@ -346,11 +353,7 @@ const char *GetAppNameFromPList()
 
 void NoExclude();
 
-int UIApplicationMain(int argc,
-   char *argv[],
-   NSString* principalClassName,
-   NSString* delegateClassName)
-{
+int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName) {
     NoExclude();
 
     _client = new DXWin32CompositorClient();
@@ -359,27 +362,27 @@ int UIApplicationMain(int argc,
     float defaultWidth = GetCACompositor()->screenWidth();
     float defaultHeight = GetCACompositor()->screenHeight();
     float defaultScale = GetCACompositor()->screenScale();
-    bool  defaultTablet = false;
-    bool  bLandscape = false;
+    bool defaultTablet = false;
+    bool bLandscape = false;
 
     [NSBundle setMainBundlePath:@"."];
 
-    if ( [UIApplication respondsToSelector:@selector(initialOperationMode)] ) {
+    if ([UIApplication respondsToSelector:@selector(initialOperationMode)]) {
         UIOperationMode mode = [UIApplication initialOperationMode];
-        if ( mode == UIOperationModeTablet ) {
+        if (mode == UIOperationModeTablet) {
             defaultTablet = true;
             defaultWidth = 768.0f;
             defaultHeight = 1024.0f;
             defaultScale = 1.0f;
         }
     }
-    if ( [UIApplication respondsToSelector:@selector(renderWidth)] ) {
+    if ([UIApplication respondsToSelector:@selector(renderWidth)]) {
         defaultWidth = [UIApplication renderWidth];
     }
-    if ( [UIApplication respondsToSelector:@selector(renderHeight)] ) {
+    if ([UIApplication respondsToSelector:@selector(renderHeight)]) {
         defaultHeight = [UIApplication renderHeight];
     }
-    if ( [UIApplication respondsToSelector:@selector(renderScale)] ) {
+    if ([UIApplication respondsToSelector:@selector(renderScale)]) {
         defaultScale = [UIApplication renderScale];
     }
 
@@ -387,28 +390,29 @@ int UIApplicationMain(int argc,
 
     //  Figure out what our initial default orientation should be from Info.plist
     int defaultOrientation = UIInterfaceOrientationUnknown;
-    if ( infoDict != nil ) {
+    if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
         NSObject* orientation;
         orientation = [infoDict objectForKey:@"UISupportedInterfaceOrientations"];
-        if ( orientation == nil ) orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
+        if (orientation == nil)
+            orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
 
-        if ( [orientation isKindOfClass:[NSString class]] ) {
+        if ([orientation isKindOfClass:[NSString class]]) {
             defaultOrientation = UIOrientationFromString(defaultOrientation, orientation);
-        } else if ( [orientation isKindOfClass:[NSArray class]]) {
+        } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*) orientation) {
+            for (NSString* curstr in(NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
-                if ( newOrientation == defaultOrientation ) {
+                if (newOrientation == defaultOrientation) {
                     found = true;
                     break;
                 }
             }
 
-            if ( !found ) {
-                if ( [orientation count] > 0 ) {
+            if (!found) {
+                if ([orientation count] > 0) {
                     defaultOrientation = UIOrientationFromString(defaultOrientation, [orientation objectAtIndex:0]);
                 } else {
                     defaultOrientation = UIInterfaceOrientationPortrait;
@@ -419,8 +423,8 @@ int UIApplicationMain(int argc,
         }
     }
 
-    if ( defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
-         defaultOrientation == UIInterfaceOrientationLandscapeRight ) {
+    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
+        defaultOrientation == UIInterfaceOrientationLandscapeRight) {
         bLandscape = true;
     }
 
@@ -431,8 +435,10 @@ int UIApplicationMain(int argc,
     applicationProperties.isTablet = defaultTablet;
     applicationProperties.bLandscape = bLandscape;
 
-    GetCACompositor()->setScreenSize(applicationProperties.appWidth, applicationProperties.appHeight, applicationProperties.appScale);
-    GetCACompositor()->setDeviceSize(applicationProperties.appWidth * applicationProperties.appScale, applicationProperties.appHeight * applicationProperties.appScale);
+    GetCACompositor()->setScreenSize(
+        applicationProperties.appWidth, applicationProperties.appHeight, applicationProperties.appScale);
+    GetCACompositor()->setDeviceSize(applicationProperties.appWidth * applicationProperties.appScale,
+                                     applicationProperties.appHeight * applicationProperties.appScale);
     GetCACompositor()->setTablet(applicationProperties.isTablet);
 
     DWORD tid;

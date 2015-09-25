@@ -16,15 +16,12 @@
 
 #include "CoreFoundation/CoreFoundation.h"
 
-CFUUIDRef CFUUIDCreate(CFAllocatorRef alloc)
-{
+CFUUIDRef CFUUIDCreate(CFAllocatorRef alloc) {
     assert(0);
     return NULL;
 }
 
-CFStringRef CFUUIDCreateString(CFAllocatorRef allocator, CFUUIDRef self)
-{
+CFStringRef CFUUIDCreateString(CFAllocatorRef allocator, CFUUIDRef self) {
     assert(0);
     return NULL;
 }
-

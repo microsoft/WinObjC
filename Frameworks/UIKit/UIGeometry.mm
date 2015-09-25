@@ -16,5 +16,5 @@
 
 #import <UIKit/UIGeometry.h>
 
-const UIEdgeInsets UIEdgeInsetsZero = UIEdgeInsetsMake(0,0,0,0);
-const UIOffset UIOffsetZero = UIOffsetMake(0,0);
+const UIEdgeInsets UIEdgeInsetsZero = UIEdgeInsetsMake(0, 0, 0, 0);
+const UIOffset UIOffsetZero = UIOffsetMake(0, 0);

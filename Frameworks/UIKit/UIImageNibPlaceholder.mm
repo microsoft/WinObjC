@@ -23,42 +23,40 @@
 }
 @end
 
-
 @implementation UIImageNibPlaceholder : NSObject
-    -(instancetype) initWithCoder:(NSCoder*)coder {
-        id result = self;
-        NSString* resourcePath = [coder decodeObjectForKey:@"UIResourceName"];
-        if ( resourcePath != nil ) {
-            id bundle = [coder _bundle];
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    id result = self;
+    NSString* resourcePath = [coder decodeObjectForKey:@"UIResourceName"];
+    if (resourcePath != nil) {
+        id bundle = [coder _bundle];
 
-            if ( bundle != nil ) {
-                id pathFind = [bundle pathForResource:resourcePath ofType:nil];
-                if ( pathFind != nil ) resourcePath = pathFind;
-            }
-
-            id ret = [[UIImage imageNamed:resourcePath] retain];
-            if ( ret == nil ) {
-                EbrDebugLog("**** Failed to initialize image ****\n");
-                ret = [[UIImage imageWithCGImage:NULL] retain];
-            }
-
-            if ( [coder containsValueForKey:@"UIImageWidth"] || [coder containsValueForKey:@"UIImageHeight"] ) {
-                float width = [coder decodeFloatForKey:@"UIImageWidth"];
-                float height = [coder decodeFloatForKey:@"UIImageHeight"];
-
-                if ( width != 1.0 || height != 1.0 ) {
-                    assert(0);
-                    //ret = [[ret stretchableImageWithLeftCapWidth:width topCapHeight:height] retain];
-                }
-            }
-
-            [self autorelease];
-            result = ret;
+        if (bundle != nil) {
+            id pathFind = [bundle pathForResource:resourcePath ofType:nil];
+            if (pathFind != nil)
+                resourcePath = pathFind;
         }
-        
-        return result;
+
+        id ret = [[UIImage imageNamed:resourcePath] retain];
+        if (ret == nil) {
+            EbrDebugLog("**** Failed to initialize image ****\n");
+            ret = [[UIImage imageWithCGImage:NULL] retain];
+        }
+
+        if ([coder containsValueForKey:@"UIImageWidth"] || [coder containsValueForKey:@"UIImageHeight"]) {
+            float width = [coder decodeFloatForKey:@"UIImageWidth"];
+            float height = [coder decodeFloatForKey:@"UIImageHeight"];
+
+            if (width != 1.0 || height != 1.0) {
+                assert(0);
+                // ret = [[ret stretchableImageWithLeftCapWidth:width topCapHeight:height] retain];
+            }
+        }
+
+        [self autorelease];
+        result = ret;
     }
 
-    
-@end
+    return result;
+}
 
+@end

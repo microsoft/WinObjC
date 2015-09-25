@@ -18,123 +18,123 @@
 #include "Starboard.h"
 #include "Foundation/NSMethodSignature.h"
 
-bool getTypeSize(char type, int *size);
-int getArgumentSize(char *type);
+bool getTypeSize(char type, int* size);
+int getArgumentSize(char* type);
 
 @implementation NSMethodSignature : NSObject
-    +(NSMethodSignature*) signatureWithObjCTypes:(char *)funcTypes {
-        NSMethodSignature* ret = [self alloc];
++ (NSMethodSignature*)signatureWithObjCTypes:(char*)funcTypes {
+    NSMethodSignature* ret = [self alloc];
 
-        //  Count args
-        char *curArg = funcTypes;
+    //  Count args
+    char* curArg = funcTypes;
 
-        while ( *curArg ) {
-            char *typeStart = curArg;
+    while (*curArg) {
+        char* typeStart = curArg;
 
-            switch ( *typeStart ) {
-                case '{': {
-                    int curCount = 0;
-                    while ( *curArg ) {
-                        if ( *curArg == '{' ) {
-                            curCount ++;
-                        }
-                        if ( *curArg == '}' ) {
-                            curCount --;
-                            if ( curCount == 0 ) break;
-                        }
-                        curArg ++;
+        switch (*typeStart) {
+            case '{': {
+                int curCount = 0;
+                while (*curArg) {
+                    if (*curArg == '{') {
+                        curCount++;
                     }
-                    while ( *curArg && !isdigit(*curArg) ) curArg ++;
-                }
-                    break;
-
-                default: {
-                    int curCount = 0;
-                    while ( *curArg ) {
-                        if ( *curArg == '{' ) {
-                            curCount ++;
-                        }
-                        if ( *curArg == '}' ) {
-                            curCount --;
-                            assert(curCount >= 0);
-                        }
-                        if ( isdigit(*curArg) && curCount == 0 ) break;
-                        curArg ++;
+                    if (*curArg == '}') {
+                        curCount--;
+                        if (curCount == 0)
+                            break;
                     }
+                    curArg++;
                 }
-                    break;
-            }
+                while (*curArg && !isdigit(*curArg))
+                    curArg++;
+            } break;
 
-            char *typeEnd = curArg;
-
-            int typeLength = typeEnd - typeStart;
-
-            while ( *curArg && isdigit(*curArg) ) curArg ++;
-
-            char *argOffsetEnd = curArg;
-
-            int offsetLength = argOffsetEnd - typeEnd;
-
-            assert(typeLength > 0);
-            assert(offsetLength > 0);
-
-            if ( ret->returnType == NULL ) {
-                ret->returnType = (char *) calloc(typeLength + 1, 1);
-                strncpy(ret->returnType, typeStart, typeLength);
-                ret->returnOffset = atoi(typeEnd);
-            } else {
-                ret->arguments[ret->numArguments] = (char *) calloc(typeLength + 1, 1);
-                strncpy(ret->arguments[ret->numArguments], typeStart, typeLength);
-                ret->argumentOffsets[ret->numArguments] = atoi(typeEnd);
-
-                ret->numArguments ++;
-            }
+            default: {
+                int curCount = 0;
+                while (*curArg) {
+                    if (*curArg == '{') {
+                        curCount++;
+                    }
+                    if (*curArg == '}') {
+                        curCount--;
+                        assert(curCount >= 0);
+                    }
+                    if (isdigit(*curArg) && curCount == 0)
+                        break;
+                    curArg++;
+                }
+            } break;
         }
 
-        return [ret autorelease];
-    }
+        char* typeEnd = curArg;
 
-    -(NSUInteger) numberOfArguments {
-        return numArguments;
-    }
+        int typeLength = typeEnd - typeStart;
 
-    -(const char *) methodReturnType {
-        return returnType;
-    }
+        while (*curArg && isdigit(*curArg))
+            curArg++;
 
-    -(const char *) getArgumentTypeAtIndex:(int)index {
-        assert (index < numArguments);
+        char* argOffsetEnd = curArg;
 
-        return arguments[index];
-    }
+        int offsetLength = argOffsetEnd - typeEnd;
 
-    -(NSInteger) getArgumentSizeAtIndex:(int)index {
-        assert (index < numArguments);
+        assert(typeLength > 0);
+        assert(offsetLength > 0);
 
-        return getArgumentSize(arguments[index]);
-    }
+        if (ret->returnType == NULL) {
+            ret->returnType = (char*)calloc(typeLength + 1, 1);
+            strncpy(ret->returnType, typeStart, typeLength);
+            ret->returnOffset = atoi(typeEnd);
+        } else {
+            ret->arguments[ret->numArguments] = (char*)calloc(typeLength + 1, 1);
+            strncpy(ret->arguments[ret->numArguments], typeStart, typeLength);
+            ret->argumentOffsets[ret->numArguments] = atoi(typeEnd);
 
-    -(NSInteger) methodReturnSize {
-        return getArgumentSize(returnType);
-    }
-
-    -(NSInteger) methodReturnLength {
-        return getArgumentSize(returnType);
-    }
-
-    -(void) dealloc {
-        if ( returnType ) {
-            free(returnType);
+            ret->numArguments++;
         }
-
-        for ( int i = 0; i < numArguments; i ++ ) {
-            if ( arguments[i] ) {
-                free(arguments[i]);
-            }
-        }
-        [super dealloc];
     }
 
-    
+    return [ret autorelease];
+}
+
+- (NSUInteger)numberOfArguments {
+    return numArguments;
+}
+
+- (const char*)methodReturnType {
+    return returnType;
+}
+
+- (const char*)getArgumentTypeAtIndex:(int)index {
+    assert(index < numArguments);
+
+    return arguments[index];
+}
+
+- (NSInteger)getArgumentSizeAtIndex:(int)index {
+    assert(index < numArguments);
+
+    return getArgumentSize(arguments[index]);
+}
+
+- (NSInteger)methodReturnSize {
+    return getArgumentSize(returnType);
+}
+
+- (NSInteger)methodReturnLength {
+    return getArgumentSize(returnType);
+}
+
+- (void)dealloc {
+    if (returnType) {
+        free(returnType);
+    }
+
+    for (int i = 0; i < numArguments; i++) {
+        if (arguments[i]) {
+            free(arguments[i]);
+        }
+    }
+    [super dealloc];
+}
+
 @end
-

@@ -19,22 +19,14 @@
 
 @implementation _TableCellAnimationHelper : NSObject
 
-    -(void) animationFinished {
-        for ( int i = 0; i < _numCellsToBeRemoved; i ++ ) {
-            [_cellsToBeRemoved[i] removeFromSuperview];
-            [_cellsToBeRemoved[i] release];
-        }
-        EbrFree(_cellsToBeRemoved);
-
-        [self release];
+- (void)animationFinished {
+    for (int i = 0; i < _numCellsToBeRemoved; i++) {
+        [_cellsToBeRemoved[i] removeFromSuperview];
+        [_cellsToBeRemoved[i] release];
     }
+    EbrFree(_cellsToBeRemoved);
 
+    [self release];
+}
 
-
-
-
-
-    
 @end
-
-

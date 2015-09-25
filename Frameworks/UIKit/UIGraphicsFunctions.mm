@@ -18,13 +18,12 @@
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
 
-#define MAX_CONTEXT_DEPTH   16
+#define MAX_CONTEXT_DEPTH 16
 __declspec(thread) CGContextRef _currentCGContext[MAX_CONTEXT_DEPTH];
-__declspec(thread) int          _currentCGContextDepth;
+__declspec(thread) int _currentCGContextDepth;
 
-void UIGraphicsPushContext(CGContextRef context)
-{
-    if ( _currentCGContextDepth >= MAX_CONTEXT_DEPTH - 1 ) {
+void UIGraphicsPushContext(CGContextRef context) {
+    if (_currentCGContextDepth >= MAX_CONTEXT_DEPTH - 1) {
         assert(0);
         return;
     }
@@ -33,76 +32,69 @@ void UIGraphicsPushContext(CGContextRef context)
     _currentCGContext[++(_currentCGContextDepth)] = context;
 }
 
-void UIGraphicsPopContext()
-{
-    if ( _currentCGContextDepth <= 0 ) {
+void UIGraphicsPopContext() {
+    if (_currentCGContextDepth <= 0) {
         assert(0);
         return;
     }
     CGContextRelease(_currentCGContext[_currentCGContextDepth]);
     _currentCGContext[_currentCGContextDepth] = nil;
-    _currentCGContextDepth --;
+    _currentCGContextDepth--;
 }
 
-CGContextRef UIGraphicsGetCurrentContext()
-{
+CGContextRef UIGraphicsGetCurrentContext() {
     return _currentCGContext[_currentCGContextDepth];
 }
 
-void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale)
-{
-    if ( scale == 0.0f ) scale = GetCACompositor()->screenScale();
-    CGContextRef newCtx = CGBitmapContextCreate32((int) (size.width * scale), (int) (size.height * scale));
+void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale) {
+    if (scale == 0.0f)
+        scale = GetCACompositor()->screenScale();
+    CGContextRef newCtx = CGBitmapContextCreate32((int)(size.width * scale), (int)(size.height * scale));
     newCtx->scale = scale;
     CGContextTranslateCTM(newCtx, 0.0f, size.height * scale);
     CGContextScaleCTM(newCtx, scale, scale);
     CGContextScaleCTM(newCtx, 1.0f, -1.0f);
 
     UIGraphicsPushContext(newCtx);
-}   
+}
 
-void UIGraphicsBeginImageContext(CGSize size)
-{
+void UIGraphicsBeginImageContext(CGSize size) {
     UIGraphicsBeginImageContextWithOptions(size, FALSE, 1.0f);
-}   
+}
 
-UIImage* UIGraphicsGetImageFromCurrentImageContext()
-{
-    id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(UIGraphicsGetCurrentContext()) scale:UIGraphicsGetCurrentContext()->scale orientation:UIImageOrientationUp];
+UIImage* UIGraphicsGetImageFromCurrentImageContext() {
+    id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(UIGraphicsGetCurrentContext())
+                                 scale:UIGraphicsGetCurrentContext()->scale
+                           orientation:UIImageOrientationUp];
 
     return ret;
 }
 
-void UIGraphicsEndImageContext()
-{
+void UIGraphicsEndImageContext() {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
 
     UIGraphicsPopContext();
     CGContextRelease(ctx);
 }
 
-void UIRectFill(CGRect rect)
-{
+void UIRectFill(CGRect rect) {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextFillRect(ctx, rect);
 }
 
-void UIRectFrame(CGRect rect)
-{
+void UIRectFrame(CGRect rect) {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    //CGContextFillRect(ctx, rect);
+    // CGContextFillRect(ctx, rect);
     EbrDebugLog("UIRectFrame not supported\n");
 }
 
-void UIRectClip(CGRect clip)
-{
+void UIRectClip(CGRect clip) {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
 
     CGContextClipToRect(ctx, clip);
 }
 
-void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode mode)
-{
+void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode mode) {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGBlendMode oldBlend = CGContextGetBlendMode(ctx);
     CGContextSetBlendMode(ctx, mode);
@@ -110,15 +102,14 @@ void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode mode)
     CGContextSetBlendMode(ctx, oldBlend);
 }
 
-
-NSString *NSStringFromCGPoint(CGPoint p) {
-    return [NSString stringWithFormat: @"{%f,%f}", p.x, p.y];
+NSString* NSStringFromCGPoint(CGPoint p) {
+    return [NSString stringWithFormat:@"{%f,%f}", p.x, p.y];
 }
 
-NSString *NSStringFromCGSize(CGSize s) {
-    return [NSString stringWithFormat: @"{%f,%f}", s.width, s.height];
+NSString* NSStringFromCGSize(CGSize s) {
+    return [NSString stringWithFormat:@"{%f,%f}", s.width, s.height];
 }
 
-NSString *NSStringFromCGRect(CGRect r) {
-    return [NSString stringWithFormat: @"{{%f, %f}, {%f, %f}}", r.origin.x, r.origin.y, r.size.width, r.size.height];
+NSString* NSStringFromCGRect(CGRect r) {
+    return [NSString stringWithFormat:@"{{%f, %f}, {%f, %f}}", r.origin.x, r.origin.y, r.size.width, r.size.height];
 }

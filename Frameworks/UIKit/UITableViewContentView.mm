@@ -19,14 +19,13 @@
 #include "UIKit/UITableViewCell.h"
 
 @implementation UITableViewContentView : UIView
-    -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-        UIView* ret = [super hitTest:point withEvent:event];
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    UIView* ret = [super hitTest:point withEvent:event];
 
-        if ( ret == self ) return nil;
+    if (ret == self)
+        return nil;
 
-        return ret;
-    }
+    return ret;
+}
 
-    
 @end
-

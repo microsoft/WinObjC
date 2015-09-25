@@ -24,62 +24,49 @@
 
 #include "Platform/EbrPlatform.h"
 
-void CFRelease(CFTypeRef obj)
-{
-    objc_release_ref((id) obj);
+void CFRelease(CFTypeRef obj) {
+    objc_release_ref((id)obj);
 }
 
-CFTypeRef CFRetain(CFTypeRef obj)
-{
-    return objc_retain_ref((id) obj);
+CFTypeRef CFRetain(CFTypeRef obj) {
+    return objc_retain_ref((id)obj);
 }
 
-CFIndex CFGetRetainCount(CFTypeRef obj)
-{
-    return (CFIndex) objc_getRetainCount((id) obj);
+CFIndex CFGetRetainCount(CFTypeRef obj) {
+    return (CFIndex)objc_getRetainCount((id)obj);
 }
 
-BOOL CFIsRetained(CFTypeRef obj)
-{
-    return objc_isRetained((id) obj);
+BOOL CFIsRetained(CFTypeRef obj) {
+    return objc_isRetained((id)obj);
 }
 
-Boolean CFEqual(CFTypeRef obj1, CFTypeRef obj2)
-{
-    return (BOOL) [(id) obj1 isEqual:(id) obj2];
+Boolean CFEqual(CFTypeRef obj1, CFTypeRef obj2) {
+    return (BOOL)[(id)obj1 isEqual:(id)obj2];
 }
 
-uint32_t CFHash(CFTypeRef obj)
-{
-    return (uint32_t) [(id) obj hash];
+uint32_t CFHash(CFTypeRef obj) {
+    return (uint32_t)[(id)obj hash];
 }
 
-void CFShow(CFTypeRef obj)
-{
-    EbrDebugLog("CFShow: %s\n", object_getClassName((id) obj));
+void CFShow(CFTypeRef obj) {
+    EbrDebugLog("CFShow: %s\n", object_getClassName((id)obj));
 }
 
-CFTypeRef CFMakeCollectable(CFTypeRef obj)
-{
+CFTypeRef CFMakeCollectable(CFTypeRef obj) {
     return obj;
 }
 
-__declspec(dllexport)
-id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone)
-{
+__declspec(dllexport) id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
     assert(zone == nil);
 
     return objc_allocateObject(classRef, extraBytes);
 }
 
-__declspec(dllexport) 
-void NSDeallocateObject(id obj)
-{
+__declspec(dllexport) void NSDeallocateObject(id obj) {
     return objc_deallocateObject(obj);
 }
 
-DWORD _NSSetLogCStringFunction(DWORD func)
-{
+DWORD _NSSetLogCStringFunction(DWORD func) {
     EbrDebugLog("NSSetLogCStringFunction not implemented\n");
 
     return 0;
@@ -87,118 +74,115 @@ DWORD _NSSetLogCStringFunction(DWORD func)
 
 #if 0
 enum {
-    CFUnknownType,
-    CFStringType,
-    CFDictionaryType,
-    CFArrayType,
-    CFNumberType,
-    CFBooleanType,
-    CGLayerType,
-    CFBundleType,
+CFUnknownType,
+CFStringType,
+CFDictionaryType,
+CFArrayType,
+CFNumberType,
+CFBooleanType,
+CGLayerType,
+CFBundleType,
 } CFTypeIDs;
 
 DWORD CFGetTypeID(id cfobj)
 {
-    id objType = cfobj;
-    if ( [objType isKindOfClass:[NSString class]] ) {
-        return CFStringType;
-    }
-    if ( [objType isKindOfClass:[NSDictionary class]] ) {
-        return CFDictionaryType;
-    }
-    if ( [objType isKindOfClass:[NSArray class]] ) {
-        return CFArrayType;
-    }
-    if ( [objType isKindOfClass:[NSNumber class]] ) {
-        if ( [objType _isBool] ) {
-            return CFBooleanType;
-        }
+id objType = cfobj;
+if ( [objType isKindOfClass:[NSString class]] ) {
+return CFStringType;
+}
+if ( [objType isKindOfClass:[NSDictionary class]] ) {
+return CFDictionaryType;
+}
+if ( [objType isKindOfClass:[NSArray class]] ) {
+return CFArrayType;
+}
+if ( [objType isKindOfClass:[NSNumber class]] ) {
+if ( [objType _isBool] ) {
+return CFBooleanType;
+}
 
-        return CFNumberType;
-    }
-    if ( [objType isKindOfClass:[CGLayer class]] ) {
-        return CGLayerType;
-    }
-    if ( [objType isKindOfClass:[NSBundle class]] ) {
-        return CFBundleType;
-    }
-    assert(0);
+return CFNumberType;
+}
+if ( [objType isKindOfClass:[CGLayer class]] ) {
+return CGLayerType;
+}
+if ( [objType isKindOfClass:[NSBundle class]] ) {
+return CFBundleType;
+}
+assert(0);
 
-    return 0;
+return 0;
 }
 
 DWORD CFDictionaryGetTypeID()
 {
-    return CFDictionaryType;
+return CFDictionaryType;
 }
 
 DWORD CFArrayGetTypeID()
 {
-    return CFArrayType;
+return CFArrayType;
 }
 
 DWORD CFStringGetTypeID()
 {
-    return CFStringType;
+return CFStringType;
 }
 
 DWORD CFBooleanGetTypeID()
 {
-    return CFBooleanType;
+return CFBooleanType;
 }
 
 DWORD CFNumberGetTypeID()
 {
-    return CFNumberType;
+return CFNumberType;
 }
 
 DWORD CGLayerGetTypeID()
 {
-    return CGLayerType;
+return CGLayerType;
 }
 
 DWORD CFBundleGetTypeID()
 {
-    return CFBundleType;
+return CFBundleType;
 }
 
 DWORD CFDateCreate(id allocator, double abstime)
 {
-    id ret = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:abstime];
+id ret = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:abstime];
 
-    return ret;
+return ret;
 }
 
 static id defaultZone = nil;
 
 DWORD NSDefaultMallocZone()
 {
-    if ( defaultZone == nil ) {
-        defaultZone = [NSObject new];
-    }
+if ( defaultZone == nil ) {
+defaultZone = [NSObject new];
+}
 
-    return defaultZone;
+return defaultZone;
 }
 
 DWORD NSZoneFromPointer(void *ptr)
 {
-    if ( defaultZone == nil ) {
-        defaultZone = [NSObject new];
-    }
+if ( defaultZone == nil ) {
+defaultZone = [NSObject new];
+}
 
-    return defaultZone;
+return defaultZone;
 }
 #endif
 
-id CFNSRetain(id allocator, id obj)
-{
+id CFNSRetain(id allocator, id obj) {
     return [obj retain];
 }
 
-id CFNSRelease(id allocator, id obj)
-{
+id CFNSRelease(id allocator, id obj) {
     [obj release];
 
     return obj;
 }
-

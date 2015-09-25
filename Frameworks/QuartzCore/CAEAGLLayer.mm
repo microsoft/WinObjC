@@ -33,59 +33,55 @@ typedef wchar_t WCHAR;
 #include <COMIncludes_End.h>
 
 @implementation CAEAGLLayer {
-    NSDictionary *_properties;
-	WXCSwapChainPanel *_swapChainPanel;
+    NSDictionary* _properties;
+    WXCSwapChainPanel* _swapChainPanel;
 }
 
-    -(void) setDrawableProperties: (NSDictionary *)propertiesDict {
-		[_properties release];
-        _properties = [propertiesDict copy];
-    }
+- (void)setDrawableProperties:(NSDictionary*)propertiesDict {
+    [_properties release];
+    _properties = [propertiesDict copy];
+}
 
-	-(void) setContentsScale: (float) factor
-	{
-		[super setContentsScale: factor];
+- (void)setContentsScale:(float)factor {
+    [super setContentsScale:factor];
 
-		WUXMScaleTransform *scaleTransform = [WUXMScaleTransform create];
-		scaleTransform.scaleX = 1.0 / factor;
-		scaleTransform.scaleY = 1.0 / factor;
+    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform create];
+    scaleTransform.scaleX = 1.0 / factor;
+    scaleTransform.scaleY = 1.0 / factor;
 
-		_swapChainPanel.renderTransform = scaleTransform;
-		[scaleTransform release];
-	}
+    _swapChainPanel.renderTransform = scaleTransform;
+    [scaleTransform release];
+}
 
-	-(instancetype) init
-	{
-		_swapChainPanel = [WXCSwapChainPanel create];
-		[super init];
-		self.contentsElement = _swapChainPanel;
+- (instancetype)init {
+    _swapChainPanel = [WXCSwapChainPanel create];
+    [super init];
+    self.contentsElement = _swapChainPanel;
 
-		return self;
-	}
+    return self;
+}
 
-    -(WXCSwapChainPanel *) swapChainPanel
-    {
-        return _swapChainPanel;
-    }
+- (WXCSwapChainPanel*)swapChainPanel {
+    return _swapChainPanel;
+}
 
-    -(DisplayTexture *) _getDisplayTexture {
-        return NULL;
-    }
-    
-    -(NSDictionary*) drawableProperties {
-        return _properties;
-    }
+- (DisplayTexture*)_getDisplayTexture {
+    return NULL;
+}
 
-    -(void) display {
-    }
+- (NSDictionary*)drawableProperties {
+    return _properties;
+}
 
-    -(void) _releaseContents {
-    }
+- (void)display {
+}
 
-    -(void) dealloc {
-		[_properties release];
-		[_swapChainPanel release];
-        [super dealloc];
-    }
+- (void)_releaseContents {
+}
+
+- (void)dealloc {
+    [_properties release];
+    [_swapChainPanel release];
+    [super dealloc];
+}
 @end
-

@@ -27,17 +27,15 @@
 
 #if USE_SDF_FONTS
 
-#define FONT_GEN_SIZE       256
-#define THRESHOLD           127
+#define FONT_GEN_SIZE 256
+#define THRESHOLD 127
 
-void SDFFontPreprocessor::init(FT_Face newFace, size_t newFontSize, float newSampleDist)
-{
+void SDFFontPreprocessor::init(FT_Face newFace, size_t newFontSize, float newSampleDist) {
     FontGenerator::init(newFace, newFontSize);
     sampleDist = newSampleDist;
 }
 
-void SDFFontPreprocessor::renderGlyph(int c)
-{
+void SDFFontPreprocessor::renderGlyph(int c) {
     src->renderGlyph(c);
     const CharMatrix& inChar = src->representation();
 
@@ -53,24 +51,25 @@ void SDFFontPreprocessor::renderGlyph(int c)
     int sampleDistH = (int)(sampleDist * srch);
 
     float maxDistance = sqrtf((float)((sampleDistW * sampleDistW) + (sampleDistH * sampleDistH)));
-    
-    for(int x = 0; x < w; x ++) {
-        for(int y = 0; y < h; y ++) {
+
+    for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
             int srcx = (int)(invScale * x);
             int srcy = (int)(invScale * y);
-          
+
             bool srcOn = inChar(srcx, srcy) > THRESHOLD;
 
             float minDist = 1.f;
-            
-            for(int xx = srcx - sampleDistW; xx < srcx + sampleDistW; xx ++) {
-                for(int yy = srcy - sampleDistH; yy < srcy + sampleDistH; yy ++) {
 
+            for (int xx = srcx - sampleDistW; xx < srcx + sampleDistW; xx++) {
+                for (int yy = srcy - sampleDistH; yy < srcy + sampleDistH; yy++) {
                     // out of bounds == no good.
-                    if ((xx < 0) || (yy < 0) || (xx >= srcw) || (yy >= srch)) continue;
+                    if ((xx < 0) || (yy < 0) || (xx >= srcw) || (yy >= srch))
+                        continue;
 
                     bool curOn = inChar(xx, yy) > THRESHOLD;
-                    if (srcOn == curOn) continue;
+                    if (srcOn == curOn)
+                        continue;
 
                     float dist = sqrtf((float)((xx - srcx) * (xx - srcx) + (yy - srcy) * (yy - srcy)));
                     float distPercent = dist / maxDistance;
@@ -78,7 +77,7 @@ void SDFFontPreprocessor::renderGlyph(int c)
                     minDist = std::min(minDist, distPercent);
                 }
             }
-            
+
             if (srcOn) {
                 rep(x, y) = (unsigned char)(THRESHOLD * minDist) + THRESHOLD;
             } else {
@@ -88,4 +87,4 @@ void SDFFontPreprocessor::renderGlyph(int c)
     }
 }
 
-#endif 
+#endif

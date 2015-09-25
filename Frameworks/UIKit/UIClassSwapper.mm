@@ -18,31 +18,29 @@
 #include "UIClassSwapper.h"
 
 @implementation UIClassSwapper : NSObject
-    -(id) instantiateWithCoder:(id)coder {
-        className = [coder decodeObjectForKey:@"UIClassName"];
-        originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
-        const char *identifier = [className UTF8String];
-        const char *identifier2 = [originalClassName UTF8String];
+- (id)instantiateWithCoder:(id)coder {
+    className = [coder decodeObjectForKey:@"UIClassName"];
+    originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
+    const char* identifier = [className UTF8String];
+    const char* identifier2 = [originalClassName UTF8String];
 
-        EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
-        id classNameId = objc_getClass(identifier);
+    EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
+    id classNameId = objc_getClass(identifier);
 
-        if ( classNameId != nil ) {
-            return [classNameId alloc];
-        } else {
-            EbrDebugLog("Class %s not found!\n", identifier);
-            return nil;
-        }
+    if (classNameId != nil) {
+        return [classNameId alloc];
+    } else {
+        EbrDebugLog("Class %s not found!\n", identifier);
+        return nil;
     }
+}
 
-    -(NSString*) originalClassName {
-        return originalClassName;
-    }
+- (NSString*)originalClassName {
+    return originalClassName;
+}
 
-    -(NSString*) className {
-        return className;
-    }
+- (NSString*)className {
+    return className;
+}
 
-    
 @end
-

@@ -24,104 +24,91 @@ NSRange NSMakeRange(NSUInteger location, NSUInteger length) {
 }
 
 NSRange NSIntersectionRange(NSRange first, NSRange second) {
-   NSUInteger min,loc,max1 = NSMaxRange(first),max2=NSMaxRange(second);
-   NSRange result;
-   
-   min=(max1<max2)?max1:max2;
-   loc=(first.location>second.location)?first.location:second.location;
+    NSUInteger min, loc, max1 = NSMaxRange(first), max2 = NSMaxRange(second);
+    NSRange result;
 
-   if(min<loc)
-    result.location=result.length=0;
-   else{
-    result.location=loc;
-    result.length=min-loc;
-   }
+    min = (max1 < max2) ? max1 : max2;
+    loc = (first.location > second.location) ? first.location : second.location;
 
-   return result;
+    if (min < loc)
+        result.location = result.length = 0;
+    else {
+        result.location = loc;
+        result.length = min - loc;
+    }
+
+    return result;
 }
 
-NSUInteger NSMaxRange(NSRange range)
-{
+NSUInteger NSMaxRange(NSRange range) {
     return range.location + range.length;
 }
 
-NSRange NSUnionRange(NSRange range1, NSRange range2)
-{
+NSRange NSUnionRange(NSRange range1, NSRange range2) {
     NSRange ret = { 0, 0 };
     assert(0);
     return ret;
 }
 
-BOOL NSEqualRanges(NSRange range1, NSRange range2)
-{
+BOOL NSEqualRanges(NSRange range1, NSRange range2) {
     return ((range1.location == range2.location) && (range1.length == range2.length));
 }
 
-NSArray *NSSearchPathForDirectoriesInDomains (NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde)
-{
+NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde) {
     switch (dir) {
-    case NSDocumentDirectory:
-        return [NSArray arrayWithObject: @"/Documents/"];
-        
-    case NSApplicationDirectory:
-        return [NSArray arrayWithObject: @"./"];
+        case NSDocumentDirectory:
+            return [NSArray arrayWithObject:@"/Documents/"];
 
-    case NSLibraryDirectory:
-        return [NSArray arrayWithObject: @"/Library/"];
+        case NSApplicationDirectory:
+            return [NSArray arrayWithObject:@"./"];
 
-    case NSCachesDirectory:
-        return [NSArray arrayWithObject: @"/Cache/"];
+        case NSLibraryDirectory:
+            return [NSArray arrayWithObject:@"/Library/"];
 
-    case NSApplicationSupportDirectory:
-        return [NSArray arrayWithObject: @"/AppSupport/"];
+        case NSCachesDirectory:
+            return [NSArray arrayWithObject:@"/Cache/"];
 
-    case NSAllApplicationsDirectory:
-        return [NSArray arrayWithObject: @"/"];
+        case NSApplicationSupportDirectory:
+            return [NSArray arrayWithObject:@"/AppSupport/"];
 
-    default:
-        assert(0);
-        break;
+        case NSAllApplicationsDirectory:
+            return [NSArray arrayWithObject:@"/"];
+
+        default:
+            assert(0);
+            break;
     }
 
     return 0;
 }
 
-Class NSClassFromString(NSString *name) {
-    return objc_lookup_class((const char *) [name UTF8String]);
+Class NSClassFromString(NSString* name) {
+    return objc_lookup_class((const char*)[name UTF8String]);
 }
 
-SEL NSSelectorFromString(NSString *str)
-{
+SEL NSSelectorFromString(NSString* str) {
     return sel_registerName([str UTF8String]);
 }
 
-NSString *NSStringFromClass(Class cls)
-{
-    return [NSString stringWithUTF8String: object_getClassName(cls)];
+NSString* NSStringFromClass(Class cls) {
+    return [NSString stringWithUTF8String:object_getClassName(cls)];
 }
 
-unsigned int NSSwapHostIntToBig(unsigned int val)
-{
-    return ((val & 0xFF) << 24) | 
-           ((val & 0xFF00) << 8) |
-           ((val & 0xFF0000) >> 8) |
-           (val >> 24);
+unsigned int NSSwapHostIntToBig(unsigned int val) {
+    return ((val & 0xFF) << 24) | ((val & 0xFF00) << 8) | ((val & 0xFF0000) >> 8) | (val >> 24);
 }
 
-NSString *NSStringFromSelector(SEL sel)
-{
-    NSString *ret = [NSString stringWithCString: sel_getName(sel)];
+NSString* NSStringFromSelector(SEL sel) {
+    NSString* ret = [NSString stringWithCString:sel_getName(sel)];
     return ret;
 }
 
-NSString *temporaryDirectory = @"/tmp";
+NSString* temporaryDirectory = @"/tmp";
 
-NSString *NSTemporaryDirectory(void)
-{
+NSString* NSTemporaryDirectory(void) {
     return temporaryDirectory;
 }
 
-void NSSetTemporaryDirectory(NSString *path)
-{
+void NSSetTemporaryDirectory(NSString* path) {
     temporaryDirectory = [path retain];
 }

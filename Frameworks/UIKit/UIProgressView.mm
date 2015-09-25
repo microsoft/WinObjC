@@ -27,150 +27,151 @@
     idretaintype(UIImage) _trackImage;
 }
 
-    static void sizeViews(UIProgressView *self, bool animated)
-    {
-        CGRect bounds;
-        bounds = [self bounds];
+static void sizeViews(UIProgressView* self, bool animated) {
+    CGRect bounds;
+    bounds = [self bounds];
 
-        if ( animated ) {
-            [UIView beginAnimations:@"MoveView" context:nil];
-            [UIView setAnimationDuration:0.25f];
-            [UIView setAnimationDelegate:nil];
-        }
+    if (animated) {
+        [UIView beginAnimations:@"MoveView" context:nil];
+        [UIView setAnimationDuration:0.25f];
+        [UIView setAnimationDelegate:nil];
+    }
 
-        CGRect newFrame;
-        newFrame.origin.x = 0;
-        newFrame.origin.y = 0;
+    CGRect newFrame;
+    newFrame.origin.x = 0;
+    newFrame.origin.y = 0;
+    newFrame.size.width = bounds.size.width;
+    newFrame.size.height = 8;
+    [self->_progressBackground setFrame:newFrame];
+
+    newFrame.size.width = bounds.size.width * self->_value;
+    if (newFrame.size.width > bounds.size.width) {
         newFrame.size.width = bounds.size.width;
-        newFrame.size.height = 8;
-        [self->_progressBackground setFrame:newFrame];
-
-        newFrame.size.width = bounds.size.width * self->_value;
-        if ( newFrame.size.width > bounds.size.width ) {
-            newFrame.size.width = bounds.size.width;
-        }
-        if ( newFrame.size.width < 8 ) {
-            newFrame.size.width = 8;
-        }
-
-        [self->_progressForeground setFrame:newFrame];
-
-        if ( animated ) {
-            [UIView commitAnimations];
-        }
+    }
+    if (newFrame.size.width < 8) {
+        newFrame.size.width = 8;
     }
 
-    -(instancetype) initWithCoder:(NSCoder *)coder {
-        [super initWithCoder:coder];
+    [self->_progressForeground setFrame:newFrame];
 
-        CGRect frame;
-        frame = [self frame];
-
-        UIImage *background = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-        UIImage *foreground = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-
-        CGRect progressFrame;
-
-        progressFrame.origin.x = 0;
-        progressFrame.origin.y = 0;
-        progressFrame.size.width = frame.size.width;
-        progressFrame.size.height = 8;
-
-        _progressBackground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-        [_progressBackground setImage:background];
-
-        progressFrame.size.width = 8;
-        _progressForeground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-        [_progressForeground setImage:foreground];
-
-        [self addSubview:_progressBackground];
-        [self addSubview:_progressForeground];
-
-        sizeViews(self, false);
-
-        return self;
+    if (animated) {
+        [UIView commitAnimations];
     }
+}
 
-    -(instancetype) initWithFrame:(CGRect)frame {
-        [super initWithFrame:frame];
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    [super initWithCoder:coder];
 
-        [self setOpaque:FALSE];
-        [self setUserInteractionEnabled:FALSE];
+    CGRect frame;
+    frame = [self frame];
 
-        UIImage *background = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-        UIImage *foreground = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* background =
+        [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* foreground =
+        [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 
-        CGRect progressFrame;
+    CGRect progressFrame;
 
-        progressFrame.origin.x = 0;
-        progressFrame.origin.y = 0;
-        progressFrame.size.width = frame.size.width;
-        progressFrame.size.height = 8;
+    progressFrame.origin.x = 0;
+    progressFrame.origin.y = 0;
+    progressFrame.size.width = frame.size.width;
+    progressFrame.size.height = 8;
 
-        _progressBackground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-        [_progressBackground setImage:background];
+    _progressBackground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
+    [_progressBackground setImage:background];
 
-        progressFrame.size.width = 8;
-        _progressForeground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
-        [_progressForeground setImage:foreground];
+    progressFrame.size.width = 8;
+    _progressForeground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
+    [_progressForeground setImage:foreground];
 
-        [self addSubview:_progressBackground];
-        [self addSubview:_progressForeground];
+    [self addSubview:_progressBackground];
+    [self addSubview:_progressForeground];
 
-        sizeViews(self, false);
+    sizeViews(self, false);
 
-        return self;
-    }
+    return self;
+}
 
-    -(instancetype) initWithProgressViewStyle:(UIProgressViewStyle)style {
-        [self init];
+- (instancetype)initWithFrame:(CGRect)frame {
+    [super initWithFrame:frame];
 
-        return self;
-    }
+    [self setOpaque:FALSE];
+    [self setUserInteractionEnabled:FALSE];
 
-    -(void) setProgressViewStyle:(UIProgressViewStyle)style {
-    }
+    UIImage* background =
+        [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* foreground =
+        [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 
-    -(void) setProgress:(float)progress {
-        _value = progress;
-        sizeViews(self, false);
-    }
+    CGRect progressFrame;
 
-    -(void) setProgress:(float)progress animated:(BOOL)animated {
-        _value = progress;
-        sizeViews(self, animated);
-    }
+    progressFrame.origin.x = 0;
+    progressFrame.origin.y = 0;
+    progressFrame.size.width = frame.size.width;
+    progressFrame.size.height = 8;
 
-    -(void) setProgressImage:(UIImage *)image {
-    }
+    _progressBackground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
+    [_progressBackground setImage:background];
 
-    -(void) setProgressTintColor:(UIColor *)color {
-    }
+    progressFrame.size.width = 8;
+    _progressForeground = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
+    [_progressForeground setImage:foreground];
 
-    -(void) setTrackTintColor:(UIColor *)color {
-    }
+    [self addSubview:_progressBackground];
+    [self addSubview:_progressForeground];
 
-    -(void) setTrackImage:(UIImage *)image {
-        _trackImage = image;
-    }
+    sizeViews(self, false);
 
-    -(UIImage *) trackImage {
-        return _trackImage;
-    }
+    return self;
+}
 
-    -(float) progress {
-        return _value;
-    }
+- (instancetype)initWithProgressViewStyle:(UIProgressViewStyle)style {
+    [self init];
 
-    -(void) layoutSubviews {
-        sizeViews(self, false);
-    }
+    return self;
+}
 
-    -(void) dealloc {
-        _trackImage = nil;
+- (void)setProgressViewStyle:(UIProgressViewStyle)style {
+}
 
-        [super dealloc];
-    }
+- (void)setProgress:(float)progress {
+    _value = progress;
+    sizeViews(self, false);
+}
+
+- (void)setProgress:(float)progress animated:(BOOL)animated {
+    _value = progress;
+    sizeViews(self, animated);
+}
+
+- (void)setProgressImage:(UIImage*)image {
+}
+
+- (void)setProgressTintColor:(UIColor*)color {
+}
+
+- (void)setTrackTintColor:(UIColor*)color {
+}
+
+- (void)setTrackImage:(UIImage*)image {
+    _trackImage = image;
+}
+
+- (UIImage*)trackImage {
+    return _trackImage;
+}
+
+- (float)progress {
+    return _value;
+}
+
+- (void)layoutSubviews {
+    sizeViews(self, false);
+}
+
+- (void)dealloc {
+    _trackImage = nil;
+
+    [super dealloc];
+}
 @end
-
-    

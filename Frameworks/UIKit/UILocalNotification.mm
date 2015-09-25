@@ -23,164 +23,162 @@
 #include "Foundation/NSTimeZone.h"
 
 @implementation UILocalNotification : NSObject
-    idretain _receiver;
-    idretain _fireDate;
-    idretain _action;
-    idretain _body;
-    idretain _alertLaunchImage;
-    idretain _userInfo;
-    idretain _timeZone;
+idretain _receiver;
+idretain _fireDate;
+idretain _action;
+idretain _body;
+idretain _alertLaunchImage;
+idretain _userInfo;
+idretain _timeZone;
 
-    void formatFireDate()
-    {
+void formatFireDate() {
 #if 0
-        id locale = [NSLocale currentLocale];
-        id formatter = [NSDateFormatter new];
-        id dateFormat = [NSDateFormatter dateFormatFromTemplate:@"E MMM d yyyy" options:0 locale:locale];
-        [formatter setDateFormat:dateFormat];
-        [formatter setLocale:locale];
+id locale = [NSLocale currentLocale];
+id formatter = [NSDateFormatter new];
+id dateFormat = [NSDateFormatter dateFormatFromTemplate:@"E MMM d yyyy" options:0 locale:locale];
+[formatter setDateFormat:dateFormat];
+[formatter setLocale:locale];
 
-        id dateStr = [formatter stringFromDate:(id)_fireDate];
-        char *s = (char *)E2H([dateStr UTF8String]);
-        EbrDebugLog("fireDate is %s.\n", s);
+id dateStr = [formatter stringFromDate:(id)_fireDate];
+char *s = (char *)E2H([dateStr UTF8String]);
+EbrDebugLog("fireDate is %s.\n", s);
 
-        [formatter release];
-        [dateStr release];
+[formatter release];
+[dateStr release];
 #endif
-    }
+}
 
-    // --------------------------------------------------------------------------------
-    // Instance methods
+// --------------------------------------------------------------------------------
+// Instance methods
 
-    -(id) init {
-        return self;
-    }
-    
-    -(void) dealloc {
-        return [super dealloc];
-    }
-    
-    -(void) _receiveAlarm:(id)unused {
-    }
-    
-    -(void) _setReceiver:(id)receiver {
-        if (_fireDate == nil) return;
-        _receiver = receiver;
+- (id)init {
+    return self;
+}
 
-        //[self _scheduleNotification];
-    }
+- (void)dealloc {
+    return [super dealloc];
+}
 
-    -(void) cancelAlarm {
-        //[self _cancelNotification];
-    }
-    
-    -(id) fireDate {
-        return _fireDate;
-    }
+- (void)_receiveAlarm:(id)unused {
+}
 
-    -(void) setFireDate:(id)val {
-        _fireDate = val;
+- (void)_setReceiver:(id)receiver {
+    if (_fireDate == nil)
+        return;
+    _receiver = receiver;
 
-        formatFireDate();
-    }
+    //[self _scheduleNotification];
+}
 
-    /* annotate with type */ -(id) timeZone {
-        return _timeZone;
-    }
+- (void)cancelAlarm {
+    //[self _cancelNotification];
+}
 
-    /* annotate with type */ -(id) setTimeZone:(id)val {
-        _timeZone = val;
-        return self;
-    }
+- (id)fireDate {
+    return _fireDate;
+}
 
-    /* annotate with type */ -(id) repeatInterval {
-        EbrDebugLog("!!!! repeatInterval called!\n");
-        return nil;
-    }
+- (void)setFireDate:(id)val {
+    _fireDate = val;
 
-    /* annotate with type */ -(id) setRepeatInterval:(NSCalendarUnit)val {
-        EbrDebugLog("!!!! setRepeatInterval called!\n");
-        return nil;
-    }
+    formatFireDate();
+}
 
-    /* annotate with type */ -(id) repeatCalendar {
-        EbrDebugLog("!!!! repeatCalendar called!\n");
-        return nil;
-    }
+- (id)timeZone {
+    return _timeZone;
+}
 
-    /* annotate with type */ -(id) setRepeatCalendar:(id)val {
-        EbrDebugLog("!!!! setRepeatCalendar called!\n");
-        return nil;
-    }
+- (id)setTimeZone:(id)val {
+    _timeZone = val;
+    return self;
+}
 
-    /* annotate with type */ -(id) alertBody {
-        return _body;
-    }
+- (id)repeatInterval {
+    EbrDebugLog("!!!! repeatInterval called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) setAlertBody:(id)val {
-        _body = val;
-        return self;
-    }
+- (id)setRepeatInterval:(NSCalendarUnit)val {
+    EbrDebugLog("!!!! setRepeatInterval called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) hasAction {
-        EbrDebugLog("!!!! hasAction called!\n");
-        return nil;
-    }
+- (id)repeatCalendar {
+    EbrDebugLog("!!!! repeatCalendar called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) setHasAction:(BOOL)val {
-        EbrDebugLog("!!!! setHasAction called!\n");
-        return nil;
-    }
+- (id)setRepeatCalendar:(id)val {
+    EbrDebugLog("!!!! setRepeatCalendar called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) alertAction {
-        return _action;
-    }
+- (id)alertBody {
+    return _body;
+}
 
-    /* annotate with type */ -(id) setAlertAction:(id)val {
-        _action = val;
-        return self;
-    }
+- (id)setAlertBody:(id)val {
+    _body = val;
+    return self;
+}
 
-    /* annotate with type */ -(id) alertLaunchImage {
-        return _alertLaunchImage;
-    }
+- (id)hasAction {
+    EbrDebugLog("!!!! hasAction called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) setAlertLaunchImage:(id)val {
-        _alertLaunchImage = val;
-        return self;
-    }
+- (id)setHasAction:(BOOL)val {
+    EbrDebugLog("!!!! setHasAction called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) soundName {
-        EbrDebugLog("!!!! soundName called!\n");
-        return nil;
-    }
+- (id)alertAction {
+    return _action;
+}
 
-    /* annotate with type */ -(id) setSoundName:(id)val {
-        EbrDebugLog("!!!! setSoundName called!\n");
-        return nil;
-    }
+- (id)setAlertAction:(id)val {
+    _action = val;
+    return self;
+}
 
-    /* annotate with type */ -(id) applicationIconBadgeNumber {
-        EbrDebugLog("!!!! applicationIconBadgeNumber called!\n");
-        return nil;
-    }
+- (id)alertLaunchImage {
+    return _alertLaunchImage;
+}
 
-    /* annotate with type */ -(id) setApplicationIconBadgeNumber:(NSInteger)val {
-        EbrDebugLog("!!!! setApplicationIconBadgeNumber called!\n");
-        return nil;
-    }
+- (id)setAlertLaunchImage:(id)val {
+    _alertLaunchImage = val;
+    return self;
+}
 
-    /* annotate with type */ -(id) userInfo {
-        return _userInfo;
-    }
+- (id)soundName {
+    EbrDebugLog("!!!! soundName called!\n");
+    return nil;
+}
 
-    /* annotate with type */ -(id) setUserInfo:(id)val {
-        _userInfo = val;
-        return self;
-    }
+- (id)setSoundName:(id)val {
+    EbrDebugLog("!!!! setSoundName called!\n");
+    return nil;
+}
 
-    // --------------------------------------------------------------------------------
+- (id)applicationIconBadgeNumber {
+    EbrDebugLog("!!!! applicationIconBadgeNumber called!\n");
+    return nil;
+}
 
-    
+- (id)setApplicationIconBadgeNumber:(NSInteger)val {
+    EbrDebugLog("!!!! setApplicationIconBadgeNumber called!\n");
+    return nil;
+}
+
+- (id)userInfo {
+    return _userInfo;
+}
+
+- (id)setUserInfo:(id)val {
+    _userInfo = val;
+    return self;
+}
+
+// --------------------------------------------------------------------------------
+
 @end
-

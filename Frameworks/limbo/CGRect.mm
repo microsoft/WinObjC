@@ -20,10 +20,11 @@
 #include <limits>
 
 //  INCORRECT
-const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
+const CGRect CGRectNull = {
+    std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f
+};
 
-CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t)
-{
+CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t) {
     CGPoint ret;
 
     ret.x = (CGFloat)((double)t.a * pt.x + (double)t.c * pt.y + t.tx);
@@ -32,8 +33,7 @@ CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t)
     return ret;
 }
 
-CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform)
-{
+CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform) {
     CGPoint pts[4];
 
     pts[0].x = rect.origin.x;
@@ -55,20 +55,20 @@ CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform)
 
     float minX = 0, maxX = 0, minY = 0, maxY = 0;
 
-    for ( int i = 0; i < 4; i ++ ) {
-        if ( !haveMinX || pts[i].x < minX ) {
+    for (int i = 0; i < 4; i++) {
+        if (!haveMinX || pts[i].x < minX) {
             haveMinX = true;
             minX = pts[i].x;
         }
-        if ( !haveMaxX || pts[i].x > maxX ) {
+        if (!haveMaxX || pts[i].x > maxX) {
             haveMaxX = true;
             maxX = pts[i].x;
         }
-        if ( !haveMinY || pts[i].y < minY ) {
+        if (!haveMinY || pts[i].y < minY) {
             haveMinY = true;
             minY = pts[i].y;
         }
-        if ( !haveMaxY || pts[i].y > maxY ) {
+        if (!haveMaxY || pts[i].y > maxY) {
             haveMaxY = true;
             maxY = pts[i].y;
         }
@@ -84,11 +84,10 @@ CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform)
     return ret;
 }
 
-extern "C" CGRect CGRectStandardize(CGRect r)
-{
+extern "C" CGRect CGRectStandardize(CGRect r) {
     CGRect out;
 
-    if ( r.size.width < 0.0f ) {
+    if (r.size.width < 0.0f) {
         out.origin.x = r.origin.x + r.size.width;
         out.size.width = -r.size.width;
     } else {
@@ -96,7 +95,7 @@ extern "C" CGRect CGRectStandardize(CGRect r)
         out.size.width = r.size.width;
     }
 
-    if ( r.size.height < 0.0f ) {
+    if (r.size.height < 0.0f) {
         out.origin.y = r.origin.y + r.size.height;
         out.size.height = -r.size.height;
     } else {
@@ -106,23 +105,22 @@ extern "C" CGRect CGRectStandardize(CGRect r)
     return out;
 }
 
-CGRect CGRectIntersection(CGRect r1, CGRect r2)
-{
+CGRect CGRectIntersection(CGRect r1, CGRect r2) {
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);
 
     float x1, y1, x2, y2;
     bool isNull = false;
 
-    if ( r1.origin.x < r2.origin.x ) {
-        if ( r1.origin.x + r1.size.width < r2.origin.x ) {
+    if (r1.origin.x < r2.origin.x) {
+        if (r1.origin.x + r1.size.width < r2.origin.x) {
             isNull = true;
         } else {
             x1 = min(r1.origin.x + r1.size.width, r2.origin.x);
             x2 = min(r1.origin.x + r1.size.width, r2.origin.x + r2.size.width);
         }
     } else {
-        if ( r2.origin.x + r2.size.width < r1.origin.x ) {
+        if (r2.origin.x + r2.size.width < r1.origin.x) {
             isNull = true;
         } else {
             x1 = min(r2.origin.x + r2.size.width, r1.origin.x);
@@ -130,15 +128,15 @@ CGRect CGRectIntersection(CGRect r1, CGRect r2)
         }
     }
 
-    if ( r1.origin.y < r2.origin.y ) {
-        if ( r1.origin.y + r1.size.height < r2.origin.y ) {
+    if (r1.origin.y < r2.origin.y) {
+        if (r1.origin.y + r1.size.height < r2.origin.y) {
             isNull = true;
         } else {
             y1 = min(r1.origin.y + r1.size.height, r2.origin.y);
             y2 = min(r1.origin.y + r1.size.height, r2.origin.y + r2.size.height);
         }
     } else {
-        if ( r2.origin.y + r2.size.height < r1.origin.y ) {
+        if (r2.origin.y + r2.size.height < r1.origin.y) {
             isNull = true;
         } else {
             y1 = min(r2.origin.y + r2.size.height, r1.origin.y);
@@ -148,10 +146,9 @@ CGRect CGRectIntersection(CGRect r1, CGRect r2)
 
     CGRect out;
 
-    if (isNull == true) { 
+    if (isNull == true) {
         memcpy(&out, &CGRectNull, sizeof(CGRect));
     } else {
-
         out.origin.x = x1;
         out.origin.y = y1;
         out.size.width = x2 - x1;
@@ -161,8 +158,7 @@ CGRect CGRectIntersection(CGRect r1, CGRect r2)
     return out;
 }
 
-CGRect CGRectIntegral(CGRect r)
-{
+CGRect CGRectIntegral(CGRect r) {
     r = CGRectStandardize(r);
 
     r.size.width = ceilf(r.origin.x + r.size.width);
@@ -175,30 +171,29 @@ CGRect CGRectIntegral(CGRect r)
     return r;
 }
 
-CGRect CGRectUnion(CGRect r1, CGRect r2)
-{
+CGRect CGRectUnion(CGRect r1, CGRect r2) {
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);
 
     float x1, y1, x2, y2;
 
-    if ( r1.origin.x < r2.origin.x ) {
+    if (r1.origin.x < r2.origin.x) {
         x1 = r1.origin.x;
     } else {
         x1 = r2.origin.x;
     }
-    if ( r1.origin.y < r2.origin.y ) {
+    if (r1.origin.y < r2.origin.y) {
         y1 = r1.origin.y;
     } else {
         y1 = r2.origin.y;
     }
 
-    if ( r1.origin.x + r1.size.width > r2.origin.x + r2.size.width ) {
+    if (r1.origin.x + r1.size.width > r2.origin.x + r2.size.width) {
         x2 = r1.origin.x + r1.size.width;
     } else {
         x2 = r2.origin.x + r2.size.width;
     }
-    if ( r1.origin.y + r1.size.height > r2.origin.y + r2.size.height ) {
+    if (r1.origin.y + r1.size.height > r2.origin.y + r2.size.height) {
         y2 = r1.origin.y + r1.size.height;
     } else {
         y2 = r2.origin.y + r2.size.height;

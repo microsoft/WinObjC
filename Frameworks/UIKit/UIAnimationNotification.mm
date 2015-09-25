@@ -19,14 +19,13 @@
 
 typedef void (^completionBlockFunc)(BOOL);
 
-static void sendHasStarted(id delegate, SEL selector, NSString* animName, void *context)
-{
-    if ( delegate != nil ) {
+static void sendHasStarted(id delegate, SEL selector, NSString* animName, void* context) {
+    if (delegate != nil) {
         SEL selName = selector;
         bool contextArg = true;
 
-        if ( selName == NULL ) {
-            if ( [delegate respondsToSelector:@selector(aanimationWillStart:context:)] ) {
+        if (selName == NULL) {
+            if ([delegate respondsToSelector:@selector(aanimationWillStart:context:)]) {
                 selName = @selector(animationWillStart:context:);
             } else {
                 selName = @selector(animationWillStart:);
@@ -34,10 +33,11 @@ static void sendHasStarted(id delegate, SEL selector, NSString* animName, void *
             }
         }
 
-        if ( ![delegate respondsToSelector:selName] ) selName = NULL;
-        if ( selName ) {
-            if ( contextArg ) {
-                [delegate performSelector:selName withObject:animName withObject:(id) context];
+        if (![delegate respondsToSelector:selName])
+            selName = NULL;
+        if (selName) {
+            if (contextArg) {
+                [delegate performSelector:selName withObject:animName withObject:(id)context];
             } else {
                 [delegate performSelector:selName withObject:animName];
             }
@@ -45,14 +45,13 @@ static void sendHasStarted(id delegate, SEL selector, NSString* animName, void *
     }
 }
 
-void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, void *context)
-{
-    if ( delegate != nil ) {
+void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, void* context) {
+    if (delegate != nil) {
         SEL selName = selector;
         bool contextArg = true;
 
-        if ( selName == NULL ) {
-            if ( [delegate respondsToSelector:@selector(animationDidStop:finished:context:)] ) {
+        if (selName == NULL) {
+            if ([delegate respondsToSelector:@selector(animationDidStop:finished:context:)]) {
                 selName = @selector(animationDidStop:finished:context:);
             } else {
                 selName = @selector(animationDidStop:finished:);
@@ -60,11 +59,12 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
             }
         }
 
-        if ( ![delegate respondsToSelector:selName] ) selName = NULL;
+        if (![delegate respondsToSelector:selName])
+            selName = NULL;
 
-        if ( selName ) {
+        if (selName) {
             id didFinish = [NSNumber numberWithBool:finished];
-            if ( contextArg ) {
+            if (contextArg) {
                 [delegate performSelector:selName withObject:animName withObject:didFinish withObject:context];
             } else {
                 [delegate performSelector:selName withObject:animName withObject:didFinish];
@@ -74,36 +74,36 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
 }
 
 @implementation UIAnimationNotification : NSObject
-    -(void) _animationHasStarted:(id)animation {
-        if ( _numAnimations == 0 ) return;
-        _numStarted ++;
+- (void)_animationHasStarted:(id)animation {
+    if (_numAnimations == 0)
+        return;
+    _numStarted++;
 
-        assert(_numStarted <= _numAnimations);
+    assert(_numStarted <= _numAnimations);
 
-        if ( _numStarted == _numAnimations ) {
-            sendHasStarted(_animDelegate, _animationWillStartSelector, _animName, _context);
-        }
+    if (_numStarted == _numAnimations) {
+        sendHasStarted(_animDelegate, _animationWillStartSelector, _animName, _context);
     }
+}
 
-    -(void) animationDidStop:(id)animation finished:(BOOL)finished {
-        if ( _numAnimations == 0 ) return;
-        _numStopped ++;
+- (void)animationDidStop:(id)animation finished:(BOOL)finished {
+    if (_numAnimations == 0)
+        return;
+    _numStopped++;
 
-        assert(_numStopped <= _numAnimations);
+    assert(_numStopped <= _numAnimations);
 
-        if ( _numStopped == _numAnimations ) {
-            sendDidStop(_animDelegate, _animationDidStopSelector, _animName, finished, _context);
-        }
-        if ( _completionBlock != nil && _numStopped == _numAnimations ) {
-            ((completionBlockFunc) _completionBlock)(TRUE);
-            [_completionBlock release];
-        }
-        if ( _animDelegate != nil && _numStopped == _numAnimations ) {
-            [_animDelegate release];
-            [_animName release];
-        }
+    if (_numStopped == _numAnimations) {
+        sendDidStop(_animDelegate, _animationDidStopSelector, _animName, finished, _context);
     }
+    if (_completionBlock != nil && _numStopped == _numAnimations) {
+        ((completionBlockFunc)_completionBlock)(TRUE);
+        [_completionBlock release];
+    }
+    if (_animDelegate != nil && _numStopped == _numAnimations) {
+        [_animDelegate release];
+        [_animName release];
+    }
+}
 
-    
 @end
-

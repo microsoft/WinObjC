@@ -26,20 +26,20 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UITouch.h"
 
-UIWindow *m_pMainWindow = NULL;
+UIWindow* m_pMainWindow = NULL;
 
 UIWindow* _curKeyWindow = nil;
 
 static float curWindowLevel = 1.0f;
-NSString *const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
-NSString *const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
-NSString *const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
-NSString *const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurveUserInfoKey";
+NSString* const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
+NSString* const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
+NSString* const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
+NSString* const UIKeyboardAnimationCurveUserInfoKey = @"UIKeyboardAnimationCurveUserInfoKey";
 
-NSString *const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
-NSString *const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
-NSString *const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
-NSString *const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
+NSString* const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
+NSString* const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
+NSString* const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
+NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
 
 @implementation UIWindow {
 @private
@@ -47,210 +47,206 @@ NSString *const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification"
     float _windowLevel;
 }
 
-    -(CGRect) convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
-        CGRect ret;
+- (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
+    CGRect ret;
 
-        memcpy(&ret, &rect, sizeof(CGRect));
+    memcpy(&ret, &rect, sizeof(CGRect));
 
-        return ret;
+    return ret;
+}
+
+- (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
+    return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
+}
+
+static void initInternal(UIWindow* self, CGRect pos) {
+    if (m_pMainWindow == NULL) {
+        m_pMainWindow = (UIWindow*)(id)self;
     }
 
-    -(CGPoint) convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
-        return [CALayer convertPoint: point fromLayer: [fromView layer] toLayer: [toView layer]];
+    CALayer* ourLayer = [self layer];
+    [ourLayer setOpaque:FALSE];
+    [ourLayer _setRootLayer:TRUE];
+
+    [CATransaction _addSublayerToTop:ourLayer];
+    GetCACompositor()->setNodeTopMost((DisplayNode*)[ourLayer _presentationNode], true);
+
+    [self setWindowLevel:curWindowLevel];
+    curWindowLevel += 1.0f;
+
+    [[UIApplication sharedApplication] _popupWindow];
+}
+
+- (void)_destroy {
+    m_pMainWindow = NULL;
+    [CATransaction _removeLayer:[self layer]];
+    [[[UIApplication sharedApplication] windows] removeObject:self];
+    [self resignKeyWindow];
+}
+
+- (UIWindow*)initWithFrame:(CGRect)pos {
+    [[[UIApplication sharedApplication] windows] addObject:self];
+
+    if (![[UIApplication sharedApplication] keyWindow]) {
+        [self makeKeyWindow];
     }
 
-    static void initInternal(UIWindow* self, CGRect pos)
-    {
-        if ( m_pMainWindow == NULL ) {
-            m_pMainWindow = (UIWindow *) (id) self;
-        }
+    //  We are ourself, a view
+    [super initWithFrame:pos];
 
-        CALayer* ourLayer = [self layer];
-        [ourLayer setOpaque:FALSE];
-        [ourLayer _setRootLayer: TRUE];
+    initInternal((UIWindow*)self, pos);
 
-        [CATransaction _addSublayerToTop: ourLayer];
-        GetCACompositor()->setNodeTopMost((DisplayNode *) [ourLayer _presentationNode], true);
+    return self;
+}
 
-        [self setWindowLevel:curWindowLevel];
-        curWindowLevel += 1.0f;
+- (UIWindow*)initWithContentRect:(CGRect)pos {
+    [self initWithFrame:pos];
 
-        [[UIApplication sharedApplication] _popupWindow];
-    }
+    return self;
+}
 
-    -(void) _destroy {
-        m_pMainWindow = NULL;
-        [CATransaction _removeLayer: [self layer]];
-        [[[UIApplication sharedApplication] windows] removeObject:self];
-        [self resignKeyWindow];
-    }
+- (NSObject*)initWithCoder:(NSCoder*)coder {
+    [[[UIApplication sharedApplication] windows] addObject:self];
 
-    -(UIWindow*) initWithFrame:(CGRect)pos {
-        [[[UIApplication sharedApplication] windows] addObject:self];
+    id ret = [super initWithCoder:coder];
 
-        if(![[UIApplication sharedApplication] keyWindow]) {
-            [self makeKeyWindow];
-        }
-
-        //  We are ourself, a view
-        [super initWithFrame:pos];
-
-        initInternal((UIWindow *) self, pos);
-
-        return self;
-    }
-
-    -(UIWindow*) initWithContentRect:(CGRect)pos {
-        [self initWithFrame:pos];
-
-        return self;
-    }
-
-    -(NSObject*) initWithCoder:(NSCoder*)coder {
-        [[[UIApplication sharedApplication] windows] addObject:self];
-
-        id ret = [super initWithCoder:coder];
-
-        CGRect frame;
-        frame = [self frame];
+    CGRect frame;
+    frame = [self frame];
 
 #ifdef RUN_NATIVE_RESOLUTION
-        frame.size.width = GetCACompositor()->screenWidth();
+    frame.size.width = GetCACompositor()->screenWidth();
+    frame.size.height = GetCACompositor()->screenHeight();
+    [super setFrame:frame];
+#else
+    if (frame.size.height == 480.0f && GetCACompositor()->screenHeight() == 568.0f) {
         frame.size.height = GetCACompositor()->screenHeight();
         [super setFrame:frame];
-#else
-        if ( frame.size.height == 480.0f && GetCACompositor()->screenHeight() == 568.0f ) {
-            frame.size.height = GetCACompositor()->screenHeight();
-            [super setFrame:frame];
-        }
+    }
 #endif
 
-        initInternal((UIWindow *) self, frame);
+    initInternal((UIWindow*)self, frame);
 
-        return self;
+    return self;
+}
+
+- (NSObject*)_getWindowInternal {
+    return self;
+}
+
++ (UIWindow*)mainWindow {
+    return (UIWindow*)m_pMainWindow;
+}
+
+- (void)makeKeyAndVisible {
+    [self setHidden:FALSE];
+    [self makeKeyWindow];
+    [self setWindowLevel:curWindowLevel];
+    curWindowLevel += 1.0f;
+}
+
+- (void)makeKeyWindow {
+    [self becomeKeyWindow];
+}
+
+- (void)becomeKeyWindow {
+    _curKeyWindow = self;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIWindowDidBecomeKeyNotification" object:self];
+}
+
+- (void)resignKeyWindow {
+    _curKeyWindow = nil;
+}
+
+- (BOOL)isKeyWindow {
+    if (_curKeyWindow == self) {
+        return TRUE;
+    } else {
+        return FALSE;
     }
+}
 
-    -(NSObject*) _getWindowInternal {
-        return self;
-    }
+- (UIResponder*)nextResponder {
+    return [UIApplication sharedApplication];
+}
 
-    +(UIWindow*) mainWindow {
-        return (UIWindow*) m_pMainWindow;
-    }
+- (UIResponder*)rootViewController {
+    return (UIResponder*)_rootViewController;
+}
 
-    -(void) makeKeyAndVisible {
-        [self setHidden:FALSE];
-        [self makeKeyWindow];
-        [self setWindowLevel:curWindowLevel];
-        curWindowLevel += 1.0f;
-    }
+- (void)setRootViewController:(UIViewController*)controller {
+    _rootViewController = controller;
 
-    -(void) makeKeyWindow {
-        [self becomeKeyWindow];
-    }
+    id controllerView = [controller view];
 
-    -(void) becomeKeyWindow {
-        _curKeyWindow = self;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIWindowDidBecomeKeyNotification" object:self];
-    }
-
-    -(void) resignKeyWindow {
-        _curKeyWindow = nil;
-    }
-
-    -(BOOL) isKeyWindow {
-        if ( _curKeyWindow == self ) {
-            return TRUE;
+    if (controllerView != nil) {
+        [self addSubview:controllerView];
+        CGRect screenFrame;
+        if ([_rootViewController wantsFullScreenLayout]) {
+            screenFrame = [[UIScreen mainScreen] bounds];
         } else {
-            return FALSE;
+            screenFrame = [[UIScreen mainScreen] applicationFrame];
         }
+
+        [[_rootViewController view] setFrame:screenFrame];
     }
 
-    -(UIResponder*) nextResponder {
-        return [UIApplication sharedApplication];
+    if (controller && [controller respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]) {
+        int ourOrientation = [controller preferredInterfaceOrientationForPresentation];
+        [[UIDevice currentDevice] setOrientation:ourOrientation animated:FALSE];
     }
+}
 
-    -(UIResponder*) rootViewController {
-        return (UIResponder*)_rootViewController;
-    }
+- (void)_setRootViewController:(UIViewController*)controller {
+    _rootViewController = controller;
+    if (controller) {
+        id view = [controller view];
 
-    -(void) setRootViewController:(UIViewController*)controller {
-        _rootViewController = controller;
-
-        id controllerView = [controller view];
-
-        if ( controllerView != nil ) {
-            [self addSubview:controllerView];
+        if ([[view superview] isKindOfClass:[UIWindow class]]) {
+            EbrDebugLog("Setting root controller to %s\n", object_getClassName(controller));
             CGRect screenFrame;
-            if ( [_rootViewController wantsFullScreenLayout] ) {
-                screenFrame = [[UIScreen mainScreen] bounds];
-            } else {
-                screenFrame = [[UIScreen mainScreen] applicationFrame];
-            }
-
-            [[_rootViewController view] setFrame:screenFrame];
+            screenFrame = [[UIScreen mainScreen] applicationFrame];
+            [view setFrame:screenFrame];
         }
-        
-        if (controller && [controller respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]) {
-            int ourOrientation = [controller preferredInterfaceOrientationForPresentation];
-            [[UIDevice currentDevice] setOrientation:ourOrientation animated: FALSE];
-        }
+    } else {
+        EbrDebugLog("Setting root controller to nil");
     }
+}
 
-    -(void) _setRootViewController:(UIViewController*)controller {
-        _rootViewController = controller;
-        if ( controller ) {
-            id view = [controller view];
+- (NSInteger)_compareWindowLevel:(id)other {
+    float level1 = [self windowLevel];
+    float level2 = [other windowLevel];
 
-            if ( [[view superview] isKindOfClass:[UIWindow class]] ) {
-                EbrDebugLog("Setting root controller to %s\n", object_getClassName(controller));
-                CGRect screenFrame;
-                screenFrame = [[UIScreen mainScreen] applicationFrame];
-                [view setFrame:screenFrame];
-            }
-        } else {
-            EbrDebugLog("Setting root controller to nil");
-        }
+    if (level1 > level2) {
+        return 1;
+    } else if (level1 < level2) {
+        return -1;
+    } else {
+        return 0;
     }
+}
 
-    -(NSInteger) _compareWindowLevel:(id)other {
-        float level1 = [self windowLevel];
-        float level2 = [other windowLevel];
+- (void)setWindowLevel:(float)level {
+    _windowLevel = level;
+    CALayer* ourLayer = [self layer];
+    GetCACompositor()->setNodeTopWindowLevel((DisplayNode*)[ourLayer _presentationNode], level);
+    GetCACompositor()->SortWindowLevels();
+    [[[UIApplication sharedApplication] windows] sortUsingSelector:@selector(_compareWindowLevel:)];
+}
 
-        if ( level1 > level2 ) {
-            return 1;
-        } else if ( level1 < level2 ) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
+- (float)windowLevel {
+    return _windowLevel;
+}
 
-    -(void) setWindowLevel:(float)level {
-        _windowLevel = level;
-        CALayer* ourLayer = [self layer];
-        GetCACompositor()->setNodeTopWindowLevel((DisplayNode *) [ourLayer _presentationNode], level);
-        GetCACompositor()->SortWindowLevels();
-        [[[UIApplication sharedApplication] windows] sortUsingSelector:@selector(_compareWindowLevel:)];
-    }
+- (void)setScreen:(UIScreen*)screen {
+    return;
+}
 
-    -(float) windowLevel {
-        return _windowLevel;
-    }
+- (void)dealloc {
+    m_pMainWindow = NULL;
+    [CATransaction _removeLayer:[self layer]];
+    [[[UIApplication sharedApplication] windows] removeObject:self];
 
-    -(void) setScreen:(UIScreen*)screen {
-        return;
-    }
+    [super dealloc];
+}
 
-    -(void) dealloc {
-        m_pMainWindow = NULL;
-        [CATransaction _removeLayer: [self layer]];
-        [[[UIApplication sharedApplication] windows] removeObject:self];
-
-        [super dealloc];
-    }
-
-        
-    
 @end
-

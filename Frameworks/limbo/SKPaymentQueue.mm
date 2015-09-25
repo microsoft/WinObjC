@@ -26,7 +26,7 @@
 static SKPaymentQueue* _defaultQueue;
 
 @implementation SKPaymentTransaction
--(instancetype) initWithIdentifier:(NSString*)ident date:(NSDate*)date payment:(SKPayment*)payment {
+- (instancetype)initWithIdentifier:(NSString*)ident date:(NSDate*)date payment:(SKPayment*)payment {
     _transactionIdentifier = ident;
     _transactionDate = date;
     _transactionState = SKPaymentTransactionStatePurchased;
@@ -39,13 +39,13 @@ static SKPaymentQueue* _defaultQueue;
     NSMutableArray* _transactionObservers;
 }
 
--(instancetype) init {
+- (instancetype)init {
     _transactionObservers = [[NSMutableArray alloc] init];
 
     return [super init];
 }
 
-+(instancetype) defaultQueue {
++ (instancetype)defaultQueue {
     if (!_defaultQueue) {
         _defaultQueue = [[SKPaymentQueue alloc] init];
     }
@@ -53,38 +53,39 @@ static SKPaymentQueue* _defaultQueue;
     return _defaultQueue;
 }
 
-+(BOOL) canMakePayments {
++ (BOOL)canMakePayments {
     return TRUE;
 }
 
--(void) addTransactionObserver:(id)observer {
+- (void)addTransactionObserver:(id)observer {
     [_transactionObservers addObject:observer];
 }
 
--(void) removeTransactionObserver:(id)observer {
+- (void)removeTransactionObserver:(id)observer {
     [_transactionObservers removeObject:observer];
 }
 
 #if WRL
 HSTRING fromNS(NSString* str) {
     HSTRING ret;
-    WindowsCreateString((const wchar_t*) [str rawCharacters], [str length], &ret);
+    WindowsCreateString((const wchar_t*)[str rawCharacters], [str length], &ret);
     return ret;
 }
 
--(void) processTransaction:(HSTRING)hReceipt withPayment:(SKPayment*)payment {
+- (void)processTransaction:(HSTRING)hReceipt withPayment:(SKPayment*)payment {
     NSString* receipt = _nsstringFromHstring(hReceipt);
 
-    SKPaymentTransaction *transaction = [[SKPaymentTransaction alloc] initWithIdentifier:receipt date:[NSDate date] payment:payment];
+    SKPaymentTransaction* transaction =
+        [[SKPaymentTransaction alloc] initWithIdentifier:receipt date:[NSDate date] payment:payment];
 
-    NSArray *transactions = [NSArray arrayWithObject:transaction];
+    NSArray* transactions = [NSArray arrayWithObject:transaction];
     for (id<SKPaymentTransactionObserver> obs in _transactionObservers) {
         [obs paymentQueue:self updatedTransactions:transactions];
     }
 }
 #endif
 
--(void) finishTransaction:(SKPaymentTransaction*)transaction {
+- (void)finishTransaction:(SKPaymentTransaction*)transaction {
 #if WRL
     NSString* identifier = transaction.payment.productIdentifier;
     HSTRING hid = fromNS(identifier);
@@ -94,7 +95,7 @@ HSTRING fromNS(NSString* str) {
 #endif
 }
 
--(void) addPayment:(SKPayment*)payment {
+- (void)addPayment:(SKPayment*)payment {
 #if WRL
     auto currentApp = getCurrentApp();
 
@@ -110,36 +111,36 @@ HSTRING fromNS(NSString* str) {
     op->put_Completed(innerHandler);
     innerHandler->Release();
 
-    /*
-    currentApp->GetProductReceiptAsync(identifier, &op);
+/*
+currentApp->GetProductReceiptAsync(identifier, &op);
 
-    auto handler = new CompletionHandler<HSTRING>([&](IAsyncOperation<HSTRING>* receiptInfo) {
-        HSTRING result;
-        if (receiptInfo->GetResults(&result) != S_OK || result == nullptr) {
-            currentApp->RequestProductPurchaseAsync(identifier, true, &op);
-            auto innerHandler = new CompletionHandler<HSTRING>([&](IAsyncOperation<HSTRING>* purchaseInfo) {
-                purchaseInfo->GetResults(&result);
-                receipt = result;
-                [self processTransaction:receipt];
-            });
-            op->put_Completed(innerHandler);
-            innerHandler->Release();
-        } else {
-            receipt = result;
-            [self processTransaction:receipt];
-        }
-    });
-    op->put_Completed(handler);
-    handler->Release();
-    */
+auto handler = new CompletionHandler<HSTRING>([&](IAsyncOperation<HSTRING>* receiptInfo) {
+HSTRING result;
+if (receiptInfo->GetResults(&result) != S_OK || result == nullptr) {
+currentApp->RequestProductPurchaseAsync(identifier, true, &op);
+auto innerHandler = new CompletionHandler<HSTRING>([&](IAsyncOperation<HSTRING>* purchaseInfo) {
+purchaseInfo->GetResults(&result);
+receipt = result;
+[self processTransaction:receipt];
+});
+op->put_Completed(innerHandler);
+innerHandler->Release();
+} else {
+receipt = result;
+[self processTransaction:receipt];
+}
+});
+op->put_Completed(handler);
+handler->Release();
+*/
 #endif
 }
 
--(NSArray*) transactions {
+- (NSArray*)transactions {
     return nil;
 }
 
--(void) dealloc {
+- (void)dealloc {
     [_transactionObservers release];
     return [super dealloc];
 }

@@ -20,48 +20,46 @@
 static NSNull* nullSingleton;
 
 @implementation NSNull : NSObject
-	+(void) initialize
-	{
-		if ( self == [NSNull class] ) {
-			nullSingleton = [super allocWithZone: nil];
-		}
-	}
-
-    -(instancetype) initWithCoder:(NSCoder*)coder {
-        return self;
++ (void)initialize {
+    if (self == [NSNull class]) {
+        nullSingleton = [super allocWithZone:nil];
     }
+}
 
-    -(void) encodeWithCoder:(NSCoder*)coder {
-    }
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    return self;
+}
 
-    -(instancetype) copyWithZone:(NSZone*)zone {
-        return nullSingleton;
-    }
+- (void)encodeWithCoder:(NSCoder*)coder {
+}
 
-	+(instancetype) allocWithZone:(NSZone*)zone {
-		return nullSingleton;
-	}
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return nullSingleton;
+}
 
-    -(oneway void) release {
-    }
++ (instancetype)allocWithZone:(NSZone*)zone {
+    return nullSingleton;
+}
 
-	-(instancetype) retain {
-		return self;
-	}
+- (oneway void)release {
+}
+
+- (instancetype)retain {
+    return self;
+}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-    -(void) dealloc {
-		assert(0 && "NSNull should never be deallocated");
-    }
+- (void)dealloc {
+    assert(0 && "NSNull should never be deallocated");
+}
 #pragma clang diagnostic pop
 
-    -(NSString*) description {
-        return @"<null>";
-    }
+- (NSString*)description {
+    return @"<null>";
+}
 
-    +(NSNull*) null {
-        return nullSingleton;
-    }
++ (NSNull*)null {
+    return nullSingleton;
+}
 @end
-
