@@ -771,7 +771,7 @@ object_getClass(id obj_)
      * to get the object of the class. 
      */
 
-    if ( obj->isa ) {
+    if ( obj && obj->isa ) {
         extern struct winrt_isa _NSConcreteGlobalBlock;
 
         if ( ((Class) obj->isa)->isa == &_NSConcreteGlobalBlock ) {
