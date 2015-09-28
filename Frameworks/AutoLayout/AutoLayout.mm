@@ -64,7 +64,12 @@ public:
         }
     }
 
-    enum { Left, Right, Top, Bottom };
+    enum {
+        Left,
+        Right,
+        Top,
+        Bottom,
+    };
 
     UIView* _view;
     ClVariable _vars[4];

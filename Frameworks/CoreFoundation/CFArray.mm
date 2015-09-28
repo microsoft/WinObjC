@@ -36,10 +36,18 @@ void CFNSRelease(CFAllocatorRef allocator, const void* obj);
 Boolean CFNSEqual(const void* obj1, const void* obj2);
 
 const CFArrayCallBacks kCFTypeArrayCallBacks = {
-    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
+    0,
+    CFNSRetain,
+    CFNSRelease,
+    0,
+    CFNSEqual,
 };
 const CFArrayCallBacks kNSTypeArrayCallBacks = {
-    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
+    0,
+    CFNSRetain,
+    CFNSRelease,
+    0,
+    CFNSEqual,
 };
 
 class __CFArray {

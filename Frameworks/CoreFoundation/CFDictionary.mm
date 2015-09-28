@@ -87,9 +87,20 @@ __declspec(dllexport) extern "C" int CFNSBlockCompare(id obj1, id obj2, id block
     return ret;
 }
 
-const CFDictionaryKeyCallBacks kCFTypeDictionaryKeyCallBacks = { 0, CFNSRetain, CFNSRelease, 0, CFNSEqual, CFNSHash };
+const CFDictionaryKeyCallBacks kCFTypeDictionaryKeyCallBacks = {
+    0,
+    CFNSRetain,
+    CFNSRelease,
+    0,
+    CFNSEqual,
+    CFNSHash,
+};
 const CFDictionaryValueCallBacks kCFTypeDictionaryValueCallBacks = {
-    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
+    0,
+    CFNSRetain,
+    CFNSRelease,
+    0,
+    CFNSEqual,
 };
 
 const CFDictionaryKeyCallBacks kNSTypeDictionaryKeyCallBacks = { 0, CFNSRetain, CFNSRelease, 0, CFNSEqual, CFNSHash };

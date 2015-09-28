@@ -46,13 +46,17 @@ void CAFDecoder::CheckState(const Byte* inInputData, ChannelState& ioChannelStat
 
     if (theStepTableIndex == ioChannelState.mStepTableIndex) // indexes match
     {
-        SInt32 theDifference =
-            thePredictedSample -
-            ioChannelState.mPredictedSample; // calculate theDifference between state and stored value
-        if (theDifference < 0)
+        // calculate theDifference between state and stored value
+        SInt32 theDifference = thePredictedSample - ioChannelState.mPredictedSample; 
+        if (theDifference < 0) {
             theDifference = -theDifference;
-        if (theDifference <= kPredTolerance) // is difference greater than tolerance?
-            return; // no, so state is good
+        }
+
+        // is difference greater than tolerance?
+        if (theDifference <= kPredTolerance) {
+            // no, so state is good
+            return; 
+        }
     }
 
     ioChannelState.mPredictedSample = thePredictedSample; // use stored state

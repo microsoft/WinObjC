@@ -33,16 +33,24 @@
 #define _S_IFDIR S_IFDIR
 #endif
 
-#define DEFN_STR(name) SB_EXPORT NSString* const name = @ #name;
+#define DEFN_STR(name) SB_EXPORT NSString* const name = @#name;
 
 DEFN_STR(NSFileTypeDirectory)
-DEFN_STR(NSFileTypeRegular) DEFN_STR(NSFileType) DEFN_STR(NSFileSize) DEFN_STR(NSFileModificationDate)
-    DEFN_STR(NSFileOwnerAccountName) DEFN_STR(NSFileSystemFreeSize) DEFN_STR(NSFileSystemSize)
-        DEFN_STR(NSFilePosixPermissions) DEFN_STR(NSFileSystemFileNumber) DEFN_STR(NSFilePathErrorKey)
-            DEFN_STR(NSFileProtectionKey) DEFN_STR(NSFileProtectionComplete)
-                DEFN_STR(NSFileProtectionCompleteUnlessOpen)
+DEFN_STR(NSFileTypeRegular)
+DEFN_STR(NSFileType)
+DEFN_STR(NSFileSize)
+DEFN_STR(NSFileModificationDate)
+DEFN_STR(NSFileOwnerAccountName)
+DEFN_STR(NSFileSystemFreeSize)
+DEFN_STR(NSFileSystemSize)
+DEFN_STR(NSFilePosixPermissions)
+DEFN_STR(NSFileSystemFileNumber)
+DEFN_STR(NSFilePathErrorKey)
+DEFN_STR(NSFileProtectionKey)
+DEFN_STR(NSFileProtectionComplete)
+DEFN_STR(NSFileProtectionCompleteUnlessOpen)
 
-                    @implementation NSDirectoryEnumerator : NSEnumerator {
+@implementation NSDirectoryEnumerator : NSEnumerator {
     idretain rootFiles;
     idretain curFile;
     idretain enumerators;

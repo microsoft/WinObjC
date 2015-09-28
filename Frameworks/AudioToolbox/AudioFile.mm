@@ -463,15 +463,6 @@ public:
     }
 };
 
-#if 0
-OSStatus AudioFileStreamOpen(DWORD clientData, DWORD inPropertyListenerProc,    DWORD inPacketsProc, DWORD inFileTypeHint, DWORD *out)
-{
-EbrDebugLog("AudioFileStreamOpen not implemented\n");
-assert(0);
-
-return 0;
-}
-
 DWORD AudioFileStreamParseBytes(AudioFile *pStream, DWORD bytesIn, void *dataIn, DWORD inFlags)
 {
 EbrDebugLog("AudioFileStreamParseBytes not implemented\n");
@@ -634,8 +625,8 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
-OSStatus
-ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
+OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize,
+                                 void* propOutData) {
     if (fileID) {
         return fileID->pAudioFile->getProperty(propID, ioDataSize, propOutData);
     } else {
