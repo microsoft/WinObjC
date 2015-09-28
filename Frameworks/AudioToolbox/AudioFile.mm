@@ -463,22 +463,6 @@ public:
     }
 };
 
-DWORD AudioFileStreamParseBytes(AudioFile *pStream, DWORD bytesIn, void *dataIn, DWORD inFlags)
-{
-EbrDebugLog("AudioFileStreamParseBytes not implemented\n");
-assert(0);
-
-return 0;
-}
-
-DWORD AudioFileStreamClose(AudioFile *fileID)
-{
-EbrDebugLog("AudioFileStreamClose not implemented\n");
-if ( !fileID ) return 0;
-return 1234;
-}
-#endif
-
 OSStatus AudioFileOpenURL(CFURLRef url, SInt8 permissions, AudioFileTypeID type, AudioFileID* out) {
     char* filename = (char*)[[url path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
@@ -736,28 +720,3 @@ DWORD AudioConverterFillComplexBuffer(DWORD handle,
                                       AudioStreamBasicDescription* out) {
     return 0;
 }
-
-;
-;
-;
-;
-;
-;
-;
-
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;

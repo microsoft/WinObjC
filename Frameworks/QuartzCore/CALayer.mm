@@ -993,7 +993,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         return;
 
     id<CAAction> action = [self actionForKey:(id)_positionAction];
-    ;
 
     priv->position.x = pos.x;
     priv->position.y = pos.y;

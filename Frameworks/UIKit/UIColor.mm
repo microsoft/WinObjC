@@ -544,5 +544,3 @@ DWORD _UIColorPatternFill(UIColor* color, CGContextRef ctx) {
     CGContextDrawImage(ctx, bounds, (CGImageRef)[color->_image CGImage]);
     return 0;
 }
-
-;

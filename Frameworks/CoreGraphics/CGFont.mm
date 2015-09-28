@@ -706,7 +706,6 @@ static int attributeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
 
     float height =
         ((float)(state->curFace->size->metrics.ascender - state->curFace->size->metrics.descender)) * spacing / 64.0f;
-    ;
     if (height > state->sizeOut->height) {
         state->sizeOut->height = height;
     }

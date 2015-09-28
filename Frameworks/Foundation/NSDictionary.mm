@@ -50,7 +50,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
-;
 @implementation NSDictionary : NSObject
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObj, ... {
     va_list pReader;

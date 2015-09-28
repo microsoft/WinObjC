@@ -538,6 +538,3 @@ CGFontRef CTFontCreateWithName(id name, float size, CGAffineTransform* matrix) {
 
     return ret;
 }
-
-;
-;

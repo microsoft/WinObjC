@@ -2478,7 +2478,6 @@ return ret;
     UStringHolder s1(self);
 
     DWORD hash = s1.string().hashCode();
-    ;
     if (strType == NSConstructedString_Unicode) {
         u->ConstructedString._hashIsCached = TRUE;
         u->ConstructedString._hashCache = hash;

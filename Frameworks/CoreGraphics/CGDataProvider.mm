@@ -107,12 +107,3 @@ CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
 void CGDataProviderRelease(CGDataProviderRef data) {
     CFRelease(data);
 }
-
-;
-;
-;
-;
-;
-;
-;
-;

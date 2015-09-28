@@ -214,27 +214,3 @@ CGFloat CGColorGetAlpha(CGColorRef color) {
 CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
     return CGColorSpaceCreateDeviceRGB();
 }
-
-;
-;
-;
-;
-;
-;
-;
-
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
-;
