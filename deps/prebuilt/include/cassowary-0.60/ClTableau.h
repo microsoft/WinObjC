@@ -168,10 +168,10 @@ class ClTableau {
   // oldVar should now be a basic variable
   void SubstituteOut(ClVariable oldVar, const ClLinearExpression &expr);
 
-  ClTableauColumnsMap Columns()
+  const ClTableauColumnsMap& Columns()
     { return _columns; }  
 
-  ClTableauRowsMap Rows()
+  const ClTableauRowsMap& Rows()
     { return _rows; }  
 
   // return true iff the variable subject is in the Columns keys

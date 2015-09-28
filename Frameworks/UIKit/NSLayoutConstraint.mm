@@ -114,32 +114,39 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
         // Connector target predicates cannot be objects.
         if (predicates[i].target != "") {
             NSString* targStr = [NSString stringWithUTF8String:predicates[i].target.c_str()];
+            NSNumber* metric = [metrics objectForKey:targStr];
             target = (UIView*)[views objectForKey:targStr];
 
             // If item2 is nil, this is a size constraint
-            if (target && !item2) {
+            if (target && item2) {
                 EbrDebugLog("Connectors cannot have targets.\n");
+                [ret release];
                 return nil;
-            } else {
-                if ([targStr isEqual:@"default"]) { // Should this just be ""?
+            }
+
+            if ([targStr isEqual:@"default"]) { // Should this just be ""?
+                if (!item2) {
+                    EbrDebugLog("Default connector value requires a second target\n");
+                    [ret release];
+                    return nil;
+                } else {
                     if ([item1 superview] == [item2 superview]) {
                         constant = 8.0f;
                     } else {
                         constant = 20.0f;
                     }
+                }
+            } else {
+                if (metric) {
+                    constant = metric.floatValue;
                 } else {
-                    NSNumber* metric = [metrics objectForKey:targStr];
-
-                    if (metric) {
-                        constant = metric.floatValue;
-                    } else {
-                        NSNumber* num = [formatter numberFromString:targStr];
-                        if (!num) {
-                            EbrDebugLog("Cannot parse number from target string: %s\n", predicates[i].target.c_str());
-                            return nil;
-                        }
-                        constant = num.floatValue;
+                    NSNumber* num = [formatter numberFromString:targStr];
+                    if (!num) {
+                        EbrDebugLog("Cannot parse number from target string: %s\n", predicates[i].target.c_str());
+                        [ret release];
+                        return nil;
                     }
+                    constant = num.floatValue;
                 }
             }
         }
@@ -154,12 +161,14 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
                 NSNumber* num = [formatter numberFromString:prioStr];
                 if (!num) {
                     EbrDebugLog("Cannot parse number from priority string: %s\n", predicates[i].priority.c_str());
+                    [ret release];
                     return nil;
                 }
                 priority = num.floatValue;
             }
             if (priority < 0.0f || priority > 1000.0f) {
                 EbrDebugLog("Priority out of range: %f\n", priority);
+                [ret release];
                 return nil;
             }
         }
@@ -172,6 +181,7 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
             relation = NSLayoutRelationGreaterThanOrEqual;
         } else {
             EbrDebugLog("Unknown relation string: \"%s\"\n", predicates[i].relation.c_str());
+            [ret release];
             return nil;
         }
 
@@ -370,7 +380,6 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
         }
     }
 
-    NSMutableArray* nsConstraints = [NSMutableArray new];
     string line([format UTF8String]);
     bool vertical = false;
     vector<PredicateList> predicates;
@@ -485,13 +494,18 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
         return nil;
     }
 
+    NSMutableArray* nsConstraints = [NSMutableArray new];
+
     [nsConstraints addObjectsFromArray:predAry];
+
+    [predAry release];
 
     for (int i = 0; i < predicates.size(); i++) {
         UIView* item1 = viewForString(constraints[i].target, views, superview);
         UIView* item2 = viewForString(constraints[i + 1].target, views, superview);
 
         if (!item1 || !item2) {
+            [nsConstraints release];
             return nil;
         }
 
@@ -499,19 +513,25 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             predicates[i], item1, item2, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
 
         if (!predAry) {
+            [nsConstraints release];
             return nil;
         }
 
         [nsConstraints addObjectsFromArray:predAry];
+
+        [predAry release];
 
         predAry = constraintsFromPredicates(
             constraints[i + 1].predicates, item2, nil, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
 
         if (!predAry) {
+            [nsConstraints release];
             return nil;
         }
 
         [nsConstraints addObjectsFromArray:predAry];
+
+        [predAry release];
     }
 
     if (opts && constraints.size()) {
@@ -523,6 +543,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             case NSLayoutFormatAlignAllCenterX:
                 if (!vertical) {
                     EbrDebugLog("Horizontal alignment option should not be specified with horizontal visual format!\n");
+                    [nsConstraints release];
                     return nil;
                 }
                 break;
@@ -532,13 +553,14 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             case NSLayoutFormatAlignAllBaseline:
                 if (vertical) {
                     EbrDebugLog("Vertical alignment option should not be specified with vertical visual format!\n");
+                    [nsConstraints release];
                     return nil;
                 }
                 break;
             default:
                 EbrDebugLog("Unknown NSLayoutFormat option: %d\n", opts & NSLayoutFormatAlignmentMask);
+                [nsConstraints release];
                 return nil;
-                break;
         }
         for (int i = 0; i < constraints.size() - 1; i++) {
             UIView* item1 = viewForString(constraints[i].target, views, superview);
@@ -556,7 +578,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
         }
     }
 
-    return nsConstraints;
+    return [nsConstraints autorelease];
 }
 
 + (instancetype)allocWithZone:(NSZone*)zone {
@@ -576,7 +598,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
                         multiplier:(CGFloat)multiplier
                           constant:(CGFloat)constant {
     // TODO: Parameter and hierarchy checking
-    NSLayoutConstraint* constraint = [NSLayoutConstraint new];
+    NSLayoutConstraint* constraint = [self new];
 
     constraint->_firstItem = view1;
     constraint->_secondItem = view2;
@@ -586,7 +608,11 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     constraint->_constant = constant;
     constraint->_relation = relation;
     constraint->_priority = NSLayoutPriorityRequired;
-    return constraint;
+    return [constraint autorelease];
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    EbrDebugLog("Unsupported attempt to encode an NSLayoutConstraint\n");
 }
 
 - (NSLayoutConstraintPrivateState*)_privateState {
@@ -668,9 +694,11 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 }
 
 - (void)dealloc {
+    EbrDebugLog("Deallocing NSLayoutConstraint\n");
     if ([self conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
         [self autoLayoutDealloc];
     }
+    delete self->priv;
     [super dealloc];
 }
 

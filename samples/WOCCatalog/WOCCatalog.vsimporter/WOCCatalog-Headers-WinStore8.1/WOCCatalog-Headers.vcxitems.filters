@@ -21,6 +21,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AlertsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AutoLayoutViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AppDelegate.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>

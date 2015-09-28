@@ -79,6 +79,8 @@ FOUNDATION_EXPORT_CLASS
 
 @end
 
+FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...);
+
 #import <Foundation/NSMutableDictionary.h>
 
 #endif /* _NSDICTIONARY_H_ */

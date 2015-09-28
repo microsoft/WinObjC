@@ -40,6 +40,7 @@
 		4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E91B5997AD00682BDB /* segment_tools.png */; };
 		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
 		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
+		7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */; };
 		7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B42BCF41B90ECFE00D45782 /* BezierViewController.m */; };
 		7B42BCF71B90FFD200D45782 /* BezierViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B42BCF61B90FFD200D45782 /* BezierViewController.xib */; };
 		7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */; };
@@ -115,6 +116,8 @@
 		4EE861EA1B5997AD00682BDB /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = WOCCatalog/Images/whiteButton.png; sourceTree = "<group>"; };
 		4EE861F81B5997E400682BDB /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesViewController.h; sourceTree = "<group>"; };
 		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
+		7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoLayoutViewController.h; sourceTree = "<group>"; };
+		7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoLayoutViewController.m; sourceTree = "<group>"; };
 		7B42BCF31B90ECFE00D45782 /* BezierViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezierViewController.h; sourceTree = "<group>"; };
 		7B42BCF41B90ECFE00D45782 /* BezierViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezierViewController.m; sourceTree = "<group>"; };
 		7B42BCF61B90FFD200D45782 /* BezierViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BezierViewController.xib; sourceTree = "<group>"; };
@@ -214,6 +217,8 @@
 				4EE861CD1B5997A500682BDB /* XamlViewController.h */,
 				4EE861CE1B5997A500682BDB /* XamlViewController.m */,
 				4ED640221B717E470092921E /* SingleImageViewController.m */,
+				7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */,
+				7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */,
 				4ED640241B717E530092921E /* SingleImageViewController.h */,
 				4EE861581B5996BF00682BDB /* Supporting Files */,
 				7B42BCF31B90ECFE00D45782 /* BezierViewController.h */,
@@ -383,6 +388,7 @@
 				4EE861DD1B5997A500682BDB /* XamlViewController.m in Sources */,
 				4EE861DB1B5997A500682BDB /* ViewController.m in Sources */,
 				4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */,
+				7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */,
 				4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */,
 				E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */,
 				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
