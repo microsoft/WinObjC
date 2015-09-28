@@ -35,7 +35,8 @@ public:
     AutoLayoutProperties *layoutProperties;
     id currentTouches;
     id gestures;
-    NSMutableArray* constraints;
+    idretaint<NSMutableArray> constraints;
+    idretaint<NSMutableArray> associatedConstraints;
     bool _isChangingParent;
     bool _constraintsNeedUpdate;
 
@@ -44,7 +45,6 @@ public:
     CGSize             _contentCompressionResistancePriority;
     BOOL               autoresizesSubviews;
     BOOL               translatesAutoresizingMaskIntoConstraints;
-    BOOL               _constrained;
     CGRect             _resizeRoundingError;
 
     UIViewPrivateState()
@@ -61,11 +61,11 @@ public:
         currentTouches = nil;
         gestures = nil;
         constraints = nil;
+        associatedConstraints = nil;
         translatesAutoresizingMaskIntoConstraints = TRUE;
         layoutProperties = NULL;
         _isChangingParent = false;
         _constraintsNeedUpdate = false;
-        _constrained = false;
         _contentHuggingPriority.height = 250.0f;
         _contentHuggingPriority.width = 250.0f;
         _contentCompressionResistancePriority.height = 750.0f;
@@ -100,6 +100,10 @@ public:
 }
 -(void) initPriv;
 -(UIViewPrivateState*) _privateState;
+
+-(void)_applyConstraints;
+-(void)_setShouldLayout;
++(void)_setNestedAnimationsEnabled:(BOOL)enable;
 @end
 
 @interface NSLayoutConstraint() { 
@@ -108,9 +112,6 @@ public:
 -(NSLayoutConstraintPrivateState*) _privateState;
 - (void)printConstraint;
 + (void)printConstraints:(NSArray*)constraints;
-
-- (void)_setShouldLayout;
-+ (void)_setNestedAnimationsEnabled:(BOOL)enable;
 @end
 
 @interface _UILayoutGuide : UIView<UILayoutSupport>

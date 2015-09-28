@@ -107,6 +107,7 @@
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m" />
     <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />

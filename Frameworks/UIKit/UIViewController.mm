@@ -234,8 +234,14 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     NSString* _identifier;
 }
 
+- (instancetype)init {
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    return self;
+}
+
 - (instancetype)initWithIdentifier:(NSString*)identifier {
     _identifier = identifier;
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     return self;
 }
 
@@ -247,6 +253,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 - (instancetype)initWithCoder:(NSCoder*)coder {
     _UILayoutGuide* ret = [super initWithCoder:coder];
     _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     assert(_identifier);
     return ret;
 }
@@ -1964,6 +1971,6 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 - (void)updateViewConstraints {
-    [((UIView*)(priv->view))updateConstraints];
+    [((UIView*)(priv->view))_applyConstraints];
 }
 @end

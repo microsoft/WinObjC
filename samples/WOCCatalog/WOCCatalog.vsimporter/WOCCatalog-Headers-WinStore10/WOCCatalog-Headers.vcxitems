@@ -13,6 +13,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\OpenGLES20Controller.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ImagesViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AlertsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AutoLayoutViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AppDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PhotogridViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ButtonsViewController.h" />

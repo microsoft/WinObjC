@@ -22,7 +22,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 
 #define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
-SB_EXPORT NSDictionary *_NSDictionaryOfVariableBindings(NSString *keysString, id firstVal, ...);
+SB_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keysString, ...);
 
 enum {
     UILayoutPriorityRequired = 1000,
