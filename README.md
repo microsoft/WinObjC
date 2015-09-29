@@ -7,7 +7,7 @@ The following sections will help you get started and you can view our wiki for m
 
 ##Where to get it
 
-Download the latest Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.150910/winobjc.zip)
+Download the latest pre-built Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.150910/winobjc.zip)
 
 ##Getting started with WinObjC
 To use WinObjC, there are a few requirements. You need:
@@ -21,7 +21,11 @@ To use WinObjC, there are a few requirements. You need:
     3. Windows 8.1 and Windows Phone 8.0/8.1 Tools (all)
 
 
-The best way to get started with WinObjC is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls. To run the sample:
+The best way to get started with WinObjC is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls.
+
+NOTE: If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki). The following instructions are for geting started using the pre-built SDK.
+
+To run the sample:
 
 1. Extract the SDK zip file to a local directory
 
