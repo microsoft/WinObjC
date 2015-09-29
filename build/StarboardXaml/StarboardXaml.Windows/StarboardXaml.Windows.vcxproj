@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -170,7 +170,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -190,7 +191,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -210,7 +212,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -230,7 +233,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -250,7 +254,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -270,7 +275,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies);d3d11.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

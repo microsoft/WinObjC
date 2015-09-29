@@ -348,8 +348,10 @@ public:
     NSString *_type, *_subType;
 
     void Completed() {
-        [_animHandler animationDidStop:TRUE];
-        [_animHandler _removeAnimationsFromLayer];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_animHandler animationDidStop:TRUE];
+            [_animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -390,8 +392,10 @@ public:
     id _animHandler;
 
     void Completed() {
-        [_animHandler animationDidStop:TRUE];
-        [_animHandler _removeAnimationsFromLayer];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_animHandler animationDidStop:TRUE];
+            [_animHandler _removeAnimationsFromLayer];
+        });
     }
 
     DisplayAnimationBasic(id animHandler,

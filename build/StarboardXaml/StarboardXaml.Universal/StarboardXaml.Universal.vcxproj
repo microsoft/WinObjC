@@ -174,7 +174,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -194,7 +195,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -214,7 +216,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -234,7 +237,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -254,7 +258,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -274,7 +279,8 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
