@@ -97,6 +97,8 @@ SEL NSSelectorFromString(NSString *str)
 
 NSString *NSStringFromClass(Class cls)
 {
+    if (!cls)
+        return nil;
     return [NSString stringWithUTF8String: object_getClassName(cls)];
 }
 
