@@ -79,4 +79,9 @@ LIBRARY GLKit
      GLKMatrix4MultiplyVector3WithTranslation
      GLKMatrix4MultiplyVector3ArrayWithTranslation
      GLKMatrix4Rotate
-     
+     GLKMatrix4MakeXRotation
+     GLKMatrix4MakeYRotation
+     GLKMatrix4MakeZRotation
+     GLKMatrix4MakeRotation
+     GLKMatrix4MakeTranslation
+     GLKMatrix4MakeScale     

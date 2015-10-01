@@ -118,6 +118,13 @@ static NSString *viewTitleKeyName = @"ViewName";
                                gl20ViewController, controllerKeyName,
                                nil]];
 
+    // GLKit
+    GLKitExampleController *glkitController = [[GLKitExampleController alloc] init];
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               @"GLKit", viewTitleKeyName,
+                               glkitController, controllerKeyName,
+                               nil]];
+
     // TextView
     TextViewViewController *textViewController = [[TextViewViewController alloc] init];
     [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:

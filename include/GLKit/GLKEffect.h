@@ -82,6 +82,9 @@ GLKIT_EXPORT_CLASS
 @property float spotCutoff;
 @property float spotExponent;
 
+@property(readonly) GLKVector4 transformedPosition;
+@property(readonly) GLKVector3 transformedSpotDirection;
+
 @property(retain) GLKEffectPropertyTransform* transform;
 
 @end

@@ -235,35 +235,27 @@ bool ShaderInputVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& 
 }
 
 bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
-    type = v.findVariable(name);
+    type = v.findVariable(name, c.isPixelStage());
     if (type) {
         out = name;
         return true;
     }
 
-    if (constantResult.empty())
-        return false;
     out = constantResult;
-    return true;
+    return !out.empty();
 }
 
 bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
-    type = v.findVariable(first);
-    if (type) {
-        out = first;
-        return true;
+    for(const auto& var : variables) {
+        type = v.findVariable(var, c.isPixelStage());
+        if (type) {
+            out = var;
+            return true;
+        }
     }
 
-    type = v.findVariable(second);
-    if (type) {
-        out = second;
-        return true;
-    }
-
-    if (constantResult.empty())
-        return false;
     out = constantResult;
-    return true;
+    return !out.empty();
 }
 
 bool ShaderFallbackNode::generate(string& out, ShaderContext& c, ShaderLayout& v) {
@@ -274,9 +266,10 @@ bool ShaderFallbackNode::generate(string& out, ShaderContext& c, ShaderLayout& v
     return false;
 }
 
-bool ShaderPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
-    if (!v.findVariable(GLKSH_POS_NAME) || !v.findVariable(GLKSH_MVP_NAME))
+bool ShaderTransformedPosRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
+    if (!v.findVariable(GLKSH_POS_NAME) || !v.findVariable(GLKSH_MVP_NAME)) {
         return false;
+    }
 
     out = GLKSH_MVP_NAME " * " GLKSH_POS_NAME;
     return true;
@@ -289,11 +282,13 @@ string ShaderTexRef::genTexLookup(string texVar, string uv, ShaderContext& c, Sh
 bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
     GLKTextureEnvMode mode = c.getInputVar(modeVar, GLKTextureEnvModeDecal);
 
-    // Get what we need for the texture, just passthrough next if not there.
+    // Get what we need for the texture, just passthrough next if not there, or if this
+    // is a vertex stage.
     string uv;
-    if (!v.findVariable(texVar) || !uvRef->generate(uv, c, v)) {
-        if (nextRef)
+    if (c.isVertexStage() || !v.findVariable(texVar) || !uvRef->generate(uv, c, v)) {
+        if (nextRef) {
             nextRef->generate(out, c, v);
+        }
         return !out.empty();
     }
 
@@ -344,13 +339,15 @@ string ShaderCubeRef::genTexLookup(string texVar, string uv, ShaderContext& c, S
 }
 
 bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v) {
-    if (nextRef)
+    if (nextRef) {
         nextRef->generate(out, c, v);
+    }
 
     // No texture?  just do passthrough.
     string uv;
-    if (!v.findVariable(texVar) || !uvRef->generate(uv, c, v))
+    if (c.isVertexStage() || !v.findVariable(texVar) || !uvRef->generate(uv, c, v)) {
         return !out.empty();
+    }
 
     // Do our texture lookup.
     string texVarTmp = texVar + "_specTmp";
@@ -358,8 +355,8 @@ bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
         "texture2D(" + texVar + ", vec2(" + uv + ")).a"; // TODO: parameterize this & refl tex for alpha vs rgb.
     c.addTempVal(GLKS_FLOAT, texVarTmp, texMod);
 
-    out = "vec4(" + texVarTmp + " * " + out + ".rgb, max(1.0, " + texVarTmp + " * " + out +
-          ".a))"; // shininess stored in .a of input.
+    // shininess stored in .a of input.
+    out = "vec4(" + texVarTmp + " * " + out + ".rgb, max(1.0, " + texVarTmp + " * " + out + ".a))";
     return true;
 }
 
@@ -576,4 +573,20 @@ bool ShaderExpFog::generate(string& out, ShaderContext& c, ShaderLayout& v) {
     }
 
     return true;
+}
+
+bool ShaderVertexOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (c.isVertexStage()) {
+        return inner->generate(out, c, v);
+    }
+    return false;
+}
+
+bool ShaderPixelOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v)
+{
+    if (c.isPixelStage()) {
+        return inner->generate(out, c, v);
+    }
+    return false;
 }

@@ -19,6 +19,11 @@
 #include "ShaderInfo.h"
 #include <set>
 
+// Internal shader definitions, not exposed through GLKShaderDefs.h
+#define Z_DEPTH                 "_posDepth"             // transformed depth.
+#define POS_INPUT               "_vertexPos"            // vertex position (model coords).
+#define NORM_INPUT              "_vertNorm"
+
 class ShaderNode;
 
 // Contains the definition of either a vertex or pixel shader program, as a map
@@ -81,7 +86,12 @@ public:
 
     int getInputVar(const std::string& name, int def = 0);
 
+    // Main shader generation function.
     GLKShaderPair* generate(ShaderMaterial& inputs);
+
+    // Accessors.
+    inline bool isVertexStage() const { return vertexStage; }
+    inline bool isPixelStage() const { return !vertexStage; }
 };
 
 // --------------------------------------------------------------------------------
@@ -135,13 +145,12 @@ public:
 // Use the first variable that's present in a list of variables, or fall back to a constant if
 // none of them are present, or generate nothing if there's no constant.
 class ShaderFallbackRef : public ShaderNode {
-    std::string first;  // TODO: generalize to array.
-    std::string second;
+    std::vector<std::string> variables;
     std::string constantResult;
 public:
-    ShaderFallbackRef(const std::string& first, const std::string& second, 
+    ShaderFallbackRef(const std::vector<std::string>& variables,
                       const std::string& constantResult = "") :
-        first(first), second(second), constantResult(constantResult) {}
+        variables(variables), constantResult(constantResult) {}
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -157,8 +166,7 @@ public:
 };
 
 // Use the position variable, applying the mvp matrix.
-struct ShaderPosRef : public ShaderNode {
-    inline ShaderPosRef() {}
+struct ShaderTransformedPosRef : public ShaderNode {
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
@@ -371,5 +379,19 @@ public:
     inline ShaderExpFog(ShaderNode* depthRef, ShaderNode* densityRef, bool squared) :
         depthRef(depthRef), densityRef(densityRef), squared(squared) { type = GLKS_FLOAT; }
 
+    virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderVertexOnly : public ShaderNode {
+    ShaderNode* inner;
+public:
+    inline ShaderVertexOnly(ShaderNode* inner) : inner(inner) { type = inner->getType(); }
+    virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
+};
+
+class ShaderPixelOnly : public ShaderNode {
+    ShaderNode* inner;
+public:
+    inline ShaderPixelOnly(ShaderNode* inner) : inner(inner) { type = inner->getType(); }
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };

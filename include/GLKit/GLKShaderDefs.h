@@ -80,5 +80,3 @@
 #define GLKSH_FOG_DENSITY       "_fogDens"
 #define GLKSH_FOG_DENSITY2      "_fogDens2"
 #define GLKSH_FOG_DISTANCES     "_fogDist"
-
-#define Z_DEPTH                 "_posDepth"

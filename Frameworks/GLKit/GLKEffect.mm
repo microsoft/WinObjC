@@ -125,7 +125,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         }
 
         int loc;
-        GLKShaderVarType type = _mat.findVariable(v.first, &loc);
+        GLKShaderVarType type = _mat.findVariable(v.first, true, &loc);
 
         if (!type) {
             NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
@@ -354,11 +354,12 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
             if (l.enabled) {
                 isLit = true;
                 char ltype = 'U';
-                if (!GLKVector4XYZEqualToScalar(l.diffuseColor, 0.f)) {
+                GLKVector4 finalColor = GLKVector4Multiply(l.diffuseColor, matProps.diffuseColor);
+                if (!GLKVector4XYZEqualToScalar(finalColor, 0.f)) {
                     ltype = 'L';
-                    m->addMaterialVar(lightVarNames[lightNum].color, l.diffuseColor);
+                    m->addMaterialVar(lightVarNames[lightNum].color, finalColor);
                     m->addMaterialVar3(lightVarNames[lightNum].pos,
-                                       GLKMatrix4MultiplyVector4(self.modelRefTrans, l.position));
+                                       GLKMatrix4MultiplyVector4(self.modelRefTrans, l.transformedPosition));
                     m->addMaterialVar(lightVarNames[lightNum].atten, l.attenuation);
                     float spot = l.spotCutoff;
                     if (spot < 180.f) {
@@ -373,7 +374,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
                         m->addMaterialVar(lightVarNames[lightNum].spotlight, GLKVector3Make(spot, exp, multiplier));
                         m->addMaterialVar(lightVarNames[lightNum].spotlightDir,
-                                          GLKMatrix4MultiplyVector3(self.modelRefTrans, l.spotDirection));
+                                          GLKMatrix4MultiplyVector3(self.modelRefTrans, l.transformedSpotDirection));
                     }
                     if (shininess > 0.f) {
                         GLKVector4 spec = GLKVector4Multiply(l.specularColor, specBase);
@@ -580,7 +581,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @end
 
-@implementation GLKEffectPropertyLight
+@implementation GLKEffectPropertyLight {
+    GLKVector4 _position;
+    GLKVector3 _spotDirection;
+}
 
 - (id)initWith:(GLKShaderEffect*)parent {
     [super initWith:parent];
@@ -608,6 +612,24 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 - (GLKVector3)attenuation {
     GLKVector3 res = { _constantAttenuation, _linearAttenuation, _quadraticAttenuation };
     return res;
+}
+
+- (GLKVector4)position {
+    return _position;
+}
+
+- (void)setPosition:(GLKVector4)pos {
+    _position = pos;
+    _transformedPosition = GLKMatrix4MultiplyVector4(self.parent.transform.modelviewMatrix, pos);
+}
+
+- (GLKVector3)spotDirection {
+    return _spotDirection;
+}
+
+- (void)setSpotDirection:(GLKVector3)dir {
+    _spotDirection = dir;
+    _transformedSpotDirection = GLKMatrix4MultiplyVector3(self.parent.transform.modelviewMatrix, dir);
 }
 
 @end

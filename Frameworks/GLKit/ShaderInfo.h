@@ -47,9 +47,10 @@ struct VarInfo {
 struct ShaderLayout {
     std::map<std::string, VarInfo> vars;
 
-    inline GLKShaderVarType findVariable(const std::string& name, int* loc = NULL) {
+    inline GLKShaderVarType findVariable(const std::string& name, bool ignoreVertexAttrs = false, int* loc = NULL) {
         auto it = vars.find(name);
         if (it == vars.end()) return GLKS_INVALID;
+        if (ignoreVertexAttrs && it->second.vertexAttr) return GLKS_INVALID; // used in pixel shaders.
 
         it->second.used = true;
         if(loc) *loc = it->second.loc;

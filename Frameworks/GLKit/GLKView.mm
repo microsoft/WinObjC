@@ -56,6 +56,12 @@
     self.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
 
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
+    [_link retain];
+}
+
+- (void)dealloc {
+    [_link release];
+    [super dealloc];
 }
 
 - (id)initWithFrame:(CGRect)rect {

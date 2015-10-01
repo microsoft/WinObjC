@@ -42,12 +42,18 @@ typedef wchar_t WCHAR;
     }
 
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
+    [_link retain];
 
     _calendar = [WGCalendar create];
     [_calendar setToNow];
     WFDateTime* dt = [_calendar getDateTime];
     _firstStart = dt.universalTime;
     _lastFrame = dt.universalTime;
+}
+
+- (void)dealloc {
+    [_link release];
+    [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
