@@ -90,8 +90,10 @@ SEL NSSelectorFromString(NSString* str) {
     return sel_registerName([str UTF8String]);
 }
 
-NSString* NSStringFromClass(Class cls) {
-    return [NSString stringWithUTF8String:object_getClassName(cls)];
+NSString *NSStringFromClass(Class cls) {
+    if (!cls)
+        return nil;
+    return [NSString stringWithUTF8String: object_getClassName(cls)];
 }
 
 unsigned int NSSwapHostIntToBig(unsigned int val) {
