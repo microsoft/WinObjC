@@ -53,7 +53,7 @@ int tc3Imp(id, SEL, int) {
 #define SGR_RESET
 #endif
 
-bool globalFailure = true;
+bool globalFailure = false;
 
 void perform(const char *what, bool (^block)(), bool flipbit = false) {
 	bool b = false;
@@ -71,7 +71,7 @@ void perform(const char *what, bool (^block)(), bool flipbit = false) {
 	if(flipbit != b) {
 		printf(SGR_GREEN "PASSED" SGR_RESET);
 	} else {
-		globalFailure = false;
+		globalFailure = true;
 		printf(SGR_RED "FAILED");
 		if(xcp) {
 			printf(" (" SGR_RESET "%s" SGR_RED ")", xcp);
