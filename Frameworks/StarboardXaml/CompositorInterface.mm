@@ -348,9 +348,10 @@ public:
     NSString *_type, *_subType;
 
     void Completed() {
+        id animHandler = _animHandler; // Save in a local for the block to retain.
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_animHandler animationDidStop:TRUE];
-            [_animHandler _removeAnimationsFromLayer];
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
         });
     }
 
@@ -392,9 +393,10 @@ public:
     id _animHandler;
 
     void Completed() {
+        id animHandler = _animHandler; // Save in a local for the block to retain.
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_animHandler animationDidStop:TRUE];
-            [_animHandler _removeAnimationsFromLayer];
+            [animHandler animationDidStop:TRUE];
+            [animHandler _removeAnimationsFromLayer];
         });
     }
 
