@@ -495,12 +495,15 @@ OSStatus AudioFileOpenURL(CFURLRef url, SInt8 permissions, AudioFileTypeID type,
 
 class EbrCallbackFile : public EbrFile {
 private:
-    DWORD funcContext;
-    DWORD readFunc, writeFunc, getSizeFunc, setSizeFunc;
+    void* funcContext;
+    AudioFile_ReadProc readFunc;
+    AudioFile_WriteProc writeFunc;
+    AudioFile_GetSizeProc getSizeFunc;
+    AudioFile_SetSizeProc setSizeFunc;
     DWORD position;
 
 public:
-    EbrCallbackFile(DWORD context, DWORD read, DWORD write, DWORD getSize, DWORD setSize) {
+    EbrCallbackFile(void* context, AudioFile_ReadProc read, AudioFile_WriteProc write, AudioFile_GetSizeProc getSize, AudioFile_SetSizeProc setSize) {
         funcContext = context;
         readFunc = read;
         writeFunc = write;
@@ -515,20 +518,20 @@ public:
 
     size_t Read(void* dest, size_t elem, size_t count) {
         size_t readCount = elem * count;
-        DWORD amtRead = 0;
+        uint32_t amtRead = 0;
         unsigned int status =
-            (unsigned int)EbrCall(readFunc, "dddddd", funcContext, position, 0, readCount, dest, &amtRead);
+            readFunc(funcContext, position, readCount, dest, &amtRead);
         position += amtRead;
 
         return amtRead;
     }
 };
 
-DWORD AudioFileOpenWithCallbacks(DWORD context,
-                                 DWORD readFunc,
-                                 DWORD writeFunc,
-                                 DWORD getSizeFunc,
-                                 DWORD setSizeFunc,
+DWORD AudioFileOpenWithCallbacks(void* context,
+                                 AudioFile_ReadProc readFunc,
+                                 AudioFile_WriteProc writeFunc,
+                                 AudioFile_GetSizeProc getSizeFunc,
+                                 AudioFile_SetSizeProc setSizeFunc,
                                  DWORD typeHint,
                                  AudioFile** out) {
     EbrCallbackFile* callbackFP = new EbrCallbackFile(context, readFunc, writeFunc, getSizeFunc, setSizeFunc);

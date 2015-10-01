@@ -542,7 +542,7 @@ public:
             if (keyCallbacks.hash == kNSTypeDictionaryKeyCallBacks.hash) {
                 return CFNSHash(key);
             } else {
-                return (uint32_t)EbrCall(keyCallbacks.hash, "d", key);
+                return keyCallbacks.hash(key);
             }
         } else {
             return (uint32_t)key;
@@ -554,7 +554,7 @@ public:
             if (keyCallbacks.equal == kNSTypeDictionaryKeyCallBacks.equal) {
                 return CFNSEqual(val1, val2) != 0;
             } else {
-                return ((int)EbrCall(keyCallbacks.equal, "dd", val1, val2)) != 0;
+                return (keyCallbacks.equal(val1, val2)) != 0;
             }
         } else {
             return val1 == val2;
@@ -564,9 +564,9 @@ public:
     const void* retainKey(const void* key) {
         if (keyCallbacks.retain != 0) {
             if (keyCallbacks.retain == kNSTypeDictionaryKeyCallBacks.retain) {
-                key = (const void*)EbrCall(keyCallbacks.retain, "dd", allocator, key);
+                key = keyCallbacks.retain(allocator, key);
             } else {
-                key = (const void*)EbrCall(keyCallbacks.retain, "dd", allocator, key);
+                key = keyCallbacks.retain(allocator, key);
             }
         }
 
@@ -578,7 +578,7 @@ public:
             if (keyCallbacks.release == kNSTypeDictionaryKeyCallBacks.release) {
                 CFNSRelease(allocator, key);
             } else {
-                EbrCall(keyCallbacks.release, "dd", allocator, key);
+                keyCallbacks.release(allocator, key);
             }
         }
 
@@ -590,7 +590,7 @@ public:
             if (valueCallbacks.release == kCFTypeDictionaryValueCallBacks.release) {
                 CFNSRelease(allocator, val);
             } else {
-                EbrCall(valueCallbacks.release, "dd", allocator, val);
+                valueCallbacks.release(allocator, val);
             }
         }
 
@@ -602,7 +602,7 @@ public:
             if (valueCallbacks.retain == kCFTypeDictionaryValueCallBacks.retain) {
                 val = (void*)CFNSRetain(allocator, val);
             } else {
-                val = (void*)EbrCall(valueCallbacks.retain, "dd", allocator, val);
+                val = valueCallbacks.retain(allocator, val);
             }
         }
 
@@ -869,7 +869,7 @@ Boolean CFDictionaryGetValueIfPresent(CFDictionaryRef dict, const void* key, con
     return 0;
 }
 
-void CFDictionaryApplyFunction(CFDictionaryRef dict, void* function, const void* context) {
+void CFDictionaryApplyFunction(CFDictionaryRef dict, CFDictionaryApplierFunction function, void* context) {
     CFIndex count = CFDictionaryGetCount(dict);
 
     const void** keys = (const void**)EbrMalloc(count * sizeof(const void*));
@@ -877,7 +877,7 @@ void CFDictionaryApplyFunction(CFDictionaryRef dict, void* function, const void*
     CFDictionaryGetKeysAndValues(dict, (const void**)keys, (const void**)vals);
 
     for (unsigned i = 0; i < count; i++) {
-        EbrCall((DWORD)function, "ddd", keys[i], vals[i], context);
+        function(keys[i], vals[i], context);
     }
 
     EbrFree(keys);

@@ -21,7 +21,7 @@
 
 @interface CGPattern : NSObject {
 @public
-    DWORD info;
+    void* info;
     CGRect bounds;
     CGAffineTransform matrix;
     float xStep, yStep;

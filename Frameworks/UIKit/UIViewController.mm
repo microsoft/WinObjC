@@ -1013,7 +1013,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     */
 
     if (completion) {
-        EbrCallBlock(completion, "d", completion);
+        completion();
     }
 }
 
@@ -1078,7 +1078,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [self notifyViewDidAppear:TRUE];
 
     if (priv->_dismissCompletionBlock != nil) {
-        EbrCallBlock(priv->_dismissCompletionBlock, "d", priv->_dismissCompletionBlock);
+        priv->_dismissCompletionBlock();
         [priv->_dismissCompletionBlock release];
         priv->_dismissCompletionBlock = nil;
     }
@@ -1150,7 +1150,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [animation setRemovedOnCompletion:FALSE];
         [layer addAnimation:animation forKey:@"ModalDismiss"];
 
-        priv->_dismissCompletionBlock = [completion copy];
+        priv->_dismissCompletionBlock = [[completion copy] autorelease];
         priv->_dismissController = curController;
         [curController notifyViewWillDisappear:TRUE];
     } else {
@@ -1168,7 +1168,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [self notifyViewDidAppear:animated];
         EbrDebugLog("Preparing completion\n");
         if (completion != nil)
-            EbrCallBlock(completion, "d", completion);
+            completion();
         EbrDebugLog("Done completion\n");
     }
 }
@@ -1753,8 +1753,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                     toViewController:(UIViewController*)toController
                             duration:(double)duration
                              options:(unsigned)options
-                          animations:(id)animations
-                          completion:(id)completion {
+                          animations:(id)animations // TODO(DH): animations
+                          completion:(void(^)(BOOL finished))completion {
     UIView* fromView = [fromController view];
     [fromView removeFromSuperview];
     UIView* toView = [toController view];
@@ -1763,7 +1763,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     bounds = [[self view] bounds];
     [toView setFrame:bounds];
     [[self view] addSubview:toView];
-    EbrCallBlock(completion, "d", completion);
+    completion(YES); // TODO(DH) "finished"?
 }
 
 - (void)setStoryboard:(id)storyboard {

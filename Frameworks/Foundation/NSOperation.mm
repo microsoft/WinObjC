@@ -54,13 +54,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
-- (void)setCompletionBlock:(void (^)())block {
+- (void)setCompletionBlock:(void (^)(void))block {
     id oldBlock = priv->completionBlock;
     priv->completionBlock = [block copy];
     [oldBlock release];
 }
 
-- (void (^)())completionBlock {
+- (void (^)(void))completionBlock {
     return priv->completionBlock;
 }
 
@@ -154,7 +154,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     // Someone might do something stupid like waitUntilFinished in the completion block,
     // which would deadlock if these weren't separated.
     if (finished && priv->completionBlock != nil) {
-        EbrCallBlock(priv->completionBlock, "d", priv->completionBlock);
+        priv->completionBlock();
         [priv->completionBlock release];
         priv->completionBlock = nil;
     }

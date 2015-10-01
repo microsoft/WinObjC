@@ -29,13 +29,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 + (void)sendAsynchronousRequest:(id)request
                           queue:(id)queue
-              completionHandler:(void (^)(NSURLResponse*, NSData*, NSError**))completionHandler {
+              completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))completionHandler {
     EbrDebugLog("sendAsynchronousRequest not fully supported\n");
 
     id response, error;
     id data = [self sendSynchronousRequest:request returningResponse:&response error:&error];
 
-    EbrCallBlock(completionHandler, "dddd", completionHandler, response, data, error);
+    completionHandler(response, data, error);
 }
 
 + (id)sendSynchronousRequest:(id)request returningResponse:(NSURLResponse**)responsep error:(NSError**)errorp {

@@ -33,7 +33,7 @@ struct NSOperationPriv
 {
     NSOperationQueuePriority priority;
     id dependencies;
-    id completionBlock;
+    void (^completionBlock)(void);
 
     pthread_cond_t finishCondition;
     pthread_mutex_t finishLock;

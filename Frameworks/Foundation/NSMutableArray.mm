@@ -21,6 +21,8 @@
 #include "Foundation/NSMutableArray.h"
 #include "../objcrt/runtime.h"
 
+using NSCompareFunc = NSInteger(*)(id,id,void*);
+
 __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, void* block);
 
@@ -186,13 +188,13 @@ static void swap(NSMutableArray* self, uint32_t a, uint32_t b) {
     [obj2 release];
 }
 
-static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, uint32_t compFunc, uint32_t context) {
+static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, NSCompareFunc compFunc, void* context) {
     int p, max;
 
     while (hi > lo) {
         max = lo;
         for (p = lo + 1; p <= (int)hi; p += 1) {
-            if (((signed int)EbrCall(compFunc, "ddd", [self objectAtIndex:p], [self objectAtIndex:max], context)) > 0)
+            if ((compFunc([self objectAtIndex:p], [self objectAtIndex:max], context)) > 0)
                 max = p;
         }
 
@@ -222,19 +224,19 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL select
     }
 }
 
-- (void)sortUsingComparator:(NSComparator*)comparator {
+- (void)sortUsingComparator:(NSComparator)comparator {
     [self sortUsingFunction:CFNSBlockCompare context:comparator];
 }
 
 #define CUTOFF 8
 
-- (void)sortUsingFunction:(uint32_t)compFunc context:(uint32_t)context {
+- (void)sortUsingFunction:(NSCompareFunc)compFunc context:(void*)context {
     NSUInteger count = [self count];
 
     [self sortUsingFunction:compFunc context:context range:NSMakeRange(0, count)];
 }
 
-- (void)sortUsingFunction:(uint32_t)compFunc context:(uint32_t)context range:(NSRange)range {
+- (void)sortUsingFunction:(NSCompareFunc)compFunc context:(void*)context range:(NSRange)range {
     uint32_t base = range.location;
     uint32_t num = range.length;
 
@@ -268,14 +270,12 @@ recurse:
             do {
                 loguy += 1;
             } while (loguy <= hi &&
-                     ((signed int)EbrCall(
-                         compFunc, "ddd", [self objectAtIndex:loguy], [self objectAtIndex:lo], context)) <= 0);
+                     (compFunc([self objectAtIndex:loguy], [self objectAtIndex:lo], context)) <= 0);
 
             do {
                 higuy -= 1;
             } while (higuy > lo &&
-                     ((signed int)EbrCall(
-                         compFunc, "ddd", [self objectAtIndex:higuy], [self objectAtIndex:lo], context)) >= 0);
+                     (compFunc([self objectAtIndex:higuy], [self objectAtIndex:lo], context)) >= 0);
 
             if (higuy < loguy)
                 break;

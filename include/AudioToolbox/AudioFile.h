@@ -27,6 +27,11 @@ typedef struct AudioFile *AudioFileID;
 typedef uint32_t AudioFilePropertyID;
 typedef uint32_t AudioFileTypeID;
 
+typedef OSStatus(*AudioFile_ReadProc)(void* clientData, int64_t position, uint32_t count, void* buffer, uint32_t* outCount);
+typedef OSStatus(*AudioFile_WriteProc)(void* clientData, int64_t position, uint32_t count, const void* buffer, uint32_t* outCount);
+typedef int64_t(*AudioFile_GetSizeProc)(void* clientData);
+typedef OSStatus(*AudioFile_SetSizeProc)(void* clientData, int64_t size);
+
 enum {
     kAudioFileReadPermission = 1,
     kAudioFileWritePermission = 2,

@@ -45,7 +45,7 @@
     idretaintype(NSMutableDictionary) _allVisibleViewsDict;
     idretain _backgroundView;
     idretain _touchingIndexPath, _currentIndexPath;
-    idretain _updateCompletionHandler;
+    idretainp<void(^)(BOOL)> _updateCompletionHandler;
 
     idretaintype(NSMutableArray) _insertItems;
     idretaintype(NSMutableArray) _deleteItems;
@@ -1246,9 +1246,9 @@ if (floatingViews.count && scrollIndicatorView) {
     [self setupCellAnimations];
 
     if (updates)
-        EbrCallBlock(updates, "d", updates);
+        updates();
     if (completion)
-        _updateCompletionHandler.attach([completion copy]);
+        _updateCompletionHandler.attach([[completion copy] autorelease]);
 
     [self endItemAnimations];
 }
@@ -1608,7 +1608,8 @@ if (floatingViews.count && scrollIndicatorView) {
 
         // In here I think when the block is called, the flag is YES. So the _updateCopletionHandler's paramer is YES.
         if (_updateCompletionHandler) {
-            EbrCallBlock(_updateCompletionHandler, "dd", (id)_updateCompletionHandler, finished);
+            // TODO(DH): finished?
+            _updateCompletionHandler(NO);
             _updateCompletionHandler = nil;
         }
     }];
@@ -1642,7 +1643,7 @@ if (floatingViews.count && scrollIndicatorView) {
 
     _collectionViewFlags.updatingLayout = NO;
     if (_updateCompletionHandler) {
-        EbrCallBlock(_updateCompletionHandler, "dd", (id)_updateCompletionHandler, finished);
+        _updateCompletionHandler(finished);
         _updateCompletionHandler = nil;
     }
     return self;

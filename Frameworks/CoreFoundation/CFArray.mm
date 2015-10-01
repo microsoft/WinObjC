@@ -196,9 +196,9 @@ public:
 
     id retainObj(id object) {
         if (callbacks.retain == kNSTypeArrayCallBacks.retain) {
-            return (id)CFNSRetain(allocator, (void*)object);
+            return static_cast<id>(CFNSRetain(allocator, (void*)object));
         } else {
-            return EbrCall(callbacks.retain, "dd", allocator, object);
+            return static_cast<id>(callbacks.retain(allocator, object));
         }
     }
 
@@ -206,7 +206,7 @@ public:
         if (callbacks.release == kNSTypeArrayCallBacks.release) {
             CFNSRelease(allocator, (void*)object);
         } else {
-            EbrCall(callbacks.release, "dd", allocator, object);
+            callbacks.release(allocator, object);
         }
 
         return object;
@@ -305,7 +305,7 @@ public:
             id curValue = objs[cur];
 
             if (callbacks.equal != 0) {
-                if (EbrCall(callbacks.equal, "dd", value, curValue)) {
+                if (callbacks.equal(value, curValue)) {
                     return TRUE;
                 }
             } else {

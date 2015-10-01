@@ -354,7 +354,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
         int i = 0;
 
         for (id curObj in self) {
-            EbrCallBlock(block, "dddd", block, curObj, i, &stop);
+            block(curObj, &stop);
             i++;
             if (stop)
                 break;

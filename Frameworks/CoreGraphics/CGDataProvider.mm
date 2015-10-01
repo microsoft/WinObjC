@@ -32,7 +32,7 @@
 @implementation CGDataProvider : NSData
 - (void)dealloc {
     if (releaseFunc != 0) {
-        EbrCall(releaseFunc, "ddd", info, data, size);
+        releaseFunc(info, data, size);
     }
     filename = nil;
     [super dealloc];
@@ -59,20 +59,20 @@ CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
     return (CFDataRef)ret;
 }
 
-CGDataProviderRef CGDataProviderCreateDirect(DWORD info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
+CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
     EbrDebugLog("Warning: CGDataProviderCreateDirect is hacky\n");
-    char* pBytes = (char*)EbrCall(callBacks->getBytePointer, "d", info);
+    char* pBytes = (char*)callBacks->getBytePointer(info);
 
     id ret = [[CGDataProvider alloc] initWithBytesNoCopy:pBytes length:(DWORD)size freeWhenDone:FALSE];
 
     return ret;
 }
 
-CGDataProviderRef CGDataProviderCreateSequential(DWORD info, CGDataProviderSequentialCallbacks* callBacks) {
+CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSequentialCallbacks* callBacks) {
     EbrDebugLog("Warning: CGDataProviderCreateSequential is hacky\n");
     char* pBytes = (char*)EbrMalloc(1024 * 1024);
 
-    int amt = (int)EbrCall(callBacks->getBytes, "ddd", info, pBytes, 1024 * 1024);
+    int amt = callBacks->getBytes(info, pBytes, 1024 * 1024);
 
     id ret = [[CGDataProvider alloc] initWithBytes:pBytes length:amt];
     EbrFree(pBytes);

@@ -55,7 +55,7 @@ struct UIViewControllerPriv
     BOOL _hidesBottomBar;
     UIModalTransitionStyle _modalTransitionStyle;
     BOOL _isRootView;
-    __unsafe_unretained id _dismissCompletionBlock;
+    idretainp<void(^)(void)> _dismissCompletionBlock;
     idretaintype(UIViewController) _dismissController;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;

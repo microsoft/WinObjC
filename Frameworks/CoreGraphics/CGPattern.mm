@@ -56,7 +56,7 @@
     CGContextTranslateCTM(patternCtx, 0.0f, height);
     CGContextScaleCTM(patternCtx, 1.0f, -1.0f);
 
-    EbrCall(callbacks.drawPattern, "dd", info, patternCtx);
+    callbacks.drawPattern(info, patternCtx);
 
     CGImageRef tilePattern = CGBitmapContextCreateImage(patternCtx);
 
@@ -107,7 +107,7 @@
         CGImageRelease(simpleImage);
     }
     if (callbacks.releaseInfo) {
-        EbrCall(callbacks.releaseInfo, "dd", info);
+        callbacks.releaseInfo(info);
     }
     [super dealloc];
 }
@@ -125,7 +125,7 @@ CGPatternRef CGPatternCreateColorspace(void* info,
     CGPattern* ret = [CGPattern new];
 
     // TODO: Obey the colorspace.
-    ret->info = (DWORD)info;
+    ret->info = info;
     ret->bounds = bounds;
     ret->matrix = matrix;
     ret->xStep = xStep;

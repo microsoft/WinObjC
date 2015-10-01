@@ -220,7 +220,7 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
         id value = (id)CFArrayGetValueAtIndex((CFArrayRef)self, i);
         BOOL shouldStop = false;
 
-        if (EbrCallBlock(pred, "dddd", pred, value, i, &shouldStop)) {
+        if (pred(value, i, &shouldStop)) {
             [ret addIndex:i];
         }
 
@@ -238,7 +238,7 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
         id value = (id)CFArrayGetValueAtIndex((CFArrayRef)self, i);
         BOOL shouldStop = false;
 
-        if (EbrCallBlock(pred, "dddd", pred, value, i, &shouldStop)) {
+        if (pred(value, i, &shouldStop)) {
             return i;
         }
 
@@ -581,7 +581,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
     if (range.length == 1) {
         id value = (id)CFArrayGetValueAtIndex((CFArrayRef)self, range.location);
-        int cmp = (int)EbrCallBlock(comparator, "ddd", comparator, obj, value);
+        int cmp = comparator(obj, value);
 
         if (cmp == NSOrderedSame) {
             return range.location;
@@ -610,7 +610,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         if (options & NSBinarySearchingLastEqual) {
             for (int i = end - 1; i < count && i >= start; i--) {
                 id value = (id)CFArrayGetValueAtIndex((CFArrayRef)self, i);
-                int cmp = (int)EbrCallBlock(comparator, "ddd", comparator, obj, value);
+                int cmp = comparator(obj, value);
 
                 if (cmp == 0) {
                     return i;
@@ -623,7 +623,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
             //  First equal
             for (int i = start; i < count && i < end; i++) {
                 id value = (id)CFArrayGetValueAtIndex((CFArrayRef)self, i);
-                int cmp = (int)EbrCallBlock(comparator, "ddd", comparator, obj, value);
+                int cmp = comparator(obj, value);
 
                 if (cmp == 0) {
                     return i;
@@ -700,12 +700,12 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     if (options & NSEnumerationReverse) {
         for (i = count - 1; i >= 0 && !stop; i--) {
             id curObj = [self objectAtIndex:i];
-            EbrCallBlock(block, "dddd", block, curObj, i, &stop);
+            block(curObj, i, &stop);
         }
     } else {
         for (i = 0; i < count && !stop; i++) {
             id curObj = [self objectAtIndex:i];
-            EbrCallBlock(block, "dddd", block, curObj, i, &stop);
+            block(curObj, i, &stop);
         }
     }
 }

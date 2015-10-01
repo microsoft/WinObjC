@@ -677,7 +677,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     for (i = 0; (key = [state nextObject]) != nil; i++) {
         id value = [self objectForKey:key];
 
-        EbrCallBlock(block, "dddd", block, key, value, &stop);
+        block(key, value, &stop);
         if (stop)
             break;
     }

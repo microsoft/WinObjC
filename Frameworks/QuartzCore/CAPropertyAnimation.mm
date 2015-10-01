@@ -22,13 +22,13 @@
 
 @interface _BlockAnimationCompletion : NSObject {
 @public
-    id _completionBlock;
+    void (^_completionBlock)();
 }
 @end
 
 @implementation _BlockAnimationCompletion : NSObject
 - (void)animationDidStop:(CAAnimation*)anim finished:(BOOL)finished {
-    EbrCallBlock(_completionBlock, "d", _completionBlock);
+    _completionBlock();
 }
 
 @end
@@ -49,6 +49,7 @@
 
     id completion = [CATransaction completionBlock];
     if (completion != nil) {
+        // TODO(DH) What the heck?
         _BlockAnimationCompletion* completionHandler = [_BlockAnimationCompletion alloc];
         completionHandler->_completionBlock = completion;
     }

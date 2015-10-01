@@ -61,8 +61,6 @@ static inline float m_assert_float()
 }
 #endif
 #define _m(...) m_assert(__FILE__, __LINE__)
-#define EbrCall(addr, signature, arg0, ...) (((id (*)(...)) addr)(arg0, __VA_ARGS__))
-#define EbrCallBlock(block, types, ...) m_assert(__FILE__, __LINE__)
 #define _m_float(...) m_assert_float()
 #define logPerf(...)
 
@@ -502,7 +500,7 @@ public:
 
     idretainp<objtype>& operator =(id val)
     {
-        if ( _val == val ) return *this;
+        if ( _val == static_cast<__unsafe_unretained objtype>(val) ) return *this;
 
         id newVal = [val retain];
         [_val release];
@@ -521,6 +519,12 @@ public:
     bool operator ==(const K& other)
     {
         return ((id) other) == (id) _val;
+    }
+
+    template<typename... Args>
+    auto operator()(Args... args) -> decltype(_val(args...))
+    {
+        return _val(std::forward<Args>(args)...);
     }
 };
 

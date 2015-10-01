@@ -201,17 +201,15 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return ret;
 }
 
-- (id)enumerateIndexesUsingBlock:(id)block {
+- (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
     BOOL stop = FALSE;
     for (unsigned int i = 0; i < raCount(self) && !stop; i++) {
         NSRange cur = raItemAtIndex(self, i);
 
         for (unsigned int j = cur.location; j < cur.location + cur.length && !stop; j++) {
-            EbrCallBlock(block, "ddd", block, j, &stop);
+            block(j, &stop);
         }
     }
-
-    return self;
 }
 
 - (BOOL)intersectsIndexesInRange:(NSRange)range {
