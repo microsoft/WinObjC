@@ -19,7 +19,7 @@
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
     <ProjectGuid>{3FAF016A-0000-4274-ACA5-5681B9125C4D}</ProjectGuid>
-    <WINOBJC_SDK_ROOT>D:\WinObjC\bin/..</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

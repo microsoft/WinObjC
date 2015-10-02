@@ -22,7 +22,7 @@
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <ProjectGuid>{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}</ProjectGuid>
-    <WINOBJC_SDK_ROOT>D:\WinObjC\bin/..</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GLKit.lib;OpenGLES.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>

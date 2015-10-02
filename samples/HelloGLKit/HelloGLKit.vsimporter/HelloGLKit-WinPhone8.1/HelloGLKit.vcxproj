@@ -19,7 +19,7 @@
     <ApplicationType>Windows Phone</ApplicationType>
     <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
     <ProjectGuid>{EB9B0D0A-BE9A-4982-90A2-2FCEC111F681}</ProjectGuid>
-    <WINOBJC_SDK_ROOT>D:\WinObjC\bin/..</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
