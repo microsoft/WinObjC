@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
@@ -79,7 +79,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
@@ -102,6 +102,7 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
