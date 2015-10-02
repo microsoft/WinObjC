@@ -121,6 +121,7 @@
     <SBLibsWinPhone81x86 Include="..\..\deps\prebuilt\Windows Phone 8.1\x86\*.dll" />
     <SBSamples Include="..\..\samples\**\*" />
     <SBBinaries Include="..\..\bin\*.exe" />
+    <SBBinaries Include="..\..\bin\*.dll" />
     <SBBinaries Include="..\..\bin\*.vsix" />
     <SBLegal Include="..\..\license.txt;..\..\ThirdPartyNotices.txt;..\..\README.md" />
   </ItemGroup>

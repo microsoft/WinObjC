@@ -138,6 +138,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
