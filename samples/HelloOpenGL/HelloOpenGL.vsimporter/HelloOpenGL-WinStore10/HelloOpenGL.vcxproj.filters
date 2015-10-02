@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{dc18f23a-ecc1-422e-9809-084b712c77ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{1a648546-198b-4914-92d5-15dfff250034}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloOpenGL">
+      <UniqueIdentifier>{6A4A98C5-A3A2-4167-A205-B9A62A2BA166}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloOpenGL\Supporting Files">
+      <UniqueIdentifier>{BC0192E6-9063-4F9A-B4EB-BF92BC9E8AE4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{D4043FF0-41D8-4DAB-8C7B-28FDB36781DE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\HelloOpenGL\OpenGLES20Controller.m">
+      <Filter>HelloOpenGL</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\HelloOpenGL\main.m">
+      <Filter>HelloOpenGL\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\HelloOpenGL\HelloOpenGL.m">
+      <Filter>HelloOpenGL</Filter>
+    </ClangCompile>
+    <AssetCatalogCompile Include="..\..\HelloOpenGL\Assets.xcassets">
+      <Filter>HelloOpenGL</Filter>
+    </AssetCatalogCompile>
+    <SBInfoPlistCopy Include="..\..\HelloOpenGL\Info.plist" />
+    <Text Include="HelloOpenGL-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="HelloOpenGL-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HelloOpenGL_TemporaryKey.pfx" />
+  </ItemGroup>
+</Project>

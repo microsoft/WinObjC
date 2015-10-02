@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
-  <Identity Name="af5fd3e1-0440-4307-826b-9a0d4b7e95b0"
-            Publisher="CN=brianlam"
+  <Identity Name="c57f131b-0cd9-4b37-bd88-cddc8a2341f4"
+            Publisher="CN=brianker"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="af5fd3e1-0440-4307-826b-9a0d4b7e95b0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="c57f131b-0cd9-4b37-bd88-cddc8a2341f4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>HelloUI</DisplayName>
-    <PublisherDisplayName>brianlam</PublisherDisplayName>
+    <DisplayName>HelloOpenGL</DisplayName>
+    <PublisherDisplayName>brianker</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -25,12 +25,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="HelloUI.App">
+        EntryPoint="HelloOpenGL.App">
         <m3:VisualElements
-            DisplayName="HelloUI"
+            DisplayName="HelloOpenGL"
             Square150x150Logo="Assets\Logo.png"
             Square44x44Logo="Assets\SmallLogo.png"
-            Description="HelloUI"
+            Description="HelloOpenGL"
             ForegroundText="light"
             BackgroundColor="transparent">
             <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>

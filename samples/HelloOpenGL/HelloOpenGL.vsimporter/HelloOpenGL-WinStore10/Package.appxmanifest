@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="2d01be9d-80e3-4215-9d7b-c0c68e0e71b3"
-    Publisher="CN=brianlam"
+    Name="d92afea4-4a6c-44fe-a8e1-d1b0b21831af"
+    Publisher="CN=brianker"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="2d01be9d-80e3-4215-9d7b-c0c68e0e71b3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="d92afea4-4a6c-44fe-a8e1-d1b0b21831af" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>HelloUI</DisplayName>
-    <PublisherDisplayName>brianlam</PublisherDisplayName>
+    <DisplayName>HelloOpenGL</DisplayName>
+    <PublisherDisplayName>brianker</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="HelloUI.App">
+      EntryPoint="HelloOpenGL.App">
       <uap:VisualElements
-        DisplayName="HelloUI"
+        DisplayName="HelloOpenGL"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="HelloUI"
+        Description="HelloOpenGL"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

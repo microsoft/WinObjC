@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
 
-  <Identity Name="0c010a08-6d27-458f-8e68-6564d11f4069"
-            Publisher="CN=brianlam"
+  <Identity Name="6df3a3ab-7c43-48f2-93eb-c5d3bb77d6b7"
+            Publisher="CN=brianker"
             Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>HelloUI</DisplayName>
-    <PublisherDisplayName>brianlam</PublisherDisplayName>
+    <DisplayName>HelloOpenGL</DisplayName>
+    <PublisherDisplayName>brianker</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -23,12 +23,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="HelloUI.App">
+        EntryPoint="HelloOpenGL.App">
         <m2:VisualElements
-            DisplayName="HelloUI"
+            DisplayName="HelloOpenGL"
             Square150x150Logo="Assets\Logo.png"
             Square30x30Logo="Assets\SmallLogo.png"
-            Description="HelloUI"
+            Description="HelloOpenGL"
             ForegroundText="light"
             BackgroundColor="#464646">
             <m2:SplashScreen Image="Assets\SplashScreen.png" />

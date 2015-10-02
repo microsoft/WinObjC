@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="HelloOpenGL">
+      <UniqueIdentifier>{F19F4D6D-5E02-4CB9-B566-A690DD260057}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\HelloOpenGL\OpenGLES20Controller.h">
+      <Filter>HelloOpenGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
