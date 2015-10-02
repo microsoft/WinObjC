@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelloGLKit", "HelloGLKit", "{D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGLKit-Headers", "HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems", "{35FCD860-3A61-4B01-A826-CD28A67E49B3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGLKit", "HelloGLKit.vsimporter\HelloGLKit-WinStore10\HelloGLKit.vcxproj", "{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems*{35FCD860-3A61-4B01-A826-CD28A67E49B3}*SharedItemsImports = 9
+		HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems*{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.Build.0 = Debug|Win32
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.Deploy.0 = Debug|Win32
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.ActiveCfg = Release|Win32
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.Build.0 = Release|Win32
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35FCD860-3A61-4B01-A826-CD28A67E49B3} = {D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}
+		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3} = {D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}
+	EndGlobalSection
+EndGlobal

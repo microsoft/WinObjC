@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>GLKitComplex_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <ItemsProjectGuid>{421E6DD1-BA60-48B0-91A4-7435F30B6599}</ItemsProjectGuid>
+    <SharedGUID>{E1DD126A-D6F8-437C-A3F4-BBFBC1E7EDDD}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\GLKitComplex\GLRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\GLKitComplex\Mesh.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

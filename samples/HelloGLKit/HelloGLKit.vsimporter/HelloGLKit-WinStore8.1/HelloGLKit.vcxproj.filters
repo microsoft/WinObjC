@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8373fd98-344d-48d8-ba00-64e62bf4eb3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{88b435a4-7eff-403f-997a-6d7051f00a14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloGLKit">
+      <UniqueIdentifier>{F90B837D-9AD2-4F1A-8B10-19A40B75289A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloGLKit\Supporting Files">
+      <UniqueIdentifier>{CE932B22-844C-4EB8-9409-7306BDB43175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{95329786-3EF8-4CAA-990B-6D41D56876A3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Logo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\HelloGLKit\HelloGLKit.mm">
+      <Filter>HelloGLKit</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\HelloGLKit\main.m">
+      <Filter>HelloGLKit\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\HelloGLKit\GLRenderer.mm">
+      <Filter>HelloGLKit</Filter>
+    </ClangCompile>
+    <AssetCatalogCompile Include="..\..\HelloGLKit\Assets.xcassets">
+      <Filter>HelloGLKit</Filter>
+    </AssetCatalogCompile>
+    <SBInfoPlistCopy Include="..\..\HelloGLKit\Info.plist" />
+    <Text Include="HelloGLKit-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="HelloGLKit-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HelloGLKit_TemporaryKey.pfx" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>HelloGLKit_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <ItemsProjectGuid>{5FC5D47B-CFCB-4100-AF9B-E9A74B1C18DA}</ItemsProjectGuid>
+    <SharedGUID>{67534226-518C-4F1B-8845-67385E469B26}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\HelloGLKit\GLRenderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

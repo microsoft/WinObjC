@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e68a0447-25d3-48cb-bdf3-37f96be74872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{86f70517-f1c4-4b27-b78c-4fd5379e2e21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLKitComplex">
+      <UniqueIdentifier>{A1AA97D4-F97A-47C7-A4D9-B7450D1C5294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLKitComplex\Supporting Files">
+      <UniqueIdentifier>{49288208-9761-4541-8AFB-4EA1D0DA1932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{2617FDA0-8671-4055-88FE-40036A03C077}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
+      <Filter>GLKitComplex</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.mm">
+      <Filter>GLKitComplex</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\GLKitComplex\main.m">
+      <Filter>GLKitComplex\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\GLKitComplex\GLRenderer.mm">
+      <Filter>GLKitComplex</Filter>
+    </ClangCompile>
+    <AssetCatalogCompile Include="..\..\GLKitComplex\Assets.xcassets">
+      <Filter>GLKitComplex</Filter>
+    </AssetCatalogCompile>
+    <SBInfoPlistCopy Include="..\..\GLKitComplex\Info.plist" />
+    <Text Include="GLKitComplex-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="GLKitComplex-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GLKitComplex_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxneg.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxpos.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyyneg.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyypos.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzneg.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzpos.JPG">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\seafloor.png">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_decal.png">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_emissive.png">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.pdn">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.png">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\utah-teapot.obj">
+      <Filter>Assets</Filter>
+    </SBResourceCopy>
+  </ItemGroup>
+</Project>

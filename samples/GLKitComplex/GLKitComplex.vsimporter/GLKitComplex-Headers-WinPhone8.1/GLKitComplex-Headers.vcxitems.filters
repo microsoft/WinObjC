@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GLKitComplex">
+      <UniqueIdentifier>{C5C2E89A-3FD1-43EE-8ECB-4CE2139E94CF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\GLKitComplex\GLRenderer.h">
+      <Filter>GLKitComplex</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\GLKitComplex\Mesh.h">
+      <Filter>GLKitComplex</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

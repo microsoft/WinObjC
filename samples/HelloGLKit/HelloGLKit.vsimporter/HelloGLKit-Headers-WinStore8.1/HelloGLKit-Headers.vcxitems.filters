@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="HelloGLKit">
+      <UniqueIdentifier>{87D38BA1-BB57-4B1B-A8A2-888A3FA42310}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\HelloGLKit\GLRenderer.h">
+      <Filter>HelloGLKit</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

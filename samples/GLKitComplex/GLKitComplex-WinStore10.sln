@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLKitComplex", "GLKitComplex", "{FEDCB98A-0A88-49DB-8615-A60BD4DD02B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKitComplex-Headers", "GLKitComplex.vsimporter\GLKitComplex-Headers-WinStore10\GLKitComplex-Headers.vcxitems", "{421E6DD1-BA60-48B0-91A4-7435F30B6599}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKitComplex", "GLKitComplex.vsimporter\GLKitComplex-WinStore10\GLKitComplex.vcxproj", "{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		GLKitComplex.vsimporter\GLKitComplex-Headers-WinStore10\GLKitComplex-Headers.vcxitems*{421E6DD1-BA60-48B0-91A4-7435F30B6599}*SharedItemsImports = 9
+		GLKitComplex.vsimporter\GLKitComplex-Headers-WinStore10\GLKitComplex-Headers.vcxitems*{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Debug|Win32.Build.0 = Debug|Win32
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Debug|Win32.Deploy.0 = Debug|Win32
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Release|Win32.ActiveCfg = Release|Win32
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Release|Win32.Build.0 = Release|Win32
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{421E6DD1-BA60-48B0-91A4-7435F30B6599} = {FEDCB98A-0A88-49DB-8615-A60BD4DD02B9}
+		{C23D3F93-EF0A-4090-9E65-2D2E4E0CDCB6} = {FEDCB98A-0A88-49DB-8615-A60BD4DD02B9}
+	EndGlobalSection
+EndGlobal
