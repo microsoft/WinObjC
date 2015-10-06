@@ -513,9 +513,42 @@ class_getInstanceVariable(Class cls, const char *name)
     return NULL;
 }
 
+Ivar* class_copyIvarList(Class cls, unsigned int* outCount)
+{
+    unsigned int count = 0;
+    size_t size = 0;
+    if (cls->ivars)
+    {
+        count = cls->ivars->count;
+        size = sizeof(Ivar) * cls->ivars->count;
+    }
+
+    if (outCount)
+    {
+        *outCount = count;
+    }
+
+    if (size == 0)
+    {
+        return NULL;
+    }
+
+    Ivar* ivs = malloc(size);
+    for (unsigned i = 0; i < count; ++i)
+    {
+        ivs[i] = &cls->ivars->ivars[i];
+    }
+    return ivs;
+}
+
 ptrdiff_t ivar_getOffset(Ivar ivar)
 {
     return ivar->offset;
+}
+
+const char* ivar_getName(Ivar ivar)
+{
+    return ivar->name;
 }
 
 OBJCRT_EXPORT IMP

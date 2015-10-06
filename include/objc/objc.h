@@ -117,7 +117,9 @@ unsigned int method_getNumberOfArguments(Method m);
 
 const char* object_getClassName(id obj);
 Ivar class_getInstanceVariable(Class cls, const char *name);
+Ivar* class_copyIvarList(Class cls, unsigned int *outCount);
 ptrdiff_t ivar_getOffset(Ivar ivar);
+const char* ivar_getName(Ivar ivar);
 const char* sel_getName(SEL);
 SEL sel_registerName(const char*);
 
@@ -135,7 +137,7 @@ void objc_release_ref(id obj);
 id objc_allocateObject(Class classRef, unsigned int extraBytes);
 void objc_deallocateObject(id obj);
 
-Class objc_allocateClassPair(Class super, char *name, size_t extraBytes);
+Class objc_allocateClassPair(Class super, const char *name, size_t extraBytes);
 void objc_registerClassPair(Class cls);
 IMP class_replaceMethod(Class cls, SEL sel, IMP imp, const char *types);
 BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char *types);
