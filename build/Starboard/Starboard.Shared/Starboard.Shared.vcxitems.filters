@@ -24,6 +24,9 @@
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\PlatformSupport.cpp">
 			<Filter>Source Files</Filter>
 		</ClangCompile>
+		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp">
+			<Filter>Source Files</Filter>
+		</ClangCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Empty.cpp">

@@ -23,6 +23,7 @@
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\pthread.cpp" />
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\MurmurHash3.mm" />
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.mm" />
+		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Empty.cpp" />
