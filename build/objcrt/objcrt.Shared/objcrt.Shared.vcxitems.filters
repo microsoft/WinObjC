@@ -28,6 +28,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\winrt-interop.mm">
       <Filter>Source Files</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\assoc.mm">
+      <Filter>Source Files</Filter>
+    </ClangCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\category.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,12 +55,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\static-instances.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\threading.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\threading.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

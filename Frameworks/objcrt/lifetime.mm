@@ -270,6 +270,8 @@ void objc_deallocateObject(id obj) {
         curr = curr->superclass;
     }
 
+    objc_removeAssociatedObjects(obj);
+
 #if 0
 id oldIsa = ((ObjCObject *) obj)->isa;
 ((ObjCObject *) obj)->isa = [NSZombie class];

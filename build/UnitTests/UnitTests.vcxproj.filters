@@ -101,6 +101,8 @@
     </ClangCompile>
     <ClangCompile Include="..\..\Frameworks\GLKit\ShaderInfo.mm">
       <Filter>Source Files\GLKit</Filter>
+    <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm">
+      <Filter>Source Files</Filter>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>
