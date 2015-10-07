@@ -31,6 +31,7 @@
 #define _UIBARBUTTONITEM_H_
 
 #import "UIBarItem.h"
+#import <UIKit/UIControl.h>
 
 typedef enum {
     UIBarButtonSystemItemDone,
@@ -70,7 +71,9 @@ enum {
 };
 typedef uint32_t UIBarMetrics;
 
-@class UIView, UIImage;
+@class UIView;
+@class UIImage;
+@class UIColor;
 
 UIKIT_EXPORT_CLASS
 @interface UIBarButtonItem : UIBarItem <NSCoding>

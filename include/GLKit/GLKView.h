@@ -19,6 +19,7 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/EAGL.h>
 #import <UIKit/UIKit.h>
+#import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEnums.h>
 
 @class GLKView;

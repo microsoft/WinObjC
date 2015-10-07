@@ -17,6 +17,12 @@
 #ifndef _GKACHIEVEMENT_H_
 #define _GKACHIEVEMENT_H_
 
+#import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+@class NSError;
+
 GAMEKIT_EXPORT_CLASS
 @interface GKAchievement : NSObject
 

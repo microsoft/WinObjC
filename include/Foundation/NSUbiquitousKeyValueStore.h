@@ -18,6 +18,7 @@
 #define _NSUBIQUITOUSKEYVALUESTORE_H_
 
 #import <StarboardExport.h>
+#import <Foundation/NSObject.h>
 
 enum {
     NSUbiquitousKeyValueStoreServerChange,
@@ -25,6 +26,8 @@ enum {
     NSUbiquitousKeyValueStoreQuotaViolationChange,
     NSUbiquitousKeyValueStoreAccountChange
 };
+
+@class NSDictionary;
 
 @interface NSUbiquitousKeyValueStore : NSObject
 

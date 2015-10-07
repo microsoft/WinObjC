@@ -18,6 +18,10 @@
 #define _UICOLLECTIONVIEWCONTROLLER_H_
 
 #import "UIKitExport.h"
+#import <UIKit/UIViewController.h>
+
+@class UICollectionView;
+@class UICollectionViewLayout;
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewController : UIViewController

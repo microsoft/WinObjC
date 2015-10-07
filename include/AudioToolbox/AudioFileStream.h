@@ -18,6 +18,8 @@
 #define _AUDIOFILESTREAM_H_
 
 #import <StarboardExport.h>
+#import <CoreAudio/CoreAudioTypes.h>
+#import <AudioToolbox/AudioFile.h>
 
 typedef struct OpaqueAudioFileStreamID  *AudioFileStreamID;
 typedef UInt32 AudioFileStreamPropertyID;

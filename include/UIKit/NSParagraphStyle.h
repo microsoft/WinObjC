@@ -17,6 +17,9 @@
 #ifndef _NSPARAGRAPHSTYLE_H_
 #define _NSPARAGRAPHSTYLE_H_
 
+#import <Foundation/NSObject.h>
+#import <UIKit/NSText.h>
+
 enum {
     NSLineBreakByWordWrapping,
     NSLineBreakByCharWrapping,

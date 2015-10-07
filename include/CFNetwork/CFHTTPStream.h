@@ -18,6 +18,9 @@
 #define _CFHTTPSTREAM_H_
 
 #import <CFNetwork/CFNetworkExport.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFStream.h>
+#import <CFNetwork/CFHTTPMessage.h>
 
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPAttemptPersistentConnection;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPFinalURL;

@@ -17,6 +17,8 @@ enum {
 };
 typedef uint32_t NSURLCredentialPersistence;
 
+@class NSArray;
+
 @interface NSURLCredential : NSObject <NSCopying>
 
 +(NSURLCredential *)credentialWithUser:(NSString *)user password:(NSString *)password persistence:(NSURLCredentialPersistence)persistence;

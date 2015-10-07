@@ -17,6 +17,10 @@
 #ifndef _UIMOTIONEFFECT_H_
 #define _UIMOTIONEFFECT_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+
 typedef enum {
     UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis,
     UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis

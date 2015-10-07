@@ -19,6 +19,7 @@
 
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
+#import <QuartzCore/CABase.h>
 #import <QuartzCore/CATransform3D.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>

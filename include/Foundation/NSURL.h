@@ -11,7 +11,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 
-@class NSURLHandle, NSNumber, NSData;
+@class NSURLHandle;
+@class NSNumber;
+@class NSData;
+@class NSArray;
+@class NSDictionary;
+@class NSError;
 
 SB_EXPORT NSString * const NSURLFileScheme;
 

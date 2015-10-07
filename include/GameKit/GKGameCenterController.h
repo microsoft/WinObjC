@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <UIKit/UINavigationController.h>
+
 @protocol GKGameCenterControllerDelegate<NSObject>
 @end
 

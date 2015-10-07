@@ -17,6 +17,10 @@
 #ifndef _GKMATCHMAKER_H_
 #define _GKMATCHMAKER_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+
 @interface GKInvite : NSObject
 @end
 

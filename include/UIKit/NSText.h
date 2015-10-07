@@ -17,6 +17,8 @@
 #ifndef _NSTEXT_H_
 #define _NSTEXT_H_
 
+#import <Foundation/NSObject.h>
+
 enum {
     NSTextAlignmentLeft = 0,
     NSTextAlignmentCenter = 1,

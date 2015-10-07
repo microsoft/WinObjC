@@ -21,6 +21,8 @@
 
 typedef void (^CLGeocodeCompletionHandler)(NSArray *placemark, NSError *error);
 
+@class CLLocation;
+
 @interface CLGeocoder : NSObject
 
 - (void)reverseGeocodeLocation:(CLLocation *)location completionHandler:(CLGeocodeCompletionHandler)completionHandler;

@@ -18,6 +18,7 @@
 #define _CTPARAGRAPHSTYLE_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFBase.h>
 
 typedef struct __CTParagraphStyle *CTParagraphStyleRef;
 

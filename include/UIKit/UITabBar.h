@@ -35,7 +35,9 @@
 
 #import "UIView.h"
 
-@class UITabBar, UITabBarItem;
+@class UITabBar;
+@class UITabBarItem;
+@class UIImage;
 
 @protocol UITabBarDelegate <NSObject>
 @optional

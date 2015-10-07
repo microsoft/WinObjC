@@ -18,6 +18,7 @@
 #define __COREBLUETOOTH_H
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
+#import <Foundation/NSObject.h>
 
 typedef uint32_t CBCentralManagerState;
 

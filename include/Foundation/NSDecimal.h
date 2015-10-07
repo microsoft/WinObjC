@@ -10,6 +10,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define _NSDECIMAL_H_
 
 #include <limits.h>
+#import <StarboardExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 #define NSDecimalMaxSize (8)
 #define NSDecimalNoScale SHRT_MAX

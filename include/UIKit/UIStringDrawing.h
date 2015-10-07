@@ -29,6 +29,7 @@
 
 #import <Foundation/Foundation.h>
 #import <StarboardExport.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 #import <UIKit/NSParagraphStyle.h>
 

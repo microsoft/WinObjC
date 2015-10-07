@@ -17,6 +17,7 @@
 #ifndef _SLCOMPOSEVIEWCONTROLLER_H_
 #define _SLCOMPOSEVIEWCONTROLLER_H_
 
+#import <Social/SocialExport.h>
 #import <UIKit/UIViewController.h>
 
 enum {

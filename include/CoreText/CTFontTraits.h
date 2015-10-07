@@ -18,6 +18,7 @@
 #define _CTFONTTRAITS_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFString.h>
 
 enum {
     kCTFontClassMaskShift = 28

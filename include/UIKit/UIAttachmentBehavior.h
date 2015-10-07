@@ -17,6 +17,11 @@
 #ifndef _UIATTACHMENTBEHAVIOR_H_
 #define _UIATTACHMENTBEHAVIOR_H_
 
+#import <UIKit/UIDynamicBehavior.h>
+#import <UIKit/UIDynamicAnimator.h>
+
+@class NSArray;
+
 @interface UIAttachmentBehavior : UIDynamicBehavior
 
 @property(nonatomic, readonly, copy) NSArray *items;

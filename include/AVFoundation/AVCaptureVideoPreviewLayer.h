@@ -20,6 +20,8 @@
 #import <QuartzCore/QuartzCore.h>
 #include "AVExport.h"
 
+@class AVCaptureSession;
+
 @interface AVCaptureVideoPreviewLayer : CALayer
 
 @property(copy) NSString *videoGravity;

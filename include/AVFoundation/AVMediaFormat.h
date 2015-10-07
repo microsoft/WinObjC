@@ -18,6 +18,7 @@
 #define _AVMEDIAFORMAT_H_
 
 #import <StarboardExport.h>
+#import <Foundation/Foundation.h>
 
 SB_EXPORT NSString *const AVMediaTypeVideo;
 SB_EXPORT NSString *const AVMediaTypeAudio;

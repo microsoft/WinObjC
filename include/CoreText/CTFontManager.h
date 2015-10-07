@@ -18,6 +18,9 @@
 #define _CTFONTMANAGER_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFError.h>
+#import <CoreFoundation/CFURL.h>
+#import <CoreGraphics/CGFont.h>
 
 enum {
     kCTFontManagerScopeNone = 0,

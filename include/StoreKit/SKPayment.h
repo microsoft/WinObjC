@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKitExport.h>
 
+@class SKProduct;
+
 STOREKIT_EXPORT_CLASS
 @interface SKPayment : NSObject
 

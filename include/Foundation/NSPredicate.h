@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define _NSPREDICATE_H_
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSSet.h>
 
 @class NSArray, NSDictionary;
 

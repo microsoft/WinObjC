@@ -17,6 +17,8 @@
 #ifndef _AVCAPTUREDEVICE_H_
 #define _AVCAPTUREDEVICE_H_
 
+#import <Foundation/Foundation.h>
+
 typedef enum : NSInteger {
     AVCaptureTorchModeOff    = 0,
     AVCaptureTorchModeOn     = 1,
@@ -34,6 +36,9 @@ typedef enum : NSInteger {
     AVCaptureDevicePositionBack  = 1,
     AVCaptureDevicePositionFront = 2
 } AVCaptureDevicePosition;
+
+@class NSArray;
+@class NSError;
 
 @interface AVCaptureDevice : NSObject
 

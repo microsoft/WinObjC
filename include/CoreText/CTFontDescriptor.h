@@ -18,6 +18,7 @@
 #define _CTFONTDESCRIPTOR_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFString.h>
 
 typedef const struct __CTFontDescriptor *CTFontDescriptorRef;
 

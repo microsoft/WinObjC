@@ -18,6 +18,7 @@
 #define _UICOLLECTIONVIEWCELL_H_
 
 #import "UIKitExport.h"
+#import <UIKit/UICollectionReusableView.h>
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewCell : UICollectionReusableView 

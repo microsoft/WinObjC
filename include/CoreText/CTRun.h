@@ -18,6 +18,9 @@
 #define _CTRUN_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreGraphics/CGFont.h>
 
 ENABLE_IMPLICIT_BRIDGING
 

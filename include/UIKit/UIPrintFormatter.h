@@ -17,6 +17,9 @@
 #ifndef _UIPRINTFORMATTER_H_
 #define _UIPRINTFORMATTER_H_
 
+#import <Foundation/NSObject.h>
+#import <UIKit/UIView.h>
+
 @interface UIPrintFormatter : NSObject<NSCopying>
 
 @property (nonatomic) NSInteger startPage;

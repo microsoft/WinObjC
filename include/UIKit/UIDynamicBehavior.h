@@ -17,6 +17,8 @@
 #ifndef _UIDYNAMICBEHAVIOR_H_
 #define _UIDYNAMICBEHAVIOR_H_
 
+#import <Foundation/NSObject.h>
+
 @interface UIDynamicBehavior : NSObject
 
 

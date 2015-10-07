@@ -17,6 +17,8 @@
 #ifndef _AUDIOFORMAT_H_
 #define _AUDIOFORMAT_H_
 
+#import <CoreAudio/CoreAudioTypes.h>
+
 typedef struct {
     AudioStreamBasicDescription mASBD;
     AudioChannelLayoutTag mChannelLayoutTag;

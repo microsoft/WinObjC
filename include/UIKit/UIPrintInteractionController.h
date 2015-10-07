@@ -17,9 +17,15 @@
 #ifndef _UIPRINTINTERACTIONCONTROLLER_H_
 #define _UIPRINTINTERACTIONCONTROLLER_H_
 
+#import <Foundation/NSObject.h>
+
 @protocol UIPrintInteractionControllerDelegate;
 
-@class UIPrintInteractionController, UIPrintInfo, UIPrintFormatter;
+@class UIPrintInteractionController;
+@class UIPrintInfo;
+@class UIPrintFormatter;
+@class UIBarButtonItem;
+@class NSError;
 
 typedef void (^UIPrintInteractionCompletionHandler) (UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error);
 

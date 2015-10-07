@@ -16,6 +16,8 @@
 
 // This header file is not yet implemented
 
+#import <CoreFoundation/CFDictionary.h>
+
 typedef struct __SecIdentity *SecIdentityRef;
 
 typedef struct __SecTrust *SecTrustRef;

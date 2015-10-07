@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 typedef struct __NSTimeZone *CFTimeZoneRef;
 
 #import <CoreFoundation/CFDate.h>
+#import <CoreFoundation/CFLocale.h>
 
 COREFOUNDATION_EXTERNC_BEGIN
 

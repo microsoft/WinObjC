@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <GameKit/GKGameCenterController.h>
+
 @interface GKGameCenterViewController : UINavigationController
 
 @property(nonatomic, assign) id<GKGameCenterControllerDelegate> gameCenterDelegate;

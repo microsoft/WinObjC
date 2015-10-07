@@ -18,6 +18,7 @@
 #define _AVANIMATION_H_
 
 #import <StarboardExport.h>
+#import <Foundation/Foundation.h>
 
 SB_EXPORT NSString * const AVLayerVideoGravityResize;
 SB_EXPORT NSString * const AVLayerVideoGravityResizeAspect;

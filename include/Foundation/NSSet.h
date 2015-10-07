@@ -11,6 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSEnumerator.h>
+#import <CoreFoundation/CFDictionary.h>
 
 @class NSArray, NSDictionary, NSString;
 

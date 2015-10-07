@@ -17,9 +17,11 @@
 #ifndef _UIDOCUMENT_H_
 #define _UIDOCUMENT_H_
 
-#import <stdint.h> // uint32_t
+#import <Foundation/NSObject.h>
 
 @class NSUndoManager;
+@class NSURL;
+@class NSError;
 
 enum {
     UIDocumentSaveForCreating,

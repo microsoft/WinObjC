@@ -28,6 +28,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIAppearance.h>
+#import <UIKit/UIControl.h>
 #import "UIGeometry.h"
 
 @class UIImage;

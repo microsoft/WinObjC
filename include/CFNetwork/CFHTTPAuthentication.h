@@ -17,6 +17,7 @@
 #ifndef _CFHTTPAUTHENTICATION_H_
 #define _CFHTTPAUTHENTICATION_H_
 
+#import <CoreFoundation/CFStream.h>
 #import <CFNetwork/CFNetworkExport.h>
 #import <CFNetwork/CFHTTPMessage.h>
 #import <stdint.h>

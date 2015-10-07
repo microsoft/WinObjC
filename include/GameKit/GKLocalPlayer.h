@@ -17,7 +17,10 @@
 #ifndef _GKLOCALPLAYER_H_
 #define _GKLOCALPLAYER_H_
 
+#import <GameKit/GameKitExport.h>
 #import <GameKit/GKPlayer.h>
+
+@class UIViewController;
 
 GAMEKIT_EXPORT_CLASS
 @interface GKLocalPlayer : GKPlayer

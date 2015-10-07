@@ -18,6 +18,7 @@
 #define _GKPEERPICKERCONTROLLER_H_
 
 #include <stdint.h>
+#import <Foundation/NSObject.h>
 
 enum {
     GKPeerPickerConnectionTypeOnline = 1,

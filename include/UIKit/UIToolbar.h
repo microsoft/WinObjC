@@ -32,6 +32,7 @@
 
 #import "UIView.h"
 #import "UIInterface.h"
+#import <UIKit/UIBarButtonItem.h>
 
 typedef enum {
     UIToolbarPositionAny = 0,

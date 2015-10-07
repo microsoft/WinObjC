@@ -14,6 +14,13 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+
+@class NSBundle;
+@class UINib;
+@class NSArray;
+@class NSDictionary;
+
 @interface UINib : NSObject
 
 + (UINib *)nibWithNibName:(NSString *)name bundle:(NSBundle *)bundleOrNil;

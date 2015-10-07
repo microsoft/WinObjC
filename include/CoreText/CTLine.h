@@ -18,6 +18,8 @@
 #define _CTLINE_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFAttributedString.h>
+#import <CoreGraphics/CGContext.h>
 
 ENABLE_IMPLICIT_BRIDGING
 

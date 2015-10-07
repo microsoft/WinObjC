@@ -17,6 +17,8 @@
 #ifndef _CAKEYFRAMEANIMATION_H_
 #define _CAKEYFRAMEANIMATION_H_
 
+#import <QuartzCore/CAPropertyAnimation.h>
+
 @interface CAKeyframeAnimation : CAPropertyAnimation
 
 @property(copy) NSArray *values;

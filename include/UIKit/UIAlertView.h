@@ -30,6 +30,7 @@
 #ifndef _UIALERTVIEW_H_
 #define _UIALERTVIEW_H_
 
+#import <Foundation/NSObject.h>
 #import "UIView.h"
 
 typedef enum {
@@ -42,6 +43,8 @@ typedef enum {
 @protocol UIAlertViewDelegate;
 
 struct UIAlertViewPriv;
+
+@class UITextField;
 
 UIKIT_EXPORT_CLASS
 @interface UIAlertView : UIView

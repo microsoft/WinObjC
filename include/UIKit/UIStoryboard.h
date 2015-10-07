@@ -18,6 +18,8 @@
 #define _UISTORYBOARD_H_
 
 #import "UIKitExport.h"
+#import <Foundation/NSObject.h>
+#import <Foundation/NSBundle.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIStoryboard : NSObject

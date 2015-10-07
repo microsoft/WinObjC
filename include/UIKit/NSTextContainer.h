@@ -17,6 +17,10 @@
 #ifndef _NSTEXTCONTAINER_H_
 #define _NSTEXTCONTAINER_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+
 @interface NSTextContainer : NSObject
 
 @property(copy, nonatomic) NSArray *exclusionPaths;

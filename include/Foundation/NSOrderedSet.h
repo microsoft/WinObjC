@@ -17,6 +17,11 @@
 #ifndef _NSORDEREDSET_H_
 #define _NSORDEREDSET_H_
 
+#import <Foundation/NSEnumerator.h>
+
+@class NSSet;
+@class NSIndexSet;
+
 @interface NSOrderedSet : NSObject <NSFastEnumeration>
 
 + (id)orderedSet;

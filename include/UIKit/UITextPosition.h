@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+
 @interface UITextPosition : NSObject
 
 

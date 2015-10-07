@@ -17,6 +17,11 @@
 #ifndef _GKACHIEVEMENTDESCRIPTION_H_
 #define _GKACHIEVEMENTDESCRIPTION_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+@class NSError;
+
 @interface GKAchievementDescription : NSObject
 
 @property(nonatomic, retain, readonly) NSString *identifier;

@@ -18,6 +18,7 @@
 #define _CFNETWORKERRORS_H_
 
 #import <CFNetwork/CFNetworkExport.h>
+#import <CoreFoundation/CFString.h>
 
 CFNETWORK_EXPORT const CFStringRef kCFErrorDomainCFNetwork;
 CFNETWORK_EXPORT const CFStringRef kCFErrorDomainWinSock;

@@ -17,6 +17,9 @@
 #ifndef _CAREPLICATORLAYER_H_
 #define _CAREPLICATORLAYER_H_
 
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CATransform3D.h>
+
 @interface CAReplicatorLayer : CALayer
 
 @property CATransform3D instanceTransform;

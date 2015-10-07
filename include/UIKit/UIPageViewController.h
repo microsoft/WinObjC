@@ -17,6 +17,9 @@
 #ifndef _UIPAGEVIEWCONTROLLER_H_
 #define _UIPAGEVIEWCONTROLLER_H_
 
+#import <Foundation/NSObject.h>
+#import <UIKit/UIViewController.h>
+
 enum {
     UIPageViewControllerNavigationDirectionForward,
     UIPageViewControllerNavigationDirectionReverse

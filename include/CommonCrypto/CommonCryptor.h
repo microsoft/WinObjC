@@ -15,6 +15,11 @@
 //******************************************************************************
 
 // This header file is not yet implemented
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 enum {
     kCCBlockSizeAES128        = 16
@@ -26,7 +31,7 @@ enum {
 
 #define CC_SHA256_DIGEST_LENGTH     32
 
-CCHmac(uint32_t alg, uint8_t *key, uint32_t keylength, uint8_t *msg, int msglength, void *out);
+void CCHmac(uint32_t alg, uint8_t *key, uint32_t keylength, uint8_t *msg, int msglength, void *out);
 
 enum {
     kCCAlgorithmAES128 = 0,
@@ -74,3 +79,6 @@ int32_t CCCrypt(
                 size_t dataOutAvailable,
                 size_t *dataOutMoved);
 
+#ifdef __cplusplus
+}
+#endif

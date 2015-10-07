@@ -3,6 +3,7 @@
 
 #import <CoreFoundation/CFBase.h>
 #import <CoreText/CoreTextExport.h>
+#import <CoreGraphics/CGContext.h>
 
 ENABLE_IMPLICIT_BRIDGING
 

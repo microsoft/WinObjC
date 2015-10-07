@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+
 @interface NSUUID : NSObject
 
 - (NSString *)UUIDString;

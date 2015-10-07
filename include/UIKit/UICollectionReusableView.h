@@ -18,6 +18,7 @@
 #define _UICOLLECTIONREUSABLEVIEW_H_
 
 #include "UICollectionViewLayout.h"
+#include <UIKit/UIView.h>
 
 @interface UICollectionReusableView : UIView
 -(void) prepareForReuse;

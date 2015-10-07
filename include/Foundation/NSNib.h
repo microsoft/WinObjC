@@ -14,6 +14,12 @@
 //
 //******************************************************************************
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+@class NSDictionary;
+
 FOUNDATION_EXPORT_CLASS
 @interface NSNib : NSObject
 -(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject;

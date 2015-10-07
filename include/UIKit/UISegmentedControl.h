@@ -17,6 +17,7 @@
 #import "UIControl.h"
 #import "UIImage.h"
 #import "UIFont.h"
+#import <UIKit/UIBarButtonItem.h>
 
 typedef enum {
     UISegmentedControlStylePlain,     // large plain

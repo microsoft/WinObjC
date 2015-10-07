@@ -17,7 +17,13 @@
 #ifndef _UIDYNAMICANIMATOR_H_
 #define _UIDYNAMICANIMATOR_H_
 
+#import <Foundation/NSObject.h>
+
 @class UIDynamicBehavior;
+@class UICollectionViewLayout;
+@class UICollectionViewLayoutAttributes;
+@class NSArray;
+@class NSIndexPath;
 
 @protocol UIDynamicItem <NSObject>
 @end

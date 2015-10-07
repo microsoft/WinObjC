@@ -14,5 +14,7 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+
 @interface UIStoryboardPushSegueTemplate : NSObject
 @end

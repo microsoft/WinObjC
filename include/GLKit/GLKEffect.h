@@ -20,12 +20,14 @@
 #include <OpenGLES/ES2/glext.h>
 
 #import "Foundation/NSObject.h"
+#import <GLKit/GLKitExport.h>
 #import "GLKit/GLKMath.h"
 #import "GLKit/GLKEnums.h"
 
 @class GLKShader;
 @class GLKShaderEffect;
 @class GLKTextureInfo;
+@class NSArray;
 
 typedef void* GLKShaderMaterialPtr;
 

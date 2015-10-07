@@ -11,7 +11,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSObject.h>
 #import <StarboardExport.h>
 
-@class NSArray, NSDictionary, NSString, NSError, NSMutableDictionary;
+@class NSArray;
+@class NSDictionary;
+@class NSString;
+@class NSError;
+@class NSMutableDictionary;
+@class NSURL;
 
 SB_EXPORT NSString * const NSBundleDidLoadNotification;
 SB_EXPORT NSString * const NSLoadedClasses; 

@@ -18,6 +18,9 @@
 #define _AVCAPTUREOUTPUT_H_
 
 #include <dispatch/dispatch.h>
+#import <Foundation/Foundation.h>
+
+@class NSDictionary;
 
 @protocol AVCaptureVideoDataOutputSampleBufferDelegate <NSObject>
 @end

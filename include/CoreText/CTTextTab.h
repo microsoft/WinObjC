@@ -18,6 +18,8 @@
 #define _CTTEXTTAB_H_
 
 #import <StarboardExport.h>
+#import <CoreText/CTParagraphStyle.h>
+#import <CoreFoundation/CFDictionary.h>
 
 typedef const struct __CTTextTab *CTTextTabRef;
 

@@ -14,12 +14,17 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+#import <CoreFoundation/CFDate.h>
+#import <QuartzCore/CABase.h>
+
 enum CADisplayLinkRunMode
 {
     CADisplayLinkSyncMode,
     CADisplayLinkTimerMode
 };
 
+@class NSRunLoop;
 @class NSRunLoopSource;
 
 CA_EXPORT_CLASS

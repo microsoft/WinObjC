@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <GameKit/GKLeaderboard.h>
+#import <UIKit/UIViewController.h>
 
 @protocol GKLeaderboardViewControllerDelegate
 @end

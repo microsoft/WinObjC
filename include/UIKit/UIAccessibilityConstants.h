@@ -18,6 +18,7 @@
 #define _UIACCESSIBILITYCONSTANTS_H_
 
 #import <StarboardExport.h>
+#import <Foundation/NSObject.h>
 
 typedef uint64_t UIAccessibilityTraits;
 

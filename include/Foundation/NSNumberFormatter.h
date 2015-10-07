@@ -12,7 +12,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSFormatter.h>
 #import <CoreFoundation/CFNumberFormatter.h>
 
-@class NSLocale, NSDecimalNumberHandler;
+@class NSLocale;
+@class NSDecimalNumberHandler;
+@class NSNumber;
+@class NSError;
 
 enum {
    NSNumberFormatterBehaviorDefault = 0,

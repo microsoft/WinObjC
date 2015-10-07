@@ -10,7 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 
-@class NSDictionary, NSArray, NSError, NSMutableOrderedSet;
+@class NSDictionary;
+@class NSArray;
+@class NSError;
+@class NSMutableSet;
+@class NSMutableOrderedSet;
 
 SB_EXPORT NSString * const NSUndefinedKeyException;
 

@@ -37,6 +37,8 @@ typedef enum {
     UIProgressViewStyleBar,
 } UIProgressViewStyle;
 
+@class UIImage;
+
 UIKIT_EXPORT_CLASS
 @interface UIProgressView : UIView
 

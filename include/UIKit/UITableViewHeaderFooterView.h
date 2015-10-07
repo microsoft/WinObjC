@@ -17,6 +17,10 @@
 #ifndef _UITABLEVIEWHEADERFOOTERVIEW_H_
 #define _UITABLEVIEWHEADERFOOTERVIEW_H_
 
+#import <UIKit/UIView.h>
+
+@class UILabel;
+
 @interface UITableViewHeaderFooterView : UIView
 
 @property(nonatomic, retain) UIView *backgroundView;

@@ -16,6 +16,7 @@
 
 #import <QuartzCore/CABase.h>
 #import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CAEAGLLayer.h>
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CAGradientLayer.h>

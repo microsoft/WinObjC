@@ -17,6 +17,8 @@
 #ifndef _GKNOTIFICATIONBANNER_H_
 #define _GKNOTIFICATIONBANNER_H_
 
+#import <Foundation/NSObject.h>
+
 @interface GKNotificationBanner : NSObject
 
 + (void)showBannerWithTitle:(NSString *)title message:(NSString *)message completionHandler:(void (^)(void))completionHandler;

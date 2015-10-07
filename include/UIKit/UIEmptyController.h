@@ -14,5 +14,7 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIView.h>
+
 @interface UIEmptyController : UIView
 @end

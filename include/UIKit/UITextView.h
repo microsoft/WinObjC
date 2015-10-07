@@ -30,11 +30,13 @@
 #ifndef _UITEXTVIEW_H_
 #define _UITEXTVIEW_H_
 
+#import "UIKitExport.h"
 #import "UIStringDrawing.h"
 #import "UIScrollView.h"
 #import "UIDataDetectors.h"
 #import "UITextInputTraits.h"
 #import "NSTextContainer.h"
+#import <UIKit/UITextInput.h>
 
 UIKIT_EXPORT NSString *const UITextViewTextDidBeginEditingNotification;
 UIKIT_EXPORT NSString *const UITextViewTextDidChangeNotification;

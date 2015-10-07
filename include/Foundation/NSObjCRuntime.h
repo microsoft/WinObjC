@@ -16,6 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <TargetConditionals.h>
 #import <Foundation/FoundationExport.h>
 #import <Availability.h>
+#import <StarboardExport.h>
 
 #define NS_INLINE static inline
 

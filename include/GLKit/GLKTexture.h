@@ -20,10 +20,13 @@
 #import "Foundation/NSObject.h"
 #import "Foundation/NSData.h"
 #import "CoreGraphics/CGImage.h"
+#import <GLKit/GLKitExport.h>
 #import "GLKit/GLKEnums.h"
 
 @class NSOpenGLContext;
 @class NSData;
+@class NSDictionary;
+@class NSArray;
 
 extern GLKIT_EXPORT NSString* const GLKTextureLoaderApplyPremultiplication;
 extern GLKIT_EXPORT NSString* const GLKTextureLoaderGenerateMipmaps;

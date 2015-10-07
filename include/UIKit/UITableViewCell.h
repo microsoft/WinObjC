@@ -31,6 +31,7 @@
 #define _UITABLEVIEWCELL_H_
 
 #import "UIView.h"
+#import <UIKit/UIStringDrawing.h>
 
 #define UITableViewCellSeparatorStyleDoubleLineEtched UITableViewCellSeparatorStyleSingleLineEtched
 #define UITableViewCellStateEditingMask UITableViewCellStateShowingEditControlMask
@@ -74,7 +75,12 @@ typedef enum : NSUInteger {
     UITableViewCellStateShowingDeleteConfirmationMask = 1 << 1
 } UITableViewCellStateMask;
 
-@class UITableViewCellSeparator, UILabel, UIImageView, UIStoryboardSegueTemplate;
+@class UITableViewCellSeparator;
+@class UILabel;
+@class UIImageView;
+@class UIStoryboardSegueTemplate;
+@class UIImage;
+@class UIFont;
 
 UIKIT_EXPORT_CLASS
 @interface UITableViewCell : UIView

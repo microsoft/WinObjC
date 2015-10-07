@@ -17,6 +17,9 @@
 #ifndef _GKACHIEVEMENTVIEWCONTROLLER_H_
 #define _GKACHIEVEMENTVIEWCONTROLLER_H_
 
+#import <GameKit/GameKitExport.h>
+#import <UIKit/UINavigationController.h>
+
 @protocol GKAchievementViewControllerDelegate
 @end
 

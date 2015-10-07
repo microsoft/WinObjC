@@ -17,6 +17,9 @@
 #ifndef _NSEXPRESSIONDESCRIPTION_H_
 #define _NSEXPRESSIONDESCRIPTION_H_
 
+#import <CoreData/NSPropertyDescription.h>
+#import <CoreData/NSAttributeDescription.h>
+
 @class NSExpression;
 
 @interface NSExpressionDescription : NSPropertyDescription

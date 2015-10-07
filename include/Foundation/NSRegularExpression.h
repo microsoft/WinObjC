@@ -17,6 +17,10 @@
 #ifndef _NSREGULAREXPRESSION_H_
 #define _NSREGULAREXPRESSION_H_
 
+#import <Foundation/NSObject.h>
+#import <Foundation/NSRange.h>
+#import <Foundation/NSTextCheckingResult.h>
+
 enum {
     NSMatchingProgress = 1,
     NSMatchingCompleted = 2,
@@ -45,6 +49,10 @@ enum {
     NSMatchingWithoutAnchoringBounds = 16
 };
 typedef NSUInteger NSMatchingOptions;
+
+@class NSError;
+@class NSArray;
+@class NSMutableString;
 
 @interface NSRegularExpression : NSObject
 

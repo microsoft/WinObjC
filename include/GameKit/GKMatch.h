@@ -17,6 +17,8 @@
 #ifndef _GKMATCH_H_
 #define _GKMATCH_H_
 
+#import <Foundation/NSObject.h>
+
 enum {
     GKPlayerStateUnknown,
     GKPlayerStateConnected,
@@ -29,6 +31,10 @@ enum {
     GKMatchSendDataUnreliable
 };
 typedef int32_t GKMatchSendDataMode;
+
+@class NSArray;
+@class NSData;
+@class NSError;
 
 @protocol GKMatchDelegate <NSObject>
 @end

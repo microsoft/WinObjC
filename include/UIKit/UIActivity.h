@@ -18,6 +18,7 @@
 #define _UIACTIVITY_H_
 
 #import <StarboardExport.h>
+#import <Foundation/NSObject.h>
 
 SB_EXPORT NSString *const UIActivityTypePostToFacebook;
 SB_EXPORT NSString *const UIActivityTypePostToTwitter;

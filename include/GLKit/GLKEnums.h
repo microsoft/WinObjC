@@ -16,6 +16,9 @@
 
 #pragma once
 
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES2/gl.h>
+
 enum _GLKLightingType {
     GLKLightingTypePerVertex = 0,
     GLKLightingTypePerPixel

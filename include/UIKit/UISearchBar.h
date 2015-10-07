@@ -38,6 +38,7 @@
 
 #import "UIView.h"
 #import "UITextField.h"
+#import <UIKit/UIInterface.h>
 
 typedef enum {
     UISearchBarIconSearch,

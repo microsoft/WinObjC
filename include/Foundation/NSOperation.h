@@ -29,6 +29,7 @@ typedef NSInteger NSOperationQueuePriority;
 
 #if __cplusplus
 #include <pthread.h>
+#include <string.h>
 struct NSOperationPriv
 {
     NSOperationQueuePriority priority;

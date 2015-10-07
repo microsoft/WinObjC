@@ -17,6 +17,8 @@
 #ifndef _AVAUDIORECORDER_H_
 #define _AVAUDIORECORDER_H_
 
+#import <Foundation/Foundation.h>
+
 @protocol AVAudioRecorderDelegate <NSObject>
 @end
 

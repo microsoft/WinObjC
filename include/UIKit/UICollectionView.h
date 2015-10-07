@@ -17,8 +17,9 @@
 #ifndef _UICOLLECTIONVIEW_H_
 #define _UICOLLECTIONVIEW_H_
 
+#import <Foundation/NSObject.h>
 #import "UIKitExport.h"
-#import <stdint.h> // uint32_t
+#import <UIKit/UIScrollView.h>
 
 enum {
     UICollectionViewScrollPositionNone = 0,
@@ -35,6 +36,7 @@ typedef uint32_t UICollectionViewScrollPosition;
 @class UICollectionViewCell;
 @class UICollectionViewLayout;
 @class UICollectionViewData;
+@class UINib;
 
 @interface UICollectionViewDataSource : NSObject
 - (uint32_t) collectionView: (UICollectionView *)view numberOfItemsInSection: (NSInteger) section;

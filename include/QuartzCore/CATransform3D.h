@@ -17,7 +17,9 @@
 #ifndef _CATRANSFORM3D_H_
 #define _CATRANSFORM3D_H_
 
+#import <Foundation/NSValue.h>
 #import <QuartzCore/CABase.h>
+#import <CoreGraphics/CGAffineTransform.h>
 
 typedef struct CATransform3D {
     union {

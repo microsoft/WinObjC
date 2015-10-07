@@ -18,6 +18,7 @@
 #define _AUDIOQUEUE_H_
 
 #import <CoreAudio/CoreAudioTypes.h>
+#import <CoreFoundation/CFRunLoop.h>
 #import <StarboardExport.h>
 
 typedef struct OpaqueAudioQueue *AudioQueueRef;

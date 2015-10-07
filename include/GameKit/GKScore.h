@@ -17,6 +17,12 @@
 #ifndef _GKSCORE_H_
 #define _GKSCORE_H_
 
+#import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
+
+@class NSDate;
+@class NSError;
+
 GAMEKIT_EXPORT_CLASS
 @interface GKScore : NSObject
 

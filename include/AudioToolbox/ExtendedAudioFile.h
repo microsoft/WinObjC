@@ -19,6 +19,7 @@
 
 #import <AudioToolbox/AudioToolboxExport.h>
 #import <CoreAudio/CoreAudioTypes.h>
+#import <CoreFoundation/CFURL.h>
 
 typedef uint32_t ExtAudioFilePropertyID;
 struct ExtAudioFile;

@@ -17,6 +17,10 @@
 #ifndef _UILOCALIZEDINDEXEDCOLLATION_H_
 #define _UILOCALIZEDINDEXEDCOLLATION_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+
 @interface UILocalizedIndexedCollation : NSObject
 
 @property (nonatomic, readonly) NSArray *sectionTitles;

@@ -18,6 +18,7 @@
 
 #import <OpenGLES/ES2/gl.h>
 #import <UIKit/UIKit.h>
+#import <GLKit/GLKitExport.h>
 
 @class GLKViewController;
 

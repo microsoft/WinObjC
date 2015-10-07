@@ -17,6 +17,7 @@
 #ifndef _AVPLAYER_H_
 #define _AVPLAYER_H_
 
+#import <Foundation/Foundation.h>
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreMedia/CMSampleBuffer.h>
 

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 enum {
     kSCNetworkFlagsTransientConnection  = 0x01,
     kSCNetworkFlagsReachable            = 0x02,

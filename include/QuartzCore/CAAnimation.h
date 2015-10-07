@@ -69,8 +69,6 @@ CA_EXPORT_CLASS
 -(void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished;
 @end
 
-#import <QuartzCore/CAPropertyAnimation.h>
-#import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CATransition.h>
 #import <QuartzCore/CAAnimationGroup.h>
 

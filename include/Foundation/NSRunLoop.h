@@ -11,7 +11,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <CoreFoundation/CFRunLoop.h>
 #include <pthread.h>
 
-@class NSTimer,NSDate,NSMutableArray,NSPort,NSPipe,NSRunLoopState,NSOrderedPerform,NSDelayedPerform,NSInputSource;
+@class NSTimer;
+@class NSDate;
+@class NSMutableArray;
+@class NSPort;
+@class NSPipe;
+@class NSRunLoopState;
+@class NSOrderedPerform;
+@class NSDelayedPerform;
+@class NSInputSource;
+@class NSMutableDictionary;
+@class NSLock;
 
 FOUNDATION_EXPORT NSString * const NSDefaultRunLoopMode;
 FOUNDATION_EXPORT NSString * const NSRunLoopCommonModes;

@@ -17,6 +17,8 @@
 #ifndef _UIREFRESHCONTROL_H_
 #define _UIREFRESHCONTROL_H_
 
+#import <UIKit/UIControl.h>
+
 @interface UIRefreshControl : UIControl
 
 - (void)beginRefreshing;

@@ -31,6 +31,8 @@
 #define _UITABBARCONTROLLER_H_
 
 #import "UIViewController.h"
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UITableViewController.h>
 
 @class UITabBarController;
 

@@ -17,6 +17,11 @@
 #ifndef _GKPLAYER_H_
 #define _GKPLAYER_H_
 
+#import <Foundation/NSObject.h>
+
+@class NSArray;
+@class NSError;
+
 @interface GKPlayer : NSObject
 
 @property (nonatomic, readonly, retain) NSString *playerID;

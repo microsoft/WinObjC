@@ -18,6 +18,7 @@
 #define _CMSAMPLEBUFFER_H_
 
 #import <CoreMedia/CMBase.h>
+#import <CoreVideo/CVImageBuffer.h>
 #import <StarboardExport.h>
 
 typedef struct opaqueCMSampleBuffer *CMSampleBufferRef;

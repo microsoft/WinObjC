@@ -29,6 +29,8 @@
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGPath.h>
+#import <CoreGraphics/CGContext.h>
 
 enum {
     UIRectCornerTopLeft     = 1 << 0,

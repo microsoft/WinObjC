@@ -11,8 +11,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSEnumerator.h>
+#import <CoreFoundation/CFDictionary.h>
 
-@class NSArray, NSURL;
+@class NSArray;
+@class NSURL;
+@class NSSet;
 
 #define __CFDICTIONARY_SIZE_BYTES   (0x54)
 

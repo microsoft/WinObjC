@@ -18,6 +18,7 @@
 #define _GKMATCHMAKERVIEWCONTROLLER_H_
 
 #import <GameKit/GKMatchmaker.h>
+#import <UIKit/UINavigationController.h>
 
 @protocol GKMatchmakerViewControllerDelegate <NSObject>
 @end

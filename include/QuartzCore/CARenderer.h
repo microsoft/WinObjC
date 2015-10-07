@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSObject.h>
+#import <QuartzCore/CABase.h>
 #import <ApplicationServices/ApplicationServices.h>
 
-@class CALayer,O2Surface;
+@class CALayer;
+@class CVTimeStamp;
 
 @interface CARenderer : NSObject {
    void    *_cglContext;

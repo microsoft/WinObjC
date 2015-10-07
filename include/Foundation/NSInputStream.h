@@ -9,6 +9,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSStream.h>
 
 @class NSData;
+@class NSURL;
 
 @interface NSInputStream : NSStream  {
     id filename;

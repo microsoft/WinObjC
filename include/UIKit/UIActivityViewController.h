@@ -17,6 +17,10 @@
 #ifndef _UIACTIVITYVIEWCONTROLLER_H_
 #define _UIACTIVITYVIEWCONTROLLER_H_
 
+#import <UIKit/UIViewController.h>
+
+@class NSString;
+
 typedef void (^UIActivityViewControllerCompletionHandler)(NSString *activityType, BOOL completed);
 
 @interface UIActivityViewController : UIViewController

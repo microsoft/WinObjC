@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
+
 @interface UIRuntimeEventConnection : NSObject {
     unsigned mask;
     SEL selector;

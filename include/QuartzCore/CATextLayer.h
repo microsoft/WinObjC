@@ -17,6 +17,8 @@
 #ifndef _CATEXTLAYER_H_
 #define _CATEXTLAYER_H_
 
+#import <QuartzCore/CABase.h>
+#import <QuartzCore/CALayer.h>
 #include "UIKit/UIGeometry.h"
 
 CA_EXPORT_CLASS

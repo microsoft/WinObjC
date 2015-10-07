@@ -18,6 +18,9 @@
 #define _CFPROXYSUPPORT_H_
 
 #import <CFNetwork/CFNetworkExport.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFURL.h>
+#import <CoreFoundation/CFError.h>
 
 CFNETWORK_EXPORT const CFStringRef kCFProxyTypeNone;
 CFNETWORK_EXPORT const CFStringRef kCFProxyTypeAutoConfigurationURL;

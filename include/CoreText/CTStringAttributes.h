@@ -18,6 +18,7 @@
 #define _CTSTRINGATTRIBUTES_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFString.h>
 
 enum {
     kCTUnderlineStyleNone = 0x00,

@@ -17,8 +17,8 @@
 #ifndef _AVCAPTURESESSION_H_
 #define _AVCAPTURESESSION_H_
 
-#import <AVFoundation/AVCaptureInput.h>
 #import <StarboardExport.h>
+#import <Foundation/Foundation.h>
 
 SB_EXPORT NSString *const AVCaptureSessionPresetPhoto;
 SB_EXPORT NSString *const AVCaptureSessionPresetHigh;
@@ -39,6 +39,9 @@ SB_EXPORT NSString *const AVCaptureSessionWasInterruptedNotification;
 SB_EXPORT NSString *const AVCaptureSessionInterruptionEndedNotification;
 
 SB_EXPORT NSString *const AVCaptureSessionErrorKey;
+
+@class AVCaptureInput;
+@class AVCaptureOutput;
 
 @interface AVCaptureSession : NSObject
 

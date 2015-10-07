@@ -17,6 +17,8 @@
 #ifndef _UIACTIVITYITEMPROVIDER_H_
 #define _UIACTIVITYITEMPROVIDER_H_
 
+#import <Foundation/NSObject.h>
+
 @protocol UIActivityItemSource <NSObject>
 @end
 

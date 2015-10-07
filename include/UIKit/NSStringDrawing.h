@@ -17,6 +17,10 @@
 #ifndef _NSSTRINGDRAWING_H_
 #define _NSSTRINGDRAWING_H_
 
+#import <Foundation/NSObject.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSAttributedString.h>
+
 enum {
     NSStringDrawingTruncatesLastVisibleLine = 1 << 5,
     NSStringDrawingUsesLineFragmentOrigin = 1 << 0,

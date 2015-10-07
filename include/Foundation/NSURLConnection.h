@@ -15,7 +15,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @protocol NSURLConnectionDataDelegate<NSURLConnectionDelegate>
 @end
 
-@class NSInputStream,NSOutputStream,NSRunLoop,NSURLRequest,NSData,NSURLResponse,NSError,NSMutableArray,NSURLAuthenticationChallenge,NSCachedURLResponse,NSURLProtocol,NSMutableData;
+@class NSInputStream;
+@class NSOutputStream;
+@class NSRunLoop;
+@class NSURLRequest;
+@class NSData;
+@class NSURLResponse;
+@class NSError;
+@class NSMutableArray;
+@class NSURLAuthenticationChallenge;
+@class NSCachedURLResponse;
+@class NSURLProtocol;
+@class NSMutableData;
+@class NSOperationQueue;
 
 #import <Foundation/NSURLProtocol.h>
 

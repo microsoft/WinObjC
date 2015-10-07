@@ -17,7 +17,10 @@
 #ifndef _NSMAPPINGMODEL_H_
 #define _NSMAPPINGMODEL_H_
 
+#import <Foundation/NSObject.h>
+
 @class NSManagedObjectModel;
+@class NSError;
 
 @interface NSMappingModel : NSObject
 

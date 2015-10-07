@@ -18,6 +18,8 @@
 #define _CFHTTPMESSAGE_H_
 
 #import <StarboardExport.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFURL.h>
 
 typedef struct __CFHTTPMessage *CFHTTPMessageRef;
 

@@ -27,6 +27,8 @@ typedef enum {
     NSDateFormatterFullStyle = kCFDateFormatterFullStyle
 } NSDateFormatterStyle;
 
+@class NSCalendar;
+
 FOUNDATION_EXPORT_CLASS
 @interface NSDateFormatter : NSFormatter
 

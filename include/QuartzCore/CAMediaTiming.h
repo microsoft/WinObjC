@@ -17,8 +17,8 @@
 #ifndef _CAMEDIATIMING_H_
 #define _CAMEDIATIMING_H_
 
+#import <Foundation/NSString.h>
 #import <QuartzCore/CABase.h>
-#import <CoreFoundation/CoreFoundation.h>
 #import <QuartzCore/CoreAnimationExport.h>
 
 CA_EXPORT NSString * const kCAFillModeRemoved;

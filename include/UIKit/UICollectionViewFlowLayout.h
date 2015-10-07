@@ -17,7 +17,10 @@
 #ifndef _UICOLLECTIONVIEWFLOWLAYOUT_H_
 #define _UICOLLECTIONVIEWFLOWLAYOUT_H_
 
+#import <Foundation/Foundation.h>
 #import "UIKitExport.h"
+#import <UIKit/UICollectionView.h>
+#import <UIKit/UICollectionViewLayout.h>
 
 enum {
    UICollectionViewScrollDirectionVertical,

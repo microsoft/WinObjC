@@ -18,6 +18,8 @@
 #define _UICOLLECTIONVIEWCLAYOUT_H_
 
 #import "UIKitExport.h"
+#import <Foundation/Foundation.h>
+#import <QuartzCore/CATransform3D.h>
 
 enum _UICollectionViewItemType {
     UICollectionViewItemTypeCell,
@@ -28,6 +30,7 @@ enum _UICollectionViewItemType {
 typedef unsigned UICollectionViewItemType;
 
 @class UICollectionViewLayoutAttributes;
+@class UICollectionView;
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewLayout : NSObject <NSCoding> {

@@ -14,6 +14,9 @@
 //
 //******************************************************************************
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
+
 enum {
     NSJSONWritingPrettyPrinted = 1
 };
@@ -25,6 +28,9 @@ enum {
     NSJSONReadingAllowFragments = 4
 };
 typedef uint32_t NSJSONReadingOptions;
+
+@class NSData;
+@class NSError;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSJSONSerialization : NSObject

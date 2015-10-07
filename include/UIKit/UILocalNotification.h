@@ -18,6 +18,8 @@
 #define _UILOCALNOTIFICATION_H_
 
 #import "UIKitExport.h"
+#import <Foundation/NSObject.h>
+#import <Foundation/NSCalendar.h>
 
 UIKIT_EXPORT_CLASS
 @interface UILocalNotification : NSObject {

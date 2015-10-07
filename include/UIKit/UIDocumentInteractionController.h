@@ -17,6 +17,8 @@
 #ifndef _UIDOCUMENTINTERACTIONCONTROLLER_H_
 #define _UIDOCUMENTINTERACTIONCONTROLLER_H_
 
+#import <UIKit/UIActionSheet.h>
+
 @protocol UIDocumentInteractionControllerDelegate;
 
 @interface UIDocumentInteractionController : NSObject<UIActionSheetDelegate>

@@ -17,6 +17,9 @@
 #ifndef _GKSESSION_H_
 #define _GKSESSION_H_
 
+#import <Foundation/NSObject.h>
+#import <GameKit/GKPublicConstants.h>
+
 enum {
     GKSessionModeServer,
     GKSessionModeClient,
@@ -32,6 +35,10 @@ enum {
     GKPeerStateConnecting
 };
 typedef uint32_t GKPeerConnectionState;
+
+@class NSArray;
+@class NSData;
+@class NSError;
 
 @protocol GKSessionDelegate
 @end

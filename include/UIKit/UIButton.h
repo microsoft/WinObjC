@@ -43,7 +43,11 @@ typedef enum {
     UIButtonTypeRoundedRectLegacy,
 } UIButtonType;
 
-@class UILabel, UIImageView, UIImage;
+@class UILabel;
+@class UIImageView;
+@class UIImage;
+@class UIFont;
+@class UIColor;
 
 UIKIT_EXPORT_CLASS
 @interface UIButton : UIControl <NSCoding> 

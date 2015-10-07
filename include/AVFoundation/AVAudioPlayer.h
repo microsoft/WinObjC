@@ -19,6 +19,12 @@
 #ifndef _AVAUDIOPLAYER_H_
 #define _AVAUDIOPLAYER_H_
 
+#import <Foundation/NSObject.h>
+#import <Foundation/NSDate.h>
+
+@class NSURL;
+@class NSError;
+
 @protocol AVAudioPlayerDelegate <NSObject>
 @end
 

@@ -17,7 +17,13 @@
 #ifndef _NSMIGRATIONMANAGER_H_
 #define _NSMIGRATIONMANAGER_H_
 
-@class NSMappingModel, NSManagedObjectModel;
+#import <Foundation/NSObject.h>
+
+@class NSMappingModel;
+@class NSManagedObjectModel;
+@class NSURL;
+@class NSDictionary;
+@class NSError;
 
 @interface NSMigrationManager : NSObject
 

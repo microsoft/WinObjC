@@ -17,6 +17,8 @@
 #ifndef _GKLEADERBOARD_H_
 #define _GKLEADERBOARD_H_
 
+#import <GameKit/GameKitExport.h>
+#import <Foundation/NSRange.h>
 #include <GameKit/GKScore.h>
 #include <stdint.h>
 
@@ -32,6 +34,9 @@ enum {
     GKLeaderboardTimeScopeAllTime = 2
 };
 typedef uint32_t GKLeaderboardTimeScope;
+
+@class NSArray;
+@class NSError;
 
 @interface GKLeaderboard : NSObject
 

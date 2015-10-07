@@ -14,7 +14,10 @@
 //
 //******************************************************************************
 
-#import <StarboardExport.h>
+#import <Foundation/NSString.h>
+#import <CoreGraphics/CGColor.h>
+#import <QuartzCore/CABase.h>
+#import <QuartzCore/CALayer.h>
 
 CA_EXPORT NSString *const kCAFillRuleNonZero;
 CA_EXPORT NSString *const kCAFillRuleEvenOdd;
