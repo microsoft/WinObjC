@@ -132,3 +132,5 @@ LIBRARY Foundation
 	 __objc_class_name_NSKeyedUnarchiver	CONSTANT
      _OBJC_CLASS_NSLocale DATA
 	 __objc_class_name_NSLocale	CONSTANT
+     _OBJC_CLASS_NSUUID DATA
+	 __objc_class_name_NSUUID	CONSTANT

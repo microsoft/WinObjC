@@ -14,10 +14,15 @@
 //
 //******************************************************************************
 
+
 #import <Foundation/NSObject.h>
 
-@interface NSUUID : NSObject
-
-- (NSString *)UUIDString;
-
+FOUNDATION_EXPORT_CLASS
+@interface NSUUID : NSObject <NSCoding, NSCopying>
++ (NSUUID*)UUID;
+- (id)init;
+- (id)initWithUUIDString:(NSString*)string;
+- (id)initWithUUIDBytes:(const void*)bytes;
+- (NSString*)UUIDString;
+- (void)getUUIDBytes:(void*)bytes;
 @end

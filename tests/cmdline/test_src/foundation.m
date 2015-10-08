@@ -90,6 +90,28 @@ int main(int argc, char *argv[])
     }
     
     printf("PASSED\n");
-    
+
+    /*** NSUUID ***/
+    NSUUID* uuidA = [NSUUID UUID];
+    NSUUID* uuidB = [NSUUID UUID];
+    NSUUID* uuidC = [NSUUID UUID];
+    NSUUID* uuidAClone = [[NSUUID alloc] initWithUUIDString:[uuidA UUIDString]];
+    if (![uuidA isEqual:uuidB] && ![uuidB isEqual:uuidC] && [uuidA isEqual:uuidAClone]) {
+	   NSLog(@"FAILED: NSUUID should be unique; UUIDString formatting & parsing should be compatible: %@ %@ %@ %@", uuidA, uuidB, uuidC, uuidAClone);
+	   return -1;
+    }
+
+    NSUUID* uuidBad = [[NSUUID alloc] initWithUUIDString:@"HELLOWOR-LDTH-ISIS-ABAD-UUIDSTRING!!"];
+    if (uuidBad != nil) {
+	    NSLog(@"FAILED: NSUUID should have failed to parse this weird string: %@", uuidBad);
+	    return -1;
+    }
+
+    NSUUID* uuidShort = [[NSUUID alloc] initWithUUIDString:@"000000"];
+    if (uuidShort != nil) {
+	    NSLog(@"FAILED: NSUUID should have failed to parse this short string: %@", uuidShort);
+	    return -1;
+    }
+
     return 0;
 }
