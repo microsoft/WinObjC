@@ -17,6 +17,7 @@
 #include <Foundation/Foundation.h>
 #include <Starboard.h>
 #include <Windows.h>
+#include <objbase.h>
 
 @interface NSUUID () {
     GUID _guid;
