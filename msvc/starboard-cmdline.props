@@ -2,9 +2,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
-    <StarboardTargetOS Condition="'$(StarboardTargetOS)'==''">Windows 8.1</StarboardTargetOS>
-    <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\Debug\$(StarboardTargetOS)</StarboardLibDirs>
-    <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(StarboardTargetOS)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Windows 8.1</TargetOsAndVersion>
+    <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\$(Configuration)\$(TargetOsAndVersion)</StarboardLibDirs>
+    <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
   </PropertyGroup>
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.props" />
