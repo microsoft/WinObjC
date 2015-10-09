@@ -18,8 +18,8 @@
 #import <Foundation/Foundation.h>
 
 TEST(NSObjectTest, AllocationSanity) {
-    NSObject *obj1 = [NSObject new];
-    NSObject *obj2 = [NSObject new];
+    NSObject* obj1 = [NSObject new];
+    NSObject* obj2 = [NSObject new];
 
     //obj1 and obj2 should be distinct pointers!
     EXPECT_NE_MSG(obj1, obj2, "obj1 and obj2 should be distinct pointers!");

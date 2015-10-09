@@ -3,6 +3,8 @@
 #include <dispatch/dispatch.h>
 
 __DISPATCH_BEGIN_DECLS
+// The dispatch test cases are open source code, and there is no as_do definition for _CPlusPlus Macro.
+#define as_do(para) para
 
 void test_start(const char* desc);
 void test_stop(void);
@@ -33,4 +35,3 @@ void _test_errno(const char* file, long line, const char* desc, long actual, lon
 #define test_errno(a,b,c) _test_errno(__FILE__, __LINE__, a, b, c)
 
 __DISPATCH_END_DECLS
-

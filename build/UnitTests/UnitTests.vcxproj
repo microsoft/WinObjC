@@ -74,15 +74,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -166,8 +170,51 @@
     <ClCompile Include="..\..\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\tests\unittests\dispatch\dispatch_test.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
+    <ClangCompile Include="..\..\tests\unittests\foundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_sanity.m" />
+    <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_after.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_api.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_apply.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_c99.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_cascade.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_debug.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_drift.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_group.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_pingpong.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_priority.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_sema.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_starfish.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_bit31.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_bit63.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
+    <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
+  </ItemGroup>
+  <ItemGroup>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcr120d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcr120_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
