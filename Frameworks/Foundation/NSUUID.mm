@@ -34,7 +34,11 @@
 
 - (id)init {
     if ((self = [super init]) != nil) {
-        CoCreateGuid(&_guid);
+        if (CoCreateGuid(&_guid) != S_OK) {
+            [NSException raise:NSGenericException format:@"NSUUID failed to generate a unique ID."];
+            [self release];
+            return nil;
+        }
     }
     return self;
 }
@@ -98,7 +102,7 @@
 }
 
 - (NSString*)UUIDString {
-    return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX",
+    return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hX%02hX-%02hX%02hX%02hX%02hX%02hX%02hX",
         _guid.Data1,
         _guid.Data2,
         _guid.Data3,
@@ -117,9 +121,7 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    NSUUID* other = [[[self class] allocWithZone:zone] init];
-    other->_guid = _guid;
-    return other;
+    return [self retain];
 }
 
 - (BOOL)isEqual:(id)other {

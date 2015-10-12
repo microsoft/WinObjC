@@ -100,13 +100,26 @@ TEST(Foundation, SanityTest) {
         comp1.month, 
         comp1.year);
 
+}
+
+TEST(Foundation, NSUUID) {
+    NSUUID* uuidA = [NSUUID UUID];
+    NSUUID* uuidB = [NSUUID UUID];
+    NSUUID* uuidC = [NSUUID UUID];
+    ASSERT_FALSE_MSG([uuidA isEqual:uuidB] || [uuidB isEqual:uuidC],
+          "FAILED: NSUUID instances should be unique");
+
+    NSUUID* uuidAClone = [[NSUUID alloc] initWithUUIDString:[uuidA UUIDString]];
+    ASSERT_TRUE_MSG([uuidA isEqual:uuidAClone] == YES,
+          "FAILED: An NSUUID created from parsing the string format of another UUID should equal it.");
+
     NSUUID* uuidBad = [[NSUUID alloc] initWithUUIDString:@"HELLOWOR-LDTH-ISIS-ABAD-UUIDSTRING!!"];
     ASSERT_TRUE_MSG(uuidBad == nil,
-	    "FAILED: NSUUID should have failed to parse this weird string: %s", 
-		uuidBad);
-	    
+        "FAILED: NSUUID should have failed to parse this weird string: %s",
+        [[uuidBad description] UTF8String]);
+
     NSUUID* uuidShort = [[NSUUID alloc] initWithUUIDString:@"000000"];
     ASSERT_TRUE_MSG(uuidShort == nil,
-	    "FAILED: NSUUID should have failed to parse this short string: %s", 
-		uuidShort);
+        "FAILED: NSUUID should have failed to parse this short string: %s",
+        [[uuidShort description] UTF8String]);
 }
