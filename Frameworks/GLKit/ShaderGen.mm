@@ -22,6 +22,7 @@
 #include "ShaderGen.h"
 
 using namespace std;
+using namespace GLKitShader;
 
 // TODO: clean up lowp references.
 
@@ -134,6 +135,12 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs) {
 
     vertexStage = true;
 
+    // These should not persist between generations.
+    vsTempFuncs.clear();
+    vsTempVals.clear();
+    psTempFuncs.clear();
+    psTempVals.clear();
+    
     // Perform vertex shader generation.
     string outvert = generate(intermediates, inputs, vs, "VS");
     string vertinvars;
@@ -326,9 +333,19 @@ bool ShaderTexRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
 }
 
 string ShaderCubeRef::genTexLookup(string texVar, string uv, ShaderContext& c, ShaderLayout& v) {
-    string modulus;
-    string texLookup = "textureCube(" + texVar + ", -vec3(" + uv + "))";
+    std::string transform;
+    if (transformNode) {
+        transformNode->generate(transform, c, v);
+    }
 
+    std::string texLookup;
+    if (!transform.empty()) {
+        texLookup = "textureCube(" + texVar + ", vec3(" + transform + " * vec4(vec3(" + uv + ") * vec3(1.0, -1.0, 1.0), 0.0)))";
+    } else {
+        texLookup = "textureCube(" + texVar + ", vec3(" + uv + ") * vec3(1.0, -1.0, 1.0))";
+    }
+
+    std::string modulus;
     if (!reflAlphaNode || !reflAlphaNode->generate(modulus, c, v))
         return texLookup;
 

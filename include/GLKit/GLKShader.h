@@ -36,8 +36,6 @@ enum _GLKShaderVarType {
 };
 typedef unsigned int GLKShaderVarType;
 
-extern size_t GLKShaderVarSizes[];
-
 @class GLKShaderEffect;
 @class GLKShader;
 

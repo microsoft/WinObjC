@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[])
 {
-    UIApplicationMain(0, NULL, nil, @"HelloOpenGLApp");
+    UIApplicationMain(0, NULL, nil, @"HelloGLKitApp");
     
     return 0;
 }

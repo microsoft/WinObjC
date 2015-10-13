@@ -24,6 +24,8 @@
 
 #define NM 0.5773502691896258f // 1 / sqrtf(3)
 
+using namespace GLKitShader;
+
 struct SkyboxVert {
     GLKVector3 pos;
     GLKVector3 norm;

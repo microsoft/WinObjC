@@ -31,9 +31,6 @@ typedef wchar_t WCHAR;
     WGCalendar* _calendar;
 }
 
-- (void)viewWillLayoutSubviews {
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([self.view isKindOfClass:[GLKView class]]) {

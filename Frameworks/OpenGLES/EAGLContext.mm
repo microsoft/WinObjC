@@ -31,6 +31,7 @@
 #include "CALayerInternal.h"
 #include "EAGLContextInternal.h"
 #include "UWP/InteropBase.h"
+#include "UWP/WindowsUIXamlControls.h"
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CAEAGLLayer.h"
@@ -210,6 +211,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     }
 
     glRenderbufferStorage(target, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+
+    surface.swapChainPanel.width = _rbWidth;
+    surface.swapChainPanel.height = _rbHeight;
 
     if (tlsCurContext == self) {
         eglMakeCurrent(eglDisplay, _eglSurface, _eglSurface, _eglContext);

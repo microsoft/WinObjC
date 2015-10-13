@@ -142,6 +142,8 @@ static void dumpMat(const GLKMatrix4& mat)
     _skybox.textureCubeMap.name = _skyboxTex.name;
     _skybox.textureCubeMap.enabled = TRUE;
 
+    _skybox.transform.modelviewMatrix = GLKMatrix4MakeScale(-1.f, 1.f, 1.f);
+
     _effect.textureCubeMap.name = _skyboxTex.name;
     _effect.textureCubeMap.envMode = GLKTextureEnvModeDecal;
     _effect.textureCubeMap.enabled = FALSE;

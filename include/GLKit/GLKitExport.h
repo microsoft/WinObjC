@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 #ifndef GLKIT_IMPEXP
- #define GLKIT_IMPEXP __declspec(dllimport)
+#ifdef __GLKIT_INSIDE_BUILD
+#define GLKIT_IMPEXP __declspec(dllexport)
+#else 
+#define GLKIT_IMPEXP __declspec(dllimport)
+#endif 
 #endif
 
 #ifndef GLKIT_EXPORT

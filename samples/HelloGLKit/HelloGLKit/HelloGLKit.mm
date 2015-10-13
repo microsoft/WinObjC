@@ -18,13 +18,13 @@
 #import <GLKit/GLKit.h>
 #import "GLRenderer.h"
 
-@interface HelloOpenGLApp : NSObject {
+@interface HelloGLKitApp : NSObject {
     UIWindow* _mainWindow;
     GLRenderer* _renderer;
 }
 @end
 
-@implementation HelloOpenGLApp
+@implementation HelloGLKitApp
 
 -(void) applicationDidFinishLaunching: (UIApplication *) app {
     CGRect bounds = [[UIScreen mainScreen] bounds];    

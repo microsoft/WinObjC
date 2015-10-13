@@ -84,4 +84,4 @@ LIBRARY GLKit
      GLKMatrix4MakeZRotation
      GLKMatrix4MakeRotation
      GLKMatrix4MakeTranslation
-     GLKMatrix4MakeScale     
+     GLKMatrix4MakeScale

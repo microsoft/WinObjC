@@ -24,6 +24,10 @@
 #define POS_INPUT               "_vertexPos"            // vertex position (model coords).
 #define NORM_INPUT              "_vertNorm"
 
+@class GLKShaderPair;
+
+namespace GLKitShader {
+
 class ShaderNode;
 
 // Contains the definition of either a vertex or pixel shader program, as a map
@@ -50,8 +54,6 @@ struct TempInfo {
     std::string body;
 };
 typedef std::map<std::string, TempInfo> TempMap;
-
-@class GLKShaderPair;
 
 // Main class responsible for shader generation.  Tracks temporary data and builds the final
 // output vertex/pixel shader program pair.
@@ -92,6 +94,9 @@ public:
     // Accessors.
     inline bool isVertexStage() const { return vertexStage; }
     inline bool isPixelStage() const { return !vertexStage; }
+
+    inline size_t numVSTempFuncs() const { return vsTempFuncs.size(); }
+    inline size_t numPSTempFuncs() const { return psTempFuncs.size(); }
 };
 
 // --------------------------------------------------------------------------------
@@ -194,14 +199,16 @@ public:
 // Cube map lookup node.  Same as for the texture node, but with cube maps.
 class ShaderCubeRef : public ShaderTexRef {
     ShaderNode* reflAlphaNode;
+    ShaderNode* transformNode;
 
 protected:
     virtual std::string genTexLookup(std::string texVar, std::string uv, ShaderContext& c, ShaderLayout& v) override;
 
 public:
     ShaderCubeRef(const std::string& tex, const std::string& mode, ShaderNode* reflAlphaNode, 
-                  ShaderNode* uvRef, ShaderNode* nextRef) :
+                  ShaderNode* uvRef, ShaderNode* transformRef, ShaderNode* nextRef) :
         reflAlphaNode(reflAlphaNode),
+        transformNode(transformRef),
         ShaderTexRef(tex, mode, uvRef, nextRef) {}
 };
 
@@ -243,7 +250,7 @@ class ShaderOp : public ShaderNode {
     bool needsAll;
 
 public:
-    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const std::string& op, bool isOperator, bool needsAll = false) :
+    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const std::string& op, bool isOperator = true, bool needsAll = false) :
         n1(n1), n2(n2), op(op), isOperator(isOperator), needsAll(needsAll) {}
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
@@ -395,3 +402,5 @@ public:
     inline ShaderPixelOnly(ShaderNode* inner) : inner(inner) { type = inner->getType(); }
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
+
+} // namespace

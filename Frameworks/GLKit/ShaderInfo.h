@@ -24,6 +24,8 @@
 #include <map>
 #include <vector>
 
+namespace GLKitShader {
+
 std::string getTypeStr(GLKShaderVarType t);
 
 // Information about a variable used in the shader program.  Basically its name, type, and location.
@@ -39,7 +41,7 @@ struct VarInfo {
     bool intermediate;
     bool used;
 
-    inline std::string getTypeStr() const { return ::getTypeStr(type); }
+    inline std::string getTypeStr() const { return ::GLKitShader::getTypeStr(type); }
     inline bool isTexture() const { return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE); }
 };
 
@@ -88,11 +90,12 @@ struct ShaderMaterial : public ShaderLayout {
     // coalesced into a single object.  Shader materials control shader generation in that if a value is present in
     // the material, it can be used by the shader, and if it is not, the code using it can be eliminated from the
     // shader entirely.
-    void addMaterialVar(const std::string& var, GLKShaderVarType type, float* data);
-    inline void addMaterialVar(const std::string& var, const GLKVector4& vec)    { addMaterialVar(var, GLKS_FLOAT4, (float*)&vec); }
-    inline void addMaterialVar(const std::string& var, const GLKVector3& vec)    { addMaterialVar(var, GLKS_FLOAT3, (float*)&vec); }
-    inline void addMaterialVar(const std::string& var, const GLKVector2& vec)    { addMaterialVar(var, GLKS_FLOAT2, (float*)&vec); }
+    void addMaterialVar(const std::string& var, GLKShaderVarType type, const float* data);
+    inline void addMaterialVar(const std::string& var, const GLKVector4& vec)    { addMaterialVar(var, GLKS_FLOAT4, vec.v); }
+    inline void addMaterialVar(const std::string& var, const GLKVector3& vec)    { addMaterialVar(var, GLKS_FLOAT3, vec.v); }
+    inline void addMaterialVar(const std::string& var, const GLKVector2& vec)    { addMaterialVar(var, GLKS_FLOAT2, vec.v); }
     inline void addMaterialVar(const std::string& var, float val)                { addMaterialVar(var, GLKS_FLOAT, &val); }
+    inline void addMaterialVar(const std::string& var, const GLKMatrix4& mat)    { addMaterialVar(var, GLKS_MAT4, mat.m); }
 
     // Adds a float4 as a float3 for convenience.
     inline void addMaterialVar3(const std::string& var, const GLKVector4& vec)   { addMaterialVar(var, GLKS_FLOAT3, (float*)&vec); }
@@ -110,3 +113,5 @@ struct ShaderMaterial : public ShaderLayout {
         values.resize(0);
     }
 };
+
+} // namespace

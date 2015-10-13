@@ -39,6 +39,7 @@
 #define TRANSFORMED_POS "_xformPos"
 
 using namespace std;
+using namespace GLKitShader;
 
 namespace {
 
@@ -142,7 +143,11 @@ ShaderNode* buildStandardCombiner(ShaderNode* specularRef, ShaderNode* colorRef,
                                           "", ".a", new ShaderTexRef(GLKSH_REFL_TEX, new ShaderVarRef("_texCoord0"))),
                                       "*",
                                       true),
-                         new ShaderReflNode(buildNormRef(), new ShaderVarRef(GLKSH_CAMERA)),
+                         new ShaderReflNode(buildNormRef(),
+                                            new ShaderOp(new ShaderVarRef(GLKSH_POS_NAME), 
+                                                         new ShaderVarRef(GLKSH_CAMERA),
+                                                         "-")),
+                         new ShaderVarRef(GLKSH_REFL_XFORM),
                          new ShaderTexRef(GLKSH_TEX1_NAME,
                                           GLKSH_TEX1_MODE,
                                           new ShaderVarRef("_texCoord1"),
@@ -190,6 +195,7 @@ auto ppspecularLighter = new ShaderAdditiveCombiner({
 } // namespace
 
 // Per-vertex lighting.
+namespace GLKitShader {
 
 ShaderDef standardVsh({
     { GL_INPUT_POS, new ShaderTempRef(GLKS_FLOAT4, TRANSFORMED_POS, new ShaderTransformedPosRef()) },
@@ -224,3 +230,5 @@ ShaderDef pixelPsh({
                                             new ShaderFallbackRef({"_outColor", GLKSH_CONSTCOLOR_NAME}, COLOR_WHITE),
                                             new ShaderOp(new ShaderVarRef("_ambient"), ppdiffuseLighter, "+", true)) }
 });
+
+} // namespace

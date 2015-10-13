@@ -18,19 +18,21 @@
 #include <OpenGLES/ES2/glext.h>
 
 #import <Starboard.h>
+
+#import <CoreGraphics/CGGeometry.h>
+
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKView.h>
 
 @implementation GLKView {
     CADisplayLink* _link;
 
-    GLuint _width;
-    GLuint _height;
-
     GLuint _framebuffer;
     GLuint _renderbuffer;
     GLuint _depthbuffer;
     GLuint _stencilbuffer;
+
+    CGSize _curSize;
 }
 
 + (Class)layerClass {
@@ -38,22 +40,25 @@
 }
 
 - (GLuint)drawableWidth {
-    return _width;
+    return (GLuint)self.frame.size.width;
 }
 
 - (GLuint)drawableHeight {
-    return _height;
+    return (GLuint)self.frame.size.height;
 }
 
 - (void)commonInit {
+    self.contentMode = UIViewContentModeRedraw;
+    
     self.enableSetNeedsDisplay = TRUE;
 
-    self.contentMode = UIViewContentModeRedraw;
     self.layer.opaque = TRUE;
 
     self.drawableColorFormat = GLKViewDrawableColorFormatWindow;
     self.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
     self.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
+
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
@@ -91,11 +96,16 @@
     BOOL res = FALSE;
     [EAGLContext setCurrentContext:self.context];
     if ([self.delegate respondsToSelector:@selector(glkView:drawInRect:)]) {
+		int width = (int)[self.layer _pixelWidth];
+		int height = (int)[self.layer _pixelHeight];
+
+        glViewport(0, 0, width, height);
         [self.delegate glkView:self drawInRect:self.frame];
         res = TRUE;
     }
 
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
+
     if (self.enableSetNeedsDisplay) {
         [_link removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     }
@@ -107,6 +117,14 @@
     [super layoutSubviews];
 
     CGRect rect = [self frame];
+    if (CGSizeEqualToSize(rect.size, _curSize)) {
+        return;
+    }
+
+    _curSize = rect.size;
+
+    self.layer.frame = rect;
+    self.layer.bounds = rect;
 
     EAGLContext* ctx = self.context;
     [EAGLContext setCurrentContext:ctx];
@@ -133,8 +151,9 @@
     }
 
     glGenFramebuffers(1, &_framebuffer);
-    glGenRenderbuffers(1, &_renderbuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+
+    glGenRenderbuffers(1, &_renderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
 
 #ifdef WINOBJC
@@ -158,11 +177,10 @@
     }
 
     [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layer];
-
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderbuffer);
 
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, (GLint*)&_width);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, (GLint*)&_height);
+    int surfaceWidth = (int)[self.layer _pixelWidth];
+    int surfaceHeight = (int)[self.layer _pixelHeight];
 
     if (self.drawableDepthFormat != GLKViewDrawableDepthFormatNone) {
         GLuint fmt = 0;
@@ -177,7 +195,7 @@
 
         glGenRenderbuffers(1, &_depthbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, _depthbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, fmt, _width, _height);
+        glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
     }
 
@@ -190,14 +208,10 @@
 
         glGenRenderbuffers(1, &_stencilbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, _stencilbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, fmt, _width, _height);
+        glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _stencilbuffer);
     }
-
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
-    glViewport(0, 0, _width, _height);
-
-    [self setNeedsDisplay];
 }
 
 @end

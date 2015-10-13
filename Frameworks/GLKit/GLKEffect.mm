@@ -30,6 +30,7 @@
 #define MAX_TEXTURES 2
 
 using namespace std;
+using namespace GLKitShader;
 
 struct LightVars {
     const char* color;
@@ -444,8 +445,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         } else {
             float start = fog.start;
             float end = fog.end;
-            // if (start >= 0 && end > start) { // OH GOD
-            if (start >= 0) {
+            if (start >= 0 && end > start) {
                 shaderName += "LF";
                 m->addMaterialVar(GLKSH_FOG_COLOR, fog.color);
                 m->addMaterialVar(GLKSH_FOG_DISTANCES, GLKVector2Make(end, 1.f / (end - start)));
@@ -705,7 +705,8 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         GLuint name = _textureCubeMap.name;
         if (name > 0) {
             mat->addTexCube(GLKSH_TEXCUBE, _textureCubeMap.name);
-            mat->addInputVar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);
+            mat->addInputVar(GLKSH_TEXCUBE_MODE, _textureCubeMap.envMode);            
+            mat->addMaterialVar(GLKSH_REFL_XFORM, self.transform.modelviewMatrix);
             self.cameraRequired = TRUE;
         }
 

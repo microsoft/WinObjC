@@ -16,6 +16,9 @@
     <Filter Include="Source Files\dispatch">
       <UniqueIdentifier>{3600b139-b14b-4194-97f7-aa3480dd0b9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GLKit">
+      <UniqueIdentifier>{41760a2e-c85e-4cbf-b31c-40b0dd6844fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\tests\unittests\dispatch.m">
@@ -86,6 +89,15 @@
     </ClangCompile>
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm">
       <Filter>Source Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm">
+      <Filter>Source Files\GLKit</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\Frameworks\GLKit\ShaderGen.mm">
+      <Filter>Source Files\GLKit</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\Frameworks\GLKit\ShaderInfo.mm">
+      <Filter>Source Files\GLKit</Filter>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>

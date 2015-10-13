@@ -17,13 +17,19 @@
 #import <Starboard.h>
 #include "ShaderInfo.h"
 
+namespace {
+size_t GLKShaderVarSizes[] = { 0, 0, 0, 1, 2, 3, 4, 16 }; // See GLKS_* in GLKShader.h
+}
+
+namespace GLKitShader {
+
 std::string getTypeStr(GLKShaderVarType t) {
     static const char* types[] = { "void", "sampler2D", "samplerCube", "float", "vec2", "vec3", "vec4", "mat4" };
 
     return std::string(types[t]);
 }
 
-void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType type, float* data) {
+void ShaderMaterial::addMaterialVar(const std::string& var, GLKShaderVarType type, const float* data) {
     assert(type != GLKS_SAMPLER2D && type != GLKS_SAMPLERCUBE);
 
     auto it = vars.find(var);
@@ -56,3 +62,5 @@ void ShaderMaterial::addTexture(const std::string& var, GLuint name, GLKShaderVa
 
     vars[var] = v;
 }
+
+} // namespace

@@ -23,7 +23,7 @@
 GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
 GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
 
-GLKMatrix3 GLKMatrix3MakeIdentity() {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeIdentity() {
     GLKMatrix3 res;
 
     res.m00 = 1.f;
@@ -41,7 +41,7 @@ GLKMatrix3 GLKMatrix3MakeIdentity() {
     return res;
 }
 
-GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m) {
     GLKMatrix3 res;
 
     res.m00 = m.m00;
@@ -59,7 +59,7 @@ GLKMatrix3 GLKMatrix3FromMatrix4(GLKMatrix4 m) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeIdentity() {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeIdentity() {
     GLKMatrix4 res;
 
     res.m00 = 1.f;
@@ -85,22 +85,22 @@ GLKMatrix4 GLKMatrix4MakeIdentity() {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4Make(float m00,
-                          float m01,
-                          float m02,
-                          float m03,
-                          float m10,
-                          float m11,
-                          float m12,
-                          float m13,
-                          float m20,
-                          float m21,
-                          float m22,
-                          float m23,
-                          float m30,
-                          float m31,
-                          float m32,
-                          float m33) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Make(float m00,
+                                       float m01,
+                                       float m02,
+                                       float m03,
+                                       float m10,
+                                       float m11,
+                                       float m12,
+                                       float m13,
+                                       float m20,
+                                       float m21,
+                                       float m22,
+                                       float m23,
+                                       float m30,
+                                       float m31,
+                                       float m32,
+                                       float m33) {
     GLKMatrix4 res;
 
     res.m00 = m00;
@@ -178,7 +178,7 @@ GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00,
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeWithArray(float* values) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArray(float* values) {
     GLKMatrix4 res;
 
     res.m00 = values[0];
@@ -204,7 +204,7 @@ GLKMatrix4 GLKMatrix4MakeWithArray(float* values) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values) {
     GLKMatrix4 res;
 
     res.m00 = values[0];
@@ -230,7 +230,7 @@ GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3) {
     GLKMatrix4 res;
 
     res.m00 = r0.x;
@@ -256,7 +256,7 @@ GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3) {
     GLKMatrix4 res;
 
     res.m00 = r0.x;
@@ -282,7 +282,10 @@ GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, G
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right,
+                                                       GLKVector3 up,
+                                                       GLKVector3 forward,
+                                                       GLKVector3 pos) {
     GLKMatrix4 res;
 
     res.m00 = right.x;
@@ -309,7 +312,7 @@ GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVe
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeLookAt(
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeLookAt(
     float eyeX, float eyeY, float eyeZ, float lookX, float lookY, float lookZ, float upX, float upY, float upZ) {
     GLKVector3 eye = GLKVector3Make(eyeX, eyeY, eyeZ);
     GLKVector3 initialUp = GLKVector3Make(upX, upY, upZ);
@@ -322,7 +325,7 @@ GLKMatrix4 GLKMatrix4MakeLookAt(
                               trans);
 }
 
-GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, float near, float far) {
     GLKMatrix4 res;
 
     res.m00 = 2.f / (right - left);
@@ -348,14 +351,14 @@ GLKMatrix4 GLKMatrix4MakeOrtho(float left, float right, float bot, float top, fl
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakePerspective(float yrad, float aspect, float near, float far) {
     float yd = tanf(yrad / 2.f) * near;
     float xd = tanf(aspect * yrad / 2.f) * near;
 
     return GLKMatrix4MakeFrustum(-xd, xd, -yd, yd, near, far);
 }
 
-GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float top, float near, float far) {
     GLKMatrix4 res;
 
     res.m00 = (2.f * near) / (right - left);
@@ -381,7 +384,7 @@ GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bottom, float to
     return res;
 }
 
-GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2) {
     GLKMatrix4 res;
 
     res.m00 = m2.m00 * m1.m00 + m2.m01 * m1.m10 + m2.m02 * m1.m20 + m2.m03 * m1.m30;
@@ -407,7 +410,7 @@ GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2) {
     return res;
 }
 
-GLKMatrix3
+GLKIT_EXPORT GLKMatrix3
 GLKMatrix3Make(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
     GLKMatrix3 res;
 
@@ -426,7 +429,7 @@ GLKMatrix3Make(float m00, float m01, float m02, float m10, float m11, float m12,
     return res;
 }
 
-GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat) {
     std::swap(mat.m01, mat.m10);
     std::swap(mat.m02, mat.m20);
     std::swap(mat.m12, mat.m21);
@@ -434,7 +437,7 @@ GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat) {
     return mat;
 }
 
-GLKMatrix3 GLKMatrix3MakeAndTranspose(
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeAndTranspose(
     float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
     GLKMatrix3 res;
 
@@ -453,7 +456,7 @@ GLKMatrix3 GLKMatrix3MakeAndTranspose(
     return res;
 }
 
-GLKMatrix3 GLKMatrix3MakeWithArray(float* values) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArray(float* values) {
     GLKMatrix3 res;
 
     res.m00 = values[0];
@@ -471,7 +474,7 @@ GLKMatrix3 GLKMatrix3MakeWithArray(float* values) {
     return res;
 }
 
-GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values) {
     GLKMatrix3 res;
 
     res.m00 = values[0];
@@ -489,7 +492,7 @@ GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values) {
     return res;
 }
 
-GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2) {
     GLKMatrix3 res;
 
     res.m00 = r0.x;
@@ -507,7 +510,7 @@ GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2
     return res;
 }
 
-GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2) {
     GLKMatrix3 res;
 
     res.m00 = r0.x;
@@ -525,37 +528,37 @@ GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4Rotate(GLKMatrix4 m, float rad, float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Rotate(GLKMatrix4 m, float rad, float x, float y, float z) {
     GLKMatrix4 r = GLKMatrix4MakeRotation(rad, x, y, z);
     return GLKMatrix4Multiply(m, r);
 }
 
-GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad) {
     GLKMatrix4 r = GLKMatrix4MakeXRotation(rad);
     return GLKMatrix4Multiply(m, r);
 }
 
-GLKMatrix4 GLKMatrix4RotateY(GLKMatrix4 m, float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateY(GLKMatrix4 m, float rad) {
     GLKMatrix4 r = GLKMatrix4MakeYRotation(rad);
     return GLKMatrix4Multiply(m, r);
 }
 
-GLKMatrix4 GLKMatrix4RotateZ(GLKMatrix4 m, float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateZ(GLKMatrix4 m, float rad) {
     GLKMatrix4 r = GLKMatrix4MakeZRotation(rad);
     return GLKMatrix4Multiply(m, r);
 }
 
-GLKMatrix4 GLKMatrix4Translate(GLKMatrix4 m, float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Translate(GLKMatrix4 m, float x, float y, float z) {
     GLKMatrix4 t = GLKMatrix4MakeTranslation(x, y, z);
     return GLKMatrix4Multiply(m, t);
 }
 
-GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z) {
     GLKMatrix4 s = GLKMatrix4MakeScale(x, y, z);
     return GLKMatrix4Multiply(m, s);
 }
 
-GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) {
+GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) {
     GLKVector3 res;
 
     res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z;
@@ -565,7 +568,7 @@ GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) {
     return res;
 }
 
-GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec) {
+GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec) {
     GLKVector3 res;
 
     res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z + m.m30;
@@ -575,12 +578,12 @@ GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec
     return res;
 }
 
-void GLKMatrix4MultiplyVector3ArrayWithTranslation(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs) {
+GLKIT_EXPORT void GLKMatrix4MultiplyVector3ArrayWithTranslation(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs) {
     for (size_t i = 0; i < numVecs; i++)
         vecs[i] = GLKMatrix4MultiplyVector3WithTranslation(m, vecs[i]);
 }
 
-GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec) {
+GLKIT_EXPORT GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec) {
     GLKVector4 res;
 
     res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z + m.m30 * vec.w;
@@ -591,17 +594,17 @@ GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec) {
     return res;
 }
 
-void GLKMatrix4MultiplyVector3Array(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs) {
+GLKIT_EXPORT void GLKMatrix4MultiplyVector3Array(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs) {
     for (size_t i = 0; i < numVecs; i++)
         vecs[i] = GLKMatrix4MultiplyVector3(m, vecs[i]);
 }
 
-void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs, size_t numVecs) {
+GLKIT_EXPORT void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs, size_t numVecs) {
     for (size_t i = 0; i < numVecs; i++)
         vecs[i] = GLKMatrix4MultiplyVector4(m, vecs[i]);
 }
 
-GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
     GLKMatrix4 rotated = m;
     GLKMatrix4 translated = GLKMatrix4Identity;
 
@@ -623,7 +626,7 @@ GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
     return GLKMatrix4Multiply(rotated, translated);
 }
 
-GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z) {
     float magn = 1.0f / sqrtf(x * x + y * y + z * z);
     x *= magn;
     y *= magn;
@@ -645,7 +648,7 @@ GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeXRotation(float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad) {
     GLKMatrix4 res = { 0 };
 
     res.m00 = 1.f;
@@ -657,7 +660,7 @@ GLKMatrix4 GLKMatrix4MakeXRotation(float rad) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeYRotation(float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeYRotation(float rad) {
     GLKMatrix4 res = { 0 };
 
     res.m11 = 1.f;
@@ -669,7 +672,7 @@ GLKMatrix4 GLKMatrix4MakeYRotation(float rad) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeZRotation(float rad) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeZRotation(float rad) {
     GLKMatrix4 res = { 0 };
 
     res.m00 = res.m11 = cosf(rad);
@@ -681,7 +684,7 @@ GLKMatrix4 GLKMatrix4MakeZRotation(float rad) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z) {
     GLKMatrix4 res = GLKMatrix4Identity;
 
     res.m30 = x;
@@ -691,7 +694,7 @@ GLKMatrix4 GLKMatrix4MakeTranslation(float x, float y, float z) {
     return res;
 }
 
-GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z) {
     GLKMatrix4 res = { 0 };
 
     res.m00 = x;

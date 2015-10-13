@@ -296,8 +296,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     GLuint tex;
     glGenTextures(1, &tex);
 
-    // NOTE: Mips appear wonky, although they appear to be generated correctly.
-    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    bool genMips = getOpt(opts, GLKTextureLoaderGenerateMipmaps);
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -405,7 +404,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
-    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    bool genMips = getOpt(opts, GLKTextureLoaderGenerateMipmaps);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     if (!genMips) {
@@ -489,7 +488,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 
-    bool genMips = false && getOpt(opts, GLKTextureLoaderGenerateMipmaps);
+    bool genMips = getOpt(opts, GLKTextureLoaderGenerateMipmaps);
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     if (!genMips) {

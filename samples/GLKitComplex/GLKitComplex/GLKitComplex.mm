@@ -53,6 +53,7 @@
     bounds.size.height = 180.f;
 
     _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
+    _welcomeLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     [_welcomeLabel setBackgroundColor: nil];
     [_welcomeLabel setTextColor: [UIColor whiteColor]];
     [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 24.0f]];

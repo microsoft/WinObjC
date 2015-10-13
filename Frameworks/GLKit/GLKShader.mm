@@ -25,7 +25,7 @@
 
 #import "ShaderInfo.h"
 
-size_t GLKShaderVarSizes[] = { 0, 0, 0, 1, 2, 3, 4, 16 }; // See GLKS_* in GLKShader.h
+using namespace GLKitShader;
 
 static GLKShaderVarType getShaderType(GLenum type) {
     switch (type) {

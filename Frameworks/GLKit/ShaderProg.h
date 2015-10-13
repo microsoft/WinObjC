@@ -18,6 +18,8 @@
 
 #include "ShaderGen.h"
 
+namespace GLKitShader {
+
 // Vertex lit shader pair.
 extern ShaderDef standardVsh;
 extern ShaderDef standardPsh;
@@ -25,3 +27,5 @@ extern ShaderDef standardPsh;
 // Per-pixel lighting variant.
 extern ShaderDef pixelVsh;
 extern ShaderDef pixelPsh;
+
+} // namespace
