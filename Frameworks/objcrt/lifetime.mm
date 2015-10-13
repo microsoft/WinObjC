@@ -247,7 +247,7 @@ id objc_allocateObject(Class classRef, unsigned int extraBytes) {
 void objc_deallocateObject(id obj) {
     ObjCHeader hdr(obj);
     void* freeAddr = (void*)obj;
-    Class classRef = [obj class];
+    Class classRef = object_getClass(obj);
 
     if (hdr->magic == NSOBJECT_MAGIC) {
         freeAddr = (void*)((char*)obj - 8);
