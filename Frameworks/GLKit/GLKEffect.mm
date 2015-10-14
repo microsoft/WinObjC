@@ -571,7 +571,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 - (id)initWith:(GLKShaderEffect*)parent {
     [super initWith:parent];
     self.color = GLKVector4Black();
-    self.mode = GLKFogModeLinear;
+    self.mode = GLKFogModeExp;
     self.density = 1.f;
     self.start = 0.f;
     self.end = 1000.f;
