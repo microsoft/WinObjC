@@ -46,6 +46,7 @@
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
+		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +125,8 @@
 		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		E19F61D01BCE9962005077C5 /* GLKitExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLKitExampleController.h; sourceTree = "<group>"; };
+		E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLKitExampleController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +171,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				E19F61D01BCE9962005077C5 /* GLKitExampleController.h */,
+				E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */,
 				7BCEEE451B70220300C31CF5 /* DisplayModeViewController.h */,
 				7BCEEE461B70220300C31CF5 /* DisplayModeViewController.m */,
 				7BCEEE471B70220300C31CF5 /* OpenGLES11Controller.h */,
@@ -379,6 +384,7 @@
 				4EE861DB1B5997A500682BDB /* ViewController.m in Sources */,
 				4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */,
 				4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */,
+				E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */,
 				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
 				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,

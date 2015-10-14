@@ -86,7 +86,7 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
             v.pos.x = static_cast<float>(x) * xMult - xSub;
             v.pos.y = static_cast<float>(heights[y * mapWidth + x] - minHeight) * heightMult;
             v.pos.z = static_cast<float>(y) * yMult - ySub;
-            v.norm = GLKVector3Origin();
+            v.norm = GLKVector3Make(0.f, 0.f, 0.f);
             
             verts.push_back(v);
         }        
@@ -182,6 +182,7 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     _effect.material.shininess = 2.f;
 
     _effect.fog.enabled = TRUE;
+    _effect.fog.mode = GLKFogModeLinear;
     _effect.fog.start = 1.f;
     _effect.fog.end = 17.f;
     _effect.fog.color = FOG_COLOR;
@@ -231,7 +232,7 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     glClearColor(FOG_COLOR.x, FOG_COLOR.y, FOG_COLOR.z, FOG_COLOR.w);
     glClearDepthf(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
     float aspect = rect.size.width / rect.size.height;
     GLKMatrix4 proj = GLKMatrix4MakePerspective(M_PI / 3, aspect, 0.5f, 25.f);
     _effect.transform.projectionMatrix = proj;
