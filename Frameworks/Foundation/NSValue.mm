@@ -531,6 +531,10 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return [[[_NSValue_NSRange alloc] initWithNSRange:value] autorelease];
 }
 
++ (NSValue*)valueWithCATransform3D:(CATransform3D)value {
+    return [[[_NSValue_CATransform3D alloc] initWithCATransform3D:value] autorelease];
+}
+
 - (NSValue*)initWithCGSize:(CGSize)value {
     [self release];
     return [[_NSValue_CGSize alloc] initWithCGSize:value];
