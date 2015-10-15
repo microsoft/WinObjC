@@ -1,3 +1,19 @@
+//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
 #include "Starboard.h"
 
 #include "UIKit/UIView.h"
@@ -142,11 +158,14 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
                 } else {
                     NSNumber* num = [formatter numberFromString:targStr];
                     if (!num) {
-                        EbrDebugLog("Cannot parse number from target string: %s\n", predicates[i].target.c_str());
-                        [ret release];
-                        return nil;
+                        if (!target) {
+                            EbrDebugLog("Cannot parse number from target string: %s\n", predicates[i].target.c_str());
+                            [ret release];
+                            return nil;
+                        }
+                    } else {
+                        constant = num.floatValue;
                     }
-                    constant = num.floatValue;
                 }
             }
         }
@@ -216,6 +235,19 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
         }
     }
     return ret;
+}
+
+const char* relationType(NSLayoutRelation relation) {
+    switch (relation) {
+        case NSLayoutRelationEqual:
+            return "==";
+        case NSLayoutRelationLessThanOrEqual:
+            return "<=";
+        case NSLayoutRelationGreaterThanOrEqual:
+            return ">=";
+        default:
+            return "None";
+    }
 }
 
 const char* constraintType(NSLayoutAttribute attribute) {
@@ -292,7 +324,7 @@ void printConstraint(NSLayoutConstraint* constraint) {
     if (constraint.firstItem != nil) {
         CGRect itmBounds;
         EbrDebugLog("%s from (%s) Type: %s\n",
-                    [[constraint description] UTF8String],
+                    [[[constraint class] description] UTF8String],
                     [[constraint.firstItem description] UTF8String],
                     constraintType(constraint.firstAttribute));
         itmBounds = [constraint.firstItem bounds];
@@ -303,13 +335,13 @@ void printConstraint(NSLayoutConstraint* constraint) {
                     itmBounds.size.height);
     } else {
         EbrDebugLog("%s from (NONE) Type: %s\n",
-                    [[constraint description] UTF8String],
+                    [[[constraint class] description] UTF8String],
                     constraintType(constraint.firstAttribute));
     }
     if (constraint.secondItem != nil) {
         CGRect itmBounds;
         EbrDebugLog("%s to   (%s) Type: %s\n",
-                    [[constraint description] UTF8String],
+                    [[[constraint class] description] UTF8String],
                     [[constraint.secondItem description] UTF8String],
                     constraintType(constraint.secondAttribute));
         itmBounds = [constraint.secondItem bounds];
@@ -320,7 +352,7 @@ void printConstraint(NSLayoutConstraint* constraint) {
                     itmBounds.size.height);
     } else {
         EbrDebugLog("%s to   (NONE) Type: %s\n",
-                    [[constraint description] UTF8String],
+                    [[[constraint class] description] UTF8String],
                     constraintType(constraint.secondAttribute));
     }
     EbrDebugLog(
@@ -431,6 +463,12 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     // Match all "[one(>=two,three@4)]" or "|"
     regex constraintRex = regex::basic_regex("(\\[([^\\]]*)\\]|\\|)");
     sregex_iterator constraintIt(line.begin(), line.end(), constraintRex);
+    size_t matchEnd = 0;
+
+    if (constraintIt->position() != 0) {
+        EbrDebugLog("Syntax error! %s\n", line.substr(0, constraintIt->position()).c_str());
+        return nil;
+    }
 
     while (constraintIt != end) {
         string conStr = constraintIt->str();
@@ -468,7 +506,13 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             }
             constraints.push_back(Constraint(localPredicates, targStr));
         }
+        matchEnd = constraintIt->position() + constraintIt->length();
         constraintIt++;
+    }
+
+    if (matchEnd != line.length()) {
+        EbrDebugLog("Syntax error! %s\n", line.substr(matchEnd).c_str());
+        return nil;
     }
 
     // Now add all constraints
@@ -609,6 +653,20 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     constraint->_relation = relation;
     constraint->_priority = NSLayoutPriorityRequired;
     return [constraint autorelease];
+}
+
+- (NSString*)description {
+    // Eg, <<NSLayoutConstraint: 0x1234>: <UIView: 0x9876>-(NSLayoutAttributeTop>=NSLayoutAttributeTop*1.0+30@1000)-<_UILayoutGuide: 0xABCD>>
+    return [NSString stringWithFormat:@"<%@: %@-(%s%s%s*%g%+g@%g)-%@>", 
+                [super description], 
+                [self.firstItem description], 
+                constraintType(self.firstAttribute), 
+                relationType(self.relation), 
+                constraintType(self.secondAttribute),
+                self.multiplier,
+                self.constant,
+                self.priority,
+                [self.secondItem description]];
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
