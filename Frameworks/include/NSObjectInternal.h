@@ -16,6 +16,6 @@
 
 @class NSString;
 
-@interface NSObject(Internal)
-+ (void)_raiseSelectorNotFoundError:(SEL)selector format: (const char *)format, ...;
+@interface NSObject (Internal)
++ (void)_raiseSelectorNotFoundError:(SEL)selector format:(const char*)format, ...;
 @end

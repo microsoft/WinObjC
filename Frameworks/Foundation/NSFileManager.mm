@@ -33,7 +33,7 @@
 #define _S_IFDIR S_IFDIR
 #endif
 
-#define DEFN_STR(name) SB_EXPORT NSString* const name = @#name;
+#define DEFN_STR(name) SB_EXPORT NSString* const name = @ #name;
 
 DEFN_STR(NSFileTypeDirectory)
 DEFN_STR(NSFileTypeRegular)
@@ -247,7 +247,7 @@ static void addAllFiles(id enumerator, id allFiles) {
 
 @end
 
-    extern "C" bool doLog;
+extern "C" bool doLog;
 
 @implementation NSFileManager : NSObject
 - (BOOL)fileExistsAtPath:(id)pathAddr {
@@ -313,10 +313,7 @@ static void addAllFiles(id enumerator, id allFiles) {
     }
 }
 
-- (BOOL)createDirectoryAtPath:(id)pathAddr
-  withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(id)attrs
-                        error:(id*)err {
+- (BOOL)createDirectoryAtPath:(id)pathAddr withIntermediateDirectories:(BOOL)createIntermediates attributes:(id)attrs error:(id*)err {
     if (createIntermediates) {
         const char* path = [pathAddr UTF8String];
         id components = [pathAddr pathComponents];
@@ -352,10 +349,7 @@ static void addAllFiles(id enumerator, id allFiles) {
     }
 }
 
-- (BOOL)createDirectoryAtURL:(id)url
- withIntermediateDirectories:(BOOL)createIntermediates
-                  attributes:(id)attrs
-                       error:(id*)err {
+- (BOOL)createDirectoryAtURL:(id)url withIntermediateDirectories:(BOOL)createIntermediates attributes:(id)attrs error:(id*)err {
     id path = [url path];
 
     return [self createDirectoryAtPath:path withIntermediateDirectories:createIntermediates attributes:attrs error:err];
@@ -646,11 +640,7 @@ static void addAllFiles(id enumerator, id allFiles) {
     return ret;
 }
 
-- (id)URLForDirectory:(DWORD)directory
-             inDomain:(DWORD)domains
-    appropriateForURL:(id)forURL
-               create:(BOOL)create
-                error:(id*)error {
+- (id)URLForDirectory:(DWORD)directory inDomain:(DWORD)domains appropriateForURL:(id)forURL create:(BOOL)create error:(id*)error {
     assert(forURL == nil);
     id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
 

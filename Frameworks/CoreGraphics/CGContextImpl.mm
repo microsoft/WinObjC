@@ -571,10 +571,7 @@ BOOL CGContextImpl::CGContextIsPathEmpty() {
 void CGContextImpl::CGContextBeginPath() {
 }
 
-void CGContextImpl::CGContextDrawLinearGradient(CGGradientRef gradient,
-                                                CGPoint startPoint,
-                                                CGPoint endPoint,
-                                                DWORD options) {
+void CGContextImpl::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, DWORD options) {
 }
 
 void CGContextImpl::CGContextDrawRadialGradient(

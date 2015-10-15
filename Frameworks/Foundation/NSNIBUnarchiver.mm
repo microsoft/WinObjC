@@ -56,8 +56,9 @@ public:
     }
 
     ~Item() {
-        if (data)
+        if (data) {
             free(data);
+        }
     }
 
     void setItemData(void* pData, int len) {
@@ -181,13 +182,12 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
         Item* strContents = itemForKey(self, "NS.bytes");
 
         if (strcmp(pObj->className, "NSString") == 0) {
-            pObj->cachedId = [[[NSString alloc] initWithBytes:strContents->data
-                                                       length:strContents->dataLen
-                                                     encoding:NSUTF8StringEncoding] autorelease];
+            pObj->cachedId =
+                [[[NSString alloc] initWithBytes:strContents->data length:strContents->dataLen encoding:NSUTF8StringEncoding] autorelease];
         } else {
-            pObj->cachedId = [[[NSMutableString alloc] initWithBytes:strContents->data
-                                                              length:strContents->dataLen
-                                                            encoding:NSUTF8StringEncoding] autorelease];
+            pObj->cachedId =
+                [[[NSMutableString alloc] initWithBytes:strContents->data length:strContents->dataLen encoding:NSUTF8StringEncoding]
+                    autorelease];
         }
         popObject(self);
     } else if (strcmp(pObj->className, "NSData") == 0) {
@@ -275,8 +275,9 @@ static id idForItem(NSNibUnarchiver* self, Item* item) {
 
 static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
     Item* item = itemForKey(self, keyName);
-    if (!item)
+    if (!item) {
         return nil;
+    }
 
     return idForItem(self, item);
 }
@@ -528,8 +529,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 
 - (BOOL)containsValueForKey:(NSString*)key {
     Item* pItem = itemForKey(self, [key UTF8String]);
-    if (!pItem)
+    if (!pItem) {
         return FALSE;
+    }
 
     return TRUE;
 }
@@ -548,8 +550,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 
 - (NSInteger)decodeInt32ForKey:(NSString*)key {
     Item* pItem = itemForKey(self, [key UTF8String]);
-    if (!pItem)
+    if (!pItem) {
         return 0;
+    }
 
     DWORD ret = 0;
     switch (pItem->type) {
@@ -587,8 +590,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 
 - (float)decodeFloatForKey:(id)key {
     Item* pItem = itemForKey(self, [key UTF8String]);
-    if (!pItem)
+    if (!pItem) {
         return 0;
+    }
 
     float ret = 0;
     switch (pItem->type) {
@@ -609,8 +613,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 
 - (double)decodeDoubleForKey:(id)key {
     Item* pItem = itemForKey(self, [key UTF8String]);
-    if (!pItem)
+    if (!pItem) {
         return 0;
+    }
 
     double ret = 0;
     switch (pItem->type) {
@@ -632,8 +637,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 + (id)unarchiveObjectWithFile:(NSString*)file {
     id data = [NSData dataWithContentsOfFile:file];
 
-    if ([data length] == 0)
+    if ([data length] == 0) {
         return nil;
+    }
 
     assert(0);
 
@@ -641,8 +647,9 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 }
 
 + (id)unarchiveObjectWithData:(NSData*)data {
-    if ([data length] == 0)
+    if ([data length] == 0) {
         return nil;
+    }
 
     assert(0);
 

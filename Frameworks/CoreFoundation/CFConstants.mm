@@ -16,7 +16,7 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#define CFREGISTER_STRING(name) const CFStringRef name = (const CFStringRef) @#name;
+#define CFREGISTER_STRING(name) const CFStringRef name = (const CFStringRef) @ #name;
 
 CFREGISTER_STRING(kCFRunLoopDefaultMode)
 CFREGISTER_STRING(kCFRunLoopCommonModes)

@@ -86,8 +86,7 @@ public:
     }
 
     inline void setCh(float* vals) {
-        val = ((unsigned short)(vals[0] * 31.f) << 11) | ((unsigned short)(vals[1] * 63.f) << 5) |
-              ((unsigned short)(vals[2] * 31.f));
+        val = ((unsigned short)(vals[0] * 31.f) << 11) | ((unsigned short)(vals[1] * 63.f) << 5) | ((unsigned short)(vals[2] * 31.f));
     }
 
 private:
@@ -97,8 +96,7 @@ private:
 template <class PSRC>
 void GreyscaleConvert(PixelByteChannel<1>* pdst, PSRC* psrc, int pixels) {
     for (int i = 0; i < pixels; i++) {
-        float grey = (psrc[i].template getCh<0>() * 0.6f) + (psrc[i].template getCh<1>() * 0.3f) +
-                     (psrc[i].template getCh<2>() * 0.1f);
+        float grey = (psrc[i].template getCh<0>() * 0.6f) + (psrc[i].template getCh<1>() * 0.3f) + (psrc[i].template getCh<2>() * 0.1f);
         pdst[i].setCh0(grey);
     }
 }
@@ -165,8 +163,7 @@ class BoxGen {
     template <int C>
     struct BoxCalc {
         inline static void apply(const PIX& s0, const PIX& s1, const PIX& s2, const PIX& s3, float* out) {
-            out[C] = 0.25f * (s0.template getCh<C>() + s1.template getCh<C>() + s2.template getCh<C>() +
-                              s3.template getCh<C>());
+            out[C] = 0.25f * (s0.template getCh<C>() + s1.template getCh<C>() + s2.template getCh<C>() + s3.template getCh<C>());
             BoxCalc<C + 1>::apply(s0, s1, s2, s3, out);
         }
     };
@@ -239,11 +236,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 }
 
 @implementation GLKTextureInfo
-- (id)initWith:(GLuint)tex
-        target:(GLuint)targ
-         width:(GLuint)width
-        height:(GLuint)height
-    alphaState:(GLKTextureInfoAlphaState)as {
+- (id)initWith:(GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height alphaState:(GLKTextureInfoAlphaState)as {
     _name = tex;
     _target = targ;
     _width = width;
@@ -357,8 +350,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         createMipmaps(GL_TEXTURE_2D, fmt, type, w, h, bytes);
     }
 
-    if (deleteBytes)
+    if (deleteBytes) {
         delete[] bytes;
+    }
     CGDataProviderRelease(provider);
 
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:h alphaState:as];
@@ -366,8 +360,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
 + (GLKTextureInfo*)cubeMapWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
-    if (!provider)
+    if (!provider) {
         return nil;
+    }
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
     if (!img) {
         CGDataProviderRelease(provider);
@@ -473,16 +468,18 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         bytes += rowSize * sideh;
     }
 
-    if (deleteBytes)
+    if (deleteBytes) {
         delete[] bytes;
+    }
     CGImageRelease(img);
     CGDataProviderRelease(provider);
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:sideh alphaState:as];
 }
 
 + (GLKTextureInfo*)cubeMapWithContentsOfFiles:(NSArray*)fnames options:(NSDictionary*)opts error:(NSError**)err {
-    if ([fnames count] != 6)
+    if ([fnames count] != 6) {
         return nil;
+    }
 
     GLuint tex;
     glGenTextures(1, &tex);
@@ -587,11 +584,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             if (bpp == 16) {
                 GreyscaleConvert<PixelRGB16>((PixelByteChannel<1>*)bytes, (PixelRGB16*)bytesIn, pixels);
             } else if (bpp == 24) {
-                GreyscaleConvert<PixelByteChannel<3>>(
-                    (PixelByteChannel<1>*)bytes, (PixelByteChannel<3>*)bytesIn, pixels);
+                GreyscaleConvert<PixelByteChannel<3>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<3>*)bytesIn, pixels);
             } else if (bpp == 32) {
-                GreyscaleConvert<PixelByteChannel<4>>(
-                    (PixelByteChannel<1>*)bytes, (PixelByteChannel<4>*)bytesIn, pixels);
+                GreyscaleConvert<PixelByteChannel<4>>((PixelByteChannel<1>*)bytes, (PixelByteChannel<4>*)bytesIn, pixels);
             }
 
             bpp = 8;
@@ -609,8 +604,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             createMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, fmt, type, w, h, bytes);
         }
 
-        if (deleteBytes)
+        if (deleteBytes) {
             delete[] bytes;
+        }
         CGDataProviderRelease(provider);
         CGImageRelease(img);
         curSide++;

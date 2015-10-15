@@ -223,8 +223,8 @@ void parseCookies(const char* lineptr, id dict) {
     id c;
     while ((c = [e nextObject])) {
         id ss = [NSString stringWithFormat:@"%@=%@", [c name], [c value]]; // On MacOS this method is not protected
-                                                                           // against = and ; characters in cookie name
-                                                                           // or value - only \n can't occur
+        // against = and ; characters in cookie name
+        // or value - only \n can't occur
         if (s)
             s = [s stringByAppendingFormat:@"; %@", ss];
         else
@@ -293,9 +293,9 @@ GEN_FIELD_GETTER(value, NSHTTPCookieValue)
     [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
     if (![_properties objectForKey:NSHTTPCookieDiscard])
         [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
-                                ![_properties objectForKey:NSHTTPCookieMaximumAge])
-                                   ? @"TRUE"
-                                   : @"FALSE"
+                                ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
+                                   @"TRUE" :
+                                   @"FALSE"
                         forKey:NSHTTPCookieDiscard];
     if (![_properties objectForKey:NSHTTPCookieDomain])
         [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];

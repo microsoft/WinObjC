@@ -37,7 +37,8 @@ using namespace Microsoft::WRL::Wrappers;
 //
 
 static std::wstring _stringFromHstring(HSTRING str) {
-    if (WindowsIsStringEmpty(str)) return std::wstring();
+    if (WindowsIsStringEmpty(str))
+        return std::wstring();
 
     unsigned len;
     auto buff = WindowsGetStringRawBuffer(str, &len);
@@ -47,25 +48,40 @@ static std::wstring _stringFromHstring(HSTRING str) {
 }
 
 static NSString* _nsstringFromHstring(HSTRING str, bool free = false) {
-    if (WindowsIsStringEmpty(str)) return nil;
+    if (WindowsIsStringEmpty(str))
+        return nil;
 
     unsigned len;
     auto buff = WindowsGetStringRawBuffer(str, &len);
     NSLog(@"ptr: 0x%x len:%d", str, len);
     OutputDebugStringW(buff);
-    auto ret = [[NSString alloc] initWithBytes:buff length:len*2 encoding:NSUnicodeStringEncoding];
+    auto ret = [[NSString alloc] initWithBytes:buff length:len * 2 encoding:NSUnicodeStringEncoding];
 
-    if (free) WindowsDeleteString(str);
+    if (free)
+        WindowsDeleteString(str);
 
     return ret;
 }
 
-#define GET_STR(obj, getter) _stringFromHstring([&]() -> HSTRING { HSTRING o; obj->getter(&o); return o; }());
-#define GET_NSTR(obj, getter) _nsstringFromHstring([&]() -> HSTRING { HSTRING o; obj->getter(&o); return o; }(), true);
+#define GET_STR(obj, getter)              \
+    _stringFromHstring([&]() -> HSTRING { \
+        HSTRING o;                        \
+        obj->getter(&o);                  \
+        return o;                         \
+    }());
+#define GET_NSTR(obj, getter) \
+    _nsstringFromHstring(     \
+        [&]() -> HSTRING {    \
+            HSTRING o;        \
+            obj->getter(&o);  \
+            return o;         \
+        }(),                  \
+        true);
 
 static ComPtr<ICurrentAppSimulator> getCurrentApp() {
     HSTRING className;
-    WindowsCreateString(RuntimeClass_Windows_ApplicationModel_Store_CurrentAppSimulator, wcslen(RuntimeClass_Windows_ApplicationModel_Store_CurrentAppSimulator),
+    WindowsCreateString(RuntimeClass_Windows_ApplicationModel_Store_CurrentAppSimulator,
+                        wcslen(RuntimeClass_Windows_ApplicationModel_Store_CurrentAppSimulator),
                         &className);
 
     ComPtr<ICurrentAppSimulator> spCurrentApp;
@@ -77,17 +93,18 @@ static ComPtr<ICurrentAppSimulator> getCurrentApp() {
     return spCurrentApp;
 }
 
-template<typename T>
-class CompletionHandler : public IAsyncOperationCompletedHandler<T>
-{
+template <typename T>
+class CompletionHandler : public IAsyncOperationCompletedHandler<T> {
     ULONG _ulRefs = 1;
     std::function<void(IAsyncOperation<T>*)> _func;
 
 public:
-    CompletionHandler(std::function<void(IAsyncOperation<T>*)> func) : _func(func) {}
+    CompletionHandler(std::function<void(IAsyncOperation<T>*)> func) : _func(func) {
+    }
 
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(_In_ REFIID id, _COM_Outptr_ void **ppv) {
-        if (nullptr == ppv) return E_INVALIDARG;
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(_In_ REFIID id, _COM_Outptr_ void** ppv) {
+        if (nullptr == ppv)
+            return E_INVALIDARG;
 
         if (id == IID_IUnknown)
             *ppv = this;
@@ -98,15 +115,15 @@ public:
             return E_NOINTERFACE;
         }
 
-        ((IUnknown *)(*ppv))->AddRef();
+        ((IUnknown*)(*ppv))->AddRef();
 
         return S_OK;
     }
-    
+
     virtual ULONG STDMETHODCALLTYPE AddRef() {
         return InterlockedIncrement(&_ulRefs);
     }
-        
+
     virtual ULONG STDMETHODCALLTYPE Release() {
         unsigned curr = InterlockedDecrement(&_ulRefs);
         if (curr == 0)
@@ -115,7 +132,7 @@ public:
         return curr;
     }
 
-    virtual HRESULT STDMETHODCALLTYPE Invoke(IAsyncOperation<T> *asyncInfo, AsyncStatus status) {
+    virtual HRESULT STDMETHODCALLTYPE Invoke(IAsyncOperation<T>* asyncInfo, AsyncStatus status) {
         _func(asyncInfo);
         return S_OK;
     }

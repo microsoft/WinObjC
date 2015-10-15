@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-void **_CFArrayGetPtr(CFArrayRef array);
-void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void **objects, int count, bool retain);
+void** _CFArrayGetPtr(CFArrayRef array);
+void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void** objects, int count, bool retain);
 void _CFArrayInitInternal(CFArrayRef arr);
 void _CFArrayDestroyInternal(CFArrayRef obj);

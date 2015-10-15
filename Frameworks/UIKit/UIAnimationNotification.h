@@ -19,15 +19,15 @@
     int _numAnimations;
     int _numStopped, _numStarted;
     id _animName;
-    void *_context;
+    void* _context;
     id _animDelegate;
     SEL _animationDidStopSelector;
     SEL _animationWillStartSelector;
     id _completionBlock;
     DWORD _calledFrom;
 }
--(void) _animationHasStarted:(id)animation;
--(void) animationDidStop:(id)animation finished:(BOOL)finished;
+- (void)_animationHasStarted:(id)animation;
+- (void)animationDidStop:(id)animation finished:(BOOL)finished;
 @end
 
-void sendDidStop(id delegate, SEL selector, idt(NSString) animName, BOOL finished, void *context);
+void sendDidStop(id delegate, SEL selector, idt(NSString) animName, BOOL finished, void* context);

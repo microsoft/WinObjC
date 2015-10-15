@@ -167,8 +167,9 @@
 }
 
 - (UIViewController*)selectedViewController {
-    if (_selectedIndex == -1)
+    if (_selectedIndex == -1) {
         return nil;
+    }
 
     return [_viewControllers objectAtIndex:_selectedIndex];
 }
@@ -180,8 +181,9 @@
 }
 
 - (void)loadView {
-    if (_moreNavigationController == nil)
+    if (_moreNavigationController == nil) {
         _moreNavigationController = [UITabMoreController new];
+    }
     if ([self nibName] != nil) {
         [super loadView];
     }
@@ -287,35 +289,40 @@
             [_delegate tabBarController:self didSelectViewController:controller];
         }
     } else {
-        if (_selectedIndex >= 0 && _selectedIndex < [[_tabBar items] count])
+        if (_selectedIndex >= 0 && _selectedIndex < [[_tabBar items] count]) {
             [tabBar setSelectedItem:[[tabBar items] objectAtIndex:_selectedIndex]];
+        }
     }
 }
 
 - (void)notifyViewWillAppear:(BOOL)animated {
-    if (_mainView != nil)
+    if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewWillAppear:animated];
+    }
 
     [super notifyViewWillAppear:animated];
 }
 
 - (void)notifyViewDidAppear:(BOOL)isAnimated {
-    if (_mainView != nil)
+    if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewDidAppear:isAnimated];
+    }
 
     [super notifyViewDidAppear:isAnimated];
 }
 
 - (void)notifyViewWillDisappear:(BOOL)isAnimated {
-    if (_mainView != nil)
+    if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewWillDisappear:isAnimated];
+    }
 
     [super notifyViewWillDisappear:isAnimated];
 }
 
 - (void)notifyViewDidDisappear:(BOOL)isAnimated {
-    if (_mainView != nil)
+    if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewDidDisappear:isAnimated];
+    }
 
     [super notifyViewDidDisappear:isAnimated];
 }

@@ -22,13 +22,13 @@
     idretain _indexPath;
     UICollectionViewItemType _type;
 }
--(unsigned) hash;
--(UICollectionViewItemType) type;
--(BOOL) isEqual:(UICollectionViewItemKey*)other;
-/* annotate with type */ -(id) indexPath;
-/* annotate with type */ -(id) setIndexPath:(id)path;
-/* annotate with type */ -(id) identifier;
-/* annotate with type */ -(id) copyWithZone:(id)zone;
-/* annotate with type */ +(id) collectionItemKeyForLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes;
-/* annotate with type */ +(id) collectionItemKeyForCellWithIndexPath:(id)indexPath;
+- (unsigned)hash;
+- (UICollectionViewItemType)type;
+- (BOOL)isEqual:(UICollectionViewItemKey*)other;
+/* annotate with type */ -(id)indexPath;
+/* annotate with type */ -(id)setIndexPath : (id)path;
+/* annotate with type */ -(id)identifier;
+/* annotate with type */ -(id)copyWithZone : (id)zone;
+/* annotate with type */ +(id)collectionItemKeyForLayoutAttributes : (UICollectionViewLayoutAttributes*)layoutAttributes;
+/* annotate with type */ +(id)collectionItemKeyForCellWithIndexPath : (id)indexPath;
 @end

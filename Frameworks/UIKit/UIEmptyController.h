@@ -19,5 +19,5 @@
 @interface UIEmptyController : UIView {
 @public
 }
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event;
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event;
 @end

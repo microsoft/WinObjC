@@ -119,8 +119,7 @@
         EbrCenterTextInRectVertically(&textRect, &size, font);
 
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)[UIColor whiteColor]);
-        size =
-            [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+        size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 }
 

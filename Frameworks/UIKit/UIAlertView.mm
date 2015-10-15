@@ -85,10 +85,12 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     va_list pReader;
     va_start(pReader, otherButtonTitles);
     [self setDelegate:delegate];
-    if (title != nil)
+    if (title != nil) {
         alertPriv->_title.attach([title copy]);
-    if (message != nil)
+    }
+    if (message != nil) {
         alertPriv->_message.attach([message copy]);
+    }
 
     alertPriv->_cancelButtonIndex = -1;
     if (cancelButtonTitle != nil) {
@@ -123,10 +125,12 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
        cancelButton:(id)cancelButton
        otherButtons:(id)otherButtons {
     [self setDelegate:delegate];
-    if (title != nil)
+    if (title != nil) {
         alertPriv->_title.attach([title copy]);
-    if (message != nil)
+    }
+    if (message != nil) {
         alertPriv->_message.attach([message copy]);
+    }
 
     alertPriv->_cancelButtonIndex = -1;
     if (cancelButton != nil) {
@@ -166,10 +170,8 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 
 - (void)setDelegate:(id)delegate {
     objc_storeWeak(&alertPriv->_delegate, delegate);
-    alertPriv->_delegateSupportsDidDismiss =
-        [alertPriv->_delegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)];
-    alertPriv->_delegateSupportsModalDismiss =
-        [alertPriv->_delegate respondsToSelector:@selector(modalView:didDismissWithButtonIndex:)];
+    alertPriv->_delegateSupportsDidDismiss = [alertPriv->_delegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)];
+    alertPriv->_delegateSupportsModalDismiss = [alertPriv->_delegate respondsToSelector:@selector(modalView:didDismissWithButtonIndex:)];
     alertPriv->_delegateSupportsModalCancel = [alertPriv->_delegate respondsToSelector:@selector(modalViewCancel:)];
 }
 
@@ -239,10 +241,8 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
     frame.size.width = width;
     frame.size.height = 30.0f;
 
-    id buttonBackground =
-        [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-    id buttonPressed =
-        [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+    id buttonBackground = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+    id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
     id ret = [[UIButton alloc] initWithFrame:frame];
     [ret setTitle:text forState:0];
@@ -412,18 +412,21 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
             messageSize = [alertPriv->_message sizeWithFont:messageFont
                                           constrainedToSize:CGSizeMake(itemWidth, 480.0f)
                                               lineBreakMode:UILineBreakModeWordWrap];
-            if (messageSize.height < maxHeight)
+            if (messageSize.height < maxHeight) {
                 break;
+            }
 
             float curSize = [messageFont pointSize];
             curSize -= 0.5f;
             messageFont = [messageFont fontWithSize:curSize];
-            if (curSize <= 1.0f)
+            if (curSize <= 1.0f) {
                 break;
+            }
         }
 
-        if (messageSize.height > maxHeight)
+        if (messageSize.height > maxHeight) {
             messageSize.height = maxHeight;
+        }
 
         CGRect frame;
 
@@ -448,12 +451,8 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     if (alertPriv->_cancelText != nil && alertPriv->_numButtons == 1 && alertPriv->_numberOfRows < 2) {
         float buttonsWidth = 270.0f;
         //  Make side by side buttons
-        alertPriv->_cancelView = (createButton(self,
-                                               alertPriv->_cancelButtonIndex,
-                                               alertPriv->_cancelText,
-                                               boxWidth / 2.0f - buttonsWidth / 2.0f,
-                                               curHeight,
-                                               130.0f));
+        alertPriv->_cancelView = (createButton(
+            self, alertPriv->_cancelButtonIndex, alertPriv->_cancelText, boxWidth / 2.0f - buttonsWidth / 2.0f, curHeight, 130.0f));
         [alertPriv->_cancelView sendControlEventsOnBack:UIControlEventTouchUpInside];
 
         for (int i = 0; i < alertPriv->_numButtons; i++) {
@@ -480,12 +479,8 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         if (alertPriv->_cancelText != nil) {
             curHeight += 10.0f;
-            alertPriv->_cancelView = (createButton(self,
-                                                   alertPriv->_cancelButtonIndex,
-                                                   alertPriv->_cancelText,
-                                                   boxWidth / 2.0f - 280.0f / 2.0f,
-                                                   curHeight,
-                                                   280.0f));
+            alertPriv->_cancelView = (createButton(
+                self, alertPriv->_cancelButtonIndex, alertPriv->_cancelText, boxWidth / 2.0f - 280.0f / 2.0f, curHeight, 280.0f));
             [alertPriv->_cancelView sendControlEventsOnBack:UIControlEventTouchUpInside];
 
             curHeight += 40.0f;
@@ -507,13 +502,16 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     image = [[UIImage imageNamed:@"/img/alert-background@2x.png"] stretchableImageWithLeftCapWidth:25 topCapHeight:30];
     UIImageSetLayerContents([self layer], image);
 
-    if (alertPriv->_messageLabel)
+    if (alertPriv->_messageLabel) {
         [self addSubview:(id)alertPriv->_messageLabel];
-    if (alertPriv->_titleLabel)
+    }
+    if (alertPriv->_titleLabel) {
         [self addSubview:(id)alertPriv->_titleLabel];
+    }
 
-    if (alertPriv->_cancelView)
+    if (alertPriv->_cancelView) {
         [self addSubview:(id)alertPriv->_cancelView];
+    }
     for (int i = 0; i < alertPriv->_numButtons; i++) {
         [self addSubview:(id)alertPriv->_buttons[i]._buttonView];
     }
@@ -563,8 +561,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 }
 
 - (id)buttonTitleAtIndex:(int)index {
-    if (index == alertPriv->_cancelButtonIndex)
+    if (index == alertPriv->_cancelButtonIndex) {
         return alertPriv->_cancelText;
+    }
 
     int idx = index - alertPriv->_otherButtonIndex;
     assert(idx >= 0 && idx < alertPriv->_numButtons);

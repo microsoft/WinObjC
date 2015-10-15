@@ -64,8 +64,7 @@ int UIOrientationFromString(int curOrientation, NSString* str) {
     } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0) {
         return UIInterfaceOrientationLandscapeRight;
     } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeDefault") == 0) {
-        if (curOrientation == UIInterfaceOrientationLandscapeLeft ||
-            curOrientation == UIInterfaceOrientationLandscapeRight) {
+        if (curOrientation == UIInterfaceOrientationLandscapeLeft || curOrientation == UIInterfaceOrientationLandscapeRight) {
             return curOrientation;
         }
 
@@ -79,8 +78,7 @@ int UIOrientationFromString(int curOrientation, NSString* str) {
     } else if (strcmp(pOrientation, "UIDeviceOrientationLandscapeLeft") == 0) {
         return UIInterfaceOrientationLandscapeLeft;
     } else if (strcmp(pOrientation, "UIInterfaceOrientationLandscape") == 0) {
-        if (curOrientation == UIInterfaceOrientationLandscapeLeft ||
-            curOrientation == UIInterfaceOrientationLandscapeRight) {
+        if (curOrientation == UIInterfaceOrientationLandscapeLeft || curOrientation == UIInterfaceOrientationLandscapeRight) {
             return curOrientation;
         }
 
@@ -103,8 +101,7 @@ int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
-int UIApplicationMainInit(
-    int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, int defaultOrientation) {
+int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, int defaultOrientation) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -176,8 +173,9 @@ int UIApplicationMainInit(
 
         if (GetCACompositor()->isTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
-            if (mainNibFile == nil)
+            if (mainNibFile == nil) {
                 mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
+            }
         } else {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
         }
@@ -203,12 +201,12 @@ int UIApplicationMainInit(
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
             }
 
-            if (storyBoardName == nil)
+            if (storyBoardName == nil) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile"];
+            }
 
             if (storyBoardName != nil) {
-                UIStoryboard* storyBoard =
-                    [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
+                UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
                 if (viewController != nil) {
                     [viewController setResizeToScreen:1];
@@ -230,8 +228,7 @@ int UIApplicationMainInit(
     } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
         [curDelegate applicationDidFinishLaunching:uiApplication];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification"
-                                                        object:uiApplication];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification" object:uiApplication];
 
     if (rootController != nil) {
         [[uiApplication _popupWindow] setRootViewController:rootController];
@@ -242,24 +239,17 @@ int UIApplicationMainInit(
     if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
         [curDelegate applicationDidBecomeActive:uiApplication];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification"
-                                                        object:uiApplication];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
 
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(setOrientation:) withObject:0 waitUntilDone:FALSE];
-    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation)
-                                               withObject:0
-                                            waitUntilDone:FALSE];
+    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
     g_uiMainRunning = true;
 
     if (newDeviceOrientation != 0) {
-        [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation)
-                                                   withObject:nil
-                                                waitUntilDone:FALSE];
+        [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
     }
 #ifdef SHOW_OPTIONS_ON_STARTUP
-    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions)
-                                                        withObject:0
-                                                     waitUntilDone:FALSE];
+    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions) withObject:0 waitUntilDone:FALSE];
 #endif
 
     //  Make windows visible
@@ -287,8 +277,9 @@ int UIApplicationMainLoop() {
     for (;;) {
         [runLoop run];
         EbrDebugLog("Warning: CFRunLoop stopped\n");
-        if (_doShutdown)
+        if (_doShutdown) {
             break;
+        }
     }
     UIBecomeInactive();
     if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(applicationWillTerminate:)]) {

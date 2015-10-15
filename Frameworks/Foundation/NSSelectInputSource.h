@@ -16,11 +16,7 @@
 
 #include "NSInputSource.h"
 
-enum {
-   NSSelectReadEvent=0x01,
-   NSSelectWriteEvent=0x02,
-   NSSelectExceptEvent=0x04
-};
+enum { NSSelectReadEvent = 0x01, NSSelectWriteEvent = 0x02, NSSelectExceptEvent = 0x04 };
 typedef int NSSelectEventMask;
 
 @interface NSSelectInputSource : NSInputSource {
@@ -31,17 +27,16 @@ typedef int NSSelectEventMask;
     NSSelectEventMask _eventMask;
     BOOL _isValid;
 }
--(void) dealloc;
--(int) descriptor;
--(BOOL) isValid;
--(void) invalidate;
--(NSSelectEventMask) selectEventMask;
--(BOOL) processImmediateEvents:(DWORD)selectEvent;
-/* annotate with type */ -(id) initWithSocket:(id)socket;
-/* annotate with type */ -(id) initWithDescriptor:(int)descriptor;
-/* annotate with type */ -(id) socket;
-/* annotate with type */ -(id) delegate;
-/* annotate with type */ -(id) setDelegate:(id)object;
-/* annotate with type */ -(id) setSelectEventMask:(DWORD)eventMask;
+- (void)dealloc;
+- (int)descriptor;
+- (BOOL)isValid;
+- (void)invalidate;
+- (NSSelectEventMask)selectEventMask;
+- (BOOL)processImmediateEvents:(DWORD)selectEvent;
+/* annotate with type */ -(id)initWithSocket : (id)socket;
+/* annotate with type */ -(id)initWithDescriptor : (int)descriptor;
+/* annotate with type */ -(id)socket;
+/* annotate with type */ -(id)delegate;
+/* annotate with type */ -(id)setDelegate : (id)object;
+/* annotate with type */ -(id)setSelectEventMask : (DWORD)eventMask;
 @end
-

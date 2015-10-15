@@ -49,7 +49,7 @@
 
 - (void)commonInit {
     self.contentMode = UIViewContentModeRedraw;
-    
+
     self.enableSetNeedsDisplay = TRUE;
 
     self.layer.opaque = TRUE;
@@ -96,8 +96,8 @@
     BOOL res = FALSE;
     [EAGLContext setCurrentContext:self.context];
     if ([self.delegate respondsToSelector:@selector(glkView:drawInRect:)]) {
-		int width = (int)[self.layer _pixelWidth];
-		int height = (int)[self.layer _pixelHeight];
+        int width = (int)[self.layer _pixelWidth];
+        int height = (int)[self.layer _pixelHeight];
 
         glViewport(0, 0, width, height);
         [self.delegate glkView:self drawInRect:self.frame];
@@ -157,8 +157,7 @@
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
 
 #ifdef WINOBJC
-    self.layer.contentsScale =
-        [[UIApplication displayMode] currentMagnification] * [[UIApplication displayMode] hostScreenScale];
+    self.layer.contentsScale = [[UIApplication displayMode] currentMagnification] * [[UIApplication displayMode] hostScreenScale];
 #endif
 
     if (self.drawableColorFormat != GLKViewDrawableColorFormatWindow) {

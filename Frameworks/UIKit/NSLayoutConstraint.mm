@@ -31,8 +31,7 @@
 using namespace std;
 
 struct Predicate {
-    Predicate(string targ = "0", string rel = "==", string prio = "1000")
-        : relation(rel), target(targ), priority(prio) {
+    Predicate(string targ = "0", string rel = "==", string prio = "1000") : relation(rel), target(targ), priority(prio) {
     }
     string relation; // >=, <=, ==
     string target; // constant or item
@@ -79,10 +78,7 @@ bool parsePredicates(string line, PredicateList& predicates) {
             return false;
         } else {
 #ifdef DEBUG_VISUAL_FORMAT
-            EbrDebugLog("Relation: %s, Constant: %s, priority: %s\n",
-                        m[1].str().c_str(),
-                        m[2].str().c_str(),
-                        m[4].str().c_str());
+            EbrDebugLog("Relation: %s, Constant: %s, priority: %s\n", m[1].str().c_str(), m[2].str().c_str(), m[4].str().c_str());
 #endif
             predicates.push_back(Predicate(m[2].str(), m[1].str(), m[4].str()));
         }
@@ -222,14 +218,13 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
             c.priority = priority;
             [ret addObject:c];
         } else {
-            NSLayoutConstraint* c =
-                [NSLayoutConstraint constraintWithItem:item1
-                                             attribute:vertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth
-                                             relatedBy:relation
-                                                toItem:target
-                                             attribute:vertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth
-                                            multiplier:1.0f
-                                              constant:constant];
+            NSLayoutConstraint* c = [NSLayoutConstraint constraintWithItem:item1
+                                                                 attribute:vertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth
+                                                                 relatedBy:relation
+                                                                    toItem:target
+                                                                 attribute:vertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth
+                                                                multiplier:1.0f
+                                                                  constant:constant];
             c.priority = priority;
             [ret addObject:c];
         }
@@ -328,15 +323,9 @@ void printConstraint(NSLayoutConstraint* constraint) {
                     [[constraint.firstItem description] UTF8String],
                     constraintType(constraint.firstAttribute));
         itmBounds = [constraint.firstItem bounds];
-        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n",
-                    itmBounds.origin.x,
-                    itmBounds.origin.y,
-                    itmBounds.size.width,
-                    itmBounds.size.height);
+        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
-        EbrDebugLog("%s from (NONE) Type: %s\n",
-                    [[[constraint class] description] UTF8String],
-                    constraintType(constraint.firstAttribute));
+        EbrDebugLog("%s from (NONE) Type: %s\n", [[[constraint class] description] UTF8String], constraintType(constraint.firstAttribute));
     }
     if (constraint.secondItem != nil) {
         CGRect itmBounds;
@@ -345,18 +334,11 @@ void printConstraint(NSLayoutConstraint* constraint) {
                     [[constraint.secondItem description] UTF8String],
                     constraintType(constraint.secondAttribute));
         itmBounds = [constraint.secondItem bounds];
-        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n",
-                    itmBounds.origin.x,
-                    itmBounds.origin.y,
-                    itmBounds.size.width,
-                    itmBounds.size.height);
+        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
-        EbrDebugLog("%s to   (NONE) Type: %s\n",
-                    [[[constraint class] description] UTF8String],
-                    constraintType(constraint.secondAttribute));
+        EbrDebugLog("%s to   (NONE) Type: %s\n", [[[constraint class] description] UTF8String], constraintType(constraint.secondAttribute));
     }
-    EbrDebugLog(
-        "Details: mult(%f) const(%f), priority(%f)\n", constraint.multiplier, constraint.constant, constraint.priority);
+    EbrDebugLog("Details: mult(%f) const(%f), priority(%f)\n", constraint.multiplier, constraint.constant, constraint.priority);
 }
 
 void printConstraints(id constraints) {
@@ -531,8 +513,8 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
         return nil;
     }
 
-    NSArray* predAry = constraintsFromPredicates(
-        constraints[0].predicates, first, nil, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
+    NSArray* predAry =
+        constraintsFromPredicates(constraints[0].predicates, first, nil, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
 
     if (!predAry) {
         return nil;
@@ -553,8 +535,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             return nil;
         }
 
-        predAry = constraintsFromPredicates(
-            predicates[i], item1, item2, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
+        predAry = constraintsFromPredicates(predicates[i], item1, item2, views, metrics, vertical, opts & NSLayoutFormatDirectionMask);
 
         if (!predAry) {
             [nsConstraints release];
@@ -610,14 +591,13 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             UIView* item1 = viewForString(constraints[i].target, views, superview);
             UIView* item2 = viewForString(constraints[i + 1].target, views, superview);
 
-            NSLayoutConstraint* alignConst =
-                [NSLayoutConstraint constraintWithItem:item1
-                                             attribute:(NSLayoutAttribute)(opts & NSLayoutFormatAlignmentMask)
-                                             relatedBy:NSLayoutRelationEqual
-                                                toItem:item2
-                                             attribute:(NSLayoutAttribute)(opts & NSLayoutFormatAlignmentMask)
-                                            multiplier:1.0f
-                                              constant:0];
+            NSLayoutConstraint* alignConst = [NSLayoutConstraint constraintWithItem:item1
+                                                                          attribute:(NSLayoutAttribute)(opts & NSLayoutFormatAlignmentMask)
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:item2
+                                                                          attribute:(NSLayoutAttribute)(opts & NSLayoutFormatAlignmentMask)
+                                                                         multiplier:1.0f
+                                                                           constant:0];
             [nsConstraints addObject:alignConst];
         }
     }
@@ -656,17 +636,18 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 }
 
 - (NSString*)description {
-    // Eg, <<NSLayoutConstraint: 0x1234>: <UIView: 0x9876>-(NSLayoutAttributeTop>=NSLayoutAttributeTop*1.0+30@1000)-<_UILayoutGuide: 0xABCD>>
-    return [NSString stringWithFormat:@"<%@: %@-(%s%s%s*%g%+g@%g)-%@>", 
-                [super description], 
-                [self.firstItem description], 
-                constraintType(self.firstAttribute), 
-                relationType(self.relation), 
-                constraintType(self.secondAttribute),
-                self.multiplier,
-                self.constant,
-                self.priority,
-                [self.secondItem description]];
+    // Eg, <<NSLayoutConstraint: 0x1234>: <UIView: 0x9876>-(NSLayoutAttributeTop>=NSLayoutAttributeTop*1.0+30@1000)-<_UILayoutGuide:
+    // 0xABCD>>
+    return [NSString stringWithFormat:@"<%@: %@-(%s%s%s*%g%+g@%g)-%@>",
+                                      [super description],
+                                      [self.firstItem description],
+                                      constraintType(self.firstAttribute),
+                                      relationType(self.relation),
+                                      constraintType(self.secondAttribute),
+                                      self.multiplier,
+                                      self.constant,
+                                      self.priority,
+                                      [self.secondItem description]];
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
@@ -737,8 +718,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     }
 
     // TODO: THIS MAY NOT WORK! The superviews may not have been set up yet!
-    if (autoSpacing && _secondItem != nil &&
-        (_firstAttribute >= NSLayoutAttributeLeft && _firstAttribute <= NSLayoutAttributeTrailing)) {
+    if (autoSpacing && _secondItem != nil && (_firstAttribute >= NSLayoutAttributeLeft && _firstAttribute <= NSLayoutAttributeTrailing)) {
         if ([_firstItem superview] == [_secondItem superview]) {
             if (_firstAttribute != _secondAttribute) {
                 _constant = 8.0f;

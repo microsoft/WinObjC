@@ -122,8 +122,9 @@
 }
 
 - (instancetype)initWithContentsOfFile:(NSString*)filename {
-    if (filename == nil)
+    if (filename == nil) {
         return nil;
+    }
 
     char* fname = (char*)[filename UTF8String];
 
@@ -280,14 +281,16 @@
 
 - (BOOL)isEqualToData:(NSData*)data {
     NSData* other = (NSData*)data;
-    if (_length != other->_length)
+    if (_length != other->_length) {
         return false;
+    }
     return memcmp(_bytes, other->_bytes, _length) == 0;
 }
 
 - (BOOL)isEqual:(id)objAddr {
-    if (objAddr == self)
+    if (objAddr == self) {
         return TRUE;
+    }
     if (objAddr != nil && [objAddr isKindOfClass:[NSData class]]) {
         return [self isEqualToData:objAddr];
     }
@@ -312,8 +315,9 @@
         cString[pos++] = hex[byte & 0x0F];
         i++;
 
-        if ((i % 4) == 0 && i < length)
+        if ((i % 4) == 0 && i < length) {
             cString[pos++] = ' ';
+        }
     }
     cString[pos++] = '>';
 

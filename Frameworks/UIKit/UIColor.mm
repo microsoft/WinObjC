@@ -72,17 +72,19 @@ hsv rgb2hsv(rgb in) {
         out.h = NAN; // its now undefined
         return out;
     }
-    if (in.r >= max) // > is bogus, just keeps compilor happy
+    if (in.r >= max) { // > is bogus, just keeps compilor happy
         out.h = (in.g - in.b) / delta; // between yellow & magenta
-    else if (in.g >= max)
+    } else if (in.g >= max) {
         out.h = 2.0 + (in.b - in.r) / delta; // between cyan & yellow
-    else
+    } else {
         out.h = 4.0 + (in.r - in.g) / delta; // between magenta & cyan
+    }
 
     out.h *= 60.0; // degrees
 
-    if (out.h < 0.0)
+    if (out.h < 0.0) {
         out.h += 360.0;
+    }
 
     return out;
 }
@@ -106,8 +108,9 @@ rgb hsv2rgb(hsv in) {
         return out;
     }
     hh = in.h;
-    if (hh >= 360.0)
+    if (hh >= 360.0) {
         hh = 0.0;
+    }
     hh /= 60.0;
     i = (long)hh;
     ff = hh - i;
@@ -399,8 +402,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 }
 
 + (UIColor*)colorWithColor:(UIColor*)copyclr {
-    if (copyclr == nil)
+    if (copyclr == nil) {
         return nil;
+    }
 
     UIColor* ret = [self alloc];
 
@@ -416,8 +420,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
 + (UIColor*)colorWithCGColor:(CGColorRef)clr {
     UIColor* copyclr = (id)clr;
-    if (copyclr == nil)
+    if (copyclr == nil) {
         return nil;
+    }
 
     UIColor* ret = [self alloc];
 
@@ -488,37 +493,46 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
     out = rgb2hsv(in);
 
-    if (h)
+    if (h) {
         *h = (float)(out.h / 360.0);
-    if (s)
+    }
+    if (s) {
         *s = (float)out.s;
-    if (v)
+    }
+    if (v) {
         *v = (float)out.v;
-    if (a)
+    }
+    if (a) {
         *a = _a;
+    }
 
     return TRUE;
 }
 
 - (BOOL)getRed:(float*)r green:(float*)g blue:(float*)b alpha:(float*)a {
-    if (r)
+    if (r) {
         *r = _r;
-    if (g)
+    }
+    if (g) {
         *g = _g;
-    if (b)
+    }
+    if (b) {
         *b = _b;
-    if (a)
+    }
+    if (a) {
         *a = _a;
+    }
 
     return TRUE;
 }
 
 - (BOOL)isEqual:(UIColor*)other {
-    if (![other isKindOfClass:[UIColor class]])
+    if (![other isKindOfClass:[UIColor class]]) {
         return FALSE;
+    }
 
-    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _r == other->_r &&
-        _g == other->_g && _b == other->_b) {
+    if (_type == other->_type && _image == other->_image && _pattern == other->_pattern && _r == other->_r && _g == other->_g &&
+        _b == other->_b) {
         return TRUE;
     } else {
         return FALSE;

@@ -53,8 +53,7 @@
 }
 
 - (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished {
-    void (*imp)(id, SEL, CAAnimation*, BOOL) =
-        (void (*)(id, SEL, CAAnimation*, BOOL))[_animDelegate methodForSelector:_selector];
+    void (*imp)(id, SEL, CAAnimation*, BOOL) = (void (*)(id, SEL, CAAnimation*, BOOL))[_animDelegate methodForSelector:_selector];
     imp(_animDelegate, _selector, animation, finished);
     _animDelegate = nil;
 }
@@ -147,8 +146,7 @@ bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceO
     }
 }
 
-UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* controller,
-                                                          UIInterfaceOrientation orientation) {
+UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* controller, UIInterfaceOrientation orientation) {
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSArray* orientations = 0;
     if (GetCACompositor()->isTablet()) {
@@ -382,8 +380,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             rect.size.width = appFrame.size.width;
             rect.size.height = appFrame.size.height;
 
-            [priv->view setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                              appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [priv->view
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [priv->view setBounds:rect];
@@ -402,8 +400,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             rect.size.width = appFrame.size.width;
             rect.size.height = appFrame.size.height;
 
-            [priv->view setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                              appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [priv->view
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [priv->view setBounds:rect];
@@ -422,8 +420,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             rect.size.width = appFrame.size.height;
             rect.size.height = appFrame.size.width;
 
-            [priv->view setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                              appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [priv->view
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [priv->view setBounds:rect];
@@ -442,8 +440,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             rect.size.width = appFrame.size.height;
             rect.size.height = appFrame.size.width;
 
-            [priv->view setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                              appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [priv->view
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [priv->view setBounds:rect];
@@ -649,8 +647,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                 nibPath = [[NSBundle mainBundle] pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
 
                 if (nibPath == nil) {
-                    nibPath =
-                        [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
+                    nibPath = [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
                 }
             }
         }
@@ -700,8 +697,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             proxyObjects[0] = [self storyboard];
             proxyNames[0] = @"UIStoryboardPlaceholder";
 
-            NSMutableDictionary* proxyObjectsDict =
-                [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
+            NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
             NSNib* nib = [NSNib alloc];
@@ -757,8 +753,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             frame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - frame.size.width / 2.0f;
             frame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - frame.size.height / 2.0f;
         }
-        UIInterfaceOrientation curOrientation =
-            (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
+        UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
 
         /*
         switch ( curOrientation ) {
@@ -945,9 +940,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [self presentViewController:controller animated:animated completion:nil];
 }
 
-- (void)presentViewController:(UIViewController*)controller
-                     animated:(BOOL)animated
-                   completion:(void (^)(void))completion {
+- (void)presentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void (^)(void))completion {
     bool shouldShow = false;
     UIViewController* curController = self;
     while (curController != nil) {
@@ -964,12 +957,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     UIViewController* oldViewController = self;
     if (priv->_modalViewController != nil) {
         oldViewController = priv->_modalViewController;
-        EbrDebugLog(
-            "Can't present view controller %08x (%s) - view controller %08x (%s) already has a presented controller!\n",
-            controller,
-            object_getClassName(controller),
-            self,
-            object_getClassName(self));
+        EbrDebugLog("Can't present view controller %08x (%s) - view controller %08x (%s) already has a presented controller!\n",
+                    controller,
+                    object_getClassName(controller),
+                    self,
+                    object_getClassName(self));
         return;
     }
 
@@ -1152,8 +1144,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [animation setDuration:0.2f];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"]];
         [animation
-            setDelegate:[_TransitionNotifier _transitionTrampoline:self
-                                                      withSelector:@selector(_dismissTransitionStopped:finished:)]];
+            setDelegate:[_TransitionNotifier _transitionTrampoline:self withSelector:@selector(_dismissTransitionStopped:finished:)]];
         [animation setRemovedOnCompletion:FALSE];
         [layer addAnimation:animation forKey:@"ModalDismiss"];
 
@@ -1256,10 +1247,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
             [animation setToValue:[NSValue valueWithCGPoint:curPos]];
             [animation setDuration:0.2f];
-            [animation
-                setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"]];
-            [animation setDelegate:[_TransitionNotifier _transitionTrampoline:self
-                                                                 withSelector:@selector(_transitionStopped:)]];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"]];
+            [animation setDelegate:[_TransitionNotifier _transitionTrampoline:self withSelector:@selector(_transitionStopped:)]];
             [layer addAnimation:animation forKey:@"ModalPresent"];
             g_presentingAnimated = FALSE;
         }
@@ -1296,8 +1285,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 static UIInterfaceOrientation findOrientation(UIViewController* self) {
     UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
     if (self->priv->_parentViewController != nil && [self->priv->_parentViewController _rotationLocked:orientation]) {
-        UIInterfaceOrientation parentOrientation =
-            (UIInterfaceOrientation)[self->priv->_parentViewController interfaceOrientation];
+        UIInterfaceOrientation parentOrientation = (UIInterfaceOrientation)[self->priv->_parentViewController interfaceOrientation];
         if (parentOrientation != 0) {
             orientation = parentOrientation;
         }
@@ -1347,8 +1335,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             break;
     }
 
-    if (priv->_didSetRotation &&
-        [self interfaceOrientation] != [[UIApplication sharedApplication] statusBarOrientation]) {
+    if (priv->_didSetRotation && [self interfaceOrientation] != [[UIApplication sharedApplication] statusBarOrientation]) {
         int ourOrientation = [self interfaceOrientation];
         [[UIApplication sharedApplication] setStatusBarOrientation:ourOrientation];
     }
@@ -1703,7 +1690,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
         if ([[cur identifier] isEqualToString:identifier]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -1712,8 +1699,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     UIViewController* controller = [[self storyboard] instantiateViewControllerWithIdentifier:controllerName];
-    UIStoryboardSegue* segue =
-        [[UIStoryboardSegue alloc] initWithIdentifier:identifier source:self destination:controller];
+    UIStoryboardSegue* segue = [[UIStoryboardSegue alloc] initWithIdentifier:identifier source:self destination:controller];
     [self prepareForSegue:segue sender:sender];
     [controller setResizeToScreen:TRUE];
 
@@ -1732,7 +1718,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
         if ([[cur destination] isEqualToString:destination]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -1761,7 +1747,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                             duration:(double)duration
                              options:(unsigned)options
                           animations:(id)animations // TODO(DH): animations
-                          completion:(void(^)(BOOL finished))completion {
+                          completion:(void (^)(BOOL finished))completion {
     UIView* fromView = [fromController view];
     [fromView removeFromSuperview];
     UIView* toView = [toController view];
@@ -1834,7 +1820,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     //  Remove us from being the parent of our child view controller.
     //  Should we call controller->removeFromParentViewController instead?
-    for (UIViewController* curController in(NSArray*)priv->_childViewControllers) {
+    for (UIViewController* curController in (NSArray*)priv->_childViewControllers) {
         curController->priv->_parentViewController = nil;
     }
 

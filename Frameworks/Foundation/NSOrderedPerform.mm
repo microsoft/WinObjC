@@ -42,8 +42,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
                                        argument:(NSObject*)argument
                                           order:(NSUInteger)order
                                           modes:(NSArray*)modes {
-    return
-        [[[self alloc] initWithSelector:selector target:target argument:argument order:order modes:modes] autorelease];
+    return [[[self alloc] initWithSelector:selector target:target argument:argument order:order modes:modes] autorelease];
 }
 
 - (SEL)selector {

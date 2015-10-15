@@ -48,8 +48,9 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
 }
 
 - (instancetype)initForReadingWithData:(NSData*)data {
-    if (data == nil)
+    if (data == nil) {
         return nil;
+    }
 
     _nameToReplacementClass.attach([NSMutableDictionary new]);
 
@@ -57,8 +58,9 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     if (memcmp(bytes, "<?xml", 5) == 0) {
         bool returnNow = false;
 
-        if (returnNow)
+        if (returnNow) {
             return nil;
+        }
         _propertyList = [NSXMLPropertyList propertyListFromData:data];
     } else {
         NSPropertyListReaderA read;
@@ -97,9 +99,9 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
         id plist = [self->_objects objectAtIndex:uidIntValue];
 
         if ([plist isKindOfClass:[NSString class]]) {
-            if ([plist isEqualToString:@"$null"])
+            if ([plist isEqualToString:@"$null"]) {
                 result = NULL;
-            else {
+            } else {
                 result = plist;
                 [self->_uidToObject setObject:result forKey:uid];
             }
@@ -139,8 +141,9 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                 if ([result respondsToSelector:@selector(initWithCoder:)]) {
                     result = [result initWithCoder:self];
                 } else {
-                    if (result != nil)
+                    if (result != nil) {
                         EbrDebugLog("%s does not respond to initWithCoder\n", object_getClassName(result));
+                    }
                 }
 
                 self->_curUid = curPos;
@@ -242,7 +245,7 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
     EbrDebugLog("Object type: %s\n", object_getClassName(plist));
     assert(0);
     //(NSException raise:@"NSKeyedUnarchiverException" format:@"Unable to decode property list with class %@",(plist
-    //class]];
+    // class]];
     return nil;
 }
 
@@ -251,10 +254,11 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
 
     id plist = [[_plistStack lastObject] objectForKey:key];
 
-    if (plist == nil)
+    if (plist == nil) {
         result = nil;
-    else
+    } else {
         result = _decodeObjectWithPropertyList(self, plist);
+    }
 
     return result;
 }
@@ -262,8 +266,9 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
 static id _numberForKey(NSKeyedUnarchiver* self, id key) {
     id result = [[self->_plistStack lastObject] objectForKey:key];
 
-    if (result == nil || [result isKindOfClass:[NSNumber class]])
+    if (result == nil || [result isKindOfClass:[NSNumber class]]) {
         return result;
+    }
 
     assert(0);
     //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
@@ -273,8 +278,9 @@ static id _numberForKey(NSKeyedUnarchiver* self, id key) {
 static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     id result = [[self->_plistStack lastObject] objectForKey:key];
 
-    if (result == nil || [result isKindOfClass:[NSValue class]])
+    if (result == nil || [result isKindOfClass:[NSValue class]]) {
         return result;
+    }
 
     assert(0);
     //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
@@ -293,8 +299,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (int)decodeIntForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
-    if (number == nil)
+    if (number == nil) {
         return 0;
+    }
 
     return [number intValue];
 }
@@ -314,8 +321,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (__int64)decodeInt64ForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
-    if (number == nil)
+    if (number == nil) {
         return 0;
+    }
 
     unsigned __int64 val;
 
@@ -327,8 +335,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (float)decodeFloatForKey:(id)key {
     id number = _numberForKey(self, key);
 
-    if (number == nil)
+    if (number == nil) {
         return 0;
+    }
 
     float ret = [number floatValue];
 
@@ -338,8 +347,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (double)decodeDoubleForKey:(id)key {
     id number = _numberForKey(self, key);
 
-    if (number == nil)
+    if (number == nil) {
         return 0;
+    }
 
     double ret = [number doubleValue];
 
@@ -360,8 +370,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 + (id)unarchiveObjectWithFile:(NSString*)file {
     id data = [NSData dataWithContentsOfFile:file];
 
-    if ([data length] == 0)
+    if ([data length] == 0) {
         return nil;
+    }
 
     NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
     [unarchiver initForReadingWithData:data];
@@ -373,8 +384,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 }
 
 + (id)unarchiveObjectWithData:(NSData*)data {
-    if ([data length] == 0)
+    if ([data length] == 0) {
         return nil;
+    }
 
     NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver alloc];
     [unarchiver initForReadingWithData:data];

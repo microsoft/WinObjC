@@ -57,11 +57,8 @@
 
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
-    _hasDidStartElement =
-        [_delegate respondsToSelector:@selector(parser:didStartElement:namespaceURI:qualifiedName:attributes:)] !=
-        FALSE;
-    _hasDidEndElement =
-        [_delegate respondsToSelector:@selector(parser:didEndElement:namespaceURI:qualifiedName:)] != FALSE;
+    _hasDidStartElement = [_delegate respondsToSelector:@selector(parser:didStartElement:namespaceURI:qualifiedName:attributes:)] != FALSE;
+    _hasDidEndElement = [_delegate respondsToSelector:@selector(parser:didEndElement:namespaceURI:qualifiedName:)] != FALSE;
     _hasFoundCharacters = [_delegate respondsToSelector:@selector(parser:foundCharacters:)] != FALSE;
     _hasFoundCData = [_delegate respondsToSelector:@selector(parser:foundCDATA:)] != FALSE;
 }

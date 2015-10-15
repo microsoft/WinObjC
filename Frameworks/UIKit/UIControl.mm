@@ -85,8 +85,9 @@
                 curTarget = self;
 
                 while (curTarget != nil) {
-                    if ([curTarget respondsToSelector:sel])
+                    if ([curTarget respondsToSelector:sel]) {
                         break;
+                    }
                     curTarget = [curTarget nextResponder];
                 }
             }
@@ -229,8 +230,7 @@
     }
 
     [self removeTarget:target action:actionSel forControlEvents:events];
-    UIRuntimeEventConnection* newEvent =
-        [[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events];
+    UIRuntimeEventConnection* newEvent = [[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events];
     [_registeredActions addObject:newEvent];
     [newEvent release];
 }

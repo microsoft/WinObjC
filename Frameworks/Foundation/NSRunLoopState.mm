@@ -27,10 +27,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "dispatch/dispatch.h"
 #include "sys/timespec.h"
 
-int (*UIEventTimedMultipleWaitCallback)(EbrEvent* events,
-                                        int numEvents,
-                                        double timeout,
-                                        SocketWait* sockets) = EbrEventTimedMultipleWait;
+int (*UIEventTimedMultipleWaitCallback)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets) = EbrEventTimedMultipleWait;
 
 /* Source: http://cantrip.org/socketpair.c */
 /* socketpair.c
@@ -316,10 +313,8 @@ bool GetMainDispatchTimerTimeout(double* val) {
         if (idx != NSNotFound) {
             [source release];
             memmove(&_waitSignals[idx], &_waitSignals[idx + 1], (_numWaitSignals - idx - 1) * sizeof(EbrEvent));
-            memmove(
-                &_waitSignalObjects[idx], &_waitSignalObjects[idx + 1], (_numWaitSignals - idx - 1) * sizeof(EbrEvent));
-            memmove(
-                &_waitSignalPriority[idx], &_waitSignalPriority[idx + 1], (_numWaitSignals - idx - 1) * sizeof(int));
+            memmove(&_waitSignalObjects[idx], &_waitSignalObjects[idx + 1], (_numWaitSignals - idx - 1) * sizeof(EbrEvent));
+            memmove(&_waitSignalPriority[idx], &_waitSignalPriority[idx + 1], (_numWaitSignals - idx - 1) * sizeof(int));
             _numWaitSignals--;
         } else
             EbrDebugLog("Warning: requested source for removal doesn't exist\n");
@@ -449,11 +444,9 @@ bool GetMainDispatchTimerTimeout(double* val) {
     if ([NSThread currentThread] == [NSThread mainThread]) {
         //  If we're blocking on the UI thread, call UIEventTimedMultipleWait,
         //  which will yield to any other UI dispatcher (such as Xaml)
-        signaled = UIEventTimedMultipleWaitCallback(
-            _waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
+        signaled = UIEventTimedMultipleWaitCallback(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
     } else {
-        signaled =
-            EbrEventTimedMultipleWait(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
+        signaled = EbrEventTimedMultipleWait(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
     }
 
 #ifdef USE_KHR_RENDERBUFFERS
@@ -487,12 +480,10 @@ bool GetMainDispatchTimerTimeout(double* val) {
 }
 
 - (NSString*)description {
-    return [NSString
-        stringWithFormat:@"%@, %i inputSources %i sockets", [super description], _numWaitSignals, _numWaitSockets];
+    return [NSString stringWithFormat:@"%@, %i inputSources %i sockets", [super description], _numWaitSignals, _numWaitSockets];
 }
 
-+ (void)setUIThreadWaitFunction:
-    (int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
++ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
     UIEventTimedMultipleWaitCallback = callback;
 }
 @end

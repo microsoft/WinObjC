@@ -20,9 +20,9 @@
 #include <set>
 
 // Internal shader definitions, not exposed through GLKShaderDefs.h
-#define Z_DEPTH                 "_posDepth"             // transformed depth.
-#define POS_INPUT               "_vertexPos"            // vertex position (model coords).
-#define NORM_INPUT              "_vertNorm"
+#define Z_DEPTH "_posDepth" // transformed depth.
+#define POS_INPUT "_vertexPos" // vertex position (model coords).
+#define NORM_INPUT "_vertNorm"
 
 @class GLKShaderPair;
 
@@ -38,18 +38,24 @@ class ShaderDef {
     void operator=(const ShaderDef&) = delete;
 
     std::map<std::string, ShaderNode*> def;
+
 public:
-    ShaderDef(const std::map<std::string, ShaderNode*>& def) : def(def) {}
-    inline const std::map<std::string, ShaderNode*>& getDef() const { return def; }
+    ShaderDef(const std::map<std::string, ShaderNode*>& def) : def(def) {
+    }
+    inline const std::map<std::string, ShaderNode*>& getDef() const {
+        return def;
+    }
 };
 
 // Information on a temporary value for the shader program.  Contains its type and definition body.
 struct TempInfo {
-    inline TempInfo() : type(GLKS_INVALID) {}
-    inline TempInfo(GLKShaderVarType type, const std::string& body) : type(type), body(body) {}
+    inline TempInfo() : type(GLKS_INVALID) {
+    }
+    inline TempInfo(GLKShaderVarType type, const std::string& body) : type(type), body(body) {
+    }
 
     bool dependsOn(const std::set<std::string>& variables) const;
-    
+
     GLKShaderVarType type;
     std::string body;
 };
@@ -58,29 +64,29 @@ typedef std::map<std::string, TempInfo> TempMap;
 // Main class responsible for shader generation.  Tracks temporary data and builds the final
 // output vertex/pixel shader program pair.
 class ShaderContext {
-    ShaderLayout            shaderVars;
-    ShaderMaterial*         inputMaterial;
+    ShaderLayout shaderVars;
+    ShaderMaterial* inputMaterial;
 
-    const ShaderDef&        vs;
-    const ShaderDef&        ps;
+    const ShaderDef& vs;
+    const ShaderDef& ps;
 
-    bool                    vertexStage; // are we generating VS or PS code?
+    bool vertexStage; // are we generating VS or PS code?
 
-    TempMap                 vsTempFuncs;
-    TempMap                 vsTempVals;
+    TempMap vsTempFuncs;
+    TempMap vsTempVals;
 
-    TempMap                 psTempFuncs;
-    TempMap                 psTempVals;
-    
+    TempMap psTempFuncs;
+    TempMap psTempVals;
+
 protected:
     std::string orderedTempVals(const TempMap& temps, bool usePrecision);
-    
-    std::string generate(ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader,
-                         const std::string& desc, ShaderLayout* usedOutputs = nullptr);
-    
+
+    std::string generate(
+        ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader, const std::string& desc, ShaderLayout* usedOutputs = nullptr);
+
 public:
-    ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) :
-        inputMaterial(nullptr), vs(vert), ps(pixel), vertexStage(false) {}
+    ShaderContext(const ShaderDef& vert, const ShaderDef& pixel) : inputMaterial(nullptr), vs(vert), ps(pixel), vertexStage(false) {
+    }
 
     // Used by ShaderNodes to NOTE: neither of these check for overwriting.
     void addTempFunc(GLKShaderVarType type, const std::string& name, const std::string& body);
@@ -92,11 +98,19 @@ public:
     GLKShaderPair* generate(ShaderMaterial& inputs);
 
     // Accessors.
-    inline bool isVertexStage() const { return vertexStage; }
-    inline bool isPixelStage() const { return !vertexStage; }
+    inline bool isVertexStage() const {
+        return vertexStage;
+    }
+    inline bool isPixelStage() const {
+        return !vertexStage;
+    }
 
-    inline size_t numVSTempFuncs() const { return vsTempFuncs.size(); }
-    inline size_t numPSTempFuncs() const { return psTempFuncs.size(); }
+    inline size_t numVSTempFuncs() const {
+        return vsTempFuncs.size();
+    }
+    inline size_t numPSTempFuncs() const {
+        return psTempFuncs.size();
+    }
 };
 
 // --------------------------------------------------------------------------------
@@ -119,11 +133,17 @@ class ShaderNode {
 
 protected:
     GLKShaderVarType type;
-public:
-    inline ShaderNode() : type(GLKS_FLOAT4) {}
 
-    virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) { return false; }
-    inline GLKShaderVarType getType() const { return type; }
+public:
+    inline ShaderNode() : type(GLKS_FLOAT4) {
+    }
+
+    virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) {
+        return false;
+    }
+    inline GLKShaderVarType getType() const {
+        return type;
+    }
 };
 
 // Check if an input variable is present and non-zero before generating the child node.
@@ -132,7 +152,8 @@ class ShaderInputVarCheck : public ShaderNode {
     ShaderNode* node;
 
 public:
-    ShaderInputVarCheck(const std::string& name, ShaderNode* node) : name(name), node(node) {}
+    ShaderInputVarCheck(const std::string& name, ShaderNode* node) : name(name), node(node) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -141,8 +162,10 @@ public:
 class ShaderVarRef : public ShaderNode {
     std::string name;
     std::string constantResult;
+
 public:
-    ShaderVarRef(const std::string& name, const std::string& constantResult = "") : name(name), constantResult(constantResult) {}
+    ShaderVarRef(const std::string& name, const std::string& constantResult = "") : name(name), constantResult(constantResult) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -152,10 +175,11 @@ public:
 class ShaderFallbackRef : public ShaderNode {
     std::vector<std::string> variables;
     std::string constantResult;
+
 public:
-    ShaderFallbackRef(const std::vector<std::string>& variables,
-                      const std::string& constantResult = "") :
-        variables(variables), constantResult(constantResult) {}
+    ShaderFallbackRef(const std::vector<std::string>& variables, const std::string& constantResult = "")
+        : variables(variables), constantResult(constantResult) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -164,8 +188,10 @@ public:
 // version of the FallbackRef above.
 class ShaderFallbackNode : public ShaderNode {
     std::vector<ShaderNode*> nodes;
+
 public:
-    ShaderFallbackNode(std::vector<ShaderNode*> nodes) : nodes(nodes) {}
+    ShaderFallbackNode(std::vector<ShaderNode*> nodes) : nodes(nodes) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -188,10 +214,11 @@ protected:
     virtual std::string genTexLookup(std::string texVar, std::string uv, ShaderContext& c, ShaderLayout& v);
 
 public:
-    ShaderTexRef(const std::string& tex, const std::string& mode, ShaderNode* uvRef, ShaderNode* nextRef) :
-        texVar(tex), modeVar(mode), uvRef(uvRef), nextRef(nextRef) {}
-    ShaderTexRef(const std::string& tex, ShaderNode* uvRef) :
-        texVar(tex), modeVar(""), uvRef(uvRef), nextRef(nullptr) {}
+    ShaderTexRef(const std::string& tex, const std::string& mode, ShaderNode* uvRef, ShaderNode* nextRef)
+        : texVar(tex), modeVar(mode), uvRef(uvRef), nextRef(nextRef) {
+    }
+    ShaderTexRef(const std::string& tex, ShaderNode* uvRef) : texVar(tex), modeVar(""), uvRef(uvRef), nextRef(nullptr) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -205,11 +232,14 @@ protected:
     virtual std::string genTexLookup(std::string texVar, std::string uv, ShaderContext& c, ShaderLayout& v) override;
 
 public:
-    ShaderCubeRef(const std::string& tex, const std::string& mode, ShaderNode* reflAlphaNode, 
-                  ShaderNode* uvRef, ShaderNode* transformRef, ShaderNode* nextRef) :
-        reflAlphaNode(reflAlphaNode),
-        transformNode(transformRef),
-        ShaderTexRef(tex, mode, uvRef, nextRef) {}
+    ShaderCubeRef(const std::string& tex,
+                  const std::string& mode,
+                  ShaderNode* reflAlphaNode,
+                  ShaderNode* uvRef,
+                  ShaderNode* transformRef,
+                  ShaderNode* nextRef)
+        : reflAlphaNode(reflAlphaNode), transformNode(transformRef), ShaderTexRef(tex, mode, uvRef, nextRef) {
+    }
 };
 
 // Modulate the specular parameters for a light with the given specular texture.  Passes through code
@@ -221,8 +251,8 @@ class ShaderSpecularTex : public ShaderNode {
     ShaderNode* nextRef;
 
 public:
-    ShaderSpecularTex(const std::string& tex, ShaderNode* uvRef, ShaderNode* nextRef) :
-        texVar(tex), uvRef(uvRef), nextRef(nextRef) {}
+    ShaderSpecularTex(const std::string& tex, ShaderNode* uvRef, ShaderNode* nextRef) : texVar(tex), uvRef(uvRef), nextRef(nextRef) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -232,11 +262,15 @@ class ShaderAdditiveCombiner : public ShaderNode {
     std::vector<ShaderNode*> subNodes;
 
 public:
-    inline ShaderAdditiveCombiner() {}
-    inline ShaderAdditiveCombiner(const std::vector<ShaderNode*>& n) : subNodes(n) {}
+    inline ShaderAdditiveCombiner() {
+    }
+    inline ShaderAdditiveCombiner(const std::vector<ShaderNode*>& n) : subNodes(n) {
+    }
 
-    inline void addNode(ShaderNode* n) { subNodes.push_back(n); }
-    
+    inline void addNode(ShaderNode* n) {
+        subNodes.push_back(n);
+    }
+
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
@@ -250,8 +284,9 @@ class ShaderOp : public ShaderNode {
     bool needsAll;
 
 public:
-    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const std::string& op, bool isOperator = true, bool needsAll = false) :
-        n1(n1), n2(n2), op(op), isOperator(isOperator), needsAll(needsAll) {}
+    inline ShaderOp(ShaderNode* n1, ShaderNode* n2, const std::string& op, bool isOperator = true, bool needsAll = false)
+        : n1(n1), n2(n2), op(op), isOperator(isOperator), needsAll(needsAll) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -264,8 +299,9 @@ class ShaderTempRef : public ShaderNode {
     ShaderNode* body;
 
 public:
-    inline ShaderTempRef(GLKShaderVarType t, const std::string& name, ShaderNode* n) :
-        name(name), body(n) { type = t; }
+    inline ShaderTempRef(GLKShaderVarType t, const std::string& name, ShaderNode* n) : name(name), body(n) {
+        type = t;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -274,9 +310,11 @@ public:
 class ShaderAttenuator : public ShaderNode {
     ShaderNode* toLight;
     ShaderNode* atten;
+
 public:
-    inline ShaderAttenuator(ShaderNode* toLight, ShaderNode* atten) :
-        toLight(toLight), atten(atten) { type = GLKS_FLOAT; }
+    inline ShaderAttenuator(ShaderNode* toLight, ShaderNode* atten) : toLight(toLight), atten(atten) {
+        type = GLKS_FLOAT;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -285,8 +323,10 @@ public:
 class ShaderReflNode : public ShaderNode {
     ShaderNode* norm;
     ShaderNode* src;
+
 public:
-    inline ShaderReflNode(ShaderNode* norm, ShaderNode* src) : norm(norm), src(src) {}
+    inline ShaderReflNode(ShaderNode* norm, ShaderNode* src) : norm(norm), src(src) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -297,11 +337,14 @@ class ShaderCustom : public ShaderNode {
     std::string before, after;
     ShaderNode* inner;
     bool useInner;
+
 public:
-    inline ShaderCustom(const std::string& before, const std::string& after = "", ShaderNode* inner = nullptr, bool useInner = true) :
-        before(before), after(after), inner(inner), useInner(useInner) {}
-    inline ShaderCustom(GLKShaderVarType t, const std::string& before) :
-        before(before), after(""), inner(nullptr), useInner(false) { type = t; }
+    inline ShaderCustom(const std::string& before, const std::string& after = "", ShaderNode* inner = nullptr, bool useInner = true)
+        : before(before), after(after), inner(inner), useInner(useInner) {
+    }
+    inline ShaderCustom(GLKShaderVarType t, const std::string& before) : before(before), after(""), inner(nullptr), useInner(false) {
+        type = t;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -314,8 +357,9 @@ class ShaderLighter : public ShaderNode {
     ShaderNode* atten;
 
 public:
-    inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color, ShaderNode* atten) :
-        lightDir(lightDir), normal(normal), color(color), atten(atten) {}
+    inline ShaderLighter(ShaderNode* lightDir, ShaderNode* normal, ShaderNode* color, ShaderNode* atten)
+        : lightDir(lightDir), normal(normal), color(color), atten(atten) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -329,9 +373,9 @@ class ShaderSpecLighter : public ShaderNode {
     ShaderNode* atten;
 
 public:
-    inline ShaderSpecLighter(ShaderNode* lightDir, ShaderNode* cameraDir, ShaderNode* normal,
-                             ShaderNode* color, ShaderNode* atten) :
-        lightDir(lightDir), cameraDir(cameraDir), normal(normal), color(color), atten(atten) {}
+    inline ShaderSpecLighter(ShaderNode* lightDir, ShaderNode* cameraDir, ShaderNode* normal, ShaderNode* color, ShaderNode* atten)
+        : lightDir(lightDir), cameraDir(cameraDir), normal(normal), color(color), atten(atten) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -343,8 +387,9 @@ class ShaderSpotlightAtten : public ShaderNode {
     ShaderNode* dir;
 
 public:
-    inline ShaderSpotlightAtten(ShaderNode* lightDir, ShaderNode* params, ShaderNode* dir) :
-        lightDir(lightDir), params(params), dir(dir) { type = GLKS_FLOAT; }
+    inline ShaderSpotlightAtten(ShaderNode* lightDir, ShaderNode* params, ShaderNode* dir) : lightDir(lightDir), params(params), dir(dir) {
+        type = GLKS_FLOAT;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -356,8 +401,8 @@ class ShaderAffineBlend : public ShaderNode {
     ShaderNode* n2;
 
 public:
-    inline ShaderAffineBlend(ShaderNode* blendNode, ShaderNode* n1, ShaderNode* n2) :
-        blendNode(blendNode), n1(n1), n2(n2) {}
+    inline ShaderAffineBlend(ShaderNode* blendNode, ShaderNode* n1, ShaderNode* n2) : blendNode(blendNode), n1(n1), n2(n2) {
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -369,8 +414,9 @@ class ShaderLinearFog : public ShaderNode {
     ShaderNode* fogParams;
 
 public:
-    inline ShaderLinearFog(ShaderNode* depthRef, ShaderNode* fogParams) :
-        depthRef(depthRef), fogParams(fogParams) { type = GLKS_FLOAT; }
+    inline ShaderLinearFog(ShaderNode* depthRef, ShaderNode* fogParams) : depthRef(depthRef), fogParams(fogParams) {
+        type = GLKS_FLOAT;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
@@ -383,23 +429,31 @@ class ShaderExpFog : public ShaderNode {
     bool squared;
 
 public:
-    inline ShaderExpFog(ShaderNode* depthRef, ShaderNode* densityRef, bool squared) :
-        depthRef(depthRef), densityRef(densityRef), squared(squared) { type = GLKS_FLOAT; }
+    inline ShaderExpFog(ShaderNode* depthRef, ShaderNode* densityRef, bool squared)
+        : depthRef(depthRef), densityRef(densityRef), squared(squared) {
+        type = GLKS_FLOAT;
+    }
 
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
 class ShaderVertexOnly : public ShaderNode {
     ShaderNode* inner;
+
 public:
-    inline ShaderVertexOnly(ShaderNode* inner) : inner(inner) { type = inner->getType(); }
+    inline ShaderVertexOnly(ShaderNode* inner) : inner(inner) {
+        type = inner->getType();
+    }
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 
 class ShaderPixelOnly : public ShaderNode {
     ShaderNode* inner;
+
 public:
-    inline ShaderPixelOnly(ShaderNode* inner) : inner(inner) { type = inner->getType(); }
+    inline ShaderPixelOnly(ShaderNode* inner) : inner(inner) {
+        type = inner->getType();
+    }
     virtual bool generate(std::string& out, ShaderContext& c, ShaderLayout& v) override;
 };
 

@@ -26,17 +26,15 @@ typedef struct _cairo_surface cairo_surface_t;
 class CGContextImpl;
 class DisplayTexture;
 
-class DisplayTextureLocking
-{
+class DisplayTextureLocking {
 public:
-    virtual void *LockWritableBitmapTexture(DisplayTexture *tex, int *stride) = 0;
-    virtual void UnlockWritableBitmapTexture(DisplayTexture *tex) = 0;
-    virtual void RetainDisplayTexture(DisplayTexture *tex) = 0;
-    virtual void ReleaseDisplayTexture(DisplayTexture *tex) = 0;
+    virtual void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) = 0;
+    virtual void UnlockWritableBitmapTexture(DisplayTexture* tex) = 0;
+    virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
+    virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
 };
 
-class CGImageBacking
-{
+class CGImageBacking {
 protected:
     int _imageLocks;
     int _cairoLocks;
@@ -44,14 +42,13 @@ protected:
 public:
     CGImageRef _parent;
 
-    virtual ~CGImageBacking()
-    {
+    virtual ~CGImageBacking() {
     }
 
     virtual CGImageRef Copy() = 0;
 
-    virtual CGContextImpl *CreateDrawingContext(CGContextRef base) = 0;
-    virtual void GetPixel(int x, int y, float &r, float &g, float &b, float &a) = 0;
+    virtual CGContextImpl* CreateDrawingContext(CGContextRef base) = 0;
+    virtual void GetPixel(int x, int y, float& r, float& g, float& b, float& a) = 0;
     virtual int InternalWidth() = 0;
     virtual int InternalHeight() = 0;
     virtual int Width() = 0;
@@ -59,20 +56,23 @@ public:
     virtual int BytesPerRow() = 0;
     virtual int BytesPerPixel() = 0;
     virtual surfaceFormat SurfaceFormat() = 0;
-    virtual void *StaticImageData() = 0;
-    virtual void *LockImageData() = 0;
+    virtual void* StaticImageData() = 0;
+    virtual void* LockImageData() = 0;
     virtual void ReleaseImageData() = 0;
-    virtual cairo_surface_t *LockCairoSurface() = 0;
+    virtual cairo_surface_t* LockCairoSurface() = 0;
     virtual void ReleaseCairoSurface() = 0;
     virtual void SetFreeWhenDone(bool freeWhenDone) = 0;
-    virtual DisplayTexture *GetDisplayTexture()
-    {
+    virtual DisplayTexture* GetDisplayTexture() {
         return NULL;
     }
 
-    virtual void DiscardIfPossible() { }
-    virtual void ConstructIfNeeded() { }
-    virtual bool DrawDirectlyToContext(CGContextImpl *ctx, CGRect src, CGRect dest) { return false; }
+    virtual void DiscardIfPossible() {
+    }
+    virtual void ConstructIfNeeded() {
+    }
+    virtual bool DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CGRect dest) {
+        return false;
+    }
     virtual CGImageRef CopyOnWrite();
 };
 
@@ -86,25 +86,23 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-class __CGImage
-{
+class __CGImage {
 protected:
     id isa;
-    CGImageBacking *_img;
+    CGImageBacking* _img;
 
 public:
-    bool            _has32BitAlpha;
-    CGImageType     _imgType;
-    idretain        _provider;
+    bool _has32BitAlpha;
+    CGImageType _imgType;
+    idretain _provider;
 
     __CGImage();
     ~__CGImage();
 
-    CGImageBacking *Backing() const
-    {
+    CGImageBacking* Backing() const {
         return _img;
     }
-    CGImageBacking *DetachBacking(CGImageRef newParent);
+    CGImageBacking* DetachBacking(CGImageRef newParent);
 };
 
 #include "CGBitmapImage.h"

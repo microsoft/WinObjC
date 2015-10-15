@@ -50,8 +50,9 @@ static void initInternal(UISearchBar* self) {
     [self->_textField setBorderStyle:UITextBorderStyleRoundedRect];
     [self->_textField addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
     [self->_textField setFont:[UIFont systemFontOfSize:15.0f]];
-    if (self->_placeholder != nil)
+    if (self->_placeholder != nil) {
         [self->_textField setPlaceholder:self->_placeholder];
+    }
     [self addSubview:self->_textField];
 
     self->_label.attach([[UILabel alloc] initWithFrame:frame]);
@@ -60,8 +61,7 @@ static void initInternal(UISearchBar* self) {
     [self->_label setTextColor:[UIColor darkGrayColor]];
     [self addSubview:self->_label];
 
-    UIImage* navGradient =
-        [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+    UIImage* navGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
     UIImageSetLayerContents([self layer], navGradient);
 }
 

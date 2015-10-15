@@ -97,8 +97,9 @@ int NSPropertyListReaderA::readLongLength(uint64_t* offset) {
     uint8_t topNibble = marker >> 4;
     uint8_t botNibble = marker & 0x0F;
 
-    if (topNibble == 0x1)
+    if (topNibble == 0x1) {
         return (int)_readIntOfSize(1 << botNibble, offset);
+    }
     if (topNibble == 0x2) {
         size_t size = 1 << botNibble;
         uint64_t val = _readIntOfSize(size, offset);
@@ -122,19 +123,23 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
 
     (*offset)++;
 
-    if (marker == 0x00)
+    if (marker == 0x00) {
         return [NSNull new];
+    }
 
-    if (marker == 0x08)
+    if (marker == 0x08) {
         return (id)kCFBooleanFalse;
-    if (marker == 0x09)
+    }
+    if (marker == 0x09) {
         return (id)kCFBooleanTrue;
+    }
 
     uint8_t topNibble = marker >> 4;
     uint8_t botNibble = marker & 0x0F;
 
-    if (topNibble == 0x1)
+    if (topNibble == 0x1) {
         return [[NSNumber alloc] initWithLongLong:(_readIntOfSize(1 << botNibble, offset))];
+    }
     if (topNibble == 0x2) {
         size_t size = 1 << botNibble;
         uint64_t val = _readIntOfSize(size, offset);
@@ -148,36 +153,38 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
         }
         return [[NSNumber alloc] initWithDouble:0.0];
     }
-    if (topNibble == 0x3)
+    if (topNibble == 0x3) {
         return [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:_readFloatOfSize(8, offset)];
+    }
 
-    if (topNibble == 0x4 || topNibble == 0x5 || topNibble == 0x6 || topNibble == 0x8 || topNibble == 0xA ||
-        topNibble == 0xD) {
+    if (topNibble == 0x4 || topNibble == 0x5 || topNibble == 0x6 || topNibble == 0x8 || topNibble == 0xA || topNibble == 0xD) {
         size_t length = 0;
-        if (botNibble != 0xF)
+        if (botNibble != 0xF) {
             length = botNibble;
-        else {
+        } else {
             length = readLongLength(offset);
         }
 
-        if (topNibble == 0x4)
+        if (topNibble == 0x4) {
             return [[NSData alloc] initWithBytes:_dataBytes + *offset length:length];
-        if (topNibble == 0x5)
-            return [[NSString alloc] initWithBytes:_dataBytes + *offset length:length encoding:NSASCIIStringEncoding];
-        if (topNibble == 0x6) {
-            return [[NSString alloc] initWithBytes:_dataBytes + *offset
-                                            length:(length * 2)
-                                          encoding:NSUTF16BigEndianStringEncoding];
         }
-        if (topNibble == 0x8)
+        if (topNibble == 0x5) {
+            return [[NSString alloc] initWithBytes:_dataBytes + *offset length:length encoding:NSASCIIStringEncoding];
+        }
+        if (topNibble == 0x6) {
+            return [[NSString alloc] initWithBytes:_dataBytes + *offset length:(length * 2) encoding:NSUTF16BigEndianStringEncoding];
+        }
+        if (topNibble == 0x8) {
             return ExtractUID(_dataBytes, _length, (*offset) - 1);
+        }
 
         if (topNibble == 0xA) {
             NSArray* result;
             id* objs = (id*)EbrMalloc(length * sizeof(id));
             uint64_t i;
-            for (i = 0; i < length; i++)
+            for (i = 0; i < length; i++) {
                 objs[i] = _readInlineObjectAtOffset(offset);
+            }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
                 result = [[NSMutableArray alloc] initWithObjectsTakeOwnership:objs count:length];
@@ -194,10 +201,12 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
             id* keys = (id*)EbrMalloc(length * sizeof(id));
             id* objs = (id*)EbrMalloc(length * sizeof(id));
             uint64_t i;
-            for (i = 0; i < length; i++)
+            for (i = 0; i < length; i++) {
                 keys[i] = _readInlineObjectAtOffset(offset);
-            for (i = 0; i < length; i++)
+            }
+            for (i = 0; i < length; i++) {
                 objs[i] = _readInlineObjectAtOffset(offset);
+            }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
                 result = [[NSMutableDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];

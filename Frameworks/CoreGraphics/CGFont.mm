@@ -195,10 +195,9 @@ bool CGFontWrapFunc(CGFontWrapState* state,
 
     //  Lookup each glyph
     while (state->curIndex < state->count) {
-        if (state->chars[state->curIndex] == 10 || (state->curIndex > 0 && state->chars[state->curIndex - 1] == 13 &&
-                                                    &state->chars[state->curIndex - 1] >= state->lineStart)) {
-            if ((state->curIndex > 0 && state->chars[state->curIndex - 1] == 13 &&
-                 state->chars[state->curIndex] != 10)) {
+        if (state->chars[state->curIndex] == 10 ||
+            (state->curIndex > 0 && state->chars[state->curIndex - 1] == 13 && &state->chars[state->curIndex - 1] >= state->lineStart)) {
+            if ((state->curIndex > 0 && state->chars[state->curIndex - 1] == 13 && state->chars[state->curIndex] != 10)) {
                 state->curIndex--;
             }
             state->lineLen = &state->chars[state->curIndex] - state->lineStart;
@@ -695,8 +694,7 @@ typedef struct {
 static int attributeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
     attributeWrapState* state = (attributeWrapState*)opaque;
 
-    if (!state->haveRange || idx < state->curRange.location ||
-        idx >= (state->curRange.location + state->curRange.length)) {
+    if (!state->haveRange || idx < state->curRange.location || idx >= (state->curRange.location + state->curRange.length)) {
         state->haveRange = true;
         id attribs = [state->attributedString attributesAtIndex:idx effectiveRange:&state->curRange];
         id font = [attribs objectForKey:@"kCTFontAttributeName"];
@@ -704,8 +702,7 @@ static int attributeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
         CGFontSetFTFontSize(font, state->curFace, [font pointSize]);
     }
 
-    float height =
-        ((float)(state->curFace->size->metrics.ascender - state->curFace->size->metrics.descender)) * spacing / 64.0f;
+    float height = ((float)(state->curFace->size->metrics.ascender - state->curFace->size->metrics.descender)) * spacing / 64.0f;
     if (height > state->sizeOut->height) {
         state->sizeOut->height = height;
     }
@@ -838,10 +835,7 @@ static id createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* siz
     return ret;
 }
 
-CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter,
-                                    CFRange stringRange,
-                                    CGPathRef path,
-                                    CFDictionaryRef frameAttributes) {
+CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
     CGRect frameSize;
     [path _getBoundingBox:&frameSize];
 
@@ -866,10 +860,7 @@ CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     return (CTLineRef)line;
 }
 
-CTLineRef CTLineCreateTruncatedLine(CTLineRef line,
-                                    double width,
-                                    CTLineTruncationType truncationType,
-                                    CTLineRef truncationToken) {
+CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
     id str = ((_CTLine*)line)->_str;
     NSRange lineRange = ((_CTLine*)line)->_strRange;
 
@@ -882,11 +873,8 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef line,
     return (CTLineRef)ret;
 }
 
-CGSize CTFramesetterSuggestFrameSizeWithConstraints(CTFramesetterRef framesetter,
-                                                    CFRange stringRange,
-                                                    CFDictionaryRef frameAttributes,
-                                                    CGSize constraints,
-                                                    CFRange* fitRange) {
+CGSize CTFramesetterSuggestFrameSizeWithConstraints(
+    CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
     CGSize ret;
     if (fitRange)
         *fitRange = stringRange;
@@ -952,15 +940,13 @@ CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
 
 const CFStringRef kCTBackgroundStrokeColorAttributeName = (const CFStringRef) @"kCTBackgroundStrokeColorAttributeName";
 const CFStringRef kCTBackgroundFillColorAttributeName = (const CFStringRef) @"kCTBackgroundFillColorAttributeName";
-const CFStringRef kCTBackgroundCornerRadiusAttributeName =
-    (const CFStringRef) @"kCTBackgroundCornerRadiusAttributeName";
+const CFStringRef kCTBackgroundCornerRadiusAttributeName = (const CFStringRef) @"kCTBackgroundCornerRadiusAttributeName";
 const CFStringRef kCTBackgroundLineWidthAttributeName = (const CFStringRef) @"kCTBackgroundLineWidthAttributeName";
 const CFStringRef kCTSuperscriptAttributeName = (const CFStringRef) @"kCTSuperscriptAttributeName";
 
 CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
     id ret = [NSMutableDictionary new];
-    [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"BLACK")
-            forKey:(id)kCTBackgroundStrokeColorAttributeName];
+    [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"BLACK") forKey:(id)kCTBackgroundStrokeColorAttributeName];
     [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"WHITE") forKey:(id)kCTBackgroundFillColorAttributeName];
     [ret setObject:[NSNumber numberWithFloat:3.0f] forKey:(id)kCTBackgroundCornerRadiusAttributeName];
     [ret setObject:[NSNumber numberWithFloat:1.0f] forKey:(id)kCTBackgroundLineWidthAttributeName];
@@ -969,7 +955,7 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
 }
 
 void CTLineDraw(CTLineRef line, CGContextRef ctx) {
-    for (_CTRun* curRun in(NSArray*)((_CTLine*)line)->_runs) {
+    for (_CTRun* curRun in (NSArray*)((_CTLine*)line)->_runs) {
         id string = curRun->_stringFragment;
         NSRange range;
         range.location = 0;
@@ -1000,8 +986,7 @@ id CTFontDescriptorCreateWithAttributes(id fontAttributes) {
     return [fontAttributes copy];
 }
 
-CTFontRef
-CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
+CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
     if (size == 0.0f)
         size = 12.0f;
     id ret = [[_LazyUIFont fontWithName:@"Helvetica" size:size] retain];
@@ -1015,8 +1000,7 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, CGAffineT
     return (CTFontRef)ret;
 }
 
-double
-CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph* glyphs, CGSize* advances, size_t count) {
+double CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph* glyphs, CGSize* advances, size_t count) {
     DWORD i;
     double total = 0.0f;
 

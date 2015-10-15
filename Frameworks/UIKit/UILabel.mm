@@ -57,16 +57,15 @@
 
     CGRect rect;
     rect = [self bounds];
-    if (rect.size.width == 0.0f || rect.size.height == 0.0f)
+    if (rect.size.width == 0.0f || rect.size.height == 0.0f) {
         return;
+    }
 
     while (curFontSize > _minimumFontSize) {
         CGSize size;
 
         size = rect.size;
-        size = [_text sizeWithFont:_font
-                 constrainedToSize:CGSizeMake(rect.size.width, 0.0f)
-                     lineBreakMode:UILineBreakModeClip];
+        size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
 
         if (size.width <= rect.size.width && size.height <= rect.size.height) {
             break;
@@ -91,16 +90,10 @@
         [[self layer] setShouldRasterize:TRUE];
     }
     UIColor* color = _textColor;
-    if (_isHighlighted && _highlightedTextColor != nil)
+    if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
-    [[self layer] _setDisplayParams:(id)
-                              _font:(id)
-                              _text:
-                              color:
-                         _alignment:
-                     _lineBreakMode:(id)
-                       _shadowColor:
-                      _shadowOffset:_numberOfLines];
+    }
+    [[self layer] _setDisplayParams:(id) _font:(id) _text:color:_alignment:_lineBreakMode:(id) _shadowColor:_shadowOffset:_numberOfLines];
 #endif
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
@@ -278,10 +271,12 @@
 }
 
 - (void)setBackgroundColor:(UIColor*)colorref {
-    if (_textLayer != nil)
+    if (_textLayer != nil) {
         [_textLayer setBackgroundColor:(CGColorRef)colorref];
-    if (!_isHighlighted)
+    }
+    if (!_isHighlighted) {
         _savedBackgroundColor = colorref;
+    }
     [super setBackgroundColor:colorref];
 }
 
@@ -361,9 +356,7 @@
             fontHeight = [@" " sizeWithFont:_font];
             size.height = fontHeight.height;
         }
-        size = [_text sizeWithFont:_font
-                 constrainedToSize:CGSizeMake(size.width, size.height)
-                     lineBreakMode:_lineBreakMode];
+        size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:_lineBreakMode];
 
         EbrCenterTextInRectVertically(&rect, &size, _font);
 
@@ -419,9 +412,7 @@
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        ret = [_text sizeWithFont:_font
-                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                    lineBreakMode:_lineBreakMode];
+        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:_lineBreakMode];
 
         if (_numberOfLines == 1) {
             CGSize fontHeight;
@@ -470,8 +461,9 @@
         CGRect superSize = CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight());
         UIView* superview = [self superview];
 
-        if (superview != nil)
+        if (superview != nil) {
             superSize = [superview bounds];
+        }
 
         if (idealSize.size.width > superSize.size.width && superSize.size.width > 0.0f) {
             idealSize.size.width = superSize.size.width;

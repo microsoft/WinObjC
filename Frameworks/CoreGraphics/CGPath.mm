@@ -53,8 +53,9 @@ public:
 
 @implementation CGPath : NSObject
 - (void)dealloc {
-    if (_components)
+    if (_components) {
         EbrFree(_components);
+    }
 
     [super dealloc];
 }
@@ -135,24 +136,30 @@ public:
     for (unsigned i = 0; i < _count; i++) {
         switch (_components[i].type) {
             case pathComponentRectangle:
-                if (_components[i].rect.origin.x + _components[i].rect.size.width > sizeOut->width)
+                if (_components[i].rect.origin.x + _components[i].rect.size.width > sizeOut->width) {
                     sizeOut->width = _components[i].rect.origin.x + _components[i].rect.size.width;
-                if (_components[i].rect.origin.y + _components[i].rect.size.height > sizeOut->height)
+                }
+                if (_components[i].rect.origin.y + _components[i].rect.size.height > sizeOut->height) {
                     sizeOut->height = _components[i].rect.origin.y + _components[i].rect.size.height;
+                }
                 break;
 
             case pathComponentMove:
-                if (_components[i].point.x > sizeOut->width)
+                if (_components[i].point.x > sizeOut->width) {
                     sizeOut->width = _components[i].point.x;
-                if (_components[i].point.y > sizeOut->height)
+                }
+                if (_components[i].point.y > sizeOut->height) {
                     sizeOut->height = _components[i].point.y;
+                }
                 break;
 
             case pathComponentLineTo:
-                if (_components[i].point.x > sizeOut->width)
+                if (_components[i].point.x > sizeOut->width) {
                     sizeOut->width = _components[i].point.x;
-                if (_components[i].point.y > sizeOut->height)
+                }
+                if (_components[i].point.y > sizeOut->height) {
                     sizeOut->height = _components[i].point.y;
+                }
                 break;
 
             default:
@@ -184,10 +191,8 @@ public:
                 break;
 
             case pathComponentArcAngle:
-                bbox.addPoint(_components[i].aa.x - _components[i].aa.radius,
-                              _components[i].aa.y - _components[i].aa.radius);
-                bbox.addPoint(_components[i].aa.x + _components[i].aa.radius,
-                              _components[i].aa.y + _components[i].aa.radius);
+                bbox.addPoint(_components[i].aa.x - _components[i].aa.radius, _components[i].aa.y - _components[i].aa.radius);
+                bbox.addPoint(_components[i].aa.x + _components[i].aa.radius, _components[i].aa.y + _components[i].aa.radius);
                 break;
 
             case pathComponentQuadCurve:
@@ -270,8 +275,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, flo
     pathObj->_count++;
 }
 
-void CGPathAddArcToPoint(
-    CGMutablePathRef path, const CGAffineTransform* m, float x1, float y1, float x2, float y2, float radius) {
+void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x1, float y1, float x2, float y2, float radius) {
     if (m) {
         assert(0);
     }
@@ -349,8 +353,9 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 }
 
 void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* points, int count) {
-    if (count == 0)
+    if (count == 0) {
         return;
+    }
 
     CGPathMoveToPoint(path, m, points[0].x, points[0].y);
     for (int i = 1; i < count; i++) {
@@ -473,8 +478,7 @@ CGPathRef CGPathRetain(CGPathRef path) {
     return path;
 }
 
-void CGPathAddQuadCurveToPoint(
-    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
+void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     assert(!m);
     CGPath* pathObj = path;
 
@@ -497,14 +501,8 @@ void CGPathAddQuadCurveToPoint(
     pathObj->_count++;
 }
 
-void CGPathAddCurveToPoint(CGMutablePathRef path,
-                           const CGAffineTransform* m,
-                           CGFloat cp1x,
-                           CGFloat cp1y,
-                           CGFloat cp2x,
-                           CGFloat cp2y,
-                           CGFloat x,
-                           CGFloat y) {
+void CGPathAddCurveToPoint(
+    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     CGPath* pathObj = path;
 
     assert(!m);

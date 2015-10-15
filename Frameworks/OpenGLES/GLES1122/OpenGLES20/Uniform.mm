@@ -31,8 +31,7 @@ const int UniformSimple::getId() {
     return id;
 }
 
-UniformBase::UniformBase(GLint location)
-    : additionalRequiredShaderFiles(), location(location), uploaded(false), father(0) {
+UniformBase::UniformBase(GLint location) : additionalRequiredShaderFiles(), location(location), uploaded(false), father(0) {
 }
 
 UniformBase::~UniformBase() {

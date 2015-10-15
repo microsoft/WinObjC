@@ -30,9 +30,9 @@
     CGPatternCallbacks callbacks;
     surfaceFormat surfaceFmt;
 }
-    -(CGImageRef) getPatternImage;
-    -(CGAffineTransform)getPatternTransform;
-    +(instancetype) patternWithImage:(CGImageRef)img;
+- (CGImageRef)getPatternImage;
+- (CGAffineTransform)getPatternTransform;
++ (instancetype)patternWithImage:(CGImageRef)img;
 @end
 
 #endif

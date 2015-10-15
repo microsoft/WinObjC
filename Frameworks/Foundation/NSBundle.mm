@@ -472,8 +472,7 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
     return ret;
 }
 
-static BundleFile*
-findFullFile(NSBundle* self, NSString* filename, NSString* extension, NSString* directory, NSString* localization) {
+static BundleFile* findFullFile(NSBundle* self, NSString* filename, NSString* extension, NSString* directory, NSString* localization) {
     char* pFilename = (char*)[filename UTF8String];
     char* pExtension = (char*)[extension UTF8String];
     char* pDirectory = (char*)[directory UTF8String];
@@ -688,10 +687,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     if ([data length] > 0) {
-        _infoDictionary = [[NSPropertyListSerialization propertyListFromData:data
-                                                            mutabilityOption:NSPropertyListImmutable
-                                                                      format:0
-                                                            errorDescription:0] retain];
+        _infoDictionary =
+            [[NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0]
+                retain];
 
         //  Find localized sttrings
         NSString* stringPath = [self pathForResource:@"Localizable" ofType:@"strings"];
@@ -701,8 +699,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
             if ([stringData length] > 0) {
                 char* bytes = (char*)[stringData bytes];
                 if (*((WORD*)bytes) == 0xFFFE || *((WORD*)bytes) == 0xFEFF) {
-                    NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF16BigEndianStringEncoding]
-                        autorelease];
+                    NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF16BigEndianStringEncoding] autorelease];
                     _localizedStrings = [[str propertyListFromStringsFileFormat] retain];
                 } else if (*((WORD*)bytes) != 0xbbef) {
                     _localizedStrings = [[NSPropertyListSerialization propertyListFromData:stringData
@@ -712,8 +709,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
                 }
 
                 if (_localizedStrings == nil) {
-                    NSString* str =
-                        [[[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding] autorelease];
+                    NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding] autorelease];
                     _localizedStrings = [str propertyListFromStringsFileFormat];
                 }
             }
@@ -826,12 +822,8 @@ static NSString* makePath(NSBundle* self,
     return [NSString stringWithCString:szPath];
 }
 
-static NSString* checkPath(NSBundle* self,
-                           NSString* name,
-                           NSString* extension,
-                           NSString* directory,
-                           NSString* localization,
-                           NSString* sublocal = nil) {
+static NSString* checkPath(
+    NSBundle* self, NSString* name, NSString* extension, NSString* directory, NSString* localization, NSString* sublocal = nil) {
     NSString* ret = makePath(self, name, extension, directory, localization, sublocal);
 
     char* path = (char*)[ret UTF8String];

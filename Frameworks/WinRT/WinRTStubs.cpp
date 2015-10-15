@@ -19,17 +19,15 @@
 #include <assert.h>
 
 extern "C" {
-    char *_getcwd(char *buffer, int maxlen)
-    {
-        buffer[0] = 0;
-        return buffer;
-    }
+char* _getcwd(char* buffer, int maxlen) {
+    buffer[0] = 0;
+    return buffer;
+}
 
-    char *getenv(const char *name)
-    {
-        return NULL;
-    }
+char* getenv(const char* name) {
+    return NULL;
+}
 
-    //  For compatibility - gives WinRT a stubbed implementation of getenv
-    void *_imp__getenv = getenv;
+//  For compatibility - gives WinRT a stubbed implementation of getenv
+void* _imp__getenv = getenv;
 };

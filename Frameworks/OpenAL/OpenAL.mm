@@ -107,9 +107,9 @@ public:
 
     bool FillBuffer(ALBufferPlayback* bufInfo) {
         int sourceFramesAvailable = (_dataLen - bufInfo->_curSourceBufPos) / _frameLen;
-        int framesToCopy = sourceFramesAvailable < (bufInfo->_frameBufMax - bufInfo->_frameBufLen)
-                               ? sourceFramesAvailable
-                               : (bufInfo->_frameBufMax - bufInfo->_frameBufLen);
+        int framesToCopy = sourceFramesAvailable < (bufInfo->_frameBufMax - bufInfo->_frameBufLen) ?
+                               sourceFramesAvailable :
+                               (bufInfo->_frameBufMax - bufInfo->_frameBufLen);
 
         BYTE* dataStart = ((BYTE*)_data) + bufInfo->_curSourceBufPos;
         if (_bits == 16) {
@@ -650,8 +650,9 @@ ALCdevice_struct::ALCdevice_struct() {
     _terminateThread = false;
 
 #ifdef EBRIUS
-    auto workItemHandler = ref new Windows::System::Threading::WorkItemHandler(
-        [=](Windows::Foundation::IAsyncAction ^ ) { AudioPlaybackThread(); }, Platform::CallbackContext::Any);
+    auto workItemHandler =
+        ref new Windows::System::Threading::WorkItemHandler([=](Windows::Foundation::IAsyncAction ^ ) { AudioPlaybackThread(); },
+                                                            Platform::CallbackContext::Any);
 
     Windows::System::Threading::ThreadPool::RunAsync(workItemHandler,
                                                      Windows::System::Threading::WorkItemPriority::High,
@@ -731,8 +732,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
         WindowsDeleteString(mediaDeviceClass);
 
         HSTRING defaultRenderDevice;
-        deviceFinder->GetDefaultAudioRenderId(ABI::Windows::Media::Devices::AudioDeviceRole::AudioDeviceRole_Default,
-                                              &defaultRenderDevice);
+        deviceFinder->GetDefaultAudioRenderId(ABI::Windows::Media::Devices::AudioDeviceRole::AudioDeviceRole_Default, &defaultRenderDevice);
         deviceFinder->Release();
 
         UINT32 len = 0;
@@ -749,11 +749,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
         WindowsDeleteString(defaultRenderDevice);
     };
     NSArray* modes = [[NSArray alloc] initWithObject:kCFRunLoopDefaultMode];
-    [[NSRunLoop mainRunLoop] performSelector:@selector(invoke)
-                                      target:activateAudioOnMainThread
-                                    argument:nil
-                                       order:0
-                                       modes:modes];
+    [[NSRunLoop mainRunLoop] performSelector:@selector(invoke) target:activateAudioOnMainThread argument:nil order:0 modes:modes];
     openCallback.Wait();
 
     hr = activateResult;
@@ -1010,8 +1006,7 @@ AL_API void AL_APIENTRY alBufferData(ALuint buffer, ALenum format, const ALvoid*
     alCurrentContext->BufferData(buffer, format, data, size, freq);
 }
 
-AL_API void AL_APIENTRY
-alBufferDataStatic(ALuint buffer, ALenum format, const ALvoid* data, ALsizei size, ALsizei freq) {
+AL_API void AL_APIENTRY alBufferDataStatic(ALuint buffer, ALenum format, const ALvoid* data, ALsizei size, ALsizei freq) {
     alCurrentContext->BufferData(buffer, format, data, size, freq);
 }
 

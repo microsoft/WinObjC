@@ -88,19 +88,10 @@ __declspec(dllexport) extern "C" int CFNSBlockCompare(id obj1, id obj2, id block
 }
 
 const CFDictionaryKeyCallBacks kCFTypeDictionaryKeyCallBacks = {
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
-    CFNSHash,
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual, CFNSHash,
 };
 const CFDictionaryValueCallBacks kCFTypeDictionaryValueCallBacks = {
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
 };
 
 const CFDictionaryKeyCallBacks kNSTypeDictionaryKeyCallBacks = { 0, CFNSRetain, CFNSRelease, 0, CFNSEqual, CFNSHash };
@@ -157,10 +148,9 @@ static kh_inline khint_t kh_get_cf_dictionary(const kh_cf_dictionary_t* h, khint
     } else
         return 0;
 }
-static kh_inline int kh_resize_cf_dictionary(kh_cf_dictionary_t* h,
-                                             khint_t new_n_buckets) { /* This function uses 0.25*n_buckets bytes of
-                                                                         working space instead of
-                                                                         [sizeof(key_t+val_t)+.25]*n_buckets. */
+static kh_inline int kh_resize_cf_dictionary(kh_cf_dictionary_t* h, khint_t new_n_buckets) { /* This function uses 0.25*n_buckets bytes of
+                                                                                                working space instead of
+                                                                                                [sizeof(key_t+val_t)+.25]*n_buckets. */
     khint32_t* new_flags = 0;
     khint_t j = 1;
     {
@@ -183,8 +173,7 @@ static kh_inline int kh_resize_cf_dictionary(kh_cf_dictionary_t* h,
                 h->keys = new_keys;
 
                 if (1) {
-                    cf_dict_array* new_vals =
-                        (cf_dict_array*)krealloc((void*)h->vals, new_n_buckets * sizeof(cf_dict_array));
+                    cf_dict_array* new_vals = (cf_dict_array*)krealloc((void*)h->vals, new_n_buckets * sizeof(cf_dict_array));
                     if (!new_vals)
                         return -1;
                     h->vals = new_vals;
@@ -257,7 +246,8 @@ static kh_inline khint_t kh_put_cf_dictionary(kh_cf_dictionary_t* h, khint32_t k
             *ret = -1;
             return h->n_buckets;
         }
-    } /* TODO: to implement automatically shrinking; resize() already support shrinking */
+    } /* TODO: to implement automatically shrinking; resize() already support
+         shrinking */
     {
         khint_t k, i, site, last, mask = h->n_buckets - 1, step = 0;
         x = site = h->n_buckets;
@@ -896,8 +886,7 @@ int CFDictionaryGetNextKey(CFDictionaryRef dict, void* enumeratorHolder, id* ret
     int retCount = 0;
 
     while (count--) {
-        if (_LazyDictOffset.member(dict)->getNextKey((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) ==
-            false)
+        if (_LazyDictOffset.member(dict)->getNextKey((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
             break;
         retCount++;
     }
@@ -913,8 +902,7 @@ int CFDictionaryGetNextValue(CFDictionaryRef dict, void* enumeratorHolder, id* r
     int retCount = 0;
 
     while (count--) {
-        if (_LazyDictOffset.member(dict)->getNextValue((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) ==
-            false)
+        if (_LazyDictOffset.member(dict)->getNextValue((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
             break;
         retCount++;
     }
@@ -926,8 +914,8 @@ void _CFDictionaryInitInternal(CFDictionaryRef dict) {
     NSDictionary* pDict = (NSDictionary*)dict;
 
     assert(sizeof(__CFDictionary) <= __CFDICTIONARY_SIZE_BYTES);
-    _LazyDictOffset.member(pDict) = new (_LazyDictSpaceOffset.member(pDict))
-        __CFDictionary(&kNSTypeDictionaryKeyCallBacks, &kNSTypeDictionaryValueCallBacks);
+    _LazyDictOffset.member(pDict) =
+        new (_LazyDictSpaceOffset.member(pDict)) __CFDictionary(&kNSTypeDictionaryKeyCallBacks, &kNSTypeDictionaryValueCallBacks);
 }
 
 void _CFDictionaryDestroyInternal(CFDictionaryRef dict) {

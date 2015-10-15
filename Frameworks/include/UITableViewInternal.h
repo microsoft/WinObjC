@@ -9,44 +9,43 @@ class TableViewRow;
 class ReusableCell;
 class VisibleComponents;
 
-struct UITableViewPriv
-{
+struct UITableViewPriv {
     id<UITableViewDelegate> _delegate; // this should be idweak
     id<UITableViewDataSource> _dataSource;
     idretain _footerView;
     idretain _externalObjects;
-    float    _footerYPos;
+    float _footerYPos;
     idretain _headerView;
-    idretaintype(UIView)  _backgroundView;
+    idretaintype(UIView) _backgroundView;
     std::unordered_map<std::string, std::vector<ReusableCell*>> _reusableCells;
-    idretaintype(NSMutableDictionary)  _reusableCellNibs;
-    idretaintype(NSMutableDictionary)  _reusableHeaderClasses;
-    idretaintype(NSMutableDictionary)  _reusableCellClasses;
+    idretaintype(NSMutableDictionary) _reusableCellNibs;
+    idretaintype(NSMutableDictionary) _reusableHeaderClasses;
+    idretaintype(NSMutableDictionary) _reusableCellClasses;
 
-    float   _defaultRowHeight;
-    float   _defaultSectionHeaderHeight;    
+    float _defaultRowHeight;
+    float _defaultSectionHeaderHeight;
 
-    TableViewNode *_rootNode;
-    BOOL         _needsReload;
-    DWORD        _isEnumerating;
+    TableViewNode* _rootNode;
+    BOOL _needsReload;
+    DWORD _isEnumerating;
 
-    VisibleComponents *_visibleComponents;
+    VisibleComponents* _visibleComponents;
 
-    UITableViewStyle    _style;
-    unsigned   _separatorStyle;
-    BOOL    _isEditing;
+    UITableViewStyle _style;
+    unsigned _separatorStyle;
+    BOOL _isEditing;
 
-    DWORD   _allowsSelection;
-    bool    _allowsMultipleSelection, _allowsMultipleSelectionDuringEditing;
+    DWORD _allowsSelection;
+    bool _allowsMultipleSelection, _allowsMultipleSelectionDuringEditing;
 
     NSInteger sectionCount();
-    TableViewSection *sectionAtIndex(int idx);
+    TableViewSection* sectionAtIndex(int idx);
 
     CGSize _lastSize;
 
-    void removeReusableCell(ReusableCell *cell);
+    void removeReusableCell(ReusableCell* cell);
     void addReusableCell(id cell);
-    void addReusableCell(TableViewRow *row);
+    void addReusableCell(TableViewRow* row);
 };
 
 @interface UITableView () {
@@ -56,7 +55,7 @@ struct UITableViewPriv
     idretain _supplementaryViewReuseQueues, _cellReuseQueues, _decorationViewReuseQueues;
     idretain _nibLayout, _nibCellsExternalObjects, _supplementaryViewsExternalObjects;
     idretain _cellNibDict, _supplementaryViewNibDict, _supplementaryViewClassDict, _cellClassDict;
-    UICollectionViewData *_collectionViewData;
+    UICollectionViewData* _collectionViewData;
     idretain _layout, _allVisibleViewsDict;
     idretain _backgroundView;
     idretain _updateCompletionHandler;
@@ -67,7 +66,7 @@ struct UITableViewPriv
     idretain _moveItems;
     idretain _update;
 
-    struct UITableViewPriv *tablePriv;
+    struct UITableViewPriv* tablePriv;
     idretain _indexPathsForSelectedItems, _indexPathsForHighlightedItems;
     idretain _currentIndexPath, _touchingIndexPath;
 
@@ -101,7 +100,7 @@ struct UITableViewPriv
         unsigned int skipLayoutDuringSnapshotting : 1;
         unsigned int layoutInvalidatedSinceLastCellUpdate : 1;
         unsigned int doneFirstLayout : 1;
-    }_collectionViewFlags;
+    } _collectionViewFlags;
 }
 @end
 
@@ -112,7 +111,7 @@ struct UITableViewPriv
     idretaint<UIStoryboardSegueTemplate> _selectionSegueTemplate;
 
     BOOL _isSelected, _isHighlighted, _currentlyHighlighted;
-    BOOL  _isEditing;
+    BOOL _isEditing;
     unsigned _accessoryType;
     float _indentationWidth;
     UITableViewCellStyle _style;
@@ -123,23 +122,23 @@ struct UITableViewPriv
     idretaintype(UIImageView) _imageView;
     idretaintype(UIView) _backgroundView, _selectedbackgroundView;
     idretain _deferredIndexPath, _indexPath;
-    UIView* _accessoryView, *_editingAccessoryView;
+    UIView *_accessoryView, *_editingAccessoryView;
     idretain _internalAccessoryView, _internalAccessoryButton;
-    int      _internalAccessoryType;
+    int _internalAccessoryType;
     idretain _reuseIdentifier;
     idretain _borderView;
-    int      _indentationLevel;
+    int _indentationLevel;
 
-    int      _groupEdgeStyle;
+    int _groupEdgeStyle;
     idretaintype(UIView) _groupEdgeView;
     idretain _cellBackgroundColor;
     idretain _cellOldBackgroundColor;
-    BOOL     _cellBackgroundColorSet;
+    BOOL _cellBackgroundColorSet;
 
     idretain _swipeGestureRecognizer;
     idretaintype(UIView) _removeButton;
 
     idretaintype(UIView) _editSelectedView;
-    BOOL     _editSelectedViewVisible;
+    BOOL _editSelectedViewVisible;
 }
 @end

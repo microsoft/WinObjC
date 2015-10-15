@@ -31,8 +31,8 @@ static int _numGroupBackgroundTextures;
 
 static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color) {
     for (int i = 0; i < _numGroupBackgroundTextures; i++) {
-        if (_backgroundTextures[i]._style == style && (_backgroundTextures[i]._backgroundColor == color ||
-                                                       [_backgroundTextures[i]._backgroundColor isEqual:color])) {
+        if (_backgroundTextures[i]._style == style &&
+            (_backgroundTextures[i]._backgroundColor == color || [_backgroundTextures[i]._backgroundColor isEqual:color])) {
             return _backgroundTextures[i]._image;
         }
     }

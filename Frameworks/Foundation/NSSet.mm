@@ -46,8 +46,9 @@ void NSSetTableAddObject(NSSet* set, id object) {
     if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
         assert(0);
     }
-    if (object == nil)
+    if (object == nil) {
         return;
+    }
     if (NSSetTableMember(set, object) == nil) {
         CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)object);
     }
@@ -289,9 +290,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 }
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state
-                                  objects:(id*)stackBuf
-                                    count:(unsigned)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     if (state->state == 0) {
         state->state = 1;
         state->mutationsPtr = &state->state;
@@ -304,39 +303,46 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 }
 
 - (BOOL)isSubsetOfSet:(NSSet*)other {
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
     for (id curObj in self) {
-        if ([other member:curObj] == nil)
+        if ([other member:curObj] == nil) {
             return NO;
+        }
     }
 
     return YES;
 }
 
 - (BOOL)intersectsSet:(NSSet*)other {
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
     for (id curObj in self) {
-        if ([other member:curObj])
+        if ([other member:curObj]) {
             return YES;
+        }
     }
 
     return NO;
 }
 
 - (BOOL)isEqualToSet:(NSSet*)other {
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
-    if ([self count] != [other count])
+    if ([self count] != [other count]) {
         return NO;
+    }
 
     for (id curObj in self) {
-        if ([other member:curObj] == nil)
+        if ([other member:curObj] == nil) {
             return NO;
+        }
     }
 
     return YES;
@@ -356,8 +362,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
         for (id curObj in self) {
             block(curObj, &stop);
             i++;
-            if (stop)
+            if (stop) {
                 break;
+            }
         }
     }
 }
@@ -383,9 +390,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 }
 
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator
-                                      forObject:self
-                                   nextFunction:NSSetEnumeratorGetNextObject];
+    return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
 }
 
 @end

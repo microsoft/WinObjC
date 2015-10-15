@@ -39,8 +39,9 @@ Quaternion Quaternion::Slerp(Quaternion q1, Quaternion q2, float t) {
     // Now, Let's code it
 
     // Here we do a check to make sure the 2 quaternions aren't the same, return q1 if they are
-    if (q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w)
+    if (q1.x == q2.x && q1.y == q2.y && q1.z == q2.z && q1.w == q2.w) {
         return q1;
+    }
 
     // Following the (b.a) part of the equation, we do a dot product between q1 and q2.
     // We can do a dot product because the same math applied for a 3D vector as a 4D vector.
@@ -192,10 +193,7 @@ Quaternion Quaternion::fromEuler(float yaw, float pitch, float roll) {
     float c1 = cosf(yaw / 2), c2 = cosf(pitch / 2), c3 = cosf(roll / 2);
     float s1 = sinf(yaw / 2), s2 = sinf(pitch / 2), s3 = sinf(roll / 2);
 
-    return Quaternion(c1 * c2 * c3 - s1 * s2 * s3,
-                      s1 * s2 * c3 + c1 * c2 * s3,
-                      s1 * c2 * c3 + c1 * s2 * s3,
-                      c1 * s2 * c3 - s1 * c2 * s3);
+    return Quaternion(c1 * c2 * c3 - s1 * s2 * s3, s1 * s2 * c3 + c1 * c2 * s3, s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3);
 }
 
 float Quaternion::yaw() const {

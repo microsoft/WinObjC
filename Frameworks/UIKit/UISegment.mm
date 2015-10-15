@@ -29,18 +29,13 @@ static idretain _buttonFill[2];
 
 @implementation UISegment : UIView
 + (id)initialize {
-    _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonRight[0] = [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
-    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"]
-        resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
+    _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+    _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+    _buttonRight[0] =
+        [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+    _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
+    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
 
     return self;
 }
@@ -138,8 +133,9 @@ static idretain _buttonFill[2];
 }
 
 - (id)_setType:(DWORD)type {
-    if (_type == 4)
+    if (_type == 4) {
         return self;
+    }
 
     _type = type;
     [self setNeedsDisplay];
@@ -171,8 +167,9 @@ static idretain _buttonFill[2];
 }
 
 - (BOOL)isEnabled {
-    if (_disabled)
+    if (_disabled) {
         return FALSE;
+    }
 
     return TRUE;
 }
@@ -187,8 +184,9 @@ static idretain _buttonFill[2];
             isDisabled = true;
         }
     }
-    if (_disabled)
+    if (_disabled) {
         isDisabled = true;
+    }
 
     if (isDisabled) {
         [self setAlpha:0.5f];
@@ -279,16 +277,11 @@ static idretain _buttonFill[2];
 
         rect = [self bounds];
         size = rect.size;
-        size = [_title sizeWithFont:_segmentFont
-                  constrainedToSize:CGSizeMake(size.width, size.height)
-                      lineBreakMode:UILineBreakModeClip];
+        size = [_title sizeWithFont:_segmentFont constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:UILineBreakModeClip];
 
         rect.origin.y = rect.size.height / 2.0f - size.height / 2.0f;
         rect.size.height = size.height;
-        size = [_title drawInRect:rect
-                         withFont:_segmentFont
-                    lineBreakMode:UILineBreakModeClip
-                        alignment:UITextAlignmentCenter];
+        size = [_title drawInRect:rect withFont:_segmentFont lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 
     return self;
@@ -304,9 +297,7 @@ static idretain _buttonFill[2];
 
     if (_title != nil) {
         CGSize size = { 0, 0 };
-        size = [_title sizeWithFont:_segmentFont
-                  constrainedToSize:CGSizeMake(0.0f, 0.0f)
-                      lineBreakMode:UILineBreakModeClip];
+        size = [_title sizeWithFont:_segmentFont constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
 
         return size.width;
     }
@@ -353,8 +344,9 @@ static idretain _buttonFill[2];
     id font = [attributes objectForKey:@"kCTFontAttributeName"];
     id textColor = [attributes objectForKey:@"UITextAttributeTextColor"];
 
-    if (font != nil)
+    if (font != nil) {
         _segmentFont = font;
+    }
     if (textColor != nil) {
         if (state == UIControlStateNormal) {
             _textColor[1] = textColor;

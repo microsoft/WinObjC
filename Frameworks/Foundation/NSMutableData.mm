@@ -37,8 +37,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
         self->_freeWhenDone = TRUE;
     } else {
         if (length > self->_capacity) {
-            if (self->_capacity < 16)
+            if (self->_capacity < 16) {
                 self->_capacity = 16;
+            }
             while (self->_capacity < length) {
                 self->_capacity *= 2;
             }

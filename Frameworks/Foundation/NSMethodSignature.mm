@@ -40,13 +40,15 @@ int getArgumentSize(const char* type);
                     }
                     if (*curArg == '}') {
                         curCount--;
-                        if (curCount == 0)
+                        if (curCount == 0) {
                             break;
+                        }
                     }
                     curArg++;
                 }
-                while (*curArg && !isdigit(*curArg))
+                while (*curArg && !isdigit(*curArg)) {
                     curArg++;
+                }
             } break;
 
             default: {
@@ -59,8 +61,9 @@ int getArgumentSize(const char* type);
                         curCount--;
                         assert(curCount >= 0);
                     }
-                    if (isdigit(*curArg) && curCount == 0)
+                    if (isdigit(*curArg) && curCount == 0) {
                         break;
+                    }
                     curArg++;
                 }
             } break;
@@ -70,8 +73,9 @@ int getArgumentSize(const char* type);
 
         int typeLength = typeEnd - typeStart;
 
-        while (*curArg && isdigit(*curArg))
+        while (*curArg && isdigit(*curArg)) {
             curArg++;
+        }
 
         char* argOffsetEnd = curArg;
 

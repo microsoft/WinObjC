@@ -37,8 +37,7 @@ static inline OSVERSIONINFO winOsVersion() {
         return result;
 
     typedef HMODULE(WINAPI * GetModuleHandleFunction)(LPCTSTR);
-    GetModuleHandleFunction pGetModuleHandle =
-        reinterpret_cast<GetModuleHandleFunction>(GetProcAddress(kernelModule, "GetModuleHandleW"));
+    GetModuleHandleFunction pGetModuleHandle = reinterpret_cast<GetModuleHandleFunction>(GetProcAddress(kernelModule, "GetModuleHandleW"));
     if (!pGetModuleHandle)
         return result;
 
@@ -48,8 +47,7 @@ static inline OSVERSIONINFO winOsVersion() {
 
     // NTSTATUS is not defined on WinRT
     typedef LONG /* NTSTATUS */ (NTAPI * RtlGetVersionFunction)(LPOSVERSIONINFO);
-    RtlGetVersionFunction pRtlGetVersion =
-        reinterpret_cast<RtlGetVersionFunction>(GetProcAddress(ntdll, "RtlGetVersion"));
+    RtlGetVersionFunction pRtlGetVersion = reinterpret_cast<RtlGetVersionFunction>(GetProcAddress(ntdll, "RtlGetVersion"));
     if (!pRtlGetVersion)
         return result;
 

@@ -61,8 +61,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setBackgroundColor:nil];
-                [self->_textLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -82,8 +81,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setNumberOfLines:0];
-                [self->_textLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
@@ -104,8 +102,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setTextColor:[UIColor blackColor]];
                 [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_textLabel setBackgroundColor:nil];
-                [self->_textLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
 
@@ -127,8 +124,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setTextColor:[UIColor blackColor]];
                 [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_textLabel setBackgroundColor:nil];
-                [self->_textLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:1];
                 [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
 
@@ -185,8 +181,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setTextAlignment:UITextAlignmentRight];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
-                [self->_secondaryLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
                 break;
@@ -206,8 +201,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
-                [self->_secondaryLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
                 break;
@@ -227,8 +221,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor whiteColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
-                [self->_secondaryLabel
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
                 break;
@@ -339,15 +332,12 @@ static void initInternal(UITableViewCell* self) {
 
         // Create the technology slightly offscreen so it can be scrolled in:
         CGRect rect = { parentRect.size.width, 13, 72, 20 };
-        UIImage* buttonBackground =
-            [[UIImage imageNamed:@"/img/redbutton.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+        UIImage* buttonBackground = [[UIImage imageNamed:@"/img/redbutton.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
         _removeButton.attach([[UIButton alloc] initWithFrame:rect]);
         [_removeButton setTitle:@"Delete" forState:0];
         [_removeButton setBackgroundImage:buttonBackground forState:0];
-        [_removeButton addTarget:self
-                          action:@selector(_removeButtonCallback:)
-                forControlEvents:UIControlEventTouchUpInside];
+        [_removeButton addTarget:self action:@selector(_removeButtonCallback:) forControlEvents:UIControlEventTouchUpInside];
 
         // Fade the removal button in
         [self addSubview:_removeButton];
@@ -585,8 +575,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
         ourFrame.size.width -= getMarginWidth(self) * 2.0f;
     }
 
-    if (!self->_isSelected || self->_selectedbackgroundView == nil ||
-        self->_selectionStyle == UITableViewCellSelectionStyleNone) {
+    if (!self->_isSelected || self->_selectedbackgroundView == nil || self->_selectionStyle == UITableViewCellSelectionStyleNone) {
         if (self->_selectedbackgroundView) {
             if ([self->_selectedbackgroundView superview] == self) {
                 [self->_selectedbackgroundView removeFromSuperview];
@@ -597,8 +586,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
                 [self->_backgroundView setFrame:ourFrame];
                 [self insertSubview:self->_backgroundView atIndex:0];
                 [self sendSubviewToBack:self->_backgroundView];
-                [self->_backgroundView
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_backgroundView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
             }
         }
     } else {
@@ -612,8 +600,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
                 [self->_selectedbackgroundView setFrame:ourFrame];
                 [self insertSubview:self->_selectedbackgroundView atIndex:0];
                 [self sendSubviewToBack:self->_selectedbackgroundView];
-                [self->_selectedbackgroundView
-                    setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+                [self->_selectedbackgroundView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
             }
         }
     }
@@ -694,10 +681,8 @@ static void setInternalAccessoryColor(UITableViewCell* self) {
             }
         }
 
-        [[self->_internalAccessoryView layer] _setContentColor:[UIColor colorWithRed:contentColor.r
-                                                                               green:contentColor.g
-                                                                                blue:contentColor.b
-                                                                               alpha:contentColor.a]];
+        [[self->_internalAccessoryView layer]
+            _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
     }
 }
 
@@ -899,8 +884,8 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
         [[parentTable backgroundColor] getColors:tableBackground];
         UIColor* backgroundColor = nil;
 
-        if ((tableBackground[3] == 0.0f) || (tableBackground[0] == 1.0f && tableBackground[1] == 1.0f &&
-                                             tableBackground[2] == 1.0f && tableBackground[3] == 1.0f)) {
+        if ((tableBackground[3] == 0.0f) ||
+            (tableBackground[0] == 1.0f && tableBackground[1] == 1.0f && tableBackground[2] == 1.0f && tableBackground[3] == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];
@@ -933,8 +918,7 @@ static void setupGroupView(UITableViewCell* self) {
 
             self->_groupEdgeView.attach([[_UIGroupEdgeView alloc] initWithFrame:ourBounds]);
             [self->_groupEdgeView setOpaque:FALSE];
-            [self->_groupEdgeView
-                setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+            [self->_groupEdgeView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
             [self addSubview:self->_groupEdgeView];
             [self sendSubviewToBack:self->_groupEdgeView];
             if (self->_contentView != nil) {

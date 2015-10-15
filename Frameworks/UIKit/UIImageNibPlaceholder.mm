@@ -32,8 +32,9 @@
 
         if (bundle != nil) {
             id pathFind = [bundle pathForResource:resourcePath ofType:nil];
-            if (pathFind != nil)
+            if (pathFind != nil) {
                 resourcePath = pathFind;
+            }
         }
 
         id ret = [[UIImage imageNamed:resourcePath] retain];

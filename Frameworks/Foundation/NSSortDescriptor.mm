@@ -63,8 +63,9 @@
 
     int result = (NSInteger)[val1 performSelector:_selector withObject:val2];
 
-    if (!_ascending)
+    if (!_ascending) {
         result = -result;
+    }
 
     return result;
 }

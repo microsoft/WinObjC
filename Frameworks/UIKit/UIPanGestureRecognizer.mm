@@ -105,8 +105,7 @@ static void commonInit(UIPanGestureRecognizer* self) {
 
 static void numTouchesChanged(UIPanGestureRecognizer* o) {
     // End or fail the gesture if we have too many touches to make a match:
-    if (o->_priv->touches.size() > o->_maximumNumberOfTouches ||
-        o->_priv->touches.size() < o->_minimumNumberOfTouches) {
+    if (o->_priv->touches.size() > o->_maximumNumberOfTouches || o->_priv->touches.size() < o->_minimumNumberOfTouches) {
         switch (o->_state) {
             case UIGestureRecognizerStateBegan:
             case UIGestureRecognizerStateChanged:

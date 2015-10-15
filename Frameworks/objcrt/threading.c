@@ -27,26 +27,20 @@
 static CRITICAL_SECTION global_mutex;
 static BOOL global_mutex_init = NO;
 
-static void
-objc_global_mutex_new(void)
-{
+static void objc_global_mutex_new(void) {
     if (!InitializeCriticalSectionEx(&global_mutex, 0, 0))
-		OBJC_ERROR("Failed to create global mutex!");
+        OBJC_ERROR("Failed to create global mutex!");
 
     global_mutex_init = YES;
 }
 
-void
-objc_global_mutex_lock(void)
-{
+void objc_global_mutex_lock(void) {
     if (!global_mutex_init)
         objc_global_mutex_new();
 
     EnterCriticalSection(&global_mutex);
 }
 
-void
-objc_global_mutex_unlock(void)
-{
+void objc_global_mutex_unlock(void) {
     LeaveCriticalSection(&global_mutex);
 }

@@ -45,11 +45,13 @@
     _rightBarButtonItem = [coder decodeObjectForKey:@"UIRightBarButtonItem"];
 
     _leftBarButtonItems = [NSMutableArray array];
-    if (_leftBarButtonItem != nil)
+    if (_leftBarButtonItem != nil) {
         [_leftBarButtonItems addObject:(id)_leftBarButtonItem];
+    }
     _rightBarButtonItems = [NSMutableArray array];
-    if (_rightBarButtonItem != nil)
+    if (_rightBarButtonItem != nil) {
         [_rightBarButtonItems addObject:(id)_rightBarButtonItem];
+    }
 
     [self initWithTitle:name];
 
@@ -91,8 +93,9 @@
             [_rightBarButtonItems removeObjectAtIndex:0];
         }
     } else {
-        if (rightBarItem != nil)
+        if (rightBarItem != nil) {
             [_rightBarButtonItems addObject:rightBarItem];
+        }
     }
 
     [_delegate navigationItemChanged:self];
@@ -164,8 +167,9 @@
             [_leftBarButtonItems removeObjectAtIndex:0];
         }
     } else {
-        if (leftBarItem != nil)
+        if (leftBarItem != nil) {
             [_leftBarButtonItems addObject:leftBarItem];
+        }
     }
     [_delegate navigationItemChanged:self];
 }

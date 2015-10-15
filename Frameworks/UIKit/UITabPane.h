@@ -31,6 +31,6 @@ class UITabBarController;
     idretain _newController, _oldController;
     id _containerView;
 }
--(instancetype) initWithFrame:(CGRect)frame;
--(void) layoutSubviews;
+- (instancetype)initWithFrame:(CGRect)frame;
+- (void)layoutSubviews;
 @end

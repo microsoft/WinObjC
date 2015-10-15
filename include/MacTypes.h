@@ -19,21 +19,20 @@
 
 #include <sys/types.h>
 
-typedef uint8_t     Boolean;
-typedef int16_t     SInt16;
-typedef uint16_t        UInt16;
-typedef uint32_t        UInt32;
-typedef int32_t     SInt32;
-typedef int8_t        SInt8;
-typedef uint8_t       UInt8;
-typedef int64_t       SInt64;
-typedef uint64_t      UInt64;
-typedef uint8_t        Byte;
-typedef unsigned int   u_int;
-typedef unsigned long  u_long;
+typedef uint8_t Boolean;
+typedef int16_t SInt16;
+typedef uint16_t UInt16;
+typedef uint32_t UInt32;
+typedef int32_t SInt32;
+typedef int8_t SInt8;
+typedef uint8_t UInt8;
+typedef int64_t SInt64;
+typedef uint64_t UInt64;
+typedef uint8_t Byte;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
 typedef unsigned short u_short;
-typedef uint16_t      mode_t;
+typedef uint16_t mode_t;
 
 enum { kNilOptions = 0 };
 #endif
-

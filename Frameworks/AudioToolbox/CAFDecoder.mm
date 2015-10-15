@@ -25,14 +25,13 @@ const UInt32 CAFDecoder::kPredictorMask = 0xFF80;
 const UInt16 CAFDecoder::kStepTableIndexMask = 0x007F;
 const SInt32 CAFDecoder::kPredictorTolerance = 0x0000007F;
 const SInt16 CAFDecoder::sIndexTable[16] = { -1, -1, -1, -1, 2, 4, 6, 8, -1, -1, -1, -1, 2, 4, 6, 8 };
-const SInt16 CAFDecoder::sStepTable[89] = {
-    7,    8,     9,     10,    11,    12,    13,    14,    16,    17,    19,    21,    23,    25,   28,
-    31,   34,    37,    41,    45,    50,    55,    60,    66,    73,    80,    88,    97,    107,  118,
-    130,  143,   157,   173,   190,   209,   230,   253,   279,   307,   337,   371,   408,   449,  494,
-    544,  598,   658,   724,   796,   876,   963,   1060,  1166,  1282,  1411,  1552,  1707,  1878, 2066,
-    2272, 2499,  2749,  3024,  3327,  3660,  4026,  4428,  4871,  5358,  5894,  6484,  7132,  7845, 8630,
-    9493, 10442, 11487, 12635, 13899, 15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
-};
+const SInt16 CAFDecoder::sStepTable[89] = { 7,     8,     9,     10,    11,    12,    13,    14,    16,    17,    19,   21,    23,
+                                            25,    28,    31,    34,    37,    41,    45,    50,    55,    60,    66,   73,    80,
+                                            88,    97,    107,   118,   130,   143,   157,   173,   190,   209,   230,  253,   279,
+                                            307,   337,   371,   408,   449,   494,   544,   598,   658,   724,   796,  876,   963,
+                                            1060,  1166,  1282,  1411,  1552,  1707,  1878,  2066,  2272,  2499,  2749, 3024,  3327,
+                                            3660,  4026,  4428,  4871,  5358,  5894,  6484,  7132,  7845,  8630,  9493, 10442, 11487,
+                                            12635, 13899, 15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767 };
 
 SInt16 CFSwapInt16BigToHost(SInt16 val) {
     return ((uint16_t)val & 0xFF00) >> 8 | ((uint16_t)val & 0x00FF) << 8;
@@ -47,7 +46,7 @@ void CAFDecoder::CheckState(const Byte* inInputData, ChannelState& ioChannelStat
     if (theStepTableIndex == ioChannelState.mStepTableIndex) // indexes match
     {
         // calculate theDifference between state and stored value
-        SInt32 theDifference = thePredictedSample - ioChannelState.mPredictedSample; 
+        SInt32 theDifference = thePredictedSample - ioChannelState.mPredictedSample;
         if (theDifference < 0) {
             theDifference = -theDifference;
         }
@@ -55,7 +54,7 @@ void CAFDecoder::CheckState(const Byte* inInputData, ChannelState& ioChannelStat
         // is difference greater than tolerance?
         if (theDifference <= kPredTolerance) {
             // no, so state is good
-            return; 
+            return;
         }
     }
 
@@ -127,8 +126,10 @@ void CAFDecoder::DecodeChannelSInt16(ChannelState& ioChannelState,
                 thePredictedSample = -32768;
             }
 
-            // EbrDebugLog("   theCode %02X  theDifference %d\n", theCode, theDifference);
-            // EbrDebugLog("OUT %02X %d   \n", thePredictedSample & 255, thePredictedSample);
+            // EbrDebugLog("   theCode %02X  theDifference %d\n", theCode,
+            // theDifference);
+            // EbrDebugLog("OUT %02X %d   \n", thePredictedSample & 255,
+            // thePredictedSample);
 
             *theOutputData = thePredictedSample;
             theOutputData += theOutputStride;
@@ -139,7 +140,8 @@ void CAFDecoder::DecodeChannelSInt16(ChannelState& ioChannelState,
             else if (theStepTableIndex > 88)
                 theStepTableIndex = 88;
             theStep = sStepTable[theStepTableIndex];
-            // EbrDebugLog("   theStep %d  theStepTableIndex %d\n", theStep, theStepTableIndex);
+            // EbrDebugLog("   theStep %d  theStepTableIndex %d\n", theStep,
+            // theStepTableIndex);
         }
 
         theInputData += theInputStride;
@@ -210,8 +212,7 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
                                         OutputDescription& mOutputFormat,
                                         CAFAudioDescription& mInputFormat) {
     if (isPcm) {
-        int read =
-            EbrFread(outOutputData, cafDesc.mBytesPerPacket, ioOutputDataByteSize / cafDesc.mBytesPerPacket, fpIn);
+        int read = EbrFread(outOutputData, cafDesc.mBytesPerPacket, ioOutputDataByteSize / cafDesc.mBytesPerPacket, fpIn);
         ioNumberPackets = read;
         ioOutputDataByteSize = ioNumberPackets * cafDesc.mBytesPerPacket;
         return 0;
@@ -224,7 +225,8 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
     //  does with not having enough data for a packet, since the encoded data
     //  is always going to be in whole packets.
 
-    //  clamp the number of packets to produce based on what is available in the input buffer
+    //  clamp the number of packets to produce based on what is available in the
+    //  input buffer
     UInt32 inputPacketSize = mInputFormat.mBytesPerPacket;
     UInt32 numberOfInputPackets = GetUsedInputBufferByteSize(fpIn) / inputPacketSize;
     if (ioNumberPackets < numberOfInputPackets) {
@@ -232,7 +234,8 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
     } else if (ioNumberPackets > numberOfInputPackets) {
         ioNumberPackets = numberOfInputPackets;
 
-        //  this also means we need more input to satisfy the request so set the return value
+        //  this also means we need more input to satisfy the request so set the
+        //  return value
         theAnswer = kAudioCodecProduceOutputPacketNeedsMoreInputData;
     }
 
@@ -245,11 +248,13 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
     UInt32 inputByteSize = numberOfInputPackets * inputPacketSize;
 
     if (ioNumberPackets > 0) {
-        //  make sure that there is enough space in the output buffer for the encoded data
+        //  make sure that there is enough space in the output buffer for the
+        //  encoded data
         //  it is an error to ask for more output than you pass in buffer space for
         UInt32 theOutputByteSize = ioNumberPackets * mInputFormat.mFramesPerPacket * mOutputFormat.mBytesPerFrame;
         // ThrowIf(ioOutputDataByteSize < theOutputByteSize,
-        // static_cast<OSStatus>(kAudioCodecNotEnoughBufferSpaceError), "ACAppleIMA4Decoder::ProduceOutputPackets: not
+        // static_cast<OSStatus>(kAudioCodecNotEnoughBufferSpaceError),
+        // "ACAppleIMA4Decoder::ProduceOutputPackets: not
         // enough space in the output buffer");
 
         //  set the return value
@@ -261,7 +266,8 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
 
         ChannelStateList::iterator theIterator = mChannelStateList.begin();
         for (int theChannelIndex = 0; theChannelIndex < mOutputFormat.mChannelsPerFrame; ++theChannelIndex) {
-            // EbrDebugLog("->DecodeChannel %d %d %d %08X %08X\n", mOutputFormat.mChannelsPerFrame, theChannelIndex,
+            // EbrDebugLog("->DecodeChannel %d %d %d %08X %08X\n",
+            // mOutputFormat.mChannelsPerFrame, theChannelIndex,
             // ioNumberPackets, theInputData, theOutputData);
             DecodeChannelSInt16(*theIterator,
                                 mOutputFormat.mChannelsPerFrame,
@@ -281,9 +287,11 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
     }
 
     /*
-    if((theAnswer == kAudioCodecProduceOutputPacketSuccess) && (GetUsedInputBufferByteSize() >= inputPacketSize))
+    if((theAnswer == kAudioCodecProduceOutputPacketSuccess) &&
+    (GetUsedInputBufferByteSize() >= inputPacketSize))
     {
-    //  we satisfied the request, and there's at least one more full packet of data we can decode
+    //  we satisfied the request, and there's at least one more full packet of
+    data we can decode
     //  so set the return value
     theAnswer = kAudioCodecProduceOutputPacketSuccessHasMore;
     }

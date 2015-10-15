@@ -18,20 +18,18 @@
 
 #include "CGImageInternal.h"
 
-class CGGraphicBufferImage : public __CGImage
-{
+class CGGraphicBufferImage : public __CGImage {
 public:
     CGGraphicBufferImage(DWORD width, DWORD height, surfaceFormat fmt);
-    CGGraphicBufferImage(DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture *nativeTexture, DisplayTextureLocking *locking);
+    CGGraphicBufferImage(DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture* nativeTexture, DisplayTextureLocking* locking);
 };
 
 class EbrFastTexture;
 
-class CGGraphicBufferImageBacking : public CGImageBacking
-{
+class CGGraphicBufferImageBacking : public CGImageBacking {
 private:
-    void *_imageData;
-    cairo_surface_t *_surface;
+    void* _imageData;
+    cairo_surface_t* _surface;
     surfaceFormat _bitmapFmt;
     DWORD _width, _height;
     DWORD _internalWidth, _internalHeight;
@@ -39,16 +37,17 @@ private:
     DWORD _bytesPerPixel;
 
 public:
-    DisplayTexture *_nativeTexture;
-    DisplayTextureLocking *_nativeTextureLocking;
+    DisplayTexture* _nativeTexture;
+    DisplayTextureLocking* _nativeTextureLocking;
 
-    CGGraphicBufferImageBacking(DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture *nativeTexture, DisplayTextureLocking *locking);
+    CGGraphicBufferImageBacking(
+        DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture* nativeTexture, DisplayTextureLocking* locking);
     ~CGGraphicBufferImageBacking();
 
     CGImageRef Copy();
 
-    CGContextImpl *CreateDrawingContext(CGContextRef base);
-    void GetPixel(int x, int y, float &r, float &g, float &b, float &a);
+    CGContextImpl* CreateDrawingContext(CGContextRef base);
+    void GetPixel(int x, int y, float& r, float& g, float& b, float& a);
     int InternalWidth();
     int InternalHeight();
     int Width();
@@ -56,12 +55,11 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     surfaceFormat SurfaceFormat();
-    void *StaticImageData();
-    void *LockImageData();
+    void* StaticImageData();
+    void* LockImageData();
     void ReleaseImageData();
-    cairo_surface_t *LockCairoSurface();
+    cairo_surface_t* LockCairoSurface();
     void ReleaseCairoSurface();
     void SetFreeWhenDone(bool freeWhenDone);
-    DisplayTexture *GetDisplayTexture();
+    DisplayTexture* GetDisplayTexture();
 };
-

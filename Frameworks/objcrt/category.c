@@ -25,47 +25,43 @@
 
 #include <windows.h>
 
-static struct objc_hashtable *categories = NULL;
+static struct objc_hashtable* categories = NULL;
 
-static void
-register_selectors(struct objc_abi_category *cat)
-{
-    struct objc_abi_method_list *ml;
+static void register_selectors(struct objc_abi_category* cat) {
+    struct objc_abi_method_list* ml;
     unsigned int i;
 
     for (ml = cat->instance_methods; ml != NULL; ml = ml->next)
         for (i = 0; i < ml->count; i++)
-            objc_register_selector(
-                (struct objc_abi_selector*)&ml->methods[i]);
+            objc_register_selector((struct objc_abi_selector*)&ml->methods[i]);
 
     for (ml = cat->class_methods; ml != NULL; ml = ml->next)
         for (i = 0; i < ml->count; i++)
-            objc_register_selector(
-                (struct objc_abi_selector*)&ml->methods[i]);
+            objc_register_selector((struct objc_abi_selector*)&ml->methods[i]);
 }
 
-static void
-register_category(struct objc_abi_category *cat)
-{
-    struct objc_abi_category **cats;
+static void register_category(struct objc_abi_category* cat) {
+    struct objc_abi_category** cats;
     Class cls = objc_classname_to_class(cat->class_name);
 
     if (categories == NULL)
         categories = objc_hashtable_new(2);
 
-    cats = (struct objc_abi_category**)objc_hashtable_get(categories,
-        cat->class_name);
+    cats = (struct objc_abi_category**)objc_hashtable_get(categories, cat->class_name);
 
     if (cats != NULL) {
-        struct objc_abi_category **ncats;
+        struct objc_abi_category** ncats;
         size_t i;
 
-        for (i = 0; cats[i] != NULL; i++);
+        for (i = 0; cats[i] != NULL; i++)
+            ;
 
-        if ((ncats = realloc(cats,
-            (i + 2) * sizeof(struct objc_abi_category*))) == NULL)
-            OBJC_ERROR("Not enough memory for category %s of "
-                "class %s!", cat->category_name, cat->class_name);
+        if ((ncats = realloc(cats, (i + 2) * sizeof(struct objc_abi_category*))) == NULL)
+            OBJC_ERROR(
+                "Not enough memory for category %s of "
+                "class %s!",
+                cat->category_name,
+                cat->class_name);
 
         ncats[i] = cat;
         ncats[i + 1] = NULL;
@@ -73,15 +69,14 @@ register_category(struct objc_abi_category *cat)
 
         if (cls != Nil && cls->info & OBJC_CLASS_INFO_SETUP) {
             objc_update_dtable(cls);
-            objc_update_dtable(object_getClass((id) cls));
+            objc_update_dtable(object_getClass((id)cls));
         }
 
         return;
     }
 
     if ((cats = malloc(2 * sizeof(struct objc_abi_category*))) == NULL)
-        OBJC_ERROR("Not enough memory for category %s of class %s!\n",
-            cat->category_name, cat->class_name);
+        OBJC_ERROR("Not enough memory for category %s of class %s!\n", cat->category_name, cat->class_name);
 
     cats[0] = cat;
     cats[1] = NULL;
@@ -89,14 +84,12 @@ register_category(struct objc_abi_category *cat)
 
     if (cls != Nil && cls->info & OBJC_CLASS_INFO_SETUP) {
         objc_update_dtable(cls);
-        objc_update_dtable(object_getClass((id) cls));
+        objc_update_dtable(object_getClass((id)cls));
     }
 }
 
-void
-objc_register_all_categories(struct objc_abi_symtab *symtab)
-{
-    struct objc_abi_category **cats;
+void objc_register_all_categories(struct objc_abi_symtab* symtab) {
+    struct objc_abi_category** cats;
     size_t i;
 
     cats = (struct objc_abi_category**)symtab->defs + symtab->cls_def_cnt;
@@ -107,19 +100,14 @@ objc_register_all_categories(struct objc_abi_symtab *symtab)
     }
 }
 
-struct objc_category**
-objc_categories_for_class(Class cls)
-{
+struct objc_category** objc_categories_for_class(Class cls) {
     if (categories == NULL)
         return NULL;
 
-    return (struct objc_category**)objc_hashtable_get(categories,
-        cls->name);
+    return (struct objc_category**)objc_hashtable_get(categories, cls->name);
 }
 
-void
-objc_free_all_categories(void)
-{
+void objc_free_all_categories(void) {
     uint32_t i;
 
     if (categories == NULL)

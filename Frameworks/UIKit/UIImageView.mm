@@ -62,8 +62,9 @@ static void initInternal(UIImageView* self) {
     CGRect pos;
     CGSize imgSize = { 0 };
 
-    if (image)
+    if (image) {
         imgSize = [image size];
+    }
 
     pos.origin.x = 0;
     pos.origin.y = 0;
@@ -184,11 +185,8 @@ static void updateContents(UIImageView* self) {
             duration /= (double)[imgPriv->_animatingImages count];
         }
 
-        imgPriv->_timer = [NSTimer scheduledTimerWithTimeInterval:duration
-                                                           target:self
-                                                         selector:@selector(_showNextImage)
-                                                         userInfo:0
-                                                          repeats:TRUE];
+        imgPriv->_timer =
+            [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(_showNextImage) userInfo:0 repeats:TRUE];
     }
 }
 
@@ -247,8 +245,9 @@ static void updateContents(UIImageView* self) {
         return;
     }
 
-    if (imgPriv->_isAnimating)
+    if (imgPriv->_isAnimating) {
         return;
+    }
 
     imgPriv->_isAnimating = TRUE;
 
@@ -262,11 +261,8 @@ static void updateContents(UIImageView* self) {
     imgPriv->_curCycle = 0;
     imgPriv->_curAnimatingImage = 0;
 
-    imgPriv->_timer = [NSTimer scheduledTimerWithTimeInterval:duration
-                                                       target:self
-                                                     selector:@selector(_showNextImage)
-                                                     userInfo:0
-                                                      repeats:TRUE];
+    imgPriv->_timer =
+        [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(_showNextImage) userInfo:0 repeats:TRUE];
     [self _showNextImage];
 }
 
@@ -278,8 +274,9 @@ static void updateContents(UIImageView* self) {
         return;
     }
 
-    if (!imgPriv->_isAnimating)
+    if (!imgPriv->_isAnimating) {
         return;
+    }
 
     imgPriv->_isAnimating = FALSE;
     [imgPriv->_timer invalidate];
@@ -323,11 +320,8 @@ static void updateContents(UIImageView* self) {
                 duration /= (double)[imgPriv->_animatingImages count];
             }
 
-            imgPriv->_timer = [NSTimer scheduledTimerWithTimeInterval:duration
-                                                               target:self
-                                                             selector:@selector(_showNextImage)
-                                                             userInfo:0
-                                                              repeats:TRUE];
+            imgPriv->_timer =
+                [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(_showNextImage) userInfo:0 repeats:TRUE];
         }
     }
     [super willMoveToWindow:newWindow];

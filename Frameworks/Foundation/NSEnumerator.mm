@@ -39,9 +39,7 @@
     return [ret autorelease];
 }
 
-+ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator
-                              forObject:(id)obj
-                           nextFunction:(nextValueFunc)nextValueFunction {
++ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction {
     NSEnumerator* ret = [self alloc];
 
     ret->getNextValueFunction = nextValueFunction;
@@ -67,24 +65,27 @@
     if (iteratorObj != nil) {
         id ret;
         int count = getNextValueFunction(iteratorObj, iteratorState, &ret, 1);
-        if (count == 1)
+        if (count == 1) {
             return ret;
+        }
         return nil;
     }
 
     if (dir == 1) {
         int count = [objArray count];
 
-        if (curIndex >= count)
+        if (curIndex >= count) {
             return nil;
+        }
 
         NSObject* ret = [objArray objectAtIndex:curIndex];
         curIndex++;
 
         return ret;
     } else {
-        if (curIndex < 0)
+        if (curIndex < 0) {
             return nil;
+        }
 
         NSObject* ret = [objArray objectAtIndex:curIndex];
         curIndex--;
@@ -93,9 +94,7 @@
     }
 }
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state
-                                  objects:(id*)stackBuf
-                                    count:(NSUInteger)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     if (iteratorObj != nil) {
         if (state->state == 0) {
             state->state = 1;
@@ -121,8 +120,9 @@
 
     while (maxCount > 0) {
         id next = [state->extra[0] nextObject];
-        if (next == nil)
+        if (next == nil) {
             break;
+        }
 
         *stackBuf = next;
         stackBuf++;

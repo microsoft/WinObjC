@@ -22,28 +22,30 @@
 #include "Foundation/NSArray.h"
 #endif
 
-#define DECLTYPE    decltype
+#define DECLTYPE decltype
 
-#define LLTREE_FOREACH(var, objname) for ( DECLTYPE(objname) var = objname->firstChild, __nextNode = var ? var->nextSibling : NULL; var != NULL; var = __nextNode, __nextNode = var ? var->nextSibling : NULL )
-#define LLTREE_FOREACH_REVERSE(var, objname) for ( DECLTYPE(objname) var = objname->lastChild, __nextNode = var ? var->prevSibling : NULL; var != NULL; var = __nextNode, __nextNode = var ? var->prevSibling : NULL )
+#define LLTREE_FOREACH(var, objname)                                                                           \
+    for (DECLTYPE(objname) var = objname->firstChild, __nextNode = var ? var->nextSibling : NULL; var != NULL; \
+         var = __nextNode, __nextNode = var ? var->nextSibling : NULL)
+#define LLTREE_FOREACH_REVERSE(var, objname)                                                                  \
+    for (DECLTYPE(objname) var = objname->lastChild, __nextNode = var ? var->prevSibling : NULL; var != NULL; \
+         var = __nextNode, __nextNode = var ? var->prevSibling : NULL)
 
-template<class T, class objectOwnerType>
-class LLTreeNode
-{
+template <class T, class objectOwnerType>
+class LLTreeNode {
 public:
     id self;
-    T *parent;
-    T *firstChild;
-    T *lastChild;
+    T* parent;
+    T* firstChild;
+    T* lastChild;
     int childCount;
 
-    T *prevSibling;
-    T *nextSibling;
+    T* prevSibling;
+    T* nextSibling;
 
     id cachedSubnodesArray;
 
-    LLTreeNode()
-    {
+    LLTreeNode() {
         parent = NULL;
         firstChild = NULL;
         lastChild = NULL;
@@ -54,9 +56,8 @@ public:
         cachedSubnodesArray = nil;
     }
 
-    ~LLTreeNode()
-    {
-        if ( cachedSubnodesArray != nil ) {
+    ~LLTreeNode() {
+        if (cachedSubnodesArray != nil) {
 #ifndef __OBJC__
             _m(cachedSubnodesArray, "release");
 #else
@@ -65,9 +66,8 @@ public:
         }
     }
 
-    void setModified()
-    {
-        if ( cachedSubnodesArray ) {
+    void setModified() {
+        if (cachedSubnodesArray) {
 #ifndef __OBJC__
             _m(cachedSubnodesArray, "autorelease");
 #else
@@ -77,94 +77,87 @@ public:
         cachedSubnodesArray = nil;
     }
 
-    id subnodesArray()
-    {
-        if ( cachedSubnodesArray != nil ) return cachedSubnodesArray;
+    id subnodesArray() {
+        if (cachedSubnodesArray != nil)
+            return cachedSubnodesArray;
 
         int subnodeCount = 0;
-        id *subnodesCopy = (id *) alloca(sizeof(id) * childCount);
-        for ( T* curChild = firstChild; curChild != NULL; curChild = curChild->nextSibling ) {
-            subnodesCopy[subnodeCount ++] = curChild->self;
+        id* subnodesCopy = (id*)alloca(sizeof(id) * childCount);
+        for (T* curChild = firstChild; curChild != NULL; curChild = curChild->nextSibling) {
+            subnodesCopy[subnodeCount++] = curChild->self;
         }
 
 #ifndef __OBJC__
         cachedSubnodesArray = _m(_m(NSArray::_meta, "alloc"), "initWithObjects:count:", subnodesCopy, subnodeCount);
 #else
-        cachedSubnodesArray = [[NSArray alloc] initWithObjects: subnodesCopy count: subnodeCount];
+        cachedSubnodesArray = [[NSArray alloc] initWithObjects:subnodesCopy count:subnodeCount];
 #endif
 
         return cachedSubnodesArray;
     }
 
-    void setSelf(id parentObj)
-    {
+    void setSelf(id parentObj) {
         self = parentObj;
     }
 
-    void addChildBefore(idtype<objectOwnerType> child, idtype<objectOwnerType> before)
-    {
+    void addChildBefore(idtype<objectOwnerType> child, idtype<objectOwnerType> before) {
         addChildBefore(child->priv, before != nil ? before->priv : NULL);
     }
 
-    void addChildAfter(idtype<objectOwnerType> child, idtype<objectOwnerType> after)
-    {
+    void addChildAfter(idtype<objectOwnerType> child, idtype<objectOwnerType> after) {
         addChildAfter(child->priv, after != nil ? after->priv : NULL);
     }
 
-    int indexOfChild(idtype<objectOwnerType> child)
-    {
+    int indexOfChild(idtype<objectOwnerType> child) {
         return indexOfChild(child->priv);
     }
 
-    int indexOfChild(T* child)
-    {
+    int indexOfChild(T* child) {
         int idx = 0;
         T* curNode = firstChild;
 
-        while ( curNode ) {
-            if ( curNode == child ) return idx;
+        while (curNode) {
+            if (curNode == child)
+                return idx;
             curNode = curNode->nextSibling;
-            idx ++;
+            idx++;
         }
 
         return 0x7fffffff;
     }
 
-    bool containsChild(idtype<objectOwnerType> child)
-    {
-        if ( child == nil ) return false;
+    bool containsChild(idtype<objectOwnerType> child) {
+        if (child == nil)
+            return false;
 
         return containsChild(child->priv);
     }
 
-    bool containsChild(T* child)
-    {
-        if ( child->parent == static_cast<T*>(this) ) 
-            return true; else
+    bool containsChild(T* child) {
+        if (child->parent == static_cast<T*>(this))
+            return true;
+        else
             return false;
     }
 
-    T* childAtIndex(int idx)
-    {
+    T* childAtIndex(int idx) {
         T* cur = firstChild;
-        while ( idx -- ) {
+        while (idx--) {
             cur = cur->nextSibling;
         }
 
         return cur;
     }
 
-    void replaceChild(idtype<objectOwnerType> child, idtype<objectOwnerType> withChild)
-    {
+    void replaceChild(idtype<objectOwnerType> child, idtype<objectOwnerType> withChild) {
         replaceChild(child->priv, withChild->priv);
     }
 
-    void replaceChild(T* child, T* withChild)
-    {
+    void replaceChild(T* child, T* withChild) {
         setModified();
 
-        T *prev = child->prevSibling;
-        T *next = child->nextSibling;
+        T* prev = child->prevSibling;
+        T* next = child->nextSibling;
 
         child->prevSibling = NULL;
         child->nextSibling = NULL;
@@ -173,146 +166,166 @@ public:
         withChild->prevSibling = prev;
         withChild->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = withChild;
-        if ( next ) next->prevSibling = withChild;
+        if (prev)
+            prev->nextSibling = withChild;
+        if (next)
+            next->prevSibling = withChild;
 
-        if ( firstChild == child ) firstChild = withChild;
-        if ( lastChild == child ) lastChild = withChild;
+        if (firstChild == child)
+            firstChild = withChild;
+        if (lastChild == child)
+            lastChild = withChild;
     }
 
-    void exchangeChild(idtype<objectOwnerType> child1, idtype<objectOwnerType> child2)
-    {
+    void exchangeChild(idtype<objectOwnerType> child1, idtype<objectOwnerType> child2) {
         exchangeChild(child1->priv, child2->priv);
     }
 
-    void exchangeChild(T* child1, T* child2)
-    {
+    void exchangeChild(T* child1, T* child2) {
         setModified();
 
         T* prev1 = child1->prevSibling;
-        if ( prev1 == child2 ) prev1 = child1;
+        if (prev1 == child2)
+            prev1 = child1;
         T* next1 = child1->nextSibling;
-        if ( next1 == child2 ) next1 = child1;
+        if (next1 == child2)
+            next1 = child1;
 
         T* prev2 = child2->prevSibling;
-        if ( prev2 == child1 ) prev2 = child2;
+        if (prev2 == child1)
+            prev2 = child2;
         T* next2 = child2->nextSibling;
-        if ( next2 == child1 ) next2 = child2;
+        if (next2 == child1)
+            next2 = child2;
 
         child1->prevSibling = prev2;
         child1->nextSibling = next2;
         child2->prevSibling = prev1;
         child2->nextSibling = next1;
 
-        if ( child1->prevSibling ) child1->prevSibling->nextSibling = child1;
-        if ( child1->nextSibling ) child1->nextSibling->prevSibling = child1;
+        if (child1->prevSibling)
+            child1->prevSibling->nextSibling = child1;
+        if (child1->nextSibling)
+            child1->nextSibling->prevSibling = child1;
 
-        if ( child2->prevSibling ) child2->prevSibling->nextSibling = child2;
-        if ( child2->nextSibling ) child2->nextSibling->prevSibling = child2;
+        if (child2->prevSibling)
+            child2->prevSibling->nextSibling = child2;
+        if (child2->nextSibling)
+            child2->nextSibling->prevSibling = child2;
 
-        if ( firstChild == child1 ) {
+        if (firstChild == child1) {
             firstChild = child2;
-        } else if ( firstChild == child2 ) {
+        } else if (firstChild == child2) {
             firstChild = child1;
         }
 
-        if ( lastChild == child1 ) {
+        if (lastChild == child1) {
             lastChild = child2;
-        } else if ( lastChild == child2 ) {
+        } else if (lastChild == child2) {
             lastChild = child1;
         }
     }
 
-    void addChildBefore(T* child, T* before)
-    {
+    void addChildBefore(T* child, T* before) {
         assert(child->parent == NULL);
 
         setModified();
 
-        if ( before == NULL ) before = firstChild;
+        if (before == NULL)
+            before = firstChild;
 
-        T *prev = NULL;
-        if ( before ) prev = before->prevSibling;
-        T *next = before;
+        T* prev = NULL;
+        if (before)
+            prev = before->prevSibling;
+        T* next = before;
 
         child->parent = static_cast<T*>(this);
         child->prevSibling = prev;
         child->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = child;
-        if ( next ) next->prevSibling = child;
+        if (prev)
+            prev->nextSibling = child;
+        if (next)
+            next->prevSibling = child;
 
-        if ( firstChild == NULL || firstChild == before ) firstChild = child;
-        if ( lastChild == NULL ) lastChild = child;
+        if (firstChild == NULL || firstChild == before)
+            firstChild = child;
+        if (lastChild == NULL)
+            lastChild = child;
 
-        childCount ++;
+        childCount++;
     }
 
-    void addChildAfter(T* child, T* after)
-    {
+    void addChildAfter(T* child, T* after) {
         assert(child->parent == NULL);
 
         setModified();
 
-        if ( after == NULL ) after = lastChild;
+        if (after == NULL)
+            after = lastChild;
 
-        T *next = NULL;
-        if ( after ) next = after->nextSibling;
-        T *prev = after;
+        T* next = NULL;
+        if (after)
+            next = after->nextSibling;
+        T* prev = after;
 
         child->parent = static_cast<T*>(this);
         child->prevSibling = prev;
         child->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = child;
-        if ( next ) next->prevSibling = child;
+        if (prev)
+            prev->nextSibling = child;
+        if (next)
+            next->prevSibling = child;
 
-        if ( firstChild == NULL ) firstChild = child;
-        if ( lastChild == NULL || lastChild == after ) lastChild = child;
+        if (firstChild == NULL)
+            firstChild = child;
+        if (lastChild == NULL || lastChild == after)
+            lastChild = child;
 
-        childCount ++;
+        childCount++;
     }
 
-    void removeChild(idtype<objectOwnerType> child)
-    {
+    void removeChild(idtype<objectOwnerType> child) {
         removeChild(child->priv);
     }
 
-    void removeChild(T* child)
-    {
+    void removeChild(T* child) {
         assert(child->parent == static_cast<T*>(this));
-        
+
         setModified();
 
-        T *prev = child->prevSibling;
-        T *next = child->nextSibling;
+        T* prev = child->prevSibling;
+        T* next = child->nextSibling;
 
         child->prevSibling = NULL;
         child->nextSibling = NULL;
         child->parent = NULL;
 
-        if ( prev ) prev->nextSibling = next;
-        if ( next ) next->prevSibling = prev;
+        if (prev)
+            prev->nextSibling = next;
+        if (next)
+            next->prevSibling = prev;
 
-        if ( firstChild == child ) firstChild = next;
-        if ( lastChild == child ) lastChild = prev;
+        if (firstChild == child)
+            firstChild = next;
+        if (lastChild == child)
+            lastChild = prev;
 
-        childCount --;
+        childCount--;
     }
 
-    void insertChildAtIndex(idtype<objectOwnerType> child, int idx)
-    {
+    void insertChildAtIndex(idtype<objectOwnerType> child, int idx) {
         insertChildAtIndex(child->priv, idx);
     }
 
-    void insertChildAtIndex(T* child, int idx)
-    {
+    void insertChildAtIndex(T* child, int idx) {
         T* cur = firstChild;
-        while ( idx -- ) {
+        while (idx--) {
             cur = cur->nextSibling;
         }
 
-        if ( cur ) {
+        if (cur) {
             addChildBefore(child, cur);
         } else {
             //  End of the list
@@ -321,23 +334,21 @@ public:
     }
 };
 
-template<class T>
-class LLTreeNodeNoObj
-{
+template <class T>
+class LLTreeNodeNoObj {
 public:
     id self;
-    T *parent;
-    T *firstChild;
-    T *lastChild;
+    T* parent;
+    T* firstChild;
+    T* lastChild;
     int childCount;
 
-    T *prevSibling;
-    T *nextSibling;
+    T* prevSibling;
+    T* nextSibling;
 
     id cachedSubnodesArray;
 
-    LLTreeNodeNoObj()
-    {
+    LLTreeNodeNoObj() {
         parent = NULL;
         firstChild = NULL;
         lastChild = NULL;
@@ -348,9 +359,8 @@ public:
         cachedSubnodesArray = nil;
     }
 
-    ~LLTreeNodeNoObj()
-    {
-        if ( cachedSubnodesArray != nil ) {
+    ~LLTreeNodeNoObj() {
+        if (cachedSubnodesArray != nil) {
 #ifndef __OBJC__
             _m(cachedSubnodesArray, "release");
 #else
@@ -359,9 +369,8 @@ public:
         }
     }
 
-    void setModified()
-    {
-        if ( cachedSubnodesArray ) {
+    void setModified() {
+        if (cachedSubnodesArray) {
 #ifndef __OBJC__
             _m(cachedSubnodesArray, "autorelease");
 #else
@@ -371,14 +380,14 @@ public:
         cachedSubnodesArray = nil;
     }
 
-    id subnodesArray()
-    {
-        if ( cachedSubnodesArray != nil ) return cachedSubnodesArray;
+    id subnodesArray() {
+        if (cachedSubnodesArray != nil)
+            return cachedSubnodesArray;
 
         int subnodeCount = 0;
-        id *subnodesCopy = (id *) alloca(sizeof(id) * childCount);
-        for ( T* curChild = firstChild; curChild != NULL; curChild = curChild->nextSibling ) {
-            subnodesCopy[subnodeCount ++] = curChild->self;
+        id* subnodesCopy = (id*)alloca(sizeof(id) * childCount);
+        for (T* curChild = firstChild; curChild != NULL; curChild = curChild->nextSibling) {
+            subnodesCopy[subnodeCount++] = curChild->self;
         }
 
 #ifndef __OBJC__
@@ -390,48 +399,45 @@ public:
         return cachedSubnodesArray;
     }
 
-    void setSelf(id parentObj)
-    {
+    void setSelf(id parentObj) {
         self = parentObj;
     }
 
-    int indexOfChild(T* child)
-    {
+    int indexOfChild(T* child) {
         int idx = 0;
         T* curNode = firstChild;
 
-        while ( curNode ) {
-            if ( curNode == child ) return idx;
+        while (curNode) {
+            if (curNode == child)
+                return idx;
             curNode = curNode->nextSibling;
-            idx ++;
+            idx++;
         }
 
         return 0x7fffffff;
     }
 
-    bool containsChild(T* child)
-    {
-        if ( child->parent == static_cast<T*>(this) ) 
-            return true; else
+    bool containsChild(T* child) {
+        if (child->parent == static_cast<T*>(this))
+            return true;
+        else
             return false;
     }
 
-    T* childAtIndex(int idx)
-    {
+    T* childAtIndex(int idx) {
         T* cur = firstChild;
-        while ( idx -- ) {
+        while (idx--) {
             cur = cur->nextSibling;
         }
 
         return cur;
     }
 
-    void replaceChild(T* child, T* withChild)
-    {
+    void replaceChild(T* child, T* withChild) {
         setModified();
 
-        T *prev = child->prevSibling;
-        T *next = child->nextSibling;
+        T* prev = child->prevSibling;
+        T* next = child->nextSibling;
 
         child->prevSibling = NULL;
         child->nextSibling = NULL;
@@ -440,131 +446,154 @@ public:
         withChild->prevSibling = prev;
         withChild->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = withChild;
-        if ( next ) next->prevSibling = withChild;
+        if (prev)
+            prev->nextSibling = withChild;
+        if (next)
+            next->prevSibling = withChild;
 
-        if ( firstChild == child ) firstChild = withChild;
-        if ( lastChild == child ) lastChild = withChild;
+        if (firstChild == child)
+            firstChild = withChild;
+        if (lastChild == child)
+            lastChild = withChild;
     }
 
-    void exchangeChild(T* child1, T* child2)
-    {
+    void exchangeChild(T* child1, T* child2) {
         setModified();
 
         T* prev1 = child1->prevSibling;
-        if ( prev1 == child2 ) prev1 = child1;
+        if (prev1 == child2)
+            prev1 = child1;
         T* next1 = child1->nextSibling;
-        if ( next1 == child2 ) next1 = child1;
+        if (next1 == child2)
+            next1 = child1;
 
         T* prev2 = child2->prevSibling;
-        if ( prev2 == child1 ) prev2 = child2;
+        if (prev2 == child1)
+            prev2 = child2;
         T* next2 = child2->nextSibling;
-        if ( next2 == child1 ) next2 = child2;
+        if (next2 == child1)
+            next2 = child2;
 
         child1->prevSibling = prev2;
         child1->nextSibling = next2;
         child2->prevSibling = prev1;
         child2->nextSibling = next1;
 
-        if ( child1->prevSibling ) child1->prevSibling->nextSibling = child1;
-        if ( child1->nextSibling ) child1->nextSibling->prevSibling = child1;
+        if (child1->prevSibling)
+            child1->prevSibling->nextSibling = child1;
+        if (child1->nextSibling)
+            child1->nextSibling->prevSibling = child1;
 
-        if ( child2->prevSibling ) child2->prevSibling->nextSibling = child2;
-        if ( child2->nextSibling ) child2->nextSibling->prevSibling = child2;
+        if (child2->prevSibling)
+            child2->prevSibling->nextSibling = child2;
+        if (child2->nextSibling)
+            child2->nextSibling->prevSibling = child2;
 
-        if ( firstChild == child1 ) {
+        if (firstChild == child1) {
             firstChild = child2;
-        } else if ( firstChild == child2 ) {
+        } else if (firstChild == child2) {
             firstChild = child1;
         }
 
-        if ( lastChild == child1 ) {
+        if (lastChild == child1) {
             lastChild = child2;
-        } else if ( lastChild == child2 ) {
+        } else if (lastChild == child2) {
             lastChild = child1;
         }
     }
 
-    void addChildBefore(T* child, T* before)
-    {
+    void addChildBefore(T* child, T* before) {
         assert(child->parent == NULL);
 
         setModified();
 
-        if ( before == NULL ) before = firstChild;
+        if (before == NULL)
+            before = firstChild;
 
-        T *prev = NULL;
-        if ( before ) prev = before->prevSibling;
-        T *next = before;
+        T* prev = NULL;
+        if (before)
+            prev = before->prevSibling;
+        T* next = before;
 
         child->parent = static_cast<T*>(this);
         child->prevSibling = prev;
         child->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = child;
-        if ( next ) next->prevSibling = child;
+        if (prev)
+            prev->nextSibling = child;
+        if (next)
+            next->prevSibling = child;
 
-        if ( firstChild == NULL || firstChild == before ) firstChild = child;
-        if ( lastChild == NULL ) lastChild = child;
+        if (firstChild == NULL || firstChild == before)
+            firstChild = child;
+        if (lastChild == NULL)
+            lastChild = child;
 
-        childCount ++;
+        childCount++;
     }
 
-    void addChildAfter(T* child, T* after)
-    {
+    void addChildAfter(T* child, T* after) {
         assert(child->parent == NULL);
 
         setModified();
 
-        if ( after == NULL ) after = lastChild;
+        if (after == NULL)
+            after = lastChild;
 
-        T *next = NULL;
-        if ( after ) next = after->nextSibling;
-        T *prev = after;
+        T* next = NULL;
+        if (after)
+            next = after->nextSibling;
+        T* prev = after;
 
         child->parent = static_cast<T*>(this);
         child->prevSibling = prev;
         child->nextSibling = next;
 
-        if ( prev ) prev->nextSibling = child;
-        if ( next ) next->prevSibling = child;
+        if (prev)
+            prev->nextSibling = child;
+        if (next)
+            next->prevSibling = child;
 
-        if ( firstChild == NULL ) firstChild = child;
-        if ( lastChild == NULL || lastChild == after ) lastChild = child;
+        if (firstChild == NULL)
+            firstChild = child;
+        if (lastChild == NULL || lastChild == after)
+            lastChild = child;
 
-        childCount ++;
+        childCount++;
     }
 
-    void removeChild(T* child)
-    {
+    void removeChild(T* child) {
         assert(child->parent == static_cast<T*>(this));
-        
+
         setModified();
 
-        T *prev = child->prevSibling;
-        T *next = child->nextSibling;
+        T* prev = child->prevSibling;
+        T* next = child->nextSibling;
 
         child->prevSibling = NULL;
         child->nextSibling = NULL;
         child->parent = NULL;
 
-        if ( prev ) prev->nextSibling = next;
-        if ( next ) next->prevSibling = prev;
+        if (prev)
+            prev->nextSibling = next;
+        if (next)
+            next->prevSibling = prev;
 
-        if ( firstChild == child ) firstChild = next;
-        if ( lastChild == child ) lastChild = prev;
+        if (firstChild == child)
+            firstChild = next;
+        if (lastChild == child)
+            lastChild = prev;
 
-        childCount --;
+        childCount--;
     }
 
-    void insertChildAtIndex(T* child, int idx)
-    {
+    void insertChildAtIndex(T* child, int idx) {
         T* cur = firstChild;
-        while ( idx -- ) {
+        while (idx--) {
             cur = cur->nextSibling;
         }
 
-        if ( cur ) {
+        if (cur) {
             addChildBefore(child, cur);
         } else {
             //  End of the list

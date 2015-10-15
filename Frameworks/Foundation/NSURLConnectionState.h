@@ -16,19 +16,18 @@
 
 @interface NSURLConnectionState : NSObject {
 @public
-   BOOL _isRunning;
-   id _error;
-   idretain _wakeUp;
+    BOOL _isRunning;
+    id _error;
+    idretain _wakeUp;
 }
--(BOOL) isRunning;
-/* annotate with type */ -(id) init;
-/* annotate with type */ -(id) dealloc;
-/* annotate with type */ -(id) receiveAllDataInMode:(id)mode;
-/* annotate with type */ -(id) connection:(id)connection didReceiveData:(id)data;
-/* annotate with type */ -(id) setError:(id)error;
-/* annotate with type */ -(id) error;
-/* annotate with type */ -(id) _doneWakeup;
-/* annotate with type */ -(id) connection:(id)connection didFailWithError:(id)error;
-/* annotate with type */ -(id) connectionDidFinishLoading:(id)connection;
+- (BOOL)isRunning;
+/* annotate with type */ -(id)init;
+/* annotate with type */ -(id)dealloc;
+/* annotate with type */ -(id)receiveAllDataInMode : (id)mode;
+/* annotate with type */ -(id)connection : (id)connection didReceiveData : (id)data;
+/* annotate with type */ -(id)setError : (id)error;
+/* annotate with type */ -(id)error;
+/* annotate with type */ -(id)_doneWakeup;
+/* annotate with type */ -(id)connection : (id)connection didFailWithError : (id)error;
+/* annotate with type */ -(id)connectionDidFinishLoading : (id)connection;
 @end
-

@@ -20,18 +20,18 @@
 @public
     DWORD _capacity;
 }
--(instancetype) initWithLength:(unsigned)length;
--(instancetype) initWithCapacity:(unsigned)length;
--(void) appendBytes:(const char *)bytes length:(unsigned)length;
--(void) appendData:(NSData*)data;
--(void) setData:(NSData*)data;
--(void) setLength:(unsigned)length;
--(void) increaseLengthBy:(unsigned)length;
--(void) replaceBytesInRange:(NSRange)range withBytes:(void *)bytes;
--(void) replaceBytesInRange:(NSRange)aRange withBytes:(void *)bytes length:(unsigned)length;
--(uint8_t *) mutableBytes;
--(id) copyWithZone:(id)zone;
-+(instancetype) data;
-+(instancetype) dataWithLength:(unsigned)length;
-+(instancetype) dataWithCapacity:(unsigned)capacity;
+- (instancetype)initWithLength:(unsigned)length;
+- (instancetype)initWithCapacity:(unsigned)length;
+- (void)appendBytes:(const char*)bytes length:(unsigned)length;
+- (void)appendData:(NSData*)data;
+- (void)setData:(NSData*)data;
+- (void)setLength:(unsigned)length;
+- (void)increaseLengthBy:(unsigned)length;
+- (void)replaceBytesInRange:(NSRange)range withBytes:(void*)bytes;
+- (void)replaceBytesInRange:(NSRange)aRange withBytes:(void*)bytes length:(unsigned)length;
+- (uint8_t*)mutableBytes;
+- (id)copyWithZone:(id)zone;
++ (instancetype)data;
++ (instancetype)dataWithLength:(unsigned)length;
++ (instancetype)dataWithCapacity:(unsigned)capacity;
 @end

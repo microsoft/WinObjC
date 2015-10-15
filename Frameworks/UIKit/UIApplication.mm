@@ -46,10 +46,8 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
-NSString* const UIApplicationWillChangeDisplayModeNofication =
-    (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
-NSString* const UIApplicationDidChangeDisplayModeNofication =
-    (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
+NSString* const UIApplicationWillChangeDisplayModeNofication = (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
+NSString* const UIApplicationDidChangeDisplayModeNofication = (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
 
 float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;
@@ -118,9 +116,8 @@ static float touchDist(float x1, float y1, float x2, float y2) {
     return sqrtf(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
 }
 
-#define TAP_SLACK_AREA                                                                                           \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / \
-     3.0f) //  1/3 inch
+#define TAP_SLACK_AREA \
+    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
 
 static void RecordTouch(float x, float y, double timeStamp) {
     //  Skip over old touches
@@ -214,10 +211,12 @@ static idretaintype(NSMutableArray) _curNotifications;
 }
 
 - (void)notify:(unsigned)activity {
-    if ([NSThread currentThread] != [NSThread mainThread])
+    if ([NSThread currentThread] != [NSThread mainThread]) {
         return;
-    if (_applicationState == UIApplicationStateBackground)
+    }
+    if (_applicationState == UIApplicationStateBackground) {
         return;
+    }
 
     if (activity & kCFRunLoopBeforeTimers) {
         //  Always evaluate keyboard if it's diplayed - properties can change
@@ -285,8 +284,9 @@ static id findTopActionButtons(NSArray* arr, NSArray* windows, UIView* root) {
     for (int i = count - 1; i >= 0; i--) {
         UIView* curView = [subviews objectAtIndex:i];
         findTopActionButtons(arr, windows, curView);
-        if ([curView isHidden])
+        if ([curView isHidden]) {
             continue;
+        }
 
         if (curView->_backButtonDelegate != nil) {
             CGRect bounds;
@@ -308,8 +308,9 @@ static id findTopActionButtons(NSArray* arr, NSArray* windows, UIView* root) {
                 if (pointView == curView || [pointView isDescendantOfView:curView]) {
                     [arr addObject:curView];
                     break;
-                } else if (pointView != nil && pointView != curWindow)
+                } else if (pointView != nil && pointView != curWindow) {
                     break;
+                }
             }
         }
     }
@@ -331,8 +332,9 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 + (void)_doBackAction {
-    if (ignoringInteractionEvents)
+    if (ignoringInteractionEvents) {
         return;
+    }
 
     NSArray* windows = [[self sharedApplication] windows];
     int count = [windows count];
@@ -349,9 +351,9 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     [allActionButtons sortUsingFunction:__EbrSortViewPriorities context:0];
 
     for (UIView* curView in allActionButtons) {
-        NSInvocation* inv = [NSInvocation
-            invocationWithMethodSignature:[[curView->_backButtonDelegate class]
-                                              instanceMethodSignatureForSelector:curView->_backButtonSelector]];
+        NSInvocation* inv =
+            [NSInvocation invocationWithMethodSignature:[[curView->_backButtonDelegate class]
+                                                            instanceMethodSignatureForSelector:curView->_backButtonSelector]];
         inv.selector = curView->_backButtonSelector;
         inv.target = curView->_backButtonDelegate;
 
@@ -403,8 +405,9 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
 - (void)_receiveAlarm:(id)localNotification {
     int idx = [_curNotifications indexOfObject:localNotification];
-    if (idx == NSNotFound)
+    if (idx == NSNotFound) {
         return; // probably deleted.
+    }
 
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Alert"
                                                     message:[localNotification alertBody]
@@ -466,10 +469,10 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             rect.size.width = appFrame.size.height;
             rect.size.height = appFrame.size.width;
 
-            [statusBarRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                          appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                      appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [statusBarRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [popupRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [statusBarRotationLayer setBounds:rect];
@@ -493,10 +496,10 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             rect.size.width = appFrame.size.width;
             rect.size.height = appFrame.size.height;
 
-            [statusBarRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                          appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                      appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [statusBarRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [popupRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [statusBarRotationLayer setBounds:rect];
@@ -519,10 +522,10 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             rect.size.width = appFrame.size.height;
             rect.size.height = appFrame.size.width;
 
-            [statusBarRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                          appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                      appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [statusBarRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [popupRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [statusBarRotationLayer setBounds:rect];
@@ -545,10 +548,10 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             rect.size.width = appFrame.size.width;
             rect.size.height = appFrame.size.height;
 
-            [statusBarRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                          appFrame.origin.y + appFrame.size.height / 2.0f)];
-            [popupRotationLayer setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f,
-                                                      appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [statusBarRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
+            [popupRotationLayer
+                setCenter:CGPointMake(appFrame.origin.x + appFrame.size.width / 2.0f, appFrame.origin.y + appFrame.size.height / 2.0f)];
             rect.origin.x = 0.0f;
             rect.origin.y = 0.0f;
             [statusBarRotationLayer setBounds:rect];
@@ -693,8 +696,9 @@ static void printViews(id curView, int level) {
     char szOut[2048];
     strcpy(szOut, "");
 
-    for (int i = 0; i < level * 2; i++)
+    for (int i = 0; i < level * 2; i++) {
         sprintf(&szOut[strlen(szOut)], " ");
+    }
     sprintf(&szOut[strlen(szOut)], "%s @ 0x%08x ", object_getClassName(curView), (unsigned int)curView);
 
     if ([curView isHidden] || [curView alpha] <= 0.01f) {
@@ -713,8 +717,7 @@ static void printViews(id curView, int level) {
 
     CGRect rect;
     rect = [curView frame];
-    id fmt = [NSString
-        stringWithFormat:@"{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
+    id fmt = [NSString stringWithFormat:@"{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
     // sprintf(&szOut[strlen(szOut)], "{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width,
     // rect.size.height);
     EbrDebugLog("%s%s", szOut, [fmt UTF8String]);
@@ -759,8 +762,9 @@ static void printViews(id curView, int level) {
 
         int finger = evt->fingerCount;
 
-        if (allTouches == nil)
+        if (allTouches == nil) {
             allTouches = [[NSMutableSet set] retain];
+        }
 
         switch (evt->mouseEvent) {
             case mouseDown: {
@@ -791,12 +795,14 @@ static void printViews(id curView, int level) {
                     pos = [curWindow convertPoint:pos fromView:nil toView:curWindow];
 
                     mouseView = [curWindow hitTest:pos withEvent:touchTestEvent];
-                    if (mouseView != nil && mouseView != curWindow)
+                    if (mouseView != nil && mouseView != curWindow) {
                         break;
+                    }
                 }
 
-                if (mouseView != nil)
+                if (mouseView != nil) {
                     EbrDebugLog("%s touched\n", object_getClassName(mouseView));
+                }
                 touches[finger]->inView = mouseView;
                 [touches[finger]->inView retain];
 
@@ -874,8 +880,9 @@ static void printViews(id curView, int level) {
                 resetAllTrackingGestures = TRUE;
 
                 for (int i = 0; i < 10; i++) {
-                    if (touches[i] != nil)
+                    if (touches[i] != nil) {
                         resetAllTrackingGestures = FALSE;
+                    }
                 }
 
                 if (resetAllTrackingGestures) {
@@ -917,8 +924,9 @@ static void printViews(id curView, int level) {
     }
 
     UIView* view = touch->inView;
-    if (view == nil)
+    if (view == nil) {
         return;
+    }
     bool process = true;
 
     UIView* views[128];
@@ -971,8 +979,7 @@ static void printViews(id curView, int level) {
             // EbrDebugLog("Checking gesture %s\n", object_getClassName(curgesture));
             id delegate = [curgesture delegate];
             BOOL send = TRUE;
-            if (touch->phase == UITouchPhaseBegan &&
-                [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+            if (touch->phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
                 send = [delegate gestureRecognizer:curgesture shouldReceiveTouch:touch];
             }
 
@@ -1053,8 +1060,9 @@ static void printViews(id curView, int level) {
 
 - (BOOL)openURL:(NSURL*)url {
     NSString* scheme = [url scheme];
-    if ([scheme isEqualToString:@"fbauth"])
+    if ([scheme isEqualToString:@"fbauth"]) {
         return FALSE;
+    }
     if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"] || [scheme isEqualToString:@"mailto"]) {
         EbrOpenURL((char*)[[url absoluteString] UTF8String]);
         return TRUE;
@@ -1206,8 +1214,9 @@ static void printViews(id curView, int level) {
 }
 
 - (void)endIgnoringInteractionEvents {
-    if (ignoringInteractionEvents > 0)
+    if (ignoringInteractionEvents > 0) {
         ignoringInteractionEvents--;
+    }
 }
 
 - (BOOL)isIgnoringInteractionEvents {
@@ -1353,8 +1362,7 @@ static void WarnViewControllers(UIView* subview) {
     if ([delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
         [delegate applicationWillResignActive:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification"
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
     EbrPauseSound();
 
     if ([windows count] > 0) {
@@ -1373,8 +1381,7 @@ static void WarnViewControllers(UIView* subview) {
     if ([delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
         [delegate applicationDidEnterBackground:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidEnterBackgroundNotification"
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidEnterBackgroundNotification" object:self];
     EbrEventSignal(_applicationStateChanged);
 }
 
@@ -1384,8 +1391,7 @@ static void WarnViewControllers(UIView* subview) {
     if ([delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
         [delegate applicationWillEnterForeground:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification"
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
 
     _applicationState = UIApplicationStateActive;
     EbrDebugLog("Bringing to foreground with: %x\n", url);
@@ -1408,8 +1414,9 @@ static void layoutBlankView(UIView* inputView, UIView* accessoryView, float tota
         if (_curKeyboardAccessory != accessoryView) {
             [_curKeyboardAccessory removeFromSuperview];
             _curKeyboardAccessory = accessoryView;
-            if (_curKeyboardAccessory != nil)
+            if (_curKeyboardAccessory != nil) {
                 [_blankView addSubview:_curKeyboardAccessory];
+            }
         }
 
         if (_curKeyboardAccessory != nil) {
@@ -1423,14 +1430,13 @@ static void layoutBlankView(UIView* inputView, UIView* accessoryView, float tota
         if (_curKeyboardInputView != inputView) {
             [_curKeyboardInputView removeFromSuperview];
             _curKeyboardInputView = inputView;
-            if (_curKeyboardInputView != nil)
+            if (_curKeyboardInputView != nil) {
                 [_blankView addSubview:_curKeyboardInputView];
+            }
         }
 
         if (_curKeyboardInputView != nil) {
-            CGRect keyboardRect = {
-                0, accessorySize.size.height, statusRect.size.width, totalHeight - accessorySize.size.height
-            };
+            CGRect keyboardRect = { 0, accessorySize.size.height, statusRect.size.width, totalHeight - accessorySize.size.height };
             [_curKeyboardInputView setFrame:keyboardRect];
         }
     } else {
@@ -1526,19 +1532,18 @@ static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAp
     centerEnd.y = mappedEnd.origin.y + mappedEnd.size.height / 2.0f;
 
     // Fire the notification:
-    id keys[7] = {
-        @"UIKeyboardFrameEndUserInfoKey",
-        @"UIKeyboardFrameBeginUserInfoKey",
-        @"UIKeyboardAnimationDurationUserInfoKey",
-        @"UIKeyboardAnimationCurveUserInfoKey",
-        @"UIKeyboardBoundsUserInfoKey",
-        @"UIKeyboardCenterBeginUserInfoKey",
-        @"UIKeyboardCenterEndUserInfoKey",
+    id keys[7] =
+    { @"UIKeyboardFrameEndUserInfoKey",
+      @"UIKeyboardFrameBeginUserInfoKey",
+      @"UIKeyboardAnimationDurationUserInfoKey",
+      @"UIKeyboardAnimationCurveUserInfoKey",
+      @"UIKeyboardBoundsUserInfoKey",
+      @"UIKeyboardCenterBeginUserInfoKey",
+      @"UIKeyboardCenterEndUserInfoKey",
     };
     id values[7] = {
-        [NSValue valueWithCGRect:mappedEnd],      [NSValue valueWithCGRect:mappedStart],
-        [NSNumber numberWithDouble:0.25],         [NSNumber numberWithInt:0],
-        [NSValue valueWithCGRect:keyboardBounds], [NSValue valueWithCGPoint:centerBegin],
+        [NSValue valueWithCGRect:mappedEnd],  [NSValue valueWithCGRect:mappedStart],    [NSNumber numberWithDouble:0.25],
+        [NSNumber numberWithInt:0],           [NSValue valueWithCGRect:keyboardBounds], [NSValue valueWithCGPoint:centerBegin],
         [NSValue valueWithCGPoint:centerEnd],
     };
 
@@ -1548,12 +1553,8 @@ static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAp
 
     if (newHeight > 0) {
         if (!blankViewUp || forceKeyboardAppearance) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillShowNotification"
-                                                                object:nil
-                                                              userInfo:dict];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidShowNotification"
-                                                                object:nil
-                                                              userInfo:dict];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillShowNotification" object:nil userInfo:dict];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidShowNotification" object:nil userInfo:dict];
         }
         if (!blankViewUp) {
             EbrOnShowKeyboardInternal();
@@ -1569,12 +1570,8 @@ static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAp
         }
     } else {
         //  Keyboard is being hidden
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillHideNotification"
-                                                            object:nil
-                                                          userInfo:dict];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidHideNotification"
-                                                            object:nil
-                                                          userInfo:dict];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillHideNotification" object:nil userInfo:dict];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidHideNotification" object:nil userInfo:dict];
         EbrOnHideKeyboardInternal();
     }
     oldHeight = newHeight;
@@ -1980,14 +1977,8 @@ int AddContactIndex(int dwID) {
     return -1;
 }
 
-void UIQueueTouchInput(float x,
-                       float y,
-                       int fingerID,
-                       int eventType,
-                       float surfaceWidth,
-                       float surfaceHeight,
-                       int64_t eventTime,
-                       bool bLandscape) {
+void UIQueueTouchInput(
+    float x, float y, int fingerID, int eventType, float surfaceWidth, float surfaceHeight, int64_t eventTime, bool bLandscape) {
     int touchID = 0;
 
     if (eventType == EVENT_DOWN) {
@@ -1995,8 +1986,9 @@ void UIQueueTouchInput(float x,
     } else {
         touchID = GetContactIndex(fingerID);
     }
-    if (touchID == -1)
+    if (touchID == -1) {
         return;
+    }
 
     EbrInputEvent evt;
 
@@ -2028,14 +2020,18 @@ void UIQueueTouchInput(float x,
         y = y * GetCACompositor()->screenHeight() / outHeight;
     }
 
-    if (x < 0.0f)
+    if (x < 0.0f) {
         x = 0.0f;
-    if (x > GetCACompositor()->screenWidth())
+    }
+    if (x > GetCACompositor()->screenWidth()) {
         x = GetCACompositor()->screenWidth();
-    if (y < 0.0f)
+    }
+    if (y < 0.0f) {
         y = 0.0f;
-    if (y > GetCACompositor()->screenHeight())
+    }
+    if (y > GetCACompositor()->screenHeight()) {
         y = GetCACompositor()->screenHeight();
+    }
 
     evt.x = x;
     evt.y = y;
@@ -2144,8 +2140,7 @@ void UIShutdown() {
         return _fixedWidth;
     } else {
         if (_fixedHeight > 0 && _autoMagnification) {
-            return round(self._currentOrientationWindowSize.width * _fixedHeight /
-                         self._currentOrientationWindowSize.height);
+            return round(self._currentOrientationWindowSize.width * _fixedHeight / self._currentOrientationWindowSize.height);
         } else {
             return round(self._currentOrientationWindowSize.width / _magnification);
         }
@@ -2171,8 +2166,7 @@ void UIShutdown() {
         return _fixedHeight;
     } else {
         if (_fixedWidth > 0 && _autoMagnification) {
-            return round(self._currentOrientationWindowSize.height * _fixedWidth /
-                         self._currentOrientationWindowSize.width);
+            return round(self._currentOrientationWindowSize.height * _fixedWidth / self._currentOrientationWindowSize.width);
         } else {
             return round(self._currentOrientationWindowSize.height / _magnification);
         }
@@ -2198,8 +2192,7 @@ void UIShutdown() {
 }
 
 - (void)_updateDisplaySettings {
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillChangeDisplayModeNofication
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillChangeDisplayModeNofication object:self];
 
     float newWidth = [self currentWidth];
     float newHeight = [self currentHeight];

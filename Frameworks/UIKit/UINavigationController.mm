@@ -141,8 +141,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         navBarClass = [UINavigationBar class];
     }
 
-    _navigationBar.attach(
-        [[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+    _navigationBar.attach([[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
     [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     [_navigationBar setDelegate:self];
     _viewControllers.attach([NSMutableArray new]);
@@ -160,8 +159,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 
     if (_navigationBar == nil) {
-        _navigationBar.attach(
-            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+        _navigationBar.attach([[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
 
@@ -185,8 +183,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         [_toolBar setHidden:TRUE];
     }
     if (_navigationBar == nil) {
-        _navigationBar.attach(
-            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+        _navigationBar.attach([[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
     [_navigationBar setDelegate:self];
@@ -233,7 +230,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 }
 
-- (UIViewController *)popViewControllerAnimated:(BOOL)animated {
+- (UIViewController*)popViewControllerAnimated:(BOOL)animated {
     if (animated)
         animated = 1;
 
@@ -430,8 +427,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
-    [_newController ? _newController : _curController willAnimateRotationToInterfaceOrientation:orientation
-                                                                                       duration:duration];
+    [_newController ? _newController : _curController willAnimateRotationToInterfaceOrientation:orientation duration:duration];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
@@ -522,9 +518,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
             [params->_appearingController notifyViewDidAppear:_showAnimated];
 
             if ([_delegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
-                [_delegate navigationController:self
-                          didShowViewController:params->_appearingController
-                                       animated:_showAnimated];
+                [_delegate navigationController:self didShowViewController:params->_appearingController animated:_showAnimated];
             }
         }
     }
@@ -650,8 +644,7 @@ static void rotateViewController(UINavigationController* self) {
 
             [_navigationBar setFrame:size];
             [_mainView addSubview:_navigationBar];
-            [_navigationBar
-                setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
+            [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
 
             bool clipToNavBar = true;
 

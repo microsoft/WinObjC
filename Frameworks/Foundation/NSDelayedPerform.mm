@@ -47,16 +47,20 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (BOOL)isEqualToPerform:(NSDelayedPerform*)other {
-    if (_object != other->_object)
+    if (_object != other->_object) {
         return NO;
+    }
 
-    if (_selector == NULL || other->_selector == NULL)
+    if (_selector == NULL || other->_selector == NULL) {
         return YES;
+    }
 
-    if (_selector != other->_selector)
+    if (_selector != other->_selector) {
         return NO;
-    if (_argument != other->_argument)
+    }
+    if (_argument != other->_argument) {
         return NO;
+    }
 
     return YES;
 }

@@ -16,58 +16,50 @@
 
 #pragma once
 
-template<typename Type, int sz>
-class RingBuffer
-{
+template <typename Type, int sz>
+class RingBuffer {
     enum { arraySize = sz + 1 };
 
     Type data[arraySize];
     size_t low, high;
 
 public:
-
-    RingBuffer() : low(0), high(0)
-    {
+    RingBuffer() : low(0), high(0) {
     }
 
-    void add(const Type& val)
-    {
+    void add(const Type& val) {
         data[high] = val;
         high = (high + 1) % arraySize;
 
         // Even when full we keep a single element empty to differentiate between an empty
         // buffer and a full buffer.
-        if ( high == low ) {
+        if (high == low) {
             low = (low + 1) % arraySize;
         }
     }
 
-    size_t size() const
-    {
-        if ( high < low ) return arraySize - (low - high);
+    size_t size() const {
+        if (high < low)
+            return arraySize - (low - high);
         return high - low;
     }
 
-    Type at(size_t index) const
-    {
+    Type at(size_t index) const {
         assert(index < size());
         index = (index + low) % arraySize;
         return data[index];
     }
 
-    Type fromEnd(size_t index) const
-    {
+    Type fromEnd(size_t index) const {
         assert(size() > index);
         return at(size() - index - 1);
     }
 
-    Type operator[](size_t index) const
-    {
+    Type operator[](size_t index) const {
         return at(index);
     }
 
-    void reset()
-    {
+    void reset() {
         low = high = 0;
     }
 };

@@ -36,18 +36,10 @@ void CFNSRelease(CFAllocatorRef allocator, const void* obj);
 Boolean CFNSEqual(const void* obj1, const void* obj2);
 
 const CFArrayCallBacks kCFTypeArrayCallBacks = {
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
 };
 const CFArrayCallBacks kNSTypeArrayCallBacks = {
-    0,
-    CFNSRetain,
-    CFNSRelease,
-    0,
-    CFNSEqual,
+    0, CFNSRetain, CFNSRelease, 0, CFNSEqual,
 };
 
 class __CFArray {
@@ -125,8 +117,7 @@ public:
 
             if (newCapacity != contents.heap.objsCapacity) {
                 contents.heap.objsCapacity = newCapacity;
-                contents.heap.objsArray =
-                    (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
+                contents.heap.objsArray = (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
             }
             return;
         }
@@ -344,10 +335,7 @@ CFArrayRef CFArrayCreateCopy(CFAllocatorRef allocator, CFArrayRef array) {
     return (CFArrayRef)ret;
 }
 
-CFArrayRef CFArrayCreate(CFAllocatorRef allocator,
-                         const void** values,
-                         CFIndex numValues,
-                         const CFArrayCallBacks* valueCallbacks) {
+CFArrayRef CFArrayCreate(CFAllocatorRef allocator, const void** values, CFIndex numValues, const CFArrayCallBacks* valueCallbacks) {
     NSArray* ret = [_LazyNSArray alloc];
     __CFArray* cfarr = new (_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
     _LazyArrOffset.member(ret) = cfarr;
@@ -477,8 +465,7 @@ void _CFArrayInitInternal(CFArrayRef arr) {
 
 void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void** objects, int count, bool retain) {
     NSArray* pArr = (NSArray*)arr;
-    _LazyArrOffset.member(arr) =
-        new (_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks, (id*)objects, count, retain);
+    _LazyArrOffset.member(arr) = new (_LazyArraySpaceOffset.member(pArr)) __CFArray(&kNSTypeArrayCallBacks, (id*)objects, count, retain);
 }
 
 void _CFArrayDestroyInternal(CFArrayRef arr) {

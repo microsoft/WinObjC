@@ -65,10 +65,8 @@ static void sizeViews(UIProgressView* self, bool animated) {
     CGRect frame;
     frame = [self frame];
 
-    UIImage* background =
-        [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    UIImage* foreground =
-        [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* background = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* foreground = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 
     CGRect progressFrame;
 
@@ -98,10 +96,8 @@ static void sizeViews(UIProgressView* self, bool animated) {
     [self setOpaque:FALSE];
     [self setUserInteractionEnabled:FALSE];
 
-    UIImage* background =
-        [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    UIImage* foreground =
-        [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* background = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage* foreground = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 
     CGRect progressFrame;
 

@@ -32,8 +32,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
-    if (_delegate == nil)
+    if (_delegate == nil) {
         _delegate = self;
+    }
 }
 
 - (id)open {
@@ -61,8 +62,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode {
-    if (_inputSource != nil)
+    if (_inputSource != nil) {
         [runLoop removeInputSource:_inputSource forMode:mode];
+    }
 
     return self;
 }
@@ -84,10 +86,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
                     [sslHandler runHandshakeIfNeeded:_socket];
                 }
 
-                if ([self hasBytesAvailable])
+                if ([self hasBytesAvailable]) {
                     event = NSStreamEventHasBytesAvailable;
-                else
+                } else {
                     event = NSStreamEventNone;
+                }
             } break;
 
             case NSStreamStatusAtEnd:
@@ -104,8 +107,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         assert(0);
     }
 
-    if (event != NSStreamEventNone && [_delegate respondsToSelector:@selector(stream:handleEvent:)])
+    if (event != NSStreamEventNone && [_delegate respondsToSelector:@selector(stream:handleEvent:)]) {
         [_delegate stream:self handleEvent:event];
+    }
 
     return self;
 }
@@ -113,17 +117,19 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 - (int)read:(uint8_t*)buffer maxLength:(DWORD)maxLength {
     NSInteger result;
 
-    if (_status == NSStreamStatusAtEnd)
+    if (_status == NSStreamStatusAtEnd) {
         return 0;
+    }
 
-    if (_status != NSStreamStatusOpen && _status != NSStreamStatusOpening)
+    if (_status != NSStreamStatusOpen && _status != NSStreamStatusOpening) {
         return -1;
+    }
 
     NSSSLHandler* sslHandler = [_socket sslHandler];
 
-    if (sslHandler == nil)
+    if (sslHandler == nil) {
         result = [_socket read:buffer maxLength:maxLength];
-    else {
+    } else {
         [sslHandler runWithSocket:_socket];
 
         result = [sslHandler readPlaintext:buffer maxLength:maxLength];
@@ -132,10 +138,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         //[sslHandler runWithSocket:_socket];
     }
 
-    if (result == 0)
+    if (result == 0) {
         _status = NSStreamStatusAtEnd;
-    if (result == -1)
+    }
+    if (result == -1) {
         _status = NSStreamStatusError;
+    }
 
     return result;
 }
@@ -146,14 +154,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     if (_status == NSStreamStatusOpen) {
         id sslHandler = [_socket sslHandler];
 
-        if (sslHandler == nil)
+        if (sslHandler == nil) {
             result = [_socket hasBytesAvailable];
-        else {
-            if ([_socket hasBytesAvailable])
+        } else {
+            if ([_socket hasBytesAvailable]) {
                 if ([sslHandler transferOneBufferFromSocketToSSL:_socket] <= 0) {
                     // If the read failed we want to return YES so that the end of stream can be read
                     return YES;
                 }
+            }
 
             result = ([sslHandler readBytesAvailable] > 0) ? YES : NO;
         }
@@ -163,8 +172,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (id)setProperty:(id)prop forKey:(id)key {
-    if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings])
+    if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings]) {
         return [_socket setSSLProperties:prop];
+    }
 
     assert(0);
     return NO;

@@ -16,7 +16,6 @@
 
 #pragma once
 
-
 FOUNDATION_EXPORT_CLASS
 @interface NSColor : NSObject {
 @public

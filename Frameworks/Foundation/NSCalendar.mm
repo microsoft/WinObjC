@@ -288,10 +288,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     return 0;
 }
 
-- (NSDateComponents*)components:(NSUInteger)unitFlags
-                       fromDate:(NSDate*)fromDate
-                         toDate:(NSDate*)toDate
-                        options:(NSUInteger)options {
+- (NSDateComponents*)components:(NSUInteger)unitFlags fromDate:(NSDate*)fromDate toDate:(NSDate*)toDate options:(NSUInteger)options {
     UErrorCode status = U_ZERO_ERROR;
     Calendar* copy = calendarCopyWithTZAndDate(self, fromDate);
     UDate toDateICU = (double)[toDate timeIntervalSince1970] * 1000.0;
@@ -319,10 +316,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     return [ret autorelease];
 }
 
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit
-          startDate:(NSDate**)datep
-           interval:(NSTimeInterval*)timep
-            forDate:(NSDate*)date {
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
     // HACK: implement me!
     *datep = [date retain];
     return NO;

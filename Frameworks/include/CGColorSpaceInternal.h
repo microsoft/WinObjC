@@ -17,14 +17,13 @@
 #ifndef __CGCOLORSPACE_H
 #define __CGCOLORSPACE_H
 
-class __CGColorSpace
-{
+class __CGColorSpace {
 public:
     id isa;
 
     surfaceFormat colorSpace;
-    char *palette;
-    int   lastColor;
+    char* palette;
+    int lastColor;
 
     __CGColorSpace(surfaceFormat fmt);
     ~__CGColorSpace();

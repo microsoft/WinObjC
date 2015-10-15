@@ -138,8 +138,7 @@ static void* connectFunc(void* p) {
 #if defined(WIN32)
         int err = WSAGetLastError();
         LPSTR errString = 0;
-        int size = FormatMessage(
-            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, err, 0, (LPSTR)&errString, 0, 0);
+        int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, err, 0, (LPSTR)&errString, 0, 0);
 #endif
         assert(0);
     }
@@ -277,8 +276,7 @@ static void* connectFunc(void* p) {
         }
     }
 
-    if (tryAddr.sin_port != 12345 &&
-        connect(_descriptor, (struct sockaddr*)&tryAddr, (socklen_t)sizeof(tryAddr)) == 0) {
+    if (tryAddr.sin_port != 12345 && connect(_descriptor, (struct sockaddr*)&tryAddr, (socklen_t)sizeof(tryAddr)) == 0) {
         if (!block) {
             if ((error = [self setOperationWouldBlock:YES]) != nil)
                 return error;

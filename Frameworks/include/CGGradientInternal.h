@@ -19,18 +19,17 @@
 
 #include "CoreGraphics/CGGradient.h"
 
-class __CGGradient
-{
+class __CGGradient {
 public:
     id isa;
     surfaceFormat _colorSpace;
-    float *_components;
-    float *_locations;
+    float* _components;
+    float* _locations;
     DWORD _count;
 
     __CGGradient();
     ~__CGGradient();
-    void initWithColorComponents(const float *components, const float *locations, size_t count, CGColorSpaceRef colorspace);
-    void initWithColors(CFArrayRef components, const float *locations, CGColorSpaceRef colorspace);
+    void initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace);
+    void initWithColors(CFArrayRef components, const float* locations, CGColorSpaceRef colorspace);
 };
 #endif

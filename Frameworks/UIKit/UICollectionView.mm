@@ -37,15 +37,14 @@
     id<UICollectionViewDelegate> _collectionViewDelegate;
     idretaintype(NSMutableDictionary) _supplementaryViewReuseQueues, _cellReuseQueues, _decorationViewReuseQueues;
     idretain _nibLayout, _nibCellsExternalObjects, _supplementaryViewsExternalObjects;
-    idretaintype(NSMutableDictionary) _cellNibDict, _supplementaryViewNibDict, _supplementaryViewClassDict,
-        _cellClassDict;
+    idretaintype(NSMutableDictionary) _cellNibDict, _supplementaryViewNibDict, _supplementaryViewClassDict, _cellClassDict;
     UICollectionViewData* _collectionViewData;
     idretaintype(NSMutableSet) _indexPathsForSelectedItems, _indexPathsForHighlightedItems;
     idretain _layout;
     idretaintype(NSMutableDictionary) _allVisibleViewsDict;
     idretain _backgroundView;
     idretain _touchingIndexPath, _currentIndexPath;
-    idretainp<void(^)(BOOL)> _updateCompletionHandler;
+    idretainp<void (^)(BOOL)> _updateCompletionHandler;
 
     idretaintype(NSMutableArray) _insertItems;
     idretaintype(NSMutableArray) _deleteItems;
@@ -116,8 +115,7 @@ static void collectionCommonSetup(UICollectionView* self) {
 
     _nibCellsExternalObjects = cellExternalObjects;
 
-    id supplementaryViewExternalObjects =
-        [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewPrototypeNibExternalObjects"];
+    id supplementaryViewExternalObjects = [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewPrototypeNibExternalObjects"];
     id supplementaryViewNibs = [inCoder decodeObjectForKey:@"UICollectionViewSupplementaryViewNibDict"];
 
     for (id identifier in [supplementaryViewNibs allKeys]) {
@@ -160,8 +158,7 @@ static void collectionCommonSetup(UICollectionView* self) {
         _dataSource = dataSource;
 
         //  Getting Item and Section Metrics
-        _collectionViewFlags.dataSourceNumberOfSections =
-            [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
+        _collectionViewFlags.dataSourceNumberOfSections = [_dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)];
 
         //  Getting Views for Items
         _collectionViewFlags.dataSourceViewForSupplementaryElement =
@@ -195,12 +192,11 @@ static void collectionCommonSetup(UICollectionView* self) {
     //  Tracking the Removal of Views
     _collectionViewFlags.delegateDidEndDisplayingCell =
         [delegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)];
-    _collectionViewFlags.delegateDidEndDisplayingSupplementaryView = [delegate
-        respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
+    _collectionViewFlags.delegateDidEndDisplayingSupplementaryView =
+        [delegate respondsToSelector:@selector(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)];
 
     //  Managing Actions for Cells
-    _collectionViewFlags.delegateSupportsMenus =
-        [delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
+    _collectionViewFlags.delegateSupportsMenus = [delegate respondsToSelector:@selector(collectionView:shouldShowMenuForItemAtIndexPath:)];
 }
 
 - (id)delegate {
@@ -257,8 +253,7 @@ static void collectionCommonSetup(UICollectionView* self) {
 
         CGPoint targetOffset;
         targetOffset = [self contentOffset];
-        CGPoint centerPoint =
-            CGPoint::point(bounds.origin.x + bounds.size.width / 2.f, bounds.origin.y + bounds.size.height / 2.f);
+        CGPoint centerPoint = CGPoint::point(bounds.origin.x + bounds.size.width / 2.f, bounds.origin.y + bounds.size.height / 2.f);
         id centerItemIndexPath = [self indexPathForItemAtPoint:centerPoint];
 
         if (!centerItemIndexPath) {
@@ -286,8 +281,8 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
         CGRect newlyBounds = CGRectMake(targetOffset.x, targetOffset.y, bounds.size.width, bounds.size.height);
         id newlyVisibleLayoutAttrs = [_collectionViewData layoutAttributesForElementsInRect:newlyBounds];
 
-        id layoutInterchangeData = [NSMutableDictionary
-            dictionaryWithCapacity:[newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
+        id layoutInterchangeData =
+            [NSMutableDictionary dictionaryWithCapacity:[newlyVisibleLayoutAttrs count] + [previouslyVisibleItemsKeysSet count]];
 
         id newlyVisibleItemsKeys = [NSMutableSet set];
         for (id attr in newlyVisibleLayoutAttrs) {
@@ -298,29 +293,23 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
             id newAttr = nil;
 
             if ([newKey type] == UICollectionViewItemTypeDecorationView) {
-                prevAttr =
-                    [[self collectionViewLayout] layoutAttributesForDecorationViewOfKind:[attr representedElementKind]
-                                                                             atIndexPath:[newKey indexPath]];
-                newAttr = [layout layoutAttributesForDecorationViewOfKind:[attr representedElementKind]
-                                                              atIndexPath:[newKey indexPath]];
+                prevAttr = [[self collectionViewLayout] layoutAttributesForDecorationViewOfKind:[attr representedElementKind]
+                                                                                    atIndexPath:[newKey indexPath]];
+                newAttr = [layout layoutAttributesForDecorationViewOfKind:[attr representedElementKind] atIndexPath:[newKey indexPath]];
             } else if ([newKey type] == UICollectionViewItemTypeCell) {
                 prevAttr = [[self collectionViewLayout] layoutAttributesForItemAtIndexPath:[newKey indexPath]];
                 newAttr = [layout layoutAttributesForItemAtIndexPath:[newKey indexPath]];
             } else {
-                prevAttr = [[self collectionViewLayout]
-                    layoutAttributesForSupplementaryViewOfKind:[attr representedElementKind]
-                                                   atIndexPath:[newKey indexPath]];
-                newAttr = [layout layoutAttributesForSupplementaryViewOfKind:[attr representedElementKind]
-                                                                 atIndexPath:[newKey indexPath]];
+                prevAttr = [[self collectionViewLayout] layoutAttributesForSupplementaryViewOfKind:[attr representedElementKind]
+                                                                                       atIndexPath:[newKey indexPath]];
+                newAttr = [layout layoutAttributesForSupplementaryViewOfKind:[attr representedElementKind] atIndexPath:[newKey indexPath]];
             }
 
             if (prevAttr != nil && newAttr != nil) {
-                [layoutInterchangeData setObject:[NSDictionary dictionaryWithObjectsAndKeys:prevAttr,
-                                                                                            @"previousLayoutInfos",
-                                                                                            "newAttr",
-                                                                                            @"newLayoutInfos",
-                                                                                            NULL]
-                                          forKey:newKey];
+                [layoutInterchangeData
+                    setObject:[NSDictionary
+                                  dictionaryWithObjectsAndKeys:prevAttr, @"previousLayoutInfos", "newAttr", @"newLayoutInfos", NULL]
+                       forKey:newKey];
             }
         }
 
@@ -330,11 +319,9 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
 
             if ([key type] == UICollectionViewItemTypeDecorationView) {
                 id decorView = [_allVisibleViewsDict objectForKey:key];
-                prevAttr =
-                    [[self collectionViewLayout] layoutAttributesForDecorationViewOfKind:[decorView reuseIdentifier]
-                                                                             atIndexPath:[key indexPath]];
-                newAttr = [layout layoutAttributesForDecorationViewOfKind:[decorView reuseIdentifier]
-                                                              atIndexPath:[key indexPath]];
+                prevAttr = [[self collectionViewLayout] layoutAttributesForDecorationViewOfKind:[decorView reuseIdentifier]
+                                                                                    atIndexPath:[key indexPath]];
+                newAttr = [layout layoutAttributesForDecorationViewOfKind:[decorView reuseIdentifier] atIndexPath:[key indexPath]];
             } else if ([key type] == UICollectionViewItemTypeCell) {
                 prevAttr = [[self collectionViewLayout] layoutAttributesForItemAtIndexPath:[key indexPath]];
                 newAttr = [layout layoutAttributesForItemAtIndexPath:[key indexPath]];
@@ -343,9 +330,8 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
                 prevAttr = [[self collectionViewLayout]
                     layoutAttributesForSupplementaryViewOfKind:[[suuplView layoutAttributes] representedElementKind]
                                                    atIndexPath:[key indexPath]];
-                newAttr = [layout
-                    layoutAttributesForSupplementaryViewOfKind:[[suuplView layoutAttributes] representedElementKind]
-                                                   atIndexPath:[key indexPath]];
+                newAttr = [layout layoutAttributesForSupplementaryViewOfKind:[[suuplView layoutAttributes] representedElementKind]
+                                                                 atIndexPath:[key indexPath]];
             }
 
             id layoutInterchangeDataValue = [NSMutableDictionary dictionary];
@@ -367,8 +353,7 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
                     [_allVisibleViewsDict setObject:cell forKey:key];
                     [self addControlledSubview:cell];
                 } else
-                    [cell applyLayoutAttributes:[[layoutInterchangeData objectForKey:key]
-                                                    objectForKey:@"previousLayoutInfos"]];
+                    [cell applyLayoutAttributes:[[layoutInterchangeData objectForKey:key] objectForKey:@"previousLayoutInfos"]];
             } else if ([key type] == UICollectionViewItemTypeSupplementaryView) {
                 id view = [_allVisibleViewsDict objectForKey:key];
                 if (!view) {
@@ -383,8 +368,7 @@ targetOffset = CGPoint::point(std::max(0.f, (float) targetRect.origin.x), std::m
                 id view = [_allVisibleViewsDict objectForKey:key];
                 if (!view) {
                     id attrs = [[layoutInterchangeData objectForKey:key] objectForKey:@"previousLayoutInfos"];
-                    view = [self dequeueReusableOrCreateDecorationViewOfKind:[attrs representedElementKind]
-                                                                forIndexPath:[attrs indexPath]];
+                    view = [self dequeueReusableOrCreateDecorationViewOfKind:[attrs representedElementKind] forIndexPath:[attrs indexPath]];
                     [_allVisibleViewsDict setObject:view forKey:key];
                     [self addControlledSubview:view];
                 }
@@ -567,7 +551,7 @@ transition.type = kCATransitionFade;
         return;
     [self invalidateLayout];
 
-    for (id curView in(id) _allVisibleViewsDict) {
+    for (id curView in (id) _allVisibleViewsDict) {
         id obj = [_allVisibleViewsDict objectForKey:curView];
 
         if ([obj isKindOfClass:[UIView class]]) {
@@ -576,7 +560,7 @@ transition.type = kCATransitionFade;
     }
     [_allVisibleViewsDict removeAllObjects];
 
-    for (id indexPath in(id) _indexPathsForSelectedItems) {
+    for (id indexPath in (id) _indexPathsForSelectedItems) {
         id selectedCell = [self cellForItemAtIndexPath:indexPath];
         [selectedCell setSelected:NO];
         [selectedCell setHighlighted:NO];
@@ -616,8 +600,7 @@ transition.type = kCATransitionFade;
 
     // Add new cells.
     for (id layoutAttributes in layoutAttributesArray) {
-        UICollectionViewItemKey* itemKey =
-            [UICollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
+        UICollectionViewItemKey* itemKey = [UICollectionViewItemKey collectionItemKeyForLayoutAttributes:layoutAttributes];
         [itemKeysToAddDict setObject:layoutAttributes forKey:itemKey];
 
         // check if cell is in visible dict; add it if not.
@@ -651,9 +634,7 @@ transition.type = kCATransitionFade;
                 view = nil;
             }
             if ([itemKey type] == UICollectionViewItemTypeCell) {
-                view = [self createPreparedCellForItemAtIndexPath:[itemKey indexPath]
-                                             withLayoutAttributes:layoutAttributes];
-
+                view = [self createPreparedCellForItemAtIndexPath:[itemKey indexPath] withLayoutAttributes:layoutAttributes];
             } else if ([itemKey type] == UICollectionViewItemTypeSupplementaryView) {
                 view = [self createPreparedSupplementaryViewForElementOfKind:[layoutAttributes representedElementKind]
                                                                  atIndexPath:[layoutAttributes indexPath]
@@ -690,9 +671,7 @@ transition.type = kCATransitionFade;
             [_allVisibleViewsDict removeObjectForKey:itemKey];
             if ([itemKey type] == UICollectionViewItemTypeCell) {
                 if (_collectionViewFlags.delegateDidEndDisplayingCell) {
-                    [_collectionViewDelegate collectionView:self
-                                       didEndDisplayingCell:reusableView
-                                         forItemAtIndexPath:[itemKey indexPath]];
+                    [_collectionViewDelegate collectionView:self didEndDisplayingCell:reusableView forItemAtIndexPath:[itemKey indexPath]];
                 }
                 [self reuseCell:reusableView];
             } else if ([itemKey type] == UICollectionViewItemTypeSupplementaryView) {
@@ -739,9 +718,7 @@ transition.type = kCATransitionFade;
     return nil;
 }
 
-- (id)dequeueReusableSupplementaryViewOfKind:(id)elementKind
-                         withReuseIdentifier:(id)identifier
-                                forIndexPath:(NSIndexPath*)indexPath {
+- (id)dequeueReusableSupplementaryViewOfKind:(id)elementKind withReuseIdentifier:(id)identifier forIndexPath:(NSIndexPath*)indexPath {
     id kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
     id reusableViews = [_supplementaryViewReuseQueues objectForKey:kindAndIdentifier];
     id view = [[[reusableViews lastObject] retain] autorelease];
@@ -765,7 +742,7 @@ transition.type = kCATransitionFade;
                 assert(0);
                 return nil;
                 //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString
-                //stringWithFormat:@"Class not registered for kind/identifier %@", kindAndIdentifier] userInfo:nil];
+                // stringWithFormat:@"Class not registered for kind/identifier %@", kindAndIdentifier] userInfo:nil];
             }
             if (_layout) {
                 id attributes = [_layout layoutAttributesForSupplementaryViewOfKind:elementKind atIndexPath:indexPath];
@@ -815,7 +792,7 @@ transition.type = kCATransitionFade;
             if (cellClass == nil) {
                 assert(0);
                 //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString
-                //stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
+                // stringWithFormat:@"Class not registered for identifier %@", identifier] userInfo:nil];
             }
             if (attributes) {
                 cell = [[cellClass alloc] initWithFrame:[attributes frame]];
@@ -854,14 +831,13 @@ transition.type = kCATransitionFade;
                 id objects = [supplementaryViewNib instantiateWithOwner:self options:nil];
                 view = [objects objectAtIndex:0];
             }
-
         } else {
             id decorationViewClassDict = [collectionViewLayout decorationViewClassDict];
             id viewClass = [decorationViewClassDict objectForKey:elementKind];
             if (viewClass == nil) {
                 assert(0);
                 //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString
-                //stringWithFormat:@"Class not registered for identifier %@", elementKind] userInfo:nil];
+                // stringWithFormat:@"Class not registered for identifier %@", elementKind] userInfo:nil];
             }
             if (attributes) {
                 view = [[viewClass alloc] initWithFrame:[attributes frame]];
@@ -929,19 +905,14 @@ if (floatingViews.count && scrollIndicatorView) {
 }
 
 - (id)reuseSupplementaryView:(id)supplementaryView {
-    id kindAndIdentifier = [NSString stringWithFormat:@"%@/%@",
-                                                      [[supplementaryView layoutAttributes] elementKind],
-                                                      [supplementaryView reuseIdentifier]];
-    [self queueReusableView:supplementaryView
-                    inQueue:(id)_supplementaryViewReuseQueues
-             withIdentifier:kindAndIdentifier];
+    id kindAndIdentifier =
+        [NSString stringWithFormat:@"%@/%@", [[supplementaryView layoutAttributes] elementKind], [supplementaryView reuseIdentifier]];
+    [self queueReusableView:supplementaryView inQueue:(id)_supplementaryViewReuseQueues withIdentifier:kindAndIdentifier];
     return 0;
 }
 
 - (id)reuseDecorationView:(id)decorationView {
-    [self queueReusableView:decorationView
-                    inQueue:(id)_decorationViewReuseQueues
-             withIdentifier:[decorationView reuseIdentifier]];
+    [self queueReusableView:decorationView inQueue:(id)_decorationViewReuseQueues withIdentifier:[decorationView reuseIdentifier]];
 
     return 0;
 }
@@ -971,10 +942,7 @@ if (floatingViews.count && scrollIndicatorView) {
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     NSIndexPath* indexPath = [self indexPathForItemAtPoint:touchPoint];
     if (indexPath && [self allowsSelection]) {
-        if (![self highlightItemAtIndexPath:indexPath
-                                   animated:YES
-                             scrollPosition:UICollectionViewScrollPositionNone
-                             notifyDelegate:YES])
+        if (![self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone notifyDelegate:YES])
             return;
 
         _touchingIndexPath = indexPath;
@@ -1000,10 +968,7 @@ if (floatingViews.count && scrollIndicatorView) {
 
         // moving out of bounds
         if ([_currentIndexPath isEqual:(id)_touchingIndexPath] && ![indexPath isEqual:(id)_touchingIndexPath] &&
-            [self unhighlightItemAtIndexPath:(id)_touchingIndexPath
-                                    animated:YES
-                              notifyDelegate:YES
-                        shouldCheckHighlight:YES]) {
+            [self unhighlightItemAtIndexPath:(id)_touchingIndexPath animated:YES notifyDelegate:YES shouldCheckHighlight:YES]) {
             _currentIndexPath = indexPath;
             // moving back into the original touching cell
         } else if (![_currentIndexPath isEqual:(id)_touchingIndexPath] && [indexPath isEqual:(id)_touchingIndexPath]) {
@@ -1056,10 +1021,7 @@ if (floatingViews.count && scrollIndicatorView) {
     if ([self allowsMultipleSelection] && [_indexPathsForSelectedItems containsObject:indexPath]) {
         [self deselectItemAtIndexPath:indexPath animated:YES notifyDelegate:YES];
     } else if ([self allowsSelection]) {
-        [self selectItemAtIndexPath:indexPath
-                           animated:YES
-                     scrollPosition:UICollectionViewScrollPositionNone
-                     notifyDelegate:YES];
+        [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone notifyDelegate:YES];
     }
 
     return self;
@@ -1155,10 +1117,7 @@ if (floatingViews.count && scrollIndicatorView) {
 }
 
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
-    return [self unhighlightItemAtIndexPath:indexPath
-                                   animated:animated
-                             notifyDelegate:notifyDelegate
-                       shouldCheckHighlight:NO];
+    return [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notifyDelegate shouldCheckHighlight:NO];
 }
 
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1194,8 +1153,7 @@ if (floatingViews.count && scrollIndicatorView) {
 - (id)deselectItemAtIndexPath:(id)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
     BOOL shouldDeselect = YES;
     // deselect only relevant during multi mode
-    if ([self allowsMultipleSelection] && notifyDelegate &&
-        _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
+    if ([self allowsMultipleSelection] && notifyDelegate && _collectionViewFlags.delegateShouldDeselectItemAtIndexPath) {
         shouldDeselect = [_collectionViewDelegate collectionView:self shouldDeselectItemAtIndexPath:indexPath];
     }
 
@@ -1226,7 +1184,7 @@ if (floatingViews.count && scrollIndicatorView) {
 - (id)cellForItemAtIndexPath:(id)indexPath {
     id ret = nil;
 
-    for (UICollectionViewItemKey* itemKey in(id) _allVisibleViewsDict) {
+    for (UICollectionViewItemKey* itemKey in (id) _allVisibleViewsDict) {
         if ([itemKey type] == UICollectionViewItemTypeCell) {
             if ([[itemKey indexPath] isEqual:indexPath]) {
                 ret = [_allVisibleViewsDict objectForKey:itemKey];
@@ -1285,9 +1243,8 @@ if (floatingViews.count && scrollIndicatorView) {
     NSUInteger idx = [sections firstIndex];
     while (idx != NSNotFound) {
         NSUInteger section = idx;
-        id updateItem = [[UICollectionViewUpdateItem alloc]
-            initWithAction:updateAction
-              forIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:section]];
+        id updateItem = [[UICollectionViewUpdateItem alloc] initWithAction:updateAction
+                                                              forIndexPath:[NSIndexPath indexPathForItem:NSNotFound inSection:section]];
         [updateActions addObject:updateItem];
         idx = [sections indexGreaterThanIndex:idx];
     }
@@ -1357,23 +1314,20 @@ if (floatingViews.count && scrollIndicatorView) {
 
     id viewsToRemove = [NSMutableDictionary dictionary];
     [viewsToRemove setObject:[NSMutableArray array] forKey:[NSNumber numberWithInt:UICollectionViewItemTypeCell]];
-    [viewsToRemove setObject:[NSMutableArray array]
-                      forKey:[NSNumber numberWithInt:UICollectionViewItemTypeDecorationView]];
-    [viewsToRemove setObject:[NSMutableArray array]
-                      forKey:[NSNumber numberWithInt:UICollectionViewItemTypeSupplementaryView]];
+    [viewsToRemove setObject:[NSMutableArray array] forKey:[NSNumber numberWithInt:UICollectionViewItemTypeDecorationView]];
+    [viewsToRemove setObject:[NSMutableArray array] forKey:[NSNumber numberWithInt:UICollectionViewItemTypeSupplementaryView]];
 
     for (UICollectionViewUpdateItem* updateItem in items) {
         if ([updateItem isSectionOperation] && [updateItem updateAction] != UICollectionUpdateActionDelete)
             continue;
         if ([updateItem isSectionOperation] && [updateItem updateAction] == UICollectionUpdateActionDelete) {
-            NSInteger numberOfBeforeSection = [[_update objectForKey:@"oldModel"]
-                numberOfItemsInSection:[[updateItem indexPathBeforeUpdate] section]];
+            NSInteger numberOfBeforeSection =
+                [[_update objectForKey:@"oldModel"] numberOfItemsInSection:[[updateItem indexPathBeforeUpdate] section]];
             for (NSInteger i = 0; i < numberOfBeforeSection; i++) {
                 id indexPath = [NSIndexPath indexPathForItem:i inSection:[[updateItem indexPathBeforeUpdate] section]];
 
                 id finalAttrs = [_layout finalLayoutAttributesForDisappearingItemAtIndexPath:indexPath];
-                UICollectionViewItemKey* key =
-                    [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:indexPath];
+                UICollectionViewItemKey* key = [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:indexPath];
                 id view = [_allVisibleViewsDict objectForKey:key];
                 if (view) {
                     id startAttrs = [view layoutAttributes];
@@ -1428,8 +1382,7 @@ if (floatingViews.count && scrollIndicatorView) {
             CGRect startRect = [startAttrs frame];
             CGRect finalRect = [finalAttrs frame];
 
-            if (CGRectIntersectsRect([self visibleBoundRects], startRect) ||
-                CGRectIntersectsRect([self visibleBoundRects], finalRect)) {
+            if (CGRectIntersectsRect([self visibleBoundRects], startRect) || CGRectIntersectsRect([self visibleBoundRects], finalRect)) {
                 if (!startAttrs) {
                     startAttrs = [finalAttrs copy];
                     [startAttrs setAlpha:0];
@@ -1480,17 +1433,16 @@ if (floatingViews.count && scrollIndicatorView) {
         UICollectionViewItemKey* view = [_allVisibleViewsDict objectForKey:key];
 
         if ([key type] == UICollectionViewItemTypeCell) {
-            NSUInteger oldGlobalIndex =
-                [[_update objectForKey:@"oldModel"] globalIndexForItemAtIndexPath:[key indexPath]];
+            NSUInteger oldGlobalIndex = [[_update objectForKey:@"oldModel"] globalIndexForItemAtIndexPath:[key indexPath]];
             id oldToNewIndexMap = [_update objectForKey:@"oldToNewIndexMap"];
             NSUInteger newGlobalIndex = NSNotFound;
             if (NSNotFound != oldGlobalIndex && oldGlobalIndex < [oldToNewIndexMap count]) {
                 newGlobalIndex = [[oldToNewIndexMap objectAtIndex:oldGlobalIndex] intValue];
             }
-            id newIndexPath = newGlobalIndex == NSNotFound ? nil : [[_update objectForKey:@"newModel"]
-                                                                       indexPathForItemAtGlobalIndex:newGlobalIndex];
-            id oldIndexPath = oldGlobalIndex == NSNotFound ? nil : [[_update objectForKey:@"oldModel"]
-                                                                       indexPathForItemAtGlobalIndex:oldGlobalIndex];
+            id newIndexPath =
+                newGlobalIndex == NSNotFound ? nil : [[_update objectForKey:@"newModel"] indexPathForItemAtGlobalIndex:newGlobalIndex];
+            id oldIndexPath =
+                oldGlobalIndex == NSNotFound ? nil : [[_update objectForKey:@"oldModel"] indexPathForItemAtGlobalIndex:oldGlobalIndex];
 
             if (newIndexPath) {
                 id startAttrs = nil;
@@ -1517,9 +1469,8 @@ if (floatingViews.count && scrollIndicatorView) {
             id finalAttrs = nil;
 
             startAttrs = [view layoutAttributes];
-            finalAttrs =
-                [_layout layoutAttributesForSupplementaryViewOfKind:[[view layoutAttributes] representedElementKind]
-                                                        atIndexPath:[key indexPath]];
+            finalAttrs = [_layout layoutAttributesForSupplementaryViewOfKind:[[view layoutAttributes] representedElementKind]
+                                                                 atIndexPath:[key indexPath]];
 
             id dic = [NSMutableDictionary dictionary];
 
@@ -1538,9 +1489,8 @@ if (floatingViews.count && scrollIndicatorView) {
             id finalAttrs = nil;
 
             startAttrs = [view layoutAttributes];
-            finalAttrs =
-                [_layout layoutAttributesForDecorationViewOfKind:[[view layoutAttributes] representedElementKind]
-                                                     atIndexPath:[key indexPath]];
+            finalAttrs = [_layout layoutAttributesForDecorationViewOfKind:[[view layoutAttributes] representedElementKind]
+                                                              atIndexPath:[key indexPath]];
 
             id dic = [NSMutableDictionary dictionary];
 
@@ -1566,8 +1516,7 @@ if (floatingViews.count && scrollIndicatorView) {
         if ([key type] == UICollectionViewItemTypeCell && ![[newAllVisibleView allKeys] containsObject:key]) {
             id startAttrs = [_layout initialLayoutAttributesForAppearingItemAtIndexPath:[attrs indexPath]];
 
-            id view = [self createPreparedCellForItemAtIndexPath:[attrs indexPath]
-                                            withLayoutAttributes:startAttrs ? startAttrs : attrs];
+            id view = [self createPreparedCellForItemAtIndexPath:[attrs indexPath] withLayoutAttributes:startAttrs ? startAttrs : attrs];
             [self addControlledSubview:view];
             [newAllVisibleView setObject:view forKey:key];
 
@@ -1670,11 +1619,11 @@ if (floatingViews.count && scrollIndicatorView) {
 
     id someMutableArr1 = [[NSMutableArray alloc] init];
 
-    id removeUpdateItems = [[self arrayForUpdateAction:UICollectionUpdateActionDelete]
-        sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)];
+    id removeUpdateItems =
+        [[self arrayForUpdateAction:UICollectionUpdateActionDelete] sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)];
 
-    id insertUpdateItems = [[self arrayForUpdateAction:UICollectionUpdateActionInsert]
-        sortedArrayUsingSelector:@selector(compareIndexPaths:)];
+    id insertUpdateItems =
+        [[self arrayForUpdateAction:UICollectionUpdateActionInsert] sortedArrayUsingSelector:@selector(compareIndexPaths:)];
 
     id sortedMutableReloadItems = [[_reloadItems sortedArrayUsingSelector:@selector(compareIndexPaths:)] mutableCopy];
     id sortedMutableMoveItems = [[_moveItems sortedArrayUsingSelector:@selector(compareIndexPaths:)] mutableCopy];
@@ -1694,16 +1643,13 @@ if (floatingViews.count && scrollIndicatorView) {
                    [oldCollectionViewData numberOfItemsInSection:[[updateItem indexPathBeforeUpdate] section]]);
         }
 
-        [someMutableArr2
-            addObject:[[UICollectionViewUpdateItem alloc] initWithAction:UICollectionUpdateActionDelete
-                                                            forIndexPath:[updateItem indexPathBeforeUpdate]]];
-        [someMutableArr3
-            addObject:[[UICollectionViewUpdateItem alloc] initWithAction:UICollectionUpdateActionInsert
-                                                            forIndexPath:[updateItem indexPathAfterUpdate]]];
+        [someMutableArr2 addObject:[[UICollectionViewUpdateItem alloc] initWithAction:UICollectionUpdateActionDelete
+                                                                         forIndexPath:[updateItem indexPathBeforeUpdate]]];
+        [someMutableArr3 addObject:[[UICollectionViewUpdateItem alloc] initWithAction:UICollectionUpdateActionInsert
+                                                                         forIndexPath:[updateItem indexPathAfterUpdate]]];
     }
 
-    id sortedDeletedMutableItems =
-        [[_deleteItems sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)] mutableCopy];
+    id sortedDeletedMutableItems = [[_deleteItems sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)] mutableCopy];
     id sortedInsertMutableItems = [[_insertItems sortedArrayUsingSelector:@selector(compareIndexPaths:)] mutableCopy];
 
     for (id deleteItem in sortedDeletedMutableItems) {
@@ -1724,11 +1670,9 @@ if (floatingViews.count && scrollIndicatorView) {
                    [oldCollectionViewData numberOfItemsInSection:[[deleteItem indexPathBeforeUpdate] section]]);
 
             id dict = nil;
-            if (!(dict = [operations
-                      objectForKey:[NSNumber numberWithInt:[[deleteItem indexPathBeforeUpdate] section]]])) {
+            if (!(dict = [operations objectForKey:[NSNumber numberWithInt:[[deleteItem indexPathBeforeUpdate] section]]])) {
                 dict = [NSMutableDictionary dictionary];
-                [operations setObject:dict
-                               forKey:[NSNumber numberWithInt:[[deleteItem indexPathBeforeUpdate] section]]];
+                [operations setObject:dict forKey:[NSNumber numberWithInt:[[deleteItem indexPathBeforeUpdate] section]]];
             }
 
             [dict setObject:[NSNumber numberWithInt:[[dict objectForKey:@"deleted"] intValue] + 1] forKey:@"deleted"];
@@ -1747,7 +1691,7 @@ if (floatingViews.count && scrollIndicatorView) {
                 if ([[moveItem indexPathAfterUpdate] isEqual:indexPath]) {
                     if ([moveItem isSectionOperation])
                         assert(0); // NO, @"attempt to perform an insert and a move to the same section (%ld)",
-                                   // (long)indexPath.section);
+                    // (long)indexPath.section);
                 }
             }
 
@@ -1756,8 +1700,7 @@ if (floatingViews.count && scrollIndicatorView) {
                 id nextInsertItem = [sortedInsertMutableItems objectAtIndex:j];
 
                 if ([[nextInsertItem indexPathAfterUpdate] section] == [indexPath section]) {
-                    assert([[nextInsertItem indexPathAfterUpdate] item] <
-                           [_collectionViewData numberOfItemsInSection:[indexPath section]]);
+                    assert([[nextInsertItem indexPathAfterUpdate] item] < [_collectionViewData numberOfItemsInSection:[indexPath section]]);
                     /*
                     @"attempt to insert item %ld into section %ld, but there are only %ld items in section %ld after the
                     update",
@@ -1834,8 +1777,7 @@ if (floatingViews.count && scrollIndicatorView) {
         }
 
         id dict1 = nil, dict2 = nil;
-        if (!(dict1 =
-                  [operations objectForKey:[NSNumber numberWithInt:[[sortedItem indexPathBeforeUpdate] section]]])) {
+        if (!(dict1 = [operations objectForKey:[NSNumber numberWithInt:[[sortedItem indexPathBeforeUpdate] section]]])) {
             dict1 = [NSMutableDictionary dictionary];
             [operations setObject:dict1 forKey:[NSNumber numberWithInt:[[sortedItem indexPathBeforeUpdate] section]]];
         }
@@ -1875,8 +1817,7 @@ if (floatingViews.count && scrollIndicatorView) {
 
     [someMutableArr2 addObjectsFromArray:sortedDeletedMutableItems];
     [someMutableArr3 addObjectsFromArray:sortedInsertMutableItems];
-    [someMutableArr1
-        addObjectsFromArray:[someMutableArr2 sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)]];
+    [someMutableArr1 addObjectsFromArray:[someMutableArr2 sortedArrayUsingSelector:@selector(inverseCompareIndexPaths:)]];
     [someMutableArr1 addObjectsFromArray:sortedMutableMoveItems];
     [someMutableArr1 addObjectsFromArray:[someMutableArr3 sortedArrayUsingSelector:@selector(compareIndexPaths:)]];
 
@@ -1890,10 +1831,8 @@ if (floatingViews.count && scrollIndicatorView) {
     for (unsigned i = 0; i < [oldCollectionViewData numberOfSections]; i++) {
         id sectionArr = [NSMutableArray array];
         for (unsigned j = 0; j < [oldCollectionViewData numberOfItemsInSection:i]; j++)
-            [sectionArr
-                addObject:[NSNumber numberWithInt:[oldCollectionViewData
-                                                      globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j
-                                                                                                        inSection:i]]]];
+            [sectionArr addObject:[NSNumber numberWithInt:[oldCollectionViewData
+                                                              globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]]]];
         [newModel addObject:sectionArr];
     }
 
@@ -1925,8 +1864,7 @@ if (floatingViews.count && scrollIndicatorView) {
                     [newModel insertObject:section atIndex:[[updateItem indexPathAfterUpdate] section]];
                 } else {
                     id object =
-                        [NSNumber numberWithInt:[oldCollectionViewData
-                                                    globalIndexForItemAtIndexPath:[updateItem indexPathBeforeUpdate]]];
+                        [NSNumber numberWithInt:[oldCollectionViewData globalIndexForItemAtIndexPath:[updateItem indexPathBeforeUpdate]]];
                     [[newModel objectAtIndex:[[updateItem indexPathBeforeUpdate] section]] removeObject:object];
                     [[newModel objectAtIndex:[[updateItem indexPathAfterUpdate] section]]
                         insertObject:object
@@ -1950,11 +1888,9 @@ if (floatingViews.count && scrollIndicatorView) {
     for (NSUInteger i = 0; i < [newModel count]; i++) {
         id section = [newModel objectAtIndex:i];
         for (NSUInteger j = 0; j < [section count]; j++) {
-            NSInteger newGlobalIndex =
-                [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
+            NSInteger newGlobalIndex = [_collectionViewData globalIndexForItemAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
             if ([[section objectAtIndex:j] integerValue] != NSNotFound)
-                [oldToNewMap setObject:[NSNumber numberWithInt:newGlobalIndex]
-                    atIndexedSubscript:[[section objectAtIndex:j] intValue]];
+                [oldToNewMap setObject:[NSNumber numberWithInt:newGlobalIndex] atIndexedSubscript:[[section objectAtIndex:j] intValue]];
             if (newGlobalIndex != NSNotFound)
                 [newToOldMap setObject:[section objectAtIndex:j] atIndexedSubscript:newGlobalIndex];
         }

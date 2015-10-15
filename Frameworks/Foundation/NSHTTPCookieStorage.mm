@@ -30,8 +30,9 @@ id EbrGetExternalCookies(id url) {
 @implementation NSHTTPCookieStorage : NSObject
 + (NSHTTPCookieStorage*)sharedHTTPCookieStorage {
     static id _shared;
-    if (!_shared)
+    if (!_shared) {
         _shared = [[self alloc] init];
+    }
     return _shared;
 }
 
@@ -78,8 +79,9 @@ id EbrGetExternalCookies(id url) {
 }
 
 - (id)cookies {
-    if (!_cookies)
+    if (!_cookies) {
         [self _sync];
+    }
 
     return [_cookies allValues];
 }
@@ -101,23 +103,27 @@ id EbrGetExternalCookies(id url) {
         EbrDebugLog("host is %s\n", [[url host] UTF8String]);
         EbrDebugLog("path is %s\n", [[url path] UTF8String]);
         if ([domain hasPrefix:@"."]) {
-            if (![[url host] hasSuffix:domain])
+            if (![[url host] hasSuffix:domain]) {
                 continue; // does not match suffix
-        } else if (![[url host] isEqualToString:domain])
+            }
+        } else if (![[url host] isEqualToString:domain]) {
             continue; // does not match exact domain
+        }
 
         path = [cookie path];
 
-        if (![path isEqualToString:@"/"] && ![urlPath hasPrefix:path] && ![urlPathWithSlash hasPrefix:path])
+        if (![path isEqualToString:@"/"] && ![urlPath hasPrefix:path] && ![urlPathWithSlash hasPrefix:path]) {
             continue; // neither "all paths" nor specific path
+        }
         /*
         if ([cookie isSecure] && ![[url scheme] hasSuffix:@"s"])
         continue;   // not requested by secure protocol
         */
         // This is very suspect:
         if ((portList = [cookie portList])) {
-            if (![portList containsObject:[url port]])
+            if (![portList containsObject:[url port]]) {
                 continue; // no match with port list
+            }
         }
         [r addObject:cookie]; // exact match
     }
@@ -133,8 +139,7 @@ id EbrGetExternalCookies(id url) {
     if ([cookie _isExternal]) {
         EbrDeleteExternalCookie(cookie);
     } else {
-        [_cookies
-            removeObjectForKey:[NSString stringWithFormat:@"%@/%@/%@", [cookie domain], [cookie path], [cookie name]]];
+        [_cookies removeObjectForKey:[NSString stringWithFormat:@"%@/%@/%@", [cookie domain], [cookie path], [cookie name]]];
         _touched = TRUE;
     }
     [self _sync];
@@ -142,8 +147,9 @@ id EbrGetExternalCookies(id url) {
 
 - (void)setCookie:(id)cookie {
     id key;
-    if (_cookieAcceptPolicy == NSHTTPCookieAcceptPolicyNever)
+    if (_cookieAcceptPolicy == NSHTTPCookieAcceptPolicyNever) {
         return;
+    }
     key = [NSString stringWithFormat:@"%@/%@/%@", [cookie domain], [cookie path], [cookie name]];
     [self _sync];
     [_cookies setObject:cookie forKey:key];
@@ -154,8 +160,9 @@ id EbrGetExternalCookies(id url) {
 - (void)setCookies:(id)cookies forURL:(id)url mainDocumentURL:(id)mainURL {
     id c;
     id cookie;
-    if (_cookieAcceptPolicy == NSHTTPCookieAcceptPolicyNever)
+    if (_cookieAcceptPolicy == NSHTTPCookieAcceptPolicyNever) {
         return;
+    }
     c = [cookies objectEnumerator];
     while ((cookie = [c nextObject])) {
         [self setCookie:cookie];

@@ -34,34 +34,34 @@ typedef struct ssl_ctx_st SSL_CTX;
 
 @interface NSSSLHandler : NSObject {
 @public
-   id _properties;
-#if defined( WIN32 ) || defined( ANDROID )
-   SSL_METHOD *_method;
-   SSL_CTX    *_context;
-   SSL        *_connection;
-   BIO        *_incoming;
-   BIO        *_outgoing;
-   int         _stableBufferCapacity;
-   uint8_t    *_stableBuffer;
-   id          _readBuffer;
-   id          _outputStream;
+    id _properties;
+#if defined(WIN32) || defined(ANDROID)
+    SSL_METHOD* _method;
+    SSL_CTX* _context;
+    SSL* _connection;
+    BIO* _incoming;
+    BIO* _outgoing;
+    int _stableBufferCapacity;
+    uint8_t* _stableBuffer;
+    id _readBuffer;
+    id _outputStream;
 #endif
 }
--(int) writePlaintext:(const uint8_t *)buffer maxLength:(int)length;
--(unsigned) readPlaintext:(uint8_t *)buffer maxLength:(unsigned)length;
-/* annotate with type */ -(id) initWithProperties:(id)properties;
-/* annotate with type */ -(id) dealloc;
-/* annotate with type */ -(id) isHandshaking;
-/* annotate with type */ -(id) writeBytesAvailable;
-/* annotate with type */ -(id) wantsMoreIncoming;
-/* annotate with type */ -(id) readEncrypted:(uint8_t *)buffer maxLength:(int)length;
-/* annotate with type */ -(id) writeEncrypted:(const uint8_t *)buffer maxLength:(int)length;
-/* annotate with type */ -(id) _readPostSSL:(uint8_t *)buffer maxLength:(int)length;
-/* annotate with type */ -(id) readBytesAvailable;
-/* annotate with type */ -(id) transferOneBufferFromSSLToSocket:(id)socket;
-/* annotate with type */ -(id) transferOneBufferFromSocketToSSL:(id)socket;
-/* annotate with type */ -(id) runHandshakeIfNeeded:(id)socket;
-/* annotate with type */ -(id) runWithSocket:(id)socket;
-/* annotate with type */ -(id) setOutputStream:(id)stream;
-/* annotate with type */ +(id) initialize;
+- (int)writePlaintext:(const uint8_t*)buffer maxLength:(int)length;
+- (unsigned)readPlaintext:(uint8_t*)buffer maxLength:(unsigned)length;
+/* annotate with type */ -(id)initWithProperties : (id)properties;
+/* annotate with type */ -(id)dealloc;
+/* annotate with type */ -(id)isHandshaking;
+/* annotate with type */ -(id)writeBytesAvailable;
+/* annotate with type */ -(id)wantsMoreIncoming;
+/* annotate with type */ -(id)readEncrypted : (uint8_t*)buffer maxLength : (int)length;
+/* annotate with type */ -(id)writeEncrypted : (const uint8_t*)buffer maxLength : (int)length;
+/* annotate with type */ -(id)_readPostSSL : (uint8_t*)buffer maxLength : (int)length;
+/* annotate with type */ -(id)readBytesAvailable;
+/* annotate with type */ -(id)transferOneBufferFromSSLToSocket : (id)socket;
+/* annotate with type */ -(id)transferOneBufferFromSocketToSSL : (id)socket;
+/* annotate with type */ -(id)runHandshakeIfNeeded : (id)socket;
+/* annotate with type */ -(id)runWithSocket : (id)socket;
+/* annotate with type */ -(id)setOutputStream : (id)stream;
+/* annotate with type */ +(id)initialize;
 @end

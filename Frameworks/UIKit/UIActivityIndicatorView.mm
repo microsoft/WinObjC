@@ -46,8 +46,9 @@
 }
 
 - (void)awakeFromNib {
-    if (startAnimating)
+    if (startAnimating) {
         [self startAnimating];
+    }
     [super awakeFromNib];
 }
 
@@ -82,8 +83,9 @@
 - (void)setHidesWhenStopped:(BOOL)shouldhide {
     hidesWhenStopped = shouldhide;
 
-    if (hidesWhenStopped && !isAnimating)
+    if (hidesWhenStopped && !isAnimating) {
         [self setHidden:TRUE];
+    }
 }
 
 - (BOOL)hidesWhenStopped {
@@ -91,8 +93,9 @@
 }
 
 static void addAnimation(UIActivityIndicatorView* self) {
-    if (!self->isAnimating)
+    if (!self->isAnimating) {
         return;
+    }
 
     if (!self->_addedAnimation) {
         CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
@@ -114,8 +117,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
 }
 
 - (void)startAnimating {
-    if (isAnimating)
+    if (isAnimating) {
         return;
+    }
 
     isAnimating = TRUE;
     [self setHidden:FALSE];
@@ -130,8 +134,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
         removeAnimation(self);
     }
 
-    if (hidesWhenStopped)
+    if (hidesWhenStopped) {
         [self setHidden:TRUE];
+    }
 }
 
 - (BOOL)isAnimating {

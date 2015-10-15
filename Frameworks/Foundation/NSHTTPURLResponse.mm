@@ -38,17 +38,14 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return @"HTTP error";
 }
 
-- (id)initWithURL:(id)url
-               statusCode:(DWORD)statusCode
-                  headers:(id)headers
-    expectedContentLength:(int)expectedContentLength {
+- (id)initWithURL:(id)url statusCode:(DWORD)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength {
     CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
 
     caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
     caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
 
-    _allHeaderFields = (NSDictionary*)CFDictionaryCreateMutable(
-        NULL, [headers count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+    _allHeaderFields =
+        (NSDictionary*)CFDictionaryCreateMutable(NULL, [headers count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
 
     //  Case insensitive dictionary
     for (id key in [headers allKeys]) {

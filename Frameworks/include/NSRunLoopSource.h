@@ -27,15 +27,14 @@ FOUNDATION_EXPORT_CLASS
     bool _destroyEvent;
     NSUInteger _priority;
 }
--(void) setSourceDelegate:(NSObject*)delegate selector:(SEL)selector;
--(NSObject*) init;
--(NSRunLoopSource*) initWithEvent:(EbrEvent)event;
--(NSUInteger) priority;
--(void) setPriority:(NSUInteger)priority;
--(void) dealloc;
--(void) fire;
--(void) _trigger;
--(NSUInteger) eventHandle;
-+(NSRunLoopSource*) sourceWithContext:(CFRunLoopSourceContext *)ctx;
+- (void)setSourceDelegate:(NSObject*)delegate selector:(SEL)selector;
+- (NSObject*)init;
+- (NSRunLoopSource*)initWithEvent:(EbrEvent)event;
+- (NSUInteger)priority;
+- (void)setPriority:(NSUInteger)priority;
+- (void)dealloc;
+- (void)fire;
+- (void)_trigger;
+- (NSUInteger)eventHandle;
++ (NSRunLoopSource*)sourceWithContext:(CFRunLoopSourceContext*)ctx;
 @end
-

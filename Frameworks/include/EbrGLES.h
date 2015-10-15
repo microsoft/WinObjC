@@ -31,56 +31,57 @@ bool EbrGLESCreateDisplayWindow();
 int EbrGLESResize(int width, int height);
 int EbrGLESSetContext(int newContext);
 
-enum EbrTextureFilter {
-    EbrTextureFilterLinear,
-    EbrTextureFilterNearest
-};
+enum EbrTextureFilter { EbrTextureFilterLinear, EbrTextureFilterNearest };
 
 class EbrFastTexture;
-EbrFastTexture* EbrCreateFastTexture(int x, int y, int width, int height, int sourceStride, void *data, surfaceFormat fmt, 
-    EbrTextureFilter minFilter = EbrTextureFilterLinear, EbrTextureFilter magFilter = EbrTextureFilterLinear);
-void *EbrLockFastTexture(EbrFastTexture *buf, int *stride);
-void EbrUnlockFastTexture(EbrFastTexture *buf);
-int EbrGetFastTextureBindable(EbrFastTexture *buf);
+EbrFastTexture* EbrCreateFastTexture(int x,
+                                     int y,
+                                     int width,
+                                     int height,
+                                     int sourceStride,
+                                     void* data,
+                                     surfaceFormat fmt,
+                                     EbrTextureFilter minFilter = EbrTextureFilterLinear,
+                                     EbrTextureFilter magFilter = EbrTextureFilterLinear);
+void* EbrLockFastTexture(EbrFastTexture* buf, int* stride);
+void EbrUnlockFastTexture(EbrFastTexture* buf);
+int EbrGetFastTextureBindable(EbrFastTexture* buf);
 
 // This returns void* because that's the internal type of EGLImageKHR according to the spec
 // but we don't want to include gl deps this high up in the dep tree.
-void* EbrFastTextureGetKHR(EbrFastTexture *buf);
+void* EbrFastTextureGetKHR(EbrFastTexture* buf);
 
-void EbrRetainFastTexture(EbrFastTexture *buf);
-void EbrReleaseFastTexture(EbrFastTexture *buf);
+void EbrRetainFastTexture(EbrFastTexture* buf);
+void EbrReleaseFastTexture(EbrFastTexture* buf);
 
 extern int glRenderContext, glDrawContext;
 
 struct CAPoint3D;
 struct CGPoint;
 
-enum TextureMode {
-    TM_DISABLED,
-    TM_ENABLED,
-    TM_FONT
-};
+enum TextureMode { TM_DISABLED, TM_ENABLED, TM_FONT };
 
 // These functions are pretty much set up just for NativeUI's rendering needs.
 bool EbrGLESInitShaders(ID3D11Device* device);
 void EbrGLESDestroyShaders();
 void EbrGLESInitDraw();
 void EbrGLESSetTexturing(TextureMode mode);
-void EbrGLESSetArrays(CAPoint3D *verts, CGPoint *uvs, ColorQuad *colors, float *texNums);
-void EbrGLESSet2DArrays(CGPoint *verts, CGPoint *uvs);
-void EbrGLESSetColor(float *colorArray); // of size 4
-void EbrGLESSetTransform(ID3D11DeviceContext* ctx, float *matrix); // of size 16, row-major.
-void EbrGLESGetTransform(float *matrix); 
+void EbrGLESSetArrays(CAPoint3D* verts, CGPoint* uvs, ColorQuad* colors, float* texNums);
+void EbrGLESSet2DArrays(CGPoint* verts, CGPoint* uvs);
+void EbrGLESSetColor(float* colorArray); // of size 4
+void EbrGLESSetTransform(ID3D11DeviceContext* ctx, float* matrix); // of size 16, row-major.
+void EbrGLESGetTransform(float* matrix);
 
-inline void EbrGLESSetColor(float r, float g, float b, float a)
-{
+inline void EbrGLESSetColor(float r, float g, float b, float a) {
     float color[4] = { r, g, b, a };
     EbrGLESSetColor(color);
 }
 
 struct android_app;
 #if defined ANDROID
-    android_app *GetAndroidApp();
+android_app* GetAndroidApp();
 #else
-    inline android_app *GetAndroidApp() { return NULL; }
-#endif 
+inline android_app* GetAndroidApp() {
+    return NULL;
+}
+#endif

@@ -18,29 +18,25 @@
 
 class CGVectorImageBacking;
 
-class CGVectorImage : public __CGImage
-{
+class CGVectorImage : public __CGImage {
 public:
     CGVectorImage(DWORD width, DWORD height, surfaceFormat fmt);
-    CGImageRef Rasterize(CGRect *insets);
+    CGImageRef Rasterize(CGRect* insets);
 
-    inline CGVectorImageBacking *VectorBacking() { return (CGVectorImageBacking *) Backing(); }
+    inline CGVectorImageBacking* VectorBacking() {
+        return (CGVectorImageBacking*)Backing();
+    }
 };
 
-enum VectorDrawingCommandType
-{
-    vectorDrawingImage,
-    vectorDrawingLine
-};
+enum VectorDrawingCommandType { vectorDrawingImage, vectorDrawingLine };
 
-class CGVectorDrawingCommand
-{
+class CGVectorDrawingCommand {
 public:
     VectorDrawingCommandType _type;
     CGImageRef _image;
     CGRect _src, _dest;
     CGPoint _start, _end;
-    float  _lineWidth;
+    float _lineWidth;
     ColorQuad _color;
 
     CGVectorDrawingCommand(CGImageRef image, CGRect src, CGRect dst);
@@ -48,12 +44,11 @@ public:
     ~CGVectorDrawingCommand();
 };
 
-class CGVectorImageBacking : public CGImageBacking
-{
+class CGVectorImageBacking : public CGImageBacking {
 private:
-    int              _width, _height;
-    surfaceFormat    _surfaceFmt;
-    CGVectorDrawingCommand *_drawCommand;
+    int _width, _height;
+    surfaceFormat _surfaceFmt;
+    CGVectorDrawingCommand* _drawCommand;
 
 public:
     CGVectorImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
@@ -62,8 +57,8 @@ public:
 
     CGImageRef Copy();
 
-    CGContextImpl *CreateDrawingContext(CGContextRef base);
-    void GetPixel(int x, int y, float &r, float &g, float &b, float &a);
+    CGContextImpl* CreateDrawingContext(CGContextRef base);
+    void GetPixel(int x, int y, float& r, float& g, float& b, float& a);
     int InternalWidth();
     int InternalHeight();
     int Width();
@@ -71,13 +66,13 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     surfaceFormat SurfaceFormat();
-    void *StaticImageData();
-    void *LockImageData();
+    void* StaticImageData();
+    void* LockImageData();
     void ReleaseImageData();
-    cairo_surface_t *LockCairoSurface();
+    cairo_surface_t* LockCairoSurface();
     void ReleaseCairoSurface();
     void SetFreeWhenDone(bool freeWhenDone);
 
     void DrawImage(CGImageRef image, CGRect src, CGRect dst);
-    void StrokePath(id path, ColorQuad color, float lineWidth, CGAffineTransform *t);
+    void StrokePath(id path, ColorQuad color, float lineWidth, CGAffineTransform* t);
 };

@@ -75,8 +75,7 @@ HSTRING fromNS(NSString* str) {
 - (void)processTransaction:(HSTRING)hReceipt withPayment:(SKPayment*)payment {
     NSString* receipt = _nsstringFromHstring(hReceipt);
 
-    SKPaymentTransaction* transaction =
-        [[SKPaymentTransaction alloc] initWithIdentifier:receipt date:[NSDate date] payment:payment];
+    SKPaymentTransaction* transaction = [[SKPaymentTransaction alloc] initWithIdentifier:receipt date:[NSDate date] payment:payment];
 
     NSArray* transactions = [NSArray arrayWithObject:transaction];
     for (id<SKPaymentTransactionObserver> obs in _transactionObservers) {

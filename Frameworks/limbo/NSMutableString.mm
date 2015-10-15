@@ -124,10 +124,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     setToUnicode(self, s1.string());
 }
 
-- (NSUInteger)replaceOccurrencesOfString:(id)target
-                              withString:(id)replacement
-                                 options:(DWORD)options
-                                   range:(NSRange)range {
+- (NSUInteger)replaceOccurrencesOfString:(id)target withString:(id)replacement options:(DWORD)options range:(NSRange)range {
     if (target == nil) {
         // NSRaiseException(NSInvalidArgumentException,self,_cmd,@"nil target object");
         assert(0);
@@ -153,8 +150,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
             searchOptions = NSMatchingAnchored;
         }
 
-        NSRegularExpression* regExp =
-            [[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL];
+        NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL];
 
         int count = [regExp replaceMatchesInString:self options:searchOptions range:range withTemplate:replacement];
         [regExp release];

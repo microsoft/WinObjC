@@ -49,8 +49,9 @@ static void sizeViews(UISlider* self, bool animated) {
 
     if (self->_max > 0.0f) {
         amt = (self->_value - self->_min) / self->_max;
-    } else
+    } else {
         amt = 0.0f;
+    }
 
     newFrame.size.width = bounds.size.width * amt;
     if (newFrame.size.width > bounds.size.width) {
@@ -74,10 +75,8 @@ static void sizeViews(UISlider* self, bool animated) {
 }
 
 static void initInternal(UISlider* self) {
-    self->_sliderLeft =
-        [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    self->_sliderRight =
-        [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    self->_sliderLeft = [[UIImage imageNamed:@"/img/progress-background@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    self->_sliderRight = [[UIImage imageNamed:@"/img/progress-foreground@2x.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
     self->_dot = [UIImage imageNamed:@"/img/slider-handle@2x.png"];
     self->_dotHighlighted = [UIImage imageNamed:@"/img/slider-handle-highlighted@2x.png"];
 
@@ -109,8 +108,7 @@ static void initInternal(UISlider* self) {
     [self addSubview:(id)self->_sliderRightView];
     [self addSubview:(id)self->_sliderThumbView];
 
-    UIPanGestureRecognizer* panGesture =
-        [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_didPan:)] autorelease];
+    UIPanGestureRecognizer* panGesture = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_didPan:)] autorelease];
     [panGesture setDelegate:(id<UIGestureRecognizerDelegate>)self];
     [panGesture _setDragSlack:0.0f];
     [self->_sliderThumbView addGestureRecognizer:(id)panGesture];
@@ -178,10 +176,12 @@ static void initInternal(UISlider* self) {
 }
 
 - (void)setValue:(float)value animated:(BOOL)animated {
-    if (value < _min)
+    if (value < _min) {
         value = _min;
-    if (value > _max)
+    }
+    if (value > _max) {
         value = _max;
+    }
     _value = value;
     sizeViews(self, animated ? true : false);
 }
@@ -245,8 +245,9 @@ static void initInternal(UISlider* self) {
         [_sliderThumbView setHighlighted:FALSE];
     } else if (state == UIGestureRecognizerStateBegan) {
         _trackVal = _value;
-        if ([_sliderThumbView highlightedImage] != nil)
+        if ([_sliderThumbView highlightedImage] != nil) {
             [_sliderThumbView setHighlighted:TRUE];
+        }
     }
 
     bounds = [self bounds];

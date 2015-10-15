@@ -16,20 +16,37 @@
 
 #pragma once
 
-template <typename T> class Triplet {
+template <typename T>
+class Triplet {
     T _x, _y, _z;
 
 public:
-    inline Triplet() {}
-    inline Triplet(T x, T y, T z) : _x(x), _y(y), _z(z) {}
-    explicit inline Triplet(T val) : _x(val), _y(val), _z(val) {}
-    inline ~Triplet() {}
+    inline Triplet() {
+    }
+    inline Triplet(T x, T y, T z) : _x(x), _y(y), _z(z) {
+    }
+    explicit inline Triplet(T val) : _x(val), _y(val), _z(val) {
+    }
+    inline ~Triplet() {
+    }
 
-    const T& x() const { return _x; }
-    const T& y() const { return _y; }
-    const T& z() const { return _z; }
+    const T& x() const {
+        return _x;
+    }
+    const T& y() const {
+        return _y;
+    }
+    const T& z() const {
+        return _z;
+    }
 
-    T& x() { return _x; }
-    T& y() { return _y; }
-    T& z() { return _z; }
+    T& x() {
+        return _x;
+    }
+    T& y() {
+        return _y;
+    }
+    T& z() {
+        return _z;
+    }
 };

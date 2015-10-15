@@ -27,8 +27,8 @@
 
 #include "IcuHelper.h"
 
-static pthread_key_t _icuUTF8Cnv, _icuUTF32BECnv, _icuASCIICnv, _icuDefaultCollator, _icuLettersSet, _icuWordIterator,
-    _icuRegexPatterns, _icuSearch;
+static pthread_key_t _icuUTF8Cnv, _icuUTF32BECnv, _icuASCIICnv, _icuDefaultCollator, _icuLettersSet, _icuWordIterator, _icuRegexPatterns,
+    _icuSearch;
 
 int _icuTotal = 0;
 

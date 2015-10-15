@@ -20,22 +20,23 @@ typedef enum _UICollectionUpdateAction {
     UICollectionUpdateActionReload,
     UICollectionUpdateActionMove,
     UICollectionUpdateActionNone
-} _UICollectionUpdateAction; 
-   
+} _UICollectionUpdateAction;
+
 typedef DWORD UICollectionUpdateAction;
 
 @interface UICollectionViewUpdateItem : NSObject {
 @public
     idretain _initialIndexPath; // nil for PSTCollectionUpdateActionInsert
-    idretain _finalIndexPath;  // nil for PSTCollectionUpdateActionDelete
+    idretain _finalIndexPath; // nil for PSTCollectionUpdateActionDelete
     UICollectionUpdateAction _updateAction;
     id _gap;
 }
--(UICollectionUpdateAction) updateAction;
--(BOOL) isSectionOperation;
-/* annotate with type */ -(id) initWithAction:(UICollectionUpdateAction)updateAction forIndexPath:(id)indexPath;
-/* annotate with type */ -(id) initWithInitialIndexPath:(id)initialIndexPath finalIndexPath:(id)finalIndexPath updateAction:(UICollectionUpdateAction)updateAction;
-/* annotate with type */ -(id) indexPathBeforeUpdate;
-/* annotate with type */ -(id) setIndexPathBeforeUpdate:(id)indexPath;
-/* annotate with type */ -(id) indexPathAfterUpdate;
+- (UICollectionUpdateAction)updateAction;
+- (BOOL)isSectionOperation;
+/* annotate with type */ -(id)initWithAction : (UICollectionUpdateAction)updateAction forIndexPath : (id)indexPath;
+/* annotate with type */ -(id)initWithInitialIndexPath : (id)initialIndexPath finalIndexPath : (id)finalIndexPath updateAction
+                                                                                               : (UICollectionUpdateAction)updateAction;
+/* annotate with type */ -(id)indexPathBeforeUpdate;
+/* annotate with type */ -(id)setIndexPathBeforeUpdate : (id)indexPath;
+/* annotate with type */ -(id)indexPathAfterUpdate;
 @end

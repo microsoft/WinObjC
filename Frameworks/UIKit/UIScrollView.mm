@@ -133,13 +133,7 @@
     BOOL _isZooming, _isZoomingToRect;
     bool _lockVertical, _lockHorizontal;
 
-    enum AnimationReason {
-        ANIMATION_DECELERATING,
-        ANIMATION_DECELERATING_TARGET,
-        ANIMATION_BOUNCING,
-        ANIMATION_PAGING,
-        ANIMATION_USER
-    };
+    enum AnimationReason { ANIMATION_DECELERATING, ANIMATION_DECELERATING_TARGET, ANIMATION_BOUNCING, ANIMATION_PAGING, ANIMATION_USER };
 
     enum AnimationReason _animationReason;
 
@@ -168,8 +162,7 @@ static void commonInit(UIScrollView* self) {
     [self->_pinchGesture setDelegate:self];
     [self addGestureRecognizer:self->_pinchGesture];
 
-    self->_panGesture.attach(
-        [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_panGestureCallback:)]);
+    self->_panGesture.attach([[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_panGestureCallback:)]);
     [self->_panGesture setDelegate:self];
     [self addGestureRecognizer:self->_panGesture];
 }
@@ -375,10 +368,12 @@ static void addPointWithBounce(UIScrollView* self, CGPoint& p, float amtX, float
 
     bool bounceVertical = false;
     bool bounceHorizontal = false;
-    if (self->_contentSize.width > bounds.size.width || self->_alwaysBounceHorizontal)
+    if (self->_contentSize.width > bounds.size.width || self->_alwaysBounceHorizontal) {
         bounceHorizontal = true;
-    if (self->_contentSize.height > bounds.size.height || self->_alwaysBounceVertical)
+    }
+    if (self->_contentSize.height > bounds.size.height || self->_alwaysBounceVertical) {
         bounceVertical = true;
+    }
 
     if (p.x + amtX < findMinX(self)) {
         if (p.x > findMinX(self)) {
@@ -394,8 +389,9 @@ static void addPointWithBounce(UIScrollView* self, CGPoint& p, float amtX, float
         }
 
         p.x += amtX / 2.0f;
-    } else
+    } else {
         p.x += amtX;
+    }
 
     if (p.y + amtY < findMinY(self)) {
         if (p.y > findMinY(self)) {
@@ -411,8 +407,9 @@ static void addPointWithBounce(UIScrollView* self, CGPoint& p, float amtX, float
         }
 
         p.y += amtY / 2.0f;
-    } else
+    } else {
         p.y += amtY;
+    }
 }
 
 static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
@@ -423,16 +420,20 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
     bool bounceHorizontal = false;
 
     if (bounce) {
-        if (o->_contentSize.width > bounds.size.width || o->_alwaysBounceHorizontal)
+        if (o->_contentSize.width > bounds.size.width || o->_alwaysBounceHorizontal) {
             bounceHorizontal = true;
-        if (o->_contentSize.height > bounds.size.height || o->_alwaysBounceVertical)
+        }
+        if (o->_contentSize.height > bounds.size.height || o->_alwaysBounceVertical) {
             bounceVertical = true;
+        }
     }
 
-    if (!bounceHorizontal)
+    if (!bounceHorizontal) {
         clamp((float&)p.x, findMinX(o), max(findMaxX(o), findMinX(o)));
-    if (!bounceVertical)
+    }
+    if (!bounceVertical) {
         clamp((float&)p.y, findMinY(o), max(findMaxY(o), findMinY(o)));
+    }
 }
 
 - (void)_refreshOrigin {
@@ -528,14 +529,18 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
             offset.x += CGRectGetMinX(goalRect) - CGRectGetMinX(visibleRect);
         }
 
-        if (offset.x > findMaxX(self))
+        if (offset.x > findMaxX(self)) {
             offset.x = findMaxX(self);
-        if (offset.x < findMinX(self))
+        }
+        if (offset.x < findMinX(self)) {
             offset.x = findMinX(self);
-        if (offset.y > findMaxY(self))
+        }
+        if (offset.y > findMaxY(self)) {
             offset.y = findMaxY(self);
-        if (offset.y < findMinY(self))
+        }
+        if (offset.y < findMinY(self)) {
             offset.y = findMinY(self);
+        }
 
         [self setContentOffset:offset animated:animated];
     }
@@ -557,12 +562,14 @@ static bool applyAnimationToDimension(float& position, float& velocity, float de
         if (velocity >= 0.0f) {
             // Return to 0 position
             velocity = returntobaseconst * fabs(min - position);
-            if (velocity < 0.5f)
+            if (velocity < 0.5f) {
                 velocity = 0.0f;
+            }
         } else {
             // Slow down in order to turn around
-            if (velocity < -1000.0f)
+            if (velocity < -1000.0f) {
                 velocity = -1000.0f;
+            }
             float change = bouncedecelerationconst * animationtimestep;
             velocity += change;
         }
@@ -572,12 +579,14 @@ static bool applyAnimationToDimension(float& position, float& velocity, float de
         if (velocity <= 0.0f) {
             // Return to bottom position
             velocity = -1.0f * returntobaseconst * fabs(position - max);
-            if (velocity > -0.5f)
+            if (velocity > -0.5f) {
                 velocity = 0.0f;
+            }
         } else {
             // Slow down
-            if (velocity > 1000.0f)
+            if (velocity > 1000.0f) {
                 velocity = 1000.0f;
+            }
             float change = bouncedecelerationconst * animationtimestep;
             velocity -= change;
         }
@@ -631,8 +640,9 @@ static void stopScrollAnimations(UIScrollView* self) {
     double elapsed = curTime - _scrollStartTime;
 
     elapsed -= animationtimestep / 2.0; //  Allow 1/2 frame leeway
-    if (elapsed < 0)
+    if (elapsed < 0) {
         elapsed = 0;
+    }
 
     int curFrame = (int)(elapsed / animationtimestep);
     int doFrames = (curFrame + 1) - _scrollFrame;
@@ -640,17 +650,16 @@ static void stopScrollAnimations(UIScrollView* self) {
     // This code used to set doFrames to 1 instead of doing nothing but this makes
     // us do the dragging animations prematurely. In particular, on my desktop it caused
     // any kind of animation snapping to be instanteous and look very jerky.
-    if (doFrames <= 0)
+    if (doFrames <= 0) {
         return;
+    }
 
     while (doFrames--) {
-        if (applyAnimationToDimension(
-                _scrollPosition.x, _scrollVelocity.x, fabs(_scrollDirection.x), findMinX(self), findMaxX(self))) {
+        if (applyAnimationToDimension(_scrollPosition.x, _scrollVelocity.x, fabs(_scrollDirection.x), findMinX(self), findMaxX(self))) {
             _animationReason = ANIMATION_BOUNCING;
         }
 
-        if (applyAnimationToDimension(
-                _scrollPosition.y, _scrollVelocity.y, fabs(_scrollDirection.y), findMinY(self), findMaxY(self))) {
+        if (applyAnimationToDimension(_scrollPosition.y, _scrollVelocity.y, fabs(_scrollDirection.y), findMinY(self), findMaxY(self))) {
             _animationReason = ANIMATION_BOUNCING;
         }
 
@@ -718,8 +727,7 @@ static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
             if ([self->_delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
                 [self->_delegate scrollViewDidEndScrollingAnimation:self];
             }
-        } else if (self->_animationReason == ANIMATION_DECELERATING_TARGET ||
-                   self->_animationReason == ANIMATION_PAGING) {
+        } else if (self->_animationReason == ANIMATION_DECELERATING_TARGET || self->_animationReason == ANIMATION_PAGING) {
             hideScrollersAction(self);
             if ([self->_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
                 [self->_delegate scrollViewDidEndDecelerating:self];
@@ -747,8 +755,7 @@ static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
                 if ([self->_delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
                     [self->_delegate scrollViewDidEndScrollingAnimation:self];
                 }
-            } else if (self->_animationReason == ANIMATION_DECELERATING_TARGET ||
-                       self->_animationReason == ANIMATION_PAGING) {
+            } else if (self->_animationReason == ANIMATION_DECELERATING_TARGET || self->_animationReason == ANIMATION_PAGING) {
                 hideScrollersAction(self);
                 if ([self->_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
                     [self->_delegate scrollViewDidEndDecelerating:self];
@@ -771,10 +778,12 @@ static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
         _scrollAnimDest.x + expf(-t) - dist.x * expf(-t / 2.f), _scrollAnimDest.y + expf(-t) - dist.y * expf(-t / 2.f),
     };
 
-    if (fabs(dist.x) < 0.1)
+    if (fabs(dist.x) < 0.1) {
         target.x = _scrollAnimDest.x;
-    if (fabs(dist.y) < 0.1)
+    }
+    if (fabs(dist.y) < 0.1) {
         target.y = _scrollAnimDest.y;
+    }
 
     animMoveTo(self, target, false);
 }
@@ -824,15 +833,15 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
     CGPoint curPos;
     curPos = [_savedTouch locationInView:self];
     id viewTouched = [super hitTest:curPos withEvent:_savedEvent];
-    if (viewTouched == self && _forwardsToSuperview)
+    if (viewTouched == self && _forwardsToSuperview) {
         viewTouched = [viewTouched superview];
+    }
 
     if (viewTouched != nil && viewTouched != self) {
         _savedTouch = [[_savedTouch copy] autorelease];
         [_savedTouch _redirectTouch:viewTouched];
 
-        _savedEvent =
-            [[UIEvent createWithTouches:[NSSet setWithObject:(id)_savedTouch] touchEvent:(id)_savedTouch] autorelease];
+        _savedEvent = [[UIEvent createWithTouches:[NSSet setWithObject:(id)_savedTouch] touchEvent:(id)_savedTouch] autorelease];
         [[UIApplication sharedApplication] sendEvent:_savedEvent];
     }
 }
@@ -853,8 +862,9 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
 
 - (void)setMinimumZoomScale:(float)scale {
     _minimumZoomScale = scale;
-    if (_minimumZoomScale > _maximumZoomScale)
+    if (_minimumZoomScale > _maximumZoomScale) {
         _maximumZoomScale = _minimumZoomScale;
+    }
     float newScale = _zoomScale;
     clamp(newScale, _minimumZoomScale, _maximumZoomScale);
     [self setZoomScale:newScale];
@@ -943,15 +953,17 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
         [self->_delegate scrollViewDidZoom:self];
     }
 
-    if (animated)
+    if (animated) {
         [UIView commitAnimations];
+    }
     [self setNeedsLayout];
 }
 
 - (void)setZoomScale:(float)scale animated:(BOOL)animated {
     clamp((float&)scale, _minimumZoomScale, _maximumZoomScale);
-    if (scale == _zoomScale)
+    if (scale == _zoomScale) {
         return;
+    }
 
     _isZoomingToRect = TRUE;
     setZoomTo(self, scale, animated);
@@ -1133,10 +1145,12 @@ static float findMinY(UIScrollView* o) {
 
         //  Stage 1: unstick axis's
         if (panStage == 1) {
-            if (delta.x != 0)
+            if (delta.x != 0) {
                 _xStuck = false;
-            if (delta.y != 0)
+            }
+            if (delta.y != 0) {
                 _yStuck = false;
+            }
         }
 
         if (!_xStuck) {
@@ -1224,9 +1238,7 @@ static float findMinY(UIScrollView* o) {
         clipPoint(self, newOffset);
 
         //  Use up the amount of translation
-        [gesture
-            setTranslation:CGPointMake(delta.x - (oldOffset.x - newOffset.x), delta.y - (oldOffset.y - newOffset.y))
-                    inView:self];
+        [gesture setTranslation:CGPointMake(delta.x - (oldOffset.x - newOffset.x), delta.y - (oldOffset.y - newOffset.y)) inView:self];
 
         //  Adjust offset, with bounce
         addPointWithBounce(self, oldOffset, newOffset.x - oldOffset.x, newOffset.y - oldOffset.y);
@@ -1235,8 +1247,9 @@ static float findMinY(UIScrollView* o) {
 }
 
 - (id)_gestureRecognizerTouchesReached:(id)gesture {
-    if (!_scrollEnabled)
+    if (!_scrollEnabled) {
         return self;
+    }
 
     if (_animationReason == ANIMATION_DECELERATING || _animationReason == ANIMATION_DECELERATING_TARGET) {
         stopScrollAnimations(self);
@@ -1246,8 +1259,7 @@ static float findMinY(UIScrollView* o) {
 }
 
 static void abortGestures(UIScrollView* self) {
-    if ([self->_panGesture state] == UIGestureRecognizerStateBegan ||
-        [self->_panGesture state] == UIGestureRecognizerStateChanged) {
+    if ([self->_panGesture state] == UIGestureRecognizerStateBegan || [self->_panGesture state] == UIGestureRecognizerStateChanged) {
         [self->_panGesture cancel];
     }
 }
@@ -1257,8 +1269,8 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     int dropScrollPage = int((curOffset + pageSize / 2.0f) / pageSize);
     int destScrollPage;
 
-    float physicalVelocity = velocity * GetCACompositor()->screenScale() /
-                             ((GetCACompositor()->screenXDpi() + GetCACompositor()->screenYDpi()) / 2.0f);
+    float physicalVelocity =
+        velocity * GetCACompositor()->screenScale() / ((GetCACompositor()->screenXDpi() + GetCACompositor()->screenYDpi()) / 2.0f);
 
     if (dropScrollPage != startScrollPage) {
         destScrollPage = dropScrollPage;
@@ -1278,8 +1290,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 }
 
 - (id)_panGestureCallback:(id)gesture {
-    if (!_scrollEnabled)
+    if (!_scrollEnabled) {
         return self;
+    }
 
     stopScrollAnimations(self);
 
@@ -1395,10 +1408,8 @@ static float clipToPage(float start, float curOffset, float velocity, float page
                 if (_pagingEnabled) {
                     CGPoint dest;
 
-                    dest.x =
-                        clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
-                    dest.y =
-                        clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
+                    dest.x = clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
+                    dest.y = clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
 
                     doAnimatedScroll(self, dest, ANIMATION_PAGING);
                     if ([_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
@@ -1412,8 +1423,8 @@ static float clipToPage(float start, float curOffset, float velocity, float page
                         doInertialScroll(self, -velocity, ANIMATION_DECELERATING);
                     } else {
                         //  We need to do inertial scroll if we're out of bounds
-                        if (_contentOffset.x < findMinX(self) || _contentOffset.x > findMaxX(self) ||
-                            _contentOffset.y < findMinY(self) || _contentOffset.y > findMaxY(self)) {
+                        if (_contentOffset.x < findMinX(self) || _contentOffset.x > findMaxX(self) || _contentOffset.y < findMinY(self) ||
+                            _contentOffset.y > findMaxY(self)) {
                             doInertialScroll(self, -velocity, ANIMATION_BOUNCING);
                         } else {
                             hideScrollersAction(self);
@@ -1436,8 +1447,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     UIGestureRecognizerState state = (UIGestureRecognizerState)[gesture state];
     UIView* view = self;
 
-    if ([_delegate respondsToSelector:@selector(viewForZoomingInScrollView:)])
+    if ([_delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
         view = [_delegate viewForZoomingInScrollView:self];
+    }
     if (state == UIGestureRecognizerStateBegan) {
         //  Cancel any other pans
         [UIPanGestureRecognizer cancelActiveExcept:(id)_panGesture];
@@ -1456,8 +1468,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     } else if (state == UIGestureRecognizerStateChanged) {
         CGFloat scale = [gesture scale];
         clamp(scale, _minimumZoomScale, _maximumZoomScale);
-        if (scale == _zoomScale)
+        if (scale == _zoomScale) {
             return;
+        }
 
         CGPoint start = _contentOffset, pinchPoint;
         pinchPoint = [gesture locationInView:self];
@@ -1471,8 +1484,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 
         double relativeScale = ((double)scale / (double)_zoomScale);
         //_contentOffset = start * relativeScale + diff * (1 - 1 / relativeScale);
-        _contentOffset =
-            ((view == self) ? start : (start * scale / _zoomScale)) + diff * ((float)(1.0 - 1.0 / relativeScale));
+        _contentOffset = ((view == self) ? start : (start * scale / _zoomScale)) + diff * ((float)(1.0 - 1.0 / relativeScale));
         clamp((float&)_contentOffset.x,
               (float)-_contentInset.left,
               max((float)(_contentSize.width - bounds.size.width + _contentInset.right), 0.f));

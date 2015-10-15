@@ -23,13 +23,15 @@ static IWLazyClassLookup _LazyNSString("NSString");
 
 static bool charInNSString(CFStringRef str, short ch) {
     unsigned length = [(NSString*)str length];
-    if (length == 0)
+    if (length == 0) {
         return false;
+    }
 
     const char* cstring = [(NSString*)str UTF8String];
     for (size_t i = 0; i < length; ++i) {
-        if (cstring[i] == ch)
+        if (cstring[i] == ch) {
             return true;
+        }
     }
     return false;
 }
@@ -46,7 +48,9 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
 
     const char hex[] = "0123456789ABCDEF";
     const char legalURLCharacters[] = {
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;="
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno"
+        "pqrstuvwxyz0123456789-._~:/"
+        "?#[]@!$&'()*+,;="
     };
 
     for (size_t i = 0; i < length; ++i) {
@@ -55,8 +59,9 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
         bool legalCharacter = charInNSString(charactersToLeaveUnescaped, code);
 
         for (size_t n = 0; n < sizeof(legalURLCharacters) && !legalCharacter; ++n) {
-            if (code == legalURLCharacters[n] && !charInNSString(legalURLCharactersToBeEscaped, code))
+            if (code == legalURLCharacters[n] && !charInNSString(legalURLCharactersToBeEscaped, code)) {
                 legalCharacter = true;
+            }
         }
 
         if (!legalCharacter) {

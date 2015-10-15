@@ -27,9 +27,7 @@
 
 IMP (*objc_forward_handler)(id, SEL) = NULL;
 
-IMP
-objc_not_found_handler(id obj, SEL sel)
-{
+IMP objc_not_found_handler(id obj, SEL sel) {
     BOOL is_class = object_getClass(obj)->info & OBJC_CLASS_INFO_METACLASS;
 
     if (!(object_getClass(obj)->info & OBJC_CLASS_INFO_INITIALIZED)) {
@@ -41,8 +39,10 @@ objc_not_found_handler(id obj, SEL sel)
             if (is_class)
                 return objc_msg_lookup(nil, sel);
             else
-                OBJC_ERROR("Could not dispatch message for "
-                    "incomplete class %s!", cls->name);
+                OBJC_ERROR(
+                    "Could not dispatch message for "
+                    "incomplete class %s!",
+                    cls->name);
         }
 
         /*
@@ -58,43 +58,38 @@ objc_not_found_handler(id obj, SEL sel)
         return objc_forward_handler(obj, sel);
 
     OBJC_NOT_IMPLEMENTED_ERROR("Selector %c[%s] is not implemented for class %s on object 0x%x!",
-        (is_class ? '+' : '-'), sel_getName(sel), object_getClassName(obj), obj);
+                               (is_class ? '+' : '-'),
+                               sel_getName(sel),
+                               object_getClassName(obj),
+                               obj);
 }
 
-BOOL
-class_respondsToSelector(Class cls, SEL sel)
-{
+BOOL class_respondsToSelector(Class cls, SEL sel) {
     if (cls == Nil)
         return NO;
 
-    return (objc_sparsearray_get(cls->dtable, (uint32_t)sel->uid) != NULL
-        ? YES : NO);
+    return (objc_sparsearray_get(cls->dtable, (uint32_t)sel->uid) != NULL ? YES : NO);
 }
 
 #ifndef OF_ASM_LOOKUP
-static id
-nil_method(id self, SEL _cmd)
-{
+static id nil_method(id self, SEL _cmd) {
     return nil;
 }
 
-OBJCRT_EXPORT IMP
-objc_msg_lookup(id obj, SEL sel)
-{
+OBJCRT_EXPORT IMP objc_msg_lookup(id obj, SEL sel) {
     IMP imp;
 
     if (obj == nil)
         return (IMP)nil_method;
 
-    if ( object_isWinRT(obj) ) {
+    if (object_isWinRT(obj)) {
         // for debugging:
-        const char *name = sel_getName(sel);
+        const char* name = sel_getName(sel);
 
         return object_getWinRTImp(obj, name);
     }
 
-    imp = objc_sparsearray_get(object_getClass(obj)->dtable,
-        (uint32_t)sel->uid);
+    imp = objc_sparsearray_get(object_getClass(obj)->dtable, (uint32_t)sel->uid);
 
     if (imp == NULL)
         return objc_not_found_handler(obj, sel);
@@ -102,23 +97,20 @@ objc_msg_lookup(id obj, SEL sel)
     return imp;
 }
 
-OBJCRT_EXPORT IMP
-objc_msg_lookup_stret(id obj, SEL sel)
-{
+OBJCRT_EXPORT IMP objc_msg_lookup_stret(id obj, SEL sel) {
     IMP imp;
 
     if (obj == nil)
         return (IMP)nil_method;
 
-    if ( object_isWinRT(obj) ) {
+    if (object_isWinRT(obj)) {
         // for debugging:
-        const char *name = sel_getName(sel);
+        const char* name = sel_getName(sel);
 
         return object_getWinRTImp(obj, name);
     }
 
-    imp = objc_sparsearray_get(object_getClass(obj)->dtable,
-        (uint32_t)sel->uid);
+    imp = objc_sparsearray_get(object_getClass(obj)->dtable, (uint32_t)sel->uid);
 
     if (imp == NULL)
         return objc_not_found_handler(obj, sel);
@@ -126,9 +118,7 @@ objc_msg_lookup_stret(id obj, SEL sel)
     return imp;
 }
 
-OBJCRT_EXPORT IMP
-objc_msg_lookup_super(struct objc_super *super, SEL sel)
-{
+OBJCRT_EXPORT IMP objc_msg_lookup_super(struct objc_super* super, SEL sel) {
     IMP imp;
 
     if (super->self == nil)
@@ -142,9 +132,7 @@ objc_msg_lookup_super(struct objc_super *super, SEL sel)
     return imp;
 }
 
-OBJCRT_EXPORT IMP
-objc_msg_lookup_super_stret(struct objc_super *super, SEL sel)
-{
+OBJCRT_EXPORT IMP objc_msg_lookup_super_stret(struct objc_super* super, SEL sel) {
     IMP imp;
 
     if (super->self == nil)

@@ -51,10 +51,8 @@ static int addButton(UIActionSheet* self, id text) {
 
     self->_totalHeight += 40.0f;
 
-    id buttonBackground =
-        [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-    id buttonPressed =
-        [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+    id buttonBackground = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+    id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
     id ret = [[UIButton alloc] initWithFrame:frame];
     [ret setTitle:text forState:0];
@@ -76,8 +74,7 @@ static int addButton(UIActionSheet* self, id text) {
     _destructiveIndex = -1;
 
     id image;
-    image =
-        [[UIImage imageNamed:@"/img/alertsheet-background@2x.png"] stretchableImageWithLeftCapWidth:70 topCapHeight:18];
+    image = [[UIImage imageNamed:@"/img/alertsheet-background@2x.png"] stretchableImageWithLeftCapWidth:70 topCapHeight:18];
 
     UIImageSetLayerContents([self layer], image);
 
@@ -335,8 +332,9 @@ static void dismissView(UIActionSheet* self, int index) {
     [_delegate autorelease];
     int index = [button tag];
 
-    if (index == _cancelButtonIndex)
+    if (index == _cancelButtonIndex) {
         index = _cancelCustomIndex;
+    }
 
     if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
         [_delegate actionSheet:self clickedButtonAtIndex:index];

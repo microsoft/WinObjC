@@ -14,241 +14,219 @@
 #include "NSObjectInternal.h"
 
 @implementation NSObject
-    -(id) init
-    {
-        return self;
-    }
+- (id)init {
+    return self;
+}
 
-    +(id) new
-    {
-        return [[self alloc] init];
-    }
++ (id) new {
+    return [[self alloc] init];
+}
 
-    +(id) class
-    {
-        return self;
-    }
++ (id) class {
+    return self;
+}
 
-    -(id) class
-    {
-        return object_getClass(self);
-    }
+    - (id) class {
+    return object_getClass(self);
+}
 
-    -(BOOL) isEqual:(id)other {
-        return self == other;
-    }
+    - (BOOL)isEqual : (id)other {
+    return self == other;
+}
 
-    +(Class) superclass
-    {
-        return class_getSuperclass(self);
-    }
++ (Class)superclass {
+    return class_getSuperclass(self);
+}
 
-    +(BOOL) isSubclassOfClass: (Class)classRef
-    {
-        Class curClass = self;
++ (BOOL)isSubclassOfClass:(Class)classRef {
+    Class curClass = self;
 
-        while ( curClass != nil ) {
-            if ( curClass == classRef ) {
-                return YES;
-            }
-
-            curClass = curClass->superclass;
+    while (curClass != nil) {
+        if (curClass == classRef) {
+            return YES;
         }
 
-        return NO;
+        curClass = curClass->superclass;
     }
 
-    -(BOOL) isMemberOfClass: (Class) classRef
-    {
-        return object_getClass(self) == classRef;
-    }
+    return NO;
+}
 
-    -(BOOL) isKindOfClass: (Class) classRef
-    {
-        Class curClass = object_getClass(self);
+- (BOOL)isMemberOfClass:(Class)classRef {
+    return object_getClass(self) == classRef;
+}
 
-        while ( curClass != nil ) {
-            if ( curClass == classRef ) {
-                return YES;
-            }
+- (BOOL)isKindOfClass:(Class)classRef {
+    Class curClass = object_getClass(self);
 
-            curClass = class_getSuperclass(curClass);
+    while (curClass != nil) {
+        if (curClass == classRef) {
+            return YES;
         }
 
-        return NO;
+        curClass = class_getSuperclass(curClass);
     }
 
-    -(BOOL) respondsToSelector: (SEL) selector
-    {
-        return class_respondsToSelector(object_getClass(self), selector);
+    return NO;
+}
+
+- (BOOL)respondsToSelector:(SEL)selector {
+    return class_respondsToSelector(object_getClass(self), selector);
+}
+
++ (BOOL)instancesRespondToSelector:(SEL)selector {
+    return class_respondsToSelector(self, selector);
+}
+
++ (void)_raiseSelectorNotFoundError:(SEL)selector format:(const char*)format, ... {
+    abort();
+}
+
+- (id)performSelector:(SEL)selector {
+    id (*imp)(id, SEL) = (id (*)(id, SEL))[self methodForSelector:selector];
+    if (imp == NULL) {
+        [NSObject _raiseSelectorNotFoundError:selector
+                                       format:"Unable to find selector %s on class %s (object 0x%x)",
+                                              sel_getName(selector),
+                                              object_getClassName(self),
+                                              self];
     }
 
-    +(BOOL) instancesRespondToSelector: (SEL) selector
-    {
-        return class_respondsToSelector(self, selector);
+    return imp(self, selector);
+}
+
+- (id)performSelector:(SEL)selector withObject:(id)obj1 {
+    id (*imp)(id, SEL, id) = (id (*)(id, SEL, id))[self methodForSelector:selector];
+
+    if (imp == NULL) {
+        [NSObject _raiseSelectorNotFoundError:selector
+                                       format:"Unable to find selector %s on class %s (object 0x%x withObject 0x%x)",
+                                              sel_getName(selector),
+                                              object_getClassName(self),
+                                              self,
+                                              obj1];
     }
 
-    + (void)_raiseSelectorNotFoundError:(SEL)selector format: (const char *)format, ...
-    {
-        abort();
+    return imp(self, selector, obj1);
+}
+
+- (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 {
+    id (*imp)(id, SEL, id, id) = (id (*)(id, SEL, id, id))[self methodForSelector:selector];
+
+    if (imp == NULL) {
+        [NSObject _raiseSelectorNotFoundError:selector
+                                       format:"Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x)",
+                                              sel_getName(selector),
+                                              object_getClassName(self),
+                                              self,
+                                              obj1,
+                                              obj2];
     }
 
-    - (id)performSelector: (SEL)selector
-    {
-        id (*imp)(id, SEL) = (id(*)(id, SEL))[self methodForSelector: selector];
-        if (imp == NULL)
-        {
-            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x)",
-                sel_getName(selector), object_getClassName(self), self];
-        }
+    return imp(self, selector, obj1, obj2);
+}
 
-        return imp(self, selector);
+- (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 withObject:(id)obj3 {
+    id (*imp)(id, SEL, id, id, id) = (id (*)(id, SEL, id, id, id))[self methodForSelector:selector];
+
+    if (imp == NULL) {
+        [NSObject _raiseSelectorNotFoundError:selector
+                                       format:"Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x 0x%x)",
+                                              sel_getName(selector),
+                                              object_getClassName(self),
+                                              self,
+                                              obj1,
+                                              obj2,
+                                              obj3];
     }
 
-    - (id)performSelector: (SEL)selector withObject: (id) obj1
-    {
-        id (*imp)(id, SEL, id) = (id(*)(id, SEL, id))[self methodForSelector: selector];
+    return imp(self, selector, obj1, obj2, obj3);
+}
 
-        if (imp == NULL)
-        {
-            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%x)",
-                sel_getName(selector), object_getClassName(self), self, obj1];
-        }
+- (IMP)methodForSelector:(SEL)selector {
+    IMP ret = class_getMethodImplementation(object_getClass(self), selector);
+    if (!ret)
+        printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
+    return ret;
+}
 
-        return imp(self, selector, obj1);
-    }
++ (IMP)instanceMethodForSelector:(SEL)selector {
+    IMP ret = class_getMethodImplementation(self, selector);
+    if (!ret)
+        printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
+    return ret;
+}
 
-    - (id)performSelector: (SEL)selector withObject: (id) obj1 withObject: (id) obj2
-    {
-        id (*imp)(id, SEL, id, id) = (id(*)(id, SEL, id, id))[self methodForSelector: selector];
+- (instancetype)self {
+    return self;
+}
 
-        if (imp == NULL)
-        {
-            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x)", 
-                sel_getName(selector), object_getClassName(self), self, obj1, obj2];
-        }
++ (instancetype)self {
+    return self;
+}
 
-        return imp(self, selector, obj1, obj2);
-    }
++ (id)allocWithZone:(NSZone*)zone {
+    id ret = objc_allocateObject(self, 0);
 
-    - (id)performSelector: (SEL)selector withObject: (id) obj1 withObject: (id) obj2 withObject: (id) obj3
-    {
-        id (*imp)(id, SEL, id, id, id) = (id(*)(id, SEL, id, id, id))[self methodForSelector: selector];
+    return ret;
+}
 
-        if (imp == NULL)
-        {
-            [NSObject _raiseSelectorNotFoundError: selector format: "Unable to find selector %s on class %s (object 0x%x withObject 0x%0x 0x%x 0x%x)",
-                sel_getName(selector), object_getClassName(self), self, obj1, obj2, obj3];
-        }
++ (id)alloc {
+    return [self allocWithZone:nil];
+}
 
-        return imp(self, selector, obj1, obj2, obj3);
-    }
++ (void)dealloc{}
 
-    - (IMP)methodForSelector: (SEL)selector
-    {
-        IMP ret = class_getMethodImplementation(object_getClass(self), selector);
-        if (!ret)
-            printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
-        return ret;
-    }
+    + (id)retain {
+    return self;
+}
 
-    + (IMP)instanceMethodForSelector: (SEL)selector
-    {
-        IMP ret = class_getMethodImplementation(self, selector);
-        if (!ret)
-            printf("Failed to lookup SEL(class %s): %s\n", sel_getName(selector), object_getClassName(self));
-        return ret;
-    }
++ (void)release{}
 
-    -(instancetype) self
-    {
-        return self;
-    }
+    - (void)dealloc {
+    objc_deallocateObject(self);
+}
 
-    +(instancetype) self
-    {
-        return self;
-    }
+- (id)autorelease {
+    [NSAutoreleasePool addObject:self];
+    return self;
+}
 
-    +(id) allocWithZone: (NSZone *) zone
-    {
-        id ret = objc_allocateObject(self, 0);
+- (id)retain {
+    return (id)objc_retain_ref(self);
+}
 
-        return ret;
-    }
+- (void)release {
+    objc_release_ref(self);
+}
 
-    +(id) alloc
-    {
-        return [self allocWithZone: nil];
-    }
+- (id)mutableCopy {
+    return [self mutableCopyWithZone:nil];
+}
 
-    +(void) dealloc
-    {
-    }
+- (id)copy {
+    return [self copyWithZone:nil];
+}
 
-    +(id) retain
-    {
-        return self;
-    }
+- (unsigned int)hash {
+    return (unsigned int)self;
+}
 
-    +(void) release
-    {
-    }
++ (id)copyWithZone:(NSZone*)zone {
+    return self;
+}
 
-    -(void) dealloc
-    {
-        objc_deallocateObject(self);
-    }
++ (BOOL)conformsToProtocol:(Protocol*)protocol {
+    Class c;
 
-    -(id) autorelease
-    {
-        [NSAutoreleasePool addObject:self];
-        return self;
-    }
+    for (c = self; c != Nil; c = class_getSuperclass(c))
+        if (class_conformsToProtocol(c, protocol))
+            return YES;
 
-    -(id) retain
-    {
-        return (id) objc_retain_ref(self);
-    }
+    return NO;
+}
 
-    -(void) release
-    {
-        objc_release_ref(self);
-    }
-
-    -(id) mutableCopy {
-        return [self mutableCopyWithZone:nil];
-    }
-
-    -(id) copy
-    {
-        return [self copyWithZone: nil];
-    }
-
-    -(unsigned int) hash
-    {
-        return (unsigned int) self;
-    }
-
-    +(id) copyWithZone: (NSZone *) zone
-    {
-        return self;
-    }
-
-    +(BOOL) conformsToProtocol: (Protocol*)protocol
-    {
-        Class c;
-
-        for (c = self; c != Nil; c = class_getSuperclass(c))
-            if (class_conformsToProtocol(c, protocol))
-                return YES;
-
-        return NO;
-    }
-
-    -(BOOL) conformsToProtocol: (Protocol*)protocol
-    {
-        return [object_getClass(self) conformsToProtocol: protocol];
-    }
+- (BOOL)conformsToProtocol:(Protocol*)protocol {
+    return [object_getClass(self) conformsToProtocol:protocol];
+}
 @end
-

@@ -18,8 +18,7 @@
 
 class CGVectorImageBacking;
 
-class CGContextVector : public CGContextImpl
-{
+class CGContextVector : public CGContextImpl {
 protected:
     idretain _curPath;
 
@@ -29,7 +28,7 @@ public:
     CGContextVector(CGContextRef base, CGImageRef destinationImage);
     virtual ~CGContextVector();
 
-    CGVectorImageBacking *VectorBacking();
+    CGVectorImageBacking* VectorBacking();
 
     void CGContextBeginPath();
     void CGContextMoveToPoint(float x, float y);

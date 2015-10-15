@@ -41,8 +41,7 @@ GLuint Shader::compile() {
 
     if (!readShaderSource()) {
         EbrDebugLog("Error reading shader source\n");
-        LOG_MESSAGE(
-            __FILE__, __LINE__, OpenGLESString("ERROR: Could not read ") + typeString + OpenGLESString(" source."));
+        LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Could not read ") + typeString + OpenGLESString(" source."));
         return 0;
     }
 
@@ -66,12 +65,9 @@ GLuint Shader::compile() {
             EbrDebugLog("Error compiling %d %s\n", len, infoLog);
 
             if (compiled) {
-                LOG_MESSAGE(__FILE__,
-                            __LINE__,
-                            OpenGLESString("WARNING: Compiled ") + typeString + " with warnings:\n" + infoLog);
+                LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Compiled ") + typeString + " with warnings:\n" + infoLog);
             } else {
-                LOG_MESSAGE(
-                    __FILE__, __LINE__, OpenGLESString("ERROR: Compiling ") + typeString + " failed:\n" + infoLog);
+                LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Compiling ") + typeString + " failed:\n" + infoLog);
             }
             free(infoLog);
         }

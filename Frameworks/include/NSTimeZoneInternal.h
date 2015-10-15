@@ -18,6 +18,6 @@
 
 #include <unicode/gregocal.h>
 
-@interface NSTimeZone(Internal)
-    -(icu::TimeZone *) _createICUTimeZone;
+@interface NSTimeZone (Internal)
+- (icu::TimeZone*)_createICUTimeZone;
 @end

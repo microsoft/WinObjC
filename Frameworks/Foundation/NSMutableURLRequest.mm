@@ -37,16 +37,15 @@
     id existing;
 
     existing = [_headerFields objectForKey:headerName];
-    if (existing != nil)
+    if (existing != nil) {
         value = [[existing stringByAppendingString:@","] stringByAppendingString:value];
+    }
 
-    [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-                      forKey:headerName];
+    [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
 }
 
 - (void)setValue:(id)value forHTTPHeaderField:(id)headerName {
-    [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-                      forKey:headerName];
+    [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
 }
 
 - (void)setHTTPMethod:(id)method {
@@ -61,9 +60,9 @@
     while ((key = [state nextObject]) != nil) {
         id value = [fields objectForKey:key];
 
-        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]])
-            [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
-                              forKey:key];
+        if ([key isKindOfClass:[NSString class]] && [value isKindOfClass:[NSString class]]) {
+            [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:key];
+        }
     }
 }
 
@@ -95,9 +94,8 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url
-                                                     cachePolicy:0
-                                                 timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
+    NSURLRequest* ret =
+        [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:0 timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
     ret->_headerFields = [_headerFields mutableCopy];
     ret->_method.attach([_method copy]);
     ret->_body.attach([_body copy]);

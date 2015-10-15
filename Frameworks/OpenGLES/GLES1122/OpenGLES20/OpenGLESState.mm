@@ -70,8 +70,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     shaders[ShaderId::MAIN_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "main.vert");
     shaders[ShaderId::LIGHTING_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "lighting.vert");
     shaders[ShaderId::LIGHTING_PER_VERTEX_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "lightingPerVertex.vert");
-    shaders[ShaderId::LIGHTING_PER_FRAGMENT_VERTEX_SHADER] =
-        new ShaderFile(GL_VERTEX_SHADER, "lightingPerFragment.vert");
+    shaders[ShaderId::LIGHTING_PER_FRAGMENT_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "lightingPerFragment.vert");
     shaders[ShaderId::FOG_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "fog.glsl");
     shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "clipPlane.vert");
     shaders[ShaderId::TEXTURE_VERTEX_SHADER] = new ShaderFile(GL_VERTEX_SHADER, "texture.vert");
@@ -81,8 +80,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     shaders[ShaderId::MAIN_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "main.frag");
     shaders[ShaderId::LIGHTING_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "lighting.frag");
-    shaders[ShaderId::LIGHTING_PER_FRAGMENT_FRAGMENT_SHADER] =
-        new ShaderFile(GL_FRAGMENT_SHADER, "lightingPerFragment.frag");
+    shaders[ShaderId::LIGHTING_PER_FRAGMENT_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "lightingPerFragment.frag");
     shaders[ShaderId::FOG_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "fog.glsl");
     shaders[ShaderId::ALPHA_TEST_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "alphaTest.frag");
     shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER] = new ShaderFile(GL_FRAGMENT_SHADER, "clipPlane.frag");
@@ -102,16 +100,13 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::POSITION_ENABLED &&
         UniformId::POSITION_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
-        uniforms[UniformId::POSITION_ENABLED] =
-            new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "POSITION_ENABLED", false);
+        uniforms[UniformId::POSITION_ENABLED] = new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "POSITION_ENABLED", false);
     } else {
         uniforms[UniformId::POSITION_ENABLED] = new Uniform<bool>(false);
     }
 
-    if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::COLOR_ENABLED &&
-        UniformId::COLOR_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
-        uniforms[UniformId::COLOR_ENABLED] =
-            new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "COLOR_ENABLED", false);
+    if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::COLOR_ENABLED && UniformId::COLOR_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
+        uniforms[UniformId::COLOR_ENABLED] = new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "COLOR_ENABLED", false);
     } else {
         uniforms[UniformId::COLOR_ENABLED] = new Uniform<bool>(false);
     }
@@ -125,10 +120,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXCOORD0_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXCOORD0_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
-    uniforms[UniformId::TEXCOORD0_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE0_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE0_VERTEX_SHADER]);
 
     UniformState<bool>* texcoord1Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::TEXCOORD1_ENABLED &&
@@ -139,10 +132,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXCOORD1_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXCOORD1_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
-    uniforms[UniformId::TEXCOORD1_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE1_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE1_VERTEX_SHADER]);
 
     UniformState<bool>* texcoord2Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::TEXCOORD2_ENABLED &&
@@ -153,10 +144,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXCOORD2_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXCOORD2_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
-    uniforms[UniformId::TEXCOORD2_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                            shaders[ShaderId::TEXTURE2_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_VERTEX_SHADER]);
+    uniforms[UniformId::TEXCOORD2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE2_VERTEX_SHADER]);
 
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::TEXTURE0_MATRIX_ENABLED &&
         UniformId::TEXTURE0_MATRIX_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
@@ -191,10 +180,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::LIGHTING_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::LIGHTING_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::LIGHTING_VERTEX_SHADER]);
-    uniforms[UniformId::LIGHTING_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::LIGHTING_FRAGMENT_SHADER]);
+    uniforms[UniformId::LIGHTING_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::LIGHTING_VERTEX_SHADER]);
+    uniforms[UniformId::LIGHTING_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::LIGHTING_FRAGMENT_SHADER]);
 
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::LIGHT_MODEL_LOCAL_VIEWER_ENABLED &&
         UniformId::LIGHT_MODEL_LOCAL_VIEWER_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
@@ -208,8 +195,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     UniformState<bool>* lightModelTwoSideEnabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::LIGHT_MODEL_TWO_SIDE_ENABLED &&
         UniformId::LIGHT_MODEL_TWO_SIDE_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
-        lightModelTwoSideEnabled =
-            new UniformState<bool>(shaders[ShaderId::LIGHTING_VERTEX_SHADER], "LIGHT_MODEL_TWO_SIDE_ENABLED", false);
+        lightModelTwoSideEnabled = new UniformState<bool>(shaders[ShaderId::LIGHTING_VERTEX_SHADER], "LIGHT_MODEL_TWO_SIDE_ENABLED", false);
         lightModelTwoSideEnabled->addDefineShaderFile(shaders[ShaderId::LIGHTING_FRAGMENT_SHADER]);
         uniforms[UniformId::LIGHT_MODEL_TWO_SIDE_ENABLED] = lightModelTwoSideEnabled;
     } else {
@@ -252,8 +238,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::NORMAL_ENABLED &&
         UniformId::NORMAL_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
-        uniforms[UniformId::NORMAL_ENABLED] =
-            new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "NORMAL_ENABLED", false);
+        uniforms[UniformId::NORMAL_ENABLED] = new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "NORMAL_ENABLED", false);
     } else {
         uniforms[UniformId::NORMAL_ENABLED] = new Uniform<bool>(false);
     }
@@ -270,16 +255,14 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::NORMALIZE_ENABLED &&
         UniformId::NORMALIZE_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
-        uniforms[UniformId::NORMALIZE_ENABLED] =
-            new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "NORMALIZE_ENABLED", false);
+        uniforms[UniformId::NORMALIZE_ENABLED] = new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "NORMALIZE_ENABLED", false);
     } else {
         uniforms[UniformId::NORMALIZE_ENABLED] = new Uniform<bool>(false);
     }
     uniforms[UniformId::NORMALIZE_ENABLED]->setFather(lightingEnabled);
 
     UniformState<bool>* fogEnabled = 0;
-    if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::FOG_ENABLED &&
-        UniformId::FOG_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
+    if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::FOG_ENABLED && UniformId::FOG_ENABLED <= UniformId::LAST_STATE_UNIFORM_BOOL) {
         fogEnabled = new UniformState<bool>(shaders[ShaderId::MAIN_VERTEX_SHADER], "FOG_ENABLED", false);
         fogEnabled->addDefineShaderFile(shaders[ShaderId::MAIN_FRAGMENT_SHADER]);
         uniforms[UniformId::FOG_ENABLED] = fogEnabled;
@@ -296,10 +279,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXTURE0_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXTURE0_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
-    uniforms[UniformId::TEXTURE0_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER]);
 
     UniformState<bool>* texture1Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::TEXTURE1_ENABLED &&
@@ -310,10 +291,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXTURE1_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXTURE1_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
-    uniforms[UniformId::TEXTURE1_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER]);
 
     UniformState<bool>* texture2Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::TEXTURE2_ENABLED &&
@@ -324,10 +303,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::TEXTURE2_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::TEXTURE2_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
-    uniforms[UniformId::TEXTURE2_ENABLED]->addAdditionalRequiredShaderFile(true,
-                                                                           shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE_FRAGMENT_SHADER]);
+    uniforms[UniformId::TEXTURE2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER]);
 
     UniformState<bool>* alphaTestEnabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::ALPHA_TEST_ENABLED &&
@@ -337,8 +314,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::ALPHA_TEST_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::ALPHA_TEST_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::ALPHA_TEST_FRAGMENT_SHADER]);
+    uniforms[UniformId::ALPHA_TEST_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::ALPHA_TEST_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane0Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE0_ENABLED &&
@@ -349,10 +325,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE0_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE0_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE0_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE0_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane1Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE1_ENABLED &&
@@ -363,10 +337,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE1_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE1_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE1_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE1_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane2Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE2_ENABLED &&
@@ -377,10 +349,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE2_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE2_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE2_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE2_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane3Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE3_ENABLED &&
@@ -391,10 +361,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE3_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE3_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE3_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE3_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE3_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane4Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE4_ENABLED &&
@@ -405,10 +373,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE4_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE4_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE4_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE4_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE4_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     UniformState<bool>* clipPlane5Enabled = 0;
     if (UniformId::FIRST_STATE_UNIFORM_BOOL <= UniformId::CLIP_PLANE5_ENABLED &&
@@ -419,16 +385,13 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     } else {
         uniforms[UniformId::CLIP_PLANE5_ENABLED] = new Uniform<bool>(false);
     }
-    uniforms[UniformId::CLIP_PLANE5_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
-    uniforms[UniformId::CLIP_PLANE5_ENABLED]->addAdditionalRequiredShaderFile(
-        true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
+    uniforms[UniformId::CLIP_PLANE5_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_VERTEX_SHADER]);
+    uniforms[UniformId::CLIP_PLANE5_ENABLED]->addAdditionalRequiredShaderFile(true, shaders[ShaderId::CLIP_PLANE_FRAGMENT_SHADER]);
 
     // Int uniforms with defines
 
     UniformState<int>* fogMode = 0;
-    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::FOG_MODE &&
-        UniformId::FOG_MODE <= UniformId::LAST_STATE_UNIFORM_INT) {
+    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::FOG_MODE && UniformId::FOG_MODE <= UniformId::LAST_STATE_UNIFORM_INT) {
         fogMode = new UniformState<GLint>(shaders[ShaderId::MAIN_VERTEX_SHADER], "FOG_MODE", GL_EXP);
         fogMode->addDefineShaderFile(shaders[ShaderId::FOG_FRAGMENT_SHADER]);
         uniforms[UniformId::FOG_MODE] = fogMode;
@@ -438,8 +401,7 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     uniforms[UniformId::FOG_MODE]->setFather(fogEnabled);
 
     UniformState<int>* fogHint = 0;
-    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::FOG_HINT &&
-        UniformId::FOG_HINT <= UniformId::LAST_STATE_UNIFORM_INT) {
+    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::FOG_HINT && UniformId::FOG_HINT <= UniformId::LAST_STATE_UNIFORM_INT) {
         fogHint = new UniformState<GLint>(shaders[ShaderId::MAIN_VERTEX_SHADER], "FOG_HINT", GL_FASTEST);
         fogHint->addDefineShaderFile(shaders[ShaderId::MAIN_FRAGMENT_SHADER]);
         uniforms[UniformId::FOG_HINT] = fogHint;
@@ -451,30 +413,23 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
     uniforms[UniformId::FOG_HINT]->setFather(fogEnabled);
 
     UniformState<int>* lightingHint = 0;
-    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::LIGHTING_HINT &&
-        UniformId::LIGHTING_HINT <= UniformId::LAST_STATE_UNIFORM_INT) {
+    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::LIGHTING_HINT && UniformId::LIGHTING_HINT <= UniformId::LAST_STATE_UNIFORM_INT) {
         lightingHint = new UniformState<GLint>(shaders[ShaderId::MAIN_VERTEX_SHADER], "LIGHTING_HINT", GL_FASTEST);
         lightingHint->addDefineShaderFile(shaders[ShaderId::MAIN_FRAGMENT_SHADER]);
         uniforms[UniformId::LIGHTING_HINT] = lightingHint;
     } else {
         uniforms[UniformId::LIGHTING_HINT] = new Uniform<int>(GL_FASTEST);
     }
-    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_FASTEST,
-                                                                        shaders[ShaderId::LIGHTING_VERTEX_SHADER]);
-    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(
-        GL_FASTEST, shaders[ShaderId::LIGHTING_PER_VERTEX_VERTEX_SHADER]);
+    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_FASTEST, shaders[ShaderId::LIGHTING_VERTEX_SHADER]);
+    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_FASTEST, shaders[ShaderId::LIGHTING_PER_VERTEX_VERTEX_SHADER]);
+    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_NICEST, shaders[ShaderId::LIGHTING_FRAGMENT_SHADER]);
+    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_NICEST, shaders[ShaderId::LIGHTING_PER_FRAGMENT_VERTEX_SHADER]);
     uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(GL_NICEST,
-                                                                        shaders[ShaderId::LIGHTING_FRAGMENT_SHADER]);
-    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(
-        GL_NICEST, shaders[ShaderId::LIGHTING_PER_FRAGMENT_VERTEX_SHADER]);
-    uniforms[UniformId::LIGHTING_HINT]->addAdditionalRequiredShaderFile(
-        GL_NICEST, shaders[ShaderId::LIGHTING_PER_FRAGMENT_FRAGMENT_SHADER]);
+                                                                        shaders[ShaderId::LIGHTING_PER_FRAGMENT_FRAGMENT_SHADER]);
     uniforms[UniformId::LIGHTING_HINT]->setFather(lightingEnabled);
 
-    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::ALPHA_FUNC &&
-        UniformId::ALPHA_FUNC <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::ALPHA_FUNC] =
-            new UniformState<GLint>(shaders[ShaderId::ALPHA_TEST_FRAGMENT_SHADER], "ALPHA_FUNC", GL_ALWAYS);
+    if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::ALPHA_FUNC && UniformId::ALPHA_FUNC <= UniformId::LAST_STATE_UNIFORM_INT) {
+        uniforms[UniformId::ALPHA_FUNC] = new UniformState<GLint>(shaders[ShaderId::ALPHA_TEST_FRAGMENT_SHADER], "ALPHA_FUNC", GL_ALWAYS);
     } else {
         uniforms[UniformId::ALPHA_FUNC] = new Uniform<int>(GL_ALWAYS);
     }
@@ -536,8 +491,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_COMBINE_RGB &&
         UniformId::TEXTURE0_ENV_COMBINE_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_COMBINE_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_COMBINE_RGB", GL_MODULATE);
+        uniforms[UniformId::TEXTURE0_ENV_COMBINE_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_COMBINE_RGB", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_COMBINE_RGB] = new Uniform<int>(GL_MODULATE);
     }
@@ -545,8 +500,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_COMBINE_RGB &&
         UniformId::TEXTURE1_ENV_COMBINE_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_COMBINE_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_COMBINE_RGB", GL_MODULATE);
+        uniforms[UniformId::TEXTURE1_ENV_COMBINE_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_COMBINE_RGB", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_COMBINE_RGB] = new Uniform<int>(GL_MODULATE);
     }
@@ -554,8 +509,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_COMBINE_RGB &&
         UniformId::TEXTURE2_ENV_COMBINE_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_COMBINE_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_COMBINE_RGB", GL_MODULATE);
+        uniforms[UniformId::TEXTURE2_ENV_COMBINE_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_COMBINE_RGB", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_COMBINE_RGB] = new Uniform<int>(GL_MODULATE);
     }
@@ -563,8 +518,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_COMBINE_ALPHA &&
         UniformId::TEXTURE0_ENV_COMBINE_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_COMBINE_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_COMBINE_ALPHA", GL_MODULATE);
+        uniforms[UniformId::TEXTURE0_ENV_COMBINE_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_COMBINE_ALPHA", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_COMBINE_ALPHA] = new Uniform<int>(GL_MODULATE);
     }
@@ -572,8 +527,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_COMBINE_ALPHA &&
         UniformId::TEXTURE1_ENV_COMBINE_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_COMBINE_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_COMBINE_ALPHA", GL_MODULATE);
+        uniforms[UniformId::TEXTURE1_ENV_COMBINE_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_COMBINE_ALPHA", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_COMBINE_ALPHA] = new Uniform<int>(GL_MODULATE);
     }
@@ -581,8 +536,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_COMBINE_ALPHA &&
         UniformId::TEXTURE2_ENV_COMBINE_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_COMBINE_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_COMBINE_ALPHA", GL_MODULATE);
+        uniforms[UniformId::TEXTURE2_ENV_COMBINE_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_COMBINE_ALPHA", GL_MODULATE);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_COMBINE_ALPHA] = new Uniform<int>(GL_MODULATE);
     }
@@ -671,8 +626,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND0_RGB &&
         UniformId::TEXTURE0_ENV_OPERAND0_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND0_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND0_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND0_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND0_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND0_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -680,8 +635,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND1_RGB &&
         UniformId::TEXTURE0_ENV_OPERAND1_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND1_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND1_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND1_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND1_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND1_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -689,8 +644,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND2_RGB &&
         UniformId::TEXTURE0_ENV_OPERAND2_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND2_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND2_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND2_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND2_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND2_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -698,8 +653,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND0_RGB &&
         UniformId::TEXTURE1_ENV_OPERAND0_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND0_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND0_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND0_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND0_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND0_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -707,8 +662,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND1_RGB &&
         UniformId::TEXTURE1_ENV_OPERAND1_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND1_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND1_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND1_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND1_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND1_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -716,8 +671,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND2_RGB &&
         UniformId::TEXTURE1_ENV_OPERAND2_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND2_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND2_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND2_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND2_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND2_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -725,8 +680,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND0_RGB &&
         UniformId::TEXTURE2_ENV_OPERAND0_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND0_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND0_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND0_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND0_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND0_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -734,8 +689,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND1_RGB &&
         UniformId::TEXTURE2_ENV_OPERAND1_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND1_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND1_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND1_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND1_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND1_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -743,8 +698,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND2_RGB &&
         UniformId::TEXTURE2_ENV_OPERAND2_RGB <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND2_RGB] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND2_RGB", GL_SRC_COLOR);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND2_RGB] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND2_RGB", GL_SRC_COLOR);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND2_RGB] = new Uniform<int>(GL_SRC_COLOR);
     }
@@ -752,8 +707,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_SRC0_ALPHA &&
         UniformId::TEXTURE0_ENV_SRC0_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_SRC0_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_SRC0_ALPHA", 0); // TODO: default value
+        uniforms[UniformId::TEXTURE0_ENV_SRC0_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_SRC0_ALPHA", 0); // TODO: default value
     } else {
         uniforms[UniformId::TEXTURE0_ENV_SRC0_ALPHA] = new Uniform<int>(0);
     }
@@ -833,8 +788,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND0_ALPHA &&
         UniformId::TEXTURE0_ENV_OPERAND0_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND0_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND0_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND0_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -842,8 +797,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND1_ALPHA &&
         UniformId::TEXTURE0_ENV_OPERAND1_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND1_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND1_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND1_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -851,8 +806,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE0_ENV_OPERAND2_ALPHA &&
         UniformId::TEXTURE0_ENV_OPERAND2_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE0_ENV_OPERAND2_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE0_ENV_OPERAND2_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE0_FRAGMENT_SHADER], "TEXTURE0_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE0_ENV_OPERAND2_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -860,8 +815,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND0_ALPHA &&
         UniformId::TEXTURE1_ENV_OPERAND0_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND0_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND0_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND0_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -869,8 +824,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND1_ALPHA &&
         UniformId::TEXTURE1_ENV_OPERAND1_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND1_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND1_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND1_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -878,8 +833,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE1_ENV_OPERAND2_ALPHA &&
         UniformId::TEXTURE1_ENV_OPERAND2_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE1_ENV_OPERAND2_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE1_ENV_OPERAND2_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE1_FRAGMENT_SHADER], "TEXTURE1_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE1_ENV_OPERAND2_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -887,8 +842,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND0_ALPHA &&
         UniformId::TEXTURE2_ENV_OPERAND0_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND0_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND0_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND0_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND0_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -896,8 +851,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND1_ALPHA &&
         UniformId::TEXTURE2_ENV_OPERAND1_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND1_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND1_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND1_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND1_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -905,8 +860,8 @@ void OpenGLESState::init(OpenGLESImplementation* implementation) {
 
     if (UniformId::FIRST_STATE_UNIFORM_INT <= UniformId::TEXTURE2_ENV_OPERAND2_ALPHA &&
         UniformId::TEXTURE2_ENV_OPERAND2_ALPHA <= UniformId::LAST_STATE_UNIFORM_INT) {
-        uniforms[UniformId::TEXTURE2_ENV_OPERAND2_ALPHA] = new UniformState<GLint>(
-            shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
+        uniforms[UniformId::TEXTURE2_ENV_OPERAND2_ALPHA] =
+            new UniformState<GLint>(shaders[ShaderId::TEXTURE2_FRAGMENT_SHADER], "TEXTURE2_ENV_OPERAND2_ALPHA", GL_SRC_ALPHA);
     } else {
         uniforms[UniformId::TEXTURE2_ENV_OPERAND2_ALPHA] = new Uniform<int>(GL_SRC_ALPHA);
     }
@@ -1036,8 +991,8 @@ void OpenGLESState::setCurrentProgram() {
             Shader* vertexShader = new Shader(GL_VERTEX_SHADER, vertexShaderSources);
             Shader* fragmentShader = new Shader(GL_FRAGMENT_SHADER, fragmentShaderSources);
 
-            currentStateShaderProgram = new StateShaderProgram(
-                getCopyOfCurrentState(), new ShaderProgram("UberShader", vertexShader, fragmentShader));
+            currentStateShaderProgram =
+                new StateShaderProgram(getCopyOfCurrentState(), new ShaderProgram("UberShader", vertexShader, fragmentShader));
             stateShaderPrograms.push_back(currentStateShaderProgram);
             currentStateShaderProgram->shaderProgram->use();
             setActiveUniformLocations(currentStateShaderProgram->shaderProgram->getActiveUniforms());
@@ -1060,8 +1015,7 @@ void OpenGLESState::setCurrentProgram() {
             currentState[currentBit / 32] = 0;
         }
 
-        currentState[currentBit / 32] |= (static_cast<UniformState<bool>*>(uniforms[i])->getValue() ? 1 : 0)
-                                         << (currentBit % 32);
+        currentState[currentBit / 32] |= (static_cast<UniformState<bool>*>(uniforms[i])->getValue() ? 1 : 0) << (currentBit % 32);
 
         currentBit++;
     }
@@ -1129,10 +1083,11 @@ void OpenGLESState::setCurrentProgram() {
         Shader* vertexShader = new Shader(GL_VERTEX_SHADER, vertexShaderSources);
         Shader* fragmentShader = new Shader(GL_FRAGMENT_SHADER, fragmentShaderSources);
 
-        currentStateShaderProgram = new StateShaderProgram(
-            getCopyOfCurrentState(),
-            new ShaderProgram(
-                OpenGLESString("Optimized Shader ") + (stateShaderPrograms.size() + 1), vertexShader, fragmentShader));
+        currentStateShaderProgram =
+            new StateShaderProgram(getCopyOfCurrentState(),
+                                   new ShaderProgram(OpenGLESString("Optimized Shader ") + (stateShaderPrograms.size() + 1),
+                                                     vertexShader,
+                                                     fragmentShader));
         stateShaderPrograms.push_back(currentStateShaderProgram);
     }
 
@@ -1205,9 +1160,7 @@ void OpenGLESState::addDefinesToShaderSources(std::vector<ShaderSource*>& vertex
         if (static_cast<Uniform<bool>*>(uniforms[UniformId::LIGHTING_ENABLED])->getValue()) {
             for (int i = 0; i < 3; i++) {
                 if (static_cast<Uniform<bool>*>(uniforms[UniformId::LIGHT0_ENABLED + i])->getValue() &&
-                    static_cast<Uniform<Vector4<GLfloat>>*>(uniforms[UniformId::LIGHT0_POSITION + i])
-                            ->getValue()
-                            .v[3] != 0.0f) {
+                    static_cast<Uniform<Vector4<GLfloat>>*>(uniforms[UniformId::LIGHT0_POSITION + i])->getValue().v[3] != 0.0f) {
                     nonDirectionalLightEnabled = true;
                     break;
                 }
@@ -1354,18 +1307,15 @@ void OpenGLESState::setTextureEnvSrcRGB(int index, GLint val) {
 }
 
 void OpenGLESState::setTextureEnvOperandRGB(int index, GLint val) {
-    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_OPERAND0_RGB + index + 3 * activeTexture])
-        ->setValue(val);
+    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_OPERAND0_RGB + index + 3 * activeTexture])->setValue(val);
 }
 
 void OpenGLESState::setTextureEnvSrcAlpha(int index, GLint val) {
-    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_SRC0_ALPHA + index + 3 * activeTexture])
-        ->setValue(val);
+    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_SRC0_ALPHA + index + 3 * activeTexture])->setValue(val);
 }
 
 void OpenGLESState::setTextureEnvOperandAlpha(int index, GLint val) {
-    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_OPERAND0_ALPHA + index + 3 * activeTexture])
-        ->setValue(val);
+    static_cast<Uniform<GLint>*>(uniforms[UniformId::TEXTURE0_ENV_OPERAND0_ALPHA + index + 3 * activeTexture])->setValue(val);
 }
 
 void OpenGLESState::setTextureEnvRGBScale(GLfloat val) {
@@ -1545,8 +1495,7 @@ void OpenGLESState::setClipPlane(GLenum clipPlaneIndex, Vector4<GLfloat> vec) {
 }
 
 void OpenGLESState::getClipPlane(GLenum clipPlaneIndex, GLfloat eqn[4]) {
-    Vector4<GLfloat> vec =
-        static_cast<Uniform<Vector4<GLfloat>>*>(uniforms[UniformId::CLIP_PLANE0_EQUATION + clipPlaneIndex])->getValue();
+    Vector4<GLfloat> vec = static_cast<Uniform<Vector4<GLfloat>>*>(uniforms[UniformId::CLIP_PLANE0_EQUATION + clipPlaneIndex])->getValue();
     eqn[0] = vec[0];
     eqn[1] = vec[1];
     eqn[2] = vec[2];
