@@ -98,9 +98,9 @@ pushd win10x86
 %CMAKE_BIN% ^
 .. ^
 -G "Visual Studio 14 2015" ^
--DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86" ^
+-DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86" ^
 -DOPENSSL_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
--DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86\libz.lib" ^
+-DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86\libz.lib" ^
 -DZLIB_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
 -DBUILD_CURL_TESTS:BOOL="OFF" ^
 -DCURL_DISABLE_TELNET:BOOL="ON" ^
@@ -110,9 +110,9 @@ pushd win10x86
 %MSBUILD_BIN% lib\libcurl.vcxproj /p:configuration=RelWithDebInfo
 
 xcopy /y /i include\curl\*.h %BUILD.DEPS.PATH%\prebuilt\include\curl
-xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86\"
-xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86\"
-xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86\"
+xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86\"
+xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86\"
+xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86\"
 
 popd
 
@@ -130,9 +130,9 @@ pushd win10x64
 %CMAKE_BIN% ^
 .. ^
 -G "Visual Studio 14 2015 Win64" ^
--DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x64" ^
+-DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x64" ^
 -DOPENSSL_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
--DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x64\libz.lib" ^
+-DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x64\libz.lib" ^
 -DZLIB_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
 -DBUILD_CURL_TESTS:BOOL="OFF" ^
 -DCURL_DISABLE_TELNET:BOOL="ON" ^
@@ -142,9 +142,9 @@ pushd win10x64
 %MSBUILD_BIN% lib\libcurl.vcxproj /p:configuration=RelWithDebInfo
 
 xcopy /y /i include\curl\*.h %BUILD.DEPS.PATH%\prebuilt\include\curl
-xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x64\"
-xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x64\"
-xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x64\"
+xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x64\"
+xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x64\"
+xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x64\"
 
 popd
 
@@ -162,9 +162,9 @@ pushd win10ARM
 %CMAKE_BIN% ^
 .. ^
 -G "Visual Studio 14 2015 ARM" ^
--DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM" ^
+-DOPENSSL_ROOT_DIR="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM" ^
 -DOPENSSL_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
--DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM\libz.lib" ^
+-DZLIB_LIBRARY="%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM\libz.lib" ^
 -DZLIB_INCLUDE_DIR="%BUILD.DEPS.PATH%\prebuilt\include" ^
 -DBUILD_CURL_TESTS:BOOL="OFF" ^
 -DCURL_DISABLE_TELNET:BOOL="ON" ^
@@ -174,9 +174,9 @@ pushd win10ARM
 %MSBUILD_BIN% lib\libcurl.vcxproj /p:configuration=RelWithDebInfo
 
 xcopy /y /i include\curl\*.h %BUILD.DEPS.PATH%\prebuilt\include\curl
-xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM\"
-xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM\"
-xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM\"
+xcopy /y lib\RelWithDebInfo\libcurl.dll "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM\"
+xcopy /y lib\RelWithDebInfo\libcurl_imp.lib "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM\"
+xcopy /y lib\RelWithDebInfo\libcurl.pdb "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM\"
 
 popd
 
