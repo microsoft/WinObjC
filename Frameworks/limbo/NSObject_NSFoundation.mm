@@ -375,7 +375,6 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     [self performSelector:selector withObject:object];
 
     [waitingLock unlockWithCondition:1];
-    [args release];
 }
 
 - (void)performSelector:(SEL)selector
