@@ -16,7 +16,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Foundation/NSObject.h>
 #import <Foundation/NSGeometry.h>
 #import <Foundation/NSRange.h>
-#import <Foundation/NSNumber.h>
 
 typedef enum : NSUInteger {
     NSValueTypeUnknown,
