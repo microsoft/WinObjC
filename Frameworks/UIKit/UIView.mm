@@ -1476,8 +1476,9 @@ static float doRound(float f) {
 }
 
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
-    if (constraint.firstItem != self && [constraint.firstItem superview] != self &&
-        (constraint.secondItem && (constraint.secondItem != self || [constraint.secondItem superview] != self))) {
+    // Constraints can only be added if they are self or a child of this view.
+    if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) || 
+        (constraint.secondItem && ((constraint.secondItem != self) && ([constraint.secondItem superview] != self)))) {
         EbrDebugLog(
             "Only constraints with relations to this view and its children may be added. "
             "This error may occur if your view hierarchy has not yet been initialized.\n");
