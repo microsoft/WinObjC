@@ -35,8 +35,9 @@
 
     ret->_path = [name stringByAppendingString:@".storyboardc"];
 
-    if (bundle == nil)
+    if (bundle == nil) {
         bundle = [NSBundle mainBundle];
+    }
     id storyInfoPath = [bundle pathForResource:@"Info" ofType:@"plist" inDirectory:(id)ret->_path];
 
     if (storyInfoPath != nil) {

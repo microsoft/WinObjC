@@ -20,8 +20,9 @@
 #include "QuartzCore/CALayer.h"
 
 __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
-    if (function == nil)
+    if (function == nil) {
         return t;
+    }
     float cp1[2];
     float cp2[2];
 
@@ -32,10 +33,8 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     cp2[0] = pFunc->_c2x;
     cp2[1] = pFunc->_c2y;
 
-    double x =
-        cubed(1.0 - t) * 0.0 + 3 * squared(1 - t) * t * cp1[0] + 3 * (1 - t) * squared(t) * cp2[0] + cubed(t) * 1.0;
-    double y =
-        cubed(1.0 - t) * 0.0 + 3 * squared(1 - t) * t * cp1[1] + 3 * (1 - t) * squared(t) * cp2[1] + cubed(t) * 1.0;
+    double x = cubed(1.0 - t) * 0.0 + 3 * squared(1 - t) * t * cp1[0] + 3 * (1 - t) * squared(t) * cp2[0] + cubed(t) * 1.0;
+    double y = cubed(1.0 - t) * 0.0 + 3 * squared(1 - t) * t * cp1[1] + 3 * (1 - t) * squared(t) * cp2[1] + cubed(t) * 1.0;
 
     // this is wrong
     return (float)y;
@@ -45,16 +44,21 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
 + (CAMediaTimingFunction*)functionWithName:(NSString*)function {
     char* name = (char*)[function UTF8String];
 
-    if (strcmp(name, "kCAMediaTimingFunctionLinear") == 0)
+    if (strcmp(name, "kCAMediaTimingFunctionLinear") == 0) {
         return [self functionWithControlPoints:0:0:1:1];
-    if (strcmp(name, "kCAMediaTimingFunctionEaseIn") == 0)
+    }
+    if (strcmp(name, "kCAMediaTimingFunctionEaseIn") == 0) {
         return [self functionWithControlPoints:0.5:0:1:1];
-    if (strcmp(name, "kCAMediaTimingFunctionEaseOut") == 0)
+    }
+    if (strcmp(name, "kCAMediaTimingFunctionEaseOut") == 0) {
         return [self functionWithControlPoints:0:0:0.5:1];
-    if (strcmp(name, "kCAMediaTimingFunctionEaseInEaseOut") == 0)
+    }
+    if (strcmp(name, "kCAMediaTimingFunctionEaseInEaseOut") == 0) {
         return [self functionWithControlPoints:0.5:0:0.5:1];
-    if (strcmp(name, "kCAMediaTimingFunctionDefault") == 0)
+    }
+    if (strcmp(name, "kCAMediaTimingFunctionDefault") == 0) {
         return [self functionWithControlPoints:0.25f:0.1f:0.25f:1.0f];
+    }
 
     return nil;
 }

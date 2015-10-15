@@ -77,17 +77,16 @@ typedef wchar_t WCHAR;
 static void initWebKit(UIWebView* self) {
     self->_xamlWebControl = [WXCWebView create];
     [self layer].contentsElement = self->_xamlWebControl;
-    self->_xamlLoadCompletedEventCookie =
-        [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
-            self->_isLoading = false;
+    self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
+        self->_isLoading = false;
 
-            if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-                [self->_delegate webViewDidFinishLoad:self];
-            }
+        if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+            [self->_delegate webViewDidFinishLoad:self];
+        }
 
-        }];
-    self->_xamlLoadStartedEventCookie = [self->_xamlWebControl
-        addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
+    }];
+    self->_xamlLoadStartedEventCookie =
+        [self->_xamlWebControl addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
             if ([self->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
                 [self->_delegate webViewDidStartLoad:self];
             }
@@ -128,10 +127,7 @@ static void initWebKit(UIWebView* self) {
     [self sizeToFit];
 }
 
-- (void)loadData:(NSData*)data
-        MIMEType:(NSString*)mimeType
-textEncodingName:(NSString*)encoding
-         baseURL:(NSURL*)baseURL {
+- (void)loadData:(NSData*)data MIMEType:(NSString*)mimeType textEncodingName:(NSString*)encoding baseURL:(NSURL*)baseURL {
     _isLoading = true;
     _delayLoadURL = nil;
 

@@ -16,20 +16,17 @@
 
 #pragma once
 
-template<typename Type>
-class List
-{
+template <typename Type>
+class List {
     Type* _data;
     size_t _capacity, _count;
 
-    void resize(size_t capacity)
-    {
+    void resize(size_t capacity) {
         Type* prevData = _data;
         _data = new Type[capacity];
 
-        //assert(capacity >= _count);
-        for(size_t i = 0; i < _count; ++i)
-        {
+        // assert(capacity >= _count);
+        for (size_t i = 0; i < _count; ++i) {
             _data[i] = prevData[i];
         }
 
@@ -38,33 +35,32 @@ class List
     }
 
 public:
-
-    List() : _data(0), _capacity(0), _count(0) {}
-
-    ~List()
-    {
-        delete [] _data;
+    List() : _data(0), _capacity(0), _count(0) {
     }
 
-    void add(const Type& val)
-    {
-        if(_count + 1 >= _capacity)
-        {
+    ~List() {
+        delete[] _data;
+    }
+
+    void add(const Type& val) {
+        if (_count + 1 >= _capacity) {
             resize(2 * _capacity + 7);
         }
         _data[_count++] = val;
     }
 
-    Type& operator [](size_t pos) { return _data[pos]; }
-    const Type& operator [](size_t pos) const { return _data[pos]; }
+    Type& operator[](size_t pos) {
+        return _data[pos];
+    }
+    const Type& operator[](size_t pos) const {
+        return _data[pos];
+    }
 
-    void removeEnd()
-    {
+    void removeEnd() {
         --_count;
     }
 
-    size_t len() const
-    {
+    size_t len() const {
         return _count;
     }
 };

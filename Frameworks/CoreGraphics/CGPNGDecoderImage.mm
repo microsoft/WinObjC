@@ -60,8 +60,9 @@ static void PNG_read_data(png_structp png_ptr, png_bytep data, png_size_t length
     ImageDataStream* buf = (ImageDataStream*)png_get_io_ptr(png_ptr);
 
     int read = buf->readData(data, length);
-    if (read < length)
+    if (read < length) {
         memset(data + read, 0, length - read);
+    }
 }
 
 static int PNG_unknown_chunk(png_structp png_ptr, png_unknown_chunkp chunk) {
@@ -257,8 +258,9 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
     if (imgDest) {
         /* convert palette/gray image to rgb */
-        if (color_type == PNG_COLOR_TYPE_PALETTE)
+        if (color_type == PNG_COLOR_TYPE_PALETTE) {
             png_set_palette_to_rgb(png);
+        }
 
         /* expand gray bit depth if needed */
         if (color_type == PNG_COLOR_TYPE_GRAY) {
@@ -267,8 +269,9 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
         /* transform transparency to alpha */
         if (color_type != PNG_COLOR_TYPE_GRAY && color_type != PNG_COLOR_TYPE_GRAY_ALPHA) {
-            if (png_get_valid(png, info, PNG_INFO_tRNS))
+            if (png_get_valid(png, info, PNG_INFO_tRNS)) {
                 png_set_tRNS_to_alpha(png);
+            }
         } else {
             //  Expand grayscale with alpha to RGBA
             if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
@@ -277,14 +280,17 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
             }
         }
 
-        if (depth == 16)
+        if (depth == 16) {
             png_set_strip_16(png);
+        }
 
-        if (depth < 8)
+        if (depth < 8) {
             png_set_packing(png);
+        }
 
-        if (interlace != PNG_INTERLACE_NONE)
+        if (interlace != PNG_INTERLACE_NONE) {
             png_set_interlace_handling(png);
+        }
 
         if (color_type != PNG_COLOR_TYPE_GRAY) {
             png_set_filler(png, 0xff, PNG_FILLER_AFTER);
@@ -295,8 +301,8 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
         png_read_update_info(png, info);
         png_get_IHDR(png, info, &png_width, &png_height, &depth, &color_type, &interlace, NULL, NULL);
         if (depth != 8 ||
-            !(color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
-              color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)) {
+            !(color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_RGB_ALPHA || color_type == PNG_COLOR_TYPE_GRAY ||
+              color_type == PNG_COLOR_TYPE_GRAY_ALPHA)) {
             EbrDebugLog("PNG load Error\n");
             errorCode = 1;
             goto error;
@@ -332,10 +338,12 @@ error:
     if (errorCode) {
         int curRow = png_get_current_row_number(png);
         if (curRow == 0) {
-            if (row_pointers != NULL)
+            if (row_pointers != NULL) {
                 EbrFree(row_pointers);
-            if (png != NULL)
+            }
+            if (png != NULL) {
                 png_destroy_read_struct(&png, &info, NULL);
+            }
             row_pointers = NULL;
             png = NULL;
 
@@ -349,10 +357,12 @@ error:
         }
     }
 
-    if (row_pointers != NULL)
+    if (row_pointers != NULL) {
         EbrFree(row_pointers);
-    if (png != NULL)
+    }
+    if (png != NULL) {
         png_destroy_read_struct(&png, &info, NULL);
+    }
     delete reader;
 }
 
@@ -368,8 +378,8 @@ bool CGPNGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CG
     if (destImage->Backing()->SurfaceFormat() != _cachedSurfaceFormat) {
         return false;
     }
-    if (src.origin.x != 0.0f || src.origin.y != 0.0f || src.size.width != _cachedWidth ||
-        src.size.height != _cachedHeight || src.origin != dest.origin || !CGSizeEqualToSize(src.size, dest.size)) {
+    if (src.origin.x != 0.0f || src.origin.y != 0.0f || src.size.width != _cachedWidth || src.size.height != _cachedHeight ||
+        src.origin != dest.origin || !CGSizeEqualToSize(src.size, dest.size)) {
         return false;
     }
     if (destImage->Backing()->Width() != _cachedWidth || destImage->Backing()->Height() != _cachedHeight) {
@@ -400,6 +410,7 @@ CGPNGImageBacking::CGPNGImageBacking(id data) {
 
 CGPNGImageBacking::~CGPNGImageBacking() {
     _data = nil;
-    if (_fileName)
+    if (_fileName) {
         free(_fileName);
+    }
 }

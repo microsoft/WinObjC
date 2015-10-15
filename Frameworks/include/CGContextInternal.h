@@ -22,8 +22,11 @@
 #include "CGImageInternal.h"
 
 class CGContextImpl;
-COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect *rect, CGSize *textSize, id font);
-COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate32(int width, int height, DisplayTexture *texture = NULL, DisplayTextureLocking *locking = NULL);
+COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
+COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate32(int width,
+                                                         int height,
+                                                         DisplayTexture* texture = NULL,
+                                                         DisplayTextureLocking* locking = NULL);
 COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate24(int width, int height);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
@@ -31,26 +34,25 @@ COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float 
 COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);
 COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
-COREGRAPHICS_EXPORT CGContextImpl *CGContextGetBacking(CGContextRef ctx);
+COREGRAPHICS_EXPORT CGContextImpl* CGContextGetBacking(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
 
-COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromFile(NSString *path);
-COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData *data);
+COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromFile(NSString* path);
+COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData* data);
 
-COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString *path);
-COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData *data);
+COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString* path);
+COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 
-class __CGContext
-{
+class __CGContext {
 public:
-    id             isa;
-    float          scale;
-    CGContextImpl  *_backing;
+    id isa;
+    float scale;
+    CGContextImpl* _backing;
 
     __CGContext(CGImageRef pDest);
     ~__CGContext();
 
-    CGContextImpl *Backing();
+    CGContextImpl* Backing();
 };
 #include "CGContextImpl.h"
 

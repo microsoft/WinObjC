@@ -20,29 +20,35 @@
 #include "SDFFontDefs.h"
 
 extern "C" {
-    #include <ft2build.h>
-    #include FT_FREETYPE_H
-    #include <ftglyph.h>
-    #include <tttables.h>
-    #include <ftadvanc.h>
-    #include <ftsizes.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <ftglyph.h>
+#include <tttables.h>
+#include <ftadvanc.h>
+#include <ftsizes.h>
 };
 
 class FontGenerator {
 protected:
-    FT_Face     face;
-    size_t      faceSize;
-    CharMatrix  rep;
+    FT_Face face;
+    size_t faceSize;
+    CharMatrix rep;
 
 public:
-    inline FontGenerator() : face(0), faceSize(0), rep(NULL) {} 
-    virtual ~FontGenerator() {}
+    inline FontGenerator() : face(0), faceSize(0), rep(NULL) {
+    }
+    virtual ~FontGenerator() {
+    }
 
     void init(void* mem, FT_Face face, size_t size);
     void init(FT_Face face, size_t size);
 
     virtual void renderGlyph(int c) = 0;
 
-    inline const CharMatrix& representation() const { return rep; }
-    inline size_t size() const                      { return faceSize; }
+    inline const CharMatrix& representation() const {
+        return rep;
+    }
+    inline size_t size() const {
+        return faceSize;
+    }
 };

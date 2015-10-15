@@ -17,8 +17,7 @@
 #ifndef _UIVIEWCONTROLLERPRIVATE_H_
 #define _UIVIEWCONTROLLERPRIVATE_H_
 
-enum ControllerVisibiltyState
-{
+enum ControllerVisibiltyState {
     controllerNotVisible,
     controllerWillAppear,
     controllerWillAppearAnimated,
@@ -27,8 +26,7 @@ enum ControllerVisibiltyState
     controllerWillDisappearAnimated
 };
 
-struct UIViewControllerPriv
-{
+struct UIViewControllerPriv {
     idretaintype(UINavigationItem) navigationItem;
     idretaintype(UITabBarItem) tabBarItem;
     idretaintype(NSArray) toolbarItems;
@@ -55,11 +53,11 @@ struct UIViewControllerPriv
     BOOL _hidesBottomBar;
     UIModalTransitionStyle _modalTransitionStyle;
     BOOL _isRootView;
-    idretainp<void(^)(void)> _dismissCompletionBlock;
+    idretainp<void (^)(void)> _dismissCompletionBlock;
     idretaintype(UIViewController) _dismissController;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;
-    BOOL  _modalInPopover;
+    BOOL _modalInPopover;
     CGSize _preferredContentSize;
 
     idretaintype(NSArray) _modalTemplates;
@@ -72,10 +70,10 @@ struct UIViewControllerPriv
     struct UIViewControllerPriv* priv;
 }
 
--(void) notifyViewWillAppear:(BOOL)isAnimated;
--(void) notifyViewDidAppear:(BOOL)isAnimated;
--(void) notifyViewWillDisappear:(BOOL)isAnimated;
--(void) notifyViewDidDisappear:(BOOL)isAnimated;
+- (void)notifyViewWillAppear:(BOOL)isAnimated;
+- (void)notifyViewDidAppear:(BOOL)isAnimated;
+- (void)notifyViewWillDisappear:(BOOL)isAnimated;
+- (void)notifyViewDidDisappear:(BOOL)isAnimated;
 @end
 
 #endif

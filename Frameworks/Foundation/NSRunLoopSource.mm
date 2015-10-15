@@ -53,8 +53,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)dealloc {
-    if (_destroyEvent)
+    if (_destroyEvent) {
         EbrEventDestroy(_signaledEvent);
+    }
 
     [super dealloc];
 }

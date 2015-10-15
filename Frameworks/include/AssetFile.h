@@ -14,6 +14,6 @@
 //
 //******************************************************************************
 
-void EbrLoadAssets(const char *assetName, const char *ownDir);
+void EbrLoadAssets(const char* assetName, const char* ownDir);
 void EbrAssetsInit();
-EbrFile *EbrZipFileForPath(const char *filename, const char *mode, bool &stop);
+EbrFile* EbrZipFileForPath(const char* filename, const char* mode, bool& stop);

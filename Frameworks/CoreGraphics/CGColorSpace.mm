@@ -143,8 +143,8 @@ CGColorRef CGColorCreateCopy(CGColorRef color) {
 }
 
 CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
-    CGColorRef ret = (CGColorRef)[
-        [_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
+    CGColorRef ret =
+        (CGColorRef)[[_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
 
     return ret;
 }
@@ -178,8 +178,9 @@ bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     [(UIColor*)color2 getColors:components2];
 
     for (int i = 0; i < 4; i++) {
-        if (components1[i] != components2[i])
+        if (components1[i] != components2[i]) {
             return FALSE;
+        }
     }
 
     return TRUE;
@@ -199,7 +200,8 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
 }
 
 size_t CGColorGetNumberOfComponents(CGColorRef color) {
-    /* [BUG: Not all colors have 4 components, but all of the ones we currently support do!] */
+    /* [BUG: Not all colors have 4 components, but all of the ones we currently
+     * support do!] */
     return 4;
 }
 

@@ -146,8 +146,7 @@ CGPatternRef CGPatternCreate(void* info,
                              CGPatternTiling tiling,
                              bool isColored,
                              const CGPatternCallbacks* callbacks) {
-    return CGPatternCreateColorspace(
-        info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
+    return CGPatternCreateColorspace(info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
 }
 
 void CGPatternRelease(CGPatternRef pattern) {

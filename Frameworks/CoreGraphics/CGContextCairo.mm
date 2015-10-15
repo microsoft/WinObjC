@@ -43,8 +43,7 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
-CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
-    : CGContextImpl(base, destinationImage), _drawContext(0) {
+CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) : CGContextImpl(base, destinationImage), _drawContext(0) {
 }
 
 CGContextCairo::~CGContextCairo() {
@@ -154,13 +153,8 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
             dest.size.width = float(x2 - x);
             dest.size.height = float(y2 - y);
         } else {
-            cairo_matrix_init(&srcMatrix,
-                              src.size.width / dest.size.width,
-                              0,
-                              0,
-                              src.size.height / dest.size.height,
-                              src.origin.x,
-                              src.origin.y);
+            cairo_matrix_init(
+                &srcMatrix, src.size.width / dest.size.width, 0, 0, src.size.height / dest.size.height, src.origin.x, src.origin.y);
             cairo_pattern_set_matrix(p, &srcMatrix);
         }
 
@@ -393,7 +387,8 @@ void CGContextCairo::CGContextRotateCTM(float angle) {
 void CGContextCairo::CGContextConcatCTM(CGAffineTransform t) {
     ObtainLock();
 
-    // CGAffineTransformConcat(&curState->curTransform, curState->curTransform, t);
+    // CGAffineTransformConcat(&curState->curTransform, curState->curTransform,
+    // t);
     curState->curTransform = CGAffineTransformConcat(t, curState->curTransform);
     cairo_matrix_t m;
     float trans[6];
@@ -794,12 +789,7 @@ void CGContextCairo::CGContextAddArcToPoint(float x1, float y1, float x2, float 
         n2y = dx2 / xl2;
     }
     t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
-    CGContextAddArc(x1 + radius * (t * dx0 + n0x),
-                    y1 + radius * (t * dy0 + n0y),
-                    radius,
-                    atan2f(-n0y, -n0x),
-                    atan2(-n2y, -n2x),
-                    (san < 0));
+    CGContextAddArc(x1 + radius * (t * dx0 + n0x), y1 + radius * (t * dy0 + n0y), radius, atan2f(-n0y, -n0x), atan2(-n2y, -n2x), (san < 0));
 }
 
 void CGContextCairo::CGContextAddEllipseInRect(CGRect rct) {
@@ -822,9 +812,12 @@ void CGContextCairo::setFillColorSource() {
                               curState->curFillColor.b,
                               curState->curFillColor.a);
     } else {
-        // TODO: Patterns are supposed to take "isColored" into account by either replacing/multiplying
-        //       the alpha channel or filling the with the colour using the pattern as a mask.
-        // TODO: Refactor UIColor. Image and pattern are the same concept, and BrushType is superfluous.
+        // TODO: Patterns are supposed to take "isColored" into account by either
+        // replacing/multiplying
+        //       the alpha channel or filling the with the colour using the pattern
+        //       as a mask.
+        // TODO: Refactor UIColor. Image and pattern are the same concept, and
+        // BrushType is superfluous.
         CGImageRef pattern = (CGImageRef)[curState->curFillColorObject getPatternImage];
         CGAffineTransform patTrans = CGAffineTransformIdentity;
         if ([curState->curFillColorObject isKindOfClass:[CGPattern class]]) {
@@ -1176,10 +1169,7 @@ void CGContextCairo::CGContextBeginPath() {
     curPathPosition.y = 0;
 }
 
-void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient,
-                                                 CGPoint startPoint,
-                                                 CGPoint endPoint,
-                                                 DWORD options) {
+void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, DWORD options) {
     ObtainLock();
 
     _isDirty = true;
@@ -1191,16 +1181,14 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient,
         case _ColorRGBA:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 4];
-                cairo_pattern_add_color_stop_rgba(
-                    pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
+                cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
             }
             break;
 
         case _ColorGrayscale:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 2];
-                cairo_pattern_add_color_stop_rgba(
-                    pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
+                cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
             }
             break;
 
@@ -1227,23 +1215,20 @@ void CGContextCairo::CGContextDrawRadialGradient(
     _isDirty = true;
 
     LOCK_CAIRO();
-    cairo_pattern_t* pattern =
-        cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
+    cairo_pattern_t* pattern = cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
 
     switch (gradient->_colorSpace) {
         case _ColorRGBA:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 4];
-                cairo_pattern_add_color_stop_rgba(
-                    pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
+                cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[1], curColor[2], curColor[3]);
             }
             break;
 
         case _ColorGrayscale:
             for (unsigned i = 0; i < gradient->_count; i++) {
                 float* curColor = &gradient->_components[i * 2];
-                cairo_pattern_add_color_stop_rgba(
-                    pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
+                cairo_pattern_add_color_stop_rgba(pattern, gradient->_locations[i], curColor[0], curColor[0], curColor[0], curColor[1]);
             }
             break;
 
@@ -1554,8 +1539,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     cairo_matrix_scale(&fontSizeMatrix, 1, -1);
     // cairo_matrix_translate(&fontSizeMatrix, 0, -1);
 
-    cairo_matrix_scale(
-        &fontSizeMatrix, curState->fontSize * _LazyUIFontHorizontalScale.member(uiFont), curState->fontSize);
+    cairo_matrix_scale(&fontSizeMatrix, curState->fontSize * _LazyUIFontHorizontalScale.member(uiFont), curState->fontSize);
     cairo_matrix_multiply(&fontSizeMatrix, &fontSizeMatrix, &fontCTM);
 
     cairo_set_font_matrix(_drawContext, &fontSizeMatrix);

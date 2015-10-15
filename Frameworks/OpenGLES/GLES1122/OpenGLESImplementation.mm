@@ -29,8 +29,7 @@ OpenGLESImplementation::~OpenGLESImplementation() {
 void OpenGLESImplementation::print() {
     LOG_DEBUG_MESSAGE("OpenGL Implementation Details:");
     LOG_DEBUG_MESSAGE("------------------------------");
-    LOG_DEBUG_MESSAGE(OpenGLESString("Max viewport dimensions: ") + maxViewportDims[0] + OpenGLESString("*") +
-                      maxViewportDims[1]);
+    LOG_DEBUG_MESSAGE(OpenGLESString("Max viewport dimensions: ") + maxViewportDims[0] + OpenGLESString("*") + maxViewportDims[1]);
     LOG_DEBUG_MESSAGE(OpenGLESString("Depth bits: ") + depthBits);
     LOG_DEBUG_MESSAGE(OpenGLESString("Stencil bits: ") + stencilBits);
     LOG_DEBUG_MESSAGE(OpenGLESString("Color read format: ") + colorReadFormat);

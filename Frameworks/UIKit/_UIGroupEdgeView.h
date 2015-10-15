@@ -21,7 +21,7 @@
     idretain _backgroundColor;
     DWORD _style;
 }
--(void) _setStyle:(int)style;
--(void) _setStyleColor:(UIColor*)background;
--(void) layoutSubviews;
+- (void)_setStyle:(int)style;
+- (void)_setStyleColor:(UIColor*)background;
+- (void)layoutSubviews;
 @end

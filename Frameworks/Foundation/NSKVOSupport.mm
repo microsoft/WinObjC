@@ -34,7 +34,8 @@ const std::unordered_set<std::string>& KVOClass::valueDependingKeys(const std::s
     if (found == _valueDependingKeys.end()) {
         auto& added = _valueDependingKeys[key];
         if ([originalClass respondsToSelector:@selector(keyPathsForValuesAffectingValueForKey:)]) {
-            NSSet* dependingKeysFromClass = [originalClass keyPathsForValuesAffectingValueForKey:[NSString stringWithUTF8String:key.c_str()]];
+            NSSet* dependingKeysFromClass =
+                [originalClass keyPathsForValuesAffectingValueForKey:[NSString stringWithUTF8String:key.c_str()]];
             for (NSString* dependingKey in dependingKeysFromClass) {
                 added.emplace([dependingKey UTF8String]);
             }
@@ -85,8 +86,7 @@ KVONotifier& KVONotifier::forInstance(id instance) {
     return *found->second;
 }
 
-std::shared_ptr<KVOObservedKey> KVONotifier::_addSubscriber(std::shared_ptr<KVOSubscriber> subscriber,
-                                                            const std::string& keypath) {
+std::shared_ptr<KVOObservedKey> KVONotifier::_addSubscriber(std::shared_ptr<KVOSubscriber> subscriber, const std::string& keypath) {
     auto pointPosition = keypath.find('.');
     std::string key(keypath, 0, pointPosition); // if pointPosition is npos, this is just the whole string.
     std::string remainingKeypath(keypath);
@@ -215,11 +215,10 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     if ([key length] > 0) {
         const char* rawKey = [key UTF8String];
-        auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s",
-                    toupper(rawKey[0]),
-                    rawKey + 1);
+        auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
-        BOOL (*imp)(Class, SEL) = reinterpret_cast<decltype(imp)>(class_getMethodImplementation(object_getClass(self), sel));
+        BOOL(*imp)
+        (Class, SEL) = reinterpret_cast<decltype(imp)>(class_getMethodImplementation(object_getClass(self), sel));
         if (imp != nullptr) {
             return imp(self, sel);
         }
@@ -230,9 +229,7 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
     if ([key length] > 0) {
         const char* rawKey = [key UTF8String];
-        auto selectorName = woc::string::format("keyPathsForValuesAffecting%c%s",
-                    toupper(rawKey[0]),
-                    rawKey + 1);
+        auto selectorName = woc::string::format("keyPathsForValuesAffecting%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
         if ([self respondsToSelector:sel]) {
             return [self performSelector:sel];
@@ -273,7 +270,7 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
 }
 @end
 
-@interface _NSKVONotifying_NSMutableDictionary: NSMutableDictionary
+@interface _NSKVONotifying_NSMutableDictionary : NSMutableDictionary
 @end
 @implementation _NSKVONotifying_NSMutableDictionary
 - (void)setObject:(id)object forKey:(NSString*)key {
@@ -289,13 +286,14 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
 }
 
 // Sentinel to notify the KVO machinery that we do in fact support notifications.
-+ (void)_NSKVO { }
++ (void)_NSKVO {
+}
 
-+ (Class)class {
++ (Class) class {
     return class_getSuperclass(self);
 }
 
-+ (void)load {
+    + (void)load {
     KVOClass::registerClassPair(self, [NSMutableDictionary class]);
 }
 @end

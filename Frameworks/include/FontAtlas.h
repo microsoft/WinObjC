@@ -23,13 +23,13 @@ struct CGPoint;
 class EbrTexture;
 
 struct FontAtlasOutputGlyph {
-    CGPoint   drawQuad[4];
-    CGPoint   uvQuad[4];
-    EbrTexture *texture;
-    CGSize    glyphSize;
-    WORD      character;
-    bool      hasTexture;
-    bool      hasSize;
+    CGPoint drawQuad[4];
+    CGPoint uvQuad[4];
+    EbrTexture* texture;
+    CGSize glyphSize;
+    WORD character;
+    bool hasTexture;
+    bool hasSize;
 };
 
 class FontAtlasMan {
@@ -38,17 +38,18 @@ protected:
     virtual ~FontAtlasMan();
 
 public:
-    static FontAtlasMan *get();
+    static FontAtlasMan* get();
 
-    virtual bool addPermanent(id font) = 0;     // make a font permanently cached.
-    virtual bool addFontRef(id font) = 0;       // add a font, refcount-based caching.
-    virtual bool releaseFontRef(id font) = 0;   // release a font reference.  cleared if # of references is 0.
+    virtual bool addPermanent(id font) = 0; // make a font permanently cached.
+    virtual bool addFontRef(id font) = 0; // add a font, refcount-based caching.
+    virtual bool releaseFontRef(id font) = 0; // release a font reference.  cleared if # of references is 0.
 
     virtual void addStringToRender(id font, id string) = 0; // scan a string for new glyphs that must be rendered
-    virtual void process(ID3D11Device1* device, ID3D11DeviceContext* context) = 0; // renders any glyphs added by addStringToRender, removes dead sheets
+    virtual void process(ID3D11Device1* device,
+                         ID3D11DeviceContext* context) = 0; // renders any glyphs added by addStringToRender, removes dead sheets
 
     // get geometry glyphs to be rendered from string.
-    virtual bool getDrawList(FontAtlasOutputGlyph *output, id font, id string, bool& sdfFont) = 0;
+    virtual bool getDrawList(FontAtlasOutputGlyph* output, id font, id string, bool& sdfFont) = 0;
 
     virtual void disconnect() = 0;
     virtual int generationCount() = 0;

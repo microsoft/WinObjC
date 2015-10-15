@@ -18,14 +18,14 @@
 
 #include <Windows.h>
 
-void NoExclude() {}
+void NoExclude() {
+}
 
 extern "C" {
-int main(int argc, char *argv[]);
+int main(int argc, char* argv[]);
 
-int CALLBACK EbrDefaultWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-    return main(0, NULL);   //  [FIXME: provide cmdline args!]
+int CALLBACK EbrDefaultWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    return main(0, NULL); //  [FIXME: provide cmdline args!]
 }
 #pragma comment(linker, "/alternatename:_WinMain@16=_EbrDefaultWinMain@16")
 }

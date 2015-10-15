@@ -46,8 +46,9 @@ static IWLazyClassLookup _LazyUIWindow("UIWindow");
 
 - (NSArray*)loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
     char* bytes = (char*)[data bytes];
-    if (!bytes)
+    if (!bytes) {
         return nil;
+    }
 
     id prop;
 

@@ -36,7 +36,8 @@ struct KVOClass {
 
     std::unordered_map<std::string, std::unordered_set<std::string>> _valueDependingKeys;
 
-    KVOClass(Class originalClass, Class notifyingClass) : originalClass(originalClass), notifyingClass(notifyingClass), _valueDependingKeys() {
+    KVOClass(Class originalClass, Class notifyingClass)
+        : originalClass(originalClass), notifyingClass(notifyingClass), _valueDependingKeys() {
     }
 
     virtual void dealloc(id instance);
@@ -76,8 +77,7 @@ public:
     static void ensureObjectWillNotify(id objcInstance);
 
     // must happen under lock
-    static void
-    registerClassPair(Class notifyingClass, Class originalClass, std::shared_ptr<KVOClass>&& attachedInfo = nullptr) {
+    static void registerClassPair(Class notifyingClass, Class originalClass, std::shared_ptr<KVOClass>&& attachedInfo = nullptr) {
         s_kvoNotifyingSubclasses.emplace(originalClass, notifyingClass);
         if (!attachedInfo) {
             s_kvoClasses.emplace(notifyingClass, std::make_shared<KVOClass>(originalClass, notifyingClass));
@@ -169,8 +169,7 @@ private:
         return [instance valueForKeyPath:[NSString stringWithUTF8String:key.c_str()]];
     }
 
-    std::shared_ptr<KVOObservedKey> _addSubscriber(std::shared_ptr<KVOSubscriber> subscriber,
-                                                   const std::string& keypath);
+    std::shared_ptr<KVOObservedKey> _addSubscriber(std::shared_ptr<KVOSubscriber> subscriber, const std::string& keypath);
     void _removeSubscriber(std::shared_ptr<KVOSubscriber> subscriber, const std::string& keypath);
     void _reregisterSubkeys(KVOObservedKey& notifyingKey);
 
@@ -186,12 +185,8 @@ private:
     void _dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification& pendingNotification, bool prior);
 
 public:
-    void addObserver(id observer,
-                     const std::string& keypath,
-                     NSKeyValueObservingOptions options = 0,
-                     void* context = nullptr) {
-        auto newEntry =
-            _subscribers.emplace(new KVOSubscriber(observer, options, context, keypath, shared_from_this()));
+    void addObserver(id observer, const std::string& keypath, NSKeyValueObservingOptions options = 0, void* context = nullptr) {
+        auto newEntry = _subscribers.emplace(new KVOSubscriber(observer, options, context, keypath, shared_from_this()));
         auto& subscriber = *(newEntry.first);
         auto newKey = _addSubscriber(subscriber, keypath);
         if (subscriber->hasOption(NSKeyValueObservingOptionInitial)) {

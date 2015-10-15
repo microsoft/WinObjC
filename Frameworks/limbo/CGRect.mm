@@ -20,9 +20,7 @@
 #include <limits>
 
 //  INCORRECT
-const CGRect CGRectNull = {
-    std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f
-};
+const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
 
 CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t) {
     CGPoint ret;

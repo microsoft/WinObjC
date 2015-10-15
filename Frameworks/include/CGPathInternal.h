@@ -19,8 +19,7 @@
 
 #include "CoreGraphics/CGPath.h"
 
-enum pathComponentType
-{
+enum pathComponentType {
     pathComponentRectangle,
     pathComponentMove,
     pathComponentLineTo,
@@ -30,60 +29,52 @@ enum pathComponentType
     pathComponentCurve,
     pathComponentEllipseInRect,
     pathComponentClose,
-	pathComponentArcAngle,
+    pathComponentArcAngle,
 };
 
-typedef struct
-{
+typedef struct {
     float x1, y1, x2, y2;
     float radius;
 } arcToPoint;
 
-typedef struct
-{
-	float x, y, startAngle, endAngle;
-	float radius;
-	BOOL clockwise;
+typedef struct {
+    float x, y, startAngle, endAngle;
+    float radius;
+    BOOL clockwise;
 } arcAngle;
 
-struct curveToPoint
-{
+struct curveToPoint {
     float x1, y1; // tangent from start
     float x2, y2; // tangent to end
     float x, y; // end pos
 };
 
-struct quadCurveToPoint
-{
+struct quadCurveToPoint {
     float cpx, cpy;
     float x, y;
 };
 
-struct ellipseInRect
-{
+struct ellipseInRect {
     CGRect rect;
 };
 
-typedef struct
-{
+typedef struct {
     pathComponentType type;
 
-    union 
-    {
+    union {
         CGRect rect;
         CGPoint point;
         arcToPoint atp;
         curveToPoint ctp;
         ellipseInRect eir;
         quadCurveToPoint qtp;
-		arcAngle aa;
+        arcAngle aa;
     };
 } pathComponent;
 
-@interface CGPath : NSObject
-{
+@interface CGPath : NSObject {
 @public
-    pathComponent *_components;
+    pathComponent* _components;
     NSUInteger _count;
     NSUInteger _max;
 }

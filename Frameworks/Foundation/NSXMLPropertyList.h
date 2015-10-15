@@ -17,5 +17,5 @@
 @interface NSXMLPropertyList : NSObject {
 @public
 }
-+(id) propertyListFromData:(NSData*)data;
++ (id)propertyListFromData:(NSData*)data;
 @end

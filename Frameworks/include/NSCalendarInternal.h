@@ -18,6 +18,6 @@
 
 #include <unicode/gregocal.h>
 
-@interface NSCalendar(Internal)
-    -(icu::Calendar *) _createICUCalendar;
+@interface NSCalendar (Internal)
+- (icu::Calendar*)_createICUCalendar;
 @end

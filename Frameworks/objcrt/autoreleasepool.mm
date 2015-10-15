@@ -68,8 +68,7 @@ void NSThreadSetCurrentPool(id pool) {
 @implementation NSAutoreleasePool
 - (void)insert:(id)object {
     if (object != nil) {
-        if (*((uint32_t*)((char*)object - 4)) == NSOBJECT_MAGIC ||
-            *((uint32_t*)((char*)object - 4)) == NSOBJECT_MANAGED_MAGIC) {
+        if (*((uint32_t*)((char*)object - 4)) == NSOBJECT_MAGIC || *((uint32_t*)((char*)object - 4)) == NSOBJECT_MANAGED_MAGIC) {
             //  Objects being dellocated should not be autoreleased
             if ((*((volatile int*)(uint32_t*)((char*)object - 8)) & 0xF0000000) != 0x00000000) {
                 return;

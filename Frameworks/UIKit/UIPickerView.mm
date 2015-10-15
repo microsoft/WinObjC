@@ -122,8 +122,7 @@ struct RowData {
             int row = _selectedRow;
             CGRect bounds;
             bounds = [self bounds];
-            [self setContentOffset:CGPointMake(0, _rowData[row]._yPos - bounds.size.height / 2.0f + _rowHeight / 2.0f)
-                          animated:NO];
+            [self setContentOffset:CGPointMake(0, _rowData[row]._yPos - bounds.size.height / 2.0f + _rowHeight / 2.0f) animated:NO];
         }
     }
 
@@ -153,16 +152,12 @@ static void showVisibleCells(UIPickerSubView* self) {
                     id rowString;
                     id rowColor;
 
-                    if ([self->_dataSource
-                            respondsToSelector:@selector(pickerView:titleForRow:forComponent:withColor:)]) {
-                        rowString = [[self->_dataSource pickerView:self->_parent
-                                                       titleForRow:j
-                                                      forComponent:self->_componentNum
-                                                         withColor:&rowColor] retain];
-                    } else {
+                    if ([self->_dataSource respondsToSelector:@selector(pickerView:titleForRow:forComponent:withColor:)]) {
                         rowString =
-                            [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum]
+                            [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum withColor:&rowColor]
                                 retain];
+                    } else {
+                        rowString = [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum] retain];
                         rowColor = [UIColor blackColor];
                     }
 
@@ -181,10 +176,8 @@ static void showVisibleCells(UIPickerSubView* self) {
                     [curRow->_rowCell setTextColor:rowColor];
                     [curRow->_rowCell setTextAlignment:self->_alignment];
                 } else {
-                    curRow->_rowCell = [[self->_dataSource pickerView:self->_parent
-                                                           viewForRow:j
-                                                         forComponent:self->_componentNum
-                                                          reusingView:nil] retain];
+                    curRow->_rowCell =
+                        [[self->_dataSource pickerView:self->_parent viewForRow:j forComponent:self->_componentNum reusingView:nil] retain];
                     [curRow->_rowCell setTag:j];
                 }
 
@@ -212,10 +205,12 @@ static int findNearestRow(UIPickerSubView* self, CGPoint offset) {
     offset.y += bounds.size.height / 2.0f;
     int row = (int)(offset.y / self->_rowHeight);
 
-    if (row >= self->_numRows)
+    if (row >= self->_numRows) {
         row = self->_numRows - 1;
-    if (row < 0)
+    }
+    if (row < 0) {
         row = 0;
+    }
 
     return row;
 }
@@ -276,8 +271,9 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
 }
 
 - (id)scrollViewDidEndDragging:(id)scrollView willDecelerate:(BOOL)decelerate {
-    if (decelerate)
+    if (decelerate) {
         return self;
+    }
     return [self scrollViewDidEndDecelerating:scrollView];
 }
 
@@ -300,9 +296,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     return self;
 }
 
-- (id)scrollViewWillEndDragging:(id)scrollView
-                   withVelocity:(CGPoint)velocity
-            targetContentOffset:(CGPoint*)destination {
+- (id)scrollViewWillEndDragging:(id)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(CGPoint*)destination {
     int selIdx = findNearestRow(self, *destination);
     destination->y = getRowContentPos(self, selIdx);
     _targetSelectedRow = selIdx;
@@ -377,13 +371,12 @@ static void setupImages(UIPickerView* self) {
     [self setBackgroundColor:[UIColor blackColor]];
 
     self->_background = [[[UIImageView alloc]
-        initWithImage:[[UIImage imageNamed:@"/img/wheel_bg@2x.png"] stretchableImageWithLeftCapWidth:4 topCapHeight:0]]
-        autorelease];
+        initWithImage:[[UIImage imageNamed:@"/img/wheel_bg@2x.png"] stretchableImageWithLeftCapWidth:4 topCapHeight:0]] autorelease];
     self->_shadow = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"/img/wheel_shadow@2x.png"]] autorelease];
     [self->_shadow setClipsToBounds:TRUE];
-    self->_selectionBar = [[[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"/img/picker-selection@2x.png"]
-                                                                  stretchableImageWithLeftCapWidth:8
-                                                                                      topCapHeight:0]] autorelease];
+    self->_selectionBar = [[[UIImageView alloc]
+        initWithImage:[[UIImage imageNamed:@"/img/picker-selection@2x.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0]]
+        autorelease];
 
     CGRect bounds;
     bounds = [self bounds];
@@ -536,8 +529,9 @@ static void layoutSubSections(UIPickerView* self) {
     CGSize contentSize = { 0, 0 };
 
     id dataSource = _dataSource;
-    if (dataSource == nil)
+    if (dataSource == nil) {
         dataSource = _delegate;
+    }
 
     if (dataSource != nil) {
         if ([dataSource respondsToSelector:@selector(numberOfComponentsInPickerView:)]) {
@@ -611,8 +605,9 @@ static void layoutSubSections(UIPickerView* self) {
     // assert( component == 0 );
     _selectedRowInComponents[component] = row;
 
-    if (component >= _numSections)
+    if (component >= _numSections) {
         return self;
+    }
 
     if (_subSections != NULL) {
         if (row >= _subSections[component]->_numRows) {
@@ -643,8 +638,9 @@ static void layoutSubSections(UIPickerView* self) {
     CGSize ret;
 
     memset(&ret, 0, sizeof(CGSize));
-    if (component >= _numSections)
+    if (component >= _numSections) {
         return ret;
+    }
 
     if (_subSections != NULL) {
         ret.width = _subSections[component]->_width - 15.0f; //  -15 for padding

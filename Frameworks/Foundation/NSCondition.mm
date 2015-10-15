@@ -107,8 +107,7 @@ struct _mach_timeval {
             if ((rc = pthread_mutex_unlock(&_mutex)) != 0) {
                 [NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
             }
-            [NSException raise:NSInvalidArgumentException
-                        format:@"failed to lock %@ before date %@ (errno: %d)", self, date, rc];
+            [NSException raise:NSInvalidArgumentException format:@"failed to lock %@ before date %@ (errno: %d)", self, date, rc];
             return NO;
     }
 }

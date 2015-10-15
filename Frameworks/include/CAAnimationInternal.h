@@ -16,8 +16,7 @@
 
 #pragma once
 
-struct CAMediaTimingProperties
-{
+struct CAMediaTimingProperties {
     BOOL _removedOnCompletion;
     double _beginTime, _duration, _timeOffset, _delay, _speed;
     BOOL _autoReverses;
@@ -30,9 +29,9 @@ struct CAMediaTimingProperties
 @interface CAAnimation () {
 @public
     CAMediaTimingProperties _timingProperties;
-    DisplayAnimation        *_runningAnimation, *_runningAnimation2;
-    id                      _attachedLayer;
-    idretaintype(NSString)  _keyName;
+    DisplayAnimation *_runningAnimation, *_runningAnimation2;
+    id _attachedLayer;
+    idretaintype(NSString) _keyName;
 }
 
 - (void)setDelay:(double)delay;

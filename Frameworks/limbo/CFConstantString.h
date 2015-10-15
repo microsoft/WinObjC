@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-@interface CFConstantString : NSString
-{
+@interface CFConstantString : NSString {
 }
 @end

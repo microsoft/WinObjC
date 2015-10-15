@@ -33,8 +33,9 @@ static void sendHasStarted(id delegate, SEL selector, NSString* animName, void* 
             }
         }
 
-        if (![delegate respondsToSelector:selName])
+        if (![delegate respondsToSelector:selName]) {
             selName = NULL;
+        }
         if (selName) {
             if (contextArg) {
                 [delegate performSelector:selName withObject:animName withObject:(id)context];
@@ -59,8 +60,9 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
             }
         }
 
-        if (![delegate respondsToSelector:selName])
+        if (![delegate respondsToSelector:selName]) {
             selName = NULL;
+        }
 
         if (selName) {
             id didFinish = [NSNumber numberWithBool:finished];
@@ -75,8 +77,9 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
 
 @implementation UIAnimationNotification : NSObject
 - (void)_animationHasStarted:(id)animation {
-    if (_numAnimations == 0)
+    if (_numAnimations == 0) {
         return;
+    }
     _numStarted++;
 
     assert(_numStarted <= _numAnimations);
@@ -87,8 +90,9 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
 }
 
 - (void)animationDidStop:(id)animation finished:(BOOL)finished {
-    if (_numAnimations == 0)
+    if (_numAnimations == 0) {
         return;
+    }
     _numStopped++;
 
     assert(_numStopped <= _numAnimations);

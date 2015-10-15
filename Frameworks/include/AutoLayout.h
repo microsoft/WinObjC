@@ -19,23 +19,23 @@
 #import "UIViewInternal.h"
 
 @protocol AutoLayoutConstraint
--(void) autoLayoutAlloc;
--(void) autoLayoutDealloc;
--(void) autoLayoutConstraintAddedToView:(UIView*)view;
--(void) autoLayoutConstraintRemovedFromView;
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (void)autoLayoutConstraintAddedToView:(UIView*)view;
+- (void)autoLayoutConstraintRemovedFromView;
 @end
 
 @interface NSLayoutConstraint (AutoLayout) <AutoLayoutConstraint>
 @end
 
-@protocol AutoLayoutView 
--(void) autoLayoutAlloc;
--(void) autoLayoutDealloc;
--(void) autoLayoutLayoutSubviews;
--(void) autoLayoutInitWithCoder:(NSCoder*)coder;
--(void) autoLayoutUpdateConstraints;
+@protocol AutoLayoutView
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (void)autoLayoutLayoutSubviews;
+- (void)autoLayoutInitWithCoder:(NSCoder*)coder;
+- (void)autoLayoutUpdateConstraints;
 @end
 
 @interface UIView (AutoLayout) <AutoLayoutView>
--(void) invalidateContentSize;
+- (void)invalidateContentSize;
 @end

@@ -19,10 +19,12 @@
 
 class AlphaFontGenerator : public FontGenerator {
 public:
-    inline AlphaFontGenerator() : FontGenerator() {}
-    virtual ~AlphaFontGenerator() {}
+    inline AlphaFontGenerator() : FontGenerator() {
+    }
+    virtual ~AlphaFontGenerator() {
+    }
 
     void init(FT_Face face, size_t size);
-    
+
     virtual void renderGlyph(int c);
 };

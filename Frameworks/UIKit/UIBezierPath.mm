@@ -43,9 +43,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     }
 }
 
-+ (instancetype)bezierPathWithRoundedRect:(CGRect)rect
-                        byRoundingCorners:(UIRectCorner)roundingCorners
-                              cornerRadii:(CGSize)size {
++ (instancetype)bezierPathWithRoundedRect:(CGRect)rect byRoundingCorners:(UIRectCorner)roundingCorners cornerRadii:(CGSize)size {
     UIBezierPath* ret = [self new];
 
     CGRect innerRect;
@@ -67,8 +65,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     CGPathAddLineToPoint(ret->_path, getTransform(ret), inside_right, outside_top);
     CGPathAddArcToPoint(ret->_path, getTransform(ret), outside_right, outside_top, outside_right, inside_top, radius);
     CGPathAddLineToPoint(ret->_path, getTransform(ret), outside_right, inside_bottom);
-    CGPathAddArcToPoint(
-        ret->_path, getTransform(ret), outside_right, outside_bottom, inside_right, outside_bottom, radius);
+    CGPathAddArcToPoint(ret->_path, getTransform(ret), outside_right, outside_bottom, inside_right, outside_bottom, radius);
 
     CGPathAddLineToPoint(ret->_path, getTransform(ret), innerRect.origin.x, outside_bottom);
     CGPathAddArcToPoint(ret->_path, NULL, outside_left, outside_bottom, outside_left, inside_bottom, radius);
@@ -192,14 +189,8 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 }
 
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2 {
-    CGPathAddCurveToPoint(_path,
-                          getTransform(self),
-                          controlPoint1.x,
-                          controlPoint1.y,
-                          controlPoint2.x,
-                          controlPoint2.y,
-                          endPoint.x,
-                          endPoint.y);
+    CGPathAddCurveToPoint(
+        _path, getTransform(self), controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
 }
 
 - (void)applyTransform:(CGAffineTransform)transform {

@@ -16,8 +16,8 @@
 
 @interface UIProxyObjectPair : NSObject {
 @public
-    id  proxiedObject;
-    id  proxiedObjectCoder;
-    id  proxiedObjectName;
+    id proxiedObject;
+    id proxiedObjectCoder;
+    id proxiedObjectName;
 }
 @end

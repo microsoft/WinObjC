@@ -98,15 +98,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     //[self setBackgroundColor:[UIColor whiteColor]];
     _text = [coder decodeObjectForKey:@"UIText"];
     __textColor = [coder decodeObjectForKey:@"UITextColor"];
-    if (_text == nil)
+    if (_text == nil) {
         _text = @"";
-    if (__textColor == nil)
+    }
+    if (__textColor == nil) {
         __textColor = [UIColor blackColor];
+    }
     _placeholder = [coder decodeObjectForKey:@"UIPlaceholder"];
     _undoManager.attach([NSUndoManager new]);
 
-    id image =
-        [[UIImage imageNamed:@"/img/TextFieldCursor@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(4, 0, 4, 0)];
+    id image = [[UIImage imageNamed:@"/img/TextFieldCursor@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(4, 0, 4, 0)];
     _cursorBlink.attach([[UIImageView alloc] initWithImage:image]);
     [_cursorBlink setHidden:TRUE];
     [self addSubview:_cursorBlink];
@@ -235,8 +236,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         if (_secureTextMode) {
             WORD* chars = (WORD*)malloc(([text length] + 1) * sizeof(WORD));
             [text getCharacters:chars];
-            for (unsigned i = 0; i < [text length] - _showLastCharLen; i++)
+            for (unsigned i = 0; i < [text length] - _showLastCharLen; i++) {
                 chars[i] = '*';
+            }
             text = [NSString stringWithCharacters:chars length:[text length]];
             free(chars);
         }
@@ -255,8 +257,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
                     CGContextRef curContext = UIGraphicsGetCurrentContext();
 
                     if ([self isFirstResponder]) {
-                        CGContextSetStrokeColorWithColor(
-                            curContext, (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor redColor] CGColor]));
+                        CGContextSetStrokeColorWithColor(curContext,
+                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor redColor] CGColor]));
                     } else {
                         CGContextSetStrokeColorWithColor(curContext, (CGColorRef)[UIColor blackColor]);
                     }
@@ -266,8 +268,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                 case UITextBorderStyleRoundedRect: {
                     rect = [self bounds];
-                    id image = [[UIImage imageNamed:@"/img/TextFieldRounded@2x.png"]
-                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
+                    id image =
+                        [[UIImage imageNamed:@"/img/TextFieldRounded@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
                     rect = [self bounds];
                     [image drawInRect:rect];
                     break;
@@ -275,8 +277,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                 case UITextBorderStyleBezel: {
                     rect = [self bounds];
-                    id image = [[UIImage imageNamed:@"/img/TextFieldBezel@2x.png"]
-                        resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
+                    id image =
+                        [[UIImage imageNamed:@"/img/TextFieldBezel@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
                     rect = [self bounds];
                     [image drawInRect:rect];
                 } break;
@@ -294,13 +296,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     size = rect.size;
 
     if (text != nil) {
-        size = [text sizeWithFont:_font
-                constrainedToSize:CGSizeMake(size.width, size.height)
-                    lineBreakMode:UILineBreakModeClip];
+        size = [text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:UILineBreakModeClip];
     } else {
-        size = [@"" sizeWithFont:_font
-                constrainedToSize:CGSizeMake(size.width, size.height)
-                    lineBreakMode:UILineBreakModeClip];
+        size = [@"" sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:UILineBreakModeClip];
     }
 
     rect.origin.x += _leftViewRect.size.width;
@@ -320,8 +318,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
             break;
     }
 
-    if (!_isPlaceholder)
+    if (!_isPlaceholder) {
         rect.origin.x += size.width;
+    }
     rect.size.width = 2;
     [_cursorBlink setFrame:rect];
 }
@@ -366,8 +365,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         if (setText) {
             _text = newString;
             [self sendEvent:self mask:UIControlEventEditingChanged];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidChangeNotification"
-                                                                object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidChangeNotification" object:self];
             [self setNeedsDisplay];
         }
     }
@@ -434,8 +432,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
                 [_delegate textFieldDidEndEditing:self];
             }
             [self sendEvent:self mask:UIControlEventEditingDidEndOnExit];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification"
-                                                                object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification" object:self];
 
             [self resignFirstResponder];
         }
@@ -568,11 +565,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     [[UIApplication sharedApplication] _keyboardChanged];
 
-    _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                    target:self
-                                                  selector:@selector(_blinkCursor)
-                                                  userInfo:0
-                                                   repeats:TRUE];
+    _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
 
     EbrShowKeyboard();
@@ -582,16 +575,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if ([_delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
         [_delegate textFieldDidBeginEditing:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidBeginEditingNotification"
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidBeginEditingNotification" object:self];
     [self setNeedsDisplay];
 
     return TRUE;
 }
 
 - (BOOL)resignFirstResponder {
-    if (![self isFirstResponder])
+    if (![self isFirstResponder]) {
         return TRUE;
+    }
 
     if (_isEditing) {
         if ([_delegate respondsToSelector:@selector(textFieldShouldEndEditing:)]) {
@@ -616,8 +609,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
             [_delegate textFieldDidEndEditing:self];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification"
-                                                            object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification" object:self];
     }
     [super resignFirstResponder];
 
@@ -651,14 +643,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     CGSize textSize = { 0 }, placeholderSize = { 0 };
     if (_text != nil) {
-        textSize = [_text sizeWithFont:_font
-                     constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                         lineBreakMode:UILineBreakModeClip];
+        textSize = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
     }
     if (_placeholder != nil) {
-        placeholderSize = [_placeholder sizeWithFont:_font
-                                   constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                                       lineBreakMode:UILineBreakModeClip];
+        placeholderSize =
+            [_placeholder sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
     }
 
     if (textSize.width > placeholderSize.width) {
@@ -669,9 +658,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if (ret.height == 0.0f) {
         CGSize size;
 
-        size = [@" " sizeWithFont:_font
-                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                    lineBreakMode:UILineBreakModeClip];
+        size = [@" " sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
         ret.height = size.height;
     }
 

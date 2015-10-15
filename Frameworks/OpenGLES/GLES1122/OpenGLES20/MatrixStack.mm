@@ -72,9 +72,8 @@ void MatrixStack::setMatrixMode(GLenum m) {
             break;
         case GL_TEXTURE:
             currentStack = &textureStacks[openGLESState->getActiveTexture()];
-            openGLESState->setTextureMatrix(
-                openGLESState->getActiveTexture(),
-                true); // TODO: could be optimized more.. only true when non-identity matrix.
+            openGLESState->setTextureMatrix(openGLESState->getActiveTexture(),
+                                            true); // TODO: could be optimized more.. only true when non-identity matrix.
             break;
         default:
             LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Unknown matrix mode.");

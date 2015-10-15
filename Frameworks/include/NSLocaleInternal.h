@@ -18,6 +18,6 @@
 
 #import <unicode/locid.h>
 
-@interface NSLocale(Internal)
-    -(icu::Locale *) _createICULocale;
+@interface NSLocale (Internal)
+- (icu::Locale*)_createICULocale;
 @end

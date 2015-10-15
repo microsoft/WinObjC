@@ -41,8 +41,8 @@ static void initInternal(UIBarButtonItem* self) {
 }
 
 static void initControls(UIBarButtonItem* self) {
-    if (self->_systemItem != UIBarButtonSystemItemFlexibleSpace &&
-        self->_systemItem != UIBarButtonSystemItemFixedSpace && self->_customView == nil) {
+    if (self->_systemItem != UIBarButtonSystemItemFlexibleSpace && self->_systemItem != UIBarButtonSystemItemFixedSpace &&
+        self->_customView == nil) {
         CGRect frame = { 0, 0, 0, 0 };
 
         self->_buttonView.attach([[UIButton alloc] initWithFrame:frame]);
@@ -54,11 +54,8 @@ static void initControls(UIBarButtonItem* self) {
             noBorder = true;
         }
         if (self->_style != UIBarButtonItemStylePlain && noBorder == false) {
-            id image = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9
-                                                                                                   topCapHeight:0];
-            id pressedImage =
-                [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9
-                                                                                             topCapHeight:0];
+            id image = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
+            id pressedImage = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
             [self->_buttonView setBackgroundImage:(id)image forState:0];
             [self->_buttonView setBackgroundImage:(id)pressedImage forState:1];
@@ -309,10 +306,7 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (instancetype)initWithTitle:(NSString*)title
-                        style:(UIBarButtonItemStyle)style
-                       target:(id)target
-                       action:(SEL)targetSel {
+- (instancetype)initWithTitle:(NSString*)title style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)targetSel {
     _style = style;
     initInternal(self);
     _title.attach([title copy]);
@@ -323,10 +317,7 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (instancetype)initWithImage:(UIImage*)image
-                        style:(UIBarButtonItemStyle)style
-                       target:(id)target
-                       action:(SEL)targetSel {
+- (instancetype)initWithImage:(UIImage*)image style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)targetSel {
     initInternal(self);
 
     _target = target;
@@ -367,8 +358,9 @@ static void initControls(UIBarButtonItem* self) {
 }
 
 - (float)_margin {
-    if (_systemItem == UIBarButtonSystemItemFlexibleSpace || _systemItem == UIBarButtonSystemItemFixedSpace)
+    if (_systemItem == UIBarButtonSystemItemFlexibleSpace || _systemItem == UIBarButtonSystemItemFixedSpace) {
         return 0.0f;
+    }
 
     if (_customView == nil) {
         return 4.0f;

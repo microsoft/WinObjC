@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// The original MurmurHash3 code was written by Austin Appleby, and is placed 
+// The original MurmurHash3 code was written by Austin Appleby, and is placed
 // in the public domain. The author hereby disclaims copyright to this source code.
 // The code in this particular file was modified by Davis E. King.  In
 // particular, endian-swapping was added along with some other minor code
@@ -39,24 +39,21 @@ DEALINGS IN THE SOFTWARE.
 
 #include "Types.h"
 
-inline uint32 rotl32(uint32 x, int8 r)
-{
+inline uint32 rotl32(uint32 x, int8 r) {
     return (x << r) | (x >> (32 - r));
 }
 
-inline uint32 fmix(uint32 h)
-{
-      h ^= h >> 16;
-      h *= 0x85ebca6b;
-      h ^= h >> 13;
-      h *= 0xc2b2ae35;
-      h ^= h >> 16;
-      return h;
+inline uint32 fmix(uint32 h) {
+    h ^= h >> 16;
+    h *= 0x85ebca6b;
+    h ^= h >> 13;
+    h *= 0xc2b2ae35;
+    h ^= h >> 16;
+    return h;
 }
 
-inline size_t murmurHash3(const void* key, int len, unsigned int seed)
-{
-    const uint8 * data = (const uint8*) key;
+inline size_t murmurHash3(const void* key, int len, unsigned int seed) {
+    const uint8* data = (const uint8*)key;
     const int nblocks = len / 4;
 
     uint32 h1 = seed;
@@ -67,34 +64,38 @@ inline size_t murmurHash3(const void* key, int len, unsigned int seed)
     //----------
     // body
 
-    const uint32 * blocks = (const uint32 *)(data + nblocks*4);
+    const uint32* blocks = (const uint32*)(data + nblocks * 4);
 
-    for(int i = -nblocks; i; i++)
-    {
+    for (int i = -nblocks; i; i++) {
         uint32 k1 = blocks[i];
 
         k1 *= c1;
-        k1 = rotl32(k1,15);
+        k1 = rotl32(k1, 15);
         k1 *= c2;
-    
+
         h1 ^= k1;
-        h1 = rotl32(h1,13); 
-        h1 = h1*5+0xe6546b64;
+        h1 = rotl32(h1, 13);
+        h1 = h1 * 5 + 0xe6546b64;
     }
 
     //----------
     // tail
 
-    const uint8 * tail = (const uint8*)(data + nblocks*4);
+    const uint8* tail = (const uint8*)(data + nblocks * 4);
 
     uint32 k1 = 0;
 
-    switch(len & 3)
-    {
-        case 3: k1 ^= tail[2] << 16;
-        case 2: k1 ^= tail[1] << 8;
-        case 1: k1 ^= tail[0];
-                k1 *= c1; k1 = rotl32(k1,15); k1 *= c2; h1 ^= k1;
+    switch (len & 3) {
+        case 3:
+            k1 ^= tail[2] << 16;
+        case 2:
+            k1 ^= tail[1] << 8;
+        case 1:
+            k1 ^= tail[0];
+            k1 *= c1;
+            k1 = rotl32(k1, 15);
+            k1 *= c2;
+            h1 ^= k1;
     };
 
     //----------
@@ -103,4 +104,4 @@ inline size_t murmurHash3(const void* key, int len, unsigned int seed)
     h1 ^= len;
     h1 = fmix(h1);
     return h1;
-} 
+}

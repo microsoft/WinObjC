@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-
 #include "UITableViewRow.h"
 
 @interface UITableViewSection : NSObject {
@@ -22,9 +21,9 @@
     idretaintype(NSString) _headerTitle;
     idretaintype(NSArray) _rows;
 }
--(id) initWithCoder:(NSCoder*)coder;
--(unsigned) numberOfRows;
--(NSString*) title;
--(void) dealloc;
--(UITableViewRow*) rowForIndex:(unsigned)idx;
+- (id)initWithCoder:(NSCoder*)coder;
+- (unsigned)numberOfRows;
+- (NSString*)title;
+- (void)dealloc;
+- (UITableViewRow*)rowForIndex:(unsigned)idx;
 @end

@@ -47,15 +47,8 @@ DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformConcat, CGAffineTran
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformMake,
-                        ArgTypeWordPtr,
-                        ArgTypeFloat,
-                        ArgTypeFloat,
-                        ArgTypeFloat,
-                        ArgTypeFloat,
-                        ArgTypeFloat,
-                        ArgTypeFloat)
+DECLARE_FUNCTION_PARAMS(
+    ArgTypeWord, CGAffineTransformMake, ArgTypeWordPtr, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat)
 DEFINE_FUNCTION_STRET_6(CGAffineTransform,
                         CGAffineTransformMake,
                         EbrFloatArg,
@@ -143,8 +136,7 @@ DECLARE_FUNCTION_PARAMS(ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(
-    CGAffineTransform, CGAffineTransformRotate, CGAffineTransform, curTransform, EbrFloatArg, angle) {
+DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformRotate, CGAffineTransform, curTransform, EbrFloatArg, angle) {
     CGAffineTransform ret;
 
     ret = CGAffineTransformMakeRotation(angle);
@@ -164,8 +156,7 @@ DECLARE_FUNCTION_PARAMS(ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord)
-DEFINE_FUNCTION_STRET_3(
-    CGAffineTransform, CGAffineTransformTranslate, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
+DEFINE_FUNCTION_STRET_3(CGAffineTransform, CGAffineTransformTranslate, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
     CGAffineTransform trans;
 
     trans = CGAffineTransformMakeTranslation(x, y);
@@ -185,23 +176,15 @@ DECLARE_FUNCTION_PARAMS(ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord,
                         ArgTypeWord)
-DEFINE_FUNCTION_STRET_3(
-    CGAffineTransform, CGAffineTransformScale, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
+DEFINE_FUNCTION_STRET_3(CGAffineTransform, CGAffineTransformScale, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
     CGAffineTransform scale;
 
     scale = CGAffineTransformMakeScale(x, y);
     return CGAffineTransformConcat(scale, curTransform);
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformInvert,
-                        ArgTypeWordPtr,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
+DECLARE_FUNCTION_PARAMS(
+    ArgTypeWord, CGAffineTransformInvert, ArgTypeWordPtr, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
 DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformInvert, CGAffineTransform, curTransform) {
     float determinant = (curTransform.a * curTransform.d - curTransform.c * curTransform.b);
 
@@ -220,14 +203,8 @@ DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformInvert, CGAffineTran
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformIsIdentity,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
+DECLARE_FUNCTION_PARAMS(
+    ArgTypeWord, CGAffineTransformIsIdentity, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
 bool CGAffineTransformIsIdentity(CGAffineTransform curTransform) {
     if (memcmp(&curTransform, &CGAffineTransformIdentity, sizeof(curTransform)) == 0) {
         return true;

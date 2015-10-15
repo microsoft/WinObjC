@@ -18,6 +18,6 @@
 @public
     id source, dest, label;
 }
--(instancetype) initWithCoder:(NSCoder*)coder;
--(void) _makeConnection;
+- (instancetype)initWithCoder:(NSCoder*)coder;
+- (void)_makeConnection;
 @end

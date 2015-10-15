@@ -123,8 +123,7 @@ int viewCount = 0;
 }
 
 static UIView* initInternal(UIView* self, CGRect pos) {
-    EbrDebugLog(
-        "[%f,%f] @ %fx%f\n", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
+    EbrDebugLog("[%f,%f] @ %fx%f\n", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
 
     [self initPriv];
     [self setOpaque:TRUE];
@@ -437,8 +436,7 @@ static void doResize(unsigned mask, float& pos, float& size, float parentSize, f
             }
         } break;
 
-        case (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
-              UIViewAutoresizingFlexibleWidth): {
+        case (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth): {
             float totalSize = 0.0f;
             float lastSize = parentSize - (pos + size);
             float newSize;
@@ -609,7 +607,7 @@ static float doRound(float f) {
 
     // Baseline constraints don't share a superview, and thus messes up our assumption of a child/sibling hierarchy.
     // We do our autolayout in screen space, so even if the frame/bounds of the children aren't updated, we need
-    // to update the new absolute constraint positions. 
+    // to update the new absolute constraint positions.
     for (UIView* child in [self subviews]) {
         if (child->priv->translatesAutoresizingMaskIntoConstraints) {
             [child autoLayoutUpdateConstraints];
@@ -617,7 +615,7 @@ static float doRound(float f) {
     }
 
     if (self->priv->translatesAutoresizingMaskIntoConstraints) {
-       [self autoLayoutUpdateConstraints];
+        [self autoLayoutUpdateConstraints];
     }
 }
 
@@ -660,8 +658,7 @@ static float doRound(float f) {
     UIViewController* controller = [UIViewController controllerForView:self];
 
     if (controller != nil && window != nil) {
-        UIViewController* rootController =
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+        UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         if (rootController == nil) {
             [[[[UIApplication sharedApplication] windows] objectAtIndex:0] _setRootViewController:controller];
             rootController = controller;
@@ -672,8 +669,7 @@ static float doRound(float f) {
             [controller notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
     }
     if (controller != nil && window == nil) {
-        UIViewController* rootController =
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+        UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || g_alwaysSendViewEvents)
             [controller notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
@@ -705,12 +701,11 @@ static float doRound(float f) {
     UIViewController* controller = [UIViewController controllerForView:self];
 
     if (controller != nil && window != nil) {
-        UIViewController* rootController =
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+        UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || [controller parentViewController] != nil ||
-            [controller isKindOfClass:[UINavigationController class]] ||
-            [parentController isKindOfClass:[UINavigationController class]] || g_alwaysSendViewEvents) {
+            [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
+            g_alwaysSendViewEvents) {
             if (stackLevel == 0) {
                 [controller notifyViewWillAppear:FALSE];
                 [controller notifyViewDidAppear:FALSE];
@@ -718,16 +713,15 @@ static float doRound(float f) {
         }
     }
     if (controller != nil && window == nil) {
-        UIViewController* rootController =
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+        UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         if (rootController == controller) {
             [[[[UIApplication sharedApplication] windows] objectAtIndex:0] _setRootViewController:nil];
         }
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || [controller parentViewController] != nil ||
-            [controller isKindOfClass:[UINavigationController class]] ||
-            [parentController isKindOfClass:[UINavigationController class]] || g_alwaysSendViewEvents)
+            [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
+            g_alwaysSendViewEvents)
             [controller notifyViewDidDisappear:FALSE];
     }
 
@@ -1477,7 +1471,7 @@ static float doRound(float f) {
 
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
     // Constraints can only be added if they are self or a child of this view.
-    if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) || 
+    if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) ||
         (constraint.secondItem && ((constraint.secondItem != self) && ([constraint.secondItem superview] != self)))) {
         EbrDebugLog(
             "Only constraints with relations to this view and its children may be added. "
@@ -1548,11 +1542,11 @@ static float doRound(float f) {
 
 - (void)setNeedsUpdateConstraints {
     for (NSLayoutConstraint* constraint in (NSArray*)priv->associatedConstraints) {
-        if([constraint.firstItem isKindOfClass:[UIView class]]) {
+        if ([constraint.firstItem isKindOfClass:[UIView class]]) {
             UIView* view = (UIView*)constraint.firstItem;
             view->priv->_constraintsNeedUpdate = true;
         }
-        if([constraint.secondItem isKindOfClass:[UIView class]]) {
+        if ([constraint.secondItem isKindOfClass:[UIView class]]) {
             UIView* view = (UIView*)constraint.secondItem;
             view->priv->_constraintsNeedUpdate = true;
         }
@@ -1699,8 +1693,7 @@ static float doRound(float f) {
 - (id<CAAction>)actionForLayer:(CALayer*)actionLayer forKey:(NSString*)key {
     if (stackLevel > 0 && g_animationsDisabled == 0 && g_nestedAnimationsDisabled == 0) {
         if ([key isEqualToString:@"opacity"] || [key isEqualToString:@"position"] || [key isEqualToString:@"bounds"] ||
-            [key isEqualToString:@"bounds.origin"] || [key isEqualToString:@"bounds.size"] ||
-            [key isEqualToString:@"transform"]) {
+            [key isEqualToString:@"bounds.origin"] || [key isEqualToString:@"bounds.size"] || [key isEqualToString:@"transform"]) {
             CABasicAnimation* ret = [CABasicAnimation animationWithKeyPath:key];
 
             if (_animationProperties[stackLevel]._beginsFromCurrentState && ![key isEqualToString:@"opacity"]) {
@@ -1767,9 +1760,7 @@ static float doRound(float f) {
     [self commitAnimations];
 }
 
-+ (void)animateWithDuration:(double)duration
-                 animations:(animationBlockFunc)animationBlock
-                 completion:(completionBlockFunc)completion {
++ (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
     EbrDebugLog("animationWithDurationCompletion not supported\n");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
@@ -1829,8 +1820,7 @@ static float doRound(float f) {
     _animationProperties[stackLevel]._repeatCount = 0.0f;
     _animationProperties[stackLevel]._autoReverses = FALSE;
     _animationProperties[stackLevel]._beginsFromCurrentState = FALSE;
-    _animationProperties[stackLevel]._animationCurve =
-        [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"];
+    _animationProperties[stackLevel]._animationCurve = [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"];
     _animationProperties[stackLevel]._animationWillStartSelector = NULL;
     _animationProperties[stackLevel]._animationDidStopSelector = NULL;
     _animationProperties[stackLevel]._animationDelegate = nil;
@@ -1847,18 +1837,15 @@ static float doRound(float f) {
             break;
 
         case UIViewAnimationCurveEaseIn:
-            _animationProperties[stackLevel]._animationCurve =
-                [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseIn"];
+            _animationProperties[stackLevel]._animationCurve = [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseIn"];
             break;
 
         case UIViewAnimationCurveEaseOut:
-            _animationProperties[stackLevel]._animationCurve =
-                [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseOut"];
+            _animationProperties[stackLevel]._animationCurve = [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseOut"];
             break;
 
         case UIViewAnimationCurveLinear:
-            _animationProperties[stackLevel]._animationCurve =
-                [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"];
+            _animationProperties[stackLevel]._animationCurve = [CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"];
             break;
 
         default:
@@ -1981,21 +1968,17 @@ static float doRound(float f) {
     }
 
     if (_animationProperties[stackLevel]._numAnimations > 0) {
-        _animationProperties[stackLevel]._animationNotifier->_numAnimations =
-            _animationProperties[stackLevel]._numAnimations;
+        _animationProperties[stackLevel]._animationNotifier->_numAnimations = _animationProperties[stackLevel]._numAnimations;
         _animationProperties[stackLevel]._animationNotifier->_numStarted = 0;
         _animationProperties[stackLevel]._animationNotifier->_numStopped = 0;
         _animationProperties[stackLevel]._animationNotifier->_animationDidStopSelector =
             _animationProperties[stackLevel]._animationDidStopSelector;
         _animationProperties[stackLevel]._animationNotifier->_animationWillStartSelector =
             _animationProperties[stackLevel]._animationWillStartSelector;
-        _animationProperties[stackLevel]._animationNotifier->_animDelegate =
-            [_animationProperties[stackLevel]._animationDelegate retain];
+        _animationProperties[stackLevel]._animationNotifier->_animDelegate = [_animationProperties[stackLevel]._animationDelegate retain];
         _animationProperties[stackLevel]._animationNotifier->_context = _animationProperties[stackLevel]._context;
-        _animationProperties[stackLevel]._animationNotifier->_animName =
-            [_animationProperties[stackLevel]._animationID copy];
-        _animationProperties[stackLevel]._animationNotifier->_completionBlock =
-            _animationProperties[stackLevel]._completionBlock;
+        _animationProperties[stackLevel]._animationNotifier->_animName = [_animationProperties[stackLevel]._animationID copy];
+        _animationProperties[stackLevel]._animationNotifier->_completionBlock = _animationProperties[stackLevel]._completionBlock;
     } else {
         sendDidStop(_animationProperties[stackLevel]._animationDelegate,
                     _animationProperties[stackLevel]._animationDidStopSelector,

@@ -19,7 +19,10 @@
 @interface NSPropertyListSerialization : NSObject {
 @public
 }
-+(id) propertyListFromData:(NSData*)data mutabilityOption:(unsigned)mutability format:(NSPropertyListFormat *)formatOut errorDescription:(NSString* *)error;
-+(id) propertyListWithData:(NSData*)data options:(unsigned)options format:(NSPropertyListFormat *)formatOut error:(NSError* *)error;
-+(NSData*) dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString* *)error;
++ (id)propertyListFromData:(NSData*)data
+          mutabilityOption:(unsigned)mutability
+                    format:(NSPropertyListFormat*)formatOut
+          errorDescription:(NSString**)error;
++ (id)propertyListWithData:(NSData*)data options:(unsigned)options format:(NSPropertyListFormat*)formatOut error:(NSError**)error;
++ (NSData*)dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString**)error;
 @end

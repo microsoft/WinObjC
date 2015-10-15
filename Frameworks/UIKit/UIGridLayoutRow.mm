@@ -122,9 +122,9 @@
         // properties for aligning
         BOOL isHorizontal = [[_section layoutInfo] horizontal];
         BOOL isLastRow = [_section indexOfIncompleteRow] == _index;
-        UIFlowLayoutHorizontalAlignment horizontalAlignment = [[[_section rowAlignmentOptions]
-            objectForKey:isLastRow ? @"UIFlowLayoutLastRowHorizontalAlignmentKey"
-                                   : @"UIFlowLayoutCommonRowHorizontalAlignmentKey"] integerValue];
+        UIFlowLayoutHorizontalAlignment horizontalAlignment =
+            [[[_section rowAlignmentOptions] objectForKey:isLastRow ? @"UIFlowLayoutLastRowHorizontalAlignmentKey" :
+                                                                      @"UIFlowLayoutCommonRowHorizontalAlignmentKey"] integerValue];
 
         // calculate space that's left over if we would align it from left to right.
         CGFloat leftOverSpace = [[_section layoutInfo] dimension];

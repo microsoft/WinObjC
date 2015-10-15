@@ -47,8 +47,9 @@ CGContextRef UIGraphicsGetCurrentContext() {
 }
 
 void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale) {
-    if (scale == 0.0f)
+    if (scale == 0.0f) {
         scale = GetCACompositor()->screenScale();
+    }
     CGContextRef newCtx = CGBitmapContextCreate32((int)(size.width * scale), (int)(size.height * scale));
     newCtx->scale = scale;
     CGContextTranslateCTM(newCtx, 0.0f, size.height * scale);

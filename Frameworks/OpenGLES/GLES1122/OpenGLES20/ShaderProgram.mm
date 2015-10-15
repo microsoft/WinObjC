@@ -90,12 +90,9 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
             EbrDebugLog("Error compiling %s\n", infoLog);
             if (linked) {
-                LOG_MESSAGE(__FILE__,
-                            __LINE__,
-                            OpenGLESString("WARNING: Linked program ") + name + " with warnings:\n" + infoLog);
+                LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Linked program ") + name + " with warnings:\n" + infoLog);
             } else {
-                LOG_MESSAGE(
-                    __FILE__, __LINE__, OpenGLESString("ERROR: Linking program ") + name + " failed:\n" + infoLog);
+                LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Linking program ") + name + " failed:\n" + infoLog);
             }
             free(infoLog);
         }
@@ -525,8 +522,7 @@ void ShaderProgram::validate() {
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
-            LOG_MESSAGE(
-                __FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
+            LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
 
             free(infoLog);
         }
@@ -545,8 +541,7 @@ GLint ShaderProgram::getAttributeLocation(const char* attribName) {
     GLint res = glGetAttribLocation(program, attribName);
 
     if (res == -1) {
-        LOG_MESSAGE(
-            __FILE__, __LINE__, OpenGLESString("ERROR: Unknown attribute ") + attribName + " in program " + name);
+        LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown attribute ") + attribName + " in program " + name);
     }
 
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
@@ -558,8 +553,7 @@ GLint ShaderProgram::getUniformLocation(const char* uniformName) {
     GLint res = glGetUniformLocation(program, uniformName);
 
     if (res == -1) {
-        LOG_MESSAGE(
-            __FILE__, __LINE__, OpenGLESString("ERROR: Unknown uniform ") + uniformName + " in program " + name);
+        LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown uniform ") + uniformName + " in program " + name);
     }
 
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);

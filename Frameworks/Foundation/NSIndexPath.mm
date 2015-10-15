@@ -45,8 +45,9 @@
     _length = length;
     _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
 
-    for (unsigned i = 0; i < length; i++)
+    for (unsigned i = 0; i < length; i++) {
         _indexes[i] = indexes[i];
+    }
 
     return self;
 }
@@ -61,8 +62,9 @@
 }
 
 - (void)dealloc {
-    if (_indexes)
+    if (_indexes) {
         EbrFree(_indexes);
+    }
     [super dealloc];
 }
 
@@ -122,16 +124,20 @@
         int val1 = [self indexAtPosition:i];
         int val2 = [otherObj indexAtPosition:i];
 
-        if (val1 < val2)
+        if (val1 < val2) {
             return -1;
-        if (val1 > val2)
+        }
+        if (val1 > val2) {
             return 1;
+        }
     }
 
-    if (len1 < len2)
+    if (len1 < len2) {
         return -1;
-    if (len1 > len2)
+    }
+    if (len1 > len2) {
         return 1;
+    }
 
     return 0;
 }

@@ -81,8 +81,9 @@
         int toRead = [_data length] - curPos;
 
         assert(toRead >= 0);
-        if (toRead > (int)maxLength)
+        if (toRead > (int)maxLength) {
             toRead = (int)maxLength;
+        }
 
         char* pBytes = (char*)[_data bytes];
         memcpy(buf, pBytes + curPos, toRead);

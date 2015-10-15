@@ -91,12 +91,10 @@ const char* psSrc =
         glGenBuffers(1, &_vb);
         glGenBuffers(1, &_ib);
 
-        static SkyboxVert skyboxVerts[] = {
-            { { -1.0f, -1.0f, -1.0f }, { -NM, -NM, -NM } }, { { 1.0f, -1.0f, -1.0f }, { NM, -NM, -NM } },
-            { { 1.0f, 1.0f, -1.0f }, { NM, NM, -NM } },     { { -1.0f, 1.0f, -1.0f }, { -NM, NM, -NM } },
-            { { -1.0f, -1.0f, 1.0f }, { -NM, -NM, NM } },   { { 1.0f, -1.0f, 1.0f }, { NM, -NM, NM } },
-            { { 1.0f, 1.0f, 1.0f }, { NM, NM, NM } },       { { -1.0f, 1.0f, 1.0f }, { -NM, NM, NM } }
-        };
+        static SkyboxVert skyboxVerts[] = { { { -1.0f, -1.0f, -1.0f }, { -NM, -NM, -NM } }, { { 1.0f, -1.0f, -1.0f }, { NM, -NM, -NM } },
+                                            { { 1.0f, 1.0f, -1.0f }, { NM, NM, -NM } },     { { -1.0f, 1.0f, -1.0f }, { -NM, NM, -NM } },
+                                            { { -1.0f, -1.0f, 1.0f }, { -NM, -NM, NM } },   { { 1.0f, -1.0f, 1.0f }, { NM, -NM, NM } },
+                                            { { 1.0f, 1.0f, 1.0f }, { NM, NM, NM } },       { { -1.0f, 1.0f, 1.0f }, { -NM, NM, NM } } };
 
         static short int faces[] = { 5, 4, 0, 1, 5, 0, 6, 5, 1, 2, 6, 1, 7, 6, 2, 3, 7, 2,
                                      4, 7, 3, 0, 4, 3, 6, 7, 4, 5, 6, 4, 1, 0, 3, 2, 1, 3 };
@@ -129,8 +127,7 @@ const char* psSrc =
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), 0);
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(
-        GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), (const GLvoid*)(3 * sizeof(float)));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(SkyboxVert), (const GLvoid*)(3 * sizeof(float)));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ib);
 
     glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_SHORT, 0);

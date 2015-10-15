@@ -16,16 +16,15 @@
 
 @interface NSDelayedPerform : NSObject {
 @public
-   idt(NSObject)    _object;
-   SEL              _selector;
-   idt(NSObject)    _argument;
-   BOOL             _releaseObjects;
+    idt(NSObject) _object;
+    SEL _selector;
+    idt(NSObject) _argument;
+    BOOL _releaseObjects;
 }
--(NSDelayedPerform*) initWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
--(NSDelayedPerform*) initWithObjectNoRef:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
--(void) dealloc;
--(BOOL) isEqualToPerform:(NSDelayedPerform*)other;
--(NSObject*) perform;
-+(NSDelayedPerform*) delayedPerformWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
+- (NSDelayedPerform*)initWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
+- (NSDelayedPerform*)initWithObjectNoRef:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
+- (void)dealloc;
+- (BOOL)isEqualToPerform:(NSDelayedPerform*)other;
+- (NSObject*)perform;
++ (NSDelayedPerform*)delayedPerformWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
 @end
-

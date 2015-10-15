@@ -16,8 +16,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-extern "C" NSString* const AVAudioSessionCategoryAmbient = (NSString* const) @"AVAudioSessionCategoryAmbient";
-extern "C" NSString* const AVAudioSessionCategoryPlayback = (NSString* const) @"AVAudioSessionCategoryPlayback";
-extern "C" NSString* const AVAudioSessionCategoryPlayAndRecord =
-    (NSString* const) @"AVAudioSessionCategoryPlayAndRecord";
-extern "C" NSString* const AVAudioSessionCategorySoloAmbient = (NSString* const) @"AVAudioSessionCategorySoloAmbient";
+extern "C" NSString* const AVAudioSessionCategoryAmbient = (NSString * const) @"AVAudioSessionCategoryAmbient";
+extern "C" NSString* const AVAudioSessionCategoryPlayback = (NSString * const) @"AVAudioSessionCategoryPlayback";
+extern "C" NSString* const AVAudioSessionCategoryPlayAndRecord = (NSString * const) @"AVAudioSessionCategoryPlayAndRecord";
+extern "C" NSString* const AVAudioSessionCategorySoloAmbient = (NSString * const) @"AVAudioSessionCategorySoloAmbient";

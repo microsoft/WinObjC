@@ -377,13 +377,12 @@ public:
         }
 
         if ([_parent->tablePriv->_delegate respondsToSelector:@selector(tableView:accessoryTypeForRowWithIndexPath:)]) {
-            UITableViewCellAccessoryType accessoryType = (UITableViewCellAccessoryType)
-                [_parent->tablePriv->_delegate tableView:_parent accessoryTypeForRowWithIndexPath:index];
+            UITableViewCellAccessoryType accessoryType =
+                (UITableViewCellAccessoryType)[_parent->tablePriv->_delegate tableView:_parent accessoryTypeForRowWithIndexPath:index];
             [view setAccessoryType:accessoryType];
         }
 
-        if ([_parent->tablePriv->_delegate
-                respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
+        if ([_parent->tablePriv->_delegate respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
             [_parent->tablePriv->_delegate tableView:_parent willDisplayCell:view forRowAtIndexPath:index];
         }
 
@@ -409,8 +408,7 @@ public:
     TableViewSection* _parentSection;
     bool _isHeader;
 
-    TableViewHeaderFooter(id parent, TableViewSection* parentSection, id string, float height, bool isHeader)
-        : TableViewNode(parent) {
+    TableViewHeaderFooter(id parent, TableViewSection* parentSection, id string, float height, bool isHeader) : TableViewNode(parent) {
         _string = string;
         _height = height;
         _parentSection = parentSection;
@@ -420,13 +418,11 @@ public:
         id view = nil;
         if (_isHeader) {
             if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
-                view = [_parent->tablePriv->_dataSource tableView:_parent
-                                           viewForHeaderInSection:_parentSection->_sectionIndex];
+                view = [_parent->tablePriv->_dataSource tableView:_parent viewForHeaderInSection:_parentSection->_sectionIndex];
             }
         } else {
             if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:viewForFooterInSection:)]) {
-                view = [_parent->tablePriv->_dataSource tableView:_parent
-                                           viewForFooterInSection:_parentSection->_sectionIndex];
+                view = [_parent->tablePriv->_dataSource tableView:_parent viewForFooterInSection:_parentSection->_sectionIndex];
             }
         }
 
@@ -435,16 +431,12 @@ public:
 
             if (string == nil) {
                 if (_isHeader) {
-                    if ([_parent->tablePriv->_dataSource
-                            respondsToSelector:@selector(tableView:titleForHeaderInSection:)]) {
-                        string = [_parent->tablePriv->_dataSource tableView:_parent
-                                                    titleForHeaderInSection:_parentSection->_sectionIndex];
+                    if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:titleForHeaderInSection:)]) {
+                        string = [_parent->tablePriv->_dataSource tableView:_parent titleForHeaderInSection:_parentSection->_sectionIndex];
                     }
                 } else {
-                    if ([_parent->tablePriv->_dataSource
-                            respondsToSelector:@selector(tableView:titleForFooterInSection:)]) {
-                        string = [_parent->tablePriv->_dataSource tableView:_parent
-                                                    titleForFooterInSection:_parentSection->_sectionIndex];
+                    if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:titleForFooterInSection:)]) {
+                        string = [_parent->tablePriv->_dataSource tableView:_parent titleForFooterInSection:_parentSection->_sectionIndex];
                     }
                 }
             }
@@ -465,8 +457,7 @@ public:
                     [view _setGroupEdgeStyle:0x800];
                 } else {
                     id backgroundGradient =
-                        [[UIImage imageNamed:@"/img/navgradient.png"] stretchableImageWithLeftCapWidth:1
-                                                                                          topCapHeight:0];
+                        [[UIImage imageNamed:@"/img/navgradient.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
                     id imageView = [[[UIImageView alloc] initWithImage:backgroundGradient] autorelease];
                     [view setBackgroundView:imageView];
                     [view setTextColor:[UIColor whiteColor]];
@@ -649,8 +640,7 @@ static void initInternal(UITableView* self) {
         tablePriv->_allowsMultipleSelection = [coder decodeInt32ForKey:@"UIAllowsMultipleSelection"] != 0;
     }
     if ([coder containsValueForKey:@"UIAllowsMultipleSelectionDuringEditing"]) {
-        tablePriv->_allowsMultipleSelectionDuringEditing =
-            [coder decodeInt32ForKey:@"UIAllowsMultipleSelectionDuringEditing"] != 0;
+        tablePriv->_allowsMultipleSelectionDuringEditing = [coder decodeInt32ForKey:@"UIAllowsMultipleSelectionDuringEditing"] != 0;
     }
     if ([coder containsValueForKey:@"UIRowHeight"]) {
         tablePriv->_defaultRowHeight = [coder decodeFloatForKey:@"UIRowHeight"];
@@ -720,8 +710,7 @@ static void initInternal(UITableView* self) {
         headerBounds.origin.x = 0;
         headerBounds.origin.y = 0;
         [tablePriv->_headerView setFrame:headerBounds];
-        [tablePriv->_headerView
-            setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
+        [tablePriv->_headerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
     [self setNeedsLayout];
 }
@@ -1386,8 +1375,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
                   scrollPosition:(UITableViewScrollPosition)scrollPosition
                   notifyDelegate:(BOOL)notifyDelegate {
     BOOL shouldHighlight = YES;
-    if (notifyDelegate &&
-        [tablePriv->_delegate respondsToSelector:@selector(tableView:shouldHighlightRowAtIndexPath:)]) {
+    if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:shouldHighlightRowAtIndexPath:)]) {
         shouldHighlight = [tablePriv->_delegate tableView:self shouldHighlightRowAtIndexPath:indexPath];
     }
 
@@ -1400,8 +1388,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
             [self scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
         }
 
-        if (notifyDelegate &&
-            [tablePriv->_delegate respondsToSelector:@selector(tableView:didHighlightRowAtIndexPath:)]) {
+        if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:didHighlightRowAtIndexPath:)]) {
             [tablePriv->_delegate tableView:self didHighlightRowAtIndexPath:indexPath];
         }
     }
@@ -1409,10 +1396,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 }
 
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
-    return [self unhighlightItemAtIndexPath:indexPath
-                                   animated:animated
-                             notifyDelegate:notifyDelegate
-                       shouldCheckHighlight:NO];
+    return [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notifyDelegate shouldCheckHighlight:NO];
 }
 
 - (BOOL)unhighlightItemAtIndexPath:(id)indexPath
@@ -1436,8 +1420,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 
         [_indexPathsForHighlightedItems removeObject:indexPath];
 
-        if (notifyDelegate &&
-            [tablePriv->_delegate respondsToSelector:@selector(tableView:didUnhighlightRowAtIndexPath:)]) {
+        if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:didUnhighlightRowAtIndexPath:)]) {
             [tablePriv->_delegate tableView:self didUnhighlightRowAtIndexPath:indexPath];
         }
 
@@ -1454,10 +1437,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     NSIndexPath* indexPath = [cell indexPath];
 
     if (indexPath && [self allowsSelection]) {
-        if (![self highlightItemAtIndexPath:indexPath
-                                   animated:YES
-                             scrollPosition:UITableViewScrollPositionNone
-                             notifyDelegate:YES])
+        if (![self highlightItemAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone notifyDelegate:YES])
             return;
 
         _touchingIndexPath = indexPath;
@@ -1522,10 +1502,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     if ([self _currentlyAllowsMultipleSelection] && [_indexPathsForSelectedItems containsObject:indexPath]) {
         [self deselectItemAtIndexPath:indexPath animated:YES notifyDelegate:YES];
     } else if ([self allowsSelection]) {
-        [self selectItemAtIndexPath:indexPath
-                           animated:YES
-                     scrollPosition:UITableViewScrollPositionNone
-                     notifyDelegate:YES];
+        [self selectItemAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone notifyDelegate:YES];
     }
 }
 
@@ -1534,8 +1511,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
              scrollPosition:(UITableViewScrollPosition)scrollPosition
              notifyDelegate:(BOOL)notifyDelegate {
     if ([self _currentlyAllowsMultipleSelection] && [_indexPathsForSelectedItems containsObject:indexPath]) {
-        if (notifyDelegate &&
-            [tablePriv->_delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)]) {
+        if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)]) {
             indexPath = [tablePriv->_delegate tableView:self willDeselectRowAtIndexPath:indexPath];
         }
 
@@ -1544,8 +1520,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         }
     } else {
         // either single selection, or wasn't already selected in multiple selection mode
-        if (notifyDelegate &&
-            [tablePriv->_delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
+        if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
             indexPath = [tablePriv->_delegate tableView:self willSelectRowAtIndexPath:indexPath];
         }
 
@@ -1569,8 +1544,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
                 [self scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
             }
 
-            if (notifyDelegate &&
-                [tablePriv->_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+            if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
                 [tablePriv->_delegate tableView:self didSelectRowAtIndexPath:indexPath];
             }
         }
@@ -1594,8 +1568,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         }
         [_indexPathsForSelectedItems removeObject:indexPath];
 
-        if (notifyDelegate &&
-            [tablePriv->_delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)]) {
+        if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:didDeselectRowAtIndexPath:)]) {
             [tablePriv->_delegate tableView:self didDeselectRowAtIndexPath:indexPath];
         }
     }
@@ -1606,9 +1579,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
 }
 
-- (void)selectRowAtIndexPath:(NSIndexPath*)indexPath
-                    animated:(BOOL)animated
-              scrollPosition:(UITableViewScrollPosition)scrollPosition {
+- (void)selectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {
     if (indexPath && ![_indexPathsForSelectedItems containsObject:indexPath])
         [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition notifyDelegate:NO];
 }
@@ -1946,9 +1917,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     [self _setShouldLayout];
 }
 
-- (void)scrollToRowAtIndexPath:(id)indexPath
-              atScrollPosition:(UITableViewScrollPosition)scrollPosition
-                      animated:(BOOL)animated {
+- (void)scrollToRowAtIndexPath:(id)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated {
     //  Get cell rect
     CGRect cellRect = CGRectNull;
     CGRect bounds;
@@ -2078,42 +2047,33 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView*)scroller {
-    if (tablePriv->_delegate != self &&
-        [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+    if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
         [tablePriv->_delegate scrollViewWillBeginDecelerating:scroller];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scroller {
-    if (tablePriv->_delegate != self &&
-        [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+    if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [tablePriv->_delegate scrollViewDidEndDecelerating:scroller];
     }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView*)scroller {
-    if (tablePriv->_delegate != self &&
-        [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+    if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
         [tablePriv->_delegate scrollViewWillBeginDragging:scroller];
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView*)scroller willDecelerate:(BOOL)willDecelerate {
-    if (tablePriv->_delegate != self &&
-        [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+    if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
         [tablePriv->_delegate scrollViewDidEndDragging:scroller willDecelerate:willDecelerate];
     }
 }
 
-- (void)scrollViewWillEndDragging:(UIScrollView*)scroller
-                     withVelocity:(CGPoint)velocity
-              targetContentOffset:(CGPoint*)contentOffsetPtr {
+- (void)scrollViewWillEndDragging:(UIScrollView*)scroller withVelocity:(CGPoint)velocity targetContentOffset:(CGPoint*)contentOffsetPtr {
     if (tablePriv->_delegate != self &&
-        [tablePriv->_delegate
-            respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
-        [tablePriv->_delegate scrollViewWillEndDragging:scroller
-                                           withVelocity:velocity
-                                    targetContentOffset:contentOffsetPtr];
+        [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [tablePriv->_delegate scrollViewWillEndDragging:scroller withVelocity:velocity targetContentOffset:contentOffsetPtr];
     }
 }
 
@@ -2138,8 +2098,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 }
 
 - (BOOL)_currentlyAllowsMultipleSelection {
-    return tablePriv->_isEditing ? tablePriv->_allowsMultipleSelectionDuringEditing
-                                 : tablePriv->_allowsMultipleSelection;
+    return tablePriv->_isEditing ? tablePriv->_allowsMultipleSelectionDuringEditing : tablePriv->_allowsMultipleSelection;
 }
 
 - (id)dequeueReusableHeaderFooterViewWithIdentifier:(NSString*)reuseIdentifier {
@@ -2160,9 +2119,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 }
 
 - (void)_forwardCellRemoval:(UITableViewCell*)cell {
-    [tablePriv->_dataSource tableView:self
-                   commitEditingStyle:UITableViewCellEditingStyleDelete
-                    forRowAtIndexPath:[cell indexPath]];
+    [tablePriv->_dataSource tableView:self commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:[cell indexPath]];
 }
 
 - (BOOL)_canEditCell:(UITableViewCell*)cell {

@@ -78,8 +78,7 @@ static void removeFromUpdateList(CADisplayLink* self) {
         EbrLockEnter(_displaySyncSocketLock);
         for (int i = 0; i < _numDisplaySyncEvents; i++) {
             if (_displaySyncEvents[i] == _LazySignaledOffset.member(self->_displaySyncEvent)) {
-                memmove(
-                    &_displaySyncEvents[i], &_displaySyncEvents[i + 1], (_numDisplaySyncEvents - i) * sizeof(EbrEvent));
+                memmove(&_displaySyncEvents[i], &_displaySyncEvents[i + 1], (_numDisplaySyncEvents - i) * sizeof(EbrEvent));
                 _numDisplaySyncEvents--;
                 break;
             }
@@ -95,15 +94,17 @@ static void removeFromUpdateList(CADisplayLink* self) {
 static void removeFromRunloops(CADisplayLink* self, NSRunLoop* runLoop = nil, NSString* mode = nil) {
     if (self->_runMode == CADisplayLinkSyncMode) {
         for (NSString* curmode in self->_addedRunLoops) {
-            if (mode != nil && ![curmode isEqualToString:mode])
+            if (mode != nil && ![curmode isEqualToString:mode]) {
                 continue;
+            }
 
             id arr = [self->_addedRunLoops objectForKey:curmode];
             for (int i = [arr count] - 1; i >= 0; i--) {
                 NSRunLoop* currunloop = [arr objectAtIndex:i];
 
-                if (runLoop != nil && currunloop != runLoop)
+                if (runLoop != nil && currunloop != runLoop) {
                     continue;
+                }
 
                 [currunloop removeInputSource:self->_displaySyncEvent forMode:curmode];
                 [arr removeObjectAtIndex:i];
@@ -112,14 +113,16 @@ static void removeFromRunloops(CADisplayLink* self, NSRunLoop* runLoop = nil, NS
         }
     } else if (self->_runMode == CADisplayLinkTimerMode) {
         for (NSString* curmode in self->_addedRunLoops) {
-            if (mode != nil && ![curmode isEqualToString:mode])
+            if (mode != nil && ![curmode isEqualToString:mode]) {
                 continue;
+            }
 
             id arr = [self->_addedRunLoops objectForKey:curmode];
             for (int i = [arr count] - 1; i >= 0; i--) {
                 NSRunLoop* currunloop = [arr objectAtIndex:i];
-                if (runLoop != nil && currunloop != runLoop)
+                if (runLoop != nil && currunloop != runLoop) {
                     continue;
+                }
 
                 [currunloop removeTimer:(NSTimer*)self->_timer forMode:curmode];
                 [arr removeObjectAtIndex:i];
@@ -190,8 +193,9 @@ static void createTimerIfNeeded(CADisplayLink* self) {
 }
 
 - (void)setFrameInterval:(NSInteger)interval {
-    if (interval < 1)
+    if (interval < 1) {
         interval = 1;
+    }
     _frameInterval = interval;
 
     if (_frameInterval != 1) {

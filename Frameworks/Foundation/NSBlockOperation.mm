@@ -49,7 +49,7 @@
 }
 
 - (void)main {
-    for (void (^curblock)() in(NSArray*)_executionBlocks) {
+    for (void (^curblock)() in (NSArray*)_executionBlocks) {
         curblock();
     }
     _executionBlocks = nil;

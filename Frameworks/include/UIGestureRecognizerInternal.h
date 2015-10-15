@@ -24,20 +24,20 @@
     BOOL _cancelsTouchesInView;
     BOOL _disabled;
     UIGestureRecognizerState _state;
-    UIView *_view;
-    NSMutableArray *_registeredActions;
-    NSMutableArray *_trackingTouches;
+    UIView* _view;
+    NSMutableArray* _registeredActions;
+    NSMutableArray* _trackingTouches;
 
     gestureTarget _targets[32];
     int _numTargets;
-    
+
     struct {
         unsigned shouldBegin : 1;
         unsigned shouldReceiveTouch : 1;
         unsigned shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
-    } _delegateHas; 
+    } _delegateHas;
 }
 
--(void) _setView:(UIView*)view;
--(void) cancelIfActive;
+- (void)_setView:(UIView*)view;
+- (void)cancelIfActive;
 @end

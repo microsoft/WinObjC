@@ -85,8 +85,9 @@ DWORD uuid_generate(BYTE* uuid);
             int subviewCount = [subviews count];
 
             for (int j = subviewCount - 1; j >= 0; j--) {
-                if ((unsigned int)j >= [subviews count])
+                if ((unsigned int)j >= [subviews count]) {
                     continue;
+                }
                 bool didRotate = false;
 
                 id curView = [subviews objectAtIndex:j];
@@ -103,8 +104,9 @@ DWORD uuid_generate(BYTE* uuid);
                         [controller setRotation:orientation animated:animated];
                     }
                 }
-                if (didRotate)
+                if (didRotate) {
                     break;
+                }
             }
 
 #if 0
@@ -123,8 +125,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
     }
 
     if (_isGeneratingEvents) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIDeviceOrientationDidChangeNotification"
-                                                            object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIDeviceOrientationDidChangeNotification" object:self];
     }
 
     return self;

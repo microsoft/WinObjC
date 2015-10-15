@@ -35,13 +35,11 @@
 
 #include <malloc.h>
 
-EAGL_EXPORT void
-EXPORT_glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
+EAGL_EXPORT void EXPORT_glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
     glFramebufferTexture2D(target, attachment, textarget, texture, level);
 }
 
-EAGL_EXPORT void
-EXPORT_glFramebufferTexture2DOES(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
+EAGL_EXPORT void EXPORT_glFramebufferTexture2DOES(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
     glFramebufferTexture2D(target, attachment, textarget, texture, level);
 }
 
@@ -97,18 +95,15 @@ EAGL_EXPORT void EXPORT_glBindFramebufferOES(GLenum target, GLuint framebuffer) 
     glBindFramebuffer(target, framebuffer);
 }
 
-EAGL_EXPORT void
-EXPORT_glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint* params) {
+EAGL_EXPORT void EXPORT_glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint* params) {
     glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
 }
 
-EAGL_EXPORT void
-EXPORT_glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
+EAGL_EXPORT void EXPORT_glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
     glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
 }
 
-EAGL_EXPORT void
-EXPORT_glFramebufferRenderbufferOES(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
+EAGL_EXPORT void EXPORT_glFramebufferRenderbufferOES(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
     glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
 }
 
@@ -442,8 +437,7 @@ EAGL_EXPORT void EXPORT_glTexImage2D(GLenum target,
         glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     } else {
         if (tlsCurContext && tlsCurContext->_gl11Ctx)
-            tlsCurContext->_gl11Ctx->glTexImage2D(
-                target, level, internalformat, width, height, border, format, type, pixels);
+            tlsCurContext->_gl11Ctx->glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 }
 
@@ -615,8 +609,7 @@ EAGL_EXPORT void EXPORT_glBlendEquationOES(GLenum type) {
     glBlendEquation(type);
 }
 
-EAGL_EXPORT void
-EXPORT_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels) {
+EAGL_EXPORT void EXPORT_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels) {
     glReadPixels(x, y, width, height, format, type, pixels);
 }
 
@@ -732,8 +725,7 @@ EAGL_EXPORT void EXPORT_glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsiz
     glGetShaderInfoLog(shader, bufsize, length, infolog);
 }
 
-EAGL_EXPORT void
-EXPORT_glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint* range, GLint* precision) {
+EAGL_EXPORT void EXPORT_glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint* range, GLint* precision) {
     glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
 }
 
@@ -797,8 +789,7 @@ EAGL_EXPORT void EXPORT_glSampleCoverage(float value, GLboolean invert) {
     glSampleCoverage(value, invert);
 }
 
-EAGL_EXPORT void
-EXPORT_glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length) {
+EAGL_EXPORT void EXPORT_glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length) {
     glShaderBinary(n, shaders, binaryformat, binary, length);
 }
 

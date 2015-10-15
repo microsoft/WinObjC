@@ -88,8 +88,8 @@
 }
 
 - (id)initialLayoutAttributesForAppearingItemAtIndexPath:(id)itemIndexPath {
-    id attrs = [_initialAnimationLayoutAttributesDict
-        objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
+    id attrs =
+        [_initialAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
 
     if ([_insertedSectionsSet containsIndex:[itemIndexPath section]]) {
         attrs = [attrs copy];
@@ -99,8 +99,8 @@
 }
 
 - (id)finalLayoutAttributesForDisappearingItemAtIndexPath:(id)itemIndexPath {
-    id attrs = [_finalAnimationLayoutAttributesDict
-        objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
+    id attrs =
+        [_finalAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
 
     if ([_deletedSectionsSet containsIndex:[itemIndexPath section]]) {
         attrs = [attrs copy];
@@ -122,9 +122,8 @@
                     [attr setIndexPath:[attr indexPath]];
                 }
             }
-            [_initialAnimationLayoutAttributesDict
-                setObject:attr
-                   forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]];
+            [_initialAnimationLayoutAttributesDict setObject:attr
+                                                      forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]];
         }
     }
 
@@ -141,9 +140,8 @@
                 id finalAttrs = [attr copy];
                 [finalAttrs setIndexPath:[[update objectForKey:@"oldModel"] indexPathForItemAtGlobalIndex:index]];
                 [finalAttrs setAlpha:0];
-                [_finalAnimationLayoutAttributesDict
-                    setObject:finalAttrs
-                       forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:finalAttrs]];
+                [_finalAnimationLayoutAttributesDict setObject:finalAttrs
+                                                        forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:finalAttrs]];
             }
         }
     }
@@ -161,8 +159,7 @@
             }
         } else {
             if (action == UICollectionUpdateActionDelete) {
-                id key =
-                    [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathBeforeUpdate]];
+                id key = [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathBeforeUpdate]];
 
                 id attrs = [[_finalAnimationLayoutAttributesDict objectForKey:key] copy];
 
@@ -171,8 +168,7 @@
                     [_finalAnimationLayoutAttributesDict setObject:attrs forKey:key];
                 }
             } else if (action == UICollectionUpdateActionReload || action == UICollectionUpdateActionInsert) {
-                id key =
-                    [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathAfterUpdate]];
+                id key = [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathAfterUpdate]];
                 id attrs = [[_initialAnimationLayoutAttributesDict objectForKey:key] copy];
 
                 if (attrs) {
@@ -281,10 +277,7 @@
 
 - (void)setCenter:(CGPoint)center {
     _center = center;
-    _frame = CGRectMake((_center.x - _frame.size.width / 2),
-                        (_center.y - _frame.size.height / 2),
-                        _frame.size.width,
-                        _frame.size.height);
+    _frame = CGRectMake((_center.x - _frame.size.width / 2), (_center.y - _frame.size.height / 2), _frame.size.width, _frame.size.height);
 }
 
 - (BOOL)isHidden {

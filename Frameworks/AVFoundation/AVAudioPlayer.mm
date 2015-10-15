@@ -23,14 +23,16 @@
 @synthesize volume;
 
 - (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError {
-    if (outError)
+    if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
+    }
     return nil;
 }
 
 - (id)initWithData:(NSData*)data error:(NSError**)outError {
-    if (outError)
+    if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
+    }
     return nil;
 }
 @end

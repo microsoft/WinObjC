@@ -16,19 +16,26 @@
 
 @interface NSOrderedPerform : NSObject {
 @public
-   SEL           _selector;
-   idt(NSObject) _target;
-   idt(NSObject) _argument;
-   unsigned int _order;
-   idt(NSArray) _modes;
+    SEL _selector;
+    idt(NSObject) _target;
+    idt(NSObject) _argument;
+    unsigned int _order;
+    idt(NSArray) _modes;
 }
--(NSOrderedPerform*) initWithSelector:(SEL)selector target:(NSObject*)target argument:(NSObject*)argument order:(NSUInteger)order modes:(NSArray*)modes;
--(void) dealloc;
--(SEL) selector;
--(NSObject*) target;
--(NSObject*) argument;
--(NSUInteger) order;
--(BOOL) fireInMode:(NSString*)mode;
-+(NSOrderedPerform*) orderedPerformWithSelector:(SEL)selector target:(NSObject*)target argument:(NSObject*)argument order:(NSUInteger)order modes:(NSArray*)modes;
+- (NSOrderedPerform*)initWithSelector:(SEL)selector
+                               target:(NSObject*)target
+                             argument:(NSObject*)argument
+                                order:(NSUInteger)order
+                                modes:(NSArray*)modes;
+- (void)dealloc;
+- (SEL)selector;
+- (NSObject*)target;
+- (NSObject*)argument;
+- (NSUInteger)order;
+- (BOOL)fireInMode:(NSString*)mode;
++ (NSOrderedPerform*)orderedPerformWithSelector:(SEL)selector
+                                         target:(NSObject*)target
+                                       argument:(NSObject*)argument
+                                          order:(NSUInteger)order
+                                          modes:(NSArray*)modes;
 @end
-

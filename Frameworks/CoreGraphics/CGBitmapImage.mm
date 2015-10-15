@@ -54,19 +54,27 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _bytesPerPixel = 2;
                 _bytesPerRow = _width * _bytesPerPixel;
                 // assert((_bytesPerRow & 3) == 0);
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData, PIXMAN_r5g6b5,
-                //width, height, width * 2);
-                _surface = _cairo_image_surface_create_with_pixman_format(
-                    ((unsigned char*)_imageData) + width * (height - 1) * 2, PIXMAN_r5g6b5, width, height, -width * 2);
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData, PIXMAN_r5g6b5,
+                // width, height, width * 2);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 2,
+                                                                          PIXMAN_r5g6b5,
+                                                                          width,
+                                                                          height,
+                                                                          -width * 2);
                 _pixmanFmt = PIXMAN_r5g6b5;
             } else {
                 _bytesPerPixel = 2;
                 _bytesPerRow = _width * _bytesPerPixel;
                 // assert((_bytesPerRow & 3) == 0);
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData, PIXMAN_r5g6b5,
-                //width, height, width * 2);
-                _surface = _cairo_image_surface_create_with_pixman_format(
-                    ((unsigned char*)_imageData) + width * (height - 1) * 2, PIXMAN_r5g6b5, width, height, -width * 2);
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData, PIXMAN_r5g6b5,
+                // width, height, width * 2);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 2,
+                                                                          PIXMAN_r5g6b5,
+                                                                          width,
+                                                                          height,
+                                                                          -width * 2);
                 _pixmanFmt = PIXMAN_r5g6b5;
             }
             break;
@@ -78,10 +86,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned char *) _imageData) + width *
+                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned
+                // char *) _imageData) + width *
                 //(height - 1) * 4, PIXMAN_x8r8g8b8, width, height, -width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_b8g8r8x8,
                                                                           width,
                                                                           height,
@@ -90,10 +98,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             } else {
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned char *) _imageData) + width *
+                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned
+                // char *) _imageData) + width *
                 //(height - 1) * 4, PIXMAN_x8r8g8b8, width, height, -width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_b8g8r8x8,
                                                                           width,
                                                                           height,
@@ -109,10 +117,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned char *) _imageData) + width *
+                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned
+                // char *) _imageData) + width *
                 //(height - 1) * 4, PIXMAN_b8g8r8x8, width, height, -width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_x8b8g8r8,
                                                                           width,
                                                                           height,
@@ -121,10 +129,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             } else {
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned char *) _imageData) + width *
+                //_surface = _cairo_image_surface_create_with_pixman_format(((unsigned
+                // char *) _imageData) + width *
                 //(height - 1) * 4, PIXMAN_b8g8r8x8, width, height, -width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_x8b8g8r8,
                                                                           width,
                                                                           height,
@@ -143,10 +151,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
                 _bytesPerPixel = 4;
                 _bytesPerRow = _internalWidth * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              _internalWidth * (height - 1) * 4,
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + _internalWidth * (height - 1) * 4,
                                                                           PIXMAN_a8r8g8b8,
                                                                           width,
                                                                           height,
@@ -155,10 +163,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             } else {
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_a8r8g8b8,
                                                                           width,
                                                                           height,
@@ -177,10 +185,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
                 _bytesPerPixel = 4;
                 _bytesPerRow = _internalWidth * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              _internalWidth * (height - 1) * 4,
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + _internalWidth * (height - 1) * 4,
                                                                           PIXMAN_a8b8g8r8,
                                                                           width,
                                                                           height,
@@ -189,10 +197,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             } else {
                 _bytesPerPixel = 4;
                 _bytesPerRow = _width * _bytesPerPixel;
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * 4,
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 4,
                                                                           PIXMAN_a8b8g8r8,
                                                                           width,
                                                                           height,
@@ -213,28 +221,30 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 3);
                 _freeWhenDone = TRUE;
 
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(
-                    ((unsigned char*)_imageData) + _internalWidth * (height - 1) * _bytesPerPixel,
-                    PIXMAN_b8g8r8,
-                    width,
-                    height,
-                    -_internalWidth * _bytesPerPixel);
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
+                                                                              _internalWidth * (height - 1) * _bytesPerPixel,
+                                                                          PIXMAN_b8g8r8,
+                                                                          width,
+                                                                          height,
+                                                                          -_internalWidth * _bytesPerPixel);
                 _pixmanFmt = PIXMAN_b8g8r8;
             } else {
                 _bytesPerPixel = 3;
                 _bytesPerRow = _width * _bytesPerPixel;
 
                 // assert((_bytesPerRow & 3) == 0);
-                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char *) _imageData,
-                //PIXMAN_a8r8g8b8, width, height, width * 4);
-                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                              width * (height - 1) * _bytesPerPixel,
-                                                                          PIXMAN_b8g8r8,
-                                                                          width,
-                                                                          height,
-                                                                          -width * 3);
+                //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
+                //*) _imageData,
+                // PIXMAN_a8r8g8b8, width, height, width * 4);
+                _surface =
+                    _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * _bytesPerPixel,
+                                                                   PIXMAN_b8g8r8,
+                                                                   width,
+                                                                   height,
+                                                                   -width * 3);
                 _pixmanFmt = PIXMAN_b8g8r8;
             }
             break;
@@ -248,17 +258,25 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _bytesPerPixel = 1;
                 _bytesPerRow = _width * _bytesPerPixel;
                 // assert((_bytesPerRow & 3) == 0);
-                /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work must be done ***/
-                _surface = _cairo_image_surface_create_with_pixman_format(
-                    ((unsigned char*)_imageData) + width * (height - 1) * 1, PIXMAN_g8, width, height, -width * 1);
+                /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work
+                 * must be done ***/
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 1,
+                                                                          PIXMAN_g8,
+                                                                          width,
+                                                                          height,
+                                                                          -width * 1);
                 _pixmanFmt = PIXMAN_g8;
             } else {
                 _bytesPerPixel = 1;
                 // assert((_bytesPerRow & 3) == 0);
                 _bytesPerRow = _width * _bytesPerPixel;
-                /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work must be done ***/
-                _surface = _cairo_image_surface_create_with_pixman_format(
-                    ((unsigned char*)_imageData) + width * (height - 1) * 1, PIXMAN_g8, width, height, -width * 1);
+                /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work
+                 * must be done ***/
+                _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 1,
+                                                                          PIXMAN_g8,
+                                                                          width,
+                                                                          height,
+                                                                          -width * 1);
                 _pixmanFmt = PIXMAN_g8;
             }
             break;
@@ -270,8 +288,11 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             }
             _bytesPerPixel = 1;
             _bytesPerRow = _width * _bytesPerPixel;
-            _surface = _cairo_image_surface_create_with_pixman_format(
-                ((unsigned char*)_imageData) + width * (height - 1) * 1, PIXMAN_a8, width, height, -width * 1);
+            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 1,
+                                                                      PIXMAN_a8,
+                                                                      width,
+                                                                      height,
+                                                                      -width * 1);
             _pixmanFmt = PIXMAN_a8;
             break;
 
@@ -282,12 +303,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
     EbrDebugLog("Constructed image from addr:%x\n", _imageData);
     imgDataSize += _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog("Allocated %dx%dx%d Number of images: %d (%dKB)\n",
-                _width,
-                _height,
-                _bytesPerPixel,
-                imgDataCount,
-                imgDataSize / 1024);
+    EbrDebugLog("Allocated %dx%dx%d Number of images: %d (%dKB)\n", _width, _height, _bytesPerPixel, imgDataCount, imgDataSize / 1024);
 
     _bitmapFmt = fmt;
 }
@@ -295,8 +311,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 CGImageData::~CGImageData() {
     EbrDecrement((volatile int*)&imgDataCount);
     imgDataSize -= _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog(
-        "Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)\n", _imageData, imgDataCount, imgDataSize / 1024);
+    EbrDebugLog("Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)\n", _imageData, imgDataCount, imgDataSize / 1024);
 
     assert(_refCount == 0);
     if (_imageData) {
@@ -363,8 +378,7 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
     if (img->_imgType == CGImageTypeBitmap) {
         _data = ((CGBitmapImageBacking*)img->Backing())->_data->Duplicate();
     } else {
-        _data =
-            new CGImageData(img->Backing()->Width(), img->Backing()->Height(), img->Backing()->SurfaceFormat(), NULL);
+        _data = new CGImageData(img->Backing()->Width(), img->Backing()->Height(), img->Backing()->SurfaceFormat(), NULL);
 
         cairo_t* drawContext = cairo_create(LockCairoSurface());
         cairo_surface_t* copySurface = img->Backing()->LockCairoSurface();

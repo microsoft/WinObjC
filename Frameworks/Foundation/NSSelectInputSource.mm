@@ -79,8 +79,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (BOOL)processImmediateEvents:(DWORD)selectEvent {
-    if ((selectEvent &= _eventMask) == 0)
+    if ((selectEvent &= _eventMask) == 0) {
         return NO;
+    }
 
     [_delegate selectInputSource:self selectEvent:selectEvent];
     return YES;

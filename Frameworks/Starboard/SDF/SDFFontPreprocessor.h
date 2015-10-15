@@ -26,15 +26,15 @@ class SDFFontPreprocessor : public FontGenerator {
     float sampleDist;
 
 public:
-    inline SDFFontPreprocessor(void* mem, AlphaFontGenerator* src) : FontGenerator(), src(src), sampleDist(0.f)
-    {
+    inline SDFFontPreprocessor(void* mem, AlphaFontGenerator* src) : FontGenerator(), src(src), sampleDist(0.f) {
         FontGenerator::init(mem, NULL, 0);
     }
-    virtual ~SDFFontPreprocessor() {}
+    virtual ~SDFFontPreprocessor() {
+    }
 
     void init(FT_Face face, size_t fontSize, float sampleDist = 1.f / 16.f);
-    
+
     virtual void renderGlyph(int c);
 };
 
-#endif 
+#endif

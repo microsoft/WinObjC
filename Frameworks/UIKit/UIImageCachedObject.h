@@ -19,9 +19,9 @@
 @interface UIImageCachedObject : NSObject {
 @public
     CGImageRef m_pImage;
-    id      _cacheName;
-    float   _scale;
-    CGRect  _imageStretch;
+    id _cacheName;
+    float _scale;
+    CGRect _imageStretch;
 }
--(void) dealloc;
+- (void)dealloc;
 @end

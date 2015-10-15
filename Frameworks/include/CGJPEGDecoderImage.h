@@ -14,28 +14,25 @@
 //
 //******************************************************************************
 
-class CGJPEGDecoderImage : public __CGImage
-{
+class CGJPEGDecoderImage : public __CGImage {
 public:
-    CGJPEGDecoderImage(const char *filename);
+    CGJPEGDecoderImage(const char* filename);
     CGJPEGDecoderImage(id data);
 };
 
-class CGJPEGImageBacking : public CGDiscardableImageBacking
-{
+class CGJPEGImageBacking : public CGDiscardableImageBacking {
 public:
-    char *_fileName;
+    char* _fileName;
     idretain _data;
 
     int _orientation;
 
-    CGJPEGImageBacking(const char *filename);
+    CGJPEGImageBacking(const char* filename);
     CGJPEGImageBacking(id data);
     ~CGJPEGImageBacking();
 
     void DiscardIfPossible();
-    CGImageBacking *ConstructBacking();
-    void Decode(void *imgDest, int stride);
-    bool DrawDirectlyToContext(CGContextImpl *ctx, CGRect src, CGRect dest);
+    CGImageBacking* ConstructBacking();
+    void Decode(void* imgDest, int stride);
+    bool DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CGRect dest);
 };
-

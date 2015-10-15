@@ -55,32 +55,27 @@ using namespace Windows::UI::Xaml::Shapes;
 using namespace Windows::ApplicationModel::Core;
 
 void IWHandleInput(float x, float y, float width, float height, int fingerID, int eventType, int64_t eventTime);
-HANDLE IWConnectCompositor(ID3D11Device1 *device);
-void IWRenderFrame(ID3D11DeviceContext *context, ID3D11RenderTargetView *renderTarget, float width, float height);
+HANDLE IWConnectCompositor(ID3D11Device1* device);
+void IWRenderFrame(ID3D11DeviceContext* context, ID3D11RenderTargetView* renderTarget, float width, float height);
 
-__declspec(dllimport)
-wchar_t *__WideStringFromNSString(void *str);
+__declspec(dllimport) wchar_t* __WideStringFromNSString(void* str);
 
-Platform::String ^principalClassName, ^delegateClassName;
+Platform::String ^ principalClassName, ^delegateClassName;
 
-ref class App : public ::Windows::UI::Xaml::Application
-{
+ref class App : public ::Windows::UI::Xaml::Application {
 public:
-    void InitializeComponent()
-    {
+    void InitializeComponent() {
     }
 
-    void Connect(int connectionId, ::Platform::Object^ target)
-    {
+    void Connect(int connectionId, ::Platform::Object ^ target) {
     }
-    
-    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override
-    {
+
+    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) override {
         auto uiElem = ref new Grid();
         auto rootFrame = ref new Frame();
         rootFrame->Content = uiElem;
 
-        SwapChainPanel ^panel = IWSetSwapChainTarget(nullptr);
+        SwapChainPanel ^ panel = IWSetSwapChainTarget(nullptr);
         uiElem->Children->Append(panel);
         uiElem->InvalidateArrange();
 
@@ -91,16 +86,14 @@ public:
 
         IWRunApplicationMain(principalClassName, delegateClassName, startupRect.Width, startupRect.Height);
     }
-    
 };
 
-extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char *argv[], void *pName, void *dName)
-{
+extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* pName, void* dName) {
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    principalClassName = pName ? ref new Platform::String((wchar_t *) __WideStringFromNSString(pName)) : nullptr;
-    delegateClassName = dName ? ref new Platform::String((wchar_t *) __WideStringFromNSString(dName)) : nullptr;
-    Windows::UI::Xaml::Application::Start(ref new Windows::UI::Xaml::ApplicationInitializationCallback(
-        [](Windows::UI::Xaml::ApplicationInitializationCallbackParams^ p) {
+    principalClassName = pName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(pName)) : nullptr;
+    delegateClassName = dName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(dName)) : nullptr;
+    Windows::UI::Xaml::Application::Start(
+        ref new Windows::UI::Xaml::ApplicationInitializationCallback([](Windows::UI::Xaml::ApplicationInitializationCallbackParams ^ p) {
             (void)p; // Unused parameter
             auto app = ref new App();
         }));

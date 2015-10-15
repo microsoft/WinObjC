@@ -22,26 +22,26 @@ typedef struct of_block_literal_t {
     Class isa;
     int flags;
     int reserved;
-    void (*invoke)(void *, ...);
+    void (*invoke)(void*, ...);
     struct of_block_descriptor_t {
         unsigned long reserved;
         unsigned long size;
-        void (*copy_helper)(void *dest, void *src);
-        void (*dispose_helper)(void *src);
-        const char *signature;
-    } *descriptor;
+        void (*copy_helper)(void* dest, void* src);
+        void (*dispose_helper)(void* src);
+        const char* signature;
+    } * descriptor;
 } of_block_literal_t;
 
-@interface NSBlock: NSObject
+@interface NSBlock : NSObject
 @end
 
-@interface NSStackBlock: NSBlock
+@interface NSStackBlock : NSBlock
 @end
 
-@interface NSGlobalBlock: NSBlock
+@interface NSGlobalBlock : NSBlock
 @end
 
-@interface NSMallocBlock: NSBlock
+@interface NSMallocBlock : NSBlock
 @end
 
 #ifdef __cplusplus
@@ -54,8 +54,8 @@ extern OBJCRT_EXPORT void _Block_release(const void*);
 #endif
 
 #ifndef Block_copy
-# define Block_copy(x) ((__typeof__(x))_Block_copy((const void*)(x)))
+#define Block_copy(x) ((__typeof__(x))_Block_copy((const void*)(x)))
 #endif
 #ifndef Block_release
-# define Block_release(x) _Block_release((const void*)(x))
+#define Block_release(x) _Block_release((const void*)(x))
 #endif

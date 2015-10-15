@@ -62,8 +62,7 @@
     if ([other isKindOfClass:[UICollectionViewItemKey class]]) {
         // identifier might be nil?
         if (_type == other->_type && [_indexPath isEqual:[other indexPath]] &&
-            ([(NSString*)_identifier isEqualToString:(id)other->_identifier] ||
-             (id)_identifier == other->_identifier)) {
+            ([(NSString*)_identifier isEqualToString:(id)other->_identifier] || (id)_identifier == other->_identifier)) {
             return YES;
         }
     }

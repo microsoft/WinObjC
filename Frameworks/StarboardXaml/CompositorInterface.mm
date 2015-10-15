@@ -349,10 +349,11 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [animHandler animationDidStop:TRUE];
-            [animHandler _removeAnimationsFromLayer];
-        });
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [animHandler animationDidStop:TRUE];
+                           [animHandler _removeAnimationsFromLayer];
+                       });
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
@@ -394,17 +395,15 @@ public:
 
     void Completed() {
         id animHandler = _animHandler; // Save in a local for the block to retain.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [animHandler animationDidStop:TRUE];
-            [animHandler _removeAnimationsFromLayer];
-        });
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           [animHandler animationDidStop:TRUE];
+                           [animHandler _removeAnimationsFromLayer];
+                       });
     }
 
-    DisplayAnimationBasic(id animHandler,
-                          NSString* propertyName,
-                          NSObject* fromValue,
-                          NSObject* toValue,
-                          CAMediaTimingProperties* timingProperties) {
+    DisplayAnimationBasic(
+        id animHandler, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) {
         IncrementCounter("BasicAnimation");
 
         CAMediaTimingFunction* mediaTiming = timingProperties->_timingFunction;
@@ -493,10 +492,8 @@ public:
 
             AddAnimation(node, L"origin.x", _fromValue != nil, fromValue.origin.x, _toValue != nil, toValue.origin.x);
             AddAnimation(node, L"origin.y", _fromValue != nil, fromValue.origin.y, _toValue != nil, toValue.origin.y);
-            AddAnimation(
-                node, L"size.width", _fromValue != nil, fromValue.size.width, _toValue != nil, toValue.size.width);
-            AddAnimation(
-                node, L"size.height", _fromValue != nil, fromValue.size.height, _toValue != nil, toValue.size.height);
+            AddAnimation(node, L"size.width", _fromValue != nil, fromValue.size.width, _toValue != nil, toValue.size.width);
+            AddAnimation(node, L"size.height", _fromValue != nil, fromValue.size.height, _toValue != nil, toValue.size.height);
             Start();
         } else if (strcmp(propName, "opacity") == 0) {
             float fromValue = [(NSNumber*)_fromValue floatValue];
@@ -532,20 +529,9 @@ public:
                 AddAnimation(node, L"transform.scale.x", _fromValue != nil, scaleFrom[0], _toValue != nil, scaleTo[0]);
                 AddAnimation(node, L"transform.scale.y", _fromValue != nil, scaleFrom[1], _toValue != nil, scaleTo[1]);
             }
-            if (translationFrom[0] != 0.0f || translationFrom[1] != 0.0f || translationTo[0] != 0.0f ||
-                translationTo[1] != 0.0f) {
-                AddAnimation(node,
-                             L"transform.translation.x",
-                             _fromValue != nil,
-                             translationFrom[0],
-                             _toValue != nil,
-                             translationTo[0]);
-                AddAnimation(node,
-                             L"transform.translation.y",
-                             _fromValue != nil,
-                             translationFrom[1],
-                             _toValue != nil,
-                             translationTo[1]);
+            if (translationFrom[0] != 0.0f || translationFrom[1] != 0.0f || translationTo[0] != 0.0f || translationTo[1] != 0.0f) {
+                AddAnimation(node, L"transform.translation.x", _fromValue != nil, translationFrom[0], _toValue != nil, translationTo[0]);
+                AddAnimation(node, L"transform.translation.y", _fromValue != nil, translationFrom[1], _toValue != nil, translationTo[1]);
             }
             if (angleFrom != 0.0f || angleTo != 0.0f) {
                 AddAnimation(node, L"transform.rotation", _fromValue != nil, angleFrom, _toValue != nil, angleTo);
@@ -842,8 +828,7 @@ public:
 
     MovementType _type;
 
-    QueuedNodeMovement(
-        MovementType type, DisplayNode* node, DisplayNode* before, DisplayNode* after, DisplayNode* supernode) {
+    QueuedNodeMovement(MovementType type, DisplayNode* node, DisplayNode* before, DisplayNode* after, DisplayNode* supernode) {
         IncrementCounter("QueuedNodeMovement");
         _type = type;
         _node = node;
@@ -1023,23 +1008,17 @@ public:
     void CommitDisplayTransaction(DisplayTransaction* transaction) {
     }
 
-    virtual void addNode(DisplayTransaction* transaction,
-                         DisplayNode* node,
-                         DisplayNode* superNode,
-                         DisplayNode* beforeNode,
-                         DisplayNode* afterNode) {
-        QueuedNodeMovement* newNode =
-            new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
+    virtual void addNode(
+        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) {
+        QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
         transaction->QueueNodeMovement(newNode);
     }
 
     virtual void sortWindowLevels() {
     }
 
-    virtual void
-    moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) {
-        QueuedNodeMovement* newNode =
-            new QueuedNodeMovement(QueuedNodeMovement::Move, node, beforeNode, afterNode, NULL);
+    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) {
+        QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Move, node, beforeNode, afterNode, NULL);
         transaction->QueueNodeMovement(newNode);
     }
 
@@ -1068,11 +1047,8 @@ public:
         */
     }
 
-    virtual void setNodeTexture(DisplayTransaction* transaction,
-                                DisplayNode* node,
-                                DisplayTexture* newTexture,
-                                CGSize contentsSize,
-                                float contentsScale) {
+    virtual void setNodeTexture(
+        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
         QueuedProperty* newPropChange = new QueuedProperty(node, newTexture, contentsSize, contentsScale);
 
         transaction->QueueProperty(newPropChange);
@@ -1085,10 +1061,7 @@ public:
     virtual void setNewPatternBackground(id layer) {
     }
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction,
-                                    DisplayNode* node,
-                                    const char* propertyName,
-                                    NSObject* newValue) {
+    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) {
         QueuedProperty* newPropChange = new QueuedProperty(node, propertyName, newValue);
 
         transaction->QueueProperty(newPropChange);
@@ -1155,25 +1128,12 @@ public:
             return;
 
         ((DisplayTextureText*)texture)
-            ->SetParams(font,
-                        text,
-                        color,
-                        alignment,
-                        lineBreak,
-                        shadowColor,
-                        shadowOffset,
-                        numLines,
-                        edgeInsets,
-                        centerVertically);
+            ->SetParams(font, text, color, alignment, lineBreak, shadowColor, shadowOffset, numLines, edgeInsets, centerVertically);
     }
 
-    virtual DisplayAnimation* GetBasicDisplayAnimation(id animobj,
-                                                       NSString* propertyName,
-                                                       NSObject* fromValue,
-                                                       NSObject* toValue,
-                                                       CAMediaTimingProperties* timingProperties) {
-        DisplayAnimationBasic* basicAnim =
-            new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, timingProperties);
+    virtual DisplayAnimation* GetBasicDisplayAnimation(
+        id animobj, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) {
+        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, timingProperties);
         return basicAnim;
     }
 

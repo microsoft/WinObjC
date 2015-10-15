@@ -19,15 +19,13 @@
 #include "Hash.h"
 #include <vector>
 
-typedef std::pair<const void *, const void*> cf_dictpair;
+typedef std::pair<const void*, const void*> cf_dictpair;
 typedef std::vector<cf_dictpair> cf_array;
 
-class ICFDict
-{
+class ICFDict {
 public:
     uint32_t numKeys;
-    ICFDict() : numKeys(0)
-    {
+    ICFDict() : numKeys(0) {
     }
 
     virtual uint32_t getHash(const void* key) = 0;
@@ -38,23 +36,22 @@ public:
     virtual const void* retainVal(const void* val) = 0;
 };
 
-class cf_dict_array
-{
+class cf_dict_array {
 private:
     const void* singleKey;
     const void* singleValue;
     bool hasItem;
-    cf_array *manyItems;
+    cf_array* manyItems;
 
 public:
     cf_dict_array();
     void destroy();
     int count();
-    const void *keyAtIndex(int idx);
+    const void* keyAtIndex(int idx);
     const void* valueAtIndex(int idx);
-    bool objectForKey(const void *key, const void **retVal, ICFDict *dict);
-    void setObjectForKey(const void* object, const void *key, ICFDict *dict, bool retain);
-    bool removeObjectForKey(const void *key, ICFDict *dict);
+    bool objectForKey(const void* key, const void** retVal, ICFDict* dict);
+    void setObjectForKey(const void* object, const void* key, ICFDict* dict, bool retain);
+    bool removeObjectForKey(const void* key, ICFDict* dict);
 };
 
 struct dictIterator;
@@ -63,21 +60,17 @@ struct dictIterator;
 KHASH_DECLARE(cf_dictionary, khint32_t, cf_dict_array);
 typedef khash_t(cf_dictionary) cf_dictionary;
 
-class EbrDictionary : public cf_dictionary,
-                      public ICFDict
-{
+class EbrDictionary : public cf_dictionary, public ICFDict {
 public:
     EbrDictionary();
     ~EbrDictionary();
-    void setObjectKey(const void *key, const void* object, bool retain = true);
-    bool objectForKey(const void *key, const void* &ret);
-    void removeKey(const void *key);
+    void setObjectKey(const void* key, const void* object, bool retain = true);
+    bool objectForKey(const void* key, const void*& ret);
+    void removeKey(const void* key);
     void removeAllValues();
-    void initIterator(struct dictIterator *iter);
-    bool getNextKey(struct dictIterator *iter, const void *&keyRet);
-    bool getNextValue(struct dictIterator *iter, const void* &valueRet);
-    void getKeysAndValues(const void **keys, const void **values);
+    void initIterator(struct dictIterator* iter);
+    bool getNextKey(struct dictIterator* iter, const void*& keyRet);
+    bool getNextValue(struct dictIterator* iter, const void*& valueRet);
+    void getKeysAndValues(const void** keys, const void** values);
     uint32_t getCount();
 };
-
-

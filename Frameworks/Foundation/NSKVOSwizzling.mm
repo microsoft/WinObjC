@@ -179,8 +179,7 @@ void KVOSwizzledClass::ensureKeyWillNotify(const std::string& key) {
     }
 
     auto origImp = class_getMethodImplementation(originalClass, sel);
-    _selectorMethodInfo.emplace(
-        std::piecewise_construct, std::forward_as_tuple(sel), std::forward_as_tuple(key, valueType, origImp));
+    _selectorMethodInfo.emplace(std::piecewise_construct, std::forward_as_tuple(sel), std::forward_as_tuple(key, valueType, origImp));
 
     class_addMethod(notifyingClass, sel, newImpl, objc_get_type_encoding(originalClass, sel));
 }

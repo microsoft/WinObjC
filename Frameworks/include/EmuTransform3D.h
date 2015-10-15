@@ -22,8 +22,7 @@
 // therefore, the indices below are backwards.  To access the 4th row and 3rd column,
 // you would need to use m34 below.  (Again, see MakeTranslation for an example).
 //
-struct CATransform3D
-{
+struct CATransform3D {
     union {
         struct {
             float m11, m12, m13, m14;
@@ -35,9 +34,9 @@ struct CATransform3D
     };
 
     void MakeIdentity();
-    
+
     void Translate(float tx, float ty, float tz);
-    
+
     void MakeTranslation(float tx, float ty, float tz);
     void MakeRotation(float angle, float x, float y, float z);
     void MakeScale(float x, float y, float z);
@@ -48,23 +47,23 @@ struct CATransform3D
     void MultByScale(float x, float y, float z);
     void MultByOrtho(float left, float right, float bottom, float top, float near, float far);
 
-    void MultiplyBy(struct CATransform3D *matrix);
-    void RMultiplyBy(struct CATransform3D *matrix);
-    
-    void TransformPoints(struct CAPoint3D *points, int count);
-    void TransformPoints2D(struct CGPoint *points, int count);
-    
-    void GetScale(float *scale);
-    void GetPosition(float *position);
+    void MultiplyBy(struct CATransform3D* matrix);
+    void RMultiplyBy(struct CATransform3D* matrix);
+
+    void TransformPoints(struct CAPoint3D* points, int count);
+    void TransformPoints2D(struct CGPoint* points, int count);
+
+    void GetScale(float* scale);
+    void GetPosition(float* position);
 
     void Transpose();
-    void TransposeFrom(const float *matrix);
-    void TransposeTo(float *matrix) const;
+    void TransposeFrom(const float* matrix);
+    void TransposeTo(float* matrix) const;
 };
 
 CATransform3D CATransform3DMakeTranslation(float x, float y, float z);
 CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float z);
 CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b);
-void CATransform3DTransformPoints(CATransform3D a, CAPoint3D *points, int count);
-void CATransform3DGetScale(CATransform3D a, float *scale);
+void CATransform3DTransformPoints(CATransform3D a, CAPoint3D* points, int count);
+void CATransform3DGetScale(CATransform3D a, float* scale);
 #endif

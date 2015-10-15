@@ -195,8 +195,7 @@ cairo_surface_t* CGGraphicBufferImageBacking::LockCairoSurface() {
 
     switch (_bitmapFmt) {
         case _ColorARGB:
-            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                          _internalWidth * (_height - 1) * 4,
+            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + _internalWidth * (_height - 1) * 4,
                                                                       PIXMAN_a8r8g8b8,
                                                                       _width,
                                                                       _height,
@@ -204,8 +203,7 @@ cairo_surface_t* CGGraphicBufferImageBacking::LockCairoSurface() {
             break;
 
         case _ColorRGBA:
-            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
-                                                                          _internalWidth * (_height - 1) * 4,
+            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + _internalWidth * (_height - 1) * 4,
                                                                       PIXMAN_a8b8g8r8,
                                                                       _width,
                                                                       _height,
@@ -213,12 +211,12 @@ cairo_surface_t* CGGraphicBufferImageBacking::LockCairoSurface() {
             break;
 
         case _ColorRGB:
-            _surface = _cairo_image_surface_create_with_pixman_format(
-                ((unsigned char*)_imageData) + _internalWidth * (_height - 1) * _bytesPerPixel,
-                PIXMAN_x8b8g8r8,
-                _width,
-                _height,
-                -_internalWidth * _bytesPerPixel);
+            _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) +
+                                                                          _internalWidth * (_height - 1) * _bytesPerPixel,
+                                                                      PIXMAN_x8b8g8r8,
+                                                                      _width,
+                                                                      _height,
+                                                                      -_internalWidth * _bytesPerPixel);
             break;
     }
 

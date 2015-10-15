@@ -22,31 +22,31 @@
     idretain _cachedLayoutAttributes;
     CGSize _contentSize;
     struct {
-        unsigned int contentSizeIsValid:1;
-        unsigned int itemCountsAreValid:1;
-        unsigned int layoutIsPrepared:1;
-    }_collectionViewDataFlags;
+        unsigned int contentSizeIsValid : 1;
+        unsigned int itemCountsAreValid : 1;
+        unsigned int layoutIsPrepared : 1;
+    } _collectionViewDataFlags;
 
     NSInteger _numItems;
     NSInteger _numSections;
-    NSInteger *_sectionItemCounts;
+    NSInteger* _sectionItemCounts;
 }
--(BOOL) _filterAttribs:(id)evaluatedObject bindings:(id)bindings;
--(void) validateItemCounts;
--(BOOL) layoutIsPrepared;
--(unsigned) numberOfSections;
--(unsigned) numberOfItems;
--(unsigned) numberOfItemsInSection:(int)section;
--(unsigned) numberOfItemsBeforeSection:(int)section;
--(unsigned) globalIndexForItemAtIndexPath:(id)indexPath;
--(CGRect) collectionViewContentRect;
-/* annotate with type */ -(id) initWithCollectionView:(id)collectionView layout:(id)layout;
-/* annotate with type */ -(id) validateLayoutInRect:(CGRect)rect;
-/* annotate with type */ -(id) setLayoutIsPrepared:(BOOL)layoutIsPrepared;
-/* annotate with type */ -(id) setContentSize:(CGSize)size;
-/* annotate with type */ -(id) prepareToLoadData;
-/* annotate with type */ -(id) layoutAttributesForElementsInRect:(CGRect)rect;
-/* annotate with type */ -(id) updateItemCounts;
-/* annotate with type */ -(id) invalidate;
-/* annotate with type */ -(id) indexPathForItemAtGlobalIndex:(NSInteger)index;
+- (BOOL)_filterAttribs:(id)evaluatedObject bindings:(id)bindings;
+- (void)validateItemCounts;
+- (BOOL)layoutIsPrepared;
+- (unsigned)numberOfSections;
+- (unsigned)numberOfItems;
+- (unsigned)numberOfItemsInSection:(int)section;
+- (unsigned)numberOfItemsBeforeSection:(int)section;
+- (unsigned)globalIndexForItemAtIndexPath:(id)indexPath;
+- (CGRect)collectionViewContentRect;
+/* annotate with type */ -(id)initWithCollectionView : (id)collectionView layout : (id)layout;
+/* annotate with type */ -(id)validateLayoutInRect : (CGRect)rect;
+/* annotate with type */ -(id)setLayoutIsPrepared : (BOOL)layoutIsPrepared;
+/* annotate with type */ -(id)setContentSize : (CGSize)size;
+/* annotate with type */ -(id)prepareToLoadData;
+/* annotate with type */ -(id)layoutAttributesForElementsInRect : (CGRect)rect;
+/* annotate with type */ -(id)updateItemCounts;
+/* annotate with type */ -(id)invalidate;
+/* annotate with type */ -(id)indexPathForItemAtGlobalIndex : (NSInteger)index;
 @end

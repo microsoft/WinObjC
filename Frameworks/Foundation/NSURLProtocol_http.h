@@ -24,8 +24,7 @@ typedef void CURL;
 
 #undef interface
 
-typedef enum
-{
+typedef enum {
     didReceiveResponse,
     didReceiveData,
     didReceiveRedirect,
@@ -35,8 +34,7 @@ typedef enum
     didCancel,
 } URLEventType;
 
-typedef struct
-{
+typedef struct {
     URLEventType type;
     id obj1, obj2;
     int error;
@@ -51,38 +49,38 @@ typedef struct
     idretain _statusLine;
     idretain _headers;
     idretain _curURL;
-    char    *_putData;
-    int      _putDataLeft;
-    CURL     *curl;
+    char* _putData;
+    int _putDataLeft;
+    CURL* curl;
 
     BOOL _sendRawResponses;
     BOOL _hasStarted, _hasCancelled, _isFinished;
 
-    struct curl_slist    *_requestHeaders;
-    idretain              _newEventSignal;
-    std::deque<URLEvent> *_events;
-    EbrLock               _eventsLock;
+    struct curl_slist* _requestHeaders;
+    idretain _newEventSignal;
+    std::deque<URLEvent>* _events;
+    EbrLock _eventsLock;
 }
--(void) selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event;
--(void) dealloc;
--(id) retain;
--(void) release;
-/* annotate with type */ -(id) _socketTimeout;
-/* annotate with type */ -(id) run;
-/* annotate with type */ -(id) init;
-/* annotate with type */ -(id) addHTTPRequest:(NSURLProtocol_http*)request;
-/* annotate with type */ -(id) cancelHTTPRequest:(NSURLProtocol_http*)request;
-/* annotate with type */ -(id) _processEvents;
-/* annotate with type */ -(id) initWithRequest:(id)request cachedResponse:(id)response client:(id)client;
-/* annotate with type */ -(id) startLoading;
-/* annotate with type */ -(id) stopLoading;
-/* annotate with type */ -(id) scheduleInRunLoop:(id)runLoop forMode:(id)mode;
-/* annotate with type */ -(id) unscheduleFromRunLoop:(id)runLoop forMode:(id)mode;
-/* annotate with type */ -(id) _setSendRawResponses:(BOOL)raw;
-/* annotate with type */ -(id) continueWithoutCredentialForAuthenticationChallenge:(id)challenge;
-/* annotate with type */ +(id) initialize;
-/* annotate with type */ +(id) initialize;
-+(BOOL) canInitWithRequest:(id)request;
+- (void)selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event;
+- (void)dealloc;
+- (id)retain;
+- (void)release;
+/* annotate with type */ -(id)_socketTimeout;
+/* annotate with type */ -(id)run;
+/* annotate with type */ -(id)init;
+/* annotate with type */ -(id)addHTTPRequest : (NSURLProtocol_http*)request;
+/* annotate with type */ -(id)cancelHTTPRequest : (NSURLProtocol_http*)request;
+/* annotate with type */ -(id)_processEvents;
+/* annotate with type */ -(id)initWithRequest : (id)request cachedResponse : (id)response client : (id)client;
+/* annotate with type */ -(id)startLoading;
+/* annotate with type */ -(id)stopLoading;
+/* annotate with type */ -(id)scheduleInRunLoop : (id)runLoop forMode : (id)mode;
+/* annotate with type */ -(id)unscheduleFromRunLoop : (id)runLoop forMode : (id)mode;
+/* annotate with type */ -(id)_setSendRawResponses : (BOOL)raw;
+/* annotate with type */ -(id)continueWithoutCredentialForAuthenticationChallenge : (id)challenge;
+/* annotate with type */ +(id)initialize;
+/* annotate with type */ +(id)initialize;
++ (BOOL)canInitWithRequest:(id)request;
 @end
 
 void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int error);

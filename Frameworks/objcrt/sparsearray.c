@@ -24,14 +24,12 @@
 
 #include <windows.h>
 
-static struct objc_sparsearray_level2 *empty_level2 = NULL;
+static struct objc_sparsearray_level2* empty_level2 = NULL;
 #ifndef OF_SELUID16
-static struct objc_sparsearray_level3 *empty_level3 = NULL;
+static struct objc_sparsearray_level3* empty_level3 = NULL;
 #endif
 
-static void
-init(void)
-{
+static void init(void) {
     uint_fast16_t i;
 
     empty_level2 = malloc(sizeof(struct objc_sparsearray_level2));
@@ -59,10 +57,8 @@ init(void)
 #endif
 }
 
-struct objc_sparsearray*
-objc_sparsearray_new(void)
-{
-    struct objc_sparsearray *s;
+struct objc_sparsearray* objc_sparsearray_new(void) {
+    struct objc_sparsearray* s;
     uint_fast16_t i;
 
 #ifndef OF_SELUID16
@@ -82,10 +78,7 @@ objc_sparsearray_new(void)
     return s;
 }
 
-void
-objc_sparsearray_copy(struct objc_sparsearray *dst,
-    struct objc_sparsearray *src)
-{
+void objc_sparsearray_copy(struct objc_sparsearray* dst, struct objc_sparsearray* src) {
     uint_fast16_t i, j;
 #ifndef OF_SELUID16
     uint_fast16_t k;
@@ -102,21 +95,20 @@ objc_sparsearray_copy(struct objc_sparsearray *dst,
                 continue;
 
             for (k = 0; k < 256; k++) {
-                const void *obj;
+                const void* obj;
 
                 obj = src->buckets[i]->buckets[j]->buckets[k];
 
                 if (obj == NULL)
                     continue;
 
-                idx = (uint32_t)
-                    (((uint32_t)i << 16) | (j << 8) | k);
+                idx = (uint32_t)(((uint32_t)i << 16) | (j << 8) | k);
                 objc_sparsearray_set(dst, idx, obj);
             }
         }
 #else
         for (j = 0; j < 256; j++) {
-            const void *obj;
+            const void* obj;
 
             obj = src->buckets[i]->buckets[j];
 
@@ -130,12 +122,10 @@ objc_sparsearray_copy(struct objc_sparsearray *dst,
     }
 }
 
-void
-objc_sparsearray_set(struct objc_sparsearray *s, uint32_t idx, const void *obj)
-{
+void objc_sparsearray_set(struct objc_sparsearray* s, uint32_t idx, const void* obj) {
 #ifndef OF_SELUID16
     uint8_t i = idx >> 16;
-    uint8_t j = idx >>  8;
+    uint8_t j = idx >> 8;
     uint8_t k = idx;
 #else
     uint8_t i = idx >> 8;
@@ -143,13 +133,14 @@ objc_sparsearray_set(struct objc_sparsearray *s, uint32_t idx, const void *obj)
 #endif
 
     if (s->buckets[i]->empty) {
-        struct objc_sparsearray_level2 *t;
+        struct objc_sparsearray_level2* t;
         uint_fast16_t l;
 
         t = malloc(sizeof(struct objc_sparsearray_level2));
 
         if (t == NULL)
-            OBJC_ERROR("Not enough memory to insert into sparse "
+            OBJC_ERROR(
+                "Not enough memory to insert into sparse "
                 "array!");
 
         t->empty = NO;
@@ -166,13 +157,14 @@ objc_sparsearray_set(struct objc_sparsearray *s, uint32_t idx, const void *obj)
 
 #ifndef OF_SELUID16
     if (s->buckets[i]->buckets[j]->empty) {
-        struct objc_sparsearray_level3 *t;
+        struct objc_sparsearray_level3* t;
         uint_fast16_t l;
 
         t = malloc(sizeof(struct objc_sparsearray_level3));
 
         if (t == NULL)
-            OBJC_ERROR("Not enough memory to insert into sparse "
+            OBJC_ERROR(
+                "Not enough memory to insert into sparse "
                 "array!");
 
         t->empty = NO;
@@ -189,9 +181,7 @@ objc_sparsearray_set(struct objc_sparsearray *s, uint32_t idx, const void *obj)
 #endif
 }
 
-void
-objc_sparsearray_free(struct objc_sparsearray *s)
-{
+void objc_sparsearray_free(struct objc_sparsearray* s) {
     uint_fast16_t i;
 #ifndef OF_SELUID16
     uint_fast16_t j;
@@ -213,9 +203,7 @@ objc_sparsearray_free(struct objc_sparsearray *s)
     free(s);
 }
 
-void
-objc_sparsearray_cleanup(void)
-{
+void objc_sparsearray_cleanup(void) {
     if (empty_level2 != NULL)
         free(empty_level2);
 #ifndef OF_SELUID16

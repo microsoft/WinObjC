@@ -27,8 +27,9 @@ static BOOL socketHasSpaceAvailable(id socket) {
     NSSelectSet* outputSet;
 
     [selectSet addObjectForWrite:socket];
-    if ([selectSet waitForSelectWithOutputSet:&outputSet beforeDate:[NSDate date]] == nil)
+    if ([selectSet waitForSelectWithOutputSet:&outputSet beforeDate:[NSDate date]] == nil) {
         return [outputSet containsObjectForWrite:socket];
+    }
 
     return NO;
 }
@@ -45,8 +46,9 @@ static BOOL socketHasSpaceAvailable(id socket) {
 
 - (id)setDelegate:(id)delegate {
     _delegate = delegate;
-    if (_delegate == nil)
+    if (_delegate == nil) {
         _delegate = self;
+    }
 
     return self;
 }
@@ -101,10 +103,11 @@ static BOOL socketHasSpaceAvailable(id socket) {
                 done = ![sslHandler isHandshaking];
             }
 
-            if (![self hasSpaceAvailable] || !done)
+            if (![self hasSpaceAvailable] || !done) {
                 event = NSStreamEventNone;
-            else
+            } else {
                 event = NSStreamEventHasSpaceAvailable;
+            }
 
             [_inputSource setSelectEventMask:[_inputSource selectEventMask] & ~NSSelectWriteEvent];
         } break;
@@ -118,15 +121,17 @@ static BOOL socketHasSpaceAvailable(id socket) {
             break;
     }
 
-    if (event != NSStreamEventNone && [_delegate respondsToSelector:@selector(stream:handleEvent:)])
+    if (event != NSStreamEventNone && [_delegate respondsToSelector:@selector(stream:handleEvent:)]) {
         [_delegate stream:self handleEvent:event];
+    }
 
     return self;
 }
 
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode {
-    if (_inputSource != nil)
+    if (_inputSource != nil) {
         [runLoop removeInputSource:_inputSource forMode:mode];
+    }
 
     return self;
 }
@@ -135,12 +140,12 @@ static BOOL socketHasSpaceAvailable(id socket) {
     if (_status == NSStreamStatusOpen) {
         id sslHandler = [_socket sslHandler];
 
-        if (sslHandler == nil)
+        if (sslHandler == nil) {
             return socketHasSpaceAvailable(_socket);
-        else {
-            if ([sslHandler writeBytesAvailable] == 0)
+        } else {
+            if ([sslHandler writeBytesAvailable] == 0) {
                 return YES;
-            else if (socketHasSpaceAvailable(_socket)) {
+            } else if (socketHasSpaceAvailable(_socket)) {
                 [sslHandler transferOneBufferFromSSLToSocket:_socket];
             }
         }
@@ -150,8 +155,9 @@ static BOOL socketHasSpaceAvailable(id socket) {
 }
 
 - (int)write:(uint8_t*)buffer maxLength:(unsigned)length {
-    if (_status != NSStreamStatusOpen && _status != NSStreamStatusOpening)
+    if (_status != NSStreamStatusOpen && _status != NSStreamStatusOpening) {
         return -1;
+    }
 
     NSSSLHandler* sslHandler = [_socket sslHandler];
 
@@ -163,8 +169,9 @@ static BOOL socketHasSpaceAvailable(id socket) {
 
         NSInteger check = [sslHandler writePlaintext:buffer maxLength:length];
 
-        if (check != length)
+        if (check != length) {
             EbrDebugLog("failure writePlaintext:%d=%d", length, check);
+        }
 
         [sslHandler runWithSocket:_socket];
         [_inputSource setSelectEventMask:[_inputSource selectEventMask] | NSSelectWriteEvent];
@@ -174,8 +181,9 @@ static BOOL socketHasSpaceAvailable(id socket) {
 }
 
 - (id)setProperty:(id)prop forKey:(id)key {
-    if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings])
+    if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings]) {
         return [_socket setSSLProperties:prop];
+    }
 
     assert(0);
     return NO;

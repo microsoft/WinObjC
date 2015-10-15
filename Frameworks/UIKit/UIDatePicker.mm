@@ -164,8 +164,8 @@ static void setDate(UIDatePicker* self, NSDate* date, BOOL animated = FALSE) {
     self->_date = date;
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
-                                               fromDate:(NSDate*)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:(NSDate*)self->_date];
 
     setPickerRow(self, [components month] - 1, 0, animated);
     setPickerRow(self, [components day] - 1, 1, animated);
@@ -208,8 +208,7 @@ static void setTime(UIDatePicker* self, NSDate* date, int component = 0, BOOL an
     self->_date = date;
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components =
-        [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_date];
+    NSDateComponents* components = [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_date];
 
     int hour = [components hour];
     int minute = [components minute];
@@ -221,8 +220,8 @@ static void setTime(UIDatePicker* self, NSDate* date, int component = 0, BOOL an
 
 static void setTimer(UIDatePicker* self) {
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
-                                               fromDate:(NSDate*)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:(NSDate*)self->_date];
 
     [components setHour:0];
     [components setMinute:0];
@@ -354,8 +353,8 @@ void didSelectTime(UIDatePicker* self, int row, int component) {
     bool am = [self->_pickerView selectedRowInComponent:2] == 0;
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
-                                               fromDate:(NSDate*)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:(NSDate*)self->_date];
 
     if (am) {
         hour %= 12;
@@ -387,8 +386,8 @@ static void didSelectTimer(UIDatePicker* self, int row, int component) {
     int minute = [self->_pickerView selectedRowInComponent:1];
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit
-                                               fromDate:(NSDate*)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:(NSDate*)self->_date];
     [components setHour:hour];
     [components setMinute:minute];
     [components setSecond:0];
@@ -407,8 +406,7 @@ static void didSelectDateAndTime(UIDatePicker* self, int row, int component) {
 
     NSDateComponents* calcComponents = [NSDateComponents new];
     [calcComponents setDay:day];
-    NSDate* daySelected =
-        [calendar dateByAddingComponents:calcComponents toDate:(NSDate*)self->_dayStartTime options:0];
+    NSDate* daySelected = [calendar dateByAddingComponents:calcComponents toDate:(NSDate*)self->_dayStartTime options:0];
     [calcComponents release];
 
     NSDateComponents* components =
@@ -474,8 +472,7 @@ static NSDateComponents* finishTime(UIDatePicker* self) {
 
     NSDateComponents* finishDate;
     if (self->_maximumDate) {
-        finishDate =
-            [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_maximumDate];
+        finishDate = [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_maximumDate];
     } else {
         finishDate = [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_date];
         [finishDate setHour:23];
@@ -498,8 +495,7 @@ NSDateComponents* minTime(UIDatePicker* self) {
 
     // We default the start date to beginning of day if we're spanning days.
     if (self->_minimumDate && [finishDate hour] > [diffDate hour]) {
-        startDate =
-            [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_minimumDate];
+        startDate = [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_minimumDate];
     } else {
         // With no minimum date we start at the beginning of the day:
         startDate = [calendar components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:(NSDate*)self->_date];
@@ -588,9 +584,9 @@ static float rowWidthDate(int component) {
 static NSString* titleForDateRow(UIDatePicker* self, unsigned row, int component, id* color) {
     id ret = nil;
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit |
-                                                        NSHourCalendarUnit | NSMinuteCalendarUnit
-                                               fromDate:(id)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit
+                    fromDate:(id)self->_date];
 
     switch (component) {
         case 0:
@@ -643,9 +639,9 @@ static id titleForTimeRow(UIDatePicker* self, int row, int component, UIColor** 
     id ret = nil;
 
     NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit |
-                                                        NSHourCalendarUnit | NSMinuteCalendarUnit
-                                               fromDate:(NSDate*)self->_date];
+    NSDateComponents* components =
+        [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit
+                    fromDate:(NSDate*)self->_date];
     int hour = [components hour];
 
     switch (component) {
@@ -733,10 +729,7 @@ static NSString* titleForDayRow(UIDatePicker* self, int row) {
     return ret;
 }
 
-- (NSString*)pickerView:(UIDatePicker*)picker
-            titleForRow:(unsigned)row
-           forComponent:(int)component
-              withColor:(UIColor**)color {
+- (NSString*)pickerView:(UIDatePicker*)picker titleForRow:(unsigned)row forComponent:(int)component withColor:(UIColor**)color {
     switch (_mode) {
         case UIDatePickerModeTime:
             return titleForTimeRow(self, row, component, color);

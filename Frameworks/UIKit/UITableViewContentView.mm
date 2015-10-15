@@ -22,8 +22,9 @@
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     UIView* ret = [super hitTest:point withEvent:event];
 
-    if (ret == self)
+    if (ret == self) {
         return nil;
+    }
 
     return ret;
 }

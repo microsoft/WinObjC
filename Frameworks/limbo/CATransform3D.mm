@@ -92,8 +92,7 @@ void CATransform3D::MakeOrtho(float left, float right, float bottom, float top, 
     m44 = 1.f;
 }
 
-CATransform3D
-CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far) {
+CATransform3D CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far) {
     CATransform3D ret;
 
     ret.MakeOrtho(left, right, bottom, top, near, far);
@@ -151,8 +150,8 @@ void CATransform3D::MultiplyBy(CATransform3D* matrix) {
     memcpy(m, mOut, sizeof(mOut));
 }
 
-const CATransform3D CATransform3DIdentity = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                                              0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+const CATransform3D CATransform3DIdentity =
+    { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
 bool CATransform3DIsIdentity(CATransform3D curTransform) {
     if (memcmp(&curTransform, &CATransform3DIdentity, sizeof(curTransform)) == 0) {
@@ -252,8 +251,7 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DScale, CATransform3D, cur, f
     return rot;
 }
 
-DEFINE_FUNCTION_STRET_5(
-    CATransform3D, CATransform3DRotate, CATransform3D, cur, float, angle, float, x, float, y, float, z) {
+DEFINE_FUNCTION_STRET_5(CATransform3D, CATransform3DRotate, CATransform3D, cur, float, angle, float, x, float, y, float, z) {
     CATransform3D rot;
 
     rot.MakeRotation(angle, -x, -y, -z);

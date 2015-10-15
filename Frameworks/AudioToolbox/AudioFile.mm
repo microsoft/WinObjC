@@ -144,7 +144,8 @@ public:
                 desc->mBytesPerFrame = info.channels * sizeof(short);
                 desc->mBitsPerChannel = 16;
 
-                // This packet information confuses me, we don't really support it in the same way...
+                // This packet information confuses me, we don't really support it in the
+                // same way...
                 desc->mFramesPerPacket = 1;
                 desc->mBytesPerPacket = sizeof(short) * info.channels;
 
@@ -184,7 +185,8 @@ class AudioFileWAV : public AudioFile {
         fileFormat.mBytesPerFrame = _header.channels * _header.bitsPerSample / 8;
         fileFormat.mBitsPerChannel = _header.bitsPerSample;
 
-        // This packet information confuses me, we don't really support it in the same way...
+        // This packet information confuses me, we don't really support it in the
+        // same way...
         fileFormat.mFramesPerPacket = 1024; // maybe incorrect??
         fileFormat.mBytesPerPacket = _header.channels * _header.bitsPerSample / 8;
     }
@@ -423,7 +425,8 @@ public:
                 desc->mBytesPerFrame = outDesc.mChannelsPerFrame * sizeof(short);
                 desc->mBitsPerChannel = outDesc.mBitsPerChannel;
 
-                // This packet information confuses me, we don't really support it in the same way...
+                // This packet information confuses me, we don't really support it in the
+                // same way...
                 desc->mFramesPerPacket = 1024;
                 desc->mBytesPerPacket = sizeof(short) * outDesc.mChannelsPerFrame;
 
@@ -503,7 +506,8 @@ private:
     DWORD position;
 
 public:
-    EbrCallbackFile(void* context, AudioFile_ReadProc read, AudioFile_WriteProc write, AudioFile_GetSizeProc getSize, AudioFile_SetSizeProc setSize) {
+    EbrCallbackFile(
+        void* context, AudioFile_ReadProc read, AudioFile_WriteProc write, AudioFile_GetSizeProc getSize, AudioFile_SetSizeProc setSize) {
         funcContext = context;
         readFunc = read;
         writeFunc = write;
@@ -519,8 +523,7 @@ public:
     size_t Read(void* dest, size_t elem, size_t count) {
         size_t readCount = elem * count;
         uint32_t amtRead = 0;
-        unsigned int status =
-            readFunc(funcContext, position, readCount, dest, &amtRead);
+        unsigned int status = readFunc(funcContext, position, readCount, dest, &amtRead);
         position += amtRead;
 
         return amtRead;
@@ -612,8 +615,7 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
-OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize,
-                                 void* propOutData) {
+OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
     if (fileID) {
         return fileID->pAudioFile->getProperty(propID, ioDataSize, propOutData);
     } else {
@@ -621,10 +623,7 @@ OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID 
     }
 }
 
-OSStatus ExtAudioFileSetProperty(ExtAudioFileRef fileID,
-                                 ExtAudioFilePropertyID propID,
-                                 UInt32 ioDataSize,
-                                 const void* propInData) {
+OSStatus ExtAudioFileSetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32 ioDataSize, const void* propInData) {
     fileID->pAudioFile->setProperty(propID, ioDataSize, propInData);
     return 0;
 }
@@ -659,8 +658,7 @@ DWORD AudioFileGetPropertyInfo(AudioFile* fileID, DWORD propID, DWORD* outDataSi
     return (DWORD)0;
 }
 
-OSStatus
-AudioFileReadBytes(AudioFileID fileID, Boolean useCached, SInt64 startByte, UInt32* ioNumBytes, void* outBuffer) {
+OSStatus AudioFileReadBytes(AudioFileID fileID, Boolean useCached, SInt64 startByte, UInt32* ioNumBytes, void* outBuffer) {
     return fileID->readBytes(startByte, ioNumBytes, outBuffer);
 }
 
@@ -715,11 +713,7 @@ DWORD AudioConverterNew(AudioStreamBasicDescription* in, AudioStreamBasicDescrip
     return 0;
 }
 
-DWORD AudioConverterFillComplexBuffer(DWORD handle,
-                                      DWORD inProc,
-                                      DWORD userData,
-                                      DWORD* outPacketSize,
-                                      AudioBufferList* outData,
-                                      AudioStreamBasicDescription* out) {
+DWORD AudioConverterFillComplexBuffer(
+    DWORD handle, DWORD inProc, DWORD userData, DWORD* outPacketSize, AudioBufferList* outData, AudioStreamBasicDescription* out) {
     return 0;
 }

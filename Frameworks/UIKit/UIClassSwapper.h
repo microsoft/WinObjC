@@ -18,7 +18,7 @@
 @public
     id className, originalClassName;
 }
--(id) instantiateWithCoder:(id)coder;
--(NSString*) originalClassName;
--(NSString*) className;
+- (id)instantiateWithCoder:(id)coder;
+- (NSString*)originalClassName;
+- (NSString*)className;
 @end

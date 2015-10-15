@@ -14,12 +14,11 @@
 //
 //******************************************************************************
 
-class CGImageData
-{
+class CGImageData {
 public:
-    cairo_surface_t *_surface;
+    cairo_surface_t* _surface;
     BOOL _freeWhenDone;
-    void *_imageData;
+    void* _imageData;
     DWORD _pixmanFmt;
     surfaceFormat _bitmapFmt;
     DWORD _width, _height;
@@ -27,38 +26,36 @@ public:
     DWORD _bytesPerRow;
     DWORD _bytesPerPixel;
     DWORD _refCount;
-    BOOL  _bottomOrientation;
+    BOOL _bottomOrientation;
 
-    CGImageData *Duplicate();
-    CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void *Data);
+    CGImageData* Duplicate();
+    CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
     ~CGImageData();
 };
 
-class CGBitmapImage : public __CGImage
-{
+class CGBitmapImage : public __CGImage {
 public:
     CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt, void *Data);
+    CGBitmapImage(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
     CGBitmapImage(CGImageRef pImg);
 };
 
-class CGBitmapImageBacking : public CGImageBacking
-{
+class CGBitmapImageBacking : public CGImageBacking {
 private:
-    CGImageData *_data;
+    CGImageData* _data;
 
 public:
     CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt);
-    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt, void *Data);
+    CGBitmapImageBacking(DWORD width, DWORD height, surfaceFormat fmt, void* Data);
     CGBitmapImageBacking(CGImageRef pImg);
 
     ~CGBitmapImageBacking();
 
     CGImageRef Copy();
-    CGImageRef  CopyOnWrite();
+    CGImageRef CopyOnWrite();
 
-    CGContextImpl *CreateDrawingContext(CGContextRef base);
-    void GetPixel(int x, int y, float &r, float &g, float &b, float &a);
+    CGContextImpl* CreateDrawingContext(CGContextRef base);
+    void GetPixel(int x, int y, float& r, float& g, float& b, float& a);
     int InternalWidth();
     int InternalHeight();
     int Width();
@@ -66,11 +63,10 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     surfaceFormat SurfaceFormat();
-    void *StaticImageData();
-    void *LockImageData();
+    void* StaticImageData();
+    void* LockImageData();
     void ReleaseImageData();
-    cairo_surface_t *LockCairoSurface();
+    cairo_surface_t* LockCairoSurface();
     void ReleaseCairoSurface();
     void SetFreeWhenDone(bool freeWhenDone);
 };
-

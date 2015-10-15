@@ -162,16 +162,15 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 
     rect = CGRectIntersection(rect, imgRefSize);
 
-    CGImageRef newImage =
-        new CGBitmapImage((DWORD)rect.size.width, (DWORD)rect.size.height, ref->Backing()->SurfaceFormat());
+    CGImageRef newImage = new CGBitmapImage((DWORD)rect.size.width, (DWORD)rect.size.height, ref->Backing()->SurfaceFormat());
 
     int startX = (int)rect.origin.x;
     int startY = (int)rect.origin.y;
     int sizeX = (int)rect.size.width;
     int sizeY = (int)rect.size.height;
 
-    BYTE* srcIn = ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() +
-                  startX * ref->Backing()->BytesPerPixel();
+    BYTE* srcIn =
+        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
     BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
 
     for (int curY = 0; curY < sizeY; curY++) {
@@ -191,8 +190,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
     if (!ref)
         return nil;
 
-    CGImageRef newImage =
-        new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
+    CGImageRef newImage = new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
 
     int startX = 0;
     int startY = 0;
@@ -203,8 +201,8 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
         startY = 0;
     }
 
-    BYTE* srcIn = ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() +
-                  startX * ref->Backing()->BytesPerPixel();
+    BYTE* srcIn =
+        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
     BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
 
     for (int curY = 0; curY < sizeY; curY++) {
@@ -221,8 +219,7 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
 }
 
 CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef colorSpace) {
-    CGImageRef newImage =
-        new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
+    CGImageRef newImage = new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
 
     int startX = 0;
     int startY = 0;
@@ -233,8 +230,8 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
         startY = 0;
     }
 
-    BYTE* srcIn = ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() +
-                  startX * ref->Backing()->BytesPerPixel();
+    BYTE* srcIn =
+        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
     BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
 
     for (int curY = 0; curY < sizeY; curY++) {
@@ -411,10 +408,9 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
 
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     char* pPtr = (char*)img->Backing()->LockImageData();
-    CGImageDataProvider* ret =
-        [[CGImageDataProvider alloc] initWithBytesNoCopy:pPtr
-                                                  length:img->Backing()->Height() * img->Backing()->BytesPerRow()
-                                            freeWhenDone:FALSE];
+    CGImageDataProvider* ret = [[CGImageDataProvider alloc] initWithBytesNoCopy:pPtr
+                                                                         length:img->Backing()->Height() * img->Backing()->BytesPerRow()
+                                                                   freeWhenDone:FALSE];
     ret->_img = img;
 
     return ret;

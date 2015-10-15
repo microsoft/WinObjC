@@ -77,8 +77,9 @@ void NSAtomicListReverse(NSAtomicListRef* listPtr) {
     struct NSAtomicListNode* prev = NULL;
     struct NSAtomicListNode* next = NULL;
 
-    if (!cur)
+    if (!cur) {
         return;
+    }
 
     do {
         next = cur->next;
@@ -95,8 +96,9 @@ void NSAtomicListReverse(NSAtomicListRef* listPtr) {
 
 void* NSAtomicListPop(NSAtomicListRef* listPtr) {
     struct NSAtomicListNode* node = *listPtr;
-    if (!node)
+    if (!node) {
         return NULL;
+    }
 
     *listPtr = node->next;
 
@@ -107,8 +109,9 @@ void* NSAtomicListPop(NSAtomicListRef* listPtr) {
 
 void* NSAtomicListPeek(NSAtomicListRef* listPtr) {
     struct NSAtomicListNode* node = *listPtr;
-    if (!node)
+    if (!node) {
         return NULL;
+    }
 
     void* elt = node->elt;
 
@@ -137,8 +140,9 @@ static id PeekOperation(NSAtomicListRef* listPtr) {
 
 static void ClearList(NSAtomicListRef* listPtr) {
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-        while (PopOperation(&listPtr[i]))
+        while (PopOperation(&listPtr[i])) {
             ;
+        }
     }
 }
 
@@ -206,8 +210,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 }
 
 - (BOOL)hasMoreWork {
-    if (priv->curOperation != nil)
+    if (priv->curOperation != nil) {
         return TRUE;
+    }
 
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
         if (priv->queues[i] != NULL) {

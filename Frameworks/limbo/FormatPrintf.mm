@@ -254,26 +254,29 @@ static void mul_ext(struct EXTEND* e1, struct EXTEND* e2, struct EXTEND* e3)
     /*
     *      fill registers with their components
     */
-    for (i = 4, pres = &result[4]; i--; pres--)
+    for (i = 4, pres = &result[4]; i--; pres--) {
         if (mp[i]) {
             unsigned short k = 0;
             unsigned long mpi = mp[i];
             for (j = 4; j--;) {
                 unsigned long tmp = (unsigned long)pres[j] + k;
-                if (mc[j])
+                if (mc[j]) {
                     tmp += mpi * mc[j];
+                }
                 pres[j] = (unsigned short)tmp;
                 k = tmp >> 16;
             }
             pres[-1] = k;
         }
+    }
 
     if (!(result[0] & 0x8000)) {
         e3->exp--;
         for (i = 0; i <= 3; i++) {
             result[i] <<= 1;
-            if (result[i + 1] & 0x8000)
+            if (result[i + 1] & 0x8000) {
                 result[i] |= 1;
+            }
         }
         result[4] <<= 1;
     }
@@ -308,10 +311,11 @@ static int b64_add(struct mantissa* e1, struct mantissa* e2)
     /* add lower pair of 32 bits */
     carry = ((unsigned long)0xFFFFFFFF - e1->l_32 < e2->l_32);
     e1->l_32 += e2->l_32;
-    if ((carry) && (++e1->h_32 == 0))
+    if ((carry) && (++e1->h_32 == 0)) {
         return (1); /* had a 64 bit overflow */
-    else
+    } else {
         return (overflow); /* return status from higher add */
+    }
 }
 
 static void b64_sft(struct mantissa* e1, int n)
@@ -401,8 +405,9 @@ static void add_ext(struct EXTEND* e1, struct EXTEND* e2, struct EXTEND* e3)
             e1->m2 -= e3->m2;
             *e3 = *e1;
         } else {
-            if (e1->m2 > e3->m2)
+            if (e1->m2 > e3->m2) {
                 e3->m1 -= 1; /* carry in */
+            }
             e3->m1 -= e1->m1;
             e3->m2 -= e1->m2;
         }
@@ -452,10 +457,12 @@ static int cmp_ext(struct EXTEND* e1, struct EXTEND* e2)
     e2->sign = !e2->sign;
     add_ext(e1, e2, &tmp);
     e2->sign = !e2->sign;
-    if (tmp.m1 == 0 && tmp.m2 == 0)
+    if (tmp.m1 == 0 && tmp.m2 == 0) {
         return 0;
-    if (tmp.sign)
+    }
+    if (tmp.sign) {
         return -1;
+    }
     return 1;
 }
 
@@ -470,10 +477,12 @@ static PrintType* _ext_str_cvt(struct EXTEND* e, int ndigit, int* decpt, int* si
     register PrintType* pe;
     int findex = 0;
 
-    if (ndigit < 0)
+    if (ndigit < 0) {
         ndigit = 0;
-    if (ndigit > NDIGITS)
+    }
+    if (ndigit > NDIGITS) {
         ndigit = NDIGITS;
+    }
     pe = &buf[ndigit];
     buf[0] = '\0';
 
@@ -490,24 +499,27 @@ static PrintType* _ext_str_cvt(struct EXTEND* e, int ndigit, int* decpt, int* si
         while (cmp_ext(e, pp) >= 0) {
             pp++;
             findex = pp - big_ten_powers;
-            if (findex >= BTP)
+            if (findex >= BTP) {
                 break;
+            }
         }
         pp--;
         findex = pp - big_ten_powers;
         mul_ext(e, &r_big_ten_powers[findex], e);
         *decpt += findex * TP;
         pp = &ten_powers[1];
-        while (pp < &ten_powers[TP] && cmp_ext(e, pp) >= 0)
+        while (pp < &ten_powers[TP] && cmp_ext(e, pp) >= 0) {
             pp++;
+        }
         pp--;
         findex = pp - ten_powers;
         *decpt += findex;
 
         if (cmp_ext(e, &ten_powers[0]) < 0) {
             pp = &r_big_ten_powers[1];
-            while (cmp_ext(e, pp) < 0)
+            while (cmp_ext(e, pp) < 0) {
                 pp++;
+            }
             pp--;
             findex = pp - r_big_ten_powers;
             mul_ext(e, &big_ten_powers[findex], e);
@@ -516,8 +528,9 @@ static PrintType* _ext_str_cvt(struct EXTEND* e, int ndigit, int* decpt, int* si
             ten_mult(e);
             (*decpt)--;
             pp = &r_ten_powers[0];
-            while (cmp_ext(e, pp) < 0)
+            while (cmp_ext(e, pp) < 0) {
                 pp++;
+            }
             findex = pp - r_ten_powers;
             mul_ext(e, &ten_powers[findex], e);
             *decpt -= findex;
@@ -528,8 +541,9 @@ static PrintType* _ext_str_cvt(struct EXTEND* e, int ndigit, int* decpt, int* si
     if (!ecvtflag) {
         /* for fcvt() we need ndigit digits behind the dot */
         pe += *decpt;
-        if (pe > &buf[NDIGITS])
+        if (pe > &buf[NDIGITS]) {
             pe = &buf[NDIGITS];
+        }
     }
     m.exp = -62;
     m.sign = 0;
@@ -576,36 +590,40 @@ static PrintType* _ext_str_cvt(struct EXTEND* e, int ndigit, int* decpt, int* si
                 *p++ = ((PrintType)(x.m1) + '0');
                 x.m1 = x.m1 << (31 - e->exp);
                 add_ext(e, &x, e);
-            } else
+            } else {
                 *p++ = '0';
-            /* Check that remainder is still significant */
+                /* Check that remainder is still significant */
+            }
             if (cmp_ext(&m, e) > 0 || cmp_ext(e, &oneminm) > 0) {
-                if (e->m1 && e->exp >= -1)
+                if (e->m1 && e->exp >= -1) {
                     *(p - 1) += 1;
+                }
                 e->m1 = 0;
                 continue;
             }
             ten_mult(&m);
             ten_mult(e);
-        } else
+        } else {
             *p++ = '0';
+        }
     }
     if (pe >= buf) {
         p = pe;
         *p += 5; /* round of at the end */
         while (*p > '9') {
             *p = '0';
-            if (p > buf)
+            if (p > buf) {
                 ++*--p;
-            else {
+            } else {
                 *p = '1';
                 ++*decpt;
                 if (!ecvtflag) {
                     /* maybe add another digit at the end,
                     because the point was shifted right
                     */
-                    if (pe > buf)
+                    if (pe > buf) {
                         *pe = '0';
+                    }
                     pe++;
                 }
             }
@@ -624,8 +642,9 @@ static void _dbl_ext_cvt(double value, struct EXTEND* e)
 
     value = frexp(value, &exponent);
     e->sign = value < 0.0;
-    if (e->sign)
+    if (e->sign) {
         value = -value;
+    }
     e->exp = exponent - 1;
     value *= 4294967296.0;
     e->m1 = unsigned(value);
@@ -663,32 +682,39 @@ static PrintType* _pfloat(long double r, register PrintType* s, int n, int flags
     register int i;
 
     s1 = _fcvt(r, n, &dp, &sign);
-    if (sign)
+    if (sign) {
         *s++ = '-';
-    else if (flags & FL_SIGN)
+    } else if (flags & FL_SIGN) {
         *s++ = '+';
-    else if (flags & FL_SPACE)
+    } else if (flags & FL_SPACE) {
         *s++ = ' ';
-
-    if (dp <= 0)
-        *s++ = '0';
-    for (i = dp; i > 0; i--)
-        if (*s1)
-            *s++ = *s1++;
-        else
-            *s++ = '0';
-    if (((i = n) > 0) || (flags & FL_ALT))
-        *s++ = '.';
-    while (++dp <= 0) {
-        if (--i < 0)
-            break;
+    }
+    if (dp <= 0) {
         *s++ = '0';
     }
-    while (--i >= 0)
-        if (*s1)
+    for (i = dp; i > 0; i--) {
+        if (*s1) {
             *s++ = *s1++;
-        else
+        } else {
             *s++ = '0';
+        }
+    }
+    if (((i = n) > 0) || (flags & FL_ALT)) {
+        *s++ = '.';
+    }
+    while (++dp <= 0) {
+        if (--i < 0) {
+            break;
+        }
+        *s++ = '0';
+    }
+    while (--i >= 0) {
+        if (*s1) {
+            *s++ = *s1++;
+        } else {
+            *s++ = '0';
+        }
+    }
     return s;
 }
 
@@ -699,24 +725,28 @@ static PrintType* _pscien(long double r, register PrintType* s, int n, int flags
     register PrintType* s1;
 
     s1 = _ecvt(r, n + 1, &dp, &sign);
-    if (sign)
+    if (sign) {
         *s++ = '-';
-    else if (flags & FL_SIGN)
+    } else if (flags & FL_SIGN) {
         *s++ = '+';
-    else if (flags & FL_SPACE)
+    } else if (flags & FL_SPACE) {
         *s++ = ' ';
-
+    }
     *s++ = *s1++;
-    if ((n > 0) || (flags & FL_ALT))
+    if ((n > 0) || (flags & FL_ALT)) {
         *s++ = '.';
-    while (--n >= 0)
-        if (*s1)
+    }
+    while (--n >= 0) {
+        if (*s1) {
             *s++ = *s1++;
-        else
+        } else {
             *s++ = '0';
+        }
+    }
     *s++ = 'e';
-    if (r != 0)
+    if (r != 0) {
         --dp;
+    }
     if (dp < 0) {
         *s++ = '-';
         dp = -dp;
@@ -748,31 +778,36 @@ static PrintType* _gcvt(long double value, int ndigit, PrintType* s, int flags)
 
     s1 = _ecvt(value, ndigit, &dp, &sign);
     s2 = s;
-    if (sign)
+    if (sign) {
         *s2++ = '-';
-    else if (flags & FL_SIGN)
+    } else if (flags & FL_SIGN) {
         *s2++ = '+';
-    else if (flags & FL_SPACE)
+    } else if (flags & FL_SPACE) {
         *s2++ = ' ';
-
-    if (!(flags & FL_ALT))
-        for (i = nndigit - 1; i > 0 && s1[i] == '0'; i--)
+    }
+    if (!(flags & FL_ALT)) {
+        for (i = nndigit - 1; i > 0 && s1[i] == '0'; i--) {
             nndigit--;
+        }
+    }
 
     if (USE_EXP(dp, ndigit)) {
         /* Use E format */
         dp--;
         *s2++ = *s1++;
-        if ((nndigit > 1) || (flags & FL_ALT))
+        if ((nndigit > 1) || (flags & FL_ALT)) {
             *s2++ = '.';
-        while (--nndigit > 0)
+        }
+        while (--nndigit > 0) {
             *s2++ = *s1++;
+        }
         *s2++ = 'e';
         if (dp < 0) {
             *s2++ = '-';
             dp = -dp;
-        } else
+        } else {
             *s2++ = '+';
+        }
         s2 += NDIGINEXP(dp);
         *s2 = 0;
         for (i = NDIGINEXP(dp); i > 0; i--) {
@@ -795,16 +830,19 @@ static PrintType* _gcvt(long double value, int ndigit, PrintType* s, int flags)
     }
     for (i = 1; i <= nndigit; i++) {
         *s2++ = *s1++;
-        if (i == dp)
+        if (i == dp) {
             *s2++ = '.';
+        }
     }
     if (i <= dp) {
-        while (i++ <= dp)
+        while (i++ <= dp) {
             *s2++ = '0';
+        }
         *s2++ = '.';
     }
-    if ((s2[-1] == '.') && !(flags & FL_ALT))
+    if ((s2[-1] == '.') && !(flags & FL_ALT)) {
         s2--;
+    }
     *s2 = '\0';
     return s;
 }
@@ -812,8 +850,9 @@ static PrintType* _gcvt(long double value, int ndigit, PrintType* s, int flags)
 static int stringlen(const PrintType* str) {
     int ret = 0;
 
-    while (*str++)
+    while (*str++) {
         ret++;
+    }
 
     return ret;
 }
@@ -824,10 +863,11 @@ PrintType* _f_print(va_list* ap, int flags, PrintType* s, PrintType c, int preci
     register PrintType* old_s = s;
     long double ld_val;
 
-    if (flags & FL_LONGDOUBLE)
+    if (flags & FL_LONGDOUBLE) {
         ld_val = EbrLongDouble(*ap, long double);
-    else
+    } else {
         ld_val = (long double)EbrDouble(*ap, double);
+    }
 
     switch (c) {
         case 'f':
@@ -844,10 +884,12 @@ PrintType* _f_print(va_list* ap, int flags, PrintType* s, PrintType c, int preci
             break;
     }
     if (c == 'E' || c == 'G') {
-        while (*old_s && *old_s != 'e')
+        while (*old_s && *old_s != 'e') {
             old_s++;
-        if (*old_s == 'e')
+        }
+        if (*old_s == 'e') {
             *old_s = 'E';
+        }
     }
     return s;
 }
@@ -859,8 +901,9 @@ PrintType* _i_compute(unsigned long long val, int base, PrintType* s, int nrdigi
 
     c = val % base;
     val /= base;
-    if (val || nrdigits > 1)
+    if (val || nrdigits > 1) {
         s = _i_compute(val, base, s, nrdigits - 1);
+    }
     *s++ = (c > 9 ? c - 10 + 'a' : c + '0');
     return s;
 }
@@ -944,17 +987,20 @@ static PrintType* o_print(va_list* ap, int flags, PrintType* s, PrintType c, int
         if (signed_val < 0) {
             *s++ = '-';
             signed_val = -signed_val;
-        } else if (flags & FL_SIGN)
+        } else if (flags & FL_SIGN) {
             *s++ = '+';
-        else if (flags & FL_SPACE)
+        } else if (flags & FL_SPACE) {
             *s++ = ' ';
+        }
         unsigned_val = signed_val;
     }
-    if ((flags & FL_ALT) && (c == 'o'))
+    if ((flags & FL_ALT) && (c == 'o')) {
         *s++ = '0';
+    }
     if (!unsigned_val) {
-        if (!precision)
+        if (!precision) {
             return s;
+        }
     } else if (((flags & FL_ALT) && (c == 'x' || c == 'X')) || c == 'p') {
         *s++ = '0';
         *s++ = (c == 'X' ? 'X' : 'x');
@@ -981,11 +1027,12 @@ static PrintType* o_print(va_list* ap, int flags, PrintType* s, PrintType c, int
 
     s = _i_compute(unsigned_val, base, s, precision);
 
-    if (c == 'X')
+    if (c == 'X') {
         while (old_s != s) {
             *old_s = toupper(*old_s);
             old_s++;
         }
+    }
 
     return s;
 }
@@ -1010,8 +1057,9 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                 nrchars++;
             }
 #endif
-            if (PrintPutC(c, stream) == EOF)
+            if (PrintPutC(c, stream) == EOF) {
                 return nrchars ? -nrchars : -1;
+            }
             nrchars++;
             continue;
         }
@@ -1042,29 +1090,34 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
 
         oldfmt = fmt;
         fmt = gnum(fmt, &width, &ap);
-        if (fmt != oldfmt)
+        if (fmt != oldfmt) {
             flags |= FL_WIDTHSPEC;
+        }
 
         if (*fmt == '.') {
             fmt++;
             oldfmt = fmt;
             fmt = gnum(fmt, &precision, &ap);
-            if (precision >= 0)
+            if (precision >= 0) {
                 flags |= FL_PRECSPEC;
+            }
         }
 
         if ((flags & FL_WIDTHSPEC) && width < 0) {
             width = -width;
             flags |= FL_LJUST;
         }
-        if (!(flags & FL_WIDTHSPEC))
+        if (!(flags & FL_WIDTHSPEC)) {
             width = 0;
+        }
 
-        if (flags & FL_SIGN)
+        if (flags & FL_SIGN) {
             flags &= ~FL_SPACE;
+        }
 
-        if (flags & FL_LJUST)
+        if (flags & FL_LJUST) {
             flags &= ~FL_ZEROFILL;
+        }
 
         s = s1 = buf;
 
@@ -1100,28 +1153,32 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                     nrchars++;
                 }
 #endif
-                if (PrintPutC(c, stream) == EOF)
+                if (PrintPutC(c, stream) == EOF) {
                     return nrchars ? -nrchars : -1;
+                }
                 nrchars++;
                 continue;
             case 'n':
-                if (flags & FL_SHORT)
+                if (flags & FL_SHORT) {
                     *EbrPtr(ap, short*) = (short)nrchars;
-                else if (flags & FL_LONG)
+                } else if (flags & FL_LONG) {
                     *EbrPtr(ap, long*) = (long)nrchars;
-                else
+                } else {
                     *EbrPtr(ap, int*) = (int)nrchars;
+                }
                 continue;
             case 's':
             case 'S':
 #ifdef UTF8CStrings
                 cs1 = EbrPtr(ap, char*);
-                if (cs1 == NULL)
+                if (cs1 == NULL) {
                     cs1 = PrintNullStringC; //"(null)";
+                }
                 cs = cs1;
                 while (precision || !(flags & FL_PRECSPEC)) {
-                    if (*cs == '\0')
+                    if (*cs == '\0') {
                         break;
+                    }
                     cs++;
                     precision--;
                 }
@@ -1143,12 +1200,14 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                 id str = [ptr description];
 
                 s1 = (PrintType*)[str _quickStringUsingEncoding:PrintEncodingType];
-                if (s1 == NULL)
+                if (s1 == NULL) {
                     s1 = PrintNullString; //"(null)";
+                }
                 s = s1;
                 while (precision || !(flags & FL_PRECSPEC)) {
-                    if (*s == '\0')
+                    if (*s == '\0') {
                         break;
+                    }
                     s++;
                     precision--;
                 }
@@ -1161,19 +1220,21 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
             case 'u':
             case 'x':
             case 'X':
-                if (!(flags & FL_PRECSPEC))
+                if (!(flags & FL_PRECSPEC)) {
                     precision = 1;
-                else if (c != 'p')
+                } else if (c != 'p') {
                     flags &= ~FL_ZEROFILL;
+                }
                 s = o_print(&ap, flags, s, c, precision, 0);
                 break;
             case 'd':
             case 'i':
                 flags |= FL_SIGNEDCONV;
-                if (!(flags & FL_PRECSPEC))
+                if (!(flags & FL_PRECSPEC)) {
                     precision = 1;
-                else
+                } else {
                     flags &= ~FL_ZEROFILL;
+                }
                 s = o_print(&ap, flags, s, c, precision, 1);
                 break;
             case 'c':
@@ -1183,16 +1244,19 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
 #ifndef NOFLOAT
             case 'G':
             case 'g':
-                if ((flags & FL_PRECSPEC) && (precision == 0))
+                if ((flags & FL_PRECSPEC) && (precision == 0)) {
                     precision = 1;
+                }
             case 'f':
             case 'E':
             case 'e':
-                if (!(flags & FL_PRECSPEC))
+                if (!(flags & FL_PRECSPEC)) {
                     precision = 6;
+                }
 
-                if (precision >= sizeof(buf))
+                if (precision >= sizeof(buf)) {
                     precision = sizeof(buf) - 1;
+                }
 
                 flags |= FL_SIGNEDCONV;
                 s = _f_print(&ap, flags, s, c, precision);
@@ -1207,11 +1271,13 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                 continue;
         }
         zfill = ' ';
-        if (flags & FL_ZEROFILL)
+        if (flags & FL_ZEROFILL) {
             zfill = '0';
+        }
         j = s - s1;
-        if (cs != NULL)
+        if (cs != NULL) {
             j = cs - cs1;
+        }
 
         /* between_fill is true under the following conditions:
         * 1- the fill character is '0'
@@ -1223,46 +1289,53 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
         between_fill = 0;
         if ((flags & FL_ZEROFILL) &&
             (((c == 'x' || c == 'X') && (flags & FL_ALT)) || (c == 'p') ||
-             ((flags & FL_SIGNEDCONV) &&
-              ((cs1 ? *cs1 : *s1) == '+' || (cs1 ? *cs1 : *s1) == '-' || (cs1 ? *cs1 : *s1) == ' '))))
+             ((flags & FL_SIGNEDCONV) && ((cs1 ? *cs1 : *s1) == '+' || (cs1 ? *cs1 : *s1) == '-' || (cs1 ? *cs1 : *s1) == ' ')))) {
             between_fill++;
+        }
 
-        if ((i = width - j) > 0)
+        if ((i = width - j) > 0) {
             if (!(flags & FL_LJUST)) { /* right justify */
                 nrchars += i;
                 if (between_fill) {
                     if (flags & FL_SIGNEDCONV) {
                         j--;
                         nrchars++;
-                        if (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF)
+                        if (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF) {
                             return nrchars ? -nrchars : -1;
+                        }
                     } else {
                         j -= 2;
                         nrchars += 2;
-                        if ((PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF) ||
-                            (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF))
+                        if ((PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF) || (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF)) {
                             return nrchars ? -nrchars : -1;
+                        }
                     }
                 }
                 do {
-                    if (PrintPutC(zfill, stream) == EOF)
+                    if (PrintPutC(zfill, stream) == EOF) {
                         return nrchars ? -nrchars : -1;
+                    }
                 } while (--i);
             }
+        }
 
         nrchars += j;
         while (--j >= 0) {
-            if (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF)
+            if (PrintPutC(cs1 ? *cs1++ : *s1++, stream) == EOF) {
                 return nrchars ? -nrchars : -1;
+            }
         }
 
         cs = cs1 = NULL;
 
-        if (i > 0)
+        if (i > 0) {
             nrchars += i;
-        while (--i >= 0)
-            if (PrintPutC(zfill, stream) == EOF)
+        }
+        while (--i >= 0) {
+            if (PrintPutC(zfill, stream) == EOF) {
                 return nrchars ? -nrchars : -1;
+            }
+        }
     }
     return nrchars;
 }

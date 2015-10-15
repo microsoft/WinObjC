@@ -18,8 +18,7 @@
 
 #include "EmuTransform3D.h"
 
-typedef enum 
-{
+typedef enum {
     notSetType,
     pointType,
     offsetType,
@@ -37,9 +36,9 @@ typedef enum
     NSValueType _valueType;
 
     typedef struct {
-        char *pType;
-        int   size;
-        void *copy;
+        char* pType;
+        int size;
+        void* copy;
     } objcValue;
 
     union {
@@ -48,37 +47,36 @@ typedef enum
         CGRect rectValue;
         CATransform3D transformValue;
         CGAffineTransform affineTransformValue;
-        void*  pointerValue;
+        void* pointerValue;
         objcValue genericValue;
     } v;
 }
--(float) scale;
--(id) initWithCoder:(NSCoder*)coder;
--(void) encodeWithCoder:(NSCoder*)coder;
--(void*) pointerValue;
--(id) nonretainedObjectValue;
--(void) getValue:(void *)dest;
--(BOOL) isEqualToValue:(NSValue*)toValue;
--(unsigned) hash;
--(NSObject*) copyWithZone:(NSZone*)zone;
--(NSString*) description;
--(const char*) objCType;
--(void) dealloc;
--(CGPoint) CGPointValue;
--(CGSize) CGSizeValue;
--(CGRect) CGRectValue;
--(CATransform3D) CATransform3DValue;
--(CGAffineTransform) CGAffineTransformValue;
-+(NSValue*) valueWithCGPoint:(CGPoint)point;
-+(NSValue*) valueWithUIOffset:(CGPoint)point;
-+(NSValue*) valueWithCGSize:(CGSize)size;
-+(NSValue*) valueWithCGRect:(CGRect)rect;
-+(NSValue*) valueWithPointer:(void*)ptr;
-+(NSValue*) valueWithNonretainedObject:(id)obj;
-+(NSValue*) valueWithCATransform3DPtr:(CATransform3D *)pTransform;
-+(NSValue*) valueWithBytes:(void *)value objCType:(char *)objCType;
-+(NSValue*) value:(void *)value withObjCType:(char *)objCType;
-+(NSValue*) valueWithCATransform3D:(CATransform3D)transform;
-+(NSValue*) valueWithCGAffineTransform:(CGAffineTransform)transform;
+- (float)scale;
+- (id)initWithCoder:(NSCoder*)coder;
+- (void)encodeWithCoder:(NSCoder*)coder;
+- (void*)pointerValue;
+- (id)nonretainedObjectValue;
+- (void)getValue:(void*)dest;
+- (BOOL)isEqualToValue:(NSValue*)toValue;
+- (unsigned)hash;
+- (NSObject*)copyWithZone:(NSZone*)zone;
+- (NSString*)description;
+- (const char*)objCType;
+- (void)dealloc;
+- (CGPoint)CGPointValue;
+- (CGSize)CGSizeValue;
+- (CGRect)CGRectValue;
+- (CATransform3D)CATransform3DValue;
+- (CGAffineTransform)CGAffineTransformValue;
++ (NSValue*)valueWithCGPoint:(CGPoint)point;
++ (NSValue*)valueWithUIOffset:(CGPoint)point;
++ (NSValue*)valueWithCGSize:(CGSize)size;
++ (NSValue*)valueWithCGRect:(CGRect)rect;
++ (NSValue*)valueWithPointer:(void*)ptr;
++ (NSValue*)valueWithNonretainedObject:(id)obj;
++ (NSValue*)valueWithCATransform3DPtr:(CATransform3D*)pTransform;
++ (NSValue*)valueWithBytes:(void*)value objCType:(char*)objCType;
++ (NSValue*)value:(void*)value withObjCType:(char*)objCType;
++ (NSValue*)valueWithCATransform3D:(CATransform3D)transform;
++ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform;
 @end
-

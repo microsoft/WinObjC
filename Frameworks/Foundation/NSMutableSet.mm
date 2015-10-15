@@ -43,8 +43,9 @@ NSUInteger NSSetTableCount(NSSet* set);
 }
 
 - (void)setSet:(NSSet*)other {
-    if (self == other)
+    if (self == other) {
         return;
+    }
 
     [self removeAllObjects];
 

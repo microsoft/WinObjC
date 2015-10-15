@@ -16,6 +16,6 @@
 
 #pragma once
 
-@interface UIWindow()
+@interface UIWindow ()
 - (void)_setRootViewController:(UIViewController*)controller;
 @end

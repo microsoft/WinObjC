@@ -18,21 +18,20 @@
 
 @interface NSInputStream_socket : NSStream {
 @public
-   id                   _delegate;
-   id                   _error;
-   id                   _socket;
-   id                   _inputSource;
+    id _delegate;
+    id _error;
+    id _socket;
+    id _inputSource;
 }
--(int) read:(uint8_t *)buffer maxLength:(DWORD)maxLength;
--(BOOL) hasBytesAvailable;
--(void) dealloc;
-/* annotate with type */ -(id) initWithSocket:(id)socket streamStatus:(DWORD)status;
-/* annotate with type */ -(id) setDelegate:(id)delegate;
-/* annotate with type */ -(id) open;
-/* annotate with type */ -(id) close;
-/* annotate with type */ -(id) scheduleInRunLoop:(id)runLoop forMode:(id)mode;
-/* annotate with type */ -(id) removeFromRunLoop:(id)runLoop forMode:(id)mode;
-/* annotate with type */ -(id) selectInputSource:(id)inputSource selectEvent:(DWORD)selectEvent;
-/* annotate with type */ -(id) setProperty:(id)prop forKey:(id)key;
+- (int)read:(uint8_t*)buffer maxLength:(DWORD)maxLength;
+- (BOOL)hasBytesAvailable;
+- (void)dealloc;
+/* annotate with type */ -(id)initWithSocket : (id)socket streamStatus : (DWORD)status;
+/* annotate with type */ -(id)setDelegate : (id)delegate;
+/* annotate with type */ -(id)open;
+/* annotate with type */ -(id)close;
+/* annotate with type */ -(id)scheduleInRunLoop : (id)runLoop forMode : (id)mode;
+/* annotate with type */ -(id)removeFromRunLoop : (id)runLoop forMode : (id)mode;
+/* annotate with type */ -(id)selectInputSource : (id)inputSource selectEvent : (DWORD)selectEvent;
+/* annotate with type */ -(id)setProperty : (id)prop forKey : (id)key;
 @end
-

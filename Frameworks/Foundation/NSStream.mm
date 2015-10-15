@@ -48,10 +48,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [super dealloc];
 }
 
-+ (void)getStreamsToHost:(id)host
-                    port:(int)port
-             inputStream:(NSInputStream**)inputStreamp
-            outputStream:(NSOutputStream**)outputStreamp {
++ (void)getStreamsToHost:(id)host port:(int)port inputStream:(NSInputStream**)inputStreamp outputStream:(NSOutputStream**)outputStreamp {
     id socket = [[[NSSocket alloc] initTCPStream] autorelease];
     id error;
     BOOL immediate;
@@ -64,10 +61,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         return;
     }
 
-    *inputStreamp = input =
-        [[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-    *outputStreamp = output =
-        [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+    *inputStreamp = input = [[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+    *outputStreamp = output = [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
 }
 
 @end

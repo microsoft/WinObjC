@@ -62,11 +62,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     [connection cancel];
 
-    if (errorp != NULL)
+    if (errorp != NULL) {
         *errorp = [state error];
+    }
 
-    if (responsep != NULL)
+    if (responsep != NULL) {
         *responsep = [[((NSURLConnection*)connection)->_response retain] autorelease];
+    }
 
     [connection release];
 
@@ -93,8 +95,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     _delegate = [delegate retain];
 
-    if (startLoading)
+    if (startLoading) {
         [self start];
+    }
 
     return self;
 }
@@ -133,8 +136,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     EbrDebugLog("URL protocol did fail\n");
     // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
     // connection:self willSendRequest:_request redirectResponse:nil];
-    if ([_delegate respondsToSelector:@selector(connection:didFailWithError:)])
+    if ([_delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
         [_delegate connection:self didFailWithError:error];
+    }
 
     if (_didRetain && !_didRelease) {
         _didRelease = TRUE;
@@ -157,8 +161,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 - (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     EbrDebugLog("URL protocol did receive response\n");
 
-    if (_mutableData == nil)
+    if (_mutableData == nil) {
         _mutableData = [[NSMutableData alloc] init];
+    }
 
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
@@ -169,8 +174,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _response = [response retain];
     _storagePolicy = policy;
 
-    if ([_delegate respondsToSelector:@selector(connection:willCacheResponse:)])
+    if ([_delegate respondsToSelector:@selector(connection:willCacheResponse:)]) {
         [_delegate connection:self willCacheResponse:response];
+    }
     if ([_delegate respondsToSelector:@selector(connection:didReceiveResponse:)]) {
         [_delegate connection:self didReceiveResponse:response];
     }
@@ -178,8 +184,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 - (void)URLProtocol:(id)urlProtocol didLoadData:(id)data {
     EbrDebugLog("URL protocol did load data\n");
-    if (_mutableData == nil)
+    if (_mutableData == nil) {
         _mutableData = [[NSMutableData alloc] init];
+    }
 
     if (![_request _shouldDiscardData]) {
         [_mutableData appendData:data];
@@ -208,8 +215,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
     */
 
-    if ([_delegate respondsToSelector:@selector(connectionDidFinishLoading:)])
+    if ([_delegate respondsToSelector:@selector(connectionDidFinishLoading:)]) {
         [_delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
+    }
 
     if (_didRetain && !_didRelease) {
         _didRelease = TRUE;

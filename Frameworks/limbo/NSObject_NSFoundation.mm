@@ -51,20 +51,17 @@ static struct objc_ivar* ivarForPropertyName(Class cls, const char* propName) {
     for (; cls; cls = class_getSuperclass(cls)) {
         unsigned int ivarCount = 0;
         std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), free);
-        auto foundIvar = std::find_if(
-            ivars.get(),
-            ivars.get() + ivarCount,
-            [&searchIvars](const Ivar ivar) {
-                // by using find_if, we avoid constructing a very short-lived std::string
-                // for every ivar we iterate over.
-                return std::find_if(
-                    searchIvars.cbegin(),
-                    searchIvars.cend(),
-                    [&ivar](const std::string &wantedIvarName) -> bool {
-                        return strcmp(ivar_getName(ivar), wantedIvarName.c_str()) == 0;
-                    }
-                ) != searchIvars.cend();
-            });
+        auto foundIvar = std::find_if(ivars.get(),
+                                      ivars.get() + ivarCount,
+                                      [&searchIvars](const Ivar ivar) {
+                                          // by using find_if, we avoid constructing a very short-lived std::string
+                                          // for every ivar we iterate over.
+                                          return std::find_if(searchIvars.cbegin(),
+                                                              searchIvars.cend(),
+                                                              [&ivar](const std::string& wantedIvarName) -> bool {
+                                                                  return strcmp(ivar_getName(ivar), wantedIvarName.c_str()) == 0;
+                                                              }) != searchIvars.cend();
+                                      });
         if (foundIvar != ivars.get() + ivarCount) {
             return *foundIvar;
         }
@@ -77,9 +74,7 @@ static bool tryGetViaAccessor(NSObject* self, const char* key, id* ret) {
     // If we can't find any of these, we fall back to ivar lookup.
     // Key length is caller-checked.
     std::vector<std::string> possibleSelectors{
-        woc::string::format("get%c%s", toupper(key[0]), &key[1]),
-        key,
-        woc::string::format("is%c%s", toupper(key[0]), &key[1]),
+        woc::string::format("get%c%s", toupper(key[0]), &key[1]), key, woc::string::format("is%c%s", toupper(key[0]), &key[1]),
     };
 
     SEL selector = nullptr;
@@ -187,8 +182,7 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
 }
 
 - (id)valueForUndefinedKey:(NSString*)key {
-    [NSException raise:NSInvalidArgumentException
-                format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
+    [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
     return nil;
 }
 
@@ -205,12 +199,10 @@ static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
         std::vector<uint8_t> data(getArgumentSize(valueType));
         if (valueType[0] == '@') { // Method is expecting an object: give it the object directly
             memcpy(data.data(), &value, sizeof(id));
-        }
-        else if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+        } else if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
             // We can't box or unbox char* or arbitrary pointers.
             return false;
-        }
-        else if ([value isKindOfClass:[NSValue class]]) {
+        } else if ([value isKindOfClass:[NSValue class]]) {
             [static_cast<NSValue*>(value) getValue:data.data()];
         }
 
@@ -332,8 +324,7 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
-    [NSException raise:NSInvalidArgumentException
-                format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
+    [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
 }
 
 - (Class)classForArchiver {
@@ -382,11 +373,7 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     [waitingLock unlockWithCondition:1];
 }
 
-- (void)performSelector:(SEL)selector
-               onThread:(NSThread*)thread
-             withObject:(id)obj
-          waitUntilDone:(BOOL)waitUntilDone
-                  modes:(id)modes {
+- (void)performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)obj waitUntilDone:(BOOL)waitUntilDone modes:(id)modes {
     NSRunLoop* runloop = [thread _runLoop];
 
     if (waitUntilDone) {
@@ -394,9 +381,8 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
             [self performSelector:selector withObject:obj];
         } else {
             if (!runloop) {
-                [NSException
-                     raise:NSInvalidArgumentException
-                    format:@"Can't perform selector %@: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
+                [NSException raise:NSInvalidArgumentException
+                            format:@"Can't perform selector %@: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
             }
 
             NSConditionLock* waitingLock = [[NSConditionLock alloc] initWithCondition:0];
@@ -413,9 +399,8 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
         }
     } else {
         if (runloop == nil) {
-            [NSException
-                 raise:NSInvalidArgumentException
-                format:@"Can't perform selector %2: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
+            [NSException raise:NSInvalidArgumentException
+                        format:@"Can't perform selector %2: Thread %@ has no runloop", NSStringFromSelector(_cmd), thread];
         }
 
         [runloop performSelector:selector target:self argument:obj order:0 modes:modes];
@@ -435,17 +420,10 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     [delayed perform];
 }
 
-+ (void)object:(id)object
-    performSelector:(SEL)selector
-         withObject:(id)argument
-         afterDelay:(double)delay
-            inModes:(NSArray*)modes {
++ (void)object:(id)object performSelector:(SEL)selector withObject:(id)argument afterDelay:(double)delay inModes:(NSArray*)modes {
     NSDelayedPerform* delayed = [NSDelayedPerform delayedPerformWithObject:object selector:selector argument:argument];
-    NSTimer* timer = [NSTimer timerWithTimeInterval:delay
-                                             target:[NSObject class]
-                                           selector:@selector(_delayedPerform:)
-                                           userInfo:delayed
-                                            repeats:NO];
+    NSTimer* timer =
+        [NSTimer timerWithTimeInterval:delay target:[NSObject class] selector:@selector(_delayedPerform:) userInfo:delayed repeats:NO];
     int i, count = [modes count];
 
     for (i = 0; i < count; i++) {

@@ -22,38 +22,38 @@ class Item;
 
 @interface NSNibUnarchiver : NSObject {
 @public
-    char *_nibData;
+    char* _nibData;
     DWORD _nibLen;
 
     DWORD _fixed[10];
 
-    char **_classNames;
-    id    *_classTypes;
-    char **_keyNames;
-    Object **_objects;
-    Item **_objectItems;
-    Object *_curObject[16];
+    char** _classNames;
+    id* _classTypes;
+    char** _keyNames;
+    Object** _objects;
+    Item** _objectItems;
+    Object* _curObject[16];
 
     int _curObjectLevel;
 
     id _bundle;
 }
--(double) decodeDoubleForKey:(id)key;
--(float) decodeFloatForKey:(id)key;
--(instancetype) initForReadingWithData:(NSData*)data;
--(NSObject*) decodeRootObject;
--(NSObject*) decodeObjectForKey:(NSString*)key;
--(BOOL) containsValueForKey:(NSString*)key;
--(BOOL) decodeBoolForKey:(NSString*)key;
--(NSInteger) decodeIntForKey:(NSString*)key;
--(NSInteger) decodeIntegerForKey:(NSString*)key;
--(NSInteger) decodeInt32ForKey:(NSString*)key;
--(void) finishDecoding;
--(void) _setBundle:(NSBundle*)bundle;
--(NSBundle*) _bundle;
--(void) dealloc;
-+(id) unarchiveObjectWithFile:(NSString*)file;
-+(id) unarchiveObjectWithData:(NSData*)data;
+- (double)decodeDoubleForKey:(id)key;
+- (float)decodeFloatForKey:(id)key;
+- (instancetype)initForReadingWithData:(NSData*)data;
+- (NSObject*)decodeRootObject;
+- (NSObject*)decodeObjectForKey:(NSString*)key;
+- (BOOL)containsValueForKey:(NSString*)key;
+- (BOOL)decodeBoolForKey:(NSString*)key;
+- (NSInteger)decodeIntForKey:(NSString*)key;
+- (NSInteger)decodeIntegerForKey:(NSString*)key;
+- (NSInteger)decodeInt32ForKey:(NSString*)key;
+- (void)finishDecoding;
+- (void)_setBundle:(NSBundle*)bundle;
+- (NSBundle*)_bundle;
+- (void)dealloc;
++ (id)unarchiveObjectWithFile:(NSString*)file;
++ (id)unarchiveObjectWithData:(NSData*)data;
 @end
 
 #endif

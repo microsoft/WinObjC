@@ -31,9 +31,8 @@
 static id _pendingTaps;
 extern NSMutableDictionary* curGesturesDict;
 
-#define TAP_SLACK_AREA                                                                                           \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / \
-     3.0f) //  1/3 inch
+#define TAP_SLACK_AREA \
+    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
 
 @interface UITapRecognizer : NSObject {
 @public
@@ -160,14 +159,12 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             }
         }
 
-        if (_recognizeTimer != nil)
+        if (_recognizeTimer != nil) {
             [_recognizeTimer invalidate];
+        }
         if (shouldDelay) {
-            _recognizeTimer = [NSTimer scheduledTimerWithTimeInterval:0.35
-                                                               target:self
-                                                             selector:@selector(_fireRecognized)
-                                                             userInfo:nil
-                                                              repeats:FALSE];
+            _recognizeTimer =
+                [NSTimer scheduledTimerWithTimeInterval:0.35 target:self selector:@selector(_fireRecognized) userInfo:nil repeats:FALSE];
             if (_pendingTaps == nil) {
                 _pendingTaps = [NSMutableArray new];
             }
@@ -268,8 +265,9 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             _cur->_wasRecognized = false;
         }
         [_pendingTaps removeObject:self];
-        if (fireGesture == nil)
+        if (fireGesture == nil) {
             fireGesture = self;
+        }
         fireGesture->_state = UIGestureRecognizerStateRecognized;
         [fireGesture _fire];
     } else {

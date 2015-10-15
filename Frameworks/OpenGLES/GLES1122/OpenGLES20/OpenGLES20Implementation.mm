@@ -34,8 +34,7 @@ void OpenGLES20Implementation::init() {
     glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, &colorReadFormat);
     glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE, &colorReadType);
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxCombinedTextureImageUnits);
-    maxCombinedTextureImageUnits =
-        std::min(3, maxCombinedTextureImageUnits); // TODO: currently shaders support 3 textures
+    maxCombinedTextureImageUnits = std::min(3, maxCombinedTextureImageUnits); // TODO: currently shaders support 3 textures
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeMapTextureSize);
     glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &maxFragmentUniformVectors);
 

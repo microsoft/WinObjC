@@ -19,7 +19,7 @@
 @interface NSInputSource : NSObject {
 @public
 }
--(BOOL) isValid;
--(void) invalidate;
--(BOOL) processInputImmediately;
+- (BOOL)isValid;
+- (void)invalidate;
+- (BOOL)processInputImmediately;
 @end

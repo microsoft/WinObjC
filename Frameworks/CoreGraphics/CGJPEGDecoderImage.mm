@@ -115,8 +115,7 @@ static DWORD readDWord(const char*& curPos, int& left, BOOL bigEndian) {
     left -= 4;
 
     if (bigEndian) {
-        ret = ((ret & 0xFF000000) >> 24) | ((ret & 0x00FF0000) >> 8) | ((ret & 0x0000FF00) << 8) |
-              ((ret & 0x000000FF) << 24);
+        ret = ((ret & 0xFF000000) >> 24) | ((ret & 0x00FF0000) >> 8) | ((ret & 0x0000FF00) << 8) | ((ret & 0x000000FF) << 24);
     }
 
     return ret;
@@ -331,13 +330,13 @@ void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
     struct jpeg_source_mgr* src;
 
     if (cinfo.src == NULL) {
-        cinfo.src = (struct jpeg_source_mgr*)(*cinfo.mem->alloc_small)(
-            (j_common_ptr)&cinfo, JPOOL_PERMANENT, sizeof(struct jpeg_source_mgr));
+        cinfo.src =
+            (struct jpeg_source_mgr*)(*cinfo.mem->alloc_small)((j_common_ptr)&cinfo, JPOOL_PERMANENT, sizeof(struct jpeg_source_mgr));
     }
 
     if (cinfo.progress == NULL) {
-        cinfo.progress = (struct jpeg_progress_mgr*)(*cinfo.mem->alloc_small)(
-            (j_common_ptr)&cinfo, JPOOL_PERMANENT, sizeof(struct jpeg_progress_mgr));
+        cinfo.progress =
+            (struct jpeg_progress_mgr*)(*cinfo.mem->alloc_small)((j_common_ptr)&cinfo, JPOOL_PERMANENT, sizeof(struct jpeg_progress_mgr));
         /* static callback function in JpegDecoder */
         cinfo.progress->progress_monitor = jpeg_progress;
     }
@@ -531,8 +530,8 @@ bool CGJPEGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, C
     if (destImage->Backing()->SurfaceFormat() != _cachedSurfaceFormat) {
         return false;
     }
-    if (src.origin.x != 0.0f || src.origin.y != 0.0f || src.size.width != _cachedWidth ||
-        src.size.height != _cachedHeight || src.origin != dest.origin || !CGSizeEqualToSize(src.size, dest.size)) {
+    if (src.origin.x != 0.0f || src.origin.y != 0.0f || src.size.width != _cachedWidth || src.size.height != _cachedHeight ||
+        src.origin != dest.origin || !CGSizeEqualToSize(src.size, dest.size)) {
         return false;
     }
     if (destImage->Backing()->Width() != _cachedWidth || destImage->Backing()->Height() != _cachedHeight) {

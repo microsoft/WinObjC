@@ -105,8 +105,7 @@ public:
     }
 };
 
-static NSString*
-NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
+static NSString* NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
     uint32_t len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, NULL, 0, &error);
     UChar* strValue = (UChar*)calloc(len + 1, sizeof(UChar));
     error = U_ZERO_ERROR;
@@ -117,8 +116,7 @@ NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int
     return ret;
 }
 
-static NSArray*
-NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int startIdx, UErrorCode& error) {
+static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int startIdx, UErrorCode& error) {
     uint32_t count = udat_countSymbols((UDateFormat*)formatter, symbol);
 
     NSMutableArray* symbolList = [NSMutableArray array];
@@ -136,14 +134,8 @@ NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int
     return ret;
 }
 
-static void SetSymbolFromNSString(
-    icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
-    udat_setSymbols((UDateFormat*)formatter,
-                    (UDateFormatSymbolType)symbol,
-                    index,
-                    (UChar*)[value rawCharacters],
-                    [value length],
-                    &error);
+static void SetSymbolFromNSString(icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
+    udat_setSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, (UChar*)[value rawCharacters], [value length], &error);
 }
 
 static void SetSymbolsFromNSArray(
@@ -173,23 +165,19 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     { ICUPropertyMapper::amSymbol,
       ICUPropertyMapper(ICUPropertyMapper::amSymbol,
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolFromNSString(
-                                formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
+                            SetSymbolFromNSString(formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
                         },
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue =
-                                NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
+                            value._objValue = NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
                         }) },
 
     { ICUPropertyMapper::pmSymbol,
       ICUPropertyMapper(ICUPropertyMapper::pmSymbol,
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolFromNSString(
-                                formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
+                            SetSymbolFromNSString(formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
                         },
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue =
-                                NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
+                            value._objValue = NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
                         }) },
 
     { ICUPropertyMapper::shortStandaloneWeekdaySymbols,
@@ -202,64 +190,65 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
                                                   error);
                         },
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(
-                                formatter, (UDateFormatSymbolType)UDAT_STANDALONE_SHORT_WEEKDAYS, 1, error);
+                            value._objValue =
+                                NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_SHORT_WEEKDAYS, 1, error);
                         }) },
 
     { ICUPropertyMapper::weekdaySymbols,
       ICUPropertyMapper(ICUPropertyMapper::weekdaySymbols,
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(
-                                formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
+                            SetSymbolsFromNSArray(formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
                         },
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue =
-                                NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
+                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
                         }) },
 
     { ICUPropertyMapper::shortWeekdaySymbols,
-      ICUPropertyMapper(
-          ICUPropertyMapper::shortWeekdaySymbols,
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              SetSymbolsFromNSArray(
-                  formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS, 1, error);
-          },
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS, 1, error);
-          }) },
+      ICUPropertyMapper(ICUPropertyMapper::shortWeekdaySymbols,
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            SetSymbolsFromNSArray(formatter,
+                                                  (NSArray*)value._objValue,
+                                                  (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS,
+                                                  1,
+                                                  error);
+                        },
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS, 1, error);
+                        }) },
 
     { ICUPropertyMapper::standaloneWeekdaySymbols,
-      ICUPropertyMapper(
-          ICUPropertyMapper::standaloneWeekdaySymbols,
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              SetSymbolsFromNSArray(
-                  formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS, 1, error);
-          },
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              value._objValue =
-                  NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS, 1, error);
-          }) },
+      ICUPropertyMapper(ICUPropertyMapper::standaloneWeekdaySymbols,
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            SetSymbolsFromNSArray(formatter,
+                                                  (NSArray*)value._objValue,
+                                                  (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS,
+                                                  1,
+                                                  error);
+                        },
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS, 1, error);
+                        }) },
 
     { ICUPropertyMapper::standaloneMonthSymbols,
-      ICUPropertyMapper(
-          ICUPropertyMapper::standaloneMonthSymbols,
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              SetSymbolsFromNSArray(
-                  formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS, 0, error);
-          },
-          [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-              value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS, 0, error);
-          }) },
+      ICUPropertyMapper(ICUPropertyMapper::standaloneMonthSymbols,
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            SetSymbolsFromNSArray(formatter,
+                                                  (NSArray*)value._objValue,
+                                                  (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS,
+                                                  0,
+                                                  error);
+                        },
+                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
+                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS, 0, error);
+                        }) },
 
     { ICUPropertyMapper::monthSymbols,
       ICUPropertyMapper(ICUPropertyMapper::monthSymbols,
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(
-                                formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
+                            SetSymbolsFromNSArray(formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
                         },
                         [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue =
-                                NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
+                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
                         }) },
 };
 
@@ -337,8 +326,8 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
 
             _formatter = new SimpleDateFormat(fmtString.string(), *icuLocale, status);
         } else {
-            _formatter = icu::DateFormat::createDateTimeInstance(
-                convertFormatterStyle(_dateStyle), convertFormatterStyle(_timeStyle), *icuLocale);
+            _formatter =
+                icu::DateFormat::createDateTimeInstance(convertFormatterStyle(_dateStyle), convertFormatterStyle(_timeStyle), *icuLocale);
         }
 
         delete icuLocale;

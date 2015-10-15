@@ -25,16 +25,15 @@
     BOOL _isValid;
     CGSize _contentSize;
 }
--(float) dimension;
--(BOOL) horizontal;
--(CGSize) contentSize;
-/* annotate with type */ -(id) setHorizontal:(BOOL)horizontal;
-/* annotate with type */ -(id) setDimension:(float)dimension;
-/* annotate with type */ -(id) setRowAlignmentOptions:(id)options;
-/* annotate with type */ -(id) init;
-/* annotate with type */ -(id) sections;
-/* annotate with type */ -(id) addSection;
-/* annotate with type */ -(id) invalidate:(BOOL)arg;
-/* annotate with type */ -(id) setContentSize:(CGSize)size;
+- (float)dimension;
+- (BOOL)horizontal;
+- (CGSize)contentSize;
+/* annotate with type */ -(id)setHorizontal : (BOOL)horizontal;
+/* annotate with type */ -(id)setDimension : (float)dimension;
+/* annotate with type */ -(id)setRowAlignmentOptions : (id)options;
+/* annotate with type */ -(id)init;
+/* annotate with type */ -(id)sections;
+/* annotate with type */ -(id)addSection;
+/* annotate with type */ -(id)invalidate : (BOOL)arg;
+/* annotate with type */ -(id)setContentSize : (CGSize)size;
 @end
-
