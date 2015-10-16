@@ -233,13 +233,13 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 }
 
-- (void)popViewControllerAnimated:(BOOL)animated {
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated {
     if (animated)
         animated = 1;
 
     if ([_viewControllers count] <= 1) {
         EbrDebugLog("attempted to pop root view controller\n");
-        return;
+        return nil;
     }
 
     UIViewController* controller = [_viewControllers lastObject];
@@ -251,6 +251,8 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     _pushingView = false;
     [self _showController:[_viewControllers lastObject] animated:animated];
     _destroyOld = true;
+
+    return controller;
 }
 
 - (NSArray*)popToViewController:(UIViewController*)controller animated:(BOOL)animated {
