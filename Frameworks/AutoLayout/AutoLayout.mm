@@ -190,6 +190,13 @@ public:
                     assert(0);
                     break;
             }
+
+            // This is to facilitate autoresizing masks. Whenever an auto-resizing happens due to a constraint changing a
+            // frame, we need to poke the other views that may have been affected. This is in place until we actually
+            // translate autoresize masks to constraints.
+            if ([item respondsToSelector:@selector(_privateState)]) {
+                [[item _privateState]->associatedConstraints addObject:self];
+            }
         }
 
         if (self.secondItem == nil) {
@@ -213,16 +220,6 @@ public:
                 break;
             default:
                 assert(0);
-        }
-
-        // This is to facilitate autoresizing masks. Whenever an auto-resizing happens due to a constraint changing a
-        // frame, we need to poke the other views that may have been affected. This is in place until we actually
-        // translate autoresize masks to constraints.
-        if (self.firstItem != nil && [self.firstItem respondsToSelector:@selector(_privateState)]) {
-            [[self.firstItem _privateState]->associatedConstraints addObject:self];
-        }
-        if (self.secondItem != nil && [self.secondItem respondsToSelector:@selector(_privateState)]) {
-            [[self.secondItem _privateState]->associatedConstraints addObject:self];
         }
 
         gSolver.AddConstraint([self _privateState]->_constraints->_constraint);
