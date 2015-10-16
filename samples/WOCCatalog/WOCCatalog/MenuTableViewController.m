@@ -32,6 +32,7 @@
 #import "GLKitExampleController.h"
 #import "PhotogridViewController.h"
 #import "BezierViewController.h"
+#import "AutoLayoutViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -73,6 +74,13 @@ static NSString *viewTitleKeyName = @"ViewName";
                               @"Buttons", viewTitleKeyName,
                               buttonsViewController, controllerKeyName,
                               nil]];
+    
+    // AutoLayout
+    AutoLayoutViewController *autoLayoutViewController = [[AutoLayoutViewController alloc] init];
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               @"Constraint Based Layout", viewTitleKeyName,
+                               autoLayoutViewController, controllerKeyName,
+                               nil]];
     
 #ifdef WINOBJC
     // Controls

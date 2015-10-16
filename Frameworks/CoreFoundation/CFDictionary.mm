@@ -940,8 +940,3 @@ void _CFDictionaryCopyInternal(CFDictionaryRef dict, CFDictionaryRef fromDict) {
     _CFDictionaryInitInternal(dict);
     _LazyDictOffset.member(pDict)->copyFrom(_LazyDictOffset.member(pDictFrom));
 }
-
-const void* _NSDictionaryOfVariableBindings(id format, ...) {
-    EbrDebugLog("NSDictionaryOfVariableBindings not implemented\n");
-    return 0;
-}

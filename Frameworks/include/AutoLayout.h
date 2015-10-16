@@ -33,7 +33,6 @@
 -(void) autoLayoutDealloc;
 -(void) autoLayoutLayoutSubviews;
 -(void) autoLayoutInitWithCoder:(NSCoder*)coder;
--(void) autoLayoutSetVars:(CGRect)bounds;
 -(void) autoLayoutUpdateConstraints;
 @end
 

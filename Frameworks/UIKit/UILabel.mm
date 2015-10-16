@@ -102,6 +102,7 @@
                        _shadowColor:
                       _shadowOffset:_numberOfLines];
 #endif
+    [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
 }
 

@@ -69,7 +69,6 @@ static int stackLevel = 0;
 int viewCount = 0;
 
 @implementation UIView {
-    NSMutableArray* _constraints;
     idretaintype(CALayer) layer;
     bool _deallocating;
 }
@@ -94,7 +93,8 @@ int viewCount = 0;
     self->priv->currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
     self->priv->contentMode = UIViewContentModeScaleToFill;
     self->priv->gestures = [NSMutableArray new];
-    self->priv->constraints = [NSMutableArray new];
+    self->priv->constraints.attach([NSMutableArray new]);
+    self->priv->associatedConstraints.attach([NSMutableArray new]);
 
     static BOOL autoLayoutInit;
     if (!autoLayoutInit) {
@@ -130,10 +130,6 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [self setOpaque:TRUE];
     [self setFrame:pos];
     [self setNeedsDisplay];
-
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutSetVars:pos];
-    }
 
     return self;
 }
@@ -265,8 +261,8 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
 
-                if (![_constraints containsObject:constraint] && !remove) {
-                    [_constraints addObject:constraint];
+                if (![priv->constraints containsObject:constraint] && !remove) {
+                    [priv->constraints addObject:constraint];
                     if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
                         [constraint autoLayoutConstraintAddedToView:self];
                     }
@@ -357,11 +353,6 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 }
 
 - (void)__didLayout {
-    UIViewController* controller = [UIViewController controllerForView:self];
-
-    if (controller != nil) {
-        [controller viewDidLayoutSubviews];
-    }
 }
 
 - (void)setNeedsLayout {
@@ -484,10 +475,9 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
 
             UIViewAutoresizing mask = subview->priv->autoresizingMask;
 
-            if (mask == UIViewAutoresizingNone)
+            if (mask == UIViewAutoresizingNone || !subview->priv->translatesAutoresizingMaskIntoConstraints) {
                 continue;
-            if (subview->priv->_constrained)
-                continue;
+            }
 
             CGRect curFrame, origFrame;
             curFrame = [subview frame];
@@ -546,6 +536,14 @@ static float doRound(float f) {
         return;
     }
 
+    //  Get our existing frame
+    CGRect curFrame;
+    curFrame = [self frame];
+
+    if (memcmp(&frame, &curFrame, sizeof(CGRect)) == 0) {
+        return;
+    }
+
     frame.origin.x = doRound(frame.origin.x);
     frame.origin.y = doRound(frame.origin.y);
     frame.size.width = doRound(frame.size.width);
@@ -558,10 +556,7 @@ static float doRound(float f) {
                 frame.size.width,
                 frame.size.height);
 
-    //  Get our existing frame
     CGRect startFrame = frame;
-    CGRect curFrame;
-    curFrame = [self frame];
 
     if (frame.origin.x == doRound(curFrame.origin.x) && frame.origin.y == doRound(curFrame.origin.y) &&
         frame.size.width == doRound(curFrame.size.width) && frame.size.height == doRound(curFrame.size.height)) {
@@ -612,8 +607,17 @@ static float doRound(float f) {
 
     [layer setBounds:curBounds];
 
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutSetVars:frame];
+    // Baseline constraints don't share a superview, and thus messes up our assumption of a child/sibling hierarchy.
+    // We do our autolayout in screen space, so even if the frame/bounds of the children aren't updated, we need
+    // to update the new absolute constraint positions. 
+    for (UIView* child in [self subviews]) {
+        if (child->priv->translatesAutoresizingMaskIntoConstraints) {
+            [child autoLayoutUpdateConstraints];
+        }
+    }
+
+    if (self->priv->translatesAutoresizingMaskIntoConstraints) {
+       [self autoLayoutUpdateConstraints];
     }
 }
 
@@ -1465,7 +1469,6 @@ static float doRound(float f) {
 
 - (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)translate {
     self->priv->translatesAutoresizingMaskIntoConstraints = translate;
-    EbrDebugLog("setTranslatesAutoresizingMaskIntoConstraints(%d) not supported\n", (int)translate);
 }
 
 - (NSArray*)constraints {
@@ -1473,11 +1476,12 @@ static float doRound(float f) {
 }
 
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
-    if (constraint.firstItem != self && [constraint.firstItem superview] != self &&
-        (constraint.secondItem && (constraint.secondItem != self || [constraint.secondItem superview] != self))) {
+    // Constraints can only be added if they are self or a child of this view.
+    if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) || 
+        (constraint.secondItem && ((constraint.secondItem != self) && ([constraint.secondItem superview] != self)))) {
         EbrDebugLog(
             "Only constraints with relations to this view and its children may be added. "
-            "This error may occur if your view hierarchy has not yet been initialized.");
+            "This error may occur if your view hierarchy has not yet been initialized.\n");
         return;
     }
 
@@ -1490,6 +1494,8 @@ static float doRound(float f) {
     if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
         [constraint autoLayoutConstraintAddedToView:self];
     }
+
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)removeConstraint:(id)constraint {
@@ -1498,13 +1504,14 @@ static float doRound(float f) {
     if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
         [constraint autoLayoutConstraintRemovedFromView];
     }
+
+    [self setNeedsUpdateConstraints];
 }
 
 - (void)addConstraints:(NSArray*)constraints {
     for (int i = 0; i < [constraints count]; i++) {
         [self addConstraint:(NSLayoutConstraint*)[constraints objectAtIndex:i]];
     }
-    [self updateConstraints];
 }
 
 - (void)removeConstraints:(NSArray*)constraints {
@@ -1513,10 +1520,16 @@ static float doRound(float f) {
     }
 }
 
-- (void)updateConstraints {
-    for (int i = 0; i < priv->childCount; i++) {
-        [priv->childAtIndex(i)->self updateConstraints];
+- (void)_applyConstraints {
+    [self updateConstraintsIfNeeded];
+
+    for (UIView* child in [self subviews]) {
+        [child _applyConstraints];
     }
+}
+
+- (void)updateConstraints {
+    priv->_constraintsNeedUpdate = false;
 
     if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
         [self autoLayoutUpdateConstraints];
@@ -1525,7 +1538,6 @@ static float doRound(float f) {
 
 - (void)updateConstraintsIfNeeded {
     if (priv->_constraintsNeedUpdate) {
-        priv->_constraintsNeedUpdate = false;
         [self updateConstraints];
     }
 }
@@ -1535,7 +1547,16 @@ static float doRound(float f) {
 }
 
 - (void)setNeedsUpdateConstraints {
-    priv->_constraintsNeedUpdate = true;
+    for (NSLayoutConstraint* constraint in (NSArray*)priv->associatedConstraints) {
+        if([constraint.firstItem isKindOfClass:[UIView class]]) {
+            UIView* view = (UIView*)constraint.firstItem;
+            view->priv->_constraintsNeedUpdate = true;
+        }
+        if([constraint.secondItem isKindOfClass:[UIView class]]) {
+            UIView* view = (UIView*)constraint.secondItem;
+            view->priv->_constraintsNeedUpdate = true;
+        }
+    }
 }
 
 - (void)removeMotionEffect:(UIMotionEffect*)effect {
@@ -1574,7 +1595,7 @@ static float doRound(float f) {
             EbrDebugLog("Content compression resistance set on unknown axis\n");
             return;
     }
-    [self invalidateContentSize];
+    [self setNeedsUpdateConstraints];
 }
 
 - (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis {
@@ -1605,7 +1626,7 @@ static float doRound(float f) {
             EbrDebugLog("Content hugging set on unknown axis\n");
             return;
     }
-    [self invalidateContentSize];
+    [self setNeedsUpdateConstraints];
 }
 
 - (UIView*)viewWithTag:(int)tag {
@@ -2048,6 +2069,7 @@ static float doRound(float f) {
     [self removeFromSuperview];
     priv->backgroundColor = nil;
     priv->constraints = nil;
+    priv->associatedConstraints = nil;
     int subviewCount = 0;
     id* subviewsCopy = (id*)alloca(sizeof(id) * priv->childCount);
     LLTREE_FOREACH(curView, priv) {
@@ -2187,7 +2209,9 @@ static float doRound(float f) {
 }
 
 - (void)invalidateIntrinsicContentSize {
-    EbrDebugLog("invalidateIntrinsicContentSize not supported\n");
+    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
+        [self invalidateContentSize];
+    }
 }
 
 - (CGSize)intrinsicContentSize {

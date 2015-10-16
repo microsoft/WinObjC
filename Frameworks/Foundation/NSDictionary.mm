@@ -698,5 +698,31 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     return result;
 }
-
 @end
+
+NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...) {
+    if (keys == nil) {
+        EbrDebugLog("Nil keys string.\n");
+        return nil;
+    }
+    NSArray* keyArray = [keys componentsSeparatedByString:@", "];
+    NSMutableArray* values = [[NSMutableArray new] autorelease];
+
+    va_list va;
+    
+    va_start(va, keys);
+
+    id value = va_arg(va, id);
+    while(value != nil) {
+        [values addObject:value];
+        value = va_arg(va, id);
+    }
+    va_end(va);
+
+    if ([values count] != [keyArray count]) {
+        EbrDebugLog("Number of keys does not match the number of objects; nil is not a valid variable\n");
+        return nil;
+    }
+    
+    return [NSDictionary dictionaryWithObjects:values forKeys:keyArray];
+}

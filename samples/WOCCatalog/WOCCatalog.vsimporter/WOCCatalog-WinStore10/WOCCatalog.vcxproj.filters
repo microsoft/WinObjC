@@ -69,6 +69,9 @@
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
