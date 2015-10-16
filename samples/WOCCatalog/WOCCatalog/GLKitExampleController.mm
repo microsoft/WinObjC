@@ -20,51 +20,158 @@
 #include <vector>
 #include <algorithm>
 
-static GLKVector4 FOG_COLOR = GLKVector4Make(0.f, 0.25f, 0.55f, 1.f);
-
-static unsigned char heights[] = {
-    145, 147, 142, 139, 177, 180, 184, 195, 134, 92, 100, 120, 135, 156, 145, 139, 125, 83, 91, 87, 65, 62, 62, 84, 121, 174, 190, 169, 157, 123, 134, 160,
-    189, 194, 176, 150, 180, 200, 208, 212, 159, 135, 157, 147, 150, 173, 141, 128, 133, 79, 62, 69, 59, 54, 38, 60, 122, 166, 184, 179, 146, 114, 131, 137,
-    224, 225, 186, 139, 161, 193, 194, 211, 195, 153, 139, 118, 139, 173, 138, 106, 107, 82, 80, 88, 85, 108, 89, 66, 120, 150, 160, 172, 128, 79, 75, 60,
-    216, 228, 187, 166, 194, 198, 185, 190, 178, 125, 88, 85, 105, 147, 138, 88, 82, 102, 115, 112, 115, 154, 137, 100, 148, 176, 178, 167, 140, 112, 75, 43,
-    188, 220, 199, 188, 199, 189, 175, 160, 145, 107, 86, 84, 78, 108, 101, 66, 92, 104, 84, 95, 124, 160, 145, 114, 159, 176, 165, 146, 141, 145, 96, 80,
-    142, 166, 204, 216, 198, 191, 164, 129, 108, 65, 58, 42, 29, 79, 90, 69, 97, 102, 65, 83, 123, 150, 136, 123, 163, 192, 183, 172, 176, 162, 108, 99,
-    133, 128, 188, 239, 215, 199, 154, 106, 82, 35, 41, 32, 36, 64, 64, 50, 64, 98, 93, 107, 133, 146, 133, 134, 169, 200, 189, 179, 175, 167, 134, 90,
-    116, 149, 194, 196, 176, 173, 149, 122, 108, 83, 56, 50, 68, 69, 56, 56, 68, 107, 144, 158, 153, 135, 122, 140, 155, 174, 168, 153, 154, 155, 143, 91,
-    121, 161, 162, 146, 159, 157, 148, 134, 119, 128, 82, 56, 68, 99, 119, 123, 134, 137, 161, 177, 161, 112, 94, 126, 120, 138, 141, 115, 124, 128, 131, 119,
-    126, 140, 122, 124, 152, 139, 116, 149, 153, 152, 135, 90, 72, 126, 180, 176, 181, 179, 174, 171, 157, 108, 79, 96, 99, 105, 88, 87, 91, 84, 101, 136,
-    116, 122, 104, 87, 96, 126, 133, 161, 147, 126, 126, 113, 116, 139, 170, 170, 179, 184, 161, 144, 148, 128, 114, 113, 118, 118, 93, 91, 61, 65, 114, 126,
-    94, 109, 97, 85, 100, 145, 148, 131, 119, 100, 95, 106, 124, 123, 130, 145, 155, 150, 116, 122, 142, 139, 155, 152, 141, 119, 84, 71, 62, 77, 108, 103,
-    90, 97, 76, 88, 115, 144, 113, 75, 86, 76, 79, 75, 66, 94, 136, 158, 157, 160, 142, 163, 180, 154, 159, 136, 101, 93, 84, 62, 73, 97, 108, 120,
-    86, 55, 46, 89, 112, 117, 95, 73, 67, 63, 73, 34, 14, 67, 139, 174, 167, 167, 155, 164, 190, 200, 188, 123, 68, 77, 80, 53, 49, 76, 119, 130,
-    65, 39, 71, 117, 118, 105, 108, 103, 71, 63, 70, 33, 36, 49, 86, 127, 115, 124, 128, 148, 209, 233, 195, 142, 105, 94, 63, 47, 60, 57, 93, 98,
-    101, 99, 115, 124, 128, 133, 134, 114, 98, 85, 75, 54, 51, 46, 67, 114, 96, 97, 103, 133, 210, 236, 197, 149, 127, 109, 53, 51, 77, 74, 104, 91,
-    114, 120, 113, 112, 136, 157, 144, 109, 119, 126, 123, 92, 64, 61, 91, 150, 127, 118, 122, 129, 190, 239, 214, 151, 135, 121, 60, 56, 67, 75, 114, 116,
-    104, 109, 116, 118, 130, 156, 136, 102, 114, 146, 149, 104, 64, 52, 106, 161, 131, 123, 144, 138, 168, 202, 188, 159, 127, 114, 84, 60, 71, 99, 123, 146,
-    126, 106, 119, 141, 145, 170, 156, 147, 169, 186, 150, 97, 56, 15, 66, 140, 139, 117, 132, 134, 156, 170, 158, 153, 104, 93, 88, 56, 78, 117, 126, 137,
-    100, 57, 80, 120, 124, 145, 159, 183, 202, 210, 177, 123, 91, 36, 23, 75, 114, 108, 115, 136, 151, 152, 150, 123, 93, 119, 126, 96, 89, 102, 120, 138,
-    83, 37, 80, 121, 117, 115, 114, 149, 159, 176, 174, 121, 89, 64, 33, 44, 97, 111, 125, 148, 134, 111, 114, 92, 98, 135, 137, 122, 102, 96, 116, 149,
-    84, 63, 93, 116, 134, 124, 107, 115, 122, 158, 171, 128, 94, 59, 23, 50, 86, 103, 141, 161, 148, 127, 113, 107, 142, 162, 130, 119, 105, 109, 140, 152,
-    101, 87, 79, 77, 118, 124, 120, 118, 125, 148, 142, 118, 103, 68, 37, 69, 75, 84, 137, 152, 129, 113, 98, 92, 132, 183, 155, 140, 141, 139, 164, 174,
-    108, 94, 76, 76, 104, 102, 103, 128, 145, 145, 119, 108, 113, 74, 50, 75, 100, 133, 169, 147, 91, 73, 55, 76, 124, 167, 167, 158, 177, 166, 153, 158,
-    103, 79, 47, 53, 65, 87, 122, 138, 134, 139, 123, 114, 120, 87, 81, 88, 120, 171, 180, 159, 123, 99, 61, 77, 112, 126, 145, 153, 179, 201, 194, 162,
-    119, 81, 16, 22, 37, 72, 134, 134, 101, 99, 121, 119, 113, 116, 108, 127, 167, 196, 191, 173, 144, 114, 90, 98, 115, 117, 138, 168, 220, 250, 211, 159,
-    128, 120, 55, 42, 50, 56, 87, 111, 109, 99, 146, 150, 137, 144, 109, 133, 169, 203, 217, 198, 172, 133, 123, 138, 146, 154, 188, 204, 249, 255, 229, 162,
-    129, 119, 71, 57, 75, 65, 52, 86, 129, 143, 162, 161, 147, 138, 129, 143, 165, 181, 192, 191, 176, 146, 133, 137, 151, 182, 223, 215, 214, 255, 255, 191,
-    125, 100, 65, 50, 62, 78, 79, 82, 109, 163, 180, 174, 154, 118, 115, 133, 162, 170, 185, 179, 154, 152, 156, 152, 180, 188, 187, 210, 213, 225, 221, 170,
-    117, 89, 58, 46, 64, 84, 106, 98, 113, 175, 203, 212, 195, 149, 141, 159, 163, 167, 185, 146, 113, 125, 132, 143, 164, 159, 161, 202, 215, 199, 170, 165,
-    107, 85, 69, 58, 79, 69, 71, 72, 100, 153, 171, 197, 191, 162, 175, 194, 167, 135, 127, 86, 73, 99, 116, 142, 153, 147, 177, 203, 179, 177, 162, 159,
-    104, 99, 78, 55, 57, 66, 63, 45, 68, 123, 150, 170, 183, 183, 190, 176, 154, 132, 106, 74, 79, 101, 132, 165, 149, 141, 193, 201, 144, 141, 144, 133
-};
-
 struct Vertex {
+    Vertex() {}
+    Vertex(GLKVector3 pos, GLKVector3 norm) : pos(pos), norm(norm) {}
+    
     GLKVector3 pos;
     GLKVector3 norm;
 };
 
-static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short>& indices, float width, float length, float height,
+namespace {
+
+GLKVector4 FOG_COLOR = GLKVector4Make(0.f, 0.25f, 0.55f, 1.f);
+
+// Input heights for the heightfield mesh.  Generated via a noise function.
+unsigned char heights[] = {
+    145, 147, 142, 139, 177, 180, 184, 195, 134, 92, 100, 120, 135, 156, 145, 139,
+    189, 194, 176, 150, 180, 200, 208, 212, 159, 135, 157, 147, 150, 173, 141, 128,
+    224, 225, 186, 139, 161, 193, 194, 211, 195, 153, 139, 118, 139, 173, 138, 106,
+    216, 228, 187, 166, 194, 198, 185, 190, 178, 125, 88, 85, 105, 147, 138, 88,
+    188, 220, 199, 188, 199, 189, 175, 160, 145, 107, 86, 84, 78, 108, 101, 66,
+    142, 166, 204, 216, 198, 191, 164, 129, 108, 65, 58, 42, 29, 79, 90, 69,
+    133, 128, 188, 239, 215, 199, 154, 106, 82, 35, 41, 32, 36, 64, 64, 50,
+    116, 149, 194, 196, 176, 173, 149, 122, 108, 83, 56, 50, 68, 69, 56, 56,
+    121, 161, 162, 146, 159, 157, 148, 134, 119, 128, 82, 56, 68, 99, 119, 123,
+    126, 140, 122, 124, 152, 139, 116, 149, 153, 152, 135, 90, 72, 126, 180, 176,
+    116, 122, 104, 87, 96, 126, 133, 161, 147, 126, 126, 113, 116, 139, 170, 170,
+    94, 109, 97, 85, 100, 145, 148, 131, 119, 100, 95, 106, 124, 123, 130, 145,
+    90, 97, 76, 88, 115, 144, 113, 75, 86, 76, 79, 75, 66, 94, 136, 158,
+    86, 55, 46, 89, 112, 117, 95, 73, 67, 63, 73, 34, 14, 67, 139, 174,
+    65, 39, 71, 117, 118, 105, 108, 103, 71, 63, 70, 33, 36, 49, 86, 127,
+    101, 99, 115, 124, 128, 133, 134, 114, 98, 85, 75, 54, 51, 46, 67, 114
+};
+
+// Create a single, round arch with the specified dimensions.
+void buildArch(std::vector<Vertex>& verts, std::vector<unsigned short>& indices,
+               const GLKVector3& center, const GLKVector3& fwd, const GLKVector3& left,
+               float length, float thickness, float width, size_t numFacets)
+{
+    GLKVector3 widthSub = GLKVector3MultiplyScalar(left, 0.5f * width);
+    GLKVector3 widthAdd = GLKVector3MultiplyScalar(left, -0.5f * width);
+    GLKVector3 invLeft = GLKVector3Negate(left);
+    
+    size_t lastFacetIdx = verts.size();
+    for (size_t i = 0; i < numFacets; i ++) {
+        size_t curFacetIdx = verts.size();
+
+        // Calculate some common factors.
+        const float mult = M_PI / (numFacets - 1);
+        const float start = -0.5f * M_PI;
+        
+        const float ang = start + static_cast<float>(i) * mult;
+        const float ybase = cosf(ang);
+        const float zbase = sinf(ang);
+
+        GLKVector3 norm = GLKVector3Add(GLKVector3MultiplyScalar(fwd, zbase), GLKVector3Make(0, ybase, 0));
+        GLKVector3 invNorm = GLKVector3Negate(norm);
+
+        const float hl = 0.5f * length;        
+        GLKVector3 far = GLKVector3MultiplyScalar(norm, hl);
+        GLKVector3 near = GLKVector3MultiplyScalar(norm, hl - thickness);
+
+        // Calculate some needed positions.
+        GLKVector3 centerLeft = GLKVector3Add(center, widthSub);
+        GLKVector3 centerRight = GLKVector3Add(center, widthAdd);
+
+        GLKVector3 farLeft = GLKVector3Add(centerLeft, far);
+        GLKVector3 nearLeft = GLKVector3Add(centerLeft, near);
+        GLKVector3 farRight = GLKVector3Add(centerRight, far);
+        GLKVector3 nearRight = GLKVector3Add(centerRight, near);
+
+        // Add the vertices for this position.
+        verts.push_back(Vertex(farLeft, norm));
+        verts.push_back(Vertex(farRight, norm));
+        verts.push_back(Vertex(farRight, invLeft));
+        verts.push_back(Vertex(nearRight, invLeft));
+        verts.push_back(Vertex(nearRight, invNorm));
+        verts.push_back(Vertex(nearLeft, invNorm));
+        verts.push_back(Vertex(nearLeft, left));
+        verts.push_back(Vertex(farLeft, left));
+        
+        // Add faces.
+        if (curFacetIdx > lastFacetIdx) {
+
+            const size_t VERTS_PER_FACET = 8;
+            for (size_t f = 0; f < VERTS_PER_FACET; f += 2) {
+                
+                size_t lb = lastFacetIdx + f;
+                size_t nb = curFacetIdx + f;
+                
+                indices.push_back(lb);
+                indices.push_back(lb + 1);
+                indices.push_back(nb + 1);
+
+                indices.push_back(lb);
+                indices.push_back(nb + 1);
+                indices.push_back(nb);
+            }
+        }
+        
+        lastFacetIdx = curFacetIdx;
+    }
+}
+
+// Build two crossing arches with the specified dimensions along 45 degree diagonals on the XZ plane.
+void buildDualArch(std::vector<Vertex>& verts, std::vector<unsigned short>& indices, const GLKVector3& center,
+                   float size, float thickness, float width, size_t facets)
+{
+    GLKVector3 f1 = GLKVector3Normalize(GLKVector3Make(1.f, 0.f, 1.f));
+    GLKVector3 f2 = GLKVector3Normalize(GLKVector3Make(1.f, 0.f, -1.f));
+    GLKVector3 f3 = GLKVector3Normalize(GLKVector3Make(-1.f, 0.f, -1.f));
+    
+    buildArch(verts, indices, center, f1, f2, size, thickness, width, facets);
+    buildArch(verts, indices, center, f2, f3, size, thickness, width, facets);
+}
+
+// Build a multilayer arch with the given number of layers.  The top layer will have a single arch, the second
+// 2x2 aches, the third 3x3, and so on.  Arrange arches such that the bottoms connect to the top of the next layer down.
+void buildMultiArch(std::vector<Vertex>& verts, std::vector<unsigned short>& indices,
+                    const GLKVector3& center, size_t numLayers, float archLength, float archThickness,
+                    float archWidth, size_t archFacets)
+{
+    if (numLayers == 1) {
+        buildDualArch(verts, indices, center, archLength, archThickness, archWidth, archFacets);
+    } else if (numLayers > 1) {
+        float archXZLength = sqrtf(0.5f * archLength * archLength);
+        
+        const size_t numArches = numLayers;
+        float innerLength = (numArches - 1) * archXZLength;
+        
+        buildMultiArch(verts, indices, GLKVector3Add(center, GLKVector3Make(0.f, 0.5f * archLength, 0.f)),
+                       numLayers - 1, archLength, archThickness, archWidth, archFacets);
+
+        float firstX = center.x - 0.5f * innerLength;
+        float firstZ = center.z - 0.5f * innerLength;
+        
+        for (size_t i = 0; i < numArches; i ++) {
+            for (size_t j = 0; j < numArches; j ++) {
+                GLKVector3 curCenter = GLKVector3Make(firstX + i * archXZLength, center.y, firstZ + j * archXZLength);
+                buildDualArch(verts, indices, curCenter, archLength, archThickness, archWidth, archFacets);
+            }
+        }
+    }
+}
+
+// Create a heightfield vertex buffer given a list of input heights.  Scales, calculates normals, etc.
+void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short>& indices, float width, float length, float height,
                    unsigned char* heights, size_t mapWidth, size_t mapHeight)
 {
+    if (mapWidth < 2 || mapHeight < 2) {
+        NSLog(@"Invalid height field parameters!");
+        return;
+    }
+    
     unsigned char minHeight = heights[0];
     unsigned char maxHeight = heights[0];
     for (int i = 1; i < mapWidth * mapHeight; i ++) {
@@ -115,7 +222,7 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
                 dy += (curY - verts[(y + 1) * mapWidth + x].pos.y);
             }
 
-            v.norm = GLKVector3Normalize(GLKVector3Make(dx, 2.f, dy));
+            v.norm = GLKVector3Normalize(GLKVector3Make(dx, 1.f, dy)); // normally y is 2.f, it's reduced here to exaggerate lighting.
         }
     }
     
@@ -140,12 +247,15 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     }
 }
 
+}
+
 @implementation GLKitExampleController {
     EAGLContext* _ctx;
     GLKView*_outputView;
     GLuint _vb, _ib;
     std::vector<Vertex> _verts;
     std::vector<unsigned short> _indices;
+    size_t _archStart;
     GLKBaseEffect* _effect;
     float _rotation;
 }
@@ -154,7 +264,9 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
 {
     _verts.resize(0);
     _indices.resize(0);
-    buildGeometry(_verts, _indices, 25.f, 25.f, 1.5f, heights, 32, 32);
+    buildGeometry(_verts, _indices, 17.f, 17.f, 1.f, heights, 16, 16);
+    _archStart = _indices.size();
+    buildMultiArch(_verts, _indices, GLKVector3Make(0.f, 0.f, 0.f), 4, 4.f, 0.25f, 0.25f, 8);
 
     glGenBuffers(1, &_vb);
     glGenBuffers(1, &_ib);
@@ -177,14 +289,10 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     _effect.lightingType = GLKLightingTypePerPixel;
     _effect.lightModelAmbientColor = GLKVector4Make(0.1f, 0.1f, 0.1f, 1.f);
 
-    _effect.material.diffuseColor = GLKVector4Make(0.4f, 1.f, 0.7f, 1.f);
-    _effect.material.specularColor = GLKVector4Make(0.25f, 0.25f, 0.075f, 1.f);
-    _effect.material.shininess = 2.f;
-
     _effect.fog.enabled = TRUE;
     _effect.fog.mode = GLKFogModeLinear;
     _effect.fog.start = 1.f;
-    _effect.fog.end = 17.f;
+    _effect.fog.end = 25.f;
     _effect.fog.color = FOG_COLOR;
 }
 
@@ -237,27 +345,20 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     GLKMatrix4 proj = GLKMatrix4MakePerspective(M_PI / 3, aspect, 0.5f, 25.f);
     _effect.transform.projectionMatrix = proj;
 
-    GLKMatrix4 lookAt = GLKMatrix4MakeLookAt(0.f, 5.f, -6.f, 0, 0, 0, 0, 1.f, 0);
+    GLKMatrix4 lookAt = GLKMatrix4MakeLookAt(0.f, 7.f, -11.f, 0, 0, 0, 0, 1.f, 0);
     _effect.transform.modelviewMatrix = lookAt;
         
     _effect.light0.enabled = TRUE;
-    _effect.light0.position = GLKVector4Make(3.f, 1.5f, -5.f, 1.f);
-    _effect.light0.diffuseColor = GLKVector4Make(1.f, 0.8f, 0.35f, 1.f);
-    _effect.light0.spotDirection = GLKVector3Make(0, 0, 1.f);
-    _effect.light0.spotExponent = 10.f;
-    _effect.light0.spotCutoff = 45.f;
+    _effect.light0.position = GLKVector4Make(-4.5f, 9.5f, -7.f, 1.f);
+    _effect.light0.diffuseColor = GLKVector4Make(0.9f, 0.9f, 1.f, 1.f);
     
-    _effect.light1.enabled = TRUE;
-    _effect.light1.position = GLKVector4Make(-3.f, 1.5f, -5.f, 1.f);
-    _effect.light1.diffuseColor = GLKVector4Make(2.f, 0.3f, 0.1f, 1.f);
-    _effect.light1.spotDirection = GLKVector3Make(0, 0, 1.f);
-    _effect.light1.spotExponent = 10.f;
-    _effect.light1.spotCutoff = 45.f;
-
     _effect.transform.modelviewMatrix = GLKMatrix4RotateY(lookAt, _rotation);;
 
+    _effect.material.diffuseColor = GLKVector4Make(0.15f, 0.55f, 0.25f, 1.f);
+    
     [_effect prepareToDraw];
 
+    // Draw ground.
     glBindBuffer(GL_ARRAY_BUFFER, _vb);
 
     glEnableVertexAttribArray(GLKVertexAttribPosition);
@@ -266,13 +367,18 @@ static void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short
     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, norm));
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ib);
+   
+    glDrawElements(GL_TRIANGLES, _archStart, GL_UNSIGNED_SHORT, 0);
 
-    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_SHORT, 0);
-
+    // Draw arches.
+    _effect.material.diffuseColor = GLKVector4Make(1.f, 1.f, 1.f, 1.f);    
+    [_effect prepareToDraw];
+    glDrawElements(GL_TRIANGLES, _indices.size() - _archStart, GL_UNSIGNED_SHORT, (GLvoid*)(_archStart * sizeof(unsigned short)));
+    
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);    
 
-    _rotation += (1.f / 360.f) * M_PI;
+    _rotation += (72.f / 360.f) * (float)self.timeSinceLastDraw;
 }
 
 @end

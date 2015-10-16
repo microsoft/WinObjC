@@ -123,3 +123,295 @@ TEST(Foundation, NSUUID) {
         "FAILED: NSUUID should have failed to parse this short string: %s",
         [[uuidShort description] UTF8String]);
 }
+
+@interface TestKVOChange: NSObject
+@property (nonatomic, copy) NSString* keypath;
+@property (nonatomic, assign /*weak but no arc*/) id object;
+@property (nonatomic, copy) NSDictionary* info;
+@property (nonatomic, assign) void* context;
+@end
+@implementation TestKVOChange
++ (id)changeWithKeypath:(NSString*)keypath object:(id)object info:(NSDictionary*)info context:(void*)context {
+    TestKVOChange *change = [[self alloc] init];
+    change.keypath = keypath;
+    change.object = object;
+    change.info = info;
+    change.context = context;
+    return change;
+}
+@end
+
+
+@interface TestKVOObserver: NSObject {
+    NSMutableDictionary *_changedKeypaths;
+}
+- (void)observeValueForKeyPath:(NSString*)keypath ofObject:(id)object change:(NSDictionary*)change context:(void*)context;
+- (NSSet*)changesForKeypath:(NSString*)keypath;
+@end
+
+@implementation TestKVOObserver
+- (id)init {
+    if (self = [super init]) {
+        _changedKeypaths = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+- (void)observeValueForKeyPath:(NSString*)keypath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+    @synchronized(self) {
+        NSMutableSet *changeSet = _changedKeypaths[keypath];
+        if (!changeSet) {
+            changeSet = [NSMutableSet set];
+            _changedKeypaths[keypath] = changeSet;
+        }
+        [changeSet addObject:[TestKVOChange changeWithKeypath:keypath object:object info:change context:context]];
+    }
+}
+- (NSSet*)changesForKeypath:(NSString*)keypath {
+    @synchronized(self) {
+        return [_changedKeypaths[keypath] copy];
+    }
+}
+- (void)clear {
+    @synchronized(self) {
+        [_changedKeypaths removeAllObjects];
+    }
+}
+@end
+
+struct TestKVOStruct {
+    int a, b, c;
+};
+
+@interface TestKVOObject: NSObject {
+    int _manuallyNotifyingIntegerProperty;
+    int _ivarWithoutSetter;
+}
+
+@property (nonatomic, retain) NSString* nonNotifyingObjectProperty;
+
+@property (nonatomic, retain) NSString* basicObjectProperty;
+@property (nonatomic, assign) uint32_t basicPodProperty;
+@property (nonatomic, assign) TestKVOStruct structProperty;
+
+// derivedObjectProperty is derived from basicObjectProperty.
+@property (nonatomic, readonly) NSString* derivedObjectProperty;
+
+@property (nonatomic, retain) TestKVOObject* cascadableKey;
+
+// This modifies the internal integer property and notifies about it.
+- (void)incrementManualIntegerProperty;
+@end
+
+@implementation TestKVOObject
++ (NSSet*)keyPathsForValuesAffectingDerivedObjectProperty {
+    return [NSSet setWithObject:@"basicObjectProperty"];
+}
+
++ (BOOL)automaticallyNotifiesObserversOfManuallyNotifyingIntegerProperty {
+    return NO;
+}
+
++ (BOOL)automaticallyNotifiesObserversOfNonNotifyingObjectProperty {
+    return NO;
+}
+
+- (NSString*)derivedObjectProperty {
+    return [NSString stringWithFormat:@"!!!%@!!!", _basicObjectProperty];
+}
+
+- (void)incrementManualIntegerProperty {
+    [self willChangeValueForKey:@"manuallyNotifyingIntegerProperty"];
+    _manuallyNotifyingIntegerProperty++;
+    [self didChangeValueForKey:@"manuallyNotifyingIntegerProperty"];
+}
+@end
+
+TEST(Foundation, KeyValueObservation) {
+    { // Basic change notification
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.basicObjectProperty = @"Hello";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "One change on basicObjectProperty should have fired.");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count], 0, "Zero changes on basicPodProperty should have fired.");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"derivedObjectProperty"] count], 0, "Zero changes on derivedObjectProperty should have fired.");
+
+        EXPECT_EQ_MSG([[[observer changesForKeypath:@"basicObjectProperty"] anyObject] object], observed,
+            "The notification object should match the observed object.");
+        EXPECT_EQ_MSG((id)[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], (id)nil,
+            "There should be no old value included in the change notification.");
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@"Hello"],
+            "The new value stored in the change notification should be Hello.");
+    }
+    { // Exclusive change notification
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+        TestKVOObserver *observer2 = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed addObserver:observer2 forKeyPath:@"basicPodProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.basicObjectProperty = @"Hello";
+        observed.basicPodProperty = 1;
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "One change on basicObjectProperty should have fired.");
+        EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicObjectProperty"] count], 0, "No changes on basicObjectProperty for second observer should have fired.");
+        EXPECT_EQ_MSG([[observer2 changesForKeypath:@"basicPodProperty"] count], 1, "One change on basicPodProperty should have fired.");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count], 0, "No changes on basicPodProperty for second observer should have fired.");
+    }
+    { // Manual change notification.
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"manuallyNotifyingIntegerProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed incrementManualIntegerProperty];
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"manuallyNotifyingIntegerProperty"] count], 1, "One change on manuallyNotifyingIntegerProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"manuallyNotifyingIntegerProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1)],
+            "The new value stored in the change notification should be a boxed 1.");
+    }
+    { // Basic change notification with Old Value
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionOld context:NULL];
+        observed.basicObjectProperty = @"Hello";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "One change on basicObjectProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+            "The old value stored in the change notification should be null.");
+    }
+    { // Cascading change notification testing subscribing to nil AND property replacement
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"cascadableKey.basicObjectProperty" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:NULL];
+
+        TestKVOObject *subObject = [[TestKVOObject alloc] init];
+        subObject.basicObjectProperty = @"Hello";
+        observed.cascadableKey = subObject;
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] count], 1, "One change on cascadableKey.basicObjectProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+            "The old value stored in the change notification should be null.");
+
+        [observer clear];
+
+        TestKVOObject *subObject2 = [[TestKVOObject alloc] init];
+        subObject2.basicObjectProperty = @"Hello";
+        observed.cascadableKey = subObject2;
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] count], 1, "A second change on cascadableKey.basicObjectProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:@"Hello"],
+            "The old value stored in the change notification should be Hello.");
+    }
+    { // Basic change notification with a Prior notification requested
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionPrior context:NULL];
+        observed.basicObjectProperty = @"Hello";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 2, "Two changes on basicObjectProperty should have fired (one prior change).");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+            "The old value stored in the change notification should be null or nil.");
+    }
+    { // Derived change notification (dependent keys)
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"derivedObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.basicObjectProperty = @"Hello";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 0, "No changes on basicObjectProperty should have fired (we did not register for it).");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"derivedObjectProperty"] count], 1, "One change on derivedObjectProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"derivedObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@"!!!Hello!!!"],
+            "The new value stored in the change notification should be !!!Hello!!! (the derived object).");
+    }
+    { // Notification on a plain old data property (non-object)
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicPodProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.basicPodProperty = 10;
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count], 1, "One change on basicPodProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]],
+            "The new value stored in the change notification should be an NSNumber instance.");
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(10)],
+            "The new value stored in the change notification should be a boxed 10.");
+    }
+    { // Basic change notification on a struct type
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"structProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.structProperty = TestKVOStruct{1,2,3};
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"structProperty"] count], 1, "One change on structProperty should have fired.");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isKindOfClass:[NSValue class]],
+            "The new value stored in the change notification should be an NSValue instance.");
+        EXPECT_TRUE_MSG(strcmp([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] objCType], @encode(TestKVOStruct)) == 0,
+            "The new objc type stored in the change notification should have an objc type matching our Struct.");
+    }
+    { // No notification for non-notifying keypaths.
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"nonNotifyingObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        observed.nonNotifyingObjectProperty = @"Whatever";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"nonNotifyingObjectProperty"] count], 0, "No changes for nonNotifyingObjectProperty should have fired.");
+    }
+    { // Initial notification for non-notifying keypaths.
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"nonNotifyingObjectProperty" options:NSKeyValueObservingOptionInitial context:NULL];
+        observed.nonNotifyingObjectProperty = @"Whatever";
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"nonNotifyingObjectProperty"] count], 1, "An INITIAL notification for nonNotifyingObjectProperty should have fired.");
+    }
+    { // Notification of ivar change through setValue:forKey:
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"ivarWithoutSetter" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed setValue:@(1024) forKey:@"ivarWithoutSetter"];
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"ivarWithoutSetter"] count], 1, "One change on ivarWithoutSetter should have fired (using setValue:forKey:).");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"ivarWithoutSetter"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1024)],
+            "The new value stored in the change notification should a boxed 1024.");
+    }
+    { // Notification through setValue:forKey: to make sure that we do not get two notifications for the same change.
+        TestKVOObject *observed = [[TestKVOObject alloc] init];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed setValue:@(1024) forKey:@"basicObjectProperty"];
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "ONLY one change on basicObjectProperty should have fired (using setValue:forKey: should not fire twice).");
+
+        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1024)],
+            "The new value stored in the change notification should a boxed 1024.");
+    }
+    { // Basic notification on a dictionary, which does not have properties or ivars.
+        NSMutableDictionary *observed = [NSMutableDictionary dictionary];
+        TestKVOObserver *observer = [[TestKVOObserver alloc] init];
+
+        [observed addObserver:observer forKeyPath:@"arbitraryValue" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed setObject:@"Whatever" forKey:@"arbitraryValue"];
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"arbitraryValue"] count], 1, "On a NSMutableDictionary, a change notification for arbitraryValue.");
+    }
+}

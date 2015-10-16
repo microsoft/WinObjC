@@ -27,3 +27,7 @@
     return (scale[0] + scale[1] + scale[2]) / 3.0f;
 }
 @end
+
+void NSValueForceinclude() {
+    [NSValue class];
+}

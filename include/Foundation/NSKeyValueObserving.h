@@ -17,25 +17,39 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSDictionary, NSSet;
 
-SB_EXPORT NSString * const NSKeyValueChangeKindKey;
-SB_EXPORT NSString * const NSKeyValueChangeNewKey;
-SB_EXPORT NSString * const NSKeyValueChangeOldKey;
-SB_EXPORT NSString * const NSKeyValueChangeIndexesKey;
-SB_EXPORT NSString * const NSKeyValueChangeNotificationIsPriorKey;
-
+FOUNDATION_EXPORT NSString * const NSKeyValueChangeKindKey;
+FOUNDATION_EXPORT NSString * const NSKeyValueChangeNewKey;
+FOUNDATION_EXPORT NSString * const NSKeyValueChangeOldKey;
+FOUNDATION_EXPORT NSString * const NSKeyValueChangeIndexesKey;
+FOUNDATION_EXPORT NSString * const NSKeyValueChangeNotificationIsPriorKey;
 
 enum {
+    // Requests that a change notification include the new value of the keypath.
     NSKeyValueObservingOptionNew = 0x01,
+
+    // Requests that a change notification include the old value of the keypath.
     NSKeyValueObservingOptionOld = 0x02,
+
+    // Requests that a change notification be dispatched immediately -- before the
+    // keypath in question has changed. This occurs during observer registration.
     NSKeyValueObservingOptionInitial = 0x04,
-    NSKeyValueObservingOptionPrior = 0x08
+
+    // Requests that a change notification be generated both before and after a change,
+    // instead of simply after it.
+    // Notifications of this manner can be differentiated by the presence of
+    // NSKeyValueChangeNotificationIsPriorKey.
+    NSKeyValueObservingOptionPrior = 0x08,
 };
 typedef NSUInteger NSKeyValueObservingOptions;
 
 enum {
+    // Indicates that the observed keypath was set to a new value.
     NSKeyValueChangeSetting=1,
+    // Indicates that an object has been inserted into a to-many relationship.
     NSKeyValueChangeInsertion=2,
+    // Indicates that an object has been removed from a to-many relationship.
     NSKeyValueChangeRemoval=3,
+    // Indicates that an object in a to-many relationship has been replaced.
     NSKeyValueChangeReplacement=4,
 };
 typedef NSUInteger NSKeyValueChange;

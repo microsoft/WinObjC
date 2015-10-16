@@ -33,6 +33,7 @@
 
 void NSObjForceinclude();
 void NSStringForceinclude();
+void NSValueForceinclude();
 
 // Make sure things are compiled in:
 void ForceInclusion() {
@@ -50,4 +51,5 @@ void ForceInclusion() {
     [UIProxyObject class];
     NSObjForceinclude();
     NSStringForceinclude();
+    NSValueForceinclude();
 }
