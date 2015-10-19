@@ -24,6 +24,11 @@
 #pragma clang diagnostic pop
 #endif
 
+#ifdef __OBJC__
+#include <objc/objc.h>
+#include <Foundation/NSString.h>
+#endif
+
 namespace GTestLogPrivate
 {
 
@@ -38,6 +43,13 @@ namespace GTestLogPrivate
 template<typename ... Args>
 std::vector<char> Format(const char* message, Args ... args)
 {
+#ifdef __OBJC__
+    static NSString* (*formatImp)(id,SEL,NSString*,...) = reinterpret_cast<decltype(formatImp)>(class_getMethodImplementation(object_getClass([NSString class]), @selector(stringWithFormat:)));
+    NSString *string = formatImp([NSString class], @selector(stringWithFormat:), [NSString stringWithUTF8String:message], args ...);
+    std::vector<char> buffer([string length] + 1);
+    memcpy(buffer.data(), [string UTF8String], buffer.size() - 1);
+    return buffer;
+#else
     // Calculate the size needed, add 1 for the null terminator
     size_t size = _snprintf(nullptr, 0, message, args ...) + 1;
 
@@ -45,6 +57,7 @@ std::vector<char> Format(const char* message, Args ... args)
     std::vector<char> buffer(size);
     snprintf(buffer.data(), size, message, args ...);
     return buffer;
+#endif
 }
 
 #if defined __clang__
@@ -52,6 +65,63 @@ std::vector<char> Format(const char* message, Args ... args)
 #endif
 
 }
+
+#ifdef __OBJC__
+namespace GTestLogPrivate
+{
+template<typename ... Args>
+std::vector<char> Format(NSString* message, Args ... args)
+{
+    return Format([message UTF8String], std::forward<Args>(args)...);
+}
+}
+
+namespace woc {
+namespace testing {
+inline ::testing::AssertionResult CompareObjectsEqual(
+    const char* expectedExpression,
+    const char* actualExpression,
+    const id& expected,
+    const id& actual) {
+    if ((!expected && !actual) || (expected && actual && [expected isEqual:actual])) {
+        return ::testing::AssertionSuccess();
+    }
+
+    return ::testing::internal::CmpHelperEQFailure(expectedExpression, actualExpression, expected, actual);
+}
+
+inline ::testing::AssertionResult CompareObjectsNotEqual(
+    const char* expectedExpression,
+    const char* actualExpression,
+    const id& expected,
+    const id& actual) {
+    if (!(expected && actual && [expected isEqual:actual]) && (expected != actual)) {
+        return ::testing::AssertionSuccess();
+    }
+
+    return ::testing::internal::CmpHelperOpFailure(expectedExpression, actualExpression, expected, actual, "!=");
+}
+}
+}
+
+namespace testing {
+namespace internal {
+inline std::ostream& operator<<(std::ostream& os, const id& object) {
+    return os << (char*)([[object description] UTF8String]);
+}
+}
+}
+
+#define EXPECT_OBJCEQ(expected, actual) \
+  EXPECT_PRED_FORMAT2(::woc::testing::CompareObjectsEqual, expected, actual)
+#define EXPECT_OBJCNE(expected, actual) \
+  EXPECT_PRED_FORMAT2(::woc::testing::CompareObjectsNotEqual, expected, actual)
+
+#define ASSERT_OBJCEQ(expected, actual) \
+  ASSERT_PRED_FORMAT2(::woc::testing::CompareObjectsEqual, expected, actual)
+#define ASSERT_OBJCNE(expected, actual) \
+  ASSERT_PRED_FORMAT2(::woc::testing::CompareObjectsNotEqual, expected, actual)
+#endif
 
 /////////////////////////////////////////////////////////
 // Logging macros
@@ -157,6 +227,14 @@ std::vector<char> Format(const char* message, Args ... args)
 #define ASSERT_ANY_THROW_MSG(statement, format, ...) \
     ASSERT_ANY_THROW(statement) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
 
+// ASSERT_OBJCEQ with formatted message string
+# define ASSERT_OBJCEQ_MSG(val1, val2, format, ...) \
+    ASSERT_OBJCEQ(val1, val2) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
+
+// ASSERT_OBJCNE with formatted message string
+# define ASSERT_OBJCNE_MSG(val1, val2, format, ...) \
+    ASSERT_OBJCNE(val1, val2) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
+
 ///////////////////////////////////////////////////////////
 // Expect macros (fails, but continues the test on failure)
 ///////////////////////////////////////////////////////////
@@ -240,3 +318,13 @@ std::vector<char> Format(const char* message, Args ... args)
 // EXPECT_ANY_THROW with formatted message string
 #define EXPECT_ANY_THROW_MSG(statement, format, ...) \
     EXPECT_ANY_THROW(statement) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
+
+// EXPECT_OBJCEQ with formatted message string
+# define EXPECT_OBJCEQ_MSG(val1, val2, format, ...) \
+    EXPECT_OBJCEQ(val1, val2) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
+
+// EXPECT_OBJCNE with formatted message string
+# define EXPECT_OBJCNE_MSG(val1, val2, format, ...) \
+    EXPECT_OBJCNE(val1, val2) << GTestLogPrivate::Format(format, __VA_ARGS__).data()
+
+
