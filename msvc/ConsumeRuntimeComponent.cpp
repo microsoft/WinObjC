@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 
+#ifdef _WOC_APP
 #pragma comment(linker, "/INCLUDE:___refMTAThread")
 
 extern "C"
@@ -36,4 +37,11 @@ int __cdecl main(::Platform::Array<::Platform::String^>^ args)
 	EbrDefaultXamlMain();
 }
 #endif
+#else // _WOC_APP
+// We need to export something to ensure we link a viable PE
+void __declspec(dllexport) EbrEnsureLinkage()
+{
+
+}
+#endif // !_WOC_APP
 

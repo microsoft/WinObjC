@@ -13,93 +13,94 @@
   </ItemGroup>
    
   <PropertyGroup>
-	<IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
+    <IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
     <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
     </ClCompile>
   </ItemGroup>
   
   <Target
     Name="CopyStarboardDependencies"
-	AfterTargets="Link">
+    AfterTargets="Link">
     
     <PropertyGroup>
       <LinkAdditionalDependencies>@(Link);@(Link->Metadata('AdditionalDependencies'))</LinkAdditionalDependencies>
     </PropertyGroup>
-	
-	<PropertyGroup>
-		<IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
-		<IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
-		<IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
-        <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
-        <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
-        <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
-		<IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
-		<IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
-		<IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
-		<IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
-		<IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
-		<IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
-		<IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
-		<IncludeObjcrt>true</IncludeObjcrt>
-		<IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
-	</PropertyGroup>
-	
+  
+    <PropertyGroup>
+      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+      <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
+      <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
+      <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
+      <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
+      <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
+      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
+      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+      <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
+      <IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
+      <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
+      <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+      <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
+      <IncludeObjcrt>true</IncludeObjcrt>
+      <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
+    </PropertyGroup>
+  
     <ItemGroup>
-	  <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
-	  <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
-	
-	  <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
-	  <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
-	  <SBResourceCopy Condition="'$(IncludeCoreFoundation)' == 'true'" Include="$(StarboardLibDirs)\CoreFoundation.dll" />
-	  <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
-	  <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
-	  <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
+      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
+      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
+    
+      <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
+      <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreFoundation)' == 'true'" Include="$(StarboardLibDirs)\CoreFoundation.dll" />
+      <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
+      <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
+      <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
+      <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
-	  <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
-	  <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
+      <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
+      <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
 
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\cairo.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\freetype.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
-	  <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\cairo.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\freetype.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
+      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
 
       <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
 
-	  <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
-	  <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
-	  <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
-	  <SBResourceCopy Condition="'$(IncludeAutoLayout)' == 'true'" Include="$(StarboardLibDirs)\AutoLayout.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
+      <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
+      <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeAutoLayout)' == 'true'" Include="$(StarboardLibDirs)\AutoLayout.dll" />
 
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
-	  <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
+      <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
+      <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
+      <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
     </ItemGroup>
   </Target>
 
   <UsingTask
     TaskName="Clang"
     AssemblyFile="ClangCompileTask.dll"/>
-	
+  
   <PropertyGroup>
     <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
-	<ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
-	<ClangCompileAfterTargets>ClCompile</ClangCompileAfterTargets>
-	<BuildCompileTargets>$(BuildCompileTargets);_ClangCompile</BuildCompileTargets>
+    <ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
+    <ClangCompileAfterTargets>ClCompile</ClangCompileAfterTargets>
+    <BuildCompileTargets>$(BuildCompileTargets);_ClangCompile</BuildCompileTargets>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -131,7 +132,7 @@
       CommandTLogFile="%(ClangCompile.CommandTLogFile)"
       CompileAs="%(ClangCompile.CompileAs)"
       DebugInformation="%(ClangCompile.DebugInformation)"
-  	  DependencyFile="%(ClangCompile.DependencyFile)"
+      DependencyFile="%(ClangCompile.DependencyFile)"
       DependencySource="%(ClangCompile.DependencySource)"
       ExceptionHandling="%(ClangCompile.ExceptionHandling)"
       HeaderMapInclude="%(ClangCompile.HeaderMapInclude)"
@@ -149,8 +150,8 @@
       UserIncludePaths="%(ClangCompile.UserIncludePaths)"
       ReadTLogFile="%(ClangCompile.ReadTLogFile)"
       AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
-	    <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
-	</Clang>
+      <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
+    </Clang>
   </Target>
   
   <Target
@@ -176,7 +177,7 @@
     Condition="'$(CombinedHMapRequired)' == 'true'"
     Inputs="@(HeaderMapEntry)"
     Outputs="$(CombinedHMapFilename).txt">
-	
+  
     <!-- Only support ASCII paths for now -->
     <WriteLinesToFile
       File="$(CombinedHMapFilename).txt"
@@ -196,10 +197,10 @@
       <HeaderMapEntry Include="%(ClInclude.FullPath)" />
       <HeaderMap Include="$(ProjectHMapFilename)" />
     </ItemGroup>
-	
-	<ItemGroup Condition="@(HeaderMapEntry) == ''">
-		<HeaderMapEntry Include="Empty" />
-	</ItemGroup>
+  
+    <ItemGroup Condition="@(HeaderMapEntry) == ''">
+      <HeaderMapEntry Include="Empty" />
+    </ItemGroup>
   </Target>
 
   <Target
@@ -227,8 +228,8 @@
     Inputs="@(HeaderMap->'%(Identity).txt')"
     Outputs="@(HeaderMap->'%(Identity).hmap')">
 
-   <Exec
-     Command="&quot;$(MSBuildThisFileDirectory)..\bin\hmapmaker.exe&quot; &quot;%(HeaderMap.Identity).txt&quot; &quot;%(HeaderMap.Identity).hmap&quot;" />
+    <Exec
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\hmapmaker.exe&quot; &quot;%(HeaderMap.Identity).txt&quot; &quot;%(HeaderMap.Identity).hmap&quot;" />
   </Target>
 
   <!-- Create parent directories for all object files -->
@@ -238,7 +239,7 @@
 
   <Target Name="ComputeClangOptions" Condition="">
     <!-- Figure out what to compile each file as -->
-   <ItemGroup>
+    <ItemGroup>
       <ClangCompile Condition="'%(ClangCompile.CompileAs)' == 'Default' or '%(ClangCompile.CompileAs)' == ''">
         <CompileAs Condition="'%(Extension)'=='.c'">CompileAsC</CompileAs>
         <CompileAs Condition="'%(Extension)'=='.m'">CompileAsObjC</CompileAs>
@@ -246,7 +247,7 @@
         <CompileAs Condition="'%(Extension)'=='.mm' or '%(Extension)'=='.mxx'">CompileAsObjCpp</CompileAs>
       </ClangCompile>
     </ItemGroup>
-	
+    
     <!-- Figure out language-specific flags -->
     <ItemGroup>
       <ClangCompile>
@@ -271,7 +272,6 @@
         <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem "$(StarboardSdkRoot)\include\WOCStdLib" -include WOCStdlib.h</WOCStdlibOptions>
       </ClangCompile>
     </ItemGroup>
-
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
@@ -290,10 +290,10 @@
   </PropertyGroup>
 
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
-	<PropertyGroup>
-	  <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
-	  <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
-	</PropertyGroup>
+    <PropertyGroup>
+      <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
+      <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
+    </PropertyGroup>
     <ItemGroup>
       <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
