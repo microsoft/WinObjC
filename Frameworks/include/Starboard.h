@@ -19,6 +19,8 @@
 
 // Placeholder for unimplemented logging and telemetry
 #define UNIMPLEMENTED()
+#define FAIL_FAST()
+#define FAIL_FAST_MSG(format, ...)
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
