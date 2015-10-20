@@ -29,6 +29,7 @@ typedef enum {
    NSPropertyListBinaryFormat_v1_0,
 } NSPropertyListFormat;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSPropertyListSerialization : NSObject
 
 +(BOOL)propertyList:propertyList isValidForFormat:(NSPropertyListFormat)format;
