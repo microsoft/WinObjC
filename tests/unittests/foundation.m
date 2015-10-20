@@ -26,10 +26,10 @@ TEST(Foundation, SanityTest) {
     NSArray* arr2 = [NSArray arrayWithObject: @1];
     NSArray* arr3 = [NSArray arrayWithObject: @2];
 
-    ASSERT_TRUE_MSG([arr1 isEqual: arr2], "FAILED: arr1 and arr2 should be equal!\n");
-    ASSERT_FALSE_MSG([arr1 isEqual: arr3], "FAILED: arr1 and arr2 should not be equal!\n");
-    ASSERT_EQ_MSG(arr1[0], arr2[0], "FAILED: arr1[0] and arr2[0] should be equal!\n");
-    ASSERT_NE_MSG(arr1[0], arr3[0], "FAILED: arr1[0] and arr3[0] should not be equal!\n");
+    ASSERT_OBJCEQ_MSG(arr1, arr2, "FAILED: arr1 and arr2 should be equal!\n");
+    ASSERT_OBJCNE_MSG(arr1, arr3, "FAILED: arr1 and arr2 should not be equal!\n");
+    ASSERT_OBJCEQ_MSG(arr1[0], arr2[0], "FAILED: arr1[0] and arr2[0] should be equal!\n");
+    ASSERT_OBJCNE_MSG(arr1[0], arr3[0], "FAILED: arr1[0] and arr3[0] should not be equal!\n");
     
     /*** NSCalendar ***/    
     //  Feb 14, 2012 12:00 GMT (leap year)
@@ -91,7 +91,7 @@ TEST(Foundation, SanityTest) {
     
     /*** NSNull ***/
     NSNull* nul1 = [NSNull null], *nul2 = [NSNull alloc], *nul3 = [NSNull new], *nul4 = [nul1 copy];
-    ASSERT_FALSE_MSG( nul1 != nul2 || nul2 != nul3 || nul3 != nul4 || ![nul1 isEqual: nul4],
+    ASSERT_FALSE_MSG( nul1 != nul2 || nul2 != nul3 || nul3 != nul4 || ![nul1 isEqual:nul4],
         "FAILED: comp1 not accurate: %d %d %d %d %d %d\n", 
         comp1.second, 
         comp1.minute, 
@@ -106,11 +106,13 @@ TEST(Foundation, NSUUID) {
     NSUUID* uuidA = [NSUUID UUID];
     NSUUID* uuidB = [NSUUID UUID];
     NSUUID* uuidC = [NSUUID UUID];
-    ASSERT_FALSE_MSG([uuidA isEqual:uuidB] || [uuidB isEqual:uuidC],
+    ASSERT_OBJCNE_MSG(uuidA, uuidB,
+          "FAILED: NSUUID instances should be unique");
+    ASSERT_OBJCNE_MSG(uuidB, uuidC,
           "FAILED: NSUUID instances should be unique");
 
     NSUUID* uuidAClone = [[NSUUID alloc] initWithUUIDString:[uuidA UUIDString]];
-    ASSERT_TRUE_MSG([uuidA isEqual:uuidAClone] == YES,
+    ASSERT_OBJCEQ_MSG((id)uuidA, (id)uuidAClone,
           "FAILED: An NSUUID created from parsing the string format of another UUID should equal it.");
 
     NSUUID* uuidBad = [[NSUUID alloc] initWithUUIDString:@"HELLOWOR-LDTH-ISIS-ABAD-UUIDSTRING!!"];
@@ -238,11 +240,11 @@ TEST(Foundation, KeyValueObservation) {
         EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count], 0, "Zero changes on basicPodProperty should have fired.");
         EXPECT_EQ_MSG([[observer changesForKeypath:@"derivedObjectProperty"] count], 0, "Zero changes on derivedObjectProperty should have fired.");
 
-        EXPECT_EQ_MSG([[[observer changesForKeypath:@"basicObjectProperty"] anyObject] object], observed,
+        EXPECT_OBJCEQ_MSG([[[observer changesForKeypath:@"basicObjectProperty"] anyObject] object], observed,
             "The notification object should match the observed object.");
-        EXPECT_EQ_MSG((id)[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], (id)nil,
+        EXPECT_OBJCEQ_MSG(nil, [[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey],
             "There should be no old value included in the change notification.");
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@"Hello"],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @"Hello",
             "The new value stored in the change notification should be Hello.");
     }
     { // Exclusive change notification
@@ -269,7 +271,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"manuallyNotifyingIntegerProperty"] count], 1, "One change on manuallyNotifyingIntegerProperty should have fired.");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"manuallyNotifyingIntegerProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1)],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"manuallyNotifyingIntegerProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @(1),
             "The new value stored in the change notification should be a boxed 1.");
     }
     { // Basic change notification with Old Value
@@ -281,7 +283,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "One change on basicObjectProperty should have fired.");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], [NSNull null],
             "The old value stored in the change notification should be null.");
     }
     { // Cascading change notification testing subscribing to nil AND property replacement
@@ -296,7 +298,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] count], 1, "One change on cascadableKey.basicObjectProperty should have fired.");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], [NSNull null],
             "The old value stored in the change notification should be null.");
 
         [observer clear];
@@ -307,7 +309,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] count], 1, "A second change on cascadableKey.basicObjectProperty should have fired.");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:@"Hello"],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], @"Hello",
             "The old value stored in the change notification should be Hello.");
     }
     { // Basic change notification with a Prior notification requested
@@ -319,7 +321,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 2, "Two changes on basicObjectProperty should have fired (one prior change).");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey] isEqual:[NSNull null]],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey], [NSNull null],
             "The old value stored in the change notification should be null or nil.");
     }
     { // Derived change notification (dependent keys)
@@ -331,8 +333,10 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 0, "No changes on basicObjectProperty should have fired (we did not register for it).");
         EXPECT_EQ_MSG([[observer changesForKeypath:@"derivedObjectProperty"] count], 1, "One change on derivedObjectProperty should have fired.");
+        [observed removeObserver:observer forKeyPath:@"derivedObjectProperty"];
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"derivedObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@"!!!Hello!!!"],
+
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"derivedObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @"!!!Hello!!!",
             "The new value stored in the change notification should be !!!Hello!!! (the derived object).");
     }
     { // Notification on a plain old data property (non-object)
@@ -346,13 +350,15 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]],
             "The new value stored in the change notification should be an NSNumber instance.");
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(10)],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @(10),
             "The new value stored in the change notification should be a boxed 10.");
     }
     { // Basic change notification on a struct type
         TestKVOObject *observed = [[TestKVOObject alloc] init];
         TestKVOObserver *observer = [[TestKVOObserver alloc] init];
 
+
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 0, "No changes on basicObjectProperty should have fired.");
         [observed addObserver:observer forKeyPath:@"structProperty" options:NSKeyValueObservingOptionNew context:NULL];
         observed.structProperty = TestKVOStruct{1,2,3};
 
@@ -360,7 +366,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isKindOfClass:[NSValue class]],
             "The new value stored in the change notification should be an NSValue instance.");
-        EXPECT_TRUE_MSG(strcmp([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] objCType], @encode(TestKVOStruct)) == 0,
+        EXPECT_STREQ_MSG([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] objCType], @encode(TestKVOStruct),
             "The new objc type stored in the change notification should have an objc type matching our Struct.");
     }
     { // No notification for non-notifying keypaths.
@@ -390,7 +396,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"ivarWithoutSetter"] count], 1, "One change on ivarWithoutSetter should have fired (using setValue:forKey:).");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"ivarWithoutSetter"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1024)],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"ivarWithoutSetter"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @(1024),
             "The new value stored in the change notification should a boxed 1024.");
     }
     { // Notification through setValue:forKey: to make sure that we do not get two notifications for the same change.
@@ -402,7 +408,7 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"basicObjectProperty"] count], 1, "ONLY one change on basicObjectProperty should have fired (using setValue:forKey: should not fire twice).");
 
-        EXPECT_TRUE_MSG([[[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] isEqual:@(1024)],
+        EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey], @(1024),
             "The new value stored in the change notification should a boxed 1024.");
     }
     { // Basic notification on a dictionary, which does not have properties or ivars.
