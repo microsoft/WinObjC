@@ -49,10 +49,7 @@ __CGGradient::~__CGGradient() {
     free(_locations);
 }
 
-void __CGGradient::initWithColorComponents(const float* components,
-                                           const float* locations,
-                                           size_t count,
-                                           CGColorSpaceRef colorspace) {
+void __CGGradient::initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace) {
     DWORD componentCount = 0;
     __CGColorSpace* cs = (__CGColorSpace*)colorspace;
     _colorSpace = cs->colorSpace;

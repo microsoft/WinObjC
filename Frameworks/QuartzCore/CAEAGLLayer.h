@@ -19,15 +19,15 @@ class DisplayTextureEAGL;
 @interface CAEAGLLayer : CALayer {
 @public
     id properties;
-    DisplayTextureEAGL *_glTexture;
-    DisplayTexture *_primaryTexture;
+    DisplayTextureEAGL* _glTexture;
+    DisplayTexture* _primaryTexture;
 }
--(void) setDrawableProperties:(id)propertiesDict;
--(void) setOpaque:(BOOL)opaque;
--(void) _setDisplayTexture:(DisplayTexture *)tex;
--(DisplayTexture *) _getDisplayTexture;
--(NSDictionary*) drawableProperties;
--(void) display;
--(void) _releaseContents;
--(void) dealloc;
+- (void)setDrawableProperties:(id)propertiesDict;
+- (void)setOpaque:(BOOL)opaque;
+- (void)_setDisplayTexture:(DisplayTexture*)tex;
+- (DisplayTexture*)_getDisplayTexture;
+- (NSDictionary*)drawableProperties;
+- (void)display;
+- (void)_releaseContents;
+- (void)dealloc;
 @end

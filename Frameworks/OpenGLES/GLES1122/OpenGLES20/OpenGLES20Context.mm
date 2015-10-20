@@ -26,10 +26,7 @@ limitations under the License.
 using namespace OpenGLES::OpenGLES2;
 
 OpenGLES20Context::OpenGLES20Context()
-    : OpenGLESContext(2, new OpenGLES20Implementation()),
-      matrixStack(&openGLESState, implementation),
-      openGLESState(),
-      shaderProgramId(0) {
+    : OpenGLESContext(2, new OpenGLES20Implementation()), matrixStack(&openGLESState, implementation), openGLESState(), shaderProgramId(0) {
     implementation->init();
     matrixStack.init();
     openGLESState.init(implementation);
@@ -115,14 +112,8 @@ void OpenGLES20Context::glColorPointer(GLint size, GLenum type, GLsizei stride, 
     openGLESState.setColor(size, type, stride, pointer);
 }
 
-void OpenGLES20Context::glCompressedTexImage2D(GLenum target,
-                                               GLint level,
-                                               GLenum internalformat,
-                                               GLsizei width,
-                                               GLsizei height,
-                                               GLint border,
-                                               GLsizei imageSize,
-                                               const GLvoid* data) {
+void OpenGLES20Context::glCompressedTexImage2D(
+    GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid* data) {
     ::glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
@@ -455,13 +446,11 @@ void OpenGLES20Context::glFrontFace(GLenum mode) {
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
-void OpenGLES20Context::glFrustumf(
-    GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+void OpenGLES20Context::glFrustumf(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
     matrixStack.frustum(left, right, bottom, top, zNear, zFar);
 }
 
-void OpenGLES20Context::glFrustumx(
-    GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar) {
+void OpenGLES20Context::glFrustumx(GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar) {
     LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Not implemented.");
 }
 
@@ -717,13 +706,11 @@ void OpenGLES20Context::glNormalPointer(GLenum type, GLsizei stride, const GLvoi
     openGLESState.setNormal(3, type, stride, pointer);
 }
 
-void OpenGLES20Context::glOrthof(
-    GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+void OpenGLES20Context::glOrthof(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
     matrixStack.ortho(left, right, bottom, top, zNear, zFar);
 }
 
-void OpenGLES20Context::glOrthox(
-    GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar) {
+void OpenGLES20Context::glOrthox(GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar) {
     LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Not implemented.");
 }
 
@@ -757,8 +744,7 @@ void OpenGLES20Context::glPushMatrix(void) {
     matrixStack.pushMatrix();
 }
 
-void OpenGLES20Context::glReadPixels(
-    GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels) {
+void OpenGLES20Context::glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels) {
     ::glReadPixels(x, y, width, height, format, type, pixels);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
@@ -1075,8 +1061,7 @@ void OpenGLES20Context::glTexEnvi(GLenum target, GLenum pname, GLint param) {
                     openGLESState.setTextureEnvMode(param);
                     break;
                 default:
-                    LOG_MESSAGE(
-                        __FILE__, __LINE__, OpenGLESString("ERROR: Unknown GL_TEXTURE_ENV_MODE parameter ") + param);
+                    LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown GL_TEXTURE_ENV_MODE parameter ") + param);
                     break;
             }
             break;
@@ -1108,8 +1093,7 @@ void OpenGLES20Context::glTexEnvi(GLenum target, GLenum pname, GLint param) {
                     openGLESState.setTextureEnvCombineAlpha(param);
                     break;
                 default:
-                    LOG_MESSAGE(
-                        __FILE__, __LINE__, OpenGLESString("ERROR: Unknown GL_COMBINE_ALPHA parameter ") + param);
+                    LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown GL_COMBINE_ALPHA parameter ") + param);
                     break;
             }
             break;
@@ -1315,16 +1299,12 @@ void OpenGLES20Context::glEnableVertexAttribArray(GLuint index) {
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
-void OpenGLES20Context::glFramebufferRenderbuffer(GLenum target,
-                                                  GLenum attachment,
-                                                  GLenum renderbuffertarget,
-                                                  GLuint renderbuffer) {
+void OpenGLES20Context::glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {
     ::glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
-void OpenGLES20Context::glFramebufferTexture2D(
-    GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
+void OpenGLES20Context::glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {
     ::glFramebufferTexture2D(target, attachment, textarget, texture, level);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
@@ -1365,10 +1345,7 @@ int OpenGLES20Context::glGetAttribLocation(GLuint program, const GLchar* name) {
     return ::glGetAttribLocation(program, name);
 }
 
-void OpenGLES20Context::glGetFramebufferAttachmentParameteriv(GLenum target,
-                                                              GLenum attachment,
-                                                              GLenum pname,
-                                                              GLint* params) {
+void OpenGLES20Context::glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint* params) {
     ::glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
@@ -1398,10 +1375,7 @@ void OpenGLES20Context::glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsiz
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
-void OpenGLES20Context::glGetShaderPrecisionFormat(GLenum shadertype,
-                                                   GLenum precisiontype,
-                                                   GLint* range,
-                                                   GLint* precision) {
+void OpenGLES20Context::glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontype, GLint* range, GLint* precision) {
     ::glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
@@ -1471,8 +1445,7 @@ void OpenGLES20Context::glRenderbufferStorage(GLenum target, GLenum internalform
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }
 
-void OpenGLES20Context::glShaderBinary(
-    GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length) {
+void OpenGLES20Context::glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length) {
     ::glShaderBinary(n, shaders, binaryformat, binary, length);
     CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
 }

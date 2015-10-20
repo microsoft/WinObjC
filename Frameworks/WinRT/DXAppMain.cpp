@@ -35,10 +35,10 @@ using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
 
-void EbrConnectCompositor(ID3D11Device1 *device);
+void EbrConnectCompositor(ID3D11Device1* device);
 void EbrDisconnectCompositor();
-bool EbrComposite(ID3D11Device1 *device, ID3D11DeviceContext *context, ID3D11RenderTargetView *renderTarget);
-void RenderFrame(ID3D11Device1 *device, ID3D11DeviceContext *context, ID3D11RenderTargetView *renderTarget);
+bool EbrComposite(ID3D11Device1* device, ID3D11DeviceContext* context, ID3D11RenderTargetView* renderTarget);
+void RenderFrame(ID3D11Device1* device, ID3D11DeviceContext* context, ID3D11RenderTargetView* renderTarget);
 void StartNativeUI();
 extern HANDLE compositorReady;
 extern float windowWidth, windowHeight;
@@ -50,9 +50,7 @@ IDXGISwapChain* existingChain = NULL;
 ID3D11RenderTargetView* existingRtv = NULL;
 
 // Loads and initializes application assets when the application is loaded.
-DXAppMain::DXAppMain(const std::shared_ptr<StarboardWinRT::DeviceResources>& deviceResources) :
-    m_deviceResources(deviceResources)
-{
+DXAppMain::DXAppMain(const std::shared_ptr<StarboardWinRT::DeviceResources>& deviceResources) : m_deviceResources(deviceResources) {
     // Register to be notified if the Device is lost or recreated
     m_deviceResources->RegisterDeviceNotify(this);
 
@@ -64,26 +62,22 @@ DXAppMain::DXAppMain(const std::shared_ptr<StarboardWinRT::DeviceResources>& dev
     */
 }
 
-DXAppMain::~DXAppMain()
-{
+DXAppMain::~DXAppMain() {
     // Deregister device notification
     m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
 // Updates application state when the window size changes (e.g. device orientation change)
-void DXAppMain::CreateWindowSizeDependentResources() 
-{
+void DXAppMain::CreateWindowSizeDependentResources() {
     auto size = m_deviceResources->GetOutputSize();
     windowWidth = size.Width;
     windowHeight = size.Height;
 }
 
 // Updates the application state once per frame.
-void DXAppMain::Update() 
-{
+void DXAppMain::Update() {
     // Update scene objects.
-    m_timer.Tick([&]()
-    {
+    m_timer.Tick([&]() {
         // TODO: Replace this with your app's content update functions.
     });
 }
@@ -92,23 +86,21 @@ extern bool dxLandscape;
 
 // Renders the current frame according to the current application state.
 // Returns true if the frame was rendered and is ready to be displayed.
-bool DXAppMain::Render() 
-{
+bool DXAppMain::Render() {
     // Don't try to render anything before the first Update.
-    if (m_timer.GetFrameCount() == 0)
-    {
+    if (m_timer.GetFrameCount() == 0) {
         return false;
     }
 
     auto context = m_deviceResources->GetD3DDeviceContext();
-    //dxLandscape = false;
+    // dxLandscape = false;
 
     // Reset render targets to the screen.
-    ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
+    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
     context->OMSetRenderTargets(1, targets, NULL);
 
     static bool bInitialized = false;
-    if ( !bInitialized ) {
+    if (!bInitialized) {
         auto size = m_deviceResources->GetOutputSize();
         windowWidth = size.Width;
         windowHeight = size.Height;
@@ -125,55 +117,51 @@ bool DXAppMain::Render()
 }
 
 // Notifies renderers that device resources need to be released.
-void DXAppMain::OnDeviceLost()
-{
+void DXAppMain::OnDeviceLost() {
 }
 
 // Notifies renderers that device resources may now be recreated.
-void DXAppMain::OnDeviceRestored()
-{
+void DXAppMain::OnDeviceRestored() {
     CreateWindowSizeDependentResources();
 }
 
-#define EVENT_DOWN  0x64
-#define EVENT_MOVE  0x65
-#define EVENT_UP    0x66
+#define EVENT_DOWN 0x64
+#define EVENT_MOVE 0x65
+#define EVENT_UP 0x66
 
 void HandleInput(float x, float y, int fingerID, int eventType, float surfaceWidth, float surfaceHeight, int64_t eventTime);
 
-void DXAppMain::OnPointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
-    HandleInput(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y,
-        e->CurrentPoint->PointerId,
-        EVENT_DOWN,
-        sender->Bounds.Width,
-        sender->Bounds.Height,
-        0);
+void DXAppMain::OnPointerPressed(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
+    HandleInput(e->CurrentPoint->Position.X,
+                e->CurrentPoint->Position.Y,
+                e->CurrentPoint->PointerId,
+                EVENT_DOWN,
+                sender->Bounds.Width,
+                sender->Bounds.Height,
+                0);
 }
 
-void DXAppMain::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
-    HandleInput(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y,
-        e->CurrentPoint->PointerId,
-        EVENT_MOVE,
-        sender->Bounds.Width,
-        sender->Bounds.Height,
-        0);
+void DXAppMain::OnPointerMoved(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
+    HandleInput(e->CurrentPoint->Position.X,
+                e->CurrentPoint->Position.Y,
+                e->CurrentPoint->PointerId,
+                EVENT_MOVE,
+                sender->Bounds.Width,
+                sender->Bounds.Height,
+                0);
 }
 
-void DXAppMain::OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
-    HandleInput(e->CurrentPoint->Position.X, e->CurrentPoint->Position.Y,
-        e->CurrentPoint->PointerId,
-        EVENT_UP,
-        sender->Bounds.Width,
-        sender->Bounds.Height,
-        0);
+void DXAppMain::OnPointerReleased(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
+    HandleInput(e->CurrentPoint->Position.X,
+                e->CurrentPoint->Position.Y,
+                e->CurrentPoint->PointerId,
+                EVENT_UP,
+                sender->Bounds.Width,
+                sender->Bounds.Height,
+                0);
 }
 
-typedef void *EbrEvent;
+typedef void* EbrEvent;
 struct SocketWait;
 
-int EbrEventTimedMultipleWait(EbrEvent *events, int numEvents, double timeout, SocketWait *sockets);
-
-
+int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);

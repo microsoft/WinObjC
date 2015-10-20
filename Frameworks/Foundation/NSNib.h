@@ -16,13 +16,12 @@
 
 @interface NSNib : NSObject {
 @public
-   idretain _bundle;
+    idretain _bundle;
 }
--(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject;
--(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
--(NSArray*) loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
--(void) _setBundle:(NSBundle*)bundle;
--(NSBundle*) _bundle;
--(void) dealloc;
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject;
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
+- (NSArray*)loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
+- (void)_setBundle:(NSBundle*)bundle;
+- (NSBundle*)_bundle;
+- (void)dealloc;
 @end
-

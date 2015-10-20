@@ -191,8 +191,7 @@ static void transferNativeToSetWithOriginals(native_set* sset, id set, id origin
         interval -= timeval.tv_sec;
         timeval.tv_usec = (long)(interval * 1000000);
 
-        if ((numFds = select(maxDescriptor + 1, activeRead->fdset, activeWrite->fdset, activeExcept->fdset, &timeval)) <
-            0) {
+        if ((numFds = select(maxDescriptor + 1, activeRead->fdset, activeWrite->fdset, activeExcept->fdset, &timeval)) < 0) {
 #if defined(WIN32) || defined(WINPHONE)
             DWORD err = WSAGetLastError();
             EbrDebugLog("Select error %d\n", err);

@@ -118,9 +118,9 @@
     } else {
         char* mode = "wb";
 
-        if (_append)
+        if (_append) {
             mode = "ab";
-
+        }
         EbrDebugLog("Opening %s for writing\n", [filename UTF8String]);
         fp = EbrFopen([filename UTF8String], mode);
         if (!fp) {

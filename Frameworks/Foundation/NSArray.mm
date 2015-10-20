@@ -37,8 +37,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     va_list pReader;
     va_start(pReader, first);
     NSArray* ret = [self new];
-    if (first == nil)
+    if (first == nil) {
         return [ret autorelease];
+    }
     CFArrayAppendValue((CFMutableArrayRef)ret, (const void*)first);
 
     id curVal = va_arg(pReader, id);
@@ -98,8 +99,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     va_list pReader;
     va_start(pReader, first);
     [self init];
-    if (first == nil)
+    if (first == nil) {
         return self;
+    }
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)first);
 
     id curVal = va_arg(pReader, id);
@@ -132,8 +134,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 
     NSData* data = [NSData dataWithContentsOfFile:filename];
 
-    if (data == nil)
+    if (data == nil) {
         return nil;
+    }
 
     char* pData = (char*)[data bytes];
 
@@ -170,8 +173,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 - (NSObject*)lastObject {
     int count = [self count];
 
-    if (count == 0)
+    if (count == 0) {
         return nil;
+    }
 
     return [self objectAtIndex:count - 1];
 }
@@ -179,16 +183,16 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 - (NSObject*)firstObject {
     int count = [self count];
 
-    if (count == 0)
+    if (count == 0) {
         return nil;
+    }
 
     return [self objectAtIndex:0];
 }
 
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
-        EbrDebugLog(
-            "objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self));
+        EbrDebugLog("objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self));
         [NSException raise:@"Array out of bounds" format:@""];
         return nil;
     }
@@ -224,8 +228,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
             [ret addIndex:i];
         }
 
-        if (shouldStop)
+        if (shouldStop) {
             break;
+        }
     }
 
     return ret;
@@ -242,8 +247,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
             return i;
         }
 
-        if (shouldStop)
+        if (shouldStop) {
             break;
+        }
     }
 
     return NSNotFound;
@@ -282,13 +288,14 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 }
 
 - (NSArray*)initWithArray:(NSArray*)arrayToCopy {
-    if (arrayToCopy != nil && (object_getClass(arrayToCopy) == [NSArrayConcrete class] ||
-                               object_getClass(arrayToCopy) == [NSMutableArrayConcrete class])) {
+    if (arrayToCopy != nil &&
+        (object_getClass(arrayToCopy) == [NSArrayConcrete class] || object_getClass(arrayToCopy) == [NSMutableArrayConcrete class])) {
         int objCount = CFArrayGetCount((CFArrayRef)arrayToCopy);
         id* objs = NULL;
 
-        if (objCount > 0)
+        if (objCount > 0) {
             objs = (id*)_CFArrayGetPtr((CFArrayRef)arrayToCopy);
+        }
 
         _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, objCount, true);
     } else {
@@ -348,9 +355,7 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return ret;
 }
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state
-                                  objects:(id*)stackBuf
-                                    count:(NSUInteger)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
         state->extra[0] = (unsigned long)[self objectEnumerator];
@@ -363,8 +368,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 
     while (maxCount > 0) {
         id next = [(id)state->extra[0] nextObject];
-        if (next == nil)
+        if (next == nil) {
             break;
+        }
 
         *stackBuf = next;
         stackBuf++;
@@ -421,8 +427,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     bool addSeparator = false;
 
     while (nextObject != nil) {
-        if (addSeparator)
+        if (addSeparator) {
             [ret appendString:str];
+        }
         addSeparator = true;
         [ret appendString:nextObject];
 
@@ -469,8 +476,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 - (NSEnumerator*)objectEnumerator {
-    id ret =
-        [NSEnumerator enumeratorWithIterator:CFArrayGetValueEnumerator forObject:self nextFunction:CFArrayGetNextValue];
+    id ret = [NSEnumerator enumeratorWithIterator:CFArrayGetValueEnumerator forObject:self nextFunction:CFArrayGetNextValue];
 
     return ret;
 }
@@ -664,8 +670,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         int i, count = [self count];
 
         [coder encodeValueOfObjCType:"i" at:&count];
-        for (i = 0; i < count; i++)
+        for (i = 0; i < count; i++) {
             [coder encodeObject:[self objectAtIndex:i]];
+        }
     }
 }
 
@@ -675,8 +682,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 + (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSArray class])
+    if (self == [NSArray class]) {
         return NSAllocateObject((Class)[NSArrayConcrete class], 0, zone);
+    }
 
     return NSAllocateObject((Class)self, 0, zone);
 }
@@ -684,8 +692,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 - (void)getObjects:(id*)objects {
     NSUInteger i, count = [self count];
 
-    for (i = 0; i < count; i++)
+    for (i = 0; i < count; i++) {
         objects[i] = [self objectAtIndex:i];
+    }
 }
 
 - (void)enumerateObjectsUsingBlock:(void (^)(id, NSUInteger, BOOL*))block {
@@ -726,11 +735,13 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 - (BOOL)isEqual:(NSObject*)other {
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
-    if (![other isKindOfClass:[NSArray class]])
+    if (![other isKindOfClass:[NSArray class]]) {
         return NO;
+    }
 
     return [self isEqualToArray:other];
 }
@@ -740,8 +751,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 - (BOOL)isEqualToArray:(NSArray*)otherArray {
-    if ([self count] != [otherArray count])
+    if ([self count] != [otherArray count]) {
         return NO;
+    }
 
     int i, count = [self count];
     for (i = 0; i < count; i++) {
@@ -776,12 +788,11 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 @end
 
 @implementation NSArrayConcrete : NSArray
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state
-                                  objects:(id*)stackBuf
-                                    count:(NSUInteger)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     DWORD count = CFArrayGetCount((CFArrayRef)self);
-    if (state->state >= count)
+    if (state->state >= count) {
         return 0;
+    }
 
     state->itemsPtr = (id*)_CFArrayGetPtr((CFArrayRef)self);
     state->state = count;

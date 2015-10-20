@@ -20,7 +20,7 @@
 @public
     id _item, _delegate;
 }
--(instancetype) initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate;
--(void) drawRect:(CGRect)pos;
--(void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
+- (instancetype)initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate;
+- (void)drawRect:(CGRect)pos;
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
 @end

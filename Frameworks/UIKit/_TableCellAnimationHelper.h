@@ -17,7 +17,7 @@
 @interface _TableCellAnimationHelper : NSObject {
 @public
     int _numCellsToBeRemoved;
-    id *_cellsToBeRemoved;
+    id* _cellsToBeRemoved;
 }
--(void) animationFinished;
+- (void)animationFinished;
 @end

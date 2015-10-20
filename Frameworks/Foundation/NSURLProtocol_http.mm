@@ -81,12 +81,10 @@ static size_t header_callback(void* ptr, size_t size, size_t nmemb, NSURLProtoco
         while (pStatusEnd < lineEnd && *pStatusEnd != 10 && *pStatusEnd != 13)
             pStatusEnd++;
 
-        session->_statusLine.attach([[NSString alloc] initWithBytes:pStatusStart
-                                                             length:pStatusEnd - pStatusStart
-                                                           encoding:NSUTF8StringEncoding]);
-        session->_statusVersion.attach([[NSString alloc] initWithBytes:pVersionStart
-                                                                length:pVersionEnd - pVersionStart
-                                                              encoding:NSUTF8StringEncoding]);
+        session->_statusLine.attach(
+            [[NSString alloc] initWithBytes:pStatusStart length:pStatusEnd - pStatusStart encoding:NSUTF8StringEncoding]);
+        session->_statusVersion.attach(
+            [[NSString alloc] initWithBytes:pVersionStart length:pVersionEnd - pVersionStart encoding:NSUTF8StringEncoding]);
     } else if (memchr(ptr, ':', size * nmemb) != NULL) {
         char* pHeaderStart = (char*)ptr;
         char* pHeaderEnd = pHeaderStart;
@@ -99,17 +97,13 @@ static size_t header_callback(void* ptr, size_t size, size_t nmemb, NSURLProtoco
         while (pValueEnd < lineEnd && *pValueEnd != 10 && *pValueEnd != 13)
             pValueEnd++;
 
-        id headerName = [[NSString alloc] initWithBytes:pHeaderStart
-                                                 length:pHeaderEnd - pHeaderStart
-                                               encoding:NSUTF8StringEncoding];
-        id headerValue =
-            [[NSString alloc] initWithBytes:pValueStart length:pValueEnd - pValueStart encoding:NSUTF8StringEncoding];
+        id headerName = [[NSString alloc] initWithBytes:pHeaderStart length:pHeaderEnd - pHeaderStart encoding:NSUTF8StringEncoding];
+        id headerValue = [[NSString alloc] initWithBytes:pValueStart length:pValueEnd - pValueStart encoding:NSUTF8StringEncoding];
         [session->_headers setObject:headerValue forKey:headerName];
 
         //  Process cookies
         if ([session->_request HTTPShouldHandleCookies]) {
-            if ([headerName caseInsensitiveCompare:@"set-cookie"] == 0 ||
-                [headerName caseInsensitiveCompare:@"set-cookie2"] == 0) {
+            if ([headerName caseInsensitiveCompare:@"set-cookie"] == 0 || [headerName caseInsensitiveCompare:@"set-cookie2"] == 0) {
                 id headerPair = [NSDictionary dictionaryWithObject:headerValue forKey:[headerName lowercaseString]];
                 id url = session->_curURL;
                 id cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:headerPair forURL:url];
@@ -524,8 +518,7 @@ static int update_timeout(CURLM* multi, long timeout_ms, NSURLProtocolTimerThrea
 
     id runLoop = [NSRunLoop currentRunLoop];
 
-    _socketTimeout =
-        [NSTimer timerWithTimeInterval:60.0 target:self selector:@selector(_socketTimeout) userInfo:nil repeats:YES];
+    _socketTimeout = [NSTimer timerWithTimeInterval:60.0 target:self selector:@selector(_socketTimeout) userInfo:nil repeats:YES];
     [runLoop addTimer:(id)_socketTimeout forMode:@"kCFRunLoopDefaultMode"];
     [runLoop run];
     return self;
@@ -612,9 +605,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
         switch (e.type) {
             case didReceiveResponse:
                 if (!_hasCancelled)
-                    [_client URLProtocol:self
-                        didReceiveResponse:e.obj1
-                        cacheStoragePolicy:NSURLCacheStorageAllowedInMemoryOnly];
+                    [_client URLProtocol:self didReceiveResponse:e.obj1 cacheStoragePolicy:NSURLCacheStorageAllowedInMemoryOnly];
                 [e.obj1 autorelease];
                 break;
 
@@ -631,8 +622,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
                     if (newRequest == nil) {
                         if (!_hasCancelled) {
                             _isFinished = TRUE;
-                            id userInfo = [NSDictionary dictionaryWithObject:@"Connection timed out"
-                                                                      forKey:@"NSLocalizedDescriptionKey"];
+                            id userInfo = [NSDictionary dictionaryWithObject:@"Connection timed out" forKey:@"NSLocalizedDescriptionKey"];
                             id error = [NSError errorWithDomain:@"NSURLErrorDomain" code:1234 userInfo:userInfo];
 
                             [_client URLProtocol:self didFailWithError:error];
@@ -666,8 +656,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
                     _isFinished = TRUE;
                     id error;
                     if (e.obj1 == nil) {
-                        id userInfo = [NSDictionary dictionaryWithObject:@"Connection timed out"
-                                                                  forKey:@"NSLocalizedDescriptionKey"];
+                        id userInfo = [NSDictionary dictionaryWithObject:@"Connection timed out" forKey:@"NSLocalizedDescriptionKey"];
                         error = [NSError errorWithDomain:@"NSURLErrorDomain" code:1234 userInfo:userInfo];
                         EbrDebugLog("Sending did fail - no error\n");
                     } else {
@@ -753,10 +742,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
         }
     }
 
-    [g_multiHandler performSelector:@selector(addHTTPRequest:)
-                           onThread:g_multiThread
-                         withObject:self
-                      waitUntilDone:FALSE];
+    [g_multiHandler performSelector:@selector(addHTTPRequest:) onThread:g_multiThread withObject:self waitUntilDone:FALSE];
 
     return self;
 }
@@ -768,10 +754,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
         return self;
 
     _hasCancelled = TRUE;
-    [g_multiHandler performSelector:@selector(cancelHTTPRequest:)
-                           onThread:g_multiThread
-                         withObject:self
-                      waitUntilDone:FALSE];
+    [g_multiHandler performSelector:@selector(cancelHTTPRequest:) onThread:g_multiThread withObject:self waitUntilDone:FALSE];
     return self;
 }
 

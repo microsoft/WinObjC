@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #ifndef IWPLATFORM_EXPORT
- #define IWPLATFORM_EXPORT
+#define IWPLATFORM_EXPORT
 #endif
 
 #include <string>
@@ -25,6 +25,5 @@ namespace string {
 
 // Returns a string formatted in accordance with the provided specifier string and values.
 IWPLATFORM_EXPORT std::string format[[gnu::format(printf, 1, 2)]](const char* fmt, ...);
-
 }
 }

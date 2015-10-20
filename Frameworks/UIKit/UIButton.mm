@@ -50,8 +50,9 @@ static UIImage* getBackgroundImage(UIButton* self) {
         return self->_states[self->_curState].backgroundImage;
     } else if (self->_states[UIControlStateNormal].backgroundImage != nil) {
         return self->_states[UIControlStateNormal].backgroundImage;
-    } else
+    } else {
         return nil;
+    }
 }
 
 static UIImage* getImage(UIButton* self) {
@@ -59,8 +60,9 @@ static UIImage* getImage(UIButton* self) {
         return self->_states[self->_curState].image;
     } else if (self->_states[UIControlStateNormal].image != nil) {
         return self->_states[UIControlStateNormal].image;
-    } else
+    } else {
         return nil;
+    }
 }
 
 static UIFont* getFont(UIButton* self) {
@@ -70,8 +72,8 @@ static UIFont* getFont(UIButton* self) {
 }
 
 static NSString* getTitle(UIButton* self) {
-    if (self->_type == UIButtonTypeDetailDisclosure || self->_type == UIButtonTypeInfoLight ||
-        self->_type == UIButtonTypeInfoDark || self->_type == UIButtonTypeContactAdd) {
+    if (self->_type == UIButtonTypeDetailDisclosure || self->_type == UIButtonTypeInfoLight || self->_type == UIButtonTypeInfoDark ||
+        self->_type == UIButtonTypeContactAdd) {
         return nil;
     }
 
@@ -79,8 +81,9 @@ static NSString* getTitle(UIButton* self) {
         return self->_states[self->_curState].title;
     } else if (self->_states[UIControlStateNormal].title != nil) {
         return self->_states[UIControlStateNormal].title;
-    } else
+    } else {
         return nil;
+    }
 }
 
 static UIColor* getTitleShadowColor(UIButton* self) {
@@ -88,8 +91,9 @@ static UIColor* getTitleShadowColor(UIButton* self) {
         return self->_states[self->_curState].titleShadowColor;
     } else if (self->_states[UIControlStateNormal].titleShadowColor != nil) {
         return self->_states[UIControlStateNormal].titleShadowColor;
-    } else
+    } else {
         return [UIColor whiteColor];
+    }
 }
 
 static UIColor* getTextColor(UIButton* self) {
@@ -97,8 +101,9 @@ static UIColor* getTextColor(UIButton* self) {
         return self->_states[self->_curState].textColor;
     } else if (self->_states[UIControlStateNormal].textColor != nil) {
         return self->_states[UIControlStateNormal].textColor;
-    } else
+    } else {
         return self->_defaultColor;
+    }
 }
 
 static void setLabelProperties(UIButton* self) {
@@ -117,10 +122,8 @@ static void setImageProperties(UIButton* self) {
         contentColor.g = 0.5f;
         contentColor.b = 0.5f;
     }
-    [[self->_imageView layer] _setContentColor:[UIColor colorWithRed:contentColor.r
-                                                               green:contentColor.g
-                                                                blue:contentColor.b
-                                                               alpha:contentColor.a]];
+    [[self->_imageView layer]
+        _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
 }
 
 static void createLabel(UIButton* self) {
@@ -147,10 +150,11 @@ static void createLabel(UIButton* self) {
     _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
     _font = [coder decodeObjectForKey:@"UIFont"];
 
-    if (isOSTarget(@"7.0"))
+    if (isOSTarget(@"7.0")) {
         _defaultColor = [UIColor blackColor];
-    else
+    } else {
         _defaultColor = [UIColor whiteColor];
+    }
 
     if ([coder containsValueForKey:@"UIButtonType"]) {
         UIButtonType type = (UIButtonType)[coder decodeIntForKey:@"UIButtonType"];
@@ -204,15 +208,17 @@ static void createLabel(UIButton* self) {
             assert(stateNum < 16);
 
             id image = [curObj image];
-            if (image != nil)
+            if (image != nil) {
                 _states[stateNum].image = image;
+            }
             _states[stateNum].title = [curObj title];
             _states[stateNum].textColor = [curObj titleColor];
             _states[stateNum].titleShadowColor = (UIColor*)[curObj shadowColor];
 
             id backgroundImage = [curObj backgroundImage];
-            if (backgroundImage != nil)
+            if (backgroundImage != nil) {
                 _states[stateNum].backgroundImage = backgroundImage;
+            }
 
             curKey = [keyEnum nextObject];
             curObj = [objEnum nextObject];
@@ -289,10 +295,11 @@ static void createLabel(UIButton* self) {
     _backgroundColor.b = 1.f;
     _backgroundColor.a = 1.f;
 
-    if (isOSTarget(@"7.0"))
+    if (isOSTarget(@"7.0")) {
         _defaultColor = [UIColor blackColor];
-    else
+    } else {
         _defaultColor = [UIColor whiteColor];
+    }
 
     _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
     _font = [UIFont buttonFont];
@@ -331,8 +338,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return;
+    }
 
     _states[state].image = image;
     [self setNeedsDisplay];
@@ -341,8 +349,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return;
+    }
 
     _states[state].backgroundImage = image;
     [self setNeedsDisplay];
@@ -351,8 +360,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (UIImage*)backgroundImageForState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return nil;
+    }
 
     return _states[state].backgroundImage;
 }
@@ -362,8 +372,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return;
+    }
 
     _states[state].title.attach([title copy]);
     [self setNeedsLayout];
@@ -371,30 +382,34 @@ static bool validateState(UIControlState state) {
 }
 
 - (NSString*)titleForState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return nil;
+    }
 
     return _states[state].title;
 }
 
 - (UIImage*)imageForState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return nil;
+    }
 
     return _states[state].image;
 }
 
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return;
+    }
 
     _states[state].textColor = color;
     [self setNeedsLayout];
 }
 
 - (UIColor*)titleColorForState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return nil;
+    }
 
     return _states[state].textColor;
 }
@@ -403,16 +418,18 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return;
+    }
 
     _states[state].titleShadowColor = color;
     [self setNeedsLayout];
 }
 
 - (UIColor*)titleShadowColorForState:(UIControlState)state {
-    if (!validateState(state))
+    if (!validateState(state)) {
         return nil;
+    }
 
     return _states[state].titleShadowColor;
 }
@@ -422,8 +439,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    if (_curState & UIControlStateDisabled)
+    if (_curState & UIControlStateDisabled) {
         return;
+    }
 
     _isPressed = true;
     _curState |= UIControlStateHighlighted;
@@ -434,8 +452,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    if (!_isPressed)
+    if (!_isPressed) {
         return;
+    }
 
     _curState &= ~UIControlStateHighlighted;
     [self setNeedsLayout];
@@ -445,8 +464,9 @@ static bool validateState(UIControlState state) {
 }
 
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    if (!_isPressed)
+    if (!_isPressed) {
         return;
+    }
 
     _curState &= ~UIControlStateHighlighted;
     [self setNeedsLayout];
@@ -546,8 +566,7 @@ static UIImage* backgroundImageForButtonType(UIButtonType type) {
     switch (type) {
         case UIButtonTypeRoundedRect:
         case UIButtonTypeRoundedRectLegacy:
-            background = [[UIImage imageNamed:@"/img/rounded-button@2x.png"] stretchableImageWithLeftCapWidth:11
-                                                                                                 topCapHeight:11];
+            background = [[UIImage imageNamed:@"/img/rounded-button@2x.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:11];
             break;
     }
 
@@ -621,9 +640,7 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     if (getTitle(self)) {
         CGSize size;
 
-        size = [getTitle(self) sizeWithFont:(id)getFont(self)
-                          constrainedToSize:CGSizeMake(0.0f, 0.0f)
-                              lineBreakMode:UILineBreakModeClip];
+        size = [getTitle(self) sizeWithFont:(id)getFont(self) constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
         size.width += 20.0f;
 
         if (size.width > frame.size.width) {
@@ -769,10 +786,12 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
 
     CGRect ret = calcComponentRect(self, totalSize, UIEdgeInsetsInsetRect(bounds, inset));
 
-    if (ret.size.width > imageSize.width)
+    if (ret.size.width > imageSize.width) {
         ret.size.width = imageSize.width;
-    if (ret.size.height > imageSize.height)
+    }
+    if (ret.size.height > imageSize.height) {
         ret.size.height = imageSize.height;
+    }
 
     return ret;
 }
@@ -784,16 +803,12 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
         UIImageSetLayerContents([self layer], image);
 
         ColorQuad contentColor = _backgroundColor;
-        if (_adjustsImageWhenHighlighted && _curState == UIControlStateHighlighted &&
-            _states[UIControlStateHighlighted].image == nil) {
+        if (_adjustsImageWhenHighlighted && _curState == UIControlStateHighlighted && _states[UIControlStateHighlighted].image == nil) {
             contentColor.r = 0.5f;
             contentColor.g = 0.5f;
             contentColor.b = 0.5f;
         }
-        [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r
-                                                       green:contentColor.g
-                                                        blue:contentColor.b
-                                                       alpha:contentColor.a]];
+        [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
         _didSetBackgroundImage = true;
     } else if (_didSetBackgroundImage) {
         [[self layer] setContents:nil];
@@ -816,8 +831,7 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     if ((_curState & UIControlStateDisabled)) {
         if (!_isDisabled) {
             _isDisabled = true;
-            if (_states[UIControlStateDisabled].backgroundImage == nil &&
-                _states[UIControlStateDisabled].image == nil) {
+            if (_states[UIControlStateDisabled].backgroundImage == nil && _states[UIControlStateDisabled].image == nil) {
                 [_label setAlpha:0.5f];
             }
             if (_states[UIControlStateDisabled].textColor == nil) {

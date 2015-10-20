@@ -49,20 +49,19 @@
         unsigned components[11];
 
         // sscanf here does not support hhx, and instead reads it as a uint32_t
-        auto scanned = sscanf_s(
-            rawString,
-            "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-            &components[0],
-            &components[1],
-            &components[2],
-            &components[3],
-            &components[4],
-            &components[5],
-            &components[6],
-            &components[7],
-            &components[8],
-            &components[9],
-            &components[10]);
+        auto scanned = sscanf_s(rawString,
+                                "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+                                &components[0],
+                                &components[1],
+                                &components[2],
+                                &components[3],
+                                &components[4],
+                                &components[5],
+                                &components[6],
+                                &components[7],
+                                &components[8],
+                                &components[9],
+                                &components[10]);
 
         if (scanned != 11) {
             [self release];
@@ -103,17 +102,17 @@
 
 - (NSString*)UUIDString {
     return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hX%02hX-%02hX%02hX%02hX%02hX%02hX%02hX",
-        _guid.Data1,
-        _guid.Data2,
-        _guid.Data3,
-        _guid.Data4[0],
-        _guid.Data4[1],
-        _guid.Data4[2],
-        _guid.Data4[3],
-        _guid.Data4[4],
-        _guid.Data4[5],
-        _guid.Data4[6],
-        _guid.Data4[7]];
+                                      _guid.Data1,
+                                      _guid.Data2,
+                                      _guid.Data3,
+                                      _guid.Data4[0],
+                                      _guid.Data4[1],
+                                      _guid.Data4[2],
+                                      _guid.Data4[3],
+                                      _guid.Data4[4],
+                                      _guid.Data4[5],
+                                      _guid.Data4[6],
+                                      _guid.Data4[7]];
 }
 
 - (void)getUUIDBytes:(void*)bytes {

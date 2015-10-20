@@ -481,8 +481,7 @@ Boolean SCNetworkReachabilitySetDispatchQueue(SCNetworkReachabilityRef target, d
     return TRUE;
 }
 
-Boolean
-SCNetworkReachabilityScheduleWithRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
+Boolean SCNetworkReachabilityScheduleWithRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
     [scNetwork scheduleInRunLoop:runloop forMode:mode];
@@ -490,8 +489,7 @@ SCNetworkReachabilityScheduleWithRunLoop(SCNetworkReachabilityRef target, CFRunL
     return TRUE;
 }
 
-Boolean
-SCNetworkReachabilityUnscheduleFromRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
+Boolean SCNetworkReachabilityUnscheduleFromRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
     return [scNetwork unscheduleFromRunLoop:runloop forMode:mode];

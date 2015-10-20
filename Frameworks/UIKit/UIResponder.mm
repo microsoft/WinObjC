@@ -23,8 +23,9 @@ static int _changingResponder = 0;
 - (BOOL)resignFirstResponder {
     if (_curFirstResponder == self) {
         _curFirstResponder = nil;
-        if (_changingResponder == 0)
+        if (_changingResponder == 0) {
             [[UIApplication sharedApplication] _evaluateKeyboard];
+        }
     }
 
     return TRUE;
@@ -50,11 +51,13 @@ static int _changingResponder = 0;
 }
 
 - (BOOL)becomeFirstResponder {
-    if (_curFirstResponder == self)
+    if (_curFirstResponder == self) {
         return TRUE;
+    }
     if ([self respondsToSelector:@selector(window)]) {
-        if ([self window] == nil)
+        if ([self window] == nil) {
             return FALSE;
+        }
     }
 
     _changingResponder++;

@@ -14,4 +14,4 @@
 //
 //******************************************************************************
 
-CGImageRef bmp_decode(const uint8_t *buf, size_t buf_size);
+CGImageRef bmp_decode(const uint8_t* buf, size_t buf_size);

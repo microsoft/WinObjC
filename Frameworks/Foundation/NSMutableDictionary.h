@@ -19,21 +19,20 @@
 @interface NSMutableDictionary : NSDictionary {
 @public
 }
--(instancetype) init;
--(instancetype) initWithCapacity:(unsigned)capacity;
--(void) setValue:(id)value forKey:(NSString*)key;
--(void) removeObjectForKey:(id)key;
--(void) removeAllObjects;
--(void) removeObjectsForKeys:(NSArray*)keys;
--(void) setObject:(id)object forKey:(id)key;
--(void) setObject:(id)object forKeyedSubscript:(id)key;
--(void) addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void) addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void) setDictionary:(NSDictionary*)otherDict;
--(id) classForArchiver;
--(id) copyWithZone:(NSZone*)zone;
-+(instancetype) dictionary;
-+(instancetype) dictionaryWithCapacity:(unsigned)capacity;
-+(instancetype) dictionaryWithDictionary:(NSDictionary*)dictionary;
+- (instancetype)init;
+- (instancetype)initWithCapacity:(unsigned)capacity;
+- (void)setValue:(id)value forKey:(NSString*)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)setObject:(id)object forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)otherDict;
+- (id)classForArchiver;
+- (id)copyWithZone:(NSZone*)zone;
++ (instancetype)dictionary;
++ (instancetype)dictionaryWithCapacity:(unsigned)capacity;
++ (instancetype)dictionaryWithDictionary:(NSDictionary*)dictionary;
 @end
-

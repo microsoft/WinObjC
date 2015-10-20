@@ -23,84 +23,72 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-static bool powerOfTwo(int x)
-{
+static bool powerOfTwo(int x) {
     return (x & (x - 1)) == 0;
 }
 
-static int log2Ceil(int x)
-{
+static int log2Ceil(int x) {
     assert(x > 0);
 
     bool pow2 = powerOfTwo(x);
 
     int lg = 0;
-    while ( x != 0 ) {
+    while (x != 0) {
         ++lg;
         x >>= 1;
     }
     return pow2 ? lg - 1 : lg;
 }
 
-static inline float cubed(float value)
-{
-   return value*value*value;
+static inline float cubed(float value) {
+    return value * value * value;
 }
 
-static inline double cubed(double value)
-{
-   return value*value*value;
+static inline double cubed(double value) {
+    return value * value * value;
 }
 
-static inline float squared(float value)
-{
-   return value*value;
+static inline float squared(float value) {
+    return value * value;
 }
 
-static inline double squared(double value)
-{
-   return value*value;
+static inline double squared(double value) {
+    return value * value;
 }
 
-template<typename Type>
-Type abs(const Type& val)
-{
-    return (val>0) ? val : -val;
+template <typename Type>
+Type abs(const Type& val) {
+    return (val > 0) ? val : -val;
 }
 
 #ifndef max
-template<typename Type>
-Type max(const Type& a, const Type& b)
-{
-    return (a>b) ? a : b;
+template <typename Type>
+Type max(const Type& a, const Type& b) {
+    return (a > b) ? a : b;
 }
 #endif
-
 
 #ifndef min
-template<typename Type>
-Type min(const Type& a, const Type& b)
-{
-    return (a<b) ? a : b;
+template <typename Type>
+Type min(const Type& a, const Type& b) {
+    return (a < b) ? a : b;
 }
 #endif
 
-template<typename Type>
-static bool numEqual(Type a, Type b, Type epsilon = 0.01)
-{
+template <typename Type>
+static bool numEqual(Type a, Type b, Type epsilon = 0.01) {
     return abs(a - b) < epsilon;
 }
 
-template<typename Type>
-static bool clamp(Type& val, Type min, Type max)
-{
+template <typename Type>
+static bool clamp(Type& val, Type min, Type max) {
     bool ret = false;
     assert(min <= max);
-    if ( val < min ) {
+    if (val < min) {
         val = min;
         ret = true;
     }
-    if ( val > max ) {
+    if (val > max) {
         val = max;
         ret = true;
     }
@@ -108,7 +96,11 @@ static bool clamp(Type& val, Type min, Type max)
     return ret;
 }
 
-inline float DEG2RAD(float deg) { return ((deg * ((float)M_PI)) / 180.f); }
-inline float RAD2DEG(float rad) { return ((rad * 180.f) / ((float)M_PI)); }
+inline float DEG2RAD(float deg) {
+    return ((deg * ((float)M_PI)) / 180.f);
+}
+inline float RAD2DEG(float rad) {
+    return ((rad * 180.f) / ((float)M_PI));
+}
 
 #endif // _UTILS_ETC_H_

@@ -30,8 +30,10 @@ std::string getTypeStr(GLKShaderVarType t);
 
 // Information about a variable used in the shader program.  Basically its name, type, and location.
 struct VarInfo {
-    VarInfo() : type(GLKS_INVALID), loc(-1), vertexAttr(false), intermediate(false), used(false) {}
-    explicit VarInfo(GLKShaderVarType vt) : type(vt), loc(-1), vertexAttr(false), intermediate(false), used(false) {}
+    VarInfo() : type(GLKS_INVALID), loc(-1), vertexAttr(false), intermediate(false), used(false) {
+    }
+    explicit VarInfo(GLKShaderVarType vt) : type(vt), loc(-1), vertexAttr(false), intermediate(false), used(false) {
+    }
 
     // when in a layout, used for variable location.
     // when in a shader mat, used for constant location in the array.
@@ -41,8 +43,12 @@ struct VarInfo {
     bool intermediate;
     bool used;
 
-    inline std::string getTypeStr() const { return ::GLKitShader::getTypeStr(type); }
-    inline bool isTexture() const { return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE); }
+    inline std::string getTypeStr() const {
+        return ::GLKitShader::getTypeStr(type);
+    }
+    inline bool isTexture() const {
+        return (type == GLKS_SAMPLER2D || type == GLKS_SAMPLERCUBE);
+    }
 };
 
 // Lists vertex attributes and shader variables for the vertex/pixel shader pair.
@@ -51,11 +57,14 @@ struct ShaderLayout {
 
     inline GLKShaderVarType findVariable(const std::string& name, bool ignoreVertexAttrs = false, int* loc = NULL) {
         auto it = vars.find(name);
-        if (it == vars.end()) return GLKS_INVALID;
-        if (ignoreVertexAttrs && it->second.vertexAttr) return GLKS_INVALID; // used in pixel shaders.
+        if (it == vars.end())
+            return GLKS_INVALID;
+        if (ignoreVertexAttrs && it->second.vertexAttr)
+            return GLKS_INVALID; // used in pixel shaders.
 
         it->second.used = true;
-        if(loc) *loc = it->second.loc;
+        if (loc)
+            *loc = it->second.loc;
 
         return it->second.type;
     }
@@ -63,8 +72,10 @@ struct ShaderLayout {
     // Define shader variable, can be either a vertex attribute or a shader constant.  These are used
     // to define shader variables not related to the material, such as the vertex layout and the MVP matrix.
     inline void defVariable(const std::string& var, GLKShaderVarType type, int loc, bool attr = false) {
-        if (type == GLKS_INVALID) return;
-        if (vars.find(var) != vars.end()) return;
+        if (type == GLKS_INVALID)
+            return;
+        if (vars.find(var) != vars.end())
+            return;
 
         VarInfo v;
         v.type = type;
@@ -74,10 +85,18 @@ struct ShaderLayout {
     }
 
     // Convenience functions for the above.
-    inline void defVertexAttr(const std::string& var)                    { defVariable(var, GLKS_FLOAT4, -1, true); }
-    inline void defVertexAttr3(const std::string& var)                   { defVariable(var, GLKS_FLOAT3, -1, true); }
-    inline void defVertexAttr2(const std::string& var)                   { defVariable(var, GLKS_FLOAT2, -1, true); }
-    inline void defMatrix(const std::string& var)                        { defVariable(var, GLKS_MAT4, -1, false); }
+    inline void defVertexAttr(const std::string& var) {
+        defVariable(var, GLKS_FLOAT4, -1, true);
+    }
+    inline void defVertexAttr3(const std::string& var) {
+        defVariable(var, GLKS_FLOAT3, -1, true);
+    }
+    inline void defVertexAttr2(const std::string& var) {
+        defVariable(var, GLKS_FLOAT2, -1, true);
+    }
+    inline void defMatrix(const std::string& var) {
+        defVariable(var, GLKS_MAT4, -1, false);
+    }
 };
 
 // A shader material is just a list of shader variables and their values.  Materials can be over-specified, but
@@ -91,23 +110,39 @@ struct ShaderMaterial : public ShaderLayout {
     // the material, it can be used by the shader, and if it is not, the code using it can be eliminated from the
     // shader entirely.
     void addMaterialVar(const std::string& var, GLKShaderVarType type, const float* data);
-    inline void addMaterialVar(const std::string& var, const GLKVector4& vec)    { addMaterialVar(var, GLKS_FLOAT4, vec.v); }
-    inline void addMaterialVar(const std::string& var, const GLKVector3& vec)    { addMaterialVar(var, GLKS_FLOAT3, vec.v); }
-    inline void addMaterialVar(const std::string& var, const GLKVector2& vec)    { addMaterialVar(var, GLKS_FLOAT2, vec.v); }
-    inline void addMaterialVar(const std::string& var, float val)                { addMaterialVar(var, GLKS_FLOAT, &val); }
-    inline void addMaterialVar(const std::string& var, const GLKMatrix4& mat)    { addMaterialVar(var, GLKS_MAT4, mat.m); }
+    inline void addMaterialVar(const std::string& var, const GLKVector4& vec) {
+        addMaterialVar(var, GLKS_FLOAT4, vec.v);
+    }
+    inline void addMaterialVar(const std::string& var, const GLKVector3& vec) {
+        addMaterialVar(var, GLKS_FLOAT3, vec.v);
+    }
+    inline void addMaterialVar(const std::string& var, const GLKVector2& vec) {
+        addMaterialVar(var, GLKS_FLOAT2, vec.v);
+    }
+    inline void addMaterialVar(const std::string& var, float val) {
+        addMaterialVar(var, GLKS_FLOAT, &val);
+    }
+    inline void addMaterialVar(const std::string& var, const GLKMatrix4& mat) {
+        addMaterialVar(var, GLKS_MAT4, mat.m);
+    }
 
     // Adds a float4 as a float3 for convenience.
-    inline void addMaterialVar3(const std::string& var, const GLKVector4& vec)   { addMaterialVar(var, GLKS_FLOAT3, (float*)&vec); }
+    inline void addMaterialVar3(const std::string& var, const GLKVector4& vec) {
+        addMaterialVar(var, GLKS_FLOAT3, (float*)&vec);
+    }
 
     // Add texture references to the shader material.
     void addTexture(const std::string& var, GLuint name, GLKShaderVarType type = GLKS_SAMPLER2D);
-    inline void addTexCube(const std::string& var, GLuint name)          { addTexture(var, name, GLKS_SAMPLERCUBE); }
+    inline void addTexCube(const std::string& var, GLuint name) {
+        addTexture(var, name, GLKS_SAMPLERCUBE);
+    }
 
     // Adds an input variable to the shader material.  These can alter shader generation, but are not used
     // by the shader itself.
-    inline void addInputVar(const std::string& var, unsigned int val)    { inputVars[var] = val; }
-    
+    inline void addInputVar(const std::string& var, unsigned int val) {
+        inputVars[var] = val;
+    }
+
     inline void reset() {
         vars.clear();
         values.resize(0);

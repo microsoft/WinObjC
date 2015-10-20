@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-class CACompositorClientInterface
-{
+class CACompositorClientInterface {
 public:
     virtual void RequestRedraw() = 0;
     virtual void RequestTransactionProcessing() = 0;

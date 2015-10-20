@@ -24,22 +24,16 @@
 @implementation Protocol
 @end
 
-inline const char*
-protocol_getName(Protocol *p)
-{
+inline const char* protocol_getName(Protocol* p) {
     return p->name;
 }
 
-inline BOOL
-protocol_isEqual(Protocol *a, Protocol *b)
-{
+inline BOOL protocol_isEqual(Protocol* a, Protocol* b) {
     return !strcmp(protocol_getName(a), protocol_getName(b));
 }
 
-BOOL
-protocol_conformsToProtocol(Protocol *a, Protocol *b)
-{
-    struct objc_protocol_list *pl;
+BOOL protocol_conformsToProtocol(Protocol* a, Protocol* b) {
+    struct objc_protocol_list* pl;
     size_t i;
 
     if (protocol_isEqual(a, b))
@@ -53,11 +47,9 @@ protocol_conformsToProtocol(Protocol *a, Protocol *b)
     return NO;
 }
 
-BOOL
-class_conformsToProtocol(Class cls, Protocol *p)
-{
-    struct objc_protocol_list *pl;
-    struct objc_category **cats;
+BOOL class_conformsToProtocol(Class cls, Protocol* p) {
+    struct objc_protocol_list* pl;
+    struct objc_category** cats;
     long i, j;
 
     for (pl = cls->protocols; pl != NULL; pl = pl->next)
@@ -75,8 +67,7 @@ class_conformsToProtocol(Class cls, Protocol *p)
     for (i = 0; cats[i] != NULL; i++) {
         for (pl = cats[i]->protocols; pl != NULL; pl = pl->next) {
             for (j = 0; j < pl->count; j++) {
-                if (protocol_conformsToProtocol(
-                    pl->list[j], p)) {
+                if (protocol_conformsToProtocol(pl->list[j], p)) {
                     objc_global_mutex_unlock();
                     return YES;
                 }

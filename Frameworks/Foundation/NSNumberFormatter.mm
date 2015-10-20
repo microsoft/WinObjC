@@ -614,8 +614,7 @@ static BOOL numberIsNegative(id number) {
         UNumberFormat* nf = unum_open(UNUM_CURRENCY, NULL, -1, NULL, NULL, &status);
         int offset = 0;
         UChar currency[4];
-        double amt = unum_parseDoubleCurrency(
-            nf, (const wchar_t*)[string rawCharacters], [string length], &offset, currency, &status);
+        double amt = unum_parseDoubleCurrency(nf, (const wchar_t*)[string rawCharacters], [string length], &offset, currency, &status);
         unum_close(nf);
         return [NSNumber numberWithDouble:amt];
     }

@@ -21,7 +21,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "../objcrt/runtime.h"
 
-using NSCompareFunc = NSInteger(*)(id,id,void*);
+using NSCompareFunc = NSInteger (*)(id, id, void*);
 
 __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, void* block);
@@ -269,13 +269,11 @@ recurse:
         for (;;) {
             do {
                 loguy += 1;
-            } while (loguy <= hi &&
-                     (compFunc([self objectAtIndex:loguy], [self objectAtIndex:lo], context)) <= 0);
+            } while (loguy <= hi && (compFunc([self objectAtIndex:loguy], [self objectAtIndex:lo], context)) <= 0);
 
             do {
                 higuy -= 1;
-            } while (higuy > lo &&
-                     (compFunc([self objectAtIndex:higuy], [self objectAtIndex:lo], context)) >= 0);
+            } while (higuy > lo && (compFunc([self objectAtIndex:higuy], [self objectAtIndex:lo], context)) >= 0);
 
             if (higuy < loguy)
                 break;

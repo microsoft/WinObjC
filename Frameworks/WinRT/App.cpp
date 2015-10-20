@@ -44,16 +44,14 @@ using namespace Windows::System;
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 
-void RunningUIThread()
-{
+void RunningUIThread() {
     auto direct3DApplicationSource = ref new Direct3DApplicationSource();
     CoreApplication::Run(direct3DApplicationSource);
 }
 
 HANDLE compositorReady;
 
-bool EbrUIAppStart()
-{
+bool EbrUIAppStart() {
     compositorReady = CreateEventEx(NULL, NULL, 0, EVENT_ALL_ACCESS);
     std::thread uiThread(RunningUIThread);
     uiThread.detach();
@@ -62,101 +60,83 @@ bool EbrUIAppStart()
     return true;
 }
 
-IFrameworkView^ Direct3DApplicationSource::CreateView()
-{
+IFrameworkView ^ Direct3DApplicationSource::CreateView() {
     return ref new App();
 }
 
-App::App() :
-    m_windowClosed(false),
-    m_windowVisible(true)
-{
+App::App() : m_windowClosed(false), m_windowVisible(true) {
 }
 
 // The first method called when the IFrameworkView is being created.
-void App::Initialize(CoreApplicationView^ applicationView)
-{
+void App::Initialize(CoreApplicationView ^ applicationView) {
     // Register event handlers for app lifecycle. This example includes Activated, so that we
     // can make the CoreWindow active and start rendering on the window.
-    applicationView->Activated +=
-        ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &App::OnActivated);
+    applicationView->Activated += ref new TypedEventHandler<CoreApplicationView ^, IActivatedEventArgs ^>(this, &App::OnActivated);
 
-    CoreApplication::Suspending +=
-        ref new EventHandler<SuspendingEventArgs^>(this, &App::OnSuspending);
+    CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs ^>(this, &App::OnSuspending);
 
-    CoreApplication::Resuming +=
-        ref new EventHandler<Platform::Object^>(this, &App::OnResuming);
+    CoreApplication::Resuming += ref new EventHandler<Platform::Object ^>(this, &App::OnResuming);
 
-    // At this point we have access to the device. 
+    // At this point we have access to the device.
     // We can create the device-dependent resources.
     m_deviceResources = std::make_shared<StarboardWinRT::DeviceResourcesCW>();
 }
 
 // Called when the CoreWindow object is created (or re-created).
-void App::SetWindow(CoreWindow^ window)
-{
-    window->SizeChanged += 
-        ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &App::OnWindowSizeChanged);
+void App::SetWindow(CoreWindow ^ window) {
+    window->SizeChanged += ref new TypedEventHandler<CoreWindow ^, WindowSizeChangedEventArgs ^>(this, &App::OnWindowSizeChanged);
 
-    window->VisibilityChanged +=
-        ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &App::OnVisibilityChanged);
+    window->VisibilityChanged += ref new TypedEventHandler<CoreWindow ^, VisibilityChangedEventArgs ^>(this, &App::OnVisibilityChanged);
 
-    window->Closed += 
-        ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &App::OnWindowClosed);
+    window->Closed += ref new TypedEventHandler<CoreWindow ^, CoreWindowEventArgs ^>(this, &App::OnWindowClosed);
 
-    DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
+    DisplayInformation ^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
 
-    currentDisplayInformation->DpiChanged +=
-        ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnDpiChanged);
+    currentDisplayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation ^, Object ^>(this, &App::OnDpiChanged);
 
     currentDisplayInformation->OrientationChanged +=
-        ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnOrientationChanged);
+        ref new TypedEventHandler<DisplayInformation ^, Object ^>(this, &App::OnOrientationChanged);
 
     DisplayInformation::DisplayContentsInvalidated +=
-        ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnDisplayContentsInvalidated);
+        ref new TypedEventHandler<DisplayInformation ^, Object ^>(this, &App::OnDisplayContentsInvalidated);
 
-    window->PointerPressed += 
-        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^, Windows::UI::Core::PointerEventArgs ^>(this, &StarboardWinRT::App::OnPointerPressed);
-    window->PointerMoved += 
-        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^, Windows::UI::Core::PointerEventArgs ^>(this, &StarboardWinRT::App::OnPointerMoved);
-    window->PointerReleased += 
-        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^, Windows::UI::Core::PointerEventArgs ^>(this, &StarboardWinRT::App::OnPointerReleased);
+    window->PointerPressed +=
+        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^,
+                                                       Windows::UI::Core::PointerEventArgs ^>(this, &StarboardWinRT::App::OnPointerPressed);
+    window->PointerMoved +=
+        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^,
+                                                       Windows::UI::Core::PointerEventArgs ^>(this, &StarboardWinRT::App::OnPointerMoved);
+    window->PointerReleased +=
+        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow ^, Windows::UI::Core::PointerEventArgs ^>(
+            this, &StarboardWinRT::App::OnPointerReleased);
 
     // Disable all pointer visual feedback for better performance when touching.
     auto pointerVisualizationSettings = PointerVisualizationSettings::GetForCurrentView();
-    pointerVisualizationSettings->IsContactFeedbackEnabled = false; 
+    pointerVisualizationSettings->IsContactFeedbackEnabled = false;
     pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
 
     m_deviceResources->SetWindow(window);
 }
 
 // Initializes scene resources, or loads a previously saved app state.
-void App::Load(Platform::String^ entryPoint)
-{
-    if (m_main == nullptr)
-    {
+void App::Load(Platform::String ^ entryPoint) {
+    if (m_main == nullptr) {
         m_main = std::unique_ptr<DXAppMain>(new DXAppMain(m_deviceResources));
     }
 }
 
 // This method is called after the window becomes active.
-void App::Run()
-{
-    while (!m_windowClosed)
-    {
-        if (m_windowVisible)
-        {
+void App::Run() {
+    while (!m_windowClosed) {
+        if (m_windowVisible) {
             CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 
             m_main->Update();
 
-            if (m_main->Render())
-            {
+            if (m_main->Render()) {
                 m_deviceResources->Present();
             }
-        }
-        else
-        {
+        } else {
             CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessOneAndAllPending);
         }
     }
@@ -165,28 +145,24 @@ void App::Run()
 // Required for IFrameworkView.
 // Terminate events do not cause Uninitialize to be called. It will be called if your IFrameworkView
 // class is torn down while the app is in the foreground.
-void App::Uninitialize()
-{
+void App::Uninitialize() {
 }
 
 // Application lifecycle event handlers.
 
-void App::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
-{
+void App::OnActivated(CoreApplicationView ^ applicationView, IActivatedEventArgs ^ args) {
     // Run() won't start until the CoreWindow is activated.
     CoreWindow::GetForCurrentThread()->Activate();
 }
 
-void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
-{
+void App::OnSuspending(Platform::Object ^ sender, SuspendingEventArgs ^ args) {
     // Save app state asynchronously after requesting a deferral. Holding a deferral
     // indicates that the application is busy performing suspending operations. Be
     // aware that a deferral may not be held indefinitely. After about five seconds,
     // the app will be forced to exit.
-    SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
+    SuspendingDeferral ^ deferral = args->SuspendingOperation->GetDeferral();
 
-    create_task([this, deferral]()
-    {
+    create_task([this, deferral]() {
         m_deviceResources->Trim();
 
         // Insert your code here.
@@ -195,8 +171,7 @@ void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
     });
 }
 
-void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
-{
+void App::OnResuming(Platform::Object ^ sender, Platform::Object ^ args) {
     // Restore any data or state that was unloaded on suspend. By default, data
     // and state are persisted when resuming from suspend. Note that this event
     // does not occur if the app was previously terminated.
@@ -206,52 +181,43 @@ void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 
 // Window event handlers.
 
-void App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args)
-{
+void App::OnWindowSizeChanged(CoreWindow ^ sender, WindowSizeChangedEventArgs ^ args) {
     m_deviceResources->SetLogicalSize(Size(sender->Bounds.Width, sender->Bounds.Height));
     m_main->CreateWindowSizeDependentResources();
 }
 
-void App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
-{
+void App::OnVisibilityChanged(CoreWindow ^ sender, VisibilityChangedEventArgs ^ args) {
     m_windowVisible = args->Visible;
 }
 
-void App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
-{
+void App::OnWindowClosed(CoreWindow ^ sender, CoreWindowEventArgs ^ args) {
     m_windowClosed = true;
 }
 
 // DisplayInformation event handlers.
 
-void App::OnDpiChanged(DisplayInformation^ sender, Object^ args)
-{
+void App::OnDpiChanged(DisplayInformation ^ sender, Object ^ args) {
     m_deviceResources->SetDpi(sender->LogicalDpi);
     m_main->CreateWindowSizeDependentResources();
 }
 
-void App::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
-{
+void App::OnOrientationChanged(DisplayInformation ^ sender, Object ^ args) {
     m_deviceResources->SetCurrentOrientation(sender->CurrentOrientation);
     m_main->CreateWindowSizeDependentResources();
 }
 
-void App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
-{
+void App::OnDisplayContentsInvalidated(DisplayInformation ^ sender, Object ^ args) {
     m_deviceResources->ValidateDevice();
 }
 
-void App::OnPointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
+void App::OnPointerPressed(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
     m_main->OnPointerPressed(sender, e);
 }
 
-void App::OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
+void App::OnPointerMoved(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
     m_main->OnPointerMoved(sender, e);
 }
 
-void App::OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
-{
+void App::OnPointerReleased(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e) {
     m_main->OnPointerReleased(sender, e);
 }

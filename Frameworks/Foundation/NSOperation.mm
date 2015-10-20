@@ -71,8 +71,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     for (int i = 0; i < count; i++) {
         id op = [priv->dependencies objectAtIndex:i];
 
-        if (![op isFinished])
+        if (![op isFinished]) {
             return NO;
+        }
     }
     return YES;
 }
@@ -101,11 +102,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             execute = true;
         }
         pthread_mutex_unlock(&priv->finishLock);
-        if (execute)
+        if (execute) {
             [self main];
+        }
 
-        if (execute)
+        if (execute) {
             [self willChangeValueForKey:@"isExecuting"];
+        }
         [self willChangeValueForKey:@"isFinished"];
         pthread_mutex_lock(&priv->finishLock);
         priv->finished = 1;

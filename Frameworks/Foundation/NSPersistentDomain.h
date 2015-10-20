@@ -18,17 +18,16 @@
 @public
     bool _isDirty;
     id _path;
-    id _mutableDomain;  
+    id _mutableDomain;
 }
--(instancetype) initWithName:(NSString*)name;
--(void) dealloc;
--(NSArray*) allKeys;
--(NSEnumerator*) keyEnumerator;
--(id) objectForKey:(NSString*)key;
--(void) setObject:(id)object forKey:(NSString*)key;
--(void) removeObjectForKey:(NSString*)key;
--(void) createUserDefaultsDirectoryIfNeeded;
--(void) synchronize;
-+(NSPersistentDomain*) persistantDomainWithName:(NSString*)name;
+- (instancetype)initWithName:(NSString*)name;
+- (void)dealloc;
+- (NSArray*)allKeys;
+- (NSEnumerator*)keyEnumerator;
+- (id)objectForKey:(NSString*)key;
+- (void)setObject:(id)object forKey:(NSString*)key;
+- (void)removeObjectForKey:(NSString*)key;
+- (void)createUserDefaultsDirectoryIfNeeded;
+- (void)synchronize;
++ (NSPersistentDomain*)persistantDomainWithName:(NSString*)name;
 @end
-

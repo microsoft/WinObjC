@@ -55,10 +55,12 @@ const float minX = 21.0f, maxX = 71.0f;
 }
 
 static void adjustImages(UISwitch* self, float pos, bool animated) {
-    if (pos < minX)
+    if (pos < minX) {
         pos = minX;
-    if (pos > maxX)
+    }
+    if (pos > maxX) {
         pos = maxX;
+    }
 
     if (animated) {
         [UIView beginAnimations:@"MoveButton" context:nil];

@@ -198,8 +198,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (id)valueForKey:(id)key {
     const char* keyName = (const char*)[key UTF8String];
 
-    if (keyName[0] == '@')
+    if (keyName[0] == '@') {
         assert(0);
+    }
 
     id ret = [self objectForKey:key];
 
@@ -208,8 +209,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     if (dictionary != nil) {
-        if ((object_getClass(dictionary) == [NSDictionary class] ||
-             object_getClass(dictionary) == [NSMutableDictionary class]) &&
+        if ((object_getClass(dictionary) == [NSDictionary class] || object_getClass(dictionary) == [NSMutableDictionary class]) &&
             (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class])) {
             _CFDictionaryCopyInternal((CFDictionaryRef)self, (CFDictionaryRef)dictionary);
         } else {
@@ -283,13 +283,12 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     NSDictionary* deserializedDict = nil;
     if (data) {
-        deserializedDict =
-            [NSPropertyListSerialization propertyListFromData:data
-                                             mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]]
-                                                                  ? NSPropertyListMutableContainersAndLeaves
-                                                                  : NSPropertyListImmutable
-                                                       format:0
-                                             errorDescription:0];
+        deserializedDict = [NSPropertyListSerialization
+            propertyListFromData:data
+                mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]] ? NSPropertyListMutableContainersAndLeaves :
+                                                                                    NSPropertyListImmutable
+                          format:0
+                errorDescription:0];
         if (deserializedDict == nil) {
             EbrDebugLog("Error deserializing NSDictionary\n");
             return nil;
@@ -312,13 +311,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 + (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)url {
     const char* file = (char*)[[url path] UTF8String];
     NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
-    if (data == nil)
+    if (data == nil) {
         return nil;
+    }
 
     return [NSPropertyListSerialization
         propertyListFromData:data
-            mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]] ? NSPropertyListMutableContainersAndLeaves
-                                                                              : NSPropertyListImmutable
+            mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]] ? NSPropertyListMutableContainersAndLeaves :
+                                                                                NSPropertyListImmutable
                       format:0
             errorDescription:0];
 }
@@ -329,12 +329,12 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     NSDictionary* dict = nil;
     if (data) {
-        dict = [NSPropertyListSerialization propertyListFromData:data
-                                                mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]]
-                                                                     ? NSPropertyListMutableContainersAndLeaves
-                                                                     : NSPropertyListImmutable
-                                                          format:0
-                                                errorDescription:0];
+        dict = [NSPropertyListSerialization
+            propertyListFromData:data
+                mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]] ? NSPropertyListMutableContainersAndLeaves :
+                                                                                    NSPropertyListImmutable
+                          format:0
+                errorDescription:0];
     }
 
     return [self initWithDictionary:dict];
@@ -492,8 +492,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     while (maxCount > 0) {
         id next = [(id)state->extra[0] nextObject];
-        if (next == nil)
+        if (next == nil) {
             break;
+        }
 
         *stackBuf = next;
         stackBuf++;
@@ -513,15 +514,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetValueEnumerator
-                                      forObject:self
-                                   nextFunction:CFDictionaryGetNextValue];
+    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetValueEnumerator forObject:self nextFunction:CFDictionaryGetNextValue];
 }
 
 - (NSEnumerator*)keyEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetKeyEnumerator
-                                      forObject:self
-                                   nextFunction:CFDictionaryGetNextKey];
+    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetKeyEnumerator forObject:self nextFunction:CFDictionaryGetNextKey];
 }
 
 /* NSFileManager category helpers */
@@ -591,11 +588,13 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 - (BOOL)isEqual:(id)other {
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
-    if (![other isKindOfClass:[NSDictionary class]])
+    if (![other isKindOfClass:[NSDictionary class]]) {
         return NO;
+    }
 
     return [self isEqualToDictionary:other];
 }
@@ -603,21 +602,25 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (BOOL)isEqualToDictionary:(NSDictionary*)dictionary {
     id key;
 
-    if (self == dictionary)
+    if (self == dictionary) {
         return YES;
+    }
 
-    if ([self count] != [dictionary count])
+    if ([self count] != [dictionary count]) {
         return NO;
+    }
 
     NSEnumerator* keys = [self keyEnumerator];
     while ((key = [keys nextObject]) != nil) {
         id value = [self objectForKey:key];
         id otherValue = [dictionary objectForKey:key];
 
-        if (otherValue == nil)
+        if (otherValue == nil) {
             return NO;
-        if (![value isEqual:otherValue])
+        }
+        if (![value isEqual:otherValue]) {
             return NO;
+        }
     }
 
     return YES;
@@ -644,10 +647,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 - (NSString*)description {
-    return [[NSString alloc] initWithData:[NSPropertyListSerialization dataFromPropertyList:self
-                                                                                     format:NSPropertyListXMLFormat_v1_0
-                                                                           errorDescription:nil]
-                                 encoding:NSUTF8StringEncoding];
+    return [[NSString alloc]
+        initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nil]
+            encoding:NSUTF8StringEncoding];
 }
 
 - (NSString*)stringFromQueryComponents {
@@ -678,8 +680,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         id value = [self objectForKey:key];
 
         block(key, value, &stop);
-        if (stop)
+        if (stop) {
             break;
+        }
     }
 }
 
@@ -690,8 +693,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     for (id curkey in keys) {
         id object = [self objectForKey:curkey];
 
-        if (object == nil)
+        if (object == nil) {
             object = notFoundMarker;
+        }
 
         [result addObject:object];
     }
@@ -700,7 +704,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 @end
 
-NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...) {
+NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     if (keys == nil) {
         EbrDebugLog("Nil keys string.\n");
         return nil;
@@ -709,11 +713,11 @@ NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...) {
     NSMutableArray* values = [[NSMutableArray new] autorelease];
 
     va_list va;
-    
+
     va_start(va, keys);
 
     id value = va_arg(va, id);
-    while(value != nil) {
+    while (value != nil) {
         [values addObject:value];
         value = va_arg(va, id);
     }
@@ -723,6 +727,6 @@ NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...) {
         EbrDebugLog("Number of keys does not match the number of objects; nil is not a valid variable\n");
         return nil;
     }
-    
+
     return [NSDictionary dictionaryWithObjects:values forKeys:keyArray];
 }

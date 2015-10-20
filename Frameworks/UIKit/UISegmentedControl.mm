@@ -71,10 +71,12 @@
 
         DWORD type = 0;
 
-        if (i == 0)
+        if (i == 0) {
             type |= 1;
-        if (i == count - 1)
+        }
+        if (i == count - 1) {
             type |= 2;
+        }
         [[_segments objectAtIndex:i] _setType:type];
     }
 
@@ -106,16 +108,18 @@ static float widthForItems(id items) {
 
             size = [curItem sizeWithFont:font];
             float width = 10.0f + size.width;
-            if (width > maxItemWidth)
+            if (width > maxItemWidth) {
                 maxItemWidth = width;
+            }
         }
         if ([curItem isKindOfClass:[UIImage class]]) {
             CGSize size = { 0, 0 };
 
             size = [curItem size];
             float width = 10.0f + size.width;
-            if (width > maxItemWidth)
+            if (width > maxItemWidth) {
                 maxItemWidth = width;
+            }
         }
     }
 
@@ -213,8 +217,9 @@ static void positionSegments(UISegmentedControl* self) {
     float x = 0.0f;
     float segWidth = ourBounds.size.width / (float)count;
     float segWidthScaler = getSegmentsDesiredWidth(self);
-    if (segWidthScaler == 0.0f)
+    if (segWidthScaler == 0.0f) {
         segWidthScaler = 1.0f;
+    }
 
     for (int i = 0; i < count; i++) {
         id curSegment = [self->_segments objectAtIndex:i];
@@ -243,10 +248,12 @@ static void positionSegments(UISegmentedControl* self) {
 
         DWORD type = 0;
 
-        if (i == 0)
+        if (i == 0) {
             type |= 1;
-        if (i == count - 1)
+        }
+        if (i == count - 1) {
             type |= 2;
+        }
 
         [curSegment _setType:type];
         if (i == self->_curSelected) {
@@ -346,8 +353,9 @@ static void positionSegments(UISegmentedControl* self) {
 }
 
 - (id)titleForSegmentAtIndex:(DWORD)index {
-    if (index == -1)
+    if (index == -1) {
         return nil;
+    }
     id segment = [_segments objectAtIndex:index];
 
     return [segment title];
@@ -387,8 +395,9 @@ static void positionSegments(UISegmentedControl* self) {
         if (!isOSTarget(@"5.0")) {
             fireEvent = true;
         }
-        if (fireEvent)
+        if (fireEvent) {
             [self sendEvent:self mask:UIControlEventValueChanged];
+        }
     }
 
     return self;
@@ -426,8 +435,9 @@ static void positionSegments(UISegmentedControl* self) {
 }
 
 - (id)segmentSelectedUp:(id)segment {
-    if (!_isMomentary)
+    if (!_isMomentary) {
         return self;
+    }
 
     if (_curSelected != 0xFFFFFFFF) {
         [[_segments objectAtIndex:_curSelected] _setSelected:0];
@@ -439,8 +449,9 @@ static void positionSegments(UISegmentedControl* self) {
 }
 
 - (id)segmentSelectedCancelled:(id)segment {
-    if (!_isMomentary)
+    if (!_isMomentary) {
         return self;
+    }
 
     if (_curSelected != 0xFFFFFFFF) {
         [[_segments objectAtIndex:_curSelected] _setSelected:0];
@@ -532,10 +543,7 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
-- (id)setDividerImage:(id)img
-  forLeftSegmentState:(int)leftState
-    rightSegmentState:(int)rightState
-           barMetrics:(int)barMetrics {
+- (id)setDividerImage:(id)img forLeftSegmentState:(int)leftState rightSegmentState:(int)rightState barMetrics:(int)barMetrics {
     int count = [_segments count];
 
     for (int i = 0; i < count; i++) {
@@ -608,8 +616,9 @@ static void positionSegments(UISegmentedControl* self) {
     CGSize ret;
 
     ret.width = getSegmentsDesiredWidth(self);
-    if (ret.width > curSize.width)
+    if (ret.width > curSize.width) {
         ret.width = curSize.width;
+    }
     ret.height = 32.0f;
 
     return ret;

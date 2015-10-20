@@ -45,8 +45,12 @@
 
 - (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(NSString*)key {
     _attachedLayer = layer;
-    _runningAnimation = _globalCompositor->GetMoveDisplayAnimation(
-        &_runningAnimation2, self, layer->priv->_presentationNode, _type, _subtype, &_timingProperties);
+    _runningAnimation = _globalCompositor->GetMoveDisplayAnimation(&_runningAnimation2,
+                                                                   self,
+                                                                   layer->priv->_presentationNode,
+                                                                   _type,
+                                                                   _subtype,
+                                                                   &_timingProperties);
 
     return _runningAnimation;
 }

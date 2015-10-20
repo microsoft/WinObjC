@@ -50,51 +50,41 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Shapes;
 using namespace Windows::ApplicationModel::Core;
 
-__declspec(dllimport)
-wchar_t *__WideStringFromNSString(void *str);
+__declspec(dllimport) wchar_t* __WideStringFromNSString(void* str);
 
-Platform::String ^principalClassName, ^delegateClassName;
+Platform::String ^ principalClassName, ^delegateClassName;
 
+ref class App : public ::Windows::UI::Xaml::Application, ::Windows::UI::Xaml::Markup::IXamlMetadataProvider {
+    ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
 
-ref class App : public ::Windows::UI::Xaml::Application,
-    ::Windows::UI::Xaml::Markup::IXamlMetadataProvider
-{
-    ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
 public:
-
-    virtual ::Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(Windows::UI::Xaml::Interop::TypeName type)
-    {
-        if(_provider == nullptr)
-        {
-            _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
+    virtual ::Windows::UI::Xaml::Markup::IXamlType ^
+        GetXamlType(Windows::UI::Xaml::Interop::TypeName type) {
+            if (_provider == nullptr) {
+                _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
+            }
+            return _provider->GetXamlTypeByType(type);
         }
-        return _provider->GetXamlTypeByType(type);
-    }
 
-    virtual ::Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(::Platform::String^ fullName)
-    {
-        if(_provider == nullptr)
-        {
-            _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
+        virtual ::Windows::UI::Xaml::Markup::IXamlType
+        ^
+        GetXamlType(::Platform::String ^ fullName) {
+            if (_provider == nullptr) {
+                _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
+            }
+            return _provider->GetXamlTypeByName(fullName);
         }
-        return _provider->GetXamlTypeByName(fullName);
+
+        virtual ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition> ^
+        GetXmlnsDefinitions() { return ref new ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition>(0); }
+
+        void InitializeComponent() {
     }
 
-    virtual ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions()
-    {
-        return ref new ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition>(0);
+    void Connect(int connectionId, ::Platform::Object ^ target) {
     }
 
-    void InitializeComponent()
-    {
-    }
-
-    void Connect(int connectionId, ::Platform::Object^ target)
-    {
-    }
-    
-    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override
-    {
+    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) override {
         auto uiElem = ref new Grid();
         auto rootFrame = ref new Frame();
         rootFrame->Content = uiElem;
@@ -108,16 +98,14 @@ public:
 
         IWRunApplicationMain(principalClassName, delegateClassName, startupRect.Width, startupRect.Height);
     }
-    
 };
 
-extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char *argv[], void *pName, void *dName)
-{
+extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* pName, void* dName) {
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    principalClassName = pName ? ref new Platform::String((wchar_t *) __WideStringFromNSString(pName)) : nullptr;
-    delegateClassName = dName ? ref new Platform::String((wchar_t *) __WideStringFromNSString(dName)) : nullptr;
-    Windows::UI::Xaml::Application::Start(ref new Windows::UI::Xaml::ApplicationInitializationCallback(
-        [](Windows::UI::Xaml::ApplicationInitializationCallbackParams^ p) {
+    principalClassName = pName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(pName)) : nullptr;
+    delegateClassName = dName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(dName)) : nullptr;
+    Windows::UI::Xaml::Application::Start(
+        ref new Windows::UI::Xaml::ApplicationInitializationCallback([](Windows::UI::Xaml::ApplicationInitializationCallbackParams ^ p) {
             (void)p; // Unused parameter
             auto app = ref new App();
         }));

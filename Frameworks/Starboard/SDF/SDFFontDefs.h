@@ -22,5 +22,3 @@
 typedef Matrix<unsigned char> CharMatrix;
 typedef Triplet<unsigned char> Pixel;
 typedef Matrix<Pixel> PixelMatrix;
-
-

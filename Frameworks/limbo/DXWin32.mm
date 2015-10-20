@@ -150,39 +150,18 @@ static LRESULT CALLBACK CompositorWindowProc(HWND hWnd, UINT message, WPARAM wPa
                 case WM_POINTERDOWN:
                     SetFocus(hWnd);
                     SetCapture(hWnd);
-                    UIQueueTouchInput(x,
-                                      y,
-                                      touchID,
-                                      EVENT_DOWN,
-                                      windowWidth,
-                                      windowHeight,
-                                      timestamp,
-                                      applicationProperties.bLandscape);
+                    UIQueueTouchInput(x, y, touchID, EVENT_DOWN, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
                     break;
 
                 case WM_LBUTTONUP:
                 case WM_POINTERUP:
                     ReleaseCapture();
-                    UIQueueTouchInput(x,
-                                      y,
-                                      touchID,
-                                      EVENT_UP,
-                                      windowWidth,
-                                      windowHeight,
-                                      timestamp,
-                                      applicationProperties.bLandscape);
+                    UIQueueTouchInput(x, y, touchID, EVENT_UP, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
                     break;
 
                 case WM_MOUSEMOVE:
                 case WM_POINTERUPDATE:
-                    UIQueueTouchInput(x,
-                                      y,
-                                      touchID,
-                                      EVENT_MOVE,
-                                      windowWidth,
-                                      windowHeight,
-                                      timestamp,
-                                      applicationProperties.bLandscape);
+                    UIQueueTouchInput(x, y, touchID, EVENT_MOVE, windowWidth, windowHeight, timestamp, applicationProperties.bLandscape);
                     break;
             }
         }
@@ -403,7 +382,7 @@ int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSSt
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in(NSArray*)orientation) {
+            for (NSString* curstr in (NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;
@@ -423,8 +402,7 @@ int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSSt
         }
     }
 
-    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
-        defaultOrientation == UIInterfaceOrientationLandscapeRight) {
+    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft || defaultOrientation == UIInterfaceOrientationLandscapeRight) {
         bLandscape = true;
     }
 
@@ -435,8 +413,7 @@ int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSSt
     applicationProperties.isTablet = defaultTablet;
     applicationProperties.bLandscape = bLandscape;
 
-    GetCACompositor()->setScreenSize(
-        applicationProperties.appWidth, applicationProperties.appHeight, applicationProperties.appScale);
+    GetCACompositor()->setScreenSize(applicationProperties.appWidth, applicationProperties.appHeight, applicationProperties.appScale);
     GetCACompositor()->setDeviceSize(applicationProperties.appWidth * applicationProperties.appScale,
                                      applicationProperties.appHeight * applicationProperties.appScale);
     GetCACompositor()->setTablet(applicationProperties.isTablet);

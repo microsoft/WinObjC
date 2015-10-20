@@ -84,8 +84,9 @@ typedef wchar_t WCHAR;
     _lastFrame = frameTime;
 
     id dest = self;
-    if (self.delegate != nil)
+    if (self.delegate != nil) {
         dest = self.delegate;
+    }
 
     // TODO: The view/view controller logic here is probably quite wrong.
 
@@ -97,8 +98,9 @@ typedef wchar_t WCHAR;
 
     bool tryDirectRender = true;
     if ([self.view respondsToSelector:@selector(_renderFrame)]) {
-        if ([self.view _renderFrame])
+        if ([self.view _renderFrame]) {
             tryDirectRender = false;
+        }
     }
 
     if (tryDirectRender) {

@@ -226,15 +226,13 @@
                     if ([_layoutInfo horizontal]) {
                         CGSize rowSize;
                         rowSize = [row rowSize];
-                        [row setRowFrame:CGRectMake(
-                                             sectionSize.width, _sectionMargins.top, rowSize.width, rowSize.height)];
+                        [row setRowFrame:CGRectMake(sectionSize.width, _sectionMargins.top, rowSize.width, rowSize.height)];
                         sectionSize.height = std::max(rowSize.height, sectionSize.height);
                         sectionSize.width += rowSize.width + (finishCycle ? 0 : _horizontalInterstice);
                     } else {
                         CGSize rowSize;
                         rowSize = [row rowSize];
-                        [row setRowFrame:CGRectMake(
-                                             _sectionMargins.left, sectionSize.height, rowSize.width, rowSize.height)];
+                        [row setRowFrame:CGRectMake(_sectionMargins.left, sectionSize.height, rowSize.width, rowSize.height)];
                         sectionSize.height += rowSize.height + (finishCycle ? 0 : _verticalInterstice);
                         sectionSize.width = std::max(rowSize.width, sectionSize.width);
                     }

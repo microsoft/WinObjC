@@ -448,8 +448,7 @@ void FontCacheInfo::buildCharAreas() {
     int numSrc = 0;
     FT_UInt glyphIndex;
 
-    for (FT_ULong cc = FT_Get_First_Char(face, &glyphIndex); glyphIndex != 0;
-         cc = FT_Get_Next_Char(face, cc, &glyphIndex)) {
+    for (FT_ULong cc = FT_Get_First_Char(face, &glyphIndex); glyphIndex != 0; cc = FT_Get_Next_Char(face, cc, &glyphIndex)) {
         numSrc++;
     }
 
@@ -459,8 +458,7 @@ void FontCacheInfo::buildCharAreas() {
     numAreas = 0;
     FontCharArea* ca = areas;
 
-    for (FT_ULong cc = FT_Get_First_Char(face, &glyphIndex); glyphIndex != 0;
-         cc = FT_Get_Next_Char(face, cc, &glyphIndex)) {
+    for (FT_ULong cc = FT_Get_First_Char(face, &glyphIndex); glyphIndex != 0; cc = FT_Get_Next_Char(face, cc, &glyphIndex)) {
         WORD gindex = FT_Get_Char_Index(face, cc);
 
         ca->rendered = false;
@@ -877,8 +875,7 @@ CATextLayerLine* DisplayTextureFontAtlas::createNewLine() {
     return ret;
 }
 
-void DisplayTextureFontAtlas::addOutputLine(
-    float x, float y, float maxWidth, int glyphStart, int numGlyphs, CGSize* sizeRet) {
+void DisplayTextureFontAtlas::addOutputLine(float x, float y, float maxWidth, int glyphStart, int numGlyphs, CGSize* sizeRet) {
     //  Skip any trailng whitespace
     for (int i = glyphStart + numGlyphs - 1; i >= glyphStart; i--) {
         if (_atlasGlyphs[i].character != ' ')
@@ -1016,15 +1013,8 @@ void DisplayTextureFontAtlas::addOutputLine(
     outputLine->numQuads = _numQuads - outputLine->startQuad;
 }
 
-void DisplayTextureFontAtlas::emitOperations(CAPoint3D* quads,
-                                             int numPoints,
-                                             float alpha,
-                                             float r,
-                                             float g,
-                                             float b,
-                                             float a,
-                                             DrawingObserver* observer,
-                                             bool sdfFont) {
+void DisplayTextureFontAtlas::emitOperations(
+    CAPoint3D* quads, int numPoints, float alpha, float r, float g, float b, float a, DrawingObserver* observer, bool sdfFont) {
     EbrTexture* texPtr = NULL;
     int basePoint = 0;
     int curPoint = 0;
@@ -1092,12 +1082,8 @@ bool DisplayTextureFontAtlas::reflowText(CGSize maxSize, CGSize* totalSizeRet) {
             float curY = 0.0f;
 
             //  Keep drawing lines of text until we're out of characters
-            while (CGFontWrapFunc(&state,
-                                  maxSize.width,
-                                  &fitSize,
-                                  fontAtlasGetCharWidth,
-                                  _atlasGlyphs,
-                                  _lineBreakMode == UILineBreakModeCharacterWrap)) {
+            while (CGFontWrapFunc(
+                &state, maxSize.width, &fitSize, fontAtlasGetCharWidth, _atlasGlyphs, _lineBreakMode == UILineBreakModeCharacterWrap)) {
                 CGSize retSize;
                 addOutputLine(0, curY, maxSize.width, state.lineStart - state.chars, state.lineLen, &retSize);
                 if (retSize.width > totalSizeRet->width) {

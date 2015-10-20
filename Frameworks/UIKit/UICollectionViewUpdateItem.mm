@@ -20,19 +20,18 @@
 
 @implementation UICollectionViewUpdateItem : NSObject
 - (id)initWithAction:(UICollectionUpdateAction)updateAction forIndexPath:(id)indexPath {
-    if (updateAction == UICollectionUpdateActionInsert)
+    if (updateAction == UICollectionUpdateActionInsert) {
         return [self initWithInitialIndexPath:nil finalIndexPath:indexPath updateAction:updateAction];
-    else if (updateAction == UICollectionUpdateActionDelete)
+    } else if (updateAction == UICollectionUpdateActionDelete) {
         return [self initWithInitialIndexPath:indexPath finalIndexPath:nil updateAction:updateAction];
-    else if (updateAction == UICollectionUpdateActionReload)
+    } else if (updateAction == UICollectionUpdateActionReload) {
         return [self initWithInitialIndexPath:indexPath finalIndexPath:indexPath updateAction:updateAction];
+    }
 
     return nil;
 }
 
-- (id)initWithInitialIndexPath:(id)initialIndexPath
-                finalIndexPath:(id)finalIndexPath
-                  updateAction:(UICollectionUpdateAction)updateAction {
+- (id)initWithInitialIndexPath:(id)initialIndexPath finalIndexPath:(id)finalIndexPath updateAction:(UICollectionUpdateAction)updateAction {
     _initialIndexPath = initialIndexPath;
     _finalIndexPath = finalIndexPath;
     _updateAction = updateAction;

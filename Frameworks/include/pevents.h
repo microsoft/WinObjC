@@ -28,23 +28,22 @@
 
 #define WFMO
 
-namespace neosmart
-{
-    //Type declarations
-    struct neosmart_event_t_;
-    typedef neosmart_event_t_ * neosmart_event_t;
-    
-    //WIN32-style functions
-    neosmart_event_t NeoCreateEvent(bool manualReset = false, bool initialState = false);
-    int DestroyEvent(neosmart_event_t event);
-    int WaitForEvent(neosmart_event_t event, uint64_t milliseconds = -1);
-    int SetEvent(neosmart_event_t event);
-    int ResetEvent(neosmart_event_t event);
+namespace neosmart {
+// Type declarations
+struct neosmart_event_t_;
+typedef neosmart_event_t_* neosmart_event_t;
+
+// WIN32-style functions
+neosmart_event_t NeoCreateEvent(bool manualReset = false, bool initialState = false);
+int DestroyEvent(neosmart_event_t event);
+int WaitForEvent(neosmart_event_t event, uint64_t milliseconds = -1);
+int SetEvent(neosmart_event_t event);
+int ResetEvent(neosmart_event_t event);
 #ifdef WFMO
-    int WaitForMultipleEvents(neosmart_event_t *events, int count, bool waitAll, uint64_t milliseconds);
-    int WaitForMultipleEvents(neosmart_event_t *events, int count, bool waitAll, uint64_t milliseconds, int &index, SocketWait *sockets);
+int WaitForMultipleEvents(neosmart_event_t* events, int count, bool waitAll, uint64_t milliseconds);
+int WaitForMultipleEvents(neosmart_event_t* events, int count, bool waitAll, uint64_t milliseconds, int& index, SocketWait* sockets);
 #endif
 
-    //POSIX-style functions
-    //TBD
+// POSIX-style functions
+// TBD
 }

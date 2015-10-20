@@ -234,8 +234,9 @@ void CGContextRestoreGState(CGContextRef ctx) {
 }
 
 void CGContextClearRect(CGContextRef ctx, CGRect rct) {
-    if (!ctx)
+    if (!ctx) {
         return;
+    }
 
     ctx->Backing()->CGContextClearRect(rct);
 }
@@ -274,8 +275,7 @@ void CGContextMoveToPoint(CGContextRef ctx, float x, float y) {
     ctx->Backing()->CGContextMoveToPoint(x, y);
 }
 
-void CGContextAddArc(
-    CGContextRef ctx, float x, float y, float radius, float startAngle, float endAngle, bool clockwise) {
+void CGContextAddArc(CGContextRef ctx, float x, float y, float radius, float startAngle, float endAngle, bool clockwise) {
     ctx->Backing()->CGContextAddArc(x, y, radius, startAngle, endAngle, clockwise);
 }
 
@@ -354,7 +354,8 @@ void CGContextDrawRadialGradient(CGContextRef ctx,
 }
 
 void CGContextDrawShading(CGContextRef ctx, CGShadingRef shading) {
-    // CGContextDrawLinearGradient(ctx, (CGGradientRef) shading->_gradient, shading->_start, shading->_end, 0);
+    // CGContextDrawLinearGradient(ctx, (CGGradientRef) shading->_gradient,
+    // shading->_start, shading->_end, 0);
 }
 
 void CGContextDrawLayerInRect(CGContextRef ctx, CGRect destRect, CGLayerRef layer) {
@@ -502,8 +503,7 @@ CGContextRef CGBitmapContextCreate(void* data,
         return ret;
     }
 
-    if (((__CGColorSpace*)colorSpace)->colorSpace == _ColorRGBA ||
-        ((__CGColorSpace*)colorSpace)->colorSpace == _ColorRGB32) {
+    if (((__CGColorSpace*)colorSpace)->colorSpace == _ColorRGBA || ((__CGColorSpace*)colorSpace)->colorSpace == _ColorRGB32) {
         switch (bitsPerComponent) {
             case 8:
                 switch (alphaType) {
@@ -545,7 +545,9 @@ CGContextRef CGBitmapContextCreate(void* data,
                 break;
 
             case 0:
-                EbrDebugLog("Warning: Invalid number of bits per component passed to CGBitmapContextCreate\n");
+                EbrDebugLog(
+                    "Warning: Invalid number of bits per component passed to "
+                    "CGBitmapContextCreate\n");
                 return 0;
 
             default:
@@ -575,7 +577,8 @@ CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef ctx) {
 }
 
 void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font) {
-    //  We want to center around the cap height. The character will appear at origin.y + ascent, so we need to adjust it
+    //  We want to center around the cap height. The character will appear at
+    //  origin.y + ascent, so we need to adjust it
     //  so that the capHeight is
     //  centered
     float ascender = [font ascender];

@@ -75,8 +75,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"EAGLContext already initialized"];
     }
     if (api != 1 && api != 2) {
-        [NSException raiseWithLogging:@"EAGLContextFailure"
-                               format:@"Only OpenGL ES 1.x and OpenGL ES 2.0 are supported (api=0x%x)", api];
+        [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Only OpenGL ES 1.x and OpenGL ES 2.0 are supported (api=0x%x)", api];
     }
 
     _eglSurface = EGL_NO_SURFACE;
@@ -113,8 +112,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     const EGLint createContextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
     _eglContext = eglCreateContext(eglDisplay, _mConfig, shareContext, createContextAttribs);
     if (_eglContext == EGL_NO_CONTEXT) {
-        [NSException raiseWithLogging:@"EAGLContextFailure"
-                               format:@"eglCreateContext failed err=0x%08x", eglGetError()];
+        [NSException raiseWithLogging:@"EAGLContextFailure" format:@"eglCreateContext failed err=0x%08x", eglGetError()];
     }
 
     //  Create a temporary surface so that we can make the context current prior to creating the
@@ -123,8 +121,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
     _eglSurface = eglCreatePbufferSurface(eglDisplay, _mConfig, pbuffer_attribute_list);
     if (_eglSurface == EGL_NO_SURFACE) {
-        [NSException raiseWithLogging:@"EAGLContextFailure"
-                               format:@"eglCreatePbufferSurface failed err=0x%08x", eglGetError()];
+        [NSException raiseWithLogging:@"EAGLContextFailure" format:@"eglCreatePbufferSurface failed err=0x%08x", eglGetError()];
     }
 
     _initializedVersion = api;
@@ -188,15 +185,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     }
 
     //  Create a temporary surface so that we can make the context current
-    EGLint surface_attribute_list[] = { EGL_WIDTH,
-                                        _rbWidth,
-                                        EGL_HEIGHT,
-                                        _rbHeight,
-                                        EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER,
-                                        EGL_TRUE,
-                                        EGL_FIXED_SIZE_ANGLE,
-                                        EGL_TRUE,
-                                        EGL_NONE };
+    EGLint surface_attribute_list[] =
+        { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
+          EGL_TRUE,  EGL_NONE };
 
     IUnknown* pUnkRaw = (IUnknown*)[surface.swapChainPanel internalObject];
 

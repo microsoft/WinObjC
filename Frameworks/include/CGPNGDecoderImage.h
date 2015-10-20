@@ -14,30 +14,27 @@
 //
 //******************************************************************************
 
-class CGPNGDecoderImage : public __CGImage
-{
+class CGPNGDecoderImage : public __CGImage {
 public:
-    CGPNGDecoderImage(const char *filename);
+    CGPNGDecoderImage(const char* filename);
     CGPNGDecoderImage(id data);
 };
 
-class CGPNGImageBacking : public CGDiscardableImageBacking
-{
+class CGPNGImageBacking : public CGDiscardableImageBacking {
 public:
-    char *_fileName;
+    char* _fileName;
     idretain _data;
-    BYTE *out;
-    BYTE **row_pointers;
-    CGImageBacking *retBacking;
+    BYTE* out;
+    BYTE** row_pointers;
+    CGImageBacking* retBacking;
 
 public:
-    CGPNGImageBacking(const char *filename);
+    CGPNGImageBacking(const char* filename);
     CGPNGImageBacking(id data);
     ~CGPNGImageBacking();
 
     void DiscardIfPossible();
-    CGImageBacking *ConstructBacking();
-    void Decode(void *imgDest, int stride);
-    bool DrawDirectlyToContext(CGContextImpl *ctx, CGRect src, CGRect dest);
+    CGImageBacking* ConstructBacking();
+    void Decode(void* imgDest, int stride);
+    bool DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CGRect dest);
 };
-

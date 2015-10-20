@@ -18,9 +18,8 @@
 @public
     id _obj;
 }
--(instancetype) initWithCoder:(NSCoder*)coder;
--(id) _getObject;
-+(void) addProxyObject:(id)proxyObject withName:(id)objectName forCoder:(id)coder;
-+(void) clearProxyObjects:(id)coder;
+- (instancetype)initWithCoder:(NSCoder*)coder;
+- (id)_getObject;
++ (void)addProxyObject:(id)proxyObject withName:(id)objectName forCoder:(id)coder;
++ (void)clearProxyObjects:(id)coder;
 @end
-

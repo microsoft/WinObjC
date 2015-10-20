@@ -14,13 +14,12 @@
 //
 //******************************************************************************
 
-class CGDiscardableImageBacking : public CGImageBacking
-{
+class CGDiscardableImageBacking : public CGImageBacking {
 protected:
-    CGImageBacking *_forward;
-    bool            _hasCachedInfo;
-    int             _cachedWidth, _cachedHeight;
-    surfaceFormat   _cachedSurfaceFormat;
+    CGImageBacking* _forward;
+    bool _hasCachedInfo;
+    int _cachedWidth, _cachedHeight;
+    surfaceFormat _cachedSurfaceFormat;
 
 public:
     CGDiscardableImageBacking();
@@ -28,8 +27,8 @@ public:
 
     CGImageRef Copy();
 
-    CGContextImpl *CreateDrawingContext(CGContextRef base);
-    void GetPixel(int x, int y, float &r, float &g, float &b, float &a);
+    CGContextImpl* CreateDrawingContext(CGContextRef base);
+    void GetPixel(int x, int y, float& r, float& g, float& b, float& a);
     int InternalWidth();
     int InternalHeight();
     int Width();
@@ -37,44 +36,41 @@ public:
     int BytesPerRow();
     int BytesPerPixel();
     surfaceFormat SurfaceFormat();
-    void *StaticImageData();
-    void *LockImageData();
+    void* StaticImageData();
+    void* LockImageData();
     void ReleaseImageData();
-    cairo_surface_t *LockCairoSurface();
+    cairo_surface_t* LockCairoSurface();
     void ReleaseCairoSurface();
     void SetFreeWhenDone(bool freeWhenDone);
     void DiscardIfPossible();
 
     void ConstructIfNeeded();
-    virtual CGImageBacking *ConstructBacking() = 0;
+    virtual CGImageBacking* ConstructBacking() = 0;
 };
 
-class ImageDataStream
-{
+class ImageDataStream {
 public:
-    virtual int readData(void *in, int len) = 0;
-    virtual ~ImageDataStream() { }
+    virtual int readData(void* in, int len) = 0;
+    virtual ~ImageDataStream() {
+    }
 };
 
-class ImageDataStreamFile : public ImageDataStream
-{
+class ImageDataStreamFile : public ImageDataStream {
 private:
-    EbrFile *fpIn;
+    EbrFile* fpIn;
 
 public:
-    ImageDataStreamFile(EbrFile *in);
-    int readData(void *in, int len);
+    ImageDataStreamFile(EbrFile* in);
+    int readData(void* in, int len);
     ~ImageDataStreamFile();
 };
 
-class ImageDataStreamMemory : public ImageDataStream
-{
+class ImageDataStreamMemory : public ImageDataStream {
 private:
-    const char *data;
-    int         dataLeft;
+    const char* data;
+    int dataLeft;
 
 public:
-    ImageDataStreamMemory(const void *in, int len);
-    int readData(void *in, int len);
+    ImageDataStreamMemory(const void* in, int len);
+    int readData(void* in, int len);
 };
-

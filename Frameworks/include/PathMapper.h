@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-class CPathMapper
-{
+class CPathMapper {
 public:
     char mappedPath[4096];
     char fixedPath[4096];
@@ -23,26 +22,23 @@ public:
 
     static char currentDir[4096];
 
-    static void setCWD(const char *directory)
-    {
-        if ( directory[0] != '/' ) {
+    static void setCWD(const char* directory) {
+        if (directory[0] != '/') {
             strcat_s(currentDir, directory);
         } else {
             strcpy_s(currentDir, directory);
         }
     }
 
-    static void getCWD(char *directory)
-    {
+    static void getCWD(char* directory) {
         strcpy_s(directory, 4095, currentDir);
     }
 
-    char *FixedPath();
-    char *MappedPath();
+    char* FixedPath();
+    char* MappedPath();
 
-    CPathMapper(const char *path);
-    operator const char *()
-    {
+    CPathMapper(const char* path);
+    operator const char*() {
         return mappedPath;
     }
 };

@@ -381,17 +381,10 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return result;
 }
 
-- (void)performSelector:(SEL)selector
-                 target:(NSObject*)target
-               argument:(NSObject*)argument
-                  order:(int)order
-                  modes:(NSArray*)modes {
+- (void)performSelector:(SEL)selector target:(NSObject*)target argument:(NSObject*)argument order:(int)order modes:(NSArray*)modes {
     NSArray* performModes = [self resolveCommonModes:modes];
-    NSOrderedPerform* perform = [[NSOrderedPerform alloc] initWithSelector:selector
-                                                                    target:target
-                                                                  argument:argument
-                                                                     order:order
-                                                                     modes:performModes];
+    NSOrderedPerform* perform =
+        [[NSOrderedPerform alloc] initWithSelector:selector target:target argument:argument order:order modes:performModes];
     [performModes release];
     [_orderedLock lock];
 
@@ -417,8 +410,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     while (--count >= 0) {
         NSOrderedPerform* check = [_orderedPerforms objectAtIndex:count];
 
-        if (strcmp((char*)[check selector], selector) == 0 && [check target] == target &&
-            [check argument] == argument) {
+        if (strcmp((char*)[check selector], selector) == 0 && [check target] == target && [check argument] == argument) {
             [_orderedPerforms removeObjectAtIndex:count];
         }
     }
@@ -447,8 +439,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     _stop = true;
 }
 
-+ (void)setUIThreadWaitFunction:
-    (int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
++ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
     [NSRunLoopState setUIThreadWaitFunction:callback];
 }
 @end

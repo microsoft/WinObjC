@@ -16,19 +16,18 @@
 
 @interface NSSelectSet : NSObject {
 @public
-   id _readSet;
-   id _writeSet;
-   id _exceptionSet;
+    id _readSet;
+    id _writeSet;
+    id _exceptionSet;
 }
--(void) dealloc;
--(BOOL) isEmpty;
--(BOOL) containsObjectForRead:(id)object;
--(BOOL) containsObjectForWrite:(id)object;
--(BOOL) containsObjectForException:(id)object;
-/* annotate with type */ -(id) init;
-/* annotate with type */ -(id) addObjectForRead:(id)object;
-/* annotate with type */ -(id) addObjectForWrite:(id)object;
-/* annotate with type */ -(id) addObjectForException:(id)object;
-/* annotate with type */ -(id) waitForSelectWithOutputSet:(id *)outputSetX beforeDate:(id)beforeDate;
+- (void)dealloc;
+- (BOOL)isEmpty;
+- (BOOL)containsObjectForRead:(id)object;
+- (BOOL)containsObjectForWrite:(id)object;
+- (BOOL)containsObjectForException:(id)object;
+/* annotate with type */ -(id)init;
+/* annotate with type */ -(id)addObjectForRead : (id)object;
+/* annotate with type */ -(id)addObjectForWrite : (id)object;
+/* annotate with type */ -(id)addObjectForException : (id)object;
+/* annotate with type */ -(id)waitForSelectWithOutputSet : (id*)outputSetX beforeDate : (id)beforeDate;
 @end
-

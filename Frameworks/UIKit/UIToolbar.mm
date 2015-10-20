@@ -46,21 +46,17 @@ void initInternal(UIToolbar* self) {
     switch (_style) {
         case 1:
             _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1
-                                                                                              topCapHeight:0];
+                [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         case 2:
         case 3:
             _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1
-                                                                                                   topCapHeight:0];
+                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         default:
-            _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1
-                                                                                          topCapHeight:0];
+            _backgroundGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
     }
 
@@ -97,21 +93,17 @@ void initInternal(UIToolbar* self) {
     switch (_style) {
         case 1:
             _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1
-                                                                                              topCapHeight:0];
+                [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         case 2:
         case 3:
             _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1
-                                                                                                   topCapHeight:0];
+                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         default:
-            _backgroundGradient =
-                [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1
-                                                                                          topCapHeight:0];
+            _backgroundGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
     }
 
@@ -208,7 +200,7 @@ struct BarViewContainer {
 };
 
 void layoutItems(UIToolbar* self) {
-    for (UIView* curView in(NSArray*)self->_curAddedViews) {
+    for (UIView* curView in (NSArray*)self->_curAddedViews) {
         [curView removeFromSuperview];
     }
     [self->_curAddedViews removeAllObjects];
@@ -369,8 +361,7 @@ void layoutItems(UIToolbar* self) {
 
             //  Add subviews
             std::vector<BarContainedView>::iterator curContainedView;
-            for (curContainedView = (*curGroup)->subViews.begin(); curContainedView != (*curGroup)->subViews.end();
-                 curContainedView++) {
+            for (curContainedView = (*curGroup)->subViews.begin(); curContainedView != (*curGroup)->subViews.end(); curContainedView++) {
                 [curContainedView->view setFrame:curContainedView->frame];
                 [groupView addSubview:curContainedView->view];
             }

@@ -77,8 +77,9 @@
         return ret;
     }
 
-    if (_description)
+    if (_description) {
         return _description;
+    }
     return @"Generic error";
 }
 

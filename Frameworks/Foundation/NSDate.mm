@@ -61,23 +61,23 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 + (NSDate*)date {
-    return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate()]
-        autorelease];
+    return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate()] autorelease];
 }
 
 + (NSDate*)distantPast {
     static id staticInstance;
-    if (!staticInstance)
-        staticInstance =
-            [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)];
+    if (!staticInstance) {
+        staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)];
+    }
 
     return staticInstance;
 }
 
 + (NSDate*)distantFuture {
     static id staticInstance;
-    if (!staticInstance)
+    if (!staticInstance) {
         staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:2010.0L * 365 * 24 * 60 * 60];
+    }
 
     return staticInstance;
 }
@@ -91,8 +91,8 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 + (NSDate*)dateWithTimeIntervalSince1970:(double)secondsSince1970 {
-    return [[[self allocWithZone:nil]
-        initWithTimeIntervalSinceReferenceDate:-NSTimeIntervalSince1970 + (double)secondsSince1970] autorelease];
+    return
+        [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-NSTimeIntervalSince1970 + (double)secondsSince1970] autorelease];
 }
 
 + (NSDate*)dateWithTimeInterval:(double)interval sinceDate:(NSDate*)date {
@@ -133,8 +133,9 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 - (NSInteger)compare:(NSDate*)toDate {
-    if (toDate == nil)
+    if (toDate == nil) {
         return -1;
+    }
 
     if (_curTime == toDate->_curTime) {
         return 0;
@@ -146,8 +147,9 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 - (NSInteger)isEqualToDate:(NSDate*)toDate {
-    if (![toDate isKindOfClass:[NSDate class]])
+    if (![toDate isKindOfClass:[NSDate class]]) {
         return FALSE;
+    }
 
     if (_curTime == toDate->_curTime) {
         return TRUE;
@@ -157,11 +159,13 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 - (BOOL)isEqual:(NSDate*)toDate {
-    if (self == toDate)
+    if (self == toDate) {
         return TRUE;
+    }
 
-    if (![toDate isKindOfClass:[NSDate class]])
+    if (![toDate isKindOfClass:[NSDate class]]) {
         return FALSE;
+    }
     return [self isEqualToDate:(id)toDate];
 }
 

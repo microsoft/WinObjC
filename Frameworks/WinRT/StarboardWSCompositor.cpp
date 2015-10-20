@@ -55,105 +55,94 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Shapes;
 using namespace Windows::ApplicationModel::Core;
 
+void EbrSetWritableFolder(const char* folder);
+void IWSetTemporaryFolder(const char* folder);
 
-void EbrSetWritableFolder(const char *folder);
-void IWSetTemporaryFolder(const char *folder);
-
-typedef void *EbrEvent;
+typedef void* EbrEvent;
 struct SocketWait;
 
-int EbrEventTimedMultipleWait(EbrEvent *events, int numEvents, double timeout, SocketWait *sockets);
+int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_PHONE)
 #define WOCGetCurrentFiber() GetCurrentFiber()
-#define WOCCreateFiber(stackCommit, stackReserve, start, param) CreateFiberEx(stackCommit, stackReserve, FIBER_FLAG_FLOAT_SWITCH, start, param)
+#define WOCCreateFiber(stackCommit, stackReserve, start, param) \
+    CreateFiberEx(stackCommit, stackReserve, FIBER_FLAG_FLOAT_SWITCH, start, param)
 #define WOCConvertThreadToFiber() ConvertThreadToFiberEx(NULL, FIBER_FLAG_FLOAT_SWITCH)
 #define WOCSwitchToFiber(fiber) SwitchToFiber(fiber)
-typedef VOID *WOCFiber;
+typedef VOID* WOCFiber;
 typedef LPFIBER_START_ROUTINE WOCFiberStartRoutine;
 #else
-typedef void (CALLBACK *WOCFiberStartRoutine)(void *);
+typedef void(CALLBACK* WOCFiberStartRoutine)(void*);
 #ifdef _M_IX86
-class WOCFiberContext
-{
+class WOCFiberContext {
 public:
-    void *stackPtr;
-    void *framePtr;
-    void *instructionPtr;
-    void *excepPtr;
-    void *stackHigh;
-    void *stackLow;
+    void* stackPtr;
+    void* framePtr;
+    void* instructionPtr;
+    void* excepPtr;
+    void* stackHigh;
+    void* stackLow;
     void *savedEsi, *savedEdi;
-    void *savedEbx;
+    void* savedEbx;
     WOCFiberStartRoutine start;
-    void *param;
+    void* param;
 };
 #else
-class WOCFiberContext
-{
+class WOCFiberContext {
 public:
     void *r4, *r5, *r6, *r7, *r8, *r9, *r10;
-    void *framePtr;
-    void *stackPtr;
-    void *instructionPtr;
-    void *stackHigh;
-    void *stackLow;
+    void* framePtr;
+    void* stackPtr;
+    void* instructionPtr;
+    void* stackHigh;
+    void* stackLow;
     WOCFiberStartRoutine start;
-    void *param;
+    void* param;
 };
 #endif
-typedef WOCFiberContext *WOCFiber;
+typedef WOCFiberContext* WOCFiber;
 
 static __declspec(thread) WOCFiber curFiber;
 
-static void WOCFiberEntry()
-{
+static void WOCFiberEntry() {
     curFiber->start(curFiber->param);
 }
 
-WOCFiber WOCGetCurrentFiber()
-{
+WOCFiber WOCGetCurrentFiber() {
     return curFiber;
 }
 
-WOCFiber WOCCreateFiber(
-    DWORD dwStackCommitSize,
-    DWORD dwStackReserveSize,
-    WOCFiberStartRoutine lpStartAddress, 
-    void *lpParameter
-    )
-{
-    struct SEH_ENTRY
-    {
-        SEH_ENTRY *next;
-        void *handler;
+WOCFiber WOCCreateFiber(DWORD dwStackCommitSize, DWORD dwStackReserveSize, WOCFiberStartRoutine lpStartAddress, void* lpParameter) {
+    struct SEH_ENTRY {
+        SEH_ENTRY* next;
+        void* handler;
     };
 
     WOCFiber ret = new WOCFiberContext();
-    char *stackStart = (char *) _aligned_malloc(dwStackReserveSize, 65536);
+    char* stackStart = (char*)_aligned_malloc(dwStackReserveSize, 65536);
 
-    ret->instructionPtr = (void *) WOCFiberEntry;
-    ret->stackPtr = (void *) (stackStart + dwStackReserveSize - 32);
-    ret->stackHigh = (void *) (stackStart + dwStackReserveSize);
-    ret->stackLow = (void *) stackStart;
+    ret->instructionPtr = (void*)WOCFiberEntry;
+    ret->stackPtr = (void*)(stackStart + dwStackReserveSize - 32);
+    ret->stackHigh = (void*)(stackStart + dwStackReserveSize);
+    ret->stackLow = (void*)stackStart;
 
 #ifdef _M_IX86
     //  Find the top-level SEH entry of our current thread
     //  RtlRaiseException does a security check and has a hard
     //  requirement that the top-level SEH handler is the one setup
-    //  by CreateThread 
-    SEH_ENTRY *topHandler = (SEH_ENTRY *)((void **) NtCurrentTeb())[0];
-    while ( (void *) topHandler->next != (void *) 0xFFFFFFFF ) {
+    //  by CreateThread
+    SEH_ENTRY* topHandler = (SEH_ENTRY*)((void**)NtCurrentTeb())[0];
+    while ((void*)topHandler->next != (void*)0xFFFFFFFF) {
         topHandler = topHandler->next;
     }
 
-    ret->stackPtr = (void *) (((char *) ret->stackPtr) - sizeof(SEH_ENTRY));
+    ret->stackPtr = (void*)(((char*)ret->stackPtr) - sizeof(SEH_ENTRY));
     ret->framePtr = ret->framePtr;
 
     //  Push the new top-level handler onto our fiber stack
-    SEH_ENTRY *newTopHandler = (SEH_ENTRY *) ret->stackPtr;
+    SEH_ENTRY* newTopHandler = (SEH_ENTRY*)ret->stackPtr;
     *newTopHandler = *topHandler;
-    ret->excepPtr = (void *) newTopHandler;
+    ret->excepPtr = (void*)newTopHandler;
 #else
     ret->framePtr = ret->stackPtr;
 #endif
@@ -163,21 +152,18 @@ WOCFiber WOCCreateFiber(
     return ret;
 }
 
-WOCFiber WOCConvertThreadToFiber()
-{
+WOCFiber WOCConvertThreadToFiber() {
     WOCFiber ret = new WOCFiberContext();
     curFiber = ret;
     return ret;
 }
 
 #ifdef _M_IX86
-static __declspec(naked) int WOCSetJmp(WOCFiber dest)
-{
-    __asm
-    {
+static __declspec(naked) int WOCSetJmp(WOCFiber dest) {
+    __asm {
         mov ecx, [esp + 4]
         mov [ecx], esp
-        add [ecx], 4    //  Pop off return address from stack in context to be restored
+        add [ecx], 4 //  Pop off return address from stack in context to be restored
         mov [ecx + 4], ebp
         mov eax, [esp]
         mov [ecx + 8], eax
@@ -195,10 +181,8 @@ static __declspec(naked) int WOCSetJmp(WOCFiber dest)
     }
 }
 
-static __declspec(naked) int WOCLongJmp(WOCFiber dest)
-{
-    __asm
-    {
+static __declspec(naked) int WOCLongJmp(WOCFiber dest) {
+    __asm {
         mov ecx, [esp + 4]
         mov esp, [ecx]
         mov ebp, [ecx + 4]
@@ -221,10 +205,9 @@ extern "C" int WOCSetJmp(WOCFiber dest);
 extern "C" int WOCLongJmp(WOCFiber dest);
 #endif
 
-void WOCSwitchToFiber(WOCFiber fiber)
-{
+void WOCSwitchToFiber(WOCFiber fiber) {
     WOCFiber origFiber = curFiber;
-    if ( WOCSetJmp(origFiber) == 0 ) {
+    if (WOCSetJmp(origFiber) == 0) {
         curFiber = fiber;
         WOCLongJmp(curFiber);
     } else {
@@ -237,28 +220,25 @@ void WOCSwitchToFiber(WOCFiber fiber)
 WOCFiber g_XamlUIFiber = NULL;
 WOCFiber g_WinObjcUIFiber;
 
-int XamlTimedMultipleWait(EbrEvent *events, int numEvents, double timeout, SocketWait *sockets)
-{
-    //  If our current fiber is the main winobjc UI thread, 
+int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets) {
+    //  If our current fiber is the main winobjc UI thread,
     //  we perform the wait on a separate worker thread, then
     //  yield to the Xaml Dispatcher fiber.  Once the worker thread wakes
     //  up, it will queue the result on the Xaml dispatcher, then
     //  have it switch back to the winobjc fiber with the result
-    if ( WOCGetCurrentFiber() == g_WinObjcUIFiber ) {
+    if (WOCGetCurrentFiber() == g_WinObjcUIFiber) {
         int retval = 0;
         bool retValValid = false;
         auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-        Windows::System::Threading::ThreadPool::RunAsync(ref new WorkItemHandler([&retval, &retValValid, events, numEvents, timeout, sockets, dispatcher](IAsyncAction ^action) {
-            //  Wait for an event
-            retval = EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
-            retValValid = true;
+        Windows::System::Threading::ThreadPool::RunAsync(
+            ref new WorkItemHandler([&retval, &retValValid, events, numEvents, timeout, sockets, dispatcher](IAsyncAction ^ action) {
+                //  Wait for an event
+                retval = EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
+                retValValid = true;
 
-            //  Dispatch it on the UI thread
-            dispatcher->RunAsync(CoreDispatcherPriority::High, 
-                ref new DispatchedHandler([]() {
-                    WOCSwitchToFiber(g_WinObjcUIFiber);
+                //  Dispatch it on the UI thread
+                dispatcher->RunAsync(CoreDispatcherPriority::High, ref new DispatchedHandler([]() { WOCSwitchToFiber(g_WinObjcUIFiber); }));
             }));
-        }));
         //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
         //  fiber from somewhere else!
         WOCSwitchToFiber(g_XamlUIFiber);
@@ -270,23 +250,19 @@ int XamlTimedMultipleWait(EbrEvent *events, int numEvents, double timeout, Socke
     }
 }
 
-__declspec(dllexport)
-unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout)
-{
+__declspec(dllexport) unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout) {
     int retval = 0;
     bool retValValid = false;
     auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-    Windows::System::Threading::ThreadPool::RunAsync(ref new WorkItemHandler([&retval, &retValValid, hEvent, timeout, dispatcher](IAsyncAction ^action) {
-        //  Wait for an event
-        retval = WaitForSingleObjectEx((HANDLE) hEvent, timeout, TRUE);
-        retValValid = true;
+    Windows::System::Threading::ThreadPool::RunAsync(
+        ref new WorkItemHandler([&retval, &retValValid, hEvent, timeout, dispatcher](IAsyncAction ^ action) {
+            //  Wait for an event
+            retval = WaitForSingleObjectEx((HANDLE)hEvent, timeout, TRUE);
+            retValValid = true;
 
-        //  Dispatch it on the UI thread
-        dispatcher->RunAsync(CoreDispatcherPriority::Normal, 
-            ref new DispatchedHandler([]() {
-                WOCSwitchToFiber(g_WinObjcUIFiber);
+            //  Dispatch it on the UI thread
+            dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([]() { WOCSwitchToFiber(g_WinObjcUIFiber); }));
         }));
-    }));
     //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
     //  fiber from somewhere else!
     WOCSwitchToFiber(g_XamlUIFiber);
@@ -295,51 +271,44 @@ unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout)
     return retval;
 }
 
-int UIApplicationMainStart(int argc,
-    char *argv[],
-    const char *pName,
-    const char *dName,
-    float windowWidth,
-    float windowHeight);
+int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char* dName, float windowWidth, float windowHeight);
 
-struct 
-{
+struct {
     int argc;
-    char **argv;
-    const char *pName;
-    const char *dName;
+    char** argv;
+    const char* pName;
+    const char* dName;
     float windowWidth, windowHeight;
-} _startparams = {
-    0, NULL, NULL, NULL, 0.0f, 0.0f
-};
+} _startparams = { 0, NULL, NULL, NULL, 0.0f, 0.0f };
 
-static VOID CALLBACK WinObjcMainLoop(LPVOID param)
-{
+static VOID CALLBACK WinObjcMainLoop(LPVOID param) {
     HANDLE hHandle = CreateEventEx(NULL, NULL, 0, EVENT_ALL_ACCESS);
-    UIApplicationMainStart(_startparams.argc, _startparams.argv, _startparams.pName, _startparams.dName, _startparams.windowWidth, _startparams.windowHeight);
+    UIApplicationMainStart(_startparams.argc,
+                           _startparams.argv,
+                           _startparams.pName,
+                           _startparams.dName,
+                           _startparams.windowWidth,
+                           _startparams.windowHeight);
 }
 
 void SetXamlUIWaiter();
 
-extern "C" void *_WideStringFromNSString(void *str);
+extern "C" void* _WideStringFromNSString(void* str);
 
-__declspec(dllexport)
-wchar_t *__WideStringFromNSString(void *str)
-{
-    return (wchar_t *) _WideStringFromNSString(str);
+__declspec(dllexport) wchar_t* __WideStringFromNSString(void* str) {
+    return (wchar_t*)_WideStringFromNSString(str);
 }
 
-static void IWStartUIRunLoop()
-{
+static void IWStartUIRunLoop() {
     WOCConvertThreadToFiber();
     g_XamlUIFiber = WOCGetCurrentFiber();
     g_WinObjcUIFiber = WOCCreateFiber(16384, 1024 * 1024, WinObjcMainLoop, NULL);
     WOCSwitchToFiber(g_WinObjcUIFiber);
 }
 
-static const char *__const_char_From_String(Platform::String ^str)
-{
-    if ( str == nullptr ) return NULL;
+static const char* __const_char_From_String(Platform::String ^ str) {
+    if (str == nullptr)
+        return NULL;
 
     std::wstring wstr(str->Data());
     std::string sstr(wstr.begin(), wstr.end());
@@ -347,11 +316,10 @@ static const char *__const_char_From_String(Platform::String ^str)
     return _strdup(sstr.data());
 }
 
-__declspec(dllexport) 
-void IWAppInit()
-{
+__declspec(dllexport) void IWAppInit() {
     static bool initialized = false;
-    if ( initialized ) return;
+    if (initialized)
+        return;
     initialized = true;
 
     char writableFolder[2048];
@@ -367,9 +335,10 @@ void IWAppInit()
     SetXamlUIWaiter();
 }
 
-__declspec(dllexport)
-void IWRunApplicationMain(Platform::String ^principalClassName, Platform::String ^delegateClassName, float windowWidth, float windowHeight)
-{
+__declspec(dllexport) void IWRunApplicationMain(Platform::String ^ principalClassName,
+                                                Platform::String ^ delegateClassName,
+                                                float windowWidth,
+                                                float windowHeight) {
     IWAppInit();
 
     _startparams.argc = 0;
@@ -380,4 +349,3 @@ void IWRunApplicationMain(Platform::String ^principalClassName, Platform::String
     _startparams.windowHeight = windowHeight;
     IWStartUIRunLoop();
 }
-

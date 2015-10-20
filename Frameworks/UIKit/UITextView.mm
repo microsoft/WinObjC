@@ -28,10 +28,7 @@ extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
 @interface NSString (CaretMeasurement)
-- (CGSize)sizeWithFont:(UIFont*)font
-              forWidth:(float)width
-         lineBreakMode:(UILineBreakMode)lineBreakMode
-           lastCharPos:(CGPoint*)lastCharPos;
+- (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos;
 @end
 
 @implementation UITextView {
@@ -175,8 +172,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 
     CGSize curSize;
     curSize = [self contentSize];
-    if (memcmp(&size, &curSize, sizeof(CGSize)) != 0)
+    if (memcmp(&size, &curSize, sizeof(CGSize)) != 0) {
         [self setContentSize:size];
+    }
 
     [self setNeedsDisplay];
 
@@ -191,10 +189,12 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         cursorPos.y += fontHeight.height;
         cursorPos.y += 10.0f;
         cursorPos.y -= curBounds.size.height;
-        if (cursorPos.y > size.height - curBounds.size.height)
+        if (cursorPos.y > size.height - curBounds.size.height) {
             cursorPos.y = size.height - curBounds.size.height;
-        if (cursorPos.y < 0.0f)
+        }
+        if (cursorPos.y < 0.0f) {
             cursorPos.y = 0.0f;
+        }
 
         if (curOffset.x != cursorPos.x || curOffset.y != cursorPos.y) {
             [self setContentOffset:CGPointMake(cursorPos.x, cursorPos.y) animated:TRUE];
@@ -286,8 +286,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 }
 
 - (BOOL)isEditable {
-    if (_isReadOnly)
+    if (_isReadOnly) {
         return FALSE;
+    }
 
     return TRUE;
 }
@@ -298,9 +299,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 - (void)drawRect:(CGRect)rect {
     id text = _text;
 
-    if (text == nil)
+    if (text == nil) {
         text = @"";
-
+    }
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
 
     rect = [self bounds];
@@ -367,8 +368,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-    if (!_isReadOnly)
+    if (!_isReadOnly) {
         [self becomeFirstResponder];
+    }
 }
 
 - (void)scrollRangeToVisible:(NSRange)range {
@@ -379,8 +381,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     NSRange range;
     bool proceed = false;
 
-    if (key == 13)
+    if (key == 13) {
         key = 10;
+    }
 
     id newChar = [NSString stringWithCharacters:(unichar*)&key length:1];
 
@@ -427,8 +430,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
             if ([_delegate respondsToSelector:@selector(textViewDidChange:)]) {
                 [_delegate textViewDidChange:self];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification"
-                                                                object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification" object:self];
 
             adjustTextLayerSize(self, true);
         }
@@ -476,8 +478,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
             if ([_delegate respondsToSelector:@selector(textViewDidChange:)]) {
                 [_delegate textViewDidChange:self];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification"
-                                                                object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification" object:self];
 
             adjustTextLayerSize(self, true);
         }
@@ -485,8 +486,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 }
 
 - (BOOL)becomeFirstResponder {
-    if (_isReadOnly)
+    if (_isReadOnly) {
         return FALSE;
+    }
     if ([self isFirstResponder]) {
         EbrRefreshKeyboard();
         return TRUE;
@@ -498,29 +500,26 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         }
     }
 
-    if ([super becomeFirstResponder] == FALSE)
+    if ([super becomeFirstResponder] == FALSE) {
         return FALSE;
+    }
     EbrShowKeyboard();
     _isEditing = TRUE;
-    _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                    target:self
-                                                  selector:@selector(_blinkCursor)
-                                                  userInfo:0
-                                                   repeats:TRUE];
+    _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
 
     if ([_delegate respondsToSelector:@selector(textViewDidBeginEditing:)]) {
         [_delegate textViewDidBeginEditing:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidBeginEditingNotification"
-                                                        object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidBeginEditingNotification" object:self];
 
     return TRUE;
 }
 
 - (BOOL)resignFirstResponder {
-    if (![self isFirstResponder])
+    if (![self isFirstResponder]) {
         return TRUE;
+    }
 
     [_cursorTimer invalidate];
     _cursorTimer = nil;
@@ -534,8 +533,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         if ([_delegate respondsToSelector:@selector(textViewDidEndEditing:)]) {
             [_delegate textViewDidEndEditing:self];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidEndEditingNotification"
-                                                            object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidEndEditingNotification" object:self];
     }
     [super resignFirstResponder];
 
@@ -591,8 +589,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 }
 
 - (void)setContentOffset:(CGPoint)offset {
-    if (offset.y < 0.0f)
+    if (offset.y < 0.0f) {
         offset.y = 0.0f;
+    }
 
     [super setContentOffset:offset];
 }
@@ -615,10 +614,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     CGSize fontExtent = { 0, 0 };
     CGPoint cursorPos = { 0, 0 };
 
-    fontExtent = [_text sizeWithFont:(id)_font
-                            forWidth:rect.size.width
-                       lineBreakMode:UILineBreakModeWordWrap
-                         lastCharPos:&cursorPos];
+    fontExtent = [_text sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap lastCharPos:&cursorPos];
 
     CGRect centerRect;
     centerRect.origin.x = 0;

@@ -130,10 +130,12 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     id* sendTo = (id*)malloc(count * sizeof(id));
     for (unsigned int i = 0; i < count; i++) {
         NSNotificationReceiver* observer = (NSNotificationReceiver*)CFArrayGetValueAtIndex((CFArrayRef)arr, i);
-        if (!observer->valid)
+        if (!observer->valid) {
             continue;
-        if (observer->notificationSender != NULL && observer->notificationSender != sender)
+        }
+        if (observer->notificationSender != NULL && observer->notificationSender != sender) {
             continue;
+        }
 
         sendTo[numSendTo] = observer;
         [sendTo[numSendTo++] retain];
@@ -164,8 +166,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
 }
 
 - (void)addObserver:(id)observer selector:(SEL)selName name:(NSString*)name object:(id)object {
-    if (name == nil)
+    if (name == nil) {
         return;
+    }
 
     NSNotificationReceiver* newObserver = [NSNotificationReceiver new];
 
@@ -213,12 +216,15 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     for (int i = numItems - 1; i >= 0; i--) {
         NSNotificationReceiver* curObserver = (NSNotificationReceiver*)CFArrayGetValueAtIndex((CFArrayRef)arr, i);
 
-        if (!curObserver->valid)
+        if (!curObserver->valid) {
             continue;
-        if (curObserver->object != observer)
+        }
+        if (curObserver->object != observer) {
             continue;
-        if (object != nil && curObserver->notificationSender != object)
+        }
+        if (object != nil && curObserver->notificationSender != object) {
             continue;
+        }
 
         curObserver->valid = false;
         CFArrayRemoveValueAtIndex((CFArrayRef)arr, i);

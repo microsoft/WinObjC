@@ -46,8 +46,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 
 //  Performed in layoutSublayers because we need to reposition _shapeImage
 - (void)layoutSublayers {
-    if (_needsRender == NO)
+    if (_needsRender == NO) {
         return;
+    }
 
     if (_path == nil) {
         _shapeImage.contents = nil;
@@ -105,8 +106,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 }
 
 - (void)setPath:(CGPathRef)path {
-    if (_path == path)
+    if (_path == path) {
         return;
+    }
 
     path = [path copy];
     [_path release];
@@ -120,8 +122,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 }
 
 - (void)setFillColor:(CGColorRef)color {
-    if (_fillColor == color)
+    if (_fillColor == color) {
         return;
+    }
 
     CGColorRetain(color);
     CGColorRelease(_fillColor);
@@ -136,8 +139,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 }
 
 - (void)setStrokeColor:(CGColorRef)color {
-    if (_strokeColor == color)
+    if (_strokeColor == color) {
         return;
+    }
 
     CGColorRetain(color);
     CGColorRelease(_strokeColor);
@@ -152,8 +156,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 }
 
 - (void)setLineWidth:(float)width {
-    if (_lineWidth == width)
+    if (_lineWidth == width) {
         return;
+    }
 
     _lineWidth = width;
 

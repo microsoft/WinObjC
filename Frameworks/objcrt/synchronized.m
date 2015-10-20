@@ -28,20 +28,17 @@ struct lock_s {
     id object;
     int count;
     CRITICAL_SECTION rmutex;
-    struct lock_s *next;
-} *locks = NULL;
+    struct lock_s* next;
+}* locks = NULL;
 
 static CRITICAL_SECTION mutex;
 
-__attribute__((constructor)) void sync_init(void)
-{
+__attribute__((constructor)) void sync_init(void) {
     InitializeCriticalSectionEx(&mutex, 0, 0);
 }
 
-OBJCRT_EXPORT int
-objc_sync_enter(id object)
-{
-    struct lock_s *lock;
+OBJCRT_EXPORT int objc_sync_enter(id object) {
+    struct lock_s* lock;
 
     EnterCriticalSection(&mutex);
 
@@ -76,9 +73,7 @@ objc_sync_enter(id object)
     return 0;
 }
 
-OBJCRT_EXPORT int
-objc_sync_exit(id object)
-{
+OBJCRT_EXPORT int objc_sync_exit(id object) {
     struct lock_s *lock, *last = NULL;
 
     EnterCriticalSection(&mutex);

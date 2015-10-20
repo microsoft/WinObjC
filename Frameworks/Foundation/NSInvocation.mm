@@ -73,12 +73,12 @@ enum {
 static inline const char* objc_skip_type_qualifier(const char* type) {
     assert(type != NULL);
 
-    while (*type == _C_CONST || *type == _C_IN || *type == _C_INOUT || *type == _C_OUT || *type == _C_BYCOPY ||
-           *type == _C_ONEWAY) {
+    while (*type == _C_CONST || *type == _C_IN || *type == _C_INOUT || *type == _C_OUT || *type == _C_BYCOPY || *type == _C_ONEWAY) {
         type++;
     }
-    while (*type && isdigit(*type))
+    while (*type && isdigit(*type)) {
         type++;
+    }
     return type;
 }
 
@@ -121,8 +121,9 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
             break;
 
         case _C_BFLD:
-            while (isdigit(*++type))
+            while (isdigit(*++type)) {
                 ;
+            }
             break;
 
         case _C_ID:
@@ -139,18 +140,21 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
         case _C_ARY_B:
             /* skip digits, typespec and closing ']' */
 
-            while (isdigit(*++type))
+            while (isdigit(*++type)) {
                 ;
+            }
             type = objc_skip_type_specifier(type, skipDigits);
             assert(type == NULL || *type == _C_ARY_E);
-            if (type)
+            if (type) {
                 type++;
+            }
             break;
 
         case _C_STRUCT_B:
             /* skip name, and elements until closing '}'  */
-            while (*type != _C_STRUCT_E && *type++ != '=')
+            while (*type != _C_STRUCT_E && *type++ != '=') {
                 ;
+            }
             while (type && *type != _C_STRUCT_E) {
                 if (*type == '"') {
                     /* embedded field names */
@@ -163,14 +167,16 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
                 }
                 type = objc_skip_type_specifier(type, skipDigits);
             }
-            if (type)
+            if (type) {
                 type++;
+            }
             break;
 
         case _C_UNION_B:
             /* skip name, and elements until closing ')'  */
-            while (*type != _C_UNION_E && *type++ != '=')
+            while (*type != _C_UNION_E && *type++ != '=') {
                 ;
+            }
             while (type && *type != _C_UNION_E) {
                 if (*type == '"') {
                     /* embedded field names */
@@ -183,8 +189,9 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
                 }
                 type = objc_skip_type_specifier(type, skipDigits);
             }
-            if (type)
+            if (type) {
                 type++;
+            }
             break;
 
         case _C_PTR:
@@ -209,8 +216,9 @@ const char* objc_skip_type_specifier(const char* type, BOOL skipDigits) {
         * this number may or may not be usefull depending on the compiler
         * version. We never use it.
         */
-        while (type && *type && isdigit(*type))
+        while (type && *type && isdigit(*type)) {
             type++;
+        }
     }
 
     return type;
@@ -324,8 +332,9 @@ size_t objc_alignof_type(const char* type) {
             return objc_alignof_type(type);
 
         case _C_ARY_B:
-            while (isdigit(*++type)) /* do nothing */
+            while (isdigit(*++type)) { /* do nothing */
                 ;
+            }
             return objc_alignof_type(type);
 
         case _C_STRUCT_B: {
@@ -333,8 +342,9 @@ size_t objc_alignof_type(const char* type) {
                 int x;
                 double y;
             };
-            while (*type != _C_STRUCT_E && *type++ != '=') /* do nothing */
+            while (*type != _C_STRUCT_E && *type++ != '=') { /* do nothing */
                 ;
+            }
             if (*type != _C_STRUCT_E) {
                 int have_align = 0;
                 size_t align = 0;
@@ -342,8 +352,9 @@ size_t objc_alignof_type(const char* type) {
                 while (type != NULL && *type != _C_STRUCT_E) {
                     if (*type == '"') {
                         type = strchr(type + 1, '"');
-                        if (type)
+                        if (type) {
                             type++;
+                        }
                     }
                     if (have_align) {
                         align = MAX(align, PyObjC_EmbeddedAlignOfType(type));
@@ -353,8 +364,9 @@ size_t objc_alignof_type(const char* type) {
                     }
                     type = objc_skip_type_specifier(type, YES);
                 }
-                if (type == NULL)
+                if (type == NULL) {
                     return -1;
+                }
                 return align;
             } else {
                 return __alignof__(fooalign);
@@ -364,17 +376,20 @@ size_t objc_alignof_type(const char* type) {
         case _C_UNION_B: {
             size_t maxalign = 0;
             type++;
-            while (*type != _C_UNION_E && *type++ != '=')
+            while (*type != _C_UNION_E && *type++ != '=') {
                 ; /* skip "<name>=" */
+            }
             while (*type != _C_UNION_E) {
                 if (*type == '"') {
                     type = strchr(type + 1, '"');
-                    if (type)
+                    if (type) {
                         type++;
+                    }
                 }
                 size_t item_align = objc_alignof_type(type);
-                if (item_align == -1)
+                if (item_align == -1) {
                     return -1;
+                }
                 maxalign = MAX(maxalign, item_align);
                 type = objc_skip_type_specifier(type, YES);
             }
@@ -410,8 +425,9 @@ static inline size_t PyObjCRT_AlignedSize(const char* type) {
     size_t size = objc_sizeof_type(type);
     size_t align = objc_alignof_type(type);
 
-    if (size == -1 || align == -1)
+    if (size == -1 || align == -1) {
         return -1;
+    }
     return ROUND(size, align);
 }
 
@@ -475,11 +491,13 @@ size_t objc_sizeof_type(const char* type) {
         case _C_ARY_B: {
             size_t len = atoi(type + 1);
             size_t item_align;
-            while (isdigit(*++type))
+            while (isdigit(*++type)) {
                 ;
+            }
             item_align = PyObjCRT_AlignedSize(type);
-            if (item_align == -1)
+            if (item_align == -1) {
                 return -1;
+            }
             return len * item_align;
         } break;
 
@@ -489,30 +507,35 @@ size_t objc_sizeof_type(const char* type) {
             size_t align;
             size_t max_align = 0;
 
-            while (*type != _C_STRUCT_E && *type++ != '=')
+            while (*type != _C_STRUCT_E && *type++ != '=') {
                 ; /* skip "<name>=" */
+            }
             while (*type != _C_STRUCT_E) {
                 if (*type == '"') {
                     type = strchr(type + 1, '"');
-                    if (type)
+                    if (type) {
                         type++;
+                    }
                 }
                 if (have_align) {
                     align = PyObjC_EmbeddedAlignOfType(type);
-                    if (align == -1)
+                    if (align == -1) {
                         return -1;
+                    }
                 } else {
                     align = objc_alignof_type(type);
-                    if (align == -1)
+                    if (align == -1) {
                         return -1;
+                    }
                     have_align = 1;
                 }
                 max_align = MAX(align, max_align);
                 acc_size = ROUND(acc_size, align);
 
                 itemSize = objc_sizeof_type(type);
-                if (itemSize == -1)
+                if (itemSize == -1) {
                     return -1;
+                }
                 acc_size += itemSize;
                 type = objc_skip_type_specifier(type, YES);
             }
@@ -524,18 +547,21 @@ size_t objc_sizeof_type(const char* type) {
 
         case _C_UNION_B: {
             size_t max_size = 0;
-            while (*type != _C_UNION_E && *type++ != '=')
+            while (*type != _C_UNION_E && *type++ != '=') {
                 ; /* skip "<name>=" */
+            }
 
             while (*type != _C_UNION_E) {
                 if (*type == '"') {
                     type = strchr(type + 1, '"');
-                    if (type)
+                    if (type) {
                         type++;
+                    }
                 }
                 itemSize = objc_sizeof_type(type);
-                if (itemSize == -1)
+                if (itemSize == -1) {
                     return -1;
+                }
                 max_size = MAX(max_size, itemSize);
                 type = objc_skip_type_specifier(type, YES);
             }
@@ -619,8 +645,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 }
 
 - (void)setTarget:(id)targetObj {
-    if (args[0])
+    if (args[0]) {
         EbrFree(args[0]);
+    }
     args[0] = copyArgument(self, &targetObj, 0);
 }
 
@@ -631,8 +658,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 - (void)setSelector:(SEL)targSelector {
     uint32_t argSelectorEmu = (uint32_t)targSelector;
 
-    if (args[1])
+    if (args[1]) {
         free(args[1]);
+    }
     args[1] = copyArgument(self, &argSelectorEmu, 1);
 }
 
@@ -714,8 +742,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     char* type = (char*)[_methodSignature methodReturnType];
     int length = getArgumentSize(type);
 
-    if (returnValue)
+    if (returnValue) {
         free(returnValue);
+    }
 
     returnValue = (char*)malloc(length);
 
@@ -821,7 +850,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
             returnValue = malloc(sizeof(double));
             assert(stackParamsLen == 2);
             *(double*)returnValue = impDouble(target, sel);
-        } else
+        } else {
             switch (stackParamsLen) {
                 case 2: {
                     unsigned retVal;
@@ -866,13 +895,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
                 case 7: {
                     unsigned retVal;
 
-                    retVal = imp(target,
-                                 (SEL)sel,
-                                 stackParams[2],
-                                 stackParams[3],
-                                 stackParams[4],
-                                 stackParams[5],
-                                 stackParams[6]);
+                    retVal = imp(target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6]);
                     returnValue = malloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
@@ -880,14 +903,8 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
                 case 8: {
                     unsigned retVal;
 
-                    retVal = imp(target,
-                                 (SEL)sel,
-                                 stackParams[2],
-                                 stackParams[3],
-                                 stackParams[4],
-                                 stackParams[5],
-                                 stackParams[6],
-                                 stackParams[7]);
+                    retVal = imp(
+                        target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6], stackParams[7]);
                     returnValue = malloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
@@ -898,6 +915,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
                     *((char*)0) = 0;
                     break;
             }
+        }
     } else {
         id target = (id)stackParams[0];
         SEL sel = (SEL)stackParams[1];

@@ -153,8 +153,7 @@ int UnlockedWaitForEvent(neosmart_event_t event, uint64_t milliseconds) {
             EbrTimeval tv;
             EbrGetTimeOfDay(&tv);
 
-            uint64_t nanoseconds =
-                ((uint64_t)tv.tv_sec) * 1000 * 1000 * 1000 + milliseconds * 1000 * 1000 + ((uint64_t)tv.tv_usec) * 1000;
+            uint64_t nanoseconds = ((uint64_t)tv.tv_sec) * 1000 * 1000 * 1000 + milliseconds * 1000 * 1000 + ((uint64_t)tv.tv_usec) * 1000;
 
             ts.tv_sec = long(nanoseconds / 1000 / 1000 / 1000);
             ts.tv_nsec = long(nanoseconds - ((uint64_t)ts.tv_sec) * 1000 * 1000 * 1000);
@@ -213,8 +212,7 @@ int WaitForMultipleEvents(neosmart_event_t* events, int count, bool waitAll, uin
     return WaitForMultipleEvents(events, count, waitAll, milliseconds, unused, NULL);
 }
 
-int WaitForMultipleEvents(
-    neosmart_event_t* events, int count, bool waitAll, uint64_t milliseconds, int& waitIndex, SocketWait* sockets) {
+int WaitForMultipleEvents(neosmart_event_t* events, int count, bool waitAll, uint64_t milliseconds, int& waitIndex, SocketWait* sockets) {
     neosmart_wfmo_t wfmo = new neosmart_wfmo_t_;
 
     int result = 0;
@@ -294,8 +292,7 @@ int WaitForMultipleEvents(
             EbrTimeval tv;
             EbrGetTimeOfDay(&tv);
 
-            uint64_t nanoseconds =
-                ((uint64_t)tv.tv_sec) * 1000 * 1000 * 1000 + milliseconds * 1000 * 1000 + ((uint64_t)tv.tv_usec) * 1000;
+            uint64_t nanoseconds = ((uint64_t)tv.tv_sec) * 1000 * 1000 * 1000 + milliseconds * 1000 * 1000 + ((uint64_t)tv.tv_usec) * 1000;
 
             ts.tv_sec = long(nanoseconds / 1000 / 1000 / 1000);
             ts.tv_nsec = long(nanoseconds - ((uint64_t)ts.tv_sec) * 1000 * 1000 * 1000);
@@ -316,11 +313,8 @@ int WaitForMultipleEvents(
                     struct __ws2_timeval tv;
                     tv.tv_sec = long(milliseconds / 1000);
                     tv.tv_usec = (milliseconds % 1000) * 1000;
-                    int selectResult = select(sockets->max + 1,
-                                              (fd_set*)sockets->fdread,
-                                              (fd_set*)sockets->fdwrite,
-                                              (fd_set*)sockets->fderror,
-                                              &tv);
+                    int selectResult =
+                        select(sockets->max + 1, (fd_set*)sockets->fdread, (fd_set*)sockets->fdwrite, (fd_set*)sockets->fderror, &tv);
                     pthread_mutex_lock(&wfmo->Mutex);
                     if (selectResult == -1) {
                         //  Timeout or error

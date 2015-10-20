@@ -51,8 +51,7 @@ string ShaderContext::orderedTempVals(const TempMap& tempDefs, bool usePrecision
         for (const auto& tempDef : remainingTemps) {
             if (!tempDef.second.dependsOn(tempNames)) {
                 string name = tempDef.first;
-                res = res + "\t" + precision + getTypeStr(tempDef.second.type) + " " + name + " = " +
-                      tempDef.second.body + ";\n";
+                res = res + "\t" + precision + getTypeStr(tempDef.second.type) + " " + name + " = " + tempDef.second.body + ";\n";
 
                 remainingTemps.erase(name);
                 tempNames.erase(name);
@@ -71,11 +70,8 @@ string ShaderContext::orderedTempVals(const TempMap& tempDefs, bool usePrecision
     return res;
 }
 
-string ShaderContext::generate(ShaderLayout& outputs,
-                               ShaderLayout& inputs,
-                               const ShaderDef& shader,
-                               const string& desc,
-                               ShaderLayout* usedOutputs) {
+string ShaderContext::generate(
+    ShaderLayout& outputs, ShaderLayout& inputs, const ShaderDef& shader, const string& desc, ShaderLayout* usedOutputs) {
     string final;
     for (const auto& it : shader.getDef()) {
         string res;
@@ -140,7 +136,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs) {
     vsTempVals.clear();
     psTempFuncs.clear();
     psTempVals.clear();
-    
+
     // Perform vertex shader generation.
     string outvert = generate(intermediates, inputs, vs, "VS");
     string vertinvars;
@@ -223,8 +219,7 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs) {
 
     // Perform final generation.
     outvert = vertinvars + vertoutvars + vsTempFuncsOut + "void main() {\n" + vsTempValsOut + outvert + "}\n";
-    outpix =
-        "precision lowp float;\n\n" + pixvars + psTempFuncsOut + "void main() {\n" + psTempValsOut + outpix + "}\n";
+    outpix = "precision lowp float;\n\n" + pixvars + psTempFuncsOut + "void main() {\n" + psTempValsOut + outpix + "}\n";
 
     GLKShaderPair* res = [[GLKShaderPair alloc] init];
     res.vertexShader = [NSString stringWithCString:outvert.c_str()];
@@ -253,7 +248,7 @@ bool ShaderVarRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
 }
 
 bool ShaderFallbackRef::generate(string& out, ShaderContext& c, ShaderLayout& v) {
-    for(const auto& var : variables) {
+    for (const auto& var : variables) {
         type = v.findVariable(var, c.isPixelStage());
         if (type) {
             out = var;
@@ -368,8 +363,7 @@ bool ShaderSpecularTex::generate(string& out, ShaderContext& c, ShaderLayout& v)
 
     // Do our texture lookup.
     string texVarTmp = texVar + "_specTmp";
-    string texMod =
-        "texture2D(" + texVar + ", vec2(" + uv + ")).a"; // TODO: parameterize this & refl tex for alpha vs rgb.
+    string texMod = "texture2D(" + texVar + ", vec2(" + uv + ")).a"; // TODO: parameterize this & refl tex for alpha vs rgb.
     c.addTempVal(GLKS_FLOAT, texVarTmp, texMod);
 
     // shininess stored in .a of input.
@@ -592,16 +586,14 @@ bool ShaderExpFog::generate(string& out, ShaderContext& c, ShaderLayout& v) {
     return true;
 }
 
-bool ShaderVertexOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v)
-{
+bool ShaderVertexOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v) {
     if (c.isVertexStage()) {
         return inner->generate(out, c, v);
     }
     return false;
 }
 
-bool ShaderPixelOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v)
-{
+bool ShaderPixelOnly::generate(std::string& out, ShaderContext& c, ShaderLayout& v) {
     if (c.isPixelStage()) {
         return inner->generate(out, c, v);
     }

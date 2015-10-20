@@ -18,12 +18,12 @@
 #define _UIAPPLICATIONINTERNAL_H_
 #import <UIKit/UIApplication.h>
 
-@interface WOCDisplayMode(internal)
--(float)currentWidth;
--(float)currentHeight;
--(void)_updateDisplaySettings;
--(void)_setWindowSize:(CGSize)newSize;
--(void)_setHostScrenWidth:(float)width height : (float)height scale : (float)scale xDpi : (float)xdpi yDpi : (float)yDpi;
+@interface WOCDisplayMode (internal)
+- (float)currentWidth;
+- (float)currentHeight;
+- (void)_updateDisplaySettings;
+- (void)_setWindowSize:(CGSize)newSize;
+- (void)_setHostScrenWidth:(float)width height:(float)height scale:(float)scale xDpi:(float)xdpi yDpi:(float)yDpi;
 @end
 
 #endif /* _UIAPPLICATIONINTERNAL_H_ */

@@ -20,16 +20,15 @@
 #include <EGL/EGL.h>
 #include <COMIncludes_End.h>
 
-namespace OpenGLES
-{
-    class OpenGLESContext;
+namespace OpenGLES {
+class OpenGLESContext;
 };
 
-@interface EAGLContext() {
+@interface EAGLContext () {
     int _initializedVersion;
     bool _gles11EmulationMode;
 
-    EAGLContext *_sharegroup;
+    EAGLContext* _sharegroup;
 
     EGLSurface _eglSurface;
     EGLContext _eglContext;
@@ -38,10 +37,10 @@ namespace OpenGLES
 
     int _rbWidth, _rbHeight;
 
-    CALayer *_targetLayer;
+    CALayer* _targetLayer;
 @public
-    OpenGLES::OpenGLESContext *_gl11Ctx;
+    OpenGLES::OpenGLESContext* _gl11Ctx;
 }
 @end
 
-extern __declspec(thread) EAGLContext *tlsCurContext;
+extern __declspec(thread) EAGLContext* tlsCurContext;

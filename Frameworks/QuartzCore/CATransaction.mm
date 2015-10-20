@@ -69,8 +69,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 + (void)commit {
     if (_curTransaction != NULL) {
         CATransaction* rel = _curTransaction;
-        GetCACompositor()->QueueDisplayTransaction(_curTransaction->_transactionQueue,
-                                                   _curTransaction->_parent->_transactionQueue);
+        GetCACompositor()->QueueDisplayTransaction(_curTransaction->_transactionQueue, _curTransaction->_parent->_transactionQueue);
         if (_curTransaction->_parent != _rootTransaction) {
             _curTransaction = _curTransaction->_parent;
         } else {
@@ -155,8 +154,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 }
 
 + (void)_addSublayerToTop:(CALayer*)layer {
-    GetCACompositor()->addNode(
-        [self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, NULL, NULL, NULL);
+    GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, NULL, NULL, NULL);
 }
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer {
@@ -207,7 +205,6 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 { GetCACompositor()->addAnimation([self _currentTransaction]->_transactionQueue, layer, anim, key); }
 
 + (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim {
-    GetCACompositor()->removeAnimationRaw(
-        [self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, anim);
+    GetCACompositor()->removeAnimationRaw([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, anim);
 }
 @end

@@ -19,8 +19,8 @@
     float _height;
     idretaintype(UITableViewCell) _cell;
 }
--(float) rowHeight;
--(id) initWithCoder:(NSCoder*)coder;
--(UITableViewCell*) cell;
--(void) dealloc;
+- (float)rowHeight;
+- (id)initWithCoder:(NSCoder*)coder;
+- (UITableViewCell*)cell;
+- (void)dealloc;
 @end

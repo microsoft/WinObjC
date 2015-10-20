@@ -92,7 +92,7 @@ _cachedLayoutAttributes = [[_layout layoutAttributesForElementsInRect:rect] filt
     [self validateItemCounts];
 
     assert(section < _numSections); //, @"request for number of items in section %ld when there are only %ld sections in
-                                    //the collection view", (long)section, (long)_numSections);
+    // the collection view", (long)section, (long)_numSections);
 
     NSInteger returnCount = 0;
     for (int i = 0; i < section; i++) {
@@ -134,8 +134,9 @@ _cachedLayoutAttributes = [[_layout layoutAttributesForElementsInRect:rect] filt
     }
     if (_numSections <= 0) { // early bail-out
         _numItems = 0;
-        if (_sectionItemCounts)
+        if (_sectionItemCounts) {
             free(_sectionItemCounts);
+        }
         _sectionItemCounts = 0;
         _collectionViewDataFlags.itemCountsAreValid = YES;
         return 0;
@@ -185,14 +186,15 @@ _cachedLayoutAttributes = [[_layout layoutAttributesForElementsInRect:rect] filt
     [self validateItemCounts];
 
     assert(index < _numItems); //, @"request for index path for global index %ld when there are only %ld items in the
-                               //collection view", (long)index, (long)_numItems);
+    // collection view", (long)index, (long)_numItems);
 
     NSInteger section = 0;
     NSInteger countItems = 0;
     for (section = 0; section < _numSections; section++) {
         NSInteger countIncludingThisSection = countItems + _sectionItemCounts[section];
-        if (countIncludingThisSection > index)
+        if (countIncludingThisSection > index) {
             break;
+        }
         countItems = countIncludingThisSection;
     }
 

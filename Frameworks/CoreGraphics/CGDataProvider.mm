@@ -84,8 +84,7 @@ CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data) {
     return [data retain];
 }
 
-CGDataProviderRef
-CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData) {
+CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData) {
     CGDataProvider* ret = [[CGDataProvider alloc] initWithBytesNoCopy:(void*)data length:size freeWhenDone:FALSE];
     ret->releaseFunc = releaseData;
     ret->info = info;
@@ -97,8 +96,9 @@ CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataPr
 
 CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
     CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[NSString stringWithCString:filename]];
-    if (!ret)
+    if (!ret) {
         return 0;
+    }
     ret->filename = [NSString stringWithCString:filename];
 
     return ret;

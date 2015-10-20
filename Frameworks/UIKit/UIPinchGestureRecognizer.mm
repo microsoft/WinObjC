@@ -35,8 +35,9 @@
 
 static TrackingTouch* findTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     for (int i = 0; i < self->_numTouches; i++) {
-        if (self->_touches[i].touch == touch)
+        if (self->_touches[i].touch == touch) {
             return &self->_touches[i];
+        }
     }
 
     return NULL;
@@ -57,8 +58,8 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
 
     if (_numTouches < 2) {
         _touches[_numTouches]._firstTouchPos = [touch locationInView:nil];
-        _touches[_numTouches]._firstTouchTime = _touches[_numTouches]._prevTouchTime =
-            _touches[_numTouches]._lastTouchTime = [touch timestamp];
+        _touches[_numTouches]._firstTouchTime = _touches[_numTouches]._prevTouchTime = _touches[_numTouches]._lastTouchTime =
+            [touch timestamp];
         _touches[_numTouches]._lastTouchPos = _touches[_numTouches]._firstTouchPos;
         _touches[_numTouches].touch = touch;
         _numTouches++;

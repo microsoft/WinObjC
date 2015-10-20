@@ -28,9 +28,7 @@
 
 #include <windows.h>
 
-uint32_t
-objc_hash_string(const char *str)
-{
+uint32_t objc_hash_string(const char* str) {
     uint32_t hash = 0;
 
     while (*str != 0) {
@@ -47,14 +45,12 @@ objc_hash_string(const char *str)
     return hash;
 }
 
-uint32_t
-objc_hash_ptr(const void *ptr)
-{
+uint32_t objc_hash_ptr(const void* ptr) {
     uint32_t hash = 0;
-    const char *in = (const char *) ptr;
-    int         size = sizeof(const void *);
+    const char* in = (const char*)ptr;
+    int size = sizeof(const void*);
 
-    while (size --) {
+    while (size--) {
         hash += *in;
         hash += (hash << 10);
         hash ^= (hash >> 6);
@@ -68,10 +64,8 @@ objc_hash_ptr(const void *ptr)
     return hash;
 }
 
-struct objc_hashtable*
-objc_hashtable_new(uint32_t size)
-{
-    struct objc_hashtable *h;
+struct objc_hashtable* objc_hashtable_new(uint32_t size) {
+    struct objc_hashtable* h;
     uint32_t i;
 
     if ((h = malloc(sizeof(struct objc_hashtable))) == NULL)
@@ -90,24 +84,23 @@ objc_hashtable_new(uint32_t size)
     return h;
 }
 
-static void
-insert(struct objc_hashtable *h, const char *key, const void *obj)
-{
+static void insert(struct objc_hashtable* h, const char* key, const void* obj) {
     uint32_t i, hash, last;
-    struct objc_hashtable_bucket *bucket;
+    struct objc_hashtable_bucket* bucket;
 
     hash = objc_hash_string(key);
     assert(h->count + 1 <= UINT32_MAX / 4);
 
     if ((h->count + 1) * 4 / (h->last_idx + 1) >= 3) {
-        struct objc_hashtable_bucket **ndata;
+        struct objc_hashtable_bucket** ndata;
         uint32_t nsize = (h->last_idx + 1) << 1;
 
         assert(nsize > 0);
 
         ndata = malloc(nsize * sizeof(struct objc_hashtable_bucket*));
         if (ndata == NULL)
-            OBJC_ERROR("Not enough memory to insert into hash "
+            OBJC_ERROR(
+                "Not enough memory to insert into hash "
                 "table!");
 
         for (i = 0; i < nsize; i++)
@@ -119,14 +112,14 @@ insert(struct objc_hashtable *h, const char *key, const void *obj)
 
                 last = nsize;
 
-                for (j = h->data[i]->hash & (nsize - 1);
-                    j < last && ndata[j] != NULL; j++);
+                for (j = h->data[i]->hash & (nsize - 1); j < last && ndata[j] != NULL; j++)
+                    ;
 
                 if (j >= last) {
                     last = h->data[i]->hash & (nsize - 1);
 
-                    for (j = 0; j < last &&
-                        ndata[j] != NULL; j++);
+                    for (j = 0; j < last && ndata[j] != NULL; j++)
+                        ;
                 }
 
                 if (j >= last)
@@ -143,12 +136,14 @@ insert(struct objc_hashtable *h, const char *key, const void *obj)
 
     last = h->last_idx + 1;
 
-    for (i = hash & h->last_idx; i < last && h->data[i] != NULL; i++);
+    for (i = hash & h->last_idx; i < last && h->data[i] != NULL; i++)
+        ;
 
     if (i >= last) {
         last = hash & h->last_idx;
 
-        for (i = 0; i < last && h->data[i] != NULL; i++);
+        for (i = 0; i < last && h->data[i] != NULL; i++)
+            ;
     }
 
     if (i >= last)
@@ -165,24 +160,23 @@ insert(struct objc_hashtable *h, const char *key, const void *obj)
     h->count++;
 }
 
-static void
-insert_ptr(struct objc_hashtable *h, const void *key, const void *obj)
-{
+static void insert_ptr(struct objc_hashtable* h, const void* key, const void* obj) {
     uint32_t i, hash, last;
-    struct objc_hashtable_bucket *bucket;
+    struct objc_hashtable_bucket* bucket;
 
     hash = objc_hash_ptr(key);
     assert(h->count + 1 <= UINT32_MAX / 4);
 
     if ((h->count + 1) * 4 / (h->last_idx + 1) >= 3) {
-        struct objc_hashtable_bucket **ndata;
+        struct objc_hashtable_bucket** ndata;
         uint32_t nsize = (h->last_idx + 1) << 1;
 
         assert(nsize > 0);
 
         ndata = malloc(nsize * sizeof(struct objc_hashtable_bucket*));
         if (ndata == NULL)
-            OBJC_ERROR("Not enough memory to insert into hash "
+            OBJC_ERROR(
+                "Not enough memory to insert into hash "
                 "table!");
 
         for (i = 0; i < nsize; i++)
@@ -194,14 +188,14 @@ insert_ptr(struct objc_hashtable *h, const void *key, const void *obj)
 
                 last = nsize;
 
-                for (j = h->data[i]->hash & (nsize - 1);
-                    j < last && ndata[j] != NULL; j++);
+                for (j = h->data[i]->hash & (nsize - 1); j < last && ndata[j] != NULL; j++)
+                    ;
 
                 if (j >= last) {
                     last = h->data[i]->hash & (nsize - 1);
 
-                    for (j = 0; j < last &&
-                        ndata[j] != NULL; j++);
+                    for (j = 0; j < last && ndata[j] != NULL; j++)
+                        ;
                 }
 
                 if (j >= last)
@@ -218,12 +212,14 @@ insert_ptr(struct objc_hashtable *h, const void *key, const void *obj)
 
     last = h->last_idx + 1;
 
-    for (i = hash & h->last_idx; i < last && h->data[i] != NULL; i++);
+    for (i = hash & h->last_idx; i < last && h->data[i] != NULL; i++)
+        ;
 
     if (i >= last) {
         last = hash & h->last_idx;
 
-        for (i = 0; i < last && h->data[i] != NULL; i++);
+        for (i = 0; i < last && h->data[i] != NULL; i++)
+            ;
     }
 
     if (i >= last)
@@ -240,9 +236,7 @@ insert_ptr(struct objc_hashtable *h, const void *key, const void *obj)
     h->count++;
 }
 
-static int64_t
-index_for_key(struct objc_hashtable *h, const char *key)
-{
+static int64_t index_for_key(struct objc_hashtable* h, const char* key) {
     uint32_t i, hash;
 
     hash = objc_hash_string(key) & h->last_idx;
@@ -261,9 +255,7 @@ index_for_key(struct objc_hashtable *h, const char *key)
     return -1;
 }
 
-static int64_t
-index_for_key_ptr(struct objc_hashtable *h, const void *key)
-{
+static int64_t index_for_key_ptr(struct objc_hashtable* h, const void* key) {
     uint32_t i, hash;
 
     hash = objc_hash_ptr(key) & h->last_idx;
@@ -282,9 +274,7 @@ index_for_key_ptr(struct objc_hashtable *h, const void *key)
     return -1;
 }
 
-void
-objc_hashtable_set(struct objc_hashtable *h, const char *key, const void *obj)
-{
+void objc_hashtable_set(struct objc_hashtable* h, const char* key, const void* obj) {
     int64_t idx = index_for_key(h, key);
 
     if (idx < 0) {
@@ -295,9 +285,7 @@ objc_hashtable_set(struct objc_hashtable *h, const char *key, const void *obj)
     h->data[idx]->obj = obj;
 }
 
-void
-objc_hashtable_set_ptr(struct objc_hashtable *h, const void *key, const void *obj)
-{
+void objc_hashtable_set_ptr(struct objc_hashtable* h, const void* key, const void* obj) {
     int64_t idx = index_for_key_ptr(h, key);
 
     if (idx < 0) {
@@ -308,9 +296,7 @@ objc_hashtable_set_ptr(struct objc_hashtable *h, const void *key, const void *ob
     h->data[idx]->obj = obj;
 }
 
-void*
-objc_hashtable_get(struct objc_hashtable *h, const char *key)
-{
+void* objc_hashtable_get(struct objc_hashtable* h, const char* key) {
     int64_t idx = index_for_key(h, key);
 
     if (idx < 0)
@@ -319,9 +305,7 @@ objc_hashtable_get(struct objc_hashtable *h, const char *key)
     return (void*)h->data[idx]->obj;
 }
 
-void*
-objc_hashtable_get_ptr(struct objc_hashtable *h, const void *key)
-{
+void* objc_hashtable_get_ptr(struct objc_hashtable* h, const void* key) {
     int64_t idx = index_for_key_ptr(h, key);
 
     if (idx < 0)
@@ -330,9 +314,7 @@ objc_hashtable_get_ptr(struct objc_hashtable *h, const void *key)
     return (void*)h->data[idx]->obj;
 }
 
-void
-objc_hashtable_free(struct objc_hashtable *h)
-{
+void objc_hashtable_free(struct objc_hashtable* h) {
     uint32_t i;
 
     for (i = 0; i <= h->last_idx; i++)

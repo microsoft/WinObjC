@@ -162,8 +162,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (NSString*)description {
-    return [NSString
-        stringWithFormat:@"{{%f, %f} {%f, %f}}", _val.origin.x, _val.origin.y, _val.size.width, _val.size.height];
+    return [NSString stringWithFormat:@"{{%f, %f} {%f, %f}}", _val.origin.x, _val.origin.y, _val.size.width, _val.size.height];
 }
 
 - (const void*)_rawBytes {
@@ -238,10 +237,22 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 
 - (NSString*)description {
     return [NSString stringWithFormat:@"{%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}, {%f, %f %f, %f}}",
-                                      _val.m11, _val.m12, _val.m13, _val.m14,
-                                      _val.m21, _val.m22, _val.m23, _val.m24,
-                                      _val.m31, _val.m32, _val.m33, _val.m34,
-                                      _val.m41, _val.m42, _val.m43, _val.m44];
+                                      _val.m11,
+                                      _val.m12,
+                                      _val.m13,
+                                      _val.m14,
+                                      _val.m21,
+                                      _val.m22,
+                                      _val.m23,
+                                      _val.m24,
+                                      _val.m31,
+                                      _val.m32,
+                                      _val.m33,
+                                      _val.m34,
+                                      _val.m41,
+                                      _val.m42,
+                                      _val.m43,
+                                      _val.m44];
 }
 
 - (const void*)_rawBytes {
@@ -413,10 +424,12 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (void)dealloc {
-    if (_objcType)
+    if (_objcType) {
         free((void*)_objcType);
-    if (_valPtr)
+    }
+    if (_valPtr) {
         free(_valPtr);
+    }
     [super dealloc];
 }
 
@@ -445,10 +458,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 @end
 
 @implementation NSValue
-+ (NSValue*)newWithZone:(NSZone*)zone
-                  bytes:(const void*)bytes
-              valueType:(NSValueType)valueType
-               objCType:(const char*)objCType {
++ (NSValue*)newWithZone:(NSZone*)zone bytes:(const void*)bytes valueType:(NSValueType)valueType objCType:(const char*)objCType {
     if (valueType == NSValueTypeUnknown) {
         valueType = valueTypeFromObjCType(objCType);
     }
@@ -593,10 +603,8 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (BOOL)isEqualToValue:(NSValue*)other {
-    return [self class] == [other class]
-        && _valueType == other->_valueType
-        && [self _rawSize] == [other _rawSize]
-        && memcmp([self _rawBytes], [other _rawBytes], [self _rawSize]) == 0;
+    return [self class] == [other class] && _valueType == other->_valueType && [self _rawSize] == [other _rawSize] &&
+           memcmp([self _rawBytes], [other _rawBytes], [self _rawSize]) == 0;
 }
 
 static unsigned hashBytes(const void* bytes, size_t len) {
@@ -621,69 +629,49 @@ static unsigned hashBytes(const void* bytes, size_t len) {
 }
 
 - (CGSize)sizeValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGSize."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGSize." userInfo:nil];
 }
 
 - (CGSize)CGSizeValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGSize."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGSize." userInfo:nil];
 }
 
 - (CGPoint)pointValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGPoint."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGPoint." userInfo:nil];
 }
 
 - (CGPoint)CGPointValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGPoint."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGPoint." userInfo:nil];
 }
 
 - (CGRect)rectValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGRect."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGRect." userInfo:nil];
 }
 
 - (CGRect)CGRectValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGRect."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGRect." userInfo:nil];
 }
 
 - (UIOffset)UIOffsetValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a UIOffset."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a UIOffset." userInfo:nil];
 }
 
 - (CATransform3D)CATransform3DValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CATransform3D."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CATransform3D." userInfo:nil];
 }
 
 - (CGAffineTransform)affineTransformValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGAffineTransform."
-                                 userInfo:nil];
+    @throw
+        [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGAffineTransform." userInfo:nil];
 }
 
 - (CGAffineTransform)CGAffineTransformValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a CGAffineTransform."
-                                 userInfo:nil];
+    @throw
+        [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGAffineTransform." userInfo:nil];
 }
 
 - (NSRange)rangeValue {
-    @throw [NSException exceptionWithName:NSDestinationInvalidException
-                                   reason:@"This value does not store a NSRange."
-                                 userInfo:nil];
+    @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a NSRange." userInfo:nil];
 }
 
 - (__unsafe_unretained id)nonretainedObjectValue {

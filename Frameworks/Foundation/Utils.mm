@@ -30,9 +30,9 @@ NSRange NSIntersectionRange(NSRange first, NSRange second) {
     min = (max1 < max2) ? max1 : max2;
     loc = (first.location > second.location) ? first.location : second.location;
 
-    if (min < loc)
+    if (min < loc) {
         result.location = result.length = 0;
-    else {
+    } else {
         result.location = loc;
         result.length = min - loc;
     }
@@ -90,10 +90,11 @@ SEL NSSelectorFromString(NSString* str) {
     return sel_registerName([str UTF8String]);
 }
 
-NSString *NSStringFromClass(Class cls) {
-    if (!cls)
+NSString* NSStringFromClass(Class cls) {
+    if (!cls) {
         return nil;
-    return [NSString stringWithUTF8String: object_getClassName(cls)];
+    }
+    return [NSString stringWithUTF8String:object_getClassName(cls)];
 }
 
 unsigned int NSSwapHostIntToBig(unsigned int val) {

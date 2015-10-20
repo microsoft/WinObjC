@@ -37,8 +37,9 @@
 }
 
 - (instancetype)init {
-    if ([super init] == nil)
+    if ([super init] == nil) {
         return nil;
+    }
     __font = nil;
     _centerVertically = true;
     return self;
@@ -54,14 +55,16 @@
 }
 
 - (DisplayTexture*)_getDisplayTexture {
-    if (_shouldRasterize)
+    if (_shouldRasterize) {
         return (DisplayTexture*)[super _getDisplayTexture];
+    }
 
     priv->contentsSize.width = ceilf(priv->bounds.size.width) * priv->contentsScale;
     priv->contentsSize.height = ceilf(priv->bounds.size.height) * priv->contentsScale;
 
-    if (__font == nil || _text == nil)
+    if (__font == nil || _text == nil) {
         return nullptr;
+    }
 
     DisplayTexture* textLayer = _globalCompositor->CreateDisplayTextureForText();
     GetCACompositor()->SetTextDisplayTextureParams(textLayer,

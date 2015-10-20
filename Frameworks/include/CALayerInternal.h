@@ -21,78 +21,75 @@
 
 @class CAAnimation, CALayerContext;
 
-class CADisplayProperties
-{
+class CADisplayProperties {
 public:
-    BOOL    hidden;
-    CGRect  bounds;
-    CGRect  contentsRect, contentsCenter;
-    CGRect  contentsInset;   //  Texture insets
+    BOOL hidden;
+    CGRect bounds;
+    CGRect contentsRect, contentsCenter;
+    CGRect contentsInset; //  Texture insets
     uint32_t contentsOrientation;
     CGPoint position;
-    float   zPosition;
+    float zPosition;
     CGPoint anchorPoint;
-    CGSize   contentsSize;
-    float   contentsScale;
+    CGSize contentsSize;
+    float contentsScale;
     uint32_t gravity;
-    BOOL    masksToBounds;
-    BOOL    isOpaque;
-    BOOL    drewOpaque;
-    BOOL    positionSet, sizeSet, originSet;
+    BOOL masksToBounds;
+    BOOL isOpaque;
+    BOOL drewOpaque;
+    BOOL positionSet, sizeSet, originSet;
 
     CATransform3D transform;
     CATransform3D sublayerTransform;
     ColorQuad backgroundColor, borderColor, contentColor;
-    float   borderWidth, cornerRadius;
-    float   opacity;
+    float borderWidth, cornerRadius;
+    float opacity;
 };
 
 class DisplayNode;
 class DisplayTexture;
 @class CALayer;
 
-class CAPrivateInfo : public CADisplayProperties,
-                      public LLTreeNode<CAPrivateInfo, CALayer>
-{
+class CAPrivateInfo : public CADisplayProperties, public LLTreeNode<CAPrivateInfo, CALayer> {
 public:
-    id           delegate;
-    NSArray  *sublayers;
-    CALayer  *superlayer;
+    id delegate;
+    NSArray* sublayers;
+    CALayer* superlayer;
     CGImageRef contents;
-    BOOL     ownsContents;
+    BOOL ownsContents;
     CGContextRef savedContext;
-    BOOL     isRootLayer;
-    BOOL     needsDisplay;
-    BOOL     hasNewContents;
-    BOOL     needsUpdate;
-    idretain     _name;
-    NSMutableDictionary *_animations;
+    BOOL isRootLayer;
+    BOOL needsDisplay;
+    BOOL hasNewContents;
+    BOOL needsUpdate;
+    idretain _name;
+    NSMutableDictionary* _animations;
     CGColorRef _backgroundColor, _borderColor;
-    BOOL     needsDisplayOnBoundsChange;
+    BOOL needsDisplayOnBoundsChange;
 
-    BOOL     _isPresentationLayer;
+    BOOL _isPresentationLayer;
 
-    DisplayNode *_presentationNode;
+    DisplayNode* _presentationNode;
     idretain _undefinedKeys;
     idretain _actions;
-    
-    bool   _frameIsCached;
+
+    bool _frameIsCached;
     CGRect _cachedFrame;
 
     BOOL needsLayout;
     BOOL didLayout;
     BOOL alwaysLayout;
 
-    CALayer *maskLayer;
+    CALayer* maskLayer;
 
-    DisplayTexture *_textureOverride;
+    DisplayTexture* _textureOverride;
 
-    CAPrivateInfo(CALayer *self, bool bPresentationLayer = false);
+    CAPrivateInfo(CALayer* self, bool bPresentationLayer = false);
     ~CAPrivateInfo();
 };
 
-@interface CALayer(Internal)
-- (NSObject*)presentationValueForKey:(NSString *)key;
+@interface CALayer (Internal)
+- (NSObject*)presentationValueForKey:(NSString*)key;
 
 - (int)_pixelWidth;
 - (int)_pixelHeight;

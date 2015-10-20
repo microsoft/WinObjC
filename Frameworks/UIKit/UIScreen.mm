@@ -76,8 +76,7 @@ static UIScreenMode* curMode;
 
 - (CGRect)applicationFrame {
     BOOL isHidden = [[UIApplication sharedApplication] isStatusBarHidden];
-    UIInterfaceOrientation statusBarOrientation =
-        (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation statusBarOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
     CGRect ret;
     ret.origin.x = 0.0f;
     ret.origin.y = 0.0f;

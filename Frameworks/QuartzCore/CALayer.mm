@@ -41,7 +41,6 @@
 - (NSValue*)initWithCATransform3D:(CATransform3D)val;
 @end
 
-
 NSString* _opacityAction = @"opacity";
 NSString* _positionAction = @"position";
 NSString* _boundsAction = @"bounds";
@@ -69,8 +68,9 @@ public:
     }
 
     ~NodeList() {
-        if (items)
+        if (items) {
             EbrFree(items);
+        }
     }
 
     inline void AddNode(T* item) {
@@ -100,8 +100,9 @@ void DoLayerLayouts(CALayer* window, bool doAlwaysLayers) {
     for (;;) {
         GetNeededLayouts(window->priv, &list, doAlwaysLayers);
 
-        if (list.curPos == list.count)
+        if (list.curPos == list.count) {
             break;
+        }
         while (list.curPos < list.count) {
             list.items[list.curPos]->needsLayout = FALSE;
             list.items[list.curPos]->didLayout = TRUE;
@@ -136,8 +137,9 @@ static void DoDisplayList(CALayer* layer) {
         CAPrivateInfo* cur = list.items[list.curPos];
 
         if (!cur->_textureOverride) {
-            if (cur->delegate)
+            if (cur->delegate) {
                 EbrDebugLog("Getting new texture for %s\n", object_getClassName(cur->delegate));
+            }
             DisplayTexture* newTexture = (DisplayTexture*)[cur->self _getDisplayTexture];
             cur->needsDisplay = FALSE;
             cur->hasNewContents = FALSE;
@@ -151,8 +153,9 @@ static void DoDisplayList(CALayer* layer) {
                                                   maskLayer->priv->contentsSize,
                                                   maskLayer->priv->contentsScale);
                 GetCACompositor()->setNodeMaskNode(cur->_presentationNode, maskLayer->priv->_presentationNode);
-                if (maskTexture)
+                if (maskTexture) {
                     GetCACompositor()->ReleaseDisplayTexture(maskTexture);
+                }
             }
 
             GetCACompositor()->setNodeTexture((DisplayTransaction*)[CATransaction _currentDisplayTransaction],
@@ -160,8 +163,9 @@ static void DoDisplayList(CALayer* layer) {
                                               newTexture,
                                               cur->contentsSize,
                                               cur->contentsScale);
-            if (newTexture)
+            if (newTexture) {
                 GetCACompositor()->ReleaseDisplayTexture(newTexture);
+            }
         } else {
             cur->needsDisplay = FALSE;
             cur->hasNewContents = FALSE;
@@ -302,11 +306,13 @@ static LockingBufferInterface _globallockingBufferInterface;
 CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     DisplayTexture* tex = NULL;
 
-    if ([NSThread isMainThread])
+    if ([NSThread isMainThread]) {
         tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+    }
     CGContextRef ret = CGBitmapContextCreate32(width, height, tex, &_globallockingBufferInterface);
-    if (tex)
+    if (tex) {
         _globallockingBufferInterface.ReleaseDisplayTexture(tex);
+    }
 
     return ret;
 }
@@ -338,15 +344,15 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 }
 
 - (void)renderInContext:(CGContextRef)ctx {
-    if (priv->hidden)
+    if (priv->hidden) {
         return;
+    }
 
     [self layoutIfNeeded];
 
     CGContextSaveGState(ctx);
     CGContextTranslateCTM(ctx, priv->position.x, priv->position.y);
-    CGContextTranslateCTM(
-        ctx, -priv->bounds.size.width * priv->anchorPoint.x, -priv->bounds.size.height * priv->anchorPoint.y);
+    CGContextTranslateCTM(ctx, -priv->bounds.size.width * priv->anchorPoint.x, -priv->bounds.size.height * priv->anchorPoint.y);
     CGRect destRect;
 
     destRect.origin.x = 0;
@@ -422,16 +428,15 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         priv->savedContext = NULL;
     }
 
-    if (priv->contentsInset.origin.x != 0.0f || priv->contentsInset.origin.y != 0.0f ||
-        priv->contentsInset.size.width != 0.0f || priv->contentsInset.size.height != 0.0f) {
+    if (priv->contentsInset.origin.x != 0.0f || priv->contentsInset.origin.y != 0.0f || priv->contentsInset.size.width != 0.0f ||
+        priv->contentsInset.size.height != 0.0f) {
         memset(&priv->contentsInset, 0, sizeof(CGRect));
     }
 
     if (priv->contents == NULL || priv->ownsContents || [self isKindOfClass:[CAShapeLayer class]]) {
         if (priv->contents) {
             if (priv->ownsContents) {
-                EbrDebugLog(
-                    "Freeing 0x%x with refcount %d\n", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
+                EbrDebugLog("Freeing 0x%x with refcount %d\n", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
                 CGImageRelease(priv->contents);
             }
             priv->contents = NULL;
@@ -445,20 +450,21 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             return;
         }
 
-        if (width > 2048)
+        if (width > 2048) {
             width = 2048;
-        if (height > 2048)
+        }
+        if (height > 2048) {
             height = 2048;
+        }
 
         priv->contentsSize.width = (float)width;
         priv->contentsSize.height = (float)height;
 
         // nothing to do?
         bool hasDrawingMethod = false;
-        if (priv->delegate != nil &&
-            (!object_isMethodFromClass(priv->delegate, @selector(drawRect:), "UIView") ||
-             !object_isMethodFromClass(priv->delegate, @selector(drawLayer:inContext:), "UIView") ||
-             [priv->delegate respondsToSelector:@selector(displayLayer:)])) {
+        if (priv->delegate != nil && (!object_isMethodFromClass(priv->delegate, @selector(drawRect:), "UIView") ||
+                                      !object_isMethodFromClass(priv->delegate, @selector(drawLayer:inContext:), "UIView") ||
+                                      [priv->delegate respondsToSelector:@selector(displayLayer:)])) {
             hasDrawingMethod = true;
         }
         if (!object_isMethodFromClass(self, @selector(drawInContext:), "CALayer")) {
@@ -747,8 +753,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)replaceSublayer:(CALayer*)oldLayer with:(CALayer*)newLayer {
     // according to the docs, if oldLayer is not found the behaviour is undefined.
     int index = priv->indexOfChild(oldLayer);
-    if (index == NSNotFound)
+    if (index == NSNotFound) {
         return;
+    }
 
     [self _setShouldLayout];
     [newLayer _setShouldLayout];
@@ -834,8 +841,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)removeFromSuperlayer {
-    if (priv->superlayer == 0)
+    if (priv->superlayer == 0) {
         return;
+    }
 
     CALayer* oursuper = priv->superlayer;
 
@@ -855,8 +863,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
         curLayer = nextSuper;
 
-        if (curLayer)
+        if (curLayer) {
             nextSuper = curLayer->priv->superlayer;
+        }
     }
 
     if (isVisible) {
@@ -995,8 +1004,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)setPosition:(CGPoint)pos {
-    if (priv->position.x == pos.x && priv->position.y == pos.y)
+    if (priv->position.x == pos.x && priv->position.y == pos.y) {
         return;
+    }
 
     id<CAAction> action = [self actionForKey:(id)_positionAction];
 
@@ -1020,8 +1030,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         assert(0);
     }
 
-    if (bounds.origin.x != bounds.origin.x || bounds.origin.y != bounds.origin.y ||
-        bounds.size.width != bounds.size.width || bounds.size.height != bounds.size.height) {
+    if (bounds.origin.x != bounds.origin.x || bounds.origin.y != bounds.origin.y || bounds.size.width != bounds.size.width ||
+        bounds.size.height != bounds.size.height) {
         EbrDebugLog("**** Warning: Bad bounds on CALayer - %f, %f, %f, %f *****\n",
                     bounds.origin.x,
                     bounds.origin.y,
@@ -1163,8 +1173,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)setHidden:(BOOL)hidden {
-    if (priv->hidden == hidden)
+    if (priv->hidden == hidden) {
         return;
+    }
 
     priv->hidden = hidden;
 
@@ -1307,8 +1318,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 
     CAAnimation* curAnim = [priv->_animations objectForKey:key];
-    if (curAnim == anim)
+    if (curAnim == anim) {
         return;
+    }
 
     if (curAnim != nil) {
         [curAnim _abortAnimation];
@@ -1381,8 +1393,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     newTransform.m[3][0] = transform.tx;
     newTransform.m[3][1] = transform.ty;
 
-    if (memcmp(priv->transform.m, newTransform.m, sizeof(newTransform.m)) == 0)
+    if (memcmp(priv->transform.m, newTransform.m, sizeof(newTransform.m)) == 0) {
         return;
+    }
 
     id<CAAction> action = [self actionForKey:_transformAction];
 
@@ -1397,8 +1410,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)setTransform:(CATransform3D)transform {
-    if (memcmp(priv->transform.m, transform.m, sizeof(transform.m)) == 0)
+    if (memcmp(priv->transform.m, transform.m, sizeof(transform.m)) == 0) {
         return;
+    }
 
     id<CAAction> action = [self actionForKey:_transformAction];
 
@@ -1553,8 +1567,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)setOpacity:(float)value {
-    if (priv->opacity == value)
+    if (priv->opacity == value) {
         return;
+    }
 
     id<CAAction> action = [self actionForKey:_opacityAction];
 
@@ -1605,17 +1620,21 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         bool shouldAnimate = false;
 
         if (key == _positionAction) {
-            if (priv->positionSet)
+            if (priv->positionSet) {
                 shouldAnimate = true;
+            }
         } else if (key == _boundsOriginAction) {
-            if (priv->originSet)
+            if (priv->originSet) {
                 shouldAnimate = true;
+            }
         } else if (key == _boundsSizeAction) {
-            if (priv->sizeSet)
+            if (priv->sizeSet) {
                 shouldAnimate = true;
+            }
         } else if (key == _boundsAction) {
-            if (priv->sizeSet)
+            if (priv->sizeSet) {
                 shouldAnimate = true;
+            }
         } else if (key == _transformAction) {
             shouldAnimate = true;
         } else if (key == _opacityAction) {
@@ -1702,12 +1721,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     LLTREE_FOREACH_REVERSE(curSublayer, priv) {
         CALayer* ret = [curSublayer->self hitTest:point];
 
-        if (ret != nil)
+        if (ret != nil) {
             return ret;
+        }
     }
 
-    if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y &&
-        point.x < priv->bounds.origin.x + priv->bounds.size.width &&
+    if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y && point.x < priv->bounds.origin.x + priv->bounds.size.width &&
         point.y < priv->bounds.origin.x + priv->bounds.size.height) {
         return self;
     }
@@ -1716,8 +1735,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (BOOL)containsPoint:(CGPoint)point {
-    if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y &&
-        point.x < priv->bounds.origin.x + priv->bounds.size.width &&
+    if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y && point.x < priv->bounds.origin.x + priv->bounds.size.width &&
         point.y < priv->bounds.origin.x + priv->bounds.size.height) {
         return TRUE;
     }
@@ -1891,8 +1909,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 - (void)_setShouldLayout {
     //  Ensure that we don't repeatedly call layoutSubviews if view sizes start arguing
-    if (priv->didLayout)
+    if (priv->didLayout) {
         return;
+    }
     [self setNeedsLayout];
 }
 
@@ -1945,8 +1964,8 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     for (int i = layerListLen - 1; i >= 0; i--) {
         curLayer = layerList[i];
 
-        *outTransform = CGAffineTransformTranslate(
-            *outTransform, curLayer->priv->position.x - origin.x, curLayer->priv->position.y - origin.y);
+        *outTransform =
+            CGAffineTransformTranslate(*outTransform, curLayer->priv->position.x - origin.x, curLayer->priv->position.y - origin.y);
 
         CGAffineTransform transform;
 
@@ -1958,8 +1977,7 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
         transform.ty = curLayer->priv->transform.m[3][1];
 
         *outTransform = CGAffineTransformConcat(transform, *outTransform);
-        *outTransform = CGAffineTransformTranslate(
-            *outTransform, -curLayer->priv->bounds.origin.x, -curLayer->priv->bounds.origin.y);
+        *outTransform = CGAffineTransformTranslate(*outTransform, -curLayer->priv->bounds.origin.x, -curLayer->priv->bounds.origin.y);
 
         //  Calculate new center point
         origin.x = curLayer->priv->bounds.size.width * curLayer->priv->anchorPoint.x;

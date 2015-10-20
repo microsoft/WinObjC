@@ -78,8 +78,7 @@ void commonInit(UICollectionViewFlowLayout* self) {
                                         forKey:@"UIFlowLayoutCommonRowHorizontalAlignmentKey"];
     [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:UIFlowLayoutHorizontalAlignmentJustify]
                                         forKey:@"UIFlowLayoutLastRowHorizontalAlignmentKey"];
-    [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:1]
-                                        forKey:@"UIFlowLayoutRowVerticalAlignmentKey"];
+    [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:1] forKey:@"UIFlowLayoutRowVerticalAlignmentKey"];
     return self;
 }
 
@@ -201,15 +200,15 @@ void commonInit(UICollectionViewFlowLayout* self) {
         if ([_data horizontal]) {
             sectionFrame.origin.x += contentSize.width;
             contentSize.width += origSectionFrame.size.width + origSectionFrame.origin.x;
-            contentSize.height = std::max(contentSize.height,
-                                          origSectionFrame.size.height + origSectionFrame.origin.y +
-                                              sectionMargins.top + sectionMargins.bottom);
+            contentSize.height =
+                std::max(contentSize.height,
+                         origSectionFrame.size.height + origSectionFrame.origin.y + sectionMargins.top + sectionMargins.bottom);
         } else {
             sectionFrame.origin.y += contentSize.height;
             contentSize.height += origSectionFrame.size.height + origSectionFrame.origin.y;
-            contentSize.width = std::max(contentSize.width,
-                                         origSectionFrame.size.width + origSectionFrame.origin.x + sectionMargins.left +
-                                             sectionMargins.right);
+            contentSize.width =
+                std::max(contentSize.width,
+                         origSectionFrame.size.width + origSectionFrame.origin.x + sectionMargins.left + sectionMargins.right);
         }
         [section setFrame:sectionFrame];
     }
@@ -222,8 +221,7 @@ void commonInit(UICollectionViewFlowLayout* self) {
 
     id<UICollectionViewDelegateFlowLayout> flowDataSource = [_collectionView delegate];
 
-    BOOL implementsSizeDelegate =
-        [flowDataSource respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)];
+    BOOL implementsSizeDelegate = [flowDataSource respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)];
     BOOL implementsHeaderReferenceDelegate =
         [flowDataSource respondsToSelector:@selector(collectionView:layout:referenceSizeForHeaderInSection:)];
     BOOL implementsFooterReferenceDelegate =
@@ -253,11 +251,9 @@ void commonInit(UICollectionViewFlowLayout* self) {
             }
         }
 
-        if ([flowDataSource
-                respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
-            CGFloat minimumInterimSpacing = [flowDataSource collectionView:_collectionView
-                                                                    layout:self
-                                  minimumInteritemSpacingForSectionAtIndex:section];
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
+            CGFloat minimumInterimSpacing =
+                [flowDataSource collectionView:_collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
             if ([_data horizontal]) {
                 [layoutSection setVerticalInterstice:minimumInterimSpacing];
             } else {
@@ -267,8 +263,7 @@ void commonInit(UICollectionViewFlowLayout* self) {
 
         CGSize headerReferenceSize;
         if (implementsHeaderReferenceDelegate) {
-            headerReferenceSize =
-                [flowDataSource collectionView:_collectionView layout:self referenceSizeForHeaderInSection:section];
+            headerReferenceSize = [flowDataSource collectionView:_collectionView layout:self referenceSizeForHeaderInSection:section];
         } else {
             headerReferenceSize = _headerReferenceSize;
         }
@@ -276,8 +271,7 @@ void commonInit(UICollectionViewFlowLayout* self) {
 
         CGSize footerReferenceSize;
         if (implementsFooterReferenceDelegate) {
-            footerReferenceSize =
-                [flowDataSource collectionView:_collectionView layout:self referenceSizeForFooterInSection:section];
+            footerReferenceSize = [flowDataSource collectionView:_collectionView layout:self referenceSizeForFooterInSection:section];
         } else {
             footerReferenceSize = _footerReferenceSize;
         }
@@ -292,8 +286,7 @@ void commonInit(UICollectionViewFlowLayout* self) {
                 CGSize itemSize;
 
                 if (implementsSizeDelegate) {
-                    itemSize =
-                        [flowDataSource collectionView:_collectionView layout:self sizeForItemAtIndexPath:indexPath];
+                    itemSize = [flowDataSource collectionView:_collectionView layout:self sizeForItemAtIndexPath:indexPath];
                 } else {
                     itemSize = _itemSize;
                 }

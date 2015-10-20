@@ -16,17 +16,15 @@
 
 #include "DeviceResources.h"
 
-namespace StarboardWinRT
-{
-    class DeviceResourcesCW : public DeviceResources
-    {
-    public:
-        void SetWindow(Windows::UI::Core::CoreWindow^ window);
-        void CreateWindowSizeDependentResources();
-        void SetDpi(float dpi);
+namespace StarboardWinRT {
+class DeviceResourcesCW : public DeviceResources {
+public:
+    void SetWindow(Windows::UI::Core::CoreWindow ^ window);
+    void CreateWindowSizeDependentResources();
+    void SetDpi(float dpi);
 
-    private:
-        // Cached reference to the Window.
-        Platform::Agile<Windows::UI::Core::CoreWindow> m_window;
-    };
+private:
+    // Cached reference to the Window.
+    Platform::Agile<Windows::UI::Core::CoreWindow> m_window;
+};
 }

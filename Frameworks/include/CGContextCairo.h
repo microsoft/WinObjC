@@ -21,10 +21,9 @@ typedef struct _cairo_surface cairo_surface_t;
 struct _cairo;
 typedef struct _cairo cairo_t;
 
-class CGContextCairo : public CGContextImpl
-{
+class CGContextCairo : public CGContextImpl {
 protected:
-    cairo_t *_drawContext;
+    cairo_t* _drawContext;
 
     void ObtainLock();
 
@@ -41,14 +40,14 @@ public:
 
     virtual void CGContextSetBlendMode(CGBlendMode mode);
     virtual CGBlendMode CGContextGetBlendMode();
-    virtual void CGContextShowTextAtPoint(float x, float y, const char *str, DWORD length);
-    virtual void CGContextShowGlyphsAtPoint(float x, float y, WORD *glyphs, int count);
-    virtual void CGContextShowGlyphsWithAdvances(WORD *glyphs, CGSize *advances, int count);
-    virtual void CGContextShowGlyphs(WORD *glyphs, int count);
+    virtual void CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length);
+    virtual void CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count);
+    virtual void CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count);
+    virtual void CGContextShowGlyphs(WORD* glyphs, int count);
     virtual void CGContextSetFont(id font);
     virtual void CGContextSetFontSize(float ptSize);
     virtual void CGContextSetTextMatrix(CGAffineTransform matrix);
-    virtual void CGContextGetTextMatrix(CGAffineTransform *ret);
+    virtual void CGContextGetTextMatrix(CGAffineTransform* ret);
     virtual void CGContextSetTextPosition(float x, float y);
     virtual void CGContextSetTextDrawingMode(CGTextDrawingMode mode);
     virtual void CGContextTranslateCTM(float x, float y);
@@ -62,12 +61,12 @@ public:
     virtual void CGContextSaveGState();
     virtual void CGContextRestoreGState();
     virtual void CGContextSetGrayFillColor(float gray, float alpha);
-    virtual void CGContextSetStrokeColor(float *components);
+    virtual void CGContextSetStrokeColor(float* components);
     virtual void CGContextSetStrokeColorWithColor(id color);
     virtual void CGContextSetFillColorWithColor(id color);
-    virtual void CGContextSetFillColor(float *components);
-    virtual void CGContextSelectFont(char *name, float size, DWORD encoding);
-    virtual void CGContextGetTextPosition(CGPoint *pos);
+    virtual void CGContextSetFillColor(float* components);
+    virtual void CGContextSelectFont(char* name, float size, DWORD encoding);
+    virtual void CGContextGetTextPosition(CGPoint* pos);
 
     virtual void CGContextClearRect(CGRect rct);
     virtual void CGContextFillRect(CGRect rct);
@@ -93,18 +92,19 @@ public:
     virtual BOOL CGContextIsPathEmpty();
     virtual void CGContextBeginPath();
     virtual void CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, DWORD options);
-    virtual void CGContextDrawRadialGradient(CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options);
+    virtual void CGContextDrawRadialGradient(
+        CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options);
     virtual void CGContextDrawLayerInRect(CGRect destRect, CGLayerRef layer);
     virtual void CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer);
-    virtual void CGContextSetLineDash(float phase, float *lengths, DWORD count);
+    virtual void CGContextSetLineDash(float phase, float* lengths, DWORD count);
     virtual void CGContextSetMiterLimit(float limit);
     virtual void CGContextSetLineJoin(DWORD lineJoin);
     virtual void CGContextSetLineCap(DWORD lineCap);
     virtual void CGContextSetLineWidth(float width);
     virtual void CGContextSetShouldAntialias(DWORD shouldAntialias);
     virtual void CGContextClip();
-    virtual void CGContextGetClipBoundingBox(CGRect *ret);
-    virtual void CGContextGetPathBoundingBox(CGRect *ret);
+    virtual void CGContextGetClipBoundingBox(CGRect* ret);
+    virtual void CGContextGetPathBoundingBox(CGRect* ret);
     virtual void CGContextClipToRect(CGRect rect);
 
     virtual void CGContextBeginTransparencyLayer(id auxInfo);
@@ -115,5 +115,5 @@ public:
     virtual void CGContextSetRGBFillColor(float r, float g, float b, float a);
     virtual void CGContextSetRGBStrokeColor(float r, float g, float b, float a);
 
-    virtual CGSize CGFontDrawGlyphsToContext(WORD *glyphs, DWORD length, float x, float y);
+    virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
 };

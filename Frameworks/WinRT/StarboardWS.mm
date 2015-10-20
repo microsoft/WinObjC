@@ -68,8 +68,7 @@ extern "C" void* _WideStringFromNSString(void* str) {
     return ret;
 }
 
-int UIApplicationMainStart(
-    int argc, char* argv[], const char* pName, const char* dName, float windowWidth, float windowHeight) {
+int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char* dName, float windowWidth, float windowHeight) {
     NSString* principalClassName = pName ? [[NSString alloc] initWithCString:pName] : nil;
     NSString* delegateClassName = dName ? [[NSString alloc] initWithCString:dName] : nil;
 
@@ -100,7 +99,7 @@ int UIApplicationMainStart(
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in(NSArray*)orientation) {
+            for (NSString* curstr in (NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;
@@ -123,8 +122,7 @@ int UIApplicationMainStart(
 //  Setup default landscape presentation transform on desktop only,
 //  based on the declared default application orientations
 #if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
-    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft ||
-        defaultOrientation == UIInterfaceOrientationLandscapeRight) {
+    if (defaultOrientation == UIInterfaceOrientationLandscapeLeft || defaultOrientation == UIInterfaceOrientationLandscapeRight) {
         displayMode.presentationTransform = defaultOrientation;
     }
 #endif

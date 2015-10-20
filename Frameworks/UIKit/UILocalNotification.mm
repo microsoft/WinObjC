@@ -63,8 +63,9 @@ EbrDebugLog("fireDate is %s.\n", s);
 }
 
 - (void)_setReceiver:(id)receiver {
-    if (_fireDate == nil)
+    if (_fireDate == nil) {
         return;
+    }
     _receiver = receiver;
 
     //[self _scheduleNotification];

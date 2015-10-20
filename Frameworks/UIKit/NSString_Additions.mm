@@ -116,16 +116,14 @@ static void drawString(UIFont* font,
 
             //  Keep drawing lines of text until we're out of characters
             while (CGFontWrap(font, size, &state, rct.size.width, &fitSize)) {
-                if (y + fitSize.height - rct.origin.y > rct.size.height && rct.size.height != 0.0f &&
-                    sizeOut->height > 0.0f) {
+                if (y + fitSize.height - rct.origin.y > rct.size.height && rct.size.height != 0.0f && sizeOut->height > 0.0f) {
                     break;
                 }
 
                 CGSize extent;
 
                 //  Draw the string
-                drawCharsAtPoint(
-                    font, context, state.lineStart, state.lineLen, rct, rct.origin.x, y, alignment, &extent);
+                drawCharsAtPoint(font, context, state.lineStart, state.lineLen, rct, rct.origin.x, y, alignment, &extent);
                 extent.height = ceilf(extent.height);
                 extent.width = ceilf(extent.width);
 
@@ -134,10 +132,12 @@ static void drawString(UIFont* font,
                     lastCharPos->y = y;
                 }
 
-                if (extent.width > sizeOut->width)
+                if (extent.width > sizeOut->width) {
                     sizeOut->width = extent.width;
-                if (y + extent.height - rct.origin.y > sizeOut->height)
+                }
+                if (y + extent.height - rct.origin.y > sizeOut->height) {
                     sizeOut->height = y + extent.height - rct.origin.y;
+                }
 
                 y += extent.height;
             }
@@ -165,10 +165,12 @@ static void drawString(UIFont* font,
                 extent.height = ceilf(extent.height);
                 extent.width = ceilf(extent.width);
 
-                if (extent.width > sizeOut->width)
+                if (extent.width > sizeOut->width) {
                     sizeOut->width = extent.width;
-                if (y + extent.height - rct.origin.y > sizeOut->height)
+                }
+                if (y + extent.height - rct.origin.y > sizeOut->height) {
                     sizeOut->height = y + extent.height - rct.origin.y;
+                }
 
                 y += extent.height;
                 curChar += num;
@@ -214,18 +216,21 @@ static void drawString(UIFont* font,
                         extent.height = ceilf(extent.height);
                         extent.width = ceilf(extent.width);
 
-                        if (extent.width > sizeOut->width)
+                        if (extent.width > sizeOut->width) {
                             sizeOut->width = extent.width;
-                        if (y + extent.height - rct.origin.y > sizeOut->height)
+                        }
+                        if (y + extent.height - rct.origin.y > sizeOut->height) {
                             sizeOut->height = y + extent.height - rct.origin.y;
+                        }
                     } else {
                         // Measure how much the '...' will take between:
                         CGSize ellipseSize;
                         WORD ellipseText[] = { '.', '.', '.', '\0' };
 
                         // If we can't even fit the ellipse in the middle, not much chance of us fitting
-                        if (CGFontFitChars(font, size, ellipseText, 3, rct.size.width, &ellipseSize) < 3)
+                        if (CGFontFitChars(font, size, ellipseText, 3, rct.size.width, &ellipseSize) < 3) {
                             break;
+                        }
 
                         // Allocate enough room for the entire string, a null terminator and the ...s
                         WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
@@ -250,15 +255,16 @@ static void drawString(UIFont* font,
                         memcpy(tempStr + leftCount, ellipseText, 3 * sizeof(WORD));
 
                         CGSize extent;
-                        drawCharsAtPoint(
-                            font, context, tempStr, lastGood + 3, rct, rct.origin.x, y, alignment, &extent);
+                        drawCharsAtPoint(font, context, tempStr, lastGood + 3, rct, rct.origin.x, y, alignment, &extent);
                         extent.height = ceilf(extent.height);
                         extent.width = ceilf(extent.width);
 
-                        if (extent.width > sizeOut->width)
+                        if (extent.width > sizeOut->width) {
                             sizeOut->width = extent.width;
-                        if (y + extent.height - rct.origin.y > sizeOut->height)
+                        }
+                        if (y + extent.height - rct.origin.y > sizeOut->height) {
                             sizeOut->height = y + extent.height - rct.origin.y;
+                        }
 
                         EbrFree(tempStr);
                     }
@@ -267,15 +273,16 @@ static void drawString(UIFont* font,
                     CGSize extent;
 
                     //  Draw the string
-                    drawCharsAtPoint(
-                        font, context, state.lineStart, state.lineLen, rct, rct.origin.x, y, alignment, &extent);
+                    drawCharsAtPoint(font, context, state.lineStart, state.lineLen, rct, rct.origin.x, y, alignment, &extent);
                     extent.height = ceilf(extent.height);
                     extent.width = ceilf(extent.width);
 
-                    if (extent.width > sizeOut->width)
+                    if (extent.width > sizeOut->width) {
                         sizeOut->width = extent.width;
-                    if (y + extent.height - rct.origin.y > sizeOut->height)
+                    }
+                    if (y + extent.height - rct.origin.y > sizeOut->height) {
                         sizeOut->height = y + extent.height - rct.origin.y;
+                    }
 
                     y += extent.height;
                 }
@@ -299,8 +306,9 @@ static void drawString(UIFont* font,
                 WORD ellipseText[] = { '.', '.', '.', '\0' };
 
                 // If we can't even fit the ellipse in the middle, not much chance of us fitting
-                if (CGFontFitChars(font, size, ellipseText, 3, rct.size.width, &ellipseSize) < 3)
+                if (CGFontFitChars(font, size, ellipseText, 3, rct.size.width, &ellipseSize) < 3) {
                     break;
+                }
 
                 // Allocate enough room for the entire string, a null terminator and the ...s
                 WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
@@ -313,8 +321,8 @@ static void drawString(UIFont* font,
                     memcpy(tempStr + leftCount + 3, str + strLength - rightCount, rightCount * sizeof(WORD));
 
                     size_t len = i + 3;
-                    if (CGFontFitChars(font, size, tempStr, len, rct.size.width, &totalSize) < len ||
-                        totalSize.width >= rct.size.width || totalSize.width == 0.f) {
+                    if (CGFontFitChars(font, size, tempStr, len, rct.size.width, &totalSize) < len || totalSize.width >= rct.size.width ||
+                        totalSize.width == 0.f) {
                         break;
                     }
                     lastGood = i;
@@ -327,8 +335,7 @@ static void drawString(UIFont* font,
                 memcpy(tempStr + leftCount + 3, str + strLength - rightCount, rightCount * sizeof(WORD));
 
                 CGSize extent;
-                drawCharsAtPoint(
-                    font, context, tempStr, lastGood + 3, rct, rct.origin.x, rct.origin.y, alignment, &extent);
+                drawCharsAtPoint(font, context, tempStr, lastGood + 3, rct, rct.origin.x, rct.origin.y, alignment, &extent);
                 extent.height = ceilf(extent.height);
                 extent.width = ceilf(extent.width);
                 *sizeOut = extent;
@@ -358,22 +365,12 @@ static void drawString(UIFont* font,
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
 
-    drawString(font,
-               UIGraphicsGetCurrentContext(),
-               str,
-               [self length],
-               rct,
-               UILineBreakModeWordWrap,
-               UITextAlignmentLeft,
-               &fontExtent);
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeWordWrap, UITextAlignmentLeft, &fontExtent);
 
     return fontExtent;
 }
 
-- (CGSize)drawInRect:(CGRect)rct
-            withFont:(UIFont*)font
-       lineBreakMode:(UILineBreakMode)lineBreakMode
-           alignment:(UITextAlignment)alignment {
+- (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
 
@@ -386,8 +383,7 @@ static void drawString(UIFont* font,
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
 
-    drawString(
-        font, UIGraphicsGetCurrentContext(), str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &fontExtent);
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &fontExtent);
 
     return fontExtent;
 }
@@ -403,14 +399,7 @@ static void drawString(UIFont* font,
     rct.size.width = 0;
     rct.size.height = 0;
 
-    drawString(font,
-               UIGraphicsGetCurrentContext(),
-               str,
-               [self length],
-               rct,
-               UILineBreakModeClip,
-               UITextAlignmentLeft,
-               &fontExtent);
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
 
     return fontExtent;
 }
@@ -426,14 +415,7 @@ static void drawString(UIFont* font,
     rct.size.width = forWidth;
     rct.size.height = 0;
 
-    drawString(font,
-               UIGraphicsGetCurrentContext(),
-               str,
-               [self length],
-               rct,
-               UILineBreakModeClip,
-               UITextAlignmentLeft,
-               &fontExtent);
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
 
     return fontExtent;
 }
@@ -455,16 +437,10 @@ static void drawString(UIFont* font,
     rct.size.width = forWidth;
     rct.size.height = 0;
 
-    drawString(font,
-               UIGraphicsGetCurrentContext(),
-               str,
-               [self length],
-               rct,
-               UILineBreakModeClip,
-               UITextAlignmentLeft,
-               &fontExtent);
-    if (actualFontSize)
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
+    if (actualFontSize) {
         *actualFontSize = 10.0f;
+    }
 
     return fontExtent;
 }
@@ -487,14 +463,7 @@ static void drawString(UIFont* font,
 
     font = [font fontWithSize:fontSize];
 
-    drawString(font,
-               UIGraphicsGetCurrentContext(),
-               str,
-               [self length],
-               rct,
-               UILineBreakModeClip,
-               UITextAlignmentLeft,
-               &fontExtent);
+    drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
 
     return fontExtent;
 }
@@ -541,10 +510,7 @@ static void drawString(UIFont* font,
     return ret;
 }
 
-- (CGSize)sizeWithFont:(UIFont*)font
-              forWidth:(float)width
-         lineBreakMode:(UILineBreakMode)lineBreakMode
-           lastCharPos:(CGPoint*)lastCharPos {
+- (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos {
     CGSize ret;
     WORD* str = (WORD*)[self rawCharacters];
 
@@ -574,15 +540,17 @@ static void drawString(UIFont* font,
     rct.size.height = 0;
 
     drawString(font, NULL, str, [self length], rct, lineBreak, UITextAlignmentLeft, &ret);
-    if (actualFontSize)
+    if (actualFontSize) {
         *actualFontSize = 10.0f;
+    }
 
     return ret;
 }
 
 - (CGSize)sizeWithFont:(UIFont*)font {
-    if (font == nil)
+    if (font == nil) {
         font = [objc_getClass("UIFont") defaultFont];
+    }
 
     CGSize ret;
     WORD* str = (WORD*)[self rawCharacters];

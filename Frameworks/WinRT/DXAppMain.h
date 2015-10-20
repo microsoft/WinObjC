@@ -20,29 +20,27 @@
 #include "DeviceResources.h"
 
 // Renders Direct2D and 3D content on the screen.
-namespace StarboardWinRT
-{
-    class DXAppMain : public StarboardWinRT::IDeviceNotify
-    {
-    public:
-        DXAppMain(const std::shared_ptr<StarboardWinRT::DeviceResources>& deviceResources);
-        ~DXAppMain();
-        void CreateWindowSizeDependentResources();
-        void Update();
-        bool Render();
-        void OnPointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e);
-        void OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e);
-        void OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e);
+namespace StarboardWinRT {
+class DXAppMain : public StarboardWinRT::IDeviceNotify {
+public:
+    DXAppMain(const std::shared_ptr<StarboardWinRT::DeviceResources>& deviceResources);
+    ~DXAppMain();
+    void CreateWindowSizeDependentResources();
+    void Update();
+    bool Render();
+    void OnPointerPressed(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e);
+    void OnPointerMoved(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e);
+    void OnPointerReleased(Windows::UI::Core::CoreWindow ^ sender, Windows::UI::Core::PointerEventArgs ^ e);
 
-        // IDeviceNotify
-        virtual void OnDeviceLost();
-        virtual void OnDeviceRestored();
+    // IDeviceNotify
+    virtual void OnDeviceLost();
+    virtual void OnDeviceRestored();
 
-    private:
-        // Cached pointer to device resources.
-        std::shared_ptr<StarboardWinRT::DeviceResources> m_deviceResources;
+private:
+    // Cached pointer to device resources.
+    std::shared_ptr<StarboardWinRT::DeviceResources> m_deviceResources;
 
-        // Rendering loop timer.
-        DX::StepTimer m_timer;
-    };
+    // Rendering loop timer.
+    DX::StepTimer m_timer;
+};
 }

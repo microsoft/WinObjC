@@ -105,10 +105,7 @@ void printContents(int level, id obj);
     }
 }
 
-+ (id)propertyListWithData:(NSData*)data
-                   options:(unsigned)options
-                    format:(NSPropertyListFormat*)formatOut
-                     error:(NSError**)error {
++ (id)propertyListWithData:(NSData*)data options:(unsigned)options format:(NSPropertyListFormat*)formatOut error:(NSError**)error {
     // [TODO] Not that this uses a different error format than ours. Below takes a string, we return an NSError.
     return [self propertyListFromData:data mutabilityOption:options format:formatOut errorDescription:NULL];
 }

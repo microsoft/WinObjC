@@ -91,8 +91,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
 @implementation NSPropertyListWriter_Binary : NSObject
 
 + (void)serializePropertyList:(id)aPropertyList intoData:(NSMutableData*)destination {
-    NSPropertyListWriter_Binary* gen =
-        [[NSPropertyListWriter_Binary alloc] initWithPropertyList:aPropertyList intoData:destination];
+    NSPropertyListWriter_Binary* gen = [[NSPropertyListWriter_Binary alloc] initWithPropertyList:aPropertyList intoData:destination];
     [gen generate];
     RELEASE(gen);
 }

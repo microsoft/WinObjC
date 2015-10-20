@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-#define MAX_WAITSIGNALS     128
-#define MAX_WAITSOCKETS     128
+#define MAX_WAITSIGNALS 128
+#define MAX_WAITSOCKETS 128
 
 @interface NSRunLoopState : NSObject {
 @public
     EbrEvent _waitSignals[MAX_WAITSIGNALS];
-    int      _waitSignalPriority[MAX_WAITSIGNALS];
+    int _waitSignalPriority[MAX_WAITSIGNALS];
     id _waitSignalObjects[MAX_WAITSIGNALS];
-    int      _numWaitSignals;
+    int _numWaitSignals;
 
-    int      _waitSockets[MAX_WAITSOCKETS];
+    int _waitSockets[MAX_WAITSOCKETS];
     id _waitSocketObjects[MAX_WAITSOCKETS];
-    int      _numWaitSockets;
+    int _numWaitSockets;
 
     idt(NSMutableArray) _timers;
     idt(NSMutableArray) _observers;
@@ -36,23 +36,22 @@
     bool _builtWakeupSockets;
     int _wakeupSockets[2];
 }
--(NSObject*) init;
--(void) dealloc;
--(void) wakeUp;
--(void) addTimer:(NSTimer*)timer;
--(BOOL) containsTimer:(NSTimer*)timer;
--(void) addObserver:(NSTimer*)observer;
--(void) removeObserver:(NSObject*)observer;
--(void) removeTimer:(NSTimer*)timer;
--(void) changingIntoMode:(NSString*)mode;
--(void) _notifyObservers:(uint32_t)mode;
--(void) checkHighPriorityEvents;
--(BOOL) fireFirstTimer;
--(NSDate*) limitDateForMode:(NSString*)mode;
--(void) addInputSource:(NSInputSource*)source;
--(void) removeInputSource:(NSInputSource*)source;
--(void) invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed;
--(void) acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date;
--(NSString*) description;
+- (NSObject*)init;
+- (void)dealloc;
+- (void)wakeUp;
+- (void)addTimer:(NSTimer*)timer;
+- (BOOL)containsTimer:(NSTimer*)timer;
+- (void)addObserver:(NSTimer*)observer;
+- (void)removeObserver:(NSObject*)observer;
+- (void)removeTimer:(NSTimer*)timer;
+- (void)changingIntoMode:(NSString*)mode;
+- (void)_notifyObservers:(uint32_t)mode;
+- (void)checkHighPriorityEvents;
+- (BOOL)fireFirstTimer;
+- (NSDate*)limitDateForMode:(NSString*)mode;
+- (void)addInputSource:(NSInputSource*)source;
+- (void)removeInputSource:(NSInputSource*)source;
+- (void)invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed;
+- (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date;
+- (NSString*)description;
 @end
-

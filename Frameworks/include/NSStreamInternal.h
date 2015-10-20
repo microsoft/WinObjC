@@ -3,7 +3,7 @@
 @interface NSStream () {
 @public
     unsigned _status;
-    struct EbrFile *fp;
+    struct EbrFile* fp;
     idretain _data;
 }
 @end

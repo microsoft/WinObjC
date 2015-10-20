@@ -32,9 +32,11 @@
 #define NSNotFound 0x7fffffff
 
 static unsigned positionOfRangeGreaterThanOrEqualToLocation(NSRange* ranges, unsigned length, unsigned location) {
-    for (unsigned i = 0; i < length; i++)
-        if (location < NSMaxRange(ranges[i]))
+    for (unsigned i = 0; i < length; i++) {
+        if (location < NSMaxRange(ranges[i])) {
             return i;
+        }
+    }
 
     return NSNotFound;
 }
@@ -43,16 +45,18 @@ static unsigned positionOfRangeLessThanOrEqualToLocation(NSRange* ranges, unsign
     int i = length;
 
     while (--i >= 0) {
-        if (ranges[i].location <= location)
+        if (ranges[i].location <= location) {
             return i;
+        }
     }
 
     return NSNotFound;
 }
 
 static void removeRangeAtPosition(NSRange* ranges, unsigned length, unsigned position) {
-    for (unsigned i = position; i + 1 < length; i++)
+    for (unsigned i = position; i + 1 < length; i++) {
         ranges[i] = ranges[i + 1];
+    }
 }
 
 static unsigned raCount(NSIndexSet* set) {
@@ -171,8 +175,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 }
 
 - (void)dealloc {
-    if (_ranges)
+    if (_ranges) {
         EbrFree(_ranges);
+    }
     [super dealloc];
 }
 
@@ -187,10 +192,12 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     for (unsigned i = 0; i < raCount(self); i++) {
         NSRange cur = raItemAtIndex(self, i);
 
-        if (cur.location > range.location + range.length)
+        if (cur.location > range.location + range.length) {
             break;
-        if (cur.location + cur.length < range.location)
+        }
+        if (cur.location + cur.length < range.location) {
             continue;
+        }
 
         int low = MAX(cur.location, range.location);
         int high = MIN(cur.location + cur.length, range.location + range.length);
@@ -215,8 +222,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 - (BOOL)intersectsIndexesInRange:(NSRange)range {
     unsigned first = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, range.location);
 
-    if (first == NSNotFound)
+    if (first == NSNotFound) {
         return NO;
+    }
 
     return (_ranges[first].location < NSMaxRange(range)) ? YES : NO;
 }
@@ -253,8 +261,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 }
 
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)otherSet {
-    if (![otherSet isKindOfClass:[NSIndexSet class]])
+    if (![otherSet isKindOfClass:[NSIndexSet class]]) {
         return FALSE;
+    }
 
     NSUInteger count = otherSet ? raCount(otherSet) : 0;
 
@@ -292,19 +301,22 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
 - (id)removeIndexesInRange:(NSRange)range {
     unsigned pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, range.location);
 
-    if (pos == NSNotFound)
+    if (pos == NSNotFound) {
         pos = 0;
+    }
 
     while (range.length > 0 && pos < _length) {
-        if (_ranges[pos].location >= NSMaxRange(range))
+        if (_ranges[pos].location >= NSMaxRange(range)) {
             break;
+        }
 
         if (NSMaxRange(_ranges[pos]) == NSMaxRange(range)) {
             if (_ranges[pos].location == range.location) {
                 removeRangeAtPosition(_ranges, _length, pos);
                 _length--;
-            } else
+            } else {
                 _ranges[pos].length = range.location - _ranges[pos].location;
+            }
             break;
         }
 
@@ -383,32 +395,36 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
         delta = -delta;
         NSUInteger pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, index - delta);
 
-        if (pos == NSNotFound)
+        if (pos == NSNotFound) {
             return self; // raise?
+        }
 
         NSUInteger count = _length;
 
         while (--count >= pos) {
-            if (_ranges[count].location >= index) // if above index just move it down
+            if (_ranges[count].location >= index) { // if above index just move it down
                 _ranges[count].location -= (unsigned)delta;
-            else if (NSMaxRange(_ranges[count]) <= index - (unsigned)delta) // below area, ignore
+            } else if (NSMaxRange(_ranges[count]) <= index - (unsigned)delta) { // below area, ignore
                 ;
-            else if (_ranges[count].length > (unsigned)delta) { // if below, shorten
-                if (NSMaxRange(_ranges[count]) - index >= (unsigned)delta) // if deletion entirely inside
+            } else if (_ranges[count].length > (unsigned)delta) { // if below, shorten
+                if (NSMaxRange(_ranges[count]) - index >= (unsigned)delta) { // if deletion entirely inside
                     _ranges[count].length -= delta;
-                else
+                } else {
                     _ranges[count].length = NSMaxRange(_ranges[count]) - (index - delta);
+                }
             } else { // if below and shorter than the delta, remove
                 _length--;
-                for (unsigned i = count; i < _length; i++)
+                for (unsigned i = count; i < _length; i++) {
                     _ranges[i] = _ranges[i + 1];
+                }
             }
         }
     } else {
         NSInteger pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, index);
 
-        if (pos == NSNotFound)
+        if (pos == NSNotFound) {
             return self; // raise?
+        }
 
         // if index is inside a range, split it
         if (_ranges[pos].location < index && index < NSMaxRange(_ranges[pos])) {
@@ -425,8 +441,9 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
         NSInteger count = _length;
 
         while (--count >= pos) {
-            if (_ranges[count].location >= index)
+            if (_ranges[count].location >= index) {
                 _ranges[count].location += delta;
+            }
         }
     }
 

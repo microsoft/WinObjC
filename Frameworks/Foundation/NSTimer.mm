@@ -76,8 +76,9 @@
         [_timerTarget release];
     }
 
-    if (_userInfo != nil)
+    if (_userInfo != nil) {
         [_userInfo release];
+    }
 
     [super dealloc];
 }

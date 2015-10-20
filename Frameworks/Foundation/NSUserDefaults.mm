@@ -210,8 +210,7 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
 - (int)integerForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
-    return [number isKindOfClass:[NSString class]] ? [number intValue]
-                                                   : ([number isKindOfClass:[NSNumber class]] ? [number intValue] : 0);
+    return [number isKindOfClass:[NSString class]] ? [number intValue] : ([number isKindOfClass:[NSNumber class]] ? [number intValue] : 0);
 }
 
 - (__int64)longLongForKey:(NSString*)defaultName {
@@ -232,17 +231,15 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
 - (float)floatForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
-    return [number isKindOfClass:[NSString class]]
-               ? [number floatValue]
-               : ([number isKindOfClass:[NSNumber class]] ? [number floatValue] : 0.0f);
+    return [number isKindOfClass:[NSString class]] ? [number floatValue] :
+                                                     ([number isKindOfClass:[NSNumber class]] ? [number floatValue] : 0.0f);
 }
 
 - (double)doubleForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
-    return [number isKindOfClass:[NSString class]]
-               ? [number doubleValue]
-               : ([number isKindOfClass:[NSNumber class]] ? [number doubleValue] : 0.0);
+    return [number isKindOfClass:[NSString class]] ? [number doubleValue] :
+                                                     ([number isKindOfClass:[NSNumber class]] ? [number doubleValue] : 0.0);
 }
 
 static id deepCopyValue(id obj) {
@@ -411,10 +408,7 @@ static id deepCopyValue(id obj) {
     EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
 }
 
-- (void)addObserver:(id)observer
-         forKeyPath:(id)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void*)context {
+- (void)addObserver:(id)observer forKeyPath:(id)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
     EbrDebugLog("NSUserDefaults: abbObserver for \"%s\"\n", [keyPath UTF8String]);
 }
 

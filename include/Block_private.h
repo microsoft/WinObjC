@@ -17,22 +17,22 @@
 struct of_block_descriptor_t {
     unsigned long reserved;
     unsigned long size;
-    void (*copy_helper)(void *dest, void *src);
-    void (*dispose_helper)(void *src);
-    const char *signature;
+    void (*copy_helper)(void* dest, void* src);
+    void (*dispose_helper)(void* src);
+    const char* signature;
 };
 struct Block_basic {
-    void *isa;
+    void* isa;
     int flags;
     int reserved;
-    void (*Block_invoke)(void *, ...);
-    struct of_block_descriptor_t *descriptor;
+    void (*Block_invoke)(void*, ...);
+    struct of_block_descriptor_t* descriptor;
 };
 
- struct Block_layout {
-     void *isa;
+struct Block_layout {
+    void* isa;
     int flags;
     int reserved;
-    void (*invoke)(void *, ...);
-    struct of_block_descriptor_t *descriptor;
+    void (*invoke)(void*, ...);
+    struct of_block_descriptor_t* descriptor;
 };

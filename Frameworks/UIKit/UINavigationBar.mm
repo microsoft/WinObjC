@@ -74,30 +74,23 @@ static void setBackground(UINavigationBar* self) {
     _textShadowOffset.width = 1;
     _textShadowOffset.height = 1;
     (_backButton)
-        .attach([[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                 style:UIBarButtonItemStylePlain
-                                                target:self
-                                                action:@selector(backClicked)]);
+        .attach([[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backClicked)]);
 
     _style = (UIBarStyle)[coder decodeInt32ForKey:@"UIBarStyle"];
 
     switch (_style) {
         case 1:
-            _navGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1
-                                                                                              topCapHeight:0];
+            _navGradient = [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         case 2:
         case 3:
             _navGradient =
-                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1
-                                                                                                   topCapHeight:0];
+                [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
         default:
-            _navGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1
-                                                                                                     topCapHeight:0];
+            _navGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
     }
 
@@ -125,10 +118,7 @@ static void setBackground(UINavigationBar* self) {
     [[self layer] setBackgroundColor:(CGColorRef)[UIColor whiteColor]];
     _font = [UIFont boldSystemFontOfSize:18];
     (_backButton)
-        .attach([[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                 style:UIBarButtonItemStylePlain
-                                                target:self
-                                                action:@selector(backClicked)]);
+        .attach([[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backClicked)]);
     pos.origin.x = 0;
     pos.origin.y = 0;
     (_titleLabel).attach([[UILabel alloc] initWithFrame:pos]);
@@ -156,8 +146,7 @@ static void setBackground(UINavigationBar* self) {
         _textShadowOffset.width = 1;
         _textShadowOffset.height = 1;
 
-        _navGradient =
-            [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+        _navGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
         setBackground(self);
     }
 
@@ -283,23 +272,27 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     CGSize textShadowOffset = { 0, 0 };
 
     textColor = [self->_titleTextAttributes objectForKey:@"UITextAttributeTextColor"];
-    if (textColor == nil)
+    if (textColor == nil) {
         textColor = self->_textColor;
+    }
 
     textShadowColor = [self->_titleTextAttributes objectForKey:@"UITextAttributeTextShadowColor"];
-    if (textShadowColor == nil)
+    if (textShadowColor == nil) {
         textShadowColor = self->_textShadowColor;
+    }
 
     font = [self->_titleTextAttributes objectForKey:@"kCTFontAttributeName"];
 
     id shadowOffset = [self->_titleTextAttributes objectForKey:@"UITextAttributeTextShadowOffset"];
     if (shadowOffset != nil) {
         textShadowOffset = [shadowOffset CGSizeValue];
-    } else
+    } else {
         textShadowOffset = self->_textShadowOffset;
+    }
 
-    if (font != nil)
+    if (font != nil) {
         [self->_titleLabel setFont:font];
+    }
     [self->_titleLabel setTextColor:textColor];
     [self->_titleLabel setShadowColor:textShadowColor];
     [self->_titleLabel setShadowOffset:textShadowOffset];
@@ -316,10 +309,12 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
             [[_leftButton _getView] setBackButtonDelegate:nil action:NULL withParam:nil];
             [[_leftButton _getView] removeFromSuperview];
         }
-        if (_rightButton != nil)
+        if (_rightButton != nil) {
             [[_rightButton _getView] removeFromSuperview];
-        if (_titleView != nil)
+        }
+        if (_titleView != nil) {
             [_titleView removeFromSuperview];
+        }
 
         _curItem = _newItem;
         [_curItem setDelegate:self];
@@ -340,8 +335,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
                     UIImage* image = nil;
 
                     image = [back backButtonBackgroundImage];
-                    if (image == nil)
+                    if (image == nil) {
                         image = [back image];
+                    }
 
                     [_backButton setTitle:text];
                     [_backButton setImage:image];
@@ -377,8 +373,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
             [leftButtonView setFrame:frame];
             [leftButtonView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin];
             [self addSubview:leftButtonView];
-        } else
+        } else {
             leftMargin = 5.0f;
+        }
 
         if (_rightButton != nil) {
             UIView* rightButtonView = [_rightButton _getView];
@@ -393,8 +390,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
             [rightButtonView setFrame:frame];
             [rightButtonView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
             [self addSubview:rightButtonView];
-        } else
+        } else {
             rightMargin = 5.0f;
+        }
 
         if (_titleView != nil) {
             CGRect frame;
@@ -414,8 +412,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 
             frame.size.width = outSize.width;
             frame.size.height = outSize.height;
-            if (frame.size.height > 35.0f)
+            if (frame.size.height > 35.0f) {
                 frame.size.height = 35.0f;
+            }
             frame.origin.x = bounds.size.width / 2.0f - outSize.width / 2.0f;
             frame.origin.y = 5.0f;
 

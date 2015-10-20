@@ -79,8 +79,7 @@ void UStringHolder::initWithString(NSString* str, int location, int length) {
                 EbrLockLeave(_upgradeLock);
             } else {
                 ConstStrData* constStr = (ConstStrData*)str;
-                _str = new UnicodeString(
-                    UnicodeString::fromUTF8(StringPiece((const char*)constStr->c_str, constStr->len)));
+                _str = new UnicodeString(UnicodeString::fromUTF8(StringPiece((const char*)constStr->c_str, constStr->len)));
                 str->u = new stringData();
                 str->u->ConstructedString.constructedStr = new _ConstructedStringData();
                 str->u->ConstructedString.constructedStr->str = _str;
@@ -104,8 +103,8 @@ void UStringHolder::initWithString(NSString* str, int location, int length) {
                 }
 
                 case NSUTF8StringEncoding: {
-                    _str = new UnicodeString(UnicodeString::fromUTF8(
-                        StringPiece((char*)str->u->NoOwnString._address, str->u->NoOwnString._length)));
+                    _str = new UnicodeString(
+                        UnicodeString::fromUTF8(StringPiece((char*)str->u->NoOwnString._address, str->u->NoOwnString._length)));
                     _destroyStr = _str;
                     break;
                 }
@@ -506,8 +505,8 @@ return [ret autorelease];
             int left = length / 4;
 
             while (left) {
-                *curChar = ((*curChar) & 0xFF) << 24 | ((*curChar) & 0xFF00) << 8 | ((*curChar) & 0xFF0000) >> 8 |
-                           ((*curChar) & 0xFF000000) >> 24;
+                *curChar =
+                    ((*curChar) & 0xFF) << 24 | ((*curChar) & 0xFF00) << 8 | ((*curChar) & 0xFF0000) >> 8 | ((*curChar) & 0xFF000000) >> 24;
                 curChar++;
                 left--;
             }
@@ -710,10 +709,7 @@ return [ret autorelease];
     return ret;
 }
 
-- (BOOL)writeToFile:(NSString*)file
-         atomically:(BOOL)atomically
-           encoding:(NSStringEncoding)encoding
-              error:(NSError**)err {
+- (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
     if (!file) {
         EbrDebugLog("WriteToFile: nil!\n");
         return FALSE;
@@ -871,9 +867,7 @@ return [ret autorelease];
     return [[[self alloc] initWithContentsOfFile:path] autorelease];
 }
 
-+ (instancetype)stringWithContentsOfFile:(NSString*)path
-                            usedEncoding:(NSStringEncoding*)usedEncoding
-                                   error:(NSError**)errorRet {
++ (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     NSString* ret = [self alloc];
 
     if (usedEncoding)
@@ -883,9 +877,7 @@ return [ret autorelease];
     return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
 }
 
-- (instancetype)initWithContentsOfFile:(NSString*)path
-                          usedEncoding:(NSStringEncoding*)usedEncoding
-                                 error:(NSError**)errorRet {
+- (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     if (usedEncoding)
         *usedEncoding = NSASCIIStringEncoding;
     EbrDebugLog("Encoding: ASCII?\n");
@@ -1566,8 +1558,8 @@ return [ret autorelease];
 
     //  32 == Localized search
     assert((options &
-            ~(NSDiacriticInsensitiveSearch | NSCaseInsensitiveSearch | NSLiteralSearch | NSWidthInsensitiveSearch |
-              NSForcedOrderingSearch | NSNumericSearch | 32)) == 0);
+            ~(NSDiacriticInsensitiveSearch | NSCaseInsensitiveSearch | NSLiteralSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch |
+              NSNumericSearch | 32)) == 0);
 
     UStringHolder s1(self, range.location, range.length);
     UStringHolder s2(compStrAddr);
@@ -1587,8 +1579,8 @@ return [ret autorelease];
     if (options & NSNumericSearch)
         ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_ON, &error);
 
-    UCollationResult result = ucol_strcoll(
-        collator, s1.string().getBuffer(), s1.string().length(), s2.string().getBuffer(), s2.string().length());
+    UCollationResult result =
+        ucol_strcoll(collator, s1.string().getBuffer(), s1.string().length(), s2.string().getBuffer(), s2.string().length());
 
     if (result == UCOL_EQUAL) {
         return 0;
@@ -1840,8 +1832,7 @@ return [ret autorelease];
         patWhere = [self rangeOfCharacterFromSet:set options:0 range:search];
 
         if (patWhere.length > 0) {
-            NSString* piece =
-                [self substringWithRange:NSMakeRange(search.location, patWhere.location - search.location)];
+            NSString* piece = [self substringWithRange:NSMakeRange(search.location, patWhere.location - search.location)];
 
             [result addObject:piece];
             search.location = patWhere.location + patWhere.length;
@@ -1865,10 +1856,7 @@ return [ret autorelease];
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target withString:(NSString*)replacement {
     int length = [self length];
 
-    return [self stringByReplacingOccurrencesOfString:target
-                                           withString:replacement
-                                              options:0
-                                                range:NSMakeRange(0, length)];
+    return [self stringByReplacingOccurrencesOfString:target withString:replacement options:0 range:NSMakeRange(0, length)];
 }
 
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target
@@ -1970,8 +1958,7 @@ return [ret autorelease];
             searchOptions = NSMatchingAnchored;
         }
 
-        NSRegularExpression* regExp =
-            [[NSRegularExpression alloc] initWithPattern:subStr options:regOptions error:NULL];
+        NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:subStr options:regOptions error:NULL];
 
         ret.location = 0;
         ret.length = 0x7fffffff;
@@ -1999,8 +1986,8 @@ return [ret autorelease];
         return ret;
     }
 
-    assert((options & (~(NSLiteralSearch | NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch | NSNumericSearch |
-                         NSBackwardsSearch | NSAnchoredSearch))) == 0);
+    assert((options & (~(NSLiteralSearch | NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch | NSNumericSearch | NSBackwardsSearch |
+                         NSAnchoredSearch))) == 0);
 
     UErrorCode error = U_ZERO_ERROR;
     UStringSearch* search = getSearchForOptions(options);
@@ -2109,22 +2096,10 @@ return [ret autorelease];
     int len = s1.string().length();
     NSUInteger numBytes = 0;
 
-    [self getBytes:NULL
-             maxLength:0x7FFFFFF
-            usedLength:&numBytes
-              encoding:encoding
-               options:0
-                 range:NSMakeRange(0, len)
-        remainingRange:NULL];
+    [self getBytes:NULL maxLength:0x7FFFFFF usedLength:&numBytes encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
 
     char* pData = (char*)EbrMalloc(numBytes);
-    [self getBytes:pData
-             maxLength:numBytes
-            usedLength:NULL
-              encoding:encoding
-               options:0
-                 range:NSMakeRange(0, len)
-        remainingRange:NULL];
+    [self getBytes:pData maxLength:numBytes usedLength:NULL encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
 
     NSData* ret = [NSData dataWithBytesNoCopy:pData length:numBytes freeWhenDone:TRUE];
 
@@ -2525,9 +2500,8 @@ return ret;
     for (i = 0; i < length; i++) {
         unichar code = unicode[i];
 
-        if ((code <= 0x20) || (code == 0x22) || (code == 0x23) || (code == 0x25) || (code == 0x3C) || (code == 0x3E) ||
-            (code == 0x5B) || (code == 0x5C) || (code == 0x5D) || (code == 0x5E) || (code == 0x60) || (code == 0x7B) ||
-            (code == 0x7C) || (code == 0x7D)) {
+        if ((code <= 0x20) || (code == 0x22) || (code == 0x23) || (code == 0x25) || (code == 0x3C) || (code == 0x3E) || (code == 0x5B) ||
+            (code == 0x5C) || (code == 0x5D) || (code == 0x5E) || (code == 0x60) || (code == 0x7B) || (code == 0x7C) || (code == 0x7D)) {
             result[resultLength++] = '%';
             result[resultLength++] = hex[(code >> 4) & 0xF];
             result[resultLength++] = hex[code & 0xF];
@@ -2757,8 +2731,7 @@ return ret;
             int32_t start = wordIterator->first();
             BOOL stop = FALSE;
 
-            for (int32_t end = wordIterator->next(); end != BreakIterator::DONE;
-                 start = end, end = wordIterator->next()) {
+            for (int32_t end = wordIterator->next(); end != BreakIterator::DONE; start = end, end = wordIterator->next()) {
                 UnicodeString word;
                 text.extractBetween(start, end, word);
 

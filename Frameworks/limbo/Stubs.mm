@@ -146,8 +146,7 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 }
 @end
 
-extern "C" NSString* const UIDeviceOrientationDidChangeNotification =
-    (NSString * const) @"UIDeviceOrientationDidChangeNotification";
+extern "C" NSString* const UIDeviceOrientationDidChangeNotification = (NSString * const) @"UIDeviceOrientationDidChangeNotification";
 
 __declspec(dllexport) extern "C" unsigned random() {
     return rand();
@@ -219,10 +218,7 @@ __declspec(dllexport) extern "C" int host_page_size(mach_port_t port, vm_size_t*
 }
 int vm_page_size = 65536;
 
-__declspec(dllexport) extern "C" int host_statistics(mach_port_t port,
-                                                     int type,
-                                                     host_info_t dataOut,
-                                                     mach_msg_type_number_t* dataOutSize) {
+__declspec(dllexport) extern "C" int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize) {
     assert(type == HOST_VM_INFO);
     assert(*dataOutSize >= sizeof(vm_statistics));
     *dataOutSize = sizeof(vm_statistics);
@@ -293,8 +289,7 @@ __declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned
 }
 }
 
-extern "C" void
-UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
+extern "C" void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
 }
 
 @implementation CBCentralManager

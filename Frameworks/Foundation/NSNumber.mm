@@ -253,8 +253,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
 }
 
 - (int)compare:(NSNumber*)objAddr {
-    if (objAddr == self)
+    if (objAddr == self) {
         return 0;
+    }
     if (objAddr != nil && [objAddr isKindOfClass:[NSNumber class]]) {
         if (type == objAddr->type) {
             if (val.i < objAddr->val.i) {
@@ -520,8 +521,9 @@ DWORD NSDecimalMultiply(NSDecimal* result, NSDecimal* left, NSDecimal* right, DW
 }
 
 DWORD NSDecimalIsNotANumber(NSDecimal* num) {
-    if (num->val != num->val)
+    if (num->val != num->val) {
         return TRUE;
+    }
     return FALSE;
 }
 

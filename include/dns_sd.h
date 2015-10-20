@@ -19,15 +19,14 @@
 
 typedef uint32_t DNSServiceErrorType;
 typedef uint32_t DNSServiceFlags;
-typedef void *DNSServiceRef;
+typedef void* DNSServiceRef;
 
-#define kDNSServiceErr_NoError  0
+#define kDNSServiceErr_NoError 0
 
-#define kDNSServiceFlagsIncludeP2P  0x01
-#define kDNSServiceFlagsMoreComing  0x02
-#define kDNSServiceFlagsAdd         0x04
-#define kDNSServiceInterfaceIndexAny    0
-#define kDNSServiceProtocol_IPv4    0x04
-
+#define kDNSServiceFlagsIncludeP2P 0x01
+#define kDNSServiceFlagsMoreComing 0x02
+#define kDNSServiceFlagsAdd 0x04
+#define kDNSServiceInterfaceIndexAny 0
+#define kDNSServiceProtocol_IPv4 0x04
 
 #endif

@@ -39,8 +39,9 @@ void parse_error_handler(const char* what, void* where) {
 static id arrayFromElement(xml_node<>* arrayNode) {
     id result = [NSMutableArray array];
 
-    for (xml_node<>* child = arrayNode->first_node(); child; child = child->next_sibling())
+    for (xml_node<>* child = arrayNode->first_node(); child; child = child->next_sibling()) {
         [result addObject:propertyListFromElement(child)];
+    }
 
     return result;
 }
@@ -48,8 +49,9 @@ static id arrayFromElement(xml_node<>* arrayNode) {
 static id dataFromElement(xml_node<>* element) {
     id result = [NSMutableData data];
 
-    for (xml_node<>* child = element->first_node(); child; child = child->next_sibling())
+    for (xml_node<>* child = element->first_node(); child; child = child->next_sibling()) {
         [result appendData:dataFromBase64(child->value(), child->value_size())];
+    }
 
     return result;
 }
@@ -65,20 +67,21 @@ static id dataFromBase64(char* buffer, size_t length) {
         WORD code = buffer[i];
         unsigned char bits;
 
-        if (code >= 'A' && code <= 'Z')
+        if (code >= 'A' && code <= 'Z') {
             bits = code - 'A';
-        else if (code >= 'a' && code <= 'z')
+        } else if (code >= 'a' && code <= 'z') {
             bits = code - 'a' + 26;
-        else if (code >= '0' && code <= '9')
+        } else if (code >= '0' && code <= '9') {
             bits = code - '0' + 52;
-        else if (code == '+')
+        } else if (code == '+') {
             bits = 62;
-        else if (code == '/')
+        } else if (code == '/') {
             bits = 63;
-        else if (code == '=')
+        } else if (code == '=') {
             break;
-        else
+        } else {
             continue;
+        }
 
         switch (state) {
             case load6High:
@@ -130,26 +133,26 @@ static id dictionaryFromElement(xml_node<>* dictElem) {
 }
 
 static id propertyListFromElement(xml_node<>* elem) {
-    if (strncmp(elem->name(), "dict", elem->name_size()) == 0)
+    if (strncmp(elem->name(), "dict", elem->name_size()) == 0) {
         return dictionaryFromElement(elem);
-    else if (strncmp(elem->name(), "array", elem->name_size()) == 0)
+    } else if (strncmp(elem->name(), "array", elem->name_size()) == 0) {
         return arrayFromElement(elem);
-    else if (strncmp(elem->name(), "string", elem->name_size()) == 0)
+    } else if (strncmp(elem->name(), "string", elem->name_size()) == 0) {
         return [NSString stringWithCString:elem->value() length:elem->value_size()];
-    else if (strncmp(elem->name(), "integer", elem->name_size()) == 0) {
+    } else if (strncmp(elem->name(), "integer", elem->name_size()) == 0) {
         Str numStr(elem->value(), elem->value_size());
         return [NSNumber numberWithInt:atoi(numStr.cstr())];
     } else if (strncmp(elem->name(), "real", elem->name_size()) == 0) {
         Str numStr(elem->value(), elem->value_size());
         //[[element stringValue] floatValue]);
         return [NSNumber numberWithFloat:(float)atof(numStr.cstr())];
-    } else if (strncmp(elem->name(), "true", elem->name_size()) == 0)
+    } else if (strncmp(elem->name(), "true", elem->name_size()) == 0) {
         return [NSNumber numberWithBool:TRUE];
-    else if (strncmp(elem->name(), "false", elem->name_size()) == 0)
+    } else if (strncmp(elem->name(), "false", elem->name_size()) == 0) {
         return [NSNumber numberWithBool:FALSE];
-    else if (strncmp(elem->name(), "data", elem->name_size()) == 0)
+    } else if (strncmp(elem->name(), "data", elem->name_size()) == 0) {
         return dataFromElement(elem);
-    else if (strncmp(elem->name(), "date", elem->name_size()) == 0) {
+    } else if (strncmp(elem->name(), "date", elem->name_size()) == 0) {
         Str numStr(elem->value(), elem->value_size());
         return [NSDate dateWithTimeIntervalSinceReferenceDate:atof(numStr.cstr())];
     } else {
@@ -162,8 +165,9 @@ static id propertyListFromElement(xml_node<>* elem) {
 static id propertyListFromXML(xml_node<>* node) {
     id result = nil;
 
-    for (xml_node<>* child = node->first_node(); child; child = child->next_sibling())
+    for (xml_node<>* child = node->first_node(); child; child = child->next_sibling()) {
         result = propertyListFromElement(child);
+    }
 
     return result;
 }

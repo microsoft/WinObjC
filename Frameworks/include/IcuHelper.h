@@ -22,11 +22,11 @@
 #include <unicode/regex.h>
 
 void InitICU();
-UConverter *getASCIIConverter();
-UConverter *getUTF8Converter();
-UConverter *getUTF32BEConverter();
-UCollator *getDefaultLocaleCollator();
-UStringSearch *getSearchForOptions(uint32_t options);
-BreakIterator *getWordIterator();
-UnicodeSet *lettersSet();
+UConverter* getASCIIConverter();
+UConverter* getUTF8Converter();
+UConverter* getUTF32BEConverter();
+UCollator* getDefaultLocaleCollator();
+UStringSearch* getSearchForOptions(uint32_t options);
+BreakIterator* getWordIterator();
+UnicodeSet* lettersSet();
 id regexCachedPattern(id pattern, int regexOptions);

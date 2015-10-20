@@ -40,10 +40,12 @@
         [_collectionView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     }
 
-    if ([_collectionView delegate] == nil)
+    if ([_collectionView delegate] == nil) {
         [_collectionView setDelegate:(id<UIScrollViewDelegate>)self];
-    if ([_collectionView dataSource] == nil)
+    }
+    if ([_collectionView dataSource] == nil) {
         [_collectionView setDataSource:(UICollectionViewDataSource*)self];
+    }
 
     // only create the collection view if it is not already created (by IB)
     if (!_collectionView) {

@@ -26,20 +26,18 @@
 #include <windows.h>
 
 #ifndef OF_SELUID16
-# define SEL_MAX 0xFFFFFF
+#define SEL_MAX 0xFFFFFF
 #else
-# define SEL_MAX 0xFFFF
+#define SEL_MAX 0xFFFF
 #endif
 
-static struct objc_hashtable *selectors = NULL;
+static struct objc_hashtable* selectors = NULL;
 static uint32_t selectors_cnt = 0;
-static struct objc_sparsearray *selector_names = NULL;
+static struct objc_sparsearray* selector_names = NULL;
 
-void
-objc_register_selector(struct objc_abi_selector *sel)
-{
-    struct objc_selector *rsel;
-    const char *name;
+void objc_register_selector(struct objc_abi_selector* sel) {
+    struct objc_selector* rsel;
+    const char* name;
 
     if (selectors == NULL)
         selectors = objc_hashtable_new(2);
@@ -62,16 +60,13 @@ objc_register_selector(struct objc_abi_selector *sel)
     objc_sparsearray_set(selector_names, (uint32_t)rsel->uid, name);
 }
 
-SEL
-sel_registerName(const char *name)
-{
-    const struct objc_abi_selector *rsel;
-    struct objc_abi_selector *sel;
+SEL sel_registerName(const char* name) {
+    const struct objc_abi_selector* rsel;
+    struct objc_abi_selector* sel;
 
     objc_global_mutex_lock();
 
-    if (selectors != NULL &&
-        (rsel = objc_hashtable_get(selectors, name)) != NULL) {
+    if (selectors != NULL && (rsel = objc_hashtable_get(selectors, name)) != NULL) {
         objc_global_mutex_unlock();
         return (SEL)rsel;
     }
@@ -91,10 +86,8 @@ sel_registerName(const char *name)
     return (SEL)sel;
 }
 
-void
-objc_register_all_selectors(struct objc_abi_symtab *symtab)
-{
-    struct objc_abi_selector *sel;
+void objc_register_all_selectors(struct objc_abi_symtab* symtab) {
+    struct objc_abi_selector* sel;
 
     if (symtab->sel_refs == NULL)
         return;
@@ -103,10 +96,8 @@ objc_register_all_selectors(struct objc_abi_symtab *symtab)
         objc_register_selector(sel);
 }
 
-const char*
-sel_getName(SEL sel)
-{
-    const char *ret;
+const char* sel_getName(SEL sel) {
+    const char* ret;
 
     objc_global_mutex_lock();
     ret = objc_sparsearray_get(selector_names, (uint32_t)sel->uid);
@@ -115,15 +106,11 @@ sel_getName(SEL sel)
     return ret;
 }
 
-BOOL
-sel_isEqual(SEL sel1, SEL sel2)
-{
+BOOL sel_isEqual(SEL sel1, SEL sel2) {
     return sel1->uid == sel2->uid;
 }
 
-void
-objc_free_all_selectors(void)
-{
+void objc_free_all_selectors(void) {
     objc_hashtable_free(selectors);
     objc_sparsearray_free(selector_names);
 

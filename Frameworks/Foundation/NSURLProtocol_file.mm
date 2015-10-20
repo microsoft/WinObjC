@@ -79,11 +79,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-    [runLoop performSelector:@selector(_doFileLoad)
-                      target:self
-                    argument:nil
-                       order:0
-                       modes:[NSArray arrayWithObject:mode]];
+    [runLoop performSelector:@selector(_doFileLoad) target:self argument:nil order:0 modes:[NSArray arrayWithObject:mode]];
     return self;
 }
 
