@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClangCompile Include="..\..\Frameworks\GLKit\ShaderGen.mm" />
     <ClangCompile Include="..\..\Frameworks\GLKit\ShaderInfo.mm" />
+    <ClangCompile Include="..\..\tests\unittests\CFUUID.m" />
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />

@@ -22,6 +22,8 @@
 #include <objbase.h>
 #include <COMIncludes_End.h>
 
+#include "NSUUID-Private.h"
+
 @interface NSUUID () {
     GUID _guid;
 }
@@ -146,6 +148,25 @@
 }
 
 - (NSString*)description {
-    return [self UUIDString];
+    return [[[super description] stringByAppendingString:@" "] stringByAppendingString:[self UUIDString]];
+}
+@end
+
+
+// _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See CFUUIDGetConstantUUIDWithBytes.
+@implementation _NSConstantUUID
+-(oneway void)release {
+}
+
+-(id)retain {
+    return self;
+}
+
+-(id)autorelease {
+    return self;
+}
+
+-(NSUInteger)retainCount {
+    return NSUIntegerMax;
 }
 @end
