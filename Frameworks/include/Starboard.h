@@ -346,7 +346,14 @@ public:
         _val = [val retain];
     }
 
-    idretaint(const idretaint<objtype>&) = delete;
+    idretaint(const idretaint<objtype>& other) {
+        _val = [other._val retain];
+    }
+
+    idretaint(idretaint<objtype>&& other) {
+        _val = other._val;
+        other._val = nil;
+    }
 
     ~idretaint() {
         [_val release];
@@ -365,6 +372,7 @@ public:
         return _val != nil;
     }
 
+    // attach assumes ownership of an already-owned object.
     void attach(id val) {
         id newVal = val;
         [_val release];
@@ -375,24 +383,27 @@ public:
         if (_val == val)
             return *this;
 
-        id newVal = [val retain];
-        [_val release];
-        _val = newVal;
-
+        attach([val retain]);
         return *this;
     }
 
     idretaint<objtype>& operator=(const idretaint<objtype>& val) {
-        return * this = val._val;
+        return *this = val._val;
+    }
+
+    idretaint<objtype>& operator=(idretaint<objtype>&& other) {
+        attach(other._val);
+        other._val = nil;
+        return *this;
     }
 
     template <typename K>
-    bool operator!=(const K& other) {
+    bool operator!=(const K& other) const {
         return ((id)other) != (id)_val;
     }
 
     template <typename K>
-    bool operator==(const K& other) {
+    bool operator==(const K& other) const {
         return ((id)other) == (id)_val;
     }
 
