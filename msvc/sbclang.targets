@@ -19,6 +19,7 @@
   <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
     <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
     </ClCompile>
   </ItemGroup>

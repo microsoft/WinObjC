@@ -2,9 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
-    <StarboardBuildConfig>Debug</StarboardBuildConfig>
-    <StarboardBuildConfig Condition="'$(Configuration.ToUpper())' == 'RELEASE'">Release</StarboardBuildConfig>
-    <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardBuildConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
+    <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\Debug\$(TargetOsAndVersion)</StarboardLibDirs>
     <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
   </PropertyGroup>
   <ImportGroup>
