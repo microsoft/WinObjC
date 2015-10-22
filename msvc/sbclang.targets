@@ -15,17 +15,10 @@
   <PropertyGroup>
     <IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
-    <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
-    </ClCompile>
-  </ItemGroup>
   
   <Target
     Name="CopyStarboardDependencies"
+    DependsOnTargets="ComputeStarboardCRT"
     AfterTargets="Link">
     
     <PropertyGroup>
@@ -110,6 +103,42 @@
     <CombinedHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Combined'))</CombinedHMapRequired>
     <ProjectHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Project'))</ProjectHMapRequired>
   </PropertyGroup>
+
+  <Target
+    Name="ComputeStarboardCRT"
+    BeforeTargets="ComputeCrtSDKReference">
+
+    <PropertyGroup>
+      <!-- Choose a CRT to use -->
+      <ClangCompileCRTs>@(ClangCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClangCompileCRTs>
+      <StarboardCRT>MultiThreadedDLL</StarboardCRT>
+      <StarboardCRT Condition="$(ClangCompileCRTs.Contains('MultiThreadedDebugDLL'))">MultiThreadedDebugDLL</StarboardCRT>
+      <!-- Choose configuration that corresponds to the CRT -->
+      <StarboardCRTConfig>Release</StarboardCRTConfig>
+      <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
+      <!-- Library directories for SDK built from source -->
+      <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
+      <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+      <!-- Library directories for pre-packaged SDK -->
+      <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' != 'true'">$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
+      <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' != 'true'">$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+      <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <RuntimeLibrary>$(StarboardCRT)</RuntimeLibrary>
+        <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
+      </ClCompile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="XamlCompositorCS" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+        <HintPath>$(StarboardLibDirs)\XamlCompositorCS.winmd</HintPath>
+        <IsWinMDFile>true</IsWinMDFile>
+      </Reference>
+    </ItemGroup>
+  </Target>
 
   <Target
     Name="_ClangCompile"
@@ -288,6 +317,19 @@
     <ComputeLibInputsTargets>$(ComputeLibInputsTargets);ComputeClangLibInputs;</ComputeLibInputsTargets>
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
+
+  <Target
+    Name="FixLinkAdditionalLibraryDirectories"
+    DependsOnTargets="$(ComputeLinkInputsTargets)"
+    BeforeTargets="Link">
+
+    <ItemGroup>
+      <Link>
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir)</AdditionalLibraryDirectories>
+      </Link>
+    </ItemGroup>
+
+  </Target>
 
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
     <PropertyGroup>

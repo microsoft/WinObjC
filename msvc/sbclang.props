@@ -20,13 +20,6 @@
     <CC1ArgsTLog>-Xclang -triple -Xclang $(CC1TargetTriple) -mrelocation-model static -mthread-model posix -mdisable-fp-elim -relaxed-aliasing -fmath-errno -masm-verbose -mconstructor-aliases -target-cpu $(CC1TargetCpu) -fdiagnostics-format msvc -dwarf-column-info -resource-dir "[LLVMResourceDir]" $(CC1DefaultIncludesTLog) -ferror-limit 19 -mstackrealign -fms-extensions -fms-compatibility -fms-compatibility-version=17.00 -fdelayed-template-parsing -fobjc-runtime=objfw -fdiagnostics-show-option -D_HAS_EXCEPTIONS=0</CC1ArgsTLog>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="XamlCompositorCS" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true' And '$(WSCompositor)' != 'SwapChain'">
-      <HintPath>$(StarboardLibDirs)\XamlCompositorCS.winmd</HintPath>
-      <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-  </ItemGroup>
-
   <ItemDefinitionGroup Label="Defaults">
     <ClangCompile>
       <CommandTLogFile Condition="'%(ClangCompile.CommandTLogFile)' == ''">$(TLogLocation)clang.command.1.tlog</CommandTLogFile>
@@ -37,7 +30,7 @@
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
       <OptimizationLevel Condition="'%(ClangCompile.OptimizationLevel)' == ''">Disabled</OptimizationLevel>
-      <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
       <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude</InternalSystemIncludePaths>
@@ -45,8 +38,6 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardLibDirs Condition="'$(StarboardLibDirs)' == ''">$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
-    <StarboardPrebuiltLibsDir Condition="'$(StarboardPrebuiltLibsDir)' == ''">$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
     <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
     <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
@@ -62,9 +53,5 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardSdkRoot)\include\VCInclude</AdditionalIncludeDirectories>
     </ClCompile>
-
-    <Link>
-      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir)</AdditionalLibraryDirectories>
-    </Link>	
   </ItemDefinitionGroup>
 </Project>

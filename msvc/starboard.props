@@ -2,8 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
-    <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\Debug\$(TargetOsAndVersion)</StarboardLibDirs>
-    <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
   </PropertyGroup>
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.props" />
