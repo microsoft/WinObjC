@@ -266,6 +266,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\Unit
 		{B3177BAC-2E11-4EF2-976B-2B8B4632FA4A} = {B3177BAC-2E11-4EF2-976B-2B8B4632FA4A}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Headers", "Headers", "{6A9F9F79-A657-47B0-B41C-A48B6A06308C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Public.Shared", "Headers\Headers.Shared\Public.Shared.vcxitems", "{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Internal.Shared", "Headers\Headers.Shared\Internal.Shared.vcxitems", "{C0DB71AA-0F89-41AC-BB7D-C0CB5458F4F9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{49aa9208-07ed-4f9c-94ac-c6cf9097e809}*SharedItemsImports = 4
@@ -308,6 +314,7 @@ Global
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{829bce35-3a8d-4e73-b56b-455b07ad935e}*SharedItemsImports = 9
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{2377da3d-6d87-433d-ae72-49f94e020525}*SharedItemsImports = 9
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{23350084-036d-41c9-837c-2874b3426d8e}*SharedItemsImports = 4
+		Headers\Headers.Shared\Internal.Shared.vcxitems*{c0db71aa-0f89-41ac-bb7d-c0cb5458f4f9}*SharedItemsImports = 9
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{b497f2dc-d195-475f-b138-74fb2c6eb1b0}*SharedItemsImports = 4
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{646a824a-87d9-4a11-ab72-f2cb4b8977ba}*SharedItemsImports = 9
 		OpenGLES\OpenGLES.Shared\OpenGLES.Shared.vcxitems*{d4b2ab87-ec16-4d9c-98d5-2ebb69c72370}*SharedItemsImports = 4
@@ -333,6 +340,7 @@ Global
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{596d062f-2662-4c91-908c-1c6102277914}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{3b9baa3e-22f1-48af-97f4-7a0c3bf93e1f}*SharedItemsImports = 9
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{537d7738-f86d-471b-a5c0-c257a72069be}*SharedItemsImports = 9
+		Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{1ccd9c7d-4f10-4ece-a783-3d03d1a375c2}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{5ddce358-cc33-40ce-87d2-fef7eb1221cd}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{2fb40e04-969c-4484-ae3b-cbd6620a8256}*SharedItemsImports = 4
@@ -1771,5 +1779,7 @@ Global
 		{D14F485E-B029-44D3-A65D-FE6340B1EBCD} = {3592746A-40FA-451F-82E7-0C8CBB5F3A7E}
 		{C30E62E2-9C92-472B-9D0F-E44791DA6673} = {3592746A-40FA-451F-82E7-0C8CBB5F3A7E}
 		{23D3982A-12A6-46AF-9221-9CC062A38D75} = {3592746A-40FA-451F-82E7-0C8CBB5F3A7E}
+		{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
+		{C0DB71AA-0F89-41AC-BB7D-C0CB5458F4F9} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
 	EndGlobalSection
 EndGlobal

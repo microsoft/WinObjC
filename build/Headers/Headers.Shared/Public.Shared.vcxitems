@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\*.h" />  
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ApplicationServices\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AudioToolbox\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AVFoundation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CFNetwork\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CommonCrypto\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreAudio\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreBluetooth\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreData\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreFoundation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreGraphics\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreLocation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreMedia\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreText\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreVideo\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Foundation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libkern\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MessageUI\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\objc\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenAL\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenGLES\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenGLES\ES1\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenGLES\ES2\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Universal Windows\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Universal Windows\UWP\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows 8.1\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows 8.1\UWP\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows Phone 8.1\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows Phone 8.1\UWP\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\QuartzCore\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Security\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Social\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\StoreKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\sys\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\SystemConfiguration\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\UIKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\winobjc\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\arm\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\arpa\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\libkern\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\libkern\arm\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\mach\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\machine\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\net\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet6\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\os\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\sys\*.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

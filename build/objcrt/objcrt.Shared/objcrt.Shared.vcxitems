@@ -8,14 +8,19 @@
     <ItemsProjectName>objcrt.Shared</ItemsProjectName>
     <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
   </PropertyGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\Islandwood.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectCapability Include="SourceItemsFromImports" />
-  </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\autoreleasepool.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\block.m" />
@@ -24,6 +29,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\property.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\protocol.m" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\winrt-interop.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\synchronized.m" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\category.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\class.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\exception.cpp">
@@ -35,10 +43,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\selector.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\sparsearray.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\static-instances.c" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\synchronized.m" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\threading.c" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\assoc.mm" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\runtime-private.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\runtime.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\winrt-interop.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\block.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
 </Project>

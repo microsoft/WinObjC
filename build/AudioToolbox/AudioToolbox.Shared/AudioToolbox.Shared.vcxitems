@@ -8,6 +8,14 @@
     <ItemsProjectName>AudioToolbox.Shared</ItemsProjectName>
     <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
   </PropertyGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\Islandwood.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
@@ -17,13 +25,12 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\AudioFile.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\CAFDecoder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\stb_vorbis.c" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AVFoundation\AudioSession.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\CAFDecoder.h" />  
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AVFoundation\AudioSession.mm">
-      <FileType>Document</FileType>
-    </ClangCompile>
   </ItemGroup>
 </Project>

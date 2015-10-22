@@ -8,6 +8,14 @@
 		<ItemsProjectName>StarboardXaml.Shared</ItemsProjectName>
 		<CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
 	</PropertyGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\Islandwood.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
 	<ItemDefinitionGroup>
 		<ClCompile>
 			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
@@ -15,13 +23,17 @@
 	</ItemDefinitionGroup>
 	<ItemGroup>
 		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\XamlCompositor.cpp" />
+		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StarboardXaml.cpp" />
+		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.cpp" />
 	</ItemGroup>
 	<ItemGroup>
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CompositorInterface.mm" />
-		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StarboardXaml.cpp" />
-		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.cpp" />
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
 	</ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CompositorInterface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.h" />  
+  </ItemGroup>
 	<ItemGroup>
 		<ProjectCapability Include="SourceItemsFromImports" />
 	</ItemGroup>

@@ -8,6 +8,14 @@
     <ItemsProjectName>StarboardWS.Shared</ItemsProjectName>
     <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
   </PropertyGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\Islandwood.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
@@ -19,9 +27,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\XamlUIWaiter.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectCapability Include="SourceItemsFromImports" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\StarboardWSCompositor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\StarboardWSCompositor.cpp" />
+    <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
 </Project>

@@ -8,14 +8,19 @@
 		<ItemsProjectName>Starboard.Shared</ItemsProjectName>
 		<CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
 	</PropertyGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\Islandwood.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
 	<ItemDefinitionGroup>
 		<ClCompile>
 			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
 		</ClCompile>
 	</ItemDefinitionGroup>
-	<ItemGroup>
-		<ProjectCapability Include="SourceItemsFromImports" />
-	</ItemGroup>
 	<ItemGroup>
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\AssetFile.cpp" />
 		<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\md5.c" />
@@ -27,5 +32,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Empty.cpp" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectCapability Include="SourceItemsFromImports" />
 	</ItemGroup>
 </Project>

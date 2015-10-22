@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\AudioFile.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\CAFDecoder.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\stb_vorbis.c" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AVFoundation\AudioSession.mm" />
-  </ItemGroup>
-</Project>
