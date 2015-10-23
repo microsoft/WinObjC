@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# WinObjC pre-commit hook.  
+# The hook exits with non-zero status after issuing an appropriate message if it wants to stop the commit.
+#
+exec powershell.exe -NoLogo -NoProfile -File ./tools/scripts/pre-commit.ps1

@@ -82,6 +82,13 @@ struct objc_class {
 };
 #endif
 
+typedef enum {
+    OBJC_ASSOCIATION_ASSIGN           = 0x0000,
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 0x0001,
+    OBJC_ASSOCIATION_COPY_NONATOMIC   = 0x0003,
+    OBJC_ASSOCIATION_RETAIN           = 0x0301,
+    OBJC_ASSOCIATION_COPY             = 0x0303
+} objc_associationPolicy;
 
 #ifdef __OBJC__
     @class Protocol;
@@ -141,6 +148,10 @@ Class objc_allocateClassPair(Class super, const char *name, size_t extraBytes);
 void objc_registerClassPair(Class cls);
 IMP class_replaceMethod(Class cls, SEL sel, IMP imp, const char *types);
 BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char *types);
+
+void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
+id objc_getAssociatedObject(id self, void* key);
+void objc_removeAssociatedObjects(id self);
 
 __END_DECLS
 

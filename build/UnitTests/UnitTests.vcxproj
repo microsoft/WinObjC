@@ -188,6 +188,7 @@
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_sanity.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
+    <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_after.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_api.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_apply.m" />
