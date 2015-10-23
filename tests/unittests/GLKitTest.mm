@@ -431,6 +431,128 @@ TEST(GLKit, BasicMath)
     auto v2 = GLKMatrix4MultiplyVector4(mcInverse, GLKMatrix4MultiplyVector4(mc, v));
     EXPECT_TRUE_MSG(GLKVector4AllEqualToVector4(v, v2),
                     "Matrix multiplication yielded unexpected result.");
+
+    float values[16] = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f, 13.f, 14.f, 15.f };
+    GLKMatrix4 m = GLKMatrix4MakeWithArray(values);
+    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[1] && m.m[2] == values[2] && m.m[3] == values[3] &&
+                    m.m[4] == values[4] && m.m[5] == values[5] && m.m[6] == values[6] && m.m[7] == values[7] &&
+                    m.m[8] == values[8] && m.m[9] == values[9] && m.m[10] == values[10] && m.m[11] == values[11] &&
+                    m.m[12] == values[12] && m.m[13] == values[13] && m.m[14] == values[14] && m.m[15] == values[15],
+                    "GLKMatrix4MakeWithArray yielded unexpected result.");
+
+    m = GLKMatrix4MakeWithArrayAndTranspose(values);
+    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[4] && m.m[2] == values[8] && m.m[3] == values[12] &&
+                    m.m[4] == values[1] && m.m[5] == values[5] && m.m[6] == values[9] && m.m[7] == values[13] &&
+                    m.m[8] == values[2] && m.m[9] == values[6] && m.m[10] == values[10] && m.m[11] == values[14] &&
+                    m.m[12] == values[3] && m.m[13] == values[7] && m.m[14] == values[11] && m.m[15] == values[15],
+                    "GLKMatrix4MakeWithArrayAndTranspose yielded unexpected result.");
+
+    m = GLKMatrix4MakeWithRows(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
+                               GLKVector4Make(4.f, 5.f, 6.f, 7.f),
+                               GLKVector4Make(8.f, 9.f, 10.f, 11.f),
+                               GLKVector4Make(12.f, 13.f, 14.f, 15.f));
+    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[4] && m.m[2] == values[8] && m.m[3] == values[12] &&
+                    m.m[4] == values[1] && m.m[5] == values[5] && m.m[6] == values[9] && m.m[7] == values[13] &&
+                    m.m[8] == values[2] && m.m[9] == values[6] && m.m[10] == values[10] && m.m[11] == values[14] &&
+                    m.m[12] == values[3] && m.m[13] == values[7] && m.m[14] == values[11] && m.m[15] == values[15],
+                    "GLKMatrix4MakeWithRows yielded unexpected result.");
+
+    m = GLKMatrix4MakeWithColumns(GLKVector4Make(0.f, 1.f, 2.f, 3.f),
+                                  GLKVector4Make(4.f, 5.f, 6.f, 7.f),
+                                  GLKVector4Make(8.f, 9.f, 10.f, 11.f),
+                                  GLKVector4Make(12.f, 13.f, 14.f, 15.f));
+    EXPECT_TRUE_MSG(m.m[0] == values[0] && m.m[1] == values[1] && m.m[2] == values[2] && m.m[3] == values[3] &&
+                    m.m[4] == values[4] && m.m[5] == values[5] && m.m[6] == values[6] && m.m[7] == values[7] &&
+                    m.m[8] == values[8] && m.m[9] == values[9] && m.m[10] == values[10] && m.m[11] == values[11] &&
+                    m.m[12] == values[12] && m.m[13] == values[13] && m.m[14] == values[14] && m.m[15] == values[15],
+                    "GLKMatrix4MakeWithColumns yielded unexpected result.");
+
+    GLKMatrix3 m3 = GLKMatrix3MakeWithRows(GLKVector3Make(0.f, 1.f, 2.f),
+                                           GLKVector3Make(3.f, 4.f, 5.f),
+                                           GLKVector3Make(6.f, 7.f, 8.f));
+    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[3] && m3.m[2] == values[6] && 
+                    m3.m[3] == values[1] && m3.m[4] == values[4] && m3.m[5] == values[7] && 
+                    m3.m[6] == values[2] && m3.m[7] == values[5] && m3.m[8] == values[8],
+                    "GLKMatrix3MakeWithRows yielded unexpected result.");
+
+    m3 = GLKMatrix3MakeWithColumns(GLKVector3Make(0.f, 1.f, 2.f),
+                                   GLKVector3Make(3.f, 4.f, 5.f),
+                                   GLKVector3Make(6.f, 7.f, 8.f));
+    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[1] && m3.m[2] == values[2] && 
+                    m3.m[3] == values[3] && m3.m[4] == values[4] && m3.m[5] == values[5] && 
+                    m3.m[6] == values[6] && m3.m[7] == values[7] && m3.m[8] == values[8],
+                    "GLKMatrix3MakeWithColumns yielded unexpected result.");
+
+    m3 = GLKMatrix3MakeWithArray(values);
+    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[1] && m3.m[2] == values[2] && 
+                    m3.m[3] == values[3] && m3.m[4] == values[4] && m3.m[5] == values[5] && 
+                    m3.m[6] == values[6] && m3.m[7] == values[7] && m3.m[8] == values[8],
+                    "GLKMatrix3MakeWithArray yielded unexpected result.");
+
+    m3 = GLKMatrix3MakeWithArrayAndTranspose(values);
+    EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[3] && m3.m[2] == values[6] && 
+                    m3.m[3] == values[1] && m3.m[4] == values[4] && m3.m[5] == values[7] && 
+                    m3.m[6] == values[2] && m3.m[7] == values[5] && m3.m[8] == values[8],
+                    "GLKMatrix3MakeWithArrayAndTranspose yielded unexpected result.");
+}
+
+TEST(GLKit, Quaternions)
+{
+    float values[4] = { 0.f, 1.f, 2.f, 3.f };
+    GLKQuaternion q = GLKQuaternionMake(0.f, 1.f, 2.f, 3.f);
+    GLKQuaternion q2 = GLKQuaternionMakeWithArray(values);
+    GLKQuaternion q3 = GLKQuaternionMakeWithVector3(GLKVector3Make(0.f, 1.f, 2.f), 3.f);
+    EXPECT_TRUE_MSG(q.x == q2.x && q.y == q2.y && q.z == q2.z && q.w == q2.w, "Basic quaternion construction failed!");
+    EXPECT_TRUE_MSG(q.x == q3.x && q.y == q3.y && q.z == q3.z && q.w == q3.w, "Basic quaternion construction failed!");
+
+    q = GLKQuaternionNormalize(q);
+    EXPECT_TRUE_MSG(fabsf(GLKQuaternionLength(q) - 1.f) <= COMPARISON_EPSILON, "Normalized quaternion has bad length.");
+
+    q = GLKQuaternionMakeWithAngleAndAxis(M_PI, 0.f, 1.f, 0.f);
+    q2 = GLKQuaternionMakeWithAngleAndVector3Axis(M_PI, GLKVector3YAxis());
+    EXPECT_TRUE_MSG(q.x == q2.x && q.y == q2.y && q.z == q2.z && q.w == q2.w, "Quaternion angle/axis construction failed!");
+
+    GLKVector3 axis = GLKQuaternionAxis(q);
+    float angle = GLKQuaternionAngle(q);
+    EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Incorrect angle extracted!");
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3YAxis()), "Incorrect rotation axis extracted!");
+    
+    GLKVector3 rotated = GLKQuaternionRotateVector3(q, GLKVector3XAxis());
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToScalar(GLKVector3Add(rotated, GLKVector3XAxis()), 0.f),
+                    "Quaternion rotation appears incorrect.");
+
+    GLKMatrix3 xrot = GLKMatrix3MakeXRotation(M_PI / 3.f);
+    GLKMatrix3 xrot2 = GLKMatrix3Make(1.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, 0.f, -1.f);
+    GLKMatrix3 yrot = GLKMatrix3Make(-1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, -1.f);
+    GLKMatrix3 zrot = GLKMatrix3Make(-1.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, 0.f, 1.f);
+
+    q = GLKQuaternionMakeWithMatrix3(xrot);
+    EXPECT_TRUE_MSG(fabsf(GLKQuaternionLength(q) - 1.f) <= COMPARISON_EPSILON, "Quaternion length incorrect");
+    axis = GLKQuaternionAxis(q);
+    angle = GLKQuaternionAngle(q);
+    EXPECT_TRUE_MSG(fabsf(angle - ((float)M_PI / 3.f)) <= COMPARISON_EPSILON, "Quaternion angle extracted incorrectly!");
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3XAxis()), "Incorrect rotation axis extracted!");
+
+    q = GLKQuaternionMakeWithMatrix3(xrot2);
+    EXPECT_TRUE_MSG(fabsf(GLKQuaternionLength(q) - 1.f) <= COMPARISON_EPSILON, "Quaternion length incorrect");
+    axis = GLKQuaternionAxis(q);
+    angle = GLKQuaternionAngle(q);
+    EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Quaternion angle extracted incorrectly!");
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3XAxis()), "Incorrect rotation axis extracted!");
+
+    q = GLKQuaternionMakeWithMatrix3(yrot);
+    EXPECT_TRUE_MSG(fabsf(GLKQuaternionLength(q) - 1.f) <= COMPARISON_EPSILON, "Quaternion length incorrect");
+    axis = GLKQuaternionAxis(q);
+    angle = GLKQuaternionAngle(q);
+    EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Quaternion angle extracted incorrectly!");
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3YAxis()), "Incorrect rotation axis extracted!");
+
+    q = GLKQuaternionMakeWithMatrix3(zrot);
+    EXPECT_TRUE_MSG(fabsf(GLKQuaternionLength(q) - 1.f) <= COMPARISON_EPSILON, "Quaternion length incorrect");
+    axis = GLKQuaternionAxis(q);
+    angle = GLKQuaternionAngle(q);
+    EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Quaternion angle extracted incorrectly!");
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3ZAxis()), "Incorrect rotation axis extracted!");    
 }
 
 TEST(GLKit, Rotations)
@@ -481,4 +603,13 @@ TEST(GLKit, Interpolation)
     float dist = GLKVector4Distance(a, b);
     EXPECT_LE_MSG(fabsf(dist - 2.f * sqrtf(GLKVector4DotProduct(a, a))), COMPARISON_EPSILON,
                   "Interpolation not within acceptable error.");
+
+    GLKVector3 v = GLKVector3Make(0.f, 1.f, 1.f);
+    GLKVector3 proj = GLKVector3Project(v, GLKVector3ZAxis());
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(proj, GLKVector3ZAxis()), "GLKVector3 projection failed!");
+
+    GLKVector4 v4 = GLKVector4Make(0.f, 1.f, 1.f, 0.f);
+    GLKVector4 zAxis = GLKVector4MakeWithVector3(GLKVector3ZAxis(), 0.f);
+    GLKVector4 proj4 = GLKVector4Project(v4, zAxis);
+    EXPECT_TRUE_MSG(GLKVector4AllEqualToVector4(proj4, zAxis), "GLKVector4 projection failed!");
 }

@@ -118,6 +118,11 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeRotation(float rad, float x, float y, float z);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeXRotation(float rad);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeYRotation(float rad);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeZRotation(float rad);
+
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeYRotation(float rad);
@@ -846,8 +851,8 @@ inline GLKVector3 GLKQuaternionAxis(GLKQuaternion quat)
 
     float mf = 1.f / sinf(acosf(quat.w));
     res.x = mf * quat.x;
-    res.y = mf * quat.x;
-    res.z = mf * quat.x;
+    res.y = mf * quat.y;
+    res.z = mf * quat.z;
     
     return res;
 }
@@ -867,8 +872,7 @@ inline GLKQuaternion GLKQuaternionInvert(GLKQuaternion q)
 }
 
 inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion q1, GLKQuaternion q2, float t)
-{
-    
+{    
     float mq1 = GLKQuaternionLength(q1);
     float mq2 = GLKQuaternionLength(q2);
     float dp = GLKQuaternionDot(q1, q2);
@@ -880,6 +884,28 @@ inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion q1, GLKQuaternion q2, floa
     return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(sinf((1.f - t) * ang) * invsang, q1),
                             GLKQuaternionMultiplyByScalar(sinf(t * ang) * invsang, q2));
 }
+
+inline GLKVector3 GLKQuaternionRotateVector3(GLKQuaternion q, GLKVector3 v)
+{
+    GLKVector3 axis = GLKQuaternionAxis(q);
+    float angle = GLKQuaternionAngle(q);
+    GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
+    return GLKMatrix4MultiplyVector3(m, v);
+}
+
+GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs);
+
+inline GLKVector4 GLKQuaternionRotateVector4(GLKQuaternion q, GLKVector4 v)
+{
+    GLKVector3 axis = GLKQuaternionAxis(q);
+    float angle = GLKQuaternionAngle(q);
+    GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
+    return GLKMatrix4MultiplyVector4(m, v);
+}
+
+GLKIT_EXPORT void GLKQuaternionRotateVector4Array(GLKQuaternion q, GLKVector4* vecs, size_t numVecs);
+GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat);
+GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat);
 
 // --------------------------------------------------------------------------------
 // Utilities.

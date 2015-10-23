@@ -234,23 +234,23 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, 
     GLKMatrix4 res;
 
     res.m00 = r0.x;
-    res.m10 = r0.y;
-    res.m20 = r0.z;
-    res.m30 = r0.w;
-
-    res.m01 = r1.x;
+    res.m01 = r0.y;
+    res.m02 = r0.z;
+    res.m03 = r0.w;
+           
+    res.m10 = r1.x;
     res.m11 = r1.y;
-    res.m21 = r1.z;
-    res.m31 = r1.w;
-
-    res.m02 = r2.x;
-    res.m12 = r2.y;
+    res.m12 = r1.z;
+    res.m13 = r1.w;
+           
+    res.m20 = r2.x;
+    res.m21 = r2.y;
     res.m22 = r2.z;
-    res.m32 = r2.w;
-
-    res.m03 = r3.x;
-    res.m13 = r3.y;
-    res.m23 = r3.z;
+    res.m23 = r2.w;
+           
+    res.m30 = r3.x;
+    res.m31 = r3.y;
+    res.m32 = r3.z;
     res.m33 = r3.w;
 
     return res;
@@ -260,23 +260,23 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLK
     GLKMatrix4 res;
 
     res.m00 = r0.x;
-    res.m01 = r0.y;
-    res.m02 = r0.z;
-    res.m03 = r0.w;
-
-    res.m10 = r1.x;
+    res.m10 = r0.y;
+    res.m20 = r0.z;
+    res.m30 = r0.w;
+           
+    res.m01 = r1.x;
     res.m11 = r1.y;
-    res.m12 = r1.z;
-    res.m13 = r1.w;
-
-    res.m20 = r2.x;
-    res.m21 = r2.y;
+    res.m21 = r1.z;
+    res.m31 = r1.w;
+           
+    res.m02 = r2.x;
+    res.m12 = r2.y;
     res.m22 = r2.z;
-    res.m23 = r2.w;
-
-    res.m30 = r3.x;
-    res.m31 = r3.y;
-    res.m32 = r3.z;
+    res.m32 = r2.w;
+           
+    res.m03 = r3.x;
+    res.m13 = r3.y;
+    res.m23 = r3.z;
     res.m33 = r3.w;
 
     return res;
@@ -491,15 +491,15 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, 
     GLKMatrix3 res;
 
     res.m00 = r0.x;
-    res.m10 = r0.y;
-    res.m20 = r0.z;
-
-    res.m01 = r1.x;
+    res.m01 = r0.y;
+    res.m02 = r0.z;
+           
+    res.m10 = r1.x;
     res.m11 = r1.y;
-    res.m21 = r1.z;
-
-    res.m02 = r2.x;
-    res.m12 = r2.y;
+    res.m12 = r1.z;
+           
+    res.m20 = r2.x;
+    res.m21 = r2.y;
     res.m22 = r2.z;
 
     return res;
@@ -509,15 +509,15 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLK
     GLKMatrix3 res;
 
     res.m00 = r0.x;
-    res.m01 = r0.y;
-    res.m02 = r0.z;
-
-    res.m10 = r1.x;
+    res.m10 = r0.y;
+    res.m20 = r0.z;
+           
+    res.m01 = r1.x;
     res.m11 = r1.y;
-    res.m12 = r1.z;
-
-    res.m20 = r2.x;
-    res.m21 = r2.y;
+    res.m21 = r1.z;
+           
+    res.m02 = r2.x;
+    res.m12 = r2.y;
     res.m22 = r2.z;
 
     return res;
@@ -621,24 +621,88 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
     return GLKMatrix4Multiply(rotated, translated);
 }
 
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeRotation(float rad, float x, float y, float z) {
+    float magn = sqrtf(x * x + y * y + z * z);
+    if (magn < COMPARISON_EPSILON) {
+        return GLKMatrix3MakeIdentity();
+    }
+    
+    float invMagn = 1.f / magn;
+    x *= invMagn;
+    y *= invMagn;
+    z *= invMagn;
+
+    GLKMatrix3 res = { 0 };
+
+    res.m00 = 1.f + (1.f - cosf(rad)) * (x * x - 1.f);
+    res.m10 = -z * sinf(rad) + (1.f - cosf(rad)) * x * y;
+    res.m20 = y * sinf(rad) + (1.f - cosf(rad)) * x * z;
+    res.m01 = z * sinf(rad) + (1.f - cosf(rad)) * x * y;
+    res.m11 = 1.f + (1.f - cosf(rad)) * (y * y - 1.f);
+    res.m21 = -x * sinf(rad) + (1.f - cosf(rad)) * y * z;
+    res.m02 = -y * sinf(rad) + (1.f - cosf(rad)) * x * z;
+    res.m12 = x * sinf(rad) + (1.f - cosf(rad)) * y * z;
+    res.m22 = 1.f + (1.f - cosf(rad)) * (z * z - 1.f);
+
+    return res;
+}
+
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeXRotation(float rad) {
+    GLKMatrix3 res = { 0 };
+
+    res.m00 = 1.f;
+    res.m11 = res.m22 = cosf(rad);
+    res.m12 = -sinf(rad);
+    res.m21 = sinf(rad);
+
+    return res;
+}
+
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeYRotation(float rad) {
+    GLKMatrix3 res = { 0 };
+
+    res.m11 = 1.f;
+    res.m00 = res.m22 = cosf(rad);
+    res.m02 = sinf(rad);
+    res.m20 = -sinf(rad);
+
+    return res;
+}
+
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeZRotation(float rad) {
+    GLKMatrix3 res = { 0 };
+
+    res.m00 = res.m11 = cosf(rad);
+    res.m01 = -sinf(rad);
+    res.m10 = sinf(rad);
+    res.m22 = 1.f;
+
+    return res;
+}
+
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z) {
-    float magn = 1.0f / sqrtf(x * x + y * y + z * z);
-    x *= magn;
-    y *= magn;
-    z *= magn;
+    float magn = sqrtf(x * x + y * y + z * z);
+    if (magn < COMPARISON_EPSILON) {
+        return GLKMatrix4MakeIdentity();
+    }
+
+    float invMagn = 1.f / magn;
+    x *= invMagn;
+    y *= invMagn;
+    z *= invMagn;
 
     GLKMatrix4 res = { 0 };
 
-    res.m00 = 1.0f + (1 - cosf(rad)) * (x * x - 1);
-    res.m10 = -z * sinf(rad) + (1.0f - cosf(rad)) * x * y;
-    res.m20 = y * sinf(rad) + (1.0f - cosf(rad)) * x * z;
-    res.m01 = z * sinf(rad) + (1.0f - cosf(rad)) * x * y;
-    res.m11 = 1.0f + (1.0f - cosf(rad)) * (y * y - 1.0f);
-    res.m21 = -x * sinf(rad) + (1.0f - cosf(rad)) * y * z;
-    res.m02 = -y * sinf(rad) + (1.0f - cosf(rad)) * x * z;
-    res.m12 = x * sinf(rad) + (1.0f - cosf(rad)) * y * z;
-    res.m22 = 1.0f + (1.0f - cosf(rad)) * (z * z - 1.0f);
-    res.m33 = 1.0f;
+    res.m00 = 1.f + (1.f - cosf(rad)) * (x * x - 1.f);
+    res.m10 = -z * sinf(rad) + (1.f - cosf(rad)) * x * y;
+    res.m20 = y * sinf(rad) + (1.f - cosf(rad)) * x * z;
+    res.m01 = z * sinf(rad) + (1.f - cosf(rad)) * x * y;
+    res.m11 = 1.f + (1.f - cosf(rad)) * (y * y - 1.f);
+    res.m21 = -x * sinf(rad) + (1.f - cosf(rad)) * y * z;
+    res.m02 = -y * sinf(rad) + (1.f - cosf(rad)) * x * z;
+    res.m12 = x * sinf(rad) + (1.f - cosf(rad)) * y * z;
+    res.m22 = 1.f + (1.f - cosf(rad)) * (z * z - 1.f);
+    res.m33 = 1.f;
 
     return res;
 }
@@ -650,7 +714,7 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad) {
     res.m11 = res.m22 = cosf(rad);
     res.m12 = -sinf(rad);
     res.m21 = sinf(rad);
-    res.m33 = 1.0f;
+    res.m33 = 1.f;
 
     return res;
 }
@@ -660,9 +724,9 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeYRotation(float rad) {
 
     res.m11 = 1.f;
     res.m00 = res.m22 = cosf(rad);
-    res.m02 = -sinf(rad);
-    res.m20 = sinf(rad);
-    res.m33 = 1.0f;
+    res.m02 = sinf(rad);
+    res.m20 = -sinf(rad);
+    res.m33 = 1.f;
 
     return res;
 }
@@ -674,7 +738,7 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeZRotation(float rad) {
     res.m01 = -sinf(rad);
     res.m10 = sinf(rad);
     res.m22 = 1.f;
-    res.m33 = 1.0f;
+    res.m33 = 1.f;
 
     return res;
 }
@@ -696,6 +760,70 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeScale(float x, float y, float z) {
     res.m11 = y;
     res.m22 = z;
     res.m33 = 1.f;
+
+    return res;
+}
+
+GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs) {
+    GLKVector3 axis = GLKQuaternionAxis(q);
+    float angle = GLKQuaternionAngle(q);
+    GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
+    GLKMatrix4MultiplyVector3Array(m, vecs, numVecs);
+}
+
+GLKIT_EXPORT void GLKQuaternionRotateVector4Array(GLKQuaternion q, GLKVector4* vecs, size_t numVecs) {
+    GLKVector3 axis = GLKQuaternionAxis(q);
+    float angle = GLKQuaternionAngle(q);
+    GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
+    GLKMatrix4MultiplyVector4Array(m, vecs, numVecs);
+}
+
+GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat) {
+    GLKQuaternion res;
+    
+    float trace = mat.m00  + mat.m11  + mat.m22;
+    if (trace > COMPARISON_EPSILON) {
+        float sqrtTrace = 2.f * sqrtf(trace + 1.f);
+        float invTrace = 1.f / sqrtTrace;
+
+        res.x = (mat.m21 - mat.m12) * invTrace;
+        res.y = (mat.m02 - mat.m20) * invTrace;
+        res.z = (mat.m10 - mat.m01) * invTrace;
+        res.w = 0.25f * sqrtTrace;
+
+    } else if ((mat.m00 > mat.m11) && (mat.m00 > mat.m22)) {
+        float sqrtTrace = 2.f * sqrtf(1.f + mat.m00 - mat.m11 - mat.m22);
+        float invTrace = 1.f / sqrtTrace;
+
+        res.x = 0.25f * sqrtTrace;
+        res.y = (mat.m10 + mat.m01) * invTrace;
+        res.z = (mat.m02 + mat.m20) * invTrace;
+        res.w = (mat.m21 - mat.m12) * invTrace;
+        
+    } else if (mat.m11 > mat.m22) {
+        float sqrtTrace = 2.f * sqrtf(1.f + mat.m11 - mat.m00 - mat.m22);
+        float invTrace = 1.f / sqrtTrace;
+        
+        res.x = (mat.m10 + mat.m01) * invTrace;
+        res.y = 0.25f * sqrtTrace;
+        res.z = (mat.m21 + mat.m12) * invTrace;
+        res.w = (mat.m02 - mat.m20) * invTrace;
+
+    } else {
+        float sqrtTrace = 2.f * sqrtf(1.f + mat.m22 - mat.m00 - mat.m11);
+        float invTrace = 1.f / sqrtTrace;
+
+        res.x = (mat.m02 + mat.m20) * invTrace;
+        res.y = (mat.m21 + mat.m12) * invTrace;
+        res.z = 0.25f * sqrtTrace;
+        res.w = (mat.m10 - mat.m01) * invTrace;
+    }
+
+    return res;
+}
+
+GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat) {
+    GLKQuaternion res;
 
     return res;
 }

@@ -83,5 +83,11 @@ LIBRARY GLKit
      GLKMatrix4MakeYRotation
      GLKMatrix4MakeZRotation
      GLKMatrix4MakeRotation
+     GLKMatrix3MakeXRotation
+     GLKMatrix3MakeYRotation
+     GLKMatrix3MakeZRotation
+     GLKMatrix3MakeRotation
      GLKMatrix4MakeTranslation
      GLKMatrix4MakeScale
+     GLKQuaternionRotateVector3Array
+     GLKQuaternionRotateVector4Array
