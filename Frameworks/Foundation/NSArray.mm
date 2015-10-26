@@ -281,8 +281,12 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return NSNotFound;
 }
 
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
 - (NSArray*)initWithCoder:(NSCoder*)coder {
-    id array = [coder decodeObjectForKey:@"NS.objects"];
+    id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
     [self initWithArray:array];
     return self;

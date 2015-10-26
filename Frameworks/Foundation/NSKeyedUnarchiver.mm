@@ -28,23 +28,52 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSPropertyListReader.h"
 #include "NSXMLPropertyList.h"
 
+#include <stack>
+#include <memory>
+#include <functional>
+
+NSString* NSInvalidUnarchiveOperationException = @"NSInvalidUnarchiveOperationException";
+static NSString* _NSUnarchiverEncounteredInvalidClassException = @"_NSUnarchiverEncounteredInvalidClassException";
+static NSString* _NSUnarchiverEncounteredInvalidClassExceptionClassType = @"_NSUnarchiverEncounteredInvalidClassExceptionClassType";
+static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
+    @"_NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses";
+
 static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
 
-@implementation NSKeyedUnarchiver : NSCoder {
-    id _delegate;
+@implementation NSKeyedUnarchiver {
     idretaintype(NSMutableDictionary) _nameToReplacementClass;
-    NSDictionary* _propertyList;
-    NSArray* _objects;
+    idretaintype(NSDictionary) _propertyList;
+    idretaintype(NSArray) _objects;
     idretaintype(NSMutableArray) _plistStack;
-    idretaintype(NSDictionary) _uidToObject;
-    idretaintype(NSDictionary) _objectToUid;
-    idretaintype(NSDictionary) _classVersions;
+    idretaintype(NSMutableDictionary) _uidToObject;
+    idretaintype(NSMutableDictionary) _objectToUid;
+    idretaintype(NSMutableDictionary) _classVersions;
 
     int _unnamedKeyIndex;
 
-    idretain _dataObjects;
-    idretain _bundle;
+    idretaintype(NSMutableArray) _dataObjects;
+    idretaintype(NSBundle) _bundle;
     int _curUid;
+
+    BOOL _requiresSecureCoding;
+    std::stack<idretaint<NSSet>> _expectedClassesInDecodePass;
+    bool _objectFailedSecureDecoding;
+}
+
+- (BOOL)requiresSecureCoding {
+    return _requiresSecureCoding;
+}
+
+- (void)setRequiresSecureCoding:(BOOL)requiresSecureCoding {
+    if (_requiresSecureCoding && !requiresSecureCoding) {
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"an unarchiver, once set to require secure coding, cannot be stripped of that requirement."];
+    }
+    _requiresSecureCoding = requiresSecureCoding;
+}
+
+- (NSSet*)allowedClasses {
+    return [[_expectedClassesInDecodePass.top() copy] autorelease];
 }
 
 - (instancetype)initForReadingWithData:(NSData*)data {
@@ -74,9 +103,11 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
         [_plistStack addObject:[_propertyList objectForKey:@"$top"]];
     }
 
-    _uidToObject.attach((NSDictionary*)CFDictionaryCreateMutable(nil, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
+    _uidToObject.attach((NSMutableDictionary*)CFDictionaryCreateMutable(nil, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
 
     _dataObjects.attach([NSMutableArray new]);
+
+    _expectedClassesInDecodePass.emplace(); // nil first entry
 
     return self;
 }
@@ -91,6 +122,41 @@ static id decodeClassFromDictionary(NSKeyedUnarchiver* self, id classReference) 
     return className;
 }
 
+static inline void checkClassForSecureCodingCompliance(NSKeyedUnarchiver* self, Class checkingClass) {
+    if (![self requiresSecureCoding]) {
+        return;
+    }
+
+    if ([checkingClass conformsToProtocol:@protocol(NSSecureCoding)] &&
+        [reinterpret_cast<id<NSSecureCoding>>(checkingClass) supportsSecureCoding]) {
+        return;
+    }
+
+    self->_objectFailedSecureDecoding = true;
+    [NSException raise:NSInvalidUnarchiveOperationException
+                format:@"This decoder will only decode classes that adopt NSSecureCoding. Class '%@' does not adopt it.", checkingClass];
+}
+
+static inline void checkClassAgainstExpectedClasses(NSKeyedUnarchiver* self, Class checkingClass, NSSet* expectedClasses) {
+    if (![self requiresSecureCoding]) {
+        return;
+    }
+
+    for (Class expectedClass in expectedClasses) {
+        if ([checkingClass isSubclassOfClass:expectedClass]) {
+            return;
+        }
+    }
+
+    self->_objectFailedSecureDecoding = true;
+    [[NSException exceptionWithName:_NSUnarchiverEncounteredInvalidClassException
+                             reason:nil
+                           userInfo:@{
+                               _NSUnarchiverEncounteredInvalidClassExceptionClassType : checkingClass,
+                               _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses : expectedClasses
+                           }] raise];
+}
+
 static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
     DWORD uidIntValue = [uid intValue];
     id result = [self->_uidToObject objectForKey:uid];
@@ -98,24 +164,27 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
     if (result == NULL) {
         id plist = [self->_objects objectAtIndex:uidIntValue];
 
+        // NSString and NSNumber can be returned directly without a class check.
         if ([plist isKindOfClass:[NSString class]]) {
             if ([plist isEqualToString:@"$null"]) {
                 result = NULL;
             } else {
                 result = plist;
-                [self->_uidToObject setObject:result forKey:uid];
             }
+        } else if ([plist isKindOfClass:[NSNumber class]]) {
+            result = plist;
         } else if ([plist isKindOfClass:[NSDictionary class]]) {
+            // NSDictionary could be an object masquerading as a dictionary;
+            // it performs its class check manually.
             id className = decodeClassFromDictionary(self, plist);
 
-            const char* pClassName = [className UTF8String];
+            Class classType = NSClassFromString(className);
 
-            static int indentCount = 0;
+            // These two methods will except (correct behaviour) if they fail to match.
+            checkClassAgainstExpectedClasses(self, classType, self->_expectedClassesInDecodePass.top());
+            checkClassForSecureCodingCompliance(self, classType);
 
             [self->_plistStack addObject:plist];
-
-            id classType = objc_getClass(pClassName);
-
             if (classType != nil) {
                 result = [classType alloc];
 
@@ -142,7 +211,10 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                     result = [result initWithCoder:self];
                 } else {
                     if (result != nil) {
-                        EbrDebugLog("%s does not respond to initWithCoder\n", object_getClassName(result));
+                        [NSException
+                             raise:NSInvalidUnarchiveOperationException
+                            format:@"instances of class '%@' do not conform to the NSCoding protocol; please implement -initWithCoder:",
+                                   classType];
                     }
                 }
 
@@ -155,32 +227,33 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                     }
 
                     [result autorelease];
-                    [self->_uidToObject setObject:result forKey:uid];
                 } else {
-                    EbrDebugLog("NSKeyedUnarchiver: Object initialization failed\n");
+                    [NSException raise:NSInvalidUnarchiveOperationException
+                                format:@"failed to instantiate class '%@' during unarchival", classType];
                 }
-            } else {
-                EbrDebugLog("Class %s not found\n", pClassName);
             }
 
             [self->_plistStack removeLastObject];
-
-            indentCount--;
-        } else if ([plist isKindOfClass:[NSNumber class]]) {
-            result = plist;
-            [self->_uidToObject setObject:result forKey:uid];
-        } else if ([plist isKindOfClass:[NSData class]]) {
-            result = plist;
-            [self->_uidToObject setObject:result forKey:uid];
-        } else if ([plist isKindOfClass:[NSDate class]]) {
-            result = plist;
-            [self->_uidToObject setObject:result forKey:uid];
         } else {
-            EbrDebugLog("plist of class %s\n", object_getClassName(plist));
-            assert(0);
+            // Everything else requires a class check.
+
+            // This might except. Let it.
+            checkClassAgainstExpectedClasses(self, object_getClass(plist), self->_expectedClassesInDecodePass.top());
+            result = plist;
+
+            if ([plist isKindOfClass:[NSData class]]) {
+                result = plist;
+            } else if ([plist isKindOfClass:[NSDate class]]) {
+                result = plist;
+            } else {
+                [NSException raise:NSInvalidUnarchiveOperationException
+                            format:@"failed to unarchive unknown object of class '%@'", object_getClass(plist)];
+            }
         }
-    } else {
-        // EbrDebugLog("Found existing item uid=%d\n", uidIntValue);
+
+        if (result) {
+            [self->_uidToObject setObject:result forKey:uid];
+        }
     }
 
     return result;
@@ -191,8 +264,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
     id values = [top allValues];
 
     if ([values count] != 1) {
-        // NSLog(@"multiple values=%@",values);
-        assert(0);
+        [NSException raise:NSInvalidUnarchiveOperationException format:@"attempted to unarchive data with multiple root objects"];
         return nil;
     } else {
         id object = [values objectAtIndex:0];
@@ -214,7 +286,7 @@ static BOOL containsValueForKey(NSKeyedUnarchiver* self, NSString* key) {
 }
 
 static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
-    if ([plist isKindOfClass:[NSString class]] || [plist isKindOfClass:[NSData class]]) {
+    if ([plist isKindOfClass:[NSString class]] || [plist isKindOfClass:[NSData class]] || [plist isKindOfClass:[NSNumber class]]) {
         return plist;
     }
 
@@ -232,59 +304,73 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
 
             if (objValue != nil) {
                 [result addObject:objValue];
-            } else {
-                EbrDebugLog("**** Failed to unarchive object *****\n");
             }
         }
 
         return result;
-    } else if ([plist isKindOfClass:[NSNumber class]]) {
-        return plist;
     }
 
-    EbrDebugLog("Object type: %s\n", object_getClassName(plist));
-    assert(0);
-    //(NSException raise:@"NSKeyedUnarchiverException" format:@"Unable to decode property list with class %@",(plist
-    // class]];
+    [NSException raise:NSInvalidUnarchiveOperationException
+                format:@"unable to decode property list object with class %@", object_getClass(plist)];
     return nil;
 }
 
 - (id)decodeObjectForKey:(NSString*)key {
-    id result;
-
-    id plist = [[_plistStack lastObject] objectForKey:key];
-
-    if (plist == nil) {
-        result = nil;
-    } else {
-        result = _decodeObjectWithPropertyList(self, plist);
+    if (_objectFailedSecureDecoding) {
+        // This flag is set when we fail an object class check.
+        // Empirically observed: On the reference platform, any decoding requests
+        // after an object check failure return nil.
+        return nil;
     }
 
-    return result;
+    @try {
+        id plist = [[_plistStack lastObject] objectForKey:key];
+
+        if (!plist) {
+            return nil;
+        }
+
+        return _decodeObjectWithPropertyList(self, plist);
+    } @catch (NSException* exception) {
+        if ([[exception name] isEqual:_NSUnarchiverEncounteredInvalidClassException]) {
+            Class invalidClass = reinterpret_cast<Class>([exception userInfo][_NSUnarchiverEncounteredInvalidClassExceptionClassType]);
+            NSSet* expectedClasses =
+                reinterpret_cast<NSSet*>([exception userInfo][_NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses]);
+            [NSException
+                 raise:NSInvalidUnarchiveOperationException
+                format:@"value for key '%@' was of unexpected class '%@'. Allowed classes are '%@'.", key, invalidClass, expectedClasses];
+        } else {
+            [exception raise];
+        }
+    }
+}
+
+- (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key {
+    return [self decodeObjectOfClasses:[NSSet setWithObject:expectedClass] forKey:key];
+}
+
+- (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key {
+    _expectedClassesInDecodePass.emplace(expectedClasses);
+    // We would have caught the ObjC exception and popped in @finally,
+    // but that ICEs the compiler. :( We're also lacking a defer-like construct.
+    std::unique_ptr<void, std::function<void(void*)>> deferPop{ reinterpret_cast<void*>(0x01),
+                                                                [&self](void*) { _expectedClassesInDecodePass.pop(); } };
+
+    return [self decodeObjectForKey:key];
 }
 
 static id _numberForKey(NSKeyedUnarchiver* self, id key) {
     id result = [[self->_plistStack lastObject] objectForKey:key];
-
-    if (result == nil || [result isKindOfClass:[NSNumber class]]) {
+    if (!result || [result isKindOfClass:[NSNumber class]]) {
         return result;
     }
 
-    assert(0);
-    //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
+    [NSException raise:NSInvalidUnarchiveOperationException format:@"value for key '%@' is not an unboxed number", key];
     return nil;
 }
 
 static id _valueForKey(NSKeyedUnarchiver* self, id key) {
-    id result = [[self->_plistStack lastObject] objectForKey:key];
-
-    if (result == nil || [result isKindOfClass:[NSValue class]]) {
-        return result;
-    }
-
-    assert(0);
-    //[NSException raise:@"NSKeyedUnarchiverException" format:@"Expecting number, got %@",result];
-    return nil;
+    return [self decodeObjectOfClass:[NSValue class] forKey:key];
 }
 
 - (BOOL)containsValueForKey:(NSString*)key {
@@ -332,7 +418,7 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return val;
 }
 
-- (float)decodeFloatForKey:(id)key {
+- (float)decodeFloatForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
     if (number == nil) {
@@ -344,7 +430,7 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
-- (double)decodeDoubleForKey:(id)key {
+- (double)decodeDoubleForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
     if (number == nil) {
@@ -356,7 +442,7 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
-- (CGPoint)decodeCGPointForKey:(id)key {
+- (CGPoint)decodeCGPointForKey:(NSString*)key {
     CGPoint ret = { 0, 0 };
     id value = _valueForKey(self, key);
 

@@ -173,9 +173,13 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
-- (id)initWithCoder:(id)coder {
-    NSArray* keys = [coder decodeObjectForKey:@"NS.keys"];
-    NSArray* values = [coder decodeObjectForKey:@"NS.objects"];
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+- (id)initWithCoder:(NSCoder*)coder {
+    NSArray* keys = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.keys"];
+    NSArray* values = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
     [self initWithObjects:values forKeys:keys];
 

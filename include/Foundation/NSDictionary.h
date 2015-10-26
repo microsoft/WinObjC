@@ -20,7 +20,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define __CFDICTIONARY_SIZE_BYTES   (0x54)
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDictionary : NSObject <NSCoding, NSCopying, NSMutableCopying, NSFastEnumeration>
+@interface NSDictionary : NSObject <NSSecureCoding, NSCopying, NSMutableCopying, NSFastEnumeration>
 {
 @public
     CFMutableDictionaryRef dict;
