@@ -24,6 +24,7 @@ NSString* const NSInternalInconsistencyException = @"NSInternalInconsistencyExce
 NSString* const NSObjectNotAvailableException = @"NSObjectNotAvailableException";
 NSString* const NSDestinationInvalidException = @"NSDestinationInvalidException";
 NSString* const NSURLErrorDomain = @"NSURLErrorDomain";
+NSString* const NSOverflowException = @"NSOverflowException";
 
 @implementation NSException {
     idretaintype(NSString) _name;

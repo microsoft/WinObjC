@@ -14,11 +14,16 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSMutableSet.h>
+#include "Starboard.h"
+#include "Foundation/NSMutableSet.h"
 
-FOUNDATION_EXPORT_CLASS
-@interface NSCountedSet : NSMutableSet
+NSUInteger NSSetTableGetValue(NSSet* set, id object);
 
-- (NSUInteger)countForObject:(id)object;
+@implementation NSCountedSet
+
+- (NSUInteger)countForObject:(id)object {
+    NSUInteger count = NSSetTableGetValue(self, object);
+    return (count == nil) ? 0 : count;
+}
 
 @end

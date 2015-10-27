@@ -27,7 +27,8 @@ void NSSetTableRemoveObject(NSSet* set, id object);
 void NSSetTableRemoveAllObjects(NSSet* set);
 NSUInteger NSSetTableCount(NSSet* set);
 
-@implementation NSMutableSet : NSSet
+@implementation NSMutableSet
+
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSSet allocWithZone:zone] initWithSet:self];
 }

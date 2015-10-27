@@ -184,6 +184,7 @@
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />

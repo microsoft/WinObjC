@@ -31,6 +31,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCoder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSColor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCondition.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSData.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDate.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDateComponents.mm" />

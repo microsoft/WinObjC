@@ -1,138 +1,140 @@
 LIBRARY Foundation
    EXPORTS
-     _OBJC_CLASS_CFConstantString	CONSTANT
-	 __objc_class_name_CFConstantString	CONSTANT
-     _OBJC_CLASS_NSArray	DATA
-	 __objc_class_name_NSArray	CONSTANT
-     _OBJC_CLASS_NSEnumerator	DATA
-	 __objc_class_name_NSEnumerator	CONSTANT
-     _OBJC_CLASS_NSMutableArray	DATA
-	 __objc_class_name_NSMutableArray	CONSTANT
-     _OBJC_CLASS_NSData	DATA
-	 __objc_class_name_NSData	CONSTANT
-     _OBJC_CLASS_NSDictionary	DATA
-	 __objc_class_name_NSDictionary	CONSTANT
-     _OBJC_CLASS_NSMutableDictionary	DATA
-	 __objc_class_name_NSMutableDictionary	CONSTANT
-     _OBJC_CLASS_NSCharacterSet	DATA
-	 __objc_class_name_NSCharacterSet	CONSTANT
-     _OBJC_CLASS_NSMutableCharacterSet	DATA
-	 __objc_class_name_NSMutableCharacterSet	CONSTANT
-     _OBJC_CLASS_NSData	DATA
-	 __objc_class_name_NSData	CONSTANT
-     _OBJC_CLASS_NSMutableData	DATA
-	 __objc_class_name_NSMutableData	CONSTANT
-     _OBJC_CLASS_NSString	DATA
-	 __objc_class_name_NSString	CONSTANT
-     _OBJC_CLASS_NSMutableString	DATA
-	 __objc_class_name_NSMutableString	CONSTANT
-     _OBJC_CLASS_NSNumber	DATA
-	 __objc_class_name_NSNumber	CONSTANT
-     _OBJC_CLASS_NSDecimalNumber	DATA
-	 __objc_class_name_NSDecimalNumber	CONSTANT
-     _OBJC_CLASS_NSURL	DATA
-	 __objc_class_name_NSURL	CONSTANT
-     _OBJC_CLASS_NSURLConnection	DATA
-	 __objc_class_name_NSURLConnection	CONSTANT
-     _OBJC_CLASS_NSURLRequest	DATA
-	 __objc_class_name_NSURLRequest	CONSTANT
-     _OBJC_CLASS_NSMutableURLRequest	DATA
-	 __objc_class_name_NSMutableURLRequest	CONSTANT
-     _OBJC_CLASS_NSDate	DATA
-	 __objc_class_name_NSDate	CONSTANT
-     _OBJC_CLASS_NSDateComponents	DATA
-	 __objc_class_name_NSDateComponents	CONSTANT
-     _OBJC_CLASS_NSDateFormatter	DATA
-	 __objc_class_name_NSDateFormatter	CONSTANT
-     _OBJC_CLASS_NSFileManager	DATA
-	 __objc_class_name_NSFileManager	CONSTANT
-     _OBJC_CLASS_NSBundle	DATA
-	 __objc_class_name_NSBundle	CONSTANT
-     _OBJC_CLASS_NSRunLoop	DATA
-	 __objc_class_name_NSRunLoop	CONSTANT
-     _OBJC_CLASS_NSRunLoopSource	DATA
-	 __objc_class_name_NSRunLoopSource	CONSTANT
-     _OBJC_CLASS_NSTimer	DATA
-	 __objc_class_name_NSTimer	CONSTANT
-     _OBJC_CLASS_NSTimeZone	DATA
-	 __objc_class_name_NSTimeZone	CONSTANT
-     _OBJC_CLASS_NSValue	DATA
-	 __objc_class_name_NSValue	CONSTANT
-     _OBJC_CLASS_NSNull	DATA
-	 __objc_class_name_NSNull	CONSTANT
-     _OBJC_CLASS_NSThread	DATA
-	 __objc_class_name_NSThread	CONSTANT
-     _OBJC_CLASS_NSColor	DATA
-	 __objc_class_name_NSColor	CONSTANT
-     _OBJC_CLASS_NSOperation	DATA
-	 __objc_class_name_NSOperation	CONSTANT
-     _OBJC_CLASS_NSOperationQueue	DATA
-	 __objc_class_name_NSOperationQueue	CONSTANT
-     _OBJC_CLASS_NSBlockOperation	DATA
-	 __objc_class_name_NSBlockOperation	CONSTANT
-     _OBJC_CLASS_NSError	DATA
-	 __objc_class_name_NSError	CONSTANT
-     _OBJC_CLASS_NSException	DATA
-	 __objc_class_name_NSException	CONSTANT
-     _OBJC_CLASS_NSFormatter	DATA
-	 __objc_class_name_NSFormatter	CONSTANT
-     _OBJC_CLASS_NSNotificationCenter	DATA
-	 __objc_class_name_NSNotificationCenter	CONSTANT
-     _OBJC_CLASS_NSNotification	DATA
-	 __objc_class_name_NSNotification	CONSTANT
-     _OBJC_CLASS_NSSet	DATA
-	 __objc_class_name_NSSet	CONSTANT
-     _OBJC_CLASS_NSMutableSet	DATA
-	 __objc_class_name_NSMutableSet	CONSTANT
-     _OBJC_CLASS_NSNib	DATA
-	 __objc_class_name_NSNib	CONSTANT
-     _OBJC_CLASS_NSIndexPath	DATA
-	 __objc_class_name_NSIndexPath	CONSTANT
-     _OBJC_CLASS_NSIndexSet	DATA
-	 __objc_class_name_NSIndexSet	CONSTANT
-     _OBJC_CLASS_NSMutableIndexSet	DATA
-	 __objc_class_name_NSMutableIndexSet	CONSTANT
-     _OBJC_CLASS_NSUserDefaults	DATA
-	 __objc_class_name_NSUserDefaults	CONSTANT
-     _OBJC_CLASS_NSCalendar	DATA
-	 __objc_class_name_NSCalendar	CONSTANT
+     _OBJC_CLASS_CFConstantString    CONSTANT
+     __objc_class_name_CFConstantString    CONSTANT
+     _OBJC_CLASS_NSArray    DATA
+     __objc_class_name_NSArray    CONSTANT
+     _OBJC_CLASS_NSEnumerator    DATA
+     __objc_class_name_NSEnumerator    CONSTANT
+     _OBJC_CLASS_NSMutableArray    DATA
+     __objc_class_name_NSMutableArray    CONSTANT
+     _OBJC_CLASS_NSData    DATA
+     __objc_class_name_NSData    CONSTANT
+     _OBJC_CLASS_NSDictionary    DATA
+     __objc_class_name_NSDictionary    CONSTANT
+     _OBJC_CLASS_NSMutableDictionary    DATA
+     __objc_class_name_NSMutableDictionary    CONSTANT
+     _OBJC_CLASS_NSCharacterSet    DATA
+     __objc_class_name_NSCharacterSet    CONSTANT
+     _OBJC_CLASS_NSMutableCharacterSet    DATA
+     __objc_class_name_NSMutableCharacterSet    CONSTANT
+     _OBJC_CLASS_NSData    DATA
+     __objc_class_name_NSData    CONSTANT
+     _OBJC_CLASS_NSMutableData    DATA
+     __objc_class_name_NSMutableData    CONSTANT
+     _OBJC_CLASS_NSString    DATA
+     __objc_class_name_NSString    CONSTANT
+     _OBJC_CLASS_NSMutableString    DATA
+     __objc_class_name_NSMutableString    CONSTANT
+     _OBJC_CLASS_NSNumber    DATA
+     __objc_class_name_NSNumber    CONSTANT
+     _OBJC_CLASS_NSDecimalNumber    DATA
+     __objc_class_name_NSDecimalNumber    CONSTANT
+     _OBJC_CLASS_NSURL    DATA
+     __objc_class_name_NSURL    CONSTANT
+     _OBJC_CLASS_NSURLConnection    DATA
+     __objc_class_name_NSURLConnection    CONSTANT
+     _OBJC_CLASS_NSURLRequest    DATA
+     __objc_class_name_NSURLRequest    CONSTANT
+     _OBJC_CLASS_NSMutableURLRequest    DATA
+     __objc_class_name_NSMutableURLRequest    CONSTANT
+     _OBJC_CLASS_NSDate    DATA
+     __objc_class_name_NSDate    CONSTANT
+     _OBJC_CLASS_NSDateComponents    DATA
+     __objc_class_name_NSDateComponents    CONSTANT
+     _OBJC_CLASS_NSDateFormatter    DATA
+     __objc_class_name_NSDateFormatter    CONSTANT
+     _OBJC_CLASS_NSFileManager    DATA
+     __objc_class_name_NSFileManager    CONSTANT
+     _OBJC_CLASS_NSBundle    DATA
+     __objc_class_name_NSBundle    CONSTANT
+     _OBJC_CLASS_NSRunLoop    DATA
+     __objc_class_name_NSRunLoop    CONSTANT
+     _OBJC_CLASS_NSRunLoopSource    DATA
+     __objc_class_name_NSRunLoopSource    CONSTANT
+     _OBJC_CLASS_NSTimer    DATA
+     __objc_class_name_NSTimer    CONSTANT
+     _OBJC_CLASS_NSTimeZone    DATA
+     __objc_class_name_NSTimeZone    CONSTANT
+     _OBJC_CLASS_NSValue    DATA
+     __objc_class_name_NSValue    CONSTANT
+     _OBJC_CLASS_NSNull    DATA
+     __objc_class_name_NSNull    CONSTANT
+     _OBJC_CLASS_NSThread    DATA
+     __objc_class_name_NSThread    CONSTANT
+     _OBJC_CLASS_NSColor    DATA
+     __objc_class_name_NSColor    CONSTANT
+     _OBJC_CLASS_NSOperation    DATA
+     __objc_class_name_NSOperation    CONSTANT
+     _OBJC_CLASS_NSOperationQueue    DATA
+     __objc_class_name_NSOperationQueue    CONSTANT
+     _OBJC_CLASS_NSBlockOperation    DATA
+     __objc_class_name_NSBlockOperation    CONSTANT
+     _OBJC_CLASS_NSError    DATA
+     __objc_class_name_NSError    CONSTANT
+     _OBJC_CLASS_NSException    DATA
+     __objc_class_name_NSException    CONSTANT
+     _OBJC_CLASS_NSFormatter    DATA
+     __objc_class_name_NSFormatter    CONSTANT
+     _OBJC_CLASS_NSNotificationCenter    DATA
+     __objc_class_name_NSNotificationCenter    CONSTANT
+     _OBJC_CLASS_NSNotification    DATA
+     __objc_class_name_NSNotification    CONSTANT
+     _OBJC_CLASS_NSSet    DATA
+     __objc_class_name_NSSet    CONSTANT
+     _OBJC_CLASS_NSMutableSet    DATA
+     __objc_class_name_NSMutableSet    CONSTANT
+     _OBJC_CLASS_NSNib    DATA
+     __objc_class_name_NSNib    CONSTANT
+     _OBJC_CLASS_NSIndexPath    DATA
+     __objc_class_name_NSIndexPath    CONSTANT
+     _OBJC_CLASS_NSIndexSet    DATA
+     __objc_class_name_NSIndexSet    CONSTANT
+     _OBJC_CLASS_NSMutableIndexSet    DATA
+     __objc_class_name_NSMutableIndexSet    CONSTANT
+     _OBJC_CLASS_NSUserDefaults    DATA
+     __objc_class_name_NSUserDefaults    CONSTANT
+     _OBJC_CLASS_NSCalendar    DATA
+     __objc_class_name_NSCalendar    CONSTANT
      _OBJC_CLASS_NSSortDescriptor DATA
-	 __objc_class_name_NSSortDescriptor	CONSTANT
+     __objc_class_name_NSSortDescriptor    CONSTANT
      _OBJC_CLASS_NSInvocation DATA
-	 __objc_class_name_NSInvocation	CONSTANT
+     __objc_class_name_NSInvocation    CONSTANT
      _OBJC_CLASS_NSInvocationOperation DATA
-	 __objc_class_name_NSInvocationOperation	CONSTANT
+     __objc_class_name_NSInvocationOperation    CONSTANT
      _OBJC_CLASS_NSNumberFormatter DATA
-	 __objc_class_name_NSNumberFormatter	CONSTANT
+     __objc_class_name_NSNumberFormatter    CONSTANT
      _OBJC_CLASS_NSHTTPCookie DATA
-	 __objc_class_name_NSHTTPCookie	CONSTANT
+     __objc_class_name_NSHTTPCookie    CONSTANT
      _OBJC_CLASS_NSHTTPURLResponse DATA
-	 __objc_class_name_NSHTTPURLResponse CONSTANT
+     __objc_class_name_NSHTTPURLResponse CONSTANT
      _OBJC_CLASS_NSLock DATA
-	 __objc_class_name_NSLock	CONSTANT
+     __objc_class_name_NSLock    CONSTANT
      _OBJC_CLASS_NSConditionLock DATA
-	 __objc_class_name_NSConditionLock	CONSTANT
+     __objc_class_name_NSConditionLock    CONSTANT
      _OBJC_CLASS_NSRecursiveLock DATA
-	 __objc_class_name_NSRecursiveLock	CONSTANT
+     __objc_class_name_NSRecursiveLock    CONSTANT
      _OBJC_CLASS_NSCondition DATA
-	 __objc_class_name_NSCondition	CONSTANT
+     __objc_class_name_NSCondition    CONSTANT
      _OBJC_CLASS_NSXMLParser DATA
-	 __objc_class_name_NSXMLParser	CONSTANT
+     __objc_class_name_NSXMLParser    CONSTANT
      _OBJC_CLASS_NSScanner DATA
-	 __objc_class_name_NSScanner	CONSTANT
+     __objc_class_name_NSScanner    CONSTANT
      _OBJC_CLASS_NSNetService DATA
-	 __objc_class_name_NSNetService	CONSTANT
+     __objc_class_name_NSNetService    CONSTANT
      _OBJC_CLASS_NSJSONSerialization DATA
-	 __objc_class_name_NSJSONSerialization	CONSTANT
+     __objc_class_name_NSJSONSerialization    CONSTANT
      _OBJC_CLASS_NSAssertionHandler DATA
-	 __objc_class_name_NSAssertionHandler	CONSTANT
+     __objc_class_name_NSAssertionHandler    CONSTANT
      _OBJC_CLASS_NSKeyedArchiver DATA
-	 __objc_class_name_NSKeyedArchiver	CONSTANT
+     __objc_class_name_NSKeyedArchiver    CONSTANT
      _OBJC_CLASS_NSKeyedUnarchiver DATA
 	 __objc_class_name_NSKeyedUnarchiver	CONSTANT
      _OBJC_CLASS_NSPropertyListSerialization DATA
 	 __objc_class_name_NSPropertyListSerialization	CONSTANT
      _OBJC_CLASS_NSLocale DATA
-	 __objc_class_name_NSLocale	CONSTANT
+     __objc_class_name_NSLocale    CONSTANT
      _OBJC_CLASS_NSUUID DATA
-	 __objc_class_name_NSUUID	CONSTANT
+     __objc_class_name_NSUUID    CONSTANT
+     _OBJC_CLASS_NSCountedSet DATA
+     __objc_class_name_NSCountedSet CONSTANT

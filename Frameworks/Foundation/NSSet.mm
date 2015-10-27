@@ -16,41 +16,71 @@
 
 #include "Starboard.h"
 #include "Foundation/NSSet.h"
-#include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableSet.h"
+#include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSKeyedArchiver.h"
-#include "Foundation/NSString.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
     set->_table.dict = CFDictionaryCreateMutable(NULL, capacity, &kCFTypeDictionaryKeyCallBacks, NULL);
 }
 
 id NSSetTableMember(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
-    id ret = nil;
 
-    if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&ret)) {
-        return ret;
+    NSUInteger count = nil;
+
+    if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&count)) {
+        return object;
     }
 
     return nil;
 }
 
-void NSSetTableAddObject(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+NSUInteger NSSetTableGetValue(NSSet* set, id object) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
+
+    NSUInteger count = 0;
+
+    if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&count)) {
+        return count;
+    }
+
+    return 0;
+}
+
+void NSSetTableAddObject(NSSet* set, id object) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
+        assert(0);
+    }
+
     if (object == nil) {
         return;
     }
-    if (NSSetTableMember(set, object) == nil) {
-        CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)object);
+
+    NSUInteger currentCount = NSSetTableGetValue(set, object);
+    if (currentCount == 0) {
+        CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(NSUInteger)1);
+    } else {
+        if (object_getClass(set) == [NSCountedSet class]) {
+            // Increment the object count. If the count exceeds NSUIntegerMax, throw an exception.
+            if (currentCount < NSUIntegerMax) {
+                CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(currentCount + 1));
+            } else {
+                [NSException raise:NSOverflowException format:@"Object count exceeds NSUIntegerMax for object 0x%p!", (void*)object];
+            }
+        }
     }
 }
 
@@ -63,9 +93,11 @@ void NSSetTableInitWithObjects(NSSet* set, id* objects, int count) {
 }
 
 void NSSetTableFree(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
-        return;
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
+        assert(0);
     }
+
     if (set->_table.dict != NULL) {
         CFDictionaryRemoveAllValues(set->_table.dict);
         _CFDictionaryDestroyInternal(set->_table.dict);
@@ -73,21 +105,38 @@ void NSSetTableFree(NSSet* set) {
 }
 
 void NSSetTableRemoveObject(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
-    CFDictionaryRemoveValue(set->_table.dict, (void*)object);
+
+    if (object_getClass(set) != [NSCountedSet class]) {
+        CFDictionaryRemoveValue(set->_table.dict, (void*)object);
+    } else {
+        NSUInteger currentCount = NSSetTableGetValue(set, object);
+        if (currentCount != 0) {
+            // Remove the object if its count is 1 else just decrement its count and keep the object in the the
+            // dictionary.
+            if (currentCount == 1) {
+                CFDictionaryRemoveValue(set->_table.dict, (void*)object);
+            } else {
+                CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(currentCount - 1));
+            }
+        }
+    }
 }
 
 void NSSetTableRemoveAllObjects(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
     CFDictionaryRemoveAllValues(set->_table.dict);
 }
 
 NSUInteger NSSetTableCount(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class]) {
+    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
+        object_getClass(set) != [NSCountedSet class]) {
         assert(0);
     }
     return CFDictionaryGetCount(set->_table.dict);
@@ -101,7 +150,8 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return CFDictionaryGetNextKey(set->_table.dict, enumeratorHolder, ret, count);
 }
 
-@implementation NSSet : NSObject
+@implementation NSSet
+
 + (id)setWithObject:(id)obj {
     return [[[self alloc] initWithObjects:&obj count:1] autorelease];
 }
