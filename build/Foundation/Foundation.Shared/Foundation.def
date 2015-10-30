@@ -142,3 +142,5 @@ LIBRARY Foundation
      __objc_class_name_NSOrderedSet CONSTANT
      _OBJC_CLASS_NSMutableOrderedSet DATA
      __objc_class_name_NSMutableOrderedSet CONSTANT
+     _OBJC_CLASS_NSCFBridgeBase DATA
+     __objc_class_name_NSCFBridgeBase CONSTANT
