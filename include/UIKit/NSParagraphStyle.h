@@ -32,7 +32,7 @@ typedef uint32_t NSLineBreakMode;
 
 @interface NSParagraphStyle : NSObject
 
-+ (NSParagraphStyle *)defaultParagraphStyle;
++ (NSParagraphStyle*)defaultParagraphStyle;
 
 - (NSTextAlignment)alignment;
 - (CGFloat)lineSpacing;
@@ -42,7 +42,11 @@ typedef uint32_t NSLineBreakMode;
 - (CGFloat)paragraphSpacingBefore;
 - (CGFloat)headIndent;
 - (CGFloat)tailIndent;
+- (CGFloat)minimumLineHeight;
 - (NSLineBreakMode)lineBreakMode;
+
+@property (nonatomic) CGFloat maximumLineHeight;
+@property (nonatomic) NSInteger defaultTabInterval;
 
 @end
 
@@ -58,6 +62,7 @@ typedef uint32_t NSLineBreakMode;
 - (void)setTailIndent:(CGFloat)aFloat;
 - (void)setLineBreakMode:(NSLineBreakMode)mode;
 - (void)setLineHeightMultiple:(CGFloat)aFloat;
+- (void)setMinimumLineHeight:(CGFloat)aFloat;
 
 @end
 

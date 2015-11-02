@@ -42,7 +42,6 @@
     idretaintype(NSMutableSet) _indexPathsForSelectedItems, _indexPathsForHighlightedItems;
     idretain _layout;
     idretaintype(NSMutableDictionary) _allVisibleViewsDict;
-    idretain _backgroundView;
     idretain _touchingIndexPath, _currentIndexPath;
     idretainp<void (^)(BOOL)> _updateCompletionHandler;
 

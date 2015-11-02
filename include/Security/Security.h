@@ -18,11 +18,11 @@
 
 #import <CoreFoundation/CFDictionary.h>
 
-typedef struct __SecIdentity *SecIdentityRef;
+typedef struct __SecIdentity* SecIdentityRef;
 
-typedef struct __SecTrust *SecTrustRef;
+typedef struct __SecTrust* SecTrustRef;
 
-typedef const struct __SecRandom * SecRandomRef;
+typedef const struct __SecRandom* SecRandomRef;
 
 extern CFTypeRef kSecClassGenericPassword;
 
@@ -38,17 +38,20 @@ extern CFTypeRef kSecAttrAccount;
 
 extern CFTypeRef kSecAttrAccessGroup;
 
-OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *result);
+extern CFTypeRef kSecAttrLabel;
 
-enum
-{
-    errSecSuccess                = 0,       /* No error. */
-    errSecItemNotFound           = -25300,      /* The specified item could not be found in the keychain. */
+extern CFTypeRef kSecAttrDescription;
+
+OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);
+
+enum {
+    errSecSuccess = 0, /* No error. */
+    errSecItemNotFound = -25300, /* The specified item could not be found in the keychain. */
 };
 
 extern CFTypeRef kSecValueData;
 
-OSStatus SecItemUpdate(CFDictionaryRef query,CFDictionaryRef attributesToUpdate);
+OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
 
 extern CFTypeRef kSecClass;
 
@@ -56,7 +59,7 @@ extern CFTypeRef kSecMatchLimit;
 
 extern CFTypeRef kSecAttrAccessibleAfterFirstUnlock;
 
-OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef *result);
+OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
 
 OSStatus SecItemDelete(CFDictionaryRef query);
 

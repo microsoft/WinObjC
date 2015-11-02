@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -34,24 +36,25 @@
 #import <ApplicationServices/ApplicationServices.h>
 #import <UIKit/UIKitExport.h>
 
-UIKIT_EXPORT NSString *const UIScreenDidConnectNotification;
-UIKIT_EXPORT NSString *const UIScreenDidDisconnectNotification;
-UIKIT_EXPORT NSString *const UIScreenModeDidChangeNotification;
+UIKIT_EXPORT NSString* const UIScreenDidConnectNotification;
+UIKIT_EXPORT NSString* const UIScreenDidDisconnectNotification;
+UIKIT_EXPORT NSString* const UIScreenModeDidChangeNotification;
 
 @class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
 
 UIKIT_EXPORT_CLASS
 @interface UIScreen : NSObject
 
-+ (UIScreen *)mainScreen;
-+ (NSArray *)screens;
++ (UIScreen*)mainScreen;
++ (NSArray*)screens;
 
 @property (nonatomic, readonly) CGRect bounds;
 @property (nonatomic, readonly) CGRect applicationFrame;
-@property (nonatomic, readonly, copy) NSArray *availableModes;      // only ever returns the currentMode
-@property (nonatomic, retain) UIScreenMode *currentMode;            // ignores any attempt to set this
+@property (nonatomic, readonly, copy) NSArray* availableModes; // only ever returns the currentMode
+@property (nonatomic, retain) UIScreenMode* currentMode; // ignores any attempt to set this
 @property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly, retain) UIScreenMode *preferredMode;
+@property (nonatomic, readonly, retain) UIScreenMode* preferredMode;
+@property (nonatomic, readonly) CGFloat nativeScale;
 
 @end
 

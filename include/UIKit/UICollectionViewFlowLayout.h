@@ -22,10 +22,7 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UICollectionViewLayout.h>
 
-enum {
-   UICollectionViewScrollDirectionVertical,
-   UICollectionViewScrollDirectionHorizontal
-};
+enum { UICollectionViewScrollDirectionVertical, UICollectionViewScrollDirectionHorizontal };
 typedef uint32_t UICollectionViewScrollDirection;
 
 typedef enum _UIFlowLayoutHorizontalAlignment {
@@ -35,31 +32,44 @@ typedef enum _UIFlowLayoutHorizontalAlignment {
     UIFlowLayoutHorizontalAlignmentJustify // 3; default except for the last row
 };
 
-typedef uint32_t  UIFlowLayoutHorizontalAlignment;
+typedef uint32_t UIFlowLayoutHorizontalAlignment;
 
-SB_EXPORT NSString *const UICollectionElementKindSectionHeader;
-SB_EXPORT NSString *const UICollectionElementKindSectionFooter;
+SB_EXPORT NSString* const UICollectionElementKindSectionHeader;
+SB_EXPORT NSString* const UICollectionElementKindSectionFooter;
 
 @protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView*)collectionView
+                  layout:(UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath*)indexPath;
+- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView
+                        layout:(UICollectionViewLayout*)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView*)collectionView
+                                 layout:(UICollectionViewLayout*)collectionViewLayout
+    minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView*)collectionView
+                                      layout:(UICollectionViewLayout*)collectionViewLayout
+    minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView*)collectionView
+                             layout:(UICollectionViewLayout*)collectionViewLayout
+    referenceSizeForHeaderInSection:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView*)collectionView
+                             layout:(UICollectionViewLayout*)collectionViewLayout
+    referenceSizeForFooterInSection:(NSInteger)section;
 @end
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewFlowLayout : UICollectionViewLayout 
+@interface UICollectionViewFlowLayout : UICollectionViewLayout
 
 @property (nonatomic) UICollectionViewScrollDirection scrollDirection;
 @property (nonatomic) CGSize itemSize;
+@property (nonatomic) CGSize headerReferenceSize;
 @property (nonatomic) CGFloat minimumInteritemSpacing;
 @property (nonatomic) CGFloat minimumLineSpacing;
 @property (nonatomic) UIEdgeInsets sectionInset;
 
--(CGSize)collectionViewContentSize;
+- (CGSize)collectionViewContentSize;
 
 @end
 

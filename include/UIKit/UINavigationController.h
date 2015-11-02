@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -36,8 +38,12 @@
 
 @protocol UINavigationControllerDelegate <NSObject>
 @optional
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (void)navigationController:(UINavigationController*)navigationController
+       didShowViewController:(UIViewController*)viewController
+                    animated:(BOOL)animated;
+- (void)navigationController:(UINavigationController*)navigationController
+      willShowViewController:(UIViewController*)viewController
+                    animated:(BOOL)animated;
 @end
 
 typedef enum {
@@ -48,38 +54,54 @@ typedef enum {
 
 @interface UINavigationPane : UIView {
 @public
-    UIViewController *_parentController;
+    UIViewController* _parentController;
 }
 @end
 
 UIKIT_EXPORT_CLASS
-@interface UINavigationController : UIViewController 
+@interface UINavigationController : UIViewController
 
-- (id)initWithRootViewController:(UIViewController *)rootViewController;
+- (id)initWithRootViewController:(UIViewController*)rootViewController;
 
-- (void)setViewControllers:(NSArray *)newViewControllers animated:(BOOL)animated;
+- (void)setViewControllers:(NSArray*)newViewControllers animated:(BOOL)animated;
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
-- (UIViewController *)popViewControllerAnimated:(BOOL)animated;
-- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated;
-- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated;
+- (void)pushViewController:(UIViewController*)viewController animated:(BOOL)animated;
+- (UIViewController*)popViewControllerAnimated:(BOOL)animated;
+- (NSArray*)popToViewController:(UIViewController*)viewController animated:(BOOL)animated;
+- (NSArray*)popToRootViewControllerAnimated:(BOOL)animated;
 
 - (void)setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated;
-- (void)setToolbarHidden:(BOOL)hidden animated:(BOOL)animated;                    // toolbar support is not really implemented yet
+- (void)setToolbarHidden:(BOOL)hidden animated:(BOOL)animated; // toolbar support is not really implemented yet
 
 - (void)setNavigationBarHidden:(BOOL)navigationBarHidden animated:(BOOL)animated; // doesn't animate yet
 
 - (instancetype)initWithNavigationBarClass:(Class)navigationBarClass toolbarClass:(Class)toolbarClass;
 
-@property (nonatomic, copy) NSArray *viewControllers;
-@property (nonatomic, readonly, retain) UIViewController *visibleViewController;
-@property (nonatomic, readonly) UINavigationBar *navigationBar;
-@property (nonatomic, readonly) UIToolbar *toolbar;                               // toolbar support is not really implemented yet
+@property (nonatomic, copy) NSArray* viewControllers;
+@property (nonatomic, readonly, retain) UIViewController* visibleViewController;
+@property (nonatomic, readonly) UINavigationBar* navigationBar;
+@property (nonatomic, readonly) UIToolbar* toolbar; // toolbar support is not really implemented yet
 @property (nonatomic, assign) id<UINavigationControllerDelegate> delegate;
-@property (nonatomic, readonly, retain) UIViewController *topViewController;
-@property (nonatomic,getter=isNavigationBarHidden) BOOL navigationBarHidden;
-@property (nonatomic,getter=isToolbarHidden) BOOL toolbarHidden;                  // toolbar support is not really implemented yet
-@property(nonatomic, readonly) UIGestureRecognizer *interactivePopGestureRecognizer;
+@property (nonatomic, readonly, retain) UIViewController* topViewController;
+@property (nonatomic, getter=isNavigationBarHidden) BOOL navigationBarHidden;
+@property (nonatomic, getter=isToolbarHidden) BOOL toolbarHidden; // toolbar support is not really implemented yet
+@property (nonatomic) BOOL hidesBarsOnSwipe;
+@property (nonatomic, readonly) UIGestureRecognizer* interactivePopGestureRecognizer;
+
+@property (nonatomic) BOOL hidesBarsOnTap;
+
+@property (nonatomic, readonly) UIGestureRecognizer* barHideOnTapGestureRecognizer;
+@property (nonatomic, readonly) UIGestureRecognizer* barHideOnSwipeGestureRecognizer;
+
+@end
+
+SB_EXPORT NSTimeInterval UINavigationControllerHideShowBarDuration;
+
+enum { UINavigationControllerOperationPush, UINavigationControllerOperationPop };
+
+typedef NSUInteger UINavigationControllerOperation;
+
+@protocol UIViewControllerTransitioningDelegate
 
 @end
 

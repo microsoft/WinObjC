@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -37,8 +39,8 @@ enum : NSUInteger {
     UIPopoverArrowDirectionDown = 1UL << 1,
     UIPopoverArrowDirectionLeft = 1UL << 2,
     UIPopoverArrowDirectionRight = 1UL << 3,
-    UIPopoverArrowDirectionAny = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown |
-    UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight,
+    UIPopoverArrowDirectionAny =
+        UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight,
     UIPopoverArrowDirectionUnknown = NSUIntegerMax
 };
 typedef NSUInteger UIPopoverArrowDirection;
@@ -47,27 +49,43 @@ typedef NSUInteger UIPopoverArrowDirection;
 
 @protocol UIPopoverControllerDelegate <NSObject>
 @optional
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController;
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController;
+- (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController;
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController;
 @end
 
 @interface UIPopoverController : NSObject
 
-- (id)initWithContentViewController:(UIViewController *)viewController;
+- (id)initWithContentViewController:(UIViewController*)viewController;
 
-- (void)setContentViewController:(UIViewController *)controller animated:(BOOL)animated;
+- (void)setContentViewController:(UIViewController*)controller animated:(BOOL)animated;
 
-- (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections animated:(BOOL)animated;
-- (void)presentPopoverFromBarButtonItem:(UIBarButtonItem *)item permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections animated:(BOOL)animated;
+- (void)presentPopoverFromRect:(CGRect)rect
+                        inView:(UIView*)view
+      permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections
+                      animated:(BOOL)animated;
+- (void)presentPopoverFromBarButtonItem:(UIBarButtonItem*)item
+               permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections
+                               animated:(BOOL)animated;
 - (void)dismissPopoverAnimated:(BOOL)animated;
 
 @property (nonatomic) CGSize popoverContentSize;
-@property (nonatomic, assign) id <UIPopoverControllerDelegate> delegate;
-@property (nonatomic, retain) UIViewController *contentViewController;
+@property (nonatomic, assign) id<UIPopoverControllerDelegate> delegate;
+@property (nonatomic, retain) UIViewController* contentViewController;
 @property (nonatomic, readonly, getter=isPopoverVisible) BOOL popoverVisible;
-@property (nonatomic, copy) NSArray *passthroughViews;
+@property (nonatomic, copy) NSArray* passthroughViews;
 @property (nonatomic, readonly) UIPopoverArrowDirection popoverArrowDirection;
 
+@end
+
+@protocol UIPopoverPresentationControllerDelegate
+@end
+
+@interface UIPopoverPresentationController : UIViewController
+@property (nonatomic, retain) UIBarButtonItem* barButtonItem;
+@property (nonatomic) NSUInteger permittedArrowDirections;
+@property (nonatomic, retain) UIView* sourceView;
+@property (nonatomic) CGRect sourceRect;
+@property (nonatomic) id delegate;
 @end
 
 #endif /* _UIPOPOVERCONTROLLER_H_ */

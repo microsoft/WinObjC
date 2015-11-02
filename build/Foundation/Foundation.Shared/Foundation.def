@@ -138,3 +138,7 @@ LIBRARY Foundation
      __objc_class_name_NSUUID    CONSTANT
      _OBJC_CLASS_NSCountedSet DATA
      __objc_class_name_NSCountedSet CONSTANT
+     _OBJC_CLASS_NSOrderedSet DATA
+     __objc_class_name_NSOrderedSet CONSTANT
+     _OBJC_CLASS_NSMutableOrderedSet DATA
+     __objc_class_name_NSMutableOrderedSet CONSTANT

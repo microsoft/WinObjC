@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -38,21 +40,21 @@
 #import "NSTextContainer.h"
 #import <UIKit/UITextInput.h>
 
-UIKIT_EXPORT NSString *const UITextViewTextDidBeginEditingNotification;
-UIKIT_EXPORT NSString *const UITextViewTextDidChangeNotification;
-UIKIT_EXPORT NSString *const UITextViewTextDidEndEditingNotification;
+UIKIT_EXPORT NSString* const UITextViewTextDidBeginEditingNotification;
+UIKIT_EXPORT NSString* const UITextViewTextDidChangeNotification;
+UIKIT_EXPORT NSString* const UITextViewTextDidEndEditingNotification;
 
 @class UIColor, UIFont, UITextLayer, UITextView;
 
 @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
-- (void)textViewDidBeginEditing:(UITextView *)textView;
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView;
-- (void)textViewDidEndEditing:(UITextView *)textView;
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void)textViewDidChange:(UITextView *)textView;
-- (void)textViewDidChangeSelection:(UITextView *)textView;
+- (BOOL)textViewShouldBeginEditing:(UITextView*)textView;
+- (void)textViewDidBeginEditing:(UITextView*)textView;
+- (BOOL)textViewShouldEndEditing:(UITextView*)textView;
+- (void)textViewDidEndEditing:(UITextView*)textView;
+- (BOOL)textView:(UITextView*)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
+- (void)textViewDidChange:(UITextView*)textView;
+- (void)textViewDidChangeSelection:(UITextView*)textView;
 @end
 
 UIKIT_EXPORT_CLASS
@@ -63,18 +65,20 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UITextAlignment textAlignment; // stub, not yet implemented!
 @property (nonatomic) NSRange selectedRange;
 @property (nonatomic, getter=isEditable) BOOL editable;
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic, retain) UIColor *textColor;
-@property (nonatomic, retain) UIFont *font;
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, retain) UIColor* textColor;
+@property (nonatomic, retain) UIFont* font;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, assign) id<UITextViewDelegate> delegate;
+@property (nonatomic, readonly) NSLayoutManager* layoutManager;
+@property (nonatomic, readonly) NSTextStorage* textStorage;
 
-@property (nonatomic, readwrite, retain) UIView *inputAccessoryView;
-@property (nonatomic, readwrite, retain) UIView *inputView;
-@property (nonatomic, copy) NSAttributedString *attributedText;
-@property (nonatomic, readonly) NSTextContainer *textContainer;
+@property (nonatomic, readwrite, retain) UIView* inputAccessoryView;
+@property (nonatomic, readwrite, retain) UIView* inputView;
+@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, readonly) NSTextContainer* textContainer;
 @property (nonatomic, assign) UIEdgeInsets textContainerInset;
-@property(nonatomic, getter=isSelectable) BOOL selectable;
+@property (nonatomic, getter=isSelectable) BOOL selectable;
 
 - (BOOL)hasText;
 

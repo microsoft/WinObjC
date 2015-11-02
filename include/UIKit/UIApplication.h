@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -37,39 +39,39 @@
 #import <StarboardExport.h>
 #import <stdint.h>
 
-UIKIT_EXPORT NSString *const UIApplicationStatusBarOrientationUserInfoKey;
-UIKIT_EXPORT NSString *const UIApplicationStatusBarFrameUserInfoKey;
+UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
+UIKIT_EXPORT NSString* const UIApplicationStatusBarFrameUserInfoKey;
 
-UIKIT_EXPORT NSString *UIApplicationDidChangeStatusBarFrameNotification;
-UIKIT_EXPORT NSString *const UIApplicationWillChangeStatusBarOrientationNotification;
-UIKIT_EXPORT NSString *const UIApplicationDidChangeStatusBarOrientationNotification;
-UIKIT_EXPORT NSString *const UIApplicationWillEnterForegroundNotification;
-UIKIT_EXPORT NSString *const UIApplicationWillTerminateNotification;
-UIKIT_EXPORT NSString *const UIApplicationWillResignActiveNotification;
-UIKIT_EXPORT NSString *const UIApplicationDidEnterBackgroundNotification;
-UIKIT_EXPORT NSString *const UIApplicationDidBecomeActiveNotification;
-UIKIT_EXPORT NSString *const UIApplicationDidFinishLaunchingNotification;
-UIKIT_EXPORT NSString *const UIApplicationSignificantTimeChangeNotification;
+UIKIT_EXPORT NSString* UIApplicationDidChangeStatusBarFrameNotification;
+UIKIT_EXPORT NSString* const UIApplicationWillChangeStatusBarOrientationNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidChangeStatusBarOrientationNotification;
+UIKIT_EXPORT NSString* const UIApplicationWillEnterForegroundNotification;
+UIKIT_EXPORT NSString* const UIApplicationWillTerminateNotification;
+UIKIT_EXPORT NSString* const UIApplicationWillResignActiveNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidEnterBackgroundNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidBecomeActiveNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidFinishLaunchingNotification;
+UIKIT_EXPORT NSString* const UIApplicationSignificantTimeChangeNotification;
 
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsURLKey;
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsSourceApplicationKey;
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsRemoteNotificationKey;
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsAnnotationKey;
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsLocalNotificationKey;
-UIKIT_EXPORT NSString *const UIApplicationLaunchOptionsLocationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocationKey;
 
-UIKIT_EXPORT NSString *const UIApplicationDidReceiveMemoryWarningNotification;
-UIKIT_EXPORT NSString *const UIApplicationWillChangeStatusBarFrameNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidReceiveMemoryWarningNotification;
+UIKIT_EXPORT NSString* const UIApplicationWillChangeStatusBarFrameNotification;
 
-UIKIT_EXPORT NSString *const UIApplicationWillChangeDisplayModeNofication;
-UIKIT_EXPORT NSString *const UIApplicationDidChangeDisplayModeNofication;
+UIKIT_EXPORT NSString* const UIApplicationWillChangeDisplayModeNofication;
+UIKIT_EXPORT NSString* const UIApplicationDidChangeDisplayModeNofication;
 
-UIKIT_EXPORT NSString *const UITrackingRunLoopMode;
+UIKIT_EXPORT NSString* const UITrackingRunLoopMode;
 
 //  UIApplicationMain is included in the static runtime component
-SB_EXPORT int UIApplicationMain(int argc, char *argv[], NSString *pClassName, NSString *dClassName);
+SB_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
 
-UIKIT_EXPORT int UIApplicationMainInit(int argc, char *argv[], NSString *pClassName, NSString *dClassName, int defaultOrientation);
+UIKIT_EXPORT int UIApplicationMainInit(int argc, char* argv[], NSString* pClassName, NSString* dClassName, int defaultOrientation);
 UIKIT_EXPORT int UIApplicationMainLoop();
 
 enum {
@@ -79,18 +81,10 @@ enum {
 };
 typedef uint32_t UIStatusBarAnimation;
 
-enum {
-    UIUserInterfaceLayoutDirectionLeftToRight,
-    UIUserInterfaceLayoutDirectionRightToLeft
-};
+enum { UIUserInterfaceLayoutDirectionLeftToRight, UIUserInterfaceLayoutDirectionRightToLeft };
 typedef NSInteger UIUserInterfaceLayoutDirection;
 
-enum {
-    UIStatusBarStyleDefault,
-    UIStatusBarStyleLightContent,
-    UIStatusBarStyleBlackTranslucent,
-    UIStatusBarStyleBlackOpaque
-};
+enum { UIStatusBarStyleDefault, UIStatusBarStyleLightContent, UIStatusBarStyleBlackTranslucent, UIStatusBarStyleBlackOpaque };
 typedef uint32_t UIStatusBarStyle;
 
 enum {
@@ -109,31 +103,38 @@ enum {
     UIInterfaceOrientationMaskLandscapeRight = (1 << UIInterfaceOrientationLandscapeRight),
     UIInterfaceOrientationMaskPortraitUpsideDown = (1 << UIInterfaceOrientationPortraitUpsideDown),
     UIInterfaceOrientationMaskLandscape = (UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
-    UIInterfaceOrientationMaskAll = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
-    UIInterfaceOrientationMaskAllButUpsideDown = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
+    UIInterfaceOrientationMaskAll = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
+                                     UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
+    UIInterfaceOrientationMaskAllButUpsideDown =
+        (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
 };
 typedef uint32_t UIInterfaceOrientationMask;
 
 #define UIInterfaceOrientationIsPortrait(orientation) \
+    \
 ((orientation) == UIInterfaceOrientationPortrait || \
 (orientation) == UIInterfaceOrientationPortraitUpsideDown)
 
 #define UIInterfaceOrientationIsLandscape(orientation) \
+    \
 ((orientation) == UIInterfaceOrientationLandscapeLeft || \
 (orientation) == UIInterfaceOrientationLandscapeRight)
 
 #define UIDeviceOrientationIsValidInterfaceOrientation(orientation) \
+    \
 ((orientation) == UIDeviceOrientationPortrait || \
-(orientation) == UIDeviceOrientationPortraitUpsideDown || \
-(orientation) == UIDeviceOrientationLandscapeLeft || \
+(orientation) == UIDeviceOrientationPortraitUpsideDown ||           \
+        \
+(orientation) == UIDeviceOrientationLandscapeLeft ||                \
+        \
 (orientation) == UIDeviceOrientationLandscapeRight)
 
 // push is not gonna work in mac os, unless you are apple (facetime)
 enum {
-  UIRemoteNotificationTypeNone    = 0,
-  UIRemoteNotificationTypeBadge   = 1 << 0,
-  UIRemoteNotificationTypeSound   = 1 << 1,
-  UIRemoteNotificationTypeAlert   = 1 << 2
+    UIRemoteNotificationTypeNone = 0,
+    UIRemoteNotificationTypeBadge = 1 << 0,
+    UIRemoteNotificationTypeSound = 1 << 1,
+    UIRemoteNotificationTypeAlert = 1 << 2
 };
 typedef uint32_t UIRemoteNotificationType;
 
@@ -141,7 +142,7 @@ typedef uint32_t UIRemoteNotificationType;
 // will switch to UIApplicationStateInactive. This happens when the app is no longer in the foreground, for instance.
 // chameleon will also switch to the inactive state when the screen is put to sleep due to power saving mode.
 // when the screen wakes up or the app is brought to the foreground, it is switched back to UIApplicationStateActive.
-// 
+//
 // UIApplicationStateBackground is now supported and your app will transition to this state in two possible ways.
 // one is when the AppKitIntegration method -terminateApplicationBeforeDate: is called. that method is intended to be
 // used when your NSApplicationDelegate is being asked to terminate. the application is also switched to
@@ -158,11 +159,7 @@ typedef uint32_t UIRemoteNotificationType;
 // guarentee that your expiration handler will even be called. additionally, the reliability of your network is certainly
 // going to be suspect when entering sleep as well. so be aware - but basically these same constraints exist on iOS so
 // in many respects it shouldn't affect your code much or at all.
-enum {
-  UIApplicationStateActive,
-  UIApplicationStateInactive,
-  UIApplicationStateBackground
-};
+enum { UIApplicationStateActive, UIApplicationStateInactive, UIApplicationStateBackground };
 typedef uint32_t UIApplicationState;
 
 typedef NSUInteger UIBackgroundTaskIdentifier;
@@ -171,35 +168,38 @@ UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 
 @class UIWindow, UIApplication, UILocalNotification;
+@class UIUserNotificationSettings;
 
 UIKIT_EXPORT_CLASS
-@interface UIApplication : UIResponder 
+@interface UIApplication : UIResponder
 
-+ (UIApplication *)sharedApplication;
++ (UIApplication*)sharedApplication;
 
-- (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event;
-- (void)sendEvent:(UIEvent *)event;
+- (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)event;
+- (void)sendEvent:(UIEvent*)event;
 
-- (BOOL)openURL:(NSURL *)url;
-- (BOOL)canOpenURL:(NSURL *)URL;
+- (BOOL)openURL:(NSURL*)url;
+- (BOOL)canOpenURL:(NSURL*)URL;
 
-- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated;  // no effect
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated; // no effect
 
 - (void)beginIgnoringInteractionEvents;
 - (void)endIgnoringInteractionEvents;
 - (BOOL)isIgnoringInteractionEvents;
 
-- (void)presentLocalNotificationNow:(UILocalNotification *)notification;
-- (void)cancelLocalNotification:(UILocalNotification *)notification;
+- (void)presentLocalNotificationNow:(UILocalNotification*)notification;
+- (void)cancelLocalNotification:(UILocalNotification*)notification;
 - (void)cancelAllLocalNotifications;
-- (void)scheduleLocalNotification:(UILocalNotification *)notification;
+- (void)scheduleLocalNotification:(UILocalNotification*)notification;
 
-- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void(^)(void))handler;
+- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)(void))handler;
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
 
 - (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation;
 
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types;
+- (void)registerForRemoteNotifications;
+- (BOOL)isRegisteredForRemoteNotifications;
 
 - (UIRemoteNotificationType)enabledRemoteNotificationTypes;
 
@@ -207,37 +207,39 @@ UIKIT_EXPORT_CLASS
 
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated;
 
+@property (nonatomic, copy) NSString* preferredContentSizeCategory;
+
 // Internal
 
--(UIWindow*) _popupWindow;
+- (UIWindow*)_popupWindow;
 // ---------
 
-@property (nonatomic, readonly) UIWindow *keyWindow;
-@property (nonatomic, readonly) NSArray *windows;
+@property (nonatomic, readonly) UIWindow* keyWindow;
+@property (nonatomic, readonly) NSArray* windows;
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
 @property (nonatomic, readonly) CGRect statusBarFrame;
-@property (nonatomic, getter=isNetworkActivityIndicatorVisible) BOOL networkActivityIndicatorVisible;   // does nothing, always returns NO
+@property (nonatomic, getter=isNetworkActivityIndicatorVisible) BOOL networkActivityIndicatorVisible; // does nothing, always returns NO
 @property (nonatomic) UIInterfaceOrientation statusBarOrientation;
 @property (nonatomic, readonly) NSTimeInterval statusBarOrientationAnimationDuration;
 @property (nonatomic, assign) id<UIApplicationDelegate> delegate;
-@property (nonatomic, getter=isIdleTimerDisabled) BOOL idleTimerDisabled;   // has no actual affect
-@property (nonatomic) BOOL applicationSupportsShakeToEdit;                  // no effect
-@property (nonatomic) UIStatusBarStyle statusBarStyle;                      // always returns UIStatusBarStyleDefault
-@property (nonatomic, readonly) UIApplicationState applicationState;        // see notes near UIApplicationState struct for details!
-@property (nonatomic, readonly) NSTimeInterval backgroundTimeRemaining;     // always 0
-@property (nonatomic) NSInteger applicationIconBadgeNumber;                 // no effect, but does set/get the number correctly
-@property (nonatomic, copy) NSArray *scheduledLocalNotifications;           // no effect, returns nil
+@property (nonatomic, getter=isIdleTimerDisabled) BOOL idleTimerDisabled; // has no actual affect
+@property (nonatomic) BOOL applicationSupportsShakeToEdit; // no effect
+@property (nonatomic) UIStatusBarStyle statusBarStyle; // always returns UIStatusBarStyleDefault
+@property (nonatomic, readonly) UIApplicationState applicationState; // see notes near UIApplicationState struct for details!
+@property (nonatomic, readonly) NSTimeInterval backgroundTimeRemaining; // always 0
+@property (nonatomic) NSInteger applicationIconBadgeNumber; // no effect, but does set/get the number correctly
+@property (nonatomic, copy) NSArray* scheduledLocalNotifications; // no effect, returns nil
 @property (nonatomic, readonly) UIUserInterfaceLayoutDirection userInterfaceLayoutDirection;
 
 @end
 
-@interface UIApplication(UIApplicationDeprecated)
+@interface UIApplication (UIApplicationDeprecated)
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated __attribute__((deprecated)); // use -setStatusBarHidden:withAnimation:
 @end
 
-@interface UIApplication(UIApplicationStarboardAdditions)
-+ (void) setStarboardInternalLoggingLevel: (int) level;
-- (void) registerForRemoteNotificationTypes: (UIRemoteNotificationType) types withId: (NSString *) id;
+@interface UIApplication (UIApplicationStarboardAdditions)
++ (void)setStarboardInternalLoggingLevel:(int)level;
+- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end
 
 enum {
@@ -259,11 +261,7 @@ enum {
 };
 typedef uint32_t WOCOperationMode;
 
-enum {
-    WOCDevicePhone,
-    WOCDeviceTablet,
-    WOCDeviceDesktop
-};
+enum { WOCDevicePhone, WOCDeviceTablet, WOCDeviceDesktop };
 typedef uint32_t WOCDeviceType;
 
 @interface WOCDisplayMode : NSObject
@@ -272,8 +270,8 @@ typedef uint32_t WOCDeviceType;
 @property (nonatomic) float fixedWidth;
 @property (nonatomic) float fixedHeight;
 @property (nonatomic) double fixedAspectRatio;
-@property (nonatomic) BOOL  autoMagnification;
-@property (nonatomic) BOOL  sizeUIWindowToFit;
+@property (nonatomic) BOOL autoMagnification;
+@property (nonatomic) BOOL sizeUIWindowToFit;
 @property (nonatomic) WOCOperationMode operationMode;
 @property (nonatomic) UIInterfaceOrientation presentationTransform;
 
@@ -290,17 +288,17 @@ typedef uint32_t WOCDeviceType;
 
 @property (nonatomic, readonly) WOCDeviceType hostDeviceType;
 
-- (void)setDisplayPreset: (WOCDisplayPreset)mode;
+- (void)setDisplayPreset:(WOCDisplayPreset)mode;
 - (void)updateDisplaySettings;
 @end
 
-@interface UIApplication(UIApplicationDisplayMode)
-+ (WOCDisplayMode *)displayMode;
+@interface UIApplication (UIApplicationDisplayMode)
++ (WOCDisplayMode*)displayMode;
 @end
 
 // Implement this category attached to UIApplication to override startup defaults
-@interface UIApplication(UIApplicationInitialStartupMode)
-+ (void)setStartupDisplayMode: (WOCDisplayMode *)mode;
+@interface UIApplication (UIApplicationInitialStartupMode)
++ (void)setStartupDisplayMode:(WOCDisplayMode*)mode;
 @end
 
 #endif /* _UIAPPLICATION_H_ */

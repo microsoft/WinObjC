@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -32,20 +34,22 @@
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
+#import <UIKit/UIFontDescriptor.h>
 
 UIKIT_EXPORT_CLASS
-@interface UIFont : NSObject 
+@interface UIFont : NSObject
 
-+ (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;
-+ (NSArray *)familyNames;
-+ (NSArray *)fontNamesForFamilyName:(NSString *)familyName;
++ (UIFont*)fontWithName:(NSString*)fontName size:(CGFloat)fontSize;
++ (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize;
++ (NSArray*)familyNames;
++ (NSArray*)fontNamesForFamilyName:(NSString*)familyName;
 
-+ (UIFont *)systemFontOfSize:(CGFloat)fontSize;
-+ (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont*)systemFontOfSize:(CGFloat)fontSize;
++ (UIFont*)boldSystemFontOfSize:(CGFloat)fontSize;
 
-- (UIFont *)fontWithSize:(CGFloat)fontSize;
+- (UIFont*)fontWithSize:(CGFloat)fontSize;
 
-@property (nonatomic, readonly, retain) NSString *fontName;
+@property (nonatomic, readonly, retain) NSString* fontName;
 
 @property (nonatomic, readonly) CGFloat ascender;
 @property (nonatomic, readonly) CGFloat descender;
@@ -53,8 +57,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) CGFloat pointSize;
 @property (nonatomic, readonly) CGFloat xHeight;
 @property (nonatomic, readonly) CGFloat capHeight;
-@property (nonatomic, readonly, retain) NSString *familyName;
+@property (nonatomic, readonly, retain) NSString* familyName;
 @property (nonatomic, readonly) CGFloat leading;
+@property (nonatomic, readonly) UIFontDescriptor* fontDescriptor;
 
 @end
 

@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -34,23 +36,24 @@
 
 @class UIBarButtonItem, UIView, UINavigationBar;
 
-@interface UINavigationItem : NSObject 
+@interface UINavigationItem : NSObject
 
-- (id)initWithTitle:(NSString *)title;
-- (void)setLeftBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
-- (void)setRightBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
+- (id)initWithTitle:(NSString*)title;
+- (void)setLeftBarButtonItem:(UIBarButtonItem*)item animated:(BOOL)animated;
+- (void)setRightBarButtonItem:(UIBarButtonItem*)item animated:(BOOL)animated;
 - (void)setHidesBackButton:(BOOL)hidesBackButton animated:(BOOL)animated;
-- (void)setRightBarButtonItems:(NSArray *)items animated:(BOOL)animated;
+- (void)setRightBarButtonItems:(NSArray*)items animated:(BOOL)animated;
+- (void)setLeftBarButtonItems:(NSArray*)items animated:(BOOL)animated;
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *prompt;
-@property (nonatomic, retain) UIBarButtonItem *backBarButtonItem;
-@property (nonatomic, retain) UIBarButtonItem *leftBarButtonItem;
-@property (nonatomic, retain) UIBarButtonItem *rightBarButtonItem;
-@property (nonatomic, retain) UIView *titleView;
+@property (nonatomic, copy) NSString* title;
+@property (nonatomic, copy) NSString* prompt;
+@property (nonatomic, retain) UIBarButtonItem* backBarButtonItem;
+@property (nonatomic, retain) UIBarButtonItem* leftBarButtonItem;
+@property (nonatomic, retain) UIBarButtonItem* rightBarButtonItem;
+@property (nonatomic, retain) UIView* titleView;
 @property (nonatomic, assign) BOOL hidesBackButton;
-@property (nonatomic, copy) NSArray *rightBarButtonItems;
-@property (nonatomic, copy) NSArray *leftBarButtonItems;
+@property (nonatomic, copy) NSArray* rightBarButtonItems;
+@property (nonatomic, copy) NSArray* leftBarButtonItems;
 
 @end
 

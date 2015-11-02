@@ -14,25 +14,14 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITY_H_
-#define _UIACTIVITY_H_
+#ifndef __ADSUPPORT_H
+#define __ADSUPPORT_H
 
-#import <StarboardExport.h>
-#import <Foundation/NSObject.h>
+@interface ASIdentifierManager : NSObject
+@property (nonatomic, readonly) NSUUID* advertisingIdentifier;
+@property (nonatomic, readonly, getter=isAdvertisingTrackingEnabled) BOOL advertisingTrackingEnabled;
 
-SB_EXPORT NSString* const UIActivityTypePostToFacebook;
-SB_EXPORT NSString* const UIActivityTypePostToTwitter;
-SB_EXPORT NSString* const UIActivityTypePostToWeibo;
-SB_EXPORT NSString* const UIActivityTypeMessage;
-SB_EXPORT NSString* const UIActivityTypeMail;
-SB_EXPORT NSString* const UIActivityTypePrint;
-SB_EXPORT NSString* const UIActivityTypeCopyToPasteboard;
-SB_EXPORT NSString* const UIActivityTypeAssignToContact;
-SB_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
-SB_EXPORT NSString* const UIActivityTypeAirDrop;
-
-@interface UIActivity : NSObject
-- (void)activityDidFinish:(BOOL)finished;
++ (ASIdentifierManager*)sharedManager;
 @end
 
-#endif /* _UIACTIVITY_H_ */
+#endif

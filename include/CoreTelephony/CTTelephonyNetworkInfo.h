@@ -14,25 +14,17 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITY_H_
-#define _UIACTIVITY_H_
+#ifndef __CTTELEPHONYNETWORKINFO_H
+#define __CTTELEPHONYNETWORKINFO_H
 
-#import <StarboardExport.h>
-#import <Foundation/NSObject.h>
+#import <CoreTelephony/CTCarrier.h>
 
-SB_EXPORT NSString* const UIActivityTypePostToFacebook;
-SB_EXPORT NSString* const UIActivityTypePostToTwitter;
-SB_EXPORT NSString* const UIActivityTypePostToWeibo;
-SB_EXPORT NSString* const UIActivityTypeMessage;
-SB_EXPORT NSString* const UIActivityTypeMail;
-SB_EXPORT NSString* const UIActivityTypePrint;
-SB_EXPORT NSString* const UIActivityTypeCopyToPasteboard;
-SB_EXPORT NSString* const UIActivityTypeAssignToContact;
-SB_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
-SB_EXPORT NSString* const UIActivityTypeAirDrop;
+NSString* const CTRadioAccessTechnologyEdge;
+NSString* const CTRadioAccessTechnologyGPRS;
 
-@interface UIActivity : NSObject
-- (void)activityDidFinish:(BOOL)finished;
+@interface CTTelephonyNetworkInfo : NSObject
+@property (nonatomic, readonly) CTCarrier* subscriberCellularProvider;
+@property (nonatomic, copy) void (^subscriberCellularProviderDidUpdateNotifier)(CTCarrier*);
 @end
 
-#endif /* _UIACTIVITY_H_ */
+#endif

@@ -34,4 +34,6 @@ unsigned random(void);
 }
 #endif
 
+#define __unavailable
+
 #endif

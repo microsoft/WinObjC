@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -37,34 +39,37 @@
 
 @protocol UINavigationBarDelegate <NSObject>
 @optional
-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPushItem:(UINavigationItem *)item;
-- (void)navigationBar:(UINavigationBar *)navigationBar didPushItem:(UINavigationItem *)item;
-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item;
-- (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item;
+- (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPushItem:(UINavigationItem*)item;
+- (void)navigationBar:(UINavigationBar*)navigationBar didPushItem:(UINavigationItem*)item;
+- (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPopItem:(UINavigationItem*)item;
+- (void)navigationBar:(UINavigationBar*)navigationBar didPopItem:(UINavigationItem*)item;
 @end
 
-UIKIT_EXPORT_CLASS
-@interface UINavigationBar : UIView 
+enum { UIBarPositionAny = -1 };
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
-- (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated;
+UIKIT_EXPORT_CLASS
+@interface UINavigationBar : UIView
+
+- (void)setItems:(NSArray*)items animated:(BOOL)animated;
+- (void)pushNavigationItem:(UINavigationItem*)item animated:(BOOL)animated;
 - (void)popNavigationItemAnimated:(BOOL)animated;
-- (void)setBackgroundImage:(UIImage *)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarPosition:(NSInteger)position barMetrics:(UIBarMetrics)barMetrics;
 - (void)setTitleVerticalPositionAdjustment:(CGFloat)adjustment forBarMetrics:(UIBarMetrics)barMetrics;
 - (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics;
 
-@property (nonatomic, retain) UIColor *barTintColor;
+@property (nonatomic, retain) UIColor* barTintColor;
 @property (nonatomic, assign) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor *tintColor;
-@property (nonatomic, readonly, retain) UINavigationItem *topItem;
-@property (nonatomic, readonly, retain) UINavigationItem *backItem;
-@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, readonly, retain) UINavigationItem* topItem;
+@property (nonatomic, readonly, retain) UINavigationItem* backItem;
+@property (nonatomic, copy) NSArray* items;
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
-@property (nonatomic,retain) UIImage *shadowImage;
-@property (nonatomic, copy) NSDictionary *titleTextAttributes;
-@property (nonatomic, retain) UIImage *backIndicatorImage;
-@property (nonatomic, retain) UIImage *backIndicatorTransitionMaskImage;
+@property (nonatomic, retain) UIImage* shadowImage;
+@property (nonatomic, copy) NSDictionary* titleTextAttributes;
+@property (nonatomic, retain) UIImage* backIndicatorImage;
+@property (nonatomic, retain) UIImage* backIndicatorTransitionMaskImage;
 
 @end
 

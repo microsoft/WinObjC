@@ -7,6 +7,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -47,51 +49,56 @@ typedef enum {
     UISearchBarIconResultsList,
 } UISearchBarIcon;
 
+typedef enum { UISearchBarStyleDefault, UISearchBarStyleMinimal } UISearchBarStyle;
+
 @protocol UISearchBarDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UISearchBar : UIView
 
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic,assign) id<UISearchBarDelegate> delegate;
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, assign) id<UISearchBarDelegate> delegate;
 @property (nonatomic) BOOL showsCancelButton;
-@property (nonatomic,copy) NSString *placeholder;
-@property (nonatomic, retain) UIColor *tintColor;
-@property (nonatomic, retain) UIColor *barTintColor;
+@property (nonatomic, copy) NSString* placeholder;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* barTintColor;
 @property (nonatomic) UITextAutocorrectionType autocorrectionType;
-@property (nonatomic, copy) NSArray *scopeButtonTitles;
+@property (nonatomic, copy) NSArray* scopeButtonTitles;
 @property (nonatomic) BOOL showsScopeBar;
 @property (nonatomic, getter=isSearchResultsButtonSelected) BOOL searchResultsButtonSelected;
-@property (nonatomic, retain) UIImage *backgroundImage;
+@property (nonatomic, retain) UIImage* backgroundImage;
 @property (nonatomic) BOOL showsBookmarkButton;
 @property (nonatomic) NSInteger selectedScopeButtonIndex;
 @property (nonatomic) UIBarStyle barStyle;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 @property (nonatomic) UIKeyboardType keyboardType;
+@property (nonatomic) UIOffset searchTextPositionAdjustment;
+@property (nonatomic) UISearchBarStyle searchBarStyle;
+@property (nonatomic) NSString* prompt;
 
 - (void)setShowsCancelButton:(BOOL)showsCancelButton animated:(BOOL)animated;
-- (void)setImage:(UIImage *)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state;
+- (void)setImage:(UIImage*)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state;
+- (void)setSearchFieldBackgroundImage:(UIImage*)iconImage forState:(UIControlState)state;
 
 @end
-
 
 @protocol UISearchBarDelegate <NSObject>
 
 @optional
 
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar;
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;
-- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar;
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText;
-- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar*)searchBar;
+- (void)searchBarTextDidBeginEditing:(UISearchBar*)searchBar;
+- (BOOL)searchBarShouldEndEditing:(UISearchBar*)searchBar;
+- (void)searchBarTextDidEndEditing:(UISearchBar*)searchBar;
+- (void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)searchText;
+- (BOOL)searchBar:(UISearchBar*)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
-- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar;
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar;
-- (void)searchBarResultsListButtonClicked:(UISearchBar *)searchBar;
+- (void)searchBarSearchButtonClicked:(UISearchBar*)searchBar;
+- (void)searchBarBookmarkButtonClicked:(UISearchBar*)searchBar;
+- (void)searchBarCancelButtonClicked:(UISearchBar*)searchBar;
+- (void)searchBarResultsListButtonClicked:(UISearchBar*)searchBar;
 
-- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope;
+- (void)searchBar:(UISearchBar*)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope;
 
 @end
 

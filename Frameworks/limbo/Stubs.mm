@@ -389,12 +389,6 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
 @implementation NSFont
 @end
 
-@interface UIFontDescriptor : NSObject
-@end
-
-@implementation UIFontDescriptor
-@end
-
 #include <Windows.h>
 #include <inaddr.h>
 

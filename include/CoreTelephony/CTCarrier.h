@@ -14,25 +14,15 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITY_H_
-#define _UIACTIVITY_H_
+#ifndef __CTCARRIER_H
+#define __CTCARRIER_H
 
-#import <StarboardExport.h>
-#import <Foundation/NSObject.h>
-
-SB_EXPORT NSString* const UIActivityTypePostToFacebook;
-SB_EXPORT NSString* const UIActivityTypePostToTwitter;
-SB_EXPORT NSString* const UIActivityTypePostToWeibo;
-SB_EXPORT NSString* const UIActivityTypeMessage;
-SB_EXPORT NSString* const UIActivityTypeMail;
-SB_EXPORT NSString* const UIActivityTypePrint;
-SB_EXPORT NSString* const UIActivityTypeCopyToPasteboard;
-SB_EXPORT NSString* const UIActivityTypeAssignToContact;
-SB_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
-SB_EXPORT NSString* const UIActivityTypeAirDrop;
-
-@interface UIActivity : NSObject
-- (void)activityDidFinish:(BOOL)finished;
+@interface CTCarrier : NSObject
+@property (nonatomic, readonly, assign) BOOL allowsVOIP;
+@property (nonatomic, readonly, retain) NSString* carrierName;
+@property (nonatomic, readonly, retain) NSString* isoCountryCode;
+@property (nonatomic, readonly, retain) NSString* mobileCountryCode;
+@property (nonatomic, readonly, retain) NSString* mobileNetworkCode;
 @end
 
-#endif /* _UIACTIVITY_H_ */
+#endif

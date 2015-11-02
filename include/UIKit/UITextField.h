@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -32,16 +34,11 @@
 #import "UITextInputTraits.h"
 #import "UITextInput.h"
 
-extern NSString *const UITextFieldTextDidBeginEditingNotification;
-extern NSString *const UITextFieldTextDidChangeNotification;
-extern NSString *const UITextFieldTextDidEndEditingNotification;
+extern NSString* const UITextFieldTextDidBeginEditingNotification;
+extern NSString* const UITextFieldTextDidChangeNotification;
+extern NSString* const UITextFieldTextDidEndEditingNotification;
 
-typedef enum {
-    UITextBorderStyleNone,
-    UITextBorderStyleLine,
-    UITextBorderStyleBezel,
-    UITextBorderStyleRoundedRect
-} UITextBorderStyle;
+typedef enum { UITextBorderStyleNone, UITextBorderStyleLine, UITextBorderStyleBezel, UITextBorderStyleRoundedRect } UITextBorderStyle;
 
 typedef enum {
     UITextFieldViewModeNever,
@@ -54,14 +51,14 @@ typedef enum {
 
 @protocol UITextFieldDelegate <NSObject>
 @optional
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField;
-- (void)textFieldDidBeginEditing:(UITextField *)textField;
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField;
-- (void)textFieldDidEndEditing:(UITextField *)textField;
+- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
+- (void)textFieldDidBeginEditing:(UITextField*)textField;
+- (BOOL)textFieldShouldEndEditing:(UITextField*)textField;
+- (void)textFieldDidEndEditing:(UITextField*)textField;
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
-- (BOOL)textFieldShouldClear:(UITextField *)textField;
-- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string;
+- (BOOL)textFieldShouldClear:(UITextField*)textField;
+- (BOOL)textFieldShouldReturn:(UITextField*)textField;
 @end
 
 UIKIT_EXPORT_CLASS
@@ -79,26 +76,28 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, assign) id<UITextFieldDelegate> delegate;
 @property (nonatomic, assign) UITextAlignment textAlignment;
-@property (nonatomic, copy) NSString *placeholder;
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic, retain) UIFont *font;
+@property (nonatomic, copy) NSString* placeholder;
+@property (nonatomic, copy) NSAttributedString* attributedPlaceholder;
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, retain) UIFont* font;
 @property (nonatomic) UITextBorderStyle borderStyle;
-@property (nonatomic, retain) UIColor *textColor;
+@property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic) BOOL clearsOnBeginEditing;
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 @property (nonatomic) CGFloat minimumFontSize;
 
-@property (nonatomic, retain) UIImage *background;
-@property (nonatomic, retain) UIImage *disabledBackground;
+@property (nonatomic, retain) UIImage* background;
+@property (nonatomic, retain) UIImage* disabledBackground;
 
 @property (nonatomic) UITextFieldViewMode clearButtonMode;
-@property (nonatomic, retain) UIView *leftView;
+@property (nonatomic, retain) UIView* leftView;
 @property (nonatomic) UITextFieldViewMode leftViewMode;
-@property (nonatomic, retain) UIView *rightView;
+@property (nonatomic, retain) UIView* rightView;
 @property (nonatomic) UITextFieldViewMode rightViewMode;
 
-@property (nonatomic, readwrite, retain) UIView *inputAccessoryView;
-@property (nonatomic, readwrite, retain) UIView *inputView;
+@property (nonatomic, readwrite, retain) UIView* inputAccessoryView;
+@property (nonatomic, readwrite, retain) UIView* inputView;
 
 @end

@@ -21,39 +21,37 @@
 
 @class CLRegion;
 
-enum _CLAuthorizationStatus {
+typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
     kCLAuthorizationStatusNotDetermined = 0,
-    kCLAuthorizationStatusRestricted = 1,
-    kCLAuthorizationStatusDenied = 2,
-    kCLAuthorizationStatusAuthorized = 3
+    kCLAuthorizationStatusRestricted,
+    kCLAuthorizationStatusDenied,
+    kCLAuthorizationStatusAuthorized,
+    kCLAuthorizationStatusAuthorizedAlways = kCLAuthorizationStatusAuthorized,
+    kCLAuthorizationStatusAuthorizedWhenInUse
 };
-typedef uint32_t CLAuthorizationStatus;
 
-enum _CLActivityType {
-    CLActivityTypeOther = 1,
-    CLActivityTypeAutomotiveNavigation,
-    CLActivityTypeFitness,
-    CLActivityTypeOtherNavigation
-};
+enum _CLActivityType { CLActivityTypeOther = 1, CLActivityTypeAutomotiveNavigation, CLActivityTypeFitness, CLActivityTypeOtherNavigation };
 typedef uint32_t CLActivityType;
 
 @interface CLLocationManager : NSObject
 
-@property(copy, nonatomic) NSString *purpose;
-@property(assign, nonatomic) id<CLLocationManagerDelegate> delegate;
-@property(assign, nonatomic) CLLocationAccuracy desiredAccuracy;
-@property(readonly, nonatomic) BOOL locationServicesEnabled;
-@property(assign, nonatomic) CLActivityType activityType;
-@property(assign, nonatomic) CLLocationDistance distanceFilter;
-@property(readonly, nonatomic) CLLocation *location;
-@property(readonly, nonatomic) NSSet *monitoredRegions;
+@property (copy, nonatomic) NSString* purpose;
+@property (assign, nonatomic) id<CLLocationManagerDelegate> delegate;
+@property (assign, nonatomic) CLLocationAccuracy desiredAccuracy;
+@property (readonly, nonatomic) BOOL locationServicesEnabled;
+@property (assign, nonatomic) CLActivityType activityType;
+@property (assign, nonatomic) CLLocationDistance distanceFilter;
+@property (readonly, nonatomic) CLLocation* location;
+@property (readonly, nonatomic) NSSet* monitoredRegions;
 
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
 + (CLAuthorizationStatus)authorizationStatus;
 + (BOOL)locationServicesEnabled;
 - (CLActivityType)activityType;
-- (void)startMonitoringForRegion:(CLRegion *)region;
-- (void)stopMonitoringForRegion:(CLRegion *)region;
+- (void)startMonitoringForRegion:(CLRegion*)region;
+- (void)stopMonitoringForRegion:(CLRegion*)region;
+- (void)requestAlwaysAuthorization;
+- (void)requestWhenInUseAuthorization;
 
 @end

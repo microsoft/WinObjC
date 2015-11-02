@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -45,6 +47,18 @@ extern UIAccessibilityTraits UIAccessibilityTraitSummaryElement;
 extern UIAccessibilityTraits UIAccessibilityTraitNotEnabled;
 extern UIAccessibilityTraits UIAccessibilityTraitUpdatesFrequently;
 
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityMedium;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryMedium;
+UIKIT_EXPORT NSString* const UIContentSizeCategorySmall;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraSmall;
 
 typedef uint32_t UIAccessibilityNotifications;
 extern UIAccessibilityNotifications UIAccessibilityScreenChangedNotification;
@@ -52,24 +66,23 @@ extern UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification;
 extern UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
 extern UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
 
-
 @interface NSObject (UIAccessibility)
 - (BOOL)isAccessibilityElement;
 - (void)setIsAccessibilityElement:(BOOL)isElement;
-- (NSString *)accessibilityLabel;
-- (void)setAccessibilityLabel:(NSString *)label;
-- (NSString *)accessibilityHint;
-- (void)setAccessibilityHint:(NSString *)hint;
-- (NSString *)accessibilityValue;
-- (void)setAccessibilityValue:(NSString *)value;
+- (NSString*)accessibilityLabel;
+- (void)setAccessibilityLabel:(NSString*)label;
+- (NSString*)accessibilityHint;
+- (void)setAccessibilityHint:(NSString*)hint;
+- (NSString*)accessibilityValue;
+- (void)setAccessibilityValue:(NSString*)value;
 - (UIAccessibilityTraits)accessibilityTraits;
 - (void)setAccessibilityTraits:(UIAccessibilityTraits)traits;
 - (CGRect)accessibilityFrame;
 - (void)setAccessibilityFrame:(CGRect)frame;
 
-@property(nonatomic) BOOL accessibilityElementsHidden;
-@property(nonatomic) BOOL shouldGroupAccessibilityChildren;
-@property(nonatomic) BOOL accessibilityViewIsModal;
+@property (nonatomic) BOOL accessibilityElementsHidden;
+@property (nonatomic) BOOL shouldGroupAccessibilityChildren;
+@property (nonatomic) BOOL accessibilityViewIsModal;
 
 @end
 
