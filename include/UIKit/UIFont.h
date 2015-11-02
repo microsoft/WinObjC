@@ -42,6 +42,7 @@ UIKIT_EXPORT_CLASS
 
 + (UIFont *)systemFontOfSize:(CGFloat)fontSize;
 + (UIFont *)boldSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont *)italicSystemFontOfSize:(CGFloat)fontSize;
 
 - (UIFont *)fontWithSize:(CGFloat)fontSize;
 
