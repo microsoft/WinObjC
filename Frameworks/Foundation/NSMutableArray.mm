@@ -433,6 +433,6 @@ recurse:
 
 @implementation NSMutableArrayConcrete
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
-    return _NSArrayConcreteCountByEnumeratingWithState(self, state, stackBuf, maxCount);
+    return _NSArrayConcreteCountByEnumeratingWithState(self, state);
 }
 @end

@@ -16,4 +16,4 @@
 
 #pragma once
 
-NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state, id* stackBuf, NSUInteger maxCount);
+NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state);
