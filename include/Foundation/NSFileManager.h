@@ -45,6 +45,7 @@ SB_EXPORT NSString* const NSFileTypeSocket;
 SB_EXPORT NSString* const NSFileTypeUnknown;
 
 SB_EXPORT NSString* const NSFileSize;
+SB_EXPORT NSString* const NSFileCreationDate;
 SB_EXPORT NSString* const NSFileModificationDate;
 SB_EXPORT NSString* const NSFileOwnerAccountName;
 SB_EXPORT NSString* const NSFileGroupOwnerAccountName;

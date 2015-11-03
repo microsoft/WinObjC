@@ -527,23 +527,21 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 /* NSFileManager category helpers */
 - (uint64_t)fileSize {
-    __int64 ret = [[self objectForKey:@"NSFileSize"] intValue];
+    __int64 ret = [[self objectForKey:NSFileSize] intValue];
 
     return ret;
 }
 
 - (NSString*)fileType {
-    return [self objectForKey:@"NSFileType"];
+    return [self objectForKey:NSFileType];
 }
 
 - (NSDate*)fileModificationDate {
-    EbrDebugLog("NSDictionary::fileModificationDate not implemented\n");
-
-    return [NSDate date];
+    return [self objectForKey:NSFileModificationDate];
 }
 
 - (NSDate*)fileCreationDate {
-    return [self objectForKey:@"NSFileCreationDate"];
+    return [self objectForKey:NSFileCreationDate];
 }
 
 - (id)classForArchiver {

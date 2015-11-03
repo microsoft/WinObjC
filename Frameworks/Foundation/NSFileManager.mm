@@ -39,6 +39,7 @@ DEFN_STR(NSFileTypeDirectory)
 DEFN_STR(NSFileTypeRegular)
 DEFN_STR(NSFileType)
 DEFN_STR(NSFileSize)
+DEFN_STR(NSFileCreationDate)
 DEFN_STR(NSFileModificationDate)
 DEFN_STR(NSFileOwnerAccountName)
 DEFN_STR(NSFileSystemFreeSize)
@@ -396,7 +397,7 @@ extern "C" bool doLog;
     return ret;
 }
 
-- (id)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
+- (NSDictionary *)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
     if (pathAddr == nil) {
         EbrDebugLog("fileAttributesAtPath nil!");
 
@@ -415,6 +416,11 @@ extern "C" bool doLog;
     id ret = [NSMutableDictionary dictionary];
 
     [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:@"NSFileSize"];
+
+    // NOTE: st_ctime is file creation time on windows for NTFS 
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:@"NSFileCreationDate"];
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:@"NSFileModificationDate"];
+
     if (st.st_mode & _S_IFDIR) {
         [ret setValue:NSFileTypeDirectory forKey:@"NSFileType"];
     } else {

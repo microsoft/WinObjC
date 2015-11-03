@@ -118,6 +118,9 @@
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -185,6 +188,7 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
     <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSFileManager.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
@@ -232,6 +236,13 @@
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Text</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
