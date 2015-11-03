@@ -234,7 +234,7 @@ void CATransform3D::TransformPoints2D(struct CGPoint* points, int count) {
     }
 }
 
-DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeScale, float, x, float, y, float, z) {
+CATransform3D CATransform3DMakeScale(float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeScale(x, y, z);
@@ -242,7 +242,7 @@ DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeScale, float, x, float, 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DScale, CATransform3D, cur, float, x, float, y, float, z) {
+CATransform3D CATransform3DScale(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeScale(x, y, z);
@@ -251,7 +251,7 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DScale, CATransform3D, cur, f
     return rot;
 }
 
-DEFINE_FUNCTION_STRET_5(CATransform3D, CATransform3DRotate, CATransform3D, cur, float, angle, float, x, float, y, float, z) {
+CATransform3D CATransform3DRotate(CATransform3D cur, float angle, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeRotation(angle, -x, -y, -z);
@@ -260,7 +260,7 @@ DEFINE_FUNCTION_STRET_5(CATransform3D, CATransform3DRotate, CATransform3D, cur, 
     return cur;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DMakeRotation, float, angle, float, x, float, y, float, z) {
+CATransform3D CATransform3DMakeRotation(float angle, float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeRotation(angle, x, y, z);
@@ -268,7 +268,7 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DMakeRotation, float, angle, 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeTranslation, float, x, float, y, float, z) {
+CATransform3D CATransform3DMakeTranslation(float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeTranslation(x, y, z);
@@ -276,7 +276,7 @@ DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeTranslation, float, x, f
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DTranslate, CATransform3D, cur, float, x, float, y, float, z) {
+CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeTranslation(x, y, z);
@@ -285,7 +285,7 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DTranslate, CATransform3D, cu
     return rot;
 }
 
-DEFINE_FUNCTION_STRET_2(CATransform3D, CATransform3DConcat, CATransform3D, a, CATransform3D, b) {
+CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b) {
     (*((CATransform3D*)&a)).MultiplyBy(&b);
 
     return a;

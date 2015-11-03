@@ -237,23 +237,33 @@ void parseCookies(const char* lineptr, id dict) {
         return [NSDictionary dictionary]; // empty
 }
 
-// Generate these with a macro:
+- (id)comment {
+    return [_properties objectForKey:NSHTTPCookieComment];
+}
 
-#define GEN_FIELD_GETTER(name, fieldName)            \
-                                                     \
-    -(id)name {                                      \
-        return [_properties objectForKey:fieldName]; \
-    }
+- (id)commentURL {
+    return [_properties objectForKey:NSHTTPCookieCommentURL];
+}
 
-GEN_FIELD_GETTER(comment, NSHTTPCookieComment)
-GEN_FIELD_GETTER(commentURL, NSHTTPCookieCommentURL)
-GEN_FIELD_GETTER(domain, NSHTTPCookieDomain)
-GEN_FIELD_GETTER(expiresDate, NSHTTPCookieExpires)
-GEN_FIELD_GETTER(name, NSHTTPCookieName)
-GEN_FIELD_GETTER(path, NSHTTPCookiePath)
-GEN_FIELD_GETTER(value, NSHTTPCookieValue)
+- (id)domain {
+    return [_properties objectForKey:NSHTTPCookieDomain];
+}
 
-#undef GEN_FIELD_GETTER
+- (id)expiresDate {
+    return [_properties objectForKey:NSHTTPCookieExpires];
+}
+
+- (id)name {
+    return [_properties objectForKey:NSHTTPCookieName];
+}
+
+- (id)path {
+    return [_properties objectForKey:NSHTTPCookiePath];
+}
+
+- (id)value {
+    return [_properties objectForKey:NSHTTPCookieValue];
+}
 
 - (unsigned)version {
     return [[_properties objectForKey:NSHTTPCookieVersion] unsignedIntValue];

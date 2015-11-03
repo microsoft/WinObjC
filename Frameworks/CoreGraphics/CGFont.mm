@@ -452,7 +452,7 @@ bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count,
     return 1;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGFontGetFontBBox, CGFontRef, font) {
+CGRect CGFontGetFontBBox(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
 

@@ -172,7 +172,7 @@ NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     return [NSData data];
 }
 
-DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt) {
+CGPoint CGPointFromString(NSString* strPt) {
     CGPoint ret;
 
     char* str = (char*)[strPt UTF8String];
@@ -180,7 +180,7 @@ DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt) {
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize) {
+CGSize CGSizeFromString(NSString* strSize) {
     CGSize ret;
 
     char* str = (char*)[strSize UTF8String];
@@ -188,7 +188,7 @@ DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize) {
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect) {
+CGRect CGRectFromString(NSString* strRect) {
     CGRect ret;
 
     char* str = (char*)[strRect UTF8String];

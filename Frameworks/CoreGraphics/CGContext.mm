@@ -117,7 +117,7 @@ void CGContextSetTextMatrix(CGContextRef ctx, CGAffineTransform matrix) {
     ctx->Backing()->CGContextSetTextMatrix(matrix);
 }
 
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGContextGetTextMatrix, CGContextRef, ctx) {
+CGAffineTransform CGContextGetTextMatrix(CGContextRef ctx) {
     CGAffineTransform ret;
 
     ctx->Backing()->CGContextGetTextMatrix(&ret);
@@ -133,7 +133,7 @@ void CGContextSetTextDrawingMode(CGContextRef ctx, CGTextDrawingMode mode) {
     ctx->Backing()->CGContextSetTextDrawingMode(mode);
 }
 
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGContextGetCTM, CGContextRef, ctx) {
+CGAffineTransform CGContextGetCTM(CGContextRef ctx) {
     return ctx->Backing()->CGContextGetCTM();
 }
 
@@ -218,7 +218,7 @@ void CGContextSelectFont(CGContextRef ctx, const char* name, float size, CGTextE
     ctx->Backing()->CGContextSelectFont((char*)name, size, encoding);
 }
 
-DEFINE_FUNCTION_STRET_1(CGPoint, CGContextGetTextPosition, CGContextRef, ctx) {
+CGPoint CGContextGetTextPosition(CGContextRef ctx) {
     CGPoint ret;
     ctx->Backing()->CGContextGetTextPosition(&ret);
 
@@ -433,14 +433,14 @@ void CGContextClip(CGContextRef ctx) {
     ctx->Backing()->CGContextClip();
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGContextGetClipBoundingBox, CGContextRef, ctx) {
+CGRect CGContextGetClipBoundingBox(CGContextRef ctx) {
     CGRect ret;
     ctx->Backing()->CGContextGetClipBoundingBox(&ret);
 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGContextGetPathBoundingBox, CGContextRef, ctx) {
+CGRect CGContextGetPathBoundingBox(CGContextRef ctx) {
     CGRect ret;
     ctx->Backing()->CGContextGetPathBoundingBox(&ret);
 
@@ -601,19 +601,19 @@ void CGContextSetAlpha(CGContextRef ctx, float a) {
     ctx->Backing()->CGContextSetAlpha(a);
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGContextConvertRectToDeviceSpace, CGContextRef, ctx, CGRect, rct) {
+CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rct) {
     return rct;
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGContextConvertRectToUserSpace, CGContextRef, ctx, CGRect, rct) {
+CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rct) {
     return rct;
 }
 
-DEFINE_FUNCTION_STRET_2(CGPoint, CGContextConvertPointToUserSpace, CGContextRef, ctx, CGPoint, pt) {
+CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
     return pt;
 }
 
-DEFINE_FUNCTION_STRET_2(CGPoint, CGContextConvertPointToDeviceSpace, CGContextRef, ctx, CGPoint, pt) {
+CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
     return pt;
 }
 
