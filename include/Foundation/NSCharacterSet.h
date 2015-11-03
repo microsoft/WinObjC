@@ -20,7 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #ifdef __cplusplus
 namespace icu_48 {
-class UnicodeSet;
+    class UnicodeSet;
 }
 typedef icu_48::UnicodeSet CharacterSet;
 #else
@@ -28,39 +28,45 @@ typedef void* CharacterSet;
 #endif
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCharacterSet : NSObject <NSCopying, NSMutableCopying, NSCoding> {
-@public
+@interface NSCharacterSet : NSObject <NSCopying, NSMutableCopying, NSCoding>{
+    @public
     CharacterSet* _icuSet;
 }
 
-+ characterSetWithBitmapRepresentation:(NSData*)data;
-+ characterSetWithCharactersInString:(NSString*)string;
-+ characterSetWithContentsOfFile:(NSString*)path;
-+ characterSetWithRange:(NSRange)range;
++characterSetWithBitmapRepresentation : (NSData*)data;
++characterSetWithCharactersInString:(NSString*)string;
++characterSetWithContentsOfFile:(NSString*)path;
++characterSetWithRange:(NSRange)range;
 
-+ alphanumericCharacterSet;
-+ controlCharacterSet;
-+ decimalDigitCharacterSet;
-+ decomposableCharacterSet;
-+ illegalCharacterSet;
-+ letterCharacterSet;
-+ lowercaseLetterCharacterSet;
-+ newlineCharacterSet;
-+ nonBaseCharacterSet;
-+ punctuationCharacterSet;
-+ uppercaseLetterCharacterSet;
-+ whitespaceAndNewlineCharacterSet;
-+ whitespaceCharacterSet;
-+ URLQueryAllowedCharacterSet;
++(instancetype)alphanumericCharacterSet;
++(instancetype)controlCharacterSet;
++(instancetype)decimalDigitCharacterSet;
++(instancetype)decomposableCharacterSet;
++(instancetype)illegalCharacterSet;
++(instancetype)letterCharacterSet;
++(instancetype)lowercaseLetterCharacterSet;
++(instancetype)newlineCharacterSet;
++(instancetype)nonBaseCharacterSet;
++(instancetype)punctuationCharacterSet;
++(instancetype)uppercaseLetterCharacterSet;
++(instancetype)whitespaceAndNewlineCharacterSet;
++(instancetype)whitespaceCharacterSet;
 
-- (BOOL)characterIsMember:(unichar)character;
-- (NSCharacterSet*)invertedSet;
++(instancetype)URLFragmentAllowedCharacterSet;
++(instancetype)URLHostAllowedCharacterSet;
++(instancetype)URLPasswordAllowedCharacterSet;
++(instancetype)URLPathAllowedCharacterSet;
++(instancetype)URLQueryAllowedCharacterSet;
++(instancetype)URLUserAllowedCharacterSet;
 
-- (NSData*)bitmapRepresentation;
+-(BOOL)characterIsMember:(unichar)character;
+-(NSCharacterSet*)invertedSet;
 
-- (BOOL)isSupersetOfSet:(NSCharacterSet*)other;
-- (NSUInteger)count;
-- (unichar)characterAtIndex:(NSUInteger)idx;
+-(NSData*)bitmapRepresentation;
+
+-(BOOL)isSupersetOfSet:(NSCharacterSet*)other;
+-(NSUInteger)count;
+-(unichar)characterAtIndex:(NSUInteger)idx;
 
 @end
 
