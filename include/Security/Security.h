@@ -17,30 +17,13 @@
 // This header file is not yet implemented
 
 #import <CoreFoundation/CFDictionary.h>
+#import <Security/SecItem.h>
 
 typedef struct __SecIdentity* SecIdentityRef;
 
 typedef struct __SecTrust* SecTrustRef;
 
 typedef const struct __SecRandom* SecRandomRef;
-
-extern CFTypeRef kSecClassGenericPassword;
-
-extern CFTypeRef kSecReturnData;
-
-extern CFTypeRef kSecMatchLimitOne;
-
-extern CFTypeRef kSecAttrService;
-
-extern CFTypeRef kSecAttrGeneric;
-
-extern CFTypeRef kSecAttrAccount;
-
-extern CFTypeRef kSecAttrAccessGroup;
-
-extern CFTypeRef kSecAttrLabel;
-
-extern CFTypeRef kSecAttrDescription;
 
 OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);
 
@@ -49,24 +32,8 @@ enum {
     errSecItemNotFound = -25300, /* The specified item could not be found in the keychain. */
 };
 
-extern CFTypeRef kSecValueData;
-
 OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
-
-extern CFTypeRef kSecClass;
-
-extern CFTypeRef kSecMatchLimit;
-
-extern CFTypeRef kSecAttrAccessibleAfterFirstUnlock;
 
 OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
 
 OSStatus SecItemDelete(CFDictionaryRef query);
-
-extern CFTypeRef kSecReturnAttributes;
-
-extern CFTypeRef kSecMatchLimitAll;
-
-extern CFTypeRef kSecMatchLimit;
-
-extern CFTypeRef kSecAttrAccessible;

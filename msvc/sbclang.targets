@@ -38,6 +38,7 @@
       <IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+      <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
@@ -82,6 +83,8 @@
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeSecurity)' == 'true'" Include="$(StarboardLibDirs)\Security.dll" />
     </ItemGroup>
   </Target>
 

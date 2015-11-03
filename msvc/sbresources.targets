@@ -347,6 +347,7 @@
       <IncludeFoundation>true</IncludeFoundation>
       <IncludeCoreFoundation>true</IncludeCoreFoundation>
       <IncludeObjcrt>true</IncludeObjcrt>
+      <IncludeSecurity>true</IncludeSecurity>
     </PropertyGroup>
   </Target>
   
