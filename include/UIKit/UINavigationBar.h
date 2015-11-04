@@ -39,9 +39,25 @@
 
 @protocol UINavigationBarDelegate <NSObject>
 @optional
+
+/**
+ @Status Stub
+*/
 - (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPushItem:(UINavigationItem*)item;
+
+/**
+ @Status Stub
+*/
 - (void)navigationBar:(UINavigationBar*)navigationBar didPushItem:(UINavigationItem*)item;
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPopItem:(UINavigationItem*)item;
+
+/**
+ @Status Interoperable
+*/
 - (void)navigationBar:(UINavigationBar*)navigationBar didPopItem:(UINavigationItem*)item;
 @end
 

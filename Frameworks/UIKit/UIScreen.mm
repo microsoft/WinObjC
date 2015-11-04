@@ -25,6 +25,10 @@
 extern float statusBarHeight;
 
 @implementation UIScreenMode : NSObject
+
+/**
+ @Status Interoperable
+*/
 - (CGSize)size {
     CGSize ret;
     ret.width = GetCACompositor()->screenWidth() * GetCACompositor()->screenScale();
@@ -44,18 +48,30 @@ static UIScreenMode* curMode;
     curMode = [UIScreenMode alloc];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIScreen*)mainScreen {
     return mainScreen;
 }
 
+/**
+ @Status Stub
+*/
 - (UIScreenMode*)currentMode {
     return curMode;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)screens {
     return [NSArray arrayWithObject:mainScreen];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)scale {
     return GetCACompositor()->screenScale();
 }
@@ -64,6 +80,9 @@ static UIScreenMode* curMode;
     return 1.0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)bounds {
     CGRect ret;
     ret.origin.x = 0.0f;
@@ -74,6 +93,9 @@ static UIScreenMode* curMode;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)applicationFrame {
     BOOL isHidden = [[UIApplication sharedApplication] isStatusBarHidden];
     UIInterfaceOrientation statusBarOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];

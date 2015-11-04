@@ -224,29 +224,47 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextColor:(UIColor*)color {
     _textColor = color;
     adjustTextLayerSize(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)textColor {
     return _textColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFont:(UIFont*)font {
     _font = font;
     adjustTextLayerSize(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)font {
     return _font;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setText:(id)text {
     _text.attach([text copy]);
     adjustTextLayerSize(self);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAttributedText:(NSAttributedString*)text {
     id attributes = [text attributesAtIndex:0 effectiveRange:NULL];
     id font = [attributes objectForKey:@"kCTFontAttributeName"];
@@ -257,6 +275,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     [self setText:[text string]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)text {
     if (_text == nil) {
         _text = @"";
@@ -264,19 +285,31 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     return _text;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasText {
     return [_text length] > 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextAlignment:(UITextAlignment)alignment {
     _alignment = alignment;
     adjustTextLayerSize(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextAlignment)textAlignment {
     return _alignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditable:(BOOL)editable {
     if (editable) {
         _isReadOnly = false;
@@ -285,6 +318,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEditable {
     if (_isReadOnly) {
         return FALSE;
@@ -343,6 +379,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 - (void)setEnablesReturnKeyAutomatically:(BOOL)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDataDetectorTypes:(UIDataDetectorTypes)type {
 }
 
@@ -355,6 +394,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 - (void)setSecureTextEntry:(BOOL)secure {
 }
 
+/**
+ @Status Stub
+*/
 - (NSRange)selectedRange {
     NSRange ret;
 
@@ -373,6 +415,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)scrollRangeToVisible:(NSRange)range {
     EbrDebugLog("scrollRangeToVisible not implemented\n");
 }
@@ -544,14 +589,23 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     return _undoManager;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setInputAccessoryView:(UIView*)view {
     _inputAccessoryView = view;
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputAccessoryView {
     return _inputAccessoryView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setInputView:(UIView*)view {
     keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
     _inputView = view;
@@ -559,6 +613,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     [[UIApplication sharedApplication] _keyboardChanged];
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputView {
     return _inputView;
 }
@@ -577,6 +634,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }

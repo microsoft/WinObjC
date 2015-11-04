@@ -26,6 +26,10 @@
     int _code;
     idretaintype(NSString) _description;
 }
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)errorWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
     NSError* ret = [self alloc];
     ret = [ret initWithDomain:domain code:code userInfo:dict];
@@ -33,6 +37,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
     _domain.attach([domain copy]);
     _code = code;
@@ -58,18 +65,30 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)domain {
     return _domain;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)code {
     return _code;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)userInfo {
     return _userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localizedDescription {
     id ret;
 
@@ -83,6 +102,9 @@
     return @"Generic error";
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localizedFailureReason {
     id ret;
 

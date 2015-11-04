@@ -290,42 +290,72 @@ static void positionScrollers(UIScrollView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setScrollEnabled:(BOOL)enable {
     _scrollEnabled = enable;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isScrollEnabled {
     return _scrollEnabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPagingEnabled:(BOOL)enable {
     _pagingEnabled = enable;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBounces:(BOOL)enable {
     _bounces = enable;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)bounces {
     return _bounces;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAlwaysBounceVertical:(BOOL)enable {
     _alwaysBounceVertical = enable;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)alwaysBounceVertical {
     return _alwaysBounceVertical;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAlwaysBounceHorizontal:(BOOL)enable {
     _alwaysBounceHorizontal = enable;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDelaysContentTouches:(BOOL)delay {
     _delaysContentTouches = delay;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentSize:(CGSize)size {
     if (_contentSize.width != size.width || _contentSize.height != size.height) {
         _contentSize = size;
@@ -336,14 +366,23 @@ static void positionScrollers(UIScrollView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)contentSize {
     return _contentSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)contentOffset {
     return _contentOffset;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentOffset:(CGPoint)offset {
     [self setContentOffset:offset animated:NO];
 }
@@ -469,6 +508,9 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentOffset:(CGPoint)offset animated:(BOOL)animated {
     if (offset != _contentOffset) {
         abortGestures(self);
@@ -484,24 +526,42 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setShowsVerticalScrollIndicator:(BOOL)show {
     _showsVerticalScrollIndicator = show;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScrollsToTop:(BOOL)scrollsToTop {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated {
     CGRect contentRect = { 0, 0, _contentSize.width, _contentSize.height };
     CGRect visibleRect = { 0 };
@@ -804,22 +864,37 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isDragging {
     return _isDragging;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isZooming {
     return _isZooming;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isTracking {
     return _isDragging || (_pressTimer != nil);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isDecelerating {
     return _displayLink != nil;
 }
 
+/**
+ @Status Stub
+*/
 - (float)decelerationRate {
     return 0.998f;
 }
@@ -846,9 +921,15 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)flashScrollIndicators {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumZoomScale:(float)scale {
     _maximumZoomScale = scale;
     float newScale = _zoomScale;
@@ -856,10 +937,16 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
     [self setZoomScale:newScale];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)maximumZoomScale {
     return _maximumZoomScale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumZoomScale:(float)scale {
     _minimumZoomScale = scale;
     if (_minimumZoomScale > _maximumZoomScale) {
@@ -870,6 +957,9 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
     [self setZoomScale:newScale];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)minimumZoomScale {
     return _minimumZoomScale;
 }
@@ -959,6 +1049,9 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setZoomScale:(float)scale animated:(BOOL)animated {
     clamp((float&)scale, _minimumZoomScale, _maximumZoomScale);
     if (scale == _zoomScale) {
@@ -970,6 +1063,9 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
     _isZoomingToRect = FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setZoomScale:(float)scale {
     [self setZoomScale:scale animated:FALSE];
 }
@@ -982,6 +1078,9 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     [self setContentOffset:offs];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated {
     CGRect bounds;
     bounds = [self bounds];
@@ -999,13 +1098,22 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     _isZoomingToRect = FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)zoomScale {
     return _zoomScale;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDecelerationRate:(float)rate {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBouncesZoom:(BOOL)bounces {
 }
 
@@ -1013,14 +1121,23 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     _forwardsToSuperview = forwards;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScrollIndicatorInsets:(UIEdgeInsets)insets {
     _scrollIndicatorInsets = insets;
 }
 
+/**
+ @Status Stub
+*/
 - (UIEdgeInsets)scrollIndicatorInsets {
     return _scrollIndicatorInsets;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentInset:(UIEdgeInsets)inset {
     if (memcmp(&_contentInset, &inset, sizeof(UIEdgeInsets)) == 0) {
         return;
@@ -1044,16 +1161,28 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIndicatorStyle:(unsigned)style {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDirectionalLockEnabled:(BOOL)enabled {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setCanCancelContentTouches:(BOOL)canCancel {
     _canCancelContentTouches = canCancel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIEdgeInsets)contentInset {
     return _contentInset;
 }
@@ -1539,6 +1668,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return _pinchGesture;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIPanGestureRecognizer*)panGestureRecognizer {
     return _panGesture;
 }

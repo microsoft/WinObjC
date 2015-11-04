@@ -42,6 +42,10 @@
 @class UIStoryboardSegue;
 
 @protocol UILayoutSupport
+
+/**
+ @Status Stub
+*/
 @property (nonatomic, readonly) CGFloat length;
 @end
 

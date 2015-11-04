@@ -62,6 +62,9 @@
     [_registeredActions addObject:connection];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendEvent:(id)event mask:(unsigned)mask {
     unsigned count = [_registeredActions count];
 
@@ -97,6 +100,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)actionsForTarget:(id)targetObj forControlEvent:(UIControlEvents)controlEvent {
     unsigned count = [_registeredActions count];
     NSMutableArray* ret = [NSMutableArray array];
@@ -127,6 +133,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSSet*)allTargets {
     unsigned count = [_registeredActions count];
     id ret = [NSMutableSet set];
@@ -148,6 +157,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     if (!enabled) {
         _curState |= UIControlStateDisabled;
@@ -159,22 +171,37 @@
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     return !(_curState & UIControlStateDisabled);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSelected {
     return _curState & UIControlStateSelected;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHighlighted {
     return _curState & UIControlStateHighlighted;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isTouchInside {
     return _touchInside;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelected:(BOOL)selected {
     if (selected) {
         _curState |= UIControlStateSelected;
@@ -186,10 +213,16 @@
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIControlState)state {
     return _curState;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlighted:(BOOL)highlighted {
     if (highlighted) {
         _curState |= UIControlStateHighlighted;
@@ -204,22 +237,37 @@
 - (void)setAccessibilityLabel:(UILabel*)label {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)alignment {
     _contentVerticalAlignment = alignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIControlContentVerticalAlignment)contentVerticalAlignment {
     return _contentVerticalAlignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentHorizontalAlignment:(UIControlContentHorizontalAlignment)alignment {
     _contentHorizontalAlignment = alignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIControlContentHorizontalAlignment)contentHorizontalAlignment {
     return _contentHorizontalAlignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addTarget:(id)target action:(SEL)actionSel forControlEvents:(UIControlEvents)events {
     // EbrDebugLog("%s: addTaret(%s, %s) for 0x%08x\n", object_getClassName(self), target != nil ?
     // object_getClassName(target) : "(nil)", actionSel != NULL ? sel_getName(actionSel) : "(null)", events);
@@ -235,6 +283,9 @@
     [newEvent release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeTarget:(id)target action:(SEL)actionSel forControlEvents:(UIControlEvents)events {
     //  Go through all targets
     unsigned count = [_registeredActions count];
@@ -342,26 +393,44 @@
     [self sendEvent:event mask:UIControlEventTouchCancel];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancelTrackingWithEvent:(UIEvent*)event {
     EbrDebugLog("cancelTrackingWithEvent not implemented\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isTracking {
     return [_activeTouches count] > 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendActionsForControlEvents:(UIControlEvents)eventMask {
     [self sendEvent:self mask:eventMask];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)beginTrackingWithTouch:(NSSet*)touchSet withEvent:(UIEvent*)event {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)continueTrackingWithTouch:(NSSet*)touchSet withEvent:(UIEvent*)event {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)endTrackingWithTouch:(NSSet*)touchSet withEvent:(UIEvent*)event {
 }
 

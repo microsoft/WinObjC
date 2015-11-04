@@ -34,14 +34,26 @@
 @end
 
 @implementation CAPropertyAnimation
+
+/**
+ @Status Caveat
+ @Notes Only position, bounds, and transform properties spuported
+*/
 - (void)setKeyPath:(NSString*)path {
     _keyPath = [path copy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)keyPath {
     return _keyPath;
 }
 
+/**
+ @Status Caveat
+ @Notes Only position, bounds, and transform properties spuported
+*/
 + (instancetype)animationWithKeyPath:(NSString*)path {
     CAPropertyAnimation* ret = [self alloc];
     ret->_timingProperties._speed = 1.0f;

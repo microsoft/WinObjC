@@ -47,10 +47,16 @@
     return _tintColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image {
     _image = image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return _image;
 }

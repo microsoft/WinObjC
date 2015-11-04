@@ -51,6 +51,9 @@ static void setBackground(UINavigationBar* self) {
     UIImageSetLayerContents([self layer], self->_navGradient);
 }
 
+/**
+ @Status Stub
+*/
 - (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics {
     return NULL;
 }
@@ -155,18 +158,30 @@ static void setBackground(UINavigationBar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id<UINavigationBarDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UINavigationBarDelegate>)delegate {
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationItem*)topItem {
     return [_items lastObject];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationItem*)backItem {
     unsigned count = [_items count];
 
@@ -184,6 +199,10 @@ static void setBackground(UINavigationBar* self) {
     _newItem = item;
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setItems:(NSArray*)items animated:(BOOL)animated {
     (_items).attach([items mutableCopy]);
     [self setNeedsDisplay];
@@ -191,18 +210,32 @@ static void setBackground(UINavigationBar* self) {
     _newItem = [_items lastObject];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setItems:(NSArray*)items {
     [self setItems:items animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)items {
     return _items;
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)pushNavigationItem:(UINavigationItem*)item animated:(BOOL)animated {
     [self pushNavigationItem:item];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)popNavigationItemAnimated:(BOOL)animated {
     id item = [_items lastObject];
     if (item == nil) {
@@ -217,14 +250,23 @@ static void setBackground(UINavigationBar* self) {
     _newItem = [_items lastObject];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBarStyle:(UIBarStyle)style {
     _style = style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarStyle)barStyle {
     return _style;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)color {
     _tintColor = color;
     if (((int)[[[UIDevice currentDevice] systemVersion] versionStringCompare:@"7.0"]) >= 0) {
@@ -235,10 +277,16 @@ static void setBackground(UINavigationBar* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (UIColor*)tintColor {
     return _tintColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTranslucent:(BOOL)translucent {
 }
 
@@ -448,15 +496,25 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes forBarMetrics not supported
+*/
 - (void)setBackgroundImage:(UIImage*)image forBarMetrics:(UIBarMetrics)metrics {
     _navGradient = image;
     setBackground(self);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitleTextAttributes:(NSDictionary*)attributes {
     (_titleTextAttributes).attach([attributes copy]);
 }
 
+/**
+ @Status Stub
+*/
 - (NSDictionary*)titleTextAttributes {
     return _titleTextAttributes;
 }
@@ -493,12 +551,21 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitleVerticalPositionAdjustment:(float)adjustment forBarMetrics:(UIBarMetrics)forBarMetrics {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowImage:(UIImage*)image {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBarTintColor:(UIColor*)color {
     _tintColor = color;
     CGSize size;
@@ -519,9 +586,15 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     setBackground(self);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBackIndicatorImage:(UIImage*)image {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBackIndicatorTransitionMaskImage:(UIImage*)image {
 }
 

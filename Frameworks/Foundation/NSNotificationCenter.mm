@@ -22,6 +22,10 @@
     id notificationObj;
     id userInfo;
 }
+
+/**
+ @Status Interoperable
+*/
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj {
     NSNotification* ret = [self alloc];
 
@@ -32,6 +36,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSNotification*)notificationWithName:(NSString*)name object:(id)obj userInfo:(NSDictionary*)info {
     NSNotification* ret = [self alloc];
 
@@ -42,14 +49,23 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)object {
     return notificationObj;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return notificationName;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)userInfo {
     return userInfo;
 }
@@ -98,6 +114,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSNotificationCenter*)defaultCenter {
     if (defaultCenter == nil) {
         defaultCenter = [NSNotificationCenter new];
@@ -111,11 +130,17 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)postNotificationName:(NSString*)name object:(NSObject*)sender {
     NSNotification* notification = [NSNotification notificationWithName:name object:sender];
     [self postNotification:notification];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)postNotification:(NSNotification*)notification {
     NSString* name = [notification name];
 
@@ -159,12 +184,18 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     free(sendTo);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)postNotificationName:(NSString*)name object:(NSObject*)sender userInfo:(NSDictionary*)userInfo {
     NSNotification* notification = [NSNotification notificationWithName:name object:sender userInfo:userInfo];
 
     [self postNotification:notification];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObserver:(id)observer selector:(SEL)selName name:(NSString*)name object:(id)object {
     if (name == nil) {
         return;
@@ -181,6 +212,10 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     [newObserver release];
 }
 
+/**
+ @Status Caveat
+ @Notes queue parameter not supported
+*/
 - (id<NSObject>)addObserverForName:(NSString*)name
                             object:(id)object
                              queue:(NSNotificationQueue*)queue
@@ -205,6 +240,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     return newObserver->object;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObserver:(id)observer name:(NSString*)name object:(id)object {
     id arr = arrayForObservers(self, name);
     if (arr == nil) {
@@ -241,6 +279,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObserver:(id)observer {
     for (NSString* curName in [observers allKeys]) {
         [self removeObserver:observer name:curName object:nil];

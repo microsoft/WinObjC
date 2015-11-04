@@ -51,6 +51,10 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 @implementation NSDictionary : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObj, ... {
     va_list pReader;
     va_start(pReader, firstObj);
@@ -73,12 +77,18 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
     NSDictionary* ret = [[self alloc] initWithObjects:vals forKeys:keys count:count];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
     [self init];
 
@@ -103,6 +113,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithObject:(id)val forKey:(id)key {
     NSDictionary* ret = [self new];
 
@@ -113,6 +126,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)dictionary {
     NSDictionary* ret = [self alloc];
     [ret initWithDictionary:dictionary];
@@ -120,10 +136,16 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithObjects:(NSArray*)vals forKeys:(NSArray*)keys {
     return [[[self alloc] initWithObjects:vals forKeys:keys] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjectsAndKeys:(id)firstObj, ... {
     va_list pReader;
     va_start(pReader, firstObj);
@@ -146,6 +168,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjects:(id)vals forKeys:(id)keys {
     [self init];
 
@@ -186,6 +211,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)objectForKey:(id)key {
     if (key == nil) {
         EbrDebugLog("Warning: objectForKey called with nil\n");
@@ -195,6 +223,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return (id)CFDictionaryGetValue((CFDictionaryRef)self, (const void*)key);
 }
 
+/**
+ @Status Stub
+*/
 - (id)objectForKeyedSubscript:(id)key {
     return [self objectForKey:key];
 }
@@ -211,6 +242,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     if (dictionary != nil) {
         if ((object_getClass(dictionary) == [NSDictionary class] || object_getClass(dictionary) == [NSMutableDictionary class]) &&
@@ -236,6 +270,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)initWithDictionary:(NSDictionary*)dict copyItems:(BOOL)copyItems {
     unsigned count = [dict count];
 
@@ -276,6 +313,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)initWithContentsOfFile:(NSString*)filename {
     if (filename == nil) {
         EbrDebugLog("initWithContentsOfFile: nil!\n");
@@ -308,10 +348,17 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDictionary*)dictionaryWithContentsOfFile:(NSString*)filename {
     return [[[self alloc] initWithContentsOfFile:filename] autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes Only file:// URLs supported
+*/
 + (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)url {
     const char* file = (char*)[[url path] UTF8String];
     NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
@@ -327,6 +374,10 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             errorDescription:0];
 }
 
+/**
+ @Status Caveat
+ @Notes Only file:// URLs supported
+*/
 - (NSDictionary*)initWithContentsOfURL:(id)url {
     const char* file = (char*)[[url path] UTF8String];
     NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
@@ -344,6 +395,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self initWithDictionary:dict];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDictionary*)dictionary {
     NSDictionary* ret = [NSDictionary new];
 
@@ -356,6 +410,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allValues {
     if (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class]) {
         int count = CFDictionaryGetCount((CFDictionaryRef)self);
@@ -397,6 +454,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allKeys {
     if (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class]) {
         unsigned count = CFDictionaryGetCount((CFDictionaryRef)self);
@@ -437,6 +497,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allKeysForObject:(id)obj {
     NSEnumerator* keyEnum = [self keyEnumerator];
     NSEnumerator* valEnum = [self objectEnumerator];
@@ -465,6 +528,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)count {
     return CFDictionaryGetCount((CFDictionaryRef)self);
 }
@@ -509,6 +575,10 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return numRet;
 }
 
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
     EbrDebugLog("Writing dictionary to file %s\n", [file UTF8String]);
 
@@ -517,25 +587,41 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [data writeToFile:file atomically:atomically];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSEnumerator*)objectEnumerator {
     return [NSEnumerator enumeratorWithIterator:CFDictionaryGetValueEnumerator forObject:self nextFunction:CFDictionaryGetNextValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSEnumerator*)keyEnumerator {
     return [NSEnumerator enumeratorWithIterator:CFDictionaryGetKeyEnumerator forObject:self nextFunction:CFDictionaryGetNextKey];
 }
 
 /* NSFileManager category helpers */
+
+/**
+ @Status Interoperable
+*/
 - (uint64_t)fileSize {
     __int64 ret = [[self objectForKey:NSFileSize] intValue];
 
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)fileType {
     return [self objectForKey:NSFileType];
 }
 
+/**
+ @Status Stub
+*/
 - (NSDate*)fileModificationDate {
     return [self objectForKey:NSFileModificationDate];
 }
@@ -601,6 +687,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self isEqualToDictionary:other];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToDictionary:(NSDictionary*)dictionary {
     id key;
 
@@ -628,6 +717,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)keysSortedByValueUsingSelector:(SEL)selector {
     SortedKeysHelperCtx ctx;
 
@@ -638,6 +730,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [[self allKeys] sortedArrayUsingFunction:_NSDict_SortedKeysHelper context:&ctx];
 }
 
+/**
+ @Status Stub
+*/
 - (NSArray*)keysSortedByValueUsingComparator:(NSComparator)comparator {
     SortedKeysHelperCtx ctx;
 
@@ -648,6 +743,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [[self allKeys] sortedArrayUsingFunction:_NSDict_SortedKeysHelper context:&ctx];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return [[NSString alloc]
         initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nil]
@@ -659,6 +757,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getObjects:(id*)objects andKeys:(id*)keys {
     NSEnumerator* state = [self keyEnumerator];
     id key;
@@ -672,6 +773,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id, id, BOOL*))block {
     NSEnumerator* state = [self keyEnumerator];
     id key;
@@ -688,6 +792,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)objectsForKeys:(NSArray*)keys notFoundMarker:(id)notFoundMarker {
     NSMutableArray* result = [NSMutableArray arrayWithCapacity:[keys count]];
     NSInteger count = [keys count];
@@ -706,6 +813,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 @end
 
+/**
+ @Status Interoperable
+*/
 NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     if (keys == nil) {
         EbrDebugLog("Nil keys string.\n");

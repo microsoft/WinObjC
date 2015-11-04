@@ -87,6 +87,9 @@ void initInternal(UIToolbar* self) {
     _delegate = delegateAddr;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBarStyle:(UIBarStyle)style {
     _style = style;
 
@@ -130,10 +133,16 @@ void initInternal(UIToolbar* self) {
     [_delegate buttonBarItemTapped:button];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setItems:(NSArray*)items {
     [self setItems:items animated:FALSE];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTranslucent:(BOOL)translucent {
 }
 
@@ -156,6 +165,9 @@ static void setBackground(UIToolbar* self, UIColor* color) {
     UIImageSetLayerContents([self layer], self->_backgroundGradient);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(id)color {
     _tintColor = color;
 
@@ -176,10 +188,16 @@ static void setBackground(UIToolbar* self, UIColor* color) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (UIColor*)tintColor {
     return _tintColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)items {
     return _items;
 }
@@ -377,6 +395,10 @@ void layoutItems(UIToolbar* self) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes animated parameter not supported
+*/
 - (void)setItems:(NSArray*)items animated:(BOOL)animated {
     _items = items;
     layoutItems(self);
@@ -430,11 +452,18 @@ void layoutItems(UIToolbar* self) {
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes position and metrics parameters not supported
+*/
 - (void)setBackgroundImage:(UIImage*)image forToolbarPosition:(unsigned int)position barMetrics:(UIBarMetrics)metrics {
     _backgroundGradient = image;
     UIImageSetLayerContents([self layer], _backgroundGradient);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBarTintColor:(UIColor*)color {
     if (isOSTarget(@"7.0")) {
         setBackground(self, color);

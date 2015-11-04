@@ -16,17 +16,29 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+/**
+ @Status Stub
+*/
 void AudioServicesPlaySystemSound(SystemSoundID soundID) {
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionGetProperty(AudioSessionPropertyID id, UInt32* dataSize, void* outData) {
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionSetActive(Boolean active) {
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop,
                                 CFStringRef inRunLoopMode,
                                 AudioSessionInterruptionListener inInterruptionListener,
@@ -34,6 +46,9 @@ OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop,
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionSetProperty(AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData) {
     return 100;
 }

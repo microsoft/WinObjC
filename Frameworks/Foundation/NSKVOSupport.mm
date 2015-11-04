@@ -212,6 +212,10 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
 }
 
 @implementation NSObject (NSKeyValueObservation)
+
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     if ([key length] > 0) {
         const char* rawKey = [key UTF8String];
@@ -226,6 +230,9 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
     if ([key length] > 0) {
         const char* rawKey = [key UTF8String];
@@ -238,21 +245,33 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
     return [NSSet set];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSInteger)options context:(void*)context {
     auto& notifier = KVONotifier::forInstance(self);
     notifier.addObserver(observer, [keyPath UTF8String], options, context);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
     auto& notifier = KVONotifier::forInstance(self);
     notifier.removeObserver(observer, [keyPath UTF8String], context);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
     // TODO(DH) is it correct to use NULL to mean "remove all observers" here?
     [self removeObserver:observer forKeyPath:keyPath context:NULL];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willChangeValueForKey:(NSString*)key {
     if (!KVOClass::isKVOCapable((id)self)) {
         return;
@@ -261,6 +280,9 @@ void KVONotifier::_dispatch(KVOObservedKey& notifyingKey, KVOPendingNotification
     notifier.willChange([key UTF8String]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didChangeValueForKey:(NSString*)key {
     if (!KVOClass::isKVOCapable((id)self)) {
         return;

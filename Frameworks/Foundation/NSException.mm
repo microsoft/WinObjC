@@ -32,6 +32,9 @@ NSString* const NSOverflowException = @"NSOverflowException";
     idretaintype(NSDictionary) _userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
     _name.attach([name copy]);
     _reason.attach([reason copy]);
@@ -40,12 +43,18 @@ NSString* const NSOverflowException = @"NSOverflowException";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
     NSException* ret = [[self alloc] initWithName:name reason:reason userInfo:userInfo];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)raise:(NSString*)name format:(NSString*)format, ... {
     va_list reader;
     va_start(reader, format);
@@ -73,6 +82,9 @@ NSString* const NSOverflowException = @"NSOverflowException";
     [exception raise];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)args {
     NSString* reason = [[NSString alloc] initWithFormat:format arguments:args];
     NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
@@ -80,18 +92,30 @@ NSString* const NSOverflowException = @"NSOverflowException";
     [exception raise];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)raise {
     @throw self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return _name;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)userInfo {
     return _userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)reason {
     return _reason;
 }

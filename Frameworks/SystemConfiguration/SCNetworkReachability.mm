@@ -436,6 +436,9 @@ static NSLock* _allReachabilityOperationsLock;
 }
 @end
 
+/**
+ @Status Interoperable
+*/
 SCNetworkReachabilityRef SCNetworkReachabilityCreateWithAddress(CFAllocatorRef allocator, const sockaddr* address) {
     SCNetworkReachability* ret = [[SCNetworkReachabilityAddress alloc] initWithAddress:address];
 
@@ -444,6 +447,9 @@ SCNetworkReachabilityRef SCNetworkReachabilityCreateWithAddress(CFAllocatorRef a
     return (SCNetworkReachabilityRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 SCNetworkReachabilityRef SCNetworkReachabilityCreateWithName(CFAllocatorRef allocator, const char* hostname) {
     SCNetworkReachability* ret = [[SCNetworkReachabilityHostName alloc] initWithHostName:hostname];
 
@@ -452,6 +458,9 @@ SCNetworkReachabilityRef SCNetworkReachabilityCreateWithName(CFAllocatorRef allo
     return (SCNetworkReachabilityRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean SCNetworkReachabilityGetFlags(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags* retFlags) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
@@ -464,6 +473,9 @@ Boolean SCNetworkReachabilityGetFlags(SCNetworkReachabilityRef target, SCNetwork
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean SCNetworkReachabilitySetCallback(SCNetworkReachabilityRef target,
                                          SCNetworkReachabilityCallBack callout,
                                          SCNetworkReachabilityContext* context) {
@@ -473,6 +485,9 @@ Boolean SCNetworkReachabilitySetCallback(SCNetworkReachabilityRef target,
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 Boolean SCNetworkReachabilitySetDispatchQueue(SCNetworkReachabilityRef target, dispatch_queue_t queue) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
@@ -481,6 +496,9 @@ Boolean SCNetworkReachabilitySetDispatchQueue(SCNetworkReachabilityRef target, d
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean SCNetworkReachabilityScheduleWithRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
@@ -489,16 +507,25 @@ Boolean SCNetworkReachabilityScheduleWithRunLoop(SCNetworkReachabilityRef target
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean SCNetworkReachabilityUnscheduleFromRunLoop(SCNetworkReachabilityRef target, CFRunLoopRef runloop, CFStringRef mode) {
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
     return [scNetwork unscheduleFromRunLoop:runloop forMode:mode];
 }
 
+/**
+ @Status Stub
+*/
 int SCError(void) {
     return SCLastError;
 }
 
+/**
+ @Status Stub
+*/
 const char* SCErrorString(int status) {
     return "Not implemented";
 }

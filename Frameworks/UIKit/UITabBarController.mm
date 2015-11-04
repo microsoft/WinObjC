@@ -86,6 +86,9 @@
     return [super initWithNibName:name bundle:bundle];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewControllers:(NSArray*)controllers {
     _viewControllers = [controllers copy];
 
@@ -132,18 +135,30 @@
     [_tabBar setItems:tabItems];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)viewControllers {
     return _viewControllers;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id<UITabBarControllerDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UITabBarControllerDelegate>)delegate {
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelectedIndex:(unsigned)index {
     if (_tabPane != nil) {
         NSArray* items = [_tabBar items];
@@ -159,6 +174,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)selectedIndex {
     if (_selectedIndex == -1) {
         return 0;
@@ -166,6 +184,9 @@
     return _selectedIndex;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)selectedViewController {
     if (_selectedIndex == -1) {
         return nil;
@@ -174,6 +195,9 @@
     return [_viewControllers objectAtIndex:_selectedIndex];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelectedViewController:(UIViewController*)controller {
     unsigned index = [_viewControllers indexOfObject:controller];
     assert(index != 0x7fffffff);
@@ -249,6 +273,9 @@
     [_tabPane setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBar*)tabBar {
     [self view];
 

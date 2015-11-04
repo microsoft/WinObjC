@@ -34,6 +34,9 @@
     EbrLockEnter(_lock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)tryLock {
     BOOL ret = EbrLockTryEnter(_lock);
 
@@ -44,12 +47,18 @@
     EbrLockLeave(_lock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)name {
     [name retain];
     [_name release];
     _name = name;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return _name;
 }
@@ -70,6 +79,9 @@
     EbrLockEnter(_lock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)tryLock {
     BOOL ret = EbrLockTryEnter(_lock);
 
@@ -80,12 +92,18 @@
     EbrLockLeave(_lock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)name {
     [name retain];
     [_name release];
     _name = name;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return _name;
 }

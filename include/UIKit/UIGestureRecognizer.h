@@ -53,8 +53,20 @@ typedef struct
 
 @protocol UIGestureRecognizerDelegate <NSObject>
 @optional
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;
+
+/**
+ @Status Stub
+*/
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 

@@ -17,6 +17,9 @@
 #include "Starboard.h"
 #import <CoreFoundation/CoreFoundation.h>
 
+/**
+ @Status Interoperable
+*/
 CFAbsoluteTime CFAbsoluteTimeGetCurrent() {
     return EbrGetMediaTime();
 }

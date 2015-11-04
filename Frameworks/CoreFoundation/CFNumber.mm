@@ -19,6 +19,10 @@
 #import <CoreGraphics/CGAffineTransform.h>
 #import <QuartzCore/CATransform3D.h>
 
+/**
+ @Status Stub
+ @Notes Asserts a failure - CF*GetType needs implementation
+*/
 CFNumberType CFNumberGetType(CFNumberRef self) {
     assert(0);
     return kCFNumberIntType;

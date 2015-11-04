@@ -19,6 +19,9 @@
 
 const CGAffineTransform CGAffineTransformIdentity = { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformConcat(CGAffineTransform t2, CGAffineTransform t1) {
     CGAffineTransform ret;
 
@@ -32,6 +35,9 @@ CGAffineTransform CGAffineTransformConcat(CGAffineTransform t2, CGAffineTransfor
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformMake(float a, float b, float c, float d, float tx, float ty) {
     CGAffineTransform ret;
 
@@ -45,6 +51,9 @@ CGAffineTransform CGAffineTransformMake(float a, float b, float c, float d, floa
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformMakeTranslation(float tx, float ty) {
     CGAffineTransform ret;
 
@@ -58,6 +67,9 @@ CGAffineTransform CGAffineTransformMakeTranslation(float tx, float ty) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformMakeScale(float sx, float sy) {
     CGAffineTransform ret;
     ret.a = sx;
@@ -70,6 +82,9 @@ CGAffineTransform CGAffineTransformMakeScale(float sx, float sy) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformMakeRotation(float angle) {
     CGAffineTransform ret;
 
@@ -93,6 +108,9 @@ CGAffineTransform CGAffineTransformMakeRotation(float angle) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformRotate(CGAffineTransform curTransform, float angle) {
     CGAffineTransform ret;
 
@@ -102,6 +120,9 @@ CGAffineTransform CGAffineTransformRotate(CGAffineTransform curTransform, float 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformTranslate(CGAffineTransform curTransform, float x, float y) {
     CGAffineTransform trans;
 
@@ -111,6 +132,9 @@ CGAffineTransform CGAffineTransformTranslate(CGAffineTransform curTransform, flo
     return trans;
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformScale(CGAffineTransform curTransform, float x, float y) {
     CGAffineTransform scale;
 
@@ -118,6 +142,9 @@ CGAffineTransform CGAffineTransformScale(CGAffineTransform curTransform, float x
     return CGAffineTransformConcat(scale, curTransform);
 }
 
+/**
+ @Status Interoperable
+*/
 CGAffineTransform CGAffineTransformInvert(CGAffineTransform curTransform) {
     float determinant = (curTransform.a * curTransform.d - curTransform.c * curTransform.b);
 
@@ -136,6 +163,9 @@ CGAffineTransform CGAffineTransformInvert(CGAffineTransform curTransform) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 bool CGAffineTransformIsIdentity(CGAffineTransform curTransform) {
     if (memcmp(&curTransform, &CGAffineTransformIdentity, sizeof(curTransform)) == 0) {
         return true;
@@ -144,6 +174,9 @@ bool CGAffineTransformIsIdentity(CGAffineTransform curTransform) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 bool CGAffineTransformEqualToTransform(CGAffineTransform t2, CGAffineTransform t1) {
     if (memcmp(&t1, &t2, sizeof(CGAffineTransform)) == 0) {
         return TRUE;

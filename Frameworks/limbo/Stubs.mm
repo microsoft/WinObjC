@@ -108,6 +108,10 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation UIAccelerometer : NSObject
+
+/**
+ @Status Stub
+*/
 + (id)sharedAccelerometer {
     return nil;
 }
@@ -135,6 +139,10 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation GKLocalPlayer
+
+/**
+ @Status Stub
+*/
 + (GKLocalPlayer*)localPlayer {
     return nil;
 }
@@ -164,14 +172,23 @@ __declspec(dllexport) extern "C" void srandom(unsigned val) {
     return srand(val);
 }
 
+/**
+ @Status Interoperable
+*/
 NSData* UIImagePNGRepresentation(UIImage* img) {
     return [NSData data];
 }
 
+/**
+ @Status Stub
+*/
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     return [NSData data];
 }
 
+/**
+ @Status Interoperable
+*/
 CGPoint CGPointFromString(NSString* strPt) {
     CGPoint ret;
 
@@ -180,6 +197,9 @@ CGPoint CGPointFromString(NSString* strPt) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGSize CGSizeFromString(NSString* strSize) {
     CGSize ret;
 
@@ -188,6 +208,9 @@ CGSize CGSizeFromString(NSString* strSize) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGRect CGRectFromString(NSString* strRect) {
     CGRect ret;
 
@@ -235,16 +258,25 @@ __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* 
     return NULL;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
     assert(0);
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
     assert(0);
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
     assert(0);
     return 0;
@@ -289,6 +321,9 @@ __declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned
 }
 }
 
+/**
+ @Status Stub
+*/
 extern "C" void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
 }
 

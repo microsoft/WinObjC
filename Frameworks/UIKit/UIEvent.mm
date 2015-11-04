@@ -32,13 +32,23 @@
     return us;
 }
 
+/**
+ @Status Stub
+*/
 - (NSSet*)touchesForWindow:(UIWindow*)window {
     return nil;
 }
+
+/**
+ @Status Stub
+*/
 - (NSSet*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSSet*)allTouches {
     return touches;
 }
@@ -47,6 +57,9 @@
     return touchEvent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSSet*)touchesForView:(UIView*)view {
     NSEnumerator* curEnum = [touches objectEnumerator];
     NSMutableSet* ret = [NSMutableSet set];
@@ -69,6 +82,9 @@
     _timestamp = time;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIEventType)type {
     return UIEventTypeTouches;
 }
@@ -79,6 +95,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timestamp {
     return _timestamp;
 }

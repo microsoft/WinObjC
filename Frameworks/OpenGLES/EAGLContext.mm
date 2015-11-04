@@ -66,10 +66,18 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes Only GLES 1.1 and 2.0 are supported
+*/
 - (instancetype)initWithAPI:(NSUInteger)api {
     return [self initWithAPI:api sharegroup:nil];
 }
 
+/**
+ @Status Caveat
+ @Notes Only GLES 1.1 and 2.0 are supported
+*/
 - (instancetype)initWithAPI:(NSUInteger)api sharegroup:(EAGLContext*)sharegroup {
     if (_initializedVersion != 0) {
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"EAGLContext already initialized"];
@@ -138,6 +146,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)currentContext {
     return tlsCurContext;
 }
@@ -146,10 +157,16 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     return _initializedVersion;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)sharegroup {
     return _sharegroup;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)setCurrentContext:(EAGLContext*)context {
     EGLSurface eglSurface = EGL_NO_SURFACE;
     EGLContext eglContext = EGL_NO_CONTEXT;
@@ -167,6 +184,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)renderbufferStorage:(int)target fromDrawable:(CAEAGLLayer*)surface {
     //  Delete any existing surface
     if (_eglSurface != EGL_NO_SURFACE) {
@@ -213,6 +233,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)presentRenderbuffer:(int)target {
     int curFB;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &curFB);

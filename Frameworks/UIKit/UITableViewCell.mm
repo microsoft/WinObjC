@@ -264,10 +264,16 @@ static void initInternal(UITableViewCell* self) {
     [self setContentMode:UIViewContentModeRedraw];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos reuseIdentifier:(NSString*)identifier {
     return [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 }
 
+/**
+ @Status Stub
+*/
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
     _style = style;
 
@@ -368,18 +374,30 @@ static void initInternal(UITableViewCell* self) {
     [[self superview] _forwardCellRemoval:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)contentView {
     return _contentView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image {
     [getImageView(self) setImage:image];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return [getImageView(self) image];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)reuseIdentifier {
     if (_reuseIdentifier == nil) {
         return [NSString stringWithCString:object_getClassName(self)];
@@ -391,30 +409,51 @@ static void initInternal(UITableViewCell* self) {
     _reuseIdentifier = [identifier copy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFont:(UIFont*)font {
     [getTextLabel(self) setFont:font];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)font {
     return [getTextLabel(self) font];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setText:(NSString*)text {
     [getTextLabel(self) setText:text];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)text {
     return [getTextLabel(self) text];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextColor:(UIColor*)textcolor {
     [getTextLabel(self) setTextColor:textcolor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)textColor {
     return [getTextLabel(self) textColor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelected:(BOOL)isSelected {
     [self setSelected:isSelected animated:NO];
 }
@@ -468,29 +507,47 @@ static void initInternal(UITableViewCell* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
     _isHighlighted = highlighted;
     [self updateBackgroundView:highlighted];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     _isSelected = selected;
     // self.accessibilityTraits = selected ? UIAccessibilityTraitSelected : UIAccessibilityTraitNone;
     [self updateBackgroundView:selected];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlighted:(BOOL)isHighlighted {
     [self setHighlighted:isHighlighted animated:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHighlighted {
     return _isHighlighted;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSelected {
     return _isSelected;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEditing {
     return _isEditing;
 }
@@ -516,10 +573,16 @@ static void initInternal(UITableViewCell* self) {
     return UITableViewCellEditingStyleNone;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)showingDeleteConfirmation {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILabel*)detailTextLabel {
     return getSecondaryLabel(self);
 }
@@ -608,6 +671,9 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
     setInternalAccessoryColor(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundView:(UIView*)view {
     if (_backgroundView) {
         [_backgroundView removeFromSuperview];
@@ -617,10 +683,16 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
     updateBackgroundView(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)backgroundView {
     return _backgroundView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelectedBackgroundView:(UIView*)view {
     if (_selectedbackgroundView) {
         [_selectedbackgroundView removeFromSuperview];
@@ -630,34 +702,58 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
     updateBackgroundView(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)selectedBackgroundView {
     return _selectedbackgroundView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextAlignment:(UITextAlignment)alignment {
     [getTextLabel(self) setTextAlignment:alignment];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextAlignment)textAlignment {
     return (UITextAlignment)[getTextLabel(self) textAlignment];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelectionStyle:(UITableViewCellSelectionStyle)style {
     _selectionStyle = style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITableViewCellSelectionStyle)selectionStyle {
     return _selectionStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAccessoryType:(UITableViewCellAccessoryType)type {
     _accessoryType = type;
     [self setNeedsLayout];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setEditingAccessoryType:(UITableViewCellAccessoryType)type {
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)accessoryType {
     return _accessoryType;
 }
@@ -781,31 +877,52 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAccessoryView:(UIView*)view {
     _accessoryView = view;
     getCurrentAccessoryView(self);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setEditingAccessoryView:(UIView*)view {
     _editingAccessoryView = view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)accessoryView {
     return _accessoryView;
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)editingAccessoryView {
     return _editingAccessoryView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImageView*)imageView {
     return getImageView(self);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIndentationWidth:(float)width {
     _indentationWidth = width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)indentationWidth {
     return _indentationWidth;
 }
@@ -818,6 +935,9 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
     EbrDebugLog("setSelectedTextColor not supported\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILabel*)textLabel {
     return getTextLabel(self);
 }
@@ -1193,10 +1313,16 @@ static void setupGroupView(UITableViewCell* self) {
 - (void)setShouldIndentWhileEditing:(BOOL)shouldIndent {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsReorderControl:(BOOL)show {
     _showsReorderControl = show;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)showsReorderControl {
     return _showsReorderControl;
 }
@@ -1209,10 +1335,16 @@ static void setupGroupView(UITableViewCell* self) {
     return _selectionSegueTemplate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIndentationLevel:(int)level {
     _indentationLevel = level;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)indentationLevel {
     return _indentationLevel;
 }
@@ -1255,6 +1387,9 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareForReuse {
     removeAllAnimationsFromLayers([self layer]);
     _groupEdgeStyle = 0;

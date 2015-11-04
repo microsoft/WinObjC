@@ -201,6 +201,9 @@ void parseCookies(const char* lineptr, id dict) {
     return cookies;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)cookiesWithResponseHeaderFields:(id)headerFields forURL:(id)url {
     id cookies = [NSMutableArray array];
 
@@ -211,10 +214,16 @@ void parseCookies(const char* lineptr, id dict) {
     return cookies;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)cookieWithProperties:(id)properties {
     return [[[self alloc] initWithProperties:properties] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)requestHeaderFieldsWithCookies:(id)cookies {
     // redo me using FOREACH_BEGIN for DD
     id s = nil;
@@ -237,55 +246,94 @@ void parseCookies(const char* lineptr, id dict) {
         return [NSDictionary dictionary]; // empty
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)comment {
     return [_properties objectForKey:NSHTTPCookieComment];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)commentURL {
     return [_properties objectForKey:NSHTTPCookieCommentURL];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)domain {
     return [_properties objectForKey:NSHTTPCookieDomain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)expiresDate {
     return [_properties objectForKey:NSHTTPCookieExpires];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)name {
     return [_properties objectForKey:NSHTTPCookieName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)path {
     return [_properties objectForKey:NSHTTPCookiePath];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)value {
     return [_properties objectForKey:NSHTTPCookieValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)version {
     return [[_properties objectForKey:NSHTTPCookieVersion] unsignedIntValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)portList {
     return [[_properties objectForKey:NSHTTPCookiePort] componentsSeparatedByString:@","];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSecure {
     // return [[_properties objectForKey:NSHTTPCookieSecure] intValue], @"TRUE");
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)isSessionOnly {
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)properties {
     return _properties;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithProperties:(id)properties {
     self = [super init];
 

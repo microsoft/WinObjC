@@ -267,16 +267,35 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 @implementation UIViewController : UIResponder
 
+/**
+ @Status Stub
+*/
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return TRUE;
 }
+
+/**
+ @Status Interoperable
+*/
 - (void)willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                                     duration:(NSTimeInterval)duration {
 }
+
+/**
+ @Status Stub
+*/
 - (void)encodeRestorableStateWithCoder:(NSCoder*)coder {
 }
+
+/**
+ @Status Stub
+*/
 - (void)decodeRestorableStateWithCoder:(NSCoder*)coder {
 }
+
+/**
+ @Status Stub
+*/
 - (BOOL)isBeingDismissed {
     return TRUE;
 }
@@ -550,6 +569,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)nibName {
     if (priv->nibName == nil) {
         NSString* ret = nil;
@@ -587,10 +609,16 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return (NSString*)(priv->nibName);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSBundle*)nibBundle {
     return priv->nibBundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
     if (!priv) {
         priv = (UIViewControllerPriv*)EbrCalloc(1, sizeof(UIViewControllerPriv));
@@ -625,6 +653,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return [self initWithNibName:nil bundle:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     if (priv->view != nil) {
         return;
@@ -773,6 +804,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)view {
     if (priv->view == nil) {
         priv->isLoading = TRUE;
@@ -808,6 +842,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return priv->view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationItem*)navigationItem {
     if (priv->navigationItem == nil) {
         priv->navigationItem.attach([[UINavigationItem alloc] initWithTitle:nil]);
@@ -816,6 +853,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return priv->navigationItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationController*)navigationController {
     UIViewController* curController = [self parentViewController];
     while (curController != nil) {
@@ -827,6 +867,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UISearchDisplayController*)searchDisplayController {
     return priv->_searchDisplayController;
 }
@@ -835,10 +878,16 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     priv->_searchDisplayController = newController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)modalViewController {
     return priv->_modalViewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setView:(UIView*)newView {
     if (newView == priv->view)
         return;
@@ -891,6 +940,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     priv->navigationItem = newItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBarItem*)tabBarItem {
     if (priv->tabBarItem == nil) {
         priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:nil]);
@@ -904,6 +956,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return priv->tabBarItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarButtonItem*)editButtonItem {
     if (priv->editButtonItem == nil) {
         priv->editButtonItem.attach([[UIBarButtonItem alloc] initWithTitle:priv->_isEditing ? @"Done" : @"Edit"
@@ -923,26 +978,45 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTabBarItem:(UITabBarItem*)newItem {
     priv->tabBarItem = newItem;
 }
 
+/**
+ @Status Caveat
+ @Notes Animated param disregared.
+*/
 - (void)setToolbarItems:(NSArray*)newItems animated:(BOOL)animated {
     priv->toolbarItems = newItems;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)toolbarItems {
     return priv->toolbarItems;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setToolbarItems:(NSArray*)newItems {
     [self setToolbarItems:newItems animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)presentModalViewController:(UIViewController*)controller animated:(BOOL)animated {
     [self presentViewController:controller animated:animated completion:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)presentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void (^)(void))completion {
     bool shouldShow = false;
     UIViewController* curController = self;
@@ -1019,6 +1093,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dismissModalViewControllerAnimated:(BOOL)animated {
     [self dismissViewControllerAnimated:animated completion:nil];
     /*
@@ -1090,6 +1167,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     if (priv->_modalViewController == nil) {
         if (priv->_parentViewController) {
@@ -1273,14 +1353,23 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldAutorotate {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setModalInPopover:(BOOL)isModal {
     priv->_modalInPopover = isModal;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isModalInPopover {
     return priv->_modalInPopover;
 }
@@ -1467,6 +1556,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)beginAppearanceTransition:(BOOL)appearing animated:(BOOL)isAnimated {
     if (appearing) {
         [self notifyViewWillAppear:isAnimated];
@@ -1475,6 +1567,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)endAppearanceTransition {
     switch (priv->_visibility) {
         case controllerWillAppear:
@@ -1495,32 +1590,57 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewWillAppear:(BOOL)isAnimated {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewDidAppear:(BOOL)isAnimated {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewWillDisappear:(BOOL)isAnimated {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewDidDisappear:(BOOL)isAnimated {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title {
     priv->_title = title;
     [[self navigationItem] setTitle:priv->_title];
     [[self tabBarItem] setTitle:priv->_title];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)title {
     return priv->_title;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditing:(BOOL)editing {
     [self setEditing:editing animated:FALSE];
 }
 
+/**
+ @Status Caveat
+ @Notes Animated param disregared.
+*/
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     priv->_isEditing = editing;
 
@@ -1529,37 +1649,65 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEditing {
     return priv->_isEditing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewDidLoad {
 }
 
+/**
+ @Status Caveat
+ @Notes Never gets called, but has also been deprecated.
+*/
 - (void)viewDidUnload {
 }
 
 - (void)viewWillUnload {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewDidLayoutSubviews {
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isViewLoaded {
     return priv->view != nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
     return orientation == UIInterfaceOrientationPortrait;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
 }
 
@@ -1567,6 +1715,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_edgesForExtendedLayout;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIInterfaceOrientation)interfaceOrientation {
     if (!priv->_didSetRotation) {
         return (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
@@ -1575,12 +1726,21 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_curOrientation;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToParentViewController:(UIViewController*)parent {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didMoveToParentViewController:(UIViewController*)parent {
 }
 
@@ -1596,6 +1756,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBarController*)tabBarController {
     UIViewController* cur = self;
 
@@ -1643,50 +1806,86 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidesBottomBarWhenPushed:(BOOL)hide {
     priv->_hidesBottomBar = hide != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hidesBottomBarWhenPushed {
     return priv->_hidesBottomBar;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setModalTransitionStyle:(UIModalTransitionStyle)style {
     priv->_modalTransitionStyle = style;
 }
 
+/**
+ @Status Stub
+*/
 - (UIModalTransitionStyle)modalTransitionStyle {
     return priv->_modalTransitionStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setWantsFullScreenLayout:(BOOL)wantsFullScreen {
     priv->_wantsFullScreenLayout = wantsFullScreen != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentSizeForViewInPopover:(CGSize)size {
     priv->_contentSizeForViewInPopover = size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)contentSizeForViewInPopover {
     return priv->_contentSizeForViewInPopover;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPreferredContentSize:(CGSize)size {
     priv->_preferredContentSize = size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)preferredContentSize {
     return priv->_preferredContentSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setModalPresentationStyle:(UIModalPresentationStyle)style {
     priv->_presentationStyle = style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIModalPresentationStyle)modalPresentationStyle {
     return priv->_presentationStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSegueWithIdentifier:(NSString*)identifier sender:(id)sender {
     EbrDebugLog("perform segue for %s\n", [identifier UTF8String]);
 
@@ -1715,6 +1914,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [segue release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSegueWithDestination:(NSString*)destination sender:(id)sender {
     EbrDebugLog("perform destination segue for %s\n", [destination UTF8String]);
 
@@ -1742,6 +1944,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [segue release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender {
 }
 
@@ -1766,18 +1971,30 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     priv->_storyboard = storyboard;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIStoryboard*)storyboard {
     return priv->_storyboard;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)wantsFullScreenLayout {
     return priv->_wantsFullScreenLayout;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)parentViewController {
     return priv->_parentViewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)presentingViewController {
     if (priv->_presentingViewController == nil) {
         return [priv->_parentViewController presentingViewController];
@@ -1786,6 +2003,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_presentingViewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)presentedViewController {
     if (priv->_presentedViewController == nil) {
         return [priv->_parentViewController presentingViewController];
@@ -1847,13 +2067,22 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didReceiveMemoryWarning {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setNeedsStatusBarAppearanceUpdate {
     EbrDebugLog("ignoring setNeedsStatusBarAppearanceUpdate!\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)childViewControllers {
     if (priv->_childViewControllers == nil) {
         priv->_childViewControllers.attach([NSMutableArray new]);
@@ -1861,6 +2090,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_childViewControllers;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addChildViewController:(UIViewController*)controller {
     if (priv->_childViewControllers == nil) {
         priv->_childViewControllers.attach([NSMutableArray new]);
@@ -1875,6 +2107,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     child->priv->_parentViewController = self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeFromParentViewController {
     UIViewController* parent = priv->_parentViewController;
 
@@ -1882,6 +2117,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         [parent->priv->_childViewControllers removeObject:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UILayoutSupport>)topLayoutGuide {
     UIView* view = priv->view;
 
@@ -1919,6 +2157,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return tlg;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UILayoutSupport>)bottomLayoutGuide {
     UIView* view = priv->view;
 
@@ -1956,9 +2197,15 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return blg;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewWillLayoutSubviews {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)updateViewConstraints {
     [((UIView*)(priv->view))_applyConstraints];
 }

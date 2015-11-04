@@ -28,6 +28,9 @@
     id _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationItem*)initWithTitle:(NSString*)title {
     _title.attach([title copy]);
 
@@ -62,28 +65,47 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title {
     _title.attach([title copy]);
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleView:(UIView*)view {
     _titleView = view;
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)titleView {
     return _titleView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setPrompt:(NSString*)prompt {
     _prompt = prompt;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRightBarButtonItem:(UIBarButtonItem*)rightBarItem {
     [self setRightBarButtonItem:rightBarItem animated:FALSE];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setRightBarButtonItem:(UIBarButtonItem*)rightBarItem animated:(BOOL)animated {
     _rightBarButtonItem = rightBarItem;
     if ([_rightBarButtonItems count] > 0) {
@@ -101,6 +123,10 @@
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setRightBarButtonItems:(NSArray*)rightBarItems animated:(BOOL)animated {
     _rightBarButtonItems = rightBarItems;
     if ([rightBarItems count] > 0) {
@@ -112,14 +138,24 @@
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Caveat
+ @Notes Only 1 item supported
+*/
 - (void)setRightBarButtonItems:(NSArray*)rightBarItems {
     [self setRightBarButtonItems:rightBarItems animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarButtonItem*)rightBarButtonItem {
     return _rightBarButtonItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)rightBarButtonItems {
     return _rightBarButtonItems;
 }
@@ -154,10 +190,17 @@
     return nil;
 }
 
+/**
+ @Status Caveat
+ @Notes Only 1 item supported
+*/
 - (void)setLeftBarButtonItems:(NSArray*)leftBarItems {
     [self setLeftBarButtonItems:leftBarItems animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLeftBarButtonItem:(UIBarButtonItem*)leftBarItem {
     _leftBarButtonItem = leftBarItem;
     if ([_leftBarButtonItems count] > 0) {
@@ -174,6 +217,10 @@
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setLeftBarButtonItem:(NSArray*)leftBarItems animated:(BOOL)animated {
     _leftBarButtonItems = leftBarItems;
     if ([leftBarItems count] > 0) {
@@ -185,40 +232,68 @@
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackBarButtonItem:(UIBarButtonItem*)backBarItem {
     _backBarButtonItem = backBarItem;
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarButtonItem*)backBarButtonItem {
     return _backBarButtonItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarButtonItem*)leftBarButtonItem {
     return _leftBarButtonItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)leftBarButtonItems {
     return _leftBarButtonItems;
 }
 
+/**
+ @Status Caveat
+*/
 - (NSString*)title {
     return _title;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)prompt {
     return _prompt;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidesBackButton:(BOOL)hide {
     [self setHidesBackButton:hide animated:FALSE];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setHidesBackButton:(BOOL)hide animated:(BOOL)animate {
     _hidesBackButton = hide;
     [_delegate navigationItemChanged:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hidesBackButton {
     return _hidesBackButton;
 }

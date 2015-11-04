@@ -108,6 +108,9 @@ static void populateDates(UIDatePicker* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDatePickerMode:(UIDatePickerMode)mode {
     _mode = mode;
     [_pickerView reloadAllComponents];
@@ -148,10 +151,16 @@ static void populateDates(UIDatePicker* self) {
     _dayStartDate = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIDatePickerMode)datePickerMode {
     return _mode;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDate:(id)date {
     [self setDate:date animated:FALSE];
 }
@@ -258,15 +267,27 @@ void setDay(UIDatePicker* self, id date) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTimeZone:(NSTimeZone*)timeZone {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLocale:(NSLocale*)locale {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setCalendar:(NSCalendar*)calendar {
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)date {
     if (_date == nil) {
         _date = [NSDate date];
@@ -759,18 +780,27 @@ static void resetPickerPositions(UIDatePicker* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumDate:(NSDate*)date {
     _minimumDate = date;
     resetPickerPositions(self);
     [_pickerView invalidateAllComponents];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumDate:(NSDate*)date {
     _maximumDate = date;
     resetPickerPositions(self);
     [_pickerView invalidateAllComponents];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinuteInterval:(NSUInteger)interval {
 }
 

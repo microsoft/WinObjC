@@ -36,6 +36,9 @@
     BOOL _canFire;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)invalidate {
     if (_valid) {
         _valid = FALSE;
@@ -44,6 +47,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isValid {
     return _valid;
 }
@@ -83,6 +89,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)fire {
     [self retain];
 
@@ -116,10 +125,16 @@
     [self release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)userInfo {
     return _userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeInterval {
     double ret;
 
@@ -143,6 +158,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSTimer*)scheduledTimerWithTimeInterval:(double)seconds
                                     target:(NSObject*)target
                                   selector:(SEL)selector
@@ -165,6 +183,9 @@
     return [pNewTimer autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSTimer*)timerWithTimeInterval:(double)seconds
                            target:(NSObject*)target
                          selector:(SEL)selector
@@ -184,6 +205,9 @@
     return [pNewTimer autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSTimer*)initWithFireDate:(NSDate*)date
                     interval:(double)seconds
                       target:(NSObject*)target
@@ -204,6 +228,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSTimer*)timerWithTimeInterval:(double)seconds invocation:(NSInvocation*)target repeats:(BOOL)repeats {
     NSTimer* pNewTimer = [self alloc];
 
@@ -221,6 +248,9 @@
     return [pNewTimer autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSTimer*)scheduledTimerWithTimeInterval:(double)seconds invocation:(NSInvocation*)target repeats:(BOOL)repeats {
     NSTimer* pNewTimer = [self alloc];
 
@@ -241,10 +271,16 @@
     return [pNewTimer autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFireDate:(NSDate*)date {
     _nextFireTime = [date timeIntervalSinceReferenceDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)fireDate {
     return [NSDate dateWithTimeIntervalSinceReferenceDate:_nextFireTime];
 }

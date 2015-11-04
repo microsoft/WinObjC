@@ -41,6 +41,11 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
 }
 
 @implementation CAMediaTimingFunction : NSObject
+
+/**
+ @Status Interoperable
+ @Notes Linear, EaseIn, EaseOut, EaseInOut, and default supported
+*/
 + (CAMediaTimingFunction*)functionWithName:(NSString*)function {
     char* name = (char*)[function UTF8String];
 
@@ -75,6 +80,9 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getControlPointAtIndex:(size_t)index values:(float[2])ptr {
     if (index == 0) {
         ptr[0] = _c1x;

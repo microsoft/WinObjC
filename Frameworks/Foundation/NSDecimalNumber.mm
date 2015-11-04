@@ -18,6 +18,9 @@
 
 @implementation NSDecimalNumber : NSNumber
 
+/**
+ @Status Stub
+*/
 + (NSDecimalNumber*)decimalNumberWithString:(NSString*)str {
     NSDecimalNumber* ret = [self alloc];
     const char* pStr = [str UTF8String];

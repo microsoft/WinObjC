@@ -17,6 +17,9 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/NSData.h>
 
+/**
+ @Status Interoperable
+*/
 const uint8_t* CFDataGetBytePtr(CFDataRef data) {
     return (uint8_t*)[(NSData*)data bytes];
 }

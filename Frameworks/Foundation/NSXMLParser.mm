@@ -27,6 +27,10 @@
 //#define LOG_PARSED
 
 @implementation NSXMLParser : NSObject
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithContentsOfURL:(id)URL {
     return [self initWithContentsOfFile:[URL path]];
 }
@@ -44,6 +48,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithData:(id)data {
     _data = [data retain];
 
@@ -55,6 +62,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
     _hasDidStartElement = [_delegate respondsToSelector:@selector(parser:didStartElement:namespaceURI:qualifiedName:attributes:)] != FALSE;
@@ -63,30 +73,51 @@
     _hasFoundCData = [_delegate respondsToSelector:@selector(parser:foundCDATA:)] != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldProcessNamespaces:(BOOL)flag {
     _shouldProcessNamespaces = flag;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldReportNamespacePrefixes:(BOOL)flag {
     _shouldReportNamespacePrefixes = flag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldProcessNamespaces {
     return _shouldProcessNamespaces;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldReportNamespacePrefixes {
     return _shouldReportNamespacePrefixes;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldResolveExternalEntities:(BOOL)flag {
     _shouldResolveExternalEntities = flag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldResolveExternalEntities {
     return _shouldResolveExternalEntities;
 }
@@ -180,6 +211,9 @@ static xmlEntityPtr entityCallback(void* user_data, const xmlChar* name) {
     return xmlGetPredefinedEntity(name);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)parse {
     _bytes = (uint8_t*)[_data bytes];
     _length = [_data length];
@@ -210,22 +244,37 @@ void abortParsing__unused() {
     assert(0);
 }
 
+/**
+ @Status Stub
+*/
 - (NSError*)parserError {
     return _parserError;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)systemID {
     return _systemID;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)publicID {
     return _publicID;
 }
 
+/**
+ @Status Stub
+*/
 - (int)columnNumber {
     return xmlSAX2GetColumnNumber((void*)self);
 }
 
+/**
+ @Status Stub
+*/
 - (int)lineNumber {
     return xmlSAX2GetColumnNumber((void*)self);
 }

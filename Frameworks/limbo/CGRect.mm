@@ -22,6 +22,9 @@
 //  INCORRECT
 const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
 
+/**
+ @Status Interoperable
+*/
 CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t) {
     CGPoint ret;
 
@@ -31,6 +34,9 @@ CGPoint CGPointApplyAffineTransform(CGPoint pt, CGAffineTransform t) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform) {
     CGPoint pts[4];
 
@@ -82,6 +88,9 @@ CGRect CGRectApplyAffineTransform(CGRect rect, CGAffineTransform curTransform) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 extern "C" CGRect CGRectStandardize(CGRect r) {
     CGRect out;
 
@@ -103,6 +112,9 @@ extern "C" CGRect CGRectStandardize(CGRect r) {
     return out;
 }
 
+/**
+ @Status Interoperable
+*/
 CGRect CGRectIntersection(CGRect r1, CGRect r2) {
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);
@@ -156,6 +168,9 @@ CGRect CGRectIntersection(CGRect r1, CGRect r2) {
     return out;
 }
 
+/**
+ @Status Interoperable
+*/
 CGRect CGRectIntegral(CGRect r) {
     r = CGRectStandardize(r);
 
@@ -169,6 +184,9 @@ CGRect CGRectIntegral(CGRect r) {
     return r;
 }
 
+/**
+ @Status Interoperable
+*/
 CGRect CGRectUnion(CGRect r1, CGRect r2) {
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);

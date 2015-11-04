@@ -313,6 +313,9 @@ public:
     }
 };
 
+/**
+ @Status Interoperable
+*/
 CFMutableArrayRef CFArrayCreateMutable(CFAllocatorRef allocator, CFIndex max, const CFArrayCallBacks* valueCallbacks) {
     static int numCreated;
     numCreated++;
@@ -323,18 +326,27 @@ CFMutableArrayRef CFArrayCreateMutable(CFAllocatorRef allocator, CFIndex max, co
     return (CFMutableArrayRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFMutableArrayRef CFArrayCreateMutableCopy(CFAllocatorRef allocator, CFIndex max, CFArrayRef array) {
     id ret = [(NSArray*)array mutableCopy];
 
     return (CFMutableArrayRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFArrayRef CFArrayCreateCopy(CFAllocatorRef allocator, CFArrayRef array) {
     id ret = [(NSArray*)array copy];
 
     return (CFArrayRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFArrayRef CFArrayCreate(CFAllocatorRef allocator, const void** values, CFIndex numValues, const CFArrayCallBacks* valueCallbacks) {
     NSArray* ret = [_LazyNSArray alloc];
     __CFArray* cfarr = new (_LazyArraySpaceOffset.member(ret)) __CFArray(valueCallbacks);
@@ -347,24 +359,39 @@ CFArrayRef CFArrayCreate(CFAllocatorRef allocator, const void** values, CFIndex 
     return (CFArrayRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFIndex CFArrayGetCount(CFArrayRef array) {
     return _LazyArrOffset.member(array)->getCount();
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArraySortValues(CFMutableArrayRef array, CFRange range, id comparator, id context) {
     [(NSArray*)array sortUsingFunction:comparator context:context range:range];
 }
 
+/**
+ @Status Interoperable
+*/
 const void* CFArrayGetValueAtIndex(CFArrayRef array, CFIndex index) {
     return (const void*)_LazyArrOffset.member(array)->objectFromIndex(index);
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayGetValues(CFArrayRef array, CFRange range, void** values) {
     for (unsigned i = range.location; i < range.location + range.length; i++) {
         values[i] = (void*)_LazyArrOffset.member(array)->objectFromIndex(i);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayAppendValue(CFMutableArrayRef array, const void* value) {
     _LazyArrOffset.member(array)->addObject((id)value, true);
 }
@@ -377,6 +404,9 @@ void CFArrayAppendValueExport(CFMutableArrayRef array, const void* value) {
     CFArrayAppendValue(array, value);
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayAppendArray(CFMutableArrayRef array, CFArrayRef arrayToAppend, CFRange range) {
     for (unsigned i = range.location; i < range.location + range.length; i++) {
         const void* curVal = CFArrayGetValueAtIndex(arrayToAppend, i);
@@ -384,6 +414,9 @@ void CFArrayAppendArray(CFMutableArrayRef array, CFArrayRef arrayToAppend, CFRan
     }
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean CFArrayContainsValue(CFArrayRef array, CFRange range, const void* value) {
     return _LazyArrOffset.member(array)->doesContainValue(range.location, range.length, (id)value) != FALSE;
 }
@@ -392,10 +425,16 @@ Boolean CFArrayDoesContainValue(CFArrayRef array, const void* value) {
     return _LazyArrOffset.member(array)->doesContainValue(0, CFArrayGetCount(array), (id)value) != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const void* value) {
     _LazyArrOffset.member(array)->addObjectAtIndex((id)value, index);
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** values, CFIndex newCount) {
     CFIndex curPos = range.location;
     const id* newValues = (const id*)values;
@@ -423,6 +462,9 @@ void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** v
     }
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayRemoveAllValues(CFMutableArrayRef array) {
     if (_LazyArrOffset.member(array) == nil)
         return;
@@ -430,6 +472,9 @@ void CFArrayRemoveAllValues(CFMutableArrayRef array) {
     _LazyArrOffset.member(array)->removeAllObjects();
 }
 
+/**
+ @Status Interoperable
+*/
 void CFArrayRemoveValueAtIndex(CFMutableArrayRef array, CFIndex idx) {
     _LazyArrOffset.member(array)->removeObject(idx);
 }

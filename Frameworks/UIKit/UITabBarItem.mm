@@ -45,6 +45,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBarItem*)initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag {
     _title.attach([title copy]);
     _tag = tag;
@@ -54,6 +57,9 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (UITabBarItem*)initWithTabBarSystemItem:(UITabBarSystemItem)sysItem tag:(NSInteger)tag {
     _title = @"Sys";
     _tag = tag;
@@ -66,10 +72,16 @@
     _title.attach([newTitle copy]);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBadgeValue:(NSString*)badgeValue {
     _badgeValue = badgeValue;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)badgeValue {
     return _badgeValue;
 }
@@ -78,6 +90,9 @@
     _image = newImage;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setFinishedSelectedImage:(UIImage*)finishedSelected withFinishedUnselectedImage:(UIImage*)unselected {
     _image = finishedSelected;
     EbrDebugLog("setFinishedSelectedImage not supported\n");

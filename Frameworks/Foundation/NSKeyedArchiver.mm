@@ -138,6 +138,9 @@ static id makeReference(unsigned ref) {
     [_enc setObject:o forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeInt:(int)anInteger forKey:(NSString*)aKey {
     CHECKKEY
 
@@ -150,30 +153,45 @@ static id makeReference(unsigned ref) {
         [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeInt32:(int32_t)anInteger forKey:(NSString*)aKey {
     CHECKKEY
 
         [_enc setObject:[NSNumber numberWithLong:anInteger] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeInt64:(int64_t)anInteger forKey:(NSString*)aKey {
     CHECKKEY
 
         [_enc setObject:[NSNumber numberWithLongLong:anInteger] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeBool:(BOOL)aBool forKey:(NSString*)aKey {
     CHECKKEY
 
         [_enc setObject:[NSNumber numberWithBool:aBool] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeFloat:(float)aFloat forKey:(NSString*)aKey {
     CHECKKEY
 
         [_enc setObject:[NSNumber numberWithFloat:aFloat] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeDouble:(double)aDouble forKey:(NSString*)aKey {
     CHECKKEY
 
@@ -186,12 +204,18 @@ static id makeReference(unsigned ref) {
         [_enc setObject:[NSValue valueWithCGPoint:pt] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeBytes:(char*)aPointer length:(int)length forKey:(NSString*)aKey {
     CHECKKEY
 
         [_enc setObject:[NSData dataWithBytes:aPointer length:length] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSData*)archivedDataWithRootObject:(id)anObject {
     NSMutableData* m = [[NSMutableData alloc] initWithCapacity:10240];
     NSKeyedArchiver* a = [[NSKeyedArchiver alloc] initForWritingWithMutableData:m];
@@ -213,6 +237,9 @@ static id makeReference(unsigned ref) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)finishEncoding {
     id error;
 
@@ -229,6 +256,9 @@ static id makeReference(unsigned ref) {
     [_delegate archiverDidFinish:self];
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)archiveRootObject:(id)anObject toFile:(NSString*)aPath {
     CREATE_AUTORELEASE_POOL(pool);
     id d;
@@ -240,6 +270,9 @@ static id makeReference(unsigned ref) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initForWritingWithMutableData:(NSMutableData*)data {
     self = [super init];
     if (self) {
@@ -258,6 +291,9 @@ static id makeReference(unsigned ref) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeObject:(id)anObject forKey:(NSString*)aKey {
     CHECKKEY
 
@@ -450,11 +486,17 @@ static id makeReference(unsigned ref) {
     return refObject;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSString*)classNameForClass:(id)aClass {
     // return (NSString*)NSMapGet(globalClassMap, (void*)aClass);
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)classNameForClass:(id)aClass {
     id* nameTmp;
     if (_priv->clsMap.get(aClass, nameTmp))

@@ -95,10 +95,16 @@ static void commonInit(UIPanGestureRecognizer* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumNumberOfTouches:(NSUInteger)numberOfTouches {
     _minimumNumberOfTouches = numberOfTouches;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumNumberOfTouches:(NSUInteger)numberOfTouches {
     _maximumNumberOfTouches = numberOfTouches;
 }
@@ -332,6 +338,9 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return newPt;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)translationInView:(UIView*)viewAddr {
     const CGPoint origin = { 0, 0 };
 
@@ -346,6 +355,9 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTranslation:(CGPoint)translation inView:(id)viewAddr {
     const CGPoint origin = { 0, 0 };
 
@@ -370,6 +382,9 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)velocityInView:(UIView*)viewAddr {
     CGPoint ret;
 
@@ -391,6 +406,9 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)stage {
     return _stage;
 }

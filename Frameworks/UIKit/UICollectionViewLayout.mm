@@ -55,17 +55,29 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)collectionView {
     return _collectionView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerClass:(id)viewClass forDecorationViewOfKind:(id)decorationViewKind {
     [_decorationViewClassDict setObject:viewClass forKey:decorationViewKind];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareLayout {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)invalidateLayout {
     [[_collectionView collectionViewData] invalidate];
     [_collectionView setNeedsLayout];
@@ -87,6 +99,9 @@
     return _decorationViewExternalObjectsTables;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initialLayoutAttributesForAppearingItemAtIndexPath:(id)itemIndexPath {
     id attrs =
         [_initialAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
@@ -98,6 +113,9 @@
     return attrs;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)finalLayoutAttributesForDisappearingItemAtIndexPath:(id)itemIndexPath {
     id attrs =
         [_finalAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
@@ -109,6 +127,9 @@
     return attrs;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareForCollectionViewUpdates:(id)updateItems {
     id update = [_collectionView currentUpdate];
 
@@ -237,6 +258,9 @@
     return attributes;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)layoutAttributesForDecorationViewOfKind:(id)elementKind withIndexPath:(id)indexPath {
     UICollectionViewLayoutAttributes* attributes = [self new];
     attributes->_elementCategory = UICollectionViewItemTypeDecorationView;
@@ -245,12 +269,18 @@
     return attributes;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     _frame = frame;
     _size = frame.size;
     _center = CGPoint::point(CGRectGetMidX(_frame), CGRectGetMidY(_frame));
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)frame {
     return _frame;
 }
@@ -259,22 +289,37 @@
     return _size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)center {
     return _center;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CATransform3D)transform3D {
     return _transform3D;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)alpha {
     return _alpha;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAlpha:(float)alpha {
     _alpha = alpha;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCenter:(CGPoint)center {
     _center = center;
     _frame = CGRectMake((_center.x - _frame.size.width / 2), (_center.y - _frame.size.height / 2), _frame.size.width, _frame.size.height);
@@ -284,10 +329,16 @@
     return _hidden;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setZIndex:(NSInteger)index {
     _zIndex = index;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)zIndex {
     return _zIndex;
 }
@@ -296,18 +347,30 @@
     return _elementKind;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)representedElementKind {
     return _elementKind;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UICollectionViewItemType)representedElementCategory {
     return _elementCategory;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)indexPath {
     return _indexPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setIndexPath:(id)indexPath {
     _indexPath = indexPath;
 }

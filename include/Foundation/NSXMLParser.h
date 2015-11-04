@@ -114,11 +114,29 @@ typedef uint32_t NSXMLParserError;
 
 @protocol NSXMLParserDelegate
 @optional
+
+/**
+ @Status Interoperable
+*/
 - (void)parserDidStartDocument:(NSXMLParser *)parser;
+
+/**
+ @Status Interoperable
+*/
 - (void)parserDidEndDocument:(NSXMLParser *)parser;
 
 - (void)parser:(NSXMLParser *)parser foundElementDeclarationWithName:(NSString *)elementName model:(NSString *)model;
+
+/**
+ @Status Caveat
+ @Notes nameSpaceURI and qualifiedName are always nil
+*/
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributes;
+
+/**
+ @Status Caveat
+ @Notes nameSpaceURI and qualifiedName are always nil
+*/
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName;
 
 - (void)parser:(NSXMLParser *)parser foundAttributeDeclarationWithName:(NSString *)attributeName forElement:(NSString *)elementName type:(NSString *)type defaultValue:(NSString *)defaultValue;
@@ -126,8 +144,19 @@ typedef uint32_t NSXMLParserError;
 - (void)parser:(NSXMLParser *)parser didStartMappingPrefix:(NSString *)prefix toURI:(NSString *)uri;
 - (void)parser:(NSXMLParser *)parser didEndMappingPrefix:(NSString *)prefix;
 
+/**
+ @Status Interoperable
+*/
 - (void)parser:(NSXMLParser *)parser foundCDATA:(NSData *)cdata;
+
+/**
+ @Status Interoperable
+*/
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
+
+/**
+ @Status Interoperable
+*/
 - (void)parser:(NSXMLParser *)parser foundComment:(NSString *)comment;
 - (void)parser:(NSXMLParser *)parser foundIgnorableWhitespace:(NSString *)whitespace;
 

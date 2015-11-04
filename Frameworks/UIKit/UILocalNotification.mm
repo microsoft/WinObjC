@@ -75,30 +75,48 @@ EbrDebugLog("fireDate is %s.\n", s);
     //[self _cancelNotification];
 }
 
+/**
+ @Status Stub
+*/
 - (id)fireDate {
     return _fireDate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setFireDate:(id)val {
     _fireDate = val;
 
     formatFireDate();
 }
 
+/**
+ @Status Stub
+*/
 - (id)timeZone {
     return _timeZone;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setTimeZone:(id)val {
     _timeZone = val;
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)repeatInterval {
     EbrDebugLog("!!!! repeatInterval called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setRepeatInterval:(NSCalendarUnit)val {
     EbrDebugLog("!!!! setRepeatInterval called!\n");
     return nil;
@@ -114,10 +132,16 @@ EbrDebugLog("fireDate is %s.\n", s);
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)alertBody {
     return _body;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setAlertBody:(id)val {
     _body = val;
     return self;
@@ -133,10 +157,16 @@ EbrDebugLog("fireDate is %s.\n", s);
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)alertAction {
     return _action;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setAlertAction:(id)val {
     _action = val;
     return self;
@@ -151,30 +181,48 @@ EbrDebugLog("fireDate is %s.\n", s);
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)soundName {
     EbrDebugLog("!!!! soundName called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setSoundName:(id)val {
     EbrDebugLog("!!!! setSoundName called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)applicationIconBadgeNumber {
     EbrDebugLog("!!!! applicationIconBadgeNumber called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setApplicationIconBadgeNumber:(NSInteger)val {
     EbrDebugLog("!!!! setApplicationIconBadgeNumber called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)userInfo {
     return _userInfo;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setUserInfo:(id)val {
     _userInfo = val;
     return self;

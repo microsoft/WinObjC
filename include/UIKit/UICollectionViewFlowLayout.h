@@ -38,22 +38,45 @@ SB_EXPORT NSString* const UICollectionElementKindSectionHeader;
 SB_EXPORT NSString* const UICollectionElementKindSectionFooter;
 
 @protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
+
+/**
+ @Status Interoperable
+*/
 - (CGSize)collectionView:(UICollectionView*)collectionView
                   layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ @Status Interoperable
+*/
 - (UIEdgeInsets)collectionView:(UICollectionView*)collectionView
                         layout:(UICollectionViewLayout*)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section;
+
+/**
+ @Status Interoperable
+*/
 - (CGFloat)collectionView:(UICollectionView*)collectionView
                                  layout:(UICollectionViewLayout*)collectionViewLayout
     minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+
+/**
+ @Status Interoperable
+*/
 - (CGFloat)collectionView:(UICollectionView*)collectionView
                                       layout:(UICollectionViewLayout*)collectionViewLayout
     minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)collectionView:(UICollectionView*)collectionView
                              layout:(UICollectionViewLayout*)collectionViewLayout
     referenceSizeForHeaderInSection:(NSInteger)section;
+
+/**
+ @Status Interoperable
+*/
 - (CGSize)collectionView:(UICollectionView*)collectionView
                              layout:(UICollectionViewLayout*)collectionViewLayout
     referenceSizeForFooterInSection:(NSInteger)section;

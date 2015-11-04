@@ -92,6 +92,9 @@ void CATransform3D::MakeOrtho(float left, float right, float bottom, float top, 
     m44 = 1.f;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far) {
     CATransform3D ret;
 
@@ -153,6 +156,9 @@ void CATransform3D::MultiplyBy(CATransform3D* matrix) {
 const CATransform3D CATransform3DIdentity =
     { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
+/**
+ @Status Interoperable
+*/
 bool CATransform3DIsIdentity(CATransform3D curTransform) {
     if (memcmp(&curTransform, &CATransform3DIdentity, sizeof(curTransform)) == 0) {
         return TRUE;
@@ -234,6 +240,9 @@ void CATransform3D::TransformPoints2D(struct CGPoint* points, int count) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DMakeScale(float x, float y, float z) {
     CATransform3D ret;
 
@@ -242,6 +251,9 @@ CATransform3D CATransform3DMakeScale(float x, float y, float z) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DScale(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
@@ -251,6 +263,9 @@ CATransform3D CATransform3DScale(CATransform3D cur, float x, float y, float z) {
     return rot;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DRotate(CATransform3D cur, float angle, float x, float y, float z) {
     CATransform3D rot;
 
@@ -260,6 +275,9 @@ CATransform3D CATransform3DRotate(CATransform3D cur, float angle, float x, float
     return cur;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DMakeRotation(float angle, float x, float y, float z) {
     CATransform3D ret;
 
@@ -268,6 +286,9 @@ CATransform3D CATransform3DMakeRotation(float angle, float x, float y, float z) 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DMakeTranslation(float x, float y, float z) {
     CATransform3D ret;
 
@@ -276,6 +297,9 @@ CATransform3D CATransform3DMakeTranslation(float x, float y, float z) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
@@ -285,12 +309,18 @@ CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float 
     return rot;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b) {
     (*((CATransform3D*)&a)).MultiplyBy(&b);
 
     return a;
 }
 
+/**
+ @Status Interoperable
+*/
 void CATransform3DTransformPoints(CATransform3D a, CAPoint3D* points, int count) {
     (*((CATransform3D*)&a)).TransformPoints(points, count);
 }

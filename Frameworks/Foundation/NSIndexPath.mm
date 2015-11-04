@@ -18,29 +18,48 @@
 #include "Foundation/NSIndexPath.h"
 
 @implementation NSIndexPath : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (NSIndexPath*)indexPathWithIndex:(unsigned)index {
     return [[[self alloc] initWithIndexes:&index length:1] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSIndexPath*)indexPathWithIndexes:(unsigned*)indexes length:(unsigned)length {
     return [[[self alloc] initWithIndexes:indexes length:length] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSIndexPath*)indexPathForRow:(unsigned)row inSection:(unsigned)section {
     unsigned indexes[] = { section, row };
 
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSIndexPath*)indexPathForItem:(unsigned)row inSection:(unsigned)section {
     NSUInteger indexes[] = { section, row };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithIndex:(unsigned)index {
     return [self initWithIndexes:&index length:1];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithIndexes:(unsigned*)indexes length:(unsigned)length {
     _length = length;
     _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
@@ -68,6 +87,10 @@
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes position must be valid
+*/
 - (unsigned)indexAtPosition:(unsigned)position {
     if (position >= _length) {
         assert(0);
@@ -78,6 +101,9 @@
     return _indexes[position];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getIndexes:(NSUInteger*)indexes {
     for (unsigned int i = 0; i < _length; i++) {
         indexes[i] = _indexes[i];
@@ -88,6 +114,9 @@
     return [[[self class] alloc] initWithIndexes:_indexes length:_length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexPath*)indexPathByAddingIndex:(int)newIndex {
     id ret = [[self class] alloc];
 
@@ -102,6 +131,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)length {
     return _length;
 }
@@ -116,6 +148,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)compare:(id)otherObj {
     int len1 = [self length];
     int len2 = [otherObj length];
@@ -142,14 +177,23 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)item {
     return [self row];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)row {
     return [self indexAtPosition:1];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)section {
     return [self indexAtPosition:0];
 }

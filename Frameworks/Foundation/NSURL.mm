@@ -319,11 +319,17 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithScheme:(NSString*)scheme host:(NSString*)host path:(NSString*)path {
     initPath(self, [scheme UTF8String], [host UTF8String], [path UTF8String]);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initFileURLWithPath:(NSString*)path {
     if (path == nil)
         return nil;
@@ -362,6 +368,9 @@ static void StripSlashes(char* pPath) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initFileURLWithPath:(NSString*)path isDirectory:(BOOL)isDirectory {
     NSURL* baseURL = nil;
     char szBasePath[4096] = "";
@@ -404,14 +413,23 @@ static void StripSlashes(char* pPath) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithString:(NSString*)string {
     return [self initWithString:string relativeToURL:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSURL*)URLByAppendingPathComponent:(id)path {
     return [self URLByAppendingPathComponent:path isDirectory:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSURL*)URLByAppendingPathComponent:(id)path isDirectory:(BOOL)isDirectory {
     if (path == nil) {
         EbrDebugLog("URLByAppendingPathComponent: path is nil!\n");
@@ -434,6 +452,9 @@ static void StripSlashes(char* pPath) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithString:(id)string relativeToURL:(id)parent {
     if (string == nil)
         return nil;
@@ -469,18 +490,30 @@ static void StripSlashes(char* pPath) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURL*)fileURLWithPath:(id)path {
     return [[[self alloc] initFileURLWithPath:path] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURL*)fileURLWithPath:(id)path isDirectory:(BOOL)isDirectory {
     return [[[self alloc] initFileURLWithPath:path isDirectory:isDirectory] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURL*)URLWithString:(id)string {
     return [[[self alloc] initWithString:string] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURL*)URLWithString:(id)string relativeToURL:(id)parent {
     return [[[self alloc] initWithString:string relativeToURL:parent] autorelease];
 }
@@ -585,6 +618,9 @@ static void StripSlashes(char* pPath) {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)relativeString {
     if (!_uri) {
         return [self absoluteString];
@@ -599,6 +635,9 @@ static void StripSlashes(char* pPath) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)absoluteString {
     if (_absoluteString == nil) {
         if (_fullUri) {
@@ -619,6 +658,9 @@ static void StripSlashes(char* pPath) {
     return (NSString*)_absoluteString;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)resourceSpecifier {
     char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
     if (uriStr == NULL)
@@ -639,6 +681,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)parameterString {
     if (!_fullUri->_parameters)
         return nil;
@@ -648,6 +693,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)scheme {
     if (!_fullUri)
         return nil;
@@ -659,6 +707,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)host {
     if (!_fullUri)
         return nil;
@@ -671,6 +722,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)fragment {
     if (!_fullUri->_fragment)
         return nil;
@@ -680,6 +734,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)path {
     if (!_fullUri)
         return nil;
@@ -691,10 +748,16 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)pathComponents {
     return [[self path] pathComponents];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)port {
     if (_fullUri->_port == -1)
         return nil;
@@ -702,6 +765,9 @@ static void StripSlashes(char* pPath) {
     return [NSNumber numberWithInt:_fullUri->_port];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)query {
     if (!_fullUri->_query)
         return nil;
@@ -711,6 +777,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)relativePath {
     if (!_uri->_path)
         return nil;
@@ -720,6 +789,9 @@ static void StripSlashes(char* pPath) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isFileURL {
     if (_fullUri) {
         if (_fullUri->_scheme == NULL) {
@@ -735,6 +807,9 @@ static void StripSlashes(char* pPath) {
     return [self absoluteString];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)absoluteURL {
     if (_baseURL == nil)
         return self;
@@ -742,23 +817,38 @@ static void StripSlashes(char* pPath) {
     return [NSURL URLWithString:[self absoluteString]];
 }
 
+/**
+ @Status Stub
+*/
 - (id)standardizedURL {
     EbrDebugLog("standardizedURL needs attention\n");
     return [self copy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)lastPathComponent {
     return [[self path] lastPathComponent];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)pathExtension {
     return [[self path] pathExtension];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)baseURL {
     return _baseURL;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)setResourceValue:(id)value forKey:(id)key error:(NSError**)error {
     if (error)
         *error = nil;

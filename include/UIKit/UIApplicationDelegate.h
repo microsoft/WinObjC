@@ -36,9 +36,25 @@
 
 @protocol UIApplicationDelegate <NSObject>
 @optional
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+
+/**
+ @Status Interoperable
+*/
 - (void)applicationDidFinishLaunching:(UIApplication *)application;
+
+/**
+ @Status Interoperable
+*/
 - (void)applicationDidBecomeActive:(UIApplication *)application;
+
+/**
+ @Status Interoperable
+*/
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationWillTerminate:(UIApplication *)application;
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;

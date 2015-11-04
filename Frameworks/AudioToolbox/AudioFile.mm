@@ -466,6 +466,10 @@ public:
     }
 };
 
+/**
+ @Status Caveat
+ @Notes Only file:// URLs supported
+*/
 OSStatus AudioFileOpenURL(CFURLRef url, SInt8 permissions, AudioFileTypeID type, AudioFileID* out) {
     char* filename = (char*)[[url path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
@@ -572,6 +576,10 @@ public:
 
 typedef ExtAudioFile* ExtAudioFileRef;
 
+/**
+ @Status Caveat
+ @Notes Only file:// URLs supported
+*/
 OSStatus ExtAudioFileOpenURL(CFURLRef url, ExtAudioFileRef* out) {
     AudioFile* audioFile = NULL;
     int ret = AudioFileOpenURL(url, 0, 0, &audioFile);
@@ -597,16 +605,26 @@ OSStatus AudioFileCreateWithURL(
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 OSStatus AudioFileClose(AudioFileID fileID) {
     delete fileID;
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 OSStatus ExtAudioFileDispose(ExtAudioFileRef fileID) {
     delete fileID;
     return 0;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited properties supported depending on codec
+*/
 OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
     if (fileID == NULL) {
         return 1234;
@@ -615,6 +633,10 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
+/**
+ @Status Caveat
+ @Notes Limited properties supported depending on codec
+*/
 OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
     if (fileID) {
         return fileID->pAudioFile->getProperty(propID, ioDataSize, propOutData);
@@ -623,6 +645,10 @@ OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID 
     }
 }
 
+/**
+ @Status Caveat
+ @Notes Only ClientDataFormat property supported
+*/
 OSStatus ExtAudioFileSetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32 ioDataSize, const void* propInData) {
     fileID->pAudioFile->setProperty(propID, ioDataSize, propInData);
     return 0;
@@ -658,6 +684,10 @@ DWORD AudioFileGetPropertyInfo(AudioFile* fileID, DWORD propID, DWORD* outDataSi
     return (DWORD)0;
 }
 
+/**
+ @Status Caveat
+ @Notes useCached parameter not supported
+*/
 OSStatus AudioFileReadBytes(AudioFileID fileID, Boolean useCached, SInt64 startByte, UInt32* ioNumBytes, void* outBuffer) {
     return fileID->readBytes(startByte, ioNumBytes, outBuffer);
 }
@@ -667,6 +697,9 @@ OSStatus ExtAudioFileSeek(ExtAudioFileRef fileID, SInt64 pos) {
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 OSStatus ExtAudioFileRead(ExtAudioFileRef fileID, UInt32* numFrames, AudioBufferList* pData) {
     if (fileID == NULL) {
         *numFrames = 0;

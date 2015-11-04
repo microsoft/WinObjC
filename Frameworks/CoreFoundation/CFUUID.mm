@@ -29,6 +29,9 @@ bool operator<(const CFUUIDBytes& lhs, const CFUUIDBytes& rhs) {
 
 static std::map<CFUUIDBytes, id> constantUUIDs;
 
+/**
+ @Status Interoperable
+*/
 CFUUIDRef CFUUIDCreate(CFAllocatorRef allocator) {
     return (CFUUIDRef)[[_LazyNSUUID alloc] init];
 }
@@ -96,6 +99,9 @@ CFUUIDBytes CFUUIDGetUUIDBytes(CFUUIDRef self) {
     return bytes;
 }
 
+/**
+ @Status Interoperable
+*/
 CFStringRef CFUUIDCreateString(CFAllocatorRef allocator, CFUUIDRef self) {
     return (CFStringRef) [[(NSUUID*)self UUIDString] retain];
 }

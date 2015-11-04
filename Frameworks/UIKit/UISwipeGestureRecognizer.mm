@@ -59,18 +59,30 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setNumberOfTouchesRequired:(NSUInteger)numberOfTouches {
     _numberOfTouchesRequired = numberOfTouches;
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)numberOfTouchesRequired {
     return _numberOfTouchesRequired;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDirection:(UISwipeGestureRecognizerDirection)direction {
     _direction = direction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UISwipeGestureRecognizerDirection)direction {
     return _direction;
 }

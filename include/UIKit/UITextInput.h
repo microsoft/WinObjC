@@ -36,8 +36,19 @@ typedef enum {
 
 @protocol UIKeyInput <UITextInputTraits>
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteBackward;
+
+/**
+ @Status Stub
+*/
 - (void)insertText:(NSString *)text;
+
+/**
+ @Status Stub
+*/
 - (BOOL)hasText;
 
 @end

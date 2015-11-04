@@ -512,49 +512,86 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSValue*)initWithBytes:(const void*)bytes objCType:(const char*)objCType {
     [self release];
     return [NSValue newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithBytes:(const void*)bytes objCType:(const char*)objCType {
     return [[self newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)value:(const void*)bytes withObjCType:(const char*)objCType {
     return [[self newWithZone:nil bytes:bytes valueType:NSValueTypeUnknown objCType:objCType] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithCGSize:(CGSize)value {
     return [[[_NSValue_CGSize alloc] initWithCGSize:value] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithCGPoint:(CGPoint)value {
     return [[[_NSValue_CGPoint alloc] initWithCGPoint:value] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithCGRect:(CGRect)value {
     return [[[_NSValue_CGRect alloc] initWithCGRect:value] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithRange:(NSRange)value {
     return [[[_NSValue_NSRange alloc] initWithNSRange:value] autorelease];
 }
 
+/**
+ @Status Interoperable
+ @Notes Not sure if this should be exposed
+*/
 + (NSValue*)valueWithCATransform3D:(CATransform3D)value {
     return [[[_NSValue_CATransform3D alloc] initWithCATransform3D:value] autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes initWithX is a private IW extension on NSValue used internally
+*/
 - (NSValue*)initWithCGSize:(CGSize)value {
     [self release];
     return [[_NSValue_CGSize alloc] initWithCGSize:value];
 }
 
+/**
+ @Status Caveat
+ @Notes initWithX is a private IW extension on NSValue used internally
+*/
 - (NSValue*)initWithCGPoint:(CGPoint)value {
     [self release];
     return [[_NSValue_CGPoint alloc] initWithCGPoint:value];
 }
 
+/**
+ @Status Caveat
+ @Notes initWithX is a private IW extension on NSValue used internally
+*/
 - (NSValue*)initWithCGRect:(CGRect)value {
     [self release];
     return [[_NSValue_CGRect alloc] initWithCGRect:value];
@@ -565,10 +602,16 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return [[_NSValue_CATransform3D alloc] initWithCATransform3D:value];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithPointer:(const void*)pointer {
     return [[[_NSValue_Pointer alloc] initWithPointer:pointer] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSValue*)valueWithNonretainedObject:(__unsafe_unretained id)object {
     return [[[_NSValue_NRO alloc] initWithNonretainedObject:object] autorelease];
 }
@@ -595,6 +638,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     [coder encodeBytes:[self _rawBytes] length:[self _rawSize] forKey:@"NSV.data"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (const char*)objCType {
     return nullptr;
 }
@@ -606,6 +652,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToValue:(NSValue*)other {
     return [self class] == [other class] && _valueType == other->_valueType && [self _rawSize] == [other _rawSize] &&
            memcmp([self _rawBytes], [other _rawBytes], [self _rawSize]) == 0;
@@ -632,34 +681,58 @@ static unsigned hashBytes(const void* bytes, size_t len) {
     return [NSValue newWithZone:zone bytes:[self _rawBytes] valueType:_valueType objCType:[self objCType]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGSize." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)CGSizeValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGSize." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)pointValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGPoint." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)CGPointValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGPoint." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)rectValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGRect." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)CGRectValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGRect." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIOffset)UIOffsetValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a UIOffset." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CATransform3D)CATransform3DValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CATransform3D." userInfo:nil];
 }
@@ -674,22 +747,34 @@ static unsigned hashBytes(const void* bytes, size_t len) {
         [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGAffineTransform." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSRange)rangeValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a NSRange." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (__unsafe_unretained id)nonretainedObjectValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException
                                    reason:@"This value does not store a nonretained object."
                                  userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (const void*)pointerValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException
                                    reason:@"This value does not store an unguarded pointer."
                                  userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getValue:(void* __attribute__((unused)))dest {
     @throw [NSException exceptionWithName:NSDestinationInvalidException
                                    reason:@"Attempted to get raw data from a non-specialized NSValue instance."

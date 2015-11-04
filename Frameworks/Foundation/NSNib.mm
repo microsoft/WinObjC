@@ -31,10 +31,16 @@ static IWLazyClassLookup _LazyUIWindow("UIWindow");
     idretain _bundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject {
     return [self loadNib:filename withOwner:ownerObject proxies:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
     NSData* data = [NSData dataWithContentsOfFile:filename];
     if (data == nil) {

@@ -22,6 +22,9 @@
 @synthesize numberOfLoops;
 @synthesize volume;
 
+/**
+ @Status Stub
+*/
 - (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError {
     if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
@@ -29,6 +32,9 @@
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)initWithData:(NSData*)data error:(NSError**)outError {
     if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
@@ -38,6 +44,10 @@
 @end
 
 @implementation AVAudioSession
+
+/**
+ @Status Stub
+*/
 + (AVAudioSession*)sharedInstance {
     return nil;
 }

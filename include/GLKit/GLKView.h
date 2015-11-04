@@ -25,6 +25,10 @@
 @class GLKView;
 
 @protocol GLKViewDelegate
+
+/**
+ @Status Interoperable
+*/
 -(void)glkView:(GLKView*)view drawInRect:(CGRect)rect;
 @end
 

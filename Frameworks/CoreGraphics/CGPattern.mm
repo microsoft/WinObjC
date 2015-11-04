@@ -138,6 +138,10 @@ CGPatternRef CGPatternCreateColorspace(void* info,
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes colorSpace parameter ignored
+*/
 CGPatternRef CGPatternCreate(void* info,
                              CGRect bounds,
                              CGAffineTransform matrix,
@@ -149,10 +153,16 @@ CGPatternRef CGPatternCreate(void* info,
     return CGPatternCreateColorspace(info, bounds, matrix, xStep, yStep, tiling, isColored, callbacks, isColored ? _ColorRGBA : _ColorA8);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGPatternRelease(CGPatternRef pattern) {
     CFRelease(pattern);
 }
 
+/**
+ @Status Interoperable
+*/
 CGPatternRef CGPatternCreateFromImage(CGImageRef img) {
     return [CGPattern patternWithImage:img];
 }

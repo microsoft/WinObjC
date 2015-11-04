@@ -81,6 +81,9 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)collectionView {
     if (!_collectionView) {
         CGRect mainScreenBounds;

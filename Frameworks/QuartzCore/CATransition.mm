@@ -32,10 +32,16 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setType:(id)type {
     _type = type;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSubtype:(id)subtype {
     _subtype = subtype;
 }

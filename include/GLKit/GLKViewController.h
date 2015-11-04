@@ -23,7 +23,15 @@
 @class GLKViewController;
 
 @protocol GLKViewControllerDelegate
+
+/**
+ @Status Interoperable
+*/
 -(void)glkViewController: (GLKViewController*)controller willPause:(BOOL)paused;
+
+/**
+ @Status Interoperable
+*/
 -(void)glkViewControllerUpdate: (GLKViewController*)controller;
 @end
 

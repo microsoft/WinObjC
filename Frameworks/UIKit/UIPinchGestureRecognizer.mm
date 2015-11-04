@@ -153,6 +153,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setScale:(float)scale {
     _curScale = scale;
     _startScale = scale;
@@ -164,6 +167,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     return _startScale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)scale {
     return _curScale;
 }

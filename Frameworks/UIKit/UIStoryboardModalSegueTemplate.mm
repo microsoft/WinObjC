@@ -128,14 +128,23 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)identifier {
     return _identifier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)destinationViewController {
     return _destination;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)sourceViewController {
     return _source;
 }

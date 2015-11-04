@@ -104,12 +104,21 @@ static void initInternal(UISearchBar* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setKeyboardType:(UIKeyboardType)type {
 }
 
@@ -121,38 +130,68 @@ static void initInternal(UISearchBar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setText:(NSString*)text {
     [_textField setText:text];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)text {
     return [_textField text];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsCancelButton:(BOOL)shows {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsCancelButton:(BOOL)shows animated:(BOOL)animated {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsBookmarkButton:(BOOL)shows {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBarStyle:(UIBarStyle)style {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPlaceholder:(id)placeholder {
     [_textField setPlaceholder:placeholder];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)placeholder {
     return [_textField placeholder];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(id)color {
 }
 
@@ -167,6 +206,9 @@ static void initInternal(UISearchBar* self) {
 - (void)setShowsSearchResultsButton:(BOOL)shows {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScopeButtonTitles:(id)titles {
 }
 
@@ -246,6 +288,9 @@ static void initInternal(UISearchBar* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBackgroundImage:(id)image {
 }
 
@@ -257,13 +302,22 @@ static void initInternal(UISearchBar* self) {
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSearchResultsButtonSelected:(BOOL)selected {
 }
 
+/**
+ @Status Stub
+*/
 - (NSInteger)selectedScopeButtonIndex {
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsScopeBar:(BOOL)show {
     if (!show) {
         _scopeButtonsHidden = true;
@@ -277,9 +331,15 @@ static void initInternal(UISearchBar* self) {
 - (void)setSearchFieldBackgroundImage:(UIImage*)image forState:(UIControlState)state {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setImage:(UIImage*)image forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBarTintColor:(UIColor*)color {
     [self setTintColor:color];
 }

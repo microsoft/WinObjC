@@ -23,10 +23,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSURLConnection.h"
 
 @implementation NSURLConnection : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (BOOL)canHandleRequest:(id)request {
     return ([NSURLProtocol _URLProtocolClassForRequest:request] != nil) ? YES : NO;
 }
 
+/**
+ @Status Caveat
+ @Notes queue parameter not supported
+*/
 + (void)sendAsynchronousRequest:(id)request
                           queue:(id)queue
               completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))completionHandler {
@@ -38,6 +46,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     completionHandler(response, data, error);
 }
 
+/**
+ @Status Caveat
+ @Notes NSError returned is not detailed
+*/
 + (id)sendSynchronousRequest:(id)request returningResponse:(NSURLResponse**)responsep error:(NSError**)errorp {
     id state = [[[NSURLConnectionState alloc] init] autorelease];
     id connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
@@ -75,10 +87,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)connectionWithRequest:(id)request delegate:(id)delegate {
     return [[[self alloc] initWithRequest:request delegate:delegate] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithRequest:(id)request delegate:(id)delegate startImmediately:(BOOL)startLoading {
     _request = [request copy];
     id cls = [NSURLProtocol _URLProtocolClassForRequest:request];
@@ -102,6 +120,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithRequest:(id)request delegate:(id)delegate {
     return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
@@ -115,6 +136,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)start {
     if (!_didRetain) {
         [self retain];
@@ -124,10 +148,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [_protocol startLoading];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
     [_protocol scheduleInRunLoop:runLoop forMode:mode];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
     [_protocol unscheduleFromRunLoop:runLoop forMode:mode];
 }
@@ -227,6 +257,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _delegate = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancel {
     [_protocol stopLoading];
 

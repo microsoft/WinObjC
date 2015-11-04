@@ -30,6 +30,9 @@
     idretaintype(NSString) _path;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)storyboardWithName:(NSString*)name bundle:(NSBundle*)bundle {
     UIStoryboard* ret = [self alloc];
 
@@ -53,6 +56,9 @@
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)instantiateInitialViewController {
     id fileName = [_fileMap objectForKey:_entryPoint];
 
@@ -93,6 +99,9 @@
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
     id fileName = [_fileMap objectForKey:(id)identifier];

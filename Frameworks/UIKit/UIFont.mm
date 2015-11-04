@@ -135,6 +135,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)familyNames {
     return [_fontList allKeys];
 }
@@ -178,6 +181,9 @@ ret->height += ascenderDelta;
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
     UIFont* ret = [self alloc];
 
@@ -249,6 +255,9 @@ ret->height += ascenderDelta;
     return dFont;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)systemFontOfSize:(float)size {
     UIFont* ret = [self fontWithName:@"Helvetica" size:size];
 
@@ -266,6 +275,9 @@ ret->height += ascenderDelta;
     assert(err == 0);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)boldSystemFontOfSize:(float)size {
     UIFont* ret = [self fontWithName:@"Helvetica Bold" size:size];
 
@@ -278,6 +290,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)fontNamesForFamilyName:(NSArray*)name {
     return [NSArray arrayWithObject:name];
 }
@@ -299,6 +314,9 @@ void loadFont(UIFont* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)fontWithSize:(float)size {
     UIFont* ret = [UIFont alloc];
 
@@ -319,10 +337,16 @@ void loadFont(UIFont* self) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)fontName {
     return _name;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)descender {
     FT_Face face = (FT_Face)_sizingFont;
     if (face == NULL)
@@ -332,6 +356,9 @@ void loadFont(UIFont* self) {
     return ((float)(face->size->metrics.descender)) / 64.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)ascender {
     FT_Face face = (FT_Face)_sizingFont;
     if (face == NULL)
@@ -345,6 +372,9 @@ void loadFont(UIFont* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)lineHeight {
     FT_Face face = (FT_Face)_sizingFont;
     if (face == NULL)
@@ -358,6 +388,9 @@ void loadFont(UIFont* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)capHeight {
     if (!_cachedCapHeight) {
         FT_Face face = (FT_Face)_sizingFont;
@@ -401,6 +434,9 @@ void loadFont(UIFont* self) {
     return _capHeight;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)xHeight {
     if (!_cachedXHeight) {
         FT_Face face = (FT_Face)_sizingFont;
@@ -444,26 +480,44 @@ void loadFont(UIFont* self) {
     return _xHeight;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)pointSize {
     return _size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)leading {
     return 0.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 + (float)smallSystemFontSize {
     return 12.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 + (float)systemFontSize {
     return 14.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 + (float)labelFontSize {
     return 17.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 + (float)buttonFontSize {
     return 14.0f;
 }
@@ -511,6 +565,9 @@ void loadFont(UIFont* self) {
 
 @end
 
+/**
+ @Status Interoperable
+*/
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     if (error)
         *error = nil;
@@ -533,6 +590,10 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     return true;
 }
 
+/**
+ @Status Caveat
+ @Notes matrix parameter not supported
+*/
 CGFontRef CTFontCreateWithName(id name, float size, CGAffineTransform* matrix) {
     id ret = [[UIFont fontWithName:name size:size] retain];
 

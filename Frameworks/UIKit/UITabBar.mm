@@ -86,16 +86,25 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)items {
     return _items;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setItems:(NSArray*)items {
     _layoutDirty = true;
     _items.attach([items copy]);
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelectedItem:(id)item {
     _selectedItem = item;
     for (UITabBarButton* button in (id) _buttons) {
@@ -103,10 +112,16 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id<UITabBarDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBarItem*)selectedItem {
     return _selectedItem;
 }
@@ -169,27 +184,45 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundImage:(UIImage*)image {
     _backgroundImage = image;
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)backgroundImage {
     return _backgroundImage;
 }
 
+/**
+ @Status Stub
+*/
 - (UIImage*)selectionIndicatorImage {
     return _selectionIndicatorImage;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSelectionIndicatorImage:(UIImage*)image {
     _selectionIndicatorImage = image;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSelectedImageTintColor:(UIColor*)color {
     EbrDebugLog("UITabBar setSelectedImageTintColor not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)color {
     EbrDebugLog("UITabBar setTintColor not supported\n");
 }

@@ -769,6 +769,9 @@ bool cf_dict_array::removeObjectForKey(const void* key, ICFDict* dict) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 CFMutableDictionaryRef CFDictionaryCreateMutable(CFAllocatorRef allocator,
                                                  CFIndex max,
                                                  const CFDictionaryKeyCallBacks* keyCallbacks,
@@ -779,6 +782,9 @@ CFMutableDictionaryRef CFDictionaryCreateMutable(CFAllocatorRef allocator,
     return (CFMutableDictionaryRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionarySetValue(CFMutableDictionaryRef dict, const void* key, const void* value) {
     _LazyDictOffset.member(dict)->setObjectKey(key, value, true);
 }
@@ -791,6 +797,9 @@ void CFDictionarySetValueExport(CFMutableDictionaryRef dict, const void* key, co
     CFDictionarySetValue(dict, key, value);
 }
 
+/**
+ @Status Interoperable
+*/
 CFDictionaryRef CFDictionaryCreate(void* allocator,
                                    const void** keys,
                                    void** values,
@@ -807,6 +816,9 @@ CFDictionaryRef CFDictionaryCreate(void* allocator,
     return (CFDictionaryRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
     const void* ret;
 
@@ -815,20 +827,32 @@ void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean CFDictionaryContainsKey(CFDictionaryRef dict, const void* key) {
     const void* ret;
 
     return _LazyDictOffset.member(dict)->objectForKey(key, ret);
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionaryRemoveValue(CFMutableDictionaryRef dict, const void* key) {
     _LazyDictOffset.member(dict)->removeKey(key);
 }
 
+/**
+ @Status Interoperable
+*/
 CFIndex CFDictionaryGetCount(CFDictionaryRef dict) {
     return _LazyDictOffset.member(dict)->getCount();
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionaryRemoveAllValues(CFMutableDictionaryRef dict) {
     if (_LazyDictOffset.member(dict) == NULL)
         return;
@@ -836,6 +860,9 @@ void CFDictionaryRemoveAllValues(CFMutableDictionaryRef dict) {
     _LazyDictOffset.member(dict)->removeAllValues();
 }
 
+/**
+ @Status Interoperable
+*/
 const void* CFDictionaryGetValue(CFDictionaryRef dict, const void* key) {
     if (dict == nil) {
         return 0;
@@ -848,6 +875,9 @@ const void* CFDictionaryGetValue(CFDictionaryRef dict, const void* key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean CFDictionaryGetValueIfPresent(CFDictionaryRef dict, const void* key, const void** valRet) {
     const void* ret;
 
@@ -859,6 +889,9 @@ Boolean CFDictionaryGetValueIfPresent(CFDictionaryRef dict, const void* key, con
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionaryApplyFunction(CFDictionaryRef dict, CFDictionaryApplierFunction function, void* context) {
     CFIndex count = CFDictionaryGetCount(dict);
 
@@ -874,6 +907,9 @@ void CFDictionaryApplyFunction(CFDictionaryRef dict, CFDictionaryApplierFunction
     EbrFree(vals);
 }
 
+/**
+ @Status Interoperable
+*/
 void CFDictionaryGetKeysAndValues(CFDictionaryRef dict, const void** pKeys, const void** pValues) {
     _LazyDictOffset.member(dict)->getKeysAndValues((const void**)pKeys, pValues);
 }

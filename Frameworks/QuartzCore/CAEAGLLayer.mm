@@ -37,6 +37,9 @@ typedef wchar_t WCHAR;
     WXCSwapChainPanel* _swapChainPanel;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDrawableProperties:(NSDictionary*)propertiesDict {
     [_properties release];
     _properties = [propertiesDict copy];
@@ -61,6 +64,10 @@ typedef wchar_t WCHAR;
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes WinObjC extension
+*/
 - (WXCSwapChainPanel*)swapChainPanel {
     return _swapChainPanel;
 }
@@ -69,6 +76,9 @@ typedef wchar_t WCHAR;
     return NULL;
 }
 
+/**
+ @Status Stub
+*/
 - (NSDictionary*)drawableProperties {
     return _properties;
 }

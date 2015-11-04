@@ -32,6 +32,9 @@
     BOOL _wasRemoved, _wasAborted;
 }
 
+/**
+ @Status Interoperable
+*/
 + (CAAnimation*)animation {
     CAAnimation* ret = [self alloc];
     ret->_timingProperties._duration = 1.0;
@@ -49,18 +52,31 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRemovedOnCompletion:(BOOL)remove {
     _timingProperties._removedOnCompletion = remove;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Caveat
+ @Notes Only linear, easein, easeout and easeinout are supported
+*/
 - (void)setTimingFunction:(CAMediaTimingFunction*)timingFunction {
     _timingProperties._timingFunction = [timingFunction retain];
 }
@@ -256,6 +272,9 @@
 
 @end
 
+/**
+ @Status Interoperable
+*/
 double CACurrentMediaTime() {
     return EbrGetMediaTime();
 }

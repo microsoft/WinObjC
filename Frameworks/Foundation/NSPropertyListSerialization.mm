@@ -34,6 +34,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 void printContents(int level, id obj);
 
 @implementation NSPropertyListSerialization : NSObject
+
+/**
+ @Status Caveat
+ @Notes mutability option not supported. Only binary, XML and text strings format supported.
+*/
 + (id)propertyListFromData:(NSData*)data
           mutabilityOption:(unsigned)mutability
                     format:(NSPropertyListFormat*)formatOut
@@ -105,11 +110,19 @@ void printContents(int level, id obj);
     }
 }
 
+/**
+ @Status Caveat
+ @Notes mutability option not supported. Only binary, XML and text strings format supported.
+*/
 + (id)propertyListWithData:(NSData*)data options:(unsigned)options format:(NSPropertyListFormat*)formatOut error:(NSError**)error {
     // [TODO] Not that this uses a different error format than ours. Below takes a string, we return an NSError.
     return [self propertyListFromData:data mutabilityOption:options format:formatOut errorDescription:NULL];
 }
 
+/**
+ @Status Caveat
+ @Notes Only binary property list is supported
+*/
 + (NSData*)dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString**)error {
     switch (format) {
         case NSPropertyListOpenStepFormat:

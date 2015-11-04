@@ -34,6 +34,10 @@ typedef void* GLKShaderMaterialPtr;
 // ----------------------------------------
 
 @protocol GLKNamedEffect
+
+/**
+ @Status Interoperable
+*/
 -(void)prepareToDraw;
 @end
 

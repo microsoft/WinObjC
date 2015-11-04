@@ -152,10 +152,16 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
 @implementation NSSet
 
+/**
+ @Status Interoperable
+*/
 + (id)setWithObject:(id)obj {
     return [[[self alloc] initWithObjects:&obj count:1] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)setWithObjects:(NSObject*)first, ... {
     va_list pReader;
     va_start(pReader, first);
@@ -192,6 +198,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)setByAddingObjectsFromSet:(NSSet*)set {
     NSMutableSet* result = [[self mutableCopy] autorelease];
 
@@ -200,6 +209,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)setByAddingObject:(id)obj {
     NSMutableSet* result = [[self mutableCopy] autorelease];
 
@@ -208,14 +220,23 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)setWithObjects:(id*)objects count:(NSUInteger)count {
     return [[[self alloc] initWithObjects:objects count:count] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSSet*)setWithSet:(NSSet*)set {
     return [[[self alloc] initWithSet:set] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSSet*)setWithArray:(NSArray*)array {
     return [[[self alloc] initWithArray:array] autorelease];
 }
@@ -225,11 +246,17 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
     NSSetTableInitWithObjects(self, objects, count);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithArray:(NSArray*)array {
     NSUInteger count = [array count];
     id* objects = (id*)EbrMalloc(count * sizeof(id));
@@ -242,6 +269,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithSet:(NSSet*)set {
     NSUInteger count = [set count];
     id* objects = (id*)EbrMalloc(count * sizeof(id));
@@ -258,6 +288,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjects:(NSObject*)first, ... {
     va_list pReader;
     va_start(pReader, first);
@@ -306,14 +339,23 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSSet*)set {
     return [[self new] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)containsObject:(id)obj {
     return [self member:obj] != nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)anyObject {
     for (id curObj in self) {
         return curObj;
@@ -322,6 +364,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allObjects {
     return [[self objectEnumerator] allObjects];
 }
@@ -334,6 +379,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [[NSMutableSet alloc] initWithSet:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)makeObjectsPerformSelector:(SEL)selector {
     for (id curObj in self) {
         _m(curObj, selector);
@@ -352,6 +400,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return NSSetEnumeratorGetNextObject(self, state->extra, stackBuf, maxCount);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSubsetOfSet:(NSSet*)other {
     if (self == other) {
         return YES;
@@ -366,6 +417,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)intersectsSet:(NSSet*)other {
     if (self == other) {
         return YES;
@@ -380,6 +434,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToSet:(NSSet*)other {
     if (self == other) {
         return YES;
@@ -398,10 +455,17 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateObjectsUsingBlock:(void (^)(id, BOOL*))block {
     [self enumerateObjectsWithOptions:0 usingBlock:block];
 }
 
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, BOOL*))block {
     if (options & NSEnumerationReverse) {
         assert(0);
@@ -419,6 +483,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors {
     NSArray* ret = [self allObjects];
     [ret sortedArrayUsingDescriptors:descriptors];
@@ -426,10 +493,16 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)member:(id)obj {
     return NSSetTableMember(self, obj);
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)count {
     return NSSetTableCount(self);
 }
@@ -439,6 +512,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSEnumerator*)objectEnumerator {
     return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
 }

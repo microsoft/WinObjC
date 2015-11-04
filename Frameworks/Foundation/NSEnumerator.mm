@@ -49,6 +49,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allObjects {
     NSArray* ret = [NSMutableArray new];
 
@@ -61,6 +64,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)nextObject {
     if (iteratorObj != nil) {
         id ret;

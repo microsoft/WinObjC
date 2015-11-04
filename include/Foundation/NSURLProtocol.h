@@ -13,12 +13,28 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @protocol NSURLProtocolClient
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirect;
+
+/**
+ @Status Interoperable
+*/
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol didReceiveResponse:(NSURLResponse *)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy;
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol cachedResponseIsValid:(NSCachedURLResponse *)response;
+
+/**
+ @Status Interoperable
+*/
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol didLoadData:(NSData *)data;
+
+/**
+ @Status Interoperable
+*/
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol didFailWithError:(NSError *)error;
+
+/**
+ @Status Interoperable
+*/
 -(void)URLProtocolDidFinishLoading:(NSURLProtocol *)urlProtocol;
 @end
 

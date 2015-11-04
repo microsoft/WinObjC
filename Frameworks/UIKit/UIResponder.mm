@@ -20,6 +20,10 @@ id _curFirstResponder;
 static int _changingResponder = 0;
 
 @implementation UIResponder : NSObject
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)resignFirstResponder {
     if (_curFirstResponder == self) {
         _curFirstResponder = nil;
@@ -31,25 +35,43 @@ static int _changingResponder = 0;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)canBecomeFirstResponder {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)canResignFirstResponder {
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 - (void)reloadInputViews {
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputView {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isFirstResponder {
     return _curFirstResponder == self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)becomeFirstResponder {
     if (_curFirstResponder == self) {
         return TRUE;
@@ -92,10 +114,16 @@ static int _changingResponder = 0;
 - (void)keyPressed:(unsigned)key {
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputAccessoryView {
     return nil;
 }
@@ -108,6 +136,9 @@ static int _changingResponder = 0;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -119,6 +150,9 @@ static int _changingResponder = 0;
     EbrDebugLog("Unhandled touchesBegan!\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     EbrDebugLog("Clicked: %s\n", object_getClassName(self));
     id nextResponder = [self nextResponder];
@@ -131,6 +165,9 @@ static int _changingResponder = 0;
     EbrDebugLog("Unhandled touchesMoved!\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     id nextResponder = [self nextResponder];
 
@@ -142,6 +179,9 @@ static int _changingResponder = 0;
     EbrDebugLog("Unhandled touchesEnded!\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     id nextResponder = [self nextResponder];
 
@@ -153,6 +193,9 @@ static int _changingResponder = 0;
     EbrDebugLog("Unhandled touchesCancelled!\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     id curTarget = self;
     while (curTarget != nil) {

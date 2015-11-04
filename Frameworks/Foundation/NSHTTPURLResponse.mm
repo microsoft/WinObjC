@@ -34,6 +34,10 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
 
     idretain _statusLine, _statusVersion;
 }
+
+/**
+ @Status Stub
+*/
 + (id)localizedStringForStatusCode:(int)code {
     return @"HTTP error";
 }
@@ -60,6 +64,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)statusCode {
     return _statusCode;
 }
@@ -90,6 +97,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)allHeaderFields {
     return _allHeaderFields;
 }

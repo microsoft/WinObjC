@@ -44,8 +44,20 @@ typedef uint32_t UICollectionViewScrollPosition;
 @end
 
 @protocol UICollectionViewDelegate <UIScrollViewDelegate>
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)collectionView:(UICollectionView*)collectionView shouldSelectItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)collectionView:(UICollectionView*)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)collectionView:(UICollectionView*)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath*)indexPath;
 @end
 

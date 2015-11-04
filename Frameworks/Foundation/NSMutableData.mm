@@ -66,14 +66,23 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     return [[[self alloc] initWithLength:0] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dataWithLength:(unsigned)length {
     return [[[self alloc] initWithLength:length] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dataWithCapacity:(unsigned)capacity {
     return [[[self alloc] initWithCapacity:capacity] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithLength:(unsigned)length {
     setCapacity(self, length, true);
     memset(_bytes, 0, length);
@@ -82,18 +91,27 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCapacity:(unsigned)length {
     _length = 0;
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendBytes:(const char*)bytes length:(unsigned)length {
     setCapacity(self, _length + length);
     memcpy(&_bytes[_length], bytes, length);
     _length += length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendData:(NSData*)data {
     char* bytes = (char*)[data bytes];
     unsigned length = [data length];
@@ -103,6 +121,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     _length += length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setData:(NSData*)data {
     char* bytes = (char*)[data bytes];
     unsigned length = [data length];
@@ -112,6 +133,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     _length = length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLength:(unsigned)length {
     unsigned setPos = _length;
     unsigned increasedSize = 0;
@@ -128,6 +152,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)increaseLengthBy:(unsigned)length {
     unsigned setPos = _length;
     unsigned increasedSize = length;
@@ -138,6 +165,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     memset(&_bytes[setPos], 0, increasedSize);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceBytesInRange:(NSRange)range withBytes:(void*)bytes {
     if (range.location + range.length > _length) {
         [self increaseLengthBy:(range.location + range.length) - (_length)];
@@ -147,6 +177,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     memcpy(&_bytes[range.location], bytes, range.length);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceBytesInRange:(NSRange)aRange withBytes:(void*)bytes length:(unsigned)length {
     if (aRange.location == 0 && aRange.length == _length && length == 0) {
         [self setLength:0];
@@ -155,6 +188,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     assert(!"replaceBytesInRangeLength not implemented!");
 }
 
+/**
+ @Status Interoperable
+*/
 - (uint8_t*)mutableBytes {
     return _bytes;
 }

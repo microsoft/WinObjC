@@ -44,6 +44,10 @@
 
 @end
 
+/**
+ @Status Caveat
+ @Notes Only supports file:/// URLs
+*/
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
     CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[url path]];
     ret->filename = [url path];
@@ -51,6 +55,9 @@ CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
     void* data = (void*)[provider bytes];
     DWORD size = [provider length];
@@ -59,6 +66,10 @@ CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
     return (CFDataRef)ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only calls getBytePointer
+*/
 CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
     EbrDebugLog("Warning: CGDataProviderCreateDirect is hacky\n");
     char* pBytes = (char*)callBacks->getBytePointer(info);
@@ -80,10 +91,16 @@ CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSeque
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data) {
     return [data retain];
 }
 
+/**
+ @Status Interoperable
+*/
 CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData) {
     CGDataProvider* ret = [[CGDataProvider alloc] initWithBytesNoCopy:(void*)data length:size freeWhenDone:FALSE];
     ret->releaseFunc = releaseData;
@@ -94,6 +111,9 @@ CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, siz
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
     CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[NSString stringWithCString:filename]];
     if (!ret) {
@@ -104,6 +124,9 @@ CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGDataProviderRelease(CGDataProviderRef data) {
     CFRelease(data);
 }

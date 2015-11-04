@@ -38,15 +38,24 @@ extern NSMutableDictionary* curGesturesDict;
     [self addTarget:dest action:destSel];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
     [self addTarget:target action:selector];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UIGestureRecognizerDelegate>)delegate {
     return _delegate;
 }
@@ -55,39 +64,72 @@ extern NSMutableDictionary* curGesturesDict;
     _view = view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)view {
     return _view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     _disabled = !enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     return !_disabled;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setCancelsTouchesInView:(BOOL)cancels {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDelaysTouchesBegan:(BOOL)delays {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDelaysTouchesEnded:(BOOL)delays {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIGestureRecognizerState)state {
     return _state;
 }
@@ -110,16 +152,25 @@ extern NSMutableDictionary* curGesturesDict;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addTarget:(id)target action:(SEL)action {
     _targets[_numTargets]._target = target;
     _targets[_numTargets]._selector = action;
     _numTargets++;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reset {
     _state = UIGestureRecognizerStatePossible;
 }
 
+/**
+ @Status Stub
+*/
 - (void)requireGestureRecognizerToFail:(UIGestureRecognizer*)gesture {
 }
 

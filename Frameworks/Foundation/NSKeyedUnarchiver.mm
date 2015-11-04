@@ -76,6 +76,9 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     return [[_expectedClassesInDecodePass.top() copy] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initForReadingWithData:(NSData*)data {
     if (data == nil) {
         return nil;
@@ -315,6 +318,9 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObjectForKey:(NSString*)key {
     if (_objectFailedSecureDecoding) {
         // This flag is set when we fail an object class check.
@@ -373,6 +379,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [self decodeObjectOfClass:[NSValue class] forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)containsValueForKey:(NSString*)key {
     return ([[_plistStack lastObject] objectForKey:key] != nil) ? TRUE : FALSE;
 }
@@ -382,6 +391,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [self decodeObjectForKey:idNum];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)decodeIntForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
@@ -392,6 +404,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [number intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)decodeInt32ForKey:(NSString*)key {
     return [self decodeIntForKey:key];
 }
@@ -400,10 +415,16 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [self decodeIntForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)decodeBoolForKey:(NSString*)key {
     return [self decodeIntForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (__int64)decodeInt64ForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
@@ -418,6 +439,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return val;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)decodeFloatForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
@@ -430,6 +454,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)decodeDoubleForKey:(NSString*)key {
     id number = _numberForKey(self, key);
 
@@ -453,6 +480,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)unarchiveObjectWithFile:(NSString*)file {
     id data = [NSData dataWithContentsOfFile:file];
 
@@ -469,6 +499,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)unarchiveObjectWithData:(NSData*)data {
     if ([data length] == 0) {
         return nil;
@@ -483,6 +516,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)length {
     *length = 0;
 
@@ -496,6 +532,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)finishDecoding {
 }
 

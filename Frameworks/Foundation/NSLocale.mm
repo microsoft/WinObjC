@@ -56,20 +56,33 @@ static NSLocale* _currentLocale;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithLocaleIdentifier:(NSString*)identifier {
     _locale = icu::Locale::createFromName([identifier UTF8String]);
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)localeWithLocaleIdentifier:(NSString*)identifier {
     return [[[self alloc] initWithLocaleIdentifier:identifier] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localeIdentifier {
     return [NSString stringWithUTF8String:_locale.getName()];
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSLocaleIdentifier is supported
+*/
 - (NSString*)displayNameForKey:(id)key value:(id)value {
     if ([NSLocaleIdentifier isEqualToString:key]) {
         icu::Locale displayLocale = icu::Locale::createFromName([value UTF8String]);
@@ -90,6 +103,10 @@ static NSLocale* _currentLocale;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes May not match system settings
+*/
 + (instancetype)currentLocale {
     return _currentLocale;
 }

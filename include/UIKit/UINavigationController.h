@@ -38,9 +38,17 @@
 
 @protocol UINavigationControllerDelegate <NSObject>
 @optional
+
+/**
+ @Status Interoperable
+*/
 - (void)navigationController:(UINavigationController*)navigationController
        didShowViewController:(UIViewController*)viewController
                     animated:(BOOL)animated;
+
+/**
+ @Status Interoperable
+*/
 - (void)navigationController:(UINavigationController*)navigationController
       willShowViewController:(UIViewController*)viewController
                     animated:(BOOL)animated;
