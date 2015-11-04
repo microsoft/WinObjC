@@ -14,12 +14,15 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocationExport.h>
 #import <CoreLocation/CLLocation.h>
-#import <CoreLocation/CLLocationManagerDelegate.h>
 #import <stdint.h> // uint32_t
 
 @class CLRegion;
+@protocol CLLocationManagerDelegate;
 
 typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
     kCLAuthorizationStatusNotDetermined = 0,
@@ -33,6 +36,7 @@ typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
 enum _CLActivityType { CLActivityTypeOther = 1, CLActivityTypeAutomotiveNavigation, CLActivityTypeFitness, CLActivityTypeOtherNavigation };
 typedef uint32_t CLActivityType;
 
+CORELOCATION_EXPORT_CLASS
 @interface CLLocationManager : NSObject
 
 @property (copy, nonatomic) NSString* purpose;
@@ -44,14 +48,22 @@ typedef uint32_t CLActivityType;
 @property (readonly, nonatomic) CLLocation* location;
 @property (readonly, nonatomic) NSSet* monitoredRegions;
 
-- (void)startUpdatingLocation;
-- (void)stopUpdatingLocation;
-+ (CLAuthorizationStatus)authorizationStatus;
-+ (BOOL)locationServicesEnabled;
-- (CLActivityType)activityType;
-- (void)startMonitoringForRegion:(CLRegion*)region;
-- (void)stopMonitoringForRegion:(CLRegion*)region;
 - (void)requestAlwaysAuthorization;
 - (void)requestWhenInUseAuthorization;
++ (CLAuthorizationStatus)authorizationStatus;
++ (BOOL)locationServicesEnabled;
++ (BOOL)deferredLocationUpdatesAvailable;
++ (BOOL)significantLocationChangeMonitoringAvailable;
++ (BOOL)headingAvailable;
++ (BOOL)isMonitoringAvailableForClass:(Class)regionClass;
++ (BOOL)isRangingAvailable;
+- (void)startUpdatingLocation;
+- (void)stopUpdatingLocation;
+- (void)requestLocation;
+- (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance timeout:(NSTimeInterval)timeout;
+- (void)disallowDeferredLocationUpdates;
+
+// TODO::
+// todo-nithishm-11022015 - Need to support other methods in future.
 
 @end
