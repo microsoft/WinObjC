@@ -84,7 +84,6 @@
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
-
       <SBResourceCopy Condition="'$(IncludeSecurity)' == 'true'" Include="$(StarboardLibDirs)\Security.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
@@ -117,11 +116,12 @@
     <PropertyGroup>
       <!-- Choose a CRT to use -->
       <ClangCompileCRTs>@(ClangCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClangCompileCRTs>
+      <ClangCompilePreprocessorDefinitions>@(ClangCompile->Metadata('PreprocessorDefinitions')->Distinct()->ClearMetadata())</ClangCompilePreprocessorDefinitions>
       <StarboardCRT>MultiThreadedDLL</StarboardCRT>
       <StarboardCRT Condition="$(ClangCompileCRTs.Contains('MultiThreadedDebugDLL'))">MultiThreadedDebugDLL</StarboardCRT>
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
-      <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
+      <StarboardCRTConfig Condition="$(ClangCompilePreprocessorDefinitions.Contains('DEBUG=1'))">Debug</StarboardCRTConfig>
       <!-- Library directories for SDK built from source -->
       <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
       <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
