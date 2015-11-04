@@ -271,6 +271,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Stub
 */
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    UNIMPLEMENTED();
     return TRUE;
 }
 
@@ -285,18 +286,21 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Stub
 */
 - (void)encodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)decodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (BOOL)isBeingDismissed {
+    UNIMPLEMENTED();
     return TRUE;
 }
 + (instancetype)allocWithZone:(NSZone*)zone {
@@ -1824,6 +1828,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Stub
 */
 - (void)setModalTransitionStyle:(UIModalTransitionStyle)style {
+    UNIMPLEMENTED();
     priv->_modalTransitionStyle = style;
 }
 
@@ -1831,6 +1836,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Stub
 */
 - (UIModalTransitionStyle)modalTransitionStyle {
+    UNIMPLEMENTED();
     return priv->_modalTransitionStyle;
 }
 
@@ -2077,6 +2083,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Stub
 */
 - (void)setNeedsStatusBarAppearanceUpdate {
+    UNIMPLEMENTED();
     EbrDebugLog("ignoring setNeedsStatusBarAppearanceUpdate!\n");
 }
 

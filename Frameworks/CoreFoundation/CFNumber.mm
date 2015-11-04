@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGAffineTransform.h>
@@ -24,6 +25,7 @@
  @Notes Asserts a failure - CF*GetType needs implementation
 */
 CFNumberType CFNumberGetType(CFNumberRef self) {
+    UNIMPLEMENTED();
     assert(0);
     return kCFNumberIntType;
 }

@@ -135,6 +135,7 @@ static void sizeViews(UIProgressView* self, bool animated) {
  @Status Stub
 */
 - (void)setProgressViewStyle:(UIProgressViewStyle)style {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -164,12 +165,14 @@ static void sizeViews(UIProgressView* self, bool animated) {
  @Status Stub
 */
 - (void)setProgressTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 /**

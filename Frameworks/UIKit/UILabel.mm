@@ -224,6 +224,7 @@
  @Status Stub
 */
 - (void)setAttributedText:(NSAttributedString*)newStr {
+    UNIMPLEMENTED();
     _attributedText.attach([newStr copy]);
     [self setText:[_attributedText string]];
 }
@@ -232,6 +233,7 @@
  @Status Stub
 */
 - (NSAttributedString*)attributedText {
+    UNIMPLEMENTED();
     return _attributedText;
 }
 
@@ -360,6 +362,7 @@
  @Status Stub
 */
 - (void)setBaselineAdjustment:(UIBaselineAdjustment)adjustment {
+    UNIMPLEMENTED();
     _baselineAdjustment = adjustment;
 }
 
@@ -367,6 +370,7 @@
  @Status Stub
 */
 - (UIBaselineAdjustment)baselineAdjustment {
+    UNIMPLEMENTED();
     return _baselineAdjustment;
 }
 

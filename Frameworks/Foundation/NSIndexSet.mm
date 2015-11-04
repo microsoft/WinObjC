@@ -210,6 +210,7 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
  @Status Stub
 */
 - (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
+    UNIMPLEMENTED();
     assert(!"indexGreaterThanIndex not implemented!");
     return -1;
 }
@@ -278,6 +279,7 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
  @Status Stub
 */
 - (BOOL)containsIndex:(unsigned)anIndex {
+    UNIMPLEMENTED();
     assert(!"containsIndex not implemented!");
     return YES;
 }
@@ -349,6 +351,7 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
  @Status Stub
 */
 - (void)addIndexesInRange:(NSRange)aRange {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -420,6 +423,7 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
  @Status Stub
 */
 - (void)addIndex:(NSUInteger)index {
+    UNIMPLEMENTED();
     NSRange r;
 
     r.location = index;
@@ -432,6 +436,7 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
  @Status Stub
 */
 - (void)addIndexes:(NSIndexSet*)other {
+    UNIMPLEMENTED();
     for (unsigned i = 0; i < other->_length; ++i) {
         [self addIndexesInRange:other->_ranges[i]];
     }

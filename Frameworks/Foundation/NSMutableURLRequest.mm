@@ -96,6 +96,7 @@
  @Status Stub
 */
 - (void)setCachePolicy:(NSURLRequestCachePolicy)policy {
+    UNIMPLEMENTED();
     _cachePolicy = policy;
 }
 
@@ -117,6 +118,7 @@
  @Status Stub
 */
 - (void)setTimeoutInterval:(double)interval {
+    UNIMPLEMENTED();
     _timeoutInterval = interval;
 }
 
@@ -124,6 +126,7 @@
  @Status Stub
 */
 - (void)setHTTPShouldUsePipelining:(BOOL)shouldPipeline {
+    UNIMPLEMENTED();
 }
 
 - (id)copyWithZone:(NSZone*)zone {

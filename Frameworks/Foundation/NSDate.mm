@@ -45,6 +45,7 @@ double TimeIntervalSinceReferenceDate() {
  @Status Stub
 */
 + (NSDate*)dateWithString:(NSString*)string {
+    UNIMPLEMENTED();
     return [[[self alloc] initWithString:string] autorelease];
 }
 
@@ -155,6 +156,7 @@ double TimeIntervalSinceReferenceDate() {
  @Status Stub
 */
 - (NSDate*)initWithString:(NSString*)string {
+    UNIMPLEMENTED();
     EbrDebugLog("NSDate initWithString not supported\n");
     [self init];
 

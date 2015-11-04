@@ -109,6 +109,7 @@
  @Status Stub
 */
 - (void)setClearsSelectionOnViewWillAppear:(BOOL)clear {
+    UNIMPLEMENTED();
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
@@ -162,6 +163,7 @@
  @Status Stub
 */
 - (void)setRefreshControl:(UIRefreshControl*)refreshControl {
+    UNIMPLEMENTED();
     _refreshControl = refreshControl;
 }
 
@@ -169,6 +171,7 @@
  @Status Stub
 */
 - (UIRefreshControl*)refreshControl {
+    UNIMPLEMENTED();
     return _refreshControl;
 }
 

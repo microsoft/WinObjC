@@ -85,6 +85,7 @@
  @Status Stub
 */
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -186,6 +187,7 @@ static void removeAnimation(UIActivityIndicatorView* self) {
  @Status Stub
 */
 - (void)setColor:(UIColor*)color {
+    UNIMPLEMENTED();
     _color = color;
 }
 
@@ -193,6 +195,7 @@ static void removeAnimation(UIActivityIndicatorView* self) {
  @Status Stub
 */
 - (UIColor*)color {
+    UNIMPLEMENTED();
     return _color;
 }
 

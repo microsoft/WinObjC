@@ -89,18 +89,21 @@ extern NSMutableDictionary* curGesturesDict;
  @Status Stub
 */
 - (void)setCancelsTouchesInView:(BOOL)cancels {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setDelaysTouchesBegan:(BOOL)delays {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setDelaysTouchesEnded:(BOOL)delays {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -172,6 +175,7 @@ extern NSMutableDictionary* curGesturesDict;
  @Status Stub
 */
 - (void)requireGestureRecognizerToFail:(UIGestureRecognizer*)gesture {
+    UNIMPLEMENTED();
 }
 
 + (BOOL)_fireGestures:(id)gestures {

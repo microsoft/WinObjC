@@ -147,6 +147,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setMinimumFontSize:(float)size {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -178,6 +179,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setClearButtonMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
     _clearButtonMode = mode;
 }
 
@@ -185,6 +187,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UITextFieldViewMode)clearButtonMode {
+    UNIMPLEMENTED();
     return _clearButtonMode;
 }
 
@@ -255,6 +258,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setClearsOnBeginEditing:(BOOL)type {
+    UNIMPLEMENTED();
 }
 
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
@@ -268,6 +272,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setBackground:(UIImage*)image {
+    UNIMPLEMENTED();
     _background = image;
 }
 
@@ -275,6 +280,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UIImage*)background {
+    UNIMPLEMENTED();
     return _background;
 }
 
@@ -497,6 +503,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -512,6 +519,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setInputAccessoryView:(UIView*)view {
+    UNIMPLEMENTED();
     _inputAccessoryView = view;
     [self setNeedsLayout];
 }
@@ -520,6 +528,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UIView*)inputAccessoryView {
+    UNIMPLEMENTED();
     return _inputAccessoryView;
 }
 
@@ -527,6 +536,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setInputView:(UIView*)view {
+    UNIMPLEMENTED();
     keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
     _inputView = view;
     [self setNeedsLayout];
@@ -537,6 +547,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UIView*)inputView {
+    UNIMPLEMENTED();
     return _inputView;
 }
 
@@ -551,12 +562,14 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setLeftViewMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setRightView:(UIView*)view {
+    UNIMPLEMENTED();
     _rightView = view;
     [self setNeedsLayout];
     [self setNeedsDisplay];
@@ -566,6 +579,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UIView*)rightView {
+    UNIMPLEMENTED();
     return _rightView;
 }
 
@@ -573,6 +587,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setRightViewMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
 }
 
 - (void)dealloc {

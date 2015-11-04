@@ -231,6 +231,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
  @Status Stub
 */
 - (void)setTextureOrder:(NSArray*)texin {
+    UNIMPLEMENTED();
     [_textures removeAllObjects];
     for (NSObject* o in texin) {
         assert([o isKindOfClass:[GLKEffectPropertyTexture class]]);
@@ -282,6 +283,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
  @Status Stub
 */
 - (void)setLightOrder:(NSArray*)lightsIn {
+    UNIMPLEMENTED();
     [_lights removeAllObjects];
     for (NSObject* o in lightsIn) {
         assert([o isKindOfClass:[GLKEffectPropertyLight class]]);
@@ -723,6 +725,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
  @Status Stub
 */
 - (GLKMatrix3)normalMatrix {
+    UNIMPLEMENTED();
     return GLKMatrix3FromMatrix4(self.modelviewMatrix);
 }
 

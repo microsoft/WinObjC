@@ -144,6 +144,7 @@ void initInternal(UIToolbar* self) {
  @Status Stub
 */
 - (void)setTranslucent:(BOOL)translucent {
+    UNIMPLEMENTED();
 }
 
 static void setBackground(UIToolbar* self, UIColor* color) {
@@ -169,6 +170,7 @@ static void setBackground(UIToolbar* self, UIColor* color) {
  @Status Stub
 */
 - (void)setTintColor:(id)color {
+    UNIMPLEMENTED();
     _tintColor = color;
 
     if (!isOSTarget(@"7.0")) {
@@ -192,6 +194,7 @@ static void setBackground(UIToolbar* self, UIColor* color) {
  @Status Stub
 */
 - (UIColor*)tintColor {
+    UNIMPLEMENTED();
     return _tintColor;
 }
 
@@ -465,6 +468,7 @@ void layoutItems(UIToolbar* self) {
  @Status Stub
 */
 - (void)setBarTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     if (isOSTarget(@"7.0")) {
         setBackground(self, color);
         _backgroundTintColor = color;

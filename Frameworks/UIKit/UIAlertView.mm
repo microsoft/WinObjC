@@ -209,6 +209,7 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
  @Status Stub
 */
 - (void)setAlertViewStyle:(UIAlertViewStyle)style {
+    UNIMPLEMENTED();
     alertPriv->_style = style;
 }
 
@@ -216,6 +217,7 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
  @Status Stub
 */
 - (UIAlertViewStyle)alertViewStyle {
+    UNIMPLEMENTED();
     return alertPriv->_style;
 }
 
@@ -623,6 +625,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
  @Status Stub
 */
 - (id)textFieldAtIndex:(int)index {
+    UNIMPLEMENTED();
     // TODO: should return a UITextField.
     return nil;
 }

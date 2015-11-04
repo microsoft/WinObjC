@@ -177,6 +177,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
  @Status Stub
 */
 - (void)setLineWidth:(float)width {
+    UNIMPLEMENTED();
     if (_lineWidth == width) {
         return;
     }
@@ -191,6 +192,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
  @Status Stub
 */
 - (CGFloat)lineWidth {
+    UNIMPLEMENTED();
     return _lineWidth;
 }
 
@@ -201,6 +203,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
  @Status Stub
 */
 - (void)setLineCap:(NSString*)cap {
+    UNIMPLEMENTED();
 }
 
 - (void)setLineJoin:(id)join {

@@ -26,6 +26,7 @@
  @Status Stub
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -33,6 +34,7 @@
  @Status Stub
 */
 - (id)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
+    UNIMPLEMENTED();
     return nil;
 }
 

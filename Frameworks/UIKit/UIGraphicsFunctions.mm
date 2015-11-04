@@ -112,6 +112,7 @@ void UIRectFill(CGRect rect) {
  @Status Stub
 */
 void UIRectFrame(CGRect rect) {
+    UNIMPLEMENTED();
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     // CGContextFillRect(ctx, rect);
     EbrDebugLog("UIRectFrame not supported\n");

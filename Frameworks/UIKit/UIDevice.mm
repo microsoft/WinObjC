@@ -71,6 +71,7 @@ DWORD uuid_generate(BYTE* uuid);
  @Status Stub
 */
 - (void)setBatteryMonitoringEnabled:(BOOL)enable {
+    UNIMPLEMENTED();
     _batteryMonitoringEnabled = enable != 0;
 }
 
@@ -78,6 +79,7 @@ DWORD uuid_generate(BYTE* uuid);
  @Status Stub
 */
 - (BOOL)isBatteryMonitoringEnabled {
+    UNIMPLEMENTED();
     return _batteryMonitoringEnabled;
 }
 
@@ -176,6 +178,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
  @Status Stub
 */
 - (id) /* use typed version */ model {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil) {
@@ -208,6 +211,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
  @Status Stub
 */
 - (id) /* use typed version */ systemVersion {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil)
@@ -226,6 +230,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
  @Status Stub
 */
 - (id) /* use typed version */ systemName {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil)
@@ -240,6 +245,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
  @Status Stub
 */
 - (id) /* use typed version */ uniqueIdentifier {
+    UNIMPLEMENTED();
 #if 0
 static id ret = nil;
 if (ret == nil) {
@@ -274,6 +280,7 @@ return ret;
  @Status Stub
 */
 - (id) /* use typed version */ identifierForVendor {
+    UNIMPLEMENTED();
 #if 0
 static id ret = nil;
 if ( ret == nil ) {
@@ -308,6 +315,7 @@ return ret;
  @Status Stub
 */
 - (float)screenPhysicalWidth {
+    UNIMPLEMENTED();
     return EbrGetDeviceInfo()->devicePhysWidth;
 }
 
@@ -315,6 +323,7 @@ return ret;
  @Status Stub
 */
 - (float)screenPhysicalHeight {
+    UNIMPLEMENTED();
     return EbrGetDeviceInfo()->devicePhysHeight;
 }
 
@@ -326,6 +335,7 @@ return ret;
  @Status Stub
 */
 - (float)batteryLevel {
+    UNIMPLEMENTED();
     return 1.f;
 }
 
@@ -333,6 +343,7 @@ return ret;
  @Status Stub
 */
 - (UIDeviceBatteryState)batteryState {
+    UNIMPLEMENTED();
     return UIDeviceBatteryStateFull;
 }
 
@@ -345,6 +356,7 @@ return ret;
  @Notes Always returns YES
 */
 - (BOOL)isMultitaskingSupported {
+    UNIMPLEMENTED();
     return TRUE;
 }
 

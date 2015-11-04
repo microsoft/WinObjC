@@ -439,6 +439,7 @@ static void positionSegments(UISegmentedControl* self) {
  @Status Stub
 */
 - (id)setSegmentedControlStyle:(DWORD)style {
+    UNIMPLEMENTED();
     return self;
 }
 
@@ -518,6 +519,7 @@ static void positionSegments(UISegmentedControl* self) {
  @Status Stub
 */
 - (id)setTintColor:(id)uiColor {
+    UNIMPLEMENTED();
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
@@ -530,6 +532,7 @@ static void positionSegments(UISegmentedControl* self) {
  @Status Stub
 */
 - (id)tintColor {
+    UNIMPLEMENTED();
     return _tintColor;
 }
 
@@ -594,6 +597,7 @@ static void positionSegments(UISegmentedControl* self) {
  @Status Stub
 */
 - (id)setApportionsSegmentWidthsByContent:(BOOL)byContent {
+    UNIMPLEMENTED();
     _apportionsSegmentWidthsByContent = byContent;
     positionSegments(self);
     return self;
@@ -603,6 +607,7 @@ static void positionSegments(UISegmentedControl* self) {
  @Status Stub
 */
 - (id)setDividerImage:(id)img forLeftSegmentState:(int)leftState rightSegmentState:(int)rightState barMetrics:(int)barMetrics {
+    UNIMPLEMENTED();
     int count = [_segments count];
 
     for (int i = 0; i < count; i++) {

@@ -84,6 +84,7 @@
  @Status Stub
 */
 - (void)setShouldProcessNamespaces:(BOOL)flag {
+    UNIMPLEMENTED();
     _shouldProcessNamespaces = flag;
 }
 
@@ -91,6 +92,7 @@
  @Status Stub
 */
 - (void)setShouldReportNamespacePrefixes:(BOOL)flag {
+    UNIMPLEMENTED();
     _shouldReportNamespacePrefixes = flag;
 }
 
@@ -112,6 +114,7 @@
  @Status Stub
 */
 - (void)setShouldResolveExternalEntities:(BOOL)flag {
+    UNIMPLEMENTED();
     _shouldResolveExternalEntities = flag;
 }
 
@@ -248,6 +251,7 @@ void abortParsing__unused() {
  @Status Stub
 */
 - (NSError*)parserError {
+    UNIMPLEMENTED();
     return _parserError;
 }
 
@@ -255,6 +259,7 @@ void abortParsing__unused() {
  @Status Stub
 */
 - (NSString*)systemID {
+    UNIMPLEMENTED();
     return _systemID;
 }
 
@@ -262,6 +267,7 @@ void abortParsing__unused() {
  @Status Stub
 */
 - (NSString*)publicID {
+    UNIMPLEMENTED();
     return _publicID;
 }
 
@@ -269,6 +275,7 @@ void abortParsing__unused() {
  @Status Stub
 */
 - (int)columnNumber {
+    UNIMPLEMENTED();
     return xmlSAX2GetColumnNumber((void*)self);
 }
 
@@ -276,6 +283,7 @@ void abortParsing__unused() {
  @Status Stub
 */
 - (int)lineNumber {
+    UNIMPLEMENTED();
     return xmlSAX2GetColumnNumber((void*)self);
 }
 

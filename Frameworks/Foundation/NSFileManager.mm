@@ -486,6 +486,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)stringWithFileSystemRepresentation:(char*)path length:(int)length {
+    UNIMPLEMENTED();
     return [NSString stringWithCString:path length:length];
 }
 
@@ -493,6 +494,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)displayNameAtPath:(id)path {
+    UNIMPLEMENTED();
     return path;
 }
 
@@ -539,6 +541,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(id*)err {
+    UNIMPLEMENTED();
     EbrDebugLog("setAttributes not implemented\n");
 
     return TRUE;
@@ -676,6 +679,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)fileSystemAttributesAtPath:(id)pathAddr {
+    UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
     EbrDebugLog("fileAttributesAtPath: %s\n", path);
@@ -692,6 +696,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)attributesOfFileSystemForPath:(id)pathAddr error:(id*)error {
+    UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
     EbrDebugLog("fileAttributesAtPath: %s\n", path);
@@ -710,6 +715,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (const char*)fileSystemRepresentationWithPath:(id)pathAddr {
+    UNIMPLEMENTED();
     return [pathAddr UTF8String];
 }
 
@@ -717,6 +723,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)destinationOfSymbolicLinkAtPath:(id)path error:(id*)error {
+    UNIMPLEMENTED();
     const char* pPath = [path UTF8String];
     EbrDebugLog("destinationOfSymbolicLinkAtPath: %s\n", pPath);
 
@@ -748,6 +755,7 @@ extern "C" bool doLog;
  @Status Stub
 */
 - (id)URLForDirectory:(DWORD)directory inDomain:(DWORD)domains appropriateForURL:(id)forURL create:(BOOL)create error:(id*)error {
+    UNIMPLEMENTED();
     assert(forURL == nil);
     id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
 

@@ -25,6 +25,7 @@ static idretain sharedURLCache;
  @Status Stub
 */
 + (id)sharedURLCache {
+    UNIMPLEMENTED();
     return sharedURLCache;
 }
 
@@ -32,6 +33,7 @@ static idretain sharedURLCache;
  @Status Stub
 */
 - (id)cachedResponseForRequest:(id)request {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -39,6 +41,7 @@ static idretain sharedURLCache;
  @Status Stub
 */
 + (void)setSharedURLCache:(id)cache {
+    UNIMPLEMENTED();
     sharedURLCache = cache;
 }
 
@@ -46,6 +49,7 @@ static idretain sharedURLCache;
  @Status Stub
 */
 - (void)removeAllCachedResponses {
+    UNIMPLEMENTED();
 }
 
 + (void)initialize {
@@ -56,18 +60,21 @@ static idretain sharedURLCache;
  @Status Stub
 */
 - (void)setMemoryCapacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setDiskCapacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (unsigned)diskCapacity {
+    UNIMPLEMENTED();
     return 1024 * 1024 * 1024;
 }
 
@@ -75,6 +82,7 @@ static idretain sharedURLCache;
  @Status Stub
 */
 - (id)initWithMemoryCapacity:(NSUInteger)memCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(id)path {
+    UNIMPLEMENTED();
     return self;
 }
 

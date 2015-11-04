@@ -85,6 +85,7 @@ typedef unsigned short unichar;
  @Status Stub
 */
 - (id)locale {
+    UNIMPLEMENTED();
     return _locale;
 }
 
@@ -110,6 +111,7 @@ typedef unsigned short unichar;
  @Status Stub
 */
 - (void)setLocale:(id)locale {
+    UNIMPLEMENTED();
     if (locale != _locale) {
         locale = [locale retain];
         [_locale release];

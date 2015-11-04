@@ -271,18 +271,21 @@ void setDay(UIDatePicker* self, id date) {
  @Status Stub
 */
 - (void)setTimeZone:(NSTimeZone*)timeZone {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setLocale:(NSLocale*)locale {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setCalendar:(NSCalendar*)calendar {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -802,6 +805,7 @@ static void resetPickerPositions(UIDatePicker* self) {
  @Status Stub
 */
 - (void)setMinuteInterval:(NSUInteger)interval {
+    UNIMPLEMENTED();
 }
 
 - (void)dealloc {

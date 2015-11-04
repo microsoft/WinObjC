@@ -308,12 +308,14 @@ static void initInternal(UISlider* self) {
  @Status Stub
 */
 - (void)setMaximumTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setMinimumTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 @end

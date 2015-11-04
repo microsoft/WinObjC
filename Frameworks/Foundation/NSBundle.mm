@@ -1099,6 +1099,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Status Stub
 */
 - (NSString*)executablePath {
+    UNIMPLEMENTED();
     return [_bundlePath stringByAppendingPathComponent:[NSString stringWithCString:g_globalExecutableName]];
 }
 
@@ -1120,6 +1121,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Status Stub
 */
 - (NSArray*)preferredLocalizations {
+    UNIMPLEMENTED();
     if (_preferredLocalizations == nil) {
         _preferredLocalizations = [[NSMutableArray arrayWithObject:@"en"] retain];
         [_preferredLocalizations addObject:@"Base"];
@@ -1134,6 +1136,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Status Stub
 */
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations {
+    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {
@@ -1153,6 +1156,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Status Stub
 */
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations forPreferences:(NSArray*)preferences {
+    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {

@@ -59,6 +59,7 @@ static UIScreenMode* curMode;
  @Status Stub
 */
 - (UIScreenMode*)currentMode {
+    UNIMPLEMENTED();
     return curMode;
 }
 
@@ -66,6 +67,7 @@ static UIScreenMode* curMode;
  @Status Stub
 */
 + (NSArray*)screens {
+    UNIMPLEMENTED();
     return [NSArray arrayWithObject:mainScreen];
 }
 

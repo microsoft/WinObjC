@@ -101,6 +101,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
  @Status Stub
 */
 + (void)flush {
+    UNIMPLEMENTED();
     EbrDebugLog("CATransaction flush?\n");
 }
 
@@ -122,6 +123,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
  @Status Stub
 */
 + (void)setCompletionBlock:(id)block {
+    UNIMPLEMENTED();
     *((char*)0) = 0;
     [self _currentTransaction]->_completionBlock = [block copy];
 }
@@ -130,6 +132,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
  @Status Stub
 */
 + (id)completionBlock {
+    UNIMPLEMENTED();
     return [self _currentTransaction]->_completionBlock;
 }
 

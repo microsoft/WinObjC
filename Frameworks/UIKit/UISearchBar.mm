@@ -108,18 +108,21 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setKeyboardType:(UIKeyboardType)type {
+    UNIMPLEMENTED();
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -155,24 +158,28 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setShowsCancelButton:(BOOL)shows {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setShowsCancelButton:(BOOL)shows animated:(BOOL)animated {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setShowsBookmarkButton:(BOOL)shows {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setBarStyle:(UIBarStyle)style {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -193,6 +200,7 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setTintColor:(id)color {
+    UNIMPLEMENTED();
 }
 
 - (void)setTranslucent:(BOOL)translucent {
@@ -210,6 +218,7 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setScopeButtonTitles:(id)titles {
+    UNIMPLEMENTED();
 }
 
 - (void)setScopeBarButtonTitleTextAttributes:(id)attributes forState:(DWORD)forState {
@@ -292,6 +301,7 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setBackgroundImage:(id)image {
+    UNIMPLEMENTED();
 }
 
 - (void)dealloc {
@@ -306,12 +316,14 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setSearchResultsButtonSelected:(BOOL)selected {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (NSInteger)selectedScopeButtonIndex {
+    UNIMPLEMENTED();
     return 0;
 }
 
@@ -319,6 +331,7 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setShowsScopeBar:(BOOL)show {
+    UNIMPLEMENTED();
     if (!show) {
         _scopeButtonsHidden = true;
     } else {
@@ -335,12 +348,14 @@ static void initInternal(UISearchBar* self) {
  @Status Stub
 */
 - (void)setImage:(UIImage*)image forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setBarTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     [self setTintColor:color];
 }
 @end

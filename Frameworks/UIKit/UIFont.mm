@@ -139,6 +139,7 @@ ret->height += ascenderDelta;
  @Status Stub
 */
 + (NSArray*)familyNames {
+    UNIMPLEMENTED();
     return [_fontList allKeys];
 }
 
@@ -294,6 +295,7 @@ ret->height += ascenderDelta;
  @Status Stub
 */
 + (NSArray*)fontNamesForFamilyName:(NSArray*)name {
+    UNIMPLEMENTED();
     return [NSArray arrayWithObject:name];
 }
 

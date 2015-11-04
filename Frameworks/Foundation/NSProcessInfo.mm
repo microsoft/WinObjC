@@ -119,6 +119,7 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Stub
 */
 - (NSString*)operatingSystemVersionString {
+    UNIMPLEMENTED();
     return @"iOS 3.2";
 }
 
@@ -126,6 +127,7 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Stub
 */
 - (NSString*)processName {
+    UNIMPLEMENTED();
     return @"MainProcess";
 }
 
@@ -133,6 +135,7 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Stub
 */
 - (int)processIdentifier {
+    UNIMPLEMENTED();
     return 12345;
 }
 
@@ -144,6 +147,7 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Stub
 */
 - (NSDictionary*)environment {
+    UNIMPLEMENTED();
     return _environment;
 }
 
@@ -151,6 +155,7 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Stub
 */
 - (unsigned)processorCount {
+    UNIMPLEMENTED();
     return 2;
 }
 

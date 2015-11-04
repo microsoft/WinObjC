@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -26,6 +27,7 @@
  @Status Stub
 */
 - (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError {
+    UNIMPLEMENTED();
     if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
     }
@@ -36,6 +38,7 @@
  @Status Stub
 */
 - (id)initWithData:(NSData*)data error:(NSError**)outError {
+    UNIMPLEMENTED();
     if (outError) {
         *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
     }
@@ -49,6 +52,7 @@
  @Status Stub
 */
 + (AVAudioSession*)sharedInstance {
+    UNIMPLEMENTED();
     return nil;
 }
 @end

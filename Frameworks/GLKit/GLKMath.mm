@@ -264,17 +264,17 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, 
     res.m01 = r0.y;
     res.m02 = r0.z;
     res.m03 = r0.w;
-           
+
     res.m10 = r1.x;
     res.m11 = r1.y;
     res.m12 = r1.z;
     res.m13 = r1.w;
-           
+
     res.m20 = r2.x;
     res.m21 = r2.y;
     res.m22 = r2.z;
     res.m23 = r2.w;
-           
+
     res.m30 = r3.x;
     res.m31 = r3.y;
     res.m32 = r3.z;
@@ -293,17 +293,17 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLK
     res.m10 = r0.y;
     res.m20 = r0.z;
     res.m30 = r0.w;
-           
+
     res.m01 = r1.x;
     res.m11 = r1.y;
     res.m21 = r1.z;
     res.m31 = r1.w;
-           
+
     res.m02 = r2.x;
     res.m12 = r2.y;
     res.m22 = r2.z;
     res.m32 = r2.w;
-           
+
     res.m03 = r3.x;
     res.m13 = r3.y;
     res.m23 = r3.z;
@@ -556,11 +556,11 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, 
     res.m00 = r0.x;
     res.m01 = r0.y;
     res.m02 = r0.z;
-           
+
     res.m10 = r1.x;
     res.m11 = r1.y;
     res.m12 = r1.z;
-           
+
     res.m20 = r2.x;
     res.m21 = r2.y;
     res.m22 = r2.z;
@@ -577,11 +577,11 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLK
     res.m00 = r0.x;
     res.m10 = r0.y;
     res.m20 = r0.z;
-           
+
     res.m01 = r1.x;
     res.m11 = r1.y;
     res.m21 = r1.z;
-           
+
     res.m02 = r2.x;
     res.m12 = r2.y;
     res.m22 = r2.z;
@@ -706,6 +706,7 @@ GLKIT_EXPORT void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs,
  @Notes Will invert non-invertible arrays.
 */
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
+    UNIMPLEMENTED();
     GLKMatrix4 rotated = m;
     GLKMatrix4 translated = GLKMatrix4Identity;
 
@@ -735,7 +736,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeRotation(float rad, float x, float y, floa
     if (magn < COMPARISON_EPSILON) {
         return GLKMatrix3MakeIdentity();
     }
-    
+
     float invMagn = 1.f / magn;
     x *= invMagn;
     y *= invMagn;
@@ -925,8 +926,8 @@ GLKIT_EXPORT void GLKQuaternionRotateVector4Array(GLKQuaternion q, GLKVector4* v
 */
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat) {
     GLKQuaternion res;
-    
-    float trace = mat.m00  + mat.m11  + mat.m22;
+
+    float trace = mat.m00 + mat.m11 + mat.m22;
     if (trace > COMPARISON_EPSILON) {
         float sqrtTrace = 2.f * sqrtf(trace + 1.f);
         float invTrace = 1.f / sqrtTrace;
@@ -944,11 +945,11 @@ GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat) {
         res.y = (mat.m10 + mat.m01) * invTrace;
         res.z = (mat.m02 + mat.m20) * invTrace;
         res.w = (mat.m21 - mat.m12) * invTrace;
-        
+
     } else if (mat.m11 > mat.m22) {
         float sqrtTrace = 2.f * sqrtf(1.f + mat.m11 - mat.m00 - mat.m22);
         float invTrace = 1.f / sqrtTrace;
-        
+
         res.x = (mat.m10 + mat.m01) * invTrace;
         res.y = 0.25f * sqrtTrace;
         res.z = (mat.m21 + mat.m12) * invTrace;

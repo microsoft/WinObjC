@@ -432,6 +432,7 @@ return [ret autorelease];
  @Status Stub
 */
 - (NSString*)stringByAbbreviatingWithTildeInPath {
+    UNIMPLEMENTED();
     return [[self copy] autorelease];
 }
 
@@ -498,6 +499,7 @@ return [ret autorelease];
  @Notes Returns NSASCIIStringEncoding
 */
 + (NSStringEncoding)defaultCStringEncoding {
+    UNIMPLEMENTED();
     return NSASCIIStringEncoding;
 }
 
@@ -1105,6 +1107,7 @@ return [ret autorelease];
  @Status Stub
 */
 - (NSStringEncoding)fastestEncoding {
+    UNIMPLEMENTED();
     return NSASCIIStringEncoding;
 }
 
@@ -1674,6 +1677,7 @@ return [ret autorelease];
  @Notes Forwards to compare:
 */
 - (int)localizedCaseInsensitiveCompare:(NSString*)compStr {
+    UNIMPLEMENTED();
     UStringHolder s1(self);
     return [self compare:(id)compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, s1.string().length())];
 }
@@ -1691,6 +1695,7 @@ return [ret autorelease];
  @Notes Forwards to compare:
 */
 - (int)localizedCompare:(NSString*)compStr {
+    UNIMPLEMENTED();
     UStringHolder s1(self);
     return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())];
 }
@@ -2415,6 +2420,7 @@ return [ret autorelease];
  @Notes Forwards to dataUsingEncoding:
 */
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(DWORD)lossy {
+    UNIMPLEMENTED();
     assert(encoding == NSASCIIStringEncoding || encoding == NSUTF8StringEncoding);
 
     return [self dataUsingEncoding:encoding];
@@ -2424,6 +2430,7 @@ return [ret autorelease];
  @Status Stub
 */
 - (NSString*)stringByExpandingTildeInPath {
+    UNIMPLEMENTED();
     return self;
 }
 
@@ -2936,6 +2943,7 @@ return ret;
  @Status Stub
 */
 - (BOOL)canBeConvertedToEncoding:(DWORD)encoding {
+    UNIMPLEMENTED();
     return TRUE; //  [BUG: Blatant lie]
 }
 
@@ -3054,6 +3062,7 @@ return ret;
  @Status Stub
 */
 - (NSString*)precomposedStringWithCanonicalMapping {
+    UNIMPLEMENTED();
     EbrDebugLog("precomposedStringWithCanonicalMapping??\n");
     return [self retain];
 }

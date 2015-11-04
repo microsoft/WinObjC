@@ -203,6 +203,7 @@
  @Status Stub
 */
 - (UIImage*)selectionIndicatorImage {
+    UNIMPLEMENTED();
     return _selectionIndicatorImage;
 }
 
@@ -210,6 +211,7 @@
  @Status Stub
 */
 - (void)setSelectionIndicatorImage:(UIImage*)image {
+    UNIMPLEMENTED();
     _selectionIndicatorImage = image;
 }
 
@@ -217,6 +219,7 @@
  @Status Stub
 */
 - (void)setSelectedImageTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     EbrDebugLog("UITabBar setSelectedImageTintColor not supported\n");
 }
 
@@ -224,6 +227,7 @@
  @Status Stub
 */
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     EbrDebugLog("UITabBar setTintColor not supported\n");
 }
 

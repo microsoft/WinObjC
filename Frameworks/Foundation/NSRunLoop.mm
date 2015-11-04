@@ -335,6 +335,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
  @Status Stub
 */
 - (void)addPort:(id)port forMode:(id)mode {
+    UNIMPLEMENTED();
     EbrDebugLog("NSRunLoop addPort not supported\n");
 }
 

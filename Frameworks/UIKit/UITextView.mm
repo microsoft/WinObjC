@@ -266,6 +266,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (void)setAttributedText:(NSAttributedString*)text {
+    UNIMPLEMENTED();
     id attributes = [text attributesAtIndex:0 effectiveRange:NULL];
     id font = [attributes objectForKey:@"kCTFontAttributeName"];
     if (font) {
@@ -383,6 +384,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (void)setDataDetectorTypes:(UIDataDetectorTypes)type {
+    UNIMPLEMENTED();
 }
 
 - (void)setClearsOnBeginEditing:(BOOL)type {
@@ -398,6 +400,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (NSRange)selectedRange {
+    UNIMPLEMENTED();
     NSRange ret;
 
     ret.location = 0;
@@ -419,6 +422,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (void)scrollRangeToVisible:(NSRange)range {
+    UNIMPLEMENTED();
     EbrDebugLog("scrollRangeToVisible not implemented\n");
 }
 
@@ -593,6 +597,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (void)setInputAccessoryView:(UIView*)view {
+    UNIMPLEMENTED();
     _inputAccessoryView = view;
 }
 
@@ -600,6 +605,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (UIView*)inputAccessoryView {
+    UNIMPLEMENTED();
     return _inputAccessoryView;
 }
 
@@ -607,6 +613,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (void)setInputView:(UIView*)view {
+    UNIMPLEMENTED();
     keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
     _inputView = view;
     [self setNeedsLayout];
@@ -617,6 +624,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
  @Status Stub
 */
 - (UIView*)inputView {
+    UNIMPLEMENTED();
     return _inputView;
 }
 

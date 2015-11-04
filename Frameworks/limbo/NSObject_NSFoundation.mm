@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #include <stdio.h>
 #include <stdlib.h>
 #import "Foundation/Foundation.h"
@@ -354,6 +355,7 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
  @Status Stub
 */
 - (Class)classForArchiver {
+    UNIMPLEMENTED();
     return [self class];
 }
 
@@ -368,6 +370,7 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
  @Status Stub
 */
 - (id)replacementObjectForArchiver:(id)a {
+    UNIMPLEMENTED();
     return self;
 }
 

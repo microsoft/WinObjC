@@ -275,6 +275,7 @@ static void initInternal(UITableViewCell* self) {
  @Status Stub
 */
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
     _style = style;
 
     CGRect pos = { 0.0f, 0.0f, 320.0f, 44.0f };
@@ -577,6 +578,7 @@ static void initInternal(UITableViewCell* self) {
  @Status Stub
 */
 - (BOOL)showingDeleteConfirmation {
+    UNIMPLEMENTED();
     return FALSE;
 }
 
@@ -749,6 +751,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
  @Status Stub
 */
 - (void)setEditingAccessoryType:(UITableViewCellAccessoryType)type {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -889,6 +892,7 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
  @Status Stub
 */
 - (void)setEditingAccessoryView:(UIView*)view {
+    UNIMPLEMENTED();
     _editingAccessoryView = view;
 }
 
@@ -903,6 +907,7 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
  @Status Stub
 */
 - (UIView*)editingAccessoryView {
+    UNIMPLEMENTED();
     return _editingAccessoryView;
 }
 
@@ -917,6 +922,7 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
  @Status Stub
 */
 - (void)setIndentationWidth:(float)width {
+    UNIMPLEMENTED();
     _indentationWidth = width;
 }
 
@@ -1317,6 +1323,7 @@ static void setupGroupView(UITableViewCell* self) {
  @Status Stub
 */
 - (void)setShowsReorderControl:(BOOL)show {
+    UNIMPLEMENTED();
     _showsReorderControl = show;
 }
 
@@ -1324,6 +1331,7 @@ static void setupGroupView(UITableViewCell* self) {
  @Status Stub
 */
 - (BOOL)showsReorderControl {
+    UNIMPLEMENTED();
     return _showsReorderControl;
 }
 
@@ -1339,6 +1347,7 @@ static void setupGroupView(UITableViewCell* self) {
  @Status Stub
 */
 - (void)setIndentationLevel:(int)level {
+    UNIMPLEMENTED();
     _indentationLevel = level;
 }
 

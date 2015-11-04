@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -126,6 +126,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>"-DAVFOUNDATION_IMPEXP=__declspec(dllexport) extern" %(AdditionalOptions)</AdditionalOptions>
+      <UserIncludePaths>$(StarboardBasePath)\Frameworks\include</UserIncludePaths>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -146,6 +147,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>"-DAVFOUNDATION_IMPEXP=__declspec(dllexport) extern" %(AdditionalOptions)</AdditionalOptions>
+      <UserIncludePaths>$(StarboardBasePath)\Frameworks\include</UserIncludePaths>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -167,6 +169,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>"-DAVFOUNDATION_IMPEXP=__declspec(dllexport) extern" %(AdditionalOptions)</AdditionalOptions>
+      <UserIncludePaths>$(StarboardBasePath)\Frameworks\include</UserIncludePaths>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -188,6 +191,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>"-DAVFOUNDATION_IMPEXP=__declspec(dllexport) extern" %(AdditionalOptions)</AdditionalOptions>
+      <UserIncludePaths>$(StarboardBasePath)\Frameworks\include</UserIncludePaths>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

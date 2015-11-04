@@ -55,6 +55,7 @@ static void setBackground(UINavigationBar* self) {
  @Status Stub
 */
 - (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics {
+    UNIMPLEMENTED();
     return NULL;
 }
 
@@ -268,6 +269,7 @@ static void setBackground(UINavigationBar* self) {
  @Status Stub
 */
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     _tintColor = color;
     if (((int)[[[UIDevice currentDevice] systemVersion] versionStringCompare:@"7.0"]) >= 0) {
         // If we're in >= ios7, this means that we set the children to this colour
@@ -281,6 +283,7 @@ static void setBackground(UINavigationBar* self) {
  @Status Stub
 */
 - (UIColor*)tintColor {
+    UNIMPLEMENTED();
     return _tintColor;
 }
 
@@ -509,6 +512,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
  @Status Stub
 */
 - (void)setTitleTextAttributes:(NSDictionary*)attributes {
+    UNIMPLEMENTED();
     (_titleTextAttributes).attach([attributes copy]);
 }
 
@@ -516,6 +520,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
  @Status Stub
 */
 - (NSDictionary*)titleTextAttributes {
+    UNIMPLEMENTED();
     return _titleTextAttributes;
 }
 
@@ -555,18 +560,21 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
  @Status Stub
 */
 - (void)setTitleVerticalPositionAdjustment:(float)adjustment forBarMetrics:(UIBarMetrics)forBarMetrics {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setShadowImage:(UIImage*)image {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setBarTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
     _tintColor = color;
     CGSize size;
 
@@ -590,12 +598,14 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
  @Status Stub
 */
 - (void)setBackIndicatorImage:(UIImage*)image {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setBackIndicatorTransitionMaskImage:(UIImage*)image {
+    UNIMPLEMENTED();
 }
 
 //

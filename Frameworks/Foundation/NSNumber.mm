@@ -645,6 +645,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Stub
 */
 DWORD NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
+    UNIMPLEMENTED();
     if (num1->val < num2->val) {
         return -1;
     } else if (num1->val > num2->val) {
@@ -658,6 +659,7 @@ DWORD NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
  @Status Stub
 */
 DWORD NSDecimalAdd(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val + right->val;
     return 0;
 }
@@ -666,6 +668,7 @@ DWORD NSDecimalAdd(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD r
  @Status Stub
 */
 DWORD NSDecimalSubtract(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val - right->val;
     return 0;
 }
@@ -674,6 +677,7 @@ DWORD NSDecimalSubtract(NSDecimal* result, NSDecimal* left, NSDecimal* right, DW
  @Status Stub
 */
 DWORD NSDecimalDivide(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val / right->val;
     return 0;
 }
@@ -682,6 +686,7 @@ DWORD NSDecimalDivide(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWOR
  @Status Stub
 */
 DWORD NSDecimalMultiply(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val * right->val;
     return 0;
 }
@@ -690,6 +695,7 @@ DWORD NSDecimalMultiply(NSDecimal* result, NSDecimal* left, NSDecimal* right, DW
  @Status Stub
 */
 DWORD NSDecimalIsNotANumber(NSDecimal* num) {
+    UNIMPLEMENTED();
     if (num->val != num->val) {
         return TRUE;
     }
@@ -700,6 +706,7 @@ DWORD NSDecimalIsNotANumber(NSDecimal* num) {
  @Status Stub
 */
 DWORD NSDecimalRound(NSDecimal* result, NSDecimal* num, int scale, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = num->val;
     return 0;
 }
@@ -708,6 +715,7 @@ DWORD NSDecimalRound(NSDecimal* result, NSDecimal* num, int scale, DWORD roundin
  @Status Stub
 */
 NSString* NSDecimalString(NSDecimal* num, id locale) {
+    UNIMPLEMENTED();
     char szVal[128];
     sprintf(szVal, "%f", num->val);
     return [NSString stringWithCString:szVal];

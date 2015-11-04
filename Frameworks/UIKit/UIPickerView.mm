@@ -409,6 +409,7 @@ static void setupImages(UIPickerView* self) {
  @Status Stub
 */
 - (id)setShowsSelectionIndicator:(DWORD)show {
+    UNIMPLEMENTED();
     return self;
 }
 

@@ -1286,6 +1286,7 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
  @Status Stub
 */
 - (NSArray*)images {
+    UNIMPLEMENTED();
     return nil;
 }
 

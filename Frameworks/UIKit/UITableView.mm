@@ -578,24 +578,28 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
  @Status Stub
 */
 - (CGRect)rectForHeaderInSection:(NSInteger)section {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (CGRect)rectForFooterInSection:(NSInteger)section {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)scrollToNearestSelectedRowAtScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)moveRowAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath {
+    UNIMPLEMENTED();
 }
 // -----------------------------------------------------
 
@@ -791,6 +795,7 @@ static void initInternal(UITableView* self) {
  @Status Stub
 */
 - (void)setAllowsSelectionDuringEditing:(BOOL)canSelect {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1448,6 +1453,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
  @Status Stub
 */
 - (void)setSeparatorColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1468,12 +1474,14 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
  @Status Stub
 */
 - (void)setSectionFooterHeight:(float)height {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setSectionIndexMinimumDisplayRowCount:(unsigned)numRows {
+    UNIMPLEMENTED();
 }
 
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1727,6 +1735,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
  @Status Stub
 */
 - (CGRect)rectForRowAtIndexPath:(NSIndexPath*)path {
+    UNIMPLEMENTED();
     int section = [path section];
     int row = [path row];
 
@@ -1835,6 +1844,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
  @Status Stub
 */
 - (void)insertSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animate {
+    UNIMPLEMENTED();
     EbrDebugLog("insertSections not supported\n");
 }
 
@@ -2202,12 +2212,14 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
  @Status Stub
 */
 - (void)beginUpdates {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)endUpdates {
+    UNIMPLEMENTED();
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scroller {

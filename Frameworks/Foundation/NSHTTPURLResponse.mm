@@ -39,6 +39,7 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
  @Status Stub
 */
 + (id)localizedStringForStatusCode:(int)code {
+    UNIMPLEMENTED();
     return @"HTTP error";
 }
 

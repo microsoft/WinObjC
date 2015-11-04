@@ -55,6 +55,7 @@ const float minX = 21.0f, maxX = 71.0f;
  @Status Stub
 */
 - (void)setOnTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 - (void)setOffTintColor:(UIColor*)color {

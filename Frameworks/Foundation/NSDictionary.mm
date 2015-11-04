@@ -227,6 +227,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Stub
 */
 - (id)objectForKeyedSubscript:(id)key {
+    UNIMPLEMENTED();
     return [self objectForKey:key];
 }
 
@@ -613,14 +614,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)fileType {
     return [self objectForKey:NSFileType];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSDate*)fileModificationDate {
     return [self objectForKey:NSFileModificationDate];
@@ -734,6 +735,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Stub
 */
 - (NSArray*)keysSortedByValueUsingComparator:(NSComparator)comparator {
+    UNIMPLEMENTED();
     SortedKeysHelperCtx ctx;
 
     ctx.dict = self;

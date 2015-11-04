@@ -350,6 +350,7 @@ static void positionScrollers(UIScrollView* self) {
  @Status Stub
 */
 - (void)setDelaysContentTouches:(BOOL)delay {
+    UNIMPLEMENTED();
     _delaysContentTouches = delay;
 }
 
@@ -530,6 +531,7 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
  @Status Stub
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -543,6 +545,7 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
  @Status Stub
 */
 - (void)setScrollsToTop:(BOOL)scrollsToTop {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -896,6 +899,7 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
  @Status Stub
 */
 - (float)decelerationRate {
+    UNIMPLEMENTED();
     return 0.998f;
 }
 
@@ -925,6 +929,7 @@ static void doAnimatedScroll(UIScrollView* self, CGPoint dest, AnimationReason r
  @Status Stub
 */
 - (void)flashScrollIndicators {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1109,12 +1114,14 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
  @Status Stub
 */
 - (void)setDecelerationRate:(float)rate {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setBouncesZoom:(BOOL)bounces {
+    UNIMPLEMENTED();
 }
 
 - (void)_setForwardsToSuperview:(BOOL)forwards {
@@ -1125,6 +1132,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
  @Status Stub
 */
 - (void)setScrollIndicatorInsets:(UIEdgeInsets)insets {
+    UNIMPLEMENTED();
     _scrollIndicatorInsets = insets;
 }
 
@@ -1132,6 +1140,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
  @Status Stub
 */
 - (UIEdgeInsets)scrollIndicatorInsets {
+    UNIMPLEMENTED();
     return _scrollIndicatorInsets;
 }
 
@@ -1165,18 +1174,21 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
  @Status Stub
 */
 - (void)setIndicatorStyle:(unsigned)style {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setDirectionalLockEnabled:(BOOL)enabled {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setCanCancelContentTouches:(BOOL)canCancel {
+    UNIMPLEMENTED();
     _canCancelContentTouches = canCancel;
 }
 

@@ -68,6 +68,7 @@ uint32_t CFHash(CFTypeRef obj) {
  @Status Stub
 */
 void CFShow(CFTypeRef obj) {
+    UNIMPLEMENTED();
     EbrDebugLog("CFShow: %s\n", object_getClassName((id)obj));
 }
 

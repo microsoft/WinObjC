@@ -79,6 +79,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)fireDate {
+    UNIMPLEMENTED();
     return _fireDate;
 }
 
@@ -86,6 +87,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (void)setFireDate:(id)val {
+    UNIMPLEMENTED();
     _fireDate = val;
 
     formatFireDate();
@@ -95,6 +97,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)timeZone {
+    UNIMPLEMENTED();
     return _timeZone;
 }
 
@@ -102,6 +105,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setTimeZone:(id)val {
+    UNIMPLEMENTED();
     _timeZone = val;
     return self;
 }
@@ -110,6 +114,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)repeatInterval {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! repeatInterval called!\n");
     return nil;
 }
@@ -118,6 +123,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setRepeatInterval:(NSCalendarUnit)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setRepeatInterval called!\n");
     return nil;
 }
@@ -136,6 +142,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)alertBody {
+    UNIMPLEMENTED();
     return _body;
 }
 
@@ -143,6 +150,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setAlertBody:(id)val {
+    UNIMPLEMENTED();
     _body = val;
     return self;
 }
@@ -161,6 +169,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)alertAction {
+    UNIMPLEMENTED();
     return _action;
 }
 
@@ -168,6 +177,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setAlertAction:(id)val {
+    UNIMPLEMENTED();
     _action = val;
     return self;
 }
@@ -185,6 +195,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)soundName {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! soundName called!\n");
     return nil;
 }
@@ -193,6 +204,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setSoundName:(id)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setSoundName called!\n");
     return nil;
 }
@@ -201,6 +213,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)applicationIconBadgeNumber {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! applicationIconBadgeNumber called!\n");
     return nil;
 }
@@ -209,6 +222,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setApplicationIconBadgeNumber:(NSInteger)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setApplicationIconBadgeNumber called!\n");
     return nil;
 }
@@ -217,6 +231,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)userInfo {
+    UNIMPLEMENTED();
     return _userInfo;
 }
 
@@ -224,6 +239,7 @@ EbrDebugLog("fireDate is %s.\n", s);
  @Status Stub
 */
 - (id)setUserInfo:(id)val {
+    UNIMPLEMENTED();
     _userInfo = val;
     return self;
 }

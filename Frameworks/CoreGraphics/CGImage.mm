@@ -121,6 +121,7 @@ CGImageRef CGImageBacking::CopyOnWrite() {
  @Status Stub
 */
 const CGFloat* CGColorGetComponents(CGColorRef color) {
+    UNIMPLEMENTED();
     float* ret = (float*)malloc(sizeof(float) * 4);
 
     [color getColors:ret];
@@ -136,6 +137,7 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
+    UNIMPLEMENTED();
     assert(decode == NULL);
 
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];

@@ -274,6 +274,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
  @Status Stub
 */
 + (GLKTextureInfo*)textureWithContentsOfData:(NSData*)data options:(NSDictionary*)opts error:(NSError**)err {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -642,6 +643,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
  @Status Stub
 */
 - (id)initWithShareContext:(NSOpenGLContext*)context {
+    UNIMPLEMENTED();
     return self;
 }
 

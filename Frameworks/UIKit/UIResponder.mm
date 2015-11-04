@@ -53,12 +53,14 @@ static int _changingResponder = 0;
  @Status Stub
 */
 - (void)reloadInputViews {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (UIView*)inputView {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -125,6 +127,7 @@ static int _changingResponder = 0;
  @Status Stub
 */
 - (UIView*)inputAccessoryView {
+    UNIMPLEMENTED();
     return nil;
 }
 

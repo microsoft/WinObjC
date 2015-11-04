@@ -1463,6 +1463,7 @@ static float doRound(float f) {
  @Status Stub
 */
 - (void)setClearsContextBeforeDrawing:(BOOL)clear {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1764,6 +1765,7 @@ static float doRound(float f) {
  @Status Stub
 */
 - (void)removeMotionEffect:(UIMotionEffect*)effect {
+    UNIMPLEMENTED();
     EbrDebugLog("Unsupported use of motion effects in removeMotionEffect:\n");
 }
 
@@ -1771,6 +1773,7 @@ static float doRound(float f) {
  @Status Stub
 */
 - (void)addMotionEffect:(UIMotionEffect*)effect {
+    UNIMPLEMENTED();
     EbrDebugLog("Unsupported use of motion effects in addMotionEffect:\n");
 }
 
@@ -1920,6 +1923,7 @@ static float doRound(float f) {
  @Status Stub
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {
+    UNIMPLEMENTED();
     EbrDebugLog("setExclusiveTouch not supported\n");
     // assert(0);
 }
@@ -2057,6 +2061,7 @@ static float doRound(float f) {
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
+    UNIMPLEMENTED();
     EbrDebugLog("%s not supported\n", __func__);
 }
 

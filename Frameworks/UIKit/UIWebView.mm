@@ -48,6 +48,7 @@ typedef wchar_t WCHAR;
  @Status Stub
 */
 - (void)setScalesPageToFit:(BOOL)scaleToFit {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -151,6 +152,7 @@ static void initWebKit(UIWebView* self) {
  @Status Stub
 */
 - (void)loadData:(NSData*)data MIMEType:(NSString*)mimeType textEncodingName:(NSString*)encoding baseURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
     _isLoading = true;
     _delayLoadURL = nil;
 
@@ -180,6 +182,7 @@ static void initWebKit(UIWebView* self) {
  @Status Stub
 */
 - (void)setDataDetectorTypes:(UIDataDetectorTypes)types {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -237,6 +240,7 @@ static void initWebKit(UIWebView* self) {
  @Status Stub
 */
 - (UIScrollView*)scrollView {
+    UNIMPLEMENTED();
     return _scrollView;
 }
 

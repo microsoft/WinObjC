@@ -445,6 +445,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -518,6 +519,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (void)setAdjustsImageWhenHighlighted:(BOOL)doAdjust {
+    UNIMPLEMENTED();
     _adjustsImageWhenHighlighted = doAdjust != FALSE;
 }
 
@@ -525,6 +527,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (BOOL)adjustsImageWhenHighlighted {
+    UNIMPLEMENTED();
     return _adjustsImageWhenHighlighted;
 }
 
@@ -532,6 +535,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (void)setAdjustsImageWhenDisabled:(BOOL)doAdjust {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -606,6 +610,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (void)setShowsTouchWhenHighlighted:(BOOL)showsTouch {
+    UNIMPLEMENTED();
     _showsTouchWhenHighlighted = showsTouch != FALSE;
 }
 
@@ -613,6 +618,7 @@ static bool validateState(UIControlState state) {
  @Status Stub
 */
 - (BOOL)showsTouchWhenHighlighted {
+    UNIMPLEMENTED();
     return _showsTouchWhenHighlighted;
 }
 
@@ -716,6 +722,7 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
  @Status Stub
 */
 - (void)setReversesTitleShadowWhenHighlighted:(BOOL)reverses {
+    UNIMPLEMENTED();
 }
 
 - (void)sizeToFit {

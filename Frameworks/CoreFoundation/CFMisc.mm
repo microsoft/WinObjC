@@ -84,6 +84,7 @@ COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char* name, void* out, s
  @Notes Returns the CFString "Desc"
 */
 CFStringRef CFCopyDescription(CFTypeRef ref) {
+    UNIMPLEMENTED();
     return (CFStringRef) @"Desc";
 }
 

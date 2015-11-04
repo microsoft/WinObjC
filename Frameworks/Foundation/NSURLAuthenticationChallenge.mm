@@ -29,6 +29,7 @@
  @Status Stub
 */
 - (NSUInteger)previousFailureCount {
+    UNIMPLEMENTED();
     return 0;
 }
 
@@ -36,6 +37,7 @@
  @Status Stub
 */
 - (id)protectionSpace {
+    UNIMPLEMENTED();
     return _protectionSpace;
 }
 
@@ -49,6 +51,7 @@
  @Status Stub
 */
 - (id)sender {
+    UNIMPLEMENTED();
     return _sender;
 }
 

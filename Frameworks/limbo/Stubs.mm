@@ -113,6 +113,7 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
  @Status Stub
 */
 + (id)sharedAccelerometer {
+    UNIMPLEMENTED();
     return nil;
 }
 @end
@@ -144,6 +145,7 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
  @Status Stub
 */
 + (GKLocalPlayer*)localPlayer {
+    UNIMPLEMENTED();
     return nil;
 }
 @end
@@ -183,6 +185,7 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
  @Status Stub
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
+    UNIMPLEMENTED();
     return [NSData data];
 }
 
@@ -262,6 +265,7 @@ __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* 
  @Status Stub
 */
 __declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
@@ -270,6 +274,7 @@ __declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
  @Status Stub
 */
 __declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
@@ -278,6 +283,7 @@ __declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsig
  @Status Stub
 */
 __declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
@@ -325,6 +331,7 @@ __declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned
  @Status Stub
 */
 extern "C" void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
+    UNIMPLEMENTED();
 }
 
 @implementation CBCentralManager

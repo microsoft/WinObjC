@@ -404,6 +404,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (void)scheduleLocalNotification:(UILocalNotification*)n {
+    UNIMPLEMENTED();
     [n _setReceiver:self];
     int idx = [_curNotifications indexOfObject:n];
     if (idx == NSNotFound) {
@@ -434,6 +435,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (void)setStatusBarStyle:(unsigned)style animated:(BOOL)animated {
+    UNIMPLEMENTED();
     _statusBarStyle = style;
 }
 
@@ -441,6 +443,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (unsigned)statusBarStyle {
+    UNIMPLEMENTED();
     return _statusBarStyle;
 }
 
@@ -473,6 +476,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirection {
+    UNIMPLEMENTED();
     return UIUserInterfaceLayoutDirectionLeftToRight;
 }
 
@@ -688,6 +692,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (void)setIdleTimerDisabled:(BOOL)disable {
+    UNIMPLEMENTED();
     idleDisabled = disable;
 }
 
@@ -695,6 +700,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (BOOL)isIdleTimerDisabled {
+    UNIMPLEMENTED();
     return idleDisabled;
 }
 
@@ -740,6 +746,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
  @Status Stub
 */
 - (void)setApplicationIconBadgeNumber:(int)num {
+    UNIMPLEMENTED();
     EbrSetApplicationBadgeNumber(num);
 }
 
@@ -1116,6 +1123,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (BOOL)openURL:(NSURL*)url {
+    UNIMPLEMENTED();
     NSString* scheme = [url scheme];
     if ([scheme isEqualToString:@"fbauth"]) {
         return FALSE;
@@ -1139,6 +1147,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (BOOL)canOpenURL:(NSURL*)url {
+    UNIMPLEMENTED();
     EbrDebugLog("UIApplication: Can open URL %s?\n", [[url absoluteString] UTF8String]);
     NSString* scheme = [url scheme];
     if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
@@ -1152,18 +1161,21 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)setNetworkActivityIndicatorVisible:(BOOL)visible {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setApplicationSupportsShakeToEdit:(BOOL)supports {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)registerForRemoteNotificationTypes:(unsigned)types {
+    UNIMPLEMENTED();
     [self registerForRemoteNotificationTypes:types withId:@"309806373466"];
 }
 
@@ -1171,6 +1183,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)registerForRemoteNotificationTypes:(unsigned)types withId:(id)identifier {
+    UNIMPLEMENTED();
 #ifdef SUPPORT_REMOTE_NOTIFICATIONS
     EbrRegisterForRemoteNotifications(identifier);
 #endif
@@ -1210,6 +1223,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)())handler {
+    UNIMPLEMENTED();
     EbrDebugLog("beginBackgroundTaskWithExpirationHandler not supported\n");
     return 0;
 }
@@ -1218,6 +1232,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (double)backgroundTimeRemaining {
+    UNIMPLEMENTED();
     return 60.0 * 5;
 }
 
@@ -1225,6 +1240,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)handler {
+    UNIMPLEMENTED();
     EbrDebugLog("endBackgroundTask not supported\n");
 }
 
@@ -1307,6 +1323,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)beginReceivingRemoteControlEvents {
+    UNIMPLEMENTED();
 }
 
 - (void)endReceivingRemoteControlEvents {
@@ -1332,6 +1349,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (double)statusBarOrientationAnimationDuration {
+    UNIMPLEMENTED();
     return 0.4;
 }
 
@@ -1405,6 +1423,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (int)applicationIconBadgeNumber {
+    UNIMPLEMENTED();
     return 0;
 }
 
@@ -1412,6 +1431,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (NSArray*)scheduledLocalNotifications {
+    UNIMPLEMENTED();
     return _curNotifications;
 }
 
@@ -1419,6 +1439,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (unsigned)enabledRemoteNotificationTypes {
+    UNIMPLEMENTED();
     return 0;
 }
 
@@ -1426,6 +1447,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)cancelAllLocalNotifications {
+    UNIMPLEMENTED();
     int count = [_curNotifications count];
     while (count > 0) {
         id object = [_curNotifications objectAtIndex:count - 1];
@@ -1439,6 +1461,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)cancelLocalNotification:(UILocalNotification*)notification {
+    UNIMPLEMENTED();
     [notification _cancelAlarm];
     int idx = [_curNotifications indexOfObject:notification];
     if (idx != NSNotFound) {
@@ -1450,6 +1473,7 @@ static void printViews(id curView, int level) {
  @Status Stub
 */
 - (void)presentLocalNotificationNow:(UILocalNotification*)notification {
+    UNIMPLEMENTED();
 }
 
 /**

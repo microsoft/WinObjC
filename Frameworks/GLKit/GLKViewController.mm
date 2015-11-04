@@ -120,6 +120,7 @@ typedef wchar_t WCHAR;
  @Status Stub
 */
 - (unsigned int)framesPerSecond {
+    UNIMPLEMENTED();
     return 30;
 }
 

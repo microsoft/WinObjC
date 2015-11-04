@@ -952,6 +952,7 @@ ALC_API ALCdevice* ALC_APIENTRY alcOpenDevice(const ALCchar* devicename) {
  @Status Stub
 */
 ALC_API ALCboolean ALC_APIENTRY alcCloseDevice(ALCdevice* device) {
+    UNIMPLEMENTED();
     device->Destroy();
 
     return true;
@@ -988,12 +989,14 @@ ALC_API ALCboolean ALC_APIENTRY alcSetThreadContext(ALCcontext* context) {
  @Status Stub
 */
 ALC_API void ALC_APIENTRY alcProcessContext(ALCcontext* context) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 ALC_API void ALC_APIENTRY alcSuspendContext(ALCcontext* context) {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1047,6 +1050,7 @@ AL_API void AL_APIENTRY alBufferDataStatic(ALuint buffer, ALenum format, const A
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcei(ALuint source, ALenum param, ALint value) {
+    UNIMPLEMENTED();
     alCurrentContext->Sourcei(source, param, value);
 }
 
@@ -1054,6 +1058,7 @@ AL_API void AL_APIENTRY alSourcei(ALuint source, ALenum param, ALint value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSourcei(ALuint source, ALenum param, ALint* value) {
+    UNIMPLEMENTED();
     if (!alCurrentContext) {
         if (value)
             *value = AL_STOPPED;
@@ -1067,6 +1072,7 @@ AL_API void AL_APIENTRY alGetSourcei(ALuint source, ALenum param, ALint* value) 
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcef(ALuint source, ALenum param, ALfloat value) {
+    UNIMPLEMENTED();
     alCurrentContext->Sourcef(source, param, value);
 }
 
@@ -1081,6 +1087,7 @@ AL_API void AL_APIENTRY alSourcePlay(ALuint source) {
  @Status Stub
 */
 ALC_API ALCenum ALC_APIENTRY alcGetError(ALCdevice* device) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1089,6 +1096,7 @@ ALC_API ALCenum ALC_APIENTRY alcGetError(ALCdevice* device) {
  @Status Stub
 */
 ALC_API ALCboolean ALC_APIENTRY alcIsExtensionPresent(ALCdevice* device, const ALCchar* extname) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1097,6 +1105,7 @@ ALC_API ALCboolean ALC_APIENTRY alcIsExtensionPresent(ALCdevice* device, const A
  @Status Stub
 */
 ALC_API ALCenum ALC_APIENTRY alcGetEnumValue(ALCdevice* device, const ALCchar* enumname) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1105,6 +1114,7 @@ ALC_API ALCenum ALC_APIENTRY alcGetEnumValue(ALCdevice* device, const ALCchar* e
  @Status Stub
 */
 ALC_API const ALCchar* ALC_APIENTRY alcGetString(ALCdevice* device, ALCenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return NULL;
 }
@@ -1113,6 +1123,7 @@ ALC_API const ALCchar* ALC_APIENTRY alcGetString(ALCdevice* device, ALCenum para
  @Status Stub
 */
 ALC_API void ALC_APIENTRY alcGetIntegerv(ALCdevice* device, ALCenum param, ALCsizei size, ALCint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1134,6 +1145,7 @@ ALC_API void* ALC_APIENTRY alcGetProcAddress(ALCdevice* device, const ALCchar* f
  @Status Stub
 */
 AL_API void AL_APIENTRY alEnable(ALenum capability) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1141,6 +1153,7 @@ AL_API void AL_APIENTRY alEnable(ALenum capability) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alDisable(ALenum capability) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1148,6 +1161,7 @@ AL_API void AL_APIENTRY alDisable(ALenum capability) {
  @Status Stub
 */
 AL_API ALboolean AL_APIENTRY alIsEnabled(ALenum capability) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1156,6 +1170,7 @@ AL_API ALboolean AL_APIENTRY alIsEnabled(ALenum capability) {
  @Status Stub
 */
 AL_API const ALchar* AL_APIENTRY alGetString(ALenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return NULL;
 }
@@ -1164,6 +1179,7 @@ AL_API const ALchar* AL_APIENTRY alGetString(ALenum param) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBooleanv(ALenum param, ALboolean* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1171,6 +1187,7 @@ AL_API void AL_APIENTRY alGetBooleanv(ALenum param, ALboolean* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetIntegerv(ALenum param, ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1178,6 +1195,7 @@ AL_API void AL_APIENTRY alGetIntegerv(ALenum param, ALint* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetFloatv(ALenum param, ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1185,6 +1203,7 @@ AL_API void AL_APIENTRY alGetFloatv(ALenum param, ALfloat* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetDoublev(ALenum param, ALdouble* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1192,6 +1211,7 @@ AL_API void AL_APIENTRY alGetDoublev(ALenum param, ALdouble* values) {
  @Status Stub
 */
 AL_API ALboolean AL_APIENTRY alGetBoolean(ALenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1200,6 +1220,7 @@ AL_API ALboolean AL_APIENTRY alGetBoolean(ALenum param) {
  @Status Stub
 */
 AL_API ALint AL_APIENTRY alGetInteger(ALenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1208,6 +1229,7 @@ AL_API ALint AL_APIENTRY alGetInteger(ALenum param) {
  @Status Stub
 */
 AL_API ALfloat AL_APIENTRY alGetFloat(ALenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1216,6 +1238,7 @@ AL_API ALfloat AL_APIENTRY alGetFloat(ALenum param) {
  @Status Stub
 */
 AL_API ALdouble AL_APIENTRY alGetDouble(ALenum param) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1224,6 +1247,7 @@ AL_API ALdouble AL_APIENTRY alGetDouble(ALenum param) {
  @Status Stub
 */
 AL_API ALenum AL_APIENTRY alGetError(void) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1232,6 +1256,7 @@ AL_API ALenum AL_APIENTRY alGetError(void) {
  @Status Stub
 */
 AL_API ALboolean AL_APIENTRY alIsExtensionPresent(const ALchar* extname) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1240,6 +1265,7 @@ AL_API ALboolean AL_APIENTRY alIsExtensionPresent(const ALchar* extname) {
  @Status Stub
 */
 AL_API ALenum AL_APIENTRY alGetEnumValue(const ALchar* ename) {
+    UNIMPLEMENTED();
     // assert(0);
     return 0;
 }
@@ -1248,6 +1274,7 @@ AL_API ALenum AL_APIENTRY alGetEnumValue(const ALchar* ename) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alListenerf(ALenum param, ALfloat value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1255,6 +1282,7 @@ AL_API void AL_APIENTRY alListenerf(ALenum param, ALfloat value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alListener3f(ALenum param, ALfloat value1, ALfloat value2, ALfloat value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1262,6 +1290,7 @@ AL_API void AL_APIENTRY alListener3f(ALenum param, ALfloat value1, ALfloat value
  @Status Stub
 */
 AL_API void AL_APIENTRY alListenerfv(ALenum param, const ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1269,6 +1298,7 @@ AL_API void AL_APIENTRY alListenerfv(ALenum param, const ALfloat* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alListeneri(ALenum param, ALint value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1276,6 +1306,7 @@ AL_API void AL_APIENTRY alListeneri(ALenum param, ALint value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alListener3i(ALenum param, ALint value1, ALint value2, ALint value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1283,6 +1314,7 @@ AL_API void AL_APIENTRY alListener3i(ALenum param, ALint value1, ALint value2, A
  @Status Stub
 */
 AL_API void AL_APIENTRY alListeneriv(ALenum param, const ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1290,6 +1322,7 @@ AL_API void AL_APIENTRY alListeneriv(ALenum param, const ALint* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListenerf(ALenum param, ALfloat* value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1297,6 +1330,7 @@ AL_API void AL_APIENTRY alGetListenerf(ALenum param, ALfloat* value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListener3f(ALenum param, ALfloat* value1, ALfloat* value2, ALfloat* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1304,6 +1338,7 @@ AL_API void AL_APIENTRY alGetListener3f(ALenum param, ALfloat* value1, ALfloat* 
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListenerfv(ALenum param, ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1311,6 +1346,7 @@ AL_API void AL_APIENTRY alGetListenerfv(ALenum param, ALfloat* values) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListeneri(ALenum param, ALint* value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1318,6 +1354,7 @@ AL_API void AL_APIENTRY alGetListeneri(ALenum param, ALint* value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListener3i(ALenum param, ALint* value1, ALint* value2, ALint* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1325,6 +1362,7 @@ AL_API void AL_APIENTRY alGetListener3i(ALenum param, ALint* value1, ALint* valu
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetListeneriv(ALenum param, ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1332,6 +1370,7 @@ AL_API void AL_APIENTRY alGetListeneriv(ALenum param, ALint* values) {
  @Status Stub
 */
 AL_API ALboolean AL_APIENTRY alIsSource(ALuint source) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1340,6 +1379,7 @@ AL_API ALboolean AL_APIENTRY alIsSource(ALuint source) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSource3f(ALuint source, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1347,6 +1387,7 @@ AL_API void AL_APIENTRY alSource3f(ALuint source, ALenum param, ALfloat value1, 
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcefv(ALuint source, ALenum param, const ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1354,6 +1395,7 @@ AL_API void AL_APIENTRY alSourcefv(ALuint source, ALenum param, const ALfloat* v
  @Status Stub
 */
 AL_API void AL_APIENTRY alSource3i(ALuint source, ALenum param, ALint value1, ALint value2, ALint value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1361,6 +1403,7 @@ AL_API void AL_APIENTRY alSource3i(ALuint source, ALenum param, ALint value1, AL
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourceiv(ALuint source, ALenum param, const ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1368,6 +1411,7 @@ AL_API void AL_APIENTRY alSourceiv(ALuint source, ALenum param, const ALint* val
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSourcef(ALuint source, ALenum param, ALfloat* value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1375,6 +1419,7 @@ AL_API void AL_APIENTRY alGetSourcef(ALuint source, ALenum param, ALfloat* value
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSource3f(ALuint source, ALenum param, ALfloat* value1, ALfloat* value2, ALfloat* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1382,6 +1427,7 @@ AL_API void AL_APIENTRY alGetSource3f(ALuint source, ALenum param, ALfloat* valu
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSourcefv(ALuint source, ALenum param, ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1389,6 +1435,7 @@ AL_API void AL_APIENTRY alGetSourcefv(ALuint source, ALenum param, ALfloat* valu
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSource3i(ALuint source, ALenum param, ALint* value1, ALint* value2, ALint* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1396,6 +1443,7 @@ AL_API void AL_APIENTRY alGetSource3i(ALuint source, ALenum param, ALint* value1
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetSourceiv(ALuint source, ALenum param, ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1403,6 +1451,7 @@ AL_API void AL_APIENTRY alGetSourceiv(ALuint source, ALenum param, ALint* values
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcePlayv(ALsizei n, const ALuint* sources) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1410,6 +1459,7 @@ AL_API void AL_APIENTRY alSourcePlayv(ALsizei n, const ALuint* sources) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourceStopv(ALsizei n, const ALuint* sources) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1417,6 +1467,7 @@ AL_API void AL_APIENTRY alSourceStopv(ALsizei n, const ALuint* sources) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourceRewindv(ALsizei n, const ALuint* sources) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1424,6 +1475,7 @@ AL_API void AL_APIENTRY alSourceRewindv(ALsizei n, const ALuint* sources) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcePausev(ALsizei n, const ALuint* sources) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1438,6 +1490,7 @@ AL_API void AL_APIENTRY alSourceStop(ALuint source) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourceRewind(ALuint source) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1445,6 +1498,7 @@ AL_API void AL_APIENTRY alSourceRewind(ALuint source) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSourcePause(ALuint source) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1473,6 +1527,7 @@ AL_API void AL_APIENTRY alDeleteBuffers(ALsizei n, const ALuint* buffers) {
  @Status Stub
 */
 AL_API ALboolean AL_APIENTRY alIsBuffer(ALuint buffer) {
+    UNIMPLEMENTED();
     // assert(0);
     return AL_FALSE;
 }
@@ -1481,6 +1536,7 @@ AL_API ALboolean AL_APIENTRY alIsBuffer(ALuint buffer) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alBufferf(ALuint buffer, ALenum param, ALfloat value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1488,6 +1544,7 @@ AL_API void AL_APIENTRY alBufferf(ALuint buffer, ALenum param, ALfloat value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alBuffer3f(ALuint buffer, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1495,6 +1552,7 @@ AL_API void AL_APIENTRY alBuffer3f(ALuint buffer, ALenum param, ALfloat value1, 
  @Status Stub
 */
 AL_API void AL_APIENTRY alBufferfv(ALuint buffer, ALenum param, const ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1502,6 +1560,7 @@ AL_API void AL_APIENTRY alBufferfv(ALuint buffer, ALenum param, const ALfloat* v
  @Status Stub
 */
 AL_API void AL_APIENTRY alBufferi(ALuint buffer, ALenum param, ALint value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1509,6 +1568,7 @@ AL_API void AL_APIENTRY alBufferi(ALuint buffer, ALenum param, ALint value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alBuffer3i(ALuint buffer, ALenum param, ALint value1, ALint value2, ALint value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1516,6 +1576,7 @@ AL_API void AL_APIENTRY alBuffer3i(ALuint buffer, ALenum param, ALint value1, AL
  @Status Stub
 */
 AL_API void AL_APIENTRY alBufferiv(ALuint buffer, ALenum param, const ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1523,6 +1584,7 @@ AL_API void AL_APIENTRY alBufferiv(ALuint buffer, ALenum param, const ALint* val
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBufferf(ALuint buffer, ALenum param, ALfloat* value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1530,6 +1592,7 @@ AL_API void AL_APIENTRY alGetBufferf(ALuint buffer, ALenum param, ALfloat* value
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBuffer3f(ALuint buffer, ALenum param, ALfloat* value1, ALfloat* value2, ALfloat* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1537,6 +1600,7 @@ AL_API void AL_APIENTRY alGetBuffer3f(ALuint buffer, ALenum param, ALfloat* valu
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBufferfv(ALuint buffer, ALenum param, ALfloat* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1544,6 +1608,7 @@ AL_API void AL_APIENTRY alGetBufferfv(ALuint buffer, ALenum param, ALfloat* valu
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBufferi(ALuint buffer, ALenum param, ALint* value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1551,6 +1616,7 @@ AL_API void AL_APIENTRY alGetBufferi(ALuint buffer, ALenum param, ALint* value) 
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBuffer3i(ALuint buffer, ALenum param, ALint* value1, ALint* value2, ALint* value3) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1558,6 +1624,7 @@ AL_API void AL_APIENTRY alGetBuffer3i(ALuint buffer, ALenum param, ALint* value1
  @Status Stub
 */
 AL_API void AL_APIENTRY alGetBufferiv(ALuint buffer, ALenum param, ALint* values) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1565,6 +1632,7 @@ AL_API void AL_APIENTRY alGetBufferiv(ALuint buffer, ALenum param, ALint* values
  @Status Stub
 */
 AL_API void AL_APIENTRY alDistanceModel(ALenum distanceModel) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1572,6 +1640,7 @@ AL_API void AL_APIENTRY alDistanceModel(ALenum distanceModel) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alDopplerFactor(ALfloat value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1579,6 +1648,7 @@ AL_API void AL_APIENTRY alDopplerFactor(ALfloat value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alDopplerVelocity(ALfloat value) {
+    UNIMPLEMENTED();
     // assert(0);
 }
 
@@ -1586,5 +1656,6 @@ AL_API void AL_APIENTRY alDopplerVelocity(ALfloat value) {
  @Status Stub
 */
 AL_API void AL_APIENTRY alSpeedOfSound(ALfloat value) {
+    UNIMPLEMENTED();
     // assert(0);
 }

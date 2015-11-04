@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #include <Foundation/Foundation.h>
 
 @implementation NSDecimalNumber : NSNumber
@@ -22,6 +23,7 @@
  @Status Stub
 */
 + (NSDecimalNumber*)decimalNumberWithString:(NSString*)str {
+    UNIMPLEMENTED();
     NSDecimalNumber* ret = [self alloc];
     const char* pStr = [str UTF8String];
     if (strstr(pStr, ".") != NULL) {

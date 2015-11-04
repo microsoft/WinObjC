@@ -489,6 +489,7 @@ Boolean SCNetworkReachabilitySetCallback(SCNetworkReachabilityRef target,
  @Status Stub
 */
 Boolean SCNetworkReachabilitySetDispatchQueue(SCNetworkReachabilityRef target, dispatch_queue_t queue) {
+    UNIMPLEMENTED();
     SCNetworkReachability* scNetwork = (SCNetworkReachability*)target;
 
     [scNetwork setCallbackQueue:queue];
@@ -520,6 +521,7 @@ Boolean SCNetworkReachabilityUnscheduleFromRunLoop(SCNetworkReachabilityRef targ
  @Status Stub
 */
 int SCError(void) {
+    UNIMPLEMENTED();
     return SCLastError;
 }
 
@@ -527,5 +529,6 @@ int SCError(void) {
  @Status Stub
 */
 const char* SCErrorString(int status) {
+    UNIMPLEMENTED();
     return "Not implemented";
 }

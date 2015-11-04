@@ -314,6 +314,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
  @Status Stub
 */
 - (void)setMaxConcurrentOperationCount:(NSInteger)count {
+    UNIMPLEMENTED();
     priv->_maxConcurrentOperationCount = count;
 }
 
@@ -321,6 +322,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
  @Status Stub
 */
 - (NSInteger)maxConcurrentOperationCount {
+    UNIMPLEMENTED();
     return priv->_maxConcurrentOperationCount;
 }
 

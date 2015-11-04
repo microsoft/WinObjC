@@ -83,6 +83,7 @@ CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
  @Notes Always returns RGBA colorspace
 */
 CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
+    UNIMPLEMENTED();
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
@@ -91,6 +92,7 @@ CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
  @Notes Always returns RGB colorspace
 */
 CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGColorSpaceGetModel not implemented\n");
     return kCGColorSpaceModelRGB;
 }
@@ -256,6 +258,7 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
  @Status Stub
 */
 size_t CGColorGetNumberOfComponents(CGColorRef color) {
+    UNIMPLEMENTED();
     /* [BUG: Not all colors have 4 components, but all of the ones we currently
      * support do!] */
     return 4;
@@ -276,5 +279,6 @@ CGFloat CGColorGetAlpha(CGColorRef color) {
  @Status Stub
 */
 CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
+    UNIMPLEMENTED();
     return CGColorSpaceCreateDeviceRGB();
 }

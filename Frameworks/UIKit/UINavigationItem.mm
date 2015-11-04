@@ -92,6 +92,7 @@
  @Status Stub
 */
 - (void)setPrompt:(NSString*)prompt {
+    UNIMPLEMENTED();
     _prompt = prompt;
 }
 
@@ -272,6 +273,7 @@
  @Status Stub
 */
 - (NSString*)prompt {
+    UNIMPLEMENTED();
     return _prompt;
 }
 

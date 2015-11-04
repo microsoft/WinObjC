@@ -121,6 +121,7 @@ void* selectorThread(void* param) {
  @Status Stub
 */
 + (void)setThreadPriority:(double)priority {
+    UNIMPLEMENTED();
     NSThread* curThread = [self currentThread];
     curThread->_priority = priority;
 }
@@ -129,6 +130,7 @@ void* selectorThread(void* param) {
  @Status Stub
 */
 - (void)setStackSize:(NSUInteger)size {
+    UNIMPLEMENTED();
     EbrDebugLog("Stack size: %d\n", size);
     _stackSize = size;
 }
@@ -172,6 +174,7 @@ void* selectorThread(void* param) {
  @Status Stub
 */
 - (NSUInteger)stackSize {
+    UNIMPLEMENTED();
     return _stackSize;
 }
 
@@ -204,6 +207,7 @@ void* selectorThread(void* param) {
  @Notes Currently asserts.
 */
 + (void)exit {
+    UNIMPLEMENTED();
     EbrDebugLog("NSThread::exit\n");
     assert(0);
 }
@@ -257,6 +261,7 @@ void* selectorThread(void* param) {
  @Status Stub
 */
 + (double)threadPriority {
+    UNIMPLEMENTED();
     NSThread* curThread = [self currentThread];
 
     return curThread->_priority;

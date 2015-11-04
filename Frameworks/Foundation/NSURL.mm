@@ -821,6 +821,7 @@ static void StripSlashes(char* pPath) {
  @Status Stub
 */
 - (id)standardizedURL {
+    UNIMPLEMENTED();
     EbrDebugLog("standardizedURL needs attention\n");
     return [self copy];
 }
@@ -850,6 +851,7 @@ static void StripSlashes(char* pPath) {
  @Status Stub
 */
 - (BOOL)setResourceValue:(id)value forKey:(id)key error:(NSError**)error {
+    UNIMPLEMENTED();
     if (error)
         *error = nil;
     EbrDebugLog("NSURL::setResourceValue not supported\n");

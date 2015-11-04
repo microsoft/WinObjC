@@ -256,6 +256,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Stub
 */
 - (void)setWindowLevel:(float)level {
+    UNIMPLEMENTED();
     _windowLevel = level;
     CALayer* ourLayer = [self layer];
     GetCACompositor()->setNodeTopWindowLevel((DisplayNode*)[ourLayer _presentationNode], level);
@@ -267,6 +268,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Stub
 */
 - (float)windowLevel {
+    UNIMPLEMENTED();
     return _windowLevel;
 }
 
@@ -274,6 +276,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Stub
 */
 - (void)setScreen:(UIScreen*)screen {
+    UNIMPLEMENTED();
     return;
 }
 

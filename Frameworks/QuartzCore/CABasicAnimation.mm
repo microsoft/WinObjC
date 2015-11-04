@@ -44,6 +44,7 @@
  @Status Stub
 */
 - (void)setByValue:(id)value {
+    UNIMPLEMENTED();
     EbrDebugLog("CABasicAnimation::setByValue not supported\n");
 }
 

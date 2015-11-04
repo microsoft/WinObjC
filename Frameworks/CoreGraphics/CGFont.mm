@@ -546,6 +546,7 @@ bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, C
  @Status Stub
 */
 int CGFontGetLeading(CGFontRef font) {
+    UNIMPLEMENTED();
     //  Get the font
     FT_Face face = (FT_Face)[font _sizingFontHandle];
 
@@ -920,6 +921,7 @@ CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
  @Notes Line is not truncated
 */
 CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
+    UNIMPLEMENTED();
     id str = ((_CTLine*)line)->_str;
     NSRange lineRange = ((_CTLine*)line)->_strRange;
 
@@ -1011,6 +1013,7 @@ double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* desc
  @Notes Returns 0.0
 */
 double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth) {
+    UNIMPLEMENTED();
     return 0.0;
 }
 
@@ -1031,6 +1034,7 @@ const CFStringRef kCTSuperscriptAttributeName = (const CFStringRef) @"kCTSupersc
  @Status Stub
 */
 CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
+    UNIMPLEMENTED();
     id ret = [NSMutableDictionary new];
     [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"BLACK") forKey:(id)kCTBackgroundStrokeColorAttributeName];
     [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"WHITE") forKey:(id)kCTBackgroundFillColorAttributeName];
@@ -1085,6 +1089,7 @@ id CTFontDescriptorCreateWithAttributes(id fontAttributes) {
  @Notes Always returns Helvetica 12-point font
 */
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
+    UNIMPLEMENTED();
     if (size == 0.0f)
         size = 12.0f;
     id ret = [[_LazyUIFont fontWithName:@"Helvetica" size:size] retain];
@@ -1184,6 +1189,7 @@ CFStringRef CTFontCopyFamilyName(CTFontRef font) {
  @Status Stub
 */
 CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount) {
+    UNIMPLEMENTED();
     return (CTParagraphStyleRef)[NSObject new];
 }
 

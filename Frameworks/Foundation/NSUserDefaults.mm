@@ -481,6 +481,7 @@ static id deepCopyValue(id obj) {
  @Status Stub
 */
 + (void)resetStandardUserDefaults {
+    UNIMPLEMENTED();
     EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
 }
 

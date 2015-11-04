@@ -67,6 +67,7 @@
  @Status Stub
 */
 - (UIView*)contentView {
+    UNIMPLEMENTED();
     return _contentView;
 }
 

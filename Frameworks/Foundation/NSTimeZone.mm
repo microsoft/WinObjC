@@ -51,6 +51,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 + (instancetype)systemTimeZone {
+    UNIMPLEMENTED();
     return [self _getSystemTZ];
 }
 
@@ -58,6 +59,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 + (void)resetSystemTimeZone {
+    UNIMPLEMENTED();
     [self _setTimeZoneToSystemSettings:[self _getSystemTZ]->_icuTZ];
 }
 
@@ -65,6 +67,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 + (instancetype)defaultTimeZone {
+    UNIMPLEMENTED();
     NSTimeZone* ret;
 
     if (_defaultTimeZone != nil) {
@@ -88,6 +91,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 + (NSArray*)knownTimeZoneNames {
+    UNIMPLEMENTED();
     //  TODO
     return [NSArray arrayWithObject:@"America/Los_Angeles"];
 }
@@ -110,6 +114,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 + (instancetype)localTimeZone {
+    UNIMPLEMENTED();
     if (_defaultTimeZone != nil) {
         return [[_defaultTimeZone retain] autorelease];
     }
@@ -174,6 +179,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 - (NSString*)localizedName:(NSTimeZoneNameStyle)name locale:(NSLocale*)locale {
+    UNIMPLEMENTED();
     return [self description];
 }
 
@@ -188,6 +194,7 @@ static NSTimeZone* _systemTimeZone;
  @Status Stub
 */
 - (NSInteger)secondsFromGMTForDate:(NSDate*)date {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }

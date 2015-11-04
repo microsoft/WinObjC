@@ -105,6 +105,7 @@
  @Status Stub
 */
 - (NSString*)calendarIdentifier {
+    UNIMPLEMENTED();
     return _identifier;
 }
 
@@ -332,6 +333,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
  @Status Stub
 */
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     EbrDebugLog("ordinalityOfUnit not supported\n");
     return 0;
 }
@@ -372,6 +374,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
  @Status Stub
 */
 - (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     // HACK: implement me!
     *datep = [date retain];
     return NO;
@@ -413,6 +416,7 @@ static UCalendarDateFields icuFieldFromUnit(NSCalendarUnit unit) {
  @Status Stub
 */
 - (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     NSRange ret;
 
     double time = [date timeIntervalSince1970];

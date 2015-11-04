@@ -1596,6 +1596,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setDoubleSided:(BOOL)doubleSided {
+    UNIMPLEMENTED();
 }
 
 - (void)setGeometryFlipped:(BOOL)flipped {
@@ -1632,6 +1633,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setBorderColor:(CGColorRef)color {
+    UNIMPLEMENTED();
     if (color != nil) {
         [color getColors:&priv->borderColor];
     } else {
@@ -1650,6 +1652,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (CGColorRef)borderColor {
+    UNIMPLEMENTED();
     return priv->_borderColor;
 }
 
@@ -1657,6 +1660,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setBorderWidth:(float)width {
+    UNIMPLEMENTED();
     priv->borderWidth = width;
 }
 
@@ -1664,6 +1668,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (float)borderWidth {
+    UNIMPLEMENTED();
     return priv->borderWidth;
 }
 
@@ -1671,6 +1676,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setCornerRadius:(float)radius {
+    UNIMPLEMENTED();
     priv->cornerRadius = radius;
 }
 
@@ -1678,6 +1684,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (float)cornerRadius {
+    UNIMPLEMENTED();
     return priv->cornerRadius;
 }
 
@@ -1696,6 +1703,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setRasterizationScale:(float)scale {
+    UNIMPLEMENTED();
     EbrDebugLog("setRasterizationScale not supported\n");
 }
 
@@ -1703,12 +1711,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShadowOffset:(CGSize)size {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (CGSize)shadowOffset {
+    UNIMPLEMENTED();
     CGSize ret;
     ret.width = 0.0f;
     ret.height = -3.0f;
@@ -1719,12 +1729,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShadowOpacity:(float)opacity {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (float)shadowOpacity {
+    UNIMPLEMENTED();
     return 0.0f;
 }
 
@@ -1732,12 +1744,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShadowColor:(CGColorRef)color {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (CGColorRef)shadowColor {
+    UNIMPLEMENTED();
     return CGColorGetConstantColor((CFStringRef) @"BLACK");
 }
 
@@ -1745,12 +1759,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShadowRadius:(float)radius {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (float)shadowRadius {
+    UNIMPLEMENTED();
     return 3.0f;
 }
 
@@ -1758,6 +1774,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShouldRasterize:(BOOL)shouldRasterize {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1771,6 +1788,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setMagnificationFilter:(NSString*)filter {
+    UNIMPLEMENTED();
 }
 
 - (void)setEdgeAntialiasingMask:(unsigned)mask {
@@ -1780,6 +1798,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setMinificationFilter:(NSString*)filter {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1917,6 +1936,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (CALayer*)presentationLayer {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -1924,6 +1944,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (instancetype)initWithLayer:(CALayer*)layerToCopy {
+    UNIMPLEMENTED();
     return self;
 }
 
@@ -2078,6 +2099,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setMask:(CALayer*)mask {
+    UNIMPLEMENTED();
     id oldLayer = priv->maskLayer;
     priv->maskLayer = [mask retain];
     [oldLayer release];
@@ -2089,6 +2111,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (CALayer*)mask {
+    UNIMPLEMENTED();
     EbrDebugLog("mask not supported\n");
     return nil;
 }
@@ -2101,6 +2124,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (void)setShadowPath:(CGPathRef)path {
+    UNIMPLEMENTED();
     EbrDebugLog("setShadowPath not supported\n");
 }
 
@@ -2108,6 +2132,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Stub
 */
 - (CGPathRef)shadowPath {
+    UNIMPLEMENTED();
     return nil;
 }
 

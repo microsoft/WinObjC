@@ -41,6 +41,7 @@ typedef wchar_t WCHAR;
  @Status Stub
 */
 - (void)setDrawableProperties:(NSDictionary*)propertiesDict {
+    UNIMPLEMENTED();
     [_properties release];
     _properties = [propertiesDict copy];
 }
@@ -80,6 +81,7 @@ typedef wchar_t WCHAR;
  @Status Stub
 */
 - (NSDictionary*)drawableProperties {
+    UNIMPLEMENTED();
     return _properties;
 }
 

@@ -514,6 +514,7 @@ static void initControls(UIBarButtonItem* self) {
  @Status Stub
 */
 - (void)setBackButtonTitlePositionAdjustment:(UIOffset)position forBarMetrics:(UIBarMetrics)metrics {
+    UNIMPLEMENTED();
     EbrDebugLog("setBackButtonTitlePositionAdjustment not supported\n");
 }
 
@@ -555,6 +556,7 @@ static void initControls(UIBarButtonItem* self) {
  @Status Stub
 */
 - (void)setTintColor:(UIColor*)tintColor {
+    UNIMPLEMENTED();
     [super setTintColor:tintColor];
 
     [_buttonView setTintColor:tintColor];
@@ -567,6 +569,7 @@ static void initControls(UIBarButtonItem* self) {
  @Status Stub
 */
 - (UIColor*)tintColor {
+    UNIMPLEMENTED();
     return [super tintColor];
 }
 

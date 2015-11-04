@@ -334,6 +334,7 @@ static int addButton(UIActionSheet* self, id text) {
  @Status Stub
 */
 - (void)setActionSheetStyle:(UIActionSheetStyle)style {
+    UNIMPLEMENTED();
 }
 
 - (id)_didHideAlert {
@@ -452,6 +453,7 @@ static void dismissView(UIActionSheet* self, int index) {
  @Status Stub
 */
 - (BOOL)isVisible {
+    UNIMPLEMENTED();
     return [self superview] != nil;
 }
 

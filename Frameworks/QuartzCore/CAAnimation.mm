@@ -56,6 +56,7 @@
  @Status Stub
 */
 - (void)setRemovedOnCompletion:(BOOL)remove {
+    UNIMPLEMENTED();
     _timingProperties._removedOnCompletion = remove;
 }
 

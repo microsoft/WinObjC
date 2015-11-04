@@ -36,6 +36,7 @@
  @Status Stub
 */
 - (NSSet*)touchesForWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
     return nil;
 }
 
@@ -43,6 +44,7 @@
  @Status Stub
 */
 - (NSSet*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture {
+    UNIMPLEMENTED();
     return nil;
 }
 

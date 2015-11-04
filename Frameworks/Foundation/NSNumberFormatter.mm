@@ -231,6 +231,7 @@ enum {
  @Status Stub
 */
 - (void)setNegativeFormat:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_negativeFormat release];
     _negativeFormat = value;
@@ -249,6 +250,7 @@ enum {
  @Status Stub
 */
 - (void)setPositiveFormat:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_positiveFormat release];
     _positiveFormat = value;
@@ -267,18 +269,21 @@ enum {
  @Status Stub
 */
 - (void)setUsesSignificantDigits:(BOOL)uses {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setMinimumSignificantDigits:(NSUInteger)min {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 - (void)setMaximumSignificantDigits:(NSUInteger)min {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -300,6 +305,7 @@ enum {
  @Status Stub
 */
 - (void)setAlwaysShowsDecimalSeparator:(BOOL)value {
+    UNIMPLEMENTED();
     _alwaysShowsDecimalSeparator = value;
 }
 
@@ -321,6 +327,7 @@ enum {
  @Status Stub
 */
 - (void)setPerMillSymbol:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_perMillSymbol release];
     _perMillSymbol = value;
@@ -375,6 +382,7 @@ enum {
  @Status Stub
 */
 - (id)currencyDecimalSeparator {
+    UNIMPLEMENTED();
     return _currencyDecimalSeparator;
 }
 
@@ -438,6 +446,7 @@ enum {
  @Status Stub
 */
 - (void)setMinimumFractionDigits:(NSUInteger)value {
+    UNIMPLEMENTED();
     _minimumFractionDigits = value;
 }
 
@@ -445,6 +454,7 @@ enum {
  @Status Stub
 */
 - (void)setUsesGroupingSeparator:(BOOL)value {
+    UNIMPLEMENTED();
     _formatter->setGroupingUsed(value);
     _usesGroupingSeparator = value;
 }
@@ -535,6 +545,7 @@ enum {
  @Status Stub
 */
 - (void)setRoundingMode:(NSNumberFormatterRoundingMode)value {
+    UNIMPLEMENTED();
     _roundingMode = (NSNumberFormatterRoundingMode)value;
 }
 

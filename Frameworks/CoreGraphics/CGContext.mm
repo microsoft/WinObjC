@@ -91,6 +91,7 @@ void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float
  @Status Stub
 */
 void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextSetPatternPhase not implemented\n");
 }
 
@@ -98,6 +99,7 @@ void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
  @Status Stub
 */
 void CGContextSetCharacterSpacing(CGContextRef ctx, float spacing) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextSetCharacterSpacing not implemented\n");
 }
 
@@ -303,6 +305,7 @@ void CGContextSetFillColor(CGContextRef ctx, const float* components) {
  @Status Stub
 */
 void CGContextSetFillColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -500,6 +503,7 @@ void CGContextDrawPath(CGContextRef ctx, CGPathDrawingMode mode) {
  @Status Stub
 */
 void CGContextFlush(CGContextRef ctx) {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -541,6 +545,7 @@ void CGContextDrawRadialGradient(CGContextRef ctx,
  @Status Stub
 */
 void CGContextDrawShading(CGContextRef ctx, CGShadingRef shading) {
+    UNIMPLEMENTED();
     // CGContextDrawLinearGradient(ctx, (CGGradientRef) shading->_gradient,
     // shading->_start, shading->_end, 0);
 }
@@ -549,6 +554,7 @@ void CGContextDrawShading(CGContextRef ctx, CGShadingRef shading) {
  @Status Stub
 */
 void CGContextDrawLayerInRect(CGContextRef ctx, CGRect destRect, CGLayerRef layer) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextDrawLayerInRect(destRect, layer);
 }
 
@@ -556,6 +562,7 @@ void CGContextDrawLayerInRect(CGContextRef ctx, CGRect destRect, CGLayerRef laye
  @Status Stub
 */
 void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef layer) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextDrawLayerAtPoint(destPoint, layer);
 }
 
@@ -570,6 +577,7 @@ void CGContextSetLineDash(CGContextRef ctx, float phase, const float* lengths, u
  @Status Stub
 */
 void CGContextSetMiterLimit(CGContextRef ctx, float limit) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetMiterLimit(limit);
 }
 
@@ -603,6 +611,7 @@ void CGContextSetLineWidth(CGContextRef ctx, float width) {
  @Status Stub
 */
 void CGContextSetShouldAntialias(CGContextRef ctx, bool shouldAntialias) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetShouldAntialias(shouldAntialias);
 }
 
@@ -610,66 +619,77 @@ void CGContextSetShouldAntialias(CGContextRef ctx, bool shouldAntialias) {
  @Status Stub
 */
 void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent intent) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
 void CGContextReplacePathWithStrokedPath(CGContextRef context) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextReplacePathWithStrokedPath not implemented\n");
 }
 
@@ -732,6 +752,7 @@ void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count)
  @Status Stub
 */
 void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextBeginTransparencyLayer((id)auxInfo);
 }
 
@@ -739,6 +760,7 @@ void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) 
  @Status Stub
 */
 void CGContextEndTransparencyLayer(CGContextRef ctx) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextEndTransparencyLayer();
 }
 
@@ -747,6 +769,7 @@ void CGContextEndTransparencyLayer(CGContextRef ctx) {
  @Notes Always returns RGBA
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
+    UNIMPLEMENTED();
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
@@ -855,6 +878,7 @@ void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsi
  @Status Stub
 */
 CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef ctx) {
+    UNIMPLEMENTED();
     return (CGInterpolationQuality)0;
 }
 
@@ -882,6 +906,7 @@ void CGContextSetGrayStrokeColor(CGContextRef ctx, float gray, float alpha) {
  @Status Stub
 */
 void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
     [colorSpace retain];
 }
 
@@ -896,6 +921,7 @@ void CGContextSetAlpha(CGContextRef ctx, float a) {
  @Status Stub
 */
 CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rct) {
+    UNIMPLEMENTED();
     return rct;
 }
 
@@ -903,6 +929,7 @@ CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rct) {
  @Status Stub
 */
 CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rct) {
+    UNIMPLEMENTED();
     return rct;
 }
 
@@ -910,6 +937,7 @@ CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rct) {
  @Status Stub
 */
 CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
+    UNIMPLEMENTED();
     return pt;
 }
 
@@ -917,6 +945,7 @@ CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
  @Status Stub
 */
 CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+    UNIMPLEMENTED();
     return pt;
 }
 
@@ -957,6 +986,7 @@ CGContextRef CGContextRetain(CGContextRef ctx) {
  @Status Stub
 */
 void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, float blur, CGColorRef color) {
+    UNIMPLEMENTED();
 }
 
 /**

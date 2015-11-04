@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #include "UIKit/UIKit.h"
 #include <math.h>
 
@@ -63,6 +64,7 @@
  @Status Stub
 */
 - (void)setNumberOfTouchesRequired:(NSUInteger)numberOfTouches {
+    UNIMPLEMENTED();
     _numberOfTouchesRequired = numberOfTouches;
 }
 
@@ -70,6 +72,7 @@
  @Status Stub
 */
 - (NSUInteger)numberOfTouchesRequired {
+    UNIMPLEMENTED();
     return _numberOfTouchesRequired;
 }
 
