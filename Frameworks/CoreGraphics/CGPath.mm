@@ -540,3 +540,13 @@ CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* tr
 
     return (CGPathRef)ret;
 }
+
+/**
+ @Status Stub
+*/
+CGRect CGPathGetPathBoundingBox(CGPathRef self) {
+    UNIMPLEMENTED();
+
+    CGRect ret;
+    return ret;
+}

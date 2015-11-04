@@ -67,19 +67,19 @@ typedef NS_ENUM(NSInteger, MPMovieSourceType) { MPMovieSourceTypeUnknown, MPMovi
 
 typedef NS_ENUM(int, MPMovieControlMode) { MPMovieControlModeDefault, MPMovieControlModeVolumeOnly, MPMovieControlModeHidden };
 
-SB_EXPORT NSString* const MPMoviePlayerThumbnailImageKey;
-SB_EXPORT NSString* const MPMoviePlayerThumbnailTimeKey;
-SB_EXPORT NSString* const MPMoviePlayerThumbnailErrorKey;
-SB_EXPORT NSString* const MPMoviePlayerFullscreenAnimationDurationUserInfoKey;
-SB_EXPORT NSString* const MPMoviePlayerFullscreenAnimationCurveUserInfoKey;
-SB_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishReasonUserInfoKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailImageKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailTimeKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailErrorKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerFullscreenAnimationDurationUserInfoKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerFullscreenAnimationCurveUserInfoKey;
+UIKIT_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishReasonUserInfoKey;
 
-SB_EXPORT NSString* const MPMoviePlayerWillExitFullscreenNotification;
-SB_EXPORT NSString* const MPMoviePlayerDidExitFullscreenNotification;
-SB_EXPORT NSString* const MPMoviePlayerWillEnterFullscreenNotification;
-SB_EXPORT NSString* const MPMoviePlayerDidEnterFullscreenNotification;
-SB_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishNotification;
-SB_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerWillExitFullscreenNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerDidExitFullscreenNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerWillEnterFullscreenNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerDidEnterFullscreenNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishNotification;
+UIKIT_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 
 @interface MPMovieErrorLogEvent : NSObject
 
@@ -129,9 +129,10 @@ SB_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 @class MPMovieAccessLog;
 @class MPMovieErrorLog;
 
-@interface MPMoviePlayerController : NSObject <MPMediaPlayback, NSObject>
+UIKIT_EXPORT 
+@interface MPMoviePlayerController : NSObject<MPMediaPlayback, NSObject>
 
-- (instancetype)initWithContentURL:(NSURL*)url;
+- (instancetype)initWithContentURL : (NSURL*)url;
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
 - (void)playPrerollAdWithCompletionHandler:(void (^)(NSError* error))completionHandler;
 - (UIImage*)thumbnailImageAtTime:(NSTimeInterval)playbackTime timeOption:(MPMovieTimeOption)option;

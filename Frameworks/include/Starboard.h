@@ -17,6 +17,9 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
+// Placeholder for unimplemented logging and telemetry
+#define UNIMPLEMENTED()
+
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface

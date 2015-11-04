@@ -33,8 +33,8 @@ typedef NS_ENUM(NSInteger, NSURLSessionResponseDisposition) {
     NSURLSessionResponseBecomeDownload = 2
 };
 
-FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionTask : NSTask
+FOUNDATION_EXPORT_CLASS 
+@interface NSURLSessionTask : NSObject
 
 @property (readonly) NSURLResponse* response;
 @property (readonly) NSURLSessionTaskState state;
@@ -43,20 +43,25 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) NSURLRequest* error;
 
 - (void)cancel;
+- (void)resume;
+- (void)suspend;
 
 @end
 
-FOUNDATION_EXPORT_CLASS
+FOUNDATION_EXPORT_CLASS 
 @interface NSURLSessionDownloadTask : NSURLSessionTask
+
+@end
+
+FOUNDATION_EXPORT_CLASS 
+@interface NSURLSessionDataTask : NSURLSessionTask 
+
 @end
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionDataTask : NSURLSessionTask
-@end
+@interface NSURLSessionConfiguration : NSObject 
 
-FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionConfiguration : NSObject
-@property (nonatomic) BOOL allowsCellularAccess;
+@property(nonatomic) BOOL allowsCellularAccess;
 @property (nonatomic) NSURLCache* URLCache;
 @property (nonatomic) NSURLRequestCachePolicy requestCachePolicy;
 @property (nonatomic) NSTimeInterval timeoutIntervalForResource;
@@ -66,6 +71,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)ephemeralSessionConfiguration;
 + (instancetype)defaultSessionConfiguration;
 + (instancetype)backgroundSessionConfiguration:(NSString*)name;
+
 @end
 
 @class NSURLCredential;

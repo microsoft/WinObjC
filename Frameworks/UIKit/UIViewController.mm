@@ -37,6 +37,9 @@
 #include "AutoLayout.h"
 #include "UIViewControllerInternal.h"
 
+NSString* const UITransitionContextFromViewControllerKey = (NSString * const) @"UITransitionContextFromViewControllerKey";
+NSString* const UITransitionContextToViewControllerKey = (NSString * const) @"UITransitionContextToViewControllerKey";
+
 @interface _TransitionNotifier : NSObject
 @end
 

@@ -14,17 +14,25 @@
 //
 //******************************************************************************
 
-#ifndef __ADSUPPORT_H
-#define __ADSUPPORT_H
+#include "Starboard.h"
+#include "Foundation/NSURLSession.h"
 
-UIKIT_EXPORT 
-@interface ASIdentifierManager : NSObject 
-
-@property (nonatomic, readonly) NSUUID* advertisingIdentifier;
-@property (nonatomic, readonly, getter=isAdvertisingTrackingEnabled) BOOL advertisingTrackingEnabled;
-
-+ (ASIdentifierManager*)sharedManager;
+@implementation NSURLSessionTask
 
 @end
 
-#endif
+@implementation NSURLSessionDownloadTask
+
+@end
+
+@implementation NSURLSessionDataTask
+
+@end
+
+@implementation NSURLSessionConfiguration
+
+@end
+
+@implementation NSURLSession
+
+@end

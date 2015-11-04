@@ -166,8 +166,8 @@ UIKIT_EXPORT_CLASS
 
 @end
 
-UIKIT_EXPORT NSString* UITransitionContextFromViewControllerKey;
-UIKIT_EXPORT NSString* UITransitionContextToViewControllerKey;
+UIKIT_EXPORT NSString* const UITransitionContextFromViewControllerKey;
+UIKIT_EXPORT NSString* const UITransitionContextToViewControllerKey;
 
 @protocol UIViewControllerContextTransitioning
 - (UIView*)containerView;

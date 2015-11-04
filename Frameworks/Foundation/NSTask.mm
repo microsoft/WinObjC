@@ -14,17 +14,9 @@
 //
 //******************************************************************************
 
-#ifndef __ADSUPPORT_H
-#define __ADSUPPORT_H
+#include "Starboard.h"
+#include "Foundation/NSTask.h"
 
-UIKIT_EXPORT 
-@interface ASIdentifierManager : NSObject 
-
-@property (nonatomic, readonly) NSUUID* advertisingIdentifier;
-@property (nonatomic, readonly, getter=isAdvertisingTrackingEnabled) BOOL advertisingTrackingEnabled;
-
-+ (ASIdentifierManager*)sharedManager;
+@implementation NSTask
 
 @end
-
-#endif

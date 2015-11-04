@@ -48,6 +48,8 @@ typedef wchar_t WCHAR;
 
 NSString* const UIApplicationWillChangeDisplayModeNofication = (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
 NSString* const UIApplicationDidChangeDisplayModeNofication = (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
+NSString* const UIApplicationDidChangeStatusBarOrientationNotification =
+    (NSString * const) @"UIApplicationDidChangeStatusBarOrientationNotification";
 
 float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;
