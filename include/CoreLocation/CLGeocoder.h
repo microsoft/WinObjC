@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-#ifndef _CLGEOCODER_H_
-#define _CLGEOCODER_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocationExport.h>
 
-typedef void (^CLGeocodeCompletionHandler)(NSArray *placemark, NSError *error);
+typedef void (^CLGeocodeCompletionHandler)(NSArray* placemark, NSError* error);
 
-@class CLLocation;
-
+CORELOCATION_EXPORT_CLASS
 @interface CLGeocoder : NSObject
 
-- (void)reverseGeocodeLocation:(CLLocation *)location completionHandler:(CLGeocodeCompletionHandler)completionHandler;
+// TODO::
+// todo-nithishm-11022015 - Incomplete file.
+
+- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler;
 
 @end
-
-#endif /* _CLGEOCODER_H_ */

@@ -14,10 +14,18 @@
 //
 //******************************************************************************
 
+#ifndef _CLPLACEMARK_H_
+#define _CLPLACEMARK_H_
+
 #import <Foundation/Foundation.h>
 
 @interface CLPlacemark : NSObject
 
-@property(nonatomic, readonly) NSDictionary *addressDictionary;
+// TODO::
+// todo-nithishm-11022015 - Incomplete file.
+
+@property (nonatomic, readonly) NSDictionary* addressDictionary;
 
 @end
+
+#endif /* _CLPLACEMARK_H_ */

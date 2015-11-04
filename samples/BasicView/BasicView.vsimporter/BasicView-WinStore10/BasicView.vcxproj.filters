@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{72bae822-a472-4803-97eb-323b7f849987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{4b5146df-f37c-4135-be97-05e8175c8975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BasicView">
+      <UniqueIdentifier>{989A0E40-FAF3-4E19-A4D7-51E237D0F5A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BasicView\Base">
+      <UniqueIdentifier>{C287BF2C-A872-4738-8D20-C1BBFA0A9E53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BasicView\Supporting Files">
+      <UniqueIdentifier>{9F03BE43-FCEF-4611-AC4F-CC23B3D9BFF5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{F0F15A00-A712-427C-9C4F-AC569DA40988}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\BasicView\ViewController.m">
+      <Filter>BasicView</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\BasicView\CustomView.m">
+      <Filter>BasicView</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\BasicView\AppDelegate.m">
+      <Filter>BasicView</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\BasicView\main.m">
+      <Filter>BasicView\Supporting Files</Filter>
+    </ClangCompile>
+    <StoryboardCompile Include="..\..\BasicView\Base.lproj\LaunchScreen.storyboard">
+      <Filter>BasicView\Base</Filter>
+    </StoryboardCompile>
+    <AssetCatalogCompile Include="..\..\BasicView\Assets.xcassets">
+      <Filter>BasicView</Filter>
+    </AssetCatalogCompile>
+    <StoryboardCompile Include="..\..\BasicView\Base.lproj\Main.storyboard">
+      <Filter>BasicView\Base</Filter>
+    </StoryboardCompile>
+    <SBInfoPlistCopy Include="..\..\BasicView\Info.plist" />
+    <Text Include="BasicView-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="BasicView-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

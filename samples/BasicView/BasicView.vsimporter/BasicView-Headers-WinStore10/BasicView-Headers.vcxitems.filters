@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="BasicView">
+      <UniqueIdentifier>{6D166DAF-9719-4E4E-9808-2B915AB6BE30}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\BasicView\AppDelegate.h">
+      <Filter>BasicView</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\BasicView\ViewController.h">
+      <Filter>BasicView</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\BasicView\CustomView.h">
+      <Filter>BasicView</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

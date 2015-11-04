@@ -1,0 +1,1 @@
+MainPackage=c:\users\nithishm\documents\visual studio 2015\Projects\WinObjC-SampleTest\Debug\WinObjC-SampleTest\WinObjC-SampleTest_1.0.0.0_Win32_Debug.appx

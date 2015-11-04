@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BasicView", "BasicView", "{A7981939-B096-4DBE-AC6E-82B615A3D742}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicView-Headers", "BasicView.vsimporter\BasicView-Headers-WinStore10\BasicView-Headers.vcxitems", "{8368CFCB-9590-4096-ACD6-82C764970C42}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicView", "BasicView.vsimporter\BasicView-WinStore10\BasicView.vcxproj", "{E26EF39D-2DB2-4841-83A8-26B419E335DB}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		BasicView.vsimporter\BasicView-Headers-WinStore10\BasicView-Headers.vcxitems*{8368CFCB-9590-4096-ACD6-82C764970C42}*SharedItemsImports = 9
+		BasicView.vsimporter\BasicView-Headers-WinStore10\BasicView-Headers.vcxitems*{E26EF39D-2DB2-4841-83A8-26B419E335DB}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Debug|Win32.Build.0 = Debug|Win32
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Debug|Win32.Deploy.0 = Debug|Win32
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Release|Win32.ActiveCfg = Release|Win32
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Release|Win32.Build.0 = Release|Win32
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8368CFCB-9590-4096-ACD6-82C764970C42} = {A7981939-B096-4DBE-AC6E-82B615A3D742}
+		{E26EF39D-2DB2-4841-83A8-26B419E335DB} = {A7981939-B096-4DBE-AC6E-82B615A3D742}
+	EndGlobalSection
+EndGlobal
