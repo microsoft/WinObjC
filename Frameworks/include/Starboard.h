@@ -423,6 +423,11 @@ public:
 
     idretainp(const idretainp<objtype>&) = delete;
 
+    idretainp(idretainp<objtype>&& other) {
+        _val = other._val;
+        other._val = nil;
+    }
+
     ~idretainp() {
         [_val release];
         _val = nil;

@@ -18,6 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Security\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj">
+      <Project>{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -30,6 +35,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <IslandwoodDRT>false</IslandwoodDRT>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -100,7 +106,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -138,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -203,6 +209,7 @@
     <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSFileManager.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSUserDefaults.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\Foundation_NSData.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
@@ -215,6 +222,7 @@
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm" />
     <ClangCompile Include="..\..\tests\unittests\Security_SecItem.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Security_GenericPassword.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_after.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_api.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_apply.m" />

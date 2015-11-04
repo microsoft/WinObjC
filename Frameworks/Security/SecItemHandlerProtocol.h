@@ -16,11 +16,14 @@
 
 #pragma once
 
-#import <Security/SecBase.h>
-#import <Security/SecItem.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSDictionary.h>
 
-typedef struct __SecIdentity* SecIdentityRef;
+@protocol SecItemHandler <NSObject>
 
-typedef struct __SecTrust* SecTrustRef;
+- (OSStatus)update:(NSDictionary*)queryDictionary withAttributes:(NSDictionary*)attributesToUpdate;
+- (OSStatus)add:(NSDictionary*)attributes withResult:(id*)result;
+- (OSStatus)remove:(NSDictionary*)queryDictionary;
+- (OSStatus)query:(NSDictionary*)queryDictionary withResult:(id*)result;
 
-typedef const struct __SecRandom* SecRandomRef;
+@end

@@ -13,14 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#pragma once
-
-#import <Security/SecBase.h>
-#import <Security/SecItem.h>
-
-typedef struct __SecIdentity* SecIdentityRef;
-
-typedef struct __SecTrust* SecTrustRef;
-
-typedef const struct __SecRandom* SecRandomRef;

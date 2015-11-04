@@ -14,13 +14,18 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "gtest-api.h"
 
-#import <Security/SecBase.h>
-#import <Security/SecItem.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSData.h>
 
-typedef struct __SecIdentity* SecIdentityRef;
-
-typedef struct __SecTrust* SecTrustRef;
-
-typedef const struct __SecRandom* SecRandomRef;
+TEST(Foundation, NSData_Base64EncodeDecode) {
+    NSString* testString = @"SGVsbG8gV29ybGQh";
+    NSData* decodedData = [[[NSData alloc] initWithBase64EncodedString:testString options:0] autorelease];
+    NSString* encodedString = [decodedData base64EncodedStringWithOptions:0];
+    ASSERT_TRUE_MSG([testString isEqualToString:encodedString],
+                    "Failed: Base64 encoded testString: %@ decoded to: %@ does not equal re-encoded string:%@",
+                    testString,
+                    decodedData,
+                    encodedString);
+}

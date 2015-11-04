@@ -64,3 +64,7 @@ static CFStaticNumber cffalse = { NULL,
 
 const CFBooleanRef kCFBooleanTrue = (const CFBooleanRef)&cftrue;
 const CFBooleanRef kCFBooleanFalse = (const CFBooleanRef)&cffalse;
+
+COREFOUNDATION_EXPORT Boolean CFBooleanGetValue(CFBooleanRef boolean) {
+    return [static_cast<id>(kCFBooleanTrue) isEqualToNumber:static_cast<NSNumber*>(boolean)];
+}

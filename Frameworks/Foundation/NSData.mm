@@ -16,26 +16,88 @@
 
 #include "Starboard.h"
 
+using WCHAR = wchar_t;
+
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSError.h"
 #include "Foundation/NSString.h"
+#include "Foundation/NSMutableArray.h"
+#include "Foundation/NSValue.h"
+#include <UWP/WindowsStorageStreams.h>
+#include <UWP/WindowsSecurityCryptography.h>
+
+#include <COMIncludes.h>
+#include "ErrorHandling.h"
+#include "RawBuffer.h"
+#include <wrl\wrappers\corewrappers.h>
+#include <windows.security.cryptography.h>
+#include <windows.storage.streams.h>
+#include <COMIncludes_End.h>
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::Security::Cryptography;
+using namespace ABI::Windows::Storage::Streams;
+using namespace Windows::Foundation;
 
 @implementation NSData : NSObject
 
 /**
- @Status Stub
+ @Status Caveat
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
+    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+
+    ComPtr<IBuffer> wrlBuffer = BufferFromRawData(_bytes, _length);
+    if (!wrlBuffer) {
+        return nil;
+    }
+
+    ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
+    HRESULT result = GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                                          &cryptographicBufferStatics);
+    if (FAILED_LOG(result)) {
+        return nil;
+    }
+
+    Wrappers::HString encodedString;
+    result = cryptographicBufferStatics->EncodeToBase64String(wrlBuffer.Get(), encodedString.GetAddressOf());
+
+    if (FAILED_LOG(result)) {
+        return nil;
+    }
+
+    unsigned int rawLength;
+    const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
+
+    return [[[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
+        autorelease];
 }
 
 /**
- @Status Stub
+ @Status Caveat
 */
-- (id)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+- (instancetype)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
+    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
+    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+    RTObject<WSSIBuffer>* decodedBuffer = [WSCCryptographicBuffer decodeFromBase64String:base64String];
+    ComPtr<IInspectable> wrlBuffer(reinterpret_cast<IInspectable*>([decodedBuffer internalObject]));
+    ComPtr<IBufferByteAccess> bufferAccess;
+    HRESULT result = wrlBuffer.As(&bufferAccess);
+
+    // What do I do with an error?
+    if (FAILED_LOG(result)) {
+        return nil;
+    }
+
+    uint8_t* rawBuffer;
+    result = bufferAccess->Buffer(&rawBuffer);
+
+    if (FAILED_LOG(result)) {
+        return nil;
+    }
+
+    return [self initWithBytes:rawBuffer length:[decodedBuffer length]];
 }
 
 /**
