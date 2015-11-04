@@ -28,4 +28,32 @@
 + (NSURLCredentialStorage*)sharedCredentialStorage {
     return [[[NSURLCredentialStorage alloc] init] autorelease];
 }
+
+- (NSDictionary*)allCredentials {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+- (NSDictionary*)credentialsForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+- (NSURLCredential*)defaultCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+- (void)setCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+    UNIMPLEMENTED();
+}
+
+- (void)setDefaultCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+    UNIMPLEMENTED();
+}
+
+- (void)removeCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+    UNIMPLEMENTED();
+}
+
 @end

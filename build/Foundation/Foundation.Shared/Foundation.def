@@ -150,16 +150,18 @@ LIBRARY Foundation
      __objc_class_name_NSCFBridgeBase CONSTANT
      _OBJC_CLASS_NSHTTPCookieStorage DATA
      __objc_class_name_NSHTTPCookieStorage CONSTANT
-     _OBJC_CLASS_NSURLSessionTask DATA
-     __objc_class_name_NSURLSessionTask CONSTANT
-     _OBJC_CLASS_NSURLSessionDownloadTask DATA
-     __objc_class_name_NSURLSessionDownloadTask CONSTANT
-     _OBJC_CLASS_NSURLSessionDataTask DATA
-     __objc_class_name_NSURLSessionDataTask CONSTANT
      _OBJC_CLASS_NSURLSessionConfiguration DATA
      __objc_class_name_NSURLSessionConfiguration CONSTANT
      _OBJC_CLASS_NSURLSession DATA
      __objc_class_name_NSURLSession CONSTANT
+     _OBJC_CLASS_NSURLSessionTask DATA
+     __objc_class_name_NSURLSessionTask CONSTANT
+     _OBJC_CLASS_NSURLSessionDataTask DATA
+     __objc_class_name_NSURLSessionDataTask CONSTANT
+     _OBJC_CLASS_NSURLSessionDownloadTask DATA
+     __objc_class_name_NSURLSessionDownloadTask CONSTANT
+     _OBJC_CLASS_NSURLSessionUploadTask DATA
+     __objc_class_name_NSURLSessionUploadTask CONSTANT
      _OBJC_CLASS_NSTask    DATA
      __objc_class_name_NSTask    CONSTANT
      _OBJC_CLASS_NSURLCache    DATA
