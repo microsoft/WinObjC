@@ -34,6 +34,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <TargetName>WOCCatalog</TargetName>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -154,7 +155,9 @@
     <Text Include="WOCCatalog-Debug-xcvars.txt" />
     <Text Include="WOCCatalog-Release-xcvars.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
