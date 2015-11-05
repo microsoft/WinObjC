@@ -156,6 +156,9 @@
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Release|x64'">-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClangCompile>
@@ -164,6 +167,9 @@
       <OtherCFlags>
       </OtherCFlags>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClangCompile>
@@ -173,6 +179,9 @@
       </OtherCFlags>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\tests\unittests\EntryPoint.cpp" />
@@ -240,8 +249,14 @@
   <ItemGroup>
     <Text Include="..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <FileType>Text</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <FileType>Text</FileType>  
     </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
