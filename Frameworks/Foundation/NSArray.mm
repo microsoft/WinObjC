@@ -27,12 +27,13 @@
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSIndexSet.h"
 #include "Foundation/NSNull.h"
+#include "NSArrayInternal.h"
 
 __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
 
-@implementation NSArray : NSObject
+@implementation NSArray
 + (NSArray*)arrayWithObjects:(NSObject*)first, ... {
     va_list pReader;
     va_start(pReader, first);
@@ -280,8 +281,12 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return NSNotFound;
 }
 
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
 - (NSArray*)initWithCoder:(NSCoder*)coder {
-    id array = [coder decodeObjectForKey:@"NS.objects"];
+    id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
     [self initWithArray:array];
     return self;
@@ -787,18 +792,24 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 
 @end
 
-@implementation NSArrayConcrete : NSArray
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
-    DWORD count = CFArrayGetCount((CFArrayRef)self);
+NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state) {
+    auto count = CFArrayGetCount((CFArrayRef)self);
+
     if (state->state >= count) {
         return 0;
     }
 
-    state->itemsPtr = (id*)_CFArrayGetPtr((CFArrayRef)self);
+    auto internalPointer = reinterpret_cast<id*>(_CFArrayGetPtr(static_cast<CFArrayRef>(self)));
+    state->itemsPtr = internalPointer;
     state->state = count;
-    state->mutationsPtr = (unsigned long*)self;
+    state->mutationsPtr = reinterpret_cast<unsigned long*>(self);
 
     return count;
 }
 
+@implementation NSArrayConcrete
+// NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
+    return _NSArrayConcreteCountByEnumeratingWithState(self, state);
+}
 @end

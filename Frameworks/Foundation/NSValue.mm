@@ -573,6 +573,10 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return [[[_NSValue_NRO alloc] initWithNonretainedObject:object] autorelease];
 }
 
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
 - (NSValue*)initWithCoder:(NSKeyedUnarchiver*)coder {
     _valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
     unsigned size;

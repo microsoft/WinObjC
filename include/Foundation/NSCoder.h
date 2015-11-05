@@ -12,84 +12,92 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSObject.h>
 #import <Foundation/NSGeometry.h>
 
-@class NSString, NSData;
+@class NSString, NSData, NSSet;
 
 @interface NSCoder : NSObject
 
--(id)_bundle;
+// Value indicating whether this coder requires secure coding.
+@property (nonatomic, readonly) BOOL requiresSecureCoding;
 
--(unsigned)systemVersion;
+// The set of classes allowable for secure coding. Every class in this set must conform to the NSSecureCoding protocol.
+@property (readonly) NSSet* allowedClasses;
 
--(void)setObjectZone:(NSZone *)zone;
--(NSZone *)objectZone;
+- (id)_bundle;
 
--(BOOL)allowsKeyedCoding;
+- (unsigned)systemVersion;
 
--(void)encodeValueOfObjCType:(const char *)type at:(const void *)ptr;
--(void)encodeDataObject:(NSData *)data;
-    
--(void)encodeObject:object;
--(void)encodePropertyList:propertyList;
--(void)encodeRootObject:rootObject;
--(void)encodeBycopyObject:object;
--(void)encodeByrefObject:object;
+- (void)setObjectZone:(NSZone*)zone;
+- (NSZone*)objectZone;
 
--(void)encodeConditionalObject:object;
--(void)encodeValuesOfObjCTypes:(const char *)types,...;
--(void)encodeArrayOfObjCType:(const char *)type count:(NSUInteger)count at:(const void *)ptr;
--(void)encodeBytes:(const void *)ptr length:(NSUInteger)length;
+- (BOOL)allowsKeyedCoding;
 
--(void)encodePoint:(NSPoint)point;
--(void)encodeSize:(NSSize)size;
--(void)encodeRect:(NSRect)rect;
+- (void)encodeValueOfObjCType:(const char*)type at:(const void*)ptr;
+- (void)encodeDataObject:(NSData*)data;
+     
+- (void)encodeObject:object;
+- (void)encodePropertyList:propertyList;
+- (void)encodeRootObject:rootObject;
+- (void)encodeBycopyObject:object;
+- (void)encodeByrefObject:object;
 
--(void)encodePoint:(NSPoint)value forKey:(NSString *)key;
--(void)encodeRect:(NSRect)value forKey:(NSString *)key;
--(void)encodeSize:(NSSize)value forKey:(NSString *)key;
+- (void)encodeConditionalObject:object;
+- (void)encodeValuesOfObjCTypes:(const char*)types, ...;
+- (void)encodeArrayOfObjCType:(const char*)type count:(NSUInteger)count at:(const void*)ptr;
+- (void)encodeBytes:(const void*)ptr length:(NSUInteger)length;
 
--(void)encodeBool:(BOOL)value forKey:(NSString *)key;
--(void)encodeConditionalObject:object forKey:(NSString *)key;
--(void)encodeDouble:(double)value forKey:(NSString *)key;
--(void)encodeFloat:(float)value forKey:(NSString *)key;
--(void)encodeInt:(int)value forKey:(NSString *)key;
--(void)encodeObject:object forKey:(NSString *)key;
+- (void)encodePoint:(NSPoint)point;
+- (void)encodeSize:(NSSize)size;
+- (void)encodeRect:(NSRect)rect;
 
--(void)encodeInt32:(int32_t)value forKey:(NSString *)key;
--(void)encodeInt64:(int64_t)value forKey:(NSString *)key;
--(void)encodeInteger:(NSInteger)value forKey:(NSString *)key;
+- (void)encodePoint:(NSPoint)value forKey:(NSString*)key;
+- (void)encodeRect:(NSRect)value forKey:(NSString*)key;
+- (void)encodeSize:(NSSize)value forKey:(NSString*)key;
 
--(void)encodeBytes:(const uint8_t *)bytes length:(NSUInteger)length forKey:(NSString *)key;
+- (void)encodeBool:(BOOL)value forKey:(NSString*)key;
+- (void)encodeConditionalObject:object forKey:(NSString*)key;
+- (void)encodeDouble:(double)value forKey:(NSString*)key;
+- (void)encodeFloat:(float)value forKey:(NSString*)key;
+- (void)encodeInt:(int)value forKey:(NSString*)key;
+- (void)encodeObject:object forKey:(NSString*)key;
 
--(void)decodeValueOfObjCType:(const char *)type at:(void *)ptr;
--(NSData *)decodeDataObject;
--(NSInteger)versionForClassName:(NSString *)className;
+- (void)encodeInt32:(int32_t)value forKey:(NSString*)key;
+- (void)encodeInt64:(int64_t)value forKey:(NSString*)key;
+- (void)encodeInteger:(NSInteger)value forKey:(NSString*)key;
 
--decodeObject;
--decodePropertyList;
--(void)decodeValuesOfObjCTypes:(const char *)types,...;
--(void)decodeArrayOfObjCType:(const char *)type count:(NSUInteger)count at:(void *)array;
--(void *)decodeBytesWithReturnedLength:(NSUInteger *)lengthp;
+- (void)encodeBytes:(const uint8_t*)bytes length:(NSUInteger)length forKey:(NSString*)key;
 
--(NSPoint)decodePoint;
--(NSSize)decodeSize;
--(NSRect)decodeRect;
+- (void)decodeValueOfObjCType:(const char*)type at:(void*)ptr;
+- (NSData*)decodeDataObject;
+- (NSInteger)versionForClassName:(NSString*)className;
 
--(BOOL)containsValueForKey:(NSString *)key;
+- (id)decodeObject;
+- (id)decodePropertyList;
+- (void)decodeValuesOfObjCTypes:(const char*)types, ...;
+- (void)decodeArrayOfObjCType:(const char*)type count:(NSUInteger)count at:(void*)array;
+- (void*)decodeBytesWithReturnedLength:(NSUInteger*)lengthp;
 
--(const uint8_t *)decodeBytesForKey:(NSString *)key returnedLength:(NSUInteger *)lengthp;
--(NSPoint)decodePointForKey:(NSString *)key;
--(NSRect)decodeRectForKey:(NSString *)key;
--(NSSize)decodeSizeForKey:(NSString *)key;
+- (NSPoint)decodePoint;
+- (NSSize)decodeSize;
+- (NSRect)decodeRect;
 
--(BOOL)decodeBoolForKey:(NSString *)key;
--(double)decodeDoubleForKey:(NSString *)key;
--(float)decodeFloatForKey:(NSString *)key;
--(int)decodeIntForKey:(NSString *)key;
--decodeObjectForKey:(NSString *)key;
+- (BOOL)containsValueForKey:(NSString*)key;
 
--(int32_t)decodeInt32ForKey:(NSString *)key;
--(int64_t)decodeInt64ForKey:(NSString *)key;
--(NSInteger)decodeIntegerForKey:(NSString *)key;
+- (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)lengthp;
+- (NSPoint)decodePointForKey:(NSString*)key;
+- (NSRect)decodeRectForKey:(NSString*)key;
+- (NSSize)decodeSizeForKey:(NSString*)key;
+
+- (BOOL)decodeBoolForKey:(NSString*)key;
+- (double)decodeDoubleForKey:(NSString*)key;
+- (float)decodeFloatForKey:(NSString*)key;
+- (int)decodeIntForKey:(NSString*)key;
+- (id)decodeObjectForKey:(NSString*)key;
+- (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key;
+- (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key;
+
+- (int32_t)decodeInt32ForKey:(NSString*)key;
+- (int64_t)decodeInt64ForKey:(NSString*)key;
+- (NSInteger)decodeIntegerForKey:(NSString*)key;
 
 @end
 

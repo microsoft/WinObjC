@@ -52,8 +52,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @end
 
 @protocol NSCoding
--initWithCoder:(NSCoder *)coder;
--(void)encodeWithCoder:(NSCoder *)coder;
+- (id)initWithCoder:(NSCoder *)coder;
+- (void)encodeWithCoder:(NSCoder *)coder;
+@end
+
+@protocol NSSecureCoding <NSCoding>
++ (BOOL)supportsSecureCoding;
 @end
 
 @protocol NSDiscardableContent

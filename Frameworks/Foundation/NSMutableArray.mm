@@ -20,13 +20,14 @@
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
 #include "../objcrt/runtime.h"
+#include "NSArrayInternal.h"
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
 
 __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, void* block);
 
-@implementation NSMutableArray : NSArray
+@implementation NSMutableArray
 + (NSMutableArray*)arrayWithCapacity:(NSUInteger)numElements {
     NSMutableArray* newArray = [self new];
 
@@ -430,19 +431,8 @@ recurse:
 
 @end
 
-extern FILE* fpLogCallsOut;
-
-@implementation NSMutableArrayConcrete : NSMutableArray
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(DWORD)maxCount {
-    NSUInteger count = CFArrayGetCount((CFArrayRef)self);
-    if (state->state >= count)
-        return 0;
-
-    state->itemsPtr = (id*)_CFArrayGetPtr((CFArrayRef)self);
-    state->state = count;
-    state->mutationsPtr = (unsigned long*)self;
-
-    return count;
+@implementation NSMutableArrayConcrete
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
+    return _NSArrayConcreteCountByEnumeratingWithState(self, state);
 }
-
 @end

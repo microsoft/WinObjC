@@ -26,7 +26,7 @@ typedef uint32_t NSBinarySearchingOptions;
 #define __CFARRAY_SIZE_BYTES    (0x30)
 
 FOUNDATION_EXPORT_CLASS
-@interface NSArray : NSObject <NSCopying, NSMutableCopying, NSCoding, NSFastEnumeration> {
+@interface NSArray : NSObject <NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration> {
     @public
     CFArrayRef arr;
     uint32_t _arraySpace[((__CFARRAY_SIZE_BYTES + 3) & ~3) / 4];

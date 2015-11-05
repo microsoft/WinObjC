@@ -9,45 +9,56 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <Foundation/NSCoder.h>
 #import <Foundation/NSMapTable.h>
 
-@class NSDictionary,NSMutableArray,NSMutableDictionary;
+@class NSDictionary, NSMutableArray, NSMutableDictionary;
+@protocol NSKeyedUnarchiverDelegate;
 
 FOUNDATION_EXPORT NSString* NSInvalidUnarchiveOperationException;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSKeyedUnarchiver : NSCoder
 
--initForReadingWithData:(NSData *)data;
+// Value indicating whether this coder requires secure coding. Once set to YES,
+// attempts to set it to NO will result in an exception. This is to avoid classes
+// selectively turning off secure coding.
+@property (nonatomic, assign) BOOL requiresSecureCoding;
 
-+unarchiveObjectWithData:(NSData *)data;
-+unarchiveObjectWithFile:(NSString *)path;
+- (instancetype)initForReadingWithData:(NSData*)data;
 
--(BOOL)containsValueForKey:(NSString *)key;
++ (id)unarchiveObjectWithData:(NSData*)data;
++ (id)unarchiveObjectWithFile:(NSString*)path;
 
--(const uint8_t *)decodeBytesForKey:(NSString *)key returnedLength:(NSUInteger *)lengthp;
--(BOOL)decodeBoolForKey:(NSString *)key;
--(double)decodeDoubleForKey:(NSString *)key;
--(float)decodeFloatForKey:(NSString *)key;
--(int)decodeIntForKey:(NSString *)key;
--(int32_t)decodeInt32ForKey:(NSString *)key;
--(int64_t)decodeInt64ForKey:(NSString *)key;
--decodeObjectForKey:(NSString *)key;
+- (BOOL)containsValueForKey:(NSString*)key;
 
--(void)finishDecoding;
+- (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)lengthp;
+- (BOOL)decodeBoolForKey:(NSString*)key;
+- (double)decodeDoubleForKey:(NSString*)key;
+- (float)decodeFloatForKey:(NSString*)key;
+- (int)decodeIntForKey:(NSString*)key;
+- (int32_t)decodeInt32ForKey:(NSString*)key;
+- (int64_t)decodeInt64ForKey:(NSString*)key;
+- (id)decodeObjectForKey:(NSString*)key;
+- (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key;
+- (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key;
 
--delegate;
--(void)setDelegate:delegate;
+- (void)finishDecoding;
 
-+(void)setClass:(Class)aClass forClassName:(NSString *)className;
-+(Class)classForClassName:(NSString *)className;
+// TODO: implement delegate :(
+@property (nonatomic, assign) id<NSKeyedUnarchiverDelegate> delegate;
 
--(void)setClass:(Class)aClass forClassName:(NSString *)className;
--(Class)classForClassName:(NSString *)className;
++ (void)setClass:(Class)aClass forClassName:(NSString*)className;
++ (Class)classForClassName:(NSString*)className;
+
+- (void)setClass:(Class)aClass forClassName:(NSString*)className;
+- (Class)classForClassName:(NSString*)className;
 
 @end
 
-@interface NSObject(NSKeyedUnarchiverDelegate)
--unarchiver:(NSKeyedUnarchiver *)unarchiver didDecodeObject:object;
--(void)unarchiver:(NSKeyedUnarchiver *)unarchiver willReplaceObject:object withObject:replacement;
--(Class)unarchiver:(NSKeyedUnarchiver *)unarchiver cannotDecodeObjectOfClassName:(NSString *)className originalClasses:(NSArray *)classHierarchy;
+@protocol NSKeyedUnarchiverDelegate <NSObject>
+@optional
+- (id)unarchiver:(NSKeyedUnarchiver*)unarchiver didDecodeObject:(id)object;
+- (void)unarchiver:(NSKeyedUnarchiver*)unarchiver willReplaceObject:(id)object withObject:(id)replacement;
+- (Class)unarchiver:(NSKeyedUnarchiver*)unarchiver cannotDecodeObjectOfClassName:(NSString*)className originalClasses:(NSArray*)classHierarchy;
+- (void)unarchiverWillFinish:(NSKeyedUnarchiver*)unarchiver;
+- (void)unarchiverDidFinish:(NSKeyedUnarchiver*)unarchiver;
 @end
 

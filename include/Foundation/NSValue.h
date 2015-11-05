@@ -32,7 +32,7 @@ typedef enum : NSUInteger {
 } NSValueType;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSValue : NSObject <NSCopying, NSCoding> {
+@interface NSValue : NSObject <NSCopying, NSSecureCoding> {
 @public
     NSValueType _valueType;
 }
