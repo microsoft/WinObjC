@@ -272,7 +272,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Public.Shared", "Headers\He
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Internal.Shared", "Headers\Headers.Shared\Internal.Shared.vcxitems", "{C0DB71AA-0F89-41AC-BB7D-C0CB5458F4F9}"
 EndProject
-<<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{83BDC65C-1E0A-482B-886C-52B78B8B9C97}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Universal", "Security\Security.Universal\Security.Universal.vcxproj", "{1B60665D-5A2D-4F96-8D52-06B5E886F29F}"
@@ -282,7 +281,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.WindowsPhone", "Security\Security.WindowsPhone\Security.WindowsPhone.vcxproj", "{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Shared", "Security\Security.Shared\Security.Shared.vcxitems", "{76C111B1-74F9-46BC-9D92-723F19018F77}"
-=======
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreLocation", "CoreLocation", "{52E0654B-3B43-4514-B48B-6BAE3E580A6F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Shared", "CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems", "{F4C2AE05-4DE4-4422-AB5D-2765FC612BE1}"
@@ -292,7 +290,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.WindowsPhone", "CoreLocation\CoreLocation.WindowsPhone\CoreLocation.WindowsPhone.vcxproj", "{0745EF57-35B6-42C5-8EB2-FC74A09F77B7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Universal", "CoreLocation\CoreLocation.Universal\CoreLocation.Universal.vcxproj", "{A03B9E82-D421-4CBC-8C94-24F0AA9EBBCE}"
->>>>>>> Setting up the basic framework for CoreLocation service implementation
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
