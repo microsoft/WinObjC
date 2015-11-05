@@ -1,0 +1,33 @@
+[$RootKey$]
+
+[$RootKey$\Editors]
+
+[$RootKey$\Editors\{1EA28DE2-163E-4e12-AC55-3E53A6F0DB77}]
+
+[$RootKey$\Editors\{1EA28DE2-163E-4e12-AC55-3E53A6F0DB77}\Extensions]
+"m"=dword:00000028
+"mm"=dword:00000028
+
+[$RootKey$\Editors\{8B382828-6202-11d1-8870-0000F87579D2}]
+
+[$RootKey$\Editors\{8B382828-6202-11d1-8870-0000F87579D2}\Extensions]
+"m"=dword:00000027
+"mm"=dword:00000027
+
+[$RootKey$\Editors\{D0E1A5C6-B359-4e41-9B60-3365922C2A22}]
+
+[$RootKey$\Editors\{D0E1A5C6-B359-4e41-9B60-3365922C2A22}\Extensions]
+"m"=dword:00000029
+"mm"=dword:00000029
+
+[$RootKey$\Languages]
+
+[$RootKey$\Languages\File Extensions]
+
+[$RootKey$\Languages\File Extensions\.m]
+"ObjCFile"=dword:00000001
+@="{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
+
+[$RootKey$\Languages\File Extensions\.mm]
+"ObjCFile"=dword:00000001
+@="{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
