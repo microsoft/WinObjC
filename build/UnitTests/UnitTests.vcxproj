@@ -106,7 +106,7 @@
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
       <OtherCFlags>
       </OtherCFlags>
       <IncludePaths>..\..\Frameworks\include</IncludePaths>
