@@ -14,18 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
-
-#ifndef CORELOCATION_IMPEXP
-#define CORELOCATION_IMPEXP __declspec(dllimport)
-#endif
-
-#ifndef CORELOCATION_EXPORT
 #ifdef __cplusplus
-#define CORELOCATION_EXPORT CORELOCATION_IMPEXP extern "C"
-#define CORELOCATION_EXPORT_CLASS CORELOCATION_IMPEXP
+#define CORELOCATION_EXPORT extern "C"
 #else
-#define CORELOCATION_EXPORT CORELOCATION_IMPEXP extern
-#define CORELOCATION_EXPORT_CLASS CORELOCATION_IMPEXP
-#endif
-#endif
+#define CORELOCATION_EXPORT extern
+#endif // __cplusplus

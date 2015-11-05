@@ -14,27 +14,20 @@
 //
 //******************************************************************************
 
-#pragma once
+#ifndef _CLREGION_H_
+#define _CLREGION_H_
 
 #import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocationExport.h>
 #import <CoreLocation/CLLocation.h>
 
-enum _CLRegionState { kCLRegionStateUnknown = 0, kCLRegionStateInside = 1, kCLRegionStateOutside = 2 };
-typedef uint32_t CLRegionState;
-
-CORELOCATION_EXPORT_CLASS
 @interface CLRegion : NSObject <NSCopying, NSCoding>
 
-// TODO::
-// todo-nithishm-11022015 - Incomplete file.
+@property(readonly, nonatomic) NSString *identifier;
+@property(readonly, nonatomic) CLLocationCoordinate2D center;
+@property(readonly, nonatomic) CLLocationDistance radius;
 
-@property (readonly, nonatomic) NSString* identifier;
-@property (readonly, nonatomic) CLLocationCoordinate2D center;
-@property (readonly, nonatomic) CLLocationDistance radius;
-@property (nonatomic, assign) BOOL notifyOnEntry;
-@property (nonatomic, assign) BOOL notifyOnExit;
-
-- (id)initCircularRegionWithCenter:(CLLocationCoordinate2D)center radius:(CLLocationDistance)radius identifier:(NSString*)identifier;
+- (id)initCircularRegionWithCenter:(CLLocationCoordinate2D)center radius:(CLLocationDistance)radius identifier:(NSString *)identifier;
 
 @end
+
+#endif /* _CLREGION_H_ */

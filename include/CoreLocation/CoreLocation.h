@@ -14,11 +14,14 @@
 //
 //******************************************************************************
 
-#pragma once
+#ifndef _CORELOCATION_H_
+#define _CORELOCATION_H_
 
-#import <CoreLocation/CoreLocationExport.h>
 #import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
+#import <CoreLocation/CLPlacemark.h>
 #import <CoreLocation/CLRegion.h>
 #import <CoreLocation/CLGeocoder.h>
+
+#endif // _CORELOCATION_H_
