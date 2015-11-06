@@ -295,9 +295,13 @@ static bool loadImageWithWICDecoder(UIImage* dest, REFGUID decoderCls, void* byt
     IWICBitmapFrameDecode* pFrame = NULL;
     HRESULT hr = S_OK;
 
-    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pFactory);
+    MULTI_QI mq = { 0 };
+    
+    mq.pIID = &IID_IWICImagingFactory;
+    hr = CoCreateInstanceFromApp(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, NULL, 1, &mq);
 
     if (SUCCEEDED(hr)) {
+        pFactory = (IWICImagingFactory*) mq.pItf;
         hr = pFactory->CreateDecoder(decoderCls, NULL, &pDecoder);
     }
 
