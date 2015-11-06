@@ -42,6 +42,7 @@ SB_EXPORT NSString * const NSSQLiteStoreType;
 SB_EXPORT NSString * const NSBinaryStoreType;
 SB_EXPORT NSString * const NSInMemoryStoreType;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSPersistentStoreCoordinator : NSObject <NSLocking>
 
 +(NSDictionary *)registeredStoreTypes;

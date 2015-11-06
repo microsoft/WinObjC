@@ -15,13 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "Foundation/NSCachedURLResponse.h"
 
-#include "Foundation/NSOrderedSet.h"
-
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation NSCachedURLResponse
 
 @end

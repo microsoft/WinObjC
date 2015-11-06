@@ -16,12 +16,8 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSOrderedSet.h"
+#include "CoreTelephony/CTTelephonyNetworkInfo.h"
 
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation CTTelephonyNetworkInfo
 
 @end

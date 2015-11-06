@@ -16,12 +16,8 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSOrderedSet.h"
+#include "UIKit/UIManagedDocument.h"
 
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation UIManagedDocument
 
 @end

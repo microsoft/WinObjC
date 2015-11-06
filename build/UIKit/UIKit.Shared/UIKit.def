@@ -164,3 +164,7 @@ LIBRARY UIKit
      __objc_class_name_MPMoviePlayerController CONSTANT
      _OBJC_CLASS_ASIdentifierManager DATA
      __objc_class_name_ASIdentifierManager CONSTANT
+     _OBJC_CLASS_UIManagedDocument DATA
+     __objc_class_name_UIManagedDocument CONSTANT
+     _OBJC_CLASS_UIDocument DATA
+     __objc_class_name_UIDocument CONSTANT

@@ -16,12 +16,9 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSOrderedSet.h"
+#include "Foundation/NSPredicate.h"
 
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation NSPredicate
 
 @end
+

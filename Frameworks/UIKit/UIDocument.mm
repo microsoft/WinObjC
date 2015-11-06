@@ -16,12 +16,10 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSOrderedSet.h"
+#include "UIKit/UIDocument.h"
 
-@implementation NSOrderedSet
+NSString* const UIDocumentStateChangedNotification = @"UIDocumentStateChangedNotification";
 
-@end
-
-@implementation NSMutableOrderedSet
+@implementation UIDocument
 
 @end

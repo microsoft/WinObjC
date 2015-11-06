@@ -14,14 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Foundation/NSMutableAttributedString.h>
 
-#include "Foundation/NSOrderedSet.h"
-
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation NSMutableAttributedString
 
 @end

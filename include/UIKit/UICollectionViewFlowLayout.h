@@ -37,8 +37,8 @@ typedef enum _UIFlowLayoutHorizontalAlignment {
 
 typedef uint32_t UIFlowLayoutHorizontalAlignment;
 
-SB_EXPORT NSString* const UICollectionElementKindSectionHeader;
-SB_EXPORT NSString* const UICollectionElementKindSectionFooter;
+UIKIT_EXPORT NSString* const UICollectionElementKindSectionHeader;
+UIKIT_EXPORT NSString* const UICollectionElementKindSectionFooter;
 
 @protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
 

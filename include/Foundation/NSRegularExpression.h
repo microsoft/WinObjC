@@ -54,6 +54,7 @@ typedef NSUInteger NSMatchingOptions;
 @class NSArray;
 @class NSMutableString;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSRegularExpression : NSObject
 
 + (NSRegularExpression*)regularExpressionWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error;

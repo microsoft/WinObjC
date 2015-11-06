@@ -19,7 +19,7 @@
 
 static idretain sharedURLCache;
 
-@implementation NSURLCache : NSObject
+@implementation NSURLCache
 
 /**
  @Status Stub

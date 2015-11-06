@@ -18,16 +18,16 @@
 
 #include "UIKit/UIActivity.h"
 
-NSString* const UIActivityTypePostToFacebook = (NSString * const) @"UIActivityTypePostToFacebook";
-NSString* const UIActivityTypePostToTwitter = (NSString * const) @"UIActivityTypePostToTwitter";
-NSString* const UIActivityTypePostToWeibo = (NSString * const) @"UIActivityTypePostToWeibo";
-NSString* const UIActivityTypeMessage = (NSString * const) @"UIActivityTypeMessage";
-NSString* const UIActivityTypeMail = (NSString * const) @"UIActivityTypeMail";
-NSString* const UIActivityTypePrint = (NSString * const) @"UIActivityTypePrint";
-NSString* const UIActivityTypeCopyToPasteboard = (NSString * const) @"UIActivityTypeCopyToPasteboard";
-NSString* const UIActivityTypeAssignToContact = (NSString * const) @"UIActivityTypeAssignToContact";
-NSString* const UIActivityTypeSaveToCameraRoll = (NSString * const) @"UIActivityTypeSaveToCameraRoll";
-NSString* const UIActivityTypeAirDrop = (NSString * const) @"UIActivityTypeAirDrop";
+NSString* const UIActivityTypePostToFacebook = @"UIActivityTypePostToFacebook";
+NSString* const UIActivityTypePostToTwitter = @"UIActivityTypePostToTwitter";
+NSString* const UIActivityTypePostToWeibo = @"UIActivityTypePostToWeibo";
+NSString* const UIActivityTypeMessage = @"UIActivityTypeMessage";
+NSString* const UIActivityTypeMail = @"UIActivityTypeMail";
+NSString* const UIActivityTypePrint = @"UIActivityTypePrint";
+NSString* const UIActivityTypeCopyToPasteboard = @"UIActivityTypeCopyToPasteboard";
+NSString* const UIActivityTypeAssignToContact = @"UIActivityTypeAssignToContact";
+NSString* const UIActivityTypeSaveToCameraRoll = @"UIActivityTypeSaveToCameraRoll";
+NSString* const UIActivityTypeAirDrop = @"UIActivityTypeAirDrop";
 
 @implementation UIActivity
 

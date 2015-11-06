@@ -16,12 +16,8 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSOrderedSet.h"
+#include "CoreData/NSPersistentStoreCoordinator.h"
 
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation NSPersistentStoreCoordinator
 
 @end

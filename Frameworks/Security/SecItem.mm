@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include "Starboard.h"
 #import <Security/SecItem.h>
 
 const CFStringRef kSecClass = static_cast<CFStringRef>(@"class");
@@ -63,3 +64,35 @@ const CFStringRef kSecAttrAccessibleAlwaysThisDeviceOnly = static_cast<CFStringR
 const CFStringRef kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly = static_cast<CFStringRef>(@"akpu");
 const CFStringRef kSecAttrAccessibleWhenUnlocked = static_cast<CFStringRef>(@"ak");
 const CFStringRef kSecAttrAccessibleWhenUnlockedThisDeviceOnly = static_cast<CFStringRef>(@"aku");
+
+/**
+ @Status Stub
+*/
+OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+OSStatus SecItemDelete(CFDictionaryRef query) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result) {
+    UNIMPLEMENTED();
+    return 0;
+}

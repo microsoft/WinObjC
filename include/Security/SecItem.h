@@ -85,3 +85,15 @@ SECURITY_EXPORT const CFStringRef kSecMatchValidOnDate;
 SECURITY_EXPORT const CFStringRef kSecMatchLimit;
 SECURITY_EXPORT const CFStringRef kSecMatchLimitOne;
 SECURITY_EXPORT const CFStringRef kSecMatchLimitAll;
+
+SECURITY_EXPORT
+OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
+
+SECURITY_EXPORT
+OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
+
+SECURITY_EXPORT
+OSStatus SecItemDelete(CFDictionaryRef query);
+
+SECURITY_EXPORT
+OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);

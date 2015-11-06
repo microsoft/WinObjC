@@ -15,13 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "Foundation/NSRegularExpression.h"
 
-#include "Foundation/NSOrderedSet.h"
-
-@implementation NSOrderedSet
-
-@end
-
-@implementation NSMutableOrderedSet
+@implementation NSRegularExpression
 
 @end
