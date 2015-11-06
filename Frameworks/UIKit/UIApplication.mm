@@ -46,6 +46,14 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
+NSString* const UIContentSizeCategoryExtraSmall = (NSString * const) @"UIContentSizeCategoryExtraSmall";
+NSString* const UIContentSizeCategorySmall = (NSString * const) @"UIContentSizeCategorySmall";
+NSString* const UIContentSizeCategoryMedium = (NSString * const) @"UIContentSizeCategoryMedium";
+NSString* const UIContentSizeCategoryLarge = (NSString * const) @"UIContentSizeCategoryLarge";
+NSString* const UIContentSizeCategoryExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraExtraExtraLarge";
+
 NSString* const UIApplicationWillChangeDisplayModeNofication = (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
 NSString* const UIApplicationDidChangeDisplayModeNofication = (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
 NSString* const UIApplicationDidChangeStatusBarOrientationNotification =

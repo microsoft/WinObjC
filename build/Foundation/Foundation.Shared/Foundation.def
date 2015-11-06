@@ -1,9 +1,11 @@
 LIBRARY Foundation
    EXPORTS
-     _OBJC_CLASS_CFConstantString    CONSTANT
-     __objc_class_name_CFConstantString    CONSTANT
-     _OBJC_CLASS_NSArray    DATA
-     __objc_class_name_NSArray    CONSTANT
+     _OBJC_CLASS_CFConstantString CONSTANT
+     __objc_class_name_CFConstantString CONSTANT
+     _OBJC_CLASS_NSArray DATA
+     __objc_class_name_NSArray CONSTANT
+     _OBJC_CLASS_NSAttributedString DATA
+     __objc_class_name_NSAttributedString CONSTANT
      _OBJC_CLASS_NSEnumerator    DATA
      __objc_class_name_NSEnumerator    CONSTANT
      _OBJC_CLASS_NSMutableArray    DATA
@@ -158,3 +160,5 @@ LIBRARY Foundation
      __objc_class_name_NSURLSession CONSTANT
      _OBJC_CLASS_NSTask    DATA
      __objc_class_name_NSTask    CONSTANT
+	 
+	 

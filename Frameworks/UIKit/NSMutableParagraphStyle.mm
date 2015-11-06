@@ -14,19 +14,11 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSObject.h>
-#import <UIKit/UIKitExport.h>
+#include "Starboard.h"
+#import  <UIKit/NSParagraphStyle.h>
 
-@class NSBundle;
-@class UINib;
-@class NSArray;
-@class NSDictionary;
+@implementation NSParagraphStyle
+@end
 
-UIKIT_EXPORT_CLASS
-@interface UINib : NSObject
-
-+ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundleOrNil;
-
-- (NSArray*)instantiateWithOwner:(id)ownerOrNil options:(NSDictionary*)optionsOrNil;
-
+@implementation NSMutableParagraphStyle
 @end

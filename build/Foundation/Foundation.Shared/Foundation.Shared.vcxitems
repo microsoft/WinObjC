@@ -25,6 +25,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBridgeBase.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArray.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSAssertionHandler.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSAttributeString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSBlockOperation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSBundle.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCalendar.mm" />

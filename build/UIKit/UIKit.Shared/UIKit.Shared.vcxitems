@@ -32,6 +32,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSString_Additions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
+	<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSMutableParagraphStyle.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAlertView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
@@ -75,6 +76,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationController.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINib.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPickerView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObject.mm" />

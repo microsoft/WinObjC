@@ -68,6 +68,19 @@ UIKIT_EXPORT NSString* const UIApplicationDidChangeDisplayModeNofication;
 
 UIKIT_EXPORT NSString* const UITrackingRunLoopMode;
 
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraExtraExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryLarge;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryAccessibilityMedium;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryMedium;
+UIKIT_EXPORT NSString* const UIContentSizeCategorySmall;
+UIKIT_EXPORT NSString* const UIContentSizeCategoryExtraSmall;
+
 //  UIApplicationMain is included in the static runtime component
 SB_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
 

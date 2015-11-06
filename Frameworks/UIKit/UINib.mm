@@ -14,19 +14,8 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSObject.h>
-#import <UIKit/UIKitExport.h>
+#include "Starboard.h"
+#import  <UIKit/UINib.h>
 
-@class NSBundle;
-@class UINib;
-@class NSArray;
-@class NSDictionary;
-
-UIKIT_EXPORT_CLASS
-@interface UINib : NSObject
-
-+ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundleOrNil;
-
-- (NSArray*)instantiateWithOwner:(id)ownerOrNil options:(NSDictionary*)optionsOrNil;
-
+@implementation UINib
 @end
