@@ -1,5 +1,7 @@
 LIBRARY QuartzCore
    EXPORTS
+     _OBJC_CLASS_CAGradientLayer DATA
+     __objc_class_name_CAGradientLayer CONSTANT   
      _OBJC_CLASS_CALayer	DATA
 	 __objc_class_name_CALayer	CONSTANT
      _OBJC_CLASS_CABasicAnimation	DATA

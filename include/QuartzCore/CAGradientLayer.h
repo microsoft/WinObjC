@@ -18,7 +18,9 @@
 #define _CAGRADIENTLAYER_H_
 
 #import <QuartzCore/CALayer.h>
+#import <GLKit/GLKitExport.h>
 
+GLKIT_EXPORT_CLASS
 @interface CAGradientLayer : CALayer
 
 @property (copy) NSArray* colors;

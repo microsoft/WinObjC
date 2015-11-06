@@ -42,7 +42,7 @@
 UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
 UIKIT_EXPORT NSString* const UIApplicationStatusBarFrameUserInfoKey;
 
-UIKIT_EXPORT NSString* UIApplicationDidChangeStatusBarFrameNotification;
+UIKIT_EXPORT NSString* const UIApplicationDidChangeStatusBarFrameNotification;
 UIKIT_EXPORT NSString* const UIApplicationWillChangeStatusBarOrientationNotification;
 UIKIT_EXPORT NSString* const UIApplicationDidChangeStatusBarOrientationNotification;
 UIKIT_EXPORT NSString* const UIApplicationWillEnterForegroundNotification;

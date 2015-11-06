@@ -31,7 +31,7 @@ UIKIT_EXPORT NSString* const UIActivityTypeAssignToContact;
 UIKIT_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
 UIKIT_EXPORT NSString* const UIActivityTypeAirDrop;
 
-UIKIT_EXPORT
+UIKIT_EXPORT_CLASS
 @interface UIActivity : NSObject
 
 - (void)activityDidFinish:(BOOL)finished;

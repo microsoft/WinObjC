@@ -46,18 +46,48 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
-NSString* const UIContentSizeCategoryExtraSmall = (NSString * const) @"UIContentSizeCategoryExtraSmall";
-NSString* const UIContentSizeCategorySmall = (NSString * const) @"UIContentSizeCategorySmall";
-NSString* const UIContentSizeCategoryMedium = (NSString * const) @"UIContentSizeCategoryMedium";
-NSString* const UIContentSizeCategoryLarge = (NSString * const) @"UIContentSizeCategoryLarge";
-NSString* const UIContentSizeCategoryExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraLarge";
-NSString* const UIContentSizeCategoryExtraExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraExtraLarge";
-NSString* const UIContentSizeCategoryExtraExtraExtraLarge = (NSString * const) @"UIContentSizeCategoryExtraExtraExtraLarge";
 
-NSString* const UIApplicationWillChangeDisplayModeNofication = (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
-NSString* const UIApplicationDidChangeDisplayModeNofication = (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
-NSString* const UIApplicationDidChangeStatusBarOrientationNotification =
-    (NSString * const) @"UIApplicationDidChangeStatusBarOrientationNotification";
+NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
+NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
+
+NSString* const UIApplicationDidChangeStatusBarFrameNotification = @"UIApplicationDidChangeStatusBarFrameNotification";
+NSString* const UIApplicationWillChangeStatusBarOrientationNotification = @"UIApplicationWillChangeStatusBarOrientationNotification";
+NSString* const UIApplicationDidChangeStatusBarOrientationNotification = @"UIApplicationDidChangeStatusBarOrientationNotification";
+NSString* const UIApplicationWillEnterForegroundNotification = @"UIApplicationWillEnterForegroundNotification";
+NSString* const UIApplicationWillTerminateNotification = @"UIApplicationWillTerminateNotification";
+NSString* const UIApplicationWillResignActiveNotification = @"UIApplicationWillResignActiveNotification";
+NSString* const UIApplicationDidEnterBackgroundNotification = @"UIApplicationDidEnterBackgroundNotification";
+NSString* const UIApplicationDidBecomeActiveNotification = @"UIApplicationDidBecomeActiveNotification";
+NSString* const UIApplicationDidFinishLaunchingNotification = @"UIApplicationDidFinishLaunchingNotification";
+NSString* const UIApplicationSignificantTimeChangeNotification = @"UIApplicationSignificantTimeChangeNotification";
+
+NSString* const UIApplicationLaunchOptionsURLKey = @"UIApplicationLaunchOptionsURLKey";
+NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplicationLaunchOptionsSourceApplicationKey";
+NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
+NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
+NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
+NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
+
+NSString* const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
+NSString* const UIApplicationWillChangeStatusBarFrameNotification = @"UIApplicationWillChangeStatusBarFrameNotification";
+
+NSString* const UIApplicationWillChangeDisplayModeNofication = @"UIApplicationWillChangeDisplayModeNofication";
+NSString* const UIApplicationDidChangeDisplayModeNofication = @"UIApplicationDidChangeDisplayModeNofication";
+
+NSString* const UITrackingRunLoopMode = @"UITrackingRunLoopMode";
+
+NSString* const UIContentSizeCategoryAccessibilityExtraExtraExtraLarge = @"UIContentSizeCategoryAccessibilityExtraExtraExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityExtraExtraLarge = @"UIContentSizeCategoryAccessibilityExtraExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraLarge = @"UIContentSizeCategoryExtraExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraExtraLarge = @"UIContentSizeCategoryExtraExtraExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityExtraLarge = @"UIContentSizeCategoryAccessibilityExtraLarge";
+NSString* const UIContentSizeCategoryExtraLarge = @"UIContentSizeCategoryExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityLarge = @"UIContentSizeCategoryAccessibilityLarge";
+NSString* const UIContentSizeCategoryLarge = @"UIContentSizeCategoryLarge";
+NSString* const UIContentSizeCategoryAccessibilityMedium = @"UIContentSizeCategoryAccessibilityMedium";
+NSString* const UIContentSizeCategoryMedium = @"UIContentSizeCategoryMedium";
+NSString* const UIContentSizeCategorySmall = @"UIContentSizeCategorySmall";
+NSString* const UIContentSizeCategoryExtraSmall = @"UIContentSizeCategoryExtraSmall";
 
 float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;

@@ -38,13 +38,16 @@ enum {
 };
 typedef int32_t UIPageViewControllerNavigationOrientation;
 
+UIKIT_EXPORT_CLASS
 @protocol UIPageViewControllerDataSource <NSObject>
 @end
 
+UIKIT_EXPORT_CLASS
 @protocol UIPageViewControllerDelegate <NSObject>
 @optional
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UIPageViewController : UIViewController
 
 @property (nonatomic, assign) id<UIPageViewControllerDataSource> dataSource;

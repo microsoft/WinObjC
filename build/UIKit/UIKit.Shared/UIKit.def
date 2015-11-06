@@ -1,33 +1,55 @@
 LIBRARY UIKit
     EXPORTS
-     _OBJC_CLASS_UIWindow DATA
-     __objc_class_name_UIWindow CONSTANT
+     _OBJC_CLASS_UIActivity DATA
+     __objc_class_name_UIActivity CONSTANT
+     _OBJC_CLASS_UIActivityIndicatorView DATA
+     __objc_class_name_UIActivityIndicatorView CONSTANT
+     _OBJC_CLASS_UIActivityViewController DATA
+     __objc_class_name_UIActivityViewController CONSTANT
+     _OBJC_CLASS_UIApplication DATA
+     __objc_class_name_UIApplication CONSTANT
+     _OBJC_CLASS_UIButton DATA
+     __objc_class_name_UIButton CONSTANT
+     _OBJC_CLASS_UICollectionReusableView DATA
+     __objc_class_name_UICollectionReusableView CONSTANT
+     _OBJC_CLASS_UICollectionViewLayoutAttributes DATA
+     __objc_class_name_UICollectionViewLayoutAttributes CONSTANT	 
+     _OBJC_CLASS_UIDatePicker DATA
+     __objc_class_name_UIDatePicker CONSTANT
      _OBJC_CLASS_UIView DATA
      __objc_class_name_UIView CONSTANT
      _OBJC_CLASS_UIImage DATA
      __objc_class_name_UIImage CONSTANT
-     _OBJC_CLASS_UIApplication DATA
-     __objc_class_name_UIBezierPath CONSTANT
      _OBJC_CLASS_UIBezierPath DATA
-     __objc_class_name_UIApplication CONSTANT
+     __objc_class_name_UIBezierPath CONSTANT
+     _OBJC_CLASS_UIFontDescriptor DATA
+     __objc_class_name_UIFontDescriptor CONSTANT
      _OBJC_CLASS_UIViewController DATA
      __objc_class_name_UIViewController CONSTANT
      _OBJC_CLASS_UIImageView DATA
      __objc_class_name_UIImageView CONSTANT
      _OBJC_CLASS_UIColor DATA
      __objc_class_name_UIColor CONSTANT
+     _OBJC_CLASS_UIInterpolatingMotionEffect DATA
+     __objc_class_name_UIInterpolatingMotionEffect CONSTANT
      _OBJC_CLASS_UIScreen DATA
      __objc_class_name_UIScreen CONSTANT
      _OBJC_CLASS_UILabel DATA
      __objc_class_name_UILabel CONSTANT
      _OBJC_CLASS_UIFont DATA
      __objc_class_name_UIFont CONSTANT
-     _OBJC_CLASS_UIButton DATA
-     __objc_class_name_UIButton CONSTANT
      _OBJC_CLASS_UIGestureRecognizer DATA
      __objc_class_name_UIGestureRecognizer CONSTANT
+     _OBJC_CLASS_UIMotionEffect DATA
+     __objc_class_name_UIMotionEffect CONSTANT
+     _OBJC_CLASS_UIMotionEffectGroup DATA
+     __objc_class_name_UIMotionEffectGroup CONSTANT
+     _OBJC_CLASS_UIPageViewController DATA
+     __objc_class_name_UIPageViewController CONSTANT
      _OBJC_CLASS_UIPanGestureRecognizer DATA
      __objc_class_name_UIPanGestureRecognizer CONSTANT
+     _OBJC_CLASS_UITableViewHeaderFooterView DATA
+     __objc_class_name_UITableViewHeaderFooterView CONSTANT
      _OBJC_CLASS_UITapGestureRecognizer DATA
      __objc_class_name_UITapGestureRecognizer CONSTANT
      _OBJC_CLASS_UIPinchGestureRecognizer DATA
@@ -72,8 +94,6 @@ LIBRARY UIKit
      __objc_class_name_UITabBar CONSTANT
      _OBJC_CLASS_UITabBarController DATA
      __objc_class_name_UITabBarController CONSTANT
-     _OBJC_CLASS_UIActivityIndicatorView DATA
-     __objc_class_name_UIActivityIndicatorView CONSTANT
      _OBJC_CLASS_UINavigationController DATA
      __objc_class_name_UINavigationController CONSTANT
      _OBJC_CLASS_UINavigationBar DATA
@@ -84,8 +104,8 @@ LIBRARY UIKit
      __objc_class_name_UIToolbar CONSTANT
      _OBJC_CLASS_UIWebView DATA
      __objc_class_name_UIWebView CONSTANT
-     _OBJC_CLASS_UIDatePicker DATA
-     __objc_class_name_UIDatePicker CONSTANT
+     _OBJC_CLASS_UIWindow DATA
+     __objc_class_name_UIWindow CONSTANT
      _OBJC_CLASS_UIPickerView DATA
      __objc_class_name_UIPickerView CONSTANT
      _OBJC_CLASS_UISwitch DATA

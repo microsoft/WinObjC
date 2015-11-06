@@ -25,6 +25,7 @@ typedef void (^UIActivityViewControllerCompletionHandler)(NSString* activityType
 
 @class UIPopoverPresentationController;
 
+UIKIT_EXPORT_CLASS
 @interface UIActivityViewController : UIViewController
 
 - (id)initWithActivityItems:(NSArray*)activityItems applicationActivities:(NSArray*)applicationActivities;

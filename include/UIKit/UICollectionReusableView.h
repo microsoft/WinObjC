@@ -20,6 +20,7 @@
 #include "UICollectionViewLayout.h"
 #include <UIKit/UIView.h>
 
+UIKIT_EXPORT_CLASS
 @interface UICollectionReusableView : UIView
 - (void)prepareForReuse;
 @end

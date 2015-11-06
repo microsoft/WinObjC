@@ -14,22 +14,8 @@
 //
 //******************************************************************************
 
-#ifndef _UITABLEVIEWHEADERFOOTERVIEW_H_
-#define _UITABLEVIEWHEADERFOOTERVIEW_H_
+#include "Starboard.h"
+#import <QuartzCore\CAGradientLayer.h>
 
-#import <UIKit/UIView.h>
-
-@class UILabel;
-
-UIKIT_EXPORT_CLASS
-@interface UITableViewHeaderFooterView : UIView
-
-@property (nonatomic, retain) UIView* backgroundView;
-@property (nonatomic, readonly, retain) UILabel* textLabel;
-@property (nonatomic, readonly, retain) UIView* contentView;
-
-- (id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
-
+@implementation CAGradientLayer
 @end
-
-#endif /* _UITABLEVIEWHEADERFOOTERVIEW_H_ */

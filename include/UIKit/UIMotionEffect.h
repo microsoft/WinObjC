@@ -26,10 +26,12 @@ typedef enum {
     UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis
 } UIInterpolatingMotionEffectType;
 
+UIKIT_EXPORT_CLASS
 @interface UIMotionEffect : NSObject <NSCopying, NSCoding>
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UIInterpolatingMotionEffect : UIMotionEffect
 
 @property (retain, nonatomic) id maximumRelativeValue;
@@ -39,6 +41,7 @@ typedef enum {
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UIMotionEffectGroup : UIMotionEffect
 @property (copy, nonatomic) NSArray* motionEffects;
 @end

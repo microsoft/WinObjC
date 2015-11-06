@@ -63,6 +63,7 @@ UIKIT_EXPORT_CLASS
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UICollectionViewLayoutAttributes : NSObject <NSCopying>
 
 - (UICollectionViewItemType)representedElementCategory;
