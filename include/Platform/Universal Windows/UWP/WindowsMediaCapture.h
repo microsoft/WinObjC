@@ -20,129 +20,143 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMCCameraCaptureUIPhotoCaptureSettings, WMCCameraCaptureUIVideoCaptureSettings, WMCCameraCaptureUI, WMCMediaCaptureFailedEventArgs, WMCMediaCapture, WMCMediaCaptureVideoProfileMediaDescription, WMCMediaCaptureVideoProfile, WMCMediaCaptureInitializationSettings, WMCMediaCaptureSettings, WMCLowLagMediaRecording, WMCLowLagPhotoCapture, WMCLowLagPhotoSequenceCapture, WMCMediaCaptureFocusChangedEventArgs, WMCPhotoConfirmationCapturedEventArgs, WMCAdvancedPhotoCapture, WMCCapturedPhoto, WMCAdvancedCapturedPhoto, WMCOptionalReferencePhotoCapturedEventArgs, WMCCapturedFrame, WMCPhotoCapturedEventArgs, WMCCapturedFrameControlValues, WMCVideoStreamConfiguration;
+@class WMCCameraCaptureUIPhotoCaptureSettings, WMCCameraCaptureUIVideoCaptureSettings, WMCCameraCaptureUI, WMCMediaCaptureFailedEventArgs,
+    WMCMediaCapture, WMCMediaCaptureVideoProfileMediaDescription, WMCMediaCaptureVideoProfile, WMCMediaCaptureInitializationSettings,
+    WMCMediaCaptureSettings, WMCLowLagMediaRecording, WMCLowLagPhotoCapture, WMCLowLagPhotoSequenceCapture,
+    WMCMediaCaptureFocusChangedEventArgs, WMCPhotoConfirmationCapturedEventArgs, WMCAdvancedPhotoCapture, WMCCapturedPhoto,
+    WMCAdvancedCapturedPhoto, WMCOptionalReferencePhotoCapturedEventArgs, WMCCapturedFrame, WMCPhotoCapturedEventArgs,
+    WMCCapturedFrameControlValues, WMCVideoStreamConfiguration;
 @class WMCWhiteBalanceGain;
-@protocol WMCICameraCaptureUIPhotoCaptureSettings, WMCICameraCaptureUIVideoCaptureSettings, WMCICameraCaptureUI, WMCIMediaCaptureFailedEventArgs, WMCIMediaCaptureVideoProfileMediaDescription, WMCIMediaCaptureVideoProfile, WMCIMediaCaptureInitializationSettings, WMCIMediaCaptureInitializationSettings2, WMCIMediaCaptureInitializationSettings3, WMCIMediaCaptureInitializationSettings4, WMCIMediaCaptureStatics, WMCIMediaCapture, WMCIMediaCapture2, WMCIMediaCapture3, WMCIMediaCapture4, WMCILowLagPhotoCapture, WMCIAdvancedPhotoCapture, WMCIAdvancedCapturedPhoto, WMCIOptionalReferencePhotoCapturedEventArgs, WMCILowLagMediaRecording, WMCILowLagMediaRecording2, WMCILowLagPhotoSequenceCapture, WMCICapturedFrameControlValues, WMCICapturedFrameControlValues2, WMCIPhotoCapturedEventArgs, WMCICapturedPhoto, WMCICapturedFrame, WMCICapturedFrameWithSoftwareBitmap, WMCIMediaCaptureVideoPreview, WMCIMediaCaptureSettings, WMCIMediaCaptureSettings2, WMCIMediaCaptureFocusChangedEventArgs, WMCIPhotoConfirmationCapturedEventArgs, WMCIVideoStreamConfiguration;
+@protocol WMCICameraCaptureUIPhotoCaptureSettings
+, WMCICameraCaptureUIVideoCaptureSettings, WMCICameraCaptureUI, WMCIMediaCaptureFailedEventArgs,
+    WMCIMediaCaptureVideoProfileMediaDescription, WMCIMediaCaptureVideoProfile, WMCIMediaCaptureInitializationSettings,
+    WMCIMediaCaptureInitializationSettings2, WMCIMediaCaptureInitializationSettings3, WMCIMediaCaptureInitializationSettings4,
+    WMCIMediaCaptureStatics, WMCIMediaCapture, WMCIMediaCapture2, WMCIMediaCapture3, WMCIMediaCapture4, WMCILowLagPhotoCapture,
+    WMCIAdvancedPhotoCapture, WMCIAdvancedCapturedPhoto, WMCIOptionalReferencePhotoCapturedEventArgs, WMCILowLagMediaRecording,
+    WMCILowLagMediaRecording2, WMCILowLagPhotoSequenceCapture, WMCICapturedFrameControlValues, WMCICapturedFrameControlValues2,
+    WMCIPhotoCapturedEventArgs, WMCICapturedPhoto, WMCICapturedFrame, WMCICapturedFrameWithSoftwareBitmap, WMCIMediaCaptureVideoPreview,
+    WMCIMediaCaptureSettings, WMCIMediaCaptureSettings2, WMCIMediaCaptureFocusChangedEventArgs, WMCIPhotoConfirmationCapturedEventArgs,
+    WMCIVideoStreamConfiguration;
 
 // Windows.Media.Capture.CameraCaptureUIMode
 enum _WMCCameraCaptureUIMode {
-	WMCCameraCaptureUIModePhotoOrVideo = 0,
-	WMCCameraCaptureUIModePhoto = 1,
-	WMCCameraCaptureUIModeVideo = 2,
+    WMCCameraCaptureUIModePhotoOrVideo = 0,
+    WMCCameraCaptureUIModePhoto = 1,
+    WMCCameraCaptureUIModeVideo = 2,
 };
 typedef unsigned WMCCameraCaptureUIMode;
 
 // Windows.Media.Capture.CameraCaptureUIPhotoFormat
 enum _WMCCameraCaptureUIPhotoFormat {
-	WMCCameraCaptureUIPhotoFormatJpeg = 0,
-	WMCCameraCaptureUIPhotoFormatPng = 1,
-	WMCCameraCaptureUIPhotoFormatJpegXR = 2,
+    WMCCameraCaptureUIPhotoFormatJpeg = 0,
+    WMCCameraCaptureUIPhotoFormatPng = 1,
+    WMCCameraCaptureUIPhotoFormatJpegXR = 2,
 };
 typedef unsigned WMCCameraCaptureUIPhotoFormat;
 
 // Windows.Media.Capture.CameraCaptureUIVideoFormat
 enum _WMCCameraCaptureUIVideoFormat {
-	WMCCameraCaptureUIVideoFormatMp4 = 0,
-	WMCCameraCaptureUIVideoFormatWmv = 1,
+    WMCCameraCaptureUIVideoFormatMp4 = 0,
+    WMCCameraCaptureUIVideoFormatWmv = 1,
 };
 typedef unsigned WMCCameraCaptureUIVideoFormat;
 
 // Windows.Media.Capture.CameraCaptureUIMaxVideoResolution
 enum _WMCCameraCaptureUIMaxVideoResolution {
-	WMCCameraCaptureUIMaxVideoResolutionHighestAvailable = 0,
-	WMCCameraCaptureUIMaxVideoResolutionLowDefinition = 1,
-	WMCCameraCaptureUIMaxVideoResolutionStandardDefinition = 2,
-	WMCCameraCaptureUIMaxVideoResolutionHighDefinition = 3,
+    WMCCameraCaptureUIMaxVideoResolutionHighestAvailable = 0,
+    WMCCameraCaptureUIMaxVideoResolutionLowDefinition = 1,
+    WMCCameraCaptureUIMaxVideoResolutionStandardDefinition = 2,
+    WMCCameraCaptureUIMaxVideoResolutionHighDefinition = 3,
 };
 typedef unsigned WMCCameraCaptureUIMaxVideoResolution;
 
 // Windows.Media.Capture.CameraCaptureUIMaxPhotoResolution
 enum _WMCCameraCaptureUIMaxPhotoResolution {
-	WMCCameraCaptureUIMaxPhotoResolutionHighestAvailable = 0,
-	WMCCameraCaptureUIMaxPhotoResolutionVerySmallQvga = 1,
-	WMCCameraCaptureUIMaxPhotoResolutionSmallVga = 2,
-	WMCCameraCaptureUIMaxPhotoResolutionMediumXga = 3,
-	WMCCameraCaptureUIMaxPhotoResolutionLarge3M = 4,
-	WMCCameraCaptureUIMaxPhotoResolutionVeryLarge5M = 5,
+    WMCCameraCaptureUIMaxPhotoResolutionHighestAvailable = 0,
+    WMCCameraCaptureUIMaxPhotoResolutionVerySmallQvga = 1,
+    WMCCameraCaptureUIMaxPhotoResolutionSmallVga = 2,
+    WMCCameraCaptureUIMaxPhotoResolutionMediumXga = 3,
+    WMCCameraCaptureUIMaxPhotoResolutionLarge3M = 4,
+    WMCCameraCaptureUIMaxPhotoResolutionVeryLarge5M = 5,
 };
 typedef unsigned WMCCameraCaptureUIMaxPhotoResolution;
 
 // Windows.Media.Capture.MediaCategory
 enum _WMCMediaCategory {
-	WMCMediaCategoryOther = 0,
-	WMCMediaCategoryCommunications = 1,
-	WMCMediaCategoryMedia = 2,
-	WMCMediaCategoryGameChat = 3,
-	WMCMediaCategorySpeech = 4,
+    WMCMediaCategoryOther = 0,
+    WMCMediaCategoryCommunications = 1,
+    WMCMediaCategoryMedia = 2,
+    WMCMediaCategoryGameChat = 3,
+    WMCMediaCategorySpeech = 4,
 };
 typedef unsigned WMCMediaCategory;
 
 // Windows.Media.Capture.MediaStreamType
 enum _WMCMediaStreamType {
-	WMCMediaStreamTypeVideoPreview = 0,
-	WMCMediaStreamTypeVideoRecord = 1,
-	WMCMediaStreamTypeAudio = 2,
-	WMCMediaStreamTypePhoto = 3,
+    WMCMediaStreamTypeVideoPreview = 0,
+    WMCMediaStreamTypeVideoRecord = 1,
+    WMCMediaStreamTypeAudio = 2,
+    WMCMediaStreamTypePhoto = 3,
 };
 typedef unsigned WMCMediaStreamType;
 
 // Windows.Media.Capture.StreamingCaptureMode
 enum _WMCStreamingCaptureMode {
-	WMCStreamingCaptureModeAudioAndVideo = 0,
-	WMCStreamingCaptureModeAudio = 1,
-	WMCStreamingCaptureModeVideo = 2,
+    WMCStreamingCaptureModeAudioAndVideo = 0,
+    WMCStreamingCaptureModeAudio = 1,
+    WMCStreamingCaptureModeVideo = 2,
 };
 typedef unsigned WMCStreamingCaptureMode;
 
 // Windows.Media.Capture.VideoRotation
 enum _WMCVideoRotation {
-	WMCVideoRotationNone = 0,
-	WMCVideoRotationClockwise90Degrees = 1,
-	WMCVideoRotationClockwise180Degrees = 2,
-	WMCVideoRotationClockwise270Degrees = 3,
+    WMCVideoRotationNone = 0,
+    WMCVideoRotationClockwise90Degrees = 1,
+    WMCVideoRotationClockwise180Degrees = 2,
+    WMCVideoRotationClockwise270Degrees = 3,
 };
 typedef unsigned WMCVideoRotation;
 
 // Windows.Media.Capture.PhotoCaptureSource
 enum _WMCPhotoCaptureSource {
-	WMCPhotoCaptureSourceAuto = 0,
-	WMCPhotoCaptureSourceVideoPreview = 1,
-	WMCPhotoCaptureSourcePhoto = 2,
+    WMCPhotoCaptureSourceAuto = 0,
+    WMCPhotoCaptureSourceVideoPreview = 1,
+    WMCPhotoCaptureSourcePhoto = 2,
 };
 typedef unsigned WMCPhotoCaptureSource;
 
 // Windows.Media.Capture.VideoDeviceCharacteristic
 enum _WMCVideoDeviceCharacteristic {
-	WMCVideoDeviceCharacteristicAllStreamsIndependent = 0,
-	WMCVideoDeviceCharacteristicPreviewRecordStreamsIdentical = 1,
-	WMCVideoDeviceCharacteristicPreviewPhotoStreamsIdentical = 2,
-	WMCVideoDeviceCharacteristicRecordPhotoStreamsIdentical = 3,
-	WMCVideoDeviceCharacteristicAllStreamsIdentical = 4,
+    WMCVideoDeviceCharacteristicAllStreamsIndependent = 0,
+    WMCVideoDeviceCharacteristicPreviewRecordStreamsIdentical = 1,
+    WMCVideoDeviceCharacteristicPreviewPhotoStreamsIdentical = 2,
+    WMCVideoDeviceCharacteristicRecordPhotoStreamsIdentical = 3,
+    WMCVideoDeviceCharacteristicAllStreamsIdentical = 4,
 };
 typedef unsigned WMCVideoDeviceCharacteristic;
 
 // Windows.Media.Capture.PowerlineFrequency
 enum _WMCPowerlineFrequency {
-	WMCPowerlineFrequencyDisabled = 0,
-	WMCPowerlineFrequencyFiftyHertz = 1,
-	WMCPowerlineFrequencySixtyHertz = 2,
+    WMCPowerlineFrequencyDisabled = 0,
+    WMCPowerlineFrequencyFiftyHertz = 1,
+    WMCPowerlineFrequencySixtyHertz = 2,
 };
 typedef unsigned WMCPowerlineFrequency;
 
 // Windows.Media.Capture.MediaCaptureThermalStatus
 enum _WMCMediaCaptureThermalStatus {
-	WMCMediaCaptureThermalStatusNormal = 0,
-	WMCMediaCaptureThermalStatusOverheated = 1,
+    WMCMediaCaptureThermalStatusNormal = 0,
+    WMCMediaCaptureThermalStatusOverheated = 1,
 };
 typedef unsigned WMCMediaCaptureThermalStatus;
 
 // Windows.Media.Capture.KnownVideoProfile
 enum _WMCKnownVideoProfile {
-	WMCKnownVideoProfileVideoRecording = 0,
-	WMCKnownVideoProfileHighQualityPhoto = 1,
-	WMCKnownVideoProfileBalancedVideoAndPhoto = 2,
-	WMCKnownVideoProfileVideoConferencing = 3,
-	WMCKnownVideoProfilePhotoSequence = 4,
+    WMCKnownVideoProfileVideoRecording = 0,
+    WMCKnownVideoProfileHighQualityPhoto = 1,
+    WMCKnownVideoProfileBalancedVideoAndPhoto = 2,
+    WMCKnownVideoProfileVideoConferencing = 3,
+    WMCKnownVideoProfilePhotoSequence = 4,
 };
 typedef unsigned WMCKnownVideoProfile;
 
@@ -160,22 +174,21 @@ typedef unsigned WMCKnownVideoProfile;
 // Windows.Media.Capture.MediaCaptureFailedEventHandler
 #ifndef __WMCMediaCaptureFailedEventHandler__DEFINED
 #define __WMCMediaCaptureFailedEventHandler__DEFINED
-typedef void(^WMCMediaCaptureFailedEventHandler)(WMCMediaCapture* sender, WMCMediaCaptureFailedEventArgs* errorEventArgs);
+typedef void (^WMCMediaCaptureFailedEventHandler)(WMCMediaCapture* sender, WMCMediaCaptureFailedEventArgs* errorEventArgs);
 #endif // __WMCMediaCaptureFailedEventHandler__DEFINED
 
 // Windows.Media.Capture.RecordLimitationExceededEventHandler
 #ifndef __WMCRecordLimitationExceededEventHandler__DEFINED
 #define __WMCRecordLimitationExceededEventHandler__DEFINED
-typedef void(^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender);
+typedef void (^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender);
 #endif // __WMCRecordLimitationExceededEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Media.Capture.WhiteBalanceGain
 WINRT_EXPORT
 @interface WMCWhiteBalanceGain : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double r;
 @property double g;
 @property double b;
@@ -184,13 +197,13 @@ WINRT_EXPORT
 // Windows.Media.Capture.MediaCaptureFailedEventHandler
 #ifndef __WMCMediaCaptureFailedEventHandler__DEFINED
 #define __WMCMediaCaptureFailedEventHandler__DEFINED
-typedef void(^WMCMediaCaptureFailedEventHandler)(WMCMediaCapture* sender, WMCMediaCaptureFailedEventArgs* errorEventArgs);
+typedef void (^WMCMediaCaptureFailedEventHandler)(WMCMediaCapture* sender, WMCMediaCaptureFailedEventArgs* errorEventArgs);
 #endif // __WMCMediaCaptureFailedEventHandler__DEFINED
 
 // Windows.Media.Capture.RecordLimitationExceededEventHandler
 #ifndef __WMCRecordLimitationExceededEventHandler__DEFINED
 #define __WMCRecordLimitationExceededEventHandler__DEFINED
-typedef void(^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender);
+typedef void (^WMCRecordLimitationExceededEventHandler)(WMCMediaCapture* sender);
 #endif // __WMCRecordLimitationExceededEventHandler__DEFINED
 
 // Windows.Media.Capture.CameraCaptureUIPhotoCaptureSettings
@@ -243,7 +256,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCaptureFailedEventArgs : RTObject
 @property (readonly) unsigned int code;
-@property (readonly) NSString * message;
+@property (readonly) NSString* message;
 @end
 
 #endif // __WMCMediaCaptureFailedEventArgs_DEFINED__
@@ -264,10 +277,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCapture : RTObject <WFIClosable>
-+ (BOOL)isVideoProfileSupported:(NSString *)videoDeviceId;
-+ (NSArray*)findAllVideoProfiles:(NSString *)videoDeviceId;
-+ (NSArray*)findConcurrentProfiles:(NSString *)videoDeviceId;
-+ (NSArray*)findKnownVideoProfiles:(NSString *)videoDeviceId name:(WMCKnownVideoProfile)name;
++ (BOOL)isVideoProfileSupported:(NSString*)videoDeviceId;
++ (NSArray*)findAllVideoProfiles:(NSString*)videoDeviceId;
++ (NSArray*)findConcurrentProfiles:(NSString*)videoDeviceId;
++ (NSArray*)findKnownVideoProfiles:(NSString*)videoDeviceId name:(WMCKnownVideoProfile)name;
 + (instancetype)create ACTIVATOR;
 @property (readonly) WMDAudioDeviceController* audioDeviceController;
 @property (readonly) WMCMediaCaptureSettings* mediaCaptureSettings;
@@ -278,24 +291,30 @@ WINRT_EXPORT
 - (void)removeFailedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addRecordLimitationExceededEvent:(WMCRecordLimitationExceededEventHandler)del;
 - (void)removeRecordLimitationExceededEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFocusChangedEvent:(void(^)(WMCMediaCapture*, WMCMediaCaptureFocusChangedEventArgs*))del;
+- (EventRegistrationToken)addFocusChangedEvent:(void (^)(WMCMediaCapture*, WMCMediaCaptureFocusChangedEventArgs*))del;
 - (void)removeFocusChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPhotoConfirmationCapturedEvent:(void(^)(WMCMediaCapture*, WMCPhotoConfirmationCapturedEventArgs*))del;
+- (EventRegistrationToken)addPhotoConfirmationCapturedEvent:(void (^)(WMCMediaCapture*, WMCPhotoConfirmationCapturedEventArgs*))del;
 - (void)removePhotoConfirmationCapturedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCameraStreamStateChangedEvent:(void(^)(WMCMediaCapture*, RTObject*))del;
+- (EventRegistrationToken)addCameraStreamStateChangedEvent:(void (^)(WMCMediaCapture*, RTObject*))del;
 - (void)removeCameraStreamStateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addThermalStatusChangedEvent:(void(^)(WMCMediaCapture*, RTObject*))del;
+- (EventRegistrationToken)addThermalStatusChangedEvent:(void (^)(WMCMediaCapture*, RTObject*))del;
 - (void)removeThermalStatusChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)initializeAsync;
 - (RTObject<WFIAsyncAction>*)initializeWithSettingsAsync:(WMCMediaCaptureInitializationSettings*)mediaCaptureInitializationSettings;
 - (RTObject<WFIAsyncAction>*)startRecordToStorageFileAsync:(WMMMediaEncodingProfile*)encodingProfile file:(RTObject<WSIStorageFile>*)file;
-- (RTObject<WFIAsyncAction>*)startRecordToStreamAsync:(WMMMediaEncodingProfile*)encodingProfile stream:(RTObject<WSSIRandomAccessStream>*)stream;
-- (RTObject<WFIAsyncAction>*)startRecordToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink;
-- (RTObject<WFIAsyncAction>*)startRecordToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile customSinkActivationId:(NSString *)customSinkActivationId customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings;
+- (RTObject<WFIAsyncAction>*)startRecordToStreamAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                               stream:(RTObject<WSSIRandomAccessStream>*)stream;
+- (RTObject<WFIAsyncAction>*)startRecordToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                          customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink;
+- (RTObject<WFIAsyncAction>*)startRecordToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                     customSinkActivationId:(NSString*)customSinkActivationId
+                                         customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings;
 - (RTObject<WFIAsyncAction>*)stopRecordAsync;
 - (RTObject<WFIAsyncAction>*)capturePhotoToStorageFileAsync:(WMMImageEncodingProperties*)type file:(RTObject<WSIStorageFile>*)file;
 - (RTObject<WFIAsyncAction>*)capturePhotoToStreamAsync:(WMMImageEncodingProperties*)type stream:(RTObject<WSSIRandomAccessStream>*)stream;
-- (RTObject<WFIAsyncAction>*)addEffectAsync:(WMCMediaStreamType)mediaStreamType effectActivationID:(NSString *)effectActivationID effectSettings:(RTObject<WFCIPropertySet>*)effectSettings;
+- (RTObject<WFIAsyncAction>*)addEffectAsync:(WMCMediaStreamType)mediaStreamType
+                         effectActivationID:(NSString*)effectActivationID
+                             effectSettings:(RTObject<WFCIPropertySet>*)effectSettings;
 - (RTObject<WFIAsyncAction>*)clearEffectsAsync:(WMCMediaStreamType)mediaStreamType;
 - (void)setEncoderProperty:(WMCMediaStreamType)mediaStreamType propertyId:(WFGUID*)propertyId propertyValue:(RTObject*)propertyValue;
 - (RTObject*)getEncoderProperty:(WMCMediaStreamType)mediaStreamType propertyId:(WFGUID*)propertyId;
@@ -306,25 +325,56 @@ WINRT_EXPORT
 - (void)setRecordRotation:(WMCVideoRotation)value;
 - (WMCVideoRotation)getRecordRotation;
 - (RTObject<WFIAsyncAction>*)startPreviewAsync;
-- (RTObject<WFIAsyncAction>*)startPreviewToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink;
-- (RTObject<WFIAsyncAction>*)startPreviewToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile customSinkActivationId:(NSString *)customSinkActivationId customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings;
+- (RTObject<WFIAsyncAction>*)startPreviewToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                           customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink;
+- (RTObject<WFIAsyncAction>*)startPreviewToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                      customSinkActivationId:(NSString*)customSinkActivationId
+                                          customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings;
 - (RTObject<WFIAsyncAction>*)stopPreviewAsync;
-- (void)prepareLowLagRecordToStorageFileAsync:(WMMMediaEncodingProfile*)encodingProfile file:(RTObject<WSIStorageFile>*)file success:(void (^)(WMCLowLagMediaRecording*))success failure:(void (^)(NSError*))failure;
-- (void)prepareLowLagRecordToStreamAsync:(WMMMediaEncodingProfile*)encodingProfile stream:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WMCLowLagMediaRecording*))success failure:(void (^)(NSError*))failure;
-- (void)prepareLowLagRecordToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink success:(void (^)(WMCLowLagMediaRecording*))success failure:(void (^)(NSError*))failure;
-- (void)prepareLowLagRecordToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile customSinkActivationId:(NSString *)customSinkActivationId customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings success:(void (^)(WMCLowLagMediaRecording*))success failure:(void (^)(NSError*))failure;
-- (void)prepareLowLagPhotoCaptureAsync:(WMMImageEncodingProperties*)type success:(void (^)(WMCLowLagPhotoCapture*))success failure:(void (^)(NSError*))failure;
-- (void)prepareLowLagPhotoSequenceCaptureAsync:(WMMImageEncodingProperties*)type success:(void (^)(WMCLowLagPhotoSequenceCapture*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)setEncodingPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties encoderProperties:(WMMMediaPropertySet*)encoderProperties;
+- (void)prepareLowLagRecordToStorageFileAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                         file:(RTObject<WSIStorageFile>*)file
+                                      success:(void (^)(WMCLowLagMediaRecording*))success
+                                      failure:(void (^)(NSError*))failure;
+- (void)prepareLowLagRecordToStreamAsync:(WMMMediaEncodingProfile*)encodingProfile
+                                  stream:(RTObject<WSSIRandomAccessStream>*)stream
+                                 success:(void (^)(WMCLowLagMediaRecording*))success
+                                 failure:(void (^)(NSError*))failure;
+- (void)prepareLowLagRecordToCustomSinkAsync:(WMMMediaEncodingProfile*)encodingProfile
+                             customMediaSink:(RTObject<WMIMediaExtension>*)customMediaSink
+                                     success:(void (^)(WMCLowLagMediaRecording*))success
+                                     failure:(void (^)(NSError*))failure;
+- (void)prepareLowLagRecordToCustomSinkIdAsync:(WMMMediaEncodingProfile*)encodingProfile
+                        customSinkActivationId:(NSString*)customSinkActivationId
+                            customSinkSettings:(RTObject<WFCIPropertySet>*)customSinkSettings
+                                       success:(void (^)(WMCLowLagMediaRecording*))success
+                                       failure:(void (^)(NSError*))failure;
+- (void)prepareLowLagPhotoCaptureAsync:(WMMImageEncodingProperties*)type
+                               success:(void (^)(WMCLowLagPhotoCapture*))success
+                               failure:(void (^)(NSError*))failure;
+- (void)prepareLowLagPhotoSequenceCaptureAsync:(WMMImageEncodingProperties*)type
+                                       success:(void (^)(WMCLowLagPhotoSequenceCapture*))success
+                                       failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)setEncodingPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties
+                                      encoderProperties:(WMMMediaPropertySet*)encoderProperties;
 - (void)close;
-- (void)prepareVariablePhotoSequenceCaptureAsync:(WMMImageEncodingProperties*)type success:(void (^)(WMCCVariablePhotoSequenceCapture*))success failure:(void (^)(NSError*))failure;
-- (void)addAudioEffectAsync:(RTObject<WMEIAudioEffectDefinition>*)definition success:(void (^)(RTObject<WMIMediaExtension>*))success failure:(void (^)(NSError*))failure;
-- (void)addVideoEffectAsync:(RTObject<WMEIVideoEffectDefinition>*)definition mediaStreamType:(WMCMediaStreamType)mediaStreamType success:(void (^)(RTObject<WMIMediaExtension>*))success failure:(void (^)(NSError*))failure;
+- (void)prepareVariablePhotoSequenceCaptureAsync:(WMMImageEncodingProperties*)type
+                                         success:(void (^)(WMCCVariablePhotoSequenceCapture*))success
+                                         failure:(void (^)(NSError*))failure;
+- (void)addAudioEffectAsync:(RTObject<WMEIAudioEffectDefinition>*)definition
+                    success:(void (^)(RTObject<WMIMediaExtension>*))success
+                    failure:(void (^)(NSError*))failure;
+- (void)addVideoEffectAsync:(RTObject<WMEIVideoEffectDefinition>*)definition
+            mediaStreamType:(WMCMediaStreamType)mediaStreamType
+                    success:(void (^)(RTObject<WMIMediaExtension>*))success
+                    failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)pauseRecordAsync:(WMDMediaCapturePauseBehavior)behavior;
 - (RTObject<WFIAsyncAction>*)resumeRecordAsync;
 - (void)getPreviewFrameAsyncWithSuccess:(void (^)(WMVideoFrame*))success failure:(void (^)(NSError*))failure;
 - (void)getPreviewFrameCopyAsync:(WMVideoFrame*)destination success:(void (^)(WMVideoFrame*))success failure:(void (^)(NSError*))failure;
-- (void)prepareAdvancedPhotoCaptureAsync:(WMMImageEncodingProperties*)encodingProperties success:(void (^)(WMCAdvancedPhotoCapture*))success failure:(void (^)(NSError*))failure;
+- (void)prepareAdvancedPhotoCaptureAsync:(WMMImageEncodingProperties*)encodingProperties
+                                 success:(void (^)(WMCAdvancedPhotoCapture*))success
+                                 failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCMediaCapture_DEFINED__
@@ -350,11 +400,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureVideoProfile : RTObject
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) NSArray* supportedPhotoMediaDescription;
 @property (readonly) NSArray* supportedPreviewMediaDescription;
 @property (readonly) NSArray* supportedRecordMediaDescription;
-@property (readonly) NSString * videoDeviceId;
+@property (readonly) NSString* videoDeviceId;
 - (NSArray*)getConcurrency;
 @end
 
@@ -367,10 +417,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCaptureInitializationSettings : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * videoDeviceId;
+@property (copy) NSString* videoDeviceId;
 @property WMCStreamingCaptureMode streamingCaptureMode;
 @property WMCPhotoCaptureSource photoCaptureSource;
-@property (copy) NSString * audioDeviceId;
+@property (copy) NSString* audioDeviceId;
 @property WMCMediaCategory mediaCategory;
 @property WMAudioProcessing audioProcessing;
 @property (copy) RTObject<WMCIMediaSource>* audioSource;
@@ -389,11 +439,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureSettings : RTObject
-@property (readonly) NSString * audioDeviceId;
+@property (readonly) NSString* audioDeviceId;
 @property (readonly) WMCPhotoCaptureSource photoCaptureSource;
 @property (readonly) WMCStreamingCaptureMode streamingCaptureMode;
 @property (readonly) WMCVideoDeviceCharacteristic videoDeviceCharacteristic;
-@property (readonly) NSString * videoDeviceId;
+@property (readonly) NSString* videoDeviceId;
 @property (readonly) WMAudioProcessing audioProcessing;
 @property (readonly) BOOL cameraSoundRequiredForRegion;
 @property (readonly) BOOL concurrentRecordAndPhotoSequenceSupported;
@@ -439,7 +489,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCLowLagPhotoSequenceCapture : RTObject
-- (EventRegistrationToken)addPhotoCapturedEvent:(void(^)(WMCLowLagPhotoSequenceCapture*, WMCPhotoCapturedEventArgs*))del;
+- (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCLowLagPhotoSequenceCapture*, WMCPhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)stopAsync;
@@ -477,9 +527,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCAdvancedPhotoCapture : RTObject
-- (EventRegistrationToken)addAllPhotosCapturedEvent:(void(^)(WMCAdvancedPhotoCapture*, RTObject*))del;
+- (EventRegistrationToken)addAllPhotosCapturedEvent:(void (^)(WMCAdvancedPhotoCapture*, RTObject*))del;
 - (void)removeAllPhotosCapturedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOptionalReferencePhotoCapturedEvent:(void(^)(WMCAdvancedPhotoCapture*, WMCOptionalReferencePhotoCapturedEventArgs*))del;
+- (EventRegistrationToken)addOptionalReferencePhotoCapturedEvent:(void (^)(WMCAdvancedPhotoCapture*,
+                                                                           WMCOptionalReferencePhotoCapturedEventArgs*))del;
 - (void)removeOptionalReferencePhotoCapturedEvent:(EventRegistrationToken)tok;
 - (void)captureAsyncWithSuccess:(void (^)(WMCAdvancedCapturedPhoto*))success failure:(void (^)(NSError*))failure;
 - (void)captureWithContextAsync:(RTObject*)context success:(void (^)(WMCAdvancedCapturedPhoto*))success failure:(void (^)(NSError*))failure;
@@ -530,7 +581,12 @@ WINRT_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned int)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned int))progress
+          failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -541,7 +597,10 @@ WINRT_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned int))success
+          progress:(void (^)(unsigned int))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -562,8 +621,16 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned int)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned int))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned int))success
+          progress:(void (^)(unsigned int))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -574,7 +641,7 @@ WINRT_EXPORT
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString * contentType;
+@property (readonly) NSString* contentType;
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -583,14 +650,23 @@ WINRT_EXPORT
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol
+    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned int)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned int))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned int))success
+          progress:(void (^)(unsigned int))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -601,11 +677,16 @@ WINRT_EXPORT
 #define __WMCCapturedFrame_DEFINED__
 
 WINRT_EXPORT
-@interface WMCCapturedFrame : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
+@interface WMCCapturedFrame : RTObject <WSSIRandomAccessStreamWithContentType,
+                                        WSSIContentTypeProvider,
+                                        WSSIRandomAccessStream,
+                                        WSSIOutputStream,
+                                        WFIClosable,
+                                        WSSIInputStream>
 @property (readonly) unsigned int height;
 @property (readonly) unsigned int width;
 @property (readonly) WGISoftwareBitmap* softwareBitmap;
-@property (readonly) NSString * contentType;
+@property (readonly) NSString* contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -615,8 +696,16 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned int)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned int))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned int))success
+          progress:(void (^)(unsigned int))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -670,4 +759,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCVideoStreamConfiguration_DEFINED__
-

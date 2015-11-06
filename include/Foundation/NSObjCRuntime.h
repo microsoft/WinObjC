@@ -124,7 +124,11 @@ typedef unsigned int NSUInteger;
 #define NSUIntegerMax UINT_MAX
 #endif
 
-enum { NSOrderedAscending = -1, NSOrderedSame = 0, NSOrderedDescending = 1 };
+enum {
+    NSOrderedAscending = -1,
+    NSOrderedSame = 0,
+    NSOrderedDescending = 1,
+};
 
 typedef NSInteger NSComparisonResult;
 

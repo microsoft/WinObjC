@@ -21,8 +21,8 @@
 
 @interface CAKeyframeAnimation : CAPropertyAnimation
 
-@property(copy) NSArray *values;
-@property(copy) NSString *rotationMode;
+@property (copy) NSArray* values;
+@property (copy) NSString* rotationMode;
 
 @end
 

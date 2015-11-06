@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WALLockScreenInfo, WALLockScreenBadge, WALLockScreenUnlockingDeferral, WALLockApplicationHost, WALLockScreenUnlockingEventArgs;
-@protocol WALILockScreenBadge, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost, WALILockApplicationHostStatics;
+@protocol WALILockScreenBadge
+, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost,
+    WALILockApplicationHostStatics;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
@@ -39,13 +41,13 @@ WINRT_EXPORT
 @property (readonly) NSArray* badges;
 @property (readonly) NSArray* detailText;
 @property (readonly) RTObject<WSSIRandomAccessStream>* lockScreenImage;
-- (EventRegistrationToken)addAlarmIconChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addAlarmIconChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeAlarmIconChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBadgesChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addBadgesChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeBadgesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDetailTextChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addDetailTextChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeDetailTextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLockScreenImageChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addLockScreenImageChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeLockScreenImageChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -57,7 +59,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WALLockScreenBadge : RTObject
-@property (readonly) NSString * automationName;
+@property (readonly) NSString* automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
 @property (readonly) id number;
@@ -84,7 +86,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WALLockApplicationHost : RTObject
 + (WALLockApplicationHost*)getForCurrentView;
-- (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
+- (EventRegistrationToken)addUnlockingEvent:(void (^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
 - (void)requestUnlock;
 @end
@@ -102,4 +104,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WALLockScreenUnlockingEventArgs_DEFINED__
-

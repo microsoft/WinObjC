@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 #ifndef SOCIAL_IMPEXP
- #define SOCIAL_IMPEXP __declspec(dllimport)
+#define SOCIAL_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef SOCIAL_EXPORT
- #ifdef __cplusplus
-  #define SOCIAL_EXPORT SOCIAL_IMPEXP extern "C"
-  #define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP 
- #else
-  #define SOCIAL_EXPORT SOCIAL_IMPEXP extern  
-  #define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
- #endif
+#ifdef __cplusplus
+#define SOCIAL_EXPORT SOCIAL_IMPEXP extern "C"
+#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
+#else
+#define SOCIAL_EXPORT SOCIAL_IMPEXP extern
+#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
+#endif
 #endif

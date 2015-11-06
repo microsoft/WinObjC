@@ -20,9 +20,13 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDSSmsBinaryMessage, WDSSmsTextMessage, WDSDeleteSmsMessageOperation, WDSDeleteSmsMessagesOperation, WDSGetSmsMessageOperation, WDSGetSmsMessagesOperation, WDSSmsDeviceMessageStore, WDSSendSmsMessageOperation, WDSSmsMessageReceivedEventArgs, WDSSmsDevice, WDSGetSmsDeviceOperation, WDSSmsReceivedEventDetails;
+@class WDSSmsBinaryMessage, WDSSmsTextMessage, WDSDeleteSmsMessageOperation, WDSDeleteSmsMessagesOperation, WDSGetSmsMessageOperation,
+    WDSGetSmsMessagesOperation, WDSSmsDeviceMessageStore, WDSSendSmsMessageOperation, WDSSmsMessageReceivedEventArgs, WDSSmsDevice,
+    WDSGetSmsDeviceOperation, WDSSmsReceivedEventDetails;
 @class WDSSmsEncodedLength;
-@protocol WDSISmsMessage, WDSISmsBinaryMessage, WDSISmsTextMessage, WDSISmsTextMessageStatics, WDSISmsDeviceMessageStore, WDSISmsMessageReceivedEventArgs, WDSISmsDeviceStatics, WDSISmsDeviceStatics2, WDSISmsDevice, WDSISmsReceivedEventDetails, WDSISmsReceivedEventDetails2;
+@protocol WDSISmsMessage
+, WDSISmsBinaryMessage, WDSISmsTextMessage, WDSISmsTextMessageStatics, WDSISmsDeviceMessageStore, WDSISmsMessageReceivedEventArgs,
+    WDSISmsDeviceStatics, WDSISmsDeviceStatics2, WDSISmsDevice, WDSISmsReceivedEventDetails, WDSISmsReceivedEventDetails2;
 
 // Windows.Devices.Sms.SmsMessageClass
 enum _WDSSmsMessageClass {
@@ -97,28 +101,27 @@ typedef unsigned WDSSmsDeviceStatus;
 // Windows.Devices.Sms.SmsDeviceStatusChangedEventHandler
 #ifndef __WDSSmsDeviceStatusChangedEventHandler__DEFINED
 #define __WDSSmsDeviceStatusChangedEventHandler__DEFINED
-typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice * sender);
+typedef void (^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice* sender);
 #endif // __WDSSmsDeviceStatusChangedEventHandler__DEFINED
 
 // Windows.Devices.Sms.SmsMessageReceivedEventHandler
 #ifndef __WDSSmsMessageReceivedEventHandler__DEFINED
 #define __WDSSmsMessageReceivedEventHandler__DEFINED
-typedef void(^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice * sender, WDSSmsMessageReceivedEventArgs * e);
+typedef void (^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice* sender, WDSSmsMessageReceivedEventArgs* e);
 #endif // __WDSSmsMessageReceivedEventHandler__DEFINED
 
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED
 #define __WFAsyncActionCompletedHandler__DEFINED
-typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
+typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
 #endif // __WFAsyncActionCompletedHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Sms.SmsEncodedLength
 WINRT_EXPORT
 @interface WDSSmsEncodedLength : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned segmentCount;
 @property unsigned characterCountLastSegment;
 @property unsigned charactersPerSegment;
@@ -129,13 +132,13 @@ WINRT_EXPORT
 // Windows.Devices.Sms.SmsMessageReceivedEventHandler
 #ifndef __WDSSmsMessageReceivedEventHandler__DEFINED
 #define __WDSSmsMessageReceivedEventHandler__DEFINED
-typedef void(^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice * sender, WDSSmsMessageReceivedEventArgs * e);
+typedef void (^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice* sender, WDSSmsMessageReceivedEventArgs* e);
 #endif // __WDSSmsMessageReceivedEventHandler__DEFINED
 
 // Windows.Devices.Sms.SmsDeviceStatusChangedEventHandler
 #ifndef __WDSSmsDeviceStatusChangedEventHandler__DEFINED
 #define __WDSSmsDeviceStatusChangedEventHandler__DEFINED
-typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice * sender);
+typedef void (^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice* sender);
 #endif // __WDSSmsDeviceStatusChangedEventHandler__DEFINED
 
 // Windows.Devices.Sms.ISmsMessage
@@ -155,8 +158,8 @@ typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice * sender);
 
 @protocol WDSISmsBinaryMessage <WDSISmsMessage>
 @property WDSSmsDataFormat format;
-- (id<NSFastEnumeration> /*UInt8*/ )getData;
-- (void)setData:(id<NSFastEnumeration> /*UInt8*/ )value;
+- (id<NSFastEnumeration> /*UInt8*/)getData;
+- (void)setData:(id<NSFastEnumeration> /*UInt8*/)value;
 @end
 
 #endif // __WDSISmsBinaryMessage_DEFINED__
@@ -166,15 +169,15 @@ typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice * sender);
 #define __WDSISmsTextMessage_DEFINED__
 
 @protocol WDSISmsTextMessage <WDSISmsMessage>
-@property (copy) NSString * body;
+@property (copy) NSString* body;
 @property WDSSmsEncoding encoding;
-@property (copy) NSString * from;
+@property (copy) NSString* from;
 @property (readonly) unsigned partCount;
 @property (readonly) unsigned partNumber;
 @property (readonly) unsigned partReferenceId;
-@property (readonly) WFDateTime * timestamp;
-@property (copy) NSString * to;
-- (id<NSFastEnumeration> /*WDSISmsBinaryMessage*/ )toBinaryMessages:(WDSSmsDataFormat)format;
+@property (readonly) WFDateTime* timestamp;
+@property (copy) NSString* to;
+- (id<NSFastEnumeration> /*WDSISmsBinaryMessage*/)toBinaryMessages:(WDSSmsDataFormat)format;
 @end
 
 #endif // __WDSISmsTextMessage_DEFINED__
@@ -184,16 +187,16 @@ typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice * sender);
 #define __WDSISmsDevice_DEFINED__
 
 @protocol WDSISmsDevice
-@property (readonly) NSString * accountPhoneNumber;
+@property (readonly) NSString* accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WDSSmsDeviceStatus deviceStatus;
-@property (readonly) WDSSmsDeviceMessageStore * messageStore;
+@property (readonly) WDSSmsDeviceMessageStore* messageStore;
 - (EventRegistrationToken)addSmsDeviceStatusChangedEvent:(WDSSmsDeviceStatusChangedEventHandler)del;
 - (void)removeSmsDeviceStatusChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSmsMessageReceivedEvent:(WDSSmsMessageReceivedEventHandler)del;
 - (void)removeSmsMessageReceivedEvent:(EventRegistrationToken)tok;
-- (WDSSendSmsMessageOperation *)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
-- (WDSSmsEncodedLength *)calculateLength:(WDSSmsTextMessage *)message;
+- (WDSSendSmsMessageOperation*)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
+- (WDSSmsEncodedLength*)calculateLength:(WDSSmsTextMessage*)message;
 @end
 
 #endif // __WDSISmsDevice_DEFINED__
@@ -208,8 +211,8 @@ WINRT_EXPORT
 @property WDSSmsDataFormat format;
 @property (readonly) unsigned id;
 @property (readonly) WDSSmsMessageClass messageClass;
-- (id<NSFastEnumeration> /*UInt8*/ )getData;
-- (void)setData:(id<NSFastEnumeration> /*UInt8*/ )value;
+- (id<NSFastEnumeration> /*UInt8*/)getData;
+- (void)setData:(id<NSFastEnumeration> /*UInt8*/)value;
 @end
 
 #endif // __WDSSmsBinaryMessage_DEFINED__
@@ -220,20 +223,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsTextMessage : RTObject <WDSISmsTextMessage, WDSISmsMessage>
-+ (WDSSmsTextMessage *)fromBinaryMessage:(WDSSmsBinaryMessage *)binaryMessage;
-+ (WDSSmsTextMessage *)fromBinaryData:(WDSSmsDataFormat)format value:(id<NSFastEnumeration> /*UInt8*/ )value;
++ (WDSSmsTextMessage*)fromBinaryMessage:(WDSSmsBinaryMessage*)binaryMessage;
++ (WDSSmsTextMessage*)fromBinaryData:(WDSSmsDataFormat)format value:(id<NSFastEnumeration> /*UInt8*/)value;
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * to;
-@property (copy) NSString * from;
+@property (copy) NSString* to;
+@property (copy) NSString* from;
 @property WDSSmsEncoding encoding;
-@property (copy) NSString * body;
+@property (copy) NSString* body;
 @property (readonly) unsigned partCount;
 @property (readonly) unsigned partNumber;
 @property (readonly) unsigned partReferenceId;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) unsigned id;
 @property (readonly) WDSSmsMessageClass messageClass;
-- (id<NSFastEnumeration> /*WDSISmsBinaryMessage*/ )toBinaryMessages:(WDSSmsDataFormat)format;
+- (id<NSFastEnumeration> /*WDSISmsBinaryMessage*/)toBinaryMessages:(WDSSmsDataFormat)format;
 @end
 
 #endif // __WDSSmsTextMessage_DEFINED__
@@ -305,7 +308,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSGetSmsMessageOperation : RTObject <WFIAsyncInfo>
-// Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<Windows.Devices.Sms.ISmsMessage>)
+// Failed to generate property Completed (Can't marshal
+// Windows.Foundation.AsyncOperationCompletedHandler`1<Windows.Devices.Sms.ISmsMessage>)
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned id;
 @property (readonly) WFAsyncStatus status;
@@ -322,12 +326,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSGetSmsMessagesOperation : RTObject <WFIAsyncInfo>
-// Failed to generate property Progress (Can't marshal Windows.Foundation.AsyncOperationProgressHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
-// Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationWithProgressCompletedHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
+// Failed to generate property Progress (Can't marshal
+// Windows.Foundation.AsyncOperationProgressHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
+// Failed to generate property Completed (Can't marshal
+// Windows.Foundation.AsyncOperationWithProgressCompletedHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned id;
 @property (readonly) WFAsyncStatus status;
-// Could not find base class Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32> type information
+// Could not find base class
+// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>
+// type information
 - (void)cancel;
 - (void)close;
 @end
@@ -344,7 +352,10 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)deleteMessageAsync:(unsigned)messageId;
 - (RTObject<WFIAsyncAction>*)deleteMessagesAsync:(WDSSmsMessageFilter)messageFilter;
 - (void)getMessageAsync:(unsigned)messageId success:(void (^)(RTObject<WDSISmsMessage>*))success failure:(void (^)(NSError*))failure;
-- (void)getMessagesAsync:(WDSSmsMessageFilter)messageFilter success:(void (^)(id<NSFastEnumeration> /*WDSISmsMessage*/ ))success progress:(void (^)(int))progress failure:(void (^)(NSError*))failure;
+- (void)getMessagesAsync:(WDSSmsMessageFilter)messageFilter
+                 success:(void (^)(id<NSFastEnumeration> /*WDSISmsMessage*/))success
+                progress:(void (^)(int))progress
+                 failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmsDeviceMessageStore_DEFINED__
@@ -372,8 +383,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsMessageReceivedEventArgs : RTObject
-@property (readonly) WDSSmsBinaryMessage * binaryMessage;
-@property (readonly) WDSSmsTextMessage * textMessage;
+@property (readonly) WDSSmsBinaryMessage* binaryMessage;
+@property (readonly) WDSSmsTextMessage* textMessage;
 @end
 
 #endif // __WDSSmsMessageReceivedEventArgs_DEFINED__
@@ -384,20 +395,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsDevice : RTObject <WDSISmsDevice>
-+ (void)fromNetworkAccountIdAsync:(NSString *)networkAccountId success:(void (^)(WDSSmsDevice *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSmsDevice *))success failure:(void (^)(NSError*))failure;
-+ (void)getDefaultAsyncWithSuccess:(void (^)(WDSSmsDevice *))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSString * accountPhoneNumber;
++ (void)fromNetworkAccountIdAsync:(NSString*)networkAccountId success:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString* accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WDSSmsDeviceStatus deviceStatus;
-@property (readonly) WDSSmsDeviceMessageStore * messageStore;
+@property (readonly) WDSSmsDeviceMessageStore* messageStore;
 - (EventRegistrationToken)addSmsDeviceStatusChangedEvent:(WDSSmsDeviceStatusChangedEventHandler)del;
 - (void)removeSmsDeviceStatusChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSmsMessageReceivedEvent:(WDSSmsMessageReceivedEventHandler)del;
 - (void)removeSmsMessageReceivedEvent:(EventRegistrationToken)tok;
-- (WDSSendSmsMessageOperation *)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
-- (WDSSmsEncodedLength *)calculateLength:(WDSSmsTextMessage *)message;
+- (WDSSendSmsMessageOperation*)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
+- (WDSSmsEncodedLength*)calculateLength:(WDSSmsTextMessage*)message;
 @end
 
 #endif // __WDSSmsDevice_DEFINED__
@@ -425,11 +436,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsReceivedEventDetails : RTObject
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned messageIndex;
-@property (readonly) WDSSmsBinaryMessage * binaryMessage;
+@property (readonly) WDSSmsBinaryMessage* binaryMessage;
 @property (readonly) WDSSmsMessageClass messageClass;
 @end
 
 #endif // __WDSSmsReceivedEventDetails_DEFINED__
-

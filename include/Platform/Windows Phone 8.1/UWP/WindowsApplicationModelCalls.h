@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WACLockScreenCallEndCallDeferral, WACLockScreenCallUI, WACLockScreenCallEndRequestedEventArgs;
-@protocol WACILockScreenCallEndCallDeferral, WACILockScreenCallEndRequestedEventArgs, WACILockScreenCallUI;
+@protocol WACILockScreenCallEndCallDeferral
+, WACILockScreenCallEndRequestedEventArgs, WACILockScreenCallUI;
 
 #include "WindowsFoundation.h"
 
@@ -42,10 +43,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACLockScreenCallUI : RTObject
-@property (copy) NSString * callTitle;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WACLockScreenCallUI *, RTObject *))del;
+@property (copy) NSString* callTitle;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WACLockScreenCallUI*, RTObject*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEndRequestedEvent:(void(^)(WACLockScreenCallUI *, WACLockScreenCallEndRequestedEventArgs *))del;
+- (EventRegistrationToken)addEndRequestedEvent:(void (^)(WACLockScreenCallUI*, WACLockScreenCallEndRequestedEventArgs*))del;
 - (void)removeEndRequestedEvent:(EventRegistrationToken)tok;
 - (void)dismiss;
 @end
@@ -58,9 +59,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACLockScreenCallEndRequestedEventArgs : RTObject
-@property (readonly) WFDateTime * deadline;
-- (WACLockScreenCallEndCallDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WACLockScreenCallEndCallDeferral*)getDeferral;
 @end
 
 #endif // __WACLockScreenCallEndRequestedEventArgs_DEFINED__
-

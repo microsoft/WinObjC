@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDWWiFiDirectDevice;
-@protocol WDWIWiFiDirectDeviceStatics, WDWIWiFiDirectDevice;
+@protocol WDWIWiFiDirectDeviceStatics
+, WDWIWiFiDirectDevice;
 
 // Windows.Devices.WiFiDirect.WiFiDirectConnectionStatus
 enum _WDWWiFiDirectConnectionStatus {
@@ -50,15 +51,14 @@ typedef unsigned WDWWiFiDirectConnectionStatus;
 
 WINRT_EXPORT
 @interface WDWWiFiDirectDevice : RTObject <WFIClosable>
-+ (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWWiFiDirectDevice *))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addConnectionStatusChangedEvent:(void(^)(WDWWiFiDirectDevice *, RTObject *))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDWWiFiDirectDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
-- (id<NSFastEnumeration> /*WNEndpointPair*/ )getConnectionEndpointPairs;
+- (id<NSFastEnumeration> /*WNEndpointPair*/)getConnectionEndpointPairs;
 - (void)close;
 @end
 
 #endif // __WDWWiFiDirectDevice_DEFINED__
-

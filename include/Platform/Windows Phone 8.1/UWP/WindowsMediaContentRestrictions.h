@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WMCRatedContentDescription, WMCContentRestrictionsBrowsePolicy, WMCRatedContentRestrictions;
-@protocol WMCIRatedContentDescription, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions, WMCIRatedContentRestrictionsFactory;
+@protocol WMCIRatedContentDescription
+, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions,
+    WMCIRatedContentRestrictionsFactory;
 
 // Windows.Media.ContentRestrictions.RatedContentCategory
 enum _WMCRatedContentCategory {
@@ -53,11 +55,11 @@ typedef unsigned WMCContentAccessRestrictionLevel;
 
 WINRT_EXPORT
 @interface WMCRatedContentDescription : RTObject
-+ (WMCRatedContentDescription *)create:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
-@property (copy) NSString * title;
-@property (copy) id<NSFastEnumeration> /*String*/  ratings;
++ (WMCRatedContentDescription*)create:(NSString*)id title:(NSString*)title category:(WMCRatedContentCategory)category ACTIVATOR;
+@property (copy) NSString* title;
+@property (copy) id<NSFastEnumeration> /*String*/ ratings;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* image;
-@property (copy) NSString * id;
+@property (copy) NSString* id;
 @property WMCRatedContentCategory category;
 @end
 
@@ -69,7 +71,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
-@property (readonly) NSString * geographicRegion;
+@property (readonly) NSString* geographicRegion;
 @property (readonly) NSNumber* maxBrowsableAgeRating;
 @property (readonly) NSNumber* preferredAgeRating;
 @end
@@ -83,13 +85,16 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WMCRatedContentRestrictions *)createWithMaxAgeRating:(unsigned)maxAgeRating ACTIVATOR;
-- (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (WMCRatedContentRestrictions*)createWithMaxAgeRating:(unsigned)maxAgeRating ACTIVATOR;
+- (EventRegistrationToken)addRestrictionsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;
-- (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy *))success failure:(void (^)(NSError*))failure;
-- (void)getRestrictionLevelAsync:(WMCRatedContentDescription *)RatedContentDescription success:(void (^)(WMCContentAccessRestrictionLevel))success failure:(void (^)(NSError*))failure;
-- (void)requestContentAccessAsync:(WMCRatedContentDescription *)RatedContentDescription success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy*))success failure:(void (^)(NSError*))failure;
+- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription
+                         success:(void (^)(WMCContentAccessRestrictionLevel))success
+                         failure:(void (^)(NSError*))failure;
+- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription
+                          success:(void (^)(BOOL))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCRatedContentRestrictions_DEFINED__
-

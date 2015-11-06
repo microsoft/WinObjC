@@ -21,18 +21,18 @@
 
 GLKIT_EXPORT_CLASS
 @interface GLKSkyboxEffect : GLKShaderEffect
-@property(readonly) GLKEffectPropertyTexture* textureCubeMap;
+@property (readonly) GLKEffectPropertyTexture* textureCubeMap;
 
-@property(assign) GLKVector3 center;
-@property(assign) float xSize;
-@property(assign) float ySize;
-@property(assign) float zSize;
+@property (assign) GLKVector3 center;
+@property (assign) float xSize;
+@property (assign) float ySize;
+@property (assign) float zSize;
 
-@property(retain) GLKShader* shader;
-@property(retain) NSString* shaderName;
+@property (retain) GLKShader* shader;
+@property (retain) NSString* shaderName;
 
--(void)prepareToDraw;
--(void)draw;
+- (void)prepareToDraw;
+- (void)draw;
 
--(BOOL)updateShaderMaterialParams;
+- (BOOL)updateShaderMaterialParams;
 @end

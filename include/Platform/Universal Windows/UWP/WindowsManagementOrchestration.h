@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMOCurrentAppOrchestration, WMOSingleAppModeContext;
-@protocol WMOICurrentAppOrchestrationStatics, WMOICurrentAppOrchestration, WMOISingleAppModeContext;
+@protocol WMOICurrentAppOrchestrationStatics
+, WMOICurrentAppOrchestration, WMOISingleAppModeContext;
 
 #include "WindowsFoundation.h"
 
@@ -59,4 +60,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMOSingleAppModeContext_DEFINED__
-

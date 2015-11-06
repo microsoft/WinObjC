@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WARMIndexedResourceCandidate, WARMResourceIndexer, WARMIndexedResourceQualifier;
-@protocol WARMIResourceIndexer, WARMIResourceIndexerFactory, WARMIResourceIndexerFactory2, WARMIIndexedResourceQualifier, WARMIIndexedResourceCandidate;
+@protocol WARMIResourceIndexer
+, WARMIResourceIndexerFactory, WARMIResourceIndexerFactory2, WARMIIndexedResourceQualifier, WARMIIndexedResourceCandidate;
 
 // Windows.ApplicationModel.Resources.Management.IndexedResourceType
 enum _WARMIndexedResourceType {
@@ -40,12 +41,12 @@ typedef unsigned WARMIndexedResourceType;
 
 WINRT_EXPORT
 @interface WARMIndexedResourceCandidate : RTObject
-@property (readonly) NSDictionary * /*String, String*/  metadata;
-@property (readonly) id<NSFastEnumeration> /*WARMIndexedResourceQualifier*/  qualifiers;
+@property (readonly) NSDictionary* /*String, String*/ metadata;
+@property (readonly) id<NSFastEnumeration> /*WARMIndexedResourceQualifier*/ qualifiers;
 @property (readonly) WARMIndexedResourceType type;
-@property (readonly) WFUri * uri;
-@property (readonly) NSString * valueAsString;
-- (NSString *)getQualifierValue:(NSString *)qualifierName;
+@property (readonly) WFUri* uri;
+@property (readonly) NSString* valueAsString;
+- (NSString*)getQualifierValue:(NSString*)qualifierName;
 @end
 
 #endif // __WARMIndexedResourceCandidate_DEFINED__
@@ -56,11 +57,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARMResourceIndexer : RTObject
-+ (WARMResourceIndexer *)createResourceIndexer:(WFUri *)projectRoot ACTIVATOR;
++ (WARMResourceIndexer*)createResourceIndexer:(WFUri*)projectRoot ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-+ (WARMResourceIndexer *)createResourceIndexerWithExtension:(WFUri *)projectRoot extensionDllPath:(WFUri *)extensionDllPath ACTIVATOR;
-- (WARMIndexedResourceCandidate *)indexFilePath:(WFUri *)filePath;
-- (void)indexFileContentsAsync:(WFUri *)file success:(void (^)(id<NSFastEnumeration> /*WARMIndexedResourceCandidate*/ ))success failure:(void (^)(NSError*))failure;
++ (WARMResourceIndexer*)createResourceIndexerWithExtension:(WFUri*)projectRoot extensionDllPath:(WFUri*)extensionDllPath ACTIVATOR;
+- (WARMIndexedResourceCandidate*)indexFilePath:(WFUri*)filePath;
+- (void)indexFileContentsAsync:(WFUri*)file
+                       success:(void (^)(id<NSFastEnumeration> /*WARMIndexedResourceCandidate*/))success
+                       failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WARMResourceIndexer_DEFINED__
@@ -71,9 +74,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARMIndexedResourceQualifier : RTObject
-@property (readonly) NSString * qualifierName;
-@property (readonly) NSString * qualifierValue;
+@property (readonly) NSString* qualifierName;
+@property (readonly) NSString* qualifierValue;
 @end
 
 #endif // __WARMIndexedResourceQualifier_DEFINED__
-

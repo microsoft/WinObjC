@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WGFLanguageFont, WGFLanguageFontGroup;
-@protocol WGFILanguageFontGroup, WGFILanguageFontGroupFactory, WGFILanguageFont;
+@protocol WGFILanguageFontGroup
+, WGFILanguageFontGroupFactory, WGFILanguageFont;
 
 #include "WindowsUIText.h"
 
@@ -33,7 +34,7 @@
 
 WINRT_EXPORT
 @interface WGFLanguageFont : RTObject
-@property (readonly) NSString * fontFamily;
+@property (readonly) NSString* fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
 @property (readonly) WUTFontStyle fontStyle;
 @property (readonly) WUTFontWeight* fontWeight;
@@ -48,7 +49,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGFLanguageFontGroup : RTObject
-+ (WGFLanguageFontGroup*)createLanguageFontGroup:(NSString *)languageTag ACTIVATOR;
++ (WGFLanguageFontGroup*)createLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
 @property (readonly) WGFLanguageFont* documentAlternate1Font;
 @property (readonly) WGFLanguageFont* documentAlternate2Font;
 @property (readonly) WGFLanguageFont* documentHeadingFont;
@@ -63,4 +64,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WGFLanguageFontGroup_DEFINED__
-

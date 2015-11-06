@@ -171,21 +171,21 @@
 }
 @end
 
-
-// _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See CFUUIDGetConstantUUIDWithBytes.
+// _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See
+// CFUUIDGetConstantUUIDWithBytes.
 @implementation _NSConstantUUID
--(oneway void)release {
+- (oneway void)release {
 }
 
--(id)retain {
+- (id)retain {
     return self;
 }
 
--(id)autorelease {
+- (id)autorelease {
     return self;
 }
 
--(NSUInteger)retainCount {
+- (NSUInteger)retainCount {
     return NSUIntegerMax;
 }
 @end

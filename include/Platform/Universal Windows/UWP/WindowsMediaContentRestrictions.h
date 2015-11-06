@@ -21,25 +21,27 @@
 
 #include "interopBase.h"
 @class WMCRatedContentDescription, WMCContentRestrictionsBrowsePolicy, WMCRatedContentRestrictions;
-@protocol WMCIRatedContentDescription, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions, WMCIRatedContentRestrictionsFactory;
+@protocol WMCIRatedContentDescription
+, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions,
+    WMCIRatedContentRestrictionsFactory;
 
 // Windows.Media.ContentRestrictions.RatedContentCategory
 enum _WMCRatedContentCategory {
-	WMCRatedContentCategoryGeneral = 0,
-	WMCRatedContentCategoryApplication = 1,
-	WMCRatedContentCategoryGame = 2,
-	WMCRatedContentCategoryMovie = 3,
-	WMCRatedContentCategoryTelevision = 4,
-	WMCRatedContentCategoryMusic = 5,
+    WMCRatedContentCategoryGeneral = 0,
+    WMCRatedContentCategoryApplication = 1,
+    WMCRatedContentCategoryGame = 2,
+    WMCRatedContentCategoryMovie = 3,
+    WMCRatedContentCategoryTelevision = 4,
+    WMCRatedContentCategoryMusic = 5,
 };
 typedef unsigned WMCRatedContentCategory;
 
 // Windows.Media.ContentRestrictions.ContentAccessRestrictionLevel
 enum _WMCContentAccessRestrictionLevel {
-	WMCContentAccessRestrictionLevelAllow = 0,
-	WMCContentAccessRestrictionLevelWarn = 1,
-	WMCContentAccessRestrictionLevelBlock = 2,
-	WMCContentAccessRestrictionLevelHide = 3,
+    WMCContentAccessRestrictionLevelAllow = 0,
+    WMCContentAccessRestrictionLevelWarn = 1,
+    WMCContentAccessRestrictionLevelBlock = 2,
+    WMCContentAccessRestrictionLevelHide = 3,
 };
 typedef unsigned WMCContentAccessRestrictionLevel;
 
@@ -55,11 +57,11 @@ typedef unsigned WMCContentAccessRestrictionLevel;
 
 WINRT_EXPORT
 @interface WMCRatedContentDescription : RTObject
-+ (WMCRatedContentDescription*)create:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
-@property (copy) NSString * title;
++ (WMCRatedContentDescription*)create:(NSString*)id title:(NSString*)title category:(WMCRatedContentCategory)category ACTIVATOR;
+@property (copy) NSString* title;
 @property (copy) NSMutableArray* ratings;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* image;
-@property (copy) NSString * id;
+@property (copy) NSString* id;
 @property WMCRatedContentCategory category;
 @end
 
@@ -71,7 +73,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
-@property (readonly) NSString * geographicRegion;
+@property (readonly) NSString* geographicRegion;
 @property (readonly) id maxBrowsableAgeRating;
 @property (readonly) id preferredAgeRating;
 @end
@@ -86,12 +88,15 @@ WINRT_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
 + (instancetype)create ACTIVATOR;
 + (WMCRatedContentRestrictions*)createWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
-- (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addRestrictionsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;
 - (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy*))success failure:(void (^)(NSError*))failure;
-- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(WMCContentAccessRestrictionLevel))success failure:(void (^)(NSError*))failure;
-- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription
+                         success:(void (^)(WMCContentAccessRestrictionLevel))success
+                         failure:(void (^)(NSError*))failure;
+- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription
+                          success:(void (^)(BOOL))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCRatedContentRestrictions_DEFINED__
-

@@ -23,8 +23,8 @@
 
 @interface UINib : NSObject
 
-+ (UINib *)nibWithNibName:(NSString *)name bundle:(NSBundle *)bundleOrNil;
++ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundleOrNil;
 
-- (NSArray *)instantiateWithOwner:(id)ownerOrNil options:(NSDictionary *)optionsOrNil;
+- (NSArray*)instantiateWithOwner:(id)ownerOrNil options:(NSDictionary*)optionsOrNil;
 
 @end

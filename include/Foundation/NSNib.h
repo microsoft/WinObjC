@@ -22,6 +22,6 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSNib : NSObject
--(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject;
--(NSArray*) loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject;
+- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
 @end

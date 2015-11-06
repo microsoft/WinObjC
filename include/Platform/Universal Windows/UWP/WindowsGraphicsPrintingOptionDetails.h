@@ -20,23 +20,29 @@
 #pragma once
 
 #include "interopBase.h"
-@class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails, WGPOPrintQualityOptionDetails, WGPOPrintColorModeOptionDetails, WGPOPrintDuplexOptionDetails, WGPOPrintCollationOptionDetails, WGPOPrintStapleOptionDetails, WGPOPrintHolePunchOptionDetails, WGPOPrintBindingOptionDetails, WGPOPrintCustomTextOptionDetails, WGPOPrintCustomItemDetails, WGPOPrintCustomItemListOptionDetails, WGPOPrintTaskOptionChangedEventArgs, WGPOPrintTaskOptionDetails;
-@protocol WGPOIPrintOptionDetails, WGPOIPrintNumberOptionDetails, WGPOIPrintTextOptionDetails, WGPOIPrintItemListOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintCustomTextOptionDetails, WGPOIPrintCustomItemDetails, WGPOIPrintCustomItemListOptionDetails, WGPOIPrintTaskOptionChangedEventArgs, WGPOIPrintTaskOptionDetails, WGPOIPrintTaskOptionDetailsStatic;
+@class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails,
+    WGPOPrintQualityOptionDetails, WGPOPrintColorModeOptionDetails, WGPOPrintDuplexOptionDetails, WGPOPrintCollationOptionDetails,
+    WGPOPrintStapleOptionDetails, WGPOPrintHolePunchOptionDetails, WGPOPrintBindingOptionDetails, WGPOPrintCustomTextOptionDetails,
+    WGPOPrintCustomItemDetails, WGPOPrintCustomItemListOptionDetails, WGPOPrintTaskOptionChangedEventArgs, WGPOPrintTaskOptionDetails;
+@protocol WGPOIPrintOptionDetails
+, WGPOIPrintNumberOptionDetails, WGPOIPrintTextOptionDetails, WGPOIPrintItemListOptionDetails, WGPOIPrintCustomOptionDetails,
+    WGPOIPrintCustomTextOptionDetails, WGPOIPrintCustomItemDetails, WGPOIPrintCustomItemListOptionDetails,
+    WGPOIPrintTaskOptionChangedEventArgs, WGPOIPrintTaskOptionDetails, WGPOIPrintTaskOptionDetailsStatic;
 
 // Windows.Graphics.Printing.OptionDetails.PrintOptionStates
 enum _WGPOPrintOptionStates {
-	WGPOPrintOptionStatesNone = 0,
-	WGPOPrintOptionStatesEnabled = 1,
-	WGPOPrintOptionStatesConstrained = 2,
+    WGPOPrintOptionStatesNone = 0,
+    WGPOPrintOptionStatesEnabled = 1,
+    WGPOPrintOptionStatesConstrained = 2,
 };
 typedef unsigned WGPOPrintOptionStates;
 
 // Windows.Graphics.Printing.OptionDetails.PrintOptionType
 enum _WGPOPrintOptionType {
-	WGPOPrintOptionTypeUnknown = 0,
-	WGPOPrintOptionTypeNumber = 1,
-	WGPOPrintOptionTypeText = 2,
-	WGPOPrintOptionTypeItemList = 3,
+    WGPOPrintOptionTypeUnknown = 0,
+    WGPOPrintOptionTypeNumber = 1,
+    WGPOPrintOptionTypeText = 2,
+    WGPOPrintOptionTypeItemList = 3,
 };
 typedef unsigned WGPOPrintOptionType;
 
@@ -51,8 +57,8 @@ typedef unsigned WGPOPrintOptionType;
 #define __WGPOIPrintOptionDetails_DEFINED__
 
 @protocol WGPOIPrintOptionDetails
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property WGPOPrintOptionStates state;
 @property (readonly) RTObject* value;
@@ -100,7 +106,7 @@ typedef unsigned WGPOPrintOptionType;
 #define __WGPOIPrintCustomOptionDetails_DEFINED__
 
 @protocol WGPOIPrintCustomOptionDetails <WGPOIPrintOptionDetails>
-@property (copy) NSString * displayName;
+@property (copy) NSString* displayName;
 - (BOOL)trySetValue:(RTObject*)value;
 @end
 
@@ -115,8 +121,8 @@ WINRT_EXPORT
 @property (readonly) unsigned int maxValue;
 @property (readonly) unsigned int minValue;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -132,8 +138,8 @@ WINRT_EXPORT
 @interface WGPOPrintMediaSizeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -149,8 +155,8 @@ WINRT_EXPORT
 @interface WGPOPrintMediaTypeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -166,8 +172,8 @@ WINRT_EXPORT
 @interface WGPOPrintOrientationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -183,8 +189,8 @@ WINRT_EXPORT
 @interface WGPOPrintQualityOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -200,8 +206,8 @@ WINRT_EXPORT
 @interface WGPOPrintColorModeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -217,8 +223,8 @@ WINRT_EXPORT
 @interface WGPOPrintDuplexOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -234,8 +240,8 @@ WINRT_EXPORT
 @interface WGPOPrintCollationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -251,8 +257,8 @@ WINRT_EXPORT
 @interface WGPOPrintStapleOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -268,8 +274,8 @@ WINRT_EXPORT
 @interface WGPOPrintHolePunchOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -285,8 +291,8 @@ WINRT_EXPORT
 @interface WGPOPrintBindingOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -300,11 +306,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomTextOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails>
-@property (copy) NSString * displayName;
+@property (copy) NSString* displayName;
 @property unsigned int maxCharacters;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
@@ -318,8 +324,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomItemDetails : RTObject
-@property (copy) NSString * itemDisplayName;
-@property (readonly) NSString * itemId;
+@property (copy) NSString* itemDisplayName;
+@property (readonly) NSString* itemId;
 @end
 
 #endif // __WGPOPrintCustomItemDetails_DEFINED__
@@ -329,16 +335,17 @@ WINRT_EXPORT
 #define __WGPOPrintCustomItemListOptionDetails_DEFINED__
 
 WINRT_EXPORT
-@interface WGPOPrintCustomItemListOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
-@property (copy) NSString * displayName;
+@interface WGPOPrintCustomItemListOptionDetails
+    : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
+@property (copy) NSString* displayName;
 @property (readonly) NSArray* items;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property (readonly) RTObject* value;
 - (BOOL)trySetValue:(RTObject*)value;
-- (void)addItem:(NSString *)itemId displayName:(NSString *)displayName;
+- (void)addItem:(NSString*)itemId displayName:(NSString*)displayName;
 @end
 
 #endif // __WGPOPrintCustomItemListOptionDetails_DEFINED__
@@ -383,14 +390,13 @@ WINRT_EXPORT
 + (WGPOPrintTaskOptionDetails*)getFromPrintTaskOptions:(WGPPrintTaskOptions*)printTaskOptions;
 @property (readonly) NSMutableArray* displayedOptions;
 @property (readonly) NSDictionary* options;
-- (EventRegistrationToken)addBeginValidationEvent:(void(^)(WGPOPrintTaskOptionDetails*, RTObject*))del;
+- (EventRegistrationToken)addBeginValidationEvent:(void (^)(WGPOPrintTaskOptionDetails*, RTObject*))del;
 - (void)removeBeginValidationEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOptionChangedEvent:(void(^)(WGPOPrintTaskOptionDetails*, WGPOPrintTaskOptionChangedEventArgs*))del;
+- (EventRegistrationToken)addOptionChangedEvent:(void (^)(WGPOPrintTaskOptionDetails*, WGPOPrintTaskOptionChangedEventArgs*))del;
 - (void)removeOptionChangedEvent:(EventRegistrationToken)tok;
-- (WGPOPrintCustomItemListOptionDetails*)createItemListOption:(NSString *)optionId displayName:(NSString *)displayName;
-- (WGPOPrintCustomTextOptionDetails*)createTextOption:(NSString *)optionId displayName:(NSString *)displayName;
+- (WGPOPrintCustomItemListOptionDetails*)createItemListOption:(NSString*)optionId displayName:(NSString*)displayName;
+- (WGPOPrintCustomTextOptionDetails*)createTextOption:(NSString*)optionId displayName:(NSString*)displayName;
 - (WGPPrintPageDescription*)getPageDescription:(unsigned int)jobPageNumber;
 @end
 
 #endif // __WGPOPrintTaskOptionDetails_DEFINED__
-

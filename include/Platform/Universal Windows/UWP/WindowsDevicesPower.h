@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDPBatteryReport, WDPBattery;
-@protocol WDPIBattery, WDPIBatteryReport, WDPIBatteryStatics;
+@protocol WDPIBattery
+, WDPIBatteryReport, WDPIBatteryStatics;
 
 #include "WindowsFoundation.h"
 #include "WindowsSystemPower.h"
@@ -49,14 +50,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBattery : RTObject
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-@property (readonly) NSString * deviceId;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
+@property (readonly) NSString* deviceId;
 + (WDPBattery*)aggregateBattery;
-- (EventRegistrationToken)addReportUpdatedEvent:(void(^)(WDPBattery*, RTObject*))del;
+- (EventRegistrationToken)addReportUpdatedEvent:(void (^)(WDPBattery*, RTObject*))del;
 - (void)removeReportUpdatedEvent:(EventRegistrationToken)tok;
 - (WDPBatteryReport*)getReport;
 @end
 
 #endif // __WDPBattery_DEFINED__
-

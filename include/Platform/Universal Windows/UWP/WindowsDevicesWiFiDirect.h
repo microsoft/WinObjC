@@ -20,45 +20,51 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings, WDWWiFiDirectAdvertisement, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWWiFiDirectAdvertisementPublisher, WDWWiFiDirectConnectionRequest, WDWWiFiDirectConnectionRequestedEventArgs, WDWWiFiDirectConnectionListener;
-@protocol WDWIWiFiDirectDeviceStatics, WDWIWiFiDirectDeviceStatics2, WDWIWiFiDirectInformationElementStatics, WDWIWiFiDirectInformationElement, WDWIWiFiDirectLegacySettings, WDWIWiFiDirectAdvertisement, WDWIWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWIWiFiDirectAdvertisementPublisher, WDWIWiFiDirectConnectionParameters, WDWIWiFiDirectConnectionRequestedEventArgs, WDWIWiFiDirectConnectionListener, WDWIWiFiDirectDevice, WDWIWiFiDirectConnectionRequest;
+@class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings,
+    WDWWiFiDirectAdvertisement, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWWiFiDirectAdvertisementPublisher,
+    WDWWiFiDirectConnectionRequest, WDWWiFiDirectConnectionRequestedEventArgs, WDWWiFiDirectConnectionListener;
+@protocol WDWIWiFiDirectDeviceStatics
+, WDWIWiFiDirectDeviceStatics2, WDWIWiFiDirectInformationElementStatics, WDWIWiFiDirectInformationElement, WDWIWiFiDirectLegacySettings,
+    WDWIWiFiDirectAdvertisement, WDWIWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWIWiFiDirectAdvertisementPublisher,
+    WDWIWiFiDirectConnectionParameters, WDWIWiFiDirectConnectionRequestedEventArgs, WDWIWiFiDirectConnectionListener, WDWIWiFiDirectDevice,
+    WDWIWiFiDirectConnectionRequest;
 
 // Windows.Devices.WiFiDirect.WiFiDirectConnectionStatus
 enum _WDWWiFiDirectConnectionStatus {
-	WDWWiFiDirectConnectionStatusDisconnected = 0,
-	WDWWiFiDirectConnectionStatusConnected = 1,
+    WDWWiFiDirectConnectionStatusDisconnected = 0,
+    WDWWiFiDirectConnectionStatusConnected = 1,
 };
 typedef unsigned WDWWiFiDirectConnectionStatus;
 
 // Windows.Devices.WiFiDirect.WiFiDirectError
 enum _WDWWiFiDirectError {
-	WDWWiFiDirectErrorSuccess = 0,
-	WDWWiFiDirectErrorRadioNotAvailable = 1,
-	WDWWiFiDirectErrorResourceInUse = 2,
+    WDWWiFiDirectErrorSuccess = 0,
+    WDWWiFiDirectErrorRadioNotAvailable = 1,
+    WDWWiFiDirectErrorResourceInUse = 2,
 };
 typedef unsigned WDWWiFiDirectError;
 
 // Windows.Devices.WiFiDirect.WiFiDirectDeviceSelectorType
 enum _WDWWiFiDirectDeviceSelectorType {
-	WDWWiFiDirectDeviceSelectorTypeDeviceInterface = 0,
-	WDWWiFiDirectDeviceSelectorTypeAssociationEndpoint = 1,
+    WDWWiFiDirectDeviceSelectorTypeDeviceInterface = 0,
+    WDWWiFiDirectDeviceSelectorTypeAssociationEndpoint = 1,
 };
 typedef unsigned WDWWiFiDirectDeviceSelectorType;
 
 // Windows.Devices.WiFiDirect.WiFiDirectAdvertisementListenStateDiscoverability
 enum _WDWWiFiDirectAdvertisementListenStateDiscoverability {
-	WDWWiFiDirectAdvertisementListenStateDiscoverabilityNone = 0,
-	WDWWiFiDirectAdvertisementListenStateDiscoverabilityNormal = 1,
-	WDWWiFiDirectAdvertisementListenStateDiscoverabilityIntensive = 2,
+    WDWWiFiDirectAdvertisementListenStateDiscoverabilityNone = 0,
+    WDWWiFiDirectAdvertisementListenStateDiscoverabilityNormal = 1,
+    WDWWiFiDirectAdvertisementListenStateDiscoverabilityIntensive = 2,
 };
 typedef unsigned WDWWiFiDirectAdvertisementListenStateDiscoverability;
 
 // Windows.Devices.WiFiDirect.WiFiDirectAdvertisementPublisherStatus
 enum _WDWWiFiDirectAdvertisementPublisherStatus {
-	WDWWiFiDirectAdvertisementPublisherStatusCreated = 0,
-	WDWWiFiDirectAdvertisementPublisherStatusStarted = 1,
-	WDWWiFiDirectAdvertisementPublisherStatusStopped = 2,
-	WDWWiFiDirectAdvertisementPublisherStatusAborted = 3,
+    WDWWiFiDirectAdvertisementPublisherStatusCreated = 0,
+    WDWWiFiDirectAdvertisementPublisherStatusStarted = 1,
+    WDWWiFiDirectAdvertisementPublisherStatusStopped = 2,
+    WDWWiFiDirectAdvertisementPublisherStatusAborted = 3,
 };
 typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 
@@ -87,13 +93,16 @@ typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 
 WINRT_EXPORT
 @interface WDWWiFiDirectDevice : RTObject <WFIClosable>
-+ (NSString *)getDeviceSelector:(WDWWiFiDirectDeviceSelectorType)type;
-+ (void)fromIdAsync:(NSString *)deviceId connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(WDWWiFiDirectDeviceSelectorType)type;
++ (void)fromIdAsync:(NSString*)deviceId
+    connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters
+                 success:(void (^)(WDWWiFiDirectDevice*))success
+                 failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addConnectionStatusChangedEvent:(void(^)(WDWWiFiDirectDevice*, RTObject*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDWWiFiDirectDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
 - (NSArray*)getConnectionEndpointPairs;
 - (void)close;
@@ -135,7 +144,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
-@property (copy) NSString * ssid;
+@property (copy) NSString* ssid;
 @property (copy) WSCPasswordCredential* passphrase;
 @property BOOL isEnabled;
 @end
@@ -177,7 +186,8 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) WDWWiFiDirectAdvertisement* advertisement;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
-- (EventRegistrationToken)addStatusChangedEvent:(void(^)(WDWWiFiDirectAdvertisementPublisher*, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs*))del;
+- (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDWWiFiDirectAdvertisementPublisher*,
+                                                          WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs*))del;
 - (void)removeStatusChangedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -215,9 +225,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
 + (instancetype)create ACTIVATOR;
-- (EventRegistrationToken)addConnectionRequestedEvent:(void(^)(WDWWiFiDirectConnectionListener*, WDWWiFiDirectConnectionRequestedEventArgs*))del;
+- (EventRegistrationToken)addConnectionRequestedEvent:(void (^)(WDWWiFiDirectConnectionListener*,
+                                                                WDWWiFiDirectConnectionRequestedEventArgs*))del;
 - (void)removeConnectionRequestedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WDWWiFiDirectConnectionListener_DEFINED__
-

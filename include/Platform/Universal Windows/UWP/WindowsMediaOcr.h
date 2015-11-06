@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMOOcrWord, WMOOcrLine, WMOOcrResult, WMOOcrEngine;
-@protocol WMOIOcrWord, WMOIOcrLine, WMOIOcrResult, WMOIOcrEngine, WMOIOcrEngineStatics;
+@protocol WMOIOcrWord
+, WMOIOcrLine, WMOIOcrResult, WMOIOcrEngine, WMOIOcrEngineStatics;
 
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
@@ -37,7 +38,7 @@
 WINRT_EXPORT
 @interface WMOOcrWord : RTObject
 @property (readonly) WFRect* boundingRect;
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 @end
 
 #endif // __WMOOcrWord_DEFINED__
@@ -48,7 +49,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMOOcrLine : RTObject
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 @property (readonly) NSArray* words;
 @end
 
@@ -61,7 +62,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMOOcrResult : RTObject
 @property (readonly) NSArray* lines;
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 @property (readonly) id textAngle;
 @end
 
@@ -83,4 +84,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMOOcrEngine_DEFINED__
-

@@ -20,8 +20,10 @@
 #pragma once
 
 #include "interopBase.h"
-@class WASCSearchSuggestion, WASCSearchSuggestionManager, WASCSearchSuggestionsRequestedEventArgs, WASCRequestingFocusOnKeyboardInputEventArgs;
-@protocol WASCISearchSuggestion, WASCISearchSuggestionsRequestedEventArgs, WASCIRequestingFocusOnKeyboardInputEventArgs, WASCISearchSuggestionManager;
+@class WASCSearchSuggestion, WASCSearchSuggestionManager, WASCSearchSuggestionsRequestedEventArgs,
+    WASCRequestingFocusOnKeyboardInputEventArgs;
+@protocol WASCISearchSuggestion
+, WASCISearchSuggestionsRequestedEventArgs, WASCIRequestingFocusOnKeyboardInputEventArgs, WASCISearchSuggestionManager;
 
 // Windows.ApplicationModel.Search.Core.SearchSuggestionKind
 enum _WASCSearchSuggestionKind {
@@ -42,12 +44,12 @@ typedef unsigned WASCSearchSuggestionKind;
 
 WINRT_EXPORT
 @interface WASCSearchSuggestion : RTObject
-@property (readonly) NSString * detailText;
+@property (readonly) NSString* detailText;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* image;
-@property (readonly) NSString * imageAlternateText;
+@property (readonly) NSString* imageAlternateText;
 @property (readonly) WASCSearchSuggestionKind kind;
-@property (readonly) NSString * tag;
-@property (readonly) NSString * text;
+@property (readonly) NSString* tag;
+@property (readonly) NSString* text;
 @end
 
 #endif // __WASCSearchSuggestion_DEFINED__
@@ -60,19 +62,25 @@ WINRT_EXPORT
 @interface WASCSearchSuggestionManager : RTObject
 + (instancetype)create ACTIVATOR;
 @property BOOL searchHistoryEnabled;
-@property (copy) NSString * searchHistoryContext;
-// Failed to generate property Suggestions (Can't marshal Windows.Foundation.Collections.IObservableVector`1<Windows.ApplicationModel.Search.Core.SearchSuggestion>)
-- (EventRegistrationToken)addRequestingFocusOnKeyboardInputEvent:(void(^)(WASCSearchSuggestionManager *, WASCRequestingFocusOnKeyboardInputEventArgs *))del;
+@property (copy) NSString* searchHistoryContext;
+// Failed to generate property Suggestions (Can't marshal
+// Windows.Foundation.Collections.IObservableVector`1<Windows.ApplicationModel.Search.Core.SearchSuggestion>)
+- (EventRegistrationToken)addRequestingFocusOnKeyboardInputEvent:(void (^)(WASCSearchSuggestionManager*,
+                                                                           WASCRequestingFocusOnKeyboardInputEventArgs*))del;
 - (void)removeRequestingFocusOnKeyboardInputEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSuggestionsRequestedEvent:(void(^)(WASCSearchSuggestionManager *, WASCSearchSuggestionsRequestedEventArgs *))del;
+- (EventRegistrationToken)addSuggestionsRequestedEvent:(void (^)(WASCSearchSuggestionManager*,
+                                                                 WASCSearchSuggestionsRequestedEventArgs*))del;
 - (void)removeSuggestionsRequestedEvent:(EventRegistrationToken)tok;
-- (void)setLocalContentSuggestionSettings:(WASLocalContentSuggestionSettings *)settings;
-- (void)setQuery:(NSString *)queryText;
-- (void)setQueryWithLanguage:(NSString *)queryText language:(NSString *)language;
-- (void)setQueryWithSearchQueryLinguisticDetails:(NSString *)queryText language:(NSString *)language linguisticDetails:(WASSearchQueryLinguisticDetails *)linguisticDetails;
-// Failed to generate member get_Suggestions (Can't marshal Windows.Foundation.Collections.IObservableVector`1<Windows.ApplicationModel.Search.Core.SearchSuggestion>)
-- (void)addToHistory:(NSString *)queryText;
-- (void)addToHistoryWithLanguage:(NSString *)queryText language:(NSString *)language;
+- (void)setLocalContentSuggestionSettings:(WASLocalContentSuggestionSettings*)settings;
+- (void)setQuery:(NSString*)queryText;
+- (void)setQueryWithLanguage:(NSString*)queryText language:(NSString*)language;
+- (void)setQueryWithSearchQueryLinguisticDetails:(NSString*)queryText
+                                        language:(NSString*)language
+                               linguisticDetails:(WASSearchQueryLinguisticDetails*)linguisticDetails;
+// Failed to generate member get_Suggestions (Can't marshal
+// Windows.Foundation.Collections.IObservableVector`1<Windows.ApplicationModel.Search.Core.SearchSuggestion>)
+- (void)addToHistory:(NSString*)queryText;
+- (void)addToHistoryWithLanguage:(NSString*)queryText language:(NSString*)language;
 - (void)clearHistory;
 @end
 
@@ -84,10 +92,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASCSearchSuggestionsRequestedEventArgs : RTObject
-@property (readonly) NSString * language;
-@property (readonly) WASSearchQueryLinguisticDetails * linguisticDetails;
-@property (readonly) NSString * queryText;
-@property (readonly) WASSearchSuggestionsRequest * request;
+@property (readonly) NSString* language;
+@property (readonly) WASSearchQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString* queryText;
+@property (readonly) WASSearchSuggestionsRequest* request;
 @end
 
 #endif // __WASCSearchSuggestionsRequestedEventArgs_DEFINED__
@@ -101,4 +109,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WASCRequestingFocusOnKeyboardInputEventArgs_DEFINED__
-

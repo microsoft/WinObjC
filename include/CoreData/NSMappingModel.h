@@ -24,9 +24,10 @@
 
 @interface NSMappingModel : NSObject
 
-+ (NSMappingModel *)inferredMappingModelForSourceModel:(NSManagedObjectModel *)source destinationModel:(NSManagedObjectModel *)destination error:(NSError **)error;
++ (NSMappingModel*)inferredMappingModelForSourceModel:(NSManagedObjectModel*)source
+                                     destinationModel:(NSManagedObjectModel*)destination
+                                                error:(NSError**)error;
 
 @end
-
 
 #endif /* _NSMAPPINGMODEL_H_ */

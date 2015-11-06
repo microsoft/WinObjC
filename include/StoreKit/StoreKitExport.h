@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 #ifndef STOREKIT_IMPEXP
- #define STOREKIT_IMPEXP __declspec(dllimport)
+#define STOREKIT_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef STOREKIT_EXPORT
- #ifdef __cplusplus
-  #define STOREKIT_EXPORT STOREKIT_IMPEXP extern "C"
-  #define STOREKIT_EXPORT_CLASS STOREKIT_IMPEXP 
- #else
-  #define STOREKIT_EXPORT STOREKIT_IMPEXP extern  
-  #define STOREKIT_EXPORT_CLASS STOREKIT_IMPEXP
- #endif
+#ifdef __cplusplus
+#define STOREKIT_EXPORT STOREKIT_IMPEXP extern "C"
+#define STOREKIT_EXPORT_CLASS STOREKIT_IMPEXP
+#else
+#define STOREKIT_EXPORT STOREKIT_IMPEXP extern
+#define STOREKIT_EXPORT_CLASS STOREKIT_IMPEXP
+#endif
 #endif

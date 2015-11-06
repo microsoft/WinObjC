@@ -23,15 +23,13 @@
 @class WDHHtmlUtilities;
 @protocol WDHIHtmlUtilities;
 
-
 // Windows.Data.Html.HtmlUtilities
 #ifndef __WDHHtmlUtilities_DEFINED__
 #define __WDHHtmlUtilities_DEFINED__
 
 WINRT_EXPORT
 @interface WDHHtmlUtilities : RTObject
-+ (NSString *)convertToText:(NSString *)html;
++ (NSString*)convertToText:(NSString*)html;
 @end
 
 #endif // __WDHHtmlUtilities_DEFINED__
-

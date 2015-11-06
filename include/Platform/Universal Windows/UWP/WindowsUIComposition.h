@@ -20,71 +20,86 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUCCompositionObject, WUCCompositionEffect, WUCCompositionEffectFactoryLoadResult, WUCCompositionEffectSourceParameter, WUCCompositionImageOptions, WUCCompositionImage, WUCCompositionImageLoadResult, WUCCompositor, WUCCompositionAnimation, WUCCompositionPropertyAnimator, WUCAnimationEndedEventArgs, WUCCompositionPropertySet, WUCCompositionGraphicsDevice, WUCCompositionEffectFactory, WUCCompositionTarget, WUCExpressionAnimation, WUCCompositionEasingFunction, WUCCubicBezierEasingFunction, WUCLinearEasingFunction, WUCVisual, WUCContainerVisual, WUCEffectVisual, WUCImageVisual, WUCSolidColorVisual, WUCCompositionClip, WUCInsetClip, WUCVisualCollection, WUCKeyFrameAnimation, WUCScalarKeyFrameAnimation, WUCVector2KeyFrameAnimation, WUCVector3KeyFrameAnimation, WUCVector4KeyFrameAnimation;
-@protocol WUCIAnimationEndedEventArgs, WUCICompositionAnimation, WUCICompositionClip, WUCICompositionEasingFunction, WUCICompositionEffect, WUCICompositionSurface, WUCICompositionEffectFactory, WUCICompositionEffectFactoryLoadResult, WUCICompositionEffectSourceParameter, WUCICompositionEffectSourceParameterFactory, WUCICompositionGraphicsDevice, WUCICompositionImage, WUCICompositionImageLoadResult, WUCICompositionImageOptions, WUCICompositionObject, WUCICompositionPropertyAnimator, WUCICompositionPropertySet, WUCICompositionTarget, WUCICompositor, WUCIContainerVisual, WUCICubicBezierEasingFunction, WUCIEffectVisual, WUCIExpressionAnimation, WUCIImageVisual, WUCIInsetClip, WUCIKeyFrameAnimation, WUCILinearEasingFunction, WUCIScalarKeyFrameAnimation, WUCISolidColorVisual, WUCIVector2KeyFrameAnimation, WUCIVector3KeyFrameAnimation, WUCIVector4KeyFrameAnimation, WUCIVisual, WUCIVisualCollection, WUCICompositionAnimationFactory, WUCICompositionClipFactory, WUCICompositionEasingFunctionFactory, WUCICompositionObjectFactory, WUCIContainerVisualFactory, WUCIKeyFrameAnimationFactory, WUCIVisualFactory;
+@class WUCCompositionObject, WUCCompositionEffect, WUCCompositionEffectFactoryLoadResult, WUCCompositionEffectSourceParameter,
+    WUCCompositionImageOptions, WUCCompositionImage, WUCCompositionImageLoadResult, WUCCompositor, WUCCompositionAnimation,
+    WUCCompositionPropertyAnimator, WUCAnimationEndedEventArgs, WUCCompositionPropertySet, WUCCompositionGraphicsDevice,
+    WUCCompositionEffectFactory, WUCCompositionTarget, WUCExpressionAnimation, WUCCompositionEasingFunction, WUCCubicBezierEasingFunction,
+    WUCLinearEasingFunction, WUCVisual, WUCContainerVisual, WUCEffectVisual, WUCImageVisual, WUCSolidColorVisual, WUCCompositionClip,
+    WUCInsetClip, WUCVisualCollection, WUCKeyFrameAnimation, WUCScalarKeyFrameAnimation, WUCVector2KeyFrameAnimation,
+    WUCVector3KeyFrameAnimation, WUCVector4KeyFrameAnimation;
+@protocol WUCIAnimationEndedEventArgs
+, WUCICompositionAnimation, WUCICompositionClip, WUCICompositionEasingFunction, WUCICompositionEffect, WUCICompositionSurface,
+    WUCICompositionEffectFactory, WUCICompositionEffectFactoryLoadResult, WUCICompositionEffectSourceParameter,
+    WUCICompositionEffectSourceParameterFactory, WUCICompositionGraphicsDevice, WUCICompositionImage, WUCICompositionImageLoadResult,
+    WUCICompositionImageOptions, WUCICompositionObject, WUCICompositionPropertyAnimator, WUCICompositionPropertySet, WUCICompositionTarget,
+    WUCICompositor, WUCIContainerVisual, WUCICubicBezierEasingFunction, WUCIEffectVisual, WUCIExpressionAnimation, WUCIImageVisual,
+    WUCIInsetClip, WUCIKeyFrameAnimation, WUCILinearEasingFunction, WUCIScalarKeyFrameAnimation, WUCISolidColorVisual,
+    WUCIVector2KeyFrameAnimation, WUCIVector3KeyFrameAnimation, WUCIVector4KeyFrameAnimation, WUCIVisual, WUCIVisualCollection,
+    WUCICompositionAnimationFactory, WUCICompositionClipFactory, WUCICompositionEasingFunctionFactory, WUCICompositionObjectFactory,
+    WUCIContainerVisualFactory, WUCIKeyFrameAnimationFactory, WUCIVisualFactory;
 
 // Windows.UI.Composition.AnimationEndReason
 enum _WUCAnimationEndReason {
-	WUCAnimationEndReasonStopped = 0,
-	WUCAnimationEndReasonCompleted = 1,
-	WUCAnimationEndReasonDisconnected = 2,
+    WUCAnimationEndReasonStopped = 0,
+    WUCAnimationEndReasonCompleted = 1,
+    WUCAnimationEndReasonDisconnected = 2,
 };
 typedef unsigned WUCAnimationEndReason;
 
 // Windows.UI.Composition.AnimationIterationBehavior
 enum _WUCAnimationIterationBehavior {
-	WUCAnimationIterationBehaviorCount = 0,
-	WUCAnimationIterationBehaviorForever = 1,
+    WUCAnimationIterationBehaviorCount = 0,
+    WUCAnimationIterationBehaviorForever = 1,
 };
 typedef unsigned WUCAnimationIterationBehavior;
 
 // Windows.UI.Composition.AnimationStopBehavior
 enum _WUCAnimationStopBehavior {
-	WUCAnimationStopBehaviorLeaveCurrentValue = 0,
-	WUCAnimationStopBehaviorSetToInitialValue = 1,
-	WUCAnimationStopBehaviorSetToFinalValue = 2,
+    WUCAnimationStopBehaviorLeaveCurrentValue = 0,
+    WUCAnimationStopBehaviorSetToInitialValue = 1,
+    WUCAnimationStopBehaviorSetToFinalValue = 2,
 };
 typedef unsigned WUCAnimationStopBehavior;
 
 // Windows.UI.Composition.CompositionEffectFactoryLoadStatus
 enum _WUCCompositionEffectFactoryLoadStatus {
-	WUCCompositionEffectFactoryLoadStatusSuccess = 0,
-	WUCCompositionEffectFactoryLoadStatusEffectTooComplex = 1,
-	WUCCompositionEffectFactoryLoadStatusOther = 2,
+    WUCCompositionEffectFactoryLoadStatusSuccess = 0,
+    WUCCompositionEffectFactoryLoadStatusEffectTooComplex = 1,
+    WUCCompositionEffectFactoryLoadStatusOther = 2,
 };
 typedef unsigned WUCCompositionEffectFactoryLoadStatus;
 
 // Windows.UI.Composition.CompositionGetValueStatus
 enum _WUCCompositionGetValueStatus {
-	WUCCompositionGetValueStatusSucceeded = 0,
-	WUCCompositionGetValueStatusTypeMismatch = 1,
-	WUCCompositionGetValueStatusNotFound = 2,
+    WUCCompositionGetValueStatusSucceeded = 0,
+    WUCCompositionGetValueStatusTypeMismatch = 1,
+    WUCCompositionGetValueStatusNotFound = 2,
 };
 typedef unsigned WUCCompositionGetValueStatus;
 
 // Windows.UI.Composition.CompositionImageLoadStatus
 enum _WUCCompositionImageLoadStatus {
-	WUCCompositionImageLoadStatusSuccess = 0,
-	WUCCompositionImageLoadStatusFileAccessError = 1,
-	WUCCompositionImageLoadStatusDecodeError = 2,
-	WUCCompositionImageLoadStatusNotEnoughResources = 3,
-	WUCCompositionImageLoadStatusOther = 4,
+    WUCCompositionImageLoadStatusSuccess = 0,
+    WUCCompositionImageLoadStatusFileAccessError = 1,
+    WUCCompositionImageLoadStatusDecodeError = 2,
+    WUCCompositionImageLoadStatusNotEnoughResources = 3,
+    WUCCompositionImageLoadStatusOther = 4,
 };
 typedef unsigned WUCCompositionImageLoadStatus;
 
 // Windows.UI.Composition.CompositionImageProgressStage
 enum _WUCCompositionImageProgressStage {
-	WUCCompositionImageProgressStageNone = 0,
-	WUCCompositionImageProgressStageHeaderDecoded = 30,
+    WUCCompositionImageProgressStageNone = 0,
+    WUCCompositionImageProgressStageHeaderDecoded = 30,
 };
 typedef unsigned WUCCompositionImageProgressStage;
 
 // Windows.UI.Composition.CompositionStretch
 enum _WUCCompositionStretch {
-	WUCCompositionStretchNone = 0,
-	WUCCompositionStretchFill = 1,
-	WUCCompositionStretchUniform = 2,
-	WUCCompositionStretchUniformToFill = 3,
+    WUCCompositionStretchNone = 0,
+    WUCCompositionStretchFill = 1,
+    WUCCompositionStretchUniform = 2,
+    WUCCompositionStretchUniformToFill = 3,
 };
 typedef unsigned WUCCompositionStretch;
 
@@ -125,8 +140,8 @@ WINRT_EXPORT
 @property (readonly) WUCCompositor* compositor;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) WUCCompositionPropertySet* properties;
-- (WUCCompositionPropertyAnimator*)connectAnimation:(NSString *)propertyName animation:(WUCCompositionAnimation*)animation;
-- (void)disconnectAnimation:(NSString *)propertyName;
+- (WUCCompositionPropertyAnimator*)connectAnimation:(NSString*)propertyName animation:(WUCCompositionAnimation*)animation;
+- (void)disconnectAnimation:(NSString*)propertyName;
 - (void)close;
 @end
 
@@ -138,8 +153,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionEffect : WUCCompositionObject
-- (RTObject<WUCICompositionSurface>*)getSourceParameter:(NSString *)name;
-- (void)setSourceParameter:(NSString *)name source:(RTObject<WUCICompositionSurface>*)source;
+- (RTObject<WUCICompositionSurface>*)getSourceParameter:(NSString*)name;
+- (void)setSourceParameter:(NSString*)name source:(RTObject<WUCICompositionSurface>*)source;
 @end
 
 #endif // __WUCCompositionEffect_DEFINED__
@@ -171,8 +186,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
-+ (WUCCompositionEffectSourceParameter*)create:(NSString *)name ACTIVATOR;
-@property (readonly) NSString * name;
++ (WUCCompositionEffectSourceParameter*)create:(NSString*)name ACTIVATOR;
+@property (readonly) NSString* name;
 @end
 
 #endif // __WUCCompositionEffectSourceParameter_DEFINED__
@@ -197,7 +212,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionImage : WUCCompositionObject <WUCICompositionSurface>
 @property (readonly) WFSize* size;
-- (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionImageLoadResult*))success progress:(void (^)(WUCCompositionImageProgressStage))progress failure:(void (^)(NSError*))failure;
+- (void)completeLoadAsyncWithSuccess:(void (^)(WUCCompositionImageLoadResult*))success
+                            progress:(void (^)(WUCCompositionImageProgressStage))progress
+                             failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WUCCompositionImage_DEFINED__
@@ -225,13 +242,17 @@ WINRT_EXPORT
 - (WUCContainerVisual*)createContainerVisual;
 - (WUCCubicBezierEasingFunction*)createCubicBezierEasingFunction:(WFNVector2*)controlPoint1 controlPoint2:(WFNVector2*)controlPoint2;
 - (WUCCompositionEffectFactory*)createEffectFactory:(RTObject<WGEIGraphicsEffect>*)graphicsEffect;
-- (WUCCompositionEffectFactory*)createEffectFactoryWithProperties:(RTObject<WGEIGraphicsEffect>*)graphicsEffect animatableProperties:(id<NSFastEnumeration> /* NSString * */)animatableProperties;
+- (WUCCompositionEffectFactory*)createEffectFactoryWithProperties:(RTObject<WGEIGraphicsEffect>*)graphicsEffect
+                                             animatableProperties:(id<NSFastEnumeration> /* NSString * */)animatableProperties;
 - (WUCEffectVisual*)createEffectVisual;
 - (WUCExpressionAnimation*)createExpressionAnimation;
-- (WUCExpressionAnimation*)createExpressionAnimationWithExpression:(NSString *)expression;
+- (WUCExpressionAnimation*)createExpressionAnimationWithExpression:(NSString*)expression;
 - (WUCImageVisual*)createImageVisual;
 - (WUCInsetClip*)createInsetClip;
-- (WUCInsetClip*)createInsetClipWithInsets:(float)leftInset topInset:(float)topInset rightInset:(float)rightInset bottomInset:(float)bottomInset;
+- (WUCInsetClip*)createInsetClipWithInsets:(float)leftInset
+                                  topInset:(float)topInset
+                                rightInset:(float)rightInset
+                               bottomInset:(float)bottomInset;
 - (WUCLinearEasingFunction*)createLinearEasingFunction;
 - (WUCCompositionPropertySet*)createPropertySet;
 - (WUCScalarKeyFrameAnimation*)createScalarKeyFrameAnimation;
@@ -252,14 +273,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCompositionAnimation : WUCCompositionObject
 - (void)clearAllParameters;
-- (void)clearParameter:(NSString *)key;
-- (void)setMatrix3x2Parameter:(NSString *)key value:(WFNMatrix3x2*)value;
-- (void)setMatrix4x4Parameter:(NSString *)key value:(WFNMatrix4x4*)value;
-- (void)setReferenceParameter:(NSString *)key compositionObject:(WUCCompositionObject*)compositionObject;
-- (void)setScalarParameter:(NSString *)key value:(float)value;
-- (void)setVector2Parameter:(NSString *)key value:(WFNVector2*)value;
-- (void)setVector3Parameter:(NSString *)key value:(WFNVector3*)value;
-- (void)setVector4Parameter:(NSString *)key value:(WFNVector4*)value;
+- (void)clearParameter:(NSString*)key;
+- (void)setMatrix3x2Parameter:(NSString*)key value:(WFNMatrix3x2*)value;
+- (void)setMatrix4x4Parameter:(NSString*)key value:(WFNMatrix4x4*)value;
+- (void)setReferenceParameter:(NSString*)key compositionObject:(WUCCompositionObject*)compositionObject;
+- (void)setScalarParameter:(NSString*)key value:(float)value;
+- (void)setVector2Parameter:(NSString*)key value:(WFNVector2*)value;
+- (void)setVector3Parameter:(NSString*)key value:(WFNVector3*)value;
+- (void)setVector4Parameter:(NSString*)key value:(WFNVector4*)value;
 @end
 
 #endif // __WUCCompositionAnimation_DEFINED__
@@ -270,7 +291,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionPropertyAnimator : WUCCompositionObject
-- (EventRegistrationToken)addAnimationEndedEvent:(void(^)(WUCCompositionPropertyAnimator*, WUCAnimationEndedEventArgs*))del;
+- (EventRegistrationToken)addAnimationEndedEvent:(void (^)(WUCCompositionPropertyAnimator*, WUCAnimationEndedEventArgs*))del;
 - (void)removeAnimationEndedEvent:(EventRegistrationToken)tok;
 - (void)pause;
 - (void)start;
@@ -296,18 +317,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionPropertySet : WUCCompositionObject
-- (void)insertMatrix3x2:(NSString *)propertyName value:(WFNMatrix3x2*)value;
-- (void)insertMatrix4x4:(NSString *)propertyName value:(WFNMatrix4x4*)value;
-- (void)insertScalar:(NSString *)propertyName value:(float)value;
-- (void)insertVector2:(NSString *)propertyName value:(WFNVector2*)value;
-- (void)insertVector3:(NSString *)propertyName value:(WFNVector3*)value;
-- (void)insertVector4:(NSString *)propertyName value:(WFNVector4*)value;
-- (WUCCompositionGetValueStatus)tryGetMatrix3x2:(NSString *)propertyName value:(WFNMatrix3x2**)value;
-- (WUCCompositionGetValueStatus)tryGetMatrix4x4:(NSString *)propertyName value:(WFNMatrix4x4**)value;
-- (WUCCompositionGetValueStatus)tryGetScalar:(NSString *)propertyName value:(float*)value;
-- (WUCCompositionGetValueStatus)tryGetVector2:(NSString *)propertyName value:(WFNVector2**)value;
-- (WUCCompositionGetValueStatus)tryGetVector3:(NSString *)propertyName value:(WFNVector3**)value;
-- (WUCCompositionGetValueStatus)tryGetVector4:(NSString *)propertyName value:(WFNVector4**)value;
+- (void)insertMatrix3x2:(NSString*)propertyName value:(WFNMatrix3x2*)value;
+- (void)insertMatrix4x4:(NSString*)propertyName value:(WFNMatrix4x4*)value;
+- (void)insertScalar:(NSString*)propertyName value:(float)value;
+- (void)insertVector2:(NSString*)propertyName value:(WFNVector2*)value;
+- (void)insertVector3:(NSString*)propertyName value:(WFNVector3*)value;
+- (void)insertVector4:(NSString*)propertyName value:(WFNVector4*)value;
+- (WUCCompositionGetValueStatus)tryGetMatrix3x2:(NSString*)propertyName value:(WFNMatrix3x2**)value;
+- (WUCCompositionGetValueStatus)tryGetMatrix4x4:(NSString*)propertyName value:(WFNMatrix4x4**)value;
+- (WUCCompositionGetValueStatus)tryGetScalar:(NSString*)propertyName value:(float*)value;
+- (WUCCompositionGetValueStatus)tryGetVector2:(NSString*)propertyName value:(WFNVector2**)value;
+- (WUCCompositionGetValueStatus)tryGetVector3:(NSString*)propertyName value:(WFNVector3**)value;
+- (WUCCompositionGetValueStatus)tryGetVector4:(NSString*)propertyName value:(WFNVector4**)value;
 @end
 
 #endif // __WUCCompositionPropertySet_DEFINED__
@@ -353,7 +374,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
-@property (copy) NSString * expression;
+@property (copy) NSString* expression;
 @end
 
 #endif // __WUCExpressionAnimation_DEFINED__
@@ -511,8 +532,10 @@ WINRT_EXPORT
 @property (copy) WFTimeSpan* duration;
 @property (copy) WFTimeSpan* delayTime;
 @property (readonly) int keyFrameCount;
-- (void)insertExpressionKeyFrame:(float)normalizedProgressKey value:(NSString *)value;
-- (void)insertExpressionKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(NSString *)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
+- (void)insertExpressionKeyFrame:(float)normalizedProgressKey value:(NSString*)value;
+- (void)insertExpressionKeyFrameWithEasingFunction:(float)normalizedProgressKey
+                                             value:(NSString*)value
+                                    easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
 
 #endif // __WUCKeyFrameAnimation_DEFINED__
@@ -524,7 +547,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCScalarKeyFrameAnimation : WUCKeyFrameAnimation
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(float)value;
-- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(float)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
+- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
+                                   value:(float)value
+                          easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
 
 #endif // __WUCScalarKeyFrameAnimation_DEFINED__
@@ -536,7 +561,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector2KeyFrameAnimation : WUCKeyFrameAnimation
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector2*)value;
-- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(WFNVector2*)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
+- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
+                                   value:(WFNVector2*)value
+                          easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
 
 #endif // __WUCVector2KeyFrameAnimation_DEFINED__
@@ -548,7 +575,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector3KeyFrameAnimation : WUCKeyFrameAnimation
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector3*)value;
-- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(WFNVector3*)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
+- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
+                                   value:(WFNVector3*)value
+                          easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
 
 #endif // __WUCVector3KeyFrameAnimation_DEFINED__
@@ -560,8 +589,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCVector4KeyFrameAnimation : WUCKeyFrameAnimation
 - (void)insertKeyFrame:(float)normalizedProgressKey value:(WFNVector4*)value;
-- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey value:(WFNVector4*)value easingFunction:(WUCCompositionEasingFunction*)easingFunction;
+- (void)insertKeyFrameWithEasingFunction:(float)normalizedProgressKey
+                                   value:(WFNVector4*)value
+                          easingFunction:(WUCCompositionEasingFunction*)easingFunction;
 @end
 
 #endif // __WUCVector4KeyFrameAnimation_DEFINED__
-

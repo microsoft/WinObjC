@@ -249,8 +249,8 @@ extern OBJCRT_EXPORT id objc_allocateObject(Class classRef, unsigned int extraBy
 extern OBJCRT_EXPORT void objc_deallocateObject(id obj);
 
 // Not yet exposed in runtime.h due to conflicting or even missing declarations of objc_associationPolicy.
-//extern OBJCRT_EXPORT void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
-//extern OBJCRT_EXPORT id objc_getAssociatedObject(id self, void* key);
+// extern OBJCRT_EXPORT void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
+// extern OBJCRT_EXPORT id objc_getAssociatedObject(id self, void* key);
 extern OBJCRT_EXPORT void objc_removeAssociatedObjects(id self);
 
 OBJCRT_EXPORT Class object_getClass(id obj_);

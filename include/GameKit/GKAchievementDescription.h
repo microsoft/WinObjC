@@ -24,11 +24,11 @@
 
 @interface GKAchievementDescription : NSObject
 
-@property(nonatomic, retain, readonly) NSString *identifier;
-@property(nonatomic, retain, readonly) NSString *title;
-@property(nonatomic, retain, readonly) NSString *achievedDescription;
+@property (nonatomic, retain, readonly) NSString* identifier;
+@property (nonatomic, retain, readonly) NSString* title;
+@property (nonatomic, retain, readonly) NSString* achievedDescription;
 
-+ (void)loadAchievementDescriptionsWithCompletionHandler:(void (^)(NSArray *descriptions, NSError *error))completionHandler;
++ (void)loadAchievementDescriptionsWithCompletionHandler:(void (^)(NSArray* descriptions, NSError* error))completionHandler;
 
 @end
 

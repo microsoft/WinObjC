@@ -23,16 +23,19 @@
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef struct __CGGradient *CGGradientRef;
+typedef struct __CGGradient* CGGradientRef;
 
 enum {
     kCGGradientDrawsBeforeStartLocation = 0x01,
-    kCGGradientDrawsAfterEndLocation = 0x02
+    kCGGradientDrawsAfterEndLocation = 0x02,
 };
 typedef uint32_t CGGradientDrawingOptions;
 
-COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,const CGFloat components[],const CGFloat locations[],size_t count);
-COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace,CFArrayRef colors,const CGFloat locations[]);
+COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
+                                                                      const CGFloat components[],
+                                                                      const CGFloat locations[],
+                                                                      size_t count);
+COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const CGFloat locations[]);
 
 COREGRAPHICS_EXPORT void CGGradientRelease(CGGradientRef self);
 COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef self);

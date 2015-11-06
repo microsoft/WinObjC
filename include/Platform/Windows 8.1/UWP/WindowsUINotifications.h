@@ -20,8 +20,15 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNBadgeUpdater, WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs, WUNToastFailedEventArgs, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNToastNotificationManager, WUNToastActivatedEventArgs;
-@protocol WUNIToastDismissedEventArgs, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdater, WUNITileUpdater2, WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdater, WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNITileNotificationFactory, WUNITileNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification, WUNIToastNotificationFactory, WUNIToastNotification, WUNIScheduledToastNotificationFactory, WUNIScheduledToastNotification, WUNIScheduledTileNotificationFactory, WUNIScheduledTileNotification;
+@class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNBadgeUpdater, WUNBadgeNotification, WUNToastNotifier,
+    WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs, WUNToastFailedEventArgs, WUNTileUpdateManager,
+    WUNBadgeUpdateManager, WUNToastNotificationManager, WUNToastActivatedEventArgs;
+@protocol WUNIToastDismissedEventArgs
+, WUNIToastFailedEventArgs, WUNIToastActivatedEventArgs, WUNITileUpdateManagerStatics, WUNITileUpdater, WUNITileUpdater2,
+    WUNIBadgeUpdateManagerStatics, WUNIBadgeUpdater, WUNIToastNotificationManagerStatics, WUNIToastNotifier, WUNITileNotificationFactory,
+    WUNITileNotification, WUNIBadgeNotificationFactory, WUNIBadgeNotification, WUNIToastNotificationFactory, WUNIToastNotification,
+    WUNIScheduledToastNotificationFactory, WUNIScheduledToastNotification, WUNIScheduledTileNotificationFactory,
+    WUNIScheduledTileNotification;
 
 // Windows.UI.Notifications.NotificationSetting
 enum _WUNNotificationSetting {
@@ -211,17 +218,22 @@ typedef unsigned WUNPeriodicUpdateRecurrence;
 WINRT_EXPORT
 @interface WUNTileUpdater : RTObject
 @property (readonly) WUNNotificationSetting setting;
-- (void)update:(WUNTileNotification *)notification;
+- (void)update:(WUNTileNotification*)notification;
 - (void)clear;
 - (void)enableNotificationQueue:(BOOL)enable;
-- (void)addToSchedule:(WUNScheduledTileNotification *)scheduledTile;
-- (void)removeFromSchedule:(WUNScheduledTileNotification *)scheduledTile;
-- (id<NSFastEnumeration> /*WUNScheduledTileNotification*/ )getScheduledTileNotifications;
-- (void)startPeriodicUpdate:(WFUri *)tileContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateAtTime:(WFUri *)tileContent startTime:(WFDateTime *)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)addToSchedule:(WUNScheduledTileNotification*)scheduledTile;
+- (void)removeFromSchedule:(WUNScheduledTileNotification*)scheduledTile;
+- (id<NSFastEnumeration> /*WUNScheduledTileNotification*/)getScheduledTileNotifications;
+- (void)startPeriodicUpdate:(WFUri*)tileContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateAtTime:(WFUri*)tileContent
+                        startTime:(WFDateTime*)startTime
+                requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)stopPeriodicUpdate;
-- (void)startPeriodicUpdateBatch:(id<NSFastEnumeration> /*WFUri*/ )tileContents requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateBatchAtTime:(id<NSFastEnumeration> /*WFUri*/ )tileContents startTime:(WFDateTime *)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateBatch:(id<NSFastEnumeration> /*WFUri*/)tileContents
+               requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateBatchAtTime:(id<NSFastEnumeration> /*WFUri*/)tileContents
+                             startTime:(WFDateTime*)startTime
+                     requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)enableNotificationQueueForSquare150x150:(BOOL)enable;
 - (void)enableNotificationQueueForWide310x150:(BOOL)enable;
 - (void)enableNotificationQueueForSquare310x310:(BOOL)enable;
@@ -235,10 +247,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNTileNotification : RTObject
-+ (WUNTileNotification *)createTileNotification:(WDXDXmlDocument *)content ACTIVATOR;
-@property (copy) NSString * tag;
-@property (copy) WFDateTime * expirationTime;
-@property (readonly) WDXDXmlDocument * content;
++ (WUNTileNotification*)createTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
+@property (copy) NSString* tag;
+@property (copy) WFDateTime* expirationTime;
+@property (readonly) WDXDXmlDocument* content;
 @end
 
 #endif // __WUNTileNotification_DEFINED__
@@ -249,12 +261,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNScheduledTileNotification : RTObject
-+ (WUNScheduledTileNotification *)createScheduledTileNotification:(WDXDXmlDocument *)content deliveryTime:(WFDateTime *)deliveryTime ACTIVATOR;
-@property (copy) NSString * tag;
-@property (copy) NSString * id;
-@property (copy) WFDateTime * expirationTime;
-@property (readonly) WDXDXmlDocument * content;
-@property (readonly) WFDateTime * deliveryTime;
++ (WUNScheduledTileNotification*)createScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
+@property (copy) NSString* tag;
+@property (copy) NSString* id;
+@property (copy) WFDateTime* expirationTime;
+@property (readonly) WDXDXmlDocument* content;
+@property (readonly) WFDateTime* deliveryTime;
 @end
 
 #endif // __WUNScheduledTileNotification_DEFINED__
@@ -265,10 +277,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNBadgeUpdater : RTObject
-- (void)update:(WUNBadgeNotification *)notification;
+- (void)update:(WUNBadgeNotification*)notification;
 - (void)clear;
-- (void)startPeriodicUpdate:(WFUri *)badgeContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
-- (void)startPeriodicUpdateAtTime:(WFUri *)badgeContent startTime:(WFDateTime *)startTime requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdate:(WFUri*)badgeContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
+- (void)startPeriodicUpdateAtTime:(WFUri*)badgeContent
+                        startTime:(WFDateTime*)startTime
+                requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)stopPeriodicUpdate;
 @end
 
@@ -280,9 +294,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNBadgeNotification : RTObject
-+ (WUNBadgeNotification *)createBadgeNotification:(WDXDXmlDocument *)content ACTIVATOR;
-@property (copy) WFDateTime * expirationTime;
-@property (readonly) WDXDXmlDocument * content;
++ (WUNBadgeNotification*)createBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
+@property (copy) WFDateTime* expirationTime;
+@property (readonly) WDXDXmlDocument* content;
 @end
 
 #endif // __WUNBadgeNotification_DEFINED__
@@ -294,11 +308,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNToastNotifier : RTObject
 @property (readonly) WUNNotificationSetting setting;
-- (void)show:(WUNToastNotification *)notification;
-- (void)hide:(WUNToastNotification *)notification;
-- (void)addToSchedule:(WUNScheduledToastNotification *)scheduledToast;
-- (void)removeFromSchedule:(WUNScheduledToastNotification *)scheduledToast;
-- (id<NSFastEnumeration> /*WUNScheduledToastNotification*/ )getScheduledToastNotifications;
+- (void)show:(WUNToastNotification*)notification;
+- (void)hide:(WUNToastNotification*)notification;
+- (void)addToSchedule:(WUNScheduledToastNotification*)scheduledToast;
+- (void)removeFromSchedule:(WUNScheduledToastNotification*)scheduledToast;
+- (id<NSFastEnumeration> /*WUNScheduledToastNotification*/)getScheduledToastNotifications;
 @end
 
 #endif // __WUNToastNotifier_DEFINED__
@@ -309,14 +323,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotification : RTObject
-+ (WUNToastNotification *)createToastNotification:(WDXDXmlDocument *)content ACTIVATOR;
-@property (copy) WFDateTime * expirationTime;
-@property (readonly) WDXDXmlDocument * content;
-- (EventRegistrationToken)addActivatedEvent:(void(^)(WUNToastNotification *, RTObject *))del;
++ (WUNToastNotification*)createToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
+@property (copy) WFDateTime* expirationTime;
+@property (readonly) WDXDXmlDocument* content;
+- (EventRegistrationToken)addActivatedEvent:(void (^)(WUNToastNotification*, RTObject*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDismissedEvent:(void(^)(WUNToastNotification *, WUNToastDismissedEventArgs *))del;
+- (EventRegistrationToken)addDismissedEvent:(void (^)(WUNToastNotification*, WUNToastDismissedEventArgs*))del;
 - (void)removeDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFailedEvent:(void(^)(WUNToastNotification *, WUNToastFailedEventArgs *))del;
+- (EventRegistrationToken)addFailedEvent:(void (^)(WUNToastNotification*, WUNToastFailedEventArgs*))del;
 - (void)removeFailedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -328,13 +342,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNScheduledToastNotification : RTObject
-+ (WUNScheduledToastNotification *)createScheduledToastNotification:(WDXDXmlDocument *)content deliveryTime:(WFDateTime *)deliveryTime ACTIVATOR;
-+ (WUNScheduledToastNotification *)createScheduledToastNotificationRecurring:(WDXDXmlDocument *)content deliveryTime:(WFDateTime *)deliveryTime snoozeInterval:(WFTimeSpan *)snoozeInterval maximumSnoozeCount:(unsigned)maximumSnoozeCount ACTIVATOR;
-@property (copy) NSString * id;
-@property (readonly) WDXDXmlDocument * content;
-@property (readonly) WFDateTime * deliveryTime;
++ (WUNScheduledToastNotification*)createScheduledToastNotification:(WDXDXmlDocument*)content
+                                                      deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
++ (WUNScheduledToastNotification*)createScheduledToastNotificationRecurring:(WDXDXmlDocument*)content
+                                                               deliveryTime:(WFDateTime*)deliveryTime
+                                                             snoozeInterval:(WFTimeSpan*)snoozeInterval
+                                                         maximumSnoozeCount:(unsigned)maximumSnoozeCount ACTIVATOR;
+@property (copy) NSString* id;
+@property (readonly) WDXDXmlDocument* content;
+@property (readonly) WFDateTime* deliveryTime;
 @property (readonly) unsigned maximumSnoozeCount;
-@property (readonly) WFTimeSpan * snoozeInterval;
+@property (readonly) WFTimeSpan* snoozeInterval;
 @end
 
 #endif // __WUNScheduledToastNotification_DEFINED__
@@ -367,10 +385,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNTileUpdateManager : RTObject
-+ (WUNTileUpdater *)createTileUpdaterForApplication;
-+ (WUNTileUpdater *)createTileUpdaterForApplicationWithId:(NSString *)applicationId;
-+ (WUNTileUpdater *)createTileUpdaterForSecondaryTile:(NSString *)tileId;
-+ (WDXDXmlDocument *)getTemplateContent:(WUNTileTemplateType)type;
++ (WUNTileUpdater*)createTileUpdaterForApplication;
++ (WUNTileUpdater*)createTileUpdaterForApplicationWithId:(NSString*)applicationId;
++ (WUNTileUpdater*)createTileUpdaterForSecondaryTile:(NSString*)tileId;
++ (WDXDXmlDocument*)getTemplateContent:(WUNTileTemplateType)type;
 @end
 
 #endif // __WUNTileUpdateManager_DEFINED__
@@ -381,10 +399,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNBadgeUpdateManager : RTObject
-+ (WUNBadgeUpdater *)createBadgeUpdaterForApplication;
-+ (WUNBadgeUpdater *)createBadgeUpdaterForApplicationWithId:(NSString *)applicationId;
-+ (WUNBadgeUpdater *)createBadgeUpdaterForSecondaryTile:(NSString *)tileId;
-+ (WDXDXmlDocument *)getTemplateContent:(WUNBadgeTemplateType)type;
++ (WUNBadgeUpdater*)createBadgeUpdaterForApplication;
++ (WUNBadgeUpdater*)createBadgeUpdaterForApplicationWithId:(NSString*)applicationId;
++ (WUNBadgeUpdater*)createBadgeUpdaterForSecondaryTile:(NSString*)tileId;
++ (WDXDXmlDocument*)getTemplateContent:(WUNBadgeTemplateType)type;
 @end
 
 #endif // __WUNBadgeUpdateManager_DEFINED__
@@ -395,9 +413,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastNotificationManager : RTObject
-+ (WUNToastNotifier *)createToastNotifier;
-+ (WUNToastNotifier *)createToastNotifierWithId:(NSString *)applicationId;
-+ (WDXDXmlDocument *)getTemplateContent:(WUNToastTemplateType)type;
++ (WUNToastNotifier*)createToastNotifier;
++ (WUNToastNotifier*)createToastNotifierWithId:(NSString*)applicationId;
++ (WDXDXmlDocument*)getTemplateContent:(WUNToastTemplateType)type;
 @end
 
 #endif // __WUNToastNotificationManager_DEFINED__
@@ -408,8 +426,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
-@property (readonly) NSString * arguments;
+@property (readonly) NSString* arguments;
 @end
 
 #endif // __WUNToastActivatedEventArgs_DEFINED__
-

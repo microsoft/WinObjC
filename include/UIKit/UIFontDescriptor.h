@@ -21,7 +21,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFontDescriptor.h>
 
-enum { UIFontTextStyleBody };
+enum {
+    UIFontTextStyleBody,
+};
 
 extern NSString* UIFontSymbolicTrait;
 extern NSString* UIFontDescriptorTraitsAttribute;

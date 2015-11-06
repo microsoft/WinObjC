@@ -18,14 +18,13 @@
 
 CA_EXPORT_CLASS
 @interface CATransition : CAAnimation {
-   NSString *_type;
-   NSString *_subtype;
+    NSString* _type;
+    NSString* _subtype;
 }
 
-@property(copy) NSString *type;
-@property(copy) NSString *subtype;
+@property (copy) NSString* type;
+@property (copy) NSString* subtype;
 @property float startProgress;
 @property float endProgress;
 
 @end
-

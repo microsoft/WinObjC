@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WADSQuickLink, WADSShareOperation;
-@protocol WADSIQuickLink, WADSIShareOperation, WADSIShareOperation2;
+@protocol WADSIQuickLink
+, WADSIShareOperation, WADSIShareOperation2;
 
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsFoundationCollections.h"
@@ -34,11 +35,11 @@
 WINRT_EXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * title;
-@property (copy) WSSRandomAccessStreamReference * thumbnail;
-@property (copy) NSString * id;
-@property (readonly) id<NSFastEnumeration> /*String*/  supportedDataFormats;
-@property (readonly) id<NSFastEnumeration> /*String*/  supportedFileTypes;
+@property (copy) NSString* title;
+@property (copy) WSSRandomAccessStreamReference* thumbnail;
+@property (copy) NSString* id;
+@property (readonly) id<NSFastEnumeration> /*String*/ supportedDataFormats;
+@property (readonly) id<NSFastEnumeration> /*String*/ supportedFileTypes;
 @end
 
 #endif // __WADSQuickLink_DEFINED__
@@ -49,17 +50,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADSShareOperation : RTObject
-@property (readonly) WADDataPackageView * data;
-@property (readonly) NSString * quickLinkId;
+@property (readonly) WADDataPackageView* data;
+@property (readonly) NSString* quickLinkId;
 - (void)removeThisQuickLink;
 - (void)reportStarted;
 - (void)reportDataRetrieved;
 - (void)reportSubmittedBackgroundTask;
-- (void)reportCompletedWithQuickLink:(WADSQuickLink *)quicklink;
+- (void)reportCompletedWithQuickLink:(WADSQuickLink*)quicklink;
 - (void)reportCompleted;
-- (void)reportError:(NSString *)value;
+- (void)reportError:(NSString*)value;
 - (void)dismissUI;
 @end
 
 #endif // __WADSShareOperation_DEFINED__
-

@@ -23,14 +23,14 @@
 @class CIFilter;
 
 @interface CIImage : NSObject {
-   CGImageRef _cgImage;
-   CIFilter *_filter;
+    CGImageRef _cgImage;
+    CIFilter* _filter;
 }
 
-+(CIImage *)emptyImage;
++ (CIImage*)emptyImage;
 
--initWithCGImage:(CGImageRef)cgImage;
--(CGRect)extent;
+- initWithCGImage:(CGImageRef)cgImage;
+- (CGRect)extent;
 
 @end
 

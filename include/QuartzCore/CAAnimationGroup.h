@@ -21,7 +21,7 @@
 
 @interface CAAnimationGroup : CAAnimation
 
-@property(copy) NSArray *animations;
+@property (copy) NSArray* animations;
 
 @end
 

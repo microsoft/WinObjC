@@ -21,25 +21,26 @@
 
 #include "interopBase.h"
 @class WNSDDnssdServiceWatcher, WNSDDnssdServiceInstance, WNSDDnssdRegistrationResult, WNSDDnssdServiceInstanceCollection;
-@protocol WNSDIDnssdServiceWatcher, WNSDIDnssdRegistrationResult, WNSDIDnssdServiceInstanceFactory, WNSDIDnssdServiceInstance;
+@protocol WNSDIDnssdServiceWatcher
+, WNSDIDnssdRegistrationResult, WNSDIDnssdServiceInstanceFactory, WNSDIDnssdServiceInstance;
 
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdRegistrationStatus
 enum _WNSDDnssdRegistrationStatus {
-	WNSDDnssdRegistrationStatusSuccess = 0,
-	WNSDDnssdRegistrationStatusInvalidServiceName = 1,
-	WNSDDnssdRegistrationStatusServerError = 2,
-	WNSDDnssdRegistrationStatusSecurityError = 3,
+    WNSDDnssdRegistrationStatusSuccess = 0,
+    WNSDDnssdRegistrationStatusInvalidServiceName = 1,
+    WNSDDnssdRegistrationStatusServerError = 2,
+    WNSDDnssdRegistrationStatusSecurityError = 3,
 };
 typedef unsigned WNSDDnssdRegistrationStatus;
 
 // Windows.Networking.ServiceDiscovery.Dnssd.DnssdServiceWatcherStatus
 enum _WNSDDnssdServiceWatcherStatus {
-	WNSDDnssdServiceWatcherStatusCreated = 0,
-	WNSDDnssdServiceWatcherStatusStarted = 1,
-	WNSDDnssdServiceWatcherStatusEnumerationCompleted = 2,
-	WNSDDnssdServiceWatcherStatusStopping = 3,
-	WNSDDnssdServiceWatcherStatusStopped = 4,
-	WNSDDnssdServiceWatcherStatusAborted = 5,
+    WNSDDnssdServiceWatcherStatusCreated = 0,
+    WNSDDnssdServiceWatcherStatusStarted = 1,
+    WNSDDnssdServiceWatcherStatusEnumerationCompleted = 2,
+    WNSDDnssdServiceWatcherStatusStopping = 3,
+    WNSDDnssdServiceWatcherStatusStopped = 4,
+    WNSDDnssdServiceWatcherStatusAborted = 5,
 };
 typedef unsigned WNSDDnssdServiceWatcherStatus;
 
@@ -58,11 +59,11 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 WINRT_EXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
 @property (readonly) WNSDDnssdServiceWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void(^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
+- (EventRegistrationToken)addAddedEvent:(void (^)(WNSDDnssdServiceWatcher*, WNSDDnssdServiceInstance*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNSDDnssdServiceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WNSDDnssdServiceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WNSDDnssdServiceWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WNSDDnssdServiceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -75,7 +76,7 @@ WINRT_EXPORT
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -86,18 +87,28 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
-+ (WNSDDnssdServiceInstance*)create:(NSString *)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
++ (WNSDDnssdServiceInstance*)create:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 @property unsigned short weight;
 @property unsigned short priority;
 @property unsigned short port;
 @property (copy) WNHostName* hostName;
-@property (copy) NSString * dnssdServiceInstanceName;
+@property (copy) NSString* dnssdServiceInstanceName;
 @property (readonly) NSMutableDictionary* textAttributes;
-- (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener*)socket success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
-- (void)registerStreamSocketListenerAsync2:(WNSStreamSocketListener*)socket adapter:(WNCNetworkAdapter*)adapter success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
-- (void)registerDatagramSocketAsync1:(WNSDatagramSocket*)socket success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
-- (void)registerDatagramSocketAsync2:(WNSDatagramSocket*)socket adapter:(WNCNetworkAdapter*)adapter success:(void (^)(WNSDDnssdRegistrationResult*))success failure:(void (^)(NSError*))failure;
-- (NSString *)toString;
+- (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener*)socket
+                                   success:(void (^)(WNSDDnssdRegistrationResult*))success
+                                   failure:(void (^)(NSError*))failure;
+- (void)registerStreamSocketListenerAsync2:(WNSStreamSocketListener*)socket
+                                   adapter:(WNCNetworkAdapter*)adapter
+                                   success:(void (^)(WNSDDnssdRegistrationResult*))success
+                                   failure:(void (^)(NSError*))failure;
+- (void)registerDatagramSocketAsync1:(WNSDatagramSocket*)socket
+                             success:(void (^)(WNSDDnssdRegistrationResult*))success
+                             failure:(void (^)(NSError*))failure;
+- (void)registerDatagramSocketAsync2:(WNSDatagramSocket*)socket
+                             adapter:(WNCNetworkAdapter*)adapter
+                             success:(void (^)(WNSDDnssdRegistrationResult*))success
+                             failure:(void (^)(NSError*))failure;
+- (NSString*)toString;
 @end
 
 #endif // __WNSDDnssdServiceInstance_DEFINED__
@@ -112,7 +123,7 @@ WINRT_EXPORT
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
 @property (readonly) WNSDDnssdRegistrationStatus status;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WNSDDnssdRegistrationResult_DEFINED__
@@ -126,11 +137,8 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
 @end
 
 #endif // __WNSDDnssdServiceInstanceCollection_DEFINED__
-

@@ -24,9 +24,9 @@
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef const struct __CTRun *CTRunRef;
+typedef const struct __CTRun* CTRunRef;
 
-SB_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat *ascent, CGFloat *descent, CGFloat *leading);
+SB_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
 SB_EXPORT CFRange CTRunGetStringRange(CTRunRef run);
 SB_EXPORT CFDictionaryRef CTRunGetAttributes(CTRunRef run);
 SB_EXPORT CFIndex CTRunGetGlyphCount(CTRunRef run);

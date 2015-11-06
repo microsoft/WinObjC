@@ -22,7 +22,7 @@
 
 enum {
     GKPeerPickerConnectionTypeOnline = 1,
-    GKPeerPickerConnectionTypeNearby = 2
+    GKPeerPickerConnectionTypeNearby = 2,
 };
 typedef uint32_t GKPeerPickerConnectionType;
 
@@ -31,7 +31,7 @@ typedef uint32_t GKPeerPickerConnectionType;
 
 @interface GKPeerPickerController : NSObject
 
-@property(nonatomic, assign) id<GKPeerPickerControllerDelegate> delegate;
+@property (nonatomic, assign) id<GKPeerPickerControllerDelegate> delegate;
 
 - (void)dismiss;
 - (void)show;

@@ -20,272 +20,279 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation, WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral, WSKnownUserProperties, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSFolderLauncherOptions, WSLauncher;
-@protocol WSIAppMemoryReport, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2, WSIProtocolForResultsOperation, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs, WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics, WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherViewOptions, WSIFolderLauncherOptions, WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3;
+@class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation,
+    WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral,
+    WSKnownUserProperties, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSFolderLauncherOptions, WSLauncher;
+@protocol WSIAppMemoryReport
+, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2,
+    WSIProtocolForResultsOperation, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs,
+    WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics,
+    WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherViewOptions, WSIFolderLauncherOptions,
+    WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3;
 
 // Windows.System.AppMemoryUsageLevel
 enum _WSAppMemoryUsageLevel {
-	WSAppMemoryUsageLevelLow = 0,
-	WSAppMemoryUsageLevelMedium = 1,
-	WSAppMemoryUsageLevelHigh = 2,
+    WSAppMemoryUsageLevelLow = 0,
+    WSAppMemoryUsageLevelMedium = 1,
+    WSAppMemoryUsageLevelHigh = 2,
 };
 typedef unsigned WSAppMemoryUsageLevel;
 
 // Windows.System.ProcessorArchitecture
 enum _WSProcessorArchitecture {
-	WSProcessorArchitectureX86 = 0,
-	WSProcessorArchitectureArm = 5,
-	WSProcessorArchitectureX64 = 9,
-	WSProcessorArchitectureNeutral = 11,
-	WSProcessorArchitectureUnknown = 65535,
+    WSProcessorArchitectureX86 = 0,
+    WSProcessorArchitectureArm = 5,
+    WSProcessorArchitectureX64 = 9,
+    WSProcessorArchitectureNeutral = 11,
+    WSProcessorArchitectureUnknown = 65535,
 };
 typedef unsigned WSProcessorArchitecture;
 
 // Windows.System.VirtualKeyModifiers
 enum _WSVirtualKeyModifiers {
-	WSVirtualKeyModifiersNone = 0,
-	WSVirtualKeyModifiersControl = 1,
-	WSVirtualKeyModifiersMenu = 2,
-	WSVirtualKeyModifiersShift = 4,
-	WSVirtualKeyModifiersWindows = 8,
+    WSVirtualKeyModifiersNone = 0,
+    WSVirtualKeyModifiersControl = 1,
+    WSVirtualKeyModifiersMenu = 2,
+    WSVirtualKeyModifiersShift = 4,
+    WSVirtualKeyModifiersWindows = 8,
 };
 typedef unsigned WSVirtualKeyModifiers;
 
 // Windows.System.VirtualKey
 enum _WSVirtualKey {
-	WSVirtualKeyNone = 0,
-	WSVirtualKeyLeftButton = 1,
-	WSVirtualKeyRightButton = 2,
-	WSVirtualKeyCancel = 3,
-	WSVirtualKeyMiddleButton = 4,
-	WSVirtualKeyXButton1 = 5,
-	WSVirtualKeyXButton2 = 6,
-	WSVirtualKeyBack = 8,
-	WSVirtualKeyTab = 9,
-	WSVirtualKeyClear = 12,
-	WSVirtualKeyEnter = 13,
-	WSVirtualKeyShift = 16,
-	WSVirtualKeyControl = 17,
-	WSVirtualKeyMenu = 18,
-	WSVirtualKeyPause = 19,
-	WSVirtualKeyCapitalLock = 20,
-	WSVirtualKeyKana = 21,
-	WSVirtualKeyHangul = 21,
-	WSVirtualKeyJunja = 23,
-	WSVirtualKeyFinal = 24,
-	WSVirtualKeyHanja = 25,
-	WSVirtualKeyKanji = 25,
-	WSVirtualKeyEscape = 27,
-	WSVirtualKeyConvert = 28,
-	WSVirtualKeyNonConvert = 29,
-	WSVirtualKeyAccept = 30,
-	WSVirtualKeyModeChange = 31,
-	WSVirtualKeySpace = 32,
-	WSVirtualKeyPageUp = 33,
-	WSVirtualKeyPageDown = 34,
-	WSVirtualKeyEnd = 35,
-	WSVirtualKeyHome = 36,
-	WSVirtualKeyLeft = 37,
-	WSVirtualKeyUp = 38,
-	WSVirtualKeyRight = 39,
-	WSVirtualKeyDown = 40,
-	WSVirtualKeySelect = 41,
-	WSVirtualKeyPrint = 42,
-	WSVirtualKeyExecute = 43,
-	WSVirtualKeySnapshot = 44,
-	WSVirtualKeyInsert = 45,
-	WSVirtualKeyDelete = 46,
-	WSVirtualKeyHelp = 47,
-	WSVirtualKeyNumber0 = 48,
-	WSVirtualKeyNumber1 = 49,
-	WSVirtualKeyNumber2 = 50,
-	WSVirtualKeyNumber3 = 51,
-	WSVirtualKeyNumber4 = 52,
-	WSVirtualKeyNumber5 = 53,
-	WSVirtualKeyNumber6 = 54,
-	WSVirtualKeyNumber7 = 55,
-	WSVirtualKeyNumber8 = 56,
-	WSVirtualKeyNumber9 = 57,
-	WSVirtualKeyA = 65,
-	WSVirtualKeyB = 66,
-	WSVirtualKeyC = 67,
-	WSVirtualKeyD = 68,
-	WSVirtualKeyE = 69,
-	WSVirtualKeyF = 70,
-	WSVirtualKeyG = 71,
-	WSVirtualKeyH = 72,
-	WSVirtualKeyI = 73,
-	WSVirtualKeyJ = 74,
-	WSVirtualKeyK = 75,
-	WSVirtualKeyL = 76,
-	WSVirtualKeyM = 77,
-	WSVirtualKeyN = 78,
-	WSVirtualKeyO = 79,
-	WSVirtualKeyP = 80,
-	WSVirtualKeyQ = 81,
-	WSVirtualKeyR = 82,
-	WSVirtualKeyS = 83,
-	WSVirtualKeyT = 84,
-	WSVirtualKeyU = 85,
-	WSVirtualKeyV = 86,
-	WSVirtualKeyW = 87,
-	WSVirtualKeyX = 88,
-	WSVirtualKeyY = 89,
-	WSVirtualKeyZ = 90,
-	WSVirtualKeyLeftWindows = 91,
-	WSVirtualKeyRightWindows = 92,
-	WSVirtualKeyApplication = 93,
-	WSVirtualKeySleep = 95,
-	WSVirtualKeyNumberPad0 = 96,
-	WSVirtualKeyNumberPad1 = 97,
-	WSVirtualKeyNumberPad2 = 98,
-	WSVirtualKeyNumberPad3 = 99,
-	WSVirtualKeyNumberPad4 = 100,
-	WSVirtualKeyNumberPad5 = 101,
-	WSVirtualKeyNumberPad6 = 102,
-	WSVirtualKeyNumberPad7 = 103,
-	WSVirtualKeyNumberPad8 = 104,
-	WSVirtualKeyNumberPad9 = 105,
-	WSVirtualKeyMultiply = 106,
-	WSVirtualKeyAdd = 107,
-	WSVirtualKeySeparator = 108,
-	WSVirtualKeySubtract = 109,
-	WSVirtualKeyDecimal = 110,
-	WSVirtualKeyDivide = 111,
-	WSVirtualKeyF1 = 112,
-	WSVirtualKeyF2 = 113,
-	WSVirtualKeyF3 = 114,
-	WSVirtualKeyF4 = 115,
-	WSVirtualKeyF5 = 116,
-	WSVirtualKeyF6 = 117,
-	WSVirtualKeyF7 = 118,
-	WSVirtualKeyF8 = 119,
-	WSVirtualKeyF9 = 120,
-	WSVirtualKeyF10 = 121,
-	WSVirtualKeyF11 = 122,
-	WSVirtualKeyF12 = 123,
-	WSVirtualKeyF13 = 124,
-	WSVirtualKeyF14 = 125,
-	WSVirtualKeyF15 = 126,
-	WSVirtualKeyF16 = 127,
-	WSVirtualKeyF17 = 128,
-	WSVirtualKeyF18 = 129,
-	WSVirtualKeyF19 = 130,
-	WSVirtualKeyF20 = 131,
-	WSVirtualKeyF21 = 132,
-	WSVirtualKeyF22 = 133,
-	WSVirtualKeyF23 = 134,
-	WSVirtualKeyF24 = 135,
-	WSVirtualKeyNavigationView = 136,
-	WSVirtualKeyNavigationMenu = 137,
-	WSVirtualKeyNavigationUp = 138,
-	WSVirtualKeyNavigationDown = 139,
-	WSVirtualKeyNavigationLeft = 140,
-	WSVirtualKeyNavigationRight = 141,
-	WSVirtualKeyNavigationAccept = 142,
-	WSVirtualKeyNavigationCancel = 143,
-	WSVirtualKeyNumberKeyLock = 144,
-	WSVirtualKeyScroll = 145,
-	WSVirtualKeyLeftShift = 160,
-	WSVirtualKeyRightShift = 161,
-	WSVirtualKeyLeftControl = 162,
-	WSVirtualKeyRightControl = 163,
-	WSVirtualKeyLeftMenu = 164,
-	WSVirtualKeyRightMenu = 165,
-	WSVirtualKeyGoBack = 166,
-	WSVirtualKeyGoForward = 167,
-	WSVirtualKeyRefresh = 168,
-	WSVirtualKeyStop = 169,
-	WSVirtualKeySearch = 170,
-	WSVirtualKeyFavorites = 171,
-	WSVirtualKeyGoHome = 172,
-	WSVirtualKeyGamepadA = 195,
-	WSVirtualKeyGamepadB = 196,
-	WSVirtualKeyGamepadX = 197,
-	WSVirtualKeyGamepadY = 198,
-	WSVirtualKeyGamepadRightShoulder = 199,
-	WSVirtualKeyGamepadLeftShoulder = 200,
-	WSVirtualKeyGamepadLeftTrigger = 201,
-	WSVirtualKeyGamepadRightTrigger = 202,
-	WSVirtualKeyGamepadDPadUp = 203,
-	WSVirtualKeyGamepadDPadDown = 204,
-	WSVirtualKeyGamepadDPadLeft = 205,
-	WSVirtualKeyGamepadDPadRight = 206,
-	WSVirtualKeyGamepadMenu = 207,
-	WSVirtualKeyGamepadView = 208,
-	WSVirtualKeyGamepadLeftThumbstickButton = 209,
-	WSVirtualKeyGamepadRightThumbstickButton = 210,
-	WSVirtualKeyGamepadLeftThumbstickUp = 211,
-	WSVirtualKeyGamepadLeftThumbstickDown = 212,
-	WSVirtualKeyGamepadLeftThumbstickRight = 213,
-	WSVirtualKeyGamepadLeftThumbstickLeft = 214,
-	WSVirtualKeyGamepadRightThumbstickUp = 215,
-	WSVirtualKeyGamepadRightThumbstickDown = 216,
-	WSVirtualKeyGamepadRightThumbstickRight = 217,
-	WSVirtualKeyGamepadRightThumbstickLeft = 218,
+    WSVirtualKeyNone = 0,
+    WSVirtualKeyLeftButton = 1,
+    WSVirtualKeyRightButton = 2,
+    WSVirtualKeyCancel = 3,
+    WSVirtualKeyMiddleButton = 4,
+    WSVirtualKeyXButton1 = 5,
+    WSVirtualKeyXButton2 = 6,
+    WSVirtualKeyBack = 8,
+    WSVirtualKeyTab = 9,
+    WSVirtualKeyClear = 12,
+    WSVirtualKeyEnter = 13,
+    WSVirtualKeyShift = 16,
+    WSVirtualKeyControl = 17,
+    WSVirtualKeyMenu = 18,
+    WSVirtualKeyPause = 19,
+    WSVirtualKeyCapitalLock = 20,
+    WSVirtualKeyKana = 21,
+    WSVirtualKeyHangul = 21,
+    WSVirtualKeyJunja = 23,
+    WSVirtualKeyFinal = 24,
+    WSVirtualKeyHanja = 25,
+    WSVirtualKeyKanji = 25,
+    WSVirtualKeyEscape = 27,
+    WSVirtualKeyConvert = 28,
+    WSVirtualKeyNonConvert = 29,
+    WSVirtualKeyAccept = 30,
+    WSVirtualKeyModeChange = 31,
+    WSVirtualKeySpace = 32,
+    WSVirtualKeyPageUp = 33,
+    WSVirtualKeyPageDown = 34,
+    WSVirtualKeyEnd = 35,
+    WSVirtualKeyHome = 36,
+    WSVirtualKeyLeft = 37,
+    WSVirtualKeyUp = 38,
+    WSVirtualKeyRight = 39,
+    WSVirtualKeyDown = 40,
+    WSVirtualKeySelect = 41,
+    WSVirtualKeyPrint = 42,
+    WSVirtualKeyExecute = 43,
+    WSVirtualKeySnapshot = 44,
+    WSVirtualKeyInsert = 45,
+    WSVirtualKeyDelete = 46,
+    WSVirtualKeyHelp = 47,
+    WSVirtualKeyNumber0 = 48,
+    WSVirtualKeyNumber1 = 49,
+    WSVirtualKeyNumber2 = 50,
+    WSVirtualKeyNumber3 = 51,
+    WSVirtualKeyNumber4 = 52,
+    WSVirtualKeyNumber5 = 53,
+    WSVirtualKeyNumber6 = 54,
+    WSVirtualKeyNumber7 = 55,
+    WSVirtualKeyNumber8 = 56,
+    WSVirtualKeyNumber9 = 57,
+    WSVirtualKeyA = 65,
+    WSVirtualKeyB = 66,
+    WSVirtualKeyC = 67,
+    WSVirtualKeyD = 68,
+    WSVirtualKeyE = 69,
+    WSVirtualKeyF = 70,
+    WSVirtualKeyG = 71,
+    WSVirtualKeyH = 72,
+    WSVirtualKeyI = 73,
+    WSVirtualKeyJ = 74,
+    WSVirtualKeyK = 75,
+    WSVirtualKeyL = 76,
+    WSVirtualKeyM = 77,
+    WSVirtualKeyN = 78,
+    WSVirtualKeyO = 79,
+    WSVirtualKeyP = 80,
+    WSVirtualKeyQ = 81,
+    WSVirtualKeyR = 82,
+    WSVirtualKeyS = 83,
+    WSVirtualKeyT = 84,
+    WSVirtualKeyU = 85,
+    WSVirtualKeyV = 86,
+    WSVirtualKeyW = 87,
+    WSVirtualKeyX = 88,
+    WSVirtualKeyY = 89,
+    WSVirtualKeyZ = 90,
+    WSVirtualKeyLeftWindows = 91,
+    WSVirtualKeyRightWindows = 92,
+    WSVirtualKeyApplication = 93,
+    WSVirtualKeySleep = 95,
+    WSVirtualKeyNumberPad0 = 96,
+    WSVirtualKeyNumberPad1 = 97,
+    WSVirtualKeyNumberPad2 = 98,
+    WSVirtualKeyNumberPad3 = 99,
+    WSVirtualKeyNumberPad4 = 100,
+    WSVirtualKeyNumberPad5 = 101,
+    WSVirtualKeyNumberPad6 = 102,
+    WSVirtualKeyNumberPad7 = 103,
+    WSVirtualKeyNumberPad8 = 104,
+    WSVirtualKeyNumberPad9 = 105,
+    WSVirtualKeyMultiply = 106,
+    WSVirtualKeyAdd = 107,
+    WSVirtualKeySeparator = 108,
+    WSVirtualKeySubtract = 109,
+    WSVirtualKeyDecimal = 110,
+    WSVirtualKeyDivide = 111,
+    WSVirtualKeyF1 = 112,
+    WSVirtualKeyF2 = 113,
+    WSVirtualKeyF3 = 114,
+    WSVirtualKeyF4 = 115,
+    WSVirtualKeyF5 = 116,
+    WSVirtualKeyF6 = 117,
+    WSVirtualKeyF7 = 118,
+    WSVirtualKeyF8 = 119,
+    WSVirtualKeyF9 = 120,
+    WSVirtualKeyF10 = 121,
+    WSVirtualKeyF11 = 122,
+    WSVirtualKeyF12 = 123,
+    WSVirtualKeyF13 = 124,
+    WSVirtualKeyF14 = 125,
+    WSVirtualKeyF15 = 126,
+    WSVirtualKeyF16 = 127,
+    WSVirtualKeyF17 = 128,
+    WSVirtualKeyF18 = 129,
+    WSVirtualKeyF19 = 130,
+    WSVirtualKeyF20 = 131,
+    WSVirtualKeyF21 = 132,
+    WSVirtualKeyF22 = 133,
+    WSVirtualKeyF23 = 134,
+    WSVirtualKeyF24 = 135,
+    WSVirtualKeyNavigationView = 136,
+    WSVirtualKeyNavigationMenu = 137,
+    WSVirtualKeyNavigationUp = 138,
+    WSVirtualKeyNavigationDown = 139,
+    WSVirtualKeyNavigationLeft = 140,
+    WSVirtualKeyNavigationRight = 141,
+    WSVirtualKeyNavigationAccept = 142,
+    WSVirtualKeyNavigationCancel = 143,
+    WSVirtualKeyNumberKeyLock = 144,
+    WSVirtualKeyScroll = 145,
+    WSVirtualKeyLeftShift = 160,
+    WSVirtualKeyRightShift = 161,
+    WSVirtualKeyLeftControl = 162,
+    WSVirtualKeyRightControl = 163,
+    WSVirtualKeyLeftMenu = 164,
+    WSVirtualKeyRightMenu = 165,
+    WSVirtualKeyGoBack = 166,
+    WSVirtualKeyGoForward = 167,
+    WSVirtualKeyRefresh = 168,
+    WSVirtualKeyStop = 169,
+    WSVirtualKeySearch = 170,
+    WSVirtualKeyFavorites = 171,
+    WSVirtualKeyGoHome = 172,
+    WSVirtualKeyGamepadA = 195,
+    WSVirtualKeyGamepadB = 196,
+    WSVirtualKeyGamepadX = 197,
+    WSVirtualKeyGamepadY = 198,
+    WSVirtualKeyGamepadRightShoulder = 199,
+    WSVirtualKeyGamepadLeftShoulder = 200,
+    WSVirtualKeyGamepadLeftTrigger = 201,
+    WSVirtualKeyGamepadRightTrigger = 202,
+    WSVirtualKeyGamepadDPadUp = 203,
+    WSVirtualKeyGamepadDPadDown = 204,
+    WSVirtualKeyGamepadDPadLeft = 205,
+    WSVirtualKeyGamepadDPadRight = 206,
+    WSVirtualKeyGamepadMenu = 207,
+    WSVirtualKeyGamepadView = 208,
+    WSVirtualKeyGamepadLeftThumbstickButton = 209,
+    WSVirtualKeyGamepadRightThumbstickButton = 210,
+    WSVirtualKeyGamepadLeftThumbstickUp = 211,
+    WSVirtualKeyGamepadLeftThumbstickDown = 212,
+    WSVirtualKeyGamepadLeftThumbstickRight = 213,
+    WSVirtualKeyGamepadLeftThumbstickLeft = 214,
+    WSVirtualKeyGamepadRightThumbstickUp = 215,
+    WSVirtualKeyGamepadRightThumbstickDown = 216,
+    WSVirtualKeyGamepadRightThumbstickRight = 217,
+    WSVirtualKeyGamepadRightThumbstickLeft = 218,
 };
 typedef unsigned WSVirtualKey;
 
 // Windows.System.UserAuthenticationStatus
 enum _WSUserAuthenticationStatus {
-	WSUserAuthenticationStatusUnauthenticated = 0,
-	WSUserAuthenticationStatusLocallyAuthenticated = 1,
-	WSUserAuthenticationStatusRemotelyAuthenticated = 2,
+    WSUserAuthenticationStatusUnauthenticated = 0,
+    WSUserAuthenticationStatusLocallyAuthenticated = 1,
+    WSUserAuthenticationStatusRemotelyAuthenticated = 2,
 };
 typedef unsigned WSUserAuthenticationStatus;
 
 // Windows.System.UserType
 enum _WSUserType {
-	WSUserTypeLocalUser = 0,
-	WSUserTypeRemoteUser = 1,
-	WSUserTypeLocalGuest = 2,
-	WSUserTypeRemoteGuest = 3,
+    WSUserTypeLocalUser = 0,
+    WSUserTypeRemoteUser = 1,
+    WSUserTypeLocalGuest = 2,
+    WSUserTypeRemoteGuest = 3,
 };
 typedef unsigned WSUserType;
 
 // Windows.System.UserPictureSize
 enum _WSUserPictureSize {
-	WSUserPictureSizeSize64x64 = 0,
-	WSUserPictureSizeSize208x208 = 1,
-	WSUserPictureSizeSize424x424 = 2,
-	WSUserPictureSizeSize1080x1080 = 3,
+    WSUserPictureSizeSize64x64 = 0,
+    WSUserPictureSizeSize208x208 = 1,
+    WSUserPictureSizeSize424x424 = 2,
+    WSUserPictureSizeSize1080x1080 = 3,
 };
 typedef unsigned WSUserPictureSize;
 
 // Windows.System.UserWatcherStatus
 enum _WSUserWatcherStatus {
-	WSUserWatcherStatusCreated = 0,
-	WSUserWatcherStatusStarted = 1,
-	WSUserWatcherStatusEnumerationCompleted = 2,
-	WSUserWatcherStatusStopping = 3,
-	WSUserWatcherStatusStopped = 4,
-	WSUserWatcherStatusAborted = 5,
+    WSUserWatcherStatusCreated = 0,
+    WSUserWatcherStatusStarted = 1,
+    WSUserWatcherStatusEnumerationCompleted = 2,
+    WSUserWatcherStatusStopping = 3,
+    WSUserWatcherStatusStopped = 4,
+    WSUserWatcherStatusAborted = 5,
 };
 typedef unsigned WSUserWatcherStatus;
 
 // Windows.System.LaunchQuerySupportType
 enum _WSLaunchQuerySupportType {
-	WSLaunchQuerySupportTypeUri = 0,
-	WSLaunchQuerySupportTypeUriForResults = 1,
+    WSLaunchQuerySupportTypeUri = 0,
+    WSLaunchQuerySupportTypeUriForResults = 1,
 };
 typedef unsigned WSLaunchQuerySupportType;
 
 // Windows.System.LaunchQuerySupportStatus
 enum _WSLaunchQuerySupportStatus {
-	WSLaunchQuerySupportStatusAvailable = 0,
-	WSLaunchQuerySupportStatusAppNotInstalled = 1,
-	WSLaunchQuerySupportStatusAppUnavailable = 2,
-	WSLaunchQuerySupportStatusNotSupported = 3,
-	WSLaunchQuerySupportStatusUnknown = 4,
+    WSLaunchQuerySupportStatusAvailable = 0,
+    WSLaunchQuerySupportStatusAppNotInstalled = 1,
+    WSLaunchQuerySupportStatusAppUnavailable = 2,
+    WSLaunchQuerySupportStatusNotSupported = 3,
+    WSLaunchQuerySupportStatusUnknown = 4,
 };
 typedef unsigned WSLaunchQuerySupportStatus;
 
 // Windows.System.LaunchUriStatus
 enum _WSLaunchUriStatus {
-	WSLaunchUriStatusSuccess = 0,
-	WSLaunchUriStatusAppUnavailable = 1,
-	WSLaunchUriStatusProtocolUnavailable = 2,
-	WSLaunchUriStatusUnknown = 3,
+    WSLaunchUriStatusSuccess = 0,
+    WSLaunchUriStatusAppUnavailable = 1,
+    WSLaunchUriStatusProtocolUnavailable = 2,
+    WSLaunchUriStatusUnknown = 3,
 };
 typedef unsigned WSLaunchUriStatus;
 
@@ -359,11 +366,11 @@ WINRT_EXPORT
 + (uint64_t)appMemoryUsage;
 + (WSAppMemoryUsageLevel)appMemoryUsageLevel;
 + (uint64_t)appMemoryUsageLimit;
-+ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void(^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeAppMemoryUsageDecreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeAppMemoryUsageIncreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void(^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
++ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void (^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
 + (void)removeAppMemoryUsageLimitChangingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -387,19 +394,19 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUserWatcher : RTObject
 @property (readonly) WSUserWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addAddedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAuthenticationStatusChangedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addAuthenticationStatusChangedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAuthenticationStatusChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAuthenticationStatusChangingEvent:(void(^)(WSUserWatcher*, WSUserAuthenticationStatusChangingEventArgs*))del;
+- (EventRegistrationToken)addAuthenticationStatusChangingEvent:(void (^)(WSUserWatcher*, WSUserAuthenticationStatusChangingEventArgs*))del;
 - (void)removeAuthenticationStatusChangingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WSUserWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WSUserWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addRemovedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WSUserWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WSUserWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addUpdatedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -416,14 +423,21 @@ WINRT_EXPORT
 + (WSUserWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncByType:(WSUserType)type success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncByTypeAndStatus:(WSUserType)type status:(WSUserAuthenticationStatus)status success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WSUser*)getFromId:(NSString *)nonRoamableId;
++ (void)findAllAsyncByTypeAndStatus:(WSUserType)type
+                             status:(WSUserAuthenticationStatus)status
+                            success:(void (^)(NSArray*))success
+                            failure:(void (^)(NSError*))failure;
++ (WSUser*)getFromId:(NSString*)nonRoamableId;
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
-@property (readonly) NSString * nonRoamableId;
+@property (readonly) NSString* nonRoamableId;
 @property (readonly) WSUserType type;
-- (void)getPropertyAsync:(NSString *)value success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
-- (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)values success:(void (^)(RTObject<WFCIPropertySet>*))success failure:(void (^)(NSError*))failure;
-- (void)getPictureAsync:(WSUserPictureSize)desiredSize success:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success failure:(void (^)(NSError*))failure;
+- (void)getPropertyAsync:(NSString*)value success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
+- (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)values
+                   success:(void (^)(RTObject<WFCIPropertySet>*))success
+                   failure:(void (^)(NSError*))failure;
+- (void)getPictureAsync:(WSUserPictureSize)desiredSize
+                success:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success
+                failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSUser_DEFINED__
@@ -470,15 +484,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSKnownUserProperties : RTObject
-+ (NSString *)accountName;
-+ (NSString *)displayName;
-+ (NSString *)domainName;
-+ (NSString *)firstName;
-+ (NSString *)guestHost;
-+ (NSString *)lastName;
-+ (NSString *)principalName;
-+ (NSString *)providerName;
-+ (NSString *)sessionInitiationProtocolUri;
++ (NSString*)accountName;
++ (NSString*)displayName;
++ (NSString*)domainName;
++ (NSString*)firstName;
++ (NSString*)guestHost;
++ (NSString*)lastName;
++ (NSString*)principalName;
++ (NSString*)providerName;
++ (NSString*)sessionInitiationProtocolUri;
 @end
 
 #endif // __WSKnownUserProperties_DEFINED__
@@ -516,13 +530,13 @@ WINRT_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)create ACTIVATOR;
 @property BOOL treatAsUntrusted;
-@property (copy) NSString * preferredApplicationPackageFamilyName;
-@property (copy) NSString * preferredApplicationDisplayName;
+@property (copy) NSString* preferredApplicationPackageFamilyName;
+@property (copy) NSString* preferredApplicationDisplayName;
 @property (copy) WFUri* fallbackUri;
 @property BOOL displayApplicationPicker;
-@property (copy) NSString * contentType;
+@property (copy) NSString* contentType;
 @property (readonly) WSLauncherUIOptions* uI;
-@property (copy) NSString * targetApplicationPackageFamilyName;
+@property (copy) NSString* targetApplicationPackageFamilyName;
 @property (copy) WSSStorageFileQueryResult* neighboringFilesQuery;
 @property WUVViewSizePreference desiredRemainingView;
 @end
@@ -549,22 +563,56 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSLauncher : RTObject
 + (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file options:(WSLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file
+                           options:(WSLauncherOptions*)options
+                           success:(void (^)(BOOL))success
+                           failure:(void (^)(NSError*))failure;
 + (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithOptionsAsync:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsAsync:(WFUri*)uri
+                          options:(WSLauncherOptions*)options
+                          success:(void (^)(BOOL))success
+                          failure:(void (^)(NSError*))failure;
 + (void)launchFolderAsync:(RTObject<WSIStorageFolder>*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder options:(WSFolderLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriForResultsAsync:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriForResultsWithDataAsync:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithDataAsync:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)queryUriSupportAsync:(WFUri*)uri launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
-+ (void)queryUriSupportWithPackageFamilyNameAsync:(WFUri*)uri launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType packageFamilyName:(NSString *)packageFamilyName success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
-+ (void)queryFileSupportAsync:(WSStorageFile*)file success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
-+ (void)queryFileSupportWithPackageFamilyNameAsync:(WSStorageFile*)file packageFamilyName:(NSString *)packageFamilyName success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
-+ (void)findUriSchemeHandlersAsync:(NSString *)scheme success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)findUriSchemeHandlersWithLaunchUriTypeAsync:(NSString *)scheme launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)findFileHandlersAsync:(NSString *)extension success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder
+                             options:(WSFolderLauncherOptions*)options
+                             success:(void (^)(BOOL))success
+                             failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsAsync:(WFUri*)uri
+                         options:(WSLauncherOptions*)options
+                         success:(void (^)(WSLaunchUriResult*))success
+                         failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsWithDataAsync:(WFUri*)uri
+                                 options:(WSLauncherOptions*)options
+                               inputData:(WFCValueSet*)inputData
+                                 success:(void (^)(WSLaunchUriResult*))success
+                                 failure:(void (^)(NSError*))failure;
++ (void)launchUriWithDataAsync:(WFUri*)uri
+                       options:(WSLauncherOptions*)options
+                     inputData:(WFCValueSet*)inputData
+                       success:(void (^)(BOOL))success
+                       failure:(void (^)(NSError*))failure;
++ (void)queryUriSupportAsync:(WFUri*)uri
+      launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
+                     success:(void (^)(WSLaunchQuerySupportStatus))success
+                     failure:(void (^)(NSError*))failure;
++ (void)queryUriSupportWithPackageFamilyNameAsync:(WFUri*)uri
+                           launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
+                                packageFamilyName:(NSString*)packageFamilyName
+                                          success:(void (^)(WSLaunchQuerySupportStatus))success
+                                          failure:(void (^)(NSError*))failure;
++ (void)queryFileSupportAsync:(WSStorageFile*)file
+                      success:(void (^)(WSLaunchQuerySupportStatus))success
+                      failure:(void (^)(NSError*))failure;
++ (void)queryFileSupportWithPackageFamilyNameAsync:(WSStorageFile*)file
+                                 packageFamilyName:(NSString*)packageFamilyName
+                                           success:(void (^)(WSLaunchQuerySupportStatus))success
+                                           failure:(void (^)(NSError*))failure;
++ (void)findUriSchemeHandlersAsync:(NSString*)scheme success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findUriSchemeHandlersWithLaunchUriTypeAsync:(NSString*)scheme
+                             launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
+                                            success:(void (^)(NSArray*))success
+                                            failure:(void (^)(NSError*))failure;
++ (void)findFileHandlersAsync:(NSString*)extension success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSLauncher_DEFINED__
-

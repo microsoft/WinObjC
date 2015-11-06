@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WUXHElementCompositionPreview;
-@protocol WUXHIElementCompositionPreview, WUXHIElementCompositionPreviewStatics;
+@protocol WUXHIElementCompositionPreview
+, WUXHIElementCompositionPreviewStatics;
 
 #include "WindowsUIXaml.h"
 
@@ -37,4 +38,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXHElementCompositionPreview_DEFINED__
-

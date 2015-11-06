@@ -23,7 +23,6 @@
 @class WSDDisplayRequest;
 @protocol WSDIDisplayRequest;
 
-
 // Windows.System.Display.DisplayRequest
 #ifndef __WSDDisplayRequest_DEFINED__
 #define __WSDDisplayRequest_DEFINED__
@@ -36,4 +35,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSDDisplayRequest_DEFINED__
-

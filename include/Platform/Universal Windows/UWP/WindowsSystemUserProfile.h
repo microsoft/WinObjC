@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings;
-@protocol WSUIAdvertisingManagerStatics, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics, WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics;
+@protocol WSUIAdvertisingManagerStatics
+, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics,
+    WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics;
 
 #include "WindowsStorage.h"
 #include "WindowsFoundation.h"
@@ -36,7 +38,7 @@
 
 WINRT_EXPORT
 @interface WSUAdvertisingManager : RTObject
-+ (NSString *)advertisingId;
++ (NSString*)advertisingId;
 @end
 
 #endif // __WSUAdvertisingManager_DEFINED__
@@ -64,7 +66,7 @@ WINRT_EXPORT
 + (NSArray*)calendars;
 + (NSArray*)clocks;
 + (NSArray*)currencies;
-+ (NSString *)homeGeographicRegion;
++ (NSString*)homeGeographicRegion;
 + (NSArray*)languages;
 + (WGDayOfWeek)weekStartsOn;
 @end
@@ -79,9 +81,9 @@ WINRT_EXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
 @property (readonly) unsigned int size;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
@@ -89,4 +91,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSUFirstSignInSettings_DEFINED__
-

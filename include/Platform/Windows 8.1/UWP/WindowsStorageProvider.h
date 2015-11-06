@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater;
-@protocol WSPICachedFileUpdaterUI, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterStatics;
+@protocol WSPICachedFileUpdaterUI
+, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterStatics;
 
 // Windows.Storage.Provider.CachedFileTarget
 enum _WSPCachedFileTarget {
@@ -83,12 +84,12 @@ typedef unsigned WSPWriteActivationMode;
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
-@property (copy) NSString * title;
+@property (copy) NSString* title;
 @property (readonly) WSPUIStatus uIStatus;
 @property (readonly) WSPCachedFileTarget updateTarget;
-- (EventRegistrationToken)addFileUpdateRequestedEvent:(void(^)(WSPCachedFileUpdaterUI *, WSPFileUpdateRequestedEventArgs *))del;
+- (EventRegistrationToken)addFileUpdateRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, WSPFileUpdateRequestedEventArgs*))del;
 - (void)removeFileUpdateRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUIRequestedEvent:(void(^)(WSPCachedFileUpdaterUI *, RTObject *))del;
+- (EventRegistrationToken)addUIRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, RTObject*))del;
 - (void)removeUIRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -100,7 +101,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
-@property (readonly) WSPFileUpdateRequest * request;
+@property (readonly) WSPFileUpdateRequest* request;
 @end
 
 #endif // __WSPFileUpdateRequestedEventArgs_DEFINED__
@@ -112,9 +113,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPFileUpdateRequest : RTObject
 @property WSPFileUpdateStatus status;
-@property (readonly) NSString * contentId;
-@property (readonly) WSStorageFile * file;
-- (WSPFileUpdateRequestDeferral *)getDeferral;
+@property (readonly) NSString* contentId;
+@property (readonly) WSStorageFile* file;
+- (WSPFileUpdateRequestDeferral*)getDeferral;
 - (void)updateLocalFile:(RTObject<WSIStorageFile>*)value;
 @end
 
@@ -137,8 +138,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdater : RTObject
-+ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file contentId:(NSString *)contentId readMode:(WSPReadActivationMode)readMode writeMode:(WSPWriteActivationMode)writeMode options:(WSPCachedFileOptions)options;
++ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file
+                   contentId:(NSString*)contentId
+                    readMode:(WSPReadActivationMode)readMode
+                   writeMode:(WSPWriteActivationMode)writeMode
+                     options:(WSPCachedFileOptions)options;
 @end
 
 #endif // __WSPCachedFileUpdater_DEFINED__
-

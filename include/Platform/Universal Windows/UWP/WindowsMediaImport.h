@@ -20,103 +20,109 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult, WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar, WMIPhotoImportVideoSegment, WMIPhotoImportItem, WMIPhotoImportSelectionChangedEventArgs, WMIPhotoImportItemImportedEventArgs;
+@class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult,
+    WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar,
+    WMIPhotoImportVideoSegment, WMIPhotoImportItem, WMIPhotoImportSelectionChangedEventArgs, WMIPhotoImportItemImportedEventArgs;
 @class WMIPhotoImportProgress;
-@protocol WMIIPhotoImportManagerStatics, WMIIPhotoImportOperation, WMIIPhotoImportStorageMedium, WMIIPhotoImportSourceStatics, WMIIPhotoImportSource, WMIIPhotoImportSession, WMIIPhotoImportItem, WMIIPhotoImportFindItemsResult, WMIIPhotoImportImportItemsResult, WMIIPhotoImportDeleteImportedItemsFromSourceResult, WMIIPhotoImportSidecar, WMIIPhotoImportVideoSegment, WMIIPhotoImportItemImportedEventArgs, WMIIPhotoImportSelectionChangedEventArgs;
+@protocol WMIIPhotoImportManagerStatics
+, WMIIPhotoImportOperation, WMIIPhotoImportStorageMedium, WMIIPhotoImportSourceStatics, WMIIPhotoImportSource, WMIIPhotoImportSession,
+    WMIIPhotoImportItem, WMIIPhotoImportFindItemsResult, WMIIPhotoImportImportItemsResult,
+    WMIIPhotoImportDeleteImportedItemsFromSourceResult, WMIIPhotoImportSidecar, WMIIPhotoImportVideoSegment,
+    WMIIPhotoImportItemImportedEventArgs, WMIIPhotoImportSelectionChangedEventArgs;
 
 // Windows.Media.Import.PhotoImportStage
 enum _WMIPhotoImportStage {
-	WMIPhotoImportStageNotStarted = 0,
-	WMIPhotoImportStageFindingItems = 1,
-	WMIPhotoImportStageImportingItems = 2,
-	WMIPhotoImportStageDeletingImportedItemsFromSource = 3,
+    WMIPhotoImportStageNotStarted = 0,
+    WMIPhotoImportStageFindingItems = 1,
+    WMIPhotoImportStageImportingItems = 2,
+    WMIPhotoImportStageDeletingImportedItemsFromSource = 3,
 };
 typedef unsigned WMIPhotoImportStage;
 
 // Windows.Media.Import.PhotoImportAccessMode
 enum _WMIPhotoImportAccessMode {
-	WMIPhotoImportAccessModeReadWrite = 0,
-	WMIPhotoImportAccessModeReadOnly = 1,
-	WMIPhotoImportAccessModeReadAndDelete = 2,
+    WMIPhotoImportAccessModeReadWrite = 0,
+    WMIPhotoImportAccessModeReadOnly = 1,
+    WMIPhotoImportAccessModeReadAndDelete = 2,
 };
 typedef unsigned WMIPhotoImportAccessMode;
 
 // Windows.Media.Import.PhotoImportImportMode
 enum _WMIPhotoImportImportMode {
-	WMIPhotoImportImportModeImportEverything = 0,
-	WMIPhotoImportImportModeIgnoreSidecars = 1,
-	WMIPhotoImportImportModeIgnoreSiblings = 2,
-	WMIPhotoImportImportModeIgnoreSidecarsAndSiblings = 3,
+    WMIPhotoImportImportModeImportEverything = 0,
+    WMIPhotoImportImportModeIgnoreSidecars = 1,
+    WMIPhotoImportImportModeIgnoreSiblings = 2,
+    WMIPhotoImportImportModeIgnoreSidecarsAndSiblings = 3,
 };
 typedef unsigned WMIPhotoImportImportMode;
 
 // Windows.Media.Import.PhotoImportSourceType
 enum _WMIPhotoImportSourceType {
-	WMIPhotoImportSourceTypeGeneric = 0,
-	WMIPhotoImportSourceTypeCamera = 1,
-	WMIPhotoImportSourceTypeMediaPlayer = 2,
-	WMIPhotoImportSourceTypePhone = 3,
-	WMIPhotoImportSourceTypeVideo = 4,
-	WMIPhotoImportSourceTypePersonalInfoManager = 5,
-	WMIPhotoImportSourceTypeAudioRecorder = 6,
+    WMIPhotoImportSourceTypeGeneric = 0,
+    WMIPhotoImportSourceTypeCamera = 1,
+    WMIPhotoImportSourceTypeMediaPlayer = 2,
+    WMIPhotoImportSourceTypePhone = 3,
+    WMIPhotoImportSourceTypeVideo = 4,
+    WMIPhotoImportSourceTypePersonalInfoManager = 5,
+    WMIPhotoImportSourceTypeAudioRecorder = 6,
 };
 typedef unsigned WMIPhotoImportSourceType;
 
 // Windows.Media.Import.PhotoImportContentType
 enum _WMIPhotoImportContentType {
-	WMIPhotoImportContentTypeUnknown = 0,
-	WMIPhotoImportContentTypeImage = 1,
-	WMIPhotoImportContentTypeVideo = 2,
+    WMIPhotoImportContentTypeUnknown = 0,
+    WMIPhotoImportContentTypeImage = 1,
+    WMIPhotoImportContentTypeVideo = 2,
 };
 typedef unsigned WMIPhotoImportContentType;
 
 // Windows.Media.Import.PhotoImportPowerSource
 enum _WMIPhotoImportPowerSource {
-	WMIPhotoImportPowerSourceUnknown = 0,
-	WMIPhotoImportPowerSourceBattery = 1,
-	WMIPhotoImportPowerSourceExternal = 2,
+    WMIPhotoImportPowerSourceUnknown = 0,
+    WMIPhotoImportPowerSourceBattery = 1,
+    WMIPhotoImportPowerSourceExternal = 2,
 };
 typedef unsigned WMIPhotoImportPowerSource;
 
 // Windows.Media.Import.PhotoImportStorageMediumType
 enum _WMIPhotoImportStorageMediumType {
-	WMIPhotoImportStorageMediumTypeUndefined = 0,
-	WMIPhotoImportStorageMediumTypeFixed = 1,
-	WMIPhotoImportStorageMediumTypeRemovable = 2,
+    WMIPhotoImportStorageMediumTypeUndefined = 0,
+    WMIPhotoImportStorageMediumTypeFixed = 1,
+    WMIPhotoImportStorageMediumTypeRemovable = 2,
 };
 typedef unsigned WMIPhotoImportStorageMediumType;
 
 // Windows.Media.Import.PhotoImportContentTypeFilter
 enum _WMIPhotoImportContentTypeFilter {
-	WMIPhotoImportContentTypeFilterOnlyImages = 0,
-	WMIPhotoImportContentTypeFilterOnlyVideos = 1,
-	WMIPhotoImportContentTypeFilterImagesAndVideos = 2,
+    WMIPhotoImportContentTypeFilterOnlyImages = 0,
+    WMIPhotoImportContentTypeFilterOnlyVideos = 1,
+    WMIPhotoImportContentTypeFilterImagesAndVideos = 2,
 };
 typedef unsigned WMIPhotoImportContentTypeFilter;
 
 // Windows.Media.Import.PhotoImportItemSelectionMode
 enum _WMIPhotoImportItemSelectionMode {
-	WMIPhotoImportItemSelectionModeSelectAll = 0,
-	WMIPhotoImportItemSelectionModeSelectNone = 1,
-	WMIPhotoImportItemSelectionModeSelectNew = 2,
+    WMIPhotoImportItemSelectionModeSelectAll = 0,
+    WMIPhotoImportItemSelectionModeSelectNone = 1,
+    WMIPhotoImportItemSelectionModeSelectNew = 2,
 };
 typedef unsigned WMIPhotoImportItemSelectionMode;
 
 // Windows.Media.Import.PhotoImportConnectionTransport
 enum _WMIPhotoImportConnectionTransport {
-	WMIPhotoImportConnectionTransportUnknown = 0,
-	WMIPhotoImportConnectionTransportUsb = 1,
-	WMIPhotoImportConnectionTransportIP = 2,
-	WMIPhotoImportConnectionTransportBluetooth = 3,
+    WMIPhotoImportConnectionTransportUnknown = 0,
+    WMIPhotoImportConnectionTransportUsb = 1,
+    WMIPhotoImportConnectionTransportIP = 2,
+    WMIPhotoImportConnectionTransportBluetooth = 3,
 };
 typedef unsigned WMIPhotoImportConnectionTransport;
 
 // Windows.Media.Import.PhotoImportSubfolderCreationMode
 enum _WMIPhotoImportSubfolderCreationMode {
-	WMIPhotoImportSubfolderCreationModeDoNotCreateSubfolders = 0,
-	WMIPhotoImportSubfolderCreationModeCreateSubfoldersFromFileDate = 1,
-	WMIPhotoImportSubfolderCreationModeCreateSubfoldersFromExifDate = 2,
-	WMIPhotoImportSubfolderCreationModeKeepOriginalFolderStructure = 3,
+    WMIPhotoImportSubfolderCreationModeDoNotCreateSubfolders = 0,
+    WMIPhotoImportSubfolderCreationModeCreateSubfoldersFromFileDate = 1,
+    WMIPhotoImportSubfolderCreationModeCreateSubfoldersFromExifDate = 2,
+    WMIPhotoImportSubfolderCreationModeKeepOriginalFolderStructure = 3,
 };
 typedef unsigned WMIPhotoImportSubfolderCreationMode;
 
@@ -130,7 +136,7 @@ typedef unsigned WMIPhotoImportSubfolderCreationMode;
 // [struct] Windows.Media.Import.PhotoImportProgress
 WINRT_EXPORT
 @interface WMIPhotoImportProgress : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned int itemsImported;
 @property unsigned int totalItemsToImport;
 @property uint64_t bytesImported;
@@ -144,21 +150,23 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMIPhotoImportSource : RTObject
-+ (void)fromIdAsync:(NSString *)sourceId success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
-+ (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString*)sourceId success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder
+                success:(void (^)(WMIPhotoImportSource*))success
+                failure:(void (^)(NSError*))failure;
 @property (readonly) id batteryLevelPercent;
-@property (readonly) NSString * connectionProtocol;
+@property (readonly) NSString* connectionProtocol;
 @property (readonly) WMIPhotoImportConnectionTransport connectionTransport;
 @property (readonly) id dateTime;
-@property (readonly) NSString * description;
-@property (readonly) NSString * displayName;
-@property (readonly) NSString * id;
+@property (readonly) NSString* description;
+@property (readonly) NSString* displayName;
+@property (readonly) NSString* id;
 @property (readonly) id isLocked;
 @property (readonly) BOOL isMassStorage;
-@property (readonly) NSString * manufacturer;
-@property (readonly) NSString * model;
+@property (readonly) NSString* manufacturer;
+@property (readonly) NSString* model;
 @property (readonly) WMIPhotoImportPowerSource powerSource;
-@property (readonly) NSString * serialNumber;
+@property (readonly) NSString* serialNumber;
 @property (readonly) NSArray* storageMedia;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (readonly) WMIPhotoImportSourceType type;
@@ -213,11 +221,15 @@ WINRT_EXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 @property WMIPhotoImportSubfolderCreationMode subfolderCreationMode;
 @property (copy) RTObject<WSIStorageFolder>* destinationFolder;
-@property (copy) NSString * destinationFileNamePrefix;
+@property (copy) NSString* destinationFileNamePrefix;
 @property BOOL appendSessionDateToDestinationFolder;
 @property (readonly) WFGUID* sessionId;
 @property (readonly) WMIPhotoImportSource* source;
-- (void)findItemsAsync:(WMIPhotoImportContentTypeFilter)contentTypeFilter itemSelectionMode:(WMIPhotoImportItemSelectionMode)itemSelectionMode success:(void (^)(WMIPhotoImportFindItemsResult*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)findItemsAsync:(WMIPhotoImportContentTypeFilter)contentTypeFilter
+     itemSelectionMode:(WMIPhotoImportItemSelectionMode)itemSelectionMode
+               success:(void (^)(WMIPhotoImportFindItemsResult*))success
+              progress:(void (^)(unsigned int))progress
+               failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -253,15 +265,17 @@ WINRT_EXPORT
 @property (readonly) uint64_t totalSizeInBytes;
 @property (readonly) unsigned int videosCount;
 @property (readonly) uint64_t videosSizeInBytes;
-- (EventRegistrationToken)addItemImportedEvent:(void(^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportItemImportedEventArgs*))del;
+- (EventRegistrationToken)addItemImportedEvent:(void (^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportItemImportedEventArgs*))del;
 - (void)removeItemImportedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionChangedEvent:(void(^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportSelectionChangedEventArgs*))del;
+- (EventRegistrationToken)addSelectionChangedEvent:(void (^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportSelectionChangedEventArgs*))del;
 - (void)removeSelectionChangedEvent:(EventRegistrationToken)tok;
 - (void)selectAll;
 - (void)selectNone;
 - (RTObject<WFIAsyncAction>*)selectNewAsync;
 - (void)setImportMode:(WMIPhotoImportImportMode)value;
-- (void)importItemsAsyncWithSuccess:(void (^)(WMIPhotoImportImportItemsResult*))success progress:(void (^)(WMIPhotoImportProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)importItemsAsyncWithSuccess:(void (^)(WMIPhotoImportImportItemsResult*))success
+                           progress:(void (^)(WMIPhotoImportProgress*))progress
+                            failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMIPhotoImportFindItemsResult_DEFINED__
@@ -285,7 +299,9 @@ WINRT_EXPORT
 @property (readonly) uint64_t totalSizeInBytes;
 @property (readonly) unsigned int videosCount;
 @property (readonly) uint64_t videosSizeInBytes;
-- (void)deleteImportedItemsFromSourceAsyncWithSuccess:(void (^)(WMIPhotoImportDeleteImportedItemsFromSourceResult*))success progress:(void (^)(double))progress failure:(void (^)(NSError*))failure;
+- (void)deleteImportedItemsFromSourceAsyncWithSuccess:(void (^)(WMIPhotoImportDeleteImportedItemsFromSourceResult*))success
+                                             progress:(void (^)(double))progress
+                                              failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMIPhotoImportImportItemsResult_DEFINED__
@@ -321,9 +337,9 @@ WINRT_EXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 @property (readonly) uint64_t availableSpaceInBytes;
 @property (readonly) uint64_t capacityInBytes;
-@property (readonly) NSString * description;
-@property (readonly) NSString * name;
-@property (readonly) NSString * serialNumber;
+@property (readonly) NSString* description;
+@property (readonly) NSString* name;
+@property (readonly) NSString* serialNumber;
 @property (readonly) WMIPhotoImportStorageMediumType storageMediumType;
 @property (readonly) WMIPhotoImportAccessMode supportedAccessMode;
 - (void)refresh;
@@ -338,7 +354,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportSidecar : RTObject
 @property (readonly) WFDateTime* date;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) uint64_t sizeInBytes;
 @end
 
@@ -351,7 +367,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportVideoSegment : RTObject
 @property (readonly) WFDateTime* date;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
 @property (readonly) NSArray* sidecars;
 @property (readonly) uint64_t sizeInBytes;
@@ -371,7 +387,7 @@ WINRT_EXPORT
 @property (readonly) NSArray* deletedFileNames;
 @property (readonly) NSArray* importedFileNames;
 @property (readonly) uint64_t itemKey;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
 @property (readonly) NSArray* sidecars;
 @property (readonly) uint64_t sizeInBytes;
@@ -402,4 +418,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMIPhotoImportItemImportedEventArgs_DEFINED__
-

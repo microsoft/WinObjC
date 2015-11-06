@@ -25,11 +25,11 @@
 
 enum {
     UIDocumentSaveForCreating,
-    UIDocumentSaveForOverwriting
+    UIDocumentSaveForOverwriting,
 };
 typedef uint32_t UIDocumentSaveOperation;
 
-extern NSString *const UIDocumentStateChangedNotification;
+extern NSString* const UIDocumentStateChangedNotification;
 
 enum {
     UIDocumentStateNormal = 0,
@@ -41,26 +41,32 @@ enum {
 typedef uint32_t UIDocumentState;
 
 enum {
-   UIDocumentChangeDone,
-   UIDocumentChangeUndone,
-   UIDocumentChangeRedone,
-   UIDocumentChangeCleared
+    UIDocumentChangeDone,
+    UIDocumentChangeUndone,
+    UIDocumentChangeRedone,
+    UIDocumentChangeCleared,
 };
 typedef int32_t UIDocumentChangeKind;
 
 @interface UIDocument : NSObject
 
-@property (readonly) NSURL *fileURL;
-@property (retain) NSUndoManager *undoManager;
+@property (readonly) NSURL* fileURL;
+@property (retain) NSUndoManager* undoManager;
 @property (readonly) UIDocumentState documentState;
-@property (readonly, copy) NSString *fileType;
+@property (readonly, copy) NSString* fileType;
 
-- (id)initWithFileURL:(NSURL *)url;
-- (void)saveToURL:(NSURL *)url forSaveOperation:(UIDocumentSaveOperation)saveOperation completionHandler:(void (^)(BOOL success))completionHandler;
+- (id)initWithFileURL:(NSURL*)url;
+- (void)saveToURL:(NSURL*)url
+ forSaveOperation:(UIDocumentSaveOperation)saveOperation
+completionHandler:(void (^)(BOOL success))completionHandler;
 - (void)openWithCompletionHandler:(void (^)(BOOL success))completionHandler;
 - (void)closeWithCompletionHandler:(void (^)(BOOL success))completionHandler;
-- (BOOL)writeContents:(id)contents toURL:(NSURL *)url forSaveOperation:(UIDocumentSaveOperation)saveOperation originalContentsURL:(NSURL *)originalContentsURL error:(NSError **)outError;
-- (void)handleError:(NSError *)error userInteractionPermitted:(BOOL)userInteractionPermitted;
+- (BOOL)writeContents:(id)contents
+                toURL:(NSURL*)url
+     forSaveOperation:(UIDocumentSaveOperation)saveOperation
+  originalContentsURL:(NSURL*)originalContentsURL
+                error:(NSError**)outError;
+- (void)handleError:(NSError*)error userInteractionPermitted:(BOOL)userInteractionPermitted;
 - (void)updateChangeCount:(UIDocumentChangeKind)change;
 - (BOOL)hasUnsavedChanges;
 

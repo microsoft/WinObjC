@@ -20,83 +20,103 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapCustomExperienceChangedEventArgs, WUXCMMapElementClickEventArgs, WUXCMMapElementPointerEnteredEventArgs, WUXCMMapElementPointerExitedEventArgs, WUXCMMapTargetCameraChangedEventArgs, WUXCMMapTileBitmapRequestDeferral, WUXCMMapTileBitmapRequest, WUXCMMapTileBitmapRequestedEventArgs, WUXCMMapTileUriRequestDeferral, WUXCMMapTileUriRequest, WUXCMMapTileUriRequestedEventArgs, WUXCMMapCamera, WUXCMMapCustomExperience, WUXCMMapElement, WUXCMMapInputEventArgs, WUXCMMapItemsControl, WUXCMMapRouteView, WUXCMMapScene, WUXCMMapTileDataSource, WUXCMMapTileSource, WUXCMStreetsidePanorama, WUXCMCustomMapTileDataSource, WUXCMHttpMapTileDataSource, WUXCMLocalMapTileDataSource, WUXCMMapIcon, WUXCMMapPolygon, WUXCMMapPolyline, WUXCMStreetsideExperience, WUXCMMapControl;
+@class WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapCustomExperienceChangedEventArgs,
+    WUXCMMapElementClickEventArgs, WUXCMMapElementPointerEnteredEventArgs, WUXCMMapElementPointerExitedEventArgs,
+    WUXCMMapTargetCameraChangedEventArgs, WUXCMMapTileBitmapRequestDeferral, WUXCMMapTileBitmapRequest,
+    WUXCMMapTileBitmapRequestedEventArgs, WUXCMMapTileUriRequestDeferral, WUXCMMapTileUriRequest, WUXCMMapTileUriRequestedEventArgs,
+    WUXCMMapCamera, WUXCMMapCustomExperience, WUXCMMapElement, WUXCMMapInputEventArgs, WUXCMMapItemsControl, WUXCMMapRouteView,
+    WUXCMMapScene, WUXCMMapTileDataSource, WUXCMMapTileSource, WUXCMStreetsidePanorama, WUXCMCustomMapTileDataSource,
+    WUXCMHttpMapTileDataSource, WUXCMLocalMapTileDataSource, WUXCMMapIcon, WUXCMMapPolygon, WUXCMMapPolyline, WUXCMStreetsideExperience,
+    WUXCMMapControl;
 @class WUXCMMapZoomLevelRange;
-@protocol WUXCMIMapActualCameraChangedEventArgs, WUXCMIMapActualCameraChangingEventArgs, WUXCMIMapCustomExperienceChangedEventArgs, WUXCMIMapElementClickEventArgs, WUXCMIMapElementPointerEnteredEventArgs, WUXCMIMapElementPointerExitedEventArgs, WUXCMIMapTargetCameraChangedEventArgs, WUXCMIMapTileBitmapRequest, WUXCMIMapTileBitmapRequestDeferral, WUXCMIMapTileBitmapRequestedEventArgs, WUXCMIMapTileUriRequest, WUXCMIMapTileUriRequestDeferral, WUXCMIMapTileUriRequestedEventArgs, WUXCMIMapCamera, WUXCMIMapCameraFactory, WUXCMIMapCustomExperience, WUXCMIMapCustomExperienceFactory, WUXCMIMapElement, WUXCMIMapElementStatics, WUXCMIMapElementFactory, WUXCMIMapElement2, WUXCMIMapElementStatics2, WUXCMIMapInputEventArgs, WUXCMIMapItemsControl, WUXCMIMapItemsControlStatics, WUXCMIMapRouteView, WUXCMIMapRouteViewFactory, WUXCMIMapScene, WUXCMIMapSceneStatics, WUXCMIMapTileDataSource, WUXCMIMapTileDataSourceFactory, WUXCMIMapTileSource, WUXCMIMapTileSourceStatics, WUXCMIMapTileSourceFactory, WUXCMIStreetsidePanorama, WUXCMIStreetsidePanoramaStatics, WUXCMICustomMapTileDataSource, WUXCMICustomMapTileDataSourceFactory, WUXCMIHttpMapTileDataSource, WUXCMIHttpMapTileDataSourceFactory, WUXCMILocalMapTileDataSource, WUXCMILocalMapTileDataSourceFactory, WUXCMIMapIcon, WUXCMIMapIconStatics, WUXCMIMapIcon2, WUXCMIMapIconStatics2, WUXCMIMapPolygon, WUXCMIMapPolygonStatics, WUXCMIMapPolyline, WUXCMIMapPolylineStatics, WUXCMIStreetsideExperience, WUXCMIStreetsideExperienceFactory, WUXCMIMapControl, WUXCMIMapControlStatics, WUXCMIMapControl2, WUXCMIMapControlStatics2;
+@protocol WUXCMIMapActualCameraChangedEventArgs
+, WUXCMIMapActualCameraChangingEventArgs, WUXCMIMapCustomExperienceChangedEventArgs, WUXCMIMapElementClickEventArgs,
+    WUXCMIMapElementPointerEnteredEventArgs, WUXCMIMapElementPointerExitedEventArgs, WUXCMIMapTargetCameraChangedEventArgs,
+    WUXCMIMapTileBitmapRequest, WUXCMIMapTileBitmapRequestDeferral, WUXCMIMapTileBitmapRequestedEventArgs, WUXCMIMapTileUriRequest,
+    WUXCMIMapTileUriRequestDeferral, WUXCMIMapTileUriRequestedEventArgs, WUXCMIMapCamera, WUXCMIMapCameraFactory, WUXCMIMapCustomExperience,
+    WUXCMIMapCustomExperienceFactory, WUXCMIMapElement, WUXCMIMapElementStatics, WUXCMIMapElementFactory, WUXCMIMapElement2,
+    WUXCMIMapElementStatics2, WUXCMIMapInputEventArgs, WUXCMIMapItemsControl, WUXCMIMapItemsControlStatics, WUXCMIMapRouteView,
+    WUXCMIMapRouteViewFactory, WUXCMIMapScene, WUXCMIMapSceneStatics, WUXCMIMapTileDataSource, WUXCMIMapTileDataSourceFactory,
+    WUXCMIMapTileSource, WUXCMIMapTileSourceStatics, WUXCMIMapTileSourceFactory, WUXCMIStreetsidePanorama, WUXCMIStreetsidePanoramaStatics,
+    WUXCMICustomMapTileDataSource, WUXCMICustomMapTileDataSourceFactory, WUXCMIHttpMapTileDataSource, WUXCMIHttpMapTileDataSourceFactory,
+    WUXCMILocalMapTileDataSource, WUXCMILocalMapTileDataSourceFactory, WUXCMIMapIcon, WUXCMIMapIconStatics, WUXCMIMapIcon2,
+    WUXCMIMapIconStatics2, WUXCMIMapPolygon, WUXCMIMapPolygonStatics, WUXCMIMapPolyline, WUXCMIMapPolylineStatics,
+    WUXCMIStreetsideExperience, WUXCMIStreetsideExperienceFactory, WUXCMIMapControl, WUXCMIMapControlStatics, WUXCMIMapControl2,
+    WUXCMIMapControlStatics2;
 
 // Windows.UI.Xaml.Controls.Maps.MapAnimationKind
 enum _WUXCMMapAnimationKind {
-	WUXCMMapAnimationKindDefault = 0,
-	WUXCMMapAnimationKindNone = 1,
-	WUXCMMapAnimationKindLinear = 2,
-	WUXCMMapAnimationKindBow = 3,
+    WUXCMMapAnimationKindDefault = 0,
+    WUXCMMapAnimationKindNone = 1,
+    WUXCMMapAnimationKindLinear = 2,
+    WUXCMMapAnimationKindBow = 3,
 };
 typedef unsigned WUXCMMapAnimationKind;
 
 // Windows.UI.Xaml.Controls.Maps.MapColorScheme
 enum _WUXCMMapColorScheme {
-	WUXCMMapColorSchemeLight = 0,
-	WUXCMMapColorSchemeDark = 1,
+    WUXCMMapColorSchemeLight = 0,
+    WUXCMMapColorSchemeDark = 1,
 };
 typedef unsigned WUXCMMapColorScheme;
 
 // Windows.UI.Xaml.Controls.Maps.MapElementCollisionBehavior
 enum _WUXCMMapElementCollisionBehavior {
-	WUXCMMapElementCollisionBehaviorHide = 0,
-	WUXCMMapElementCollisionBehaviorRemainVisible = 1,
+    WUXCMMapElementCollisionBehaviorHide = 0,
+    WUXCMMapElementCollisionBehaviorRemainVisible = 1,
 };
 typedef unsigned WUXCMMapElementCollisionBehavior;
 
 // Windows.UI.Xaml.Controls.Maps.MapInteractionMode
 enum _WUXCMMapInteractionMode {
-	WUXCMMapInteractionModeAuto = 0,
-	WUXCMMapInteractionModeDisabled = 1,
-	WUXCMMapInteractionModeGestureOnly = 2,
-	WUXCMMapInteractionModeControlOnly = 3,
-	WUXCMMapInteractionModeGestureAndControl = 4,
+    WUXCMMapInteractionModeAuto = 0,
+    WUXCMMapInteractionModeDisabled = 1,
+    WUXCMMapInteractionModeGestureOnly = 2,
+    WUXCMMapInteractionModeControlOnly = 3,
+    WUXCMMapInteractionModeGestureAndControl = 4,
 };
 typedef unsigned WUXCMMapInteractionMode;
 
 // Windows.UI.Xaml.Controls.Maps.MapLoadingStatus
 enum _WUXCMMapLoadingStatus {
-	WUXCMMapLoadingStatusLoading = 0,
-	WUXCMMapLoadingStatusLoaded = 1,
+    WUXCMMapLoadingStatusLoading = 0,
+    WUXCMMapLoadingStatusLoaded = 1,
 };
 typedef unsigned WUXCMMapLoadingStatus;
 
 // Windows.UI.Xaml.Controls.Maps.MapPanInteractionMode
 enum _WUXCMMapPanInteractionMode {
-	WUXCMMapPanInteractionModeAuto = 0,
-	WUXCMMapPanInteractionModeDisabled = 1,
+    WUXCMMapPanInteractionModeAuto = 0,
+    WUXCMMapPanInteractionModeDisabled = 1,
 };
 typedef unsigned WUXCMMapPanInteractionMode;
 
 // Windows.UI.Xaml.Controls.Maps.MapStyle
 enum _WUXCMMapStyle {
-	WUXCMMapStyleNone = 0,
-	WUXCMMapStyleRoad = 1,
-	WUXCMMapStyleAerial = 2,
-	WUXCMMapStyleAerialWithRoads = 3,
-	WUXCMMapStyleTerrain = 4,
-	WUXCMMapStyleAerial3D = 5,
-	WUXCMMapStyleAerial3DWithRoads = 6,
+    WUXCMMapStyleNone = 0,
+    WUXCMMapStyleRoad = 1,
+    WUXCMMapStyleAerial = 2,
+    WUXCMMapStyleAerialWithRoads = 3,
+    WUXCMMapStyleTerrain = 4,
+    WUXCMMapStyleAerial3D = 5,
+    WUXCMMapStyleAerial3DWithRoads = 6,
 };
 typedef unsigned WUXCMMapStyle;
 
 // Windows.UI.Xaml.Controls.Maps.MapTileLayer
 enum _WUXCMMapTileLayer {
-	WUXCMMapTileLayerLabelOverlay = 0,
-	WUXCMMapTileLayerRoadOverlay = 1,
-	WUXCMMapTileLayerAreaOverlay = 2,
-	WUXCMMapTileLayerBackgroundOverlay = 3,
-	WUXCMMapTileLayerBackgroundReplacement = 4,
+    WUXCMMapTileLayerLabelOverlay = 0,
+    WUXCMMapTileLayerRoadOverlay = 1,
+    WUXCMMapTileLayerAreaOverlay = 2,
+    WUXCMMapTileLayerBackgroundOverlay = 3,
+    WUXCMMapTileLayerBackgroundReplacement = 4,
 };
 typedef unsigned WUXCMMapTileLayer;
 
 // Windows.UI.Xaml.Controls.Maps.MapWatermarkMode
 enum _WUXCMMapWatermarkMode {
-	WUXCMMapWatermarkModeAutomatic = 0,
-	WUXCMMapWatermarkModeOn = 1,
+    WUXCMMapWatermarkModeAutomatic = 0,
+    WUXCMMapWatermarkModeOn = 1,
 };
 typedef unsigned WUXCMMapWatermarkMode;
 
@@ -121,106 +141,105 @@ typedef unsigned WUXCMMapWatermarkMode;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.DependencyPropertyChangedEventHandler
 #ifndef __WXDependencyPropertyChangedEventHandler__DEFINED
 #define __WXDependencyPropertyChangedEventHandler__DEFINED
-typedef void(^WXDependencyPropertyChangedEventHandler)(RTObject* sender, WXDependencyPropertyChangedEventArgs* e);
+typedef void (^WXDependencyPropertyChangedEventHandler)(RTObject* sender, WXDependencyPropertyChangedEventArgs* e);
 #endif // __WXDependencyPropertyChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.DragEventHandler
 #ifndef __WXDragEventHandler__DEFINED
 #define __WXDragEventHandler__DEFINED
-typedef void(^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
+typedef void (^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
 #endif // __WXDragEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.DoubleTappedEventHandler
 #ifndef __WUXIDoubleTappedEventHandler__DEFINED
 #define __WUXIDoubleTappedEventHandler__DEFINED
-typedef void(^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
+typedef void (^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
 #endif // __WUXIDoubleTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.HoldingEventHandler
 #ifndef __WUXIHoldingEventHandler__DEFINED
 #define __WUXIHoldingEventHandler__DEFINED
-typedef void(^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
+typedef void (^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
 #endif // __WUXIHoldingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.KeyEventHandler
 #ifndef __WUXIKeyEventHandler__DEFINED
 #define __WUXIKeyEventHandler__DEFINED
-typedef void(^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
+typedef void (^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
 #endif // __WUXIKeyEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationCompletedEventHandler
 #ifndef __WUXIManipulationCompletedEventHandler__DEFINED
 #define __WUXIManipulationCompletedEventHandler__DEFINED
-typedef void(^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
+typedef void (^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
 #endif // __WUXIManipulationCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationDeltaEventHandler
 #ifndef __WUXIManipulationDeltaEventHandler__DEFINED
 #define __WUXIManipulationDeltaEventHandler__DEFINED
-typedef void(^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
+typedef void (^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
 #endif // __WUXIManipulationDeltaEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationInertiaStartingEventHandler
 #ifndef __WUXIManipulationInertiaStartingEventHandler__DEFINED
 #define __WUXIManipulationInertiaStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
+typedef void (^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationInertiaStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartedEventHandler
 #ifndef __WUXIManipulationStartedEventHandler__DEFINED
 #define __WUXIManipulationStartedEventHandler__DEFINED
-typedef void(^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
+typedef void (^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
 #endif // __WUXIManipulationStartedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartingEventHandler
 #ifndef __WUXIManipulationStartingEventHandler__DEFINED
 #define __WUXIManipulationStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
+typedef void (^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.PointerEventHandler
 #ifndef __WUXIPointerEventHandler__DEFINED
 #define __WUXIPointerEventHandler__DEFINED
-typedef void(^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
+typedef void (^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
 #endif // __WUXIPointerEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.RightTappedEventHandler
 #ifndef __WUXIRightTappedEventHandler__DEFINED
 #define __WUXIRightTappedEventHandler__DEFINED
-typedef void(^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
+typedef void (^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
 #endif // __WUXIRightTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.TappedEventHandler
 #ifndef __WUXITappedEventHandler__DEFINED
 #define __WUXITappedEventHandler__DEFINED
-typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
+typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
 #endif // __WUXITappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
+typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SizeChangedEventHandler
 #ifndef __WXSizeChangedEventHandler__DEFINED
 #define __WXSizeChangedEventHandler__DEFINED
-typedef void(^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
+typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
 #endif // __WXSizeChangedEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Controls.Maps.MapZoomLevelRange
 WINRT_EXPORT
 @interface WUXCMMapZoomLevelRange : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double min;
 @property double max;
 @end
@@ -421,8 +440,14 @@ WINRT_EXPORT
 @interface WUXCMMapCamera : WXDependencyObject
 + (WUXCMMapCamera*)createInstanceWithLocation:(WDGGeopoint*)location ACTIVATOR;
 + (WUXCMMapCamera*)createInstanceWithLocationAndHeading:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees ACTIVATOR;
-+ (WUXCMMapCamera*)createInstanceWithLocationHeadingAndPitch:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees ACTIVATOR;
-+ (WUXCMMapCamera*)createInstanceWithLocationHeadingPitchRollAndFieldOfView:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees rollInDegrees:(double)rollInDegrees fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
++ (WUXCMMapCamera*)createInstanceWithLocationHeadingAndPitch:(WDGGeopoint*)location
+                                            headingInDegrees:(double)headingInDegrees
+                                              pitchInDegrees:(double)pitchInDegrees ACTIVATOR;
++ (WUXCMMapCamera*)createInstanceWithLocationHeadingPitchRollAndFieldOfView:(WDGGeopoint*)location
+                                                           headingInDegrees:(double)headingInDegrees
+                                                             pitchInDegrees:(double)pitchInDegrees
+                                                              rollInDegrees:(double)rollInDegrees
+                                                       fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 @property double roll;
 @property double pitch;
 @property (copy) WDGGeopoint* location;
@@ -510,16 +535,25 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMMapScene : WXDependencyObject
 + (WUXCMMapScene*)createFromBoundingBox:(WDGGeoboundingBox*)bounds;
-+ (WUXCMMapScene*)createFromBoundingBoxWithHeadingAndPitch:(WDGGeoboundingBox*)bounds headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees;
++ (WUXCMMapScene*)createFromBoundingBoxWithHeadingAndPitch:(WDGGeoboundingBox*)bounds
+                                          headingInDegrees:(double)headingInDegrees
+                                            pitchInDegrees:(double)pitchInDegrees;
 + (WUXCMMapScene*)createFromCamera:(WUXCMMapCamera*)camera;
 + (WUXCMMapScene*)createFromLocation:(WDGGeopoint*)location;
-+ (WUXCMMapScene*)createFromLocationWithHeadingAndPitch:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees;
++ (WUXCMMapScene*)createFromLocationWithHeadingAndPitch:(WDGGeopoint*)location
+                                       headingInDegrees:(double)headingInDegrees
+                                         pitchInDegrees:(double)pitchInDegrees;
 + (WUXCMMapScene*)createFromLocationAndRadius:(WDGGeopoint*)location radiusInMeters:(double)radiusInMeters;
-+ (WUXCMMapScene*)createFromLocationAndRadiusWithHeadingAndPitch:(WDGGeopoint*)location radiusInMeters:(double)radiusInMeters headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees;
++ (WUXCMMapScene*)createFromLocationAndRadiusWithHeadingAndPitch:(WDGGeopoint*)location
+                                                  radiusInMeters:(double)radiusInMeters
+                                                headingInDegrees:(double)headingInDegrees
+                                                  pitchInDegrees:(double)pitchInDegrees;
 + (WUXCMMapScene*)createFromLocations:(id<NSFastEnumeration> /* WDGGeopoint* */)locations;
-+ (WUXCMMapScene*)createFromLocationsWithHeadingAndPitch:(id<NSFastEnumeration> /* WDGGeopoint* */)locations headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees;
++ (WUXCMMapScene*)createFromLocationsWithHeadingAndPitch:(id<NSFastEnumeration> /* WDGGeopoint* */)locations
+                                        headingInDegrees:(double)headingInDegrees
+                                          pitchInDegrees:(double)pitchInDegrees;
 @property (readonly) WUXCMMapCamera* targetCamera;
-- (EventRegistrationToken)addTargetCameraChangedEvent:(void(^)(WUXCMMapScene*, WUXCMMapTargetCameraChangedEventArgs*))del;
+- (EventRegistrationToken)addTargetCameraChangedEvent:(void (^)(WUXCMMapScene*, WUXCMMapTargetCameraChangedEventArgs*))del;
 - (void)removeTargetCameraChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -575,8 +609,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMStreetsidePanorama : WXDependencyObject
-+ (void)findNearbyWithLocationAsync:(WDGGeopoint*)location success:(void (^)(WUXCMStreetsidePanorama*))success failure:(void (^)(NSError*))failure;
-+ (void)findNearbyWithLocationAndRadiusAsync:(WDGGeopoint*)location radiusInMeters:(double)radiusInMeters success:(void (^)(WUXCMStreetsidePanorama*))success failure:(void (^)(NSError*))failure;
++ (void)findNearbyWithLocationAsync:(WDGGeopoint*)location
+                            success:(void (^)(WUXCMStreetsidePanorama*))success
+                            failure:(void (^)(NSError*))failure;
++ (void)findNearbyWithLocationAndRadiusAsync:(WDGGeopoint*)location
+                              radiusInMeters:(double)radiusInMeters
+                                     success:(void (^)(WUXCMStreetsidePanorama*))success
+                                     failure:(void (^)(NSError*))failure;
 @property (readonly) WDGGeopoint* location;
 @end
 
@@ -589,7 +628,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMCustomMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)create ACTIVATOR;
-- (EventRegistrationToken)addBitmapRequestedEvent:(void(^)(WUXCMCustomMapTileDataSource*, WUXCMMapTileBitmapRequestedEventArgs*))del;
+- (EventRegistrationToken)addBitmapRequestedEvent:(void (^)(WUXCMCustomMapTileDataSource*, WUXCMMapTileBitmapRequestedEventArgs*))del;
 - (void)removeBitmapRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -602,10 +641,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMHttpMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * uriFormatString;
+@property (copy) NSString* uriFormatString;
 @property BOOL allowCaching;
 @property (readonly) NSMutableDictionary* additionalRequestHeaders;
-- (EventRegistrationToken)addUriRequestedEvent:(void(^)(WUXCMHttpMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
+- (EventRegistrationToken)addUriRequestedEvent:(void (^)(WUXCMHttpMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
 - (void)removeUriRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -618,8 +657,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMLocalMapTileDataSource : WUXCMMapTileDataSource
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * uriFormatString;
-- (EventRegistrationToken)addUriRequestedEvent:(void(^)(WUXCMLocalMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
+@property (copy) NSString* uriFormatString;
+- (EventRegistrationToken)addUriRequestedEvent:(void (^)(WUXCMLocalMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
 - (void)removeUriRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -632,7 +671,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMMapIcon : WUXCMMapElement
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * title;
+@property (copy) NSString* title;
 @property (copy) WFPoint* normalizedAnchorPoint;
 @property (copy) WDGGeopoint* location;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* image;
@@ -688,7 +727,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCMStreetsideExperience : WUXCMMapCustomExperience
 + (WUXCMStreetsideExperience*)createInstanceWithPanorama:(WUXCMStreetsidePanorama*)panorama ACTIVATOR;
-+ (WUXCMStreetsideExperience*)createInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
++ (WUXCMStreetsideExperience*)createInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama
+                                                                  headingInDegrees:(double)headingInDegrees
+                                                                    pitchInDegrees:(double)pitchInDegrees
+                                                              fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 @property BOOL zoomButtonsVisible;
 @property BOOL streetLabelsVisible;
 @property BOOL overviewMapVisible;
@@ -750,7 +792,7 @@ WINRT_EXPORT
 #define __WXIFrameworkElementOverrides2_DEFINED__
 
 @protocol WXIFrameworkElementOverrides2
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
+- (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -889,9 +931,9 @@ WINRT_EXPORT
 - (void)removeRightTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTappedEvent:(WUXITappedEventHandler)del;
 - (void)removeTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDragStartingEvent:(void(^)(WXUIElement*, WXDragStartingEventArgs*))del;
+- (EventRegistrationToken)addDragStartingEvent:(void (^)(WXUIElement*, WXDragStartingEventArgs*))del;
 - (void)removeDragStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDropCompletedEvent:(void(^)(WXUIElement*, WXDropCompletedEventArgs*))del;
+- (EventRegistrationToken)addDropCompletedEvent:(void (^)(WXUIElement*, WXDropCompletedEventArgs*))del;
 - (void)removeDropCompletedEvent:(EventRegistrationToken)tok;
 - (void)measure:(WFSize*)availableSize;
 - (void)arrange:(WFRect*)finalRect;
@@ -908,7 +950,9 @@ WINRT_EXPORT
 - (void)onDisconnectVisualChildren;
 - (id<NSFastEnumeration>)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
-- (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
+- (void)startDragAsync:(WUIPointerPoint*)pointerPoint
+               success:(void (^)(WADDataPackageOperation))success
+               failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -921,7 +965,7 @@ WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 + (instancetype)create ACTIVATOR;
 @property (copy) WXThickness* margin;
-@property (copy) NSString * language;
+@property (copy) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
@@ -934,7 +978,7 @@ WINRT_EXPORT
 @property (copy) RTObject* tag;
 @property (copy) WXStyle* style;
 @property (copy) WXResourceDictionary* resources;
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -960,7 +1004,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)verticalAlignmentProperty;
 + (WXDependencyProperty*)widthProperty;
 + (WXDependencyProperty*)requestedThemeProperty;
-- (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addLayoutUpdatedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
 - (void)removeLoadedEvent:(EventRegistrationToken)tok;
@@ -968,17 +1012,17 @@ WINRT_EXPORT
 - (void)removeSizeChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addUnloadedEvent:(WXRoutedEventHandler)del;
 - (void)removeUnloadedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDataContextChangedEvent:(void(^)(WXFrameworkElement*, WXDataContextChangedEventArgs*))del;
+- (EventRegistrationToken)addDataContextChangedEvent:(void (^)(WXFrameworkElement*, WXDataContextChangedEventArgs*))del;
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLoadingEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
+- (EventRegistrationToken)addLoadingEvent:(void (^)(WXFrameworkElement*, RTObject*))del;
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
-- (RTObject*)findName:(NSString *)name;
+- (RTObject*)findName:(NSString*)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 - (WFSize*)measureOverride:(WFSize*)availableSize;
 - (WFSize*)arrangeOverride:(WFSize*)finalSize;
 - (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
+- (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1066,7 +1110,7 @@ WINRT_EXPORT
 - (void)onDragLeave:(WXDragEventArgs*)e;
 - (void)onDragOver:(WXDragEventArgs*)e;
 - (void)onDrop:(WXDragEventArgs*)e;
-- (WXDependencyObject*)getTemplateChild:(NSString *)childName;
+- (WXDependencyObject*)getTemplateChild:(NSString*)childName;
 @end
 
 #endif // __WXCControl_DEFINED__
@@ -1086,7 +1130,7 @@ WINRT_EXPORT
 @property double heading;
 @property double desiredPitch;
 @property WUXCMMapColorScheme colorScheme;
-@property (copy) NSString * mapServiceToken;
+@property (copy) NSString* mapServiceToken;
 @property double zoomLevel;
 @property WUXCMMapWatermarkMode watermarkMode;
 @property (copy) WFPoint* transformOrigin;
@@ -1143,47 +1187,65 @@ WINRT_EXPORT
 + (WXDependencyProperty*)tiltInteractionModeProperty;
 + (WXDependencyProperty*)transitFeaturesVisibleProperty;
 + (WXDependencyProperty*)zoomInteractionModeProperty;
-- (EventRegistrationToken)addCenterChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addCenterChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeCenterChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHeadingChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addHeadingChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeHeadingChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLoadingStatusChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addLoadingStatusChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeLoadingStatusChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapDoubleTappedEvent:(void(^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
+- (EventRegistrationToken)addMapDoubleTappedEvent:(void (^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
 - (void)removeMapDoubleTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapHoldingEvent:(void(^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
+- (EventRegistrationToken)addMapHoldingEvent:(void (^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
 - (void)removeMapHoldingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapTappedEvent:(void(^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
+- (EventRegistrationToken)addMapTappedEvent:(void (^)(WUXCMMapControl*, WUXCMMapInputEventArgs*))del;
 - (void)removeMapTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPitchChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addPitchChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removePitchChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTransformOriginChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addTransformOriginChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeTransformOriginChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addZoomLevelChangedEvent:(void(^)(WUXCMMapControl*, RTObject*))del;
+- (EventRegistrationToken)addZoomLevelChangedEvent:(void (^)(WUXCMMapControl*, RTObject*))del;
 - (void)removeZoomLevelChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addActualCameraChangedEvent:(void(^)(WUXCMMapControl*, WUXCMMapActualCameraChangedEventArgs*))del;
+- (EventRegistrationToken)addActualCameraChangedEvent:(void (^)(WUXCMMapControl*, WUXCMMapActualCameraChangedEventArgs*))del;
 - (void)removeActualCameraChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addActualCameraChangingEvent:(void(^)(WUXCMMapControl*, WUXCMMapActualCameraChangingEventArgs*))del;
+- (EventRegistrationToken)addActualCameraChangingEvent:(void (^)(WUXCMMapControl*, WUXCMMapActualCameraChangingEventArgs*))del;
 - (void)removeActualCameraChangingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCustomExperienceChangedEvent:(void(^)(WUXCMMapControl*, WUXCMMapCustomExperienceChangedEventArgs*))del;
+- (EventRegistrationToken)addCustomExperienceChangedEvent:(void (^)(WUXCMMapControl*, WUXCMMapCustomExperienceChangedEventArgs*))del;
 - (void)removeCustomExperienceChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapElementClickEvent:(void(^)(WUXCMMapControl*, WUXCMMapElementClickEventArgs*))del;
+- (EventRegistrationToken)addMapElementClickEvent:(void (^)(WUXCMMapControl*, WUXCMMapElementClickEventArgs*))del;
 - (void)removeMapElementClickEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapElementPointerEnteredEvent:(void(^)(WUXCMMapControl*, WUXCMMapElementPointerEnteredEventArgs*))del;
+- (EventRegistrationToken)addMapElementPointerEnteredEvent:(void (^)(WUXCMMapControl*, WUXCMMapElementPointerEnteredEventArgs*))del;
 - (void)removeMapElementPointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMapElementPointerExitedEvent:(void(^)(WUXCMMapControl*, WUXCMMapElementPointerExitedEventArgs*))del;
+- (EventRegistrationToken)addMapElementPointerExitedEvent:(void (^)(WUXCMMapControl*, WUXCMMapElementPointerExitedEventArgs*))del;
 - (void)removeMapElementPointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTargetCameraChangedEvent:(void(^)(WUXCMMapControl*, WUXCMMapTargetCameraChangedEventArgs*))del;
+- (EventRegistrationToken)addTargetCameraChangedEvent:(void (^)(WUXCMMapControl*, WUXCMMapTargetCameraChangedEventArgs*))del;
 - (void)removeTargetCameraChangedEvent:(EventRegistrationToken)tok;
 - (NSArray*)findMapElementsAtOffset:(WFPoint*)offset;
 - (void)getLocationFromOffset:(WFPoint*)offset location:(WDGGeopoint**)location;
 - (void)getOffsetFromLocation:(WDGGeopoint*)location offset:(WFPoint**)offset;
 - (void)isLocationInView:(WDGGeopoint*)location isInView:(BOOL*)isInView;
-- (void)trySetViewBoundsAsync:(WDGGeoboundingBox*)bounds margin:(id /* WXThickness* */)margin animation:(WUXCMMapAnimationKind)animation success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)trySetViewBoundsAsync:(WDGGeoboundingBox*)bounds
+                       margin:(id /* WXThickness* */)margin
+                    animation:(WUXCMMapAnimationKind)animation
+                      success:(void (^)(BOOL))success
+                      failure:(void (^)(NSError*))failure;
 - (void)trySetViewWithCenterAsync:(WDGGeopoint*)center success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)trySetViewWithCenterAndZoomAsync:(WDGGeopoint*)center zoomLevel:(id /* double */)zoomLevel success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)trySetViewWithCenterZoomHeadingAndPitchAsync:(WDGGeopoint*)center zoomLevel:(id /* double */)zoomLevel heading:(id /* double */)heading desiredPitch:(id /* double */)desiredPitch success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)trySetViewWithCenterZoomHeadingPitchAndAnimationAsync:(WDGGeopoint*)center zoomLevel:(id /* double */)zoomLevel heading:(id /* double */)heading desiredPitch:(id /* double */)desiredPitch animation:(WUXCMMapAnimationKind)animation success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)trySetViewWithCenterAndZoomAsync:(WDGGeopoint*)center
+                               zoomLevel:(id /* double */)zoomLevel
+                                 success:(void (^)(BOOL))success
+                                 failure:(void (^)(NSError*))failure;
+- (void)trySetViewWithCenterZoomHeadingAndPitchAsync:(WDGGeopoint*)center
+                                           zoomLevel:(id /* double */)zoomLevel
+                                             heading:(id /* double */)heading
+                                        desiredPitch:(id /* double */)desiredPitch
+                                             success:(void (^)(BOOL))success
+                                             failure:(void (^)(NSError*))failure;
+- (void)trySetViewWithCenterZoomHeadingPitchAndAnimationAsync:(WDGGeopoint*)center
+                                                    zoomLevel:(id /* double */)zoomLevel
+                                                      heading:(id /* double */)heading
+                                                 desiredPitch:(id /* double */)desiredPitch
+                                                    animation:(WUXCMMapAnimationKind)animation
+                                                      success:(void (^)(BOOL))success
+                                                      failure:(void (^)(NSError*))failure;
 - (void)startContinuousRotate:(double)rateInDegreesPerSecond;
 - (void)stopContinuousRotate;
 - (void)startContinuousTilt:(double)rateInDegreesPerSecond;
@@ -1198,8 +1260,10 @@ WINRT_EXPORT
 - (void)tryZoomOutAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)tryZoomToAsync:(double)zoomLevel success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)trySetSceneAsync:(WUXCMMapScene*)scene success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)trySetSceneWithAnimationAsync:(WUXCMMapScene*)scene animationKind:(WUXCMMapAnimationKind)animationKind success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)trySetSceneWithAnimationAsync:(WUXCMMapScene*)scene
+                        animationKind:(WUXCMMapAnimationKind)animationKind
+                              success:(void (^)(BOOL))success
+                              failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WUXCMMapControl_DEFINED__
-

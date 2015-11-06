@@ -22,7 +22,7 @@
 #import <AudioToolbox/AudioToolboxExport.h>
 #import <stdint.h>
 
-#define kSystemSoundID_Vibrate    0x00000FFF
+#define kSystemSoundID_Vibrate 0x00000FFF
 
 enum {
     kAudioServicesNoError = 0,
@@ -36,9 +36,9 @@ enum {
 typedef uint32_t SystemSoundID;
 
 AUDIOTOOLBOX_EXPORT void AudioServicesPlaySystemSound(SystemSoundID soundID);
-//AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef fileURL, SystemSoundID soundID);
+// AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef fileURL, SystemSoundID soundID);
 AUDIOTOOLBOX_EXPORT OSStatus AudioServicesDisposeSystemSoundID(SystemSoundID soundID);
 AUDIOTOOLBOX_EXPORT void AudioServicesPlayAlertSound(SystemSoundID inSystemSoundID);
-AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID  *outSystemSoundID);
+AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID* outSystemSoundID);
 
 #endif // _AUDIOSERVICES_H_

@@ -23,7 +23,6 @@
 @class WMWMdmPolicy;
 @protocol WMWIMdmAllowPolicyStatics;
 
-
 #import <Foundation/Foundation.h>
 
 // Windows.Management.Workplace.MdmPolicy
@@ -39,4 +38,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMWMdmPolicy_DEFINED__
-

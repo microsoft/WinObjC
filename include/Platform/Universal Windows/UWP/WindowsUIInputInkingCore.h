@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WUIICCoreInkIndependentInputSource;
-@protocol WUIICICoreInkIndependentInputSource, WUIICICoreInkIndependentInputSourceStatics;
+@protocol WUIICICoreInkIndependentInputSource
+, WUIICICoreInkIndependentInputSourceStatics;
 
 #include "WindowsFoundation.h"
 #include "WindowsUICore.h"
@@ -37,21 +38,20 @@ WINRT_EXPORT
 @interface WUIICCoreInkIndependentInputSource : RTObject
 + (WUIICCoreInkIndependentInputSource*)create:(WUIIInkPresenter*)inkPresenter;
 @property (readonly) WUIIInkPresenter* inkPresenter;
-- (EventRegistrationToken)addPointerEnteringEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteringEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteringEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitingEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitingEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerExitingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerHoveringEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerHoveringEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerHoveringEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerLostEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerLostEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovingEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovingEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerMovingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressingEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressingEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerPressingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasingEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasingEvent:(void (^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasingEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WUIICCoreInkIndependentInputSource_DEFINED__
-

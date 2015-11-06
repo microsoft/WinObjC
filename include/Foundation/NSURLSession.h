@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, NSURLSessionResponseDisposition) {
     NSURLSessionResponseBecomeDownload = 2
 };
 
-FOUNDATION_EXPORT_CLASS 
+FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionTask : NSObject
 
 @property (readonly) NSURLResponse* response;
@@ -48,20 +48,20 @@ FOUNDATION_EXPORT_CLASS
 
 @end
 
-FOUNDATION_EXPORT_CLASS 
+FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionDownloadTask : NSURLSessionTask
 
 @end
 
-FOUNDATION_EXPORT_CLASS 
-@interface NSURLSessionDataTask : NSURLSessionTask 
+FOUNDATION_EXPORT_CLASS
+@interface NSURLSessionDataTask : NSURLSessionTask
 
 @end
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionConfiguration : NSObject 
+@interface NSURLSessionConfiguration : NSObject
 
-@property(nonatomic) BOOL allowsCellularAccess;
+@property (nonatomic) BOOL allowsCellularAccess;
 @property (nonatomic) NSURLCache* URLCache;
 @property (nonatomic) NSURLRequestCachePolicy requestCachePolicy;
 @property (nonatomic) NSTimeInterval timeoutIntervalForResource;

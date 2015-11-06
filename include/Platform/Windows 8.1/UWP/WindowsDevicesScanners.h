@@ -20,9 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDSImageScannerAutoConfiguration, WDSImageScannerFlatbedConfiguration, WDSImageScannerFeederConfiguration, WDSImageScannerScanResult, WDSImageScannerPreviewResult, WDSImageScanner;
+@class WDSImageScannerAutoConfiguration, WDSImageScannerFlatbedConfiguration, WDSImageScannerFeederConfiguration, WDSImageScannerScanResult,
+    WDSImageScannerPreviewResult, WDSImageScanner;
 @class WDSImageScannerResolution;
-@protocol WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration, WDSIImageScannerFeederConfiguration, WDSIImageScannerScanResult, WDSIImageScannerPreviewResult, WDSIImageScanner, WDSIImageScannerStatics;
+@protocol WDSIImageScannerFormatConfiguration
+, WDSIImageScannerSourceConfiguration, WDSIImageScannerFeederConfiguration, WDSIImageScannerScanResult, WDSIImageScannerPreviewResult,
+    WDSIImageScanner, WDSIImageScannerStatics;
 
 // Windows.Devices.Scanners.ImageScannerFormat
 enum _WDSImageScannerFormat {
@@ -71,7 +74,7 @@ typedef unsigned WDSImageScannerScanSource;
 // [struct] Windows.Devices.Scanners.ImageScannerResolution
 WINRT_EXPORT
 @interface WDSImageScannerResolution : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float dpiX;
 @property float dpiY;
 @end
@@ -93,7 +96,7 @@ WINRT_EXPORT
 #define __WDSIImageScannerSourceConfiguration_DEFINED__
 
 @protocol WDSIImageScannerSourceConfiguration <WDSIImageScannerFormatConfiguration>
-@property (readonly) WDSImageScannerResolution * actualResolution;
+@property (readonly) WDSImageScannerResolution* actualResolution;
 @property WDSImageScannerAutoCroppingMode autoCroppingMode;
 @property int brightness;
 @property (readonly) unsigned brightnessStep;
@@ -103,17 +106,17 @@ WINRT_EXPORT
 @property (readonly) int defaultBrightness;
 @property (readonly) WDSImageScannerColorMode defaultColorMode;
 @property (readonly) int defaultContrast;
-@property (copy) WDSImageScannerResolution * desiredResolution;
+@property (copy) WDSImageScannerResolution* desiredResolution;
 @property (readonly) int maxBrightness;
 @property (readonly) int maxContrast;
-@property (readonly) WDSImageScannerResolution * maxResolution;
-@property (readonly) WFSize * maxScanArea;
+@property (readonly) WDSImageScannerResolution* maxResolution;
+@property (readonly) WFSize* maxScanArea;
 @property (readonly) int minBrightness;
 @property (readonly) int minContrast;
-@property (readonly) WDSImageScannerResolution * minResolution;
-@property (readonly) WFSize * minScanArea;
-@property (readonly) WDSImageScannerResolution * opticalResolution;
-@property (copy) WFRect * selectedScanRegion;
+@property (readonly) WDSImageScannerResolution* minResolution;
+@property (readonly) WFSize* minScanArea;
+@property (readonly) WDSImageScannerResolution* opticalResolution;
+@property (copy) WFRect* selectedScanRegion;
 - (BOOL)isAutoCroppingModeSupported:(WDSImageScannerAutoCroppingMode)value;
 - (BOOL)isColorModeSupported:(WDSImageScannerColorMode)value;
 - (BOOL)isFormatSupported:(WDSImageScannerFormat)value;
@@ -142,13 +145,13 @@ WINRT_EXPORT
 @interface WDSImageScannerFlatbedConfiguration : RTObject <WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration>
 @property WDSImageScannerFormat format;
 @property (readonly) WDSImageScannerFormat defaultFormat;
-@property (copy) WFRect * selectedScanRegion;
-@property (copy) WDSImageScannerResolution * desiredResolution;
+@property (copy) WFRect* selectedScanRegion;
+@property (copy) WDSImageScannerResolution* desiredResolution;
 @property int contrast;
 @property WDSImageScannerColorMode colorMode;
 @property int brightness;
 @property WDSImageScannerAutoCroppingMode autoCroppingMode;
-@property (readonly) WDSImageScannerResolution * actualResolution;
+@property (readonly) WDSImageScannerResolution* actualResolution;
 @property (readonly) unsigned brightnessStep;
 @property (readonly) unsigned contrastStep;
 @property (readonly) int defaultBrightness;
@@ -156,13 +159,13 @@ WINRT_EXPORT
 @property (readonly) int defaultContrast;
 @property (readonly) int maxBrightness;
 @property (readonly) int maxContrast;
-@property (readonly) WDSImageScannerResolution * maxResolution;
-@property (readonly) WFSize * maxScanArea;
+@property (readonly) WDSImageScannerResolution* maxResolution;
+@property (readonly) WFSize* maxScanArea;
 @property (readonly) int minBrightness;
 @property (readonly) int minContrast;
-@property (readonly) WDSImageScannerResolution * minResolution;
-@property (readonly) WFSize * minScanArea;
-@property (readonly) WDSImageScannerResolution * opticalResolution;
+@property (readonly) WDSImageScannerResolution* minResolution;
+@property (readonly) WFSize* minScanArea;
+@property (readonly) WDSImageScannerResolution* opticalResolution;
 - (BOOL)isFormatSupported:(WDSImageScannerFormat)value;
 - (BOOL)isAutoCroppingModeSupported:(WDSImageScannerAutoCroppingMode)value;
 - (BOOL)isColorModeSupported:(WDSImageScannerColorMode)value;
@@ -185,30 +188,30 @@ WINRT_EXPORT
 @property (readonly) BOOL canScanDuplex;
 @property (readonly) BOOL canScanAhead;
 @property (readonly) BOOL canAutoDetectPageSize;
-@property (readonly) WFSize * pageSizeDimensions;
+@property (readonly) WFSize* pageSizeDimensions;
 @property WDSImageScannerFormat format;
 @property (readonly) WDSImageScannerFormat defaultFormat;
 @property int contrast;
-@property (copy) WDSImageScannerResolution * desiredResolution;
-@property (copy) WFRect * selectedScanRegion;
+@property (copy) WDSImageScannerResolution* desiredResolution;
+@property (copy) WFRect* selectedScanRegion;
 @property WDSImageScannerColorMode colorMode;
 @property int brightness;
 @property WDSImageScannerAutoCroppingMode autoCroppingMode;
-@property (readonly) WDSImageScannerResolution * actualResolution;
+@property (readonly) WDSImageScannerResolution* actualResolution;
 @property (readonly) unsigned brightnessStep;
 @property (readonly) int minBrightness;
 @property (readonly) int minContrast;
-@property (readonly) WDSImageScannerResolution * minResolution;
-@property (readonly) WFSize * minScanArea;
-@property (readonly) WDSImageScannerResolution * opticalResolution;
-@property (readonly) WDSImageScannerResolution * maxResolution;
+@property (readonly) WDSImageScannerResolution* minResolution;
+@property (readonly) WFSize* minScanArea;
+@property (readonly) WDSImageScannerResolution* opticalResolution;
+@property (readonly) WDSImageScannerResolution* maxResolution;
 @property (readonly) int maxContrast;
 @property (readonly) int maxBrightness;
 @property (readonly) int defaultContrast;
 @property (readonly) WDSImageScannerColorMode defaultColorMode;
 @property (readonly) int defaultBrightness;
 @property (readonly) unsigned contrastStep;
-@property (readonly) WFSize * maxScanArea;
+@property (readonly) WFSize* maxScanArea;
 - (BOOL)isFormatSupported:(WDSImageScannerFormat)value;
 - (BOOL)isAutoCroppingModeSupported:(WDSImageScannerAutoCroppingMode)value;
 - (BOOL)isColorModeSupported:(WDSImageScannerColorMode)value;
@@ -223,7 +226,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSImageScannerScanResult : RTObject
-@property (readonly) id<NSFastEnumeration> /*WSStorageFile*/  scannedFiles;
+@property (readonly) id<NSFastEnumeration> /*WSStorageFile*/ scannedFiles;
 @end
 
 #endif // __WDSImageScannerScanResult_DEFINED__
@@ -246,18 +249,24 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSImageScanner : RTObject
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSImageScanner *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-@property (readonly) WDSImageScannerAutoConfiguration * autoConfiguration;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSImageScanner*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
+@property (readonly) WDSImageScannerAutoConfiguration* autoConfiguration;
 @property (readonly) WDSImageScannerScanSource defaultScanSource;
-@property (readonly) NSString * deviceId;
-@property (readonly) WDSImageScannerFeederConfiguration * feederConfiguration;
-@property (readonly) WDSImageScannerFlatbedConfiguration * flatbedConfiguration;
+@property (readonly) NSString* deviceId;
+@property (readonly) WDSImageScannerFeederConfiguration* feederConfiguration;
+@property (readonly) WDSImageScannerFlatbedConfiguration* flatbedConfiguration;
 - (BOOL)isScanSourceSupported:(WDSImageScannerScanSource)value;
 - (BOOL)isPreviewSupported:(WDSImageScannerScanSource)scanSource;
-- (void)scanPreviewToStreamAsync:(WDSImageScannerScanSource)scanSource targetStream:(RTObject<WSSIRandomAccessStream>*)targetStream success:(void (^)(WDSImageScannerPreviewResult *))success failure:(void (^)(NSError*))failure;
-- (void)scanFilesToFolderAsync:(WDSImageScannerScanSource)scanSource storageFolder:(WSStorageFolder *)storageFolder success:(void (^)(WDSImageScannerScanResult *))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)scanPreviewToStreamAsync:(WDSImageScannerScanSource)scanSource
+                    targetStream:(RTObject<WSSIRandomAccessStream>*)targetStream
+                         success:(void (^)(WDSImageScannerPreviewResult*))success
+                         failure:(void (^)(NSError*))failure;
+- (void)scanFilesToFolderAsync:(WDSImageScannerScanSource)scanSource
+                 storageFolder:(WSStorageFolder*)storageFolder
+                       success:(void (^)(WDSImageScannerScanResult*))success
+                      progress:(void (^)(unsigned))progress
+                       failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSImageScanner_DEFINED__
-

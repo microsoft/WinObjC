@@ -20,8 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WARCResourceMap, WARCResourceContext, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate, WARCNamedResource, WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap, WARCResourceQualifierMapView, WARCResourceQualifierVectorView, WARCResourceCandidateVectorView, WARCResourceContextLanguagesVectorView;
-@protocol WARCIResourceManager, WARCIResourceManagerStatics, WARCIResourceQualifier, WARCIResourceContext, WARCIResourceContextStatics, WARCIResourceContextStatics2, WARCIResourceCandidate, WARCINamedResource, WARCIResourceMap;
+@class WARCResourceMap, WARCResourceContext, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate, WARCNamedResource,
+    WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap,
+    WARCResourceQualifierMapView, WARCResourceQualifierVectorView, WARCResourceCandidateVectorView, WARCResourceContextLanguagesVectorView;
+@protocol WARCIResourceManager
+, WARCIResourceManagerStatics, WARCIResourceQualifier, WARCIResourceContext, WARCIResourceContextStatics, WARCIResourceContextStatics2,
+    WARCIResourceCandidate, WARCINamedResource, WARCIResourceMap;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
@@ -33,13 +37,15 @@
 
 WINRT_EXPORT
 @interface WARCResourceMap : RTObject
-@property (readonly) WFUri * uri;
+@property (readonly) WFUri* uri;
 @property (readonly) unsigned size;
-- (WARCResourceCandidate *)getValue:(NSString *)resource;
-- (WARCResourceCandidate *)getValueForContext:(NSString *)resource context:(WARCResourceContext *)context;
-- (WARCResourceMap *)getSubtree:(NSString *)reference;
-// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.NamedResource> type information
-// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.NamedResource> type information
+- (WARCResourceCandidate*)getValue:(NSString*)resource;
+- (WARCResourceCandidate*)getValueForContext:(NSString*)resource context:(WARCResourceContext*)context;
+- (WARCResourceMap*)getSubtree:(NSString*)reference;
+// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.NamedResource> type
+// information
+// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.NamedResource> type
+// information
 @end
 
 #endif // __WARCResourceMap_DEFINED__
@@ -50,20 +56,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceContext : RTObject
-+ (WARCResourceContext *)getForCurrentView;
-+ (void)setGlobalQualifierValue:(NSString *)key value:(NSString *)value;
++ (WARCResourceContext*)getForCurrentView;
++ (void)setGlobalQualifierValue:(NSString*)key value:(NSString*)value;
 + (void)resetGlobalQualifierValues;
-+ (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /*String*/ )qualifierNames;
-+ (WARCResourceContext *)getForViewIndependentUse;
-+ (WARCResourceContext *)createMatchingContext:(id<NSFastEnumeration> /*WARCResourceQualifier*/ )result;
++ (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /*String*/)qualifierNames;
++ (WARCResourceContext*)getForViewIndependentUse;
++ (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /*WARCResourceQualifier*/)result;
 + (instancetype)create ACTIVATOR;
-@property (copy) id<NSFastEnumeration> /*String*/  languages;
+@property (copy) id<NSFastEnumeration> /*String*/ languages;
 // Failed to generate property QualifierValues (Can't marshal Windows.Foundation.Collections.IObservableMap`2<String,String>)
 // Failed to generate member get_QualifierValues (Can't marshal Windows.Foundation.Collections.IObservableMap`2<String,String>)
 - (void)reset;
-- (void)resetQualifierValues:(id<NSFastEnumeration> /*String*/ )qualifierNames;
-- (void)overrideToMatch:(id<NSFastEnumeration> /*WARCResourceQualifier*/ )result;
-- (WARCResourceContext *)clone;
+- (void)resetQualifierValues:(id<NSFastEnumeration> /*String*/)qualifierNames;
+- (void)overrideToMatch:(id<NSFastEnumeration> /*WARCResourceQualifier*/)result;
+- (WARCResourceContext*)clone;
 @end
 
 #endif // __WARCResourceContext_DEFINED__
@@ -74,13 +80,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceManager : RTObject
-+ (BOOL)isResourceReference:(NSString *)resourceReference;
-@property (readonly) NSDictionary * /*String, WARCResourceMap*/  allResourceMaps;
-@property (readonly) WARCResourceContext * defaultContext;
-@property (readonly) WARCResourceMap * mainResourceMap;
-+ (WARCResourceManager *)current;
-- (void)loadPriFiles:(id<NSFastEnumeration> /*WSIStorageFile*/ )files;
-- (void)unloadPriFiles:(id<NSFastEnumeration> /*WSIStorageFile*/ )files;
++ (BOOL)isResourceReference:(NSString*)resourceReference;
+@property (readonly) NSDictionary* /*String, WARCResourceMap*/ allResourceMaps;
+@property (readonly) WARCResourceContext* defaultContext;
+@property (readonly) WARCResourceMap* mainResourceMap;
++ (WARCResourceManager*)current;
+- (void)loadPriFiles:(id<NSFastEnumeration> /*WSIStorageFile*/)files;
+- (void)unloadPriFiles:(id<NSFastEnumeration> /*WSIStorageFile*/)files;
 @end
 
 #endif // __WARCResourceManager_DEFINED__
@@ -93,8 +99,8 @@ WINRT_EXPORT
 @interface WARCResourceQualifier : RTObject
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
-@property (readonly) NSString * qualifierName;
-@property (readonly) NSString * qualifierValue;
+@property (readonly) NSString* qualifierName;
+@property (readonly) NSString* qualifierValue;
 @property (readonly) double score;
 @end
 
@@ -109,10 +115,10 @@ WINRT_EXPORT
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
 @property (readonly) BOOL isMatchAsDefault;
-@property (readonly) id<NSFastEnumeration> /*WARCResourceQualifier*/  qualifiers;
-@property (readonly) NSString * valueAsString;
-- (void)getValueAsFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
-- (NSString *)getQualifierValue:(NSString *)qualifierName;
+@property (readonly) id<NSFastEnumeration> /*WARCResourceQualifier*/ qualifiers;
+@property (readonly) NSString* valueAsString;
+- (void)getValueAsFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (NSString*)getQualifierValue:(NSString*)qualifierName;
 @end
 
 #endif // __WARCResourceCandidate_DEFINED__
@@ -123,12 +129,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCNamedResource : RTObject
-@property (readonly) id<NSFastEnumeration> /*WARCResourceCandidate*/  candidates;
-@property (readonly) WFUri * uri;
-- (WARCResourceCandidate *)resolve;
-- (WARCResourceCandidate *)resolveForContext:(WARCResourceContext *)resourceContext;
-- (id<NSFastEnumeration> /*WARCResourceCandidate*/ )resolveAll;
-- (id<NSFastEnumeration> /*WARCResourceCandidate*/ )resolveAllForContext:(WARCResourceContext *)resourceContext;
+@property (readonly) id<NSFastEnumeration> /*WARCResourceCandidate*/ candidates;
+@property (readonly) WFUri* uri;
+- (WARCResourceCandidate*)resolve;
+- (WARCResourceCandidate*)resolveForContext:(WARCResourceContext*)resourceContext;
+- (id<NSFastEnumeration> /*WARCResourceCandidate*/)resolveAll;
+- (id<NSFastEnumeration> /*WARCResourceCandidate*/)resolveAllForContext:(WARCResourceContext*)resourceContext;
 @end
 
 #endif // __WARCNamedResource_DEFINED__
@@ -139,9 +145,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceMapIterator : RTObject
-// Failed to generate property Current (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>)
+// Failed to generate property Current (Can't marshal
+// Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>)
 @property (readonly) BOOL hasCurrent;
-// Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>> type information
+// Could not find base class
+// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
+// type information
 @end
 
 #endif // __WARCResourceMapIterator_DEFINED__
@@ -153,7 +162,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceMapMapView : RTObject
 @property (readonly) unsigned size;
-// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap> type information
+// Could not find base class Windows.Foundation.Collections.IMapView`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap> type
+// information
 @end
 
 #endif // __WARCResourceMapMapView_DEFINED__
@@ -164,9 +174,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceMapMapViewIterator : RTObject
-// Failed to generate property Current (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>)
+// Failed to generate property Current (Can't marshal
+// Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>)
 @property (readonly) BOOL hasCurrent;
-// Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>> type information
+// Could not find base class
+// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
+// type information
 @end
 
 #endif // __WARCResourceMapMapViewIterator_DEFINED__
@@ -230,4 +243,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WARCResourceContextLanguagesVectorView_DEFINED__
-

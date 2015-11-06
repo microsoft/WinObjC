@@ -20,9 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId, WAPackage, WADesignMode;
+@class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId,
+    WAPackage, WADesignMode;
 @class WAPackageVersion;
-@protocol WAIAppDisplayInfo, WAIAppInfo, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAIPackageIdWithMetadata, WAIPackageWithMetadata, WAIPackageStatus, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackageStatics, WAIDesignModeStatics;
+@protocol WAIAppDisplayInfo
+, WAIAppInfo, WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAIPackageIdWithMetadata, WAIPackageWithMetadata,
+    WAIPackageStatus, WAIPackageId, WAIPackage, WAIPackage2, WAIPackage3, WAIPackageStatics, WAIDesignModeStatics;
 
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
@@ -36,7 +39,7 @@
 // [struct] Windows.ApplicationModel.PackageVersion
 WINRT_EXPORT
 @interface WAPackageVersion : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned short major;
 @property unsigned short minor;
 @property unsigned short build;
@@ -80,8 +83,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppDisplayInfo : RTObject
-@property (readonly) NSString * description;
-@property (readonly) NSString * displayName;
+@property (readonly) NSString* description;
+@property (readonly) NSString* displayName;
 - (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
 @end
 
@@ -93,10 +96,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppInfo : RTObject
-@property (readonly) NSString * appUserModelId;
+@property (readonly) NSString* appUserModelId;
 @property (readonly) WAAppDisplayInfo* displayInfo;
-@property (readonly) NSString * id;
-@property (readonly) NSString * packageFamilyName;
+@property (readonly) NSString* id;
+@property (readonly) NSString* packageFamilyName;
 @end
 
 #endif // __WAAppInfo_DEFINED__
@@ -164,15 +167,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAPackageId : RTObject
 @property (readonly) WSProcessorArchitecture architecture;
-@property (readonly) NSString * familyName;
-@property (readonly) NSString * fullName;
-@property (readonly) NSString * name;
-@property (readonly) NSString * publisher;
-@property (readonly) NSString * publisherId;
-@property (readonly) NSString * resourceId;
+@property (readonly) NSString* familyName;
+@property (readonly) NSString* fullName;
+@property (readonly) NSString* name;
+@property (readonly) NSString* publisher;
+@property (readonly) NSString* publisherId;
+@property (readonly) NSString* resourceId;
 @property (readonly) WAPackageVersion* version;
-@property (readonly) NSString * author;
-@property (readonly) NSString * productId;
+@property (readonly) NSString* author;
+@property (readonly) NSString* productId;
 @end
 
 #endif // __WAPackageId_DEFINED__
@@ -187,20 +190,20 @@ WINRT_EXPORT
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
-@property (readonly) NSString * description;
-@property (readonly) NSString * displayName;
+@property (readonly) NSString* description;
+@property (readonly) NSString* displayName;
 @property (readonly) BOOL isBundle;
 @property (readonly) BOOL isDevelopmentMode;
 @property (readonly) BOOL isResourcePackage;
 @property (readonly) WFUri* logo;
-@property (readonly) NSString * publisherDisplayName;
+@property (readonly) NSString* publisherDisplayName;
 @property (readonly) WFDateTime* installedDate;
 @property (readonly) WAPackageStatus* status;
 @property (readonly) WFDateTime* installDate;
 + (WAPackage*)current;
 - (void)getAppListEntriesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (NSString *)getThumbnailToken;
-- (void)launch:(NSString *)parameters;
+- (NSString*)getThumbnailToken;
+- (void)launch:(NSString*)parameters;
 @end
 
 #endif // __WAPackage_DEFINED__
@@ -215,4 +218,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WADesignMode_DEFINED__
-

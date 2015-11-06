@@ -15,15 +15,15 @@
 //******************************************************************************
 
 #ifndef AUDIOTOOLBOX_IMPEXP
- #define AUDIOTOOLBOX_IMPEXP __declspec(dllimport)
+#define AUDIOTOOLBOX_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef AUDIOTOOLBOX_EXPORT
- #ifdef __cplusplus
-  #define AUDIOTOOLBOX_EXPORT AUDIOTOOLBOX_IMPEXP extern "C"
-  #define AUDIOTOOLBOX_EXPORT_CLASS AUDIOTOOLBOX_IMPEXP 
- #else
-  #define AUDIOTOOLBOX_EXPORT AUDIOTOOLBOX_IMPEXP extern  
-  #define AUDIOTOOLBOX_EXPORT_CLASS AUDIOTOOLBOX_IMPEXP
- #endif
+#ifdef __cplusplus
+#define AUDIOTOOLBOX_EXPORT AUDIOTOOLBOX_IMPEXP extern "C"
+#define AUDIOTOOLBOX_EXPORT_CLASS AUDIOTOOLBOX_IMPEXP
+#else
+#define AUDIOTOOLBOX_EXPORT AUDIOTOOLBOX_IMPEXP extern
+#define AUDIOTOOLBOX_EXPORT_CLASS AUDIOTOOLBOX_IMPEXP
+#endif
 #endif

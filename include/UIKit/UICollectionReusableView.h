@@ -21,7 +21,7 @@
 #include <UIKit/UIView.h>
 
 @interface UICollectionReusableView : UIView
--(void) prepareForReuse;
+- (void)prepareForReuse;
 @end
 
 #endif /* _UICOLLECTIONREUSABLEVIEW_H_ */

@@ -32,5 +32,3 @@ enum _WMRAudioRenderCategory {
     WMRAudioRenderCategoryGameMedia = 7,
 };
 typedef unsigned WMRAudioRenderCategory;
-
-

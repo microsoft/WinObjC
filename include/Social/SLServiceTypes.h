@@ -17,5 +17,5 @@
 #import <Foundation/Foundation.h>
 #import <Social/SocialExport.h>
 
-SOCIAL_EXPORT NSString *const SLServiceTypeFacebook;
-SOCIAL_EXPORT NSString *const SLServiceTypeTwitter;
+SOCIAL_EXPORT NSString* const SLServiceTypeFacebook;
+SOCIAL_EXPORT NSString* const SLServiceTypeTwitter;

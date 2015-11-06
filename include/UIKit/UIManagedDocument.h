@@ -20,9 +20,9 @@
 @interface UIManagedDocument : UIDocument {
 }
 
-- (id)initWithFileURL:(NSURL *)url;
+- (id)initWithFileURL:(NSURL*)url;
 
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain, readonly) NSManagedObjectContext* managedObjectContext;
 @property (readonly) UIDocumentState documentState;
 
 @end

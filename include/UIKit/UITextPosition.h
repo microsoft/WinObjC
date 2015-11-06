@@ -18,6 +18,4 @@
 
 @interface UITextPosition : NSObject
 
-
-
 @end

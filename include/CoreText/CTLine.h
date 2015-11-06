@@ -23,12 +23,12 @@
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef struct __CTLine *CTLineRef;
+typedef struct __CTLine* CTLineRef;
 
 enum {
     kCTLineTruncationStart = 0,
     kCTLineTruncationEnd = 1,
-    kCTLineTruncationMiddle = 2
+    kCTLineTruncationMiddle = 2,
 };
 typedef uint32_t CTLineTruncationType;
 

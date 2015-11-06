@@ -20,90 +20,101 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior, WUXIManipulationPivot, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName, WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs, WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs, WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs;
-@protocol WUXIICommand, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIInertiaExpansionBehavior, WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer, WUXIIDoubleTappedRoutedEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory, WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs, WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIIPointerRoutedEventArgs, WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs;
+@class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior,
+    WUXIManipulationPivot, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName,
+    WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs,
+    WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs,
+    WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs;
+@protocol WUXIICommand
+, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIInertiaExpansionBehavior,
+    WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer,
+    WUXIIDoubleTappedRoutedEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory,
+    WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs,
+    WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs,
+    WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIIPointerRoutedEventArgs,
+    WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs;
 
 // Windows.UI.Xaml.Input.FocusNavigationDirection
 enum _WUXIFocusNavigationDirection {
-	WUXIFocusNavigationDirectionNext = 0,
-	WUXIFocusNavigationDirectionPrevious = 1,
-	WUXIFocusNavigationDirectionUp = 2,
-	WUXIFocusNavigationDirectionDown = 3,
-	WUXIFocusNavigationDirectionLeft = 4,
-	WUXIFocusNavigationDirectionRight = 5,
-	WUXIFocusNavigationDirectionNone = 6,
+    WUXIFocusNavigationDirectionNext = 0,
+    WUXIFocusNavigationDirectionPrevious = 1,
+    WUXIFocusNavigationDirectionUp = 2,
+    WUXIFocusNavigationDirectionDown = 3,
+    WUXIFocusNavigationDirectionLeft = 4,
+    WUXIFocusNavigationDirectionRight = 5,
+    WUXIFocusNavigationDirectionNone = 6,
 };
 typedef unsigned WUXIFocusNavigationDirection;
 
 // Windows.UI.Xaml.Input.InputScopeNameValue
 enum _WUXIInputScopeNameValue {
-	WUXIInputScopeNameValueDefault = 0,
-	WUXIInputScopeNameValueUrl = 1,
-	WUXIInputScopeNameValueEmailSmtpAddress = 5,
-	WUXIInputScopeNameValuePersonalFullName = 7,
-	WUXIInputScopeNameValueCurrencyAmountAndSymbol = 20,
-	WUXIInputScopeNameValueCurrencyAmount = 21,
-	WUXIInputScopeNameValueDateMonthNumber = 23,
-	WUXIInputScopeNameValueDateDayNumber = 24,
-	WUXIInputScopeNameValueDateYear = 25,
-	WUXIInputScopeNameValueDigits = 28,
-	WUXIInputScopeNameValueNumber = 29,
-	WUXIInputScopeNameValuePassword = 31,
-	WUXIInputScopeNameValueTelephoneNumber = 32,
-	WUXIInputScopeNameValueTelephoneCountryCode = 33,
-	WUXIInputScopeNameValueTelephoneAreaCode = 34,
-	WUXIInputScopeNameValueTelephoneLocalNumber = 35,
-	WUXIInputScopeNameValueTimeHour = 37,
-	WUXIInputScopeNameValueTimeMinutesOrSeconds = 38,
-	WUXIInputScopeNameValueNumberFullWidth = 39,
-	WUXIInputScopeNameValueAlphanumericHalfWidth = 40,
-	WUXIInputScopeNameValueAlphanumericFullWidth = 41,
-	WUXIInputScopeNameValueHiragana = 44,
-	WUXIInputScopeNameValueKatakanaHalfWidth = 45,
-	WUXIInputScopeNameValueKatakanaFullWidth = 46,
-	WUXIInputScopeNameValueHanja = 47,
-	WUXIInputScopeNameValueHangulHalfWidth = 48,
-	WUXIInputScopeNameValueHangulFullWidth = 49,
-	WUXIInputScopeNameValueSearch = 50,
-	WUXIInputScopeNameValueFormula = 51,
-	WUXIInputScopeNameValueSearchIncremental = 52,
-	WUXIInputScopeNameValueChineseHalfWidth = 53,
-	WUXIInputScopeNameValueChineseFullWidth = 54,
-	WUXIInputScopeNameValueNativeScript = 55,
-	WUXIInputScopeNameValueText = 57,
-	WUXIInputScopeNameValueChat = 58,
-	WUXIInputScopeNameValueNameOrPhoneNumber = 59,
-	WUXIInputScopeNameValueEmailNameOrAddress = 60,
-	WUXIInputScopeNameValueMaps = 62,
-	WUXIInputScopeNameValueNumericPassword = 63,
-	WUXIInputScopeNameValueNumericPin = 64,
-	WUXIInputScopeNameValueAlphanumericPin = 65,
-	WUXIInputScopeNameValueFormulaNumber = 67,
+    WUXIInputScopeNameValueDefault = 0,
+    WUXIInputScopeNameValueUrl = 1,
+    WUXIInputScopeNameValueEmailSmtpAddress = 5,
+    WUXIInputScopeNameValuePersonalFullName = 7,
+    WUXIInputScopeNameValueCurrencyAmountAndSymbol = 20,
+    WUXIInputScopeNameValueCurrencyAmount = 21,
+    WUXIInputScopeNameValueDateMonthNumber = 23,
+    WUXIInputScopeNameValueDateDayNumber = 24,
+    WUXIInputScopeNameValueDateYear = 25,
+    WUXIInputScopeNameValueDigits = 28,
+    WUXIInputScopeNameValueNumber = 29,
+    WUXIInputScopeNameValuePassword = 31,
+    WUXIInputScopeNameValueTelephoneNumber = 32,
+    WUXIInputScopeNameValueTelephoneCountryCode = 33,
+    WUXIInputScopeNameValueTelephoneAreaCode = 34,
+    WUXIInputScopeNameValueTelephoneLocalNumber = 35,
+    WUXIInputScopeNameValueTimeHour = 37,
+    WUXIInputScopeNameValueTimeMinutesOrSeconds = 38,
+    WUXIInputScopeNameValueNumberFullWidth = 39,
+    WUXIInputScopeNameValueAlphanumericHalfWidth = 40,
+    WUXIInputScopeNameValueAlphanumericFullWidth = 41,
+    WUXIInputScopeNameValueHiragana = 44,
+    WUXIInputScopeNameValueKatakanaHalfWidth = 45,
+    WUXIInputScopeNameValueKatakanaFullWidth = 46,
+    WUXIInputScopeNameValueHanja = 47,
+    WUXIInputScopeNameValueHangulHalfWidth = 48,
+    WUXIInputScopeNameValueHangulFullWidth = 49,
+    WUXIInputScopeNameValueSearch = 50,
+    WUXIInputScopeNameValueFormula = 51,
+    WUXIInputScopeNameValueSearchIncremental = 52,
+    WUXIInputScopeNameValueChineseHalfWidth = 53,
+    WUXIInputScopeNameValueChineseFullWidth = 54,
+    WUXIInputScopeNameValueNativeScript = 55,
+    WUXIInputScopeNameValueText = 57,
+    WUXIInputScopeNameValueChat = 58,
+    WUXIInputScopeNameValueNameOrPhoneNumber = 59,
+    WUXIInputScopeNameValueEmailNameOrAddress = 60,
+    WUXIInputScopeNameValueMaps = 62,
+    WUXIInputScopeNameValueNumericPassword = 63,
+    WUXIInputScopeNameValueNumericPin = 64,
+    WUXIInputScopeNameValueAlphanumericPin = 65,
+    WUXIInputScopeNameValueFormulaNumber = 67,
 };
 typedef unsigned WUXIInputScopeNameValue;
 
 // Windows.UI.Xaml.Input.KeyboardNavigationMode
 enum _WUXIKeyboardNavigationMode {
-	WUXIKeyboardNavigationModeLocal = 0,
-	WUXIKeyboardNavigationModeCycle = 1,
-	WUXIKeyboardNavigationModeOnce = 2,
+    WUXIKeyboardNavigationModeLocal = 0,
+    WUXIKeyboardNavigationModeCycle = 1,
+    WUXIKeyboardNavigationModeOnce = 2,
 };
 typedef unsigned WUXIKeyboardNavigationMode;
 
 // Windows.UI.Xaml.Input.ManipulationModes
 enum _WUXIManipulationModes {
-	WUXIManipulationModesNone = 0,
-	WUXIManipulationModesTranslateX = 1,
-	WUXIManipulationModesTranslateY = 2,
-	WUXIManipulationModesTranslateRailsX = 4,
-	WUXIManipulationModesTranslateRailsY = 8,
-	WUXIManipulationModesRotate = 16,
-	WUXIManipulationModesScale = 32,
-	WUXIManipulationModesTranslateInertia = 64,
-	WUXIManipulationModesRotateInertia = 128,
-	WUXIManipulationModesScaleInertia = 256,
-	WUXIManipulationModesAll = 65535,
-	WUXIManipulationModesSystem = 65536,
+    WUXIManipulationModesNone = 0,
+    WUXIManipulationModesTranslateX = 1,
+    WUXIManipulationModesTranslateY = 2,
+    WUXIManipulationModesTranslateRailsX = 4,
+    WUXIManipulationModesTranslateRailsY = 8,
+    WUXIManipulationModesRotate = 16,
+    WUXIManipulationModesScale = 32,
+    WUXIManipulationModesTranslateInertia = 64,
+    WUXIManipulationModesRotateInertia = 128,
+    WUXIManipulationModesScaleInertia = 256,
+    WUXIManipulationModesAll = 65535,
+    WUXIManipulationModesSystem = 65536,
 };
 typedef unsigned WUXIManipulationModes;
 
@@ -117,76 +128,75 @@ typedef unsigned WUXIManipulationModes;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Input.DoubleTappedEventHandler
 #ifndef __WUXIDoubleTappedEventHandler__DEFINED
 #define __WUXIDoubleTappedEventHandler__DEFINED
-typedef void(^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
+typedef void (^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
 #endif // __WUXIDoubleTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.HoldingEventHandler
 #ifndef __WUXIHoldingEventHandler__DEFINED
 #define __WUXIHoldingEventHandler__DEFINED
-typedef void(^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
+typedef void (^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
 #endif // __WUXIHoldingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.KeyEventHandler
 #ifndef __WUXIKeyEventHandler__DEFINED
 #define __WUXIKeyEventHandler__DEFINED
-typedef void(^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
+typedef void (^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
 #endif // __WUXIKeyEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationCompletedEventHandler
 #ifndef __WUXIManipulationCompletedEventHandler__DEFINED
 #define __WUXIManipulationCompletedEventHandler__DEFINED
-typedef void(^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
+typedef void (^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
 #endif // __WUXIManipulationCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationDeltaEventHandler
 #ifndef __WUXIManipulationDeltaEventHandler__DEFINED
 #define __WUXIManipulationDeltaEventHandler__DEFINED
-typedef void(^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
+typedef void (^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
 #endif // __WUXIManipulationDeltaEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationInertiaStartingEventHandler
 #ifndef __WUXIManipulationInertiaStartingEventHandler__DEFINED
 #define __WUXIManipulationInertiaStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
+typedef void (^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationInertiaStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartedEventHandler
 #ifndef __WUXIManipulationStartedEventHandler__DEFINED
 #define __WUXIManipulationStartedEventHandler__DEFINED
-typedef void(^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
+typedef void (^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
 #endif // __WUXIManipulationStartedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartingEventHandler
 #ifndef __WUXIManipulationStartingEventHandler__DEFINED
 #define __WUXIManipulationStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
+typedef void (^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.PointerEventHandler
 #ifndef __WUXIPointerEventHandler__DEFINED
 #define __WUXIPointerEventHandler__DEFINED
-typedef void(^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
+typedef void (^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
 #endif // __WUXIPointerEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.RightTappedEventHandler
 #ifndef __WUXIRightTappedEventHandler__DEFINED
 #define __WUXIRightTappedEventHandler__DEFINED
-typedef void(^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
+typedef void (^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
 #endif // __WUXIRightTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.TappedEventHandler
 #ifndef __WUXITappedEventHandler__DEFINED
 #define __WUXITappedEventHandler__DEFINED
-typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
+typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
 #endif // __WUXITappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ICommand
@@ -194,7 +204,7 @@ typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArg
 #define __WUXIICommand_DEFINED__
 
 @protocol WUXIICommand
-- (EventRegistrationToken)addCanExecuteChangedEvent:(void(^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addCanExecuteChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeCanExecuteChangedEvent:(EventRegistrationToken)tok;
 - (BOOL)canExecute:(RTObject*)parameter;
 - (void)execute:(RTObject*)parameter;
@@ -511,4 +521,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXITappedRoutedEventArgs_DEFINED__
-

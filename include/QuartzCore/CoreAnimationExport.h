@@ -15,15 +15,15 @@
 //******************************************************************************
 
 #ifndef CA_IMPEXP
- #define CA_IMPEXP __declspec(dllimport)
+#define CA_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef CA_EXPORT
- #ifdef __cplusplus
-  #define CA_EXPORT CA_IMPEXP extern "C"
-  #define CA_EXPORT_CLASS CA_IMPEXP 
- #else
-  #define CA_EXPORT CA_IMPEXP extern  
-  #define CA_EXPORT_CLASS CA_IMPEXP
- #endif
+#ifdef __cplusplus
+#define CA_EXPORT CA_IMPEXP extern "C"
+#define CA_EXPORT_CLASS CA_IMPEXP
+#else
+#define CA_EXPORT CA_IMPEXP extern
+#define CA_EXPORT_CLASS CA_IMPEXP
+#endif
 #endif

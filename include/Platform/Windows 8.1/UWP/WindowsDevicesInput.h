@@ -22,7 +22,9 @@
 #include "interopBase.h"
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
-@protocol WDIIMouseCapabilities, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIMouseEventArgs, WDIIMouseDevice, WDIIMouseDeviceStatics;
+@protocol WDIIMouseCapabilities
+, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIMouseEventArgs, WDIIMouseDevice,
+    WDIIMouseDeviceStatics;
 
 // Windows.Devices.Input.PointerDeviceType
 enum _WDIPointerDeviceType {
@@ -38,7 +40,7 @@ typedef unsigned WDIPointerDeviceType;
 // [struct] Windows.Devices.Input.PointerDeviceUsage
 WINRT_EXPORT
 @interface WDIPointerDeviceUsage : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned usagePage;
 @property unsigned usage;
 @property int minLogical;
@@ -52,7 +54,7 @@ WINRT_EXPORT
 // [struct] Windows.Devices.Input.MouseDelta
 WINRT_EXPORT
 @interface WDIMouseDelta : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int x;
 @property int y;
 @end
@@ -63,14 +65,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIPointerDevice : RTObject
-+ (WDIPointerDevice *)getPointerDevice:(unsigned)pointerId;
-+ (id<NSFastEnumeration> /*WDIPointerDevice*/ )getPointerDevices;
++ (WDIPointerDevice*)getPointerDevice:(unsigned)pointerId;
++ (id<NSFastEnumeration> /*WDIPointerDevice*/)getPointerDevices;
 @property (readonly) BOOL isIntegrated;
 @property (readonly) unsigned maxContacts;
-@property (readonly) WFRect * physicalDeviceRect;
+@property (readonly) WFRect* physicalDeviceRect;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFRect * screenRect;
-@property (readonly) id<NSFastEnumeration> /*WDIPointerDeviceUsage*/  supportedUsages;
+@property (readonly) WFRect* screenRect;
+@property (readonly) id<NSFastEnumeration> /*WDIPointerDeviceUsage*/ supportedUsages;
 @end
 
 #endif // __WDIPointerDevice_DEFINED__
@@ -81,8 +83,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseDevice : RTObject
-+ (WDIMouseDevice *)getForCurrentView;
-- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice *, WDIMouseEventArgs *))del;
++ (WDIMouseDevice*)getForCurrentView;
+- (EventRegistrationToken)addMouseMovedEvent:(void (^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -94,7 +96,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseEventArgs : RTObject
-@property (readonly) WDIMouseDelta * mouseDelta;
+@property (readonly) WDIMouseDelta* mouseDelta;
 @end
 
 #endif // __WDIMouseEventArgs_DEFINED__
@@ -139,4 +141,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDITouchCapabilities_DEFINED__
-

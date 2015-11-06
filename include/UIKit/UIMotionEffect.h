@@ -26,7 +26,7 @@ typedef enum {
     UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis
 } UIInterpolatingMotionEffectType;
 
-@interface UIMotionEffect : NSObject<NSCopying, NSCoding>
+@interface UIMotionEffect : NSObject <NSCopying, NSCoding>
 
 @end
 
@@ -35,12 +35,12 @@ typedef enum {
 @property (retain, nonatomic) id maximumRelativeValue;
 @property (retain, nonatomic) id minimumRelativeValue;
 
-- (instancetype)initWithKeyPath:(NSString *)keyPath type:(UIInterpolatingMotionEffectType)type;
+- (instancetype)initWithKeyPath:(NSString*)keyPath type:(UIInterpolatingMotionEffectType)type;
 
 @end
 
 @interface UIMotionEffectGroup : UIMotionEffect
-@property (copy, nonatomic) NSArray *motionEffects;
+@property (copy, nonatomic) NSArray* motionEffects;
 @end
 
 #endif /* _UIMOTIONEFFECT_H_ */

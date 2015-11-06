@@ -21,8 +21,8 @@
 
 @interface CAGradientLayer : CALayer
 
-@property(copy) NSArray *colors;
-@property(copy) NSArray *locations;
+@property (copy) NSArray* colors;
+@property (copy) NSArray* locations;
 @property CGPoint startPoint;
 @property CGPoint endPoint;
 

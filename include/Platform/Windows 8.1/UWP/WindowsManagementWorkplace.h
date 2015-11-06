@@ -23,7 +23,6 @@
 @class WMWWorkplaceSettings;
 @protocol WMWIWorkplaceSettingsStatics;
 
-
 // Windows.Management.Workplace.WorkplaceSettings
 #ifndef __WMWWorkplaceSettings_DEFINED__
 #define __WMWWorkplaceSettings_DEFINED__
@@ -34,4 +33,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMWWorkplaceSettings_DEFINED__
-

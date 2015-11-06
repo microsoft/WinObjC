@@ -20,7 +20,7 @@
 #import <StarboardExport.h>
 #import <CoreFoundation/CFString.h>
 
-typedef const struct __CTFontDescriptor *CTFontDescriptorRef;
+typedef const struct __CTFontDescriptor* CTFontDescriptorRef;
 
 SB_EXPORT const CFStringRef kCTFontURLAttribute;
 SB_EXPORT const CFStringRef kCTFontNameAttribute;

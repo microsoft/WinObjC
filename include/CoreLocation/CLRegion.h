@@ -20,7 +20,11 @@
 #import <CoreLocation/CoreLocationExport.h>
 #import <CoreLocation/CLLocation.h>
 
-enum _CLRegionState { kCLRegionStateUnknown = 0, kCLRegionStateInside = 1, kCLRegionStateOutside = 2 };
+enum _CLRegionState {
+    kCLRegionStateUnknown = 0,
+    kCLRegionStateInside = 1,
+    kCLRegionStateOutside = 2,
+};
 typedef uint32_t CLRegionState;
 
 CORELOCATION_EXPORT_CLASS

@@ -21,23 +21,26 @@
 
 #include "interopBase.h"
 @class WSAWCWebTokenRequest, WSAWCWebAuthenticationCoreManager, WSAWCWebProviderError, WSAWCWebTokenResponse, WSAWCWebTokenRequestResult;
-@protocol WSAWCIWebTokenRequest, WSAWCIWebTokenRequestFactory, WSAWCIWebAuthenticationCoreManagerStatics, WSAWCIWebAuthenticationCoreManagerStatics2, WSAWCIWebProviderError, WSAWCIWebProviderErrorFactory, WSAWCIWebTokenRequestResult, WSAWCIWebTokenResponse, WSAWCIWebTokenResponseFactory;
+@protocol WSAWCIWebTokenRequest
+, WSAWCIWebTokenRequestFactory, WSAWCIWebAuthenticationCoreManagerStatics, WSAWCIWebAuthenticationCoreManagerStatics2,
+    WSAWCIWebProviderError, WSAWCIWebProviderErrorFactory, WSAWCIWebTokenRequestResult, WSAWCIWebTokenResponse,
+    WSAWCIWebTokenResponseFactory;
 
 // Windows.Security.Authentication.Web.Core.WebTokenRequestPromptType
 enum _WSAWCWebTokenRequestPromptType {
-	WSAWCWebTokenRequestPromptTypeDefault = 0,
-	WSAWCWebTokenRequestPromptTypeForceAuthentication = 1,
+    WSAWCWebTokenRequestPromptTypeDefault = 0,
+    WSAWCWebTokenRequestPromptTypeForceAuthentication = 1,
 };
 typedef unsigned WSAWCWebTokenRequestPromptType;
 
 // Windows.Security.Authentication.Web.Core.WebTokenRequestStatus
 enum _WSAWCWebTokenRequestStatus {
-	WSAWCWebTokenRequestStatusSuccess = 0,
-	WSAWCWebTokenRequestStatusUserCancel = 1,
-	WSAWCWebTokenRequestStatusAccountSwitch = 2,
-	WSAWCWebTokenRequestStatusUserInteractionRequired = 3,
-	WSAWCWebTokenRequestStatusAccountProviderNotAvailable = 4,
-	WSAWCWebTokenRequestStatusProviderError = 5,
+    WSAWCWebTokenRequestStatusSuccess = 0,
+    WSAWCWebTokenRequestStatusUserCancel = 1,
+    WSAWCWebTokenRequestStatusAccountSwitch = 2,
+    WSAWCWebTokenRequestStatusUserInteractionRequired = 3,
+    WSAWCWebTokenRequestStatusAccountProviderNotAvailable = 4,
+    WSAWCWebTokenRequestStatusProviderError = 5,
 };
 typedef unsigned WSAWCWebTokenRequestStatus;
 
@@ -54,14 +57,17 @@ typedef unsigned WSAWCWebTokenRequestStatus;
 
 WINRT_EXPORT
 @interface WSAWCWebTokenRequest : RTObject
-+ (WSAWCWebTokenRequest*)create:(WSCWebAccountProvider*)provider scope:(NSString *)scope clientId:(NSString *)clientId ACTIVATOR;
-+ (WSAWCWebTokenRequest*)createWithPromptType:(WSCWebAccountProvider*)provider scope:(NSString *)scope clientId:(NSString *)clientId promptType:(WSAWCWebTokenRequestPromptType)promptType ACTIVATOR;
++ (WSAWCWebTokenRequest*)create:(WSCWebAccountProvider*)provider scope:(NSString*)scope clientId:(NSString*)clientId ACTIVATOR;
++ (WSAWCWebTokenRequest*)createWithPromptType:(WSCWebAccountProvider*)provider
+                                        scope:(NSString*)scope
+                                     clientId:(NSString*)clientId
+                                   promptType:(WSAWCWebTokenRequestPromptType)promptType ACTIVATOR;
 + (WSAWCWebTokenRequest*)createWithProvider:(WSCWebAccountProvider*)provider ACTIVATOR;
-+ (WSAWCWebTokenRequest*)createWithScope:(WSCWebAccountProvider*)provider scope:(NSString *)scope ACTIVATOR;
-@property (readonly) NSString * clientId;
++ (WSAWCWebTokenRequest*)createWithScope:(WSCWebAccountProvider*)provider scope:(NSString*)scope ACTIVATOR;
+@property (readonly) NSString* clientId;
 @property (readonly) WSAWCWebTokenRequestPromptType promptType;
 @property (readonly) NSMutableDictionary* properties;
-@property (readonly) NSString * scope;
+@property (readonly) NSString* scope;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
@@ -73,21 +79,61 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWCWebAuthenticationCoreManager : RTObject
-+ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountAsync:(WSCWebAccountProvider*)provider webAccountId:(NSString *)webAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderAsync:(NSString *)webAccountProviderId success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderWithAuthorityAsync:(NSString *)webAccountProviderId authority:(NSString *)authority success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderWithAuthorityForUserAsync:(NSString *)webAccountProviderId authority:(NSString *)authority user:(WSUser*)user success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request webAccount:(WSCWebAccount*)webAccount success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountAsync:(WSCWebAccountProvider*)provider webAccountId:(NSString *)webAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderAsync:(NSString *)webAccountProviderId success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
-+ (void)findAccountProviderWithAuthorityAsync:(NSString *)webAccountProviderId authority:(NSString *)authority success:(void (^)(WSCWebAccountProvider*))success failure:(void (^)(NSError*))failure;
++ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request
+                      success:(void (^)(WSAWCWebTokenRequestResult*))success
+                      failure:(void (^)(NSError*))failure;
++ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request
+                                 webAccount:(WSCWebAccount*)webAccount
+                                    success:(void (^)(WSAWCWebTokenRequestResult*))success
+                                    failure:(void (^)(NSError*))failure;
++ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request
+                  success:(void (^)(WSAWCWebTokenRequestResult*))success
+                  failure:(void (^)(NSError*))failure;
++ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request
+                             webAccount:(WSCWebAccount*)webAccount
+                                success:(void (^)(WSAWCWebTokenRequestResult*))success
+                                failure:(void (^)(NSError*))failure;
++ (void)findAccountAsync:(WSCWebAccountProvider*)provider
+            webAccountId:(NSString*)webAccountId
+                 success:(void (^)(WSCWebAccount*))success
+                 failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderAsync:(NSString*)webAccountProviderId
+                         success:(void (^)(WSCWebAccountProvider*))success
+                         failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderWithAuthorityAsync:(NSString*)webAccountProviderId
+                                    authority:(NSString*)authority
+                                      success:(void (^)(WSCWebAccountProvider*))success
+                                      failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderWithAuthorityForUserAsync:(NSString*)webAccountProviderId
+                                           authority:(NSString*)authority
+                                                user:(WSUser*)user
+                                             success:(void (^)(WSCWebAccountProvider*))success
+                                             failure:(void (^)(NSError*))failure;
++ (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request
+                      success:(void (^)(WSAWCWebTokenRequestResult*))success
+                      failure:(void (^)(NSError*))failure;
++ (void)getTokenSilentlyWithWebAccountAsync:(WSAWCWebTokenRequest*)request
+                                 webAccount:(WSCWebAccount*)webAccount
+                                    success:(void (^)(WSAWCWebTokenRequestResult*))success
+                                    failure:(void (^)(NSError*))failure;
++ (void)requestTokenAsync:(WSAWCWebTokenRequest*)request
+                  success:(void (^)(WSAWCWebTokenRequestResult*))success
+                  failure:(void (^)(NSError*))failure;
++ (void)requestTokenWithWebAccountAsync:(WSAWCWebTokenRequest*)request
+                             webAccount:(WSCWebAccount*)webAccount
+                                success:(void (^)(WSAWCWebTokenRequestResult*))success
+                                failure:(void (^)(NSError*))failure;
++ (void)findAccountAsync:(WSCWebAccountProvider*)provider
+            webAccountId:(NSString*)webAccountId
+                 success:(void (^)(WSCWebAccount*))success
+                 failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderAsync:(NSString*)webAccountProviderId
+                         success:(void (^)(WSCWebAccountProvider*))success
+                         failure:(void (^)(NSError*))failure;
++ (void)findAccountProviderWithAuthorityAsync:(NSString*)webAccountProviderId
+                                    authority:(NSString*)authority
+                                      success:(void (^)(WSCWebAccountProvider*))success
+                                      failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSAWCWebAuthenticationCoreManager_DEFINED__
@@ -98,9 +144,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWCWebProviderError : RTObject
-+ (WSAWCWebProviderError*)create:(unsigned int)errorCode errorMessage:(NSString *)errorMessage ACTIVATOR;
++ (WSAWCWebProviderError*)create:(unsigned int)errorCode errorMessage:(NSString*)errorMessage ACTIVATOR;
 @property (readonly) unsigned int errorCode;
-@property (readonly) NSString * errorMessage;
+@property (readonly) NSString* errorMessage;
 @property (readonly) NSMutableDictionary* properties;
 @end
 
@@ -112,13 +158,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWCWebTokenResponse : RTObject
-+ (WSAWCWebTokenResponse*)createWithToken:(NSString *)token ACTIVATOR;
-+ (WSAWCWebTokenResponse*)createWithTokenAndAccount:(NSString *)token webAccount:(WSCWebAccount*)webAccount ACTIVATOR;
-+ (WSAWCWebTokenResponse*)createWithTokenAccountAndError:(NSString *)token webAccount:(WSCWebAccount*)webAccount error:(WSAWCWebProviderError*)error ACTIVATOR;
++ (WSAWCWebTokenResponse*)createWithToken:(NSString*)token ACTIVATOR;
++ (WSAWCWebTokenResponse*)createWithTokenAndAccount:(NSString*)token webAccount:(WSCWebAccount*)webAccount ACTIVATOR;
++ (WSAWCWebTokenResponse*)createWithTokenAccountAndError:(NSString*)token
+                                              webAccount:(WSCWebAccount*)webAccount
+                                                   error:(WSAWCWebProviderError*)error ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @property (readonly) NSMutableDictionary* properties;
 @property (readonly) WSAWCWebProviderError* providerError;
-@property (readonly) NSString * token;
+@property (readonly) NSString* token;
 @property (readonly) WSCWebAccount* webAccount;
 @end
 
@@ -137,4 +185,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSAWCWebTokenRequestResult_DEFINED__
-

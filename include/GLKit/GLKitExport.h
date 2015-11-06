@@ -16,17 +16,17 @@
 #ifndef GLKIT_IMPEXP
 #ifdef __GLKIT_INSIDE_BUILD
 #define GLKIT_IMPEXP __declspec(dllexport)
-#else 
+#else
 #define GLKIT_IMPEXP __declspec(dllimport)
-#endif 
+#endif
 #endif
 
 #ifndef GLKIT_EXPORT
- #ifdef __cplusplus
-  #define GLKIT_EXPORT GLKIT_IMPEXP extern "C"
-  #define GLKIT_EXPORT_CLASS GLKIT_IMPEXP 
- #else
-  #define GLKIT_EXPORT GLKIT_IMPEXP extern  
-  #define GLKIT_EXPORT_CLASS GLKIT_IMPEXP
- #endif
+#ifdef __cplusplus
+#define GLKIT_EXPORT GLKIT_IMPEXP extern "C"
+#define GLKIT_EXPORT_CLASS GLKIT_IMPEXP
+#else
+#define GLKIT_EXPORT GLKIT_IMPEXP extern
+#define GLKIT_EXPORT_CLASS GLKIT_IMPEXP
+#endif
 #endif

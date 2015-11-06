@@ -22,7 +22,9 @@
 #include "interopBase.h"
 @class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
 @class WUXMXamlBinaryWriterErrorInformation, WUXMXmlnsDefinition;
-@protocol WUXMIComponentConnector, WUXMIComponentConnector2, WUXMIXamlMember, WUXMIXamlType, WUXMIXamlMetadataProvider, WUXMIXamlBinaryWriter, WUXMIXamlBinaryWriterStatics, WUXMIXamlReader, WUXMIXamlReaderStatics, WUXMIDataTemplateComponent, WUXMIXamlBindingHelper, WUXMIXamlBindingHelperStatics;
+@protocol WUXMIComponentConnector
+, WUXMIComponentConnector2, WUXMIXamlMember, WUXMIXamlType, WUXMIXamlMetadataProvider, WUXMIXamlBinaryWriter, WUXMIXamlBinaryWriterStatics,
+    WUXMIXamlReader, WUXMIXamlReaderStatics, WUXMIDataTemplateComponent, WUXMIXamlBindingHelper, WUXMIXamlBindingHelperStatics;
 
 #include "WindowsUIXamlInterop.h"
 #include "WindowsStorageStreams.h"
@@ -35,7 +37,7 @@
 // [struct] Windows.UI.Xaml.Markup.XamlBinaryWriterErrorInformation
 WINRT_EXPORT
 @interface WUXMXamlBinaryWriterErrorInformation : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned int inputStreamIndex;
 @property unsigned int lineNumber;
 @property unsigned int linePosition;
@@ -44,9 +46,9 @@ WINRT_EXPORT
 // [struct] Windows.UI.Xaml.Markup.XmlnsDefinition
 WINRT_EXPORT
 @interface WUXMXmlnsDefinition : NSObject
-+ (instancetype)new;
-@property (copy) NSString * xmlNamespace;
-@property (copy) NSString * Namespace;
++ (instancetype) new;
+@property (copy) NSString* xmlNamespace;
+@property (copy) NSString* Namespace;
 @end
 
 // Windows.UI.Xaml.Markup.IComponentConnector
@@ -77,7 +79,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isAttachable;
 @property (readonly) BOOL isDependencyProperty;
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) RTObject<WUXMIXamlType>* targetType;
 @property (readonly) RTObject<WUXMIXamlType>* type;
 - (RTObject*)getValue:(RTObject*)instance;
@@ -93,7 +95,7 @@ WINRT_EXPORT
 @protocol WUXMIXamlType
 @property (readonly) RTObject<WUXMIXamlType>* baseType;
 @property (readonly) RTObject<WUXMIXamlMember>* contentProperty;
-@property (readonly) NSString * fullName;
+@property (readonly) NSString* fullName;
 @property (readonly) BOOL isArray;
 @property (readonly) BOOL isBindable;
 @property (readonly) BOOL isCollection;
@@ -104,8 +106,8 @@ WINRT_EXPORT
 @property (readonly) RTObject<WUXMIXamlType>* keyType;
 @property (readonly) WUXITypeName* underlyingType;
 - (RTObject*)activateInstance;
-- (RTObject*)createFromString:(NSString *)value;
-- (RTObject<WUXMIXamlMember>*)getMember:(NSString *)name;
+- (RTObject*)createFromString:(NSString*)value;
+- (RTObject<WUXMIXamlMember>*)getMember:(NSString*)name;
 - (void)addToVector:(RTObject*)instance value:(RTObject*)value;
 - (void)addToMap:(RTObject*)instance key:(RTObject*)key value:(RTObject*)value;
 - (void)runInitializer;
@@ -119,7 +121,7 @@ WINRT_EXPORT
 
 @protocol WUXMIXamlMetadataProvider
 - (RTObject<WUXMIXamlType>*)getXamlType:(WUXITypeName*)type;
-- (RTObject<WUXMIXamlType>*)getXamlTypeByFullName:(NSString *)fullName;
+- (RTObject<WUXMIXamlType>*)getXamlTypeByFullName:(NSString*)fullName;
 - (NSArray*)getXmlnsDefinitions;
 @end
 
@@ -142,7 +144,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMXamlBinaryWriter : RTObject
-+ (WUXMXamlBinaryWriterErrorInformation*)write:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)inputStreams outputStreams:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)outputStreams xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
++ (WUXMXamlBinaryWriterErrorInformation*)write:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)inputStreams
+                                 outputStreams:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)outputStreams
+                          xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
 @end
 
 #endif // __WUXMXamlBinaryWriter_DEFINED__
@@ -153,8 +157,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMXamlReader : RTObject
-+ (RTObject*)load:(NSString *)xaml;
-+ (RTObject*)loadWithInitialTemplateValidation:(NSString *)xaml;
++ (RTObject*)load:(NSString*)xaml;
++ (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
 @end
 
 #endif // __WUXMXamlReader_DEFINED__
@@ -170,7 +174,7 @@ WINRT_EXPORT
 + (void)suspendRendering:(WXUIElement*)target;
 + (void)resumeRendering:(WXUIElement*)target;
 + (RTObject*)convertValue:(WUXITypeName*)type value:(RTObject*)value;
-+ (void)setPropertyFromString:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(NSString *)value;
++ (void)setPropertyFromString:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(NSString*)value;
 + (void)setPropertyFromBoolean:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(BOOL)value;
 + (void)setPropertyFromChar16:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WCHAR)value;
 + (void)setPropertyFromDateTime:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFDateTime*)value;
@@ -191,4 +195,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXMXamlBindingHelper_DEFINED__
-

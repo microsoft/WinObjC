@@ -22,23 +22,25 @@
 #include "interopBase.h"
 @class WUXINotifyCollectionChangedEventArgs;
 @class WUXITypeName;
-@protocol WUXIIBindableIterable, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged, WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
+@protocol WUXIIBindableIterable
+, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged,
+    WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedAction
 enum _WUXINotifyCollectionChangedAction {
-	WUXINotifyCollectionChangedActionAdd = 0,
-	WUXINotifyCollectionChangedActionRemove = 1,
-	WUXINotifyCollectionChangedActionReplace = 2,
-	WUXINotifyCollectionChangedActionMove = 3,
-	WUXINotifyCollectionChangedActionReset = 4,
+    WUXINotifyCollectionChangedActionAdd = 0,
+    WUXINotifyCollectionChangedActionRemove = 1,
+    WUXINotifyCollectionChangedActionReplace = 2,
+    WUXINotifyCollectionChangedActionMove = 3,
+    WUXINotifyCollectionChangedActionReset = 4,
 };
 typedef unsigned WUXINotifyCollectionChangedAction;
 
 // Windows.UI.Xaml.Interop.TypeKind
 enum _WUXITypeKind {
-	WUXITypeKindPrimitive = 0,
-	WUXITypeKindMetadata = 1,
-	WUXITypeKindCustom = 2,
+    WUXITypeKindPrimitive = 0,
+    WUXITypeKindMetadata = 1,
+    WUXITypeKindCustom = 2,
 };
 typedef unsigned WUXITypeKind;
 
@@ -46,36 +48,35 @@ typedef unsigned WUXITypeKind;
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
 WINRT_EXPORT
 @interface WUXITypeName : NSObject
-+ (instancetype)new;
-@property (copy) NSString * name;
++ (instancetype) new;
+@property (copy) NSString* name;
 @property WUXITypeKind kind;
 @end
 
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.IBindableIterable
@@ -179,4 +180,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXINotifyCollectionChangedEventArgs_DEFINED__
-

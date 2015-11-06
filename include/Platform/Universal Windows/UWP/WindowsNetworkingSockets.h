@@ -20,105 +20,121 @@
 #pragma once
 
 #include "interopBase.h"
-@class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation, WNSDatagramSocketControl, WNSDatagramSocketInformation, WNSDatagramSocketMessageReceivedEventArgs, WNSStreamSocketControl, WNSStreamSocketInformation, WNSStreamSocketListenerControl, WNSStreamSocketListenerInformation, WNSStreamSocketListenerConnectionReceivedEventArgs, WNSWebSocketClosedEventArgs, WNSMessageWebSocketControl, WNSMessageWebSocketInformation, WNSMessageWebSocket, WNSMessageWebSocketMessageReceivedEventArgs, WNSStreamWebSocketControl, WNSStreamWebSocketInformation, WNSStreamWebSocket, WNSWebSocketKeepAlive, WNSSocketError, WNSWebSocketError, WNSSocketActivityTriggerDetails;
+@class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation,
+    WNSDatagramSocketControl, WNSDatagramSocketInformation, WNSDatagramSocketMessageReceivedEventArgs, WNSStreamSocketControl,
+    WNSStreamSocketInformation, WNSStreamSocketListenerControl, WNSStreamSocketListenerInformation,
+    WNSStreamSocketListenerConnectionReceivedEventArgs, WNSWebSocketClosedEventArgs, WNSMessageWebSocketControl,
+    WNSMessageWebSocketInformation, WNSMessageWebSocket, WNSMessageWebSocketMessageReceivedEventArgs, WNSStreamWebSocketControl,
+    WNSStreamWebSocketInformation, WNSStreamWebSocket, WNSWebSocketKeepAlive, WNSSocketError, WNSWebSocketError,
+    WNSSocketActivityTriggerDetails;
 @class WNSRoundTripTimeStatistics, WNSBandwidthStatistics;
-@protocol WNSISocketActivityInformation, WNSISocketActivityTriggerDetails, WNSISocketActivityInformationStatics, WNSISocketActivityContext, WNSISocketActivityContextFactory, WNSIDatagramSocketMessageReceivedEventArgs, WNSIMessageWebSocketMessageReceivedEventArgs, WNSIWebSocketClosedEventArgs, WNSIDatagramSocketInformation, WNSIDatagramSocketControl, WNSIDatagramSocketControl2, WNSIDatagramSocketControl3, WNSIDatagramSocketStatics, WNSIDatagramSocket, WNSIDatagramSocket2, WNSIDatagramSocket3, WNSIStreamSocketInformation, WNSIStreamSocketInformation2, WNSIStreamSocketControl, WNSIStreamSocketControl2, WNSIStreamSocketControl3, WNSIStreamSocket, WNSIStreamSocket2, WNSIStreamSocket3, WNSIStreamSocketListenerControl, WNSIStreamSocketListenerControl2, WNSIStreamSocketListenerInformation, WNSIStreamSocketListenerConnectionReceivedEventArgs, WNSIStreamSocketListener, WNSIStreamSocketListener2, WNSIStreamSocketListener3, WNSIWebSocketControl, WNSIWebSocketInformation, WNSIWebSocket, WNSIMessageWebSocketControl, WNSIMessageWebSocket, WNSIStreamWebSocketControl, WNSIStreamWebSocket, WNSISocketErrorStatics, WNSIWebSocketErrorStatics;
+@protocol WNSISocketActivityInformation
+, WNSISocketActivityTriggerDetails, WNSISocketActivityInformationStatics, WNSISocketActivityContext, WNSISocketActivityContextFactory,
+    WNSIDatagramSocketMessageReceivedEventArgs, WNSIMessageWebSocketMessageReceivedEventArgs, WNSIWebSocketClosedEventArgs,
+    WNSIDatagramSocketInformation, WNSIDatagramSocketControl, WNSIDatagramSocketControl2, WNSIDatagramSocketControl3,
+    WNSIDatagramSocketStatics, WNSIDatagramSocket, WNSIDatagramSocket2, WNSIDatagramSocket3, WNSIStreamSocketInformation,
+    WNSIStreamSocketInformation2, WNSIStreamSocketControl, WNSIStreamSocketControl2, WNSIStreamSocketControl3, WNSIStreamSocket,
+    WNSIStreamSocket2, WNSIStreamSocket3, WNSIStreamSocketListenerControl, WNSIStreamSocketListenerControl2,
+    WNSIStreamSocketListenerInformation, WNSIStreamSocketListenerConnectionReceivedEventArgs, WNSIStreamSocketListener,
+    WNSIStreamSocketListener2, WNSIStreamSocketListener3, WNSIWebSocketControl, WNSIWebSocketInformation, WNSIWebSocket,
+    WNSIMessageWebSocketControl, WNSIMessageWebSocket, WNSIStreamWebSocketControl, WNSIStreamWebSocket, WNSISocketErrorStatics,
+    WNSIWebSocketErrorStatics;
 
 // Windows.Networking.Sockets.SocketMessageType
 enum _WNSSocketMessageType {
-	WNSSocketMessageTypeBinary = 0,
-	WNSSocketMessageTypeUtf8 = 1,
+    WNSSocketMessageTypeBinary = 0,
+    WNSSocketMessageTypeUtf8 = 1,
 };
 typedef unsigned WNSSocketMessageType;
 
 // Windows.Networking.Sockets.SocketProtectionLevel
 enum _WNSSocketProtectionLevel {
-	WNSSocketProtectionLevelPlainSocket = 0,
-	WNSSocketProtectionLevelSsl = 1,
-	WNSSocketProtectionLevelSslAllowNullEncryption = 2,
-	WNSSocketProtectionLevelBluetoothEncryptionAllowNullAuthentication = 3,
-	WNSSocketProtectionLevelBluetoothEncryptionWithAuthentication = 4,
-	WNSSocketProtectionLevelSsl3AllowWeakEncryption = 5,
-	WNSSocketProtectionLevelTls10 = 6,
-	WNSSocketProtectionLevelTls11 = 7,
-	WNSSocketProtectionLevelTls12 = 8,
+    WNSSocketProtectionLevelPlainSocket = 0,
+    WNSSocketProtectionLevelSsl = 1,
+    WNSSocketProtectionLevelSslAllowNullEncryption = 2,
+    WNSSocketProtectionLevelBluetoothEncryptionAllowNullAuthentication = 3,
+    WNSSocketProtectionLevelBluetoothEncryptionWithAuthentication = 4,
+    WNSSocketProtectionLevelSsl3AllowWeakEncryption = 5,
+    WNSSocketProtectionLevelTls10 = 6,
+    WNSSocketProtectionLevelTls11 = 7,
+    WNSSocketProtectionLevelTls12 = 8,
 };
 typedef unsigned WNSSocketProtectionLevel;
 
 // Windows.Networking.Sockets.SocketQualityOfService
 enum _WNSSocketQualityOfService {
-	WNSSocketQualityOfServiceNormal = 0,
-	WNSSocketQualityOfServiceLowLatency = 1,
+    WNSSocketQualityOfServiceNormal = 0,
+    WNSSocketQualityOfServiceLowLatency = 1,
 };
 typedef unsigned WNSSocketQualityOfService;
 
 // Windows.Networking.Sockets.SocketErrorStatus
 enum _WNSSocketErrorStatus {
-	WNSSocketErrorStatusUnknown = 0,
-	WNSSocketErrorStatusOperationAborted = 1,
-	WNSSocketErrorStatusHttpInvalidServerResponse = 2,
-	WNSSocketErrorStatusConnectionTimedOut = 3,
-	WNSSocketErrorStatusAddressFamilyNotSupported = 4,
-	WNSSocketErrorStatusSocketTypeNotSupported = 5,
-	WNSSocketErrorStatusHostNotFound = 6,
-	WNSSocketErrorStatusNoDataRecordOfRequestedType = 7,
-	WNSSocketErrorStatusNonAuthoritativeHostNotFound = 8,
-	WNSSocketErrorStatusClassTypeNotFound = 9,
-	WNSSocketErrorStatusAddressAlreadyInUse = 10,
-	WNSSocketErrorStatusCannotAssignRequestedAddress = 11,
-	WNSSocketErrorStatusConnectionRefused = 12,
-	WNSSocketErrorStatusNetworkIsUnreachable = 13,
-	WNSSocketErrorStatusUnreachableHost = 14,
-	WNSSocketErrorStatusNetworkIsDown = 15,
-	WNSSocketErrorStatusNetworkDroppedConnectionOnReset = 16,
-	WNSSocketErrorStatusSoftwareCausedConnectionAbort = 17,
-	WNSSocketErrorStatusConnectionResetByPeer = 18,
-	WNSSocketErrorStatusHostIsDown = 19,
-	WNSSocketErrorStatusNoAddressesFound = 20,
-	WNSSocketErrorStatusTooManyOpenFiles = 21,
-	WNSSocketErrorStatusMessageTooLong = 22,
-	WNSSocketErrorStatusCertificateExpired = 23,
-	WNSSocketErrorStatusCertificateUntrustedRoot = 24,
-	WNSSocketErrorStatusCertificateCommonNameIsIncorrect = 25,
-	WNSSocketErrorStatusCertificateWrongUsage = 26,
-	WNSSocketErrorStatusCertificateRevoked = 27,
-	WNSSocketErrorStatusCertificateNoRevocationCheck = 28,
-	WNSSocketErrorStatusCertificateRevocationServerOffline = 29,
-	WNSSocketErrorStatusCertificateIsInvalid = 30,
+    WNSSocketErrorStatusUnknown = 0,
+    WNSSocketErrorStatusOperationAborted = 1,
+    WNSSocketErrorStatusHttpInvalidServerResponse = 2,
+    WNSSocketErrorStatusConnectionTimedOut = 3,
+    WNSSocketErrorStatusAddressFamilyNotSupported = 4,
+    WNSSocketErrorStatusSocketTypeNotSupported = 5,
+    WNSSocketErrorStatusHostNotFound = 6,
+    WNSSocketErrorStatusNoDataRecordOfRequestedType = 7,
+    WNSSocketErrorStatusNonAuthoritativeHostNotFound = 8,
+    WNSSocketErrorStatusClassTypeNotFound = 9,
+    WNSSocketErrorStatusAddressAlreadyInUse = 10,
+    WNSSocketErrorStatusCannotAssignRequestedAddress = 11,
+    WNSSocketErrorStatusConnectionRefused = 12,
+    WNSSocketErrorStatusNetworkIsUnreachable = 13,
+    WNSSocketErrorStatusUnreachableHost = 14,
+    WNSSocketErrorStatusNetworkIsDown = 15,
+    WNSSocketErrorStatusNetworkDroppedConnectionOnReset = 16,
+    WNSSocketErrorStatusSoftwareCausedConnectionAbort = 17,
+    WNSSocketErrorStatusConnectionResetByPeer = 18,
+    WNSSocketErrorStatusHostIsDown = 19,
+    WNSSocketErrorStatusNoAddressesFound = 20,
+    WNSSocketErrorStatusTooManyOpenFiles = 21,
+    WNSSocketErrorStatusMessageTooLong = 22,
+    WNSSocketErrorStatusCertificateExpired = 23,
+    WNSSocketErrorStatusCertificateUntrustedRoot = 24,
+    WNSSocketErrorStatusCertificateCommonNameIsIncorrect = 25,
+    WNSSocketErrorStatusCertificateWrongUsage = 26,
+    WNSSocketErrorStatusCertificateRevoked = 27,
+    WNSSocketErrorStatusCertificateNoRevocationCheck = 28,
+    WNSSocketErrorStatusCertificateRevocationServerOffline = 29,
+    WNSSocketErrorStatusCertificateIsInvalid = 30,
 };
 typedef unsigned WNSSocketErrorStatus;
 
 // Windows.Networking.Sockets.SocketSslErrorSeverity
 enum _WNSSocketSslErrorSeverity {
-	WNSSocketSslErrorSeverityNone = 0,
-	WNSSocketSslErrorSeverityIgnorable = 1,
-	WNSSocketSslErrorSeverityFatal = 2,
+    WNSSocketSslErrorSeverityNone = 0,
+    WNSSocketSslErrorSeverityIgnorable = 1,
+    WNSSocketSslErrorSeverityFatal = 2,
 };
 typedef unsigned WNSSocketSslErrorSeverity;
 
 // Windows.Networking.Sockets.SocketActivityKind
 enum _WNSSocketActivityKind {
-	WNSSocketActivityKindNone = 0,
-	WNSSocketActivityKindStreamSocketListener = 1,
-	WNSSocketActivityKindDatagramSocket = 2,
-	WNSSocketActivityKindStreamSocket = 3,
+    WNSSocketActivityKindNone = 0,
+    WNSSocketActivityKindStreamSocketListener = 1,
+    WNSSocketActivityKindDatagramSocket = 2,
+    WNSSocketActivityKindStreamSocket = 3,
 };
 typedef unsigned WNSSocketActivityKind;
 
 // Windows.Networking.Sockets.SocketActivityTriggerReason
 enum _WNSSocketActivityTriggerReason {
-	WNSSocketActivityTriggerReasonNone = 0,
-	WNSSocketActivityTriggerReasonSocketActivity = 1,
-	WNSSocketActivityTriggerReasonConnectionAccepted = 2,
-	WNSSocketActivityTriggerReasonKeepAliveTimerExpired = 3,
-	WNSSocketActivityTriggerReasonSocketClosed = 4,
+    WNSSocketActivityTriggerReasonNone = 0,
+    WNSSocketActivityTriggerReasonSocketActivity = 1,
+    WNSSocketActivityTriggerReasonConnectionAccepted = 2,
+    WNSSocketActivityTriggerReasonKeepAliveTimerExpired = 3,
+    WNSSocketActivityTriggerReasonSocketClosed = 4,
 };
 typedef unsigned WNSSocketActivityTriggerReason;
 
 // Windows.Networking.Sockets.SocketActivityConnectedStandbyAction
 enum _WNSSocketActivityConnectedStandbyAction {
-	WNSSocketActivityConnectedStandbyActionDoNotWake = 0,
-	WNSSocketActivityConnectedStandbyActionWake = 1,
+    WNSSocketActivityConnectedStandbyActionDoNotWake = 0,
+    WNSSocketActivityConnectedStandbyActionWake = 1,
 };
 typedef unsigned WNSSocketActivityConnectedStandbyAction;
 
@@ -137,7 +153,7 @@ typedef unsigned WNSSocketActivityConnectedStandbyAction;
 // [struct] Windows.Networking.Sockets.RoundTripTimeStatistics
 WINRT_EXPORT
 @interface WNSRoundTripTimeStatistics : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned int variance;
 @property unsigned int max;
 @property unsigned int min;
@@ -147,7 +163,7 @@ WINRT_EXPORT
 // [struct] Windows.Networking.Sockets.BandwidthStatistics
 WINRT_EXPORT
 @interface WNSBandwidthStatistics : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property uint64_t outboundBitsPerSecond;
 @property uint64_t inboundBitsPerSecond;
 @property uint64_t outboundBitsPerSecondInstability;
@@ -176,7 +192,7 @@ WINRT_EXPORT
 @protocol WNSIWebSocketInformation
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
-@property (readonly) NSString * protocol;
+@property (readonly) NSString* protocol;
 @end
 
 #endif // __WNSIWebSocketInformation_DEFINED__
@@ -197,11 +213,11 @@ WINRT_EXPORT
 
 @protocol WNSIWebSocket <WFIClosable>
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)connectAsync:(WFUri*)uri;
-- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
-- (void)closeWithStatus:(unsigned short)code reason:(NSString *)reason;
+- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (void)closeWithStatus:(unsigned short)code reason:(NSString*)reason;
 - (void)close;
 @end
 
@@ -225,29 +241,44 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDatagramSocket : RTObject <WFIClosable>
-+ (void)getEndpointPairsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)getEndpointPairsWithSortOptionsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName sortOptions:(WNHostNameSortOptions)sortOptions success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getEndpointPairsAsync:(WNHostName*)remoteHostName
+            remoteServiceName:(NSString*)remoteServiceName
+                      success:(void (^)(NSArray*))success
+                      failure:(void (^)(NSError*))failure;
++ (void)getEndpointPairsWithSortOptionsAsync:(WNHostName*)remoteHostName
+                           remoteServiceName:(NSString*)remoteServiceName
+                                 sortOptions:(WNHostNameSortOptions)sortOptions
+                                     success:(void (^)(NSArray*))success
+                                     failure:(void (^)(NSError*))failure;
 + (instancetype)create ACTIVATOR;
 @property (readonly) WNSDatagramSocketControl* control;
 @property (readonly) WNSDatagramSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WNSDatagramSocket*, WNSDatagramSocketMessageReceivedEventArgs*))del;
+- (EventRegistrationToken)addMessageReceivedEvent:(void (^)(WNSDatagramSocket*, WNSDatagramSocketMessageReceivedEventArgs*))del;
 - (void)removeMessageReceivedEvent:(EventRegistrationToken)tok;
-- (RTObject<WFIAsyncAction>*)connectAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName;
+- (RTObject<WFIAsyncAction>*)connectAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString*)remoteServiceName;
 - (RTObject<WFIAsyncAction>*)connectWithEndpointPairAsync:(WNEndpointPair*)endpointPair;
-- (RTObject<WFIAsyncAction>*)bindServiceNameAsync:(NSString *)localServiceName;
-- (RTObject<WFIAsyncAction>*)bindEndpointAsync:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName;
+- (RTObject<WFIAsyncAction>*)bindServiceNameAsync:(NSString*)localServiceName;
+- (RTObject<WFIAsyncAction>*)bindEndpointAsync:(WNHostName*)localHostName localServiceName:(NSString*)localServiceName;
 - (void)joinMulticastGroup:(WNHostName*)host;
-- (void)getOutputStreamAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName success:(void (^)(RTObject<WSSIOutputStream>*))success failure:(void (^)(NSError*))failure;
-- (void)getOutputStreamWithEndpointPairAsync:(WNEndpointPair*)endpointPair success:(void (^)(RTObject<WSSIOutputStream>*))success failure:(void (^)(NSError*))failure;
+- (void)getOutputStreamAsync:(WNHostName*)remoteHostName
+           remoteServiceName:(NSString*)remoteServiceName
+                     success:(void (^)(RTObject<WSSIOutputStream>*))success
+                     failure:(void (^)(NSError*))failure;
+- (void)getOutputStreamWithEndpointPairAsync:(WNEndpointPair*)endpointPair
+                                     success:(void (^)(RTObject<WSSIOutputStream>*))success
+                                     failure:(void (^)(NSError*))failure;
 - (void)close;
-- (RTObject<WFIAsyncAction>*)bindServiceNameAndAdapterAsync:(NSString *)localServiceName adapter:(WNCNetworkAdapter*)adapter;
+- (RTObject<WFIAsyncAction>*)bindServiceNameAndAdapterAsync:(NSString*)localServiceName adapter:(WNCNetworkAdapter*)adapter;
 - (RTObject<WFIAsyncAction>*)cancelIOAsync;
 - (void)enableTransferOwnership:(WFGUID*)taskId;
-- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
-- (void)transferOwnership:(NSString *)socketId;
-- (void)transferOwnershipWithContext:(NSString *)socketId data:(WNSSocketActivityContext*)data;
-- (void)transferOwnershipWithContextAndKeepAliveTime:(NSString *)socketId data:(WNSSocketActivityContext*)data keepAliveTime:(WFTimeSpan*)keepAliveTime;
+- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId
+                                   connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
+- (void)transferOwnership:(NSString*)socketId;
+- (void)transferOwnershipWithContext:(NSString*)socketId data:(WNSSocketActivityContext*)data;
+- (void)transferOwnershipWithContextAndKeepAliveTime:(NSString*)socketId
+                                                data:(WNSSocketActivityContext*)data
+                                       keepAliveTime:(WFTimeSpan*)keepAliveTime;
 @end
 
 #endif // __WNSDatagramSocket_DEFINED__
@@ -264,18 +295,27 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
 - (RTObject<WFIAsyncAction>*)connectWithEndpointPairAsync:(WNEndpointPair*)endpointPair;
-- (RTObject<WFIAsyncAction>*)connectAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName;
-- (RTObject<WFIAsyncAction>*)connectWithEndpointPairAndProtectionLevelAsync:(WNEndpointPair*)endpointPair protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
-- (RTObject<WFIAsyncAction>*)connectWithProtectionLevelAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
+- (RTObject<WFIAsyncAction>*)connectAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString*)remoteServiceName;
+- (RTObject<WFIAsyncAction>*)connectWithEndpointPairAndProtectionLevelAsync:(WNEndpointPair*)endpointPair
+                                                            protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
+- (RTObject<WFIAsyncAction>*)connectWithProtectionLevelAsync:(WNHostName*)remoteHostName
+                                           remoteServiceName:(NSString*)remoteServiceName
+                                             protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
 - (RTObject<WFIAsyncAction>*)upgradeToSslAsync:(WNSSocketProtectionLevel)protectionLevel validationHostName:(WNHostName*)validationHostName;
 - (void)close;
-- (RTObject<WFIAsyncAction>*)connectWithProtectionLevelAndAdapterAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName protectionLevel:(WNSSocketProtectionLevel)protectionLevel adapter:(WNCNetworkAdapter*)adapter;
+- (RTObject<WFIAsyncAction>*)connectWithProtectionLevelAndAdapterAsync:(WNHostName*)remoteHostName
+                                                     remoteServiceName:(NSString*)remoteServiceName
+                                                       protectionLevel:(WNSSocketProtectionLevel)protectionLevel
+                                                               adapter:(WNCNetworkAdapter*)adapter;
 - (RTObject<WFIAsyncAction>*)cancelIOAsync;
 - (void)enableTransferOwnership:(WFGUID*)taskId;
-- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
-- (void)transferOwnership:(NSString *)socketId;
-- (void)transferOwnershipWithContext:(NSString *)socketId data:(WNSSocketActivityContext*)data;
-- (void)transferOwnershipWithContextAndKeepAliveTime:(NSString *)socketId data:(WNSSocketActivityContext*)data keepAliveTime:(WFTimeSpan*)keepAliveTime;
+- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId
+                                   connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
+- (void)transferOwnership:(NSString*)socketId;
+- (void)transferOwnershipWithContext:(NSString*)socketId data:(WNSSocketActivityContext*)data;
+- (void)transferOwnershipWithContextAndKeepAliveTime:(NSString*)socketId
+                                                data:(WNSSocketActivityContext*)data
+                                       keepAliveTime:(WFTimeSpan*)keepAliveTime;
 @end
 
 #endif // __WNSStreamSocket_DEFINED__
@@ -289,18 +329,23 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) WNSStreamSocketListenerControl* control;
 @property (readonly) WNSStreamSocketListenerInformation* information;
-- (EventRegistrationToken)addConnectionReceivedEvent:(void(^)(WNSStreamSocketListener*, WNSStreamSocketListenerConnectionReceivedEventArgs*))del;
+- (EventRegistrationToken)addConnectionReceivedEvent:(void (^)(WNSStreamSocketListener*,
+                                                               WNSStreamSocketListenerConnectionReceivedEventArgs*))del;
 - (void)removeConnectionReceivedEvent:(EventRegistrationToken)tok;
-- (RTObject<WFIAsyncAction>*)bindServiceNameAsync:(NSString *)localServiceName;
-- (RTObject<WFIAsyncAction>*)bindEndpointAsync:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName;
+- (RTObject<WFIAsyncAction>*)bindServiceNameAsync:(NSString*)localServiceName;
+- (RTObject<WFIAsyncAction>*)bindEndpointAsync:(WNHostName*)localHostName localServiceName:(NSString*)localServiceName;
 - (void)close;
-- (RTObject<WFIAsyncAction>*)bindServiceNameWithProtectionLevelAsync:(NSString *)localServiceName protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
-- (RTObject<WFIAsyncAction>*)bindServiceNameWithProtectionLevelAndAdapterAsync:(NSString *)localServiceName protectionLevel:(WNSSocketProtectionLevel)protectionLevel adapter:(WNCNetworkAdapter*)adapter;
+- (RTObject<WFIAsyncAction>*)bindServiceNameWithProtectionLevelAsync:(NSString*)localServiceName
+                                                     protectionLevel:(WNSSocketProtectionLevel)protectionLevel;
+- (RTObject<WFIAsyncAction>*)bindServiceNameWithProtectionLevelAndAdapterAsync:(NSString*)localServiceName
+                                                               protectionLevel:(WNSSocketProtectionLevel)protectionLevel
+                                                                       adapter:(WNCNetworkAdapter*)adapter;
 - (RTObject<WFIAsyncAction>*)cancelIOAsync;
 - (void)enableTransferOwnership:(WFGUID*)taskId;
-- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
-- (void)transferOwnership:(NSString *)socketId;
-- (void)transferOwnershipWithContext:(NSString *)socketId data:(WNSSocketActivityContext*)data;
+- (void)enableTransferOwnershipWithConnectedStandbyAction:(WFGUID*)taskId
+                                   connectedStandbyAction:(WNSSocketActivityConnectedStandbyAction)connectedStandbyAction;
+- (void)transferOwnership:(NSString*)socketId;
+- (void)transferOwnershipWithContext:(NSString*)socketId data:(WNSSocketActivityContext*)data;
 @end
 
 #endif // __WNSStreamSocketListener_DEFINED__
@@ -313,7 +358,7 @@ WINRT_EXPORT
 @interface WNSSocketActivityInformation : RTObject
 @property (readonly) WNSSocketActivityContext* context;
 @property (readonly) WNSDatagramSocket* datagramSocket;
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WNSSocketActivityKind socketKind;
 @property (readonly) WNSStreamSocket* streamSocket;
 @property (readonly) WNSStreamSocketListener* streamSocketListener;
@@ -345,9 +390,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSDatagramSocketInformation : RTObject
 @property (readonly) WNHostName* localAddress;
-@property (readonly) NSString * localPort;
+@property (readonly) NSString* localPort;
 @property (readonly) WNHostName* remoteAddress;
-@property (readonly) NSString * remotePort;
+@property (readonly) NSString* remotePort;
 @end
 
 #endif // __WNSDatagramSocketInformation_DEFINED__
@@ -360,7 +405,7 @@ WINRT_EXPORT
 @interface WNSDatagramSocketMessageReceivedEventArgs : RTObject
 @property (readonly) WNHostName* localAddress;
 @property (readonly) WNHostName* remoteAddress;
-@property (readonly) NSString * remotePort;
+@property (readonly) NSString* remotePort;
 - (WSSDataReader*)getDataReader;
 - (RTObject<WSSIInputStream>*)getDataStream;
 @end
@@ -393,12 +438,12 @@ WINRT_EXPORT
 @interface WNSStreamSocketInformation : RTObject
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
-@property (readonly) NSString * localPort;
+@property (readonly) NSString* localPort;
 @property (readonly) WNSSocketProtectionLevel protectionLevel;
 @property (readonly) WNHostName* remoteAddress;
 @property (readonly) WNHostName* remoteHostName;
-@property (readonly) NSString * remotePort;
-@property (readonly) NSString * remoteServiceName;
+@property (readonly) NSString* remotePort;
+@property (readonly) NSString* remoteServiceName;
 @property (readonly) WNSRoundTripTimeStatistics* roundTripTimeStatistics;
 @property (readonly) RTObject<WSSIBuffer>* sessionKey;
 @property (readonly) WSCCCertificate* serverCertificate;
@@ -430,7 +475,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamSocketListenerInformation : RTObject
-@property (readonly) NSString * localPort;
+@property (readonly) NSString* localPort;
 @end
 
 #endif // __WNSStreamSocketListenerInformation_DEFINED__
@@ -453,7 +498,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSWebSocketClosedEventArgs : RTObject
 @property (readonly) unsigned short code;
-@property (readonly) NSString * reason;
+@property (readonly) NSString* reason;
 @end
 
 #endif // __WNSWebSocketClosedEventArgs_DEFINED__
@@ -482,7 +527,7 @@ WINRT_EXPORT
 @interface WNSMessageWebSocketInformation : RTObject <WNSIWebSocketInformation>
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
-@property (readonly) NSString * protocol;
+@property (readonly) NSString* protocol;
 @end
 
 #endif // __WNSMessageWebSocketInformation_DEFINED__
@@ -497,13 +542,13 @@ WINRT_EXPORT
 @property (readonly) WNSMessageWebSocketControl* control;
 @property (readonly) WNSMessageWebSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WNSMessageWebSocket*, WNSMessageWebSocketMessageReceivedEventArgs*))del;
+- (EventRegistrationToken)addMessageReceivedEvent:(void (^)(WNSMessageWebSocket*, WNSMessageWebSocketMessageReceivedEventArgs*))del;
 - (void)removeMessageReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)connectAsync:(WFUri*)uri;
-- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
-- (void)closeWithStatus:(unsigned short)code reason:(NSString *)reason;
+- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (void)closeWithStatus:(unsigned short)code reason:(NSString*)reason;
 - (void)close;
 @end
 
@@ -545,7 +590,7 @@ WINRT_EXPORT
 @interface WNSStreamWebSocketInformation : RTObject <WNSIWebSocketInformation>
 @property (readonly) WNSBandwidthStatistics* bandwidthStatistics;
 @property (readonly) WNHostName* localAddress;
-@property (readonly) NSString * protocol;
+@property (readonly) NSString* protocol;
 @end
 
 #endif // __WNSStreamWebSocketInformation_DEFINED__
@@ -561,11 +606,11 @@ WINRT_EXPORT
 @property (readonly) WNSStreamWebSocketInformation* information;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(RTObject<WNSIWebSocket>*, WNSWebSocketClosedEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)connectAsync:(WFUri*)uri;
-- (void)setRequestHeader:(NSString *)headerName headerValue:(NSString *)headerValue;
-- (void)closeWithStatus:(unsigned short)code reason:(NSString *)reason;
+- (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
+- (void)closeWithStatus:(unsigned short)code reason:(NSString*)reason;
 - (void)close;
 @end
 
@@ -626,4 +671,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WNSSocketActivityTriggerDetails_DEFINED__
-

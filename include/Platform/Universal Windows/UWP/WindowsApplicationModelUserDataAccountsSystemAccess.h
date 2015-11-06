@@ -21,13 +21,14 @@
 
 #include "interopBase.h"
 @class WAUSDeviceAccountConfiguration, WAUSUserDataAccountSystemAccessManager;
-@protocol WAUSIDeviceAccountConfiguration, WAUSIUserDataAccountSystemAccessManagerStatics;
+@protocol WAUSIDeviceAccountConfiguration
+, WAUSIUserDataAccountSystemAccessManagerStatics;
 
 // Windows.ApplicationModel.UserDataAccounts.SystemAccess.DeviceAccountServerType
 enum _WAUSDeviceAccountServerType {
-	WAUSDeviceAccountServerTypeExchange = 0,
-	WAUSDeviceAccountServerTypePop = 1,
-	WAUSDeviceAccountServerTypeImap = 2,
+    WAUSDeviceAccountServerTypeExchange = 0,
+    WAUSDeviceAccountServerTypePop = 1,
+    WAUSDeviceAccountServerTypeImap = 2,
 };
 typedef unsigned WAUSDeviceAccountServerType;
 
@@ -43,20 +44,20 @@ typedef unsigned WAUSDeviceAccountServerType;
 WINRT_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * incomingServerAddress;
-@property (copy) NSString * incomingServerUsername;
-@property (copy) NSString * emailAddress;
-@property (copy) NSString * accountName;
-@property (copy) NSString * deviceAccountTypeId;
+@property (copy) NSString* incomingServerAddress;
+@property (copy) NSString* incomingServerUsername;
+@property (copy) NSString* emailAddress;
+@property (copy) NSString* accountName;
+@property (copy) NSString* deviceAccountTypeId;
 @property BOOL calendarSyncEnabled;
-@property (copy) NSString * domain;
+@property (copy) NSString* domain;
 @property int incomingServerPort;
 @property WAUSDeviceAccountServerType serverType;
-@property (copy) NSString * outgoingServerUsername;
+@property (copy) NSString* outgoingServerUsername;
 @property BOOL contactsSyncEnabled;
 @property BOOL outgoingServerRequiresSsl;
 @property int outgoingServerPort;
-@property (copy) NSString * outgoingServerAddress;
+@property (copy) NSString* outgoingServerAddress;
 @property BOOL emailSyncEnabled;
 @property BOOL incomingServerRequiresSsl;
 @end
@@ -69,8 +70,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAUSUserDataAccountSystemAccessManager : RTObject
-+ (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /* WAUSDeviceAccountConfiguration* */)accounts success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /* WAUSDeviceAccountConfiguration* */)accounts
+                              success:(void (^)(NSArray*))success
+                              failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAUSUserDataAccountSystemAccessManager_DEFINED__
-

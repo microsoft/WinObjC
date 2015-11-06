@@ -23,51 +23,56 @@
 @class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
 @class WFPoint, WFSize, WFRect, WFDateTime, WFTimeSpan;
 @class RTArray_C_RTObject_WFIWwwFormUrlDecoderEntry;
-@protocol WFIClosable, WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction, WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIUriRuntimeClass, WFIUriRuntimeClassWithAbsoluteCanonicalUri, WFIUriEscapeStatics, WFIUriRuntimeClassFactory, WFIWwwFormUrlDecoderEntry, WFIWwwFormUrlDecoderRuntimeClass, WFIWwwFormUrlDecoderRuntimeClassFactory, WFIGetActivationFactory, WFIMemoryBufferReference, WFIMemoryBuffer, WFIMemoryBufferFactory;
+@protocol WFIClosable
+, WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction,
+    WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIUriRuntimeClass,
+    WFIUriRuntimeClassWithAbsoluteCanonicalUri, WFIUriEscapeStatics, WFIUriRuntimeClassFactory, WFIWwwFormUrlDecoderEntry,
+    WFIWwwFormUrlDecoderRuntimeClass, WFIWwwFormUrlDecoderRuntimeClassFactory, WFIGetActivationFactory, WFIMemoryBufferReference,
+    WFIMemoryBuffer, WFIMemoryBufferFactory;
 
 // Windows.Foundation.PropertyType
 enum _WFPropertyType {
-	WFPropertyTypeEmpty = 0,
-	WFPropertyTypeUInt8 = 1,
-	WFPropertyTypeInt16 = 2,
-	WFPropertyTypeUInt16 = 3,
-	WFPropertyTypeInt32 = 4,
-	WFPropertyTypeUInt32 = 5,
-	WFPropertyTypeInt64 = 6,
-	WFPropertyTypeUInt64 = 7,
-	WFPropertyTypeSingle = 8,
-	WFPropertyTypeDouble = 9,
-	WFPropertyTypeChar16 = 10,
-	WFPropertyTypeBoolean = 11,
-	WFPropertyTypeString = 12,
-	WFPropertyTypeInspectable = 13,
-	WFPropertyTypeDateTime = 14,
-	WFPropertyTypeTimeSpan = 15,
-	WFPropertyTypeGuid = 16,
-	WFPropertyTypePoint = 17,
-	WFPropertyTypeSize = 18,
-	WFPropertyTypeRect = 19,
-	WFPropertyTypeOtherType = 20,
-	WFPropertyTypeUInt8Array = 1025,
-	WFPropertyTypeInt16Array = 1026,
-	WFPropertyTypeUInt16Array = 1027,
-	WFPropertyTypeInt32Array = 1028,
-	WFPropertyTypeUInt32Array = 1029,
-	WFPropertyTypeInt64Array = 1030,
-	WFPropertyTypeUInt64Array = 1031,
-	WFPropertyTypeSingleArray = 1032,
-	WFPropertyTypeDoubleArray = 1033,
-	WFPropertyTypeChar16Array = 1034,
-	WFPropertyTypeBooleanArray = 1035,
-	WFPropertyTypeStringArray = 1036,
-	WFPropertyTypeInspectableArray = 1037,
-	WFPropertyTypeDateTimeArray = 1038,
-	WFPropertyTypeTimeSpanArray = 1039,
-	WFPropertyTypeGuidArray = 1040,
-	WFPropertyTypePointArray = 1041,
-	WFPropertyTypeSizeArray = 1042,
-	WFPropertyTypeRectArray = 1043,
-	WFPropertyTypeOtherTypeArray = 1044,
+    WFPropertyTypeEmpty = 0,
+    WFPropertyTypeUInt8 = 1,
+    WFPropertyTypeInt16 = 2,
+    WFPropertyTypeUInt16 = 3,
+    WFPropertyTypeInt32 = 4,
+    WFPropertyTypeUInt32 = 5,
+    WFPropertyTypeInt64 = 6,
+    WFPropertyTypeUInt64 = 7,
+    WFPropertyTypeSingle = 8,
+    WFPropertyTypeDouble = 9,
+    WFPropertyTypeChar16 = 10,
+    WFPropertyTypeBoolean = 11,
+    WFPropertyTypeString = 12,
+    WFPropertyTypeInspectable = 13,
+    WFPropertyTypeDateTime = 14,
+    WFPropertyTypeTimeSpan = 15,
+    WFPropertyTypeGuid = 16,
+    WFPropertyTypePoint = 17,
+    WFPropertyTypeSize = 18,
+    WFPropertyTypeRect = 19,
+    WFPropertyTypeOtherType = 20,
+    WFPropertyTypeUInt8Array = 1025,
+    WFPropertyTypeInt16Array = 1026,
+    WFPropertyTypeUInt16Array = 1027,
+    WFPropertyTypeInt32Array = 1028,
+    WFPropertyTypeUInt32Array = 1029,
+    WFPropertyTypeInt64Array = 1030,
+    WFPropertyTypeUInt64Array = 1031,
+    WFPropertyTypeSingleArray = 1032,
+    WFPropertyTypeDoubleArray = 1033,
+    WFPropertyTypeChar16Array = 1034,
+    WFPropertyTypeBooleanArray = 1035,
+    WFPropertyTypeStringArray = 1036,
+    WFPropertyTypeInspectableArray = 1037,
+    WFPropertyTypeDateTimeArray = 1038,
+    WFPropertyTypeTimeSpanArray = 1039,
+    WFPropertyTypeGuidArray = 1040,
+    WFPropertyTypePointArray = 1041,
+    WFPropertyTypeSizeArray = 1042,
+    WFPropertyTypeRectArray = 1043,
+    WFPropertyTypeOtherTypeArray = 1044,
 };
 typedef unsigned WFPropertyType;
 
@@ -75,22 +80,21 @@ typedef unsigned WFPropertyType;
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED
 #define __WFAsyncActionCompletedHandler__DEFINED
-typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
+typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
 #endif // __WFAsyncActionCompletedHandler__DEFINED
 
 // Windows.Foundation.DeferralCompletedHandler
 #ifndef __WFDeferralCompletedHandler__DEFINED
 #define __WFDeferralCompletedHandler__DEFINED
-typedef void(^WFDeferralCompletedHandler)();
+typedef void (^WFDeferralCompletedHandler)();
 #endif // __WFDeferralCompletedHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Foundation.Point
 WINRT_EXPORT
 @interface WFPoint : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @end
@@ -98,7 +102,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Size
 WINRT_EXPORT
 @interface WFSize : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float width;
 @property float height;
 @end
@@ -106,7 +110,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Rect
 WINRT_EXPORT
 @interface WFRect : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @property float width;
@@ -116,43 +120,43 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.DateTime
 WINRT_EXPORT
 @interface WFDateTime : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int64_t universalTime;
 @end
 
 // [struct] Windows.Foundation.TimeSpan
 WINRT_EXPORT
 @interface WFTimeSpan : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int64_t duration;
 @end
 
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED
 #define __WFAsyncActionCompletedHandler__DEFINED
-typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
+typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
 #endif // __WFAsyncActionCompletedHandler__DEFINED
 
 // Windows.Foundation.DeferralCompletedHandler
 #ifndef __WFDeferralCompletedHandler__DEFINED
 #define __WFDeferralCompletedHandler__DEFINED
-typedef void(^WFDeferralCompletedHandler)();
+typedef void (^WFDeferralCompletedHandler)();
 #endif // __WFDeferralCompletedHandler__DEFINED
 
 // Windows.Foundation.AsyncOperationWithProgressCompletedHandler`2
- // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
+// Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
 // Windows.Foundation.AsyncOperationCompletedHandler`1
- // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperation`1<0>
+// Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperation`1<0>
 // Windows.Foundation.AsyncActionWithProgressCompletedHandler`1
- // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
+// Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
 // Windows.Foundation.AsyncOperationProgressHandler`2
- // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
+// Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
 // Windows.Foundation.AsyncActionProgressHandler`1
- // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
+// Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
 // Windows.Foundation.TypedEventHandler`2
- // Could not generate delegate: Can't marshal 0
+// Could not generate delegate: Can't marshal 0
 // Windows.Foundation.EventHandler`1
- // Could not generate delegate: Can't marshal 0
+// Could not generate delegate: Can't marshal 0
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
 #define __WFIClosable_DEFINED__
@@ -181,7 +185,7 @@ typedef void(^WFDeferralCompletedHandler)();
 - (double)getDouble;
 - (WCHAR)getChar16;
 - (BOOL)getBoolean;
-- (NSString *)getString;
+- (NSString*)getString;
 - (WFGUID*)getGuid;
 - (WFDateTime*)getDateTime;
 - (WFTimeSpan*)getTimeSpan;
@@ -216,7 +220,7 @@ typedef void(^WFDeferralCompletedHandler)();
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -253,8 +257,8 @@ typedef void(^WFDeferralCompletedHandler)();
 #define __WFIWwwFormUrlDecoderEntry_DEFINED__
 
 @protocol WFIWwwFormUrlDecoderEntry
-@property (readonly) NSString * name;
-@property (readonly) NSString * value;
+@property (readonly) NSString* name;
+@property (readonly) NSString* value;
 @end
 
 #endif // __WFIWwwFormUrlDecoderEntry_DEFINED__
@@ -264,7 +268,7 @@ typedef void(^WFDeferralCompletedHandler)();
 #define __WFIGetActivationFactory_DEFINED__
 
 @protocol WFIGetActivationFactory
-- (RTObject*)getActivationFactory:(NSString *)activatableClassId;
+- (RTObject*)getActivationFactory:(NSString*)activatableClassId;
 @end
 
 #endif // __WFIGetActivationFactory_DEFINED__
@@ -275,7 +279,7 @@ typedef void(^WFDeferralCompletedHandler)();
 
 @protocol WFIMemoryBufferReference <WFIClosable>
 @property (readonly) unsigned int capacity;
-- (EventRegistrationToken)addClosedEvent:(void(^)(RTObject<WFIMemoryBufferReference>*, RTObject*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(RTObject<WFIMemoryBufferReference>*, RTObject*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -311,7 +315,7 @@ WINRT_EXPORT
 + (RTObject*)createDouble:(double)value;
 + (RTObject*)createChar16:(WCHAR)value;
 + (RTObject*)createBoolean:(BOOL)value;
-+ (RTObject*)createString:(NSString *)value;
++ (RTObject*)createString:(NSString*)value;
 + (RTObject*)createInspectable:(RTObject*)value;
 + (RTObject*)createGuid:(WFGUID*)value;
 + (RTObject*)createDateTime:(WFDateTime*)value;
@@ -361,15 +365,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
-+ (WFWwwFormUrlDecoder*)createWwwFormUrlDecoder:(NSString *)query ACTIVATOR;
++ (WFWwwFormUrlDecoder*)createWwwFormUrlDecoder:(NSString*)query ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (NSString *)getFirstValueByName:(NSString *)name;
+- (NSString*)getFirstValueByName:(NSString*)name;
 @end
 
 #endif // __WFWwwFormUrlDecoder_DEFINED__
@@ -380,30 +382,30 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFUri : RTObject <WFIStringable>
-+ (NSString *)unescapeComponent:(NSString *)toUnescape;
-+ (NSString *)escapeComponent:(NSString *)toEscape;
-+ (WFUri*)createUri:(NSString *)uri ACTIVATOR;
-+ (WFUri*)createWithRelativeUri:(NSString *)baseUri relativeUri:(NSString *)relativeUri ACTIVATOR;
-@property (readonly) NSString * absoluteUri;
-@property (readonly) NSString * displayUri;
-@property (readonly) NSString * domain;
-@property (readonly) NSString * extension;
-@property (readonly) NSString * fragment;
-@property (readonly) NSString * host;
-@property (readonly) NSString * password;
-@property (readonly) NSString * path;
++ (NSString*)unescapeComponent:(NSString*)toUnescape;
++ (NSString*)escapeComponent:(NSString*)toEscape;
++ (WFUri*)createUri:(NSString*)uri ACTIVATOR;
++ (WFUri*)createWithRelativeUri:(NSString*)baseUri relativeUri:(NSString*)relativeUri ACTIVATOR;
+@property (readonly) NSString* absoluteUri;
+@property (readonly) NSString* displayUri;
+@property (readonly) NSString* domain;
+@property (readonly) NSString* extension;
+@property (readonly) NSString* fragment;
+@property (readonly) NSString* host;
+@property (readonly) NSString* password;
+@property (readonly) NSString* path;
 @property (readonly) int port;
-@property (readonly) NSString * query;
+@property (readonly) NSString* query;
 @property (readonly) WFWwwFormUrlDecoder* queryParsed;
-@property (readonly) NSString * rawUri;
-@property (readonly) NSString * schemeName;
+@property (readonly) NSString* rawUri;
+@property (readonly) NSString* schemeName;
 @property (readonly) BOOL suspicious;
-@property (readonly) NSString * userName;
-@property (readonly) NSString * absoluteCanonicalUri;
-@property (readonly) NSString * displayIri;
+@property (readonly) NSString* userName;
+@property (readonly) NSString* absoluteCanonicalUri;
+@property (readonly) NSString* displayIri;
 - (BOOL)equals:(WFUri*)pUri;
-- (WFUri*)combineUri:(NSString *)relativeUri;
-- (NSString *)toString;
+- (WFUri*)combineUri:(NSString*)relativeUri;
+- (NSString*)toString;
 @end
 
 #endif // __WFUri_DEFINED__
@@ -414,8 +416,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
-@property (readonly) NSString * name;
-@property (readonly) NSString * value;
+@property (readonly) NSString* name;
+@property (readonly) NSString* value;
 @end
 
 #endif // __WFWwwFormUrlDecoderEntry_DEFINED__
@@ -432,4 +434,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WFMemoryBuffer_DEFINED__
-

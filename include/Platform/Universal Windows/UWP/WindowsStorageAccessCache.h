@@ -20,24 +20,27 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSAAccessListEntryView, WSAStorageItemMostRecentlyUsedList, WSAItemRemovedEventArgs, WSAStorageItemAccessList, WSAStorageApplicationPermissions;
+@class WSAAccessListEntryView, WSAStorageItemMostRecentlyUsedList, WSAItemRemovedEventArgs, WSAStorageItemAccessList,
+    WSAStorageApplicationPermissions;
 @class WSAAccessListEntry;
-@protocol WSAIItemRemovedEventArgs, WSAIStorageItemAccessList, WSAIStorageItemMostRecentlyUsedList, WSAIStorageItemMostRecentlyUsedList2, WSAIStorageApplicationPermissionsStatics;
+@protocol WSAIItemRemovedEventArgs
+, WSAIStorageItemAccessList, WSAIStorageItemMostRecentlyUsedList, WSAIStorageItemMostRecentlyUsedList2,
+    WSAIStorageApplicationPermissionsStatics;
 
 // Windows.Storage.AccessCache.AccessCacheOptions
 enum _WSAAccessCacheOptions {
-	WSAAccessCacheOptionsNone = 0,
-	WSAAccessCacheOptionsDisallowUserInput = 1,
-	WSAAccessCacheOptionsFastLocationsOnly = 2,
-	WSAAccessCacheOptionsUseReadOnlyCachedCopy = 4,
-	WSAAccessCacheOptionsSuppressAccessTimeUpdate = 8,
+    WSAAccessCacheOptionsNone = 0,
+    WSAAccessCacheOptionsDisallowUserInput = 1,
+    WSAAccessCacheOptionsFastLocationsOnly = 2,
+    WSAAccessCacheOptionsUseReadOnlyCachedCopy = 4,
+    WSAAccessCacheOptionsSuppressAccessTimeUpdate = 8,
 };
 typedef unsigned WSAAccessCacheOptions;
 
 // Windows.Storage.AccessCache.RecentStorageItemVisibility
 enum _WSARecentStorageItemVisibility {
-	WSARecentStorageItemVisibilityAppOnly = 0,
-	WSARecentStorageItemVisibilityAppAndSystem = 1,
+    WSARecentStorageItemVisibilityAppOnly = 0,
+    WSARecentStorageItemVisibilityAppAndSystem = 1,
 };
 typedef unsigned WSARecentStorageItemVisibility;
 
@@ -49,9 +52,9 @@ typedef unsigned WSARecentStorageItemVisibility;
 // [struct] Windows.Storage.AccessCache.AccessListEntry
 WINRT_EXPORT
 @interface WSAAccessListEntry : NSObject
-+ (instancetype)new;
-@property (copy) NSString * token;
-@property (copy) NSString * metadata;
++ (instancetype) new;
+@property (copy) NSString* token;
+@property (copy) NSString* metadata;
 @end
 
 // Windows.Storage.AccessCache.IStorageItemAccessList
@@ -61,18 +64,27 @@ WINRT_EXPORT
 @protocol WSAIStorageItemAccessList
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
-- (NSString *)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
-- (NSString *)add:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)addOrReplaceOverloadDefaultMetadata:(NSString *)token file:(RTObject<WSIStorageItem>*)file;
-- (void)addOrReplace:(NSString *)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)getItemAsync:(NSString *)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileAsync:(NSString *)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString *)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getItemWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)remove:(NSString *)token;
-- (BOOL)containsItem:(NSString *)token;
+- (NSString*)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
+- (NSString*)add:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)addOrReplaceOverloadDefaultMetadata:(NSString*)token file:(RTObject<WSIStorageItem>*)file;
+- (void)addOrReplace:(NSString*)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)getItemAsync:(NSString*)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)getFileAsync:(NSString*)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString*)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getItemWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(RTObject<WSIStorageItem>*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFileWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(WSStorageFile*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFolderWithOptionsAsync:(NSString*)token
+                          options:(WSAAccessCacheOptions)options
+                          success:(void (^)(WSStorageFolder*))success
+                          failure:(void (^)(NSError*))failure;
+- (void)remove:(NSString*)token;
+- (BOOL)containsItem:(NSString*)token;
 - (void)clear;
 - (BOOL)checkAccess:(RTObject<WSIStorageItem>*)file;
 @end
@@ -88,9 +100,7 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
 @end
 
@@ -104,24 +114,38 @@ WINRT_EXPORT
 @interface WSAStorageItemMostRecentlyUsedList : RTObject <WSAIStorageItemAccessList>
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
-- (EventRegistrationToken)addItemRemovedEvent:(void(^)(WSAStorageItemMostRecentlyUsedList*, WSAItemRemovedEventArgs*))del;
+- (EventRegistrationToken)addItemRemovedEvent:(void (^)(WSAStorageItemMostRecentlyUsedList*, WSAItemRemovedEventArgs*))del;
 - (void)removeItemRemovedEvent:(EventRegistrationToken)tok;
-- (NSString *)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
-- (NSString *)add:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)addOrReplaceOverloadDefaultMetadata:(NSString *)token file:(RTObject<WSIStorageItem>*)file;
-- (void)addOrReplace:(NSString *)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)getItemAsync:(NSString *)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileAsync:(NSString *)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString *)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getItemWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)remove:(NSString *)token;
-- (BOOL)containsItem:(NSString *)token;
+- (NSString*)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
+- (NSString*)add:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)addOrReplaceOverloadDefaultMetadata:(NSString*)token file:(RTObject<WSIStorageItem>*)file;
+- (void)addOrReplace:(NSString*)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)getItemAsync:(NSString*)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)getFileAsync:(NSString*)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString*)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getItemWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(RTObject<WSIStorageItem>*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFileWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(WSStorageFile*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFolderWithOptionsAsync:(NSString*)token
+                          options:(WSAAccessCacheOptions)options
+                          success:(void (^)(WSStorageFolder*))success
+                          failure:(void (^)(NSError*))failure;
+- (void)remove:(NSString*)token;
+- (BOOL)containsItem:(NSString*)token;
 - (void)clear;
 - (BOOL)checkAccess:(RTObject<WSIStorageItem>*)file;
-- (NSString *)addWithMetadataAndVisibility:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata visibility:(WSARecentStorageItemVisibility)visibility;
-- (void)addOrReplaceWithMetadataAndVisibility:(NSString *)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata visibility:(WSARecentStorageItemVisibility)visibility;
+- (NSString*)addWithMetadataAndVisibility:(RTObject<WSIStorageItem>*)file
+                                 metadata:(NSString*)metadata
+                               visibility:(WSARecentStorageItemVisibility)visibility;
+- (void)addOrReplaceWithMetadataAndVisibility:(NSString*)token
+                                         file:(RTObject<WSIStorageItem>*)file
+                                     metadata:(NSString*)metadata
+                                   visibility:(WSARecentStorageItemVisibility)visibility;
 @end
 
 #endif // __WSAStorageItemMostRecentlyUsedList_DEFINED__
@@ -145,18 +169,27 @@ WINRT_EXPORT
 @interface WSAStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
 @property (readonly) WSAAccessListEntryView* entries;
 @property (readonly) unsigned int maximumItemsAllowed;
-- (NSString *)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
-- (NSString *)add:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)addOrReplaceOverloadDefaultMetadata:(NSString *)token file:(RTObject<WSIStorageItem>*)file;
-- (void)addOrReplace:(NSString *)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString *)metadata;
-- (void)getItemAsync:(NSString *)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileAsync:(NSString *)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString *)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getItemWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFileWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderWithOptionsAsync:(NSString *)token options:(WSAAccessCacheOptions)options success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)remove:(NSString *)token;
-- (BOOL)containsItem:(NSString *)token;
+- (NSString*)addOverloadDefaultMetadata:(RTObject<WSIStorageItem>*)file;
+- (NSString*)add:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)addOrReplaceOverloadDefaultMetadata:(NSString*)token file:(RTObject<WSIStorageItem>*)file;
+- (void)addOrReplace:(NSString*)token file:(RTObject<WSIStorageItem>*)file metadata:(NSString*)metadata;
+- (void)getItemAsync:(NSString*)token success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)getFileAsync:(NSString*)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString*)token success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getItemWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(RTObject<WSIStorageItem>*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFileWithOptionsAsync:(NSString*)token
+                        options:(WSAAccessCacheOptions)options
+                        success:(void (^)(WSStorageFile*))success
+                        failure:(void (^)(NSError*))failure;
+- (void)getFolderWithOptionsAsync:(NSString*)token
+                          options:(WSAAccessCacheOptions)options
+                          success:(void (^)(WSStorageFolder*))success
+                          failure:(void (^)(NSError*))failure;
+- (void)remove:(NSString*)token;
+- (BOOL)containsItem:(NSString*)token;
 - (void)clear;
 - (BOOL)checkAccess:(RTObject<WSIStorageItem>*)file;
 @end
@@ -174,4 +207,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSAStorageApplicationPermissions_DEFINED__
-

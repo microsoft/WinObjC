@@ -30,13 +30,13 @@
 
 @interface UIDynamicAnimator : NSObject
 
-@property(nonatomic, readonly, copy) NSArray *behaviors;
+@property (nonatomic, readonly, copy) NSArray* behaviors;
 
-- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout;
-- (void)addBehavior:(UIDynamicBehavior *)behavior;
-- (void)removeBehavior:(UIDynamicBehavior *)behavior;
-- (NSArray *)itemsInRect:(CGRect)rect;
-- (UICollectionViewLayoutAttributes *)layoutAttributesForCellAtIndexPath:(NSIndexPath *)indexPath;
+- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout;
+- (void)addBehavior:(UIDynamicBehavior*)behavior;
+- (void)removeBehavior:(UIDynamicBehavior*)behavior;
+- (NSArray*)itemsInRect:(CGRect)rect;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForCellAtIndexPath:(NSIndexPath*)indexPath;
 - (void)updateItemUsingCurrentState:(id<UIDynamicItem>)item;
 
 @end

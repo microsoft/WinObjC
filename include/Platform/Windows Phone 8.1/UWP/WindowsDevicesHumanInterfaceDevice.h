@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription, WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
-@protocol WDHIHidDeviceStatics, WDHIHidBooleanControlDescription, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport, WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl, WDHIHidDevice;
+@class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
+    WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
+@protocol WDHIHidDeviceStatics
+, WDHIHidBooleanControlDescription, WDHIHidNumericControlDescription, WDHIHidCollection, WDHIHidInputReport, WDHIHidOutputReport,
+    WDHIHidFeatureReport, WDHIHidInputReportReceivedEventArgs, WDHIHidBooleanControl, WDHIHidNumericControl, WDHIHidDevice;
 
 // Windows.Devices.HumanInterfaceDevice.HidReportType
 enum _WDHHidReportType {
@@ -65,28 +68,40 @@ typedef unsigned WDHHidCollectionType;
 
 WINRT_EXPORT
 @interface WDHHidDevice : RTObject <WFIClosable>
-+ (NSString *)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
-+ (NSString *)getDeviceSelectorVidPid:(unsigned short)usagePage usageId:(unsigned short)usageId vendorId:(unsigned short)vendorId productId:(unsigned short)productId;
-+ (void)fromIdAsync:(NSString *)deviceId accessMode:(WSFileAccessMode)accessMode success:(void (^)(WDHHidDevice *))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(unsigned short)usagePage usageId:(unsigned short)usageId;
++ (NSString*)getDeviceSelectorVidPid:(unsigned short)usagePage
+                             usageId:(unsigned short)usageId
+                            vendorId:(unsigned short)vendorId
+                           productId:(unsigned short)productId;
++ (void)fromIdAsync:(NSString*)deviceId
+         accessMode:(WSFileAccessMode)accessMode
+            success:(void (^)(WDHHidDevice*))success
+            failure:(void (^)(NSError*))failure;
 @property (readonly) unsigned short productId;
 @property (readonly) unsigned short usageId;
 @property (readonly) unsigned short usagePage;
 @property (readonly) unsigned short vendorId;
 @property (readonly) unsigned short version;
-- (EventRegistrationToken)addInputReportReceivedEvent:(void(^)(WDHHidDevice *, WDHHidInputReportReceivedEventArgs *))del;
+- (EventRegistrationToken)addInputReportReceivedEvent:(void (^)(WDHHidDevice*, WDHHidInputReportReceivedEventArgs*))del;
 - (void)removeInputReportReceivedEvent:(EventRegistrationToken)tok;
-- (void)getInputReportAsyncWithSuccess:(void (^)(WDHHidInputReport *))success failure:(void (^)(NSError*))failure;
-- (void)getInputReportByIdAsync:(unsigned short)reportId success:(void (^)(WDHHidInputReport *))success failure:(void (^)(NSError*))failure;
-- (void)getFeatureReportAsyncWithSuccess:(void (^)(WDHHidFeatureReport *))success failure:(void (^)(NSError*))failure;
-- (void)getFeatureReportByIdAsync:(unsigned short)reportId success:(void (^)(WDHHidFeatureReport *))success failure:(void (^)(NSError*))failure;
-- (WDHHidOutputReport *)createOutputReport;
-- (WDHHidOutputReport *)createOutputReportById:(unsigned short)reportId;
-- (WDHHidFeatureReport *)createFeatureReport;
-- (WDHHidFeatureReport *)createFeatureReportById:(unsigned short)reportId;
-- (void)sendOutputReportAsync:(WDHHidOutputReport *)outputReport success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
-- (void)sendFeatureReportAsync:(WDHHidFeatureReport *)featureReport success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration> /*WDHHidBooleanControlDescription*/ )getBooleanControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (id<NSFastEnumeration> /*WDHHidNumericControlDescription*/ )getNumericControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (void)getInputReportAsyncWithSuccess:(void (^)(WDHHidInputReport*))success failure:(void (^)(NSError*))failure;
+- (void)getInputReportByIdAsync:(unsigned short)reportId success:(void (^)(WDHHidInputReport*))success failure:(void (^)(NSError*))failure;
+- (void)getFeatureReportAsyncWithSuccess:(void (^)(WDHHidFeatureReport*))success failure:(void (^)(NSError*))failure;
+- (void)getFeatureReportByIdAsync:(unsigned short)reportId
+                          success:(void (^)(WDHHidFeatureReport*))success
+                          failure:(void (^)(NSError*))failure;
+- (WDHHidOutputReport*)createOutputReport;
+- (WDHHidOutputReport*)createOutputReportById:(unsigned short)reportId;
+- (WDHHidFeatureReport*)createFeatureReport;
+- (WDHHidFeatureReport*)createFeatureReportById:(unsigned short)reportId;
+- (void)sendOutputReportAsync:(WDHHidOutputReport*)outputReport success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
+- (void)sendFeatureReportAsync:(WDHHidFeatureReport*)featureReport success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
+- (id<NSFastEnumeration> /*WDHHidBooleanControlDescription*/)getBooleanControlDescriptions:(WDHHidReportType)reportType
+                                                                                 usagePage:(unsigned short)usagePage
+                                                                                   usageId:(unsigned short)usageId;
+- (id<NSFastEnumeration> /*WDHHidNumericControlDescription*/)getNumericControlDescriptions:(WDHHidReportType)reportType
+                                                                                 usagePage:(unsigned short)usagePage
+                                                                                   usageId:(unsigned short)usageId;
 - (void)close;
 @end
 
@@ -98,14 +113,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidInputReport : RTObject
-@property (readonly) id<NSFastEnumeration> /*WDHHidBooleanControl*/  activatedBooleanControls;
+@property (readonly) id<NSFastEnumeration> /*WDHHidBooleanControl*/ activatedBooleanControls;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
-@property (readonly) id<NSFastEnumeration> /*WDHHidBooleanControl*/  transitionedBooleanControls;
-- (WDHHidBooleanControl *)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidBooleanControl *)getBooleanControlByDescription:(WDHHidBooleanControlDescription *)controlDescription;
-- (WDHHidNumericControl *)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidNumericControl *)getNumericControlByDescription:(WDHHidNumericControlDescription *)controlDescription;
+@property (readonly) id<NSFastEnumeration> /*WDHHidBooleanControl*/ transitionedBooleanControls;
+- (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;
+- (WDHHidNumericControl*)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidNumericControl*)getNumericControlByDescription:(WDHHidNumericControlDescription*)controlDescription;
 @end
 
 #endif // __WDHHidInputReport_DEFINED__
@@ -118,10 +133,10 @@ WINRT_EXPORT
 @interface WDHHidFeatureReport : RTObject
 @property (copy) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
-- (WDHHidBooleanControl *)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidBooleanControl *)getBooleanControlByDescription:(WDHHidBooleanControlDescription *)controlDescription;
-- (WDHHidNumericControl *)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidNumericControl *)getNumericControlByDescription:(WDHHidNumericControlDescription *)controlDescription;
+- (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;
+- (WDHHidNumericControl*)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidNumericControl*)getNumericControlByDescription:(WDHHidNumericControlDescription*)controlDescription;
 @end
 
 #endif // __WDHHidFeatureReport_DEFINED__
@@ -134,10 +149,10 @@ WINRT_EXPORT
 @interface WDHHidOutputReport : RTObject
 @property (copy) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
-- (WDHHidBooleanControl *)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidBooleanControl *)getBooleanControlByDescription:(WDHHidBooleanControlDescription *)controlDescription;
-- (WDHHidNumericControl *)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (WDHHidNumericControl *)getNumericControlByDescription:(WDHHidNumericControlDescription *)controlDescription;
+- (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;
+- (WDHHidNumericControl*)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (WDHHidNumericControl*)getNumericControlByDescription:(WDHHidNumericControlDescription*)controlDescription;
 @end
 
 #endif // __WDHHidOutputReport_DEFINED__
@@ -149,7 +164,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
 @property (readonly) unsigned id;
-@property (readonly) id<NSFastEnumeration> /*WDHHidCollection*/  parentCollections;
+@property (readonly) id<NSFastEnumeration> /*WDHHidCollection*/ parentCollections;
 @property (readonly) unsigned short reportId;
 @property (readonly) WDHHidReportType reportType;
 @property (readonly) unsigned short usageId;
@@ -169,7 +184,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isAbsolute;
 @property (readonly) int logicalMaximum;
 @property (readonly) int logicalMinimum;
-@property (readonly) id<NSFastEnumeration> /*WDHHidCollection*/  parentCollections;
+@property (readonly) id<NSFastEnumeration> /*WDHHidCollection*/ parentCollections;
 @property (readonly) int physicalMaximum;
 @property (readonly) int physicalMinimum;
 @property (readonly) unsigned reportCount;
@@ -190,7 +205,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidInputReportReceivedEventArgs : RTObject
-@property (readonly) WDHHidInputReport * report;
+@property (readonly) WDHHidInputReport* report;
 @end
 
 #endif // __WDHHidInputReportReceivedEventArgs_DEFINED__
@@ -216,7 +231,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDHHidBooleanControl : RTObject
 @property BOOL isActive;
-@property (readonly) WDHHidBooleanControlDescription * controlDescription;
+@property (readonly) WDHHidBooleanControlDescription* controlDescription;
 @property (readonly) unsigned id;
 @property (readonly) unsigned short usageId;
 @property (readonly) unsigned short usagePage;
@@ -232,7 +247,7 @@ WINRT_EXPORT
 @interface WDHHidNumericControl : RTObject
 @property int64_t value;
 @property int64_t scaledValue;
-@property (readonly) WDHHidNumericControlDescription * controlDescription;
+@property (readonly) WDHHidNumericControlDescription* controlDescription;
 @property (readonly) unsigned id;
 @property (readonly) BOOL isGrouped;
 @property (readonly) unsigned short usageId;
@@ -240,4 +255,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDHHidNumericControl_DEFINED__
-

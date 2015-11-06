@@ -24,10 +24,10 @@
 
 @interface GKPlayer : NSObject
 
-@property (nonatomic, readonly, retain) NSString *playerID;
-@property (nonatomic, readonly, copy) NSString *alias;
+@property (nonatomic, readonly, retain) NSString* playerID;
+@property (nonatomic, readonly, copy) NSString* alias;
 
-+ (void)loadPlayersForIdentifiers:(NSArray *)identifiers withCompletionHandler:(void (^)(NSArray *players, NSError *error))completionHandler;
++ (void)loadPlayersForIdentifiers:(NSArray*)identifiers withCompletionHandler:(void (^)(NSArray* players, NSError* error))completionHandler;
 
 @end
 

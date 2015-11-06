@@ -25,15 +25,15 @@
 GAMEKIT_EXPORT_CLASS
 @interface GKLocalPlayer : GKPlayer
 
-@property (nonatomic, copy) void(^authenticateHandler)(UIViewController *viewController, NSError *err);
+@property (nonatomic, copy) void (^authenticateHandler)(UIViewController* viewController, NSError* err);
 @property (nonatomic, readonly, getter=isAuthenticated) BOOL authenticated;
 
-+ (GKLocalPlayer *)localPlayer;
-- (void)authenticateWithCompletionHandler:(void (^)(NSError *error))completionHandler;
-- (void)loadFriendsWithCompletionHandler:(void (^)(NSArray *friends, NSError *error))completionHandler;
++ (GKLocalPlayer*)localPlayer;
+- (void)authenticateWithCompletionHandler:(void (^)(NSError* error))completionHandler;
+- (void)loadFriendsWithCompletionHandler:(void (^)(NSArray* friends, NSError* error))completionHandler;
 
 @end
 
-SB_EXPORT NSString *GKPlayerAuthenticationDidChangeNotificationName;
+SB_EXPORT NSString* GKPlayerAuthenticationDidChangeNotificationName;
 
 #endif /* _GKLOCALPLAYER_H_ */

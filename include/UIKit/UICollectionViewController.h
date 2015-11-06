@@ -26,9 +26,9 @@
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewController : UIViewController
 
-@property (nonatomic, retain) UICollectionView *collectionView;
+@property (nonatomic, retain) UICollectionView* collectionView;
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout;
+- (id)initWithCollectionViewLayout:(UICollectionViewLayout*)layout;
 
 @end
 

@@ -27,7 +27,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) double minimumValue;
 @property (nonatomic) double maximumValue;
 @property (nonatomic) double stepValue;
-@property (nonatomic, retain) UIColor *tintColor;
+@property (nonatomic, retain) UIColor* tintColor;
 
 @end
 

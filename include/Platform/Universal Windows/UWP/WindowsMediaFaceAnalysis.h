@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMFDetectedFace, WMFFaceTracker, WMFFaceDetector;
-@protocol WMFIDetectedFace, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
+@protocol WMFIDetectedFace
+, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
 
 #include "WindowsGraphicsImaging.h"
 #include "WindowsFoundation.h"
@@ -71,8 +72,10 @@ WINRT_EXPORT
 @property (copy) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
 - (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
-- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image searchArea:(WGIBitmapBounds*)searchArea success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image
+                            searchArea:(WGIBitmapBounds*)searchArea
+                               success:(void (^)(NSMutableArray*))success
+                               failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceDetector_DEFINED__
-

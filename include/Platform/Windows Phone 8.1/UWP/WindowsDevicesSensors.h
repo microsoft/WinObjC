@@ -20,8 +20,21 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer, WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs, WDSCompass, WDSCompassReading, WDSCompassReadingChangedEventArgs, WDSLightSensor, WDSLightSensorReading, WDSLightSensorReadingChangedEventArgs, WDSSensorRotationMatrix, WDSSensorQuaternion, WDSOrientationSensor, WDSOrientationSensorReading, WDSOrientationSensorReadingChangedEventArgs, WDSSimpleOrientationSensor, WDSSimpleOrientationSensorOrientationChangedEventArgs;
-@protocol WDSIAccelerometerStatics, WDSIAccelerometer, WDSIAccelerometerReading, WDSIAccelerometerReadingChangedEventArgs, WDSIAccelerometerShakenEventArgs, WDSIInclinometerStatics, WDSIInclinometer, WDSIInclinometerReading, WDSIInclinometerReadingYawAccuracy, WDSIInclinometerReadingChangedEventArgs, WDSIGyrometerStatics, WDSIGyrometer, WDSIGyrometerReading, WDSIGyrometerReadingChangedEventArgs, WDSICompassStatics, WDSICompass, WDSICompassReading, WDSICompassReadingHeadingAccuracy, WDSICompassReadingChangedEventArgs, WDSILightSensorStatics, WDSILightSensor, WDSILightSensorReading, WDSILightSensorReadingChangedEventArgs, WDSISensorRotationMatrix, WDSISensorQuaternion, WDSIOrientationSensorStatics, WDSIOrientationSensor, WDSIOrientationSensorReading, WDSIOrientationSensorReadingYawAccuracy, WDSIOrientationSensorReadingChangedEventArgs, WDSISimpleOrientationSensorStatics, WDSISimpleOrientationSensor, WDSISimpleOrientationSensorOrientationChangedEventArgs;
+@class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer,
+    WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs,
+    WDSCompass, WDSCompassReading, WDSCompassReadingChangedEventArgs, WDSLightSensor, WDSLightSensorReading,
+    WDSLightSensorReadingChangedEventArgs, WDSSensorRotationMatrix, WDSSensorQuaternion, WDSOrientationSensor, WDSOrientationSensorReading,
+    WDSOrientationSensorReadingChangedEventArgs, WDSSimpleOrientationSensor, WDSSimpleOrientationSensorOrientationChangedEventArgs;
+@protocol WDSIAccelerometerStatics
+, WDSIAccelerometer, WDSIAccelerometerReading, WDSIAccelerometerReadingChangedEventArgs, WDSIAccelerometerShakenEventArgs,
+    WDSIInclinometerStatics, WDSIInclinometer, WDSIInclinometerReading, WDSIInclinometerReadingYawAccuracy,
+    WDSIInclinometerReadingChangedEventArgs, WDSIGyrometerStatics, WDSIGyrometer, WDSIGyrometerReading,
+    WDSIGyrometerReadingChangedEventArgs, WDSICompassStatics, WDSICompass, WDSICompassReading, WDSICompassReadingHeadingAccuracy,
+    WDSICompassReadingChangedEventArgs, WDSILightSensorStatics, WDSILightSensor, WDSILightSensorReading,
+    WDSILightSensorReadingChangedEventArgs, WDSISensorRotationMatrix, WDSISensorQuaternion, WDSIOrientationSensorStatics,
+    WDSIOrientationSensor, WDSIOrientationSensorReading, WDSIOrientationSensorReadingYawAccuracy,
+    WDSIOrientationSensorReadingChangedEventArgs, WDSISimpleOrientationSensorStatics, WDSISimpleOrientationSensor,
+    WDSISimpleOrientationSensorOrientationChangedEventArgs;
 
 // Windows.Devices.Sensors.MagnetometerAccuracy
 enum _WDSMagnetometerAccuracy {
@@ -51,14 +64,14 @@ typedef unsigned WDSSimpleOrientation;
 
 WINRT_EXPORT
 @interface WDSAccelerometer : RTObject
-+ (WDSAccelerometer *)getDefault;
++ (WDSAccelerometer*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSAccelerometer *, WDSAccelerometerReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSAccelerometer*, WDSAccelerometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addShakenEvent:(void(^)(WDSAccelerometer *, WDSAccelerometerShakenEventArgs *))del;
+- (EventRegistrationToken)addShakenEvent:(void (^)(WDSAccelerometer*, WDSAccelerometerShakenEventArgs*))del;
 - (void)removeShakenEvent:(EventRegistrationToken)tok;
-- (WDSAccelerometerReading *)getCurrentReading;
+- (WDSAccelerometerReading*)getCurrentReading;
 @end
 
 #endif // __WDSAccelerometer_DEFINED__
@@ -72,7 +85,7 @@ WINRT_EXPORT
 @property (readonly) double accelerationX;
 @property (readonly) double accelerationY;
 @property (readonly) double accelerationZ;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSAccelerometerReading_DEFINED__
@@ -83,7 +96,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSAccelerometerReadingChangedEventArgs : RTObject
-@property (readonly) WDSAccelerometerReading * reading;
+@property (readonly) WDSAccelerometerReading* reading;
 @end
 
 #endif // __WDSAccelerometerReadingChangedEventArgs_DEFINED__
@@ -94,7 +107,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSAccelerometerShakenEventArgs : RTObject
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSAccelerometerShakenEventArgs_DEFINED__
@@ -105,12 +118,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSInclinometer : RTObject
-+ (WDSInclinometer *)getDefault;
++ (WDSInclinometer*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSInclinometer *, WDSInclinometerReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSInclinometer*, WDSInclinometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSInclinometerReading *)getCurrentReading;
+- (WDSInclinometerReading*)getCurrentReading;
 @end
 
 #endif // __WDSInclinometer_DEFINED__
@@ -123,7 +136,7 @@ WINRT_EXPORT
 @interface WDSInclinometerReading : RTObject
 @property (readonly) float pitchDegrees;
 @property (readonly) float rollDegrees;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @property (readonly) float yawDegrees;
 @property (readonly) WDSMagnetometerAccuracy yawAccuracy;
 @end
@@ -136,7 +149,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSInclinometerReadingChangedEventArgs : RTObject
-@property (readonly) WDSInclinometerReading * reading;
+@property (readonly) WDSInclinometerReading* reading;
 @end
 
 #endif // __WDSInclinometerReadingChangedEventArgs_DEFINED__
@@ -147,12 +160,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSGyrometer : RTObject
-+ (WDSGyrometer *)getDefault;
++ (WDSGyrometer*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSGyrometer *, WDSGyrometerReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSGyrometer*, WDSGyrometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSGyrometerReading *)getCurrentReading;
+- (WDSGyrometerReading*)getCurrentReading;
 @end
 
 #endif // __WDSGyrometer_DEFINED__
@@ -166,7 +179,7 @@ WINRT_EXPORT
 @property (readonly) double angularVelocityX;
 @property (readonly) double angularVelocityY;
 @property (readonly) double angularVelocityZ;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSGyrometerReading_DEFINED__
@@ -177,7 +190,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSGyrometerReadingChangedEventArgs : RTObject
-@property (readonly) WDSGyrometerReading * reading;
+@property (readonly) WDSGyrometerReading* reading;
 @end
 
 #endif // __WDSGyrometerReadingChangedEventArgs_DEFINED__
@@ -188,12 +201,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCompass : RTObject
-+ (WDSCompass *)getDefault;
++ (WDSCompass*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCompass *, WDSCompassReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSCompass*, WDSCompassReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSCompassReading *)getCurrentReading;
+- (WDSCompassReading*)getCurrentReading;
 @end
 
 #endif // __WDSCompass_DEFINED__
@@ -207,7 +220,7 @@ WINRT_EXPORT
 @property (readonly) WDSMagnetometerAccuracy headingAccuracy;
 @property (readonly) double headingMagneticNorth;
 @property (readonly) NSNumber* headingTrueNorth;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSCompassReading_DEFINED__
@@ -218,7 +231,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCompassReadingChangedEventArgs : RTObject
-@property (readonly) WDSCompassReading * reading;
+@property (readonly) WDSCompassReading* reading;
 @end
 
 #endif // __WDSCompassReadingChangedEventArgs_DEFINED__
@@ -229,12 +242,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSLightSensor : RTObject
-+ (WDSLightSensor *)getDefault;
++ (WDSLightSensor*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSLightSensor *, WDSLightSensorReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSLightSensor*, WDSLightSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSLightSensorReading *)getCurrentReading;
+- (WDSLightSensorReading*)getCurrentReading;
 @end
 
 #endif // __WDSLightSensor_DEFINED__
@@ -246,7 +259,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSLightSensorReading : RTObject
 @property (readonly) float illuminanceInLux;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSLightSensorReading_DEFINED__
@@ -257,7 +270,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSLightSensorReadingChangedEventArgs : RTObject
-@property (readonly) WDSLightSensorReading * reading;
+@property (readonly) WDSLightSensorReading* reading;
 @end
 
 #endif // __WDSLightSensorReadingChangedEventArgs_DEFINED__
@@ -301,12 +314,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSOrientationSensor : RTObject
-+ (WDSOrientationSensor *)getDefault;
++ (WDSOrientationSensor*)getDefault;
 @property unsigned reportInterval;
 @property (readonly) unsigned minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSOrientationSensor *, WDSOrientationSensorReadingChangedEventArgs *))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSOrientationSensor*, WDSOrientationSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (WDSOrientationSensorReading *)getCurrentReading;
+- (WDSOrientationSensorReading*)getCurrentReading;
 @end
 
 #endif // __WDSOrientationSensor_DEFINED__
@@ -318,9 +331,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSOrientationSensorReading : RTObject
 @property (readonly) WDSMagnetometerAccuracy yawAccuracy;
-@property (readonly) WDSSensorQuaternion * quaternion;
-@property (readonly) WDSSensorRotationMatrix * rotationMatrix;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WDSSensorQuaternion* quaternion;
+@property (readonly) WDSSensorRotationMatrix* rotationMatrix;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSOrientationSensorReading_DEFINED__
@@ -331,7 +344,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSOrientationSensorReadingChangedEventArgs : RTObject
-@property (readonly) WDSOrientationSensorReading * reading;
+@property (readonly) WDSOrientationSensorReading* reading;
 @end
 
 #endif // __WDSOrientationSensorReadingChangedEventArgs_DEFINED__
@@ -342,8 +355,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSimpleOrientationSensor : RTObject
-+ (WDSSimpleOrientationSensor *)getDefault;
-- (EventRegistrationToken)addOrientationChangedEvent:(void(^)(WDSSimpleOrientationSensor *, WDSSimpleOrientationSensorOrientationChangedEventArgs *))del;
++ (WDSSimpleOrientationSensor*)getDefault;
+- (EventRegistrationToken)addOrientationChangedEvent:(void (^)(WDSSimpleOrientationSensor*,
+                                                               WDSSimpleOrientationSensorOrientationChangedEventArgs*))del;
 - (void)removeOrientationChangedEvent:(EventRegistrationToken)tok;
 - (WDSSimpleOrientation)getCurrentOrientation;
 @end
@@ -357,8 +371,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSimpleOrientationSensorOrientationChangedEventArgs : RTObject
 @property (readonly) WDSSimpleOrientation orientation;
-@property (readonly) WFDateTime * timestamp;
+@property (readonly) WFDateTime* timestamp;
 @end
 
 #endif // __WDSSimpleOrientationSensorOrientationChangedEventArgs_DEFINED__
-

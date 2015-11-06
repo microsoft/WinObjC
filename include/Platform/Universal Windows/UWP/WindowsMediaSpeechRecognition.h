@@ -20,87 +20,101 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint, WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts, WMSSpeechRecognizerUIOptions, WMSSpeechRecognitionCompilationResult, WMSSpeechRecognizer, WMSSpeechRecognitionQualityDegradingEventArgs, WMSSpeechRecognizerStateChangedEventArgs, WMSSpeechRecognitionVoiceCommandDefinitionConstraint, WMSSpeechContinuousRecognitionSession, WMSSpeechRecognitionHypothesisGeneratedEventArgs, WMSSpeechRecognitionHypothesis, WMSSpeechContinuousRecognitionCompletedEventArgs, WMSSpeechContinuousRecognitionResultGeneratedEventArgs;
-@protocol WMSISpeechRecognitionCompilationResult, WMSISpeechRecognizerTimeouts, WMSISpeechRecognizerUIOptions, WMSISpeechRecognitionResult, WMSISpeechRecognitionConstraint, WMSISpeechRecognitionResult2, WMSISpeechRecognitionSemanticInterpretation, WMSISpeechRecognitionTopicConstraint, WMSISpeechRecognitionTopicConstraintFactory, WMSISpeechRecognitionListConstraint, WMSISpeechRecognitionListConstraintFactory, WMSISpeechRecognitionGrammarFileConstraint, WMSISpeechRecognitionGrammarFileConstraintFactory, WMSISpeechRecognitionVoiceCommandDefinitionConstraint, WMSISpeechRecognitionQualityDegradingEventArgs, WMSISpeechRecognizerStateChangedEventArgs, WMSISpeechRecognizer, WMSISpeechRecognizerFactory, WMSISpeechRecognizerStatics, WMSISpeechRecognizer2, WMSISpeechRecognitionHypothesis, WMSISpeechRecognitionHypothesisGeneratedEventArgs, WMSISpeechContinuousRecognitionSession, WMSISpeechContinuousRecognitionCompletedEventArgs, WMSISpeechContinuousRecognitionResultGeneratedEventArgs;
+@class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint,
+    WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts,
+    WMSSpeechRecognizerUIOptions, WMSSpeechRecognitionCompilationResult, WMSSpeechRecognizer, WMSSpeechRecognitionQualityDegradingEventArgs,
+    WMSSpeechRecognizerStateChangedEventArgs, WMSSpeechRecognitionVoiceCommandDefinitionConstraint, WMSSpeechContinuousRecognitionSession,
+    WMSSpeechRecognitionHypothesisGeneratedEventArgs, WMSSpeechRecognitionHypothesis, WMSSpeechContinuousRecognitionCompletedEventArgs,
+    WMSSpeechContinuousRecognitionResultGeneratedEventArgs;
+@protocol WMSISpeechRecognitionCompilationResult
+, WMSISpeechRecognizerTimeouts, WMSISpeechRecognizerUIOptions, WMSISpeechRecognitionResult, WMSISpeechRecognitionConstraint,
+    WMSISpeechRecognitionResult2, WMSISpeechRecognitionSemanticInterpretation, WMSISpeechRecognitionTopicConstraint,
+    WMSISpeechRecognitionTopicConstraintFactory, WMSISpeechRecognitionListConstraint, WMSISpeechRecognitionListConstraintFactory,
+    WMSISpeechRecognitionGrammarFileConstraint, WMSISpeechRecognitionGrammarFileConstraintFactory,
+    WMSISpeechRecognitionVoiceCommandDefinitionConstraint, WMSISpeechRecognitionQualityDegradingEventArgs,
+    WMSISpeechRecognizerStateChangedEventArgs, WMSISpeechRecognizer, WMSISpeechRecognizerFactory, WMSISpeechRecognizerStatics,
+    WMSISpeechRecognizer2, WMSISpeechRecognitionHypothesis, WMSISpeechRecognitionHypothesisGeneratedEventArgs,
+    WMSISpeechContinuousRecognitionSession, WMSISpeechContinuousRecognitionCompletedEventArgs,
+    WMSISpeechContinuousRecognitionResultGeneratedEventArgs;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability
 enum _WMSSpeechRecognitionConstraintProbability {
-	WMSSpeechRecognitionConstraintProbabilityDefault = 0,
-	WMSSpeechRecognitionConstraintProbabilityMin = 1,
-	WMSSpeechRecognitionConstraintProbabilityMax = 2,
+    WMSSpeechRecognitionConstraintProbabilityDefault = 0,
+    WMSSpeechRecognitionConstraintProbabilityMin = 1,
+    WMSSpeechRecognitionConstraintProbabilityMax = 2,
 };
 typedef unsigned WMSSpeechRecognitionConstraintProbability;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionConfidence
 enum _WMSSpeechRecognitionConfidence {
-	WMSSpeechRecognitionConfidenceHigh = 0,
-	WMSSpeechRecognitionConfidenceMedium = 1,
-	WMSSpeechRecognitionConfidenceLow = 2,
-	WMSSpeechRecognitionConfidenceRejected = 3,
+    WMSSpeechRecognitionConfidenceHigh = 0,
+    WMSSpeechRecognitionConfidenceMedium = 1,
+    WMSSpeechRecognitionConfidenceLow = 2,
+    WMSSpeechRecognitionConfidenceRejected = 3,
 };
 typedef unsigned WMSSpeechRecognitionConfidence;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionScenario
 enum _WMSSpeechRecognitionScenario {
-	WMSSpeechRecognitionScenarioWebSearch = 0,
-	WMSSpeechRecognitionScenarioDictation = 1,
-	WMSSpeechRecognitionScenarioFormFilling = 2,
+    WMSSpeechRecognitionScenarioWebSearch = 0,
+    WMSSpeechRecognitionScenarioDictation = 1,
+    WMSSpeechRecognitionScenarioFormFilling = 2,
 };
 typedef unsigned WMSSpeechRecognitionScenario;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionConstraintType
 enum _WMSSpeechRecognitionConstraintType {
-	WMSSpeechRecognitionConstraintTypeTopic = 0,
-	WMSSpeechRecognitionConstraintTypeList = 1,
-	WMSSpeechRecognitionConstraintTypeGrammar = 2,
-	WMSSpeechRecognitionConstraintTypeVoiceCommandDefinition = 3,
+    WMSSpeechRecognitionConstraintTypeTopic = 0,
+    WMSSpeechRecognitionConstraintTypeList = 1,
+    WMSSpeechRecognitionConstraintTypeGrammar = 2,
+    WMSSpeechRecognitionConstraintTypeVoiceCommandDefinition = 3,
 };
 typedef unsigned WMSSpeechRecognitionConstraintType;
 
 // Windows.Media.SpeechRecognition.SpeechRecognizerState
 enum _WMSSpeechRecognizerState {
-	WMSSpeechRecognizerStateIdle = 0,
-	WMSSpeechRecognizerStateCapturing = 1,
-	WMSSpeechRecognizerStateProcessing = 2,
-	WMSSpeechRecognizerStateSoundStarted = 3,
-	WMSSpeechRecognizerStateSoundEnded = 4,
-	WMSSpeechRecognizerStateSpeechDetected = 5,
-	WMSSpeechRecognizerStatePaused = 6,
+    WMSSpeechRecognizerStateIdle = 0,
+    WMSSpeechRecognizerStateCapturing = 1,
+    WMSSpeechRecognizerStateProcessing = 2,
+    WMSSpeechRecognizerStateSoundStarted = 3,
+    WMSSpeechRecognizerStateSoundEnded = 4,
+    WMSSpeechRecognizerStateSpeechDetected = 5,
+    WMSSpeechRecognizerStatePaused = 6,
 };
 typedef unsigned WMSSpeechRecognizerState;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionAudioProblem
 enum _WMSSpeechRecognitionAudioProblem {
-	WMSSpeechRecognitionAudioProblemNone = 0,
-	WMSSpeechRecognitionAudioProblemTooNoisy = 1,
-	WMSSpeechRecognitionAudioProblemNoSignal = 2,
-	WMSSpeechRecognitionAudioProblemTooLoud = 3,
-	WMSSpeechRecognitionAudioProblemTooQuiet = 4,
-	WMSSpeechRecognitionAudioProblemTooFast = 5,
-	WMSSpeechRecognitionAudioProblemTooSlow = 6,
+    WMSSpeechRecognitionAudioProblemNone = 0,
+    WMSSpeechRecognitionAudioProblemTooNoisy = 1,
+    WMSSpeechRecognitionAudioProblemNoSignal = 2,
+    WMSSpeechRecognitionAudioProblemTooLoud = 3,
+    WMSSpeechRecognitionAudioProblemTooQuiet = 4,
+    WMSSpeechRecognitionAudioProblemTooFast = 5,
+    WMSSpeechRecognitionAudioProblemTooSlow = 6,
 };
 typedef unsigned WMSSpeechRecognitionAudioProblem;
 
 // Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus
 enum _WMSSpeechRecognitionResultStatus {
-	WMSSpeechRecognitionResultStatusSuccess = 0,
-	WMSSpeechRecognitionResultStatusTopicLanguageNotSupported = 1,
-	WMSSpeechRecognitionResultStatusGrammarLanguageMismatch = 2,
-	WMSSpeechRecognitionResultStatusGrammarCompilationFailure = 3,
-	WMSSpeechRecognitionResultStatusAudioQualityFailure = 4,
-	WMSSpeechRecognitionResultStatusUserCanceled = 5,
-	WMSSpeechRecognitionResultStatusUnknown = 6,
-	WMSSpeechRecognitionResultStatusTimeoutExceeded = 7,
-	WMSSpeechRecognitionResultStatusPauseLimitExceeded = 8,
-	WMSSpeechRecognitionResultStatusNetworkFailure = 9,
-	WMSSpeechRecognitionResultStatusMicrophoneUnavailable = 10,
+    WMSSpeechRecognitionResultStatusSuccess = 0,
+    WMSSpeechRecognitionResultStatusTopicLanguageNotSupported = 1,
+    WMSSpeechRecognitionResultStatusGrammarLanguageMismatch = 2,
+    WMSSpeechRecognitionResultStatusGrammarCompilationFailure = 3,
+    WMSSpeechRecognitionResultStatusAudioQualityFailure = 4,
+    WMSSpeechRecognitionResultStatusUserCanceled = 5,
+    WMSSpeechRecognitionResultStatusUnknown = 6,
+    WMSSpeechRecognitionResultStatusTimeoutExceeded = 7,
+    WMSSpeechRecognitionResultStatusPauseLimitExceeded = 8,
+    WMSSpeechRecognitionResultStatusNetworkFailure = 9,
+    WMSSpeechRecognitionResultStatusMicrophoneUnavailable = 10,
 };
 typedef unsigned WMSSpeechRecognitionResultStatus;
 
 // Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode
 enum _WMSSpeechContinuousRecognitionMode {
-	WMSSpeechContinuousRecognitionModeDefault = 0,
-	WMSSpeechContinuousRecognitionModePauseOnRecognition = 1,
+    WMSSpeechContinuousRecognitionModeDefault = 0,
+    WMSSpeechContinuousRecognitionModePauseOnRecognition = 1,
 };
 typedef unsigned WMSSpeechContinuousRecognitionMode;
 
@@ -118,7 +132,7 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 @protocol WMSISpeechRecognitionConstraint
 @property BOOL isEnabled;
 @property WMSSpeechRecognitionConstraintProbability probability;
-@property (copy) NSString * tag;
+@property (copy) NSString* tag;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
 @end
 
@@ -147,7 +161,7 @@ WINRT_EXPORT
 @property (readonly) NSArray* rulePath;
 @property (readonly) WMSSpeechRecognitionSemanticInterpretation* semanticInterpretation;
 @property (readonly) WMSSpeechRecognitionResultStatus status;
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 @property (readonly) WFTimeSpan* phraseDuration;
 @property (readonly) WFDateTime* phraseStartTime;
 - (NSArray*)getAlternates:(unsigned int)maxAlternates;
@@ -161,14 +175,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionTopicConstraint : RTObject <WMSISpeechRecognitionConstraint>
-+ (WMSSpeechRecognitionTopicConstraint*)create:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint ACTIVATOR;
-+ (WMSSpeechRecognitionTopicConstraint*)createWithTag:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint tag:(NSString *)tag ACTIVATOR;
-@property (copy) NSString * tag;
++ (WMSSpeechRecognitionTopicConstraint*)create:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString*)topicHint ACTIVATOR;
++ (WMSSpeechRecognitionTopicConstraint*)createWithTag:(WMSSpeechRecognitionScenario)scenario
+                                            topicHint:(NSString*)topicHint
+                                                  tag:(NSString*)tag ACTIVATOR;
+@property (copy) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
 @property (readonly) WMSSpeechRecognitionScenario scenario;
-@property (readonly) NSString * topicHint;
+@property (readonly) NSString* topicHint;
 @end
 
 #endif // __WMSSpeechRecognitionTopicConstraint_DEFINED__
@@ -180,8 +196,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechRecognitionListConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionListConstraint*)create:(id<NSFastEnumeration> /* NSString * */)commands ACTIVATOR;
-+ (WMSSpeechRecognitionListConstraint*)createWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString *)tag ACTIVATOR;
-@property (copy) NSString * tag;
++ (WMSSpeechRecognitionListConstraint*)createWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString*)tag ACTIVATOR;
+@property (copy) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
@@ -197,8 +213,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechRecognitionGrammarFileConstraint : RTObject <WMSISpeechRecognitionConstraint>
 + (WMSSpeechRecognitionGrammarFileConstraint*)create:(WSStorageFile*)file ACTIVATOR;
-+ (WMSSpeechRecognitionGrammarFileConstraint*)createWithTag:(WSStorageFile*)file tag:(NSString *)tag ACTIVATOR;
-@property (copy) NSString * tag;
++ (WMSSpeechRecognitionGrammarFileConstraint*)createWithTag:(WSStorageFile*)file tag:(NSString*)tag ACTIVATOR;
+@property (copy) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
@@ -228,8 +244,8 @@ WINRT_EXPORT
 @interface WMSSpeechRecognizerUIOptions : RTObject
 @property BOOL showConfirmation;
 @property BOOL isReadBackEnabled;
-@property (copy) NSString * exampleText;
-@property (copy) NSString * audiblePrompt;
+@property (copy) NSString* exampleText;
+@property (copy) NSString* audiblePrompt;
 @end
 
 #endif // __WMSSpeechRecognizerUIOptions_DEFINED__
@@ -272,11 +288,13 @@ WINRT_EXPORT
 + (NSArray*)supportedGrammarLanguages;
 + (NSArray*)supportedTopicLanguages;
 + (WGLanguage*)systemSpeechLanguage;
-- (EventRegistrationToken)addRecognitionQualityDegradingEvent:(void(^)(WMSSpeechRecognizer*, WMSSpeechRecognitionQualityDegradingEventArgs*))del;
+- (EventRegistrationToken)addRecognitionQualityDegradingEvent:(void (^)(WMSSpeechRecognizer*,
+                                                                        WMSSpeechRecognitionQualityDegradingEventArgs*))del;
 - (void)removeRecognitionQualityDegradingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMSSpeechRecognizer*, WMSSpeechRecognizerStateChangedEventArgs*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void (^)(WMSSpeechRecognizer*, WMSSpeechRecognizerStateChangedEventArgs*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHypothesisGeneratedEvent:(void(^)(WMSSpeechRecognizer*, WMSSpeechRecognitionHypothesisGeneratedEventArgs*))del;
+- (EventRegistrationToken)addHypothesisGeneratedEvent:(void (^)(WMSSpeechRecognizer*,
+                                                                WMSSpeechRecognitionHypothesisGeneratedEventArgs*))del;
 - (void)removeHypothesisGeneratedEvent:(EventRegistrationToken)tok;
 - (void)compileConstraintsAsyncWithSuccess:(void (^)(WMSSpeechRecognitionCompilationResult*))success failure:(void (^)(NSError*))failure;
 - (void)recognizeAsyncWithSuccess:(void (^)(WMSSpeechRecognitionResult*))success failure:(void (^)(NSError*))failure;
@@ -315,7 +333,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionVoiceCommandDefinitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
-@property (copy) NSString * tag;
+@property (copy) NSString* tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
@@ -330,9 +348,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechContinuousRecognitionSession : RTObject
 @property (copy) WFTimeSpan* autoStopSilenceTimeout;
-- (EventRegistrationToken)addCompletedEvent:(void(^)(WMSSpeechContinuousRecognitionSession*, WMSSpeechContinuousRecognitionCompletedEventArgs*))del;
+- (EventRegistrationToken)addCompletedEvent:(void (^)(WMSSpeechContinuousRecognitionSession*,
+                                                      WMSSpeechContinuousRecognitionCompletedEventArgs*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addResultGeneratedEvent:(void(^)(WMSSpeechContinuousRecognitionSession*, WMSSpeechContinuousRecognitionResultGeneratedEventArgs*))del;
+- (EventRegistrationToken)addResultGeneratedEvent:(void (^)(WMSSpeechContinuousRecognitionSession*,
+                                                            WMSSpeechContinuousRecognitionResultGeneratedEventArgs*))del;
 - (void)removeResultGeneratedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)startWithModeAsync:(WMSSpeechContinuousRecognitionMode)mode;
@@ -361,7 +381,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionHypothesis : RTObject
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 @end
 
 #endif // __WMSSpeechRecognitionHypothesis_DEFINED__
@@ -387,4 +407,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMSSpeechContinuousRecognitionResultGeneratedEventArgs_DEFINED__
-

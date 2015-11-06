@@ -20,9 +20,17 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs, WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs, WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint, WUIPointerPointProperties, WUIPointerVisualizationSettings;
+@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs,
+    WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs,
+    WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint,
+    WUIPointerPointProperties, WUIPointerVisualizationSettings;
 @class WUIManipulationDelta, WUIManipulationVelocities, WUICrossSlideThresholds;
-@protocol WUIIEdgeGestureEventArgs, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs, WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs, WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics, WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerVisualizationSettings, WUIIPointerVisualizationSettingsStatics;
+@protocol WUIIEdgeGestureEventArgs
+, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs,
+    WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs,
+    WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics,
+    WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerVisualizationSettings,
+    WUIIPointerVisualizationSettingsStatics;
 
 // Windows.UI.Input.EdgeGestureKind
 enum _WUIEdgeGestureKind {
@@ -106,8 +114,8 @@ typedef unsigned WUIPointerUpdateKind;
 // [struct] Windows.UI.Input.ManipulationDelta
 WINRT_EXPORT
 @interface WUIManipulationDelta : NSObject
-+ (instancetype)new;
-@property (copy) WFPoint * translation;
++ (instancetype) new;
+@property (copy) WFPoint* translation;
 @property float scale;
 @property float rotation;
 @property float expansion;
@@ -116,8 +124,8 @@ WINRT_EXPORT
 // [struct] Windows.UI.Input.ManipulationVelocities
 WINRT_EXPORT
 @interface WUIManipulationVelocities : NSObject
-+ (instancetype)new;
-@property (copy) WFPoint * linear;
++ (instancetype) new;
+@property (copy) WFPoint* linear;
 @property float angular;
 @property float expansion;
 @end
@@ -125,7 +133,7 @@ WINRT_EXPORT
 // [struct] Windows.UI.Input.CrossSlideThresholds
 WINRT_EXPORT
 @interface WUICrossSlideThresholds : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float selectionStart;
 @property float speedBumpStart;
 @property float speedBumpEnd;
@@ -138,8 +146,8 @@ WINRT_EXPORT
 
 @protocol WUIIPointerPointTransform
 @property (readonly) RTObject<WUIIPointerPointTransform>* inverse;
-- (BOOL)tryTransform:(WFPoint *)inPoint outPoint:(WFPoint **)outPoint;
-- (WFRect *)transformBounds:(WFRect *)rect;
+- (BOOL)tryTransform:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
+- (WFRect*)transformBounds:(WFRect*)rect;
 @end
 
 #endif // __WUIIPointerPointTransform_DEFINED__
@@ -161,12 +169,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIEdgeGesture : RTObject
-+ (WUIEdgeGesture *)getForCurrentView;
-- (EventRegistrationToken)addCanceledEvent:(void(^)(WUIEdgeGesture *, WUIEdgeGestureEventArgs *))del;
++ (WUIEdgeGesture*)getForCurrentView;
+- (EventRegistrationToken)addCanceledEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCompletedEvent:(void(^)(WUIEdgeGesture *, WUIEdgeGestureEventArgs *))del;
+- (EventRegistrationToken)addCompletedEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStartingEvent:(void(^)(WUIEdgeGesture *, WUIEdgeGestureEventArgs *))del;
+- (EventRegistrationToken)addStartingEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeStartingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -178,10 +186,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIMouseWheelParameters : RTObject
-@property (copy) WFPoint * pageTranslation;
+@property (copy) WFPoint* pageTranslation;
 @property float deltaScale;
 @property float deltaRotationAngle;
-@property (copy) WFPoint * charTranslation;
+@property (copy) WFPoint* charTranslation;
 @end
 
 #endif // __WUIMouseWheelParameters_DEFINED__
@@ -198,42 +206,43 @@ WINRT_EXPORT
 @property float inertiaExpansionDeceleration;
 @property float inertiaExpansion;
 @property WUIGestureSettings gestureSettings;
-@property (copy) WUICrossSlideThresholds * crossSlideThresholds;
+@property (copy) WUICrossSlideThresholds* crossSlideThresholds;
 @property BOOL crossSlideHorizontally;
 @property BOOL crossSlideExact;
 @property BOOL autoProcessInertia;
 @property BOOL showGestureFeedback;
 @property float pivotRadius;
-@property (copy) WFPoint * pivotCenter;
+@property (copy) WFPoint* pivotCenter;
 @property BOOL manipulationExact;
 @property float inertiaTranslationDisplacement;
 @property float inertiaTranslationDeceleration;
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isInertial;
-@property (readonly) WUIMouseWheelParameters * mouseWheelParameters;
-- (EventRegistrationToken)addCrossSlidingEvent:(void(^)(WUIGestureRecognizer *, WUICrossSlidingEventArgs *))del;
+@property (readonly) WUIMouseWheelParameters* mouseWheelParameters;
+- (EventRegistrationToken)addCrossSlidingEvent:(void (^)(WUIGestureRecognizer*, WUICrossSlidingEventArgs*))del;
 - (void)removeCrossSlidingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDraggingEvent:(void(^)(WUIGestureRecognizer *, WUIDraggingEventArgs *))del;
+- (EventRegistrationToken)addDraggingEvent:(void (^)(WUIGestureRecognizer*, WUIDraggingEventArgs*))del;
 - (void)removeDraggingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHoldingEvent:(void(^)(WUIGestureRecognizer *, WUIHoldingEventArgs *))del;
+- (EventRegistrationToken)addHoldingEvent:(void (^)(WUIGestureRecognizer*, WUIHoldingEventArgs*))del;
 - (void)removeHoldingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationCompletedEvent:(void(^)(WUIGestureRecognizer *, WUIManipulationCompletedEventArgs *))del;
+- (EventRegistrationToken)addManipulationCompletedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationCompletedEventArgs*))del;
 - (void)removeManipulationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationInertiaStartingEvent:(void(^)(WUIGestureRecognizer *, WUIManipulationInertiaStartingEventArgs *))del;
+- (EventRegistrationToken)addManipulationInertiaStartingEvent:(void (^)(WUIGestureRecognizer*,
+                                                                        WUIManipulationInertiaStartingEventArgs*))del;
 - (void)removeManipulationInertiaStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationStartedEvent:(void(^)(WUIGestureRecognizer *, WUIManipulationStartedEventArgs *))del;
+- (EventRegistrationToken)addManipulationStartedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationStartedEventArgs*))del;
 - (void)removeManipulationStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationUpdatedEvent:(void(^)(WUIGestureRecognizer *, WUIManipulationUpdatedEventArgs *))del;
+- (EventRegistrationToken)addManipulationUpdatedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationUpdatedEventArgs*))del;
 - (void)removeManipulationUpdatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRightTappedEvent:(void(^)(WUIGestureRecognizer *, WUIRightTappedEventArgs *))del;
+- (EventRegistrationToken)addRightTappedEvent:(void (^)(WUIGestureRecognizer*, WUIRightTappedEventArgs*))del;
 - (void)removeRightTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTappedEvent:(void(^)(WUIGestureRecognizer *, WUITappedEventArgs *))del;
+- (EventRegistrationToken)addTappedEvent:(void (^)(WUIGestureRecognizer*, WUITappedEventArgs*))del;
 - (void)removeTappedEvent:(EventRegistrationToken)tok;
-- (BOOL)canBeDoubleTap:(WUIPointerPoint *)value;
-- (void)processDownEvent:(WUIPointerPoint *)value;
-- (void)processMoveEvents:(id<NSFastEnumeration> /*WUIPointerPoint*/ )value;
-- (void)processUpEvent:(WUIPointerPoint *)value;
-- (void)processMouseWheelEvent:(WUIPointerPoint *)value isShiftKeyDown:(BOOL)isShiftKeyDown isControlKeyDown:(BOOL)isControlKeyDown;
+- (BOOL)canBeDoubleTap:(WUIPointerPoint*)value;
+- (void)processDownEvent:(WUIPointerPoint*)value;
+- (void)processMoveEvents:(id<NSFastEnumeration> /*WUIPointerPoint*/)value;
+- (void)processUpEvent:(WUIPointerPoint*)value;
+- (void)processMouseWheelEvent:(WUIPointerPoint*)value isShiftKeyDown:(BOOL)isShiftKeyDown isControlKeyDown:(BOOL)isControlKeyDown;
 - (void)processInertia;
 - (void)completeGesture;
 @end
@@ -247,7 +256,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUITappedEventArgs : RTObject
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @property (readonly) unsigned tapCount;
 @end
 
@@ -260,7 +269,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIRightTappedEventArgs : RTObject
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @end
 
 #endif // __WUIRightTappedEventArgs_DEFINED__
@@ -273,7 +282,7 @@ WINRT_EXPORT
 @interface WUIHoldingEventArgs : RTObject
 @property (readonly) WUIHoldingState holdingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @end
 
 #endif // __WUIHoldingEventArgs_DEFINED__
@@ -286,7 +295,7 @@ WINRT_EXPORT
 @interface WUIDraggingEventArgs : RTObject
 @property (readonly) WUIDraggingState draggingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @end
 
 #endif // __WUIDraggingEventArgs_DEFINED__
@@ -297,9 +306,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationStartedEventArgs : RTObject
-@property (readonly) WUIManipulationDelta * cumulative;
+@property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @end
 
 #endif // __WUIManipulationStartedEventArgs_DEFINED__
@@ -310,11 +319,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationUpdatedEventArgs : RTObject
-@property (readonly) WUIManipulationDelta * cumulative;
-@property (readonly) WUIManipulationDelta * delta;
+@property (readonly) WUIManipulationDelta* cumulative;
+@property (readonly) WUIManipulationDelta* delta;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
-@property (readonly) WUIManipulationVelocities * velocities;
+@property (readonly) WFPoint* position;
+@property (readonly) WUIManipulationVelocities* velocities;
 @end
 
 #endif // __WUIManipulationUpdatedEventArgs_DEFINED__
@@ -325,11 +334,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationInertiaStartingEventArgs : RTObject
-@property (readonly) WUIManipulationDelta * cumulative;
-@property (readonly) WUIManipulationDelta * delta;
+@property (readonly) WUIManipulationDelta* cumulative;
+@property (readonly) WUIManipulationDelta* delta;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
-@property (readonly) WUIManipulationVelocities * velocities;
+@property (readonly) WFPoint* position;
+@property (readonly) WUIManipulationVelocities* velocities;
 @end
 
 #endif // __WUIManipulationInertiaStartingEventArgs_DEFINED__
@@ -340,10 +349,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIManipulationCompletedEventArgs : RTObject
-@property (readonly) WUIManipulationDelta * cumulative;
+@property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
-@property (readonly) WUIManipulationVelocities * velocities;
+@property (readonly) WFPoint* position;
+@property (readonly) WUIManipulationVelocities* velocities;
 @end
 
 #endif // __WUIManipulationCompletedEventArgs_DEFINED__
@@ -356,7 +365,7 @@ WINRT_EXPORT
 @interface WUICrossSlidingEventArgs : RTObject
 @property (readonly) WUICrossSlidingState crossSlidingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
-@property (readonly) WFPoint * position;
+@property (readonly) WFPoint* position;
 @end
 
 #endif // __WUICrossSlidingEventArgs_DEFINED__
@@ -367,17 +376,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIPointerPoint : RTObject
-+ (WUIPointerPoint *)getCurrentPoint:(unsigned)pointerId;
-+ (id<NSFastEnumeration> /*WUIPointerPoint*/ )getIntermediatePoints:(unsigned)pointerId;
-+ (WUIPointerPoint *)getCurrentPointTransformed:(unsigned)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
-+ (id<NSFastEnumeration> /*WUIPointerPoint*/ )getIntermediatePointsTransformed:(unsigned)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
++ (WUIPointerPoint*)getCurrentPoint:(unsigned)pointerId;
++ (id<NSFastEnumeration> /*WUIPointerPoint*/)getIntermediatePoints:(unsigned)pointerId;
++ (WUIPointerPoint*)getCurrentPointTransformed:(unsigned)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
++ (id<NSFastEnumeration> /*WUIPointerPoint*/)getIntermediatePointsTransformed:(unsigned)pointerId
+                                                                    transform:(RTObject<WUIIPointerPointTransform>*)transform;
 @property (readonly) unsigned frameId;
 @property (readonly) BOOL isInContact;
-@property (readonly) WDIPointerDevice * pointerDevice;
+@property (readonly) WDIPointerDevice* pointerDevice;
 @property (readonly) unsigned pointerId;
-@property (readonly) WFPoint * position;
-@property (readonly) WUIPointerPointProperties * properties;
-@property (readonly) WFPoint * rawPosition;
+@property (readonly) WFPoint* position;
+@property (readonly) WUIPointerPointProperties* properties;
+@property (readonly) WFPoint* rawPosition;
 @property (readonly) uint64_t timestamp;
 @end
 
@@ -389,8 +399,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIPointerPointProperties : RTObject
-@property (readonly) WFRect * contactRect;
-@property (readonly) WFRect * contactRectRaw;
+@property (readonly) WFRect* contactRect;
+@property (readonly) WFRect* contactRectRaw;
 @property (readonly) BOOL isBarrelButtonPressed;
 @property (readonly) BOOL isCanceled;
 @property (readonly) BOOL isEraser;
@@ -423,10 +433,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIPointerVisualizationSettings : RTObject
-+ (WUIPointerVisualizationSettings *)getForCurrentView;
++ (WUIPointerVisualizationSettings*)getForCurrentView;
 @property BOOL isContactFeedbackEnabled;
 @property BOOL isBarrelButtonFeedbackEnabled;
 @end
 
 #endif // __WUIPointerVisualizationSettings_DEFINED__
-

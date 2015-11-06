@@ -467,7 +467,7 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
         return ret;
 
     /* [BUG: blamb] We should find the "highest score" match, since we may end up in the middle of a directory/filename
-     * match */
+    * match */
 
     return ret;
 }

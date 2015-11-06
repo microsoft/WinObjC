@@ -15,15 +15,15 @@
 //******************************************************************************
 
 #ifndef FOUNDATION_IMPEXP
- #define FOUNDATION_IMPEXP __declspec(dllimport)
+#define FOUNDATION_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef FOUNDATION_EXPORT
- #ifdef __cplusplus
-  #define FOUNDATION_EXPORT FOUNDATION_IMPEXP extern "C"
-  #define FOUNDATION_EXPORT_CLASS FOUNDATION_IMPEXP 
- #else
-  #define FOUNDATION_EXPORT FOUNDATION_IMPEXP extern  
-  #define FOUNDATION_EXPORT_CLASS FOUNDATION_IMPEXP
- #endif
+#ifdef __cplusplus
+#define FOUNDATION_EXPORT FOUNDATION_IMPEXP extern "C"
+#define FOUNDATION_EXPORT_CLASS FOUNDATION_IMPEXP
+#else
+#define FOUNDATION_EXPORT FOUNDATION_IMPEXP extern
+#define FOUNDATION_EXPORT_CLASS FOUNDATION_IMPEXP
+#endif
 #endif

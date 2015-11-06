@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings, WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
-@protocol WASISearchPaneQueryLinguisticDetails, WASISearchSuggestionCollection, WASILocalContentSuggestionSettings, WASISearchQueryLinguisticDetailsFactory, WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
+@class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings,
+    WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
+@protocol WASISearchPaneQueryLinguisticDetails
+, WASISearchSuggestionCollection, WASILocalContentSuggestionSettings, WASISearchQueryLinguisticDetailsFactory,
+    WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
@@ -49,10 +52,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 @property (readonly) unsigned int size;
-- (void)appendQuerySuggestion:(NSString *)text;
+- (void)appendQuerySuggestion:(NSString*)text;
 - (void)appendQuerySuggestions:(id<NSFastEnumeration> /* NSString * */)suggestions;
-- (void)appendResultSuggestion:(NSString *)text detailText:(NSString *)detailText tag:(NSString *)tag image:(RTObject<WSSIRandomAccessStreamReference>*)image imageAlternateText:(NSString *)imageAlternateText;
-- (void)appendSearchSeparator:(NSString *)label;
+- (void)appendResultSuggestion:(NSString*)text
+                    detailText:(NSString*)detailText
+                           tag:(NSString*)tag
+                         image:(RTObject<WSSIRandomAccessStreamReference>*)image
+            imageAlternateText:(NSString*)imageAlternateText;
+- (void)appendSearchSeparator:(NSString*)label;
 @end
 
 #endif // __WASSearchSuggestionCollection_DEFINED__
@@ -65,7 +72,7 @@ WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)create ACTIVATOR;
 @property BOOL enabled;
-@property (copy) NSString * aqsFilter;
+@property (copy) NSString* aqsFilter;
 @property (readonly) NSMutableArray* locations;
 @property (readonly) NSMutableArray* propertiesToMatch;
 @end
@@ -78,7 +85,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
-+ (WASSearchQueryLinguisticDetails*)createInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives queryTextCompositionStart:(unsigned int)queryTextCompositionStart queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
++ (WASSearchQueryLinguisticDetails*)createInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
+                         queryTextCompositionStart:(unsigned int)queryTextCompositionStart
+                        queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 @property (readonly) NSArray* queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;
@@ -109,4 +118,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WASSearchSuggestionsRequest_DEFINED__
-

@@ -59,7 +59,10 @@ enum {
 };
 typedef int32_t NSUnderlineStyle;
 
-enum { NSAttributedStringEnumerationReverse = (1UL << 1), NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20) };
+enum {
+    NSAttributedStringEnumerationReverse = (1UL << 1),
+    NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20),
+};
 typedef uint32_t NSAttributedStringEnumerationOptions;
 
 @class NSDictionary;

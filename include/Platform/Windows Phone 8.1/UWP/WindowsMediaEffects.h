@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMEAudioEffect, WMEAudioRenderEffectsManager, WMEAudioCaptureEffectsManager, WMEAudioEffectsManager;
-@protocol WMEIAudioEffect, WMEIAudioEffectsManagerStatics, WMEIAudioRenderEffectsManager, WMEIAudioCaptureEffectsManager;
+@protocol WMEIAudioEffect
+, WMEIAudioEffectsManagerStatics, WMEIAudioRenderEffectsManager, WMEIAudioCaptureEffectsManager;
 
 // Windows.Media.Effects.AudioEffectType
 enum _WMEAudioEffectType {
@@ -69,9 +70,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
-- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void(^)(WMEAudioRenderEffectsManager *, RTObject *))del;
+- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void (^)(WMEAudioRenderEffectsManager*, RTObject*))del;
 - (void)removeAudioRenderEffectsChangedEvent:(EventRegistrationToken)tok;
-- (id<NSFastEnumeration> /*WMEAudioEffect*/ )getAudioRenderEffects;
+- (id<NSFastEnumeration> /*WMEAudioEffect*/)getAudioRenderEffects;
 @end
 
 #endif // __WMEAudioRenderEffectsManager_DEFINED__
@@ -82,9 +83,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
-- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void(^)(WMEAudioCaptureEffectsManager *, RTObject *))del;
+- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void (^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
-- (id<NSFastEnumeration> /*WMEAudioEffect*/ )getAudioCaptureEffects;
+- (id<NSFastEnumeration> /*WMEAudioEffect*/)getAudioCaptureEffects;
 @end
 
 #endif // __WMEAudioCaptureEffectsManager_DEFINED__
@@ -95,11 +96,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioEffectsManager : RTObject
-+ (WMEAudioRenderEffectsManager *)createAudioRenderEffectsManager:(NSString *)deviceId category:(WMRAudioRenderCategory)category;
-+ (WMEAudioRenderEffectsManager *)createAudioRenderEffectsManagerWithMode:(NSString *)deviceId category:(WMRAudioRenderCategory)category mode:(WMAudioProcessing)mode;
-+ (WMEAudioCaptureEffectsManager *)createAudioCaptureEffectsManager:(NSString *)deviceId category:(WMCMediaCategory)category;
-+ (WMEAudioCaptureEffectsManager *)createAudioCaptureEffectsManagerWithMode:(NSString *)deviceId category:(WMCMediaCategory)category mode:(WMAudioProcessing)mode;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString*)deviceId category:(WMRAudioRenderCategory)category;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString*)deviceId
+                                                                category:(WMRAudioRenderCategory)category
+                                                                    mode:(WMAudioProcessing)mode;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManager:(NSString*)deviceId category:(WMCMediaCategory)category;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManagerWithMode:(NSString*)deviceId
+                                                                  category:(WMCMediaCategory)category
+                                                                      mode:(WMAudioProcessing)mode;
 @end
 
 #endif // __WMEAudioEffectsManager_DEFINED__
-

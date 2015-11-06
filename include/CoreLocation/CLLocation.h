@@ -20,7 +20,10 @@
 #import <CoreLocation/CoreLocationExport.h>
 #import <stdint.h> // uint32_t
 
-enum _CLError { kCLErrorLocationUnknown = 0, kCLErrorDenied = 1 };
+enum _CLError {
+    kCLErrorLocationUnknown = 0,
+    kCLErrorDenied = 1,
+};
 typedef uint32_t CLError;
 
 typedef double CLLocationAccuracy;

@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSCDDataProtectionProvider;
-@protocol WSCDIDataProtectionProvider, WSCDIDataProtectionProviderFactory;
+@protocol WSCDIDataProtectionProvider
+, WSCDIDataProtectionProviderFactory;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
@@ -32,7 +33,7 @@
 
 WINRT_EXPORT
 @interface WSCDDataProtectionProvider : RTObject
-+ (WSCDDataProtectionProvider *)createOverloadExplicit:(NSString *)protectionDescriptor ACTIVATOR;
++ (WSCDDataProtectionProvider*)createOverloadExplicit:(NSString*)protectionDescriptor ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 - (void)protectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)unprotectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
@@ -41,4 +42,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSCDDataProtectionProvider_DEFINED__
-

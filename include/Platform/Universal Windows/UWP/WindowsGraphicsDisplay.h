@@ -21,37 +21,38 @@
 
 #include "interopBase.h"
 @class WGDDisplayInformation, WGDDisplayProperties;
-@protocol WGDIDisplayInformationStatics, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayPropertiesStatics;
+@protocol WGDIDisplayInformationStatics
+, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayPropertiesStatics;
 
 // Windows.Graphics.Display.DisplayOrientations
 enum _WGDDisplayOrientations {
-	WGDDisplayOrientationsNone = 0,
-	WGDDisplayOrientationsLandscape = 1,
-	WGDDisplayOrientationsPortrait = 2,
-	WGDDisplayOrientationsLandscapeFlipped = 4,
-	WGDDisplayOrientationsPortraitFlipped = 8,
+    WGDDisplayOrientationsNone = 0,
+    WGDDisplayOrientationsLandscape = 1,
+    WGDDisplayOrientationsPortrait = 2,
+    WGDDisplayOrientationsLandscapeFlipped = 4,
+    WGDDisplayOrientationsPortraitFlipped = 8,
 };
 typedef unsigned WGDDisplayOrientations;
 
 // Windows.Graphics.Display.ResolutionScale
 enum _WGDResolutionScale {
-	WGDResolutionScaleInvalid = 0,
-	WGDResolutionScaleScale100Percent = 100,
-	WGDResolutionScaleScale120Percent = 120,
-	WGDResolutionScaleScale125Percent = 125,
-	WGDResolutionScaleScale140Percent = 140,
-	WGDResolutionScaleScale150Percent = 150,
-	WGDResolutionScaleScale160Percent = 160,
-	WGDResolutionScaleScale175Percent = 175,
-	WGDResolutionScaleScale180Percent = 180,
-	WGDResolutionScaleScale200Percent = 200,
-	WGDResolutionScaleScale225Percent = 225,
-	WGDResolutionScaleScale250Percent = 250,
-	WGDResolutionScaleScale300Percent = 300,
-	WGDResolutionScaleScale350Percent = 350,
-	WGDResolutionScaleScale400Percent = 400,
-	WGDResolutionScaleScale450Percent = 450,
-	WGDResolutionScaleScale500Percent = 500,
+    WGDResolutionScaleInvalid = 0,
+    WGDResolutionScaleScale100Percent = 100,
+    WGDResolutionScaleScale120Percent = 120,
+    WGDResolutionScaleScale125Percent = 125,
+    WGDResolutionScaleScale140Percent = 140,
+    WGDResolutionScaleScale150Percent = 150,
+    WGDResolutionScaleScale160Percent = 160,
+    WGDResolutionScaleScale175Percent = 175,
+    WGDResolutionScaleScale180Percent = 180,
+    WGDResolutionScaleScale200Percent = 200,
+    WGDResolutionScaleScale225Percent = 225,
+    WGDResolutionScaleScale250Percent = 250,
+    WGDResolutionScaleScale300Percent = 300,
+    WGDResolutionScaleScale350Percent = 350,
+    WGDResolutionScaleScale400Percent = 400,
+    WGDResolutionScaleScale450Percent = 450,
+    WGDResolutionScaleScale500Percent = 500,
 };
 typedef unsigned WGDResolutionScale;
 
@@ -60,16 +61,15 @@ typedef unsigned WGDResolutionScale;
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void(^WGDDisplayPropertiesEventHandler)(RTObject* sender);
+typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void(^WGDDisplayPropertiesEventHandler)(RTObject* sender);
+typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
 
 // Windows.Graphics.Display.DisplayInformation
@@ -89,15 +89,15 @@ WINRT_EXPORT
 @property (readonly) double rawPixelsPerViewPixel;
 + (WGDDisplayOrientations)autoRotationPreferences;
 + (void)setAutoRotationPreferences:(WGDDisplayOrientations)value;
-- (EventRegistrationToken)addColorProfileChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addColorProfileChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeColorProfileChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDpiChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addDpiChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeDpiChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOrientationChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addOrientationChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeOrientationChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStereoEnabledChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addStereoEnabledChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeStereoEnabledChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
++ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 + (void)removeDisplayContentsInvalidatedEvent:(EventRegistrationToken)tok;
 - (void)getColorProfileAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 @end
@@ -131,4 +131,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WGDDisplayProperties_DEFINED__
-

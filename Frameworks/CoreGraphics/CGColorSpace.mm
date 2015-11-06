@@ -260,7 +260,7 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
 size_t CGColorGetNumberOfComponents(CGColorRef color) {
     UNIMPLEMENTED();
     /* [BUG: Not all colors have 4 components, but all of the ones we currently
-     * support do!] */
+    * support do!] */
     return 4;
 }
 

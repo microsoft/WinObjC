@@ -26,12 +26,12 @@ typedef enum {
     UIPrintInfoOutputPhotoGrayscale
 } UIPrintInfoOutputType;
 
-@interface UIPrintInfo : NSObject<NSCopying, NSCoding>
+@interface UIPrintInfo : NSObject <NSCopying, NSCoding>
 
-@property(nonatomic, copy) NSString *jobName;
-@property(nonatomic) UIPrintInfoOutputType outputType;
+@property (nonatomic, copy) NSString* jobName;
+@property (nonatomic) UIPrintInfoOutputType outputType;
 
-+ (UIPrintInfo *)printInfo;
++ (UIPrintInfo*)printInfo;
 
 @end
 

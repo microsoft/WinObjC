@@ -18,14 +18,14 @@
 #import <Foundation/NSObject.h>
 
 enum {
-    NSJSONWritingPrettyPrinted = 1
+    NSJSONWritingPrettyPrinted = 1,
 };
 typedef uint32_t NSJSONWritingOptions;
 
 enum {
     NSJSONReadingMutableContainers = 1,
     NSJSONReadingMutableLeaves = 2,
-    NSJSONReadingAllowFragments = 4
+    NSJSONReadingAllowFragments = 4,
 };
 typedef uint32_t NSJSONReadingOptions;
 
@@ -35,7 +35,7 @@ typedef uint32_t NSJSONReadingOptions;
 FOUNDATION_EXPORT_CLASS
 @interface NSJSONSerialization : NSObject
 
-+(NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError **)error;
-+(id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error;
++ (NSData*)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError**)error;
++ (id)JSONObjectWithData:(NSData*)data options:(NSJSONReadingOptions)opt error:(NSError**)error;
 
 @end

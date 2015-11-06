@@ -23,7 +23,7 @@
 
 typedef uint32_t ExtAudioFilePropertyID;
 struct ExtAudioFile;
-typedef struct ExtAudioFile *ExtAudioFileRef;
+typedef struct ExtAudioFile* ExtAudioFileRef;
 
 enum {
     kExtAudioFileProperty_FileDataFormat = 'ffmt',
@@ -42,10 +42,16 @@ enum {
     kExtAudioFileProperty_PacketTable = 'xpti'
 };
 
-AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileOpenURL(CFURLRef inURL, ExtAudioFileRef *outExtAudioFile);
-AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileGetProperty(ExtAudioFileRef inExtAudioFile, ExtAudioFilePropertyID inPropertyID, UInt32 *ioPropertyDataSize, void *outPropertyData);
-AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileSetProperty(ExtAudioFileRef inExtAudioFile, ExtAudioFilePropertyID inPropertyID, UInt32 inPropertyDataSize, const void *inPropertyData);
-AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileRead(ExtAudioFileRef inExtAudioFile, UInt32 *ioNumberFrames, AudioBufferList *ioData);
+AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileOpenURL(CFURLRef inURL, ExtAudioFileRef* outExtAudioFile);
+AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileGetProperty(ExtAudioFileRef inExtAudioFile,
+                                                     ExtAudioFilePropertyID inPropertyID,
+                                                     UInt32* ioPropertyDataSize,
+                                                     void* outPropertyData);
+AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileSetProperty(ExtAudioFileRef inExtAudioFile,
+                                                     ExtAudioFilePropertyID inPropertyID,
+                                                     UInt32 inPropertyDataSize,
+                                                     const void* inPropertyData);
+AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileRead(ExtAudioFileRef inExtAudioFile, UInt32* ioNumberFrames, AudioBufferList* ioData);
 AUDIOTOOLBOX_EXPORT OSStatus ExtAudioFileDispose(ExtAudioFileRef inExtAudioFile);
 
 #endif // _EXTENDEDAUDIOFILE_H_

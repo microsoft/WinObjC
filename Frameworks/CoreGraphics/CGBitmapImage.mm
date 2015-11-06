@@ -259,7 +259,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _bytesPerRow = _width * _bytesPerPixel;
                 // assert((_bytesPerRow & 3) == 0);
                 /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work
-                 * must be done ***/
+                * must be done ***/
                 _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 1,
                                                                           PIXMAN_g8,
                                                                           width,
@@ -271,7 +271,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 // assert((_bytesPerRow & 3) == 0);
                 _bytesPerRow = _width * _bytesPerPixel;
                 /*** BEWARE: pixman doesn't fully support unaligned g8 format .. more work
-                 * must be done ***/
+                * must be done ***/
                 _surface = _cairo_image_surface_create_with_pixman_format(((unsigned char*)_imageData) + width * (height - 1) * 1,
                                                                           PIXMAN_g8,
                                                                           width,

@@ -22,19 +22,19 @@
 
 enum {
     UIPageViewControllerNavigationDirectionForward,
-    UIPageViewControllerNavigationDirectionReverse
+    UIPageViewControllerNavigationDirectionReverse,
 };
 typedef int32_t UIPageViewControllerNavigationDirection;
 
 enum {
     UIPageViewControllerTransitionStylePageCurl = 0,
-    UIPageViewControllerTransitionStyleScroll = 1
+    UIPageViewControllerTransitionStyleScroll = 1,
 };
 typedef int32_t UIPageViewControllerTransitionStyle;
 
 enum {
     UIPageViewControllerNavigationOrientationHorizontal = 0,
-    UIPageViewControllerNavigationOrientationVertical = 1
+    UIPageViewControllerNavigationOrientationVertical = 1,
 };
 typedef int32_t UIPageViewControllerNavigationOrientation;
 
@@ -49,11 +49,16 @@ typedef int32_t UIPageViewControllerNavigationOrientation;
 
 @property (nonatomic, assign) id<UIPageViewControllerDataSource> dataSource;
 @property (nonatomic, assign) id<UIPageViewControllerDelegate> delegate;
-@property (nonatomic, readonly) NSArray *gestureRecognizers;
-@property (nonatomic, readonly) NSArray *viewControllers;
+@property (nonatomic, readonly) NSArray* gestureRecognizers;
+@property (nonatomic, readonly) NSArray* viewControllers;
 
-- (void)setViewControllers:(NSArray *)viewControllers direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
-- (id)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation options:(NSDictionary *)options;
+- (void)setViewControllers:(NSArray*)viewControllers
+                 direction:(UIPageViewControllerNavigationDirection)direction
+                  animated:(BOOL)animated
+                completion:(void (^)(BOOL finished))completion;
+- (id)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
+        navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation
+                      options:(NSDictionary*)options;
 
 @end
 

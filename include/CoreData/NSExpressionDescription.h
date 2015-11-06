@@ -24,12 +24,11 @@
 
 @interface NSExpressionDescription : NSPropertyDescription
 
-- (NSExpression *)expression;
-- (void)setExpression:(NSExpression *)expression;
+- (NSExpression*)expression;
+- (void)setExpression:(NSExpression*)expression;
 - (NSAttributeType)expressionResultType;
 - (void)setExpressionResultType:(NSAttributeType)type;
 
 @end
-
 
 #endif /* _NSEXPRESSIONDESCRIPTION_H_ */

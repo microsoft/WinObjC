@@ -449,7 +449,7 @@ extern "C" bool doLog;
  @Status Caveat
  @Notes Only NSFileSize and NSFileType attributes are supported. traverseLink not supported.
 */
-- (NSDictionary *)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
+- (NSDictionary*)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
     if (pathAddr == nil) {
         EbrDebugLog("fileAttributesAtPath nil!");
 
@@ -469,7 +469,7 @@ extern "C" bool doLog;
 
     [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:@"NSFileSize"];
 
-    // NOTE: st_ctime is file creation time on windows for NTFS 
+    // NOTE: st_ctime is file creation time on windows for NTFS
     [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:@"NSFileCreationDate"];
     [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:@"NSFileModificationDate"];
 

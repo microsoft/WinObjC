@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WGFLanguageFont, WGFLanguageFontGroup;
-@protocol WGFILanguageFontGroup, WGFILanguageFontGroupFactory, WGFILanguageFont;
+@protocol WGFILanguageFontGroup
+, WGFILanguageFontGroupFactory, WGFILanguageFont;
 
 #include "WindowsUIText.h"
 
@@ -31,10 +32,10 @@
 
 WINRT_EXPORT
 @interface WGFLanguageFont : RTObject
-@property (readonly) NSString * fontFamily;
+@property (readonly) NSString* fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
 @property (readonly) WUTFontStyle fontStyle;
-@property (readonly) WUTFontWeight * fontWeight;
+@property (readonly) WUTFontWeight* fontWeight;
 @property (readonly) double scaleFactor;
 @end
 
@@ -46,19 +47,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGFLanguageFontGroup : RTObject
-+ (WGFLanguageFontGroup *)createLanguageFontGroup:(NSString *)languageTag ACTIVATOR;
-@property (readonly) WGFLanguageFont * documentAlternate1Font;
-@property (readonly) WGFLanguageFont * documentAlternate2Font;
-@property (readonly) WGFLanguageFont * documentHeadingFont;
-@property (readonly) WGFLanguageFont * fixedWidthTextFont;
-@property (readonly) WGFLanguageFont * modernDocumentFont;
-@property (readonly) WGFLanguageFont * traditionalDocumentFont;
-@property (readonly) WGFLanguageFont * uICaptionFont;
-@property (readonly) WGFLanguageFont * uIHeadingFont;
-@property (readonly) WGFLanguageFont * uINotificationHeadingFont;
-@property (readonly) WGFLanguageFont * uITextFont;
-@property (readonly) WGFLanguageFont * uITitleFont;
++ (WGFLanguageFontGroup*)createLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
+@property (readonly) WGFLanguageFont* documentAlternate1Font;
+@property (readonly) WGFLanguageFont* documentAlternate2Font;
+@property (readonly) WGFLanguageFont* documentHeadingFont;
+@property (readonly) WGFLanguageFont* fixedWidthTextFont;
+@property (readonly) WGFLanguageFont* modernDocumentFont;
+@property (readonly) WGFLanguageFont* traditionalDocumentFont;
+@property (readonly) WGFLanguageFont* uICaptionFont;
+@property (readonly) WGFLanguageFont* uIHeadingFont;
+@property (readonly) WGFLanguageFont* uINotificationHeadingFont;
+@property (readonly) WGFLanguageFont* uITextFont;
+@property (readonly) WGFLanguageFont* uITitleFont;
 @end
 
 #endif // __WGFLanguageFontGroup_DEFINED__
-

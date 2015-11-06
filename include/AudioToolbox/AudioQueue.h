@@ -21,45 +21,45 @@
 #import <CoreFoundation/CFRunLoop.h>
 #import <StarboardExport.h>
 
-typedef struct OpaqueAudioQueue *AudioQueueRef;
-typedef struct OpaqueAudioQueueTimeline *AudioQueueTimelineRef;
+typedef struct OpaqueAudioQueue* AudioQueueRef;
+typedef struct OpaqueAudioQueueTimeline* AudioQueueTimelineRef;
 typedef Float32 AudioQueueParameterValue;
 
 typedef struct AudioQueueBuffer {
-    const UInt32                 mAudioDataBytesCapacity;
-    void                         *const mAudioData;
-    UInt32                       mAudioDataByteSize;
-    void                         *mUserData;
-    const UInt32                 mPacketDescriptionCapacity;
-    AudioStreamPacketDescription *const mPacketDescriptions;
-    UInt32                       mPacketDescriptionCount;
+    const UInt32 mAudioDataBytesCapacity;
+    void* const mAudioData;
+    UInt32 mAudioDataByteSize;
+    void* mUserData;
+    const UInt32 mPacketDescriptionCapacity;
+    AudioStreamPacketDescription* const mPacketDescriptions;
+    UInt32 mPacketDescriptionCount;
 } AudioQueueBuffer;
-typedef AudioQueueBuffer *AudioQueueBufferRef;
+typedef AudioQueueBuffer* AudioQueueBufferRef;
 
 enum {
-    kAudioQueueProperty_IsRunning               = 'aqrn',
-    kAudioQueueDeviceProperty_SampleRate        = 'aqsr',
-    kAudioQueueDeviceProperty_NumberChannels    = 'aqdc',
-    kAudioQueueProperty_CurrentDevice           = 'aqcd',
-    kAudioQueueProperty_MagicCookie             = 'aqmc',
+    kAudioQueueProperty_IsRunning = 'aqrn',
+    kAudioQueueDeviceProperty_SampleRate = 'aqsr',
+    kAudioQueueDeviceProperty_NumberChannels = 'aqdc',
+    kAudioQueueProperty_CurrentDevice = 'aqcd',
+    kAudioQueueProperty_MagicCookie = 'aqmc',
     kAudioQueueProperty_MaximumOutputPacketSize = 'xops',
-    kAudioQueueProperty_StreamDescription       = 'aqft',
-    kAudioQueueProperty_ChannelLayout           = 'aqcl',
-    kAudioQueueProperty_EnableLevelMetering     = 'aqme',
-    kAudioQueueProperty_CurrentLevelMeter       = 'aqmv',
-    kAudioQueueProperty_CurrentLevelMeterDB     = 'aqmd',
-    kAudioQueueProperty_DecodeBufferSizeFrames  = 'dcbf',
-    kAudioQueueProperty_ConverterError          = 'qcve'
+    kAudioQueueProperty_StreamDescription = 'aqft',
+    kAudioQueueProperty_ChannelLayout = 'aqcl',
+    kAudioQueueProperty_EnableLevelMetering = 'aqme',
+    kAudioQueueProperty_CurrentLevelMeter = 'aqmv',
+    kAudioQueueProperty_CurrentLevelMeterDB = 'aqmd',
+    kAudioQueueProperty_DecodeBufferSizeFrames = 'dcbf',
+    kAudioQueueProperty_ConverterError = 'qcve'
 };
 typedef uint32_t AudioQueuePropertyID;
 
-typedef void (*AudioQueueOutputCallback) (void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer);
-typedef void (*AudioQueuePropertyListenerProc) (void *inUserData, AudioQueueRef inAQ, AudioQueuePropertyID inID);
+typedef void (*AudioQueueOutputCallback)(void* inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer);
+typedef void (*AudioQueuePropertyListenerProc)(void* inUserData, AudioQueueRef inAQ, AudioQueuePropertyID inID);
 
 enum {
     kAudioQueueParam_Volume = 1,
     kAudioQueueParam_VolumeRampTime = 4,
-    kAudioQueueParam_Pan = 13
+    kAudioQueueParam_Pan = 13,
 };
 typedef uint32_t AudioQueueParameterID;
 
@@ -67,13 +67,28 @@ SB_EXPORT OSStatus AudioQueueSetParameter(AudioQueueRef inAQ, AudioQueueParamete
 SB_EXPORT OSStatus AudioQueueStop(AudioQueueRef inAQ, Boolean inImmediate);
 SB_EXPORT OSStatus AudioQueuePause(AudioQueueRef inAQ);
 SB_EXPORT OSStatus AudioQueueDispose(AudioQueueRef inAQ, Boolean inImmediate);
-SB_EXPORT OSStatus AudioQueueStart(AudioQueueRef inAQ, const AudioTimeStamp *inStartTime);
+SB_EXPORT OSStatus AudioQueueStart(AudioQueueRef inAQ, const AudioTimeStamp* inStartTime);
 SB_EXPORT OSStatus AudioQueueFlush(AudioQueueRef inAQ);
-SB_EXPORT OSStatus AudioQueueGetCurrentTime(AudioQueueRef inAQ, AudioQueueTimelineRef inTimeline, AudioTimeStamp *outTimeStamp, Boolean *outTimelineDiscontinuity);
-SB_EXPORT OSStatus AudioQueueEnqueueBuffer(AudioQueueRef inAQ, AudioQueueBufferRef inBuffer, UInt32 inNumPacketDescs, const AudioStreamPacketDescription *inPacketDescs);
-SB_EXPORT OSStatus AudioQueueNewOutput(const AudioStreamBasicDescription *inFormat, AudioQueueOutputCallback inCallbackProc, void *inUserData, CFRunLoopRef inCallbackRunLoop, CFStringRef inCallbackRunLoopMode, UInt32 inFlags, AudioQueueRef *outAQ);
-SB_EXPORT OSStatus AudioQueueAllocateBuffer(AudioQueueRef inAQ, UInt32 inBufferByteSize, AudioQueueBufferRef *outBuffer);
-SB_EXPORT OSStatus AudioQueueAddPropertyListener(AudioQueueRef inAQ, AudioQueuePropertyID inID, AudioQueuePropertyListenerProc inProc, void *inUserData);
-SB_EXPORT OSStatus AudioQueueSetProperty(AudioQueueRef inAQ, AudioQueuePropertyID inID, const void *inData, UInt32 inDataSize);
+SB_EXPORT OSStatus AudioQueueGetCurrentTime(AudioQueueRef inAQ,
+                                            AudioQueueTimelineRef inTimeline,
+                                            AudioTimeStamp* outTimeStamp,
+                                            Boolean* outTimelineDiscontinuity);
+SB_EXPORT OSStatus AudioQueueEnqueueBuffer(AudioQueueRef inAQ,
+                                           AudioQueueBufferRef inBuffer,
+                                           UInt32 inNumPacketDescs,
+                                           const AudioStreamPacketDescription* inPacketDescs);
+SB_EXPORT OSStatus AudioQueueNewOutput(const AudioStreamBasicDescription* inFormat,
+                                       AudioQueueOutputCallback inCallbackProc,
+                                       void* inUserData,
+                                       CFRunLoopRef inCallbackRunLoop,
+                                       CFStringRef inCallbackRunLoopMode,
+                                       UInt32 inFlags,
+                                       AudioQueueRef* outAQ);
+SB_EXPORT OSStatus AudioQueueAllocateBuffer(AudioQueueRef inAQ, UInt32 inBufferByteSize, AudioQueueBufferRef* outBuffer);
+SB_EXPORT OSStatus AudioQueueAddPropertyListener(AudioQueueRef inAQ,
+                                                 AudioQueuePropertyID inID,
+                                                 AudioQueuePropertyListenerProc inProc,
+                                                 void* inUserData);
+SB_EXPORT OSStatus AudioQueueSetProperty(AudioQueueRef inAQ, AudioQueuePropertyID inID, const void* inData, UInt32 inDataSize);
 
 #endif /* _AUDIOQUEUE_H_ */

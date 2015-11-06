@@ -20,61 +20,88 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer, WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs, WDSCompass, WDSCompassReading, WDSCompassReadingChangedEventArgs, WDSLightSensor, WDSLightSensorReading, WDSLightSensorReadingChangedEventArgs, WDSSensorRotationMatrix, WDSSensorQuaternion, WDSOrientationSensor, WDSOrientationSensorReading, WDSOrientationSensorReadingChangedEventArgs, WDSSimpleOrientationSensor, WDSSimpleOrientationSensorOrientationChangedEventArgs, WDSMagnetometer, WDSMagnetometerReading, WDSMagnetometerReadingChangedEventArgs, WDSActivitySensor, WDSActivitySensorReading, WDSActivitySensorReadingChangedEventArgs, WDSActivitySensorReadingChangeReport, WDSActivitySensorTriggerDetails, WDSBarometer, WDSBarometerReading, WDSBarometerReadingChangedEventArgs, WDSPedometerReading, WDSPedometer, WDSPedometerReadingChangedEventArgs, WDSProximitySensor, WDSProximitySensorReading, WDSProximitySensorReadingChangedEventArgs, WDSProximitySensorDisplayOnOffController, WDSAltimeter, WDSAltimeterReading, WDSAltimeterReadingChangedEventArgs;
-@protocol WDSIAccelerometerDeviceId, WDSIAccelerometerStatics, WDSIAccelerometer, WDSIAccelerometer2, WDSIAccelerometer3, WDSIAccelerometerReading, WDSIAccelerometerReadingChangedEventArgs, WDSIAccelerometerShakenEventArgs, WDSIInclinometerDeviceId, WDSIInclinometerStatics, WDSIInclinometerStatics2, WDSIInclinometer, WDSIInclinometer2, WDSIInclinometerReading, WDSIInclinometerReadingYawAccuracy, WDSIInclinometerReadingChangedEventArgs, WDSIGyrometerDeviceId, WDSIGyrometerStatics, WDSIGyrometer, WDSIGyrometer2, WDSIGyrometerReading, WDSIGyrometerReadingChangedEventArgs, WDSICompassDeviceId, WDSICompassStatics, WDSICompass, WDSICompass2, WDSICompassReading, WDSICompassReadingHeadingAccuracy, WDSICompassReadingChangedEventArgs, WDSILightSensorDeviceId, WDSILightSensorStatics, WDSILightSensor, WDSILightSensorReading, WDSILightSensorReadingChangedEventArgs, WDSISensorRotationMatrix, WDSISensorQuaternion, WDSIOrientationSensorDeviceId, WDSIOrientationSensorStatics, WDSIOrientationSensorStatics2, WDSIOrientationSensor, WDSIOrientationSensor2, WDSIOrientationSensorReading, WDSIOrientationSensorReadingYawAccuracy, WDSIOrientationSensorReadingChangedEventArgs, WDSISimpleOrientationSensorDeviceId, WDSISimpleOrientationSensorStatics, WDSISimpleOrientationSensor, WDSISimpleOrientationSensor2, WDSISimpleOrientationSensorOrientationChangedEventArgs, WDSIMagnetometerDeviceId, WDSIMagnetometerStatics, WDSIMagnetometer, WDSIMagnetometer2, WDSIMagnetometerReading, WDSIMagnetometerReadingChangedEventArgs, WDSIActivitySensorStatics, WDSIActivitySensor, WDSIActivitySensorReading, WDSIActivitySensorReadingChangedEventArgs, WDSIActivitySensorReadingChangeReport, WDSIActivitySensorTriggerDetails, WDSIBarometerStatics, WDSIBarometer, WDSIBarometerReading, WDSIBarometerReadingChangedEventArgs, WDSIPedometerReading, WDSIPedometerReadingChangedEventArgs, WDSIPedometerStatics, WDSIPedometer, WDSIProximitySensorStatics, WDSIProximitySensor, WDSIProximitySensorReadingChangedEventArgs, WDSIProximitySensorReading, WDSIAltimeterStatics, WDSIAltimeter, WDSIAltimeterReading, WDSIAltimeterReadingChangedEventArgs;
+@class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer,
+    WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs,
+    WDSCompass, WDSCompassReading, WDSCompassReadingChangedEventArgs, WDSLightSensor, WDSLightSensorReading,
+    WDSLightSensorReadingChangedEventArgs, WDSSensorRotationMatrix, WDSSensorQuaternion, WDSOrientationSensor, WDSOrientationSensorReading,
+    WDSOrientationSensorReadingChangedEventArgs, WDSSimpleOrientationSensor, WDSSimpleOrientationSensorOrientationChangedEventArgs,
+    WDSMagnetometer, WDSMagnetometerReading, WDSMagnetometerReadingChangedEventArgs, WDSActivitySensor, WDSActivitySensorReading,
+    WDSActivitySensorReadingChangedEventArgs, WDSActivitySensorReadingChangeReport, WDSActivitySensorTriggerDetails, WDSBarometer,
+    WDSBarometerReading, WDSBarometerReadingChangedEventArgs, WDSPedometerReading, WDSPedometer, WDSPedometerReadingChangedEventArgs,
+    WDSProximitySensor, WDSProximitySensorReading, WDSProximitySensorReadingChangedEventArgs, WDSProximitySensorDisplayOnOffController,
+    WDSAltimeter, WDSAltimeterReading, WDSAltimeterReadingChangedEventArgs;
+@protocol WDSIAccelerometerDeviceId
+, WDSIAccelerometerStatics, WDSIAccelerometer, WDSIAccelerometer2, WDSIAccelerometer3, WDSIAccelerometerReading,
+    WDSIAccelerometerReadingChangedEventArgs, WDSIAccelerometerShakenEventArgs, WDSIInclinometerDeviceId, WDSIInclinometerStatics,
+    WDSIInclinometerStatics2, WDSIInclinometer, WDSIInclinometer2, WDSIInclinometerReading, WDSIInclinometerReadingYawAccuracy,
+    WDSIInclinometerReadingChangedEventArgs, WDSIGyrometerDeviceId, WDSIGyrometerStatics, WDSIGyrometer, WDSIGyrometer2,
+    WDSIGyrometerReading, WDSIGyrometerReadingChangedEventArgs, WDSICompassDeviceId, WDSICompassStatics, WDSICompass, WDSICompass2,
+    WDSICompassReading, WDSICompassReadingHeadingAccuracy, WDSICompassReadingChangedEventArgs, WDSILightSensorDeviceId,
+    WDSILightSensorStatics, WDSILightSensor, WDSILightSensorReading, WDSILightSensorReadingChangedEventArgs, WDSISensorRotationMatrix,
+    WDSISensorQuaternion, WDSIOrientationSensorDeviceId, WDSIOrientationSensorStatics, WDSIOrientationSensorStatics2, WDSIOrientationSensor,
+    WDSIOrientationSensor2, WDSIOrientationSensorReading, WDSIOrientationSensorReadingYawAccuracy,
+    WDSIOrientationSensorReadingChangedEventArgs, WDSISimpleOrientationSensorDeviceId, WDSISimpleOrientationSensorStatics,
+    WDSISimpleOrientationSensor, WDSISimpleOrientationSensor2, WDSISimpleOrientationSensorOrientationChangedEventArgs,
+    WDSIMagnetometerDeviceId, WDSIMagnetometerStatics, WDSIMagnetometer, WDSIMagnetometer2, WDSIMagnetometerReading,
+    WDSIMagnetometerReadingChangedEventArgs, WDSIActivitySensorStatics, WDSIActivitySensor, WDSIActivitySensorReading,
+    WDSIActivitySensorReadingChangedEventArgs, WDSIActivitySensorReadingChangeReport, WDSIActivitySensorTriggerDetails,
+    WDSIBarometerStatics, WDSIBarometer, WDSIBarometerReading, WDSIBarometerReadingChangedEventArgs, WDSIPedometerReading,
+    WDSIPedometerReadingChangedEventArgs, WDSIPedometerStatics, WDSIPedometer, WDSIProximitySensorStatics, WDSIProximitySensor,
+    WDSIProximitySensorReadingChangedEventArgs, WDSIProximitySensorReading, WDSIAltimeterStatics, WDSIAltimeter, WDSIAltimeterReading,
+    WDSIAltimeterReadingChangedEventArgs;
 
 // Windows.Devices.Sensors.MagnetometerAccuracy
 enum _WDSMagnetometerAccuracy {
-	WDSMagnetometerAccuracyUnknown = 0,
-	WDSMagnetometerAccuracyUnreliable = 1,
-	WDSMagnetometerAccuracyApproximate = 2,
-	WDSMagnetometerAccuracyHigh = 3,
+    WDSMagnetometerAccuracyUnknown = 0,
+    WDSMagnetometerAccuracyUnreliable = 1,
+    WDSMagnetometerAccuracyApproximate = 2,
+    WDSMagnetometerAccuracyHigh = 3,
 };
 typedef unsigned WDSMagnetometerAccuracy;
 
 // Windows.Devices.Sensors.ActivityType
 enum _WDSActivityType {
-	WDSActivityTypeUnknown = 0,
-	WDSActivityTypeIdle = 1,
-	WDSActivityTypeStationary = 2,
-	WDSActivityTypeFidgeting = 3,
-	WDSActivityTypeWalking = 4,
-	WDSActivityTypeRunning = 5,
-	WDSActivityTypeInVehicle = 6,
-	WDSActivityTypeBiking = 7,
+    WDSActivityTypeUnknown = 0,
+    WDSActivityTypeIdle = 1,
+    WDSActivityTypeStationary = 2,
+    WDSActivityTypeFidgeting = 3,
+    WDSActivityTypeWalking = 4,
+    WDSActivityTypeRunning = 5,
+    WDSActivityTypeInVehicle = 6,
+    WDSActivityTypeBiking = 7,
 };
 typedef unsigned WDSActivityType;
 
 // Windows.Devices.Sensors.ActivitySensorReadingConfidence
 enum _WDSActivitySensorReadingConfidence {
-	WDSActivitySensorReadingConfidenceHigh = 0,
-	WDSActivitySensorReadingConfidenceLow = 1,
+    WDSActivitySensorReadingConfidenceHigh = 0,
+    WDSActivitySensorReadingConfidenceLow = 1,
 };
 typedef unsigned WDSActivitySensorReadingConfidence;
 
 // Windows.Devices.Sensors.SensorReadingType
 enum _WDSSensorReadingType {
-	WDSSensorReadingTypeAbsolute = 0,
-	WDSSensorReadingTypeRelative = 1,
+    WDSSensorReadingTypeAbsolute = 0,
+    WDSSensorReadingTypeRelative = 1,
 };
 typedef unsigned WDSSensorReadingType;
 
 // Windows.Devices.Sensors.SimpleOrientation
 enum _WDSSimpleOrientation {
-	WDSSimpleOrientationNotRotated = 0,
-	WDSSimpleOrientationRotated90DegreesCounterclockwise = 1,
-	WDSSimpleOrientationRotated180DegreesCounterclockwise = 2,
-	WDSSimpleOrientationRotated270DegreesCounterclockwise = 3,
-	WDSSimpleOrientationFaceup = 4,
-	WDSSimpleOrientationFacedown = 5,
+    WDSSimpleOrientationNotRotated = 0,
+    WDSSimpleOrientationRotated90DegreesCounterclockwise = 1,
+    WDSSimpleOrientationRotated180DegreesCounterclockwise = 2,
+    WDSSimpleOrientationRotated270DegreesCounterclockwise = 3,
+    WDSSimpleOrientationFaceup = 4,
+    WDSSimpleOrientationFacedown = 5,
 };
 typedef unsigned WDSSimpleOrientation;
 
 // Windows.Devices.Sensors.PedometerStepKind
 enum _WDSPedometerStepKind {
-	WDSPedometerStepKindUnknown = 0,
-	WDSPedometerStepKindWalking = 1,
-	WDSPedometerStepKindRunning = 2,
+    WDSPedometerStepKindUnknown = 0,
+    WDSPedometerStepKindWalking = 1,
+    WDSPedometerStepKindRunning = 2,
 };
 typedef unsigned WDSPedometerStepKind;
 
@@ -96,10 +123,10 @@ WINRT_EXPORT
 @property WGDDisplayOrientations readingTransform;
 @property unsigned int reportLatency;
 @property (readonly) unsigned int maxBatchSize;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSAccelerometer*, WDSAccelerometerReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSAccelerometer*, WDSAccelerometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addShakenEvent:(void(^)(WDSAccelerometer*, WDSAccelerometerShakenEventArgs*))del;
+- (EventRegistrationToken)addShakenEvent:(void (^)(WDSAccelerometer*, WDSAccelerometerShakenEventArgs*))del;
 - (void)removeShakenEvent:(EventRegistrationToken)tok;
 - (WDSAccelerometerReading*)getCurrentReading;
 @end
@@ -154,8 +181,8 @@ WINRT_EXPORT
 @property (readonly) unsigned int minimumReportInterval;
 @property WGDDisplayOrientations readingTransform;
 @property (readonly) WDSSensorReadingType readingType;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSInclinometer*, WDSInclinometerReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSInclinometer*, WDSInclinometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSInclinometerReading*)getCurrentReading;
 @end
@@ -198,8 +225,8 @@ WINRT_EXPORT
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
 @property WGDDisplayOrientations readingTransform;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSGyrometer*, WDSGyrometerReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSGyrometer*, WDSGyrometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSGyrometerReading*)getCurrentReading;
 @end
@@ -241,8 +268,8 @@ WINRT_EXPORT
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
 @property WGDDisplayOrientations readingTransform;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCompass*, WDSCompassReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSCompass*, WDSCompassReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSCompassReading*)getCurrentReading;
 @end
@@ -283,8 +310,8 @@ WINRT_EXPORT
 + (WDSLightSensor*)getDefault;
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSLightSensor*, WDSLightSensorReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSLightSensor*, WDSLightSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSLightSensorReading*)getCurrentReading;
 @end
@@ -359,8 +386,8 @@ WINRT_EXPORT
 @property (readonly) unsigned int minimumReportInterval;
 @property WGDDisplayOrientations readingTransform;
 @property (readonly) WDSSensorReadingType readingType;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSOrientationSensor*, WDSOrientationSensorReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSOrientationSensor*, WDSOrientationSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSOrientationSensorReading*)getCurrentReading;
 @end
@@ -400,8 +427,9 @@ WINRT_EXPORT
 @interface WDSSimpleOrientationSensor : RTObject
 + (WDSSimpleOrientationSensor*)getDefault;
 @property WGDDisplayOrientations readingTransform;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addOrientationChangedEvent:(void(^)(WDSSimpleOrientationSensor*, WDSSimpleOrientationSensorOrientationChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addOrientationChangedEvent:(void (^)(WDSSimpleOrientationSensor*,
+                                                               WDSSimpleOrientationSensorOrientationChangedEventArgs*))del;
 - (void)removeOrientationChangedEvent:(EventRegistrationToken)tok;
 - (WDSSimpleOrientation)getCurrentOrientation;
 @end
@@ -430,8 +458,8 @@ WINRT_EXPORT
 @property unsigned int reportInterval;
 @property (readonly) unsigned int minimumReportInterval;
 @property WGDDisplayOrientations readingTransform;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSMagnetometer*, WDSMagnetometerReadingChangedEventArgs*))del;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSMagnetometer*, WDSMagnetometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSMagnetometerReading*)getCurrentReading;
 @end
@@ -471,16 +499,19 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSActivitySensor : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
 + (void)getSystemHistoryAsync:(WFDateTime*)fromTime success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime duration:(WFTimeSpan*)duration success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSString * deviceId;
++ (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime
+                                 duration:(WFTimeSpan*)duration
+                                  success:(void (^)(NSArray*))success
+                                  failure:(void (^)(NSError*))failure;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) double powerInMilliwatts;
 @property (readonly) NSMutableArray* subscribedActivities;
 @property (readonly) NSArray* supportedActivities;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSActivitySensor*, WDSActivitySensorReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSActivitySensor*, WDSActivitySensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (void)getCurrentReadingAsyncWithSuccess:(void (^)(WDSActivitySensorReading*))success failure:(void (^)(NSError*))failure;
 @end
@@ -541,9 +572,9 @@ WINRT_EXPORT
 @interface WDSBarometer : RTObject
 + (WDSBarometer*)getDefault;
 @property unsigned int reportInterval;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSBarometer*, WDSBarometerReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSBarometer*, WDSBarometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSBarometerReading*)getCurrentReading;
 @end
@@ -593,16 +624,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSPedometer : RTObject
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
++ (NSString*)getDeviceSelector;
 + (void)getSystemHistoryAsync:(WFDateTime*)fromTime success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime duration:(WFTimeSpan*)duration success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime
+                                 duration:(WFTimeSpan*)duration
+                                  success:(void (^)(NSArray*))success
+                                  failure:(void (^)(NSError*))failure;
 @property unsigned int reportInterval;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) double powerInMilliwatts;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSPedometer*, WDSPedometerReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSPedometer*, WDSPedometerReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -625,12 +659,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSProximitySensor : RTObject
-+ (NSString *)getDeviceSelector;
-+ (WDSProximitySensor*)fromId:(NSString *)sensorId;
-@property (readonly) NSString * deviceId;
++ (NSString*)getDeviceSelector;
++ (WDSProximitySensor*)fromId:(NSString*)sensorId;
+@property (readonly) NSString* deviceId;
 @property (readonly) id maxDistanceInMillimeters;
 @property (readonly) id minDistanceInMillimeters;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSProximitySensor*, WDSProximitySensorReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSProximitySensor*, WDSProximitySensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSProximitySensorReading*)getCurrentReading;
 - (WDSProximitySensorDisplayOnOffController*)createDisplayOnOffController;
@@ -691,9 +725,9 @@ WINRT_EXPORT
 @interface WDSAltimeter : RTObject
 + (WDSAltimeter*)getDefault;
 @property unsigned int reportInterval;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSAltimeter*, WDSAltimeterReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSAltimeter*, WDSAltimeterReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSAltimeterReading*)getCurrentReading;
 @end
@@ -722,4 +756,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDSAltimeterReadingChangedEventArgs_DEFINED__
-

@@ -21,56 +21,58 @@
 
 #include "interopBase.h"
 @class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater;
-@protocol WSPICachedFileUpdaterUI, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2, WSPICachedFileUpdaterStatics;
+@protocol WSPICachedFileUpdaterUI
+, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2,
+    WSPICachedFileUpdaterStatics;
 
 // Windows.Storage.Provider.CachedFileTarget
 enum _WSPCachedFileTarget {
-	WSPCachedFileTargetLocal = 0,
-	WSPCachedFileTargetRemote = 1,
+    WSPCachedFileTargetLocal = 0,
+    WSPCachedFileTargetRemote = 1,
 };
 typedef unsigned WSPCachedFileTarget;
 
 // Windows.Storage.Provider.UIStatus
 enum _WSPUIStatus {
-	WSPUIStatusUnavailable = 0,
-	WSPUIStatusHidden = 1,
-	WSPUIStatusVisible = 2,
-	WSPUIStatusComplete = 3,
+    WSPUIStatusUnavailable = 0,
+    WSPUIStatusHidden = 1,
+    WSPUIStatusVisible = 2,
+    WSPUIStatusComplete = 3,
 };
 typedef unsigned WSPUIStatus;
 
 // Windows.Storage.Provider.FileUpdateStatus
 enum _WSPFileUpdateStatus {
-	WSPFileUpdateStatusIncomplete = 0,
-	WSPFileUpdateStatusComplete = 1,
-	WSPFileUpdateStatusUserInputNeeded = 2,
-	WSPFileUpdateStatusCurrentlyUnavailable = 3,
-	WSPFileUpdateStatusFailed = 4,
-	WSPFileUpdateStatusCompleteAndRenamed = 5,
+    WSPFileUpdateStatusIncomplete = 0,
+    WSPFileUpdateStatusComplete = 1,
+    WSPFileUpdateStatusUserInputNeeded = 2,
+    WSPFileUpdateStatusCurrentlyUnavailable = 3,
+    WSPFileUpdateStatusFailed = 4,
+    WSPFileUpdateStatusCompleteAndRenamed = 5,
 };
 typedef unsigned WSPFileUpdateStatus;
 
 // Windows.Storage.Provider.CachedFileOptions
 enum _WSPCachedFileOptions {
-	WSPCachedFileOptionsNone = 0,
-	WSPCachedFileOptionsRequireUpdateOnAccess = 1,
-	WSPCachedFileOptionsUseCachedFileWhenOffline = 2,
-	WSPCachedFileOptionsDenyAccessWhenOffline = 4,
+    WSPCachedFileOptionsNone = 0,
+    WSPCachedFileOptionsRequireUpdateOnAccess = 1,
+    WSPCachedFileOptionsUseCachedFileWhenOffline = 2,
+    WSPCachedFileOptionsDenyAccessWhenOffline = 4,
 };
 typedef unsigned WSPCachedFileOptions;
 
 // Windows.Storage.Provider.ReadActivationMode
 enum _WSPReadActivationMode {
-	WSPReadActivationModeNotNeeded = 0,
-	WSPReadActivationModeBeforeAccess = 1,
+    WSPReadActivationModeNotNeeded = 0,
+    WSPReadActivationModeBeforeAccess = 1,
 };
 typedef unsigned WSPReadActivationMode;
 
 // Windows.Storage.Provider.WriteActivationMode
 enum _WSPWriteActivationMode {
-	WSPWriteActivationModeReadOnly = 0,
-	WSPWriteActivationModeNotNeeded = 1,
-	WSPWriteActivationModeAfterWrite = 2,
+    WSPWriteActivationModeReadOnly = 0,
+    WSPWriteActivationModeNotNeeded = 1,
+    WSPWriteActivationModeAfterWrite = 2,
 };
 typedef unsigned WSPWriteActivationMode;
 
@@ -85,13 +87,13 @@ typedef unsigned WSPWriteActivationMode;
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
-@property (copy) NSString * title;
+@property (copy) NSString* title;
 @property (readonly) WSPUIStatus uIStatus;
 @property (readonly) WSPCachedFileTarget updateTarget;
 @property (readonly) WSPFileUpdateRequest* updateRequest;
-- (EventRegistrationToken)addFileUpdateRequestedEvent:(void(^)(WSPCachedFileUpdaterUI*, WSPFileUpdateRequestedEventArgs*))del;
+- (EventRegistrationToken)addFileUpdateRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, WSPFileUpdateRequestedEventArgs*))del;
 - (void)removeFileUpdateRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUIRequestedEvent:(void(^)(WSPCachedFileUpdaterUI*, RTObject*))del;
+- (EventRegistrationToken)addUIRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, RTObject*))del;
 - (void)removeUIRequestedEvent:(EventRegistrationToken)tok;
 - (WSPFileUpdateRequestDeferral*)getDeferral;
 @end
@@ -116,9 +118,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPFileUpdateRequest : RTObject
 @property WSPFileUpdateStatus status;
-@property (readonly) NSString * contentId;
+@property (readonly) NSString* contentId;
 @property (readonly) WSStorageFile* file;
-@property (copy) NSString * userInputNeededMessage;
+@property (copy) NSString* userInputNeededMessage;
 - (WSPFileUpdateRequestDeferral*)getDeferral;
 - (void)updateLocalFile:(RTObject<WSIStorageFile>*)value;
 @end
@@ -142,8 +144,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdater : RTObject
-+ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file contentId:(NSString *)contentId readMode:(WSPReadActivationMode)readMode writeMode:(WSPWriteActivationMode)writeMode options:(WSPCachedFileOptions)options;
++ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file
+                   contentId:(NSString*)contentId
+                    readMode:(WSPReadActivationMode)readMode
+                   writeMode:(WSPWriteActivationMode)writeMode
+                     options:(WSPCachedFileOptions)options;
 @end
 
 #endif // __WSPCachedFileUpdater_DEFINED__
-

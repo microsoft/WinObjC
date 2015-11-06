@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMCApplicationDataManager;
-@protocol WMCIApplicationDataManagerStatics, WMCIApplicationDataManager;
+@protocol WMCIApplicationDataManagerStatics
+, WMCIApplicationDataManager;
 
 #include "WindowsStorage.h"
 
@@ -31,8 +32,7 @@
 
 WINRT_EXPORT
 @interface WMCApplicationDataManager : RTObject
-+ (WSApplicationData *)createForPackageFamily:(NSString *)packageFamilyName;
++ (WSApplicationData*)createForPackageFamily:(NSString*)packageFamilyName;
 @end
 
 #endif // __WMCApplicationDataManager_DEFINED__
-

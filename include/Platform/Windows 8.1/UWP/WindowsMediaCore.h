@@ -20,8 +20,20 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs, WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs, WMCMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCMediaStreamSamplePropertySet, WMCMediaStreamSample, WMCMediaStreamSampleProtectionProperties, WMCMediaStreamSourceClosedRequest, WMCMediaStreamSourceStartingRequestDeferral, WMCMediaStreamSourceStartingRequest, WMCMediaStreamSourceSampleRequestDeferral, WMCMediaStreamSourceSampleRequest, WMCMediaStreamSourceSwitchStreamsRequestDeferral, WMCMediaStreamSourceSwitchStreamsRequest;
-@protocol WMCIMediaStreamDescriptor, WMCIAudioStreamDescriptor, WMCIAudioStreamDescriptorFactory, WMCIVideoStreamDescriptor, WMCIVideoStreamDescriptorFactory, WMCIMediaSource, WMCIMediaStreamSource, WMCIMediaStreamSourceFactory, WMCIMediaStreamSample, WMCIMediaStreamSampleStatics, WMCIMediaStreamSampleProtectionProperties, WMCIMediaStreamSourceClosedRequest, WMCIMediaStreamSourceClosedEventArgs, WMCIMediaStreamSourceStartingRequestDeferral, WMCIMediaStreamSourceStartingRequest, WMCIMediaStreamSourceStartingEventArgs, WMCIMediaStreamSourceSampleRequestDeferral, WMCIMediaStreamSourceSampleRequest, WMCIMediaStreamSourceSampleRequestedEventArgs, WMCIMediaStreamSourceSwitchStreamsRequestDeferral, WMCIMediaStreamSourceSwitchStreamsRequest, WMCIMediaStreamSourceSwitchStreamsRequestedEventArgs;
+@class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs,
+    WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs,
+    WMCMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCMediaStreamSamplePropertySet, WMCMediaStreamSample,
+    WMCMediaStreamSampleProtectionProperties, WMCMediaStreamSourceClosedRequest, WMCMediaStreamSourceStartingRequestDeferral,
+    WMCMediaStreamSourceStartingRequest, WMCMediaStreamSourceSampleRequestDeferral, WMCMediaStreamSourceSampleRequest,
+    WMCMediaStreamSourceSwitchStreamsRequestDeferral, WMCMediaStreamSourceSwitchStreamsRequest;
+@protocol WMCIMediaStreamDescriptor
+, WMCIAudioStreamDescriptor, WMCIAudioStreamDescriptorFactory, WMCIVideoStreamDescriptor, WMCIVideoStreamDescriptorFactory, WMCIMediaSource,
+    WMCIMediaStreamSource, WMCIMediaStreamSourceFactory, WMCIMediaStreamSample, WMCIMediaStreamSampleStatics,
+    WMCIMediaStreamSampleProtectionProperties, WMCIMediaStreamSourceClosedRequest, WMCIMediaStreamSourceClosedEventArgs,
+    WMCIMediaStreamSourceStartingRequestDeferral, WMCIMediaStreamSourceStartingRequest, WMCIMediaStreamSourceStartingEventArgs,
+    WMCIMediaStreamSourceSampleRequestDeferral, WMCIMediaStreamSourceSampleRequest, WMCIMediaStreamSourceSampleRequestedEventArgs,
+    WMCIMediaStreamSourceSwitchStreamsRequestDeferral, WMCIMediaStreamSourceSwitchStreamsRequest,
+    WMCIMediaStreamSourceSwitchStreamsRequestedEventArgs;
 
 // Windows.Media.Core.MediaStreamSourceClosedReason
 enum _WMCMediaStreamSourceClosedReason {
@@ -60,8 +72,8 @@ typedef unsigned WMCMediaStreamSourceErrorStatus;
 
 @protocol WMCIMediaStreamDescriptor
 @property (readonly) BOOL isSelected;
-@property (copy) NSString * language;
-@property (copy) NSString * name;
+@property (copy) NSString* language;
+@property (copy) NSString* name;
 @end
 
 #endif // __WMCIMediaStreamDescriptor_DEFINED__
@@ -81,10 +93,10 @@ typedef unsigned WMCMediaStreamSourceErrorStatus;
 
 WINRT_EXPORT
 @interface WMCAudioStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
-+ (WMCAudioStreamDescriptor *)create:(WMMAudioEncodingProperties *)encodingProperties ACTIVATOR;
-@property (readonly) WMMAudioEncodingProperties * encodingProperties;
-@property (copy) NSString * name;
-@property (copy) NSString * language;
++ (WMCAudioStreamDescriptor*)create:(WMMAudioEncodingProperties*)encodingProperties ACTIVATOR;
+@property (readonly) WMMAudioEncodingProperties* encodingProperties;
+@property (copy) NSString* name;
+@property (copy) NSString* language;
 @property (readonly) BOOL isSelected;
 @end
 
@@ -96,10 +108,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
-+ (WMCVideoStreamDescriptor *)create:(WMMVideoEncodingProperties *)encodingProperties ACTIVATOR;
-@property (readonly) WMMVideoEncodingProperties * encodingProperties;
-@property (copy) NSString * name;
-@property (copy) NSString * language;
++ (WMCVideoStreamDescriptor*)create:(WMMVideoEncodingProperties*)encodingProperties ACTIVATOR;
+@property (readonly) WMMVideoEncodingProperties* encodingProperties;
+@property (copy) NSString* name;
+@property (copy) NSString* language;
 @property (readonly) BOOL isSelected;
 @end
 
@@ -111,29 +123,33 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSource : RTObject <WMCIMediaSource>
-+ (WMCMediaStreamSource *)createFromDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor ACTIVATOR;
-+ (WMCMediaStreamSource *)createFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor descriptor2:(RTObject<WMCIMediaStreamDescriptor>*)descriptor2 ACTIVATOR;
++ (WMCMediaStreamSource*)createFromDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor ACTIVATOR;
++ (WMCMediaStreamSource*)createFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor
+                                   descriptor2:(RTObject<WMCIMediaStreamDescriptor>*)descriptor2 ACTIVATOR;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (copy) WMPMediaProtectionManager * mediaProtectionManager;
-@property (copy) WFTimeSpan * duration;
+@property (copy) WMPMediaProtectionManager* mediaProtectionManager;
+@property (copy) WFTimeSpan* duration;
 @property BOOL canSeek;
-@property (copy) WFTimeSpan * bufferTime;
-@property (readonly) WSFMusicProperties * musicProperties;
-@property (readonly) WSFVideoProperties * videoProperties;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WMCMediaStreamSource *, WMCMediaStreamSourceClosedEventArgs *))del;
+@property (copy) WFTimeSpan* bufferTime;
+@property (readonly) WSFMusicProperties* musicProperties;
+@property (readonly) WSFVideoProperties* videoProperties;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceClosedEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPausedEvent:(void(^)(WMCMediaStreamSource *, RTObject *))del;
+- (EventRegistrationToken)addPausedEvent:(void (^)(WMCMediaStreamSource*, RTObject*))del;
 - (void)removePausedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSampleRequestedEvent:(void(^)(WMCMediaStreamSource *, WMCMediaStreamSourceSampleRequestedEventArgs *))del;
+- (EventRegistrationToken)addSampleRequestedEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceSampleRequestedEventArgs*))del;
 - (void)removeSampleRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStartingEvent:(void(^)(WMCMediaStreamSource *, WMCMediaStreamSourceStartingEventArgs *))del;
+- (EventRegistrationToken)addStartingEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceStartingEventArgs*))del;
 - (void)removeStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSwitchStreamsRequestedEvent:(void(^)(WMCMediaStreamSource *, WMCMediaStreamSourceSwitchStreamsRequestedEventArgs *))del;
+- (EventRegistrationToken)addSwitchStreamsRequestedEvent:(void (^)(WMCMediaStreamSource*,
+                                                                   WMCMediaStreamSourceSwitchStreamsRequestedEventArgs*))del;
 - (void)removeSwitchStreamsRequestedEvent:(EventRegistrationToken)tok;
 - (void)notifyError:(WMCMediaStreamSourceErrorStatus)errorStatus;
 - (void)addStreamDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor;
-- (void)setBufferedRange:(WFTimeSpan *)startOffset endOffset:(WFTimeSpan *)endOffset;
-- (void)addProtectionKey:(RTObject<WMCIMediaStreamDescriptor>*)streamDescriptor keyIdentifier:(id<NSFastEnumeration> /*UInt8*/ )keyIdentifier licenseData:(id<NSFastEnumeration> /*UInt8*/ )licenseData;
+- (void)setBufferedRange:(WFTimeSpan*)startOffset endOffset:(WFTimeSpan*)endOffset;
+- (void)addProtectionKey:(RTObject<WMCIMediaStreamDescriptor>*)streamDescriptor
+           keyIdentifier:(id<NSFastEnumeration> /*UInt8*/)keyIdentifier
+             licenseData:(id<NSFastEnumeration> /*UInt8*/)licenseData;
 @end
 
 #endif // __WMCMediaStreamSource_DEFINED__
@@ -144,7 +160,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceClosedEventArgs : RTObject
-@property (readonly) WMCMediaStreamSourceClosedRequest * request;
+@property (readonly) WMCMediaStreamSourceClosedRequest* request;
 @end
 
 #endif // __WMCMediaStreamSourceClosedEventArgs_DEFINED__
@@ -155,7 +171,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingEventArgs : RTObject
-@property (readonly) WMCMediaStreamSourceStartingRequest * request;
+@property (readonly) WMCMediaStreamSourceStartingRequest* request;
 @end
 
 #endif // __WMCMediaStreamSourceStartingEventArgs_DEFINED__
@@ -166,7 +182,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSampleRequestedEventArgs : RTObject
-@property (readonly) WMCMediaStreamSourceSampleRequest * request;
+@property (readonly) WMCMediaStreamSourceSampleRequest* request;
 @end
 
 #endif // __WMCMediaStreamSourceSampleRequestedEventArgs_DEFINED__
@@ -177,7 +193,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequestedEventArgs : RTObject
-@property (readonly) WMCMediaStreamSourceSwitchStreamsRequest * request;
+@property (readonly) WMCMediaStreamSourceSwitchStreamsRequest* request;
 @end
 
 #endif // __WMCMediaStreamSourceSwitchStreamsRequestedEventArgs_DEFINED__
@@ -200,17 +216,21 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSample : RTObject
-+ (WMCMediaStreamSample *)createFromBuffer:(RTObject<WSSIBuffer>*)buffer timestamp:(WFTimeSpan *)timestamp;
-+ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream count:(unsigned)count timestamp:(WFTimeSpan *)timestamp success:(void (^)(WMCMediaStreamSample *))success failure:(void (^)(NSError*))failure;
++ (WMCMediaStreamSample*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer timestamp:(WFTimeSpan*)timestamp;
++ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream
+                        count:(unsigned)count
+                    timestamp:(WFTimeSpan*)timestamp
+                      success:(void (^)(WMCMediaStreamSample*))success
+                      failure:(void (^)(NSError*))failure;
 @property BOOL keyFrame;
-@property (copy) WFTimeSpan * duration;
+@property (copy) WFTimeSpan* duration;
 @property BOOL discontinuous;
-@property (copy) WFTimeSpan * decodeTimestamp;
-@property (readonly) WSSBuffer * buffer;
-@property (readonly) WMCMediaStreamSamplePropertySet * extendedProperties;
-@property (readonly) WMCMediaStreamSampleProtectionProperties * protection;
-@property (readonly) WFTimeSpan * timestamp;
-- (EventRegistrationToken)addProcessedEvent:(void(^)(WMCMediaStreamSample *, RTObject *))del;
+@property (copy) WFTimeSpan* decodeTimestamp;
+@property (readonly) WSSBuffer* buffer;
+@property (readonly) WMCMediaStreamSamplePropertySet* extendedProperties;
+@property (readonly) WMCMediaStreamSampleProtectionProperties* protection;
+@property (readonly) WFTimeSpan* timestamp;
+- (EventRegistrationToken)addProcessedEvent:(void (^)(WMCMediaStreamSample*, RTObject*))del;
 - (void)removeProcessedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -222,12 +242,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSampleProtectionProperties : RTObject
-- (void)setKeyIdentifier:(id<NSFastEnumeration> /*UInt8*/ )value;
-- (void)getKeyIdentifier:(id<NSFastEnumeration> /*UInt8*/ *)value;
-- (void)setInitializationVector:(id<NSFastEnumeration> /*UInt8*/ )value;
-- (void)getInitializationVector:(id<NSFastEnumeration> /*UInt8*/ *)value;
-- (void)setSubSampleMapping:(id<NSFastEnumeration> /*UInt8*/ )value;
-- (void)getSubSampleMapping:(id<NSFastEnumeration> /*UInt8*/ *)value;
+- (void)setKeyIdentifier:(id<NSFastEnumeration> /*UInt8*/)value;
+- (void)getKeyIdentifier:(id<NSFastEnumeration> /*UInt8*/*)value;
+- (void)setInitializationVector:(id<NSFastEnumeration> /*UInt8*/)value;
+- (void)getInitializationVector:(id<NSFastEnumeration> /*UInt8*/*)value;
+- (void)setSubSampleMapping:(id<NSFastEnumeration> /*UInt8*/)value;
+- (void)getSubSampleMapping:(id<NSFastEnumeration> /*UInt8*/*)value;
 @end
 
 #endif // __WMCMediaStreamSampleProtectionProperties_DEFINED__
@@ -260,9 +280,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingRequest : RTObject
-@property (readonly) WFTimeSpan * startPosition;
-- (WMCMediaStreamSourceStartingRequestDeferral *)getDeferral;
-- (void)setActualStartPosition:(WFTimeSpan *)position;
+@property (readonly) WFTimeSpan* startPosition;
+- (WMCMediaStreamSourceStartingRequestDeferral*)getDeferral;
+- (void)setActualStartPosition:(WFTimeSpan*)position;
 @end
 
 #endif // __WMCMediaStreamSourceStartingRequest_DEFINED__
@@ -284,9 +304,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceSampleRequest : RTObject
-@property (copy) WMCMediaStreamSample * sample;
+@property (copy) WMCMediaStreamSample* sample;
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* streamDescriptor;
-- (WMCMediaStreamSourceSampleRequestDeferral *)getDeferral;
+- (WMCMediaStreamSourceSampleRequestDeferral*)getDeferral;
 - (void)reportSampleProgress:(unsigned)progress;
 @end
 
@@ -311,8 +331,7 @@ WINRT_EXPORT
 @interface WMCMediaStreamSourceSwitchStreamsRequest : RTObject
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* newStreamDescriptor;
 @property (readonly) RTObject<WMCIMediaStreamDescriptor>* oldStreamDescriptor;
-- (WMCMediaStreamSourceSwitchStreamsRequestDeferral *)getDeferral;
+- (WMCMediaStreamSourceSwitchStreamsRequestDeferral*)getDeferral;
 @end
 
 #endif // __WMCMediaStreamSourceSwitchStreamsRequest_DEFINED__
-
