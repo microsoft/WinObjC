@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -55,5 +55,14 @@
     <Text Include="HelloUI-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HelloUI_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
   </ItemGroup>
 </Project>

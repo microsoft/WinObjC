@@ -65,4 +65,7 @@
   <ItemGroup>
     <None Include="HelloOpenGL_TemporaryKey.pfx" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+  </ItemGroup>
 </Project>
