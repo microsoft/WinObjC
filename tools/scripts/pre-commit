@@ -3,4 +3,5 @@
 # WinObjC pre-commit hook.  
 # The hook exits with non-zero status after issuing an appropriate message if it wants to stop the commit.
 #
-exec powershell.exe -NoLogo -NoProfile -File ./tools/scripts/pre-commit.ps1
+REPO_ROOT=$(git.exe rev-parse --show-toplevel)
+exec powershell.exe -NoLogo -NoProfile -File ${REPO_ROOT}/tools/scripts/pre-commit.ps1
