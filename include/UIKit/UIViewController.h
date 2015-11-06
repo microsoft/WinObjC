@@ -54,6 +54,11 @@ typedef enum {
     UIModalPresentationPageSheet,
     UIModalPresentationFormSheet,
     UIModalPresentationCurrentContext,
+    UIModalPresentationCustom,
+    UIModalPresentationOverFullScreen,
+    UIModalPresentationOverCurrentContext,
+    UIModalPresentationPopover,
+    UIModalPresentationNone = -1
 } UIModalPresentationStyle;
 
 typedef enum {
@@ -63,7 +68,8 @@ typedef enum {
     UIModalTransitionStylePartialCurl,
 } UIModalTransitionStyle;
 
-@class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController, UIStoryboard;
+@class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController, UIStoryboard, UIPresentationController,
+    UIPopoverPresentationController;
 
 UIKIT_EXPORT_CLASS
 @interface UIViewController : UIResponder <NSCoding>
@@ -152,6 +158,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) UINavigationController* navigationController;
 @property (nonatomic, readonly, retain) UISplitViewController* splitViewController;
 @property (nonatomic, readonly, retain) UISearchDisplayController* searchDisplayController; // stub
+
+@property (nonatomic, readonly) UIPopoverPresentationController* popoverPresentationController;
+@property (nonatomic, readonly) UIPresentationController* presentationController;
 
 // stubs
 @property (nonatomic, retain) UITabBarItem* tabBarItem;
