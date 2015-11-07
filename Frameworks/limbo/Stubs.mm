@@ -29,7 +29,6 @@
 
 typedef unsigned int mach_port_t;
 
-float _UINavigationControllerHideShowBarDuration = .25f;
 EbrEvent _applicationStateChanged;
 int g_browsersVisible = 0;
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;

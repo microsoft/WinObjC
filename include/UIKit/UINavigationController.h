@@ -103,7 +103,7 @@ UIKIT_EXPORT_CLASS
 
 @end
 
-SB_EXPORT NSTimeInterval UINavigationControllerHideShowBarDuration;
+UIKIT_EXPORT const CGFloat UINavigationControllerHideShowBarDuration;
 
 enum {
     UINavigationControllerOperationPush,

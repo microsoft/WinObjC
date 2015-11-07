@@ -26,6 +26,13 @@ NSString* const NSDestinationInvalidException = @"NSDestinationInvalidException"
 NSString* const NSURLErrorDomain = @"NSURLErrorDomain";
 NSString* const NSOverflowException = @"NSOverflowException";
 
+/**
+ @Status Stub
+*/
+void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
+    UNIMPLEMENTED();
+}
+
 @implementation NSException {
     idretaintype(NSString) _name;
     idretaintype(NSString) _reason;

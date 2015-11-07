@@ -92,6 +92,8 @@ LIBRARY Foundation
      __objc_class_name_NSIndexPath    CONSTANT
      _OBJC_CLASS_NSIndexSet    DATA
      __objc_class_name_NSIndexSet    CONSTANT
+     _OBJC_CLASS_NSManagedObjectModel    DATA
+     __objc_class_name_NSManagedObjectModel    CONSTANT
      _OBJC_CLASS_NSMutableIndexSet    DATA
      __objc_class_name_NSMutableIndexSet    CONSTANT
      _OBJC_CLASS_NSUserDefaults    DATA
@@ -177,3 +179,4 @@ LIBRARY Foundation
      _OBJC_CLASS_CTTelephonyNetworkInfo    DATA
      __objc_class_name_CTTelephonyNetworkInfo    CONSTANT
 
+ 
