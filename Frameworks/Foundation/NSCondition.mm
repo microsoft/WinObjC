@@ -177,6 +177,10 @@ struct _mach_timeval {
     pthread_cond_wait(&_cond, &_mutex);
 }
 
+- (BOOL)tryLock {
+    return pthread_mutex_trylock(&_mutex) == 0;
+}
+
 - (void)lockWhenCondition:(NSInteger)condition {
     int rc;
 
