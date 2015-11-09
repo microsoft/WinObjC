@@ -17,6 +17,7 @@
 #ifndef _UIMOTIONEFFECT_H_
 #define _UIMOTIONEFFECT_H_
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 @class NSArray;

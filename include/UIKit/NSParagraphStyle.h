@@ -18,6 +18,7 @@
 #define _NSPARAGRAPHSTYLE_H_
 
 #import <Foundation/NSObject.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 
 enum {

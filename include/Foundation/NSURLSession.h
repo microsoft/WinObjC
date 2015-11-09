@@ -20,6 +20,11 @@
 #import <Foundation/NSTask.h>
 #import <Foundation/NSURLRequest.h>
 
+@class NSURLResponse;
+@class NSURLCache;
+@class NSError;
+@class NSOperationQueue;
+
 typedef NS_ENUM(NSInteger, NSURLSessionTaskState) {
     NSURLSessionTaskStateRunning = 0,
     NSURLSessionTaskStateSuspended = 1,

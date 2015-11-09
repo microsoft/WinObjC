@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UIDocument.h>
 #import <CoreData/NSManagedObjectContext.h>
 

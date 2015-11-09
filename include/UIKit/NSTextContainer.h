@@ -18,6 +18,8 @@
 #define _NSTEXTCONTAINER_H_
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSRange.h>
+#import <UIKit/NSParagraphStyle.h>
 
 @class NSArray;
 

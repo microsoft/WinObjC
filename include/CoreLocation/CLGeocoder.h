@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocationExport.h>
 
+@class CLLocation;
+
 typedef void (^CLGeocodeCompletionHandler)(NSArray* placemark, NSError* error);
 
 CORELOCATION_EXPORT_CLASS

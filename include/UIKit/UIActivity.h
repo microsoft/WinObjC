@@ -17,7 +17,7 @@
 #ifndef _UIACTIVITY_H_
 #define _UIACTIVITY_H_
 
-#import <StarboardExport.h>
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 UIKIT_EXPORT NSString* const UIActivityTypePostToFacebook;
