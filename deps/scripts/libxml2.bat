@@ -79,7 +79,7 @@ echo:
 
 %MSBUILD_BIN% Win10\libxml2.Win10.vcxproj /p:Configuration=Release;Platform=x86
 
-call :CopyBuildOutput Win10 Win10 "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\x86"
+call :CopyBuildOutput Win10 Win10 "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\x86"
 
 :Win10x64
 if %BUILD.x64%==N goto Win10ARM
@@ -89,7 +89,7 @@ echo:
 
 %MSBUILD_BIN% Win10\libxml2.Win10.vcxproj /p:Configuration=Release;Platform=x64
 
-call :CopyBuildOutput Win10\x64 Win10 "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\X64"
+call :CopyBuildOutput Win10\x64 Win10 "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\X64"
 
 :Win10ARM
 if %BUILD.ARM%==N goto Win8.1
@@ -99,7 +99,7 @@ echo:
 
 %MSBUILD_BIN% Win10\libxml2.Win10.vcxproj /p:Configuration=Release;Platform=ARM
 
-call :CopyBuildOutput Win10\ARM Win10 "%BUILD.DEPS.PATH%\prebuilt\Windows Universal\ARM"
+call :CopyBuildOutput Win10\ARM Win10 "%BUILD.DEPS.PATH%\prebuilt\Universal Windows\ARM"
 
 :: Build and deploy Windows 8.1 library
 :Win8.1
@@ -186,7 +186,7 @@ popd
 exit /b
 
 :CopyBuildOutput
-xcopy /y /i %1\Release\libxml2.%2\libxml2.dll %3
-xcopy /y /i %1\Release\libxml2.%2\libxml2.lib %3
-xcopy /y /i %1\Release\libxml2.%2\libxml2.pdb %3
+xcopy /y /i %1\Release\libxml2.%2\libxml2.dll %3\libxml2.dll
+xcopy /y /i %1\Release\libxml2.%2\libxml2.lib %3\libxml2.lib
+xcopy /y /i %1\Release\libxml2.%2\libxml2.pdb %3\libxml2.pdb
 exit /b
