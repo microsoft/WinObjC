@@ -14,19 +14,14 @@
 //
 //******************************************************************************
 
-#include <sys/cdefs.h>
+#include <Starboard.h>
+#include "sys/utsname.h"
 
-#ifndef _SYS_UTSNAME_H_
-#define _SYS_UTSNAME_H_
-
-struct utsname {
-    char machine[32];
-};
-
-__BEGIN_DECLS
-
-int uname(struct utsname* uname);
-
-__END_DECLS
-
-#endif
+/**
+ @Status Stub
+*/
+IWPLATFORM_EXPORT
+int uname(struct utsname* uname) {
+    UNIMPLEMENTED();
+    return 0;
+}

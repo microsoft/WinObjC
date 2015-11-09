@@ -2,6 +2,7 @@
 //
 // Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
 //   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -129,4 +130,14 @@ OBJCRT_EXPORT void objc_setPropertyStruct(void* dest, const void* src, ptrdiff_t
     }
 
     memcpy(dest, src, size);
+}
+
+const char* property_getAttributes(Property property) {
+    OBJC_NOT_IMPLEMENTED_ERROR("property_getAttributes is not yet implemented");
+    return NULL;
+}
+
+const char* property_getName(Property property) {
+    OBJC_NOT_IMPLEMENTED_ERROR("property_getName is not yet implemented");
+    return NULL;
 }

@@ -24,6 +24,12 @@
 
 #include "CAAnimationInternal.h"
 
+NSString* const kCAFillModeRemoved = @"kCAFillModeRemoved";
+NSString* const kCAFillModeForwards = @"kCAFillModeForwards";
+NSString* const kCAFillModeBackwards = @"kCAFillModeBackwards";
+NSString* const kCAFillModeBoth = @"kCAFillModeBoth";
+NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
+
 @implementation CAAnimation : NSObject {
     idretain _delegate;
     SEL _finishedSelector;
@@ -119,13 +125,11 @@
 }
 
 - (void)setFillMode:(NSString*)mode {
-    char* pStr = (char*)[mode UTF8String];
-
-    if (strcmp(pStr, "kCAFillModeRemoved") == 0) {
+    if ([mode isEqualToString:kCAFillModeRemoved]) {
         _timingProperties._fillMode = fillModeRemoved;
-    } else if (strcmp(pStr, "kCAFillModeForwards") == 0) {
+    } else if ([mode isEqualToString:kCAFillModeForwards]) {
         _timingProperties._fillMode = fillModeForwards;
-    } else if (strcmp(pStr, "kCAFillModeBoth") == 0) {
+    } else if ([mode isEqualToString:kCAFillModeBoth]) {
         _timingProperties._fillMode = fillModeBoth;
     } else {
         assert(0);

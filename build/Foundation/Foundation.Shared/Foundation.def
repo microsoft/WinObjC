@@ -178,5 +178,7 @@ LIBRARY Foundation
      __objc_class_name_NSPersistentStoreCoordinator    CONSTANT
      _OBJC_CLASS_CTTelephonyNetworkInfo    DATA
      __objc_class_name_CTTelephonyNetworkInfo    CONSTANT
+     _OBJC_CLASS_NSManagedObjectContext    DATA
+     __objc_class_name_NSManagedObjectContext    CONSTANT
 
  
