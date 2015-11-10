@@ -72,13 +72,26 @@ static UIScreenMode* curMode;
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Returns the system scale and will dynamcially change unlike iOS.
 */
-- (float)scale {
+- (CGFloat)scale {
     return GetCACompositor()->screenScale();
 }
 
-- (float)brightness {
+/**
+ @Status Caveat
+ @Notes Returns the host screen scale which will never change. This value may not map 1:1 with iOS.
+*/
+- (CGFloat)nativeScale {
+    return UIApplication.displayMode.hostScreenScale;
+}
+
+/**
+ @Status Caveat
+ @Notes Always returns 1.0.
+*/
+- (CGFloat)brightness {
     return 1.0;
 }
 
@@ -91,6 +104,19 @@ static UIScreenMode* curMode;
     ret.origin.y = 0.0f;
     ret.size.width = GetCACompositor()->screenWidth();
     ret.size.height = GetCACompositor()->screenHeight();
+
+    return ret;
+}
+
+/**
+ @Status Caveat
+ @Notes returns the host window size width and height.
+*/
+- (CGRect)nativeBounds {
+    CGRect ret;
+    ret.origin.x = 0.0f;
+    ret.origin.y = 0.0f;
+    ret.size = UIApplication.displayMode.hostWindowSize;
 
     return ret;
 }
