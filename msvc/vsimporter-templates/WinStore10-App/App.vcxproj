@@ -17,6 +17,7 @@
   <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
@@ -34,7 +35,11 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>

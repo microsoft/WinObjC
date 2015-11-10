@@ -8,6 +8,7 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
@@ -15,6 +16,7 @@
   <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
@@ -25,7 +27,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" VSImporterLabel="UserMacros" />
-  <ItemDefinitionGroup VSImporterLabel="ConfigurationItemDefinitions" />
+  <ItemDefinitionGroup VSImporterLabel="ConfigurationItemDefinitions">
+    <ClCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClangCompile>
+  </ItemDefinitionGroup>
   <ItemGroup VSImporterLabel="ProjectItems" />
   <ItemGroup VSImporterLabel="ProjectReferences" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
