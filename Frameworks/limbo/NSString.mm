@@ -2438,7 +2438,7 @@ return [ret autorelease];
  @Status Interoperable
 */
 - (NSString*)stringByStandardizingPath {
-    NSArray* components = [self componentsSeparatedByString:@"/"];
+    NSMutableArray* components = [NSMutableArray arrayWithArray: [self componentsSeparatedByString:@"/"]];
     int componentsCount = [components count];
     int lastComponentLen = 0;
 

@@ -206,6 +206,7 @@
     <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSURL.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_sanity.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm" />
