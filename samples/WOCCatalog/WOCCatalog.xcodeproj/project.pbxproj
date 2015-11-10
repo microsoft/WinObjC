@@ -47,7 +47,8 @@
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
-		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; settings = {ASSET_TAGS = (); }; };
+		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
+		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		E19F61D01BCE9962005077C5 /* GLKitExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLKitExampleController.h; sourceTree = "<group>"; };
 		E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLKitExampleController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */,
 				7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +157,7 @@
 		4EE8614C1B5996BF00682BDB = {
 			isa = PBXGroup;
 			children = (
+				8430AAC81BE7F2E500927545 /* GLKit.framework */,
 				7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */,
 				4EE8617E1B5996DA00682BDB /* Images */,
 				4EE861571B5996BF00682BDB /* WOCCatalog */,
