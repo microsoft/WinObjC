@@ -38,7 +38,7 @@ FOUNDATION_EXPORT_CLASS
    id _delegate;
    id _response;
    unsigned _storagePolicy;
-   BOOL _didRetain, _didRelease;
+   BOOL _didRetain, _didRelease, _scheduled;
 }
 
 +(BOOL)canHandleRequest:(NSURLRequest *)request;
