@@ -64,8 +64,8 @@ public:
     }
 
     void dealloc(id instance) override {
-        NSKVOClass::dealloc(instance);
         _deallocInstance(instance);
+        NSKVOClass::dealloc(instance);
     }
 
     // Two entrypoints into method swizzling: one key-based, one imp-based.
