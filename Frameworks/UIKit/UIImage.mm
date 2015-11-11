@@ -296,12 +296,12 @@ static bool loadImageWithWICDecoder(UIImage* dest, REFGUID decoderCls, void* byt
     HRESULT hr = S_OK;
 
     MULTI_QI mq = { 0 };
-    
+
     mq.pIID = &IID_IWICImagingFactory;
     hr = CoCreateInstanceFromApp(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, NULL, 1, &mq);
 
     if (SUCCEEDED(hr)) {
-        pFactory = (IWICImagingFactory*) mq.pItf;
+        pFactory = (IWICImagingFactory*)mq.pItf;
         hr = pFactory->CreateDecoder(decoderCls, NULL, &pDecoder);
     }
 
@@ -580,6 +580,25 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 */
 + (UIImage*)imageWithData:(NSData*)data scale:(float)scale {
     return [[[self alloc] initWithData:data scale:scale] autorelease];
+}
+
+- (UIImage*)_initWithCopyOfImage:(UIImage*)imageToCopy WithRenderingMode:(UIImageRenderingMode)renderingMode {
+    m_pImage = getImage(imageToCopy);
+    CFRetain((id)m_pImage);
+    _scale = imageToCopy->_scale;
+    _orientation = imageToCopy->_orientation;
+    _imageInsets = imageToCopy->_imageInsets;
+    _imageStretch = imageToCopy->_imageStretch;
+    _renderingMode = renderingMode;
+    return self;
+}
+
+/**
+ @Status Caveat
+ @Notes Ignores the UIImageRenderingMode passed in and will always be treated as the orginal ignoring the template.
+*/
+- (UIImage*)imageWithRenderingMode:(UIImageRenderingMode)renderingMode {
+    return [[[UIImage alloc] _initWithCopyOfImage:self WithRenderingMode:renderingMode] autorelease];
 }
 
 /**
