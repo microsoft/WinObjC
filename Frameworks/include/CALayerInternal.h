@@ -18,6 +18,7 @@
 #define _CALAYERPRIVATE_H_
 
 #import <LinkedList.h>
+#import <AccessibilityInternal.h>
 
 @class CAAnimation, CALayerContext;
 

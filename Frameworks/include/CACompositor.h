@@ -28,6 +28,8 @@ struct CAMediaTimingProperties;
 #define CACompositorRotation180 180.0f
 #define CACompositorRotation90CounterClockwise 270.0f
 
+struct IWAccessibilityInfo;
+
 class CACompositorInterface {
 public:
     virtual void DisplayTreeChanged() = 0;
@@ -117,6 +119,8 @@ public:
 
     virtual void IncrementCounter(const char* name) = 0;
     virtual void DecrementCounter(const char* name) = 0;
+
+    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;

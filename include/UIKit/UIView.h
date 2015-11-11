@@ -36,6 +36,7 @@
 #import "UIGeometry.h"
 #import "UIAppearance.h"
 #import "NSLayoutConstraint.h"
+#import "UIAccessibility.h"
 
 enum {
     UIViewAutoresizingNone = 0,
@@ -115,7 +116,7 @@ UIKIT_EXPORT const CGFloat UIViewNoIntrinsicMetric;
 @class UIColor, CALayer, UIViewController, UIGestureRecognizer, NSLayoutConstraint, UIMotionEffect, WXFrameworkElement;
 
 UIKIT_EXPORT_CLASS
-@interface UIView : UIResponder <NSCoding, UIAppearance, UIAppearanceContainer> {
+@interface UIView : UIResponder<NSCoding, UIAppearance, UIAppearanceContainer, UIAccessibility, UIAccessibilityIdentification> {
 @public
     id _backButtonDelegate;
     SEL _backButtonSelector;
@@ -259,8 +260,22 @@ UIKIT_EXPORT_CLASS
 
 - (void)setNativeElement:(WXFrameworkElement*)nativeElement;
 
-/*** This should be put into the accessibility protocol ***/
-@property (copy, nonatomic) NSString* accessibilityIdentifier;
+// UIAccessibility properties.
+@property BOOL isAccessibilityElement;
+@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityHint;
+@property (copy) NSString* accessibilityValue;
+@property UIAccessibilityTraits accessibilityTraits;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+@property (nonatomic) CGRect accessibilityFrame;
+@property (copy) UIBezierPath* accessibilityPath;
+@property CGPoint accessibilityActivationPoint;
+@property (retain) NSString* accessibilityLanguage;
+@property BOOL accessibilityElementsHidden;
+@property BOOL shouldGroupAccessibilityChildren;
+@property BOOL accessibilityViewIsModal;
+@property (copy) NSString* accessibilityIdentifier;
+
 @end
 
 @interface UIView (StarboardActions)

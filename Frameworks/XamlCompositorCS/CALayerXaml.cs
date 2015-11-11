@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
@@ -28,6 +29,21 @@ namespace XamlCompositorCS
 {
     namespace Controls
     {
+        [Bindable]
+        public sealed class CALayerXamlAutomationPeer : FrameworkElementAutomationPeer
+        {
+            public CALayerXamlAutomationPeer(CALayerXaml owner) : base(owner) {
+            }
+
+            protected override string GetClassNameCore() {
+                return "FakeClassName";
+            }
+                
+            protected override AutomationControlType GetAutomationControlTypeCore() {
+                return AutomationControlType.ScrollBar;
+            }
+        }
+        
         [Bindable]
         public sealed class CALayerXaml : Panel, CacheableObject
         {
@@ -857,6 +873,12 @@ namespace XamlCompositorCS
                 }
             }
 
+            /* Disable for now
+            protected override AutomationPeer OnCreateAutomationPeer()
+            {
+                return new CALayerXamlAutomationPeer(this);
+            }
+            */
 
             public static void SizeChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
             {

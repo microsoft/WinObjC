@@ -30,60 +30,101 @@
 */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIAccessibilityConstants.h>
+#import <Foundation/NSString.h>
+
+@class UIView;
+@class UIBezierPath;
+
+enum _UIAccessibilityNavigationStyle {
+    UIAccessibilityNavigationStyleAutomatic,
+    UIAccessibilityNavigationStyleSeparate,
+    UIAccessibilityNavigationStyleCombined,
+};
+typedef NSUInteger UIAccessibilityNavigationStyle;
 
 typedef uint64_t UIAccessibilityTraits;
 
-extern UIAccessibilityTraits UIAccessibilityTraitNone;
-extern UIAccessibilityTraits UIAccessibilityTraitButton;
-extern UIAccessibilityTraits UIAccessibilityTraitLink;
-extern UIAccessibilityTraits UIAccessibilityTraitSearchField;
-extern UIAccessibilityTraits UIAccessibilityTraitImage;
-extern UIAccessibilityTraits UIAccessibilityTraitSelected;
-extern UIAccessibilityTraits UIAccessibilityTraitPlaysSound;
-extern UIAccessibilityTraits UIAccessibilityTraitKeyboardKey;
-extern UIAccessibilityTraits UIAccessibilityTraitStaticText;
-extern UIAccessibilityTraits UIAccessibilityTraitSummaryElement;
-extern UIAccessibilityTraits UIAccessibilityTraitNotEnabled;
-extern UIAccessibilityTraits UIAccessibilityTraitUpdatesFrequently;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitNone;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitButton;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitLink;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitSearchField;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitImage;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitSelected;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitPlaysSound;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitKeyboardKey;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitStaticText;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitSummaryElement;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitNotEnabled;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitUpdatesFrequently;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitStartsMediaSession;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitAdjustable;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitAllowsDirectInteraction;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitCausesPageTurn;
+UIKIT_EXPORT UIAccessibilityTraits UIAccessibilityTraitHeader;
 
 typedef uint32_t UIAccessibilityNotifications;
-extern UIAccessibilityNotifications UIAccessibilityScreenChangedNotification;
-extern UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification;
-extern UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
-extern UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityScreenChangedNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
 
-@interface NSObject (UIAccessibility)
-- (BOOL)isAccessibilityElement;
-- (void)setIsAccessibilityElement:(BOOL)isElement;
-- (NSString*)accessibilityLabel;
-- (void)setAccessibilityLabel:(NSString*)label;
-- (NSString*)accessibilityHint;
-- (void)setAccessibilityHint:(NSString*)hint;
-- (NSString*)accessibilityValue;
-- (void)setAccessibilityValue:(NSString*)value;
-- (UIAccessibilityTraits)accessibilityTraits;
-- (void)setAccessibilityTraits:(UIAccessibilityTraits)traits;
-- (CGRect)accessibilityFrame;
-- (void)setAccessibilityFrame:(CGRect)frame;
+// ----------------------------------------
 
-@property (nonatomic) BOOL accessibilityElementsHidden;
-@property (nonatomic) BOOL shouldGroupAccessibilityChildren;
-@property (nonatomic) BOOL accessibilityViewIsModal;
+@protocol UIAccessibility
+
+- (void)initAccessibility;
+- (void)updateAccessibility;
+
+@property BOOL isAccessibilityElement;
+
+@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityHint;
+@property (copy) NSString* accessibilityValue;
+
+@property UIAccessibilityTraits accessibilityTraits;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+
+@property (nonatomic) CGRect accessibilityFrame;
+@property (copy) UIBezierPath* accessibilityPath;
+@property CGPoint accessibilityActivationPoint;
+
+@property (retain) NSString* accessibilityLanguage;
+
+@property BOOL accessibilityElementsHidden;
+@property BOOL shouldGroupAccessibilityChildren;
+
+@property BOOL accessibilityViewIsModal;
 
 @end
 
-@interface NSObject (UIAccessibilityContainer)
-- (NSInteger)accessibilityElementCount;
+// ----------------------------------------
+
+@protocol UIAccessibilityContainer
 - (id)accessibilityElementAtIndex:(NSInteger)index;
 - (NSInteger)indexOfAccessibilityElement:(id)element;
+
+@property (readonly) NSInteger accessibilityElementCount;
+@property (readonly) NSArray* accessibilityElements;
+
 @end
 
-@interface NSObject (UIAccessibilityFocus)
+// ----------------------------------------
+
+@protocol UIAccessibilityFocus
+
 - (void)accessibilityElementDidBecomeFocused;
 - (void)accessibilityElementDidLoseFocus;
 - (BOOL)accessibilityElementIsFocused;
+
 @end
 
-extern void UIAccessibilityPostNotification(UIAccessibilityNotifications notification, id argument);
-extern BOOL UIAccessibilityIsVoiceOverRunning(void);
+// ----------------------------------------
+
+@protocol UIAccessibilityIdentification
+
+@property (copy) NSString* accessibilityIdentifier;
+
+@end
+
+UIKIT_EXPORT void UIAccessibilityPostNotification(UIAccessibilityNotifications notification, id argument);
+UIKIT_EXPORT BOOL UIAccessibilityIsVoiceOverRunning(void);
