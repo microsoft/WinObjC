@@ -292,8 +292,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Shared", "Security
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreLocation", "CoreLocation", "{52E0654B-3B43-4514-B48B-6BAE3E580A6F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Shared", "CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems", "{F4C2AE05-4DE4-4422-AB5D-2765FC612BE1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Windows", "CoreLocation\CoreLocation.Windows\CoreLocation.Windows.vcxproj", "{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.WindowsPhone", "CoreLocation\CoreLocation.WindowsPhone\CoreLocation.WindowsPhone.vcxproj", "{0745EF57-35B6-42C5-8EB2-FC74A09F77B7}"
@@ -307,7 +305,6 @@ Global
 		Security\Security.Shared\Security.Shared.vcxitems*{6ff5cfd7-3e46-4182-9f76-c315f69b6c13}*SharedItemsImports = 4
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{00d9c3e9-f324-4fd0-a857-61122339e726}*SharedItemsImports = 4
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{3243fc44-21d3-4255-8fd8-85cbc4bc08bd}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{f4c2ae05-4de4-4422-ab5d-2765fc612be1}*SharedItemsImports = 9
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{d14f485e-b029-44d3-a65d-fe6340b1ebcd}*SharedItemsImports = 4
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{2983879b-50ad-439c-8253-d8bdfebf7ee0}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{aa0c8e83-62d3-4e3c-98a5-6a25077474d2}*SharedItemsImports = 4
@@ -323,7 +320,6 @@ Global
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{8ea9a3b0-43d2-4349-8444-77b7941482ea}*SharedItemsImports = 4
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{c30e62e2-9c92-472b-9d0f-e44791da6673}*SharedItemsImports = 4
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{b46cbd1b-cffd-43c2-962b-c7a8defbd879}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{ee65195f-8b43-4b9d-b0c0-da54166ef6f1}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{8fff6d4a-429f-4926-b60c-727a0d6bb599}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{bb965052-1af9-4d41-b8ca-65ea7ea62cc5}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{9e4c5bfa-ad28-4907-a597-f5f6487d49c8}*SharedItemsImports = 4
@@ -331,7 +327,6 @@ Global
 		AVFoundation\AVFoundation.Shared\AVFoundation.Shared.vcxitems*{75f79b8d-7025-4f7b-8e51-ce43cc9f6d18}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{6053551e-a1fc-4301-b0de-0cb3a7751cdc}*SharedItemsImports = 9
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{f0df962c-3de8-449a-8955-039d7299ba29}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{0745ef57-35b6-42c5-8eb2-fc74a09f77b7}*SharedItemsImports = 4
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{2ab1b594-97f6-4793-a887-6cb72edc1c42}*SharedItemsImports = 4
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{797cf916-7cc2-4bce-93be-dc9e8b1cc58d}*SharedItemsImports = 4
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{47c7d4e5-0d07-4594-bc73-a926816cb312}*SharedItemsImports = 9
@@ -366,7 +361,6 @@ Global
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{c53cec05-b3b6-4963-bdbf-3eb670adeb90}*SharedItemsImports = 4
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{0df2ba6c-d067-4da7-993f-97995ae68321}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{ed0f4033-106a-432d-818f-b2ae6a251be9}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{a03b9e82-d421-4cbc-8c94-24f0aa9ebbce}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{71596d8a-c60b-46a3-953c-e667a5eeb077}*SharedItemsImports = 4
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{77299427-3095-497d-bbbc-1345b4074840}*SharedItemsImports = 9
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{3fe9e4dd-b0ed-4676-b3ce-d46240bd033e}*SharedItemsImports = 4
@@ -1965,7 +1959,6 @@ Global
 		{6FF5CFD7-3E46-4182-9F76-C315F69B6C13} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
 		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
 		{76C111B1-74F9-46BC-9D92-723F19018F77} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
-		{F4C2AE05-4DE4-4422-AB5D-2765FC612BE1} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
 		{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
 		{0745EF57-35B6-42C5-8EB2-FC74A09F77B7} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
 		{A03B9E82-D421-4CBC-8C94-24F0AA9EBBCE} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}

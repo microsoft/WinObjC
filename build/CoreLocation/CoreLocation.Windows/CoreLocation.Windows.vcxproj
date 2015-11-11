@@ -40,6 +40,12 @@
       <Project>{d9bba177-5624-43bf-ace5-cc68949598e4}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreLocation.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLLocation.mm" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ee65195f-8b43-4b9d-b0c0-da54166ef6f1}</ProjectGuid>
     <RootNamespace>CoreLocation</RootNamespace>
@@ -91,7 +97,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.props" />
   </ImportGroup>
-  <Import Project="..\CoreLocation.Shared\CoreLocation.Shared.vcxitems" Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -162,7 +167,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>
@@ -186,7 +191,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>
@@ -210,7 +215,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>
@@ -234,7 +239,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>
@@ -258,7 +263,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>
@@ -282,7 +287,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>..\CoreLocation.Shared\CoreLocation.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\Platform\$(TargetOSAndVersion)</IncludePaths>

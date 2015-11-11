@@ -195,6 +195,7 @@
     <ClangCompile Include="..\..\tests\unittests\Accessibility.mm" />
     <ClangCompile Include="..\..\tests\unittests\CFUUID.m" />
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocation.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSOperation.mm" />
@@ -228,7 +229,6 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_bit63.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
-    <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocationManager.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
   </ItemGroup>
   <ItemGroup>
