@@ -800,6 +800,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 /**
+   @Status Caveat
+   @Notes enumeration options are not implemented.
+*/
+- (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
+    [self enumerateKeysAndObjectsUsingBlock:block];
+}
+
+/**
  @Status Interoperable
 */
 - (NSArray*)objectsForKeys:(NSArray*)keys notFoundMarker:(id)notFoundMarker {
