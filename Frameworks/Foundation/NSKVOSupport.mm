@@ -312,7 +312,7 @@ void NSKVOClass::dealloc(id instance) {
             // TODO: We have to be able to throw an exception DURING DEALLOC and have
             // the object properly deallocated.
             // The FAIL_FAST is a compromise right now because we can't.
-            FAIL_FAST_MSG("Instance of %s deallocated with observers still registered.", class_getName(originalClass));
+            FAIL_FAST_MSG(E_UNEXPECTED, "Instance of %s deallocated with observers still registered.", class_getName(originalClass));
             [NSException raise:NSInvalidArgumentException
                         format:@"Instance of %s deallocated with observers still registered.", class_getName(originalClass)];
         }

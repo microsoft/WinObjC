@@ -19,8 +19,6 @@
 
 // Placeholder for unimplemented logging and telemetry
 #define UNIMPLEMENTED()
-#define FAIL_FAST()
-#define FAIL_FAST_MSG(format, ...)
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
@@ -30,6 +28,8 @@
 #ifndef IWPLATFORM_EXPORT
 #define IWPLATFORM_EXPORT
 #endif
+
+#include "ErrorHandling.h"
 
 extern "C" void dbg_printf(const char* fmt, ...);
 #define EbrDebugLog(...) dbg_printf(__VA_ARGS__)
