@@ -19,27 +19,39 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSDate.h"
 #include "NSRunLoopSource.h"
 
-@implementation NSURLConnectionState : NSObject
+@interface NSURLConnectionState ()
+@property (nonatomic, readwrite, retain) NSError* error;
+@property (nonatomic, readwrite, retain) NSURLResponse* response;
+@end
+
+@implementation NSURLConnectionState
 - (id)init {
-    _isRunning = YES;
-    _error = nil;
-    _wakeUp.attach([NSRunLoopSource new]);
-    [_wakeUp setSourceDelegate:(id)self selector:@selector(_doneWakeup)];
+    if(self = [super init]) {
+        _error = nil;
+        _wakeUp.attach([NSRunLoopSource new]);
+        [_wakeUp setSourceDelegate:(id)self selector:@selector(_doneWakeup)];
+    }
     return self;
 }
 
-- (id)dealloc {
+- (void)dealloc {
     [_error release];
     _wakeUp = nil;
+    [_receivedData release];
     [super dealloc];
-    return self;
+}
+
+- (NSData*)receivedData {
+    return [[_receivedData retain] autorelease];
 }
 
 - (BOOL)isRunning {
     return _isRunning;
 }
 
-- (id)receiveAllDataInMode:(id)mode {
+- (void)receiveAllDataInMode:(id)mode {
+    _isRunning = YES;
+
     [[NSRunLoop currentRunLoop] addInputSource:(id)_wakeUp forMode:mode];
 
     while ([self isRunning]) {
@@ -47,39 +59,32 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 
     [[NSRunLoop currentRunLoop] removeInputSource:(id)_wakeUp forMode:mode];
-
-    return self;
 }
 
-- (id)connection:(id)connection didReceiveData:(id)data {
-    return self;
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+    // We get some of these for each redirect. We want explicitly to only capture the final one.
+    self.response = response;
+    [_receivedData release];
+    _receivedData = [[NSMutableData alloc] init];
 }
 
-- (id)setError:(id)error {
-    _error = [error retain];
-    return self;
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+    [_receivedData appendData:data];
 }
 
-- (id)error {
-    return _error;
+- (void)_doneWakeup {
+
 }
 
-- (id)_doneWakeup {
-    return self;
-}
-
-- (id)connection:(id)connection didFailWithError:(id)error {
+- (void)connection:(id)connection didFailWithError:(id)error {
     _isRunning = NO;
-    _error = [error retain];
+    self.error = error;
     [_wakeUp _trigger];
-
-    return self;
 }
 
-- (id)connectionDidFinishLoading:(id)connection {
+- (void)connectionDidFinishLoading:(id)connection {
     _isRunning = NO;
     [_wakeUp _trigger];
-    return self;
 }
 
 @end

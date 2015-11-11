@@ -137,7 +137,6 @@
     ret->_method.attach([_method copy]);
     ret->_body.attach([_body copy]);
     ret->_shouldHandleCookies = _shouldHandleCookies;
-    ret->_shouldDiscardData = _shouldDiscardData;
     ret->_cachePolicy = _cachePolicy;
     ret->_bodyStream = _bodyStream;
 
