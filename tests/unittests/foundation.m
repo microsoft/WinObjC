@@ -519,12 +519,21 @@ TEST(Foundation, KeyValueObservation) {
         NSMutableDictionary* observed = [NSMutableDictionary dictionary];
         TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
+        [observed setObject:[[[TestKVOObject alloc] init] autorelease] forKey:@"subKey"];
+
         [observed addObserver:observer forKeyPath:@"arbitraryValue" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed addObserver:observer forKeyPath:@"subKey.basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+
         [observed setObject:@"Whatever" forKey:@"arbitraryValue"];
+        [observed setValue:@"Whatever2" forKeyPath:@"arbitraryValue"];
+        [observed setValue:@"Whatever2" forKeyPath:@"subKey.basicObjectProperty"];
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"arbitraryValue"] count],
-                      1,
+                      2,
                       "On a NSMutableDictionary, a change notification for arbitraryValue.");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"subKey.basicObjectProperty"] count],
+                      1,
+                      "On a NSMutableDictionary, a change notification for subKey.basicObjectProperty.");
     }
     { // Deregistration test
         TestKVOObject* observed = [[TestKVOObject alloc] init];

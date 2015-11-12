@@ -284,6 +284,24 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
 
 /**
  @Status Interoperable
+*/
+- (void)setValue:(id)value forKeyPath:(NSString*)path {
+    std::string keyPath([path UTF8String]);
+
+    auto pointPosition = keyPath.find('.');
+    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
+        [self setValue:value forKey:path];
+        return;
+    }
+
+    std::string keyComponent(keyPath, 0, pointPosition);
+
+    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
+    [subValue setValue:value forKeyPath:[NSString stringWithUTF8String:keyPath.c_str() + pointPosition + 1]];
+}
+
+/**
+ @Status Interoperable
  @Notes These throw exceptions. That's what they're supposed to do.
 */
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
