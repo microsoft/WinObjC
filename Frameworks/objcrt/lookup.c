@@ -27,6 +27,10 @@
 
 IMP (*objc_forward_handler)(id, SEL) = NULL;
 
+static id nil_method(id self, SEL _cmd) {
+    return nil;
+}
+
 IMP objc_not_found_handler(id obj, SEL sel) {
     BOOL is_class = object_getClass(obj)->info & OBJC_CLASS_INFO_METACLASS;
 
@@ -57,11 +61,20 @@ IMP objc_not_found_handler(id obj, SEL sel) {
     if (objc_forward_handler != NULL)
         return objc_forward_handler(obj, sel);
 
+// TODO: Switch to a runtime-configurable setting
+#ifdef OBJC_APP_BRINGUP
+    char buffer[1024] = { 0 };
+    sprintf_s(buffer, sizeof(buffer), "*******Class [%s]: method [%s]: not implemented*******\r\n", object_getClassName(obj), sel_getName(sel));
+    OutputDebugStringA(buffer);
+
+    return (IMP)nil_method;
+#else
     OBJC_NOT_IMPLEMENTED_ERROR("Selector %c[%s] is not implemented for class %s on object 0x%x!",
                                (is_class ? '+' : '-'),
                                sel_getName(sel),
                                object_getClassName(obj),
                                obj);
+#endif
 }
 
 BOOL class_respondsToSelector(Class cls, SEL sel) {
@@ -72,9 +85,6 @@ BOOL class_respondsToSelector(Class cls, SEL sel) {
 }
 
 #ifndef OF_ASM_LOOKUP
-static id nil_method(id self, SEL _cmd) {
-    return nil;
-}
 
 OBJCRT_EXPORT IMP objc_msg_lookup(id obj, SEL sel) {
     IMP imp;

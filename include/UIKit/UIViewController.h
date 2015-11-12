@@ -177,6 +177,22 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL automaticallyAdjustsScrollViewInsets;
 @property (nonatomic) BOOL extendedLayoutIncludesOpaqueBars;
 
+// UIAccessibility properties.
+@property BOOL isAccessibilityElement;
+@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityHint;
+@property (copy) NSString* accessibilityValue;
+@property UIAccessibilityTraits accessibilityTraits;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+@property (nonatomic) CGRect accessibilityFrame;
+@property (copy) UIBezierPath* accessibilityPath;
+@property CGPoint accessibilityActivationPoint;
+@property (retain) NSString* accessibilityLanguage;
+@property BOOL accessibilityElementsHidden;
+@property BOOL shouldGroupAccessibilityChildren;
+@property BOOL accessibilityViewIsModal;
+@property (copy) NSString* accessibilityIdentifier;
+
 @end
 
 UIKIT_EXPORT NSString* const UITransitionContextFromViewControllerKey;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -114,7 +114,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Starboard.lib;UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087</AdditionalOptions>
@@ -138,7 +138,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Starboard.lib;UIKit.lib;Foundation.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;OpenGLES.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4087</AdditionalOptions>
       <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>

@@ -17,9 +17,6 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
-// Placeholder for unimplemented logging and telemetry
-#define UNIMPLEMENTED()
-
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
@@ -36,6 +33,10 @@ extern "C" void dbg_printf(const char* fmt, ...);
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
+
+// Placeholder for unimplemented logging and telemetry
+#define UNIMPLEMENTED() \
+    dbg_printf("*******Stub %s not implemented at %s:%d*******\r\n", __FUNCTION__, __FILE__, __LINE__);
 
 #include <assert.h>
 #include <stdio.h>

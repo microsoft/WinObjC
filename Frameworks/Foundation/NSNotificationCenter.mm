@@ -265,13 +265,15 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
         }
 
         curObserver->valid = false;
-        CFArrayRemoveValueAtIndex((CFArrayRef)arr, i);
         if (curObserver->block != nil) {
             [curObserver->block release];
             [curObserver->object release];
             curObserver->block = nil;
             curObserver->object = nil;
         }
+
+        // Remove the object *after* freeing its block and object
+        CFArrayRemoveValueAtIndex((CFArrayRef)arr, i);
     }
 
     if (CFArrayGetCount((CFArrayRef)arr) == 0) {
