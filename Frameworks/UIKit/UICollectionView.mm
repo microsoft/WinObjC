@@ -42,7 +42,6 @@
     idretaintype(NSMutableSet) _indexPathsForSelectedItems, _indexPathsForHighlightedItems;
     idretain _layout;
     idretaintype(NSMutableDictionary) _allVisibleViewsDict;
-    idretain _backgroundView;
     idretain _touchingIndexPath, _currentIndexPath;
     idretainp<void (^)(BOOL)> _updateCompletionHandler;
 
@@ -137,6 +136,9 @@ static void collectionCommonSetup(UICollectionView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithFrame:(CGRect)pos collectionViewLayout:(id)layout {
     id ret = [super initWithFrame:pos];
     [super setDelegate:(id<UIScrollViewDelegate>)self];
@@ -153,6 +155,9 @@ static void collectionCommonSetup(UICollectionView* self) {
     return [self initWithFrame:pos collectionViewLayout:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDataSource:(id)dataSource {
     if (dataSource != _dataSource) {
         _dataSource = dataSource;
@@ -166,6 +171,9 @@ static void collectionCommonSetup(UICollectionView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dataSource {
     return _dataSource;
 }
@@ -446,14 +454,23 @@ freeUnusedViews();
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCollectionViewLayout:(id)layout {
     [self setCollectionViewLayout:layout animated:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerNib:(id)nib forCellWithReuseIdentifier:(id)identifier {
     [_cellNibDict setObject:nib forKey:identifier];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerNib:(id)nib forSupplementaryViewOfKind:(id)kind withReuseIdentifier:(id)identifier {
     id kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", kind, identifier];
     [_supplementaryViewNibDict setObject:nib forKey:kindAndIdentifier];
@@ -538,6 +555,9 @@ transition.type = kCATransitionFade;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)collectionViewLayout {
     return _layout;
 }
@@ -546,6 +566,9 @@ transition.type = kCATransitionFade;
     return _collectionViewData;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reloadData {
     if (_reloadingSuspendedCount != 0)
         return;
@@ -571,14 +594,23 @@ transition.type = kCATransitionFade;
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)indexPathsForSelectedItems {
     return [_indexPathsForSelectedItems allObjects];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfSections {
     return [_collectionViewData numberOfSections];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfItemsInSection:(int)section {
     return [_collectionViewData numberOfItemsInSection:section];
 }
@@ -718,6 +750,9 @@ transition.type = kCATransitionFade;
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dequeueReusableSupplementaryViewOfKind:(id)elementKind withReuseIdentifier:(id)identifier forIndexPath:(NSIndexPath*)indexPath {
     id kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
     id reusableViews = [_supplementaryViewReuseQueues objectForKey:kindAndIdentifier];
@@ -762,10 +797,16 @@ transition.type = kCATransitionFade;
     return view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerClass:(Class)cls forCellWithReuseIdentifier:(NSString*)id {
     [_cellClassDict setObject:cls forKey:id];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dequeueReusableCellWithReuseIdentifier:(id)identifier forIndexPath:(NSIndexPath*)indexPath {
     // de-queue cell (if available)
     id reusableCells = [_cellReuseQueues objectForKey:identifier];
@@ -1173,14 +1214,23 @@ if (floatingViews.count && scrollIndicatorView) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsSelection {
     return _collectionViewFlags.allowsSelection;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsMultipleSelection {
     return _collectionViewFlags.allowsMultipleSelection;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)cellForItemAtIndexPath:(id)indexPath {
     id ret = nil;
 
@@ -1196,10 +1246,16 @@ if (floatingViews.count && scrollIndicatorView) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deselectItemAtIndexPath:(id)indexPath animated:(BOOL)animated {
     [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performBatchUpdates:(void (^)())updates completion:(void (^)(BOOL))completion {
     [self setupCellAnimations];
 
@@ -1229,6 +1285,9 @@ if (floatingViews.count && scrollIndicatorView) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reloadSections:(id)sections {
     [self updateSections:sections updateAction:UICollectionUpdateActionReload];
 }
@@ -1292,6 +1351,9 @@ if (floatingViews.count && scrollIndicatorView) {
     return _allVisibleViewsDict;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)visibleBoundRects {
     return [self bounds];
 }

@@ -18,6 +18,9 @@
 #include <Foundation/NSString.h>
 #include <Windows.h>
 
+/**
+ @Status Interoperable
+*/
 void NSLogv(NSString* fmt, va_list list) {
     auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
     INT len = [str length];
@@ -30,6 +33,9 @@ void NSLogv(NSString* fmt, va_list list) {
     [str release];
 }
 
+/**
+ @Status Interoperable
+*/
 void NSLog(NSString* fmt, ...) {
     va_list list;
     va_start(list, fmt);

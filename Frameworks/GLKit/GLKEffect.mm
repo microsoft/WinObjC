@@ -163,6 +163,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     GLKLightingType _lightingType;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     self = [super init];
     if (!self)
@@ -195,6 +198,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKEffectPropertyTexture*)texture2d0 {
     unsigned int count = [_textures count];
     if (count > 0) {
@@ -203,6 +209,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKEffectPropertyTexture*)texture2d1 {
     unsigned int count = [_textures count];
     if (count > 1) {
@@ -211,11 +220,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)textureOrder {
     return _textures;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTextureOrder:(NSArray*)texin {
+    UNIMPLEMENTED();
     [_textures removeAllObjects];
     for (NSObject* o in texin) {
         assert([o isKindOfClass:[GLKEffectPropertyTexture class]]);
@@ -223,6 +239,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKEffectPropertyLight*)light0 {
     unsigned int count = [_lights count];
     if (count > 0) {
@@ -231,6 +250,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKEffectPropertyLight*)light1 {
     unsigned int count = [_lights count];
     if (count > 1) {
@@ -239,6 +261,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKEffectPropertyLight*)light2 {
     unsigned int count = [_lights count];
     if (count > 2) {
@@ -247,11 +272,18 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)lightOrder {
     return _lights;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLightOrder:(NSArray*)lightsIn {
+    UNIMPLEMENTED();
     [_lights removeAllObjects];
     for (NSObject* o in lightsIn) {
         assert([o isKindOfClass:[GLKEffectPropertyLight class]]);
@@ -489,10 +521,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)useConstantColor {
     return _useConstantColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setUseConstantColor:(BOOL)use {
     if (_useConstantColor != use) {
         self.effectChanged = TRUE;
@@ -511,10 +549,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKLightingType)lightingType {
     return _lightingType;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLightingType:(GLKLightingType)type {
     if (_lightingType != type) {
         _lightingType = type;
@@ -531,10 +575,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     BOOL _enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)enabled {
     return _enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)e {
     if (e != _enabled) {
         _enabled = e;
@@ -592,24 +642,39 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKVector3)attenuation {
     GLKVector3 res = { _constantAttenuation, _linearAttenuation, _quadraticAttenuation };
     return res;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKVector4)position {
     return _position;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPosition:(GLKVector4)pos {
     _position = pos;
     _transformedPosition = GLKMatrix4MultiplyVector4(self.parent.transform.modelviewMatrix, pos);
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKVector3)spotDirection {
     return _spotDirection;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSpotDirection:(GLKVector3)dir {
     _spotDirection = dir;
     _transformedSpotDirection = GLKMatrix4MultiplyVector3(self.parent.transform.modelviewMatrix, dir);
@@ -656,7 +721,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (GLKMatrix3)normalMatrix {
+    UNIMPLEMENTED();
     return GLKMatrix3FromMatrix4(self.modelviewMatrix);
 }
 
@@ -670,6 +739,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @implementation GLKReflectionMapEffect
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     [super init];
     _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];

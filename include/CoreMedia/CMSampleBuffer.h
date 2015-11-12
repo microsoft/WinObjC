@@ -21,7 +21,7 @@
 #import <CoreVideo/CVImageBuffer.h>
 #import <StarboardExport.h>
 
-typedef struct opaqueCMSampleBuffer *CMSampleBufferRef;
+typedef struct opaqueCMSampleBuffer* CMSampleBufferRef;
 
 SB_EXPORT CVImageBufferRef CMSampleBufferGetImageBuffer(CMSampleBufferRef sbuf);
 SB_EXPORT CMItemCount CMSampleBufferGetNumSamples(CMSampleBufferRef sbuf);

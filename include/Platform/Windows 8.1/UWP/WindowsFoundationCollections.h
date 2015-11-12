@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WFCPropertySet;
-@protocol WFCIVectorChangedEventArgs, WFCIPropertySet, WFCIIterable, WFCIIterator, WFCIVectorView, WFCIVector, WFCIKeyValuePair, WFCIMap, WFCIMapView, WFCIObservableVector, WFCIMapChangedEventArgs, WFCIObservableMap;
+@protocol WFCIVectorChangedEventArgs
+, WFCIPropertySet, WFCIIterable, WFCIIterator, WFCIVectorView, WFCIVector, WFCIKeyValuePair, WFCIMap, WFCIMapView, WFCIObservableVector,
+    WFCIMapChangedEventArgs, WFCIObservableMap;
 
 // Windows.Foundation.Collections.CollectionChange
 enum _WFCCollectionChange {
@@ -35,9 +37,9 @@ typedef unsigned WFCCollectionChange;
 #include "WindowsFoundation.h"
 
 // Windows.Foundation.Collections.VectorChangedEventHandler`1
- // Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableVector`1<0>
+// Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableVector`1<0>
 // Windows.Foundation.Collections.MapChangedEventHandler`2
- // Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableMap`2<0,1>
+// Could not generate delegate: Can't marshal Windows.Foundation.Collections.IObservableMap`2<0,1>
 // Windows.Foundation.Collections.IVectorChangedEventArgs
 #ifndef __WFCIVectorChangedEventArgs_DEFINED__
 #define __WFCIVectorChangedEventArgs_DEFINED__
@@ -77,4 +79,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WFCPropertySet_DEFINED__
-

@@ -175,4 +175,7 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+  </ItemGroup>
 </Project>

@@ -29,7 +29,6 @@
 
 typedef unsigned int mach_port_t;
 
-float _UINavigationControllerHideShowBarDuration = .25f;
 EbrEvent _applicationStateChanged;
 int g_browsersVisible = 0;
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
@@ -108,7 +107,12 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation UIAccelerometer : NSObject
+
+/**
+ @Status Stub
+*/
 + (id)sharedAccelerometer {
+    UNIMPLEMENTED();
     return nil;
 }
 @end
@@ -135,7 +139,12 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 @implementation GKLocalPlayer
+
+/**
+ @Status Stub
+*/
 + (GKLocalPlayer*)localPlayer {
+    UNIMPLEMENTED();
     return nil;
 }
 @end
@@ -164,15 +173,25 @@ __declspec(dllexport) extern "C" void srandom(unsigned val) {
     return srand(val);
 }
 
+/**
+ @Status Interoperable
+*/
 NSData* UIImagePNGRepresentation(UIImage* img) {
     return [NSData data];
 }
 
+/**
+ @Status Stub
+*/
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
+    UNIMPLEMENTED();
     return [NSData data];
 }
 
-DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt) {
+/**
+ @Status Interoperable
+*/
+CGPoint CGPointFromString(NSString* strPt) {
     CGPoint ret;
 
     char* str = (char*)[strPt UTF8String];
@@ -180,7 +199,10 @@ DEFINE_FUNCTION_STRET_1(CGPoint, CGPointFromString, idt(NSString), strPt) {
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize) {
+/**
+ @Status Interoperable
+*/
+CGSize CGSizeFromString(NSString* strSize) {
     CGSize ret;
 
     char* str = (char*)[strSize UTF8String];
@@ -188,7 +210,10 @@ DEFINE_FUNCTION_STRET_1(CGSize, CGSizeFromString, idt(NSString), strSize) {
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGRectFromString, idt(NSString), strRect) {
+/**
+ @Status Interoperable
+*/
+CGRect CGRectFromString(NSString* strRect) {
     CGRect ret;
 
     char* str = (char*)[strRect UTF8String];
@@ -235,17 +260,29 @@ __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* 
     return NULL;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 __declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
@@ -289,7 +326,11 @@ __declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned
 }
 }
 
+/**
+ @Status Stub
+*/
 extern "C" void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
+    UNIMPLEMENTED();
 }
 
 @implementation CBCentralManager
@@ -387,12 +428,6 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
 @end
 
 @implementation NSFont
-@end
-
-@interface UIFontDescriptor : NSObject
-@end
-
-@implementation UIFontDescriptor
 @end
 
 #include <Windows.h>

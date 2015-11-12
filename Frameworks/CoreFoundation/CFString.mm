@@ -16,14 +16,24 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ @Status Interoperable
+*/
 void CFStringAppendCharacters(CFMutableStringRef str, const UniChar* append, CFIndex length) {
     [(NSMutableString*)str __appendCharacters:append length:length];
 }
 
+/**
+ @Status Interoperable
+*/
 void CFStringAppend(CFMutableStringRef str, CFStringRef append) {
     [(NSMutableString*)str appendString:(NSString*)append];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) {
     switch (encoding) {
         case kCFStringEncodingASCII:
@@ -37,6 +47,10 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) 
     return 0;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
     switch (encoding) {
         case NSASCIIStringEncoding:
@@ -56,15 +70,25 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
     return 0;
 }
 
+/**
+ @Status Interoperable
+ @Notes Limited encodings supported
+*/
 const char* CFStringGetCStringPtr(CFStringRef self, CFStringEncoding encoding) {
     assert(encoding == 0x600 || encoding == 0);
     return [(NSString*)self UTF8String];
 }
 
+/**
+ @Status Interoperable
+*/
 CFComparisonResult CFStringCompare(CFStringRef self, CFStringRef other, CFOptionFlags options) {
     return (CFComparisonResult)[(NSString*)self compare:(NSString*)other options:options];
 }
 
+/**
+ @Status Interoperable
+*/
 CFIndex CFStringGetLength(CFStringRef self) {
     return [(NSString*)self length];
 }

@@ -23,6 +23,10 @@
 
 @implementation NSURLRequest
 
+/**
+ @Status Caveat
+ @Notes cachePolicy and timeoutInterval not supported
+*/
 - (id)initWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
     _url = [url absoluteURL];
     _timeoutInterval = timeout;
@@ -42,32 +46,53 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithURL:(id)url {
     return [self initWithURL:url cachePolicy:nil timeoutInterval:30.0];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)requestWithURL:(id)url {
     id ret = [[self alloc] initWithURL:url cachePolicy:nil timeoutInterval:30.0];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)URL {
     return _url;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)allHTTPHeaderFields {
     return _headerFields;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)HTTPBody {
     return _body;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)HTTPBodyStream {
     return _bodyStream;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)HTTPMethod {
     if (_method == nil) {
         _method = @"GET";
@@ -76,10 +101,17 @@
     return _method;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)HTTPShouldHandleCookies {
     return _shouldHandleCookies;
 }
 
+/**
+ @Status Caveat
+ @Notes cachePolicy and timeoutInterval not supported
+*/
 + (id)requestWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
     id ret = [[self alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:timeout];
 
@@ -103,10 +135,16 @@
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeoutInterval {
     return _timeoutInterval;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForHTTPHeaderField:(id)field {
     id ret = [_headerFields objectForKey:field];
     const char* pName = [field UTF8String];
@@ -139,6 +177,9 @@
     return _shouldDiscardData;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSURLRequestCachePolicy)cachePolicy {
     return _cachePolicy;
 }

@@ -34,9 +34,9 @@ typedef struct CATransform3D {
 
 #ifdef __cplusplus
     void MakeIdentity();
-    
+
     void Translate(float tx, float ty, float tz);
-    
+
     void MakeTranslation(float tx, float ty, float tz);
     void MakeRotation(float angle, float x, float y, float z);
     void MakeScale(float x, float y, float z);
@@ -47,14 +47,14 @@ typedef struct CATransform3D {
     void MultByScale(float x, float y, float z);
     void MultByOrtho(float left, float right, float bottom, float top, float near, float far);
 
-    void MultiplyBy(struct CATransform3D *matrix);
-    void RMultiplyBy(struct CATransform3D *matrix);
-    
-    void TransformPoints(struct CAPoint3D *points, int count);
-    void TransformPoints2D(struct CGPoint *points, int count);
-    
-    void GetScale(float *scale);
-    void GetPosition(float *position);
+    void MultiplyBy(struct CATransform3D* matrix);
+    void RMultiplyBy(struct CATransform3D* matrix);
+
+    void TransformPoints(struct CAPoint3D* points, int count);
+    void TransformPoints2D(struct CGPoint* points, int count);
+
+    void GetScale(float* scale);
+    void GetPosition(float* position);
 #endif
 } CATransform3D;
 
@@ -73,13 +73,13 @@ CA_EXPORT bool CATransform3DIsIdentity(CATransform3D t);
 CA_EXPORT CATransform3D CATransform3DMakeTranslation(CGFloat tx, CGFloat ty, CGFloat tz);
 CA_EXPORT bool CATransform3DIsAffine(CATransform3D t);
 CA_EXPORT CGAffineTransform CATransform3DGetAffineTransform(CATransform3D t);
-CA_EXPORT CATransform3D CATransform3DMakeAffineTransform (CGAffineTransform m);
-CA_EXPORT void CATransform3DTransformPoints(CATransform3D a, struct CAPoint3D *points, int count);
-CA_EXPORT void CATransform3DGetScale(CATransform3D a, float *scale);
-CA_EXPORT void CATransform3DGetPosition(CATransform3D a, float *position);
+CA_EXPORT CATransform3D CATransform3DMakeAffineTransform(CGAffineTransform m);
+CA_EXPORT void CATransform3DTransformPoints(CATransform3D a, struct CAPoint3D* points, int count);
+CA_EXPORT void CATransform3DGetScale(CATransform3D a, float* scale);
+CA_EXPORT void CATransform3DGetPosition(CATransform3D a, float* position);
 
 @interface NSValue (CATransform3DAdditions)
-+ (NSValue *)valueWithCATransform3D:(CATransform3D)t;
++ (NSValue*)valueWithCATransform3D:(CATransform3D)t;
 - (CATransform3D)CATransform3DValue;
 @end
 

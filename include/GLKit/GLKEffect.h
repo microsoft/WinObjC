@@ -34,7 +34,11 @@ typedef void* GLKShaderMaterialPtr;
 // ----------------------------------------
 
 @protocol GLKNamedEffect
--(void)prepareToDraw;
+
+/**
+ @Status Interoperable
+*/
+- (void)prepareToDraw;
 @end
 
 // ----------------------------------------
@@ -42,17 +46,17 @@ typedef void* GLKShaderMaterialPtr;
 GLKIT_EXPORT_CLASS
 @interface GLKEffectProperty : NSObject
 @property BOOL enabled;
-@property(readonly) GLKShaderEffect* parent;
--(id)initWith: (GLKShaderEffect*)parent;
+@property (readonly) GLKShaderEffect* parent;
+- (id)initWith:(GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyTransform : GLKEffectProperty
 
-@property(assign) GLKMatrix4 modelviewMatrix;
-@property(readonly) GLKMatrix3 normalMatrix;
-@property(assign) GLKMatrix4 projectionMatrix;
-@property(readonly) GLKMatrix4 mvp;
+@property (assign) GLKMatrix4 modelviewMatrix;
+@property (readonly) GLKMatrix3 normalMatrix;
+@property (assign) GLKMatrix4 projectionMatrix;
+@property (readonly) GLKMatrix4 mvp;
 
 @end
 
@@ -63,45 +67,45 @@ GLKIT_EXPORT_CLASS
 @property float start;
 @property float end;
 @property float density;
-@property(assign) GLKVector4 color;
+@property (assign) GLKVector4 color;
 
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyLight : GLKEffectProperty
 
-@property(assign) GLKVector4 position;
-@property(assign) GLKVector4 ambientColor;
-@property(assign) GLKVector4 diffuseColor;
-@property(assign) GLKVector4 specularColor;
+@property (assign) GLKVector4 position;
+@property (assign) GLKVector4 ambientColor;
+@property (assign) GLKVector4 diffuseColor;
+@property (assign) GLKVector4 specularColor;
 
 @property float constantAttenuation;
 @property float linearAttenuation;
 @property float quadraticAttenuation;
-@property(readonly) GLKVector3 attenuation;
+@property (readonly) GLKVector3 attenuation;
 
-@property(assign) GLKVector3 spotDirection;
+@property (assign) GLKVector3 spotDirection;
 @property float spotCutoff;
 @property float spotExponent;
 
-@property(readonly) GLKVector4 transformedPosition;
-@property(readonly) GLKVector3 transformedSpotDirection;
+@property (readonly) GLKVector4 transformedPosition;
+@property (readonly) GLKVector3 transformedSpotDirection;
 
-@property(retain) GLKEffectPropertyTransform* transform;
+@property (retain) GLKEffectPropertyTransform* transform;
 
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKEffectPropertyMaterial : GLKEffectProperty
 
-@property (assign)GLKVector4 ambientColor;
-@property (assign)GLKVector4 diffuseColor;
-@property (assign)GLKVector4 specularColor;
-@property (assign)GLKVector4 emissiveColor;
-@property (assign)GLuint emissiveTex;
-@property (assign)GLuint specularTex;
-@property (assign)float reflectionBlendAlpha;
-@property (assign)GLuint reflectionBlendTex;
+@property (assign) GLKVector4 ambientColor;
+@property (assign) GLKVector4 diffuseColor;
+@property (assign) GLKVector4 specularColor;
+@property (assign) GLKVector4 emissiveColor;
+@property (assign) GLuint emissiveTex;
+@property (assign) GLuint specularTex;
+@property (assign) float reflectionBlendAlpha;
+@property (assign) GLuint reflectionBlendTex;
 @property float shininess;
 
 @end
@@ -118,67 +122,65 @@ GLKIT_EXPORT_CLASS
 // ----------------------------------------
 
 GLKIT_EXPORT_CLASS
-@interface GLKShaderEffect : NSObject<GLKNamedEffect>
+@interface GLKShaderEffect : NSObject <GLKNamedEffect>
 
-@property(readonly) GLKEffectPropertyTransform* transform;
-@property(readonly) GLKShaderMaterialPtr        shaderMat;
-@property(retain)   GLKShader*                  shader;
-@property(retain)   NSString*                   shaderName;
-@property(readonly) GLKMatrix4                  modelRefTrans;
-@property           BOOL                        effectChanged;
-@property           BOOL                        cameraRequired;         // set when a subclass needs the camera position in a shader.
+@property (readonly) GLKEffectPropertyTransform* transform;
+@property (readonly) GLKShaderMaterialPtr shaderMat;
+@property (retain) GLKShader* shader;
+@property (retain) NSString* shaderName;
+@property (readonly) GLKMatrix4 modelRefTrans;
+@property BOOL effectChanged;
+@property BOOL cameraRequired; // set when a subclass needs the camera position in a shader.
 
--(id)init;
--(void)prepareToDraw;
+- (id)init;
+- (void)prepareToDraw;
 
-
--(BOOL)updateShaderMaterialParams;  // Used by subclasses to update all the required shader material parameters.
--(BOOL)prepareShaders;              // Make sure shaders are ready to run.  Called after updateShaderMaterialParams.
+- (BOOL)updateShaderMaterialParams; // Used by subclasses to update all the required shader material parameters.
+- (BOOL)prepareShaders; // Make sure shaders are ready to run.  Called after updateShaderMaterialParams.
 
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKBaseEffect : GLKShaderEffect
 
-@property(readonly) GLKEffectPropertyLight* light0;
-@property(readonly) GLKEffectPropertyLight* light1;
-@property(readonly) GLKEffectPropertyLight* light2;
-@property(copy) NSArray* lightOrder;
+@property (readonly) GLKEffectPropertyLight* light0;
+@property (readonly) GLKEffectPropertyLight* light1;
+@property (readonly) GLKEffectPropertyLight* light2;
+@property (copy) NSArray* lightOrder;
 
-@property(assign) GLKLightingType lightingType;
-@property(assign) GLKVector4 lightModelAmbientColor;
-@property(assign) BOOL lightModelTwoSided;
-@property(assign) BOOL lightingEnabled;
+@property (assign) GLKLightingType lightingType;
+@property (assign) GLKVector4 lightModelAmbientColor;
+@property (assign) BOOL lightModelTwoSided;
+@property (assign) BOOL lightingEnabled;
 
-@property(readonly) GLKEffectPropertyTexture* texture2d0;
-@property(readonly) GLKEffectPropertyTexture* texture2d1;
-@property(copy) NSArray* textureOrder;
+@property (readonly) GLKEffectPropertyTexture* texture2d0;
+@property (readonly) GLKEffectPropertyTexture* texture2d1;
+@property (copy) NSArray* textureOrder;
 
 @property BOOL colorMaterialEnabled;
-@property(readonly) GLKEffectPropertyMaterial* material;
-@property(readonly) GLKEffectPropertyFog* fog;
+@property (readonly) GLKEffectPropertyMaterial* material;
+@property (readonly) GLKEffectPropertyFog* fog;
 
 @property BOOL useConstantColor;
-@property(assign) GLKVector4 constantColor;
+@property (assign) GLKVector4 constantColor;
 
 // For subclasses of GLKBaseEffect that change their own parameters.
-@property(assign) NSString* shaderExtName;
+@property (assign) NSString* shaderExtName;
 
--(id)init;
+- (id)init;
 
--(BOOL)updateShaderMaterialParams;
--(BOOL)prepareShaders;
+- (BOOL)updateShaderMaterialParams;
+- (BOOL)prepareShaders;
 @end
 
 // ----------------------------------------
 
 GLKIT_EXPORT_CLASS
 @interface GLKReflectionMapEffect : GLKBaseEffect
-@property(readonly) GLKEffectPropertyTexture* textureCubeMap;
-@property(assign) GLKMatrix3 matrix;
+@property (readonly) GLKEffectPropertyTexture* textureCubeMap;
+@property (assign) GLKMatrix3 matrix;
 
--(id)init;
+- (id)init;
 
--(BOOL)updateShaderMaterialParams;
+- (BOOL)updateShaderMaterialParams;
 @end
-

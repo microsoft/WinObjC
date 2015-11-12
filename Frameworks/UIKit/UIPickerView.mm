@@ -405,10 +405,17 @@ static void setupImages(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setShowsSelectionIndicator:(DWORD)show {
+    UNIMPLEMENTED();
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setDelegate:(id)delegate {
     _delegate = delegate;
     _needsReload = TRUE;
@@ -417,6 +424,9 @@ static void setupImages(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setDataSource:(id)source {
     _dataSource = source;
     _needsReload = TRUE;
@@ -425,6 +435,9 @@ static void setupImages(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)selectedRowInComponent:(DWORD)component {
     if ((int)component < _numSections) {
         return [_subSections[component] _selectedRow];
@@ -520,6 +533,9 @@ static void layoutSubSections(UIPickerView* self) {
     [self setAutoresizesSubviews:TRUE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ reloadAllComponents {
     _needsReload = FALSE;
 
@@ -584,6 +600,9 @@ static void layoutSubSections(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)reloadComponent:(int)component {
     [self reloadAllComponents];
 
@@ -601,6 +620,9 @@ static void layoutSubSections(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)selectRow:(int)row inComponent:(int)component animated:(BOOL)animated {
     // assert( component == 0 );
     _selectedRowInComponents[component] = row;
@@ -634,6 +656,9 @@ static void layoutSubSections(UIPickerView* self) {
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)rowSizeForComponent:(int)component {
     CGSize ret;
 

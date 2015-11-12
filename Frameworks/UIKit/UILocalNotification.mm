@@ -75,31 +75,55 @@ EbrDebugLog("fireDate is %s.\n", s);
     //[self _cancelNotification];
 }
 
+/**
+ @Status Stub
+*/
 - (id)fireDate {
+    UNIMPLEMENTED();
     return _fireDate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setFireDate:(id)val {
+    UNIMPLEMENTED();
     _fireDate = val;
 
     formatFireDate();
 }
 
+/**
+ @Status Stub
+*/
 - (id)timeZone {
+    UNIMPLEMENTED();
     return _timeZone;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setTimeZone:(id)val {
+    UNIMPLEMENTED();
     _timeZone = val;
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)repeatInterval {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! repeatInterval called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setRepeatInterval:(NSCalendarUnit)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setRepeatInterval called!\n");
     return nil;
 }
@@ -114,11 +138,19 @@ EbrDebugLog("fireDate is %s.\n", s);
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)alertBody {
+    UNIMPLEMENTED();
     return _body;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setAlertBody:(id)val {
+    UNIMPLEMENTED();
     _body = val;
     return self;
 }
@@ -133,11 +165,19 @@ EbrDebugLog("fireDate is %s.\n", s);
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)alertAction {
+    UNIMPLEMENTED();
     return _action;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setAlertAction:(id)val {
+    UNIMPLEMENTED();
     _action = val;
     return self;
 }
@@ -151,31 +191,55 @@ EbrDebugLog("fireDate is %s.\n", s);
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)soundName {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! soundName called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setSoundName:(id)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setSoundName called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)applicationIconBadgeNumber {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! applicationIconBadgeNumber called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setApplicationIconBadgeNumber:(NSInteger)val {
+    UNIMPLEMENTED();
     EbrDebugLog("!!!! setApplicationIconBadgeNumber called!\n");
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (id)userInfo {
+    UNIMPLEMENTED();
     return _userInfo;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setUserInfo:(id)val {
+    UNIMPLEMENTED();
     _userInfo = val;
     return self;
 }

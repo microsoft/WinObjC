@@ -58,6 +58,10 @@ static inline OSVERSIONINFO winOsVersion() {
 }
 
 @implementation NSProcessInfo : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (NSProcessInfo*)processInfo {
     return _processInfo;
 }
@@ -75,6 +79,9 @@ static inline OSVERSIONINFO winOsVersion() {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)globallyUniqueString {
     CFUUIDRef uuid = CFUUIDCreate(nil);
     NSString* ret = (NSString*)CFUUIDCreateString(nil, uuid);
@@ -84,11 +91,19 @@ static inline OSVERSIONINFO winOsVersion() {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+ @Notes Returns Windows version
+*/
 - (NSOperatingSystemVersion)operatingSystemVersion {
     const OSVERSIONINFO info = winOsVersion();
     return (NSOperatingSystemVersion){ info.dwMajorVersion, info.dwMinorVersion, info.dwBuildNumber };
 }
 
+/**
+ @Status Interoperable
+ @Notes Compares against Windows version
+*/
 - (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version {
     const NSOperatingSystemVersion systemVersion = [self operatingSystemVersion];
     if (systemVersion.majorVersion == version.majorVersion) {
@@ -100,15 +115,27 @@ static inline OSVERSIONINFO winOsVersion() {
     return systemVersion.majorVersion >= version.majorVersion;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)operatingSystemVersionString {
+    UNIMPLEMENTED();
     return @"iOS 3.2";
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)processName {
+    UNIMPLEMENTED();
     return @"MainProcess";
 }
 
+/**
+ @Status Stub
+*/
 - (int)processIdentifier {
+    UNIMPLEMENTED();
     return 12345;
 }
 
@@ -116,14 +143,25 @@ static inline OSVERSIONINFO winOsVersion() {
     return 60.0 * 5.0;
 }
 
+/**
+ @Status Stub
+*/
 - (NSDictionary*)environment {
+    UNIMPLEMENTED();
     return _environment;
 }
 
+/**
+ @Status Stub
+*/
 - (unsigned)processorCount {
+    UNIMPLEMENTED();
     return 2;
 }
 
+/**
+ @Status Interoperable
+*/
 - (uint64_t)physicalMemory {
     return [_LazyUIDevice _deviceTotalMemory];
 }

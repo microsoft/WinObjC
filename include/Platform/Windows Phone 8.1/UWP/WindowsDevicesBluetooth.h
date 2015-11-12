@@ -26,5 +26,3 @@ enum _WDBBluetoothCacheMode {
     WDBBluetoothCacheModeUncached = 1,
 };
 typedef unsigned WDBBluetoothCacheMode;
-
-

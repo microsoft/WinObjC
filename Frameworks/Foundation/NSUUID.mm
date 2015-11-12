@@ -30,10 +30,17 @@
 @end
 
 @implementation NSUUID
+
+/**
+ @Status Interoperable
+*/
 + (NSUUID*)UUID {
     return [[[self alloc] init] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     if ((self = [super init]) != nil) {
         if (CoCreateGuid(&_guid) != S_OK) {
@@ -45,6 +52,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithUUIDString:(NSString*)string {
     if ((self = [super init]) != nil) {
         const char* rawString = [string UTF8String];
@@ -80,6 +90,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithUUIDBytes:(const void*)bytes {
     if ((self = [super init]) != nil) {
         memcpy(&_guid, bytes, 16);
@@ -102,6 +115,9 @@
     [coder encodeBytes:reinterpret_cast<uint8_t*>(&_guid) length:sizeof(_guid) forKey:@"NSU.uuid"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)UUIDString {
     return [NSString stringWithFormat:@"%08lX-%04hX-%04hX-%02hX%02hX-%02hX%02hX%02hX%02hX%02hX%02hX",
                                       _guid.Data1,
@@ -117,6 +133,9 @@
                                       _guid.Data4[7]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getUUIDBytes:(void*)bytes {
     memcpy(bytes, &_guid, 16);
 }
@@ -152,21 +171,21 @@
 }
 @end
 
-
-// _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See CFUUIDGetConstantUUIDWithBytes.
+// _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See
+// CFUUIDGetConstantUUIDWithBytes.
 @implementation _NSConstantUUID
--(oneway void)release {
+- (oneway void)release {
 }
 
--(id)retain {
+- (id)retain {
     return self;
 }
 
--(id)autorelease {
+- (id)autorelease {
     return self;
 }
 
--(NSUInteger)retainCount {
+- (NSUInteger)retainCount {
     return NSUIntegerMax;
 }
 @end

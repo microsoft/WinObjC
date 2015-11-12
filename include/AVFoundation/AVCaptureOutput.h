@@ -30,10 +30,11 @@
 
 @interface AVCaptureVideoDataOutput : AVCaptureOutput
 
-@property(nonatomic) BOOL alwaysDiscardsLateVideoFrames;
-@property(nonatomic, copy) NSDictionary *videoSettings;
+@property (nonatomic) BOOL alwaysDiscardsLateVideoFrames;
+@property (nonatomic, copy) NSDictionary* videoSettings;
 
-- (void)setSampleBufferDelegate:(id<AVCaptureVideoDataOutputSampleBufferDelegate>)sampleBufferDelegate queue:(dispatch_queue_t)sampleBufferCallbackQueue;
+- (void)setSampleBufferDelegate:(id<AVCaptureVideoDataOutputSampleBufferDelegate>)sampleBufferDelegate
+                          queue:(dispatch_queue_t)sampleBufferCallbackQueue;
 
 @end
 

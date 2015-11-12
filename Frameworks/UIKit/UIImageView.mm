@@ -58,6 +58,9 @@ static void initInternal(UIImageView* self) {
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithImage:(UIImage*)image {
     CGRect pos;
     CGSize imgSize = { 0 };
@@ -78,6 +81,9 @@ static void initInternal(UIImageView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithImage:(UIImage*)image highlightedImage:(UIImage*)highlighted {
     [self initWithImage:image];
     [self setHighlightedImage:highlighted];
@@ -123,32 +129,53 @@ static void updateContents(UIImageView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return imgPriv->_image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image {
     imgPriv->_image = image;
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHighlighted {
     return imgPriv->_isHighlighted;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlightedImage:(UIImage*)image {
     imgPriv->_highlightedImage = image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlighted:(BOOL)isHighlighted {
     imgPriv->_isHighlighted = isHighlighted;
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)highlightedImage {
     return imgPriv->_highlightedImage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAnimationImages:(NSArray*)imagesArray {
     id mainRunLoop = [NSRunLoop mainRunLoop];
     id currentRunLoop = [NSRunLoop currentRunLoop];
@@ -161,10 +188,16 @@ static void updateContents(UIImageView* self) {
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)animationImages {
     return imgPriv->_animatingImages;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAnimationDuration:(double)duration {
     bool changed = duration != imgPriv->_animationDuration;
     imgPriv->_animationDuration = duration;
@@ -190,6 +223,9 @@ static void updateContents(UIImageView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)animationDuration {
     double duration = imgPriv->_animationDuration;
     if (imgPriv->_animationDuration == 0.0f) {
@@ -201,14 +237,23 @@ static void updateContents(UIImageView* self) {
     return duration;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAnimationRepeatCount:(unsigned)count {
     imgPriv->_repeatCount = count;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)animationRepeatCount {
     return imgPriv->_repeatCount;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isAnimating {
     return imgPriv->_isAnimating;
 }
@@ -237,6 +282,9 @@ static void updateContents(UIImageView* self) {
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)startAnimating {
     NSRunLoop* mainRunLoop = [NSRunLoop mainRunLoop];
     NSRunLoop* currentRunLoop = [NSRunLoop currentRunLoop];
@@ -266,6 +314,9 @@ static void updateContents(UIImageView* self) {
     [self _showNextImage];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)stopAnimating {
     id mainRunLoop = [NSRunLoop mainRunLoop];
     id currentRunLoop = [NSRunLoop currentRunLoop];

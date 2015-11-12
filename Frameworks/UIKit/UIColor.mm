@@ -214,82 +214,142 @@ static id _cachedColorsDict;
     [coder encodeFloat:_a forKey:@"UIAlpha"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)grayColor {
     RETURN_CACHED("gray", [self colorWithRed:0.5f green:0.5f blue:0.5f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)cyanColor {
     RETURN_CACHED("cyan", [self colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)magentaColor {
     RETURN_CACHED("magenta", [self colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)lightGrayColor {
     RETURN_CACHED("lightGray", [self colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)darkGrayColor {
     RETURN_CACHED("darkGray", [self colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)clearColor {
     RETURN_CACHED("clear", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)blackColor {
     RETURN_CACHED("black", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)redColor {
     RETURN_CACHED("red", [self colorWithRed:1.0f green:0.0f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)blueColor {
     RETURN_CACHED("blue", [self colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)cornflowerBlueColor {
     RETURN_CACHED("cornflowerBlue", [self colorWithRed:0.0f green:0.737f blue:0.949f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)whiteColor {
     RETURN_CACHED("white", [self colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)yellowColor {
     RETURN_CACHED("yellow", [self colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)brownColor {
     RETURN_CACHED("brown", [self colorWithRed:0.65f green:0.35f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)greenColor {
     RETURN_CACHED("green", [self colorWithRed:0.0f green:1.0f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)orangeColor {
     RETURN_CACHED("orange", [self colorWithRed:1.0f green:0.5f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)purpleColor {
     RETURN_CACHED("purple", [self colorWithRed:0.7f green:0.2f blue:0.9f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)lightTextColor {
     RETURN_CACHED("lightText", [self colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)darkTextColor {
     RETURN_CACHED("darkText", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGColorRef)CGColor {
     return (CGColorRef)self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)colorWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
     UIColor* ret = [self alloc];
     ret->_r = r;
@@ -301,12 +361,18 @@ static id _cachedColorsDict;
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)colorWithHue:(float)h saturation:(float)s brightness:(float)v alpha:(float)a {
     UIColor* ret = [self alloc];
 
     return [[ret initWithHue:h saturation:s brightness:v alpha:a] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)initWithHue:(float)h saturation:(float)s brightness:(float)v alpha:(float)a {
     hsv in;
     rgb out;
@@ -326,6 +392,9 @@ static id _cachedColorsDict;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)initWithRed:(float)r green:(float)g blue:(float)b alpha:(float)a {
     _r = r;
     _g = g;
@@ -335,6 +404,9 @@ static id _cachedColorsDict;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)initWithPatternImage:(UIImage*)image {
     CGRect bounds = { 0 };
 
@@ -374,14 +446,23 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)colorWithWhite:(float)gray alpha:(float)alpha {
     return [self colorWithRed:gray green:gray blue:gray alpha:alpha];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)initWithWhite:(float)gray alpha:(float)alpha {
     return [self initWithRed:gray green:gray blue:gray alpha:alpha];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)colorWithPatternImage:(UIImage*)image {
     UIColor* ret = [self alloc];
 
@@ -397,6 +478,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)colorWithAlphaComponent:(float)alpha {
     return [UIColor colorWithRed:_r green:_g blue:_b alpha:alpha];
 }
@@ -418,6 +502,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)colorWithCGColor:(CGColorRef)clr {
     UIColor* copyclr = (id)clr;
     if (copyclr == nil) {
@@ -443,6 +530,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     colors[3] = _a;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)set {
     //  Set current context color
     if (UIGraphicsGetCurrentContext()) {
@@ -461,6 +551,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return (CGImageRef)[_pattern getPatternImage];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFill {
     //  Set current context color
     if (UIGraphicsGetCurrentContext()) {
@@ -470,11 +563,17 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStroke {
     //  Set current context color
     CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIColor*)groupTableViewBackgroundColor {
     return [self colorWithRed:197.f / 255.f green:204.f / 255.f blue:210.f / 255.f alpha:1.0f];
 }
@@ -483,6 +582,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [self whiteColor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getHue:(float*)h saturation:(float*)s brightness:(float*)v alpha:(float*)a {
     hsv out;
     rgb in;
@@ -509,6 +611,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getRed:(float*)r green:(float*)g blue:(float*)b alpha:(float*)a {
     if (r) {
         *r = _r;

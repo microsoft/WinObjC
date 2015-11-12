@@ -20,7 +20,7 @@
 #import <StarboardExport.h>
 #import <CoreFoundation/CFBase.h>
 
-typedef struct __CTParagraphStyle *CTParagraphStyleRef;
+typedef struct __CTParagraphStyle* CTParagraphStyleRef;
 
 enum {
     kCTParagraphStyleSpecifierAlignment = 0,
@@ -72,11 +72,14 @@ typedef uint32_t CTLineBreakMode;
 enum {
     kCTWritingDirectionNatural = -1,
     kCTWritingDirectionLeftToRight = 0,
-    kCTWritingDirectionRightToLeft = 1
+    kCTWritingDirectionRightToLeft = 1,
 };
 typedef int8_t CTWritingDirection;
 
-SB_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting *settings, CFIndex settingCount);
-SB_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle, CTParagraphStyleSpecifier spec, size_t valueBufferSize, void* valueBuffer);
+SB_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount);
+SB_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
+                                                    CTParagraphStyleSpecifier spec,
+                                                    size_t valueBufferSize,
+                                                    void* valueBuffer);
 
 #endif /* _CTPARAGRAPHSTYLE_H_ */

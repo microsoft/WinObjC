@@ -22,23 +22,24 @@
 #include "interopBase.h"
 @class WUXMMMatrix3DHelper, WUXMMTransform3D, WUXMMCompositeTransform3D, WUXMMPerspectiveTransform3D;
 @class WUXMMMatrix3D;
-@protocol WUXMMIMatrix3DHelper, WUXMMIMatrix3DHelperStatics, WUXMMITransform3D, WUXMMITransform3DFactory, WUXMMICompositeTransform3D, WUXMMICompositeTransform3DStatics, WUXMMIPerspectiveTransform3D, WUXMMIPerspectiveTransform3DStatics;
+@protocol WUXMMIMatrix3DHelper
+, WUXMMIMatrix3DHelperStatics, WUXMMITransform3D, WUXMMITransform3DFactory, WUXMMICompositeTransform3D, WUXMMICompositeTransform3DStatics,
+    WUXMMIPerspectiveTransform3D, WUXMMIPerspectiveTransform3DStatics;
 
 #include "WindowsUIXaml.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Media3D.Matrix3D
 WINRT_EXPORT
 @interface WUXMMMatrix3D : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double m11;
 @property double m12;
 @property double m13;
@@ -64,7 +65,22 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMMMatrix3DHelper : RTObject
 + (WUXMMMatrix3D*)multiply:(WUXMMMatrix3D*)matrix1 matrix2:(WUXMMMatrix3D*)matrix2;
-+ (WUXMMMatrix3D*)fromElements:(double)m11 m12:(double)m12 m13:(double)m13 m14:(double)m14 m21:(double)m21 m22:(double)m22 m23:(double)m23 m24:(double)m24 m31:(double)m31 m32:(double)m32 m33:(double)m33 m34:(double)m34 offsetX:(double)offsetX offsetY:(double)offsetY offsetZ:(double)offsetZ m44:(double)m44;
++ (WUXMMMatrix3D*)fromElements:(double)m11
+                           m12:(double)m12
+                           m13:(double)m13
+                           m14:(double)m14
+                           m21:(double)m21
+                           m22:(double)m22
+                           m23:(double)m23
+                           m24:(double)m24
+                           m31:(double)m31
+                           m32:(double)m32
+                           m33:(double)m33
+                           m34:(double)m34
+                       offsetX:(double)offsetX
+                       offsetY:(double)offsetY
+                       offsetZ:(double)offsetZ
+                           m44:(double)m44;
 + (BOOL)getHasInverse:(WUXMMMatrix3D*)target;
 + (BOOL)getIsIdentity:(WUXMMMatrix3D*)target;
 + (WUXMMMatrix3D*)invert:(WUXMMMatrix3D*)target;
@@ -154,4 +170,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXMMPerspectiveTransform3D_DEFINED__
-

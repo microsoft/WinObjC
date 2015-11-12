@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@protocol WGCICharacterGrouping, WGCICharacterGroupings;
+@protocol WGCICharacterGrouping
+, WGCICharacterGroupings;
 
 #include "WindowsFoundationCollections.h"
 
@@ -31,8 +32,8 @@
 
 WINRT_EXPORT
 @interface WGCCharacterGrouping : RTObject
-@property (readonly) NSString * first;
-@property (readonly) NSString * label;
+@property (readonly) NSString* first;
+@property (readonly) NSString* label;
 @end
 
 #endif // __WGCCharacterGrouping_DEFINED__
@@ -45,8 +46,7 @@ WINRT_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)create ACTIVATOR;
 @property (readonly) unsigned size;
-- (NSString *)lookup:(NSString *)text;
+- (NSString*)lookup:(NSString*)text;
 @end
 
 #endif // __WGCCharacterGroupings_DEFINED__
-

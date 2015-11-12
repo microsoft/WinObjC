@@ -105,6 +105,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     CGContextRelease(drawContext);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPath:(CGPathRef)path {
     if (_path == path) {
         return;
@@ -117,10 +120,16 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPathRef)path {
     return _path;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFillColor:(CGColorRef)color {
     if (_fillColor == color) {
         return;
@@ -134,10 +143,16 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGColorRef)fillColor {
     return _fillColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStrokeColor:(CGColorRef)color {
     if (_strokeColor == color) {
         return;
@@ -151,11 +166,18 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGColorRef)strokeColor {
     return _strokeColor;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLineWidth:(float)width {
+    UNIMPLEMENTED();
     if (_lineWidth == width) {
         return;
     }
@@ -166,19 +188,30 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     [self setNeedsLayout];
 }
 
+/**
+ @Status Stub
+*/
 - (CGFloat)lineWidth {
+    UNIMPLEMENTED();
     return _lineWidth;
 }
 
 - (void)setLineDashPattern:(id)pattern {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLineCap:(NSString*)cap {
+    UNIMPLEMENTED();
 }
 
 - (void)setLineJoin:(id)join {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFillRule:(id)rule {
 }
 

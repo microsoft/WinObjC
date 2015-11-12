@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WUXHXamlUIPresenter;
-@protocol WUXHIXamlUIPresenterHost, WUXHIXamlUIPresenterHost2, WUXHIXamlUIPresenter, WUXHIXamlUIPresenterStatics, WUXHIXamlUIPresenterStatics2;
+@protocol WUXHIXamlUIPresenterHost
+, WUXHIXamlUIPresenterHost2, WUXHIXamlUIPresenter, WUXHIXamlUIPresenterStatics, WUXHIXamlUIPresenterStatics2;
 
 #include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUIXaml.h"
@@ -32,7 +33,7 @@
 #define __WUXHIXamlUIPresenterHost_DEFINED__
 
 @protocol WUXHIXamlUIPresenterHost
-- (NSString *)resolveFileResource:(NSString *)path;
+- (NSString*)resolveFileResource:(NSString*)path;
 @end
 
 #endif // __WUXHIXamlUIPresenterHost_DEFINED__
@@ -42,7 +43,7 @@
 #define __WUXHIXamlUIPresenterHost2_DEFINED__
 
 @protocol WUXHIXamlUIPresenterHost2
-- (NSString *)getGenericXamlFilePath;
+- (NSString*)getGenericXamlFilePath;
 @end
 
 #endif // __WUXHIXamlUIPresenterHost2_DEFINED__
@@ -55,11 +56,20 @@ WINRT_EXPORT
 @interface WUXHXamlUIPresenter : RTObject
 + (void)setHost:(RTObject<WUXHIXamlUIPresenterHost>*)host;
 + (void)notifyWindowSizeChanged;
-+ (WFRect *)getFlyoutPlacementTargetInfo:(WXFrameworkElement *)placementTarget preferredPlacement:(WUXCPFlyoutPlacementMode)preferredPlacement targetPreferredPlacement:(WUXCPFlyoutPlacementMode*)targetPreferredPlacement allowFallbacks:(BOOL*)allowFallbacks;
-+ (WFRect *)getFlyoutPlacement:(WFRect *)placementTargetBounds controlSize:(WFSize *)controlSize minControlSize:(WFSize *)minControlSize containerRect:(WFRect *)containerRect targetPreferredPlacement:(WUXCPFlyoutPlacementMode)targetPreferredPlacement allowFallbacks:(BOOL)allowFallbacks chosenPlacement:(WUXCPFlyoutPlacementMode*)chosenPlacement;
-@property (copy) NSString * themeResourcesXaml;
-@property (copy) NSString * themeKey;
-@property (copy) WXUIElement * rootElement;
++ (WFRect*)getFlyoutPlacementTargetInfo:(WXFrameworkElement*)placementTarget
+                     preferredPlacement:(WUXCPFlyoutPlacementMode)preferredPlacement
+               targetPreferredPlacement:(WUXCPFlyoutPlacementMode*)targetPreferredPlacement
+                         allowFallbacks:(BOOL*)allowFallbacks;
++ (WFRect*)getFlyoutPlacement:(WFRect*)placementTargetBounds
+                  controlSize:(WFSize*)controlSize
+               minControlSize:(WFSize*)minControlSize
+                containerRect:(WFRect*)containerRect
+     targetPreferredPlacement:(WUXCPFlyoutPlacementMode)targetPreferredPlacement
+               allowFallbacks:(BOOL)allowFallbacks
+              chosenPlacement:(WUXCPFlyoutPlacementMode*)chosenPlacement;
+@property (copy) NSString* themeResourcesXaml;
+@property (copy) NSString* themeKey;
+@property (copy) WXUIElement* rootElement;
 + (BOOL)completeTimelinesAutomatically;
 + (void)setCompleteTimelinesAutomatically:(BOOL)value;
 - (void)setSize:(int)width height:(int)height;
@@ -68,4 +78,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXHXamlUIPresenter_DEFINED__
-

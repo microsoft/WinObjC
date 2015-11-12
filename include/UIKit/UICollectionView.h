@@ -39,52 +39,75 @@ typedef uint32_t UICollectionViewScrollPosition;
 @class UINib;
 
 @interface UICollectionViewDataSource : NSObject
-- (uint32_t) collectionView: (UICollectionView *)view numberOfItemsInSection: (NSInteger) section;
-- (uint32_t) numberOfSectionsInCollectionView: (UICollectionView*) view;
+- (uint32_t)collectionView:(UICollectionView*)view numberOfItemsInSection:(NSInteger)section;
+- (uint32_t)numberOfSectionsInCollectionView:(UICollectionView*)view;
 @end
 
 @protocol UICollectionViewDelegate <UIScrollViewDelegate>
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)collectionView:(UICollectionView*)collectionView shouldSelectItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)collectionView:(UICollectionView*)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)collectionView:(UICollectionView*)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionView : UIScrollView 
+@interface UICollectionView : UIScrollView
 
-- (UICollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UICollectionViewCell*)cellForItemAtIndexPath:(NSIndexPath*)indexPath;
+- (NSArray*)indexPathsForVisibleItems;
 
-- (id)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath*)indexPath;
-- (id)dequeueReusableSupplementaryViewOfKind:(NSString*)elementKind withReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath*)indexPath;
-- (NSArray *)indexPathsForSelectedItems;
-- (id)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout;
+- (id)dequeueReusableCellWithReuseIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath;
+- (id)dequeueReusableSupplementaryViewOfKind:(NSString*)elementKind
+                         withReuseIdentifier:(NSString*)identifier
+                                forIndexPath:(NSIndexPath*)indexPath;
+- (NSArray*)indexPathsForSelectedItems;
+- (id)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout*)layout;
 
 - (void)reloadData;
-- (void)reloadSections:(NSIndexSet *)sections;
+- (void)reloadSections:(NSIndexSet*)sections;
 
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion;
 
-- (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString *)elementKind withReuseIdentifier:(NSString *)identifier;
+- (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString*)elementKind withReuseIdentifier:(NSString*)identifier;
 - (void)registerClass:(Class)viewClass forCellWithReuseIdentifier:(NSString*)identifier;
-- (void)registerNib:(UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
-- (void)registerNib:(UINib *)nib forSupplementaryViewOfKind:(NSString *)kind withReuseIdentifier:(NSString *)identifier;
+- (void)registerNib:(UINib*)nib forCellWithReuseIdentifier:(NSString*)identifier;
+- (void)registerNib:(UINib*)nib forSupplementaryViewOfKind:(NSString*)kind withReuseIdentifier:(NSString*)identifier;
 
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
+- (void)deselectItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated;
 
-- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
+- (void)scrollToItemAtIndexPath:(NSIndexPath*)indexPath
+               atScrollPosition:(UICollectionViewScrollPosition)scrollPosition
+                       animated:(BOOL)animated;
 
-- (void)insertItemsAtIndexPaths:(NSArray *)indexPaths;
-- (void)deleteItemsAtIndexPaths:(NSArray *)indexPaths;
+- (void)insertItemsAtIndexPaths:(NSArray*)indexPaths;
+- (void)moveItemAtIndexPath:(NSIndexPath*)path toIndexPath:(NSIndexPath*)toPath;
+- (void)deleteItemsAtIndexPaths:(NSArray*)indexPaths;
+
+- (NSIndexPath*)indexPathForItemAtPoint:(CGPoint)point;
+- (NSIndexPath*)indexPathForCell:(UICollectionViewCell*)cell;
 
 - (NSInteger)numberOfSections;
 - (NSInteger)numberOfItemsInSection:(NSInteger)section;
 
 - (CGRect)visibleBoundRects;
 
-@property (nonatomic, retain) UICollectionViewLayout *collectionViewLayout;
-@property (nonatomic, assign) UICollectionViewDataSource *dataSource;
+@property (nonatomic, retain) UICollectionViewLayout* collectionViewLayout;
+@property (nonatomic, assign) UICollectionViewDataSource* dataSource;
 @property (nonatomic) BOOL allowsSelection;
 @property (nonatomic) BOOL allowsMultipleSelection;
+@property (nonatomic, retain) UIView* backgroundView;
+@property (nonatomic, readonly) NSArray* visibleCells;
 
 @end
 
@@ -93,7 +116,7 @@ UIKIT_EXPORT_CLASS
 
 @interface NSIndexPath (UICollectionViewAdditions)
 
-+ (NSIndexPath *)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
++ (NSIndexPath*)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
 
 @property (nonatomic, readonly) NSInteger item;
 

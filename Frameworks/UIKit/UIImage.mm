@@ -143,6 +143,10 @@ imageCacheInfo imageInfo;
 
     return obj;
 }
+
+/**
+ @Status Interoperable
+*/
 + (UIImage*)imageNamed:(NSString*)pathAddr {
     return [self applicationImageNamed:pathAddr];
 }
@@ -178,10 +182,16 @@ imageCacheInfo imageInfo;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIImage*)imageWithContentsOfFile:(id)pathAddr {
     return [[[self alloc] initWithContentsOfFile:pathAddr] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCGImage:(CGImageRef)image {
     CFRetain((id)image);
     m_pImage = image;
@@ -195,6 +205,9 @@ imageCacheInfo imageInfo;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCGImage:(CGImageRef)image scale:(float)scale orientation:(UIImageOrientation)orientation {
     CFRetain((id)image);
     m_pImage = image;
@@ -209,10 +222,16 @@ imageCacheInfo imageInfo;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)imageWithCGImage:(CGImageRef)image {
     return [[[self alloc] initWithCGImage:image] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)imageWithCGImage:(CGImageRef)image scale:(float)scaleFactor orientation:(UIImageOrientation)orientation {
     return [[[self alloc] initWithCGImage:image scale:scaleFactor orientation:orientation] autorelease];
 }
@@ -276,9 +295,13 @@ static bool loadImageWithWICDecoder(UIImage* dest, REFGUID decoderCls, void* byt
     IWICBitmapFrameDecode* pFrame = NULL;
     HRESULT hr = S_OK;
 
-    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pFactory);
+    MULTI_QI mq = { 0 };
+    
+    mq.pIID = &IID_IWICImagingFactory;
+    hr = CoCreateInstanceFromApp(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, NULL, 1, &mq);
 
     if (SUCCEEDED(hr)) {
+        pFactory = (IWICImagingFactory*) mq.pItf;
         hr = pFactory->CreateDecoder(decoderCls, NULL, &pDecoder);
     }
 
@@ -342,6 +365,9 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     return loadImageWithWICDecoder(dest, GUID_ContainerFormatTiff, bytes, length);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithContentsOfFile:(NSString*)pathAddr {
     if (pathAddr == nil) {
         return nil;
@@ -542,18 +568,30 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIImage*)imageWithData:(NSData*)data {
     return [[[self alloc] initWithData:data] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIImage*)imageWithData:(NSData*)data scale:(float)scale {
     return [[[self alloc] initWithData:data scale:scale] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithData:(NSData*)data {
     return [self initWithData:data scale:1.0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithData:(NSData*)data scale:(float)scale {
     if (data == nil) {
         EbrDebugLog("UIImage: imageWithData, data=nil!\n");
@@ -656,10 +694,16 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     CGContextDrawImageRect(cur, getImage(self), srcRect, pos);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawAtPoint:(CGPoint)point {
     [self drawAtPoint:CGPointMake(point.x, point.y) blendMode:kCGBlendModeNormal alpha:0.0f];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)mode alpha:(float)alpha {
     CGContextRef cur = UIGraphicsGetCurrentContext();
     if (!cur) {
@@ -1001,10 +1045,16 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
                  makeRect(self->_imageInsets.left, self->_imageInsets.top, stretchyWidth, stretchyHeight));
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawInRect:(CGRect)pos {
     [self drawInRect:pos blendMode:kCGBlendModeNormal alpha:1.0f];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawInRect:(CGRect)pos blendMode:(CGBlendMode)mode alpha:(float)alpha {
     //  [BUG: Need to honor mode and alpha]
     CGContextRef cur = UIGraphicsGetCurrentContext();
@@ -1066,6 +1116,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     _orientation = orientation;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)size {
     CGSize size;
 
@@ -1093,22 +1146,37 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return getImage(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGImageRef)CGImage {
     return getImage(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImageOrientation)imageOrientation {
     return _orientation;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)leftCapWidth {
     return (int)_imageInsets.left;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)topCapHeight {
     return (int)_imageInsets.top;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)stretchableImageWithLeftCapWidth:(int)leftCap topCapHeight:(int)topCap {
     UIImage* ret = [UIImage alloc];
 
@@ -1138,6 +1206,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)insets {
     UIImage* ret = [UIImage alloc];
 
@@ -1161,6 +1232,10 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [ret autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes resizeMode not supported
+*/
 - (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)insets resizingMode:(unsigned)resizeMode {
     UIImage* ret = [UIImage alloc];
 
@@ -1193,6 +1268,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)scale {
     return _scale;
 }
@@ -1208,7 +1286,11 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [self retain];
 }
 
+/**
+ @Status Stub
+*/
 - (NSArray*)images {
+    UNIMPLEMENTED();
     return nil;
 }
 

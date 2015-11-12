@@ -20,8 +20,22 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUWActivatedDeferral, WUWActivatedOperation, WUWWebUILaunchActivatedEventArgs, WUWWebUISearchActivatedEventArgs, WUWWebUIShareTargetActivatedEventArgs, WUWWebUIFileActivatedEventArgs, WUWWebUIProtocolActivatedEventArgs, WUWWebUIFileOpenPickerActivatedEventArgs, WUWWebUIFileSavePickerActivatedEventArgs, WUWWebUICachedFileUpdaterActivatedEventArgs, WUWWebUIContactPickerActivatedEventArgs, WUWWebUIDeviceActivatedEventArgs, WUWWebUIPrintTaskSettingsActivatedEventArgs, WUWWebUICameraSettingsActivatedEventArgs, WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs, WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs, WUWWebUIContactCallActivatedEventArgs, WUWWebUIContactMessageActivatedEventArgs, WUWWebUIContactMapActivatedEventArgs, WUWWebUIContactPostActivatedEventArgs, WUWWebUIContactVideoCallActivatedEventArgs, WUWWebUILockScreenCallActivatedEventArgs, WUWWebUIRestrictedLaunchActivatedEventArgs, WUWWebUINavigatedOperation, WUWSuspendingDeferral, WUWSuspendingOperation, WUWSuspendingEventArgs, WUWWebUIBackgroundTaskInstanceRuntimeClass, WUWWebUIBackgroundTaskInstance, WUWWebUINavigatedDeferral, WUWWebUINavigatedEventArgs, WUWWebUIApplication, WUWHtmlPrintDocumentSource;
-@protocol WUWIActivatedDeferral, WUWIActivatedOperation, WUWIActivatedEventArgsDeferral, WUWIWebUINavigatedEventArgs, WUWIWebUIBackgroundTaskInstance, WUWIWebUIBackgroundTaskInstanceStatics, WUWIWebUINavigatedDeferral, WUWIWebUINavigatedOperation, WUWIWebUIActivationStatics, WUWIHtmlPrintDocumentSource;
+@class WUWActivatedDeferral, WUWActivatedOperation, WUWWebUILaunchActivatedEventArgs, WUWWebUISearchActivatedEventArgs,
+    WUWWebUIShareTargetActivatedEventArgs, WUWWebUIFileActivatedEventArgs, WUWWebUIProtocolActivatedEventArgs,
+    WUWWebUIFileOpenPickerActivatedEventArgs, WUWWebUIFileSavePickerActivatedEventArgs, WUWWebUICachedFileUpdaterActivatedEventArgs,
+    WUWWebUIContactPickerActivatedEventArgs, WUWWebUIDeviceActivatedEventArgs, WUWWebUIPrintTaskSettingsActivatedEventArgs,
+    WUWWebUICameraSettingsActivatedEventArgs, WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs,
+    WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs,
+    WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs, WUWWebUIContactCallActivatedEventArgs,
+    WUWWebUIContactMessageActivatedEventArgs, WUWWebUIContactMapActivatedEventArgs, WUWWebUIContactPostActivatedEventArgs,
+    WUWWebUIContactVideoCallActivatedEventArgs, WUWWebUILockScreenCallActivatedEventArgs, WUWWebUIRestrictedLaunchActivatedEventArgs,
+    WUWWebUINavigatedOperation, WUWSuspendingDeferral, WUWSuspendingOperation, WUWSuspendingEventArgs,
+    WUWWebUIBackgroundTaskInstanceRuntimeClass, WUWWebUIBackgroundTaskInstance, WUWWebUINavigatedDeferral, WUWWebUINavigatedEventArgs,
+    WUWWebUIApplication, WUWHtmlPrintDocumentSource;
+@protocol WUWIActivatedDeferral
+, WUWIActivatedOperation, WUWIActivatedEventArgsDeferral, WUWIWebUINavigatedEventArgs, WUWIWebUIBackgroundTaskInstance,
+    WUWIWebUIBackgroundTaskInstanceStatics, WUWIWebUINavigatedDeferral, WUWIWebUINavigatedOperation, WUWIWebUIActivationStatics,
+    WUWIHtmlPrintDocumentSource;
 
 // Windows.UI.WebUI.PrintContent
 enum _WUWPrintContent {
@@ -52,56 +66,56 @@ typedef unsigned WUWPrintContent;
 // Windows.ApplicationModel.Background.BackgroundTaskCanceledEventHandler
 #ifndef __WABBackgroundTaskCanceledEventHandler__DEFINED
 #define __WABBackgroundTaskCanceledEventHandler__DEFINED
-typedef void(^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender, WABBackgroundTaskCancellationReason reason);
+typedef void (^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender,
+                                                      WABBackgroundTaskCancellationReason reason);
 #endif // __WABBackgroundTaskCanceledEventHandler__DEFINED
 
 // Windows.UI.WebUI.ActivatedEventHandler
 #ifndef __WUWActivatedEventHandler__DEFINED
 #define __WUWActivatedEventHandler__DEFINED
-typedef void(^WUWActivatedEventHandler)(RTObject * sender, RTObject<WAAIActivatedEventArgs>* eventArgs);
+typedef void (^WUWActivatedEventHandler)(RTObject* sender, RTObject<WAAIActivatedEventArgs>* eventArgs);
 #endif // __WUWActivatedEventHandler__DEFINED
 
 // Windows.UI.WebUI.NavigatedEventHandler
 #ifndef __WUWNavigatedEventHandler__DEFINED
 #define __WUWNavigatedEventHandler__DEFINED
-typedef void(^WUWNavigatedEventHandler)(RTObject * sender, RTObject<WUWIWebUINavigatedEventArgs>* e);
+typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINavigatedEventArgs>* e);
 #endif // __WUWNavigatedEventHandler__DEFINED
 
 // Windows.UI.WebUI.ResumingEventHandler
 #ifndef __WUWResumingEventHandler__DEFINED
 #define __WUWResumingEventHandler__DEFINED
-typedef void(^WUWResumingEventHandler)(RTObject * sender);
+typedef void (^WUWResumingEventHandler)(RTObject* sender);
 #endif // __WUWResumingEventHandler__DEFINED
 
 // Windows.UI.WebUI.SuspendingEventHandler
 #ifndef __WUWSuspendingEventHandler__DEFINED
 #define __WUWSuspendingEventHandler__DEFINED
-typedef void(^WUWSuspendingEventHandler)(RTObject * sender, RTObject<WAISuspendingEventArgs>* e);
+typedef void (^WUWSuspendingEventHandler)(RTObject* sender, RTObject<WAISuspendingEventArgs>* e);
 #endif // __WUWSuspendingEventHandler__DEFINED
-
 
 // Windows.UI.WebUI.ActivatedEventHandler
 #ifndef __WUWActivatedEventHandler__DEFINED
 #define __WUWActivatedEventHandler__DEFINED
-typedef void(^WUWActivatedEventHandler)(RTObject * sender, RTObject<WAAIActivatedEventArgs>* eventArgs);
+typedef void (^WUWActivatedEventHandler)(RTObject* sender, RTObject<WAAIActivatedEventArgs>* eventArgs);
 #endif // __WUWActivatedEventHandler__DEFINED
 
 // Windows.UI.WebUI.ResumingEventHandler
 #ifndef __WUWResumingEventHandler__DEFINED
 #define __WUWResumingEventHandler__DEFINED
-typedef void(^WUWResumingEventHandler)(RTObject * sender);
+typedef void (^WUWResumingEventHandler)(RTObject* sender);
 #endif // __WUWResumingEventHandler__DEFINED
 
 // Windows.UI.WebUI.SuspendingEventHandler
 #ifndef __WUWSuspendingEventHandler__DEFINED
 #define __WUWSuspendingEventHandler__DEFINED
-typedef void(^WUWSuspendingEventHandler)(RTObject * sender, RTObject<WAISuspendingEventArgs>* e);
+typedef void (^WUWSuspendingEventHandler)(RTObject* sender, RTObject<WAISuspendingEventArgs>* e);
 #endif // __WUWSuspendingEventHandler__DEFINED
 
 // Windows.UI.WebUI.NavigatedEventHandler
 #ifndef __WUWNavigatedEventHandler__DEFINED
 #define __WUWNavigatedEventHandler__DEFINED
-typedef void(^WUWNavigatedEventHandler)(RTObject * sender, RTObject<WUWIWebUINavigatedEventArgs>* e);
+typedef void (^WUWNavigatedEventHandler)(RTObject* sender, RTObject<WUWIWebUINavigatedEventArgs>* e);
 #endif // __WUWNavigatedEventHandler__DEFINED
 
 // Windows.UI.WebUI.IActivatedEventArgsDeferral
@@ -109,7 +123,7 @@ typedef void(^WUWNavigatedEventHandler)(RTObject * sender, RTObject<WUWIWebUINav
 #define __WUWIActivatedEventArgsDeferral_DEFINED__
 
 @protocol WUWIActivatedEventArgsDeferral
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWIActivatedEventArgsDeferral_DEFINED__
@@ -119,7 +133,7 @@ typedef void(^WUWNavigatedEventHandler)(RTObject * sender, RTObject<WUWIWebUINav
 #define __WUWIWebUINavigatedEventArgs_DEFINED__
 
 @protocol WUWIWebUINavigatedEventArgs
-@property (readonly) WUWWebUINavigatedOperation * navigatedOperation;
+@property (readonly) WUWWebUINavigatedOperation* navigatedOperation;
 @end
 
 #endif // __WUWIWebUINavigatedEventArgs_DEFINED__
@@ -151,7 +165,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUWActivatedOperation : RTObject
-- (WUWActivatedDeferral *)getDeferral;
+- (WUWActivatedDeferral*)getDeferral;
 @end
 
 #endif // __WUWActivatedOperation_DEFINED__
@@ -163,7 +177,7 @@ WINRT_EXPORT
 @protocol WAAIActivatedEventArgs
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WAAIActivatedEventArgs_DEFINED__
@@ -173,8 +187,8 @@ WINRT_EXPORT
 #define __WAAILaunchActivatedEventArgs_DEFINED__
 
 @protocol WAAILaunchActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * tileId;
+@property (readonly) NSString* arguments;
+@property (readonly) NSString* tileId;
 @end
 
 #endif // __WAAILaunchActivatedEventArgs_DEFINED__
@@ -204,15 +218,19 @@ WINRT_EXPORT
 #define __WUWWebUILaunchActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIPrelaunchActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * tileId;
+@interface WUWWebUILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs,
+                                                        WAAIActivatedEventArgs,
+                                                        WAAIPrelaunchActivatedEventArgs,
+                                                        WAAIApplicationViewActivatedEventArgs,
+                                                        WUWIActivatedEventArgsDeferral>
+@property (readonly) NSString* arguments;
+@property (readonly) NSString* tileId;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) BOOL prelaunchActivated;
 @property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUILaunchActivatedEventArgs_DEFINED__
@@ -222,8 +240,8 @@ WINRT_EXPORT
 #define __WAAISearchActivatedEventArgs_DEFINED__
 
 @protocol WAAISearchActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSString * language;
-@property (readonly) NSString * queryText;
+@property (readonly) NSString* language;
+@property (readonly) NSString* queryText;
 @end
 
 #endif // __WAAISearchActivatedEventArgs_DEFINED__
@@ -233,7 +251,7 @@ WINRT_EXPORT
 #define __WAAISearchActivatedEventArgsWithLinguisticDetails_DEFINED__
 
 @protocol WAAISearchActivatedEventArgsWithLinguisticDetails
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @end
 
 #endif // __WAAISearchActivatedEventArgsWithLinguisticDetails_DEFINED__
@@ -243,15 +261,19 @@ WINRT_EXPORT
 #define __WUWWebUISearchActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs, WAAIActivatedEventArgs, WAAISearchActivatedEventArgsWithLinguisticDetails, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) NSString * language;
-@property (readonly) NSString * queryText;
+@interface WUWWebUISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs,
+                                                        WAAIActivatedEventArgs,
+                                                        WAAISearchActivatedEventArgsWithLinguisticDetails,
+                                                        WAAIApplicationViewActivatedEventArgs,
+                                                        WUWIActivatedEventArgsDeferral>
+@property (readonly) NSString* language;
+@property (readonly) NSString* queryText;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUISearchActivatedEventArgs_DEFINED__
@@ -261,7 +283,7 @@ WINRT_EXPORT
 #define __WAAIShareTargetActivatedEventArgs_DEFINED__
 
 @protocol WAAIShareTargetActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WADSShareOperation * shareOperation;
+@property (readonly) WADSShareOperation* shareOperation;
 @end
 
 #endif // __WAAIShareTargetActivatedEventArgs_DEFINED__
@@ -271,12 +293,13 @@ WINRT_EXPORT
 #define __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WADSShareOperation * shareOperation;
+@interface WUWWebUIShareTargetActivatedEventArgs
+    : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WADSShareOperation* shareOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUIShareTargetActivatedEventArgs_DEFINED__
@@ -286,8 +309,8 @@ WINRT_EXPORT
 #define __WAAIFileActivatedEventArgs_DEFINED__
 
 @protocol WAAIFileActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) id<NSFastEnumeration> /*WSIStorageItem*/  files;
-@property (readonly) NSString * verb;
+@property (readonly) id<NSFastEnumeration> /*WSIStorageItem*/ files;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WAAIFileActivatedEventArgs_DEFINED__
@@ -297,7 +320,7 @@ WINRT_EXPORT
 #define __WAAIFileActivatedEventArgsWithNeighboringFiles_DEFINED__
 
 @protocol WAAIFileActivatedEventArgsWithNeighboringFiles <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WSSStorageFileQueryResult * neighboringFilesQuery;
+@property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
 @end
 
 #endif // __WAAIFileActivatedEventArgsWithNeighboringFiles_DEFINED__
@@ -307,15 +330,19 @@ WINRT_EXPORT
 #define __WUWWebUIFileActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral, WAAIFileActivatedEventArgsWithNeighboringFiles>
+@interface WUWWebUIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs,
+                                                      WAAIActivatedEventArgs,
+                                                      WAAIApplicationViewActivatedEventArgs,
+                                                      WUWIActivatedEventArgsDeferral,
+                                                      WAAIFileActivatedEventArgsWithNeighboringFiles>
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) id<NSFastEnumeration> /*WSIStorageItem*/  files;
-@property (readonly) NSString * verb;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) id<NSFastEnumeration> /*WSIStorageItem*/ files;
+@property (readonly) NSString* verb;
 @property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) WSSStorageFileQueryResult * neighboringFilesQuery;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUIFileActivatedEventArgs_DEFINED__
@@ -325,7 +352,7 @@ WINRT_EXPORT
 #define __WAAIProtocolActivatedEventArgs_DEFINED__
 
 @protocol WAAIProtocolActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WFUri * uri;
+@property (readonly) WFUri* uri;
 @end
 
 #endif // __WAAIProtocolActivatedEventArgs_DEFINED__
@@ -335,13 +362,16 @@ WINRT_EXPORT
 #define __WUWWebUIProtocolActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@interface WUWWebUIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs,
+                                                          WAAIActivatedEventArgs,
+                                                          WAAIApplicationViewActivatedEventArgs,
+                                                          WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) WFUri * uri;
+@property (readonly) WFUri* uri;
 @end
 
 #endif // __WUWWebUIProtocolActivatedEventArgs_DEFINED__
@@ -351,7 +381,7 @@ WINRT_EXPORT
 #define __WAAIFileOpenPickerActivatedEventArgs_DEFINED__
 
 @protocol WAAIFileOpenPickerActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WSPPFileOpenPickerUI * fileOpenPickerUI;
+@property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
 @end
 
 #endif // __WAAIFileOpenPickerActivatedEventArgs_DEFINED__
@@ -361,12 +391,13 @@ WINRT_EXPORT
 #define __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@interface WUWWebUIFileOpenPickerActivatedEventArgs
+    : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WSPPFileOpenPickerUI * fileOpenPickerUI;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUIFileOpenPickerActivatedEventArgs_DEFINED__
@@ -376,7 +407,7 @@ WINRT_EXPORT
 #define __WAAIFileSavePickerActivatedEventArgs_DEFINED__
 
 @protocol WAAIFileSavePickerActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WSPPFileSavePickerUI * fileSavePickerUI;
+@property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
 @end
 
 #endif // __WAAIFileSavePickerActivatedEventArgs_DEFINED__
@@ -386,12 +417,13 @@ WINRT_EXPORT
 #define __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) WSPPFileSavePickerUI * fileSavePickerUI;
+@interface WUWWebUIFileSavePickerActivatedEventArgs
+    : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIFileSavePickerActivatedEventArgs_DEFINED__
@@ -401,7 +433,7 @@ WINRT_EXPORT
 #define __WAAICachedFileUpdaterActivatedEventArgs_DEFINED__
 
 @protocol WAAICachedFileUpdaterActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WSPCachedFileUpdaterUI * cachedFileUpdaterUI;
+@property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
 @end
 
 #endif // __WAAICachedFileUpdaterActivatedEventArgs_DEFINED__
@@ -411,12 +443,13 @@ WINRT_EXPORT
 #define __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@interface WUWWebUICachedFileUpdaterActivatedEventArgs
+    : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WSPCachedFileUpdaterUI * cachedFileUpdaterUI;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
 @end
 
 #endif // __WUWWebUICachedFileUpdaterActivatedEventArgs_DEFINED__
@@ -426,7 +459,7 @@ WINRT_EXPORT
 #define __WAAIContactPickerActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactPickerActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WACPContactPickerUI * contactPickerUI;
+@property (readonly) WACPContactPickerUI* contactPickerUI;
 @end
 
 #endif // __WAAIContactPickerActivatedEventArgs_DEFINED__
@@ -436,12 +469,13 @@ WINRT_EXPORT
 #define __WUWWebUIContactPickerActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactPickerActivatedEventArgs : RTObject <WAAIContactPickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WACPContactPickerUI * contactPickerUI;
+@interface WUWWebUIContactPickerActivatedEventArgs
+    : RTObject <WAAIContactPickerActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WACPContactPickerUI* contactPickerUI;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUIContactPickerActivatedEventArgs_DEFINED__
@@ -451,8 +485,8 @@ WINRT_EXPORT
 #define __WAAIDeviceActivatedEventArgs_DEFINED__
 
 @protocol WAAIDeviceActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSString * deviceInformationId;
-@property (readonly) NSString * verb;
+@property (readonly) NSString* deviceInformationId;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WAAIDeviceActivatedEventArgs_DEFINED__
@@ -462,14 +496,15 @@ WINRT_EXPORT
 #define __WUWWebUIDeviceActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@interface WUWWebUIDeviceActivatedEventArgs
+    : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 @property (readonly) int currentlyShownApplicationViewId;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) NSString * deviceInformationId;
-@property (readonly) NSString * verb;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) NSString* deviceInformationId;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WUWWebUIDeviceActivatedEventArgs_DEFINED__
@@ -479,7 +514,7 @@ WINRT_EXPORT
 #define __WAAIPrintTaskSettingsActivatedEventArgs_DEFINED__
 
 @protocol WAAIPrintTaskSettingsActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) WDPEPrintTaskConfiguration * configuration;
+@property (readonly) WDPEPrintTaskConfiguration* configuration;
 @end
 
 #endif // __WAAIPrintTaskSettingsActivatedEventArgs_DEFINED__
@@ -489,12 +524,13 @@ WINRT_EXPORT
 #define __WUWWebUIPrintTaskSettingsActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) WDPEPrintTaskConfiguration * configuration;
+@interface WUWWebUIPrintTaskSettingsActivatedEventArgs
+    : RTObject <WAAIPrintTaskSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) WDPEPrintTaskConfiguration* configuration;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIPrintTaskSettingsActivatedEventArgs_DEFINED__
@@ -504,8 +540,8 @@ WINRT_EXPORT
 #define __WAAICameraSettingsActivatedEventArgs_DEFINED__
 
 @protocol WAAICameraSettingsActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) RTObject * videoDeviceController;
-@property (readonly) RTObject * videoDeviceExtension;
+@property (readonly) RTObject* videoDeviceController;
+@property (readonly) RTObject* videoDeviceExtension;
 @end
 
 #endif // __WAAICameraSettingsActivatedEventArgs_DEFINED__
@@ -515,13 +551,14 @@ WINRT_EXPORT
 #define __WUWWebUICameraSettingsActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUICameraSettingsActivatedEventArgs : RTObject <WAAICameraSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) RTObject * videoDeviceController;
-@property (readonly) RTObject * videoDeviceExtension;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@interface WUWWebUICameraSettingsActivatedEventArgs
+    : RTObject <WAAICameraSettingsActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) RTObject* videoDeviceController;
+@property (readonly) RTObject* videoDeviceExtension;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUICameraSettingsActivatedEventArgs_DEFINED__
@@ -531,7 +568,7 @@ WINRT_EXPORT
 #define __WAAIAppointmentsProviderActivatedEventArgs_DEFINED__
 
 @protocol WAAIAppointmentsProviderActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSString * verb;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WAAIAppointmentsProviderActivatedEventArgs_DEFINED__
@@ -541,7 +578,7 @@ WINRT_EXPORT
 #define __WAAIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
 @protocol WAAIAppointmentsProviderAddAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WAAAAddAppointmentOperation * addAppointmentOperation;
+@property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
 @end
 
 #endif // __WAAIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
@@ -551,13 +588,17 @@ WINRT_EXPORT
 #define __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) WAAAAddAppointmentOperation * addAppointmentOperation;
+@interface WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs,
+                WAAIAppointmentsProviderActivatedEventArgs,
+                WAAIActivatedEventArgs,
+                WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) NSString * verb;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WUWWebUIAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
@@ -567,7 +608,7 @@ WINRT_EXPORT
 #define __WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
 @protocol WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WAAAReplaceAppointmentOperation * replaceAppointmentOperation;
+@property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
 @end
 
 #endif // __WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
@@ -577,13 +618,17 @@ WINRT_EXPORT
 #define __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WAAAReplaceAppointmentOperation * replaceAppointmentOperation;
+@interface WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs,
+                WAAIAppointmentsProviderActivatedEventArgs,
+                WAAIActivatedEventArgs,
+                WUWIActivatedEventArgsDeferral>
+@property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) NSString * verb;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WUWWebUIAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
@@ -593,7 +638,7 @@ WINRT_EXPORT
 #define __WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
 @protocol WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WAAARemoveAppointmentOperation * removeAppointmentOperation;
+@property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
 @end
 
 #endif // __WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
@@ -603,13 +648,17 @@ WINRT_EXPORT
 #define __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WAAARemoveAppointmentOperation * removeAppointmentOperation;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) NSString * verb;
+@interface WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs
+    : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs,
+                WAAIAppointmentsProviderActivatedEventArgs,
+                WAAIActivatedEventArgs,
+                WUWIActivatedEventArgsDeferral>
+@property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) NSString* verb;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
@@ -619,8 +668,8 @@ WINRT_EXPORT
 #define __WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
 @protocol WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WFTimeSpan * duration;
-@property (readonly) WFDateTime * timeToShow;
+@property (readonly) WFTimeSpan* duration;
+@property (readonly) WFDateTime* timeToShow;
 @end
 
 #endif // __WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
@@ -630,14 +679,17 @@ WINRT_EXPORT
 #define __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) NSString * verb;
-@property (readonly) WFTimeSpan * duration;
-@property (readonly) WFDateTime * timeToShow;
+@interface WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs,
+                                                                                   WAAIAppointmentsProviderActivatedEventArgs,
+                                                                                   WAAIActivatedEventArgs,
+                                                                                   WUWIActivatedEventArgsDeferral>
+@property (readonly) NSString* verb;
+@property (readonly) WFTimeSpan* duration;
+@property (readonly) WFDateTime* timeToShow;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @end
 
 #endif // __WUWWebUIAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
@@ -647,7 +699,7 @@ WINRT_EXPORT
 #define __WAAIContactActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSString * verb;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WAAIContactActivatedEventArgs_DEFINED__
@@ -657,9 +709,9 @@ WINRT_EXPORT
 #define __WAAIContactCallActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactCallActivatedEventArgs <WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @end
 
 #endif // __WAAIContactCallActivatedEventArgs_DEFINED__
@@ -669,15 +721,16 @@ WINRT_EXPORT
 #define __WUWWebUIContactCallActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactCallActivatedEventArgs : RTObject <WAAIContactCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) NSString * verb;
+@interface WUWWebUIContactCallActivatedEventArgs
+    : RTObject <WAAIContactCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) NSString* verb;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIContactCallActivatedEventArgs_DEFINED__
@@ -687,9 +740,9 @@ WINRT_EXPORT
 #define __WAAIContactMessageActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactMessageActivatedEventArgs <WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @end
 
 #endif // __WAAIContactMessageActivatedEventArgs_DEFINED__
@@ -699,15 +752,16 @@ WINRT_EXPORT
 #define __WUWWebUIContactMessageActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactMessageActivatedEventArgs : RTObject <WAAIContactMessageActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) NSString * verb;
+@interface WUWWebUIContactMessageActivatedEventArgs
+    : RTObject <WAAIContactMessageActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) NSString* verb;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @end
 
 #endif // __WUWWebUIContactMessageActivatedEventArgs_DEFINED__
@@ -717,8 +771,8 @@ WINRT_EXPORT
 #define __WAAIContactMapActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactMapActivatedEventArgs <WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACContactAddress * address;
-@property (readonly) WACContact * contact;
+@property (readonly) WACContactAddress* address;
+@property (readonly) WACContact* contact;
 @end
 
 #endif // __WAAIContactMapActivatedEventArgs_DEFINED__
@@ -728,14 +782,15 @@ WINRT_EXPORT
 #define __WUWWebUIContactMapActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactMapActivatedEventArgs : RTObject <WAAIContactMapActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WACContactAddress * address;
-@property (readonly) WACContact * contact;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) NSString * verb;
+@interface WUWWebUIContactMapActivatedEventArgs
+    : RTObject <WAAIContactMapActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WACContactAddress* address;
+@property (readonly) WACContact* contact;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) NSString* verb;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIContactMapActivatedEventArgs_DEFINED__
@@ -745,9 +800,9 @@ WINRT_EXPORT
 #define __WAAIContactPostActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactPostActivatedEventArgs <WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @end
 
 #endif // __WAAIContactPostActivatedEventArgs_DEFINED__
@@ -757,15 +812,16 @@ WINRT_EXPORT
 #define __WUWWebUIContactPostActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactPostActivatedEventArgs : RTObject <WAAIContactPostActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
-@property (readonly) NSString * verb;
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@interface WUWWebUIContactPostActivatedEventArgs
+    : RTObject <WAAIContactPostActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
+@property (readonly) NSString* verb;
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
+@property (readonly) WAASplashScreen* splashScreen;
 @end
 
 #endif // __WUWWebUIContactPostActivatedEventArgs_DEFINED__
@@ -775,9 +831,9 @@ WINRT_EXPORT
 #define __WAAIContactVideoCallActivatedEventArgs_DEFINED__
 
 @protocol WAAIContactVideoCallActivatedEventArgs <WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @end
 
 #endif // __WAAIContactVideoCallActivatedEventArgs_DEFINED__
@@ -787,15 +843,18 @@ WINRT_EXPORT
 #define __WUWWebUIContactVideoCallActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) WACContact * contact;
-@property (readonly) NSString * serviceId;
-@property (readonly) NSString * serviceUserId;
+@interface WUWWebUIContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs,
+                                                                  WAAIContactActivatedEventArgs,
+                                                                  WAAIActivatedEventArgs,
+                                                                  WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) WACContact* contact;
+@property (readonly) NSString* serviceId;
+@property (readonly) NSString* serviceUserId;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) NSString * verb;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) NSString* verb;
 @end
 
 #endif // __WUWWebUIContactVideoCallActivatedEventArgs_DEFINED__
@@ -805,7 +864,7 @@ WINRT_EXPORT
 #define __WAAILockScreenCallActivatedEventArgs_DEFINED__
 
 @protocol WAAILockScreenCallActivatedEventArgs <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) WACLockScreenCallUI * callUI;
+@property (readonly) WACLockScreenCallUI* callUI;
 @end
 
 #endif // __WAAILockScreenCallActivatedEventArgs_DEFINED__
@@ -815,15 +874,19 @@ WINRT_EXPORT
 #define __WUWWebUILockScreenCallActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WUWIActivatedEventArgsDeferral>
-@property (readonly) WUWActivatedOperation * activatedOperation;
+@interface WUWWebUILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs,
+                                                                WAAILaunchActivatedEventArgs,
+                                                                WAAIActivatedEventArgs,
+                                                                WAAIApplicationViewActivatedEventArgs,
+                                                                WUWIActivatedEventArgsDeferral>
+@property (readonly) WUWActivatedOperation* activatedOperation;
 @property (readonly) int currentlyShownApplicationViewId;
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WACLockScreenCallUI * callUI;
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * tileId;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WACLockScreenCallUI* callUI;
+@property (readonly) NSString* arguments;
+@property (readonly) NSString* tileId;
 @end
 
 #endif // __WUWWebUILockScreenCallActivatedEventArgs_DEFINED__
@@ -833,7 +896,7 @@ WINRT_EXPORT
 #define __WAAIRestrictedLaunchActivatedEventArgs_DEFINED__
 
 @protocol WAAIRestrictedLaunchActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) RTObject * sharedContext;
+@property (readonly) RTObject* sharedContext;
 @end
 
 #endif // __WAAIRestrictedLaunchActivatedEventArgs_DEFINED__
@@ -843,12 +906,13 @@ WINRT_EXPORT
 #define __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
 
 WINRT_EXPORT
-@interface WUWWebUIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
+@interface WUWWebUIRestrictedLaunchActivatedEventArgs
+    : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WUWIActivatedEventArgsDeferral>
 @property (readonly) WAAActivationKind kind;
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
-@property (readonly) WAASplashScreen * splashScreen;
-@property (readonly) WUWActivatedOperation * activatedOperation;
-@property (readonly) RTObject * sharedContext;
+@property (readonly) WAASplashScreen* splashScreen;
+@property (readonly) WUWActivatedOperation* activatedOperation;
+@property (readonly) RTObject* sharedContext;
 @end
 
 #endif // __WUWWebUIRestrictedLaunchActivatedEventArgs_DEFINED__
@@ -859,7 +923,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUWWebUINavigatedOperation : RTObject
-- (WUWWebUINavigatedDeferral *)getDeferral;
+- (WUWWebUINavigatedDeferral*)getDeferral;
 @end
 
 #endif // __WUWWebUINavigatedOperation_DEFINED__
@@ -890,8 +954,8 @@ WINRT_EXPORT
 #define __WAISuspendingOperation_DEFINED__
 
 @protocol WAISuspendingOperation
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WAISuspendingOperation_DEFINED__
@@ -902,8 +966,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUWSuspendingOperation : RTObject <WAISuspendingOperation>
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WUWSuspendingOperation_DEFINED__
@@ -913,7 +977,7 @@ WINRT_EXPORT
 #define __WAISuspendingEventArgs_DEFINED__
 
 @protocol WAISuspendingEventArgs
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WAISuspendingEventArgs_DEFINED__
@@ -924,7 +988,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUWSuspendingEventArgs : RTObject <WAISuspendingEventArgs>
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WUWSuspendingEventArgs_DEFINED__
@@ -934,14 +998,14 @@ WINRT_EXPORT
 #define __WABIBackgroundTaskInstance_DEFINED__
 
 @protocol WABIBackgroundTaskInstance
-@property (readonly) WFGUID * instanceId;
+@property (readonly) WFGUID* instanceId;
 @property unsigned progress;
 @property (readonly) unsigned suspendedCount;
-@property (readonly) WABBackgroundTaskRegistration * task;
-@property (readonly) RTObject * triggerDetails;
+@property (readonly) WABBackgroundTaskRegistration* task;
+@property (readonly) RTObject* triggerDetails;
 - (EventRegistrationToken)addCanceledEvent:(WABBackgroundTaskCanceledEventHandler)del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
-- (WABBackgroundTaskDeferral *)getDeferral;
+- (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
 #endif // __WABIBackgroundTaskInstance_DEFINED__
@@ -954,13 +1018,13 @@ WINRT_EXPORT
 @interface WUWWebUIBackgroundTaskInstanceRuntimeClass : RTObject <WUWIWebUIBackgroundTaskInstance, WABIBackgroundTaskInstance>
 @property BOOL succeeded;
 @property unsigned progress;
-@property (readonly) WFGUID * instanceId;
+@property (readonly) WFGUID* instanceId;
 @property (readonly) unsigned suspendedCount;
-@property (readonly) WABBackgroundTaskRegistration * task;
-@property (readonly) RTObject * triggerDetails;
+@property (readonly) WABBackgroundTaskRegistration* task;
+@property (readonly) RTObject* triggerDetails;
 - (EventRegistrationToken)addCanceledEvent:(WABBackgroundTaskCanceledEventHandler)del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
-- (WABBackgroundTaskDeferral *)getDeferral;
+- (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
 #endif // __WUWWebUIBackgroundTaskInstanceRuntimeClass_DEFINED__
@@ -993,7 +1057,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUWWebUINavigatedEventArgs : RTObject <WUWIWebUINavigatedEventArgs>
-@property (readonly) WUWWebUINavigatedOperation * navigatedOperation;
+@property (readonly) WUWWebUINavigatedOperation* navigatedOperation;
 @end
 
 #endif // __WUWWebUINavigatedEventArgs_DEFINED__
@@ -1049,10 +1113,9 @@ WINRT_EXPORT
 @property BOOL enableHeaderFooter;
 @property WUWPrintContent content;
 @property float bottomMargin;
-@property (readonly) NSString * pageRange;
-- (BOOL)trySetPageRange:(NSString *)strPageRange;
+@property (readonly) NSString* pageRange;
+- (BOOL)trySetPageRange:(NSString*)strPageRange;
 - (void)close;
 @end
 
 #endif // __WUWHtmlPrintDocumentSource_DEFINED__
-

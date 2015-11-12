@@ -26,10 +26,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 + (void)initialize {
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)streamStatus {
     return _status;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)close {
     if (fp) {
         EbrFclose(fp);
@@ -48,7 +54,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 + (void)getStreamsToHost:(id)host port:(int)port inputStream:(NSInputStream**)inputStreamp outputStream:(NSOutputStream**)outputStreamp {
+    UNIMPLEMENTED();
     id socket = [[[NSSocket alloc] initTCPStream] autorelease];
     id error;
     BOOL immediate;

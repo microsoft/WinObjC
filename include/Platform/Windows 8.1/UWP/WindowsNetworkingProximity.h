@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WNPProximityMessage, WNPProximityDevice, WNPTriggeredConnectionStateChangedEventArgs, WNPPeerInformation, WNPConnectionRequestedEventArgs, WNPPeerWatcher, WNPPeerFinder;
-@protocol WNPIProximityMessage, WNPIProximityDevice, WNPIProximityDeviceStatics, WNPITriggeredConnectionStateChangedEventArgs, WNPIPeerInformation, WNPIPeerInformation3, WNPIConnectionRequestedEventArgs, WNPIPeerWatcher, WNPIPeerFinderStatics, WNPIPeerFinderStatics2;
+@class WNPProximityMessage, WNPProximityDevice, WNPTriggeredConnectionStateChangedEventArgs, WNPPeerInformation,
+    WNPConnectionRequestedEventArgs, WNPPeerWatcher, WNPPeerFinder;
+@protocol WNPIProximityMessage
+, WNPIProximityDevice, WNPIProximityDeviceStatics, WNPITriggeredConnectionStateChangedEventArgs, WNPIPeerInformation, WNPIPeerInformation3,
+    WNPIConnectionRequestedEventArgs, WNPIPeerWatcher, WNPIPeerFinderStatics, WNPIPeerFinderStatics2;
 
 // Windows.Networking.Proximity.TriggeredConnectState
 enum _WNPTriggeredConnectState {
@@ -68,50 +71,49 @@ typedef unsigned WNPPeerRole;
 // Windows.Networking.Proximity.DeviceArrivedEventHandler
 #ifndef __WNPDeviceArrivedEventHandler__DEFINED
 #define __WNPDeviceArrivedEventHandler__DEFINED
-typedef void(^WNPDeviceArrivedEventHandler)(WNPProximityDevice * sender);
+typedef void (^WNPDeviceArrivedEventHandler)(WNPProximityDevice* sender);
 #endif // __WNPDeviceArrivedEventHandler__DEFINED
 
 // Windows.Networking.Proximity.DeviceDepartedEventHandler
 #ifndef __WNPDeviceDepartedEventHandler__DEFINED
 #define __WNPDeviceDepartedEventHandler__DEFINED
-typedef void(^WNPDeviceDepartedEventHandler)(WNPProximityDevice * sender);
+typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 #endif // __WNPDeviceDepartedEventHandler__DEFINED
 
 // Windows.Networking.Proximity.MessageReceivedHandler
 #ifndef __WNPMessageReceivedHandler__DEFINED
 #define __WNPMessageReceivedHandler__DEFINED
-typedef void(^WNPMessageReceivedHandler)(WNPProximityDevice * sender, WNPProximityMessage * message);
+typedef void (^WNPMessageReceivedHandler)(WNPProximityDevice* sender, WNPProximityMessage* message);
 #endif // __WNPMessageReceivedHandler__DEFINED
 
 // Windows.Networking.Proximity.MessageTransmittedHandler
 #ifndef __WNPMessageTransmittedHandler__DEFINED
 #define __WNPMessageTransmittedHandler__DEFINED
-typedef void(^WNPMessageTransmittedHandler)(WNPProximityDevice * sender, int64_t messageId);
+typedef void (^WNPMessageTransmittedHandler)(WNPProximityDevice* sender, int64_t messageId);
 #endif // __WNPMessageTransmittedHandler__DEFINED
-
 
 // Windows.Networking.Proximity.MessageReceivedHandler
 #ifndef __WNPMessageReceivedHandler__DEFINED
 #define __WNPMessageReceivedHandler__DEFINED
-typedef void(^WNPMessageReceivedHandler)(WNPProximityDevice * sender, WNPProximityMessage * message);
+typedef void (^WNPMessageReceivedHandler)(WNPProximityDevice* sender, WNPProximityMessage* message);
 #endif // __WNPMessageReceivedHandler__DEFINED
 
 // Windows.Networking.Proximity.MessageTransmittedHandler
 #ifndef __WNPMessageTransmittedHandler__DEFINED
 #define __WNPMessageTransmittedHandler__DEFINED
-typedef void(^WNPMessageTransmittedHandler)(WNPProximityDevice * sender, int64_t messageId);
+typedef void (^WNPMessageTransmittedHandler)(WNPProximityDevice* sender, int64_t messageId);
 #endif // __WNPMessageTransmittedHandler__DEFINED
 
 // Windows.Networking.Proximity.DeviceArrivedEventHandler
 #ifndef __WNPDeviceArrivedEventHandler__DEFINED
 #define __WNPDeviceArrivedEventHandler__DEFINED
-typedef void(^WNPDeviceArrivedEventHandler)(WNPProximityDevice * sender);
+typedef void (^WNPDeviceArrivedEventHandler)(WNPProximityDevice* sender);
 #endif // __WNPDeviceArrivedEventHandler__DEFINED
 
 // Windows.Networking.Proximity.DeviceDepartedEventHandler
 #ifndef __WNPDeviceDepartedEventHandler__DEFINED
 #define __WNPDeviceDepartedEventHandler__DEFINED
-typedef void(^WNPDeviceDepartedEventHandler)(WNPProximityDevice * sender);
+typedef void (^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 #endif // __WNPDeviceDepartedEventHandler__DEFINED
 
 // Windows.Networking.Proximity.ProximityMessage
@@ -121,8 +123,8 @@ typedef void(^WNPDeviceDepartedEventHandler)(WNPProximityDevice * sender);
 WINRT_EXPORT
 @interface WNPProximityMessage : RTObject
 @property (readonly) RTObject<WSSIBuffer>* data;
-@property (readonly) NSString * dataAsString;
-@property (readonly) NSString * messageType;
+@property (readonly) NSString* dataAsString;
+@property (readonly) NSString* messageType;
 @property (readonly) int64_t subscriptionId;
 @end
 
@@ -134,23 +136,27 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPProximityDevice : RTObject
-+ (NSString *)getDeviceSelector;
-+ (WNPProximityDevice *)getDefault;
-+ (WNPProximityDevice *)fromId:(NSString *)deviceId;
++ (NSString*)getDeviceSelector;
++ (WNPProximityDevice*)getDefault;
++ (WNPProximityDevice*)fromId:(NSString*)deviceId;
 @property (readonly) uint64_t bitsPerSecond;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) unsigned maxMessageBytes;
 - (EventRegistrationToken)addDeviceArrivedEvent:(WNPDeviceArrivedEventHandler)del;
 - (void)removeDeviceArrivedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDeviceDepartedEvent:(WNPDeviceDepartedEventHandler)del;
 - (void)removeDeviceDepartedEvent:(EventRegistrationToken)tok;
-- (int64_t)subscribeForMessage:(NSString *)messageType messageReceivedHandler:(WNPMessageReceivedHandler)messageReceivedHandler;
-- (int64_t)publishMessage:(NSString *)messageType message:(NSString *)message;
-- (int64_t)publishMessageWithCallback:(NSString *)messageType message:(NSString *)message messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
-- (int64_t)publishBinaryMessage:(NSString *)messageType message:(RTObject<WSSIBuffer>*)message;
-- (int64_t)publishBinaryMessageWithCallback:(NSString *)messageType message:(RTObject<WSSIBuffer>*)message messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
-- (int64_t)publishUriMessage:(WFUri *)message;
-- (int64_t)publishUriMessageWithCallback:(WFUri *)message messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
+- (int64_t)subscribeForMessage:(NSString*)messageType messageReceivedHandler:(WNPMessageReceivedHandler)messageReceivedHandler;
+- (int64_t)publishMessage:(NSString*)messageType message:(NSString*)message;
+- (int64_t)publishMessageWithCallback:(NSString*)messageType
+                              message:(NSString*)message
+            messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
+- (int64_t)publishBinaryMessage:(NSString*)messageType message:(RTObject<WSSIBuffer>*)message;
+- (int64_t)publishBinaryMessageWithCallback:(NSString*)messageType
+                                    message:(RTObject<WSSIBuffer>*)message
+                  messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
+- (int64_t)publishUriMessage:(WFUri*)message;
+- (int64_t)publishUriMessageWithCallback:(WFUri*)message messageTransmittedHandler:(WNPMessageTransmittedHandler)messageTransmittedHandler;
 - (void)stopSubscribingForMessage:(int64_t)subscriptionId;
 - (void)stopPublishingMessage:(int64_t)messageId;
 @end
@@ -164,7 +170,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
 @property (readonly) unsigned id;
-@property (readonly) WNSStreamSocket * socket;
+@property (readonly) WNSStreamSocket* socket;
 @property (readonly) WNPTriggeredConnectState state;
 @end
 
@@ -176,9 +182,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPPeerInformation : RTObject
-@property (readonly) NSString * displayName;
+@property (readonly) NSString* displayName;
 @property (readonly) RTObject<WSSIBuffer>* discoveryData;
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @end
 
 #endif // __WNPPeerInformation_DEFINED__
@@ -189,7 +195,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
-@property (readonly) WNPPeerInformation * peerInformation;
+@property (readonly) WNPPeerInformation* peerInformation;
 @end
 
 #endif // __WNPConnectionRequestedEventArgs_DEFINED__
@@ -201,15 +207,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPPeerWatcher : RTObject
 @property (readonly) WNPPeerWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void(^)(WNPPeerWatcher *, WNPPeerInformation *))del;
+- (EventRegistrationToken)addAddedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNPPeerWatcher *, RTObject *))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WNPPeerWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void(^)(WNPPeerWatcher *, WNPPeerInformation *))del;
+- (EventRegistrationToken)addRemovedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WNPPeerWatcher *, RTObject *))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WNPPeerWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void(^)(WNPPeerWatcher *, WNPPeerInformation *))del;
+- (EventRegistrationToken)addUpdatedEvent:(void (^)(WNPPeerWatcher*, WNPPeerInformation*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -223,19 +229,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPPeerFinder : RTObject
-+ (WNPPeerWatcher *)createWatcher;
++ (WNPPeerWatcher*)createWatcher;
 // Failed to generate member get_AlternateIdentities (Can't marshal Windows.Foundation.Collections.IMap`2<String,String>)
 + (void)start;
-+ (void)startWithMessage:(NSString *)peerMessage;
++ (void)startWithMessage:(NSString*)peerMessage;
 + (void)stop;
-+ (void)findAllPeersAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WNPPeerInformation*/ ))success failure:(void (^)(NSError*))failure;
-+ (void)connectAsync:(WNPPeerInformation *)peerInformation success:(void (^)(WNSStreamSocket *))success failure:(void (^)(NSError*))failure;
++ (void)findAllPeersAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WNPPeerInformation*/))success failure:(void (^)(NSError*))failure;
++ (void)connectAsync:(WNPPeerInformation*)peerInformation success:(void (^)(WNSStreamSocket*))success failure:(void (^)(NSError*))failure;
 + (WNPPeerRole)role;
 + (void)setRole:(WNPPeerRole)value;
 + (RTObject<WSSIBuffer>*)discoveryData;
 + (void)setDiscoveryData:(RTObject<WSSIBuffer>*)value;
-+ (NSString *)displayName;
-+ (void)setDisplayName:(NSString *)value;
++ (NSString*)displayName;
++ (void)setDisplayName:(NSString*)value;
 + (BOOL)allowWiFiDirect;
 + (void)setAllowWiFiDirect:(BOOL)value;
 + (BOOL)allowInfrastructure;
@@ -244,11 +250,10 @@ WINRT_EXPORT
 + (void)setAllowBluetooth:(BOOL)value;
 // Failed to generate property AlternateIdentities (Can't marshal Windows.Foundation.Collections.IMap`2<String,String>)
 + (WNPPeerDiscoveryTypes)supportedDiscoveryTypes;
-+ (EventRegistrationToken)addConnectionRequestedEvent:(void(^)(RTObject *, WNPConnectionRequestedEventArgs *))del;
++ (EventRegistrationToken)addConnectionRequestedEvent:(void (^)(RTObject*, WNPConnectionRequestedEventArgs*))del;
 + (void)removeConnectionRequestedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addTriggeredConnectionStateChangedEvent:(void(^)(RTObject *, WNPTriggeredConnectionStateChangedEventArgs *))del;
++ (EventRegistrationToken)addTriggeredConnectionStateChangedEvent:(void (^)(RTObject*, WNPTriggeredConnectionStateChangedEventArgs*))del;
 + (void)removeTriggeredConnectionStateChangedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WNPPeerFinder_DEFINED__
-

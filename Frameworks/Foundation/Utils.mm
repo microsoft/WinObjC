@@ -18,11 +18,17 @@
 #include "Foundation/NSArray.h"
 #include "Foundation/NSPathUtilities.h"
 
+/**
+ @Status Interoperable
+*/
 NSRange NSMakeRange(NSUInteger location, NSUInteger length) {
     NSRange ret = { location, length };
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 NSRange NSIntersectionRange(NSRange first, NSRange second) {
     NSUInteger min, loc, max1 = NSMaxRange(first), max2 = NSMaxRange(second);
     NSRange result;
@@ -40,20 +46,32 @@ NSRange NSIntersectionRange(NSRange first, NSRange second) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 NSUInteger NSMaxRange(NSRange range) {
     return range.location + range.length;
 }
 
+/**
+ @Status Interoperable
+*/
 NSRange NSUnionRange(NSRange range1, NSRange range2) {
     NSRange ret = { 0, 0 };
     assert(0);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 BOOL NSEqualRanges(NSRange range1, NSRange range2) {
     return ((range1.location == range2.location) && (range1.length == range2.length));
 }
 
+/**
+ @Status Interoperable
+*/
 NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde) {
     switch (dir) {
         case NSDocumentDirectory:
@@ -82,14 +100,23 @@ NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearch
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 Class NSClassFromString(NSString* name) {
     return objc_lookup_class((const char*)[name UTF8String]);
 }
 
+/**
+ @Status Interoperable
+*/
 SEL NSSelectorFromString(NSString* str) {
     return sel_registerName([str UTF8String]);
 }
 
+/**
+ @Status Interoperable
+*/
 NSString* NSStringFromClass(Class cls) {
     if (!cls) {
         return nil;
@@ -97,10 +124,16 @@ NSString* NSStringFromClass(Class cls) {
     return [NSString stringWithUTF8String:object_getClassName(cls)];
 }
 
+/**
+ @Status Interoperable
+*/
 unsigned int NSSwapHostIntToBig(unsigned int val) {
     return ((val & 0xFF) << 24) | ((val & 0xFF00) << 8) | ((val & 0xFF0000) >> 8) | (val >> 24);
 }
 
+/**
+ @Status Interoperable
+*/
 NSString* NSStringFromSelector(SEL sel) {
     NSString* ret = [NSString stringWithCString:sel_getName(sel)];
     return ret;
@@ -108,10 +141,16 @@ NSString* NSStringFromSelector(SEL sel) {
 
 NSString* temporaryDirectory = @"/tmp";
 
+/**
+ @Status Interoperable
+*/
 NSString* NSTemporaryDirectory(void) {
     return temporaryDirectory;
 }
 
+/**
+ @Status Interoperable
+*/
 void NSSetTemporaryDirectory(NSString* path) {
     temporaryDirectory = [path retain];
 }

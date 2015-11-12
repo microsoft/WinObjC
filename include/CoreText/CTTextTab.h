@@ -21,7 +21,7 @@
 #import <CoreText/CTParagraphStyle.h>
 #import <CoreFoundation/CFDictionary.h>
 
-typedef const struct __CTTextTab *CTTextTabRef;
+typedef const struct __CTTextTab* CTTextTabRef;
 
 SB_EXPORT CTTextTabRef CTTextTabCreate(CTTextAlignment alignment, double location, CFDictionaryRef options);
 

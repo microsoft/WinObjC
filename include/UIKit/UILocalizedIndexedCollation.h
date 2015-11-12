@@ -23,13 +23,13 @@
 
 @interface UILocalizedIndexedCollation : NSObject
 
-@property (nonatomic, readonly) NSArray *sectionTitles;
-@property (nonatomic, readonly) NSArray *sectionIndexTitles;
+@property (nonatomic, readonly) NSArray* sectionTitles;
+@property (nonatomic, readonly) NSArray* sectionIndexTitles;
 
 + (id)currentCollation;
 
 - (NSInteger)sectionForSectionIndexTitleAtIndex:(NSInteger)indexTitleIndex;
-- (NSArray *)sortedArrayFromArray:(NSArray *)array collationStringSelector:(SEL)selector;
+- (NSArray*)sortedArrayFromArray:(NSArray*)array collationStringSelector:(SEL)selector;
 - (NSInteger)sectionForObject:(id)object collationStringSelector:(SEL)selector;
 
 @end

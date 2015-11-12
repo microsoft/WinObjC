@@ -20,14 +20,14 @@
 #import <StarboardExport.h>
 #import <Foundation/Foundation.h>
 
-SB_EXPORT NSString *const AVMediaTypeVideo;
-SB_EXPORT NSString *const AVMediaTypeAudio;
-SB_EXPORT NSString *const AVMediaTypeText;
-SB_EXPORT NSString *const AVMediaTypeClosedCaption;
-SB_EXPORT NSString *const AVMediaTypeSubtitle;
-SB_EXPORT NSString *const AVMediaTypeTimecode;
-SB_EXPORT NSString *const AVMediaTypeTimedMetadata;
-SB_EXPORT NSString *const AVMediaTypeMetadata;
-SB_EXPORT NSString *const AVMediaTypeMuxed;
+SB_EXPORT NSString* const AVMediaTypeVideo;
+SB_EXPORT NSString* const AVMediaTypeAudio;
+SB_EXPORT NSString* const AVMediaTypeText;
+SB_EXPORT NSString* const AVMediaTypeClosedCaption;
+SB_EXPORT NSString* const AVMediaTypeSubtitle;
+SB_EXPORT NSString* const AVMediaTypeTimecode;
+SB_EXPORT NSString* const AVMediaTypeTimedMetadata;
+SB_EXPORT NSString* const AVMediaTypeMetadata;
+SB_EXPORT NSString* const AVMediaTypeMuxed;
 
 #endif /* _AVMEDIAFORMAT_H_ */

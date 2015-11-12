@@ -19,37 +19,70 @@
 
 static idretain sharedURLCache;
 
-@implementation NSURLCache : NSObject
+@implementation NSURLCache
+
+/**
+ @Status Stub
+*/
 + (id)sharedURLCache {
+    UNIMPLEMENTED();
     return sharedURLCache;
 }
 
+/**
+ @Status Stub
+*/
 - (id)cachedResponseForRequest:(id)request {
+    UNIMPLEMENTED();
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 + (void)setSharedURLCache:(id)cache {
+    UNIMPLEMENTED();
     sharedURLCache = cache;
 }
 
+/**
+ @Status Stub
+*/
 - (void)removeAllCachedResponses {
+    UNIMPLEMENTED();
 }
 
 + (void)initialize {
     sharedURLCache.attach([self new]);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMemoryCapacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDiskCapacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (unsigned)diskCapacity {
+    UNIMPLEMENTED();
     return 1024 * 1024 * 1024;
 }
 
+/**
+ @Status Stub
+*/
 - (id)initWithMemoryCapacity:(NSUInteger)memCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(id)path {
+    UNIMPLEMENTED();
     return self;
 }
 

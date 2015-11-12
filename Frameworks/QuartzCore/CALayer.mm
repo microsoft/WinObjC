@@ -321,6 +321,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     WXFrameworkElement* _contentsElement;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     assert(priv == NULL);
     priv = new CAPrivateInfo(self);
@@ -328,6 +331,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsDisplay {
     if (priv->needsDisplay == FALSE) {
         priv->needsDisplay = TRUE;
@@ -336,6 +342,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     GetCACompositor()->DisplayTreeChanged();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)displayIfNeeded {
     if (priv->needsDisplay) {
         priv->needsDisplay = FALSE;
@@ -343,6 +352,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes transform properties not supported
+*/
 - (void)renderInContext:(CGContextRef)ctx {
     if (priv->hidden) {
         return;
@@ -397,13 +410,24 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     CGContextRestoreGState(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawInContext:(CGContextRef)ctx {
 }
 
+/**
+ @Status Caveat
+ @Notes WinObjC extension method
+*/
 - (WXFrameworkElement*)contentsElement {
     return _contentsElement;
 }
 
+/**
+ @Status Caveat
+ @Notes WinObjC extension method
+*/
 - (void)setContentsElement:(WXFrameworkElement*)element {
     [element retain];
     [_contentsElement release];
@@ -417,6 +441,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     priv->needsDisplay = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)display {
     EbrDebugLog("Displaying for 0x%08x (%s, %s)\n",
                 priv->delegate,
@@ -641,6 +668,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addSublayer:(CALayer*)subLayerAddr {
     if (subLayerAddr == self) {
         assert(0);
@@ -681,6 +711,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [CATransaction _addSublayerToLayer:self sublayer:sublayer];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSublayer:(CALayer*)layer above:(CALayer*)aboveLayer {
     int curLayerPos = priv->indexOfChild(aboveLayer);
     if (curLayerPos == 0x7fffffff) {
@@ -690,6 +723,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [self insertSublayer:layer atIndex:curLayerPos + 1];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSublayer:(CALayer*)layer below:(CALayer*)belowLayer {
     int curLayerPos = priv->indexOfChild(belowLayer);
     if (curLayerPos == 0x7fffffff) {
@@ -699,6 +735,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [self insertSublayer:layer atIndex:curLayerPos];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSublayer:(CALayer*)subLayerAddr atIndex:(unsigned)index {
     if (subLayerAddr == self) {
         assert(0);
@@ -750,6 +789,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceSublayer:(CALayer*)oldLayer with:(CALayer*)newLayer {
     // according to the docs, if oldLayer is not found the behaviour is undefined.
     int index = priv->indexOfChild(oldLayer);
@@ -840,6 +882,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [CATransaction _moveLayer:sublayer beforeLayer:insertBefore afterLayer:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeFromSuperlayer {
     if (priv->superlayer == 0) {
         return;
@@ -883,6 +928,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->hidden;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)frame {
     CGRect ret;
 
@@ -916,6 +964,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     /*
     char szOut[512];
@@ -970,18 +1021,30 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [self setBounds:outBounds];
 }
 
+/**
+ @Status Interoperable
+*/
 + (CALayer*)layer {
     return [[self new] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)bounds {
     return priv->bounds;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CALayer*)superlayer {
     return priv->superlayer;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGAffineTransform)affineTransform {
     CGAffineTransform ret;
 
@@ -995,14 +1058,23 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)position {
     return priv->position;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)anchorPoint {
     return priv->anchorPoint;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPosition:(CGPoint)pos {
     if (priv->position.x == pos.x && priv->position.y == pos.y) {
         return;
@@ -1024,6 +1096,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBounds:(CGRect)bounds {
     CGRect zero = { 0 };
     if (*((DWORD*)&bounds.size.width) == 0xCCCCCCCC) {
@@ -1109,6 +1184,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAnchorPoint:(CGPoint)point {
     priv->anchorPoint = point;
     priv->_frameIsCached = FALSE;
@@ -1130,6 +1208,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newRect release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentsCenter:(CGRect)rect {
     memcpy(&priv->contentsCenter, &rect, sizeof(CGRect));
 
@@ -1138,6 +1219,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newRect release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentsGravity:(NSString*)gravity {
     if ([gravity isEqual:kCAGravityCenter]) {
         priv->gravity = kGravityCenter;
@@ -1172,6 +1256,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newGravity release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidden:(BOOL)hidden {
     if (priv->hidden == hidden) {
         return;
@@ -1184,10 +1271,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newHidden release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHidden {
     return priv->hidden;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegateAddr {
     priv->delegate = delegateAddr;
 
@@ -1199,10 +1292,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return priv->delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContents:(CGImageRef)pImg {
     CGImageRef oldContents = priv->contents;
 
@@ -1231,6 +1330,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     GetCACompositor()->DisplayTreeChanged();
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)contents {
     if (!priv->ownsContents) {
         return (id)priv->contents;
@@ -1272,14 +1374,23 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->isOpaque;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)opaque {
     return priv->isOpaque;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOpaque:(BOOL)isOpaque {
     priv->isOpaque = isOpaque;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setZPosition:(float)pos {
     priv->zPosition = pos;
 
@@ -1288,10 +1399,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newZPos release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)zPosition {
     return priv->zPosition;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMasksToBounds:(BOOL)mask {
     priv->masksToBounds = mask;
 
@@ -1300,10 +1417,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newMask release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)masksToBounds {
     return priv->masksToBounds;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addAnimation:(CAAnimation*)anim forKey:(NSString*)key {
     if (priv->_animations == nil) {
         priv->_animations = [NSMutableDictionary new];
@@ -1339,6 +1462,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [priv->_animations setObject:nil forKey:animation->_keyName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)animationForKey:(NSString*)key {
     if (priv->_animations == nil) {
         priv->_animations = [NSMutableDictionary new];
@@ -1351,6 +1477,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [priv->_animations objectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)animationKeys {
     if (priv->_animations == nil) {
         priv->_animations = [NSMutableDictionary new];
@@ -1359,6 +1488,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return [priv->_animations allKeys];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllAnimations {
     if (priv->_animations) {
         int count = CFDictionaryGetCount((CFDictionaryRef)priv->_animations);
@@ -1373,6 +1505,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAnimationForKey:(NSString*)key {
     CAAnimation* anim = [priv->_animations objectForKey:key];
 
@@ -1382,6 +1517,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [priv->_animations removeObjectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAffineTransform:(CGAffineTransform)transform {
     CATransform3D newTransform;
 
@@ -1409,6 +1547,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [transformValue release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTransform:(CATransform3D)transform {
     if (memcmp(priv->transform.m, transform.m, sizeof(transform.m)) == 0) {
         return;
@@ -1426,6 +1567,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [transformValue release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSublayerTransform:(CATransform3D)transform {
     memcpy(priv->sublayerTransform.m, transform.m, sizeof(transform.m));
 
@@ -1434,21 +1578,34 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newTransform release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CATransform3D)sublayerTransform {
     return priv->sublayerTransform;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CATransform3D)transform {
     return priv->transform;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDoubleSided:(BOOL)doubleSided {
+    UNIMPLEMENTED();
 }
 
 - (void)setGeometryFlipped:(BOOL)flipped {
     EbrDebugLog("setGeometryFlipped not supported\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(CGColorRef)color {
     if (color != nil) {
         [color getColors:&priv->backgroundColor];
@@ -1472,7 +1629,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [CATransaction _setPropertyForLayer:self name:@"contentColor" value:newColor];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBorderColor:(CGColorRef)color {
+    UNIMPLEMENTED();
     if (color != nil) {
         [color getColors:&priv->borderColor];
     } else {
@@ -1487,26 +1648,49 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     CGColorRelease(old);
 }
 
+/**
+ @Status Stub
+*/
 - (CGColorRef)borderColor {
+    UNIMPLEMENTED();
     return priv->_borderColor;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBorderWidth:(float)width {
+    UNIMPLEMENTED();
     priv->borderWidth = width;
 }
 
+/**
+ @Status Stub
+*/
 - (float)borderWidth {
+    UNIMPLEMENTED();
     return priv->borderWidth;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setCornerRadius:(float)radius {
+    UNIMPLEMENTED();
     priv->cornerRadius = radius;
 }
 
+/**
+ @Status Stub
+*/
 - (float)cornerRadius {
+    UNIMPLEMENTED();
     return priv->cornerRadius;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentsScale:(float)scale {
     priv->contentsScale = scale;
 
@@ -1515,57 +1699,111 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newScale release];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRasterizationScale:(float)scale {
+    UNIMPLEMENTED();
     EbrDebugLog("setRasterizationScale not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowOffset:(CGSize)size {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (CGSize)shadowOffset {
+    UNIMPLEMENTED();
     CGSize ret;
     ret.width = 0.0f;
     ret.height = -3.0f;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowOpacity:(float)opacity {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (float)shadowOpacity {
+    UNIMPLEMENTED();
     return 0.0f;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowColor:(CGColorRef)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (CGColorRef)shadowColor {
+    UNIMPLEMENTED();
     return CGColorGetConstantColor((CFStringRef) @"BLACK");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowRadius:(float)radius {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (float)shadowRadius {
+    UNIMPLEMENTED();
     return 3.0f;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldRasterize:(BOOL)shouldRasterize {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)contentsScale {
     return priv->contentsScale;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMagnificationFilter:(NSString*)filter {
+    UNIMPLEMENTED();
 }
 
 - (void)setEdgeAntialiasingMask:(unsigned)mask {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinificationFilter:(NSString*)filter {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOpacity:(float)value {
     if (priv->opacity == value) {
         return;
@@ -1584,22 +1822,37 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [newOpacity release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)opacity {
     return priv->opacity;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)name {
     priv->_name.attach([name copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return priv->_name;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sublayers {
     return priv->subnodesArray();
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<CAAction>)actionForKey:(NSString*)key {
     id<CAAction> ret = nil;
 
@@ -1679,14 +1932,25 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return ourTexture;
 }
 
+/**
+ @Status Stub
+*/
 - (CALayer*)presentationLayer {
+    UNIMPLEMENTED();
     return nil;
 }
 
+/**
+ @Status Stub
+*/
 - (instancetype)initWithLayer:(CALayer*)layerToCopy {
+    UNIMPLEMENTED();
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsDisplayOnBoundsChange:(BOOL)needsDisplayOnBoundsChange {
     priv->needsDisplayOnBoundsChange = needsDisplayOnBoundsChange;
 }
@@ -1831,7 +2095,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMask:(CALayer*)mask {
+    UNIMPLEMENTED();
     id oldLayer = priv->maskLayer;
     priv->maskLayer = [mask retain];
     [oldLayer release];
@@ -1839,7 +2107,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     priv->hasNewContents = TRUE;
 }
 
+/**
+ @Status Stub
+*/
 - (CALayer*)mask {
+    UNIMPLEMENTED();
     EbrDebugLog("mask not supported\n");
     return nil;
 }
@@ -1848,38 +2120,67 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     EbrDebugLog("setFillMode not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShadowPath:(CGPathRef)path {
+    UNIMPLEMENTED();
     EbrDebugLog("setShadowPath not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (CGPathRef)shadowPath {
+    UNIMPLEMENTED();
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)actions {
     return priv->_actions;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setActions:(NSArray*)actions {
     priv->_actions.attach([actions copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)convertPoint:(CGPoint)point toLayer:(CALayer*)toLayer {
     return [CALayer convertPoint:point fromLayer:self toLayer:toLayer];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)convertRect:(CGRect)rect toLayer:(CALayer*)toLayer {
     return [CALayer convertRect:rect fromLayer:self toLayer:toLayer];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer {
     return [CALayer convertPoint:point fromLayer:fromLayer toLayer:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)convertRect:(CGRect)rect fromLayer:(CALayer*)fromLayer {
     return [CALayer convertRect:rect fromLayer:fromLayer toLayer:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutIfNeeded {
     CALayer* curLayer = self;
 
@@ -1902,6 +2203,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     DiscardLayerContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsLayout {
     priv->needsLayout = TRUE;
     GetCACompositor()->DisplayTreeChanged();
@@ -1915,6 +2219,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSublayers {
     if ([priv->delegate respondsToSelector:@selector(layoutSublayersOfLayer:)]) {
         [priv->delegate layoutSublayersOfLayer:self];
@@ -1985,6 +2292,9 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
     CALayer* pToLayer = (CALayer*)toLayer;
 

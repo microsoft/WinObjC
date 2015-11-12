@@ -22,7 +22,8 @@
 #include "interopBase.h"
 @class WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageId, WAPackage, WADesignMode;
 @class WAPackageVersion;
-@protocol WAISuspendingDeferral, WAISuspendingOperation, WAISuspendingEventArgs, WAIPackageId, WAIPackage, WAIPackage2, WAIPackageStatics, WAIDesignModeStatics;
+@protocol WAISuspendingDeferral
+, WAISuspendingOperation, WAISuspendingEventArgs, WAIPackageId, WAIPackage, WAIPackage2, WAIPackageStatics, WAIDesignModeStatics;
 
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
@@ -32,7 +33,7 @@
 // [struct] Windows.ApplicationModel.PackageVersion
 WINRT_EXPORT
 @interface WAPackageVersion : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned short major;
 @property unsigned short minor;
 @property unsigned short build;
@@ -54,8 +55,8 @@ WINRT_EXPORT
 #define __WAISuspendingOperation_DEFINED__
 
 @protocol WAISuspendingOperation
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WAISuspendingOperation_DEFINED__
@@ -65,7 +66,7 @@ WINRT_EXPORT
 #define __WAISuspendingEventArgs_DEFINED__
 
 @protocol WAISuspendingEventArgs
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WAISuspendingEventArgs_DEFINED__
@@ -76,7 +77,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingEventArgs : RTObject <WAISuspendingEventArgs>
-@property (readonly) WASuspendingOperation * suspendingOperation;
+@property (readonly) WASuspendingOperation* suspendingOperation;
 @end
 
 #endif // __WASuspendingEventArgs_DEFINED__
@@ -98,8 +99,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASuspendingOperation : RTObject <WAISuspendingOperation>
-@property (readonly) WFDateTime * deadline;
-- (WASuspendingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WASuspendingDeferral*)getDeferral;
 @end
 
 #endif // __WASuspendingOperation_DEFINED__
@@ -111,13 +112,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAPackageId : RTObject
 @property (readonly) WSProcessorArchitecture architecture;
-@property (readonly) NSString * familyName;
-@property (readonly) NSString * fullName;
-@property (readonly) NSString * name;
-@property (readonly) NSString * publisher;
-@property (readonly) NSString * publisherId;
-@property (readonly) NSString * resourceId;
-@property (readonly) WAPackageVersion * version;
+@property (readonly) NSString* familyName;
+@property (readonly) NSString* fullName;
+@property (readonly) NSString* name;
+@property (readonly) NSString* publisher;
+@property (readonly) NSString* publisherId;
+@property (readonly) NSString* resourceId;
+@property (readonly) WAPackageVersion* version;
 @end
 
 #endif // __WAPackageId_DEFINED__
@@ -128,18 +129,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackage : RTObject
-@property (readonly) id<NSFastEnumeration> /*WAPackage*/  dependencies;
-@property (readonly) WAPackageId * id;
-@property (readonly) WSStorageFolder * installedLocation;
+@property (readonly) id<NSFastEnumeration> /*WAPackage*/ dependencies;
+@property (readonly) WAPackageId* id;
+@property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
-@property (readonly) NSString * description;
-@property (readonly) NSString * displayName;
+@property (readonly) NSString* description;
+@property (readonly) NSString* displayName;
 @property (readonly) BOOL isBundle;
 @property (readonly) BOOL isDevelopmentMode;
 @property (readonly) BOOL isResourcePackage;
-@property (readonly) WFUri * logo;
-@property (readonly) NSString * publisherDisplayName;
-+ (WAPackage *)current;
+@property (readonly) WFUri* logo;
+@property (readonly) NSString* publisherDisplayName;
++ (WAPackage*)current;
 @end
 
 #endif // __WAPackage_DEFINED__
@@ -154,4 +155,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WADesignMode_DEFINED__
-

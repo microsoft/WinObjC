@@ -25,48 +25,47 @@
 
 @class CAMediaTimingFunction;
 
-CA_EXPORT NSString * const kCATransitionFade;
-CA_EXPORT NSString * const kCATransitionMoveIn;
-CA_EXPORT NSString * const kCATransitionPush;
-CA_EXPORT NSString * const kCATransitionReveal;
+CA_EXPORT NSString* const kCATransitionFade;
+CA_EXPORT NSString* const kCATransitionMoveIn;
+CA_EXPORT NSString* const kCATransitionPush;
+CA_EXPORT NSString* const kCATransitionReveal;
 
-CA_EXPORT NSString * const kCATransitionFromLeft;
-CA_EXPORT NSString * const kCATransitionFromRight;
-CA_EXPORT NSString * const kCATransitionFromTop;
-CA_EXPORT NSString * const kCATransitionFromBottom;
+CA_EXPORT NSString* const kCATransitionFromLeft;
+CA_EXPORT NSString* const kCATransitionFromRight;
+CA_EXPORT NSString* const kCATransitionFromTop;
+CA_EXPORT NSString* const kCATransitionFromBottom;
 
-CA_EXPORT NSString * const kCAAnimationRotateAuto;
-CA_EXPORT NSString * const kCAAnimationRotateAutoReverse;
+CA_EXPORT NSString* const kCAAnimationRotateAuto;
+CA_EXPORT NSString* const kCAAnimationRotateAutoReverse;
 
-enum CAMediaFillMode
-{
+enum CAMediaFillMode {
     fillModeRemoved,
     fillModeForwards,
     fillModeBackwards,
-    fillModeBoth
+    fillModeBoth,
 };
 
 #ifdef __cplusplus
 class DisplayAnimation;
 #else
-typedef void *DisplayAnimation;
+typedef void* DisplayAnimation;
 #endif
 
 CA_EXPORT_CLASS
 @interface CAAnimation : NSObject <NSCopying, CAMediaTiming, CAAction>
 
-+animation;
++ animation;
 
 @property (retain) id delegate;
 @property (getter=isRemovedOnCompletion) BOOL removedOnCompletion;
-@property (retain) CAMediaTimingFunction *timingFunction;
+@property (retain) CAMediaTimingFunction* timingFunction;
 @property CGPathRef path;
 
 @end
 
 @interface NSObject (CAAnimationDelegate)
--(void)animationDidStart:(CAAnimation *)animation;
--(void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished;
+- (void)animationDidStart:(CAAnimation*)animation;
+- (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished;
 @end
 
 #import <QuartzCore/CATransition.h>

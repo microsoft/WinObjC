@@ -28,26 +28,42 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, void* block);
 
 @implementation NSMutableArray
+
+/**
+ @Status Interoperable
+*/
 + (NSMutableArray*)arrayWithCapacity:(NSUInteger)numElements {
     NSMutableArray* newArray = [self new];
 
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableArray*)initWithCapacity:(NSUInteger)numElements {
     [self init];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllObjects {
     CFArrayRemoveAllValues((CFMutableArrayRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObject:(NSObject*)objAddr {
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObjectsFromArray:(NSArray*)fromArray {
     NSEnumerator* enumerator = [fromArray objectEnumerator];
 
@@ -56,11 +72,17 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setArray:(NSArray*)fromArray {
     [self removeAllObjects];
     [self addObjectsFromArray:fromArray];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectsInArray:(NSArray*)fromArray {
     NSEnumerator* enumerator = [fromArray objectEnumerator];
     NSObject* curVal = [enumerator nextObject];
@@ -71,10 +93,16 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
     CFArrayInsertValueAtIndex((CFMutableArrayRef)self, index, (const void*)objAddr);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertObjects:(NSArray*)objects atIndexes:(NSIndexSet*)indexes {
     NSInteger i;
     NSInteger index = [indexes firstIndex];
@@ -85,6 +113,9 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
     if (object_getClass(self) == [NSMutableArrayConcrete class]) {
         //  Fastpath
@@ -108,6 +139,9 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)exchangeObjectAtIndex:(NSUInteger)atIndex withObjectAtIndex:(NSUInteger)withIndex {
     NSObject* obj1 = [self objectAtIndex:atIndex];
     NSObject* obj2 = [self objectAtIndex:withIndex];
@@ -122,6 +156,9 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     [obj2 release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObject:(NSObject*)objAddr {
     if (objAddr == nil) {
         EbrDebugLog("objAddr = nil!\n");
@@ -133,6 +170,9 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObject:(NSObject*)objAddr inRange:(NSRange)range {
     for (int i = range.location + range.length - 1; i >= (int)range.location; i--) {
         id curObj = [self objectAtIndex:i];
@@ -143,12 +183,18 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectsInRange:(NSRange)range {
     for (int i = range.location + range.length - 1; i >= (int)range.location; i--) {
         [self removeObjectAtIndex:i];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectIdenticalTo:(NSObject*)objAddr {
     int idx = [self indexOfObjectIdenticalTo:objAddr];
     if (idx != NSNotFound) {
@@ -156,10 +202,16 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectAtIndex:(NSUInteger)index {
     CFArrayRemoveValueAtIndex((CFMutableArrayRef)self, index);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectsAtIndexes:(NSIndexSet*)index {
     [index _removeFromArray:self];
 }
@@ -168,6 +220,9 @@ __declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, voi
     CFArrayMoveValueAtIndexToEnd((CFMutableArrayRef)self, index);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeLastObject {
     NSUInteger count = [self count];
 
@@ -225,12 +280,18 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL select
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingComparator:(NSComparator)comparator {
     [self sortUsingFunction:CFNSBlockCompare context:comparator];
 }
 
 #define CUTOFF 8
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingFunction:(NSCompareFunc)compFunc context:(void*)context {
     NSUInteger count = [self count];
 
@@ -316,6 +377,9 @@ recurse:
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingSelector:(SEL)selector {
     uint32_t base = 0;
     uint32_t num = [self count];
@@ -395,6 +459,9 @@ recurse:
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingDescriptors:(NSArray*)descriptors {
     [self sortUsingFunction:CFNSDescriptorCompare context:descriptors];
 }
@@ -412,6 +479,9 @@ recurse:
     return NSAllocateObject((Class)self, 0, zone);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
         //[NSException raise:NSInvalidArgumentException format:@"-[%@ %s] predicate is nil",isa,_cmd];

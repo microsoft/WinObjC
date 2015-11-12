@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #include <stdio.h>
 #include <stdlib.h>
 #import "Foundation/Foundation.h"
@@ -31,6 +32,10 @@
 #include <functional>
 
 @implementation NSObject (Foundation)
+
+/**
+ @Status Interoperable
+*/
 + (BOOL)accessInstanceVariablesDirectly {
     return YES;
 }
@@ -138,6 +143,10 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return true;
 }
 
+/**
+ @Status Caveat
+ @Notes Does not support aggregate functions.
+*/
 - (id)valueForKeyPath:(NSString*)path {
     const char* keyPath = [path UTF8String];
 
@@ -160,6 +169,10 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Does not support set/array adapters
+*/
 - (id)valueForKey:(NSString*)key {
     if ([key length] == 0) {
         // Bail quickly
@@ -181,6 +194,10 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return [self valueForUndefinedKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Notes These throw exceptions. That's what they're supposed to do.
+*/
 - (id)valueForUndefinedKey:(NSString*)key {
     [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
     return nil;
@@ -293,6 +310,9 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     return true;
 }
 
+/**
+ @Status Caveat
+*/
 - (void)setValue:(id)val forKey:(NSString*)key {
     if ([key length] == 0) {
         // Bail quickly
@@ -323,36 +343,63 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     [self setValue:val forUndefinedKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Notes These throw exceptions. That's what they're supposed to do.
+*/
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
     [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
 }
 
+/**
+ @Status Stub
+*/
 - (Class)classForArchiver {
+    UNIMPLEMENTED();
     return [self class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForKeyedArchiver {
     return [self classForArchiver];
 }
 
+/**
+ @Status Stub
+*/
 - (id)replacementObjectForArchiver:(id)a {
+    UNIMPLEMENTED();
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)replacementObjectForKeyedArchiver:(id)a {
     return [self replacementObjectForArchiver:a];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj1 waitUntilDone:(BOOL)wait {
     id modes = [[NSArray alloc] initWithObject:@"kCFRunLoopDefaultMode"];
     [self performSelectorOnMainThread:selector withObject:obj1 waitUntilDone:wait modes:modes];
     selector, [modes release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj waitUntilDone:(BOOL)wait modes:(NSArray*)modes {
     [self performSelector:selector onThread:[NSThread mainThread] withObject:obj waitUntilDone:wait modes:modes];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelectorInBackground:(SEL)selector withObject:(id)obj {
     [NSThread detachNewThreadSelector:selector toTarget:self withObject:obj];
 }
@@ -373,6 +420,9 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     [waitingLock unlockWithCondition:1];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)obj waitUntilDone:(BOOL)waitUntilDone modes:(id)modes {
     NSRunLoop* runloop = [thread _runLoop];
 
@@ -407,6 +457,9 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelector:(SEL)selector onThread:(id)thread withObject:(id)obj waitUntilDone:(BOOL)wait {
     [self performSelector:selector
                  onThread:thread
@@ -431,6 +484,9 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(double)delay {
     [[self class] object:self
          performSelector:selector
@@ -439,10 +495,16 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
                  inModes:[NSArray arrayWithObject:@"kCFRunLoopDefaultMode"]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
     return [[self class] instanceMethodSignatureForSelector:selector];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
     id cls = self;
     const char* methodTypes;
@@ -465,6 +527,9 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSString*)description {
     return NSStringFromClass([self class]);
 }

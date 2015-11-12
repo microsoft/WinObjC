@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 #ifndef COREBLUETOOTH_IMPEXP
- #define COREBLUETOOTH_IMPEXP __declspec(dllimport)
+#define COREBLUETOOTH_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef COREBLUETOOTH_EXPORT
- #ifdef __cplusplus
-  #define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern "C"
-  #define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP 
- #else
-  #define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern  
-  #define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
- #endif
+#ifdef __cplusplus
+#define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern "C"
+#define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
+#else
+#define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern
+#define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
+#endif
 #endif

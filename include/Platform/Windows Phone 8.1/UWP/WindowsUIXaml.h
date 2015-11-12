@@ -20,9 +20,34 @@
 #pragma once
 
 #include "interopBase.h"
-@class WXDependencyObject, WXDependencyPropertyChangedEventArgs, WXApplicationInitializationCallbackParams, WXCornerRadiusHelper, WXDurationHelper, WXGridLengthHelper, WXPointHelper, WXRectHelper, WXSizeHelper, WXThicknessHelper, WXBindingFailedEventArgs, WXRoutedEventArgs, WXUnhandledExceptionEventArgs, WXVisualStateChangedEventArgs, WXDataContextChangedEventArgs, WXDataTemplateKey, WXDebugSettings, WXDependencyProperty, WXDependencyObjectCollection, WXPropertyMetadata, WXDispatcherTimer, WXDragEventArgs, WXRoutedEvent, WXTriggerActionCollection, WXExceptionRoutedEventArgs, WXWindowCreatedEventArgs, WXApplication, WXTriggerCollection, WXFrameworkTemplate, WXDataTemplate, WXFrameworkView, WXFrameworkViewSource, WXMediaFailedRoutedEventArgs, WXPropertyPath, WXResourceDictionary, WXSetterBase, WXSetter, WXSetterBaseCollection, WXSizeChangedEventArgs, WXStyle, WXTriggerAction, WXTriggerBase, WXEventTrigger, WXUIElement, WXFrameworkElement, WXVisualState, WXVisualStateGroup, WXVisualStateManager, WXVisualTransition, WXWindow;
+@class WXDependencyObject, WXDependencyPropertyChangedEventArgs, WXApplicationInitializationCallbackParams, WXCornerRadiusHelper,
+    WXDurationHelper, WXGridLengthHelper, WXPointHelper, WXRectHelper, WXSizeHelper, WXThicknessHelper, WXBindingFailedEventArgs,
+    WXRoutedEventArgs, WXUnhandledExceptionEventArgs, WXVisualStateChangedEventArgs, WXDataContextChangedEventArgs, WXDataTemplateKey,
+    WXDebugSettings, WXDependencyProperty, WXDependencyObjectCollection, WXPropertyMetadata, WXDispatcherTimer, WXDragEventArgs,
+    WXRoutedEvent, WXTriggerActionCollection, WXExceptionRoutedEventArgs, WXWindowCreatedEventArgs, WXApplication, WXTriggerCollection,
+    WXFrameworkTemplate, WXDataTemplate, WXFrameworkView, WXFrameworkViewSource, WXMediaFailedRoutedEventArgs, WXPropertyPath,
+    WXResourceDictionary, WXSetterBase, WXSetter, WXSetterBaseCollection, WXSizeChangedEventArgs, WXStyle, WXTriggerAction, WXTriggerBase,
+    WXEventTrigger, WXUIElement, WXFrameworkElement, WXVisualState, WXVisualStateGroup, WXVisualStateManager, WXVisualTransition, WXWindow;
 @class WXCornerRadius, WXDuration, WXGridLength, WXThickness;
-@protocol WXICornerRadiusHelper, WXICornerRadiusHelperStatics, WXIDurationHelper, WXIDurationHelperStatics, WXIGridLengthHelper, WXIGridLengthHelperStatics, WXIPointHelper, WXIPointHelperStatics, WXIRectHelper, WXIRectHelperStatics, WXISizeHelper, WXISizeHelperStatics, WXIThicknessHelper, WXIThicknessHelperStatics, WXIApplicationInitializationCallbackParams, WXIBindingFailedEventArgs, WXIDataContextChangedEventArgs, WXIDataTemplate, WXIDataTemplateFactory, WXIDataTemplateKey, WXIDataTemplateKeyFactory, WXIDebugSettings, WXIDebugSettings2, WXIDependencyObject, WXIDependencyObjectFactory, WXIDependencyObjectCollectionFactory, WXIDependencyProperty, WXIDependencyPropertyStatics, WXIDependencyPropertyChangedEventArgs, WXIDispatcherTimer, WXIDispatcherTimerFactory, WXIDragEventArgs, WXIEventTrigger, WXIExceptionRoutedEventArgs, WXIExceptionRoutedEventArgsFactory, WXIApplication, WXIApplicationOverrides, WXIApplicationStatics, WXIApplicationFactory, WXIFrameworkElement, WXIFrameworkElementOverrides, WXIFrameworkElementStatics, WXIFrameworkElementFactory, WXIFrameworkElement2, WXIFrameworkElementOverrides2, WXIFrameworkElementStatics2, WXIFrameworkTemplate, WXIFrameworkTemplateFactory, WXIFrameworkView, WXIFrameworkViewSource, WXIMediaFailedRoutedEventArgs, WXIPropertyMetadata, WXIPropertyMetadataStatics, WXIPropertyMetadataFactory, WXIPropertyPath, WXIPropertyPathFactory, WXIResourceDictionary, WXIResourceDictionaryFactory, WXIRoutedEvent, WXIRoutedEventArgs, WXIRoutedEventArgsFactory, WXISetter, WXISetterFactory, WXISetterBase, WXISetterBaseFactory, WXISetterBaseCollection, WXISizeChangedEventArgs, WXIStyle, WXIStyleFactory, WXITriggerAction, WXITriggerActionFactory, WXITriggerBase, WXITriggerBaseFactory, WXIUIElement, WXIUIElementOverrides, WXIUIElementStatics, WXIUIElementFactory, WXIUIElement2, WXIUIElementStatics2, WXIUnhandledExceptionEventArgs, WXIVisualState, WXIVisualStateChangedEventArgs, WXIVisualStateGroup, WXIVisualStateManager, WXIVisualStateManagerOverrides, WXIVisualStateManagerProtected, WXIVisualStateManagerStatics, WXIVisualStateManagerFactory, WXIVisualTransition, WXIVisualTransitionFactory, WXIWindow, WXIWindowStatics, WXIWindowCreatedEventArgs;
+@protocol WXICornerRadiusHelper
+, WXICornerRadiusHelperStatics, WXIDurationHelper, WXIDurationHelperStatics, WXIGridLengthHelper, WXIGridLengthHelperStatics,
+    WXIPointHelper, WXIPointHelperStatics, WXIRectHelper, WXIRectHelperStatics, WXISizeHelper, WXISizeHelperStatics, WXIThicknessHelper,
+    WXIThicknessHelperStatics, WXIApplicationInitializationCallbackParams, WXIBindingFailedEventArgs, WXIDataContextChangedEventArgs,
+    WXIDataTemplate, WXIDataTemplateFactory, WXIDataTemplateKey, WXIDataTemplateKeyFactory, WXIDebugSettings, WXIDebugSettings2,
+    WXIDependencyObject, WXIDependencyObjectFactory, WXIDependencyObjectCollectionFactory, WXIDependencyProperty,
+    WXIDependencyPropertyStatics, WXIDependencyPropertyChangedEventArgs, WXIDispatcherTimer, WXIDispatcherTimerFactory, WXIDragEventArgs,
+    WXIEventTrigger, WXIExceptionRoutedEventArgs, WXIExceptionRoutedEventArgsFactory, WXIApplication, WXIApplicationOverrides,
+    WXIApplicationStatics, WXIApplicationFactory, WXIFrameworkElement, WXIFrameworkElementOverrides, WXIFrameworkElementStatics,
+    WXIFrameworkElementFactory, WXIFrameworkElement2, WXIFrameworkElementOverrides2, WXIFrameworkElementStatics2, WXIFrameworkTemplate,
+    WXIFrameworkTemplateFactory, WXIFrameworkView, WXIFrameworkViewSource, WXIMediaFailedRoutedEventArgs, WXIPropertyMetadata,
+    WXIPropertyMetadataStatics, WXIPropertyMetadataFactory, WXIPropertyPath, WXIPropertyPathFactory, WXIResourceDictionary,
+    WXIResourceDictionaryFactory, WXIRoutedEvent, WXIRoutedEventArgs, WXIRoutedEventArgsFactory, WXISetter, WXISetterFactory, WXISetterBase,
+    WXISetterBaseFactory, WXISetterBaseCollection, WXISizeChangedEventArgs, WXIStyle, WXIStyleFactory, WXITriggerAction,
+    WXITriggerActionFactory, WXITriggerBase, WXITriggerBaseFactory, WXIUIElement, WXIUIElementOverrides, WXIUIElementStatics,
+    WXIUIElementFactory, WXIUIElement2, WXIUIElementStatics2, WXIUnhandledExceptionEventArgs, WXIVisualState,
+    WXIVisualStateChangedEventArgs, WXIVisualStateGroup, WXIVisualStateManager, WXIVisualStateManagerOverrides,
+    WXIVisualStateManagerProtected, WXIVisualStateManagerStatics, WXIVisualStateManagerFactory, WXIVisualTransition,
+    WXIVisualTransitionFactory, WXIWindow, WXIWindowStatics, WXIWindowCreatedEventArgs;
 
 // Windows.UI.Xaml.ApplicationTheme
 enum _WXApplicationTheme {
@@ -243,158 +268,157 @@ typedef unsigned WXVisibility;
 // Windows.UI.Xaml.ApplicationInitializationCallback
 #ifndef __WXApplicationInitializationCallback__DEFINED
 #define __WXApplicationInitializationCallback__DEFINED
-typedef void(^WXApplicationInitializationCallback)(WXApplicationInitializationCallbackParams * p);
+typedef void (^WXApplicationInitializationCallback)(WXApplicationInitializationCallbackParams* p);
 #endif // __WXApplicationInitializationCallback__DEFINED
 
 // Windows.UI.Xaml.BindingFailedEventHandler
 #ifndef __WXBindingFailedEventHandler__DEFINED
 #define __WXBindingFailedEventHandler__DEFINED
-typedef void(^WXBindingFailedEventHandler)(RTObject * sender, WXBindingFailedEventArgs * e);
+typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEventArgs* e);
 #endif // __WXBindingFailedEventHandler__DEFINED
 
 // Windows.UI.Xaml.CreateDefaultValueCallback
 #ifndef __WXCreateDefaultValueCallback__DEFINED
 #define __WXCreateDefaultValueCallback__DEFINED
-typedef void(^WXCreateDefaultValueCallback)();
+typedef void (^WXCreateDefaultValueCallback)();
 #endif // __WXCreateDefaultValueCallback__DEFINED
 
 // Windows.UI.Xaml.DragEventHandler
 #ifndef __WXDragEventHandler__DEFINED
 #define __WXDragEventHandler__DEFINED
-typedef void(^WXDragEventHandler)(RTObject * sender, WXDragEventArgs * e);
+typedef void (^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
 #endif // __WXDragEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.DoubleTappedEventHandler
 #ifndef __WUXIDoubleTappedEventHandler__DEFINED
 #define __WUXIDoubleTappedEventHandler__DEFINED
-typedef void(^WUXIDoubleTappedEventHandler)(RTObject * sender, WUXIDoubleTappedRoutedEventArgs * e);
+typedef void (^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
 #endif // __WUXIDoubleTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.HoldingEventHandler
 #ifndef __WUXIHoldingEventHandler__DEFINED
 #define __WUXIHoldingEventHandler__DEFINED
-typedef void(^WUXIHoldingEventHandler)(RTObject * sender, WUXIHoldingRoutedEventArgs * e);
+typedef void (^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
 #endif // __WUXIHoldingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.KeyEventHandler
 #ifndef __WUXIKeyEventHandler__DEFINED
 #define __WUXIKeyEventHandler__DEFINED
-typedef void(^WUXIKeyEventHandler)(RTObject * sender, WUXIKeyRoutedEventArgs * e);
+typedef void (^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
 #endif // __WUXIKeyEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationCompletedEventHandler
 #ifndef __WUXIManipulationCompletedEventHandler__DEFINED
 #define __WUXIManipulationCompletedEventHandler__DEFINED
-typedef void(^WUXIManipulationCompletedEventHandler)(RTObject * sender, WUXIManipulationCompletedRoutedEventArgs * e);
+typedef void (^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
 #endif // __WUXIManipulationCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationDeltaEventHandler
 #ifndef __WUXIManipulationDeltaEventHandler__DEFINED
 #define __WUXIManipulationDeltaEventHandler__DEFINED
-typedef void(^WUXIManipulationDeltaEventHandler)(RTObject * sender, WUXIManipulationDeltaRoutedEventArgs * e);
+typedef void (^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
 #endif // __WUXIManipulationDeltaEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationInertiaStartingEventHandler
 #ifndef __WUXIManipulationInertiaStartingEventHandler__DEFINED
 #define __WUXIManipulationInertiaStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationInertiaStartingEventHandler)(RTObject * sender, WUXIManipulationInertiaStartingRoutedEventArgs * e);
+typedef void (^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationInertiaStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartedEventHandler
 #ifndef __WUXIManipulationStartedEventHandler__DEFINED
 #define __WUXIManipulationStartedEventHandler__DEFINED
-typedef void(^WUXIManipulationStartedEventHandler)(RTObject * sender, WUXIManipulationStartedRoutedEventArgs * e);
+typedef void (^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
 #endif // __WUXIManipulationStartedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartingEventHandler
 #ifndef __WUXIManipulationStartingEventHandler__DEFINED
 #define __WUXIManipulationStartingEventHandler__DEFINED
-typedef void(^WUXIManipulationStartingEventHandler)(RTObject * sender, WUXIManipulationStartingRoutedEventArgs * e);
+typedef void (^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.PointerEventHandler
 #ifndef __WUXIPointerEventHandler__DEFINED
 #define __WUXIPointerEventHandler__DEFINED
-typedef void(^WUXIPointerEventHandler)(RTObject * sender, WUXIPointerRoutedEventArgs * e);
+typedef void (^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
 #endif // __WUXIPointerEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.RightTappedEventHandler
 #ifndef __WUXIRightTappedEventHandler__DEFINED
 #define __WUXIRightTappedEventHandler__DEFINED
-typedef void(^WUXIRightTappedEventHandler)(RTObject * sender, WUXIRightTappedRoutedEventArgs * e);
+typedef void (^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
 #endif // __WUXIRightTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.TappedEventHandler
 #ifndef __WUXITappedEventHandler__DEFINED
 #define __WUXITappedEventHandler__DEFINED
-typedef void(^WUXITappedEventHandler)(RTObject * sender, WUXITappedRoutedEventArgs * e);
+typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
 #endif // __WUXITappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.PropertyChangedCallback
 #ifndef __WXPropertyChangedCallback__DEFINED
 #define __WXPropertyChangedCallback__DEFINED
-typedef void(^WXPropertyChangedCallback)(WXDependencyObject * d, WXDependencyPropertyChangedEventArgs * e);
+typedef void (^WXPropertyChangedCallback)(WXDependencyObject* d, WXDependencyPropertyChangedEventArgs* e);
 #endif // __WXPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject * sender, WXRoutedEventArgs * e);
+typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SizeChangedEventHandler
 #ifndef __WXSizeChangedEventHandler__DEFINED
 #define __WXSizeChangedEventHandler__DEFINED
-typedef void(^WXSizeChangedEventHandler)(RTObject * sender, WXSizeChangedEventArgs * e);
+typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
 #endif // __WXSizeChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SuspendingEventHandler
 #ifndef __WXSuspendingEventHandler__DEFINED
 #define __WXSuspendingEventHandler__DEFINED
-typedef void(^WXSuspendingEventHandler)(RTObject * sender, WASuspendingEventArgs * e);
+typedef void (^WXSuspendingEventHandler)(RTObject* sender, WASuspendingEventArgs* e);
 #endif // __WXSuspendingEventHandler__DEFINED
 
 // Windows.UI.Xaml.UnhandledExceptionEventHandler
 #ifndef __WXUnhandledExceptionEventHandler__DEFINED
 #define __WXUnhandledExceptionEventHandler__DEFINED
-typedef void(^WXUnhandledExceptionEventHandler)(RTObject * sender, WXUnhandledExceptionEventArgs * e);
+typedef void (^WXUnhandledExceptionEventHandler)(RTObject* sender, WXUnhandledExceptionEventArgs* e);
 #endif // __WXUnhandledExceptionEventHandler__DEFINED
 
 // Windows.UI.Xaml.VisualStateChangedEventHandler
 #ifndef __WXVisualStateChangedEventHandler__DEFINED
 #define __WXVisualStateChangedEventHandler__DEFINED
-typedef void(^WXVisualStateChangedEventHandler)(RTObject * sender, WXVisualStateChangedEventArgs * e);
+typedef void (^WXVisualStateChangedEventHandler)(RTObject* sender, WXVisualStateChangedEventArgs* e);
 #endif // __WXVisualStateChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowActivatedEventHandler
 #ifndef __WXWindowActivatedEventHandler__DEFINED
 #define __WXWindowActivatedEventHandler__DEFINED
-typedef void(^WXWindowActivatedEventHandler)(RTObject * sender, WUCWindowActivatedEventArgs * e);
+typedef void (^WXWindowActivatedEventHandler)(RTObject* sender, WUCWindowActivatedEventArgs* e);
 #endif // __WXWindowActivatedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowClosedEventHandler
 #ifndef __WXWindowClosedEventHandler__DEFINED
 #define __WXWindowClosedEventHandler__DEFINED
-typedef void(^WXWindowClosedEventHandler)(RTObject * sender, WUCCoreWindowEventArgs * e);
+typedef void (^WXWindowClosedEventHandler)(RTObject* sender, WUCCoreWindowEventArgs* e);
 #endif // __WXWindowClosedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowSizeChangedEventHandler
 #ifndef __WXWindowSizeChangedEventHandler__DEFINED
 #define __WXWindowSizeChangedEventHandler__DEFINED
-typedef void(^WXWindowSizeChangedEventHandler)(RTObject * sender, WUCWindowSizeChangedEventArgs * e);
+typedef void (^WXWindowSizeChangedEventHandler)(RTObject* sender, WUCWindowSizeChangedEventArgs* e);
 #endif // __WXWindowSizeChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowVisibilityChangedEventHandler
 #ifndef __WXWindowVisibilityChangedEventHandler__DEFINED
 #define __WXWindowVisibilityChangedEventHandler__DEFINED
-typedef void(^WXWindowVisibilityChangedEventHandler)(RTObject * sender, WUCVisibilityChangedEventArgs * e);
+typedef void (^WXWindowVisibilityChangedEventHandler)(RTObject* sender, WUCVisibilityChangedEventArgs* e);
 #endif // __WXWindowVisibilityChangedEventHandler__DEFINED
-
 
 // [struct] Windows.UI.Xaml.CornerRadius
 WINRT_EXPORT
 @interface WXCornerRadius : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double topLeft;
 @property double topRight;
 @property double bottomRight;
@@ -404,15 +428,15 @@ WINRT_EXPORT
 // [struct] Windows.UI.Xaml.Duration
 WINRT_EXPORT
 @interface WXDuration : NSObject
-+ (instancetype)new;
-@property (copy) WFTimeSpan * timeSpan;
++ (instancetype) new;
+@property (copy) WFTimeSpan* timeSpan;
 @property WXDurationType type;
 @end
 
 // [struct] Windows.UI.Xaml.GridLength
 WINRT_EXPORT
 @interface WXGridLength : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double value;
 @property WXGridUnitType gridUnitType;
 @end
@@ -420,7 +444,7 @@ WINRT_EXPORT
 // [struct] Windows.UI.Xaml.Thickness
 WINRT_EXPORT
 @interface WXThickness : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double left;
 @property double top;
 @property double right;
@@ -430,97 +454,97 @@ WINRT_EXPORT
 // Windows.UI.Xaml.CreateDefaultValueCallback
 #ifndef __WXCreateDefaultValueCallback__DEFINED
 #define __WXCreateDefaultValueCallback__DEFINED
-typedef void(^WXCreateDefaultValueCallback)();
+typedef void (^WXCreateDefaultValueCallback)();
 #endif // __WXCreateDefaultValueCallback__DEFINED
 
 // Windows.UI.Xaml.PropertyChangedCallback
 #ifndef __WXPropertyChangedCallback__DEFINED
 #define __WXPropertyChangedCallback__DEFINED
-typedef void(^WXPropertyChangedCallback)(WXDependencyObject * d, WXDependencyPropertyChangedEventArgs * e);
+typedef void (^WXPropertyChangedCallback)(WXDependencyObject* d, WXDependencyPropertyChangedEventArgs* e);
 #endif // __WXPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.ApplicationInitializationCallback
 #ifndef __WXApplicationInitializationCallback__DEFINED
 #define __WXApplicationInitializationCallback__DEFINED
-typedef void(^WXApplicationInitializationCallback)(WXApplicationInitializationCallbackParams * p);
+typedef void (^WXApplicationInitializationCallback)(WXApplicationInitializationCallbackParams* p);
 #endif // __WXApplicationInitializationCallback__DEFINED
 
 // Windows.UI.Xaml.BindingFailedEventHandler
 #ifndef __WXBindingFailedEventHandler__DEFINED
 #define __WXBindingFailedEventHandler__DEFINED
-typedef void(^WXBindingFailedEventHandler)(RTObject * sender, WXBindingFailedEventArgs * e);
+typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEventArgs* e);
 #endif // __WXBindingFailedEventHandler__DEFINED
 
 // Windows.UI.Xaml.DependencyPropertyChangedEventHandler
 #ifndef __WXDependencyPropertyChangedEventHandler__DEFINED
 #define __WXDependencyPropertyChangedEventHandler__DEFINED
-typedef void(^WXDependencyPropertyChangedEventHandler)(RTObject * sender, WXDependencyPropertyChangedEventArgs * e);
+typedef void (^WXDependencyPropertyChangedEventHandler)(RTObject* sender, WXDependencyPropertyChangedEventArgs* e);
 #endif // __WXDependencyPropertyChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.DragEventHandler
 #ifndef __WXDragEventHandler__DEFINED
 #define __WXDragEventHandler__DEFINED
-typedef void(^WXDragEventHandler)(RTObject * sender, WXDragEventArgs * e);
+typedef void (^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
 #endif // __WXDragEventHandler__DEFINED
 
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void(^WXExceptionRoutedEventHandler)(RTObject * sender, WXExceptionRoutedEventArgs * e);
+typedef void (^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject * sender, WXRoutedEventArgs * e);
+typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SizeChangedEventHandler
 #ifndef __WXSizeChangedEventHandler__DEFINED
 #define __WXSizeChangedEventHandler__DEFINED
-typedef void(^WXSizeChangedEventHandler)(RTObject * sender, WXSizeChangedEventArgs * e);
+typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
 #endif // __WXSizeChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SuspendingEventHandler
 #ifndef __WXSuspendingEventHandler__DEFINED
 #define __WXSuspendingEventHandler__DEFINED
-typedef void(^WXSuspendingEventHandler)(RTObject * sender, WASuspendingEventArgs * e);
+typedef void (^WXSuspendingEventHandler)(RTObject* sender, WASuspendingEventArgs* e);
 #endif // __WXSuspendingEventHandler__DEFINED
 
 // Windows.UI.Xaml.UnhandledExceptionEventHandler
 #ifndef __WXUnhandledExceptionEventHandler__DEFINED
 #define __WXUnhandledExceptionEventHandler__DEFINED
-typedef void(^WXUnhandledExceptionEventHandler)(RTObject * sender, WXUnhandledExceptionEventArgs * e);
+typedef void (^WXUnhandledExceptionEventHandler)(RTObject* sender, WXUnhandledExceptionEventArgs* e);
 #endif // __WXUnhandledExceptionEventHandler__DEFINED
 
 // Windows.UI.Xaml.VisualStateChangedEventHandler
 #ifndef __WXVisualStateChangedEventHandler__DEFINED
 #define __WXVisualStateChangedEventHandler__DEFINED
-typedef void(^WXVisualStateChangedEventHandler)(RTObject * sender, WXVisualStateChangedEventArgs * e);
+typedef void (^WXVisualStateChangedEventHandler)(RTObject* sender, WXVisualStateChangedEventArgs* e);
 #endif // __WXVisualStateChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowActivatedEventHandler
 #ifndef __WXWindowActivatedEventHandler__DEFINED
 #define __WXWindowActivatedEventHandler__DEFINED
-typedef void(^WXWindowActivatedEventHandler)(RTObject * sender, WUCWindowActivatedEventArgs * e);
+typedef void (^WXWindowActivatedEventHandler)(RTObject* sender, WUCWindowActivatedEventArgs* e);
 #endif // __WXWindowActivatedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowClosedEventHandler
 #ifndef __WXWindowClosedEventHandler__DEFINED
 #define __WXWindowClosedEventHandler__DEFINED
-typedef void(^WXWindowClosedEventHandler)(RTObject * sender, WUCCoreWindowEventArgs * e);
+typedef void (^WXWindowClosedEventHandler)(RTObject* sender, WUCCoreWindowEventArgs* e);
 #endif // __WXWindowClosedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowSizeChangedEventHandler
 #ifndef __WXWindowSizeChangedEventHandler__DEFINED
 #define __WXWindowSizeChangedEventHandler__DEFINED
-typedef void(^WXWindowSizeChangedEventHandler)(RTObject * sender, WUCWindowSizeChangedEventArgs * e);
+typedef void (^WXWindowSizeChangedEventHandler)(RTObject* sender, WUCWindowSizeChangedEventArgs* e);
 #endif // __WXWindowSizeChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.WindowVisibilityChangedEventHandler
 #ifndef __WXWindowVisibilityChangedEventHandler__DEFINED
 #define __WXWindowVisibilityChangedEventHandler__DEFINED
-typedef void(^WXWindowVisibilityChangedEventHandler)(RTObject * sender, WUCVisibilityChangedEventArgs * e);
+typedef void (^WXWindowVisibilityChangedEventHandler)(RTObject* sender, WUCVisibilityChangedEventArgs* e);
 #endif // __WXWindowVisibilityChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.DependencyObject
@@ -530,12 +554,12 @@ typedef void(^WXWindowVisibilityChangedEventHandler)(RTObject * sender, WUCVisib
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (RTObject *)getValue:(WXDependencyProperty *)dp;
-- (void)setValue:(WXDependencyProperty *)dp value:(RTObject *)value;
-- (void)clearValue:(WXDependencyProperty *)dp;
-- (RTObject *)readLocalValue:(WXDependencyProperty *)dp;
-- (RTObject *)getAnimationBaseValue:(WXDependencyProperty *)dp;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (RTObject*)getValue:(WXDependencyProperty*)dp;
+- (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
+- (void)clearValue:(WXDependencyProperty*)dp;
+- (RTObject*)readLocalValue:(WXDependencyProperty*)dp;
+- (RTObject*)getAnimationBaseValue:(WXDependencyProperty*)dp;
 @end
 
 #endif // __WXDependencyObject_DEFINED__
@@ -546,9 +570,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyPropertyChangedEventArgs : RTObject
-@property (readonly) RTObject * newValue;
-@property (readonly) RTObject * oldValue;
-@property (readonly) WXDependencyProperty * property;
+@property (readonly) RTObject* newValue;
+@property (readonly) RTObject* oldValue;
+@property (readonly) WXDependencyProperty* property ;
 @end
 
 #endif // __WXDependencyPropertyChangedEventArgs_DEFINED__
@@ -569,8 +593,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCornerRadiusHelper : RTObject
-+ (WXCornerRadius *)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
-+ (WXCornerRadius *)fromUniformRadius:(double)uniformRadius;
++ (WXCornerRadius*)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
++ (WXCornerRadius*)fromUniformRadius:(double)uniformRadius;
 @end
 
 #endif // __WXCornerRadiusHelper_DEFINED__
@@ -581,14 +605,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDurationHelper : RTObject
-+ (int)compare:(WXDuration *)duration1 duration2:(WXDuration *)duration2;
-+ (WXDuration *)fromTimeSpan:(WFTimeSpan *)timeSpan;
-+ (BOOL)getHasTimeSpan:(WXDuration *)target;
-+ (WXDuration *)add:(WXDuration *)target duration:(WXDuration *)duration;
-+ (BOOL)equals:(WXDuration *)target value:(WXDuration *)value;
-+ (WXDuration *)subtract:(WXDuration *)target duration:(WXDuration *)duration;
-+ (WXDuration *)automatic;
-+ (WXDuration *)forever;
++ (int)compare:(WXDuration*)duration1 duration2:(WXDuration*)duration2;
++ (WXDuration*)fromTimeSpan:(WFTimeSpan*)timeSpan;
++ (BOOL)getHasTimeSpan:(WXDuration*)target;
++ (WXDuration*)add:(WXDuration*)target duration:(WXDuration*)duration;
++ (BOOL)equals:(WXDuration*)target value:(WXDuration*)value;
++ (WXDuration*)subtract:(WXDuration*)target duration:(WXDuration*)duration;
++ (WXDuration*)automatic;
++ (WXDuration*)forever;
 @end
 
 #endif // __WXDurationHelper_DEFINED__
@@ -599,13 +623,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXGridLengthHelper : RTObject
-+ (WXGridLength *)fromPixels:(double)pixels;
-+ (WXGridLength *)fromValueAndType:(double)value type:(WXGridUnitType)type;
-+ (BOOL)getIsAbsolute:(WXGridLength *)target;
-+ (BOOL)getIsAuto:(WXGridLength *)target;
-+ (BOOL)getIsStar:(WXGridLength *)target;
-+ (BOOL)equals:(WXGridLength *)target value:(WXGridLength *)value;
-+ (WXGridLength *)Auto;
++ (WXGridLength*)fromPixels:(double)pixels;
++ (WXGridLength*)fromValueAndType:(double)value type:(WXGridUnitType)type;
++ (BOOL)getIsAbsolute:(WXGridLength*)target;
++ (BOOL)getIsAuto:(WXGridLength*)target;
++ (BOOL)getIsStar:(WXGridLength*)target;
++ (BOOL)equals:(WXGridLength*)target value:(WXGridLength*)value;
++ (WXGridLength*)Auto;
 @end
 
 #endif // __WXGridLengthHelper_DEFINED__
@@ -616,7 +640,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXPointHelper : RTObject
-+ (WFPoint *)fromCoordinates:(float)x y:(float)y;
++ (WFPoint*)fromCoordinates:(float)x y:(float)y;
 @end
 
 #endif // __WXPointHelper_DEFINED__
@@ -627,20 +651,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRectHelper : RTObject
-+ (WFRect *)fromCoordinatesAndDimensions:(float)x y:(float)y width:(float)width height:(float)height;
-+ (WFRect *)fromPoints:(WFPoint *)point1 point2:(WFPoint *)point2;
-+ (WFRect *)fromLocationAndSize:(WFPoint *)location size:(WFSize *)size;
-+ (BOOL)getIsEmpty:(WFRect *)target;
-+ (float)getBottom:(WFRect *)target;
-+ (float)getLeft:(WFRect *)target;
-+ (float)getRight:(WFRect *)target;
-+ (float)getTop:(WFRect *)target;
-+ (BOOL)contains:(WFRect *)target point:(WFPoint *)point;
-+ (BOOL)equals:(WFRect *)target value:(WFRect *)value;
-+ (WFRect *)intersect:(WFRect *)target rect:(WFRect *)rect;
-+ (WFRect *)unionWithPoint:(WFRect *)target point:(WFPoint *)point;
-+ (WFRect *)unionWithRect:(WFRect *)target rect:(WFRect *)rect;
-+ (WFRect *)empty;
++ (WFRect*)fromCoordinatesAndDimensions:(float)x y:(float)y width:(float)width height:(float)height;
++ (WFRect*)fromPoints:(WFPoint*)point1 point2:(WFPoint*)point2;
++ (WFRect*)fromLocationAndSize:(WFPoint*)location size:(WFSize*)size;
++ (BOOL)getIsEmpty:(WFRect*)target;
++ (float)getBottom:(WFRect*)target;
++ (float)getLeft:(WFRect*)target;
++ (float)getRight:(WFRect*)target;
++ (float)getTop:(WFRect*)target;
++ (BOOL)contains:(WFRect*)target point:(WFPoint*)point;
++ (BOOL)equals:(WFRect*)target value:(WFRect*)value;
++ (WFRect*)intersect:(WFRect*)target rect:(WFRect*)rect;
++ (WFRect*)unionWithPoint:(WFRect*)target point:(WFPoint*)point;
++ (WFRect*)unionWithRect:(WFRect*)target rect:(WFRect*)rect;
++ (WFRect*)empty;
 @end
 
 #endif // __WXRectHelper_DEFINED__
@@ -651,10 +675,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSizeHelper : RTObject
-+ (WFSize *)fromDimensions:(float)width height:(float)height;
-+ (BOOL)getIsEmpty:(WFSize *)target;
-+ (BOOL)equals:(WFSize *)target value:(WFSize *)value;
-+ (WFSize *)empty;
++ (WFSize*)fromDimensions:(float)width height:(float)height;
++ (BOOL)getIsEmpty:(WFSize*)target;
++ (BOOL)equals:(WFSize*)target value:(WFSize*)value;
++ (WFSize*)empty;
 @end
 
 #endif // __WXSizeHelper_DEFINED__
@@ -665,8 +689,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXThicknessHelper : RTObject
-+ (WXThickness *)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
-+ (WXThickness *)fromUniformLength:(double)uniformLength;
++ (WXThickness*)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
++ (WXThickness*)fromUniformLength:(double)uniformLength;
 @end
 
 #endif // __WXThicknessHelper_DEFINED__
@@ -677,7 +701,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXBindingFailedEventArgs : RTObject
-@property (readonly) NSString * message;
+@property (readonly) NSString* message;
 @end
 
 #endif // __WXBindingFailedEventArgs_DEFINED__
@@ -689,7 +713,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) RTObject * originalSource;
+@property (readonly) RTObject* originalSource;
 @end
 
 #endif // __WXRoutedEventArgs_DEFINED__
@@ -702,7 +726,7 @@ WINRT_EXPORT
 @interface WXUnhandledExceptionEventArgs : RTObject
 @property BOOL handled;
 @property (readonly) HRESULT exception;
-@property (readonly) NSString * message;
+@property (readonly) NSString* message;
 @end
 
 #endif // __WXUnhandledExceptionEventArgs_DEFINED__
@@ -714,9 +738,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WXVisualState * oldState;
-@property (copy) WXVisualState * newState;
-@property (copy) WXCControl * control;
+@property (copy) WXVisualState* oldState;
+@property (copy) WXVisualState* newState;
+@property (copy) WXCControl* control;
 @end
 
 #endif // __WXVisualStateChangedEventArgs_DEFINED__
@@ -728,7 +752,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDataContextChangedEventArgs : RTObject
 @property BOOL handled;
-@property (readonly) RTObject * newValue;
+@property (readonly) RTObject* newValue;
 @end
 
 #endif // __WXDataContextChangedEventArgs_DEFINED__
@@ -740,7 +764,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) RTObject * dataType;
+@property (copy) RTObject* dataType;
 @end
 
 #endif // __WXDataTemplateKey_DEFINED__
@@ -767,10 +791,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyProperty : RTObject
-+ (WXDependencyProperty *)Register:(NSString *)name propertyType:(WUXITypeName *)propertyType ownerType:(WUXITypeName *)ownerType typeMetadata:(WXPropertyMetadata *)typeMetadata;
-+ (WXDependencyProperty *)registerAttached:(NSString *)name propertyType:(WUXITypeName *)propertyType ownerType:(WUXITypeName *)ownerType defaultMetadata:(WXPropertyMetadata *)defaultMetadata;
-+ (RTObject *)unsetValue;
-- (WXPropertyMetadata *)getMetadata:(WUXITypeName *)forType;
++ (WXDependencyProperty*)Register:(NSString*)name
+                     propertyType:(WUXITypeName*)propertyType
+                        ownerType:(WUXITypeName*)ownerType
+                     typeMetadata:(WXPropertyMetadata*)typeMetadata;
++ (WXDependencyProperty*)registerAttached:(NSString*)name
+                             propertyType:(WUXITypeName*)propertyType
+                                ownerType:(WUXITypeName*)ownerType
+                          defaultMetadata:(WXPropertyMetadata*)defaultMetadata;
++ (RTObject*)unsetValue;
+- (WXPropertyMetadata*)getMetadata:(WUXITypeName*)forType;
 @end
 
 #endif // __WXDependencyProperty_DEFINED__
@@ -783,7 +813,8 @@ WINRT_EXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
 + (instancetype)create ACTIVATOR;
 @property (readonly) unsigned size;
-// Could not generate add_VectorChanged (Can't marshal Windows.Foundation.Collections.VectorChangedEventHandler`1<Windows.UI.Xaml.DependencyObject>)
+// Could not generate add_VectorChanged (Can't marshal
+// Windows.Foundation.Collections.VectorChangedEventHandler`1<Windows.UI.Xaml.DependencyObject>)
 - (void)removeVectorChangedEvent:(EventRegistrationToken)tok;
 // Could not find base class Windows.Foundation.Collections.IObservableVector`1<Windows.UI.Xaml.DependencyObject> type information
 @end
@@ -796,12 +827,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXPropertyMetadata : RTObject
-+ (WXPropertyMetadata *)createWithDefaultValue:(RTObject *)defaultValue;
-+ (WXPropertyMetadata *)createWithDefaultValueAndCallback:(RTObject *)defaultValue propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
-+ (WXPropertyMetadata *)createWithFactory:(WXCreateDefaultValueCallback)createDefaultValueCallback;
-+ (WXPropertyMetadata *)createWithFactoryAndCallback:(WXCreateDefaultValueCallback)createDefaultValueCallback propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
++ (WXPropertyMetadata*)createWithDefaultValue:(RTObject*)defaultValue;
++ (WXPropertyMetadata*)createWithDefaultValueAndCallback:(RTObject*)defaultValue
+                                 propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
++ (WXPropertyMetadata*)createWithFactory:(WXCreateDefaultValueCallback)createDefaultValueCallback;
++ (WXPropertyMetadata*)createWithFactoryAndCallback:(WXCreateDefaultValueCallback)createDefaultValueCallback
+                            propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
 @property (readonly) WXCreateDefaultValueCallback createDefaultValueCallback;
-@property (readonly) RTObject * defaultValue;
+@property (readonly) RTObject* defaultValue;
 @end
 
 #endif // __WXPropertyMetadata_DEFINED__
@@ -813,9 +846,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFTimeSpan * interval;
+@property (copy) WFTimeSpan* interval;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addTickEvent:(void(^)(RTObject*, RTObject *))del;
+- (EventRegistrationToken)addTickEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeTickEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -830,8 +863,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
 @property BOOL handled;
-@property (copy) WADDataPackage * data;
-- (WFPoint *)getPosition:(WXUIElement *)relativeTo;
+@property (copy) WADDataPackage* data;
+- (WFPoint*)getPosition:(WXUIElement*)relativeTo;
 @end
 
 #endif // __WXDragEventArgs_DEFINED__
@@ -864,7 +897,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXExceptionRoutedEventArgs : WXRoutedEventArgs
-@property (readonly) NSString * errorMessage;
+@property (readonly) NSString* errorMessage;
 @end
 
 #endif // __WXExceptionRoutedEventArgs_DEFINED__
@@ -875,7 +908,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXWindowCreatedEventArgs : RTObject
-@property (readonly) WXWindow * window;
+@property (readonly) WXWindow* window;
 @end
 
 #endif // __WXWindowCreatedEventArgs_DEFINED__
@@ -887,14 +920,16 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXApplication : RTObject
 + (void)start:(WXApplicationInitializationCallback)callback;
-+ (void)loadComponent:(RTObject *)component resourceLocator:(WFUri *)resourceLocator;
-+ (void)loadComponentWithResourceLocation:(RTObject *)component resourceLocator:(WFUri *)resourceLocator componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
++ (void)loadComponent:(RTObject*)component resourceLocator:(WFUri*)resourceLocator;
++ (void)loadComponentWithResourceLocation:(RTObject*)component
+                          resourceLocator:(WFUri*)resourceLocator
+                componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
 + (instancetype)create ACTIVATOR;
-@property (copy) WXResourceDictionary * resources;
+@property (copy) WXResourceDictionary* resources;
 @property WXApplicationTheme requestedTheme;
-@property (readonly) WXDebugSettings * debugSettings;
-+ (WXApplication *)current;
-- (EventRegistrationToken)addResumingEvent:(void(^)(RTObject*, RTObject *))del;
+@property (readonly) WXDebugSettings* debugSettings;
++ (WXApplication*)current;
+- (EventRegistrationToken)addResumingEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeResumingEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSuspendingEvent:(WXSuspendingEventHandler)del;
 - (void)removeSuspendingEvent:(EventRegistrationToken)tok;
@@ -902,14 +937,14 @@ WINRT_EXPORT
 - (void)removeUnhandledExceptionEvent:(EventRegistrationToken)tok;
 - (void)exit;
 - (void)onActivated:(RTObject<WAAIActivatedEventArgs>*)args;
-- (void)onLaunched:(WAALaunchActivatedEventArgs *)args;
-- (void)onFileActivated:(WAAFileActivatedEventArgs *)args;
-- (void)onSearchActivated:(WAASearchActivatedEventArgs *)args;
-- (void)onShareTargetActivated:(WAAShareTargetActivatedEventArgs *)args;
-- (void)onFileOpenPickerActivated:(WAAFileOpenPickerActivatedEventArgs *)args;
-- (void)onFileSavePickerActivated:(WAAFileSavePickerActivatedEventArgs *)args;
-- (void)onCachedFileUpdaterActivated:(WAACachedFileUpdaterActivatedEventArgs *)args;
-- (void)onWindowCreated:(WXWindowCreatedEventArgs *)args;
+- (void)onLaunched:(WAALaunchActivatedEventArgs*)args;
+- (void)onFileActivated:(WAAFileActivatedEventArgs*)args;
+- (void)onSearchActivated:(WAASearchActivatedEventArgs*)args;
+- (void)onShareTargetActivated:(WAAShareTargetActivatedEventArgs*)args;
+- (void)onFileOpenPickerActivated:(WAAFileOpenPickerActivatedEventArgs*)args;
+- (void)onFileSavePickerActivated:(WAAFileSavePickerActivatedEventArgs*)args;
+- (void)onCachedFileUpdaterActivated:(WAACachedFileUpdaterActivatedEventArgs*)args;
+- (void)onWindowCreated:(WXWindowCreatedEventArgs*)args;
 @end
 
 #endif // __WXApplication_DEFINED__
@@ -943,7 +978,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDataTemplate : WXFrameworkTemplate
 + (instancetype)create ACTIVATOR;
-- (WXDependencyObject *)loadContent;
+- (WXDependencyObject*)loadContent;
 @end
 
 #endif // __WXDataTemplate_DEFINED__
@@ -953,9 +988,9 @@ WINRT_EXPORT
 #define __WACIFrameworkView_DEFINED__
 
 @protocol WACIFrameworkView
-- (void)initialize:(WACCoreApplicationView *)applicationView;
-- (void)setWindow:(WUCCoreWindow *)window;
-- (void)load:(NSString *)entryPoint;
+- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)setWindow:(WUCCoreWindow*)window;
+- (void)load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end
@@ -969,9 +1004,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)create ACTIVATOR;
-- (void)initialize:(WACCoreApplicationView *)applicationView;
-- (void)setWindow:(WUCCoreWindow *)window;
-- (void)load:(NSString *)entryPoint;
+- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)setWindow:(WUCCoreWindow*)window;
+- (void)load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end
@@ -1006,7 +1041,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXMediaFailedRoutedEventArgs : WXExceptionRoutedEventArgs
-@property (readonly) NSString * errorTrace;
+@property (readonly) NSString* errorTrace;
 @end
 
 #endif // __WXMediaFailedRoutedEventArgs_DEFINED__
@@ -1017,8 +1052,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXPropertyPath : WXDependencyObject
-+ (WXPropertyPath *)createInstance:(NSString *)path ACTIVATOR;
-@property (readonly) NSString * path;
++ (WXPropertyPath*)createInstance:(NSString*)path ACTIVATOR;
+@property (readonly) NSString* path;
 @end
 
 #endif // __WXPropertyPath_DEFINED__
@@ -1031,8 +1066,8 @@ WINRT_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)create ACTIVATOR;
 @property (readonly) unsigned size;
-@property (copy) WFUri * source;
-@property (readonly) id<NSFastEnumeration> /*WXResourceDictionary*/  mergedDictionaries;
+@property (copy) WFUri* source;
+@property (readonly) id<NSFastEnumeration> /*WXResourceDictionary*/ mergedDictionaries;
 // Failed to generate property ThemeDictionaries (Can't marshal Windows.Foundation.Collections.IMap`2<System.Object,System.Object>)
 // Failed to generate member get_ThemeDictionaries (Can't marshal Windows.Foundation.Collections.IMap`2<System.Object,System.Object>)
 // Could not find base class Windows.Foundation.Collections.IMap`2<System.Object,System.Object> type information
@@ -1058,9 +1093,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXSetter : WXSetterBase
 + (instancetype)create ACTIVATOR;
-+ (WXSetter *)createInstance:(WXDependencyProperty *)targetProperty value:(RTObject *)value ACTIVATOR;
-@property (copy) RTObject * value;
-@property (copy) WXDependencyProperty * property;
++ (WXSetter*)createInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
+@property (copy) RTObject* value;
+@property (copy) WXDependencyProperty* property ;
 @end
 
 #endif // __WXSetter_DEFINED__
@@ -1084,8 +1119,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSizeChangedEventArgs : WXRoutedEventArgs
-@property (readonly) WFSize * newSize;
-@property (readonly) WFSize * previousSize;
+@property (readonly) WFSize* newSize;
+@property (readonly) WFSize* previousSize;
 @end
 
 #endif // __WXSizeChangedEventArgs_DEFINED__
@@ -1097,11 +1132,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXStyle : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-+ (WXStyle *)createInstance:(WUXITypeName *)targetType ACTIVATOR;
-@property (copy) WUXITypeName * targetType;
-@property (copy) WXStyle * basedOn;
++ (WXStyle*)createInstance:(WUXITypeName*)targetType ACTIVATOR;
+@property (copy) WUXITypeName* targetType;
+@property (copy) WXStyle* basedOn;
 @property (readonly) BOOL isSealed;
-@property (readonly) WXSetterBaseCollection * setters;
+@property (readonly) WXSetterBaseCollection* setters;
 - (void)seal;
 @end
 
@@ -1134,8 +1169,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)create ACTIVATOR;
-@property (copy) WXRoutedEvent * routedEvent;
-@property (readonly) WXTriggerActionCollection * actions;
+@property (copy) WXRoutedEvent* routedEvent;
+@property (readonly) WXTriggerActionCollection* actions;
 @end
 
 #endif // __WXEventTrigger_DEFINED__
@@ -1152,61 +1187,61 @@ WINRT_EXPORT
 @property BOOL isHitTestVisible;
 @property BOOL isDoubleTapEnabled;
 @property WUXIManipulationModes manipulationMode;
-@property (copy) WUXMRectangleGeometry * clip;
-@property (copy) WUXMCacheMode * cacheMode;
+@property (copy) WUXMRectangleGeometry* clip;
+@property (copy) WUXMCacheMode* cacheMode;
 @property BOOL allowDrop;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMATransitionCollection * transitions;
-@property (copy) WFPoint * renderTransformOrigin;
-@property (copy) WUXMTransform * renderTransform;
-@property (copy) WUXMProjection * projection;
+@property (copy) WUXMATransitionCollection* transitions;
+@property (copy) WFPoint* renderTransformOrigin;
+@property (copy) WUXMTransform* renderTransform;
+@property (copy) WUXMProjection* projection;
 @property double opacity;
-@property (readonly) WFSize * desiredSize;
-@property (readonly) id<NSFastEnumeration> /*WUXIPointer*/  pointerCaptures;
-@property (readonly) WFSize * renderSize;
+@property (readonly) WFSize* desiredSize;
+@property (readonly) id<NSFastEnumeration> /*WUXIPointer*/ pointerCaptures;
+@property (readonly) WFSize* renderSize;
 @property WUXMElementCompositeMode compositeMode;
-+ (WXDependencyProperty *)compositeModeProperty;
-+ (WXDependencyProperty *)allowDropProperty;
-+ (WXDependencyProperty *)cacheModeProperty;
-+ (WXDependencyProperty *)clipProperty;
-+ (WXRoutedEvent *)doubleTappedEvent;
-+ (WXRoutedEvent *)dragEnterEvent;
-+ (WXRoutedEvent *)dragLeaveEvent;
-+ (WXRoutedEvent *)dragOverEvent;
-+ (WXRoutedEvent *)dropEvent;
-+ (WXRoutedEvent *)holdingEvent;
-+ (WXDependencyProperty *)isDoubleTapEnabledProperty;
-+ (WXDependencyProperty *)isHitTestVisibleProperty;
-+ (WXDependencyProperty *)isHoldingEnabledProperty;
-+ (WXDependencyProperty *)isRightTapEnabledProperty;
-+ (WXDependencyProperty *)isTapEnabledProperty;
-+ (WXRoutedEvent *)keyDownEvent;
-+ (WXRoutedEvent *)keyUpEvent;
-+ (WXRoutedEvent *)manipulationCompletedEvent;
-+ (WXRoutedEvent *)manipulationDeltaEvent;
-+ (WXRoutedEvent *)manipulationInertiaStartingEvent;
-+ (WXDependencyProperty *)manipulationModeProperty;
-+ (WXRoutedEvent *)manipulationStartedEvent;
-+ (WXRoutedEvent *)manipulationStartingEvent;
-+ (WXDependencyProperty *)opacityProperty;
-+ (WXRoutedEvent *)pointerCanceledEvent;
-+ (WXRoutedEvent *)pointerCaptureLostEvent;
-+ (WXDependencyProperty *)pointerCapturesProperty;
-+ (WXRoutedEvent *)pointerEnteredEvent;
-+ (WXRoutedEvent *)pointerExitedEvent;
-+ (WXRoutedEvent *)pointerMovedEvent;
-+ (WXRoutedEvent *)pointerPressedEvent;
-+ (WXRoutedEvent *)pointerReleasedEvent;
-+ (WXRoutedEvent *)pointerWheelChangedEvent;
-+ (WXDependencyProperty *)projectionProperty;
-+ (WXDependencyProperty *)renderTransformOriginProperty;
-+ (WXDependencyProperty *)renderTransformProperty;
-+ (WXRoutedEvent *)rightTappedEvent;
-+ (WXRoutedEvent *)tappedEvent;
-+ (WXDependencyProperty *)transitionsProperty;
-+ (WXDependencyProperty *)useLayoutRoundingProperty;
-+ (WXDependencyProperty *)visibilityProperty;
++ (WXDependencyProperty*)compositeModeProperty;
++ (WXDependencyProperty*)allowDropProperty;
++ (WXDependencyProperty*)cacheModeProperty;
++ (WXDependencyProperty*)clipProperty;
++ (WXRoutedEvent*)doubleTappedEvent;
++ (WXRoutedEvent*)dragEnterEvent;
++ (WXRoutedEvent*)dragLeaveEvent;
++ (WXRoutedEvent*)dragOverEvent;
++ (WXRoutedEvent*)dropEvent;
++ (WXRoutedEvent*)holdingEvent;
++ (WXDependencyProperty*)isDoubleTapEnabledProperty;
++ (WXDependencyProperty*)isHitTestVisibleProperty;
++ (WXDependencyProperty*)isHoldingEnabledProperty;
++ (WXDependencyProperty*)isRightTapEnabledProperty;
++ (WXDependencyProperty*)isTapEnabledProperty;
++ (WXRoutedEvent*)keyDownEvent;
++ (WXRoutedEvent*)keyUpEvent;
++ (WXRoutedEvent*)manipulationCompletedEvent;
++ (WXRoutedEvent*)manipulationDeltaEvent;
++ (WXRoutedEvent*)manipulationInertiaStartingEvent;
++ (WXDependencyProperty*)manipulationModeProperty;
++ (WXRoutedEvent*)manipulationStartedEvent;
++ (WXRoutedEvent*)manipulationStartingEvent;
++ (WXDependencyProperty*)opacityProperty;
++ (WXRoutedEvent*)pointerCanceledEvent;
++ (WXRoutedEvent*)pointerCaptureLostEvent;
++ (WXDependencyProperty*)pointerCapturesProperty;
++ (WXRoutedEvent*)pointerEnteredEvent;
++ (WXRoutedEvent*)pointerExitedEvent;
++ (WXRoutedEvent*)pointerMovedEvent;
++ (WXRoutedEvent*)pointerPressedEvent;
++ (WXRoutedEvent*)pointerReleasedEvent;
++ (WXRoutedEvent*)pointerWheelChangedEvent;
++ (WXDependencyProperty*)projectionProperty;
++ (WXDependencyProperty*)renderTransformOriginProperty;
++ (WXDependencyProperty*)renderTransformProperty;
++ (WXRoutedEvent*)rightTappedEvent;
++ (WXRoutedEvent*)tappedEvent;
++ (WXDependencyProperty*)transitionsProperty;
++ (WXDependencyProperty*)useLayoutRoundingProperty;
++ (WXDependencyProperty*)visibilityProperty;
 - (EventRegistrationToken)addDoubleTappedEvent:(WUXIDoubleTappedEventHandler)del;
 - (void)removeDoubleTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDragEnterEvent:(WXDragEventHandler)del;
@@ -1257,21 +1292,22 @@ WINRT_EXPORT
 - (void)removeRightTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTappedEvent:(WUXITappedEventHandler)del;
 - (void)removeTappedEvent:(EventRegistrationToken)tok;
-- (void)measure:(WFSize *)availableSize;
-- (void)arrange:(WFRect *)finalRect;
-- (BOOL)capturePointer:(WUXIPointer *)value;
-- (void)releasePointerCapture:(WUXIPointer *)value;
+- (void)measure:(WFSize*)availableSize;
+- (void)arrange:(WFRect*)finalRect;
+- (BOOL)capturePointer:(WUXIPointer*)value;
+- (void)releasePointerCapture:(WUXIPointer*)value;
 - (void)releasePointerCaptures;
-- (void)addHandler:(WXRoutedEvent *)routedEvent handler:(RTObject *)handler handledEventsToo:(BOOL)handledEventsToo;
-- (void)removeHandler:(WXRoutedEvent *)routedEvent handler:(RTObject *)handler;
-- (WUXMGeneralTransform *)transformToVisual:(WXUIElement *)visual;
+- (void)addHandler:(WXRoutedEvent*)routedEvent handler:(RTObject*)handler handledEventsToo:(BOOL)handledEventsToo;
+- (void)removeHandler:(WXRoutedEvent*)routedEvent handler:(RTObject*)handler;
+- (WUXMGeneralTransform*)transformToVisual:(WXUIElement*)visual;
 - (void)invalidateMeasure;
 - (void)invalidateArrange;
 - (void)updateLayout;
 - (BOOL)cancelDirectManipulations;
-- (WUXAPAutomationPeer *)onCreateAutomationPeer;
+- (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-// Failed to generate member FindSubElementsForTouchTargeting (Cannot marshal contained object of unknown type Windows.Foundation.Collections.IIterable`1<Windows.Foundation.Point>)
+// Failed to generate member FindSubElementsForTouchTargeting (Cannot marshal contained object of unknown type
+// Windows.Foundation.Collections.IIterable`1<Windows.Foundation.Point>)
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -1284,46 +1320,46 @@ WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 + (instancetype)create ACTIVATOR;
 @property WXElementTheme requestedTheme;
-@property (copy) NSString * name;
-@property (copy) NSString * language;
+@property (copy) NSString* name;
+@property (copy) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject * dataContext;
+@property (copy) RTObject* dataContext;
 @property double maxWidth;
 @property double maxHeight;
-@property (copy) WXStyle * style;
+@property (copy) WXStyle* style;
 @property double width;
 @property WXVerticalAlignment verticalAlignment;
-@property (copy) RTObject * tag;
-@property (copy) WXResourceDictionary * resources;
-@property (copy) WXThickness * margin;
+@property (copy) RTObject* tag;
+@property (copy) WXResourceDictionary* resources;
+@property (copy) WXThickness* margin;
 @property double minWidth;
 @property double minHeight;
 @property (readonly) double actualHeight;
 @property (readonly) double actualWidth;
-@property (readonly) WXDependencyObject * parent;
-@property (readonly) WFUri * baseUri;
-@property (readonly) WXTriggerCollection * triggers;
-+ (WXDependencyProperty *)verticalAlignmentProperty;
-+ (WXDependencyProperty *)widthProperty;
-+ (WXDependencyProperty *)actualHeightProperty;
-+ (WXDependencyProperty *)actualWidthProperty;
-+ (WXDependencyProperty *)dataContextProperty;
-+ (WXDependencyProperty *)flowDirectionProperty;
-+ (WXDependencyProperty *)heightProperty;
-+ (WXDependencyProperty *)horizontalAlignmentProperty;
-+ (WXDependencyProperty *)languageProperty;
-+ (WXDependencyProperty *)marginProperty;
-+ (WXDependencyProperty *)maxHeightProperty;
-+ (WXDependencyProperty *)maxWidthProperty;
-+ (WXDependencyProperty *)minHeightProperty;
-+ (WXDependencyProperty *)minWidthProperty;
-+ (WXDependencyProperty *)nameProperty;
-+ (WXDependencyProperty *)styleProperty;
-+ (WXDependencyProperty *)tagProperty;
-+ (WXDependencyProperty *)requestedThemeProperty;
-- (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject *))del;
+@property (readonly) WXDependencyObject* parent;
+@property (readonly) WFUri* baseUri;
+@property (readonly) WXTriggerCollection* triggers;
++ (WXDependencyProperty*)verticalAlignmentProperty;
++ (WXDependencyProperty*)widthProperty;
++ (WXDependencyProperty*)actualHeightProperty;
++ (WXDependencyProperty*)actualWidthProperty;
++ (WXDependencyProperty*)dataContextProperty;
++ (WXDependencyProperty*)flowDirectionProperty;
++ (WXDependencyProperty*)heightProperty;
++ (WXDependencyProperty*)horizontalAlignmentProperty;
++ (WXDependencyProperty*)languageProperty;
++ (WXDependencyProperty*)marginProperty;
++ (WXDependencyProperty*)maxHeightProperty;
++ (WXDependencyProperty*)maxWidthProperty;
++ (WXDependencyProperty*)minHeightProperty;
++ (WXDependencyProperty*)minWidthProperty;
++ (WXDependencyProperty*)nameProperty;
++ (WXDependencyProperty*)styleProperty;
++ (WXDependencyProperty*)tagProperty;
++ (WXDependencyProperty*)requestedThemeProperty;
+- (EventRegistrationToken)addLayoutUpdatedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
 - (void)removeLoadedEvent:(EventRegistrationToken)tok;
@@ -1331,15 +1367,15 @@ WINRT_EXPORT
 - (void)removeSizeChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addUnloadedEvent:(WXRoutedEventHandler)del;
 - (void)removeUnloadedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDataContextChangedEvent:(void(^)(WXFrameworkElement *, WXDataContextChangedEventArgs *))del;
+- (EventRegistrationToken)addDataContextChangedEvent:(void (^)(WXFrameworkElement*, WXDataContextChangedEventArgs*))del;
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
-- (RTObject *)findName:(NSString *)name;
-- (void)setBinding:(WXDependencyProperty *)dp binding:(WUXDBindingBase *)binding;
-- (WUXDBindingExpression *)getBindingExpression:(WXDependencyProperty *)dp;
-- (WFSize *)measureOverride:(WFSize *)availableSize;
-- (WFSize *)arrangeOverride:(WFSize *)finalSize;
+- (RTObject*)findName:(NSString*)name;
+- (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
+- (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
+- (WFSize*)measureOverride:(WFSize*)availableSize;
+- (WFSize*)arrangeOverride:(WFSize*)finalSize;
 - (void)onApplyTemplate;
-- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
+- (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -1351,8 +1387,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WUXMAStoryboard * storyboard;
-@property (readonly) NSString * name;
+@property (copy) WUXMAStoryboard* storyboard;
+@property (readonly) NSString* name;
 @end
 
 #endif // __WXVisualState_DEFINED__
@@ -1364,10 +1400,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualStateGroup : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WXVisualState * currentState;
-@property (readonly) NSString * name;
-@property (readonly) id<NSFastEnumeration> /*WXVisualState*/  states;
-@property (readonly) id<NSFastEnumeration> /*WXVisualTransition*/  transitions;
+@property (readonly) WXVisualState* currentState;
+@property (readonly) NSString* name;
+@property (readonly) id<NSFastEnumeration> /*WXVisualState*/ states;
+@property (readonly) id<NSFastEnumeration> /*WXVisualTransition*/ transitions;
 - (EventRegistrationToken)addCurrentStateChangedEvent:(WXVisualStateChangedEventHandler)del;
 - (void)removeCurrentStateChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addCurrentStateChangingEvent:(WXVisualStateChangedEventHandler)del;
@@ -1382,15 +1418,26 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXVisualStateManager : WXDependencyObject
-+ (id<NSFastEnumeration> /*WXVisualStateGroup*/ )getVisualStateGroups:(WXFrameworkElement *)obj;
-+ (WXVisualStateManager *)getCustomVisualStateManager:(WXFrameworkElement *)obj;
-+ (void)setCustomVisualStateManager:(WXFrameworkElement *)obj value:(WXVisualStateManager *)value;
-+ (BOOL)goToState:(WXCControl *)control stateName:(NSString *)stateName useTransitions:(BOOL)useTransitions;
++ (id<NSFastEnumeration> /*WXVisualStateGroup*/)getVisualStateGroups:(WXFrameworkElement*)obj;
++ (WXVisualStateManager*)getCustomVisualStateManager:(WXFrameworkElement*)obj;
++ (void)setCustomVisualStateManager:(WXFrameworkElement*)obj value:(WXVisualStateManager*)value;
++ (BOOL)goToState:(WXCControl*)control stateName:(NSString*)stateName useTransitions:(BOOL)useTransitions;
 + (instancetype)create ACTIVATOR;
-+ (WXDependencyProperty *)customVisualStateManagerProperty;
-- (BOOL)goToStateCore:(WXCControl *)control templateRoot:(WXFrameworkElement *)templateRoot stateName:(NSString *)stateName group:(WXVisualStateGroup *)group state:(WXVisualState *)state useTransitions:(BOOL)useTransitions;
-- (void)raiseCurrentStateChanging:(WXVisualStateGroup *)stateGroup oldState:(WXVisualState *)oldState newState:(WXVisualState *)newState control:(WXCControl *)control;
-- (void)raiseCurrentStateChanged:(WXVisualStateGroup *)stateGroup oldState:(WXVisualState *)oldState newState:(WXVisualState *)newState control:(WXCControl *)control;
++ (WXDependencyProperty*)customVisualStateManagerProperty;
+- (BOOL)goToStateCore:(WXCControl*)control
+         templateRoot:(WXFrameworkElement*)templateRoot
+            stateName:(NSString*)stateName
+                group:(WXVisualStateGroup*)group
+                state:(WXVisualState*)state
+       useTransitions:(BOOL)useTransitions;
+- (void)raiseCurrentStateChanging:(WXVisualStateGroup*)stateGroup
+                         oldState:(WXVisualState*)oldState
+                         newState:(WXVisualState*)newState
+                          control:(WXCControl*)control;
+- (void)raiseCurrentStateChanged:(WXVisualStateGroup*)stateGroup
+                        oldState:(WXVisualState*)oldState
+                        newState:(WXVisualState*)newState
+                         control:(WXCControl*)control;
 @end
 
 #endif // __WXVisualStateManager_DEFINED__
@@ -1402,11 +1449,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * to;
-@property (copy) WUXMAStoryboard * storyboard;
-@property (copy) WUXMAEasingFunctionBase * generatedEasingFunction;
-@property (copy) WXDuration * generatedDuration;
-@property (copy) NSString * from;
+@property (copy) NSString* to;
+@property (copy) WUXMAStoryboard* storyboard;
+@property (copy) WUXMAEasingFunctionBase* generatedEasingFunction;
+@property (copy) WXDuration* generatedDuration;
+@property (copy) NSString* from;
 @end
 
 #endif // __WXVisualTransition_DEFINED__
@@ -1417,12 +1464,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXWindow : RTObject
-@property (copy) WXUIElement * content;
-@property (readonly) WFRect * bounds;
-@property (readonly) WUCCoreWindow * coreWindow;
-@property (readonly) WUCCoreDispatcher * dispatcher;
+@property (copy) WXUIElement* content;
+@property (readonly) WFRect* bounds;
+@property (readonly) WUCCoreWindow* coreWindow;
+@property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) BOOL visible;
-+ (WXWindow *)current;
++ (WXWindow*)current;
 - (EventRegistrationToken)addActivatedEvent:(WXWindowActivatedEventHandler)del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addClosedEvent:(WXWindowClosedEventHandler)del;
@@ -1436,4 +1483,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WXWindow_DEFINED__
-

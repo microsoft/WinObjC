@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WDBRRfcommServiceId, WDBRRfcommDeviceService, WDBRRfcommServiceProvider;
-@protocol WDBRIRfcommServiceIdStatics, WDBRIRfcommServiceId, WDBRIRfcommDeviceServiceStatics, WDBRIRfcommDeviceService, WDBRIRfcommServiceProviderStatics, WDBRIRfcommServiceProvider;
+@protocol WDBRIRfcommServiceIdStatics
+, WDBRIRfcommServiceId, WDBRIRfcommDeviceServiceStatics, WDBRIRfcommDeviceService, WDBRIRfcommServiceProviderStatics,
+    WDBRIRfcommServiceProvider;
 
 #include "WindowsDevicesBluetooth.h"
 #include "WindowsFoundation.h"
@@ -36,17 +38,17 @@
 
 WINRT_EXPORT
 @interface WDBRRfcommServiceId : RTObject
-+ (WDBRRfcommServiceId *)fromUuid:(WFGUID *)uuid;
-+ (WDBRRfcommServiceId *)fromShortId:(unsigned)shortId;
-@property (readonly) WFGUID * uuid;
-+ (WDBRRfcommServiceId *)genericFileTransfer;
-+ (WDBRRfcommServiceId *)obexFileTransfer;
-+ (WDBRRfcommServiceId *)obexObjectPush;
-+ (WDBRRfcommServiceId *)phoneBookAccessPce;
-+ (WDBRRfcommServiceId *)phoneBookAccessPse;
-+ (WDBRRfcommServiceId *)serialPort;
++ (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
++ (WDBRRfcommServiceId*)fromShortId:(unsigned)shortId;
+@property (readonly) WFGUID* uuid;
++ (WDBRRfcommServiceId*)genericFileTransfer;
++ (WDBRRfcommServiceId*)obexFileTransfer;
++ (WDBRRfcommServiceId*)obexObjectPush;
++ (WDBRRfcommServiceId*)phoneBookAccessPce;
++ (WDBRRfcommServiceId*)phoneBookAccessPse;
++ (WDBRRfcommServiceId*)serialPort;
 - (unsigned)asShortId;
-- (NSString *)asString;
+- (NSString*)asString;
 @end
 
 #endif // __WDBRRfcommServiceId_DEFINED__
@@ -57,15 +59,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBRRfcommDeviceService : RTObject
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector:(WDBRRfcommServiceId *)serviceId;
-@property (readonly) WNHostName * connectionHostName;
-@property (readonly) NSString * connectionServiceName;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
+@property (readonly) WNHostName* connectionHostName;
+@property (readonly) NSString* connectionServiceName;
 @property (readonly) WNSSocketProtectionLevel maxProtectionLevel;
 @property (readonly) WNSSocketProtectionLevel protectionLevel;
-@property (readonly) WDBRRfcommServiceId * serviceId;
-- (void)getSdpRawAttributesAsyncWithSuccess:(void (^)(NSDictionary * /*UInt32, WSSIBuffer*/ ))success failure:(void (^)(NSError*))failure;
-- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(NSDictionary * /*UInt32, WSSIBuffer*/ ))success failure:(void (^)(NSError*))failure;
+@property (readonly) WDBRRfcommServiceId* serviceId;
+- (void)getSdpRawAttributesAsyncWithSuccess:(void (^)(NSDictionary* /*UInt32, WSSIBuffer*/))success failure:(void (^)(NSError*))failure;
+- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
+                                      success:(void (^)(NSDictionary* /*UInt32, WSSIBuffer*/))success
+                                      failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDBRRfcommDeviceService_DEFINED__
@@ -76,13 +80,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBRRfcommServiceProvider : RTObject
-+ (void)createAsync:(WDBRRfcommServiceId *)serviceId success:(void (^)(WDBRRfcommServiceProvider *))success failure:(void (^)(NSError*))failure;
-// Failed to generate property SdpRawAttributes (Can't marshal Windows.Foundation.Collections.IMap`2<UInt32,Windows.Storage.Streams.IBuffer>)
-@property (readonly) WDBRRfcommServiceId * serviceId;
-// Failed to generate member get_SdpRawAttributes (Can't marshal Windows.Foundation.Collections.IMap`2<UInt32,Windows.Storage.Streams.IBuffer>)
-- (void)startAdvertising:(WNSStreamSocketListener *)listener;
++ (void)createAsync:(WDBRRfcommServiceId*)serviceId
+            success:(void (^)(WDBRRfcommServiceProvider*))success
+            failure:(void (^)(NSError*))failure;
+// Failed to generate property SdpRawAttributes (Can't marshal
+// Windows.Foundation.Collections.IMap`2<UInt32,Windows.Storage.Streams.IBuffer>)
+@property (readonly) WDBRRfcommServiceId* serviceId;
+// Failed to generate member get_SdpRawAttributes (Can't marshal
+// Windows.Foundation.Collections.IMap`2<UInt32,Windows.Storage.Streams.IBuffer>)
+- (void)startAdvertising:(WNSStreamSocketListener*)listener;
 - (void)stopAdvertising;
 @end
 
 #endif // __WDBRRfcommServiceProvider_DEFINED__
-

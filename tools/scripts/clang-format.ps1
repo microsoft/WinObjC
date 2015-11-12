@@ -9,9 +9,19 @@ param(
     [switch]$DryRun = $false
     )
 
+# Returns root path of git repo
+function Get-RepoRoot {
+    $gitCommand = "git.exe rev-parse --show-toplevel"
+    $results = Invoke-Expression $gitCommand | Out-String
+    return $results
+}
+
 # Run clang-format
 try {
-    $clangCommand = "bin/clang-format-3.7.exe -style=file "
+    $repoRootDirectory = (Get-RepoRoot).Trim()
+    Set-Location $repoRootDirectory
+    
+    $clangCommand = "msvc/LLVM-3.6.0/bin/clang-format.exe -style=file "
 
     # If not dry-run, edit the files in-place
     if (!$DryRun) {

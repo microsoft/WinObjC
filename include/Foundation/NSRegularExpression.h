@@ -26,7 +26,7 @@ enum {
     NSMatchingCompleted = 2,
     NSMatchingHitEnd = 4,
     NSMatchingRequiredEnd = 8,
-    NSMatchingInternalError = 16
+    NSMatchingInternalError = 16,
 };
 typedef uint32_t NSMatchingFlags;
 
@@ -54,24 +54,34 @@ typedef NSUInteger NSMatchingOptions;
 @class NSArray;
 @class NSMutableString;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSRegularExpression : NSObject
 
-+ (NSRegularExpression *)regularExpressionWithPattern:(NSString *)pattern options:(NSRegularExpressionOptions)options error:(NSError **)error;
++ (NSRegularExpression*)regularExpressionWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error;
 
-- (id)initWithPattern:(NSString *)pattern options:(NSRegularExpressionOptions)options error:(NSError **)error;
-- (NSUInteger)numberOfMatchesInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
+- (id)initWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error;
+- (NSUInteger)numberOfMatchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
 
-- (NSArray *)matchesInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
-- (void)enumerateMatchesInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range usingBlock:(void (^)(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop))block;
-- (NSTextCheckingResult *)firstMatchInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
-- (NSRange)rangeOfFirstMatchInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
-- (NSString *)stringByReplacingMatchesInString:(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range withTemplate:(NSString *)tmplate;
-- (NSUInteger)replaceMatchesInString:(NSMutableString *)string options:(NSMatchingOptions)options range:(NSRange)range withTemplate:(NSString *)tmplate;
+- (NSArray*)matchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
+- (void)enumerateMatchesInString:(NSString*)string
+                         options:(NSMatchingOptions)options
+                           range:(NSRange)range
+                      usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block;
+- (NSTextCheckingResult*)firstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
+- (NSRange)rangeOfFirstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
+- (NSString*)stringByReplacingMatchesInString:(NSString*)string
+                                      options:(NSMatchingOptions)options
+                                        range:(NSRange)range
+                                 withTemplate:(NSString*)tmplate;
+- (NSUInteger)replaceMatchesInString:(NSMutableString*)string
+                             options:(NSMatchingOptions)options
+                               range:(NSRange)range
+                        withTemplate:(NSString*)tmplate;
 @end
 
 @interface NSDataDetector : NSRegularExpression
 
-+ (NSDataDetector *)dataDetectorWithTypes:(NSTextCheckingTypes)checkingTypes error:(NSError **)error;
++ (NSDataDetector*)dataDetectorWithTypes:(NSTextCheckingTypes)checkingTypes error:(NSError**)error;
 
 @end
 

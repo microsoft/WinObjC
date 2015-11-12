@@ -19,6 +19,10 @@
 
 static IWLazyClassLookup _LazyNSRunLoop("NSRunLoop"), _LazyNSDate("NSDate");
 
+/**
+ @Status Caveat
+ @Notes returnAfterSource parameter is not supported
+*/
 SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnAfterSource) {
     id stopDate = [_LazyNSDate dateWithTimeIntervalSinceNow:time];
     id runLoop = [_LazyNSRunLoop currentRunLoop];
@@ -32,10 +36,16 @@ SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnA
     return kCFRunLoopRunTimedOut;
 }
 
+/**
+ @Status Interoperable
+*/
 CFRunLoopRef CFRunLoopGetCurrent() {
     return (CFRunLoopRef)[_LazyNSRunLoop currentRunLoop];
 }
 
+/**
+ @Status Interoperable
+*/
 CFRunLoopRef CFRunLoopGetMain() {
     return (CFRunLoopRef)[_LazyNSRunLoop mainRunLoop];
 }

@@ -21,20 +21,20 @@
 @class CVTimeStamp;
 
 @interface CARenderer : NSObject {
-   void    *_cglContext;
-   CGRect   _bounds;
-   CALayer *_rootLayer;
+    void* _cglContext;
+    CGRect _bounds;
+    CALayer* _rootLayer;
 }
 
-@property(assign) CGRect bounds;
-@property(retain) CALayer *layer;
+@property (assign) CGRect bounds;
+@property (retain) CALayer* layer;
 
-+(CARenderer *)rendererWithCGLContext:(void *)cglContext options:(NSDictionary *)options;
++ (CARenderer*)rendererWithCGLContext:(void*)cglContext options:(NSDictionary*)options;
 
--(void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(CVTimeStamp *)timeStamp;
+- (void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(CVTimeStamp*)timeStamp;
 
--(void)render;
+- (void)render;
 
--(void)endFrame;
+- (void)endFrame;
 
 @end

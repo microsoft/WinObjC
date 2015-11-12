@@ -32,7 +32,7 @@ enum _GLKShaderVarType {
     GLKS_FLOAT2,
     GLKS_FLOAT3,
     GLKS_FLOAT4,
-    GLKS_MAT4
+    GLKS_MAT4,
 };
 typedef unsigned int GLKShaderVarType;
 
@@ -45,29 +45,29 @@ typedef void* GLKShaderMaterialPtr;
 GLKIT_EXPORT_CLASS
 @interface GLKShaderPair : NSObject
 
-@property(retain) NSString* vertexShader;
-@property(retain) NSString* pixelShader;
+@property (retain) NSString* vertexShader;
+@property (retain) NSString* pixelShader;
 
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKShaderCache : NSObject
-+(instancetype) get;
++ (instancetype)get;
 
--(GLKShader*)addShaderNamed: (NSString*)name source: (GLKShaderPair*)src;
--(GLKShader*)shaderNamed: (NSString*)name;
+- (GLKShader*)addShaderNamed:(NSString*)name source:(GLKShaderPair*)src;
+- (GLKShader*)shaderNamed:(NSString*)name;
 
--(id)init;
+- (id)init;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKShader : NSObject
 
-@property(readonly) GLKShaderLayoutPtr layout;
-@property(readonly) GLuint program;
-@property(readonly) GLint mvploc;
+@property (readonly) GLKShaderLayoutPtr layout;
+@property (readonly) GLuint program;
+@property (readonly) GLint mvploc;
 
--(id)initWith: (GLuint)program;
+- (id)initWith:(GLuint)program;
 @end
 
 // The next two classes wrap some internal C++ classes.  It isn't necessary to know about/use them
@@ -75,21 +75,21 @@ GLKIT_EXPORT_CLASS
 
 GLKIT_EXPORT_CLASS
 @interface GLKShaderMaterial : NSObject
--(id)initWith: (GLKShaderMaterialPtr)ptr;
+- (id)initWith:(GLKShaderMaterialPtr)ptr;
 
--(void)reset;
--(void)addVec2: (GLKVector2)val named: (NSString*)name;
--(void)addVec3: (GLKVector3)val named: (NSString*)name;
--(void)addVec4: (GLKVector4)val named: (NSString*)name;
--(void)addTexture: (GLuint)texHandle named: (NSString*)name;
--(void)addTexCube: (GLuint)texHandle named: (NSString*)name;
+- (void)reset;
+- (void)addVec2:(GLKVector2)val named:(NSString*)name;
+- (void)addVec3:(GLKVector3)val named:(NSString*)name;
+- (void)addVec4:(GLKVector4)val named:(NSString*)name;
+- (void)addTexture:(GLuint)texHandle named:(NSString*)name;
+- (void)addTexCube:(GLuint)texHandle named:(NSString*)name;
 
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKShaderLayout : NSObject
--(id)initWith: (GLKShaderLayoutPtr)ptr;
--(NSArray /*NSString*/*)variables;
--(int)getLocationOf: (NSString*)var;
--(GLKShaderVarType)getTypeOf: (NSString*)var;
+- (id)initWith:(GLKShaderLayoutPtr)ptr;
+- (NSArray /*NSString*/*)variables;
+- (int)getLocationOf:(NSString*)var;
+- (GLKShaderVarType)getTypeOf:(NSString*)var;
 @end

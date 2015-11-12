@@ -25,7 +25,7 @@
 - (void)endRefreshing;
 
 @property (nonatomic, readonly, getter=isRefreshing) BOOL refreshing;
-@property (nonatomic, retain) NSAttributedString *attributedTitle;
+@property (nonatomic, retain) NSAttributedString* attributedTitle;
 
 @end
 

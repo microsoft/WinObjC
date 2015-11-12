@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSURLResponse,NSData,NSDictionary;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSCachedURLResponse : NSObject {
    NSURLResponse  *_response;
    NSData         *_data;

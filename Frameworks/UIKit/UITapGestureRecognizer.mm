@@ -95,14 +95,23 @@ static savedTouch* findTouch(UITapGestureRecognizer* self, id touch) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNumberOfTapsRequired:(unsigned)numberOfTaps {
     _numberOfTapsRequired = numberOfTaps;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)numberOfTapsRequired {
     return _numberOfTapsRequired;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNumberOfTouchesRequired:(unsigned)numberOfTouches {
     _numberOfTouchesRequired = numberOfTouches;
 }

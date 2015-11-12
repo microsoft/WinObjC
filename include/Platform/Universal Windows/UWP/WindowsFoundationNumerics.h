@@ -27,7 +27,7 @@
 // [struct] Windows.Foundation.Numerics.Vector2
 WINRT_EXPORT
 @interface WFNVector2 : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @end
@@ -35,7 +35,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Vector3
 WINRT_EXPORT
 @interface WFNVector3 : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @property float z;
@@ -44,7 +44,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Vector4
 WINRT_EXPORT
 @interface WFNVector4 : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @property float z;
@@ -54,7 +54,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Matrix3x2
 WINRT_EXPORT
 @interface WFNMatrix3x2 : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float m11;
 @property float m12;
 @property float m21;
@@ -66,7 +66,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Matrix4x4
 WINRT_EXPORT
 @interface WFNMatrix4x4 : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float m11;
 @property float m12;
 @property float m13;
@@ -88,7 +88,7 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Plane
 WINRT_EXPORT
 @interface WFNPlane : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property (copy) WFNVector3* normal;
 @property float d;
 @end
@@ -96,10 +96,9 @@ WINRT_EXPORT
 // [struct] Windows.Foundation.Numerics.Quaternion
 WINRT_EXPORT
 @interface WFNQuaternion : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float x;
 @property float y;
 @property float z;
 @property float w;
 @end
-

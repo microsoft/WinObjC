@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #include "UIKit/UIKit.h"
 #include <math.h>
 
@@ -59,18 +60,32 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setNumberOfTouchesRequired:(NSUInteger)numberOfTouches {
+    UNIMPLEMENTED();
     _numberOfTouchesRequired = numberOfTouches;
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)numberOfTouchesRequired {
+    UNIMPLEMENTED();
     return _numberOfTouchesRequired;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDirection:(UISwipeGestureRecognizerDirection)direction {
     _direction = direction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UISwipeGestureRecognizerDirection)direction {
     return _direction;
 }

@@ -29,6 +29,9 @@
 #include "UIGridLayoutInfo.h"
 #include "UIGridLayoutItem.h"
 
+NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
+NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
+
 @implementation UICollectionViewFlowLayout {
     struct {
         unsigned int delegateSizeForItem : 1;
@@ -107,14 +110,23 @@ void commonInit(UICollectionViewFlowLayout* self) {
 - (void)awakeFromNib {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setScrollDirection:(UICollectionViewScrollDirection)direction {
     _scrollDirection = direction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setItemSize:(CGSize)size {
     _itemSize = size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)itemSize {
     return _itemSize;
 }
@@ -127,22 +139,37 @@ void commonInit(UICollectionViewFlowLayout* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumInteritemSpacing:(float)spacing {
     _interitemSpacing = spacing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)minimumInteritemSpacing {
     return _interitemSpacing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumLineSpacing:(float)spacing {
     _lineSpacing = spacing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)minimumLineSpacing {
     return _lineSpacing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSectionInset:(UIEdgeInsets)sectionInset {
     if (!UIEdgeInsetsEqualToEdgeInsets(sectionInset, _sectionInset)) {
         _sectionInset = sectionInset;
@@ -175,6 +202,9 @@ void commonInit(UICollectionViewFlowLayout* self) {
     _data = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)collectionViewContentSize {
     if (!_data)
         [self prepareLayout];

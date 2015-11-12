@@ -28,10 +28,10 @@
 
 - (void)loadProductWithParameters:(NSDictionary*)params completionBlock:(void (^)(BOOL result, NSError* error))block;
 
-@property(nonatomic, assign) id<SKStoreProductViewControllerDelegate> delegate;
+@property (nonatomic, assign) id<SKStoreProductViewControllerDelegate> delegate;
 
 @end
 
-STOREKIT_EXPORT NSString *const SKStoreProductParameterITunesItemIdentifier;
+STOREKIT_EXPORT NSString* const SKStoreProductParameterITunesItemIdentifier;
 
 #endif // _SKSTOREPRODUCTVIEWCONTROLLER_H_

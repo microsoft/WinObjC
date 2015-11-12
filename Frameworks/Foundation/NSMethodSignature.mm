@@ -22,6 +22,10 @@ bool getTypeSize(char type, int* size);
 int getArgumentSize(const char* type);
 
 @implementation NSMethodSignature : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (NSMethodSignature*)signatureWithObjCTypes:(char*)funcTypes {
     NSMethodSignature* ret = [self alloc];
 
@@ -100,14 +104,23 @@ int getArgumentSize(const char* type);
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)numberOfArguments {
     return numArguments;
 }
 
+/**
+ @Status Interoperable
+*/
 - (const char*)methodReturnType {
     return returnType;
 }
 
+/**
+ @Status Interoperable
+*/
 - (const char*)getArgumentTypeAtIndex:(int)index {
     assert(index < numArguments);
 
@@ -124,6 +137,9 @@ int getArgumentSize(const char* type);
     return getArgumentSize(returnType);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)methodReturnLength {
     return getArgumentSize(returnType);
 }

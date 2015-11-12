@@ -20,163 +20,190 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs, WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs, WMCMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCMediaStreamSamplePropertySet, WMCMediaStreamSample, WMCMediaStreamSampleProtectionProperties, WMCMediaStreamSourceClosedRequest, WMCMediaStreamSourceStartingRequestDeferral, WMCMediaStreamSourceStartingRequest, WMCMediaStreamSourceSampleRequestDeferral, WMCMediaStreamSourceSampleRequest, WMCMediaStreamSourceSwitchStreamsRequestDeferral, WMCMediaStreamSourceSwitchStreamsRequest, WMCMseStreamSource, WMCMseSourceBufferList, WMCMseSourceBuffer, WMCHighDynamicRangeControl, WMCSceneAnalysisEffect, WMCSceneAnalyzedEventArgs, WMCHighDynamicRangeOutput, WMCSceneAnalysisEffectFrame, WMCSceneAnalysisEffectDefinition, WMCFaceDetectionEffectFrame, WMCFaceDetectedEventArgs, WMCFaceDetectionEffect, WMCFaceDetectionEffectDefinition, WMCVideoStabilizationEffectEnabledChangedEventArgs, WMCVideoStabilizationEffect, WMCVideoStabilizationEffectDefinition, WMCMediaSourceError, WMCMediaSource, WMCMediaSourceOpenOperationCompletedEventArgs, WMCTimedTextSource, WMCTimedMetadataTrack, WMCTimedTextRegion, WMCTimedTextStyle, WMCTimedTextLine, WMCTimedTextSubformat, WMCTimedMetadataTrackError, WMCMediaCueEventArgs, WMCTimedMetadataTrackFailedEventArgs, WMCTimedTextSourceResolveResultEventArgs, WMCTimedTextCue, WMCDataCue, WMCVideoTrack, WMCAudioTrack;
+@class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs,
+    WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs,
+    WMCMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCMediaStreamSamplePropertySet, WMCMediaStreamSample,
+    WMCMediaStreamSampleProtectionProperties, WMCMediaStreamSourceClosedRequest, WMCMediaStreamSourceStartingRequestDeferral,
+    WMCMediaStreamSourceStartingRequest, WMCMediaStreamSourceSampleRequestDeferral, WMCMediaStreamSourceSampleRequest,
+    WMCMediaStreamSourceSwitchStreamsRequestDeferral, WMCMediaStreamSourceSwitchStreamsRequest, WMCMseStreamSource, WMCMseSourceBufferList,
+    WMCMseSourceBuffer, WMCHighDynamicRangeControl, WMCSceneAnalysisEffect, WMCSceneAnalyzedEventArgs, WMCHighDynamicRangeOutput,
+    WMCSceneAnalysisEffectFrame, WMCSceneAnalysisEffectDefinition, WMCFaceDetectionEffectFrame, WMCFaceDetectedEventArgs,
+    WMCFaceDetectionEffect, WMCFaceDetectionEffectDefinition, WMCVideoStabilizationEffectEnabledChangedEventArgs,
+    WMCVideoStabilizationEffect, WMCVideoStabilizationEffectDefinition, WMCMediaSourceError, WMCMediaSource,
+    WMCMediaSourceOpenOperationCompletedEventArgs, WMCTimedTextSource, WMCTimedMetadataTrack, WMCTimedTextRegion, WMCTimedTextStyle,
+    WMCTimedTextLine, WMCTimedTextSubformat, WMCTimedMetadataTrackError, WMCMediaCueEventArgs, WMCTimedMetadataTrackFailedEventArgs,
+    WMCTimedTextSourceResolveResultEventArgs, WMCTimedTextCue, WMCDataCue, WMCVideoTrack, WMCAudioTrack;
 @class WMCMseTimeRange, WMCTimedTextPadding, WMCTimedTextSize, WMCTimedTextDouble, WMCTimedTextPoint;
-@protocol WMCIMediaSource, WMCIMediaStreamDescriptor, WMCIAudioStreamDescriptor, WMCIAudioStreamDescriptorFactory, WMCIVideoStreamDescriptor, WMCIVideoStreamDescriptorFactory, WMCIMediaStreamSource, WMCIMediaStreamSourceFactory, WMCIMediaStreamSample, WMCIMediaStreamSampleStatics, WMCIMediaStreamSampleProtectionProperties, WMCIMediaStreamSourceClosedRequest, WMCIMediaStreamSourceClosedEventArgs, WMCIMediaStreamSourceStartingRequestDeferral, WMCIMediaStreamSourceStartingRequest, WMCIMediaStreamSourceStartingEventArgs, WMCIMediaStreamSourceSampleRequestDeferral, WMCIMediaStreamSourceSampleRequest, WMCIMediaStreamSourceSampleRequestedEventArgs, WMCIMediaStreamSourceSwitchStreamsRequestDeferral, WMCIMediaStreamSourceSwitchStreamsRequest, WMCIMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCIMseStreamSourceStatics, WMCIMseStreamSource, WMCIMseSourceBuffer, WMCIMseSourceBufferList, WMCIHighDynamicRangeControl, WMCISceneAnalysisEffect, WMCIHighDynamicRangeOutput, WMCISceneAnalysisEffectFrame, WMCISceneAnalyzedEventArgs, WMCIFaceDetectionEffectFrame, WMCIFaceDetectedEventArgs, WMCIFaceDetectionEffect, WMCIFaceDetectionEffectDefinition, WMCIVideoStabilizationEffectEnabledChangedEventArgs, WMCIVideoStabilizationEffect, WMCIMediaSourceError, WMCIMediaSourceOpenOperationCompletedEventArgs, WMCIMediaSourceStatics, WMCIMediaSource2, WMCIMediaCue, WMCITimedTextCue, WMCITimedTextRegion, WMCITimedTextStyle, WMCITimedTextSubformat, WMCITimedTextLine, WMCISingleSelectMediaTrackList, WMCIMediaTrack, WMCITimedMetadataTrackError, WMCIMediaCueEventArgs, WMCITimedMetadataTrackFailedEventArgs, WMCIDataCue, WMCITimedMetadataTrackFactory, WMCITimedMetadataTrack, WMCITimedTextSourceResolveResultEventArgs, WMCITimedTextSource, WMCITimedTextSourceStatics;
+@protocol WMCIMediaSource
+, WMCIMediaStreamDescriptor, WMCIAudioStreamDescriptor, WMCIAudioStreamDescriptorFactory, WMCIVideoStreamDescriptor,
+    WMCIVideoStreamDescriptorFactory, WMCIMediaStreamSource, WMCIMediaStreamSourceFactory, WMCIMediaStreamSample,
+    WMCIMediaStreamSampleStatics, WMCIMediaStreamSampleProtectionProperties, WMCIMediaStreamSourceClosedRequest,
+    WMCIMediaStreamSourceClosedEventArgs, WMCIMediaStreamSourceStartingRequestDeferral, WMCIMediaStreamSourceStartingRequest,
+    WMCIMediaStreamSourceStartingEventArgs, WMCIMediaStreamSourceSampleRequestDeferral, WMCIMediaStreamSourceSampleRequest,
+    WMCIMediaStreamSourceSampleRequestedEventArgs, WMCIMediaStreamSourceSwitchStreamsRequestDeferral,
+    WMCIMediaStreamSourceSwitchStreamsRequest, WMCIMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCIMseStreamSourceStatics,
+    WMCIMseStreamSource, WMCIMseSourceBuffer, WMCIMseSourceBufferList, WMCIHighDynamicRangeControl, WMCISceneAnalysisEffect,
+    WMCIHighDynamicRangeOutput, WMCISceneAnalysisEffectFrame, WMCISceneAnalyzedEventArgs, WMCIFaceDetectionEffectFrame,
+    WMCIFaceDetectedEventArgs, WMCIFaceDetectionEffect, WMCIFaceDetectionEffectDefinition,
+    WMCIVideoStabilizationEffectEnabledChangedEventArgs, WMCIVideoStabilizationEffect, WMCIMediaSourceError,
+    WMCIMediaSourceOpenOperationCompletedEventArgs, WMCIMediaSourceStatics, WMCIMediaSource2, WMCIMediaCue, WMCITimedTextCue,
+    WMCITimedTextRegion, WMCITimedTextStyle, WMCITimedTextSubformat, WMCITimedTextLine, WMCISingleSelectMediaTrackList, WMCIMediaTrack,
+    WMCITimedMetadataTrackError, WMCIMediaCueEventArgs, WMCITimedMetadataTrackFailedEventArgs, WMCIDataCue, WMCITimedMetadataTrackFactory,
+    WMCITimedMetadataTrack, WMCITimedTextSourceResolveResultEventArgs, WMCITimedTextSource, WMCITimedTextSourceStatics;
 
 // Windows.Media.Core.MediaStreamSourceClosedReason
 enum _WMCMediaStreamSourceClosedReason {
-	WMCMediaStreamSourceClosedReasonDone = 0,
-	WMCMediaStreamSourceClosedReasonUnknownError = 1,
-	WMCMediaStreamSourceClosedReasonAppReportedError = 2,
-	WMCMediaStreamSourceClosedReasonUnsupportedProtectionSystem = 3,
-	WMCMediaStreamSourceClosedReasonProtectionSystemFailure = 4,
-	WMCMediaStreamSourceClosedReasonUnsupportedEncodingFormat = 5,
-	WMCMediaStreamSourceClosedReasonMissingSampleRequestedEventHandler = 6,
+    WMCMediaStreamSourceClosedReasonDone = 0,
+    WMCMediaStreamSourceClosedReasonUnknownError = 1,
+    WMCMediaStreamSourceClosedReasonAppReportedError = 2,
+    WMCMediaStreamSourceClosedReasonUnsupportedProtectionSystem = 3,
+    WMCMediaStreamSourceClosedReasonProtectionSystemFailure = 4,
+    WMCMediaStreamSourceClosedReasonUnsupportedEncodingFormat = 5,
+    WMCMediaStreamSourceClosedReasonMissingSampleRequestedEventHandler = 6,
 };
 typedef unsigned WMCMediaStreamSourceClosedReason;
 
 // Windows.Media.Core.MediaStreamSourceErrorStatus
 enum _WMCMediaStreamSourceErrorStatus {
-	WMCMediaStreamSourceErrorStatusOther = 0,
-	WMCMediaStreamSourceErrorStatusOutOfMemory = 1,
-	WMCMediaStreamSourceErrorStatusFailedToOpenFile = 2,
-	WMCMediaStreamSourceErrorStatusFailedToConnectToServer = 3,
-	WMCMediaStreamSourceErrorStatusConnectionToServerLost = 4,
-	WMCMediaStreamSourceErrorStatusUnspecifiedNetworkError = 5,
-	WMCMediaStreamSourceErrorStatusDecodeError = 6,
-	WMCMediaStreamSourceErrorStatusUnsupportedMediaFormat = 7,
+    WMCMediaStreamSourceErrorStatusOther = 0,
+    WMCMediaStreamSourceErrorStatusOutOfMemory = 1,
+    WMCMediaStreamSourceErrorStatusFailedToOpenFile = 2,
+    WMCMediaStreamSourceErrorStatusFailedToConnectToServer = 3,
+    WMCMediaStreamSourceErrorStatusConnectionToServerLost = 4,
+    WMCMediaStreamSourceErrorStatusUnspecifiedNetworkError = 5,
+    WMCMediaStreamSourceErrorStatusDecodeError = 6,
+    WMCMediaStreamSourceErrorStatusUnsupportedMediaFormat = 7,
 };
 typedef unsigned WMCMediaStreamSourceErrorStatus;
 
 // Windows.Media.Core.MseReadyState
 enum _WMCMseReadyState {
-	WMCMseReadyStateClosed = 0,
-	WMCMseReadyStateOpen = 1,
-	WMCMseReadyStateEnded = 2,
+    WMCMseReadyStateClosed = 0,
+    WMCMseReadyStateOpen = 1,
+    WMCMseReadyStateEnded = 2,
 };
 typedef unsigned WMCMseReadyState;
 
 // Windows.Media.Core.MseEndOfStreamStatus
 enum _WMCMseEndOfStreamStatus {
-	WMCMseEndOfStreamStatusSuccess = 0,
-	WMCMseEndOfStreamStatusNetworkError = 1,
-	WMCMseEndOfStreamStatusDecodeError = 2,
-	WMCMseEndOfStreamStatusUnknownError = 3,
+    WMCMseEndOfStreamStatusSuccess = 0,
+    WMCMseEndOfStreamStatusNetworkError = 1,
+    WMCMseEndOfStreamStatusDecodeError = 2,
+    WMCMseEndOfStreamStatusUnknownError = 3,
 };
 typedef unsigned WMCMseEndOfStreamStatus;
 
 // Windows.Media.Core.MseAppendMode
 enum _WMCMseAppendMode {
-	WMCMseAppendModeSegments = 0,
-	WMCMseAppendModeSequence = 1,
+    WMCMseAppendModeSegments = 0,
+    WMCMseAppendModeSequence = 1,
 };
 typedef unsigned WMCMseAppendMode;
 
 // Windows.Media.Core.FaceDetectionMode
 enum _WMCFaceDetectionMode {
-	WMCFaceDetectionModeHighPerformance = 0,
-	WMCFaceDetectionModeBalanced = 1,
-	WMCFaceDetectionModeHighQuality = 2,
+    WMCFaceDetectionModeHighPerformance = 0,
+    WMCFaceDetectionModeBalanced = 1,
+    WMCFaceDetectionModeHighQuality = 2,
 };
 typedef unsigned WMCFaceDetectionMode;
 
 // Windows.Media.Core.VideoStabilizationEffectEnabledChangedReason
 enum _WMCVideoStabilizationEffectEnabledChangedReason {
-	WMCVideoStabilizationEffectEnabledChangedReasonProgrammatic = 0,
-	WMCVideoStabilizationEffectEnabledChangedReasonPixelRateTooHigh = 1,
-	WMCVideoStabilizationEffectEnabledChangedReasonRunningSlowly = 2,
+    WMCVideoStabilizationEffectEnabledChangedReasonProgrammatic = 0,
+    WMCVideoStabilizationEffectEnabledChangedReasonPixelRateTooHigh = 1,
+    WMCVideoStabilizationEffectEnabledChangedReasonRunningSlowly = 2,
 };
 typedef unsigned WMCVideoStabilizationEffectEnabledChangedReason;
 
 // Windows.Media.Core.MediaTrackKind
 enum _WMCMediaTrackKind {
-	WMCMediaTrackKindAudio = 0,
-	WMCMediaTrackKindVideo = 1,
-	WMCMediaTrackKindTimedMetadata = 2,
+    WMCMediaTrackKindAudio = 0,
+    WMCMediaTrackKindVideo = 1,
+    WMCMediaTrackKindTimedMetadata = 2,
 };
 typedef unsigned WMCMediaTrackKind;
 
 // Windows.Media.Core.TimedMetadataKind
 enum _WMCTimedMetadataKind {
-	WMCTimedMetadataKindCaption = 0,
-	WMCTimedMetadataKindChapter = 1,
-	WMCTimedMetadataKindCustom = 2,
-	WMCTimedMetadataKindData = 3,
-	WMCTimedMetadataKindDescription = 4,
-	WMCTimedMetadataKindSubtitle = 5,
+    WMCTimedMetadataKindCaption = 0,
+    WMCTimedMetadataKindChapter = 1,
+    WMCTimedMetadataKindCustom = 2,
+    WMCTimedMetadataKindData = 3,
+    WMCTimedMetadataKindDescription = 4,
+    WMCTimedMetadataKindSubtitle = 5,
 };
 typedef unsigned WMCTimedMetadataKind;
 
 // Windows.Media.Core.TimedMetadataTrackErrorCode
 enum _WMCTimedMetadataTrackErrorCode {
-	WMCTimedMetadataTrackErrorCodeNone = 0,
-	WMCTimedMetadataTrackErrorCodeDataFormatError = 1,
-	WMCTimedMetadataTrackErrorCodeNetworkError = 2,
-	WMCTimedMetadataTrackErrorCodeInternalError = 3,
+    WMCTimedMetadataTrackErrorCodeNone = 0,
+    WMCTimedMetadataTrackErrorCodeDataFormatError = 1,
+    WMCTimedMetadataTrackErrorCodeNetworkError = 2,
+    WMCTimedMetadataTrackErrorCodeInternalError = 3,
 };
 typedef unsigned WMCTimedMetadataTrackErrorCode;
 
 // Windows.Media.Core.TimedTextScrollMode
 enum _WMCTimedTextScrollMode {
-	WMCTimedTextScrollModePopon = 0,
-	WMCTimedTextScrollModeRollup = 1,
+    WMCTimedTextScrollModePopon = 0,
+    WMCTimedTextScrollModeRollup = 1,
 };
 typedef unsigned WMCTimedTextScrollMode;
 
 // Windows.Media.Core.TimedTextUnit
 enum _WMCTimedTextUnit {
-	WMCTimedTextUnitPixels = 0,
-	WMCTimedTextUnitPercentage = 1,
+    WMCTimedTextUnitPixels = 0,
+    WMCTimedTextUnitPercentage = 1,
 };
 typedef unsigned WMCTimedTextUnit;
 
 // Windows.Media.Core.TimedTextWritingMode
 enum _WMCTimedTextWritingMode {
-	WMCTimedTextWritingModeLeftRightTopBottom = 0,
-	WMCTimedTextWritingModeRightLeftTopBottom = 1,
-	WMCTimedTextWritingModeTopBottomRightLeft = 2,
-	WMCTimedTextWritingModeTopBottomLeftRight = 3,
-	WMCTimedTextWritingModeLeftRight = 4,
-	WMCTimedTextWritingModeRightLeft = 5,
-	WMCTimedTextWritingModeTopBottom = 6,
+    WMCTimedTextWritingModeLeftRightTopBottom = 0,
+    WMCTimedTextWritingModeRightLeftTopBottom = 1,
+    WMCTimedTextWritingModeTopBottomRightLeft = 2,
+    WMCTimedTextWritingModeTopBottomLeftRight = 3,
+    WMCTimedTextWritingModeLeftRight = 4,
+    WMCTimedTextWritingModeRightLeft = 5,
+    WMCTimedTextWritingModeTopBottom = 6,
 };
 typedef unsigned WMCTimedTextWritingMode;
 
 // Windows.Media.Core.TimedTextDisplayAlignment
 enum _WMCTimedTextDisplayAlignment {
-	WMCTimedTextDisplayAlignmentBefore = 0,
-	WMCTimedTextDisplayAlignmentAfter = 1,
-	WMCTimedTextDisplayAlignmentCenter = 2,
+    WMCTimedTextDisplayAlignmentBefore = 0,
+    WMCTimedTextDisplayAlignmentAfter = 1,
+    WMCTimedTextDisplayAlignmentCenter = 2,
 };
 typedef unsigned WMCTimedTextDisplayAlignment;
 
 // Windows.Media.Core.TimedTextLineAlignment
 enum _WMCTimedTextLineAlignment {
-	WMCTimedTextLineAlignmentStart = 0,
-	WMCTimedTextLineAlignmentEnd = 1,
-	WMCTimedTextLineAlignmentCenter = 2,
+    WMCTimedTextLineAlignmentStart = 0,
+    WMCTimedTextLineAlignmentEnd = 1,
+    WMCTimedTextLineAlignmentCenter = 2,
 };
 typedef unsigned WMCTimedTextLineAlignment;
 
 // Windows.Media.Core.TimedTextWrapping
 enum _WMCTimedTextWrapping {
-	WMCTimedTextWrappingNoWrap = 0,
-	WMCTimedTextWrappingWrap = 1,
+    WMCTimedTextWrappingNoWrap = 0,
+    WMCTimedTextWrappingWrap = 1,
 };
 typedef unsigned WMCTimedTextWrapping;
 
 // Windows.Media.Core.TimedTextWeight
 enum _WMCTimedTextWeight {
-	WMCTimedTextWeightNormal = 400,
-	WMCTimedTextWeightBold = 700,
+    WMCTimedTextWeightNormal = 400,
+    WMCTimedTextWeightBold = 700,
 };
 typedef unsigned WMCTimedTextWeight;
 
 // Windows.Media.Core.TimedTextFlowDirection
 enum _WMCTimedTextFlowDirection {
-	WMCTimedTextFlowDirectionLeftToRight = 0,
-	WMCTimedTextFlowDirectionRightToLeft = 1,
+    WMCTimedTextFlowDirectionLeftToRight = 0,
+    WMCTimedTextFlowDirectionRightToLeft = 1,
 };
 typedef unsigned WMCTimedTextFlowDirection;
 
@@ -202,7 +229,7 @@ typedef unsigned WMCTimedTextFlowDirection;
 // [struct] Windows.Media.Core.MseTimeRange
 WINRT_EXPORT
 @interface WMCMseTimeRange : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property (copy) WFTimeSpan* start;
 @property (copy) WFTimeSpan* end;
 @end
@@ -210,7 +237,7 @@ WINRT_EXPORT
 // [struct] Windows.Media.Core.TimedTextPadding
 WINRT_EXPORT
 @interface WMCTimedTextPadding : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double before;
 @property double after;
 @property double start;
@@ -221,7 +248,7 @@ WINRT_EXPORT
 // [struct] Windows.Media.Core.TimedTextSize
 WINRT_EXPORT
 @interface WMCTimedTextSize : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double height;
 @property double width;
 @property WMCTimedTextUnit unit;
@@ -230,7 +257,7 @@ WINRT_EXPORT
 // [struct] Windows.Media.Core.TimedTextDouble
 WINRT_EXPORT
 @interface WMCTimedTextDouble : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double value;
 @property WMCTimedTextUnit unit;
 @end
@@ -238,7 +265,7 @@ WINRT_EXPORT
 // [struct] Windows.Media.Core.TimedTextPoint
 WINRT_EXPORT
 @interface WMCTimedTextPoint : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double x;
 @property double y;
 @property WMCTimedTextUnit unit;
@@ -259,8 +286,8 @@ WINRT_EXPORT
 
 @protocol WMCIMediaStreamDescriptor
 @property (readonly) BOOL isSelected;
-@property (copy) NSString * language;
-@property (copy) NSString * name;
+@property (copy) NSString* language;
+@property (copy) NSString* name;
 @end
 
 #endif // __WMCIMediaStreamDescriptor_DEFINED__
@@ -271,7 +298,7 @@ WINRT_EXPORT
 
 @protocol WMCIMediaCue
 @property (copy) WFTimeSpan* duration;
-@property (copy) NSString * id;
+@property (copy) NSString* id;
 @property (copy) WFTimeSpan* startTime;
 @end
 
@@ -283,7 +310,7 @@ WINRT_EXPORT
 
 @protocol WMCISingleSelectMediaTrackList
 @property int selectedIndex;
-- (EventRegistrationToken)addSelectedIndexChangedEvent:(void(^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
+- (EventRegistrationToken)addSelectedIndexChangedEvent:(void (^)(RTObject<WMCISingleSelectMediaTrackList>*, RTObject*))del;
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -294,9 +321,9 @@ WINRT_EXPORT
 #define __WMCIMediaTrack_DEFINED__
 
 @protocol WMCIMediaTrack
-@property (readonly) NSString * id;
-@property (copy) NSString * label;
-@property (readonly) NSString * language;
+@property (readonly) NSString* id;
+@property (copy) NSString* label;
+@property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
 @end
 
@@ -310,8 +337,8 @@ WINRT_EXPORT
 @interface WMCAudioStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCAudioStreamDescriptor*)create:(WMMAudioEncodingProperties*)encodingProperties ACTIVATOR;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
-@property (copy) NSString * name;
-@property (copy) NSString * language;
+@property (copy) NSString* name;
+@property (copy) NSString* language;
 @property (readonly) BOOL isSelected;
 @end
 
@@ -324,8 +351,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCVideoStreamDescriptor : RTObject <WMCIMediaStreamDescriptor>
 + (WMCVideoStreamDescriptor*)create:(WMMVideoEncodingProperties*)encodingProperties ACTIVATOR;
-@property (copy) NSString * name;
-@property (copy) NSString * language;
+@property (copy) NSString* name;
+@property (copy) NSString* language;
 @property (readonly) BOOL isSelected;
 @property (readonly) WMMVideoEncodingProperties* encodingProperties;
 @end
@@ -339,7 +366,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaStreamSource : RTObject <WMCIMediaSource>
 + (WMCMediaStreamSource*)createFromDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor ACTIVATOR;
-+ (WMCMediaStreamSource*)createFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor descriptor2:(RTObject<WMCIMediaStreamDescriptor>*)descriptor2 ACTIVATOR;
++ (WMCMediaStreamSource*)createFromDescriptors:(RTObject<WMCIMediaStreamDescriptor>*)descriptor
+                                   descriptor2:(RTObject<WMCIMediaStreamDescriptor>*)descriptor2 ACTIVATOR;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (copy) WMPMediaProtectionManager* mediaProtectionManager;
 @property (copy) WFTimeSpan* duration;
@@ -347,20 +375,23 @@ WINRT_EXPORT
 @property (copy) WFTimeSpan* bufferTime;
 @property (readonly) WSFMusicProperties* musicProperties;
 @property (readonly) WSFVideoProperties* videoProperties;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WMCMediaStreamSource*, WMCMediaStreamSourceClosedEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceClosedEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPausedEvent:(void(^)(WMCMediaStreamSource*, RTObject*))del;
+- (EventRegistrationToken)addPausedEvent:(void (^)(WMCMediaStreamSource*, RTObject*))del;
 - (void)removePausedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSampleRequestedEvent:(void(^)(WMCMediaStreamSource*, WMCMediaStreamSourceSampleRequestedEventArgs*))del;
+- (EventRegistrationToken)addSampleRequestedEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceSampleRequestedEventArgs*))del;
 - (void)removeSampleRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStartingEvent:(void(^)(WMCMediaStreamSource*, WMCMediaStreamSourceStartingEventArgs*))del;
+- (EventRegistrationToken)addStartingEvent:(void (^)(WMCMediaStreamSource*, WMCMediaStreamSourceStartingEventArgs*))del;
 - (void)removeStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSwitchStreamsRequestedEvent:(void(^)(WMCMediaStreamSource*, WMCMediaStreamSourceSwitchStreamsRequestedEventArgs*))del;
+- (EventRegistrationToken)addSwitchStreamsRequestedEvent:(void (^)(WMCMediaStreamSource*,
+                                                                   WMCMediaStreamSourceSwitchStreamsRequestedEventArgs*))del;
 - (void)removeSwitchStreamsRequestedEvent:(EventRegistrationToken)tok;
 - (void)notifyError:(WMCMediaStreamSourceErrorStatus)errorStatus;
 - (void)addStreamDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor;
 - (void)setBufferedRange:(WFTimeSpan*)startOffset endOffset:(WFTimeSpan*)endOffset;
-- (void)addProtectionKey:(RTObject<WMCIMediaStreamDescriptor>*)streamDescriptor keyIdentifier:(id<NSFastEnumeration> /* uint8_t */)keyIdentifier licenseData:(id<NSFastEnumeration> /* uint8_t */)licenseData;
+- (void)addProtectionKey:(RTObject<WMCIMediaStreamDescriptor>*)streamDescriptor
+           keyIdentifier:(id<NSFastEnumeration> /* uint8_t */)keyIdentifier
+             licenseData:(id<NSFastEnumeration> /* uint8_t */)licenseData;
 @end
 
 #endif // __WMCMediaStreamSource_DEFINED__
@@ -416,21 +447,21 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaStreamSamplePropertySet : RTObject
 @property (readonly) unsigned int size;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
 @end
 
 #endif // __WMCMediaStreamSamplePropertySet_DEFINED__
@@ -442,7 +473,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaStreamSample : RTObject
 + (WMCMediaStreamSample*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer timestamp:(WFTimeSpan*)timestamp;
-+ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream count:(unsigned int)count timestamp:(WFTimeSpan*)timestamp success:(void (^)(WMCMediaStreamSample*))success failure:(void (^)(NSError*))failure;
++ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream
+                        count:(unsigned int)count
+                    timestamp:(WFTimeSpan*)timestamp
+                      success:(void (^)(WMCMediaStreamSample*))success
+                      failure:(void (^)(NSError*))failure;
 @property BOOL keyFrame;
 @property (copy) WFTimeSpan* duration;
 @property BOOL discontinuous;
@@ -451,7 +486,7 @@ WINRT_EXPORT
 @property (readonly) WMCMediaStreamSamplePropertySet* extendedProperties;
 @property (readonly) WMCMediaStreamSampleProtectionProperties* protection;
 @property (readonly) WFTimeSpan* timestamp;
-- (EventRegistrationToken)addProcessedEvent:(void(^)(WMCMediaStreamSample*, RTObject*))del;
+- (EventRegistrationToken)addProcessedEvent:(void (^)(WMCMediaStreamSample*, RTObject*))del;
 - (void)removeProcessedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -563,19 +598,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMseStreamSource : RTObject <WMCIMediaSource>
-+ (BOOL)isContentTypeSupported:(NSString *)contentType;
++ (BOOL)isContentTypeSupported:(NSString*)contentType;
 + (instancetype)create ACTIVATOR;
 @property (copy) id duration;
 @property (readonly) WMCMseSourceBufferList* activeSourceBuffers;
 @property (readonly) WMCMseReadyState readyState;
 @property (readonly) WMCMseSourceBufferList* sourceBuffers;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WMCMseStreamSource*, RTObject*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WMCMseStreamSource*, RTObject*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEndedEvent:(void(^)(WMCMseStreamSource*, RTObject*))del;
+- (EventRegistrationToken)addEndedEvent:(void (^)(WMCMseStreamSource*, RTObject*))del;
 - (void)removeEndedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOpenedEvent:(void(^)(WMCMseStreamSource*, RTObject*))del;
+- (EventRegistrationToken)addOpenedEvent:(void (^)(WMCMseStreamSource*, RTObject*))del;
 - (void)removeOpenedEvent:(EventRegistrationToken)tok;
-- (WMCMseSourceBuffer*)addSourceBuffer:(NSString *)mimeType;
+- (WMCMseSourceBuffer*)addSourceBuffer:(NSString*)mimeType;
 - (void)removeSourceBuffer:(WMCMseSourceBuffer*)buffer;
 - (void)endOfStream:(WMCMseEndOfStreamStatus)status;
 @end
@@ -589,9 +624,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMseSourceBufferList : RTObject
 @property (readonly) NSArray* buffers;
-- (EventRegistrationToken)addSourceBufferAddedEvent:(void(^)(WMCMseSourceBufferList*, RTObject*))del;
+- (EventRegistrationToken)addSourceBufferAddedEvent:(void (^)(WMCMseSourceBufferList*, RTObject*))del;
 - (void)removeSourceBufferAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceBufferRemovedEvent:(void(^)(WMCMseSourceBufferList*, RTObject*))del;
+- (EventRegistrationToken)addSourceBufferRemovedEvent:(void (^)(WMCMseSourceBufferList*, RTObject*))del;
 - (void)removeSourceBufferRemovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -609,15 +644,15 @@ WINRT_EXPORT
 @property (copy) id appendWindowEnd;
 @property (readonly) NSArray* buffered;
 @property (readonly) BOOL isUpdating;
-- (EventRegistrationToken)addAbortedEvent:(void(^)(WMCMseSourceBuffer*, RTObject*))del;
+- (EventRegistrationToken)addAbortedEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeAbortedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WMCMseSourceBuffer*, RTObject*))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdateEndedEvent:(void(^)(WMCMseSourceBuffer*, RTObject*))del;
+- (EventRegistrationToken)addUpdateEndedEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeUpdateEndedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdateStartingEvent:(void(^)(WMCMseSourceBuffer*, RTObject*))del;
+- (EventRegistrationToken)addUpdateStartingEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeUpdateStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void(^)(WMCMseSourceBuffer*, RTObject*))del;
+- (EventRegistrationToken)addUpdatedEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)appendBuffer:(RTObject<WSSIBuffer>*)buffer;
 - (void)appendStream:(RTObject<WSSIInputStream>*)stream;
@@ -657,7 +692,7 @@ WINRT_EXPORT
 @interface WMCSceneAnalysisEffect : RTObject <WMIMediaExtension>
 @property (copy) WFTimeSpan* desiredAnalysisInterval;
 @property (readonly) WMCHighDynamicRangeControl* highDynamicRangeAnalyzer;
-- (EventRegistrationToken)addSceneAnalyzedEvent:(void(^)(WMCSceneAnalysisEffect*, WMCSceneAnalyzedEventArgs*))del;
+- (EventRegistrationToken)addSceneAnalyzedEvent:(void (^)(WMCSceneAnalysisEffect*, WMCSceneAnalyzedEventArgs*))del;
 - (void)removeSceneAnalyzedEvent:(EventRegistrationToken)tok;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
@@ -708,7 +743,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isReadOnly;
 @property (copy) id relativeTime;
 @property (copy) id systemRelativeTime;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 - (void)close;
 @end
 
@@ -728,7 +763,7 @@ WINRT_EXPORT
 @property (copy) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 - (void)close;
 @end
 
@@ -739,7 +774,7 @@ WINRT_EXPORT
 #define __WMEIVideoEffectDefinition_DEFINED__
 
 @protocol WMEIVideoEffectDefinition
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -752,7 +787,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCSceneAnalysisEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)create ACTIVATOR;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -771,7 +806,7 @@ WINRT_EXPORT
 @property (copy) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 - (void)close;
 @end
 
@@ -796,7 +831,7 @@ WINRT_EXPORT
 @interface WMCFaceDetectionEffect : RTObject <WMIMediaExtension>
 @property BOOL enabled;
 @property (copy) WFTimeSpan* desiredDetectionInterval;
-- (EventRegistrationToken)addFaceDetectedEvent:(void(^)(WMCFaceDetectionEffect*, WMCFaceDetectedEventArgs*))del;
+- (EventRegistrationToken)addFaceDetectedEvent:(void (^)(WMCFaceDetectionEffect*, WMCFaceDetectedEventArgs*))del;
 - (void)removeFaceDetectedEvent:(EventRegistrationToken)tok;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
@@ -812,7 +847,7 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property BOOL synchronousDetectionEnabled;
 @property WMCFaceDetectionMode detectionMode;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -836,9 +871,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffect : RTObject <WMIMediaExtension>
 @property BOOL enabled;
-- (EventRegistrationToken)addEnabledChangedEvent:(void(^)(WMCVideoStabilizationEffect*, WMCVideoStabilizationEffectEnabledChangedEventArgs*))del;
+- (EventRegistrationToken)addEnabledChangedEvent:(void (^)(WMCVideoStabilizationEffect*,
+                                                           WMCVideoStabilizationEffectEnabledChangedEventArgs*))del;
 - (void)removeEnabledChangedEvent:(EventRegistrationToken)tok;
-- (WMCVideoStreamConfiguration*)getRecommendedStreamConfiguration:(WMDVideoDeviceController*)controller desiredProperties:(WMMVideoEncodingProperties*)desiredProperties;
+- (WMCVideoStreamConfiguration*)getRecommendedStreamConfiguration:(WMDVideoDeviceController*)controller
+                                                desiredProperties:(WMMVideoEncodingProperties*)desiredProperties;
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
@@ -851,7 +888,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)create ACTIVATOR;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -888,15 +925,15 @@ WINRT_EXPORT
 + (WMCMediaSource*)createFromMseStreamSource:(WMCMseStreamSource*)mediaSource;
 + (WMCMediaSource*)createFromIMediaSource:(RTObject<WMCIMediaSource>*)mediaSource;
 + (WMCMediaSource*)createFromStorageFile:(RTObject<WSIStorageFile>*)file;
-+ (WMCMediaSource*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream contentType:(NSString *)contentType;
-+ (WMCMediaSource*)createFromStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)stream contentType:(NSString *)contentType;
++ (WMCMediaSource*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream contentType:(NSString*)contentType;
++ (WMCMediaSource*)createFromStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)stream contentType:(NSString*)contentType;
 + (WMCMediaSource*)createFromUri:(WFUri*)uri;
 @property (readonly) WFCValueSet* customProperties;
 @property (readonly) id duration;
 @property (readonly) NSMutableArray<RTObservableCollection>* externalTimedMetadataTracks;
 @property (readonly) NSMutableArray<RTObservableCollection>* externalTimedTextSources;
 @property (readonly) BOOL isOpen;
-- (EventRegistrationToken)addOpenOperationCompletedEvent:(void(^)(WMCMediaSource*, WMCMediaSourceOpenOperationCompletedEventArgs*))del;
+- (EventRegistrationToken)addOpenOperationCompletedEvent:(void (^)(WMCMediaSource*, WMCMediaSourceOpenOperationCompletedEventArgs*))del;
 - (void)removeOpenOperationCompletedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -922,9 +959,9 @@ WINRT_EXPORT
 @interface WMCTimedTextSource : RTObject
 + (WMCTimedTextSource*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
 + (WMCTimedTextSource*)createFromUri:(WFUri*)uri;
-+ (WMCTimedTextSource*)createFromStreamWithLanguage:(RTObject<WSSIRandomAccessStream>*)stream defaultLanguage:(NSString *)defaultLanguage;
-+ (WMCTimedTextSource*)createFromUriWithLanguage:(WFUri*)uri defaultLanguage:(NSString *)defaultLanguage;
-- (EventRegistrationToken)addResolvedEvent:(void(^)(WMCTimedTextSource*, WMCTimedTextSourceResolveResultEventArgs*))del;
++ (WMCTimedTextSource*)createFromStreamWithLanguage:(RTObject<WSSIRandomAccessStream>*)stream defaultLanguage:(NSString*)defaultLanguage;
++ (WMCTimedTextSource*)createFromUriWithLanguage:(WFUri*)uri defaultLanguage:(NSString*)defaultLanguage;
+- (EventRegistrationToken)addResolvedEvent:(void (^)(WMCTimedTextSource*, WMCTimedTextSourceResolveResultEventArgs*))del;
 - (void)removeResolvedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -936,20 +973,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedMetadataTrack : RTObject <WMCIMediaTrack>
-+ (WMCTimedMetadataTrack*)create:(NSString *)id language:(NSString *)language kind:(WMCTimedMetadataKind)kind ACTIVATOR;
-@property (copy) NSString * label;
-@property (readonly) NSString * id;
-@property (readonly) NSString * language;
++ (WMCTimedMetadataTrack*)create:(NSString*)id language:(NSString*)language kind:(WMCTimedMetadataKind)kind ACTIVATOR;
+@property (copy) NSString* label;
+@property (readonly) NSString* id;
+@property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
 @property (readonly) NSArray* activeCues;
 @property (readonly) NSArray* cues;
-@property (readonly) NSString * dispatchType;
+@property (readonly) NSString* dispatchType;
 @property (readonly) WMCTimedMetadataKind timedMetadataKind;
-- (EventRegistrationToken)addCueEnteredEvent:(void(^)(WMCTimedMetadataTrack*, WMCMediaCueEventArgs*))del;
+- (EventRegistrationToken)addCueEnteredEvent:(void (^)(WMCTimedMetadataTrack*, WMCMediaCueEventArgs*))del;
 - (void)removeCueEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCueExitedEvent:(void(^)(WMCTimedMetadataTrack*, WMCMediaCueEventArgs*))del;
+- (EventRegistrationToken)addCueExitedEvent:(void (^)(WMCTimedMetadataTrack*, WMCMediaCueEventArgs*))del;
 - (void)removeCueExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTrackFailedEvent:(void(^)(WMCTimedMetadataTrack*, WMCTimedMetadataTrackFailedEventArgs*))del;
+- (EventRegistrationToken)addTrackFailedEvent:(void (^)(WMCTimedMetadataTrack*, WMCTimedMetadataTrackFailedEventArgs*))del;
 - (void)removeTrackFailedEvent:(EventRegistrationToken)tok;
 - (void)addCue:(RTObject<WMCIMediaCue>*)cue;
 - (void)removeCue:(RTObject<WMCIMediaCue>*)cue;
@@ -964,7 +1001,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextRegion : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @property (copy) WMCTimedTextDouble* lineHeight;
 @property BOOL isOverflowClipped;
 @property (copy) WMCTimedTextSize* extent;
@@ -990,14 +1027,14 @@ WINRT_EXPORT
 @property (copy) WUColor* foreground;
 @property WMCTimedTextWeight fontWeight;
 @property (copy) WMCTimedTextDouble* fontSize;
-@property (copy) NSString * fontFamily;
+@property (copy) NSString* fontFamily;
 @property WMCTimedTextFlowDirection flowDirection;
 @property BOOL isBackgroundAlwaysShown;
 @property (copy) WUColor* background;
 @property (copy) WMCTimedTextDouble* outlineThickness;
 @property (copy) WMCTimedTextDouble* outlineRadius;
 @property (copy) WUColor* outlineColor;
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @property WMCTimedTextLineAlignment lineAlignment;
 @end
 
@@ -1010,7 +1047,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextLine : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * text;
+@property (copy) NSString* text;
 @property (readonly) NSMutableArray* subformats;
 @end
 
@@ -1084,7 +1121,7 @@ WINRT_EXPORT
 @interface WMCTimedTextCue : RTObject <WMCIMediaCue>
 + (instancetype)create ACTIVATOR;
 @property (copy) WFTimeSpan* startTime;
-@property (copy) NSString * id;
+@property (copy) NSString* id;
 @property (copy) WFTimeSpan* duration;
 @property (copy) WMCTimedTextStyle* cueStyle;
 @property (copy) WMCTimedTextRegion* cueRegion;
@@ -1102,7 +1139,7 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (copy) RTObject<WSSIBuffer>* data;
 @property (copy) WFTimeSpan* startTime;
-@property (copy) NSString * id;
+@property (copy) NSString* id;
 @property (copy) WFTimeSpan* duration;
 @end
 
@@ -1114,9 +1151,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoTrack : RTObject <WMCIMediaTrack>
-@property (copy) NSString * label;
-@property (readonly) NSString * id;
-@property (readonly) NSString * language;
+@property (copy) NSString* label;
+@property (readonly) NSString* id;
+@property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
 @end
 
@@ -1128,11 +1165,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCAudioTrack : RTObject <WMCIMediaTrack>
-@property (copy) NSString * label;
-@property (readonly) NSString * id;
-@property (readonly) NSString * language;
+@property (copy) NSString* label;
+@property (readonly) NSString* id;
+@property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
 @end
 
 #endif // __WMCAudioTrack_DEFINED__
-

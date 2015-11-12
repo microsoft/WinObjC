@@ -46,8 +46,48 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
-NSString* const UIApplicationWillChangeDisplayModeNofication = (NSString * const) @"UIApplicationWillChangeDisplayModeNofication";
-NSString* const UIApplicationDidChangeDisplayModeNofication = (NSString * const) @"UIApplicationDidChangeDisplayModeNofication";
+
+NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
+NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
+
+NSString* const UIApplicationDidChangeStatusBarFrameNotification = @"UIApplicationDidChangeStatusBarFrameNotification";
+NSString* const UIApplicationWillChangeStatusBarOrientationNotification = @"UIApplicationWillChangeStatusBarOrientationNotification";
+NSString* const UIApplicationDidChangeStatusBarOrientationNotification = @"UIApplicationDidChangeStatusBarOrientationNotification";
+NSString* const UIApplicationWillEnterForegroundNotification = @"UIApplicationWillEnterForegroundNotification";
+NSString* const UIApplicationWillTerminateNotification = @"UIApplicationWillTerminateNotification";
+NSString* const UIApplicationWillResignActiveNotification = @"UIApplicationWillResignActiveNotification";
+NSString* const UIApplicationDidEnterBackgroundNotification = @"UIApplicationDidEnterBackgroundNotification";
+NSString* const UIApplicationDidBecomeActiveNotification = @"UIApplicationDidBecomeActiveNotification";
+NSString* const UIApplicationDidFinishLaunchingNotification = @"UIApplicationDidFinishLaunchingNotification";
+NSString* const UIApplicationSignificantTimeChangeNotification = @"UIApplicationSignificantTimeChangeNotification";
+
+NSString* const UIApplicationLaunchOptionsURLKey = @"UIApplicationLaunchOptionsURLKey";
+NSString* const UIApplicationLaunchOptionsSourceApplicationKey = @"UIApplicationLaunchOptionsSourceApplicationKey";
+NSString* const UIApplicationLaunchOptionsRemoteNotificationKey = @"UIApplicationLaunchOptionsRemoteNotificationKey";
+NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchOptionsAnnotationKey";
+NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
+NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
+
+NSString* const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
+NSString* const UIApplicationWillChangeStatusBarFrameNotification = @"UIApplicationWillChangeStatusBarFrameNotification";
+
+NSString* const UIApplicationWillChangeDisplayModeNofication = @"UIApplicationWillChangeDisplayModeNofication";
+NSString* const UIApplicationDidChangeDisplayModeNofication = @"UIApplicationDidChangeDisplayModeNofication";
+
+NSString* const UITrackingRunLoopMode = @"UITrackingRunLoopMode";
+
+NSString* const UIContentSizeCategoryAccessibilityExtraExtraExtraLarge = @"UIContentSizeCategoryAccessibilityExtraExtraExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityExtraExtraLarge = @"UIContentSizeCategoryAccessibilityExtraExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraLarge = @"UIContentSizeCategoryExtraExtraLarge";
+NSString* const UIContentSizeCategoryExtraExtraExtraLarge = @"UIContentSizeCategoryExtraExtraExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityExtraLarge = @"UIContentSizeCategoryAccessibilityExtraLarge";
+NSString* const UIContentSizeCategoryExtraLarge = @"UIContentSizeCategoryExtraLarge";
+NSString* const UIContentSizeCategoryAccessibilityLarge = @"UIContentSizeCategoryAccessibilityLarge";
+NSString* const UIContentSizeCategoryLarge = @"UIContentSizeCategoryLarge";
+NSString* const UIContentSizeCategoryAccessibilityMedium = @"UIContentSizeCategoryAccessibilityMedium";
+NSString* const UIContentSizeCategoryMedium = @"UIContentSizeCategoryMedium";
+NSString* const UIContentSizeCategorySmall = @"UIContentSizeCategorySmall";
+NSString* const UIContentSizeCategoryExtraSmall = @"UIContentSizeCategoryExtraSmall";
 
 float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;
@@ -391,11 +431,18 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIApplication*)sharedApplication {
     return sharedApplication;
 }
 
+/**
+ @Status Stub
+*/
 - (void)scheduleLocalNotification:(UILocalNotification*)n {
+    UNIMPLEMENTED();
     [n _setReceiver:self];
     int idx = [_curNotifications indexOfObject:n];
     if (idx == NSNotFound) {
@@ -422,18 +469,33 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     [localNotification release];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setStatusBarStyle:(unsigned)style animated:(BOOL)animated {
+    UNIMPLEMENTED();
     _statusBarStyle = style;
 }
 
+/**
+ @Status Stub
+*/
 - (unsigned)statusBarStyle {
+    UNIMPLEMENTED();
     return _statusBarStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStatusBarHidden:(BOOL)hide {
     [self setStatusBarHidden:hide animated:0];
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setStatusBarHidden:(BOOL)hide withAnimation:(UIStatusBarAnimation)anim {
     [self setStatusBarHidden:hide animated:anim];
 }
@@ -441,14 +503,24 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 - (void)setProximitySensingEnabled:(BOOL)enabled {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)orientation {
     [self setStatusBarOrientation:orientation animated:FALSE];
 }
 
+/**
+ @Status Stub
+*/
 - (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirection {
+    UNIMPLEMENTED();
     return UIUserInterfaceLayoutDirectionLeftToRight;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
     CGRect rect, appFrame;
 
@@ -620,6 +692,9 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     _internalOrientation = orientation;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIInterfaceOrientation)statusBarOrientation {
     return _curOrientation;
 }
@@ -637,22 +712,39 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 - (void)setStatusBarMode:(unsigned)mode duration:(unsigned)duration {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegateAddr {
     _delegate = delegateAddr;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIdleTimerDisabled:(BOOL)disable {
+    UNIMPLEMENTED();
     idleDisabled = disable;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)isIdleTimerDisabled {
+    UNIMPLEMENTED();
     return idleDisabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated {
     if (statusBarHidden != hidden) {
         statusBarHidden = hidden;
@@ -688,7 +780,11 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setApplicationIconBadgeNumber:(int)num {
+    UNIMPLEMENTED();
     EbrSetApplicationBadgeNumber(num);
 }
 
@@ -897,6 +993,9 @@ static void printViews(id curView, int level) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendEvent:(UIEvent*)event {
     UITouch* touch = [event _touchEvent];
     SEL eventName;
@@ -1058,7 +1157,11 @@ static void printViews(id curView, int level) {
     [view performSelector:eventName withObject:touches withObject:event];
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)openURL:(NSURL*)url {
+    UNIMPLEMENTED();
     NSString* scheme = [url scheme];
     if ([scheme isEqualToString:@"fbauth"]) {
         return FALSE;
@@ -1078,7 +1181,11 @@ static void printViews(id curView, int level) {
     return FALSE;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canOpenURL:(NSURL*)url {
+    UNIMPLEMENTED();
     EbrDebugLog("UIApplication: Can open URL %s?\n", [[url absoluteString] UTF8String]);
     NSString* scheme = [url scheme];
     if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
@@ -1088,22 +1195,41 @@ static void printViews(id curView, int level) {
     return FALSE;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setNetworkActivityIndicatorVisible:(BOOL)visible {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setApplicationSupportsShakeToEdit:(BOOL)supports {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)registerForRemoteNotificationTypes:(unsigned)types {
+    UNIMPLEMENTED();
     [self registerForRemoteNotificationTypes:types withId:@"309806373466"];
 }
 
+/**
+ @Status Stub
+*/
 - (void)registerForRemoteNotificationTypes:(unsigned)types withId:(id)identifier {
+    UNIMPLEMENTED();
 #ifdef SUPPORT_REMOTE_NOTIFICATIONS
     EbrRegisterForRemoteNotifications(identifier);
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)forEvent {
     UIResponder* curTarget = target;
 
@@ -1131,16 +1257,28 @@ static void printViews(id curView, int level) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)())handler {
+    UNIMPLEMENTED();
     EbrDebugLog("beginBackgroundTaskWithExpirationHandler not supported\n");
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (double)backgroundTimeRemaining {
+    UNIMPLEMENTED();
     return 60.0 * 5;
 }
 
+/**
+ @Status Stub
+*/
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)handler {
+    UNIMPLEMENTED();
     EbrDebugLog("endBackgroundTask not supported\n");
 }
 
@@ -1148,10 +1286,16 @@ static void printViews(id curView, int level) {
     //[[self _popupWindow] setRootViewController:controller];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)windows {
     return windows;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)keyWindow {
     return _curKeyWindow;
 }
@@ -1199,34 +1343,57 @@ static void printViews(id curView, int level) {
     return statusBar;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isStatusBarHidden {
     return statusBarHidden;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)beginIgnoringInteractionEvents {
     ignoringInteractionEvents++;
 }
 
+/**
+ @Status Stub
+*/
 - (void)beginReceivingRemoteControlEvents {
+    UNIMPLEMENTED();
 }
 
 - (void)endReceivingRemoteControlEvents {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)endIgnoringInteractionEvents {
     if (ignoringInteractionEvents > 0) {
         ignoringInteractionEvents--;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isIgnoringInteractionEvents {
     return ignoringInteractionEvents > 0;
 }
 
+/**
+ @Status Stub
+*/
 - (double)statusBarOrientationAnimationDuration {
+    UNIMPLEMENTED();
     return 0.4;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)statusBarFrame {
     CGRect ret;
 
@@ -1290,19 +1457,35 @@ static void printViews(id curView, int level) {
     return popupRotationLayer;
 }
 
+/**
+ @Status Stub
+*/
 - (int)applicationIconBadgeNumber {
+    UNIMPLEMENTED();
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (NSArray*)scheduledLocalNotifications {
+    UNIMPLEMENTED();
     return _curNotifications;
 }
 
+/**
+ @Status Stub
+*/
 - (unsigned)enabledRemoteNotificationTypes {
+    UNIMPLEMENTED();
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (void)cancelAllLocalNotifications {
+    UNIMPLEMENTED();
     int count = [_curNotifications count];
     while (count > 0) {
         id object = [_curNotifications objectAtIndex:count - 1];
@@ -1312,7 +1495,11 @@ static void printViews(id curView, int level) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)cancelLocalNotification:(UILocalNotification*)notification {
+    UNIMPLEMENTED();
     [notification _cancelAlarm];
     int idx = [_curNotifications indexOfObject:notification];
     if (idx != NSNotFound) {
@@ -1320,9 +1507,16 @@ static void printViews(id curView, int level) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)presentLocalNotificationNow:(UILocalNotification*)notification {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIApplicationState)applicationState {
     return _applicationState;
 }
@@ -1772,6 +1966,10 @@ static void evaluateKeyboard(id self) {
     [_UISettings showSettings];
 }
 
+/**
+ @Status Caveat
+ @Notes WinObjC extension
+*/
 + (WOCDisplayMode*)displayMode {
     static WOCDisplayMode* ret = nil;
     if (ret == nil) {
@@ -2106,6 +2304,9 @@ void UIShutdown() {
     _windowSize = size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)currentSize {
     return CGSizeMake([self currentWidth], [self currentHeight]);
 }
@@ -2173,6 +2374,9 @@ void UIShutdown() {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)currentMagnification {
     if (_autoMagnification) {
         //  Calculate magnification as a function of the screen width/height and aspect-fit it
@@ -2187,6 +2391,9 @@ void UIShutdown() {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)updateDisplaySettings {
     [self _updateDisplaySettings];
 }
@@ -2235,6 +2442,9 @@ void UIShutdown() {
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidChangeDisplayModeNofication object:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)hostWindowSize {
     return _windowSize;
 }
@@ -2244,6 +2454,9 @@ void UIShutdown() {
                       self._currentOrientationWindowSize.height * self.hostScreenScale);
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)hostScreenScale {
     if (_hostScale == 0.0f) {
         _hostScale = ((float)[[WGDDisplayInformation getForCurrentView] resolutionScale]) / 100.0f;
@@ -2251,11 +2464,17 @@ void UIShutdown() {
     return _hostScale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)hostScreenSizePixels {
     CGSize screenSize = [self hostScreenSizePoints];
     return CGSizeMake(screenSize.width * self.hostScreenScale, screenSize.height * self.hostScreenScale);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)hostScreenSizePoints {
     if (_hostScreenSize.width == 0 || _hostScreenSize.height == 0) {
         _hostScreenSize = self._currentOrientationWindowSize;
@@ -2264,6 +2483,9 @@ void UIShutdown() {
     return CGSizeMake(_hostScreenSize.width, _hostScreenSize.height);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)hostScreenSizeInches {
     CGSize sizePixels = self.hostScreenSizePixels;
 
@@ -2277,11 +2499,17 @@ void UIShutdown() {
     return CGSizeMake(sizePixels.width / _hostScreenDpi.width, sizePixels.height / _hostScreenDpi.height);
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)hostScreenDiagonalInches {
     CGSize sizeInches = self.hostScreenSizeInches;
     return sqrt(sizeInches.width * sizeInches.width + sizeInches.height * sizeInches.height);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDisplayPreset:(WOCDisplayPreset)mode {
     switch (mode) {
         case WOCDisplayPresetPhone320x480:

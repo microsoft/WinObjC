@@ -13,6 +13,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @protocol NSObject
 
+/**
+ @Status Stub
+ @Notes NSZone is not supported
+*/
 -(NSZone *)zone;
 
 -(id)self;
@@ -48,6 +52,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @end
 
 @protocol NSMutableCopying
+
+/**
+ @Status Interoperable
+*/
 -mutableCopyWithZone:(NSZone *)zone;
 @end
 

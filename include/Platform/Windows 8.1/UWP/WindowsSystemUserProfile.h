@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSUAdvertisingManager, WSUUserInformation, WSULockScreen, WSUGlobalizationPreferences;
-@protocol WSUIAdvertisingManagerStatics, WSUIUserInformationStatics, WSUILockScreenStatics, WSUILockScreenImageFeedStatics, WSUIGlobalizationPreferencesStatics;
+@protocol WSUIAdvertisingManagerStatics
+, WSUIUserInformationStatics, WSUILockScreenStatics, WSUILockScreenImageFeedStatics, WSUIGlobalizationPreferencesStatics;
 
 // Windows.System.UserProfile.AccountPictureKind
 enum _WSUAccountPictureKind {
@@ -62,7 +63,7 @@ typedef unsigned WSUSetImageFeedResult;
 
 WINRT_EXPORT
 @interface WSUAdvertisingManager : RTObject
-+ (NSString *)advertisingId;
++ (NSString*)advertisingId;
 @end
 
 #endif // __WSUAdvertisingManager_DEFINED__
@@ -74,19 +75,31 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUUserInformation : RTObject
 + (RTObject<WSIStorageFile>*)getAccountPicture:(WSUAccountPictureKind)kind;
-+ (void)setAccountPictureAsync:(RTObject<WSIStorageFile>*)image success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
-+ (void)setAccountPicturesAsync:(RTObject<WSIStorageFile>*)smallImage largeImage:(RTObject<WSIStorageFile>*)largeImage video:(RTObject<WSIStorageFile>*)video success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
-+ (void)setAccountPictureFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)image success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
-+ (void)setAccountPicturesFromStreamsAsync:(RTObject<WSSIRandomAccessStream>*)smallImage largeImage:(RTObject<WSSIRandomAccessStream>*)largeImage video:(RTObject<WSSIRandomAccessStream>*)video success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
-+ (void)getDisplayNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getFirstNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getLastNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getPrincipalNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)getSessionInitiationProtocolUriAsyncWithSuccess:(void (^)(WFUri *))success failure:(void (^)(NSError*))failure;
-+ (void)getDomainNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)setAccountPictureAsync:(RTObject<WSIStorageFile>*)image
+                       success:(void (^)(WSUSetAccountPictureResult))success
+                       failure:(void (^)(NSError*))failure;
++ (void)setAccountPicturesAsync:(RTObject<WSIStorageFile>*)smallImage
+                     largeImage:(RTObject<WSIStorageFile>*)largeImage
+                          video:(RTObject<WSIStorageFile>*)video
+                        success:(void (^)(WSUSetAccountPictureResult))success
+                        failure:(void (^)(NSError*))failure;
++ (void)setAccountPictureFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)image
+                                 success:(void (^)(WSUSetAccountPictureResult))success
+                                 failure:(void (^)(NSError*))failure;
++ (void)setAccountPicturesFromStreamsAsync:(RTObject<WSSIRandomAccessStream>*)smallImage
+                                largeImage:(RTObject<WSSIRandomAccessStream>*)largeImage
+                                     video:(RTObject<WSSIRandomAccessStream>*)video
+                                   success:(void (^)(WSUSetAccountPictureResult))success
+                                   failure:(void (^)(NSError*))failure;
++ (void)getDisplayNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getFirstNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getLastNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getPrincipalNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getSessionInitiationProtocolUriAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
++ (void)getDomainNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (BOOL)accountPictureChangeEnabled;
 + (BOOL)nameAccessAllowed;
-+ (EventRegistrationToken)addAccountPictureChangedEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addAccountPictureChangedEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeAccountPictureChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -101,9 +114,11 @@ WINRT_EXPORT
 + (RTObject<WSSIRandomAccessStream>*)getImageStream;
 + (RTObject<WFIAsyncAction>*)setImageFileAsync:(RTObject<WSIStorageFile>*)value;
 + (RTObject<WFIAsyncAction>*)setImageStreamAsync:(RTObject<WSSIRandomAccessStream>*)value;
-+ (void)requestSetImageFeedAsync:(WFUri *)syndicationFeedUri success:(void (^)(WSUSetImageFeedResult))success failure:(void (^)(NSError*))failure;
++ (void)requestSetImageFeedAsync:(WFUri*)syndicationFeedUri
+                         success:(void (^)(WSUSetImageFeedResult))success
+                         failure:(void (^)(NSError*))failure;
 + (BOOL)tryRemoveImageFeed;
-+ (WFUri *)originalImageFile;
++ (WFUri*)originalImageFile;
 @end
 
 #endif // __WSULockScreen_DEFINED__
@@ -114,13 +129,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUGlobalizationPreferences : RTObject
-+ (id<NSFastEnumeration> /*String*/ )calendars;
-+ (id<NSFastEnumeration> /*String*/ )clocks;
-+ (id<NSFastEnumeration> /*String*/ )currencies;
-+ (NSString *)homeGeographicRegion;
-+ (id<NSFastEnumeration> /*String*/ )languages;
++ (id<NSFastEnumeration> /*String*/)calendars;
++ (id<NSFastEnumeration> /*String*/)clocks;
++ (id<NSFastEnumeration> /*String*/)currencies;
++ (NSString*)homeGeographicRegion;
++ (id<NSFastEnumeration> /*String*/)languages;
 + (WGDayOfWeek)weekStartsOn;
 @end
 
 #endif // __WSUGlobalizationPreferences_DEFINED__
-

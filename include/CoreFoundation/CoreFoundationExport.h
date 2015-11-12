@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #ifndef COREFOUNDATION_EXPORT
- #define COREFOUNDATION_EXPORT __declspec(dllimport) extern 
+#define COREFOUNDATION_EXPORT __declspec(dllimport) extern
 #endif
 
 #define COREFOUNDATION_EXPORT_DLL __declspec(dllexport) extern

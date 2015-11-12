@@ -27,10 +27,16 @@
 
 @interface NSMigrationManager : NSObject
 
-- (id)initWithSourceModel:(NSManagedObjectModel *)sourceModel destinationModel:(NSManagedObjectModel *)destinationModel;
-- (BOOL)migrateStoreFromURL:(NSURL *)sourceURL type:(NSString *)sStoreType options:(NSDictionary *)sOptions withMappingModel:(NSMappingModel *)mappings toDestinationURL:(NSURL *)dURL destinationType:(NSString *)dStoreType destinationOptions:(NSDictionary *)dOptions error:(NSError **)error;
+- (id)initWithSourceModel:(NSManagedObjectModel*)sourceModel destinationModel:(NSManagedObjectModel*)destinationModel;
+- (BOOL)migrateStoreFromURL:(NSURL*)sourceURL
+                       type:(NSString*)sStoreType
+                    options:(NSDictionary*)sOptions
+           withMappingModel:(NSMappingModel*)mappings
+           toDestinationURL:(NSURL*)dURL
+            destinationType:(NSString*)dStoreType
+         destinationOptions:(NSDictionary*)dOptions
+                      error:(NSError**)error;
 
 @end
-
 
 #endif /* _NSMIGRATIONMANAGER_H_ */

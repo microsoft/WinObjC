@@ -121,42 +121,77 @@ static void sizeViews(UIProgressView* self, bool animated) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes style not supported
+*/
 - (instancetype)initWithProgressViewStyle:(UIProgressViewStyle)style {
     [self init];
 
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setProgressViewStyle:(UIProgressViewStyle)style {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setProgress:(float)progress {
     _value = progress;
     sizeViews(self, false);
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)setProgress:(float)progress animated:(BOOL)animated {
     _value = progress;
     sizeViews(self, animated);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setProgressImage:(UIImage*)image {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setProgressTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTrackImage:(UIImage*)image {
     _trackImage = image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)trackImage {
     return _trackImage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)progress {
     return _value;
 }

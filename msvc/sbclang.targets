@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
+
   <ItemGroup>
     <PropertyPageSchema
       Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
@@ -11,20 +11,20 @@
       <Targets>_ClangCompile</Targets>
     </AvailableItemName>
   </ItemGroup>
-   
+
   <PropertyGroup>
     <IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
   </PropertyGroup>
-  
+
   <Target
     Name="CopyStarboardDependencies"
     DependsOnTargets="ComputeStarboardCRT"
     AfterTargets="Link">
-    
+
     <PropertyGroup>
       <LinkAdditionalDependencies>@(Link);@(Link->Metadata('AdditionalDependencies'))</LinkAdditionalDependencies>
     </PropertyGroup>
-  
+
     <PropertyGroup>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
@@ -38,15 +38,17 @@
       <IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
+      <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
+      <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
     </PropertyGroup>
-  
+
     <ItemGroup>
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
-    
+
       <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
       <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
       <SBResourceCopy Condition="'$(IncludeCoreFoundation)' == 'true'" Include="$(StarboardLibDirs)\CoreFoundation.dll" />
@@ -82,13 +84,16 @@
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\OpenGLES.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libEGL.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenGLES)' == 'true'" Include="$(StarboardLibDirs)\libGLESv2.dll" />
+      <SBResourceCopy Condition="'$(IncludeSecurity)' == 'true'" Include="$(StarboardLibDirs)\Security.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
     </ItemGroup>
   </Target>
 
   <UsingTask
     TaskName="Clang"
     AssemblyFile="ClangCompileTask.dll"/>
-  
+
   <PropertyGroup>
     <ClangCompileDependsOn>_SelectedFiles;MakeDirsForClang;GenerateHeaderMaps;ComputeClangOptions</ClangCompileDependsOn>
     <ClangCompileBeforeTargets>Link;Lib;ImpLib</ClangCompileBeforeTargets>
@@ -111,11 +116,12 @@
     <PropertyGroup>
       <!-- Choose a CRT to use -->
       <ClangCompileCRTs>@(ClangCompile->Metadata('RuntimeLibrary')->Distinct()->ClearMetadata())</ClangCompileCRTs>
+      <ClangCompilePreprocessorDefinitions>@(ClangCompile->Metadata('PreprocessorDefinitions')->Distinct()->ClearMetadata())</ClangCompilePreprocessorDefinitions>
       <StarboardCRT>MultiThreadedDLL</StarboardCRT>
       <StarboardCRT Condition="$(ClangCompileCRTs.Contains('MultiThreadedDebugDLL'))">MultiThreadedDebugDLL</StarboardCRT>
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
-      <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
+      <StarboardCRTConfig Condition="$(ClangCompilePreprocessorDefinitions.Contains('DEBUG=1'))">Debug</StarboardCRTConfig>
       <!-- Library directories for SDK built from source -->
       <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
       <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
@@ -182,11 +188,11 @@
       <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
     </Clang>
   </Target>
-  
+
   <Target
     Name="GenerateHeaderMaps"
     DependsOnTargets="GenerateCombinedHMap;GenerateProjectHMap;WriteHeaderMaps" />
-  
+
   <Target
     Name="ComputeCombinedHMap">
 
@@ -206,7 +212,7 @@
     Condition="'$(CombinedHMapRequired)' == 'true'"
     Inputs="@(HeaderMapEntry)"
     Outputs="$(CombinedHMapFilename).txt">
-  
+
     <!-- Only support ASCII paths for now -->
     <WriteLinesToFile
       File="$(CombinedHMapFilename).txt"
@@ -218,15 +224,15 @@
       <HeaderMapEntry Remove="@(HeaderMapEntry)" />
     </ItemGroup>
   </Target>
-  
-  <Target 
+
+  <Target
     Name="ComputeProjectHMap">
 
     <ItemGroup>
       <HeaderMapEntry Include="%(ClInclude.FullPath)" />
       <HeaderMap Include="$(ProjectHMapFilename)" />
     </ItemGroup>
-  
+
     <ItemGroup Condition="@(HeaderMapEntry) == ''">
       <HeaderMapEntry Include="Empty" />
     </ItemGroup>
@@ -250,7 +256,7 @@
       <HeaderMapEntry Remove="@(HeaderMapEntry)" />
     </ItemGroup>
   </Target>
-  
+
   <Target
     Name="WriteHeaderMaps"
     Condition="'@(HeaderMap)' != ''"
@@ -276,7 +282,7 @@
         <CompileAs Condition="'%(Extension)'=='.mm' or '%(Extension)'=='.mxx'">CompileAsObjCpp</CompileAs>
       </ClangCompile>
     </ItemGroup>
-    
+
     <!-- Figure out language-specific flags -->
     <ItemGroup>
       <ClangCompile>
@@ -294,7 +300,7 @@
         <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Combined'">-I"$(CombinedHMapFilename).hmap"</HeaderMapInclude>
       </ClangCompile>
     </ItemGroup>
-    
+
     <!-- Figure out WOCStdlib options to use -->
     <ItemGroup>
       <ClangCompile>
@@ -341,7 +347,7 @@
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
     </ItemGroup>
   </Target>
-  
+
   <Target Name="ComputeClangLinkInputs" DependsOnTargets="_ClangCompile">
     <ItemGroup>
       <Link Condition="'%(ClangOutputs.LinkCompiled)' == 'true'" Include="%(ClangOutputs.ObjectFileName)" />

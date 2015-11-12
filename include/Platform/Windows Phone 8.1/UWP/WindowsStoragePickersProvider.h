@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral, WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
-@protocol WSPPIFileRemovedEventArgs, WSPPIFileOpenPickerUI, WSPPIPickerClosingEventArgs, WSPPIPickerClosingOperation, WSPPIPickerClosingDeferral, WSPPIFileSavePickerUI, WSPPITargetFileRequestedEventArgs, WSPPITargetFileRequest, WSPPITargetFileRequestDeferral;
+@class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral,
+    WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
+@protocol WSPPIFileRemovedEventArgs
+, WSPPIFileOpenPickerUI, WSPPIPickerClosingEventArgs, WSPPIPickerClosingOperation, WSPPIPickerClosingDeferral, WSPPIFileSavePickerUI,
+    WSPPITargetFileRequestedEventArgs, WSPPITargetFileRequest, WSPPITargetFileRequestDeferral;
 
 // Windows.Storage.Pickers.Provider.AddFileResult
 enum _WSPPAddFileResult {
@@ -57,7 +60,7 @@ typedef unsigned WSPPSetFileNameResult;
 
 WINRT_EXPORT
 @interface WSPPFileRemovedEventArgs : RTObject
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @end
 
 #endif // __WSPPFileRemovedEventArgs_DEFINED__
@@ -68,17 +71,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileOpenPickerUI : RTObject
-@property (copy) NSString * title;
-@property (readonly) id<NSFastEnumeration> /*String*/  allowedFileTypes;
+@property (copy) NSString* title;
+@property (readonly) id<NSFastEnumeration> /*String*/ allowedFileTypes;
 @property (readonly) WSPPFileSelectionMode selectionMode;
-@property (readonly) NSString * settingsIdentifier;
-- (EventRegistrationToken)addClosingEvent:(void(^)(WSPPFileOpenPickerUI *, WSPPPickerClosingEventArgs *))del;
+@property (readonly) NSString* settingsIdentifier;
+- (EventRegistrationToken)addClosingEvent:(void (^)(WSPPFileOpenPickerUI*, WSPPPickerClosingEventArgs*))del;
 - (void)removeClosingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFileRemovedEvent:(void(^)(WSPPFileOpenPickerUI *, WSPPFileRemovedEventArgs *))del;
+- (EventRegistrationToken)addFileRemovedEvent:(void (^)(WSPPFileOpenPickerUI*, WSPPFileRemovedEventArgs*))del;
 - (void)removeFileRemovedEvent:(EventRegistrationToken)tok;
-- (WSPPAddFileResult)addFile:(NSString *)id file:(RTObject<WSIStorageFile>*)file;
-- (void)removeFile:(NSString *)id;
-- (BOOL)containsFile:(NSString *)id;
+- (WSPPAddFileResult)addFile:(NSString*)id file:(RTObject<WSIStorageFile>*)file;
+- (void)removeFile:(NSString*)id;
+- (BOOL)containsFile:(NSString*)id;
 - (BOOL)canAddFile:(RTObject<WSIStorageFile>*)file;
 @end
 
@@ -90,7 +93,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPPickerClosingEventArgs : RTObject
-@property (readonly) WSPPPickerClosingOperation * closingOperation;
+@property (readonly) WSPPPickerClosingOperation* closingOperation;
 @property (readonly) BOOL isCanceled;
 @end
 
@@ -102,8 +105,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPPickerClosingOperation : RTObject
-@property (readonly) WFDateTime * deadline;
-- (WSPPPickerClosingDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WSPPPickerClosingDeferral*)getDeferral;
 @end
 
 #endif // __WSPPPickerClosingOperation_DEFINED__
@@ -125,15 +128,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileSavePickerUI : RTObject
-@property (copy) NSString * title;
-@property (readonly) id<NSFastEnumeration> /*String*/  allowedFileTypes;
-@property (readonly) NSString * fileName;
-@property (readonly) NSString * settingsIdentifier;
-- (EventRegistrationToken)addFileNameChangedEvent:(void(^)(WSPPFileSavePickerUI *, RTObject *))del;
+@property (copy) NSString* title;
+@property (readonly) id<NSFastEnumeration> /*String*/ allowedFileTypes;
+@property (readonly) NSString* fileName;
+@property (readonly) NSString* settingsIdentifier;
+- (EventRegistrationToken)addFileNameChangedEvent:(void (^)(WSPPFileSavePickerUI*, RTObject*))del;
 - (void)removeFileNameChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTargetFileRequestedEvent:(void(^)(WSPPFileSavePickerUI *, WSPPTargetFileRequestedEventArgs *))del;
+- (EventRegistrationToken)addTargetFileRequestedEvent:(void (^)(WSPPFileSavePickerUI*, WSPPTargetFileRequestedEventArgs*))del;
 - (void)removeTargetFileRequestedEvent:(EventRegistrationToken)tok;
-- (WSPPSetFileNameResult)trySetFileName:(NSString *)value;
+- (WSPPSetFileNameResult)trySetFileName:(NSString*)value;
 @end
 
 #endif // __WSPPFileSavePickerUI_DEFINED__
@@ -144,7 +147,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPTargetFileRequestedEventArgs : RTObject
-@property (readonly) WSPPTargetFileRequest * request;
+@property (readonly) WSPPTargetFileRequest* request;
 @end
 
 #endif // __WSPPTargetFileRequestedEventArgs_DEFINED__
@@ -156,7 +159,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPPTargetFileRequest : RTObject
 @property (copy) RTObject<WSIStorageFile>* targetFile;
-- (WSPPTargetFileRequestDeferral *)getDeferral;
+- (WSPPTargetFileRequestDeferral*)getDeferral;
 @end
 
 #endif // __WSPPTargetFileRequest_DEFINED__
@@ -171,4 +174,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSPPTargetFileRequestDeferral_DEFINED__
-

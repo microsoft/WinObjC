@@ -24,6 +24,12 @@
 
 #include "CAAnimationInternal.h"
 
+NSString* const kCAFillModeRemoved = @"kCAFillModeRemoved";
+NSString* const kCAFillModeForwards = @"kCAFillModeForwards";
+NSString* const kCAFillModeBackwards = @"kCAFillModeBackwards";
+NSString* const kCAFillModeBoth = @"kCAFillModeBoth";
+NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
+
 @implementation CAAnimation : NSObject {
     idretain _delegate;
     SEL _finishedSelector;
@@ -32,6 +38,9 @@
     BOOL _wasRemoved, _wasAborted;
 }
 
+/**
+ @Status Interoperable
+*/
 + (CAAnimation*)animation {
     CAAnimation* ret = [self alloc];
     ret->_timingProperties._duration = 1.0;
@@ -49,18 +58,32 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRemovedOnCompletion:(BOOL)remove {
+    UNIMPLEMENTED();
     _timingProperties._removedOnCompletion = remove;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Caveat
+ @Notes Only linear, easein, easeout and easeinout are supported
+*/
 - (void)setTimingFunction:(CAMediaTimingFunction*)timingFunction {
     _timingProperties._timingFunction = [timingFunction retain];
 }
@@ -102,13 +125,11 @@
 }
 
 - (void)setFillMode:(NSString*)mode {
-    char* pStr = (char*)[mode UTF8String];
-
-    if (strcmp(pStr, "kCAFillModeRemoved") == 0) {
+    if ([mode isEqualToString:kCAFillModeRemoved]) {
         _timingProperties._fillMode = fillModeRemoved;
-    } else if (strcmp(pStr, "kCAFillModeForwards") == 0) {
+    } else if ([mode isEqualToString:kCAFillModeForwards]) {
         _timingProperties._fillMode = fillModeForwards;
-    } else if (strcmp(pStr, "kCAFillModeBoth") == 0) {
+    } else if ([mode isEqualToString:kCAFillModeBoth]) {
         _timingProperties._fillMode = fillModeBoth;
     } else {
         assert(0);
@@ -256,6 +277,9 @@
 
 @end
 
+/**
+ @Status Interoperable
+*/
 double CACurrentMediaTime() {
     return EbrGetMediaTime();
 }

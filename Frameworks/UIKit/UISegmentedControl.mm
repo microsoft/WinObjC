@@ -130,6 +130,9 @@ static float widthForItems(id items) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithItems:(id)items {
     _shouldResizeToSuper = TRUE;
     _curSelected = 0xFFFFFFFF;
@@ -282,6 +285,10 @@ static void positionSegments(UISegmentedControl* self) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes animated parameter not supported
+*/
 - (id)insertSegmentWithTitle:(id)title atIndex:(DWORD)index animated:(DWORD)animated {
     id newSegment = [[UISegment alloc] initWithTitle:title];
     [newSegment setDelegate:self];
@@ -294,11 +301,18 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)imageForSegmentAtIndex:(DWORD)index {
     id segment = [_segments objectAtIndex:index];
     return [segment image];
 }
 
+/**
+ @Status Caveat
+ @Notes animated parameter not supported
+*/
 - (id)insertSegmentWithImage:(id)image atIndex:(DWORD)index animated:(DWORD)animated {
     id newSegment = [[UISegment alloc] initWithImage:image];
     [newSegment setDelegate:self];
@@ -311,6 +325,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setTitle:(id)title forSegmentAtIndex:(DWORD)index {
     id segment = [_segments objectAtIndex:index];
     [segment setTitle:title];
@@ -318,6 +335,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setImage:(id)image forSegmentAtIndex:(DWORD)index {
     id segment = [_segments objectAtIndex:index];
     [segment setImage:image];
@@ -325,6 +345,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enable forSegmentAtIndex:(DWORD)index {
     id curSegment = [_segments objectAtIndex:index];
     [curSegment setEnabled:enable];
@@ -342,6 +365,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)removeAllSegments {
     int count;
 
@@ -352,6 +378,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)titleForSegmentAtIndex:(DWORD)index {
     if (index == -1) {
         return nil;
@@ -379,6 +408,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setSelectedSegmentIndex:(DWORD)pos {
     if (pos != _curSelected) {
         if (_curSelected != 0xFFFFFFFF) {
@@ -403,10 +435,17 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setSegmentedControlStyle:(DWORD)style {
+    UNIMPLEMENTED();
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setMomentary:(DWORD)isMomentary {
     _isMomentary = isMomentary;
     return self;
@@ -462,15 +501,25 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)selectedSegmentIndex {
     return _curSelected;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)numberOfSegments {
     return [_segments count];
 }
 
+/**
+ @Status Stub
+*/
 - (id)setTintColor:(id)uiColor {
+    UNIMPLEMENTED();
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
@@ -479,10 +528,17 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)tintColor {
+    UNIMPLEMENTED();
     return _tintColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setWidth:(float)width forSegmentAtIndex:(int)index {
     id curSegment = [_segments objectAtIndex:index];
     [curSegment _setWidth:width];
@@ -537,13 +593,21 @@ static void positionSegments(UISegmentedControl* self) {
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 - (id)setApportionsSegmentWidthsByContent:(BOOL)byContent {
+    UNIMPLEMENTED();
     _apportionsSegmentWidthsByContent = byContent;
     positionSegments(self);
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)setDividerImage:(id)img forLeftSegmentState:(int)leftState rightSegmentState:(int)rightState barMetrics:(int)barMetrics {
+    UNIMPLEMENTED();
     int count = [_segments count];
 
     for (int i = 0; i < count; i++) {
@@ -561,6 +625,10 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes metrics parameter not supported
+*/
 - (id)setBackgroundImage:(id)img forState:(NSUInteger)state barMetrics:(NSUInteger)metrics {
     if ([img leftCapWidth] == 0) {
         CGSize imgSize;
@@ -590,6 +658,9 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setTitleTextAttributes:(id)attributes forState:(NSUInteger)state {
     if (state == 0) {
         int count = [_segments count];

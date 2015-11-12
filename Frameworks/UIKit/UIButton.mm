@@ -337,6 +337,9 @@ static bool validateState(UIControlState state) {
     return true;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     if (!validateState(state)) {
         return;
@@ -348,6 +351,9 @@ static bool validateState(UIControlState state) {
     setImageProperties(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
     if (!validateState(state)) {
         return;
@@ -359,6 +365,9 @@ static bool validateState(UIControlState state) {
     setImageProperties(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)backgroundImageForState:(UIControlState)state {
     if (!validateState(state)) {
         return nil;
@@ -367,10 +376,16 @@ static bool validateState(UIControlState state) {
     return _states[state].backgroundImage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)currentImage {
     return getImage(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
     if (!validateState(state)) {
         return;
@@ -381,6 +396,9 @@ static bool validateState(UIControlState state) {
     [self layoutSubviews];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)titleForState:(UIControlState)state {
     if (!validateState(state)) {
         return nil;
@@ -389,6 +407,9 @@ static bool validateState(UIControlState state) {
     return _states[state].title;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)imageForState:(UIControlState)state {
     if (!validateState(state)) {
         return nil;
@@ -397,6 +418,9 @@ static bool validateState(UIControlState state) {
     return _states[state].image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     if (!validateState(state)) {
         return;
@@ -406,6 +430,9 @@ static bool validateState(UIControlState state) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)titleColorForState:(UIControlState)state {
     if (!validateState(state)) {
         return nil;
@@ -414,9 +441,16 @@ static bool validateState(UIControlState state) {
     return _states[state].textColor;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state {
     if (!validateState(state)) {
         return;
@@ -426,6 +460,9 @@ static bool validateState(UIControlState state) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)titleShadowColorForState:(UIControlState)state {
     if (!validateState(state)) {
         return nil;
@@ -434,6 +471,9 @@ static bool validateState(UIControlState state) {
     return _states[state].titleShadowColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)currentTitleShadowColor {
     return getTitleShadowColor(self);
 }
@@ -475,63 +515,110 @@ static bool validateState(UIControlState state) {
     [super touchesCancelled:touchSet withEvent:event];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAdjustsImageWhenHighlighted:(BOOL)doAdjust {
+    UNIMPLEMENTED();
     _adjustsImageWhenHighlighted = doAdjust != FALSE;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)adjustsImageWhenHighlighted {
+    UNIMPLEMENTED();
     return _adjustsImageWhenHighlighted;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAdjustsImageWhenDisabled:(BOOL)doAdjust {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFont:(UIFont*)font {
     _font = font;
     [_label setFont:(id)_font];
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)font {
     return _font;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIButtonType)buttonType {
     return _type;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleEdgeInsets:(UIEdgeInsets)insets {
     memcpy(&titleInsets, &insets, sizeof(UIEdgeInsets));
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImageEdgeInsets:(UIEdgeInsets)insets {
     memcpy(&imageInsets, &insets, sizeof(UIEdgeInsets));
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentEdgeInsets:(UIEdgeInsets)insets {
     memcpy(&contentInsets, &insets, sizeof(UIEdgeInsets));
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIEdgeInsets)imageEdgeInsets {
     return imageInsets;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIEdgeInsets)titleEdgeInsets {
     return titleInsets;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIEdgeInsets)contentEdgeInsets {
     return contentInsets;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShowsTouchWhenHighlighted:(BOOL)showsTouch {
+    UNIMPLEMENTED();
     _showsTouchWhenHighlighted = showsTouch != FALSE;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)showsTouchWhenHighlighted {
+    UNIMPLEMENTED();
     return _showsTouchWhenHighlighted;
 }
 
@@ -577,6 +664,9 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIButton*)buttonWithType:(UIButtonType)type {
     UIButton* ret;
 
@@ -628,7 +718,11 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     memcpy(&_shadowOffset, &offset, sizeof(CGSize));
 }
 
+/**
+ @Status Stub
+*/
 - (void)setReversesTitleShadowWhenHighlighted:(BOOL)reverses {
+    UNIMPLEMENTED();
 }
 
 - (void)sizeToFit {
@@ -670,18 +764,30 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     [self setFrame:frame];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)currentTitle {
     return getTitle(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)currentTitleColor {
     return getTextColor(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILabel*)titleLabel {
     return _label;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImageView*)imageView {
     return _imageView;
 }

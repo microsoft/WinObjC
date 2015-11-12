@@ -64,18 +64,30 @@ struct _mach_timeval {
     pthread_mutex_unlock(&_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)signal {
     pthread_cond_signal(&_cond);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)broadcast {
     pthread_cond_broadcast(&_cond);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)wait {
     pthread_cond_wait(&_cond, &_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)waitUntilDate:(NSDate*)date {
     int rc;
     struct timespec t = { 0 };
@@ -112,10 +124,16 @@ struct _mach_timeval {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)newName {
     _name.attach([newName copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return _name;
 }
@@ -137,6 +155,9 @@ struct _mach_timeval {
     return [self initWithCondition:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCondition:(NSInteger)value {
     pthread_mutex_init(&_mutex, NULL);
     pthread_cond_init(&_cond, NULL);
@@ -145,6 +166,9 @@ struct _mach_timeval {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)condition {
     return _value;
 }
@@ -181,6 +205,9 @@ struct _mach_timeval {
     return pthread_mutex_trylock(&_mutex) == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lockWhenCondition:(NSInteger)condition {
     int rc;
 
@@ -202,6 +229,9 @@ struct _mach_timeval {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unlockWithCondition:(NSInteger)condition {
     _value = condition;
     int rc;
@@ -213,10 +243,16 @@ struct _mach_timeval {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)newName {
     _name = newName;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     return _name;
 }

@@ -36,6 +36,9 @@ static bool charInNSString(CFStringRef str, short ch) {
     return false;
 }
 
+/**
+ @Status Interoperable
+*/
 CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
                                                     CFStringRef origString,
                                                     CFStringRef charactersToLeaveUnescaped,
@@ -87,6 +90,9 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
     return (__bridge CFStringRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFStringRef CFURLCopyPathExtension(CFURLRef self) {
     return (CFStringRef)[[[(NSURL*)self path] pathExtension] retain];
 }

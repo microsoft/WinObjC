@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDBDeviceUseDetails, WDBDeviceServicingDetails;
-@protocol WDBIDeviceUseDetails, WDBIDeviceServicingDetails;
+@protocol WDBIDeviceUseDetails
+, WDBIDeviceServicingDetails;
 
 #include "WindowsFoundation.h"
 
@@ -31,8 +32,8 @@
 
 WINRT_EXPORT
 @interface WDBDeviceUseDetails : RTObject
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* arguments;
+@property (readonly) NSString* deviceId;
 @end
 
 #endif // __WDBDeviceUseDetails_DEFINED__
@@ -43,10 +44,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBDeviceServicingDetails : RTObject
-@property (readonly) NSString * arguments;
-@property (readonly) NSString * deviceId;
-@property (readonly) WFTimeSpan * expectedDuration;
+@property (readonly) NSString* arguments;
+@property (readonly) NSString* deviceId;
+@property (readonly) WFTimeSpan* expectedDuration;
 @end
 
 #endif // __WDBDeviceServicingDetails_DEFINED__
-

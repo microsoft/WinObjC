@@ -177,6 +177,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
         _font = font;
@@ -190,6 +193,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)font {
     if (_font == nil) {
         _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
@@ -197,6 +203,9 @@
     return _font;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setText:(NSString*)newStr {
     if (![newStr isKindOfClass:[NSString class]]) {
         newStr = [newStr description];
@@ -211,27 +220,47 @@
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAttributedText:(NSAttributedString*)newStr {
+    UNIMPLEMENTED();
     _attributedText.attach([newStr copy]);
     [self setText:[_attributedText string]];
 }
 
+/**
+ @Status Stub
+*/
 - (NSAttributedString*)attributedText {
+    UNIMPLEMENTED();
     return _attributedText;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enable {
     _isDisabled = !enable;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     return _isDisabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)text {
     return _text;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
@@ -239,10 +268,16 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextAlignment)textAlignment {
     return _alignment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextColor:(UIColor*)color {
     if (![_textColor isEqual:color]) {
         _textColor = color;
@@ -250,22 +285,37 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)textColor {
     return _textColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setShadowColor:(UIColor*)colorref {
     _shadowColor = colorref;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)shadowColor {
     return _shadowColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setShadowOffset:(CGSize)offset {
     _shadowOffset = offset;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)shadowOffset {
     return _shadowOffset;
 }
@@ -280,39 +330,68 @@
     [super setBackgroundColor:colorref];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
     _numberOfLines = numberOfLines;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfLines {
     return _numberOfLines;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumFontSize:(float)size {
     _minimumFontSize = size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)minimumFontSize {
     return _minimumFontSize;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBaselineAdjustment:(UIBaselineAdjustment)adjustment {
+    UNIMPLEMENTED();
     _baselineAdjustment = adjustment;
 }
 
+/**
+ @Status Stub
+*/
 - (UIBaselineAdjustment)baselineAdjustment {
+    UNIMPLEMENTED();
     return _baselineAdjustment;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLineBreakMode:(UILineBreakMode)mode {
     _lineBreakMode = mode;
     [self adjustTextLayerSize];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILineBreakMode)lineBreakMode {
     return _lineBreakMode;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlighted:(BOOL)highlighted {
     _isHighlighted = highlighted;
     if (highlighted) {
@@ -323,14 +402,23 @@
     [self adjustTextLayerSize];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHighlighted {
     return _isHighlighted;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHighlightedTextColor:(UIColor*)color {
     _highlightedTextColor = color;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)highlightedTextColor {
     return _highlightedTextColor;
 }
@@ -341,6 +429,9 @@
     [self drawTextInRect:drawArea];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawTextInRect:(CGRect)rect {
     if (_text != nil) {
         if (_font == nil) {
@@ -389,6 +480,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjusts {
     _adjustFontSize = adjusts;
 
@@ -397,9 +491,15 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumScaleFactor:(float)scale {
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)adjustsFontSizeToFitWidth {
     return _adjustFontSize;
 }
@@ -425,6 +525,10 @@
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes limitedToNumberOfLines parameter not supported
+*/
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)maxLines {
     CGRect ret = { 0 };
 

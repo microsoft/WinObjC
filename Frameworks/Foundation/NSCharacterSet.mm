@@ -44,6 +44,18 @@
 @end
 
 @implementation NSCharacterSet : NSObject
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)characterSetWithICUCharacterSet:(char*) chars {
+    NSCharacterSet* ret = [self alloc];
+
+    ret->_icuSet = setWithCharacters(chars);
+
+    return [ret autorelease];
+}
+
 + (instancetype)characterSetWithCharactersInString:(NSString*)str {
     NSCharacterSet* ret = [self alloc];
 
@@ -72,12 +84,12 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes English characters only
+*/
 + (instancetype)alphanumericCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-
-    ret->_icuSet = setWithCharacters("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
 }
 
 - (instancetype)init {
@@ -86,13 +98,17 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Notes English characters only
+*/
 + (instancetype)uppercaseLetterCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)controlCharacterSet {
     NSCharacterSet* ret = [self alloc];
 
@@ -103,20 +119,25 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+ @Notes English characters only
+*/
 + (instancetype)lowercaseLetterCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("abcdefghijklmnopqrstuvwxyz");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyz"];
 }
 
+/**
+ @Status Interoperable
+ @Notes English characters only
+*/
 + (instancetype)letterCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)whitespaceAndNewlineCharacterSet {
     if (self == [NSCharacterSet class]) {
         static id cachedRet;
@@ -137,27 +158,30 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)punctuationCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("!\"%'(),-./:;?[\\]{}");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"!\"%'(),-./:;?[\\]{}"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)decimalDigitCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("0123456789");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"0123456789"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)newlineCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("\r\n");
-
-    return [ret autorelease];
+    return [self characterSetWithICUCharacterSet:"\r\n"];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)whitespaceCharacterSet {
     if (self == [NSCharacterSet class]) {
         static id cachedRet;
@@ -178,10 +202,31 @@ static UnicodeSet* setWithCharacters(char* chars) {
 }
 
 + (instancetype)symbolCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters("!@#$%^&*()-+"); //  [BUG: This is not correct!]
+    return [self characterSetWithICUCharacterSet:"!@#$%^&*()-+"]; //  [BUG: This is not correct!]
+}
 
-    return [ret autorelease];
++ (instancetype)URLFragmentAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+}
+
++ (instancetype)URLHostAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~"];
+}
+
++ (instancetype)URLPasswordAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+}
+
++ (instancetype)URLPathAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+}
+
++ (instancetype)URLQueryAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+}
+
++ (instancetype)URLUserAllowedCharacterSet {
+    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
 }
 
 - (instancetype)set {
@@ -204,6 +249,9 @@ static UnicodeSet* setWithCharacters(char* chars) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)invertedSet {
     NSCharacterSet* ret = [NSMutableCharacterSet alloc];
     ret->_icuSet = new UnicodeSet(*_icuSet);
@@ -212,6 +260,9 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)characterIsMember:(unichar)member {
     if (_icuSet->contains(member)) {
         return TRUE;
@@ -219,6 +270,9 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSupersetOfSet:(NSCharacterSet*)set {
     if (_icuSet->containsAll(*set->_icuSet)) {
         return TRUE;
@@ -226,10 +280,16 @@ static UnicodeSet* setWithCharacters(char* chars) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)count {
     return _icuSet->size();
 }
 
+/**
+ @Status Interoperable
+*/
 - (unichar)characterAtIndex:(NSUInteger)idx {
     return _icuSet->charAt(idx);
 }

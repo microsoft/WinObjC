@@ -106,7 +106,7 @@
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
       <OtherCFlags>
       </OtherCFlags>
       <IncludePaths>..\..\Frameworks\include</IncludePaths>
@@ -118,6 +118,9 @@
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -153,6 +156,9 @@
       <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Release|x64'">-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClangCompile>
@@ -161,6 +167,9 @@
       <OtherCFlags>
       </OtherCFlags>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClangCompile>
@@ -170,6 +179,9 @@
       </OtherCFlags>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\tests\unittests\EntryPoint.cpp" />
@@ -184,15 +196,19 @@
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSFileManager.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_sanity.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Security_SecItem.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_after.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_api.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_apply.m" />
@@ -209,6 +225,7 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_bit63.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
+    <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocationManager.mm" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120d_app.dll">
@@ -229,6 +246,19 @@
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <FileType>Text</FileType>  
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

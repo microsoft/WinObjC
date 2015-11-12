@@ -39,10 +39,16 @@
     return [CAEAGLLayer class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLuint)drawableWidth {
     return (GLuint)self.frame.size.width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLuint)drawableHeight {
     return (GLuint)self.frame.size.height;
 }
@@ -69,6 +75,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithFrame:(CGRect)rect {
     self = [super initWithFrame:rect];
     if (self) {
@@ -77,6 +86,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if (self) {
@@ -113,6 +125,9 @@
     return res;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [super layoutSubviews];
 

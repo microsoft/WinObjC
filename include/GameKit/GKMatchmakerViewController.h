@@ -25,10 +25,10 @@
 
 @interface GKMatchmakerViewController : UINavigationController
 
-@property(nonatomic, assign) id<GKMatchmakerViewControllerDelegate> matchmakerDelegate;
+@property (nonatomic, assign) id<GKMatchmakerViewControllerDelegate> matchmakerDelegate;
 
-- (id)initWithMatchRequest:(GKMatchRequest *)request;
-- (id)initWithInvite:(GKInvite *)invite;
+- (id)initWithMatchRequest:(GKMatchRequest*)request;
+- (id)initWithInvite:(GKInvite*)invite;
 
 @end
 

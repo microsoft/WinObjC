@@ -20,55 +20,64 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDBABluetoothLEManufacturerData, WDBABluetoothLEAdvertisementDataSection, WDBABluetoothLEAdvertisement, WDBABluetoothLEAdvertisementBytePattern, WDBABluetoothLEAdvertisementFilter, WDBABluetoothLEAdvertisementWatcherStoppedEventArgs, WDBABluetoothLEAdvertisementWatcher, WDBABluetoothLEAdvertisementReceivedEventArgs, WDBABluetoothLEAdvertisementDataTypes, WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs, WDBABluetoothLEAdvertisementPublisher;
-@protocol WDBAIBluetoothLEAdvertisement, WDBAIBluetoothLEAdvertisementFilter, WDBAIBluetoothLEAdvertisementWatcherStoppedEventArgs, WDBAIBluetoothLEAdvertisementWatcherFactory, WDBAIBluetoothLEAdvertisementWatcher, WDBAIBluetoothLEAdvertisementReceivedEventArgs, WDBAIBluetoothLEAdvertisementDataSectionFactory, WDBAIBluetoothLEAdvertisementDataSection, WDBAIBluetoothLEManufacturerDataFactory, WDBAIBluetoothLEManufacturerData, WDBAIBluetoothLEAdvertisementBytePatternFactory, WDBAIBluetoothLEAdvertisementBytePattern, WDBAIBluetoothLEAdvertisementDataTypesStatics, WDBAIBluetoothLEAdvertisementPublisherStatusChangedEventArgs, WDBAIBluetoothLEAdvertisementPublisherFactory, WDBAIBluetoothLEAdvertisementPublisher;
+@class WDBABluetoothLEManufacturerData, WDBABluetoothLEAdvertisementDataSection, WDBABluetoothLEAdvertisement,
+    WDBABluetoothLEAdvertisementBytePattern, WDBABluetoothLEAdvertisementFilter, WDBABluetoothLEAdvertisementWatcherStoppedEventArgs,
+    WDBABluetoothLEAdvertisementWatcher, WDBABluetoothLEAdvertisementReceivedEventArgs, WDBABluetoothLEAdvertisementDataTypes,
+    WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs, WDBABluetoothLEAdvertisementPublisher;
+@protocol WDBAIBluetoothLEAdvertisement
+, WDBAIBluetoothLEAdvertisementFilter, WDBAIBluetoothLEAdvertisementWatcherStoppedEventArgs, WDBAIBluetoothLEAdvertisementWatcherFactory,
+    WDBAIBluetoothLEAdvertisementWatcher, WDBAIBluetoothLEAdvertisementReceivedEventArgs, WDBAIBluetoothLEAdvertisementDataSectionFactory,
+    WDBAIBluetoothLEAdvertisementDataSection, WDBAIBluetoothLEManufacturerDataFactory, WDBAIBluetoothLEManufacturerData,
+    WDBAIBluetoothLEAdvertisementBytePatternFactory, WDBAIBluetoothLEAdvertisementBytePattern,
+    WDBAIBluetoothLEAdvertisementDataTypesStatics, WDBAIBluetoothLEAdvertisementPublisherStatusChangedEventArgs,
+    WDBAIBluetoothLEAdvertisementPublisherFactory, WDBAIBluetoothLEAdvertisementPublisher;
 
 // Windows.Devices.Bluetooth.Advertisement.BluetoothLEScanningMode
 enum _WDBABluetoothLEScanningMode {
-	WDBABluetoothLEScanningModePassive = 0,
-	WDBABluetoothLEScanningModeActive = 1,
+    WDBABluetoothLEScanningModePassive = 0,
+    WDBABluetoothLEScanningModeActive = 1,
 };
 typedef unsigned WDBABluetoothLEScanningMode;
 
 // Windows.Devices.Bluetooth.Advertisement.BluetoothLEAdvertisementFlags
 enum _WDBABluetoothLEAdvertisementFlags {
-	WDBABluetoothLEAdvertisementFlagsNone = 0,
-	WDBABluetoothLEAdvertisementFlagsLimitedDiscoverableMode = 1,
-	WDBABluetoothLEAdvertisementFlagsGeneralDiscoverableMode = 2,
-	WDBABluetoothLEAdvertisementFlagsClassicNotSupported = 4,
-	WDBABluetoothLEAdvertisementFlagsDualModeControllerCapable = 8,
-	WDBABluetoothLEAdvertisementFlagsDualModeHostCapable = 16,
+    WDBABluetoothLEAdvertisementFlagsNone = 0,
+    WDBABluetoothLEAdvertisementFlagsLimitedDiscoverableMode = 1,
+    WDBABluetoothLEAdvertisementFlagsGeneralDiscoverableMode = 2,
+    WDBABluetoothLEAdvertisementFlagsClassicNotSupported = 4,
+    WDBABluetoothLEAdvertisementFlagsDualModeControllerCapable = 8,
+    WDBABluetoothLEAdvertisementFlagsDualModeHostCapable = 16,
 };
 typedef unsigned WDBABluetoothLEAdvertisementFlags;
 
 // Windows.Devices.Bluetooth.Advertisement.BluetoothLEAdvertisementType
 enum _WDBABluetoothLEAdvertisementType {
-	WDBABluetoothLEAdvertisementTypeConnectableUndirected = 0,
-	WDBABluetoothLEAdvertisementTypeConnectableDirected = 1,
-	WDBABluetoothLEAdvertisementTypeScannableUndirected = 2,
-	WDBABluetoothLEAdvertisementTypeNonConnectableUndirected = 3,
-	WDBABluetoothLEAdvertisementTypeScanResponse = 4,
+    WDBABluetoothLEAdvertisementTypeConnectableUndirected = 0,
+    WDBABluetoothLEAdvertisementTypeConnectableDirected = 1,
+    WDBABluetoothLEAdvertisementTypeScannableUndirected = 2,
+    WDBABluetoothLEAdvertisementTypeNonConnectableUndirected = 3,
+    WDBABluetoothLEAdvertisementTypeScanResponse = 4,
 };
 typedef unsigned WDBABluetoothLEAdvertisementType;
 
 // Windows.Devices.Bluetooth.Advertisement.BluetoothLEAdvertisementWatcherStatus
 enum _WDBABluetoothLEAdvertisementWatcherStatus {
-	WDBABluetoothLEAdvertisementWatcherStatusCreated = 0,
-	WDBABluetoothLEAdvertisementWatcherStatusStarted = 1,
-	WDBABluetoothLEAdvertisementWatcherStatusStopping = 2,
-	WDBABluetoothLEAdvertisementWatcherStatusStopped = 3,
-	WDBABluetoothLEAdvertisementWatcherStatusAborted = 4,
+    WDBABluetoothLEAdvertisementWatcherStatusCreated = 0,
+    WDBABluetoothLEAdvertisementWatcherStatusStarted = 1,
+    WDBABluetoothLEAdvertisementWatcherStatusStopping = 2,
+    WDBABluetoothLEAdvertisementWatcherStatusStopped = 3,
+    WDBABluetoothLEAdvertisementWatcherStatusAborted = 4,
 };
 typedef unsigned WDBABluetoothLEAdvertisementWatcherStatus;
 
 // Windows.Devices.Bluetooth.Advertisement.BluetoothLEAdvertisementPublisherStatus
 enum _WDBABluetoothLEAdvertisementPublisherStatus {
-	WDBABluetoothLEAdvertisementPublisherStatusCreated = 0,
-	WDBABluetoothLEAdvertisementPublisherStatusWaiting = 1,
-	WDBABluetoothLEAdvertisementPublisherStatusStarted = 2,
-	WDBABluetoothLEAdvertisementPublisherStatusStopping = 3,
-	WDBABluetoothLEAdvertisementPublisherStatusStopped = 4,
-	WDBABluetoothLEAdvertisementPublisherStatusAborted = 5,
+    WDBABluetoothLEAdvertisementPublisherStatusCreated = 0,
+    WDBABluetoothLEAdvertisementPublisherStatusWaiting = 1,
+    WDBABluetoothLEAdvertisementPublisherStatusStarted = 2,
+    WDBABluetoothLEAdvertisementPublisherStatusStopping = 3,
+    WDBABluetoothLEAdvertisementPublisherStatusStopped = 4,
+    WDBABluetoothLEAdvertisementPublisherStatusAborted = 5,
 };
 typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 
@@ -114,7 +123,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * localName;
+@property (copy) NSString* localName;
 @property (copy) id flags;
 @property (readonly) NSMutableArray* dataSections;
 @property (readonly) NSMutableArray* manufacturerData;
@@ -180,9 +189,11 @@ WINRT_EXPORT
 @property (readonly) WFTimeSpan* minOutOfRangeTimeout;
 @property (readonly) WFTimeSpan* minSamplingInterval;
 @property (readonly) WDBABluetoothLEAdvertisementWatcherStatus status;
-- (EventRegistrationToken)addReceivedEvent:(void(^)(WDBABluetoothLEAdvertisementWatcher*, WDBABluetoothLEAdvertisementReceivedEventArgs*))del;
+- (EventRegistrationToken)addReceivedEvent:(void (^)(WDBABluetoothLEAdvertisementWatcher*,
+                                                     WDBABluetoothLEAdvertisementReceivedEventArgs*))del;
 - (void)removeReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WDBABluetoothLEAdvertisementWatcher*, WDBABluetoothLEAdvertisementWatcherStoppedEventArgs*))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WDBABluetoothLEAdvertisementWatcher*,
+                                                    WDBABluetoothLEAdvertisementWatcherStoppedEventArgs*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -259,11 +270,11 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
-- (EventRegistrationToken)addStatusChangedEvent:(void(^)(WDBABluetoothLEAdvertisementPublisher*, WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs*))del;
+- (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDBABluetoothLEAdvertisementPublisher*,
+                                                          WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs*))del;
 - (void)removeStatusChangedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
 @end
 
 #endif // __WDBABluetoothLEAdvertisementPublisher_DEFINED__
-

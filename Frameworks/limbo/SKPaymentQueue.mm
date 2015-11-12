@@ -45,6 +45,9 @@ static SKPaymentQueue* _defaultQueue;
     return [super init];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)defaultQueue {
     if (!_defaultQueue) {
         _defaultQueue = [[SKPaymentQueue alloc] init];
@@ -53,14 +56,23 @@ static SKPaymentQueue* _defaultQueue;
     return _defaultQueue;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)canMakePayments {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addTransactionObserver:(id)observer {
     [_transactionObservers addObject:observer];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeTransactionObserver:(id)observer {
     [_transactionObservers removeObject:observer];
 }
@@ -84,6 +96,9 @@ HSTRING fromNS(NSString* str) {
 }
 #endif
 
+/**
+ @Status Interoperable
+*/
 - (void)finishTransaction:(SKPaymentTransaction*)transaction {
 #if WRL
     NSString* identifier = transaction.payment.productIdentifier;
@@ -94,6 +109,9 @@ HSTRING fromNS(NSString* str) {
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addPayment:(SKPayment*)payment {
 #if WRL
     auto currentApp = getCurrentApp();
@@ -135,6 +153,9 @@ handler->Release();
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)transactions {
     return nil;
 }

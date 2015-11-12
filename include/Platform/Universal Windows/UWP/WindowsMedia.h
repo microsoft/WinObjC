@@ -20,77 +20,89 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes, WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties, WMSystemMediaTransportControlsDisplayUpdater, WMSystemMediaTransportControlsButtonPressedEventArgs, WMSystemMediaTransportControlsPropertyChangedEventArgs, WMPlaybackPositionChangeRequestedEventArgs, WMPlaybackRateChangeRequestedEventArgs, WMShuffleEnabledChangeRequestedEventArgs, WMAutoRepeatModeChangeRequestedEventArgs, WMSystemMediaTransportControls, WMMediaExtensionManager, WMVideoEffects;
-@protocol WMIMediaProcessingTriggerDetails, WMIVideoFrameFactory, WMIAudioFrameFactory, WMIMediaFrame, WMIVideoFrame, WMIAudioFrame, WMIAudioBuffer, WMIMediaMarker, WMIMediaMarkers, WMIMediaMarkerTypesStatics, WMISystemMediaTransportControlsTimelineProperties, WMIMusicDisplayProperties, WMIMusicDisplayProperties2, WMIVideoDisplayProperties, WMIVideoDisplayProperties2, WMIImageDisplayProperties, WMISystemMediaTransportControlsDisplayUpdater, WMISystemMediaTransportControlsButtonPressedEventArgs, WMISystemMediaTransportControlsPropertyChangedEventArgs, WMIPlaybackPositionChangeRequestedEventArgs, WMIPlaybackRateChangeRequestedEventArgs, WMIShuffleEnabledChangeRequestedEventArgs, WMIAutoRepeatModeChangeRequestedEventArgs, WMISystemMediaTransportControls, WMISystemMediaTransportControls2, WMISystemMediaTransportControlsStatics, WMIMediaExtension, WMIMediaExtensionManager, WMIVideoEffectsStatics;
+@class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes,
+    WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties,
+    WMSystemMediaTransportControlsDisplayUpdater, WMSystemMediaTransportControlsButtonPressedEventArgs,
+    WMSystemMediaTransportControlsPropertyChangedEventArgs, WMPlaybackPositionChangeRequestedEventArgs,
+    WMPlaybackRateChangeRequestedEventArgs, WMShuffleEnabledChangeRequestedEventArgs, WMAutoRepeatModeChangeRequestedEventArgs,
+    WMSystemMediaTransportControls, WMMediaExtensionManager, WMVideoEffects;
+@protocol WMIMediaProcessingTriggerDetails
+, WMIVideoFrameFactory, WMIAudioFrameFactory, WMIMediaFrame, WMIVideoFrame, WMIAudioFrame, WMIAudioBuffer, WMIMediaMarker, WMIMediaMarkers,
+    WMIMediaMarkerTypesStatics, WMISystemMediaTransportControlsTimelineProperties, WMIMusicDisplayProperties, WMIMusicDisplayProperties2,
+    WMIVideoDisplayProperties, WMIVideoDisplayProperties2, WMIImageDisplayProperties, WMISystemMediaTransportControlsDisplayUpdater,
+    WMISystemMediaTransportControlsButtonPressedEventArgs, WMISystemMediaTransportControlsPropertyChangedEventArgs,
+    WMIPlaybackPositionChangeRequestedEventArgs, WMIPlaybackRateChangeRequestedEventArgs, WMIShuffleEnabledChangeRequestedEventArgs,
+    WMIAutoRepeatModeChangeRequestedEventArgs, WMISystemMediaTransportControls, WMISystemMediaTransportControls2,
+    WMISystemMediaTransportControlsStatics, WMIMediaExtension, WMIMediaExtensionManager, WMIVideoEffectsStatics;
 
 // Windows.Media.AudioBufferAccessMode
 enum _WMAudioBufferAccessMode {
-	WMAudioBufferAccessModeRead = 0,
-	WMAudioBufferAccessModeReadWrite = 1,
-	WMAudioBufferAccessModeWrite = 2,
+    WMAudioBufferAccessModeRead = 0,
+    WMAudioBufferAccessModeReadWrite = 1,
+    WMAudioBufferAccessModeWrite = 2,
 };
 typedef unsigned WMAudioBufferAccessMode;
 
 // Windows.Media.SoundLevel
 enum _WMSoundLevel {
-	WMSoundLevelMuted = 0,
-	WMSoundLevelLow = 1,
-	WMSoundLevelFull = 2,
+    WMSoundLevelMuted = 0,
+    WMSoundLevelLow = 1,
+    WMSoundLevelFull = 2,
 };
 typedef unsigned WMSoundLevel;
 
 // Windows.Media.MediaPlaybackType
 enum _WMMediaPlaybackType {
-	WMMediaPlaybackTypeUnknown = 0,
-	WMMediaPlaybackTypeMusic = 1,
-	WMMediaPlaybackTypeVideo = 2,
-	WMMediaPlaybackTypeImage = 3,
+    WMMediaPlaybackTypeUnknown = 0,
+    WMMediaPlaybackTypeMusic = 1,
+    WMMediaPlaybackTypeVideo = 2,
+    WMMediaPlaybackTypeImage = 3,
 };
 typedef unsigned WMMediaPlaybackType;
 
 // Windows.Media.MediaPlaybackAutoRepeatMode
 enum _WMMediaPlaybackAutoRepeatMode {
-	WMMediaPlaybackAutoRepeatModeNone = 0,
-	WMMediaPlaybackAutoRepeatModeTrack = 1,
-	WMMediaPlaybackAutoRepeatModeList = 2,
+    WMMediaPlaybackAutoRepeatModeNone = 0,
+    WMMediaPlaybackAutoRepeatModeTrack = 1,
+    WMMediaPlaybackAutoRepeatModeList = 2,
 };
 typedef unsigned WMMediaPlaybackAutoRepeatMode;
 
 // Windows.Media.MediaPlaybackStatus
 enum _WMMediaPlaybackStatus {
-	WMMediaPlaybackStatusClosed = 0,
-	WMMediaPlaybackStatusChanging = 1,
-	WMMediaPlaybackStatusStopped = 2,
-	WMMediaPlaybackStatusPlaying = 3,
-	WMMediaPlaybackStatusPaused = 4,
+    WMMediaPlaybackStatusClosed = 0,
+    WMMediaPlaybackStatusChanging = 1,
+    WMMediaPlaybackStatusStopped = 2,
+    WMMediaPlaybackStatusPlaying = 3,
+    WMMediaPlaybackStatusPaused = 4,
 };
 typedef unsigned WMMediaPlaybackStatus;
 
 // Windows.Media.SystemMediaTransportControlsButton
 enum _WMSystemMediaTransportControlsButton {
-	WMSystemMediaTransportControlsButtonPlay = 0,
-	WMSystemMediaTransportControlsButtonPause = 1,
-	WMSystemMediaTransportControlsButtonStop = 2,
-	WMSystemMediaTransportControlsButtonRecord = 3,
-	WMSystemMediaTransportControlsButtonFastForward = 4,
-	WMSystemMediaTransportControlsButtonRewind = 5,
-	WMSystemMediaTransportControlsButtonNext = 6,
-	WMSystemMediaTransportControlsButtonPrevious = 7,
-	WMSystemMediaTransportControlsButtonChannelUp = 8,
-	WMSystemMediaTransportControlsButtonChannelDown = 9,
+    WMSystemMediaTransportControlsButtonPlay = 0,
+    WMSystemMediaTransportControlsButtonPause = 1,
+    WMSystemMediaTransportControlsButtonStop = 2,
+    WMSystemMediaTransportControlsButtonRecord = 3,
+    WMSystemMediaTransportControlsButtonFastForward = 4,
+    WMSystemMediaTransportControlsButtonRewind = 5,
+    WMSystemMediaTransportControlsButtonNext = 6,
+    WMSystemMediaTransportControlsButtonPrevious = 7,
+    WMSystemMediaTransportControlsButtonChannelUp = 8,
+    WMSystemMediaTransportControlsButtonChannelDown = 9,
 };
 typedef unsigned WMSystemMediaTransportControlsButton;
 
 // Windows.Media.SystemMediaTransportControlsProperty
 enum _WMSystemMediaTransportControlsProperty {
-	WMSystemMediaTransportControlsPropertySoundLevel = 0,
+    WMSystemMediaTransportControlsPropertySoundLevel = 0,
 };
 typedef unsigned WMSystemMediaTransportControlsProperty;
 
 // Windows.Media.AudioProcessing
 enum _WMAudioProcessing {
-	WMAudioProcessingDefault = 0,
-	WMAudioProcessingRaw = 1,
+    WMAudioProcessingDefault = 0,
+    WMAudioProcessingRaw = 1,
 };
 typedef unsigned WMAudioProcessing;
 
@@ -124,7 +136,7 @@ typedef unsigned WMAudioProcessing;
 @property (readonly) BOOL isReadOnly;
 @property (copy) id relativeTime;
 @property (copy) id systemRelativeTime;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 - (void)close;
 @end
 
@@ -135,8 +147,8 @@ typedef unsigned WMAudioProcessing;
 #define __WMIMediaMarker_DEFINED__
 
 @protocol WMIMediaMarker
-@property (readonly) NSString * mediaMarkerType;
-@property (readonly) NSString * text;
+@property (readonly) NSString* mediaMarkerType;
+@property (readonly) NSString* text;
 @property (readonly) WFTimeSpan* time;
 @end
 
@@ -187,7 +199,7 @@ WINRT_EXPORT
 @property (copy) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 @property (readonly) RTObject<WGDDIDirect3DSurface>* direct3DSurface;
 @property (readonly) WGISoftwareBitmap* softwareBitmap;
 - (RTObject<WFIAsyncAction>*)copyToAsync:(WMVideoFrame*)frame;
@@ -234,7 +246,7 @@ WINRT_EXPORT
 @property (copy) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSString * type;
+@property (readonly) NSString* type;
 - (WMAudioBuffer*)lockBuffer:(WMAudioBufferAccessMode)mode;
 - (void)close;
 @end
@@ -247,7 +259,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMediaMarkerTypes : RTObject
-+ (NSString *)bookmark;
++ (NSString*)bookmark;
 @end
 
 #endif // __WMMediaMarkerTypes_DEFINED__
@@ -274,11 +286,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMusicDisplayProperties : RTObject
-@property (copy) NSString * title;
-@property (copy) NSString * artist;
-@property (copy) NSString * albumArtist;
+@property (copy) NSString* title;
+@property (copy) NSString* artist;
+@property (copy) NSString* albumArtist;
 @property unsigned int trackNumber;
-@property (copy) NSString * albumTitle;
+@property (copy) NSString* albumTitle;
 @property (readonly) NSMutableArray* genres;
 @end
 
@@ -290,8 +302,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMVideoDisplayProperties : RTObject
-@property (copy) NSString * title;
-@property (copy) NSString * subtitle;
+@property (copy) NSString* title;
+@property (copy) NSString* subtitle;
 @property (readonly) NSMutableArray* genres;
 @end
 
@@ -303,8 +315,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMImageDisplayProperties : RTObject
-@property (copy) NSString * title;
-@property (copy) NSString * subtitle;
+@property (copy) NSString* title;
+@property (copy) NSString* subtitle;
 @end
 
 #endif // __WMImageDisplayProperties_DEFINED__
@@ -317,11 +329,14 @@ WINRT_EXPORT
 @interface WMSystemMediaTransportControlsDisplayUpdater : RTObject
 @property WMMediaPlaybackType type;
 @property (copy) WSSRandomAccessStreamReference* thumbnail;
-@property (copy) NSString * appMediaId;
+@property (copy) NSString* appMediaId;
 @property (readonly) WMImageDisplayProperties* imageProperties;
 @property (readonly) WMMusicDisplayProperties* musicProperties;
 @property (readonly) WMVideoDisplayProperties* videoProperties;
-- (void)copyFromFileAsync:(WMMediaPlaybackType)type source:(WSStorageFile*)source success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)copyFromFileAsync:(WMMediaPlaybackType)type
+                   source:(WSStorageFile*)source
+                  success:(void (^)(BOOL))success
+                  failure:(void (^)(NSError*))failure;
 - (void)clearAll;
 - (void)update;
 @end
@@ -345,7 +360,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSystemMediaTransportControlsPropertyChangedEventArgs : RTObject
-@property (readonly) WMSystemMediaTransportControlsProperty property;
+@property (readonly) WMSystemMediaTransportControlsProperty property ;
 @end
 
 #endif // __WMSystemMediaTransportControlsPropertyChangedEventArgs_DEFINED__
@@ -418,17 +433,23 @@ WINRT_EXPORT
 @property BOOL shuffleEnabled;
 @property double playbackRate;
 @property WMMediaPlaybackAutoRepeatMode autoRepeatMode;
-- (EventRegistrationToken)addButtonPressedEvent:(void(^)(WMSystemMediaTransportControls*, WMSystemMediaTransportControlsButtonPressedEventArgs*))del;
+- (EventRegistrationToken)addButtonPressedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                          WMSystemMediaTransportControlsButtonPressedEventArgs*))del;
 - (void)removeButtonPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPropertyChangedEvent:(void(^)(WMSystemMediaTransportControls*, WMSystemMediaTransportControlsPropertyChangedEventArgs*))del;
+- (EventRegistrationToken)addPropertyChangedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                            WMSystemMediaTransportControlsPropertyChangedEventArgs*))del;
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAutoRepeatModeChangeRequestedEvent:(void(^)(WMSystemMediaTransportControls*, WMAutoRepeatModeChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addAutoRepeatModeChangeRequestedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                                          WMAutoRepeatModeChangeRequestedEventArgs*))del;
 - (void)removeAutoRepeatModeChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlaybackPositionChangeRequestedEvent:(void(^)(WMSystemMediaTransportControls*, WMPlaybackPositionChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addPlaybackPositionChangeRequestedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                                            WMPlaybackPositionChangeRequestedEventArgs*))del;
 - (void)removePlaybackPositionChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlaybackRateChangeRequestedEvent:(void(^)(WMSystemMediaTransportControls*, WMPlaybackRateChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addPlaybackRateChangeRequestedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                                        WMPlaybackRateChangeRequestedEventArgs*))del;
 - (void)removePlaybackRateChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addShuffleEnabledChangeRequestedEvent:(void(^)(WMSystemMediaTransportControls*, WMShuffleEnabledChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addShuffleEnabledChangeRequestedEvent:(void (^)(WMSystemMediaTransportControls*,
+                                                                          WMShuffleEnabledChangeRequestedEventArgs*))del;
 - (void)removeShuffleEnabledChangeRequestedEvent:(EventRegistrationToken)tok;
 - (void)updateTimelineProperties:(WMSystemMediaTransportControlsTimelineProperties*)timelineProperties;
 @end
@@ -442,18 +463,35 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMMediaExtensionManager : RTObject
 + (instancetype)create ACTIVATOR;
-- (void)registerSchemeHandler:(NSString *)activatableClassId scheme:(NSString *)scheme;
-- (void)registerSchemeHandlerWithSettings:(NSString *)activatableClassId scheme:(NSString *)scheme configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)registerByteStreamHandler:(NSString *)activatableClassId fileExtension:(NSString *)fileExtension mimeType:(NSString *)mimeType;
-- (void)registerByteStreamHandlerWithSettings:(NSString *)activatableClassId fileExtension:(NSString *)fileExtension mimeType:(NSString *)mimeType configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)registerAudioDecoder:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
-- (void)registerAudioDecoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)registerAudioEncoder:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
-- (void)registerAudioEncoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)registerVideoDecoder:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
-- (void)registerVideoDecoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)registerVideoEncoder:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
-- (void)registerVideoEncoderWithSettings:(NSString *)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerSchemeHandler:(NSString*)activatableClassId scheme:(NSString*)scheme;
+- (void)registerSchemeHandlerWithSettings:(NSString*)activatableClassId
+                                   scheme:(NSString*)scheme
+                            configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerByteStreamHandler:(NSString*)activatableClassId fileExtension:(NSString*)fileExtension mimeType:(NSString*)mimeType;
+- (void)registerByteStreamHandlerWithSettings:(NSString*)activatableClassId
+                                fileExtension:(NSString*)fileExtension
+                                     mimeType:(NSString*)mimeType
+                                configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerAudioDecoder:(NSString*)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
+- (void)registerAudioDecoderWithSettings:(NSString*)activatableClassId
+                            inputSubtype:(WFGUID*)inputSubtype
+                           outputSubtype:(WFGUID*)outputSubtype
+                           configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerAudioEncoder:(NSString*)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
+- (void)registerAudioEncoderWithSettings:(NSString*)activatableClassId
+                            inputSubtype:(WFGUID*)inputSubtype
+                           outputSubtype:(WFGUID*)outputSubtype
+                           configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerVideoDecoder:(NSString*)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
+- (void)registerVideoDecoderWithSettings:(NSString*)activatableClassId
+                            inputSubtype:(WFGUID*)inputSubtype
+                           outputSubtype:(WFGUID*)outputSubtype
+                           configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)registerVideoEncoder:(NSString*)activatableClassId inputSubtype:(WFGUID*)inputSubtype outputSubtype:(WFGUID*)outputSubtype;
+- (void)registerVideoEncoderWithSettings:(NSString*)activatableClassId
+                            inputSubtype:(WFGUID*)inputSubtype
+                           outputSubtype:(WFGUID*)outputSubtype
+                           configuration:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
 #endif // __WMMediaExtensionManager_DEFINED__
@@ -464,8 +502,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMVideoEffects : RTObject
-+ (NSString *)videoStabilization;
++ (NSString*)videoStabilization;
 @end
 
 #endif // __WMVideoEffects_DEFINED__
-

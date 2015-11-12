@@ -133,6 +133,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     return initInternal(self, pos);
 }
@@ -302,22 +305,37 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     EbrDebugLog("Unsupported attempt to encode a UIView\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)bounds {
     return [layer bounds];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)center {
     return [layer position];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGAffineTransform)transform {
     return [layer affineTransform];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)frame {
     return CGRectStandardize([layer frame]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCenter:(CGPoint)center {
     [layer setPosition:center];
 }
@@ -339,6 +357,10 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes Questionable impl re: AutoLayout.
+*/
 - (void)layoutSubviews {
     if (priv->autoresizesSubviews) {
         if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
@@ -347,6 +369,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutIfNeeded {
     [layer layoutIfNeeded];
 }
@@ -354,6 +379,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 - (void)__didLayout {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsLayout {
     [layer setNeedsLayout];
 }
@@ -528,6 +556,9 @@ static float doRound(float f) {
     return (float)(floor((f * 2) + 0.5) / 2.0f);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     if (memcmp(&frame, &CGRectNull, sizeof(CGRect)) == 0) {
         EbrDebugLog("setFrame: CGRectNull!\n");
@@ -619,6 +650,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBounds:(CGRect)bounds {
     //  Get our existing bounds
     CGRect curBounds;
@@ -650,6 +684,9 @@ static float doRound(float f) {
     [layer setOrigin:origin];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)subviews {
     return priv->subnodesArray();
 }
@@ -690,6 +727,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToSuperview:(UIView*)view {
 }
 
@@ -732,6 +772,9 @@ static float doRound(float f) {
     [self didMoveToWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeFromSuperview {
     if (priv->_isChangingParent) {
         assert(0);
@@ -791,6 +834,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addSubview:(UIView*)subview {
     if (subview == nil) {
         EbrDebugLog("subview = nil!\n");
@@ -849,6 +895,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSubview:(UIView*)subview atIndex:(int)index {
     if (!priv->containsChild(subview)) {
         UIWindow* subviewWindow = [subview _getWindowInternal];
@@ -898,6 +947,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSubview:(UIView*)subview belowSubview:(UIView*)belowSubview {
     if (subview == nil) {
         EbrDebugLog("Subview = nil!\n");
@@ -956,6 +1008,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)exchangeSubviewAtIndex:(int)index1 withSubviewAtIndex:(int)index2 {
     UIView* view1 = nil;
     UIView* view2 = nil;
@@ -986,6 +1041,9 @@ static float doRound(float f) {
     [layer exchangeSublayer:layer1 withLayer:layer2];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertSubview:(UIView*)subview aboveSubview:(UIView*)aboveSubview {
     if (subview == nil) {
         EbrDebugLog("insertSubview: subview = nil!\n");
@@ -1047,6 +1105,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)bringSubviewToFront:(UIView*)subview {
     if (!priv->containsChild(subview))
         return;
@@ -1057,6 +1118,9 @@ static float doRound(float f) {
     [layer bringSublayerToFront:[subview layer]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendSubviewToBack:(UIView*)subview {
     if (!priv->containsChild(subview))
         return;
@@ -1071,10 +1135,16 @@ static float doRound(float f) {
     [self addSubview:view];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentScaleFactor:(float)factor {
     [layer setContentsScale:factor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)contentScaleFactor {
     return [layer contentsScale];
 }
@@ -1086,18 +1156,30 @@ static float doRound(float f) {
     EbrDebugLog("UIVIew::makeKey\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidden:(BOOL)hide {
     [layer setHidden:hide];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isHidden {
     return [layer isHidden];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)superview {
     return priv->superview;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     CGRect bounds;
 
@@ -1112,6 +1194,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     UIWindow* window = [self _getWindowInternal];
 
@@ -1162,6 +1247,9 @@ static float doRound(float f) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)convertRect:(CGRect)pos toView:(UIView*)toView {
     CGRect ret;
 
@@ -1195,6 +1283,9 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)convertRect:(CGRect)pos fromView:(UIView*)fromView {
     CGRect ret;
 
@@ -1228,6 +1319,9 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)convertPoint:(CGPoint)pos toView:(UIView*)toView {
     CGPoint ret;
 
@@ -1244,6 +1338,9 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)convertPoint:(CGPoint)pos fromView:(UIView*)fromView {
     CGPoint ret;
 
@@ -1277,18 +1374,31 @@ static float doRound(float f) {
 - (void)setGestureDelegate:(id)delegateAddr {
 }
 
+/**
+ @Status Interoperable
+*/
 - (CALayer*)layer {
     return layer;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsDisplay {
     [layer setNeedsDisplay];
 }
 
+/**
+ @Status Caveat
+ @Notes Same impl as setNeedsDisplay. With our compositor this might not even have meaning.
+*/
 - (void)setNeedsDisplayInRect:(CGRect)rc {
     [layer setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)window {
     return [self _getWindowInternal];
 }
@@ -1305,6 +1415,9 @@ static float doRound(float f) {
     return [priv->superview _getWindowInternal];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMultipleTouchEnabled:(BOOL)enabled {
     if (!priv) {
         EbrDebugLog("Priv is null, should alloc priv in alloc\n");
@@ -1314,18 +1427,30 @@ static float doRound(float f) {
     priv->multipleTouchEnabled = enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)layerClass {
     return [CALayer class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAlpha:(float)alpha {
     [layer setOpacity:alpha];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)alpha {
     return [layer opacity];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTransform:(CGAffineTransform)transform {
     [layer setAffineTransform:transform];
 }
@@ -1334,42 +1459,73 @@ static float doRound(float f) {
     assert(0);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setClearsContextBeforeDrawing:(BOOL)clear {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(UIColor*)color {
     priv->backgroundColor = color;
     [layer setBackgroundColor:[color CGColor]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)backgroundColor {
     return priv->backgroundColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setUserInteractionEnabled:(BOOL)enabled {
     priv->userInteractionEnabled = enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTag:(int)newTag {
     priv->tag = newTag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)tag {
     return priv->tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isUserInteractionEnabled {
     return priv->userInteractionEnabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isMultipleTouchEnabled {
     return priv->multipleTouchEnabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewContentMode)contentMode {
     return priv->contentMode;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentMode:(UIViewContentMode)mode {
     priv->contentMode = mode;
 
@@ -1433,42 +1589,72 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentStretch:(CGRect)stretch {
     [layer setContentsCenter:stretch];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOpaque:(BOOL)opaque {
     [layer setOpaque:opaque];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isOpaque {
     return [layer opaque];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAutoresizingMask:(UIViewAutoresizing)mask {
     priv->autoresizingMask = mask;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewAutoresizing)autoresizingMask {
     return priv->autoresizingMask;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAutoresizesSubviews:(BOOL)autoresize {
     priv->autoresizesSubviews = autoresize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)translatesAutoresizingMaskIntoConstraints {
     return self->priv->translatesAutoresizingMaskIntoConstraints;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)translate {
     self->priv->translatesAutoresizingMaskIntoConstraints = translate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)constraints {
     return priv->constraints;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
     // Constraints can only be added if they are self or a child of this view.
     if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) ||
@@ -1492,6 +1678,9 @@ static float doRound(float f) {
     [self setNeedsUpdateConstraints];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeConstraint:(id)constraint {
     [priv->constraints removeObject:constraint];
 
@@ -1502,12 +1691,18 @@ static float doRound(float f) {
     [self setNeedsUpdateConstraints];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addConstraints:(NSArray*)constraints {
     for (int i = 0; i < [constraints count]; i++) {
         [self addConstraint:(NSLayoutConstraint*)[constraints objectAtIndex:i]];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeConstraints:(NSArray*)constraints {
     for (int i = 0; i < [constraints count]; i++) {
         [self removeConstraint:(NSLayoutConstraint*)[constraints objectAtIndex:i]];
@@ -1522,6 +1717,10 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+ @Notes May need some validation.
+*/
 - (void)updateConstraints {
     priv->_constraintsNeedUpdate = false;
 
@@ -1530,16 +1729,25 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)updateConstraintsIfNeeded {
     if (priv->_constraintsNeedUpdate) {
         [self updateConstraints];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)needsUpdateConstraints {
     return priv->_constraintsNeedUpdate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNeedsUpdateConstraints {
     for (NSLayoutConstraint* constraint in (NSArray*)priv->associatedConstraints) {
         if ([constraint.firstItem isKindOfClass:[UIView class]]) {
@@ -1553,14 +1761,25 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)removeMotionEffect:(UIMotionEffect*)effect {
+    UNIMPLEMENTED();
     EbrDebugLog("Unsupported use of motion effects in removeMotionEffect:\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)addMotionEffect:(UIMotionEffect*)effect {
+    UNIMPLEMENTED();
     EbrDebugLog("Unsupported use of motion effects in addMotionEffect:\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis {
     switch (axis) {
         case UILayoutConstraintAxisHorizontal:
@@ -1576,6 +1795,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis {
     switch (axis) {
         case UILayoutConstraintAxisHorizontal:
@@ -1592,6 +1814,9 @@ static float doRound(float f) {
     [self setNeedsUpdateConstraints];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis {
     switch (axis) {
         case UILayoutConstraintAxisHorizontal:
@@ -1607,6 +1832,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis {
     switch (axis) {
         case UILayoutConstraintAxisHorizontal:
@@ -1623,6 +1851,9 @@ static float doRound(float f) {
     [self setNeedsUpdateConstraints];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)viewWithTag:(int)tag {
     if (priv->tag == tag) {
         return self;
@@ -1681,11 +1912,18 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setClipsToBounds:(BOOL)clip {
     [layer setMasksToBounds:clip];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setExclusiveTouch:(BOOL)isExclusive {
+    UNIMPLEMENTED();
     EbrDebugLog("setExclusiveTouch not supported\n");
     // assert(0);
 }
@@ -1719,6 +1957,9 @@ static float doRound(float f) {
     return (id<CAAction>)[NSNull null];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock {
     [self beginAnimations:nil context:0];
     [self setAnimationDuration:duration];
@@ -1728,6 +1969,9 @@ static float doRound(float f) {
     [self commitAnimations];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)transitionFromView:(UIView*)fromView
                     toView:(UIView*)toView
                   duration:(double)duration
@@ -1745,6 +1989,9 @@ static float doRound(float f) {
     [self commitAnimations];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)transitionWithView:(id)view
                   duration:(double)duration
                    options:(unsigned)options
@@ -1760,6 +2007,9 @@ static float doRound(float f) {
     [self commitAnimations];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
     EbrDebugLog("animationWithDurationCompletion not supported\n");
     [self beginAnimations:nil context:0];
@@ -1771,6 +2021,9 @@ static float doRound(float f) {
     // EbrCall(E2H(completion)[3], "dd", completion, TRUE);
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)animateWithDuration:(double)duration
                       delay:(double)delay
                     options:(unsigned)options
@@ -1798,6 +2051,9 @@ static float doRound(float f) {
     // EbrCall(E2H(completion)[3], "dd", completion, TRUE);
 }
 
+/**
+ @Status Stub
+*/
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
      usingSpringWithDamping:(CGFloat)dampingRatio
@@ -1805,9 +2061,13 @@ static float doRound(float f) {
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
+    UNIMPLEMENTED();
     EbrDebugLog("%s not supported\n", __func__);
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)beginAnimations:(id)animationID context:(void*)context {
     stackLevel++;
     assert(stackLevel < 32);
@@ -1829,6 +2089,9 @@ static float doRound(float f) {
     _animationProperties[stackLevel]._completionBlock = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationCurve:(UIViewAnimationCurve)curve {
     switch (curve) {
         case UIViewAnimationCurveEaseInOut:
@@ -1854,14 +2117,23 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationRepeatAutoreverses:(BOOL)autoReverses {
     _animationProperties[stackLevel]._autoReverses = autoReverses;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationRepeatCount:(float)count {
     _animationProperties[stackLevel]._repeatCount = count;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationDuration:(double)duration {
     _animationProperties[stackLevel]._animationDuration = duration;
 }
@@ -1874,14 +2146,23 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationDelay:(double)delay {
     _animationProperties[stackLevel]._animationDelay = delay;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationDelegate:(id)delegate {
     _animationProperties[stackLevel]._animationDelegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationsEnabled:(BOOL)enable {
     g_animationsDisabled = !enable;
 }
@@ -1898,10 +2179,16 @@ static float doRound(float f) {
     return (g_animationsDisabled == 0) && (g_nestedAnimationsDisabled == 0);
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)areAnimationsEnabled {
     return [self areAnimationsEnabled];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView*)view cache:(BOOL)cache {
     if (stackLevel > 0 && transition != UIViewAnimationTransitionNone) {
         _animationProperties[stackLevel]._numAnimations++;
@@ -1949,18 +2236,30 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationBeginsFromCurrentState:(BOOL)curState {
     _animationProperties[stackLevel]._beginsFromCurrentState = curState;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationDidStopSelector:(SEL)selector {
     _animationProperties[stackLevel]._animationDidStopSelector = selector;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationWillStartSelector:(SEL)selector {
     _animationProperties[stackLevel]._animationWillStartSelector = selector;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)commitAnimations {
     if (stackLevel <= 0) {
         EbrDebugLog("UIView: No animations stacked!\n");
@@ -1995,12 +2294,21 @@ static float doRound(float f) {
     stackLevel--;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(UIWindow*)window {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willRemoveSubview:(UIView*)subview {
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isDescendantOfView:(UIView*)view {
     id curView = self;
     while (curView != nil) {
@@ -2015,22 +2323,37 @@ static float doRound(float f) {
 - (void)awakeFromNib {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didMoveToWindow {
     [super didMoveToWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didMoveToSuperview {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didAddSubview:(UIView*)subview {
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGRect curBounds;
     curBounds = [self bounds];
     return curBounds.size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sizeToFit {
     CGRect curSize;
 
@@ -2083,6 +2406,9 @@ static float doRound(float f) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)endEditing:(BOOL)force {
     for (UIView* child in [self subviews]) {
         if ([child isKindOfClass:[UITextField class]]) {
@@ -2099,6 +2425,9 @@ static float doRound(float f) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)pos {
 }
 
@@ -2117,16 +2446,25 @@ static float doRound(float f) {
 - (void)setIsAccessibilityElement:(BOOL)enabled {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addGestureRecognizer:(UIGestureRecognizer*)gesture {
     [priv->gestures addObject:gesture];
     [gesture _setView:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeGestureRecognizer:(UIGestureRecognizer*)gesture {
     [priv->gestures removeObject:gesture];
     [gesture _setView:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setGestureRecognizers:(NSArray*)gestures {
     for (UIGestureRecognizer* curgesture in priv->gestures) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
@@ -2147,6 +2485,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)gestureRecognizers {
     return priv->gestures;
 }
@@ -2161,16 +2502,25 @@ static float doRound(float f) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackButtonDelegate:(id)delegate action:(SEL)action withParam:(id)param {
     _backButtonDelegate = delegate;
     _backButtonSelector = action;
     _backButtonArg = param;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackButtonReturnsSuccess:(BOOL)returnsSuccess {
     _backButtonReturnsSuccess = returnsSuccess;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackButtonPriority:(int)priority {
     _backButtonPriority = priority;
 }
@@ -2187,16 +2537,25 @@ static float doRound(float f) {
     UIImageSetLayerContents([self layer], image);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)viewForBaselineLayout {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)invalidateIntrinsicContentSize {
     if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
         [self invalidateContentSize];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
     ret.width = UIViewNoIntrinsicMetric;
@@ -2204,6 +2563,9 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNativeElement:(WXFrameworkElement*)nativeElement {
     [self layer].contentsElement = nativeElement;
 }

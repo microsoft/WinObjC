@@ -33,6 +33,9 @@
     return newObj;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationInView:(UIView*)viewAddr {
     CGPoint ret;
     CGPoint location;
@@ -63,6 +66,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)previousLocationInView:(UIView*)viewAddr {
     CGPoint ret;
     CGPoint location;
@@ -86,14 +92,23 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)tapCount {
     return tapCount;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITouchPhase)phase {
     return phase;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)view {
     return inView;
 }
@@ -115,12 +130,18 @@
     phase = newPhase;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timestamp {
     assert(timeStamp != 0.0f);
     double ret = timeStamp;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)velocity {
     CGPoint ret;
     ret.x = velocityX;

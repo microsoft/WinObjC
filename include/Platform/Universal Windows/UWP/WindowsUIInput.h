@@ -20,82 +20,90 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs, WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs, WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint, WUIPointerPointProperties, WUIPointerVisualizationSettings;
+@class WUIEdgeGestureEventArgs, WUIEdgeGesture, WUIMouseWheelParameters, WUIGestureRecognizer, WUITappedEventArgs, WUIRightTappedEventArgs,
+    WUIHoldingEventArgs, WUIDraggingEventArgs, WUIManipulationStartedEventArgs, WUIManipulationUpdatedEventArgs,
+    WUIManipulationInertiaStartingEventArgs, WUIManipulationCompletedEventArgs, WUICrossSlidingEventArgs, WUIPointerPoint,
+    WUIPointerPointProperties, WUIPointerVisualizationSettings;
 @class WUIManipulationDelta, WUIManipulationVelocities, WUICrossSlideThresholds;
-@protocol WUIIEdgeGestureEventArgs, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs, WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs, WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics, WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerPointProperties2, WUIIPointerVisualizationSettings, WUIIPointerVisualizationSettingsStatics;
+@protocol WUIIEdgeGestureEventArgs
+, WUIIEdgeGestureStatics, WUIIEdgeGesture, WUIITappedEventArgs, WUIIRightTappedEventArgs, WUIIHoldingEventArgs, WUIIDraggingEventArgs,
+    WUIIManipulationStartedEventArgs, WUIIManipulationUpdatedEventArgs, WUIIManipulationInertiaStartingEventArgs,
+    WUIIManipulationCompletedEventArgs, WUIICrossSlidingEventArgs, WUIIMouseWheelParameters, WUIIGestureRecognizer, WUIIPointerPointStatics,
+    WUIIPointerPointTransform, WUIIPointerPoint, WUIIPointerPointProperties, WUIIPointerPointProperties2, WUIIPointerVisualizationSettings,
+    WUIIPointerVisualizationSettingsStatics;
 
 // Windows.UI.Input.EdgeGestureKind
 enum _WUIEdgeGestureKind {
-	WUIEdgeGestureKindTouch = 0,
-	WUIEdgeGestureKindKeyboard = 1,
-	WUIEdgeGestureKindMouse = 2,
+    WUIEdgeGestureKindTouch = 0,
+    WUIEdgeGestureKindKeyboard = 1,
+    WUIEdgeGestureKindMouse = 2,
 };
 typedef unsigned WUIEdgeGestureKind;
 
 // Windows.UI.Input.HoldingState
 enum _WUIHoldingState {
-	WUIHoldingStateStarted = 0,
-	WUIHoldingStateCompleted = 1,
-	WUIHoldingStateCanceled = 2,
+    WUIHoldingStateStarted = 0,
+    WUIHoldingStateCompleted = 1,
+    WUIHoldingStateCanceled = 2,
 };
 typedef unsigned WUIHoldingState;
 
 // Windows.UI.Input.DraggingState
 enum _WUIDraggingState {
-	WUIDraggingStateStarted = 0,
-	WUIDraggingStateContinuing = 1,
-	WUIDraggingStateCompleted = 2,
+    WUIDraggingStateStarted = 0,
+    WUIDraggingStateContinuing = 1,
+    WUIDraggingStateCompleted = 2,
 };
 typedef unsigned WUIDraggingState;
 
 // Windows.UI.Input.CrossSlidingState
 enum _WUICrossSlidingState {
-	WUICrossSlidingStateStarted = 0,
-	WUICrossSlidingStateDragging = 1,
-	WUICrossSlidingStateSelecting = 2,
-	WUICrossSlidingStateSelectSpeedBumping = 3,
-	WUICrossSlidingStateSpeedBumping = 4,
-	WUICrossSlidingStateRearranging = 5,
-	WUICrossSlidingStateCompleted = 6,
+    WUICrossSlidingStateStarted = 0,
+    WUICrossSlidingStateDragging = 1,
+    WUICrossSlidingStateSelecting = 2,
+    WUICrossSlidingStateSelectSpeedBumping = 3,
+    WUICrossSlidingStateSpeedBumping = 4,
+    WUICrossSlidingStateRearranging = 5,
+    WUICrossSlidingStateCompleted = 6,
 };
 typedef unsigned WUICrossSlidingState;
 
 // Windows.UI.Input.GestureSettings
 enum _WUIGestureSettings {
-	WUIGestureSettingsNone = 0,
-	WUIGestureSettingsTap = 1,
-	WUIGestureSettingsDoubleTap = 2,
-	WUIGestureSettingsHold = 4,
-	WUIGestureSettingsHoldWithMouse = 8,
-	WUIGestureSettingsRightTap = 16,
-	WUIGestureSettingsDrag = 32,
-	WUIGestureSettingsManipulationTranslateX = 64,
-	WUIGestureSettingsManipulationTranslateY = 128,
-	WUIGestureSettingsManipulationTranslateRailsX = 256,
-	WUIGestureSettingsManipulationTranslateRailsY = 512,
-	WUIGestureSettingsManipulationRotate = 1024,
-	WUIGestureSettingsManipulationScale = 2048,
-	WUIGestureSettingsManipulationTranslateInertia = 4096,
-	WUIGestureSettingsManipulationRotateInertia = 8192,
-	WUIGestureSettingsManipulationScaleInertia = 16384,
-	WUIGestureSettingsCrossSlide = 32768,
-	WUIGestureSettingsManipulationMultipleFingerPanning = 65536,
+    WUIGestureSettingsNone = 0,
+    WUIGestureSettingsTap = 1,
+    WUIGestureSettingsDoubleTap = 2,
+    WUIGestureSettingsHold = 4,
+    WUIGestureSettingsHoldWithMouse = 8,
+    WUIGestureSettingsRightTap = 16,
+    WUIGestureSettingsDrag = 32,
+    WUIGestureSettingsManipulationTranslateX = 64,
+    WUIGestureSettingsManipulationTranslateY = 128,
+    WUIGestureSettingsManipulationTranslateRailsX = 256,
+    WUIGestureSettingsManipulationTranslateRailsY = 512,
+    WUIGestureSettingsManipulationRotate = 1024,
+    WUIGestureSettingsManipulationScale = 2048,
+    WUIGestureSettingsManipulationTranslateInertia = 4096,
+    WUIGestureSettingsManipulationRotateInertia = 8192,
+    WUIGestureSettingsManipulationScaleInertia = 16384,
+    WUIGestureSettingsCrossSlide = 32768,
+    WUIGestureSettingsManipulationMultipleFingerPanning = 65536,
 };
 typedef unsigned WUIGestureSettings;
 
 // Windows.UI.Input.PointerUpdateKind
 enum _WUIPointerUpdateKind {
-	WUIPointerUpdateKindOther = 0,
-	WUIPointerUpdateKindLeftButtonPressed = 1,
-	WUIPointerUpdateKindLeftButtonReleased = 2,
-	WUIPointerUpdateKindRightButtonPressed = 3,
-	WUIPointerUpdateKindRightButtonReleased = 4,
-	WUIPointerUpdateKindMiddleButtonPressed = 5,
-	WUIPointerUpdateKindMiddleButtonReleased = 6,
-	WUIPointerUpdateKindXButton1Pressed = 7,
-	WUIPointerUpdateKindXButton1Released = 8,
-	WUIPointerUpdateKindXButton2Pressed = 9,
-	WUIPointerUpdateKindXButton2Released = 10,
+    WUIPointerUpdateKindOther = 0,
+    WUIPointerUpdateKindLeftButtonPressed = 1,
+    WUIPointerUpdateKindLeftButtonReleased = 2,
+    WUIPointerUpdateKindRightButtonPressed = 3,
+    WUIPointerUpdateKindRightButtonReleased = 4,
+    WUIPointerUpdateKindMiddleButtonPressed = 5,
+    WUIPointerUpdateKindMiddleButtonReleased = 6,
+    WUIPointerUpdateKindXButton1Pressed = 7,
+    WUIPointerUpdateKindXButton1Released = 8,
+    WUIPointerUpdateKindXButton2Pressed = 9,
+    WUIPointerUpdateKindXButton2Released = 10,
 };
 typedef unsigned WUIPointerUpdateKind;
 
@@ -108,7 +116,7 @@ typedef unsigned WUIPointerUpdateKind;
 // [struct] Windows.UI.Input.ManipulationDelta
 WINRT_EXPORT
 @interface WUIManipulationDelta : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property (copy) WFPoint* translation;
 @property float scale;
 @property float rotation;
@@ -118,7 +126,7 @@ WINRT_EXPORT
 // [struct] Windows.UI.Input.ManipulationVelocities
 WINRT_EXPORT
 @interface WUIManipulationVelocities : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property (copy) WFPoint* linear;
 @property float angular;
 @property float expansion;
@@ -127,7 +135,7 @@ WINRT_EXPORT
 // [struct] Windows.UI.Input.CrossSlideThresholds
 WINRT_EXPORT
 @interface WUICrossSlideThresholds : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property float selectionStart;
 @property float speedBumpStart;
 @property float speedBumpEnd;
@@ -164,11 +172,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIEdgeGesture : RTObject
 + (WUIEdgeGesture*)getForCurrentView;
-- (EventRegistrationToken)addCanceledEvent:(void(^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
+- (EventRegistrationToken)addCanceledEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCompletedEvent:(void(^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
+- (EventRegistrationToken)addCompletedEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStartingEvent:(void(^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
+- (EventRegistrationToken)addStartingEvent:(void (^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeStartingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -213,23 +221,24 @@ WINRT_EXPORT
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isInertial;
 @property (readonly) WUIMouseWheelParameters* mouseWheelParameters;
-- (EventRegistrationToken)addCrossSlidingEvent:(void(^)(WUIGestureRecognizer*, WUICrossSlidingEventArgs*))del;
+- (EventRegistrationToken)addCrossSlidingEvent:(void (^)(WUIGestureRecognizer*, WUICrossSlidingEventArgs*))del;
 - (void)removeCrossSlidingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDraggingEvent:(void(^)(WUIGestureRecognizer*, WUIDraggingEventArgs*))del;
+- (EventRegistrationToken)addDraggingEvent:(void (^)(WUIGestureRecognizer*, WUIDraggingEventArgs*))del;
 - (void)removeDraggingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHoldingEvent:(void(^)(WUIGestureRecognizer*, WUIHoldingEventArgs*))del;
+- (EventRegistrationToken)addHoldingEvent:(void (^)(WUIGestureRecognizer*, WUIHoldingEventArgs*))del;
 - (void)removeHoldingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationCompletedEvent:(void(^)(WUIGestureRecognizer*, WUIManipulationCompletedEventArgs*))del;
+- (EventRegistrationToken)addManipulationCompletedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationCompletedEventArgs*))del;
 - (void)removeManipulationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationInertiaStartingEvent:(void(^)(WUIGestureRecognizer*, WUIManipulationInertiaStartingEventArgs*))del;
+- (EventRegistrationToken)addManipulationInertiaStartingEvent:(void (^)(WUIGestureRecognizer*,
+                                                                        WUIManipulationInertiaStartingEventArgs*))del;
 - (void)removeManipulationInertiaStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationStartedEvent:(void(^)(WUIGestureRecognizer*, WUIManipulationStartedEventArgs*))del;
+- (EventRegistrationToken)addManipulationStartedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationStartedEventArgs*))del;
 - (void)removeManipulationStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addManipulationUpdatedEvent:(void(^)(WUIGestureRecognizer*, WUIManipulationUpdatedEventArgs*))del;
+- (EventRegistrationToken)addManipulationUpdatedEvent:(void (^)(WUIGestureRecognizer*, WUIManipulationUpdatedEventArgs*))del;
 - (void)removeManipulationUpdatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRightTappedEvent:(void(^)(WUIGestureRecognizer*, WUIRightTappedEventArgs*))del;
+- (EventRegistrationToken)addRightTappedEvent:(void (^)(WUIGestureRecognizer*, WUIRightTappedEventArgs*))del;
 - (void)removeRightTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTappedEvent:(void(^)(WUIGestureRecognizer*, WUITappedEventArgs*))del;
+- (EventRegistrationToken)addTappedEvent:(void (^)(WUIGestureRecognizer*, WUITappedEventArgs*))del;
 - (void)removeTappedEvent:(EventRegistrationToken)tok;
 - (BOOL)canBeDoubleTap:(WUIPointerPoint*)value;
 - (void)processDownEvent:(WUIPointerPoint*)value;
@@ -432,4 +441,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUIPointerVisualizationSettings_DEFINED__
-

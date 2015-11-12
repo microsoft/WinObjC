@@ -53,6 +53,9 @@
     return _layoutAttributes;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareForReuse {
     _layoutAttributes = nil;
 }
@@ -163,6 +166,9 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)contentView {
     return _contentView;
 }

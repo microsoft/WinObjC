@@ -22,23 +22,23 @@
 
 @class CAMediaTimingFunction;
 
-CA_EXPORT NSString * const kCATransactionAnimationDuration;
-CA_EXPORT NSString * const kCATransactionDisableActions;
-CA_EXPORT NSString * const kCATransactionAnimationTimingFunction;
-CA_EXPORT NSString * const kCATransactionCompletionBlock;
+CA_EXPORT NSString* const kCATransactionAnimationDuration;
+CA_EXPORT NSString* const kCATransactionDisableActions;
+CA_EXPORT NSString* const kCATransactionAnimationTimingFunction;
+CA_EXPORT NSString* const kCATransactionCompletionBlock;
 
 CA_EXPORT_CLASS
 @interface CATransaction : NSObject {
 }
 + (BOOL)disableActions;
 + (CFTimeInterval)animationDuration;
-+ (CAMediaTimingFunction *)animationTimingFunction;
-+ valueForKey:(NSString *)key;
++ (CAMediaTimingFunction*)animationTimingFunction;
++ valueForKey:(NSString*)key;
 
 + (void)setAnimationDuration:(CFTimeInterval)value;
-+ (void)setAnimationTimingFunction:(CAMediaTimingFunction *)value;
++ (void)setAnimationTimingFunction:(CAMediaTimingFunction*)value;
 + (void)setDisableActions:(BOOL)value;
-+ (void)setValue:value forKey:(NSString *)key;
++ (void)setValue:value forKey:(NSString*)key;
 
 + (void)begin;
 + (void)commit;

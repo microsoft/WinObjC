@@ -21,14 +21,18 @@
 
 @class NSString;
 
-typedef void (^UIActivityViewControllerCompletionHandler)(NSString *activityType, BOOL completed);
+typedef void (^UIActivityViewControllerCompletionHandler)(NSString* activityType, BOOL completed);
 
+@class UIPopoverPresentationController;
+
+UIKIT_EXPORT_CLASS
 @interface UIActivityViewController : UIViewController
 
-- (id)initWithActivityItems:(NSArray *)activityItems applicationActivities:(NSArray *)applicationActivities;
+- (id)initWithActivityItems:(NSArray*)activityItems applicationActivities:(NSArray*)applicationActivities;
 
-@property (nonatomic,copy) UIActivityViewControllerCompletionHandler completionHandler;
-@property (nonatomic,copy) NSArray *excludedActivityTypes;
+@property (nonatomic, copy) UIActivityViewControllerCompletionHandler completionHandler;
+@property (nonatomic, copy) NSArray* excludedActivityTypes;
+@property (nonatomic, retain) UIPopoverPresentationController* popoverPresentationController;
 
 @end
 

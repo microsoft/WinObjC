@@ -23,15 +23,15 @@
 
 @class NSDictionary, NSURL, NSOrthography;
 
-SB_EXPORT NSString * const NSTextCheckingNameKey;
-SB_EXPORT NSString * const NSTextCheckingJobTitleKey;
-SB_EXPORT NSString * const NSTextCheckingOrganizationKey;
-SB_EXPORT NSString * const NSTextCheckingStreetKey;
-SB_EXPORT NSString * const NSTextCheckingCityKey;
-SB_EXPORT NSString * const NSTextCheckingStateKey;
-SB_EXPORT NSString * const NSTextCheckingZIPKey;
-SB_EXPORT NSString * const NSTextCheckingCountryKey;
-SB_EXPORT NSString * const NSTextCheckingPhoneKey;
+SB_EXPORT NSString* const NSTextCheckingNameKey;
+SB_EXPORT NSString* const NSTextCheckingJobTitleKey;
+SB_EXPORT NSString* const NSTextCheckingOrganizationKey;
+SB_EXPORT NSString* const NSTextCheckingStreetKey;
+SB_EXPORT NSString* const NSTextCheckingCityKey;
+SB_EXPORT NSString* const NSTextCheckingStateKey;
+SB_EXPORT NSString* const NSTextCheckingZIPKey;
+SB_EXPORT NSString* const NSTextCheckingCountryKey;
+SB_EXPORT NSString* const NSTextCheckingPhoneKey;
 
 enum {
     NSTextCheckingTypeOrthography = 1ULL << 0,
@@ -51,40 +51,43 @@ enum {
 typedef uint32_t NSTextCheckingType;
 
 enum : uint64_t {
-    NSTextCheckingAllSystemTypes= 0xffffffffULL,
-    NSTextCheckingAllCustomTypes= 0xffffffffULL<<32,
-    NSTextCheckingAllTypes      = (NSTextCheckingAllSystemTypes | NSTextCheckingAllCustomTypes),
+    NSTextCheckingAllSystemTypes = 0xffffffffULL,
+    NSTextCheckingAllCustomTypes = 0xffffffffULL << 32,
+    NSTextCheckingAllTypes = (NSTextCheckingAllSystemTypes | NSTextCheckingAllCustomTypes),
 };
 typedef uint64_t NSTextCheckingTypes;
 
 @interface NSTextCheckingResult : NSObject
 
-+ (NSTextCheckingResult *)addressCheckingResultWithRange:(NSRange)range components:(NSDictionary *)components;
-+ (NSTextCheckingResult *)correctionCheckingResultWithRange:(NSRange)range replacementString:(NSString *)replacement;
-+ (NSTextCheckingResult *)dashCheckingResultWithRange:(NSRange)range replacementString:(NSString *)replacement;
-+ (NSTextCheckingResult *)dateCheckingResultWithRange:(NSRange)range date:(NSDate *)date;
-+ (NSTextCheckingResult *)dateCheckingResultWithRange:(NSRange)range date:(NSDate *)date timeZone:(NSTimeZone *)timeZone duration:(NSTimeInterval)duration;
-+ (NSTextCheckingResult *)grammarCheckingResultWithRange:(NSRange)range details:(NSArray *)details;
-+ (NSTextCheckingResult *)linkCheckingResultWithRange:(NSRange)range URL:(NSURL *)url;
-+ (NSTextCheckingResult *)orthographyCheckingResultWithRange:(NSRange)range orthography:(NSOrthography *)orthography;
-+ (NSTextCheckingResult *)quoteCheckingResultWithRange:(NSRange)range replacementString:(NSString *)replacement;
-+ (NSTextCheckingResult *)replacementCheckingResultWithRange:(NSRange)range replacementString:(NSString *)replacement;
-+ (NSTextCheckingResult *)spellCheckingResultWithRange:(NSRange)range;
-+ (NSTextCheckingResult *)phoneNumberCheckingResultWithRange:(NSRange)range phoneNumber:(NSString *)phoneNumber;
++ (NSTextCheckingResult*)addressCheckingResultWithRange:(NSRange)range components:(NSDictionary*)components;
++ (NSTextCheckingResult*)correctionCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
++ (NSTextCheckingResult*)dashCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
++ (NSTextCheckingResult*)dateCheckingResultWithRange:(NSRange)range date:(NSDate*)date;
++ (NSTextCheckingResult*)dateCheckingResultWithRange:(NSRange)range
+                                                date:(NSDate*)date
+                                            timeZone:(NSTimeZone*)timeZone
+                                            duration:(NSTimeInterval)duration;
++ (NSTextCheckingResult*)grammarCheckingResultWithRange:(NSRange)range details:(NSArray*)details;
++ (NSTextCheckingResult*)linkCheckingResultWithRange:(NSRange)range URL:(NSURL*)url;
++ (NSTextCheckingResult*)orthographyCheckingResultWithRange:(NSRange)range orthography:(NSOrthography*)orthography;
++ (NSTextCheckingResult*)quoteCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
++ (NSTextCheckingResult*)replacementCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
++ (NSTextCheckingResult*)spellCheckingResultWithRange:(NSRange)range;
++ (NSTextCheckingResult*)phoneNumberCheckingResultWithRange:(NSRange)range phoneNumber:(NSString*)phoneNumber;
 
 - (NSRange)rangeAtIndex:(NSUInteger)idx;
 
-@property (readonly) NSDictionary *addressComponents;
-@property (readonly) NSDate *date;
+@property (readonly) NSDictionary* addressComponents;
+@property (readonly) NSDate* date;
 @property (readonly) NSTimeInterval duration;
-@property (readonly) NSArray *grammarDetails;
-@property (readonly) NSOrthography *orthography;
+@property (readonly) NSArray* grammarDetails;
+@property (readonly) NSOrthography* orthography;
 @property (readonly) NSRange range;
-@property (readonly) NSString *replacementString;
+@property (readonly) NSString* replacementString;
 @property (readonly) NSTextCheckingType resultType;
-@property (readonly) NSTimeZone *timeZone;
-@property (readonly) NSURL *URL;
-@property (readonly) NSString *phoneNumber;
+@property (readonly) NSTimeZone* timeZone;
+@property (readonly) NSURL* URL;
+@property (readonly) NSString* phoneNumber;
 @property (readonly) NSUInteger numberOfRanges;
 
 @end

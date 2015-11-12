@@ -20,52 +20,65 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult, WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult, WMAAudioFileOutputNode, WMACreateAudioFileOutputNodeResult, WMAAudioGraphUnrecoverableErrorOccurredEventArgs, WMAAudioFrameInputNode, WMAAudioFrameOutputNode, WMAAudioSubmixNode, WMAAudioGraphConnection, WMAAudioFrameCompletedEventArgs, WMAFrameInputNodeQuantumStartedEventArgs, WMAEqualizerBand, WMAEqualizerEffectDefinition, WMAReverbEffectDefinition, WMAEchoEffectDefinition, WMALimiterEffectDefinition;
-@protocol WMAICreateAudioGraphResult, WMAIAudioGraphSettingsFactory, WMAIAudioGraphSettings, WMAIAudioGraphStatics, WMAICreateAudioDeviceInputNodeResult, WMAICreateAudioDeviceOutputNodeResult, WMAICreateAudioFileInputNodeResult, WMAICreateAudioFileOutputNodeResult, WMAIAudioGraphUnrecoverableErrorOccurredEventArgs, WMAIAudioGraph, WMAIAudioNode, WMAIAudioInputNode, WMAIAudioFrameInputNode, WMAIAudioFileInputNode, WMAIAudioDeviceInputNode, WMAIAudioDeviceOutputNode, WMAIAudioFrameOutputNode, WMAIAudioFileOutputNode, WMAIAudioFrameCompletedEventArgs, WMAIFrameInputNodeQuantumStartedEventArgs, WMAIAudioGraphConnection, WMAIEqualizerBand, WMAIEqualizerEffectDefinitionFactory, WMAIReverbEffectDefinitionFactory, WMAIEchoEffectDefinitionFactory, WMAILimiterEffectDefinitionFactory, WMAIEqualizerEffectDefinition, WMAIReverbEffectDefinition, WMAIEchoEffectDefinition, WMAILimiterEffectDefinition;
+@class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult,
+    WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult,
+    WMAAudioFileOutputNode, WMACreateAudioFileOutputNodeResult, WMAAudioGraphUnrecoverableErrorOccurredEventArgs, WMAAudioFrameInputNode,
+    WMAAudioFrameOutputNode, WMAAudioSubmixNode, WMAAudioGraphConnection, WMAAudioFrameCompletedEventArgs,
+    WMAFrameInputNodeQuantumStartedEventArgs, WMAEqualizerBand, WMAEqualizerEffectDefinition, WMAReverbEffectDefinition,
+    WMAEchoEffectDefinition, WMALimiterEffectDefinition;
+@protocol WMAICreateAudioGraphResult
+, WMAIAudioGraphSettingsFactory, WMAIAudioGraphSettings, WMAIAudioGraphStatics, WMAICreateAudioDeviceInputNodeResult,
+    WMAICreateAudioDeviceOutputNodeResult, WMAICreateAudioFileInputNodeResult, WMAICreateAudioFileOutputNodeResult,
+    WMAIAudioGraphUnrecoverableErrorOccurredEventArgs, WMAIAudioGraph, WMAIAudioNode, WMAIAudioInputNode, WMAIAudioFrameInputNode,
+    WMAIAudioFileInputNode, WMAIAudioDeviceInputNode, WMAIAudioDeviceOutputNode, WMAIAudioFrameOutputNode, WMAIAudioFileOutputNode,
+    WMAIAudioFrameCompletedEventArgs, WMAIFrameInputNodeQuantumStartedEventArgs, WMAIAudioGraphConnection, WMAIEqualizerBand,
+    WMAIEqualizerEffectDefinitionFactory, WMAIReverbEffectDefinitionFactory, WMAIEchoEffectDefinitionFactory,
+    WMAILimiterEffectDefinitionFactory, WMAIEqualizerEffectDefinition, WMAIReverbEffectDefinition, WMAIEchoEffectDefinition,
+    WMAILimiterEffectDefinition;
 
 // Windows.Media.Audio.AudioGraphCreationStatus
 enum _WMAAudioGraphCreationStatus {
-	WMAAudioGraphCreationStatusSuccess = 0,
-	WMAAudioGraphCreationStatusDeviceNotAvailable = 1,
-	WMAAudioGraphCreationStatusFormatNotSupported = 2,
-	WMAAudioGraphCreationStatusUnknownFailure = 3,
+    WMAAudioGraphCreationStatusSuccess = 0,
+    WMAAudioGraphCreationStatusDeviceNotAvailable = 1,
+    WMAAudioGraphCreationStatusFormatNotSupported = 2,
+    WMAAudioGraphCreationStatusUnknownFailure = 3,
 };
 typedef unsigned WMAAudioGraphCreationStatus;
 
 // Windows.Media.Audio.QuantumSizeSelectionMode
 enum _WMAQuantumSizeSelectionMode {
-	WMAQuantumSizeSelectionModeSystemDefault = 0,
-	WMAQuantumSizeSelectionModeLowestLatency = 1,
-	WMAQuantumSizeSelectionModeClosestToDesired = 2,
+    WMAQuantumSizeSelectionModeSystemDefault = 0,
+    WMAQuantumSizeSelectionModeLowestLatency = 1,
+    WMAQuantumSizeSelectionModeClosestToDesired = 2,
 };
 typedef unsigned WMAQuantumSizeSelectionMode;
 
 // Windows.Media.Audio.AudioDeviceNodeCreationStatus
 enum _WMAAudioDeviceNodeCreationStatus {
-	WMAAudioDeviceNodeCreationStatusSuccess = 0,
-	WMAAudioDeviceNodeCreationStatusDeviceNotAvailable = 1,
-	WMAAudioDeviceNodeCreationStatusFormatNotSupported = 2,
-	WMAAudioDeviceNodeCreationStatusUnknownFailure = 3,
-	WMAAudioDeviceNodeCreationStatusAccessDenied = 4,
+    WMAAudioDeviceNodeCreationStatusSuccess = 0,
+    WMAAudioDeviceNodeCreationStatusDeviceNotAvailable = 1,
+    WMAAudioDeviceNodeCreationStatusFormatNotSupported = 2,
+    WMAAudioDeviceNodeCreationStatusUnknownFailure = 3,
+    WMAAudioDeviceNodeCreationStatusAccessDenied = 4,
 };
 typedef unsigned WMAAudioDeviceNodeCreationStatus;
 
 // Windows.Media.Audio.AudioFileNodeCreationStatus
 enum _WMAAudioFileNodeCreationStatus {
-	WMAAudioFileNodeCreationStatusSuccess = 0,
-	WMAAudioFileNodeCreationStatusFileNotFound = 1,
-	WMAAudioFileNodeCreationStatusInvalidFileType = 2,
-	WMAAudioFileNodeCreationStatusFormatNotSupported = 3,
-	WMAAudioFileNodeCreationStatusUnknownFailure = 4,
+    WMAAudioFileNodeCreationStatusSuccess = 0,
+    WMAAudioFileNodeCreationStatusFileNotFound = 1,
+    WMAAudioFileNodeCreationStatusInvalidFileType = 2,
+    WMAAudioFileNodeCreationStatusFormatNotSupported = 3,
+    WMAAudioFileNodeCreationStatusUnknownFailure = 4,
 };
 typedef unsigned WMAAudioFileNodeCreationStatus;
 
 // Windows.Media.Audio.AudioGraphUnrecoverableError
 enum _WMAAudioGraphUnrecoverableError {
-	WMAAudioGraphUnrecoverableErrorNone = 0,
-	WMAAudioGraphUnrecoverableErrorAudioDeviceLost = 1,
-	WMAAudioGraphUnrecoverableErrorAudioSessionDisconnected = 2,
-	WMAAudioGraphUnrecoverableErrorUnknownFailure = 3,
+    WMAAudioGraphUnrecoverableErrorNone = 0,
+    WMAAudioGraphUnrecoverableErrorAudioDeviceLost = 1,
+    WMAAudioGraphUnrecoverableErrorAudioSessionDisconnected = 2,
+    WMAAudioGraphUnrecoverableErrorUnknownFailure = 3,
 };
 typedef unsigned WMAAudioGraphUnrecoverableError;
 
@@ -136,30 +149,49 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 
 WINRT_EXPORT
 @interface WMAAudioGraph : RTObject <WFIClosable>
-+ (void)createAsync:(WMAAudioGraphSettings*)settings success:(void (^)(WMACreateAudioGraphResult*))success failure:(void (^)(NSError*))failure;
++ (void)createAsync:(WMAAudioGraphSettings*)settings
+            success:(void (^)(WMACreateAudioGraphResult*))success
+            failure:(void (^)(NSError*))failure;
 @property (readonly) uint64_t completedQuantumCount;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 @property (readonly) int latencyInSamples;
 @property (readonly) WDEDeviceInformation* primaryRenderDevice;
 @property (readonly) WMAudioProcessing renderDeviceAudioProcessing;
 @property (readonly) int samplesPerQuantum;
-- (EventRegistrationToken)addQuantumProcessedEvent:(void(^)(WMAAudioGraph*, RTObject*))del;
+- (EventRegistrationToken)addQuantumProcessedEvent:(void (^)(WMAAudioGraph*, RTObject*))del;
 - (void)removeQuantumProcessedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addQuantumStartedEvent:(void(^)(WMAAudioGraph*, RTObject*))del;
+- (EventRegistrationToken)addQuantumStartedEvent:(void (^)(WMAAudioGraph*, RTObject*))del;
 - (void)removeQuantumStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUnrecoverableErrorOccurredEvent:(void(^)(WMAAudioGraph*, WMAAudioGraphUnrecoverableErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addUnrecoverableErrorOccurredEvent:(void (^)(WMAAudioGraph*,
+                                                                       WMAAudioGraphUnrecoverableErrorOccurredEventArgs*))del;
 - (void)removeUnrecoverableErrorOccurredEvent:(EventRegistrationToken)tok;
 - (WMAAudioFrameInputNode*)createFrameInputNode;
 - (WMAAudioFrameInputNode*)createFrameInputNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
-- (void)createDeviceInputNodeAsync:(WMCMediaCategory)category success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createDeviceInputNodeWithFormatAsync:(WMCMediaCategory)category encodingProperties:(WMMAudioEncodingProperties*)encodingProperties success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createDeviceInputNodeWithFormatOnDeviceAsync:(WMCMediaCategory)category encodingProperties:(WMMAudioEncodingProperties*)encodingProperties device:(WDEDeviceInformation*)device success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeAsync:(WMCMediaCategory)category
+                           success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
+                           failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeWithFormatAsync:(WMCMediaCategory)category
+                          encodingProperties:(WMMAudioEncodingProperties*)encodingProperties
+                                     success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
+                                     failure:(void (^)(NSError*))failure;
+- (void)createDeviceInputNodeWithFormatOnDeviceAsync:(WMCMediaCategory)category
+                                  encodingProperties:(WMMAudioEncodingProperties*)encodingProperties
+                                              device:(WDEDeviceInformation*)device
+                                             success:(void (^)(WMACreateAudioDeviceInputNodeResult*))success
+                                             failure:(void (^)(NSError*))failure;
 - (WMAAudioFrameOutputNode*)createFrameOutputNode;
 - (WMAAudioFrameOutputNode*)createFrameOutputNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
 - (void)createDeviceOutputNodeAsyncWithSuccess:(void (^)(WMACreateAudioDeviceOutputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createFileInputNodeAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMACreateAudioFileInputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createFileOutputNodeAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMACreateAudioFileOutputNodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)createFileOutputNodeWithFileProfileAsync:(RTObject<WSIStorageFile>*)file fileEncodingProfile:(WMMMediaEncodingProfile*)fileEncodingProfile success:(void (^)(WMACreateAudioFileOutputNodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)createFileInputNodeAsync:(RTObject<WSIStorageFile>*)file
+                         success:(void (^)(WMACreateAudioFileInputNodeResult*))success
+                         failure:(void (^)(NSError*))failure;
+- (void)createFileOutputNodeAsync:(RTObject<WSIStorageFile>*)file
+                          success:(void (^)(WMACreateAudioFileOutputNodeResult*))success
+                          failure:(void (^)(NSError*))failure;
+- (void)createFileOutputNodeWithFileProfileAsync:(RTObject<WSIStorageFile>*)file
+                             fileEncodingProfile:(WMMMediaEncodingProfile*)fileEncodingProfile
+                                         success:(void (^)(WMACreateAudioFileOutputNodeResult*))success
+                                         failure:(void (^)(NSError*))failure;
 - (WMAAudioSubmixNode*)createSubmixNode;
 - (WMAAudioSubmixNode*)createSubmixNodeWithFormat:(WMMAudioEncodingProperties*)encodingProperties;
 - (void)start;
@@ -287,7 +319,7 @@ WINRT_EXPORT
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
-- (EventRegistrationToken)addFileCompletedEvent:(void(^)(WMAAudioFileInputNode*, RTObject*))del;
+- (EventRegistrationToken)addFileCompletedEvent:(void (^)(WMAAudioFileInputNode*, RTObject*))del;
 - (void)removeFileCompletedEvent:(EventRegistrationToken)tok;
 - (void)seek:(WFTimeSpan*)position;
 - (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
@@ -374,9 +406,9 @@ WINRT_EXPORT
 @property BOOL consumeInput;
 @property (readonly) NSMutableArray* effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
-- (EventRegistrationToken)addAudioFrameCompletedEvent:(void(^)(WMAAudioFrameInputNode*, WMAAudioFrameCompletedEventArgs*))del;
+- (EventRegistrationToken)addAudioFrameCompletedEvent:(void (^)(WMAAudioFrameInputNode*, WMAAudioFrameCompletedEventArgs*))del;
 - (void)removeAudioFrameCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addQuantumStartedEvent:(void(^)(WMAAudioFrameInputNode*, WMAFrameInputNodeQuantumStartedEventArgs*))del;
+- (EventRegistrationToken)addQuantumStartedEvent:(void (^)(WMAAudioFrameInputNode*, WMAFrameInputNodeQuantumStartedEventArgs*))del;
 - (void)removeQuantumStartedEvent:(EventRegistrationToken)tok;
 - (void)addFrame:(WMAudioFrame*)frame;
 - (void)discardQueuedFrames;
@@ -490,7 +522,7 @@ WINRT_EXPORT
 #define __WMEIAudioEffectDefinition_DEFINED__
 
 @protocol WMEIAudioEffectDefinition
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -504,7 +536,7 @@ WINRT_EXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEqualizerEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
 @property (readonly) NSArray* bands;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -540,7 +572,7 @@ WINRT_EXPORT
 @property double roomSize;
 @property double roomFilterMain;
 @property double roomFilterHF;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -556,7 +588,7 @@ WINRT_EXPORT
 @property double wetDryMix;
 @property double feedback;
 @property double delay;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -571,9 +603,8 @@ WINRT_EXPORT
 + (WMALimiterEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
 @property unsigned int release;
 @property unsigned int loudness;
-@property (readonly) NSString * activatableClassId;
+@property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
 #endif // __WMALimiterEffectDefinition_DEFINED__
-

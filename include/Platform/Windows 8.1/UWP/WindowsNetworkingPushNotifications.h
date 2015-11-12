@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WNPPushNotificationChannel, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
-@protocol WNPIPushNotificationChannelManagerStatics, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;
+@protocol WNPIPushNotificationChannelManagerStatics
+, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;
 
 // Windows.Networking.PushNotifications.PushNotificationType
 enum _WNPPushNotificationType {
@@ -41,9 +42,10 @@ typedef unsigned WNPPushNotificationType;
 
 WINRT_EXPORT
 @interface WNPPushNotificationChannel : RTObject
-@property (readonly) WFDateTime * expirationTime;
-@property (readonly) NSString * uri;
-- (EventRegistrationToken)addPushNotificationReceivedEvent:(void(^)(WNPPushNotificationChannel *, WNPPushNotificationReceivedEventArgs *))del;
+@property (readonly) WFDateTime* expirationTime;
+@property (readonly) NSString* uri;
+- (EventRegistrationToken)addPushNotificationReceivedEvent:(void (^)(WNPPushNotificationChannel*,
+                                                                     WNPPushNotificationReceivedEventArgs*))del;
 - (void)removePushNotificationReceivedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -57,11 +59,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNPPushNotificationReceivedEventArgs : RTObject
 @property BOOL cancel;
-@property (readonly) WUNBadgeNotification * badgeNotification;
+@property (readonly) WUNBadgeNotification* badgeNotification;
 @property (readonly) WNPPushNotificationType notificationType;
-@property (readonly) WNPRawNotification * rawNotification;
-@property (readonly) WUNTileNotification * tileNotification;
-@property (readonly) WUNToastNotification * toastNotification;
+@property (readonly) WNPRawNotification* rawNotification;
+@property (readonly) WUNTileNotification* tileNotification;
+@property (readonly) WUNToastNotification* toastNotification;
 @end
 
 #endif // __WNPPushNotificationReceivedEventArgs_DEFINED__
@@ -72,7 +74,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPRawNotification : RTObject
-@property (readonly) NSString * content;
+@property (readonly) NSString* content;
 @end
 
 #endif // __WNPRawNotification_DEFINED__
@@ -83,10 +85,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNPPushNotificationChannelManager : RTObject
-+ (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel *))success failure:(void (^)(NSError*))failure;
-+ (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString *)applicationId success:(void (^)(WNPPushNotificationChannel *))success failure:(void (^)(NSError*))failure;
-+ (void)createPushNotificationChannelForSecondaryTileAsync:(NSString *)tileId success:(void (^)(WNPPushNotificationChannel *))success failure:(void (^)(NSError*))failure;
++ (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success
+                                                            failure:(void (^)(NSError*))failure;
++ (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString*)applicationId
+                                                       success:(void (^)(WNPPushNotificationChannel*))success
+                                                       failure:(void (^)(NSError*))failure;
++ (void)createPushNotificationChannelForSecondaryTileAsync:(NSString*)tileId
+                                                   success:(void (^)(WNPPushNotificationChannel*))success
+                                                   failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNPPushNotificationChannelManager_DEFINED__
-

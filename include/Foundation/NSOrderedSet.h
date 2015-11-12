@@ -17,43 +17,46 @@
 #ifndef _NSORDEREDSET_H_
 #define _NSORDEREDSET_H_
 
+#import <Foundation/NSObject.h>
 #import <Foundation/NSEnumerator.h>
 
 @class NSSet;
 @class NSIndexSet;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSOrderedSet : NSObject <NSFastEnumeration>
 
 + (id)orderedSet;
-+ (id)orderedSetWithSet:(NSSet *)set;
-+ (id)orderedSetWithOrderedSet:(NSOrderedSet *)set;
++ (id)orderedSetWithSet:(NSSet*)set;
++ (id)orderedSetWithOrderedSet:(NSOrderedSet*)set;
 + (id)orderedSetWithObject:(id)object;
-+ (id)orderedSetWithArray:(NSArray *)array;
++ (id)orderedSetWithArray:(NSArray*)array;
 
-- (NSIndexSet *)indexesOfObjectsPassingTest:(BOOL (^)(id obj, NSUInteger idx, BOOL *stop))predicate;
+- (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(id obj, NSUInteger idx, BOOL* stop))predicate;
 - (NSUInteger)count;
-- (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block;
-- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block;
-- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(id obj, NSUInteger idx, BOOL *stop))predicate;
-- (NSArray *)objectsAtIndexes:(NSIndexSet *)indexes;
+- (void)enumerateObjectsUsingBlock:(void (^)(id obj, NSUInteger idx, BOOL* stop))block;
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id obj, NSUInteger idx, BOOL* stop))block;
+- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(id obj, NSUInteger idx, BOOL* stop))predicate;
+- (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes;
 - (id)objectAtIndex:(NSUInteger)index;
 - (id)objectAtIndexedSubscript:(NSUInteger)index;
-- (NSSet *)set;
-- (NSArray *)array;
+- (NSSet*)set;
+- (NSArray*)array;
 - (id)lastObject;
 - (id)firstObject;
 - (BOOL)containsObject:(id)object;
 
 @end
 
+FOUNDATION_EXPORT_CLASS
 @interface NSMutableOrderedSet : NSOrderedSet
 
 + (id)orderedSetWithCapacity:(NSUInteger)numItems;
 
-- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectsAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects;
+- (void)removeObjectsAtIndexes:(NSIndexSet*)indexes;
+- (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray*)objects;
 - (void)addObject:(id)object;
-- (void)addObjectsFromArray:(NSArray *)array;
+- (void)addObjectsFromArray:(NSArray*)array;
 - (void)setObject:(id)obj atIndex:(NSUInteger)idx;
 - (void)removeAllObjects;
 

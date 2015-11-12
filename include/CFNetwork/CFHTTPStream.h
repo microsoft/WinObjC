@@ -35,7 +35,9 @@ CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPSProxyPort;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPShouldAutoredirect;
 CFNETWORK_EXPORT const SInt32 kCFStreamErrorDomainHTTP;
 
-CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForStreamedHTTPRequest(CFAllocatorRef alloc, CFHTTPMessageRef rqstHeaders, CFReadStreamRef rqstBody);
+CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForStreamedHTTPRequest(CFAllocatorRef alloc,
+                                                                          CFHTTPMessageRef rqstHeaders,
+                                                                          CFReadStreamRef rqstBody);
 CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForHTTPRequest(CFAllocatorRef alloc, CFHTTPMessageRef rqst);
 
 #endif // _CFHTTPSTREAM_H_

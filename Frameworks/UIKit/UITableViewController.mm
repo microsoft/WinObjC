@@ -37,6 +37,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithStyle:(UITableViewStyle)style {
     [super init];
 
@@ -49,6 +52,9 @@
     return [super init];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITableView*)tableView {
     UIView* ret = [self view];
     if ([ret isKindOfClass:[UITableView class]]) {
@@ -75,6 +81,9 @@
     [self setTableView:tableView];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTableView:(UITableView*)tableView {
     [tableView setDelegate:self];
     [tableView setDataSource:self];
@@ -96,7 +105,11 @@
     _staticSource = dataSource;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setClearsSelectionOnViewWillAppear:(BOOL)clear {
+    UNIMPLEMENTED();
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
@@ -146,11 +159,19 @@
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRefreshControl:(UIRefreshControl*)refreshControl {
+    UNIMPLEMENTED();
     _refreshControl = refreshControl;
 }
 
+/**
+ @Status Stub
+*/
 - (UIRefreshControl*)refreshControl {
+    UNIMPLEMENTED();
     return _refreshControl;
 }
 

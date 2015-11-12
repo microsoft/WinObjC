@@ -20,51 +20,56 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult, WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault, WSCPasswordCredentialPropertyStore;
-@protocol WSCIWebAccountFactory, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3, WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult, WSCIKeyCredentialAttestationResult, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
+@class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult,
+    WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault,
+    WSCPasswordCredentialPropertyStore;
+@protocol WSCIWebAccountFactory
+, WSCIWebAccount, WSCIWebAccount2, WSCIWebAccountProviderFactory, WSCIWebAccountProvider, WSCIWebAccountProvider2, WSCIWebAccountProvider3,
+    WSCIKeyCredentialManagerStatics, WSCIKeyCredential, WSCIKeyCredentialRetrievalResult, WSCIKeyCredentialOperationResult,
+    WSCIKeyCredentialAttestationResult, WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault;
 
 // Windows.Security.Credentials.WebAccountState
 enum _WSCWebAccountState {
-	WSCWebAccountStateNone = 0,
-	WSCWebAccountStateConnected = 1,
-	WSCWebAccountStateError = 2,
+    WSCWebAccountStateNone = 0,
+    WSCWebAccountStateConnected = 1,
+    WSCWebAccountStateError = 2,
 };
 typedef unsigned WSCWebAccountState;
 
 // Windows.Security.Credentials.WebAccountPictureSize
 enum _WSCWebAccountPictureSize {
-	WSCWebAccountPictureSizeSize64x64 = 64,
-	WSCWebAccountPictureSizeSize208x208 = 208,
-	WSCWebAccountPictureSizeSize424x424 = 424,
-	WSCWebAccountPictureSizeSize1080x1080 = 1080,
+    WSCWebAccountPictureSizeSize64x64 = 64,
+    WSCWebAccountPictureSizeSize208x208 = 208,
+    WSCWebAccountPictureSizeSize424x424 = 424,
+    WSCWebAccountPictureSizeSize1080x1080 = 1080,
 };
 typedef unsigned WSCWebAccountPictureSize;
 
 // Windows.Security.Credentials.KeyCredentialStatus
 enum _WSCKeyCredentialStatus {
-	WSCKeyCredentialStatusSuccess = 0,
-	WSCKeyCredentialStatusUnknownError = 1,
-	WSCKeyCredentialStatusNotFound = 2,
-	WSCKeyCredentialStatusUserCanceled = 3,
-	WSCKeyCredentialStatusUserPrefersPassword = 4,
-	WSCKeyCredentialStatusCredentialAlreadyExists = 5,
-	WSCKeyCredentialStatusSecurityDeviceLocked = 6,
+    WSCKeyCredentialStatusSuccess = 0,
+    WSCKeyCredentialStatusUnknownError = 1,
+    WSCKeyCredentialStatusNotFound = 2,
+    WSCKeyCredentialStatusUserCanceled = 3,
+    WSCKeyCredentialStatusUserPrefersPassword = 4,
+    WSCKeyCredentialStatusCredentialAlreadyExists = 5,
+    WSCKeyCredentialStatusSecurityDeviceLocked = 6,
 };
 typedef unsigned WSCKeyCredentialStatus;
 
 // Windows.Security.Credentials.KeyCredentialAttestationStatus
 enum _WSCKeyCredentialAttestationStatus {
-	WSCKeyCredentialAttestationStatusSuccess = 0,
-	WSCKeyCredentialAttestationStatusUnknownError = 1,
-	WSCKeyCredentialAttestationStatusNotSupported = 2,
-	WSCKeyCredentialAttestationStatusTemporaryFailure = 3,
+    WSCKeyCredentialAttestationStatusSuccess = 0,
+    WSCKeyCredentialAttestationStatusUnknownError = 1,
+    WSCKeyCredentialAttestationStatusNotSupported = 2,
+    WSCKeyCredentialAttestationStatusTemporaryFailure = 3,
 };
 typedef unsigned WSCKeyCredentialAttestationStatus;
 
 // Windows.Security.Credentials.KeyCredentialCreationOption
 enum _WSCKeyCredentialCreationOption {
-	WSCKeyCredentialCreationOptionReplaceExisting = 0,
-	WSCKeyCredentialCreationOptionFailIfExists = 1,
+    WSCKeyCredentialCreationOptionReplaceExisting = 0,
+    WSCKeyCredentialCreationOptionFailIfExists = 1,
 };
 typedef unsigned WSCKeyCredentialCreationOption;
 
@@ -81,7 +86,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 @protocol WSCIWebAccount
 @property (readonly) WSCWebAccountState state;
-@property (readonly) NSString * userName;
+@property (readonly) NSString* userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
@@ -93,12 +98,12 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 WINRT_EXPORT
 @interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider*)createWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
-@property (readonly) NSString * displayName;
++ (WSCWebAccountProvider*)createWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
+@property (readonly) NSString* displayName;
 @property (readonly) WFUri* iconUri;
-@property (readonly) NSString * id;
-@property (readonly) NSString * authority;
-@property (readonly) NSString * displayPurpose;
+@property (readonly) NSString* id;
+@property (readonly) NSString* authority;
+@property (readonly) NSString* displayPurpose;
 @property (readonly) WSUser* user;
 @end
 
@@ -110,15 +115,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
-+ (WSCWebAccount*)createWebAccount:(WSCWebAccountProvider*)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
++ (WSCWebAccount*)createWebAccount:(WSCWebAccountProvider*)webAccountProvider
+                          userName:(NSString*)userName
+                             state:(WSCWebAccountState)state ACTIVATOR;
 @property (readonly) WSCWebAccountState state;
-@property (readonly) NSString * userName;
+@property (readonly) NSString* userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) NSDictionary* properties;
-- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
+- (void)getPictureAsync:(WSCWebAccountPictureSize)desizedSize
+                success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
+                failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)signOutAsync;
-- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString *)clientId;
+- (RTObject<WFIAsyncAction>*)signOutWithClientIdAsync:(NSString*)clientId;
 @end
 
 #endif // __WSCWebAccount_DEFINED__
@@ -166,9 +175,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCKeyCredential : RTObject
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 - (RTObject<WSSIBuffer>*)retrievePublicKey;
-- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(WSCKeyCredentialOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)requestSignAsync:(RTObject<WSSIBuffer>*)data
+                 success:(void (^)(WSCKeyCredentialOperationResult*))success
+                 failure:(void (^)(NSError*))failure;
 - (void)getAttestationAsyncWithSuccess:(void (^)(WSCKeyCredentialAttestationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -182,9 +193,12 @@ WINRT_EXPORT
 @interface WSCKeyCredentialManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)renewAttestationAsync;
-+ (void)requestCreateAsync:(NSString *)name option:(WSCKeyCredentialCreationOption)option success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
-+ (void)openAsync:(NSString *)name success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)deleteAsync:(NSString *)name;
++ (void)requestCreateAsync:(NSString*)name
+                    option:(WSCKeyCredentialCreationOption)option
+                   success:(void (^)(WSCKeyCredentialRetrievalResult*))success
+                   failure:(void (^)(NSError*))failure;
++ (void)openAsync:(NSString*)name success:(void (^)(WSCKeyCredentialRetrievalResult*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)deleteAsync:(NSString*)name;
 @end
 
 #endif // __WSCKeyCredentialManager_DEFINED__
@@ -196,10 +210,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordCredential : RTObject
 + (instancetype)create ACTIVATOR;
-+ (WSCPasswordCredential*)createPasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
-@property (copy) NSString * userName;
-@property (copy) NSString * resource;
-@property (copy) NSString * password;
++ (WSCPasswordCredential*)createPasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
+@property (copy) NSString* userName;
+@property (copy) NSString* resource;
+@property (copy) NSString* password;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (void)retrievePassword;
 @end
@@ -215,9 +229,9 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 - (void)add:(WSCPasswordCredential*)credential;
 - (void)remove:(WSCPasswordCredential*)credential;
-- (WSCPasswordCredential*)retrieve:(NSString *)resource userName:(NSString *)userName;
-- (NSArray*)findAllByResource:(NSString *)resource;
-- (NSArray*)findAllByUserName:(NSString *)userName;
+- (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
+- (NSArray*)findAllByResource:(NSString*)resource;
+- (NSArray*)findAllByUserName:(NSString*)userName;
 - (NSArray*)retrieveAll;
 @end
 
@@ -228,23 +242,23 @@ WINRT_EXPORT
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
--(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
--(void)removeObserver: (EventRegistrationToken)receiverToken;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCIPropertySet_DEFINED__
@@ -259,24 +273,23 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
--(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
--(void)removeObserver: (EventRegistrationToken)receiverToken;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WSCPasswordCredentialPropertyStore_DEFINED__
-

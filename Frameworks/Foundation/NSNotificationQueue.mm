@@ -18,6 +18,10 @@
 #include "Foundation/NSNotificationQueue.h"
 
 @implementation NSNotificationQueue
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)defaultQueue {
     return nil;
 }

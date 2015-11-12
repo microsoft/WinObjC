@@ -47,15 +47,27 @@ static NSTimeZone* _systemTimeZone;
     return _systemTimeZone;
 }
 
+/**
+ @Status Stub
+*/
 + (instancetype)systemTimeZone {
+    UNIMPLEMENTED();
     return [self _getSystemTZ];
 }
 
+/**
+ @Status Stub
+*/
 + (void)resetSystemTimeZone {
+    UNIMPLEMENTED();
     [self _setTimeZoneToSystemSettings:[self _getSystemTZ]->_icuTZ];
 }
 
+/**
+ @Status Stub
+*/
 + (instancetype)defaultTimeZone {
+    UNIMPLEMENTED();
     NSTimeZone* ret;
 
     if (_defaultTimeZone != nil) {
@@ -66,13 +78,20 @@ static NSTimeZone* _systemTimeZone;
     return [[ret copy] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setDefaultTimeZone:(NSTimeZone*)zone {
     zone = [zone retain];
     [_defaultTimeZone release];
     _defaultTimeZone = zone;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)knownTimeZoneNames {
+    UNIMPLEMENTED();
     //  TODO
     return [NSArray arrayWithObject:@"America/Los_Angeles"];
 }
@@ -81,6 +100,9 @@ static NSTimeZone* _systemTimeZone;
     return _icuTZ->clone();
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds {
     NSTimeZone* ret = [self alloc];
     ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
@@ -88,7 +110,11 @@ static NSTimeZone* _systemTimeZone;
     return [ret autorelease];
 }
 
+/**
+ @Status Stub
+*/
 + (instancetype)localTimeZone {
+    UNIMPLEMENTED();
     if (_defaultTimeZone != nil) {
         return [[_defaultTimeZone retain] autorelease];
     }
@@ -101,12 +127,18 @@ static NSTimeZone* _systemTimeZone;
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)timeZoneWithName:(NSString*)name {
     NSTimeZone* ret = [self alloc];
     ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)timeZoneWithAbbreviation:(NSString*)name {
     NSTimeZone* ret = [self alloc];
     const char* nameStr = [name UTF8String];
@@ -116,33 +148,53 @@ static NSTimeZone* _systemTimeZone;
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)name {
     icu_48::UnicodeString n;
     _icuTZ->getDisplayName(n);
     return NSStringFromICU(n);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)abbreviation {
     icu_48::UnicodeString n;
     _icuTZ->getID(n);
     return NSStringFromICU(n);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     icu_48::UnicodeString n;
     _icuTZ->getDisplayName(n);
     return NSStringFromICU(n);
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)localizedName:(NSTimeZoneNameStyle)name locale:(NSLocale*)locale {
+    UNIMPLEMENTED();
     return [self description];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)secondsFromGMT {
     return _icuTZ->getRawOffset() / 1000;
 }
 
+/**
+ @Status Stub
+*/
 - (NSInteger)secondsFromGMTForDate:(NSDate*)date {
+    UNIMPLEMENTED();
     assert(0);
     return 0;
 }
@@ -151,12 +203,18 @@ static NSTimeZone* _systemTimeZone;
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isDaylightSavingTimeForDate:(NSDate*)date {
     UErrorCode status = U_ZERO_ERROR;
 
     return _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isDaylightSavingTime {
     return [self isDaylightSavingTimeForDate:[NSDate date]];
 }

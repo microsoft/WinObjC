@@ -21,8 +21,8 @@
 
 #include "interopBase.h"
 @class WSPAnalyticsVersionInfo, WSPAnalyticsInfo;
-@protocol WSPIAnalyticsInfoStatics, WSPIAnalyticsVersionInfo;
-
+@protocol WSPIAnalyticsInfoStatics
+, WSPIAnalyticsVersionInfo;
 
 #import <Foundation/Foundation.h>
 
@@ -32,8 +32,8 @@
 
 WINRT_EXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
-@property (readonly) NSString * deviceFamily;
-@property (readonly) NSString * deviceFamilyVersion;
+@property (readonly) NSString* deviceFamily;
+@property (readonly) NSString* deviceFamilyVersion;
 @end
 
 #endif // __WSPAnalyticsVersionInfo_DEFINED__
@@ -44,9 +44,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPAnalyticsInfo : RTObject
-+ (NSString *)deviceForm;
++ (NSString*)deviceForm;
 + (WSPAnalyticsVersionInfo*)versionInfo;
 @end
 
 #endif // __WSPAnalyticsInfo_DEFINED__
-

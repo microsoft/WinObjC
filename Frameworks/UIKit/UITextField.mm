@@ -66,6 +66,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)setTextCentersHorizontally:(BOOL)center {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setText:(NSString*)text {
     if (text != nil) {
         _text = [text copy];
@@ -75,14 +78,23 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)text {
     return _text;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFont:(UIFont*)font {
     _font = font;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIFont*)font {
     return _font;
 }
@@ -131,18 +143,31 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinimumFontSize:(float)size {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextColor:(UIColor*)color {
     __textColor = color;
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
@@ -150,22 +175,39 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)setEditingDelegate:(id)delegate {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setClearButtonMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
     _clearButtonMode = mode;
 }
 
+/**
+ @Status Stub
+*/
 - (UITextFieldViewMode)clearButtonMode {
+    UNIMPLEMENTED();
     return _clearButtonMode;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTextAlignment:(UITextAlignment)alignment {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBorderStyle:(UITextBorderStyle)style {
     _borderStyle = style;
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextBorderStyle)borderStyle {
     return _borderStyle;
 }
@@ -195,10 +237,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)setSpellCheckingType:(UITextSpellCheckingType)type {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPlaceholder:(NSString*)str {
     _placeholder = [str copy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)placeholder {
     return _placeholder;
 }
@@ -206,7 +254,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)setEnablesReturnKeyAutomatically:(BOOL)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setClearsOnBeginEditing:(BOOL)type {
+    UNIMPLEMENTED();
 }
 
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
@@ -216,11 +268,19 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _secureTextMode = secure;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBackground:(UIImage*)image {
+    UNIMPLEMENTED();
     _background = image;
 }
 
+/**
+ @Status Stub
+*/
 - (UIImage*)background {
+    UNIMPLEMENTED();
     return _background;
 }
 
@@ -439,53 +499,95 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLeftView:(UIView*)view {
     _leftView = view;
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setInputAccessoryView:(UIView*)view {
+    UNIMPLEMENTED();
     _inputAccessoryView = view;
     [self setNeedsLayout];
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputAccessoryView {
+    UNIMPLEMENTED();
     return _inputAccessoryView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setInputView:(UIView*)view {
+    UNIMPLEMENTED();
     keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
     _inputView = view;
     [self setNeedsLayout];
     [[UIApplication sharedApplication] _keyboardChanged];
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)inputView {
+    UNIMPLEMENTED();
     return _inputView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)leftView {
     return _leftView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLeftViewMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRightView:(UIView*)view {
+    UNIMPLEMENTED();
     _rightView = view;
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)rightView {
+    UNIMPLEMENTED();
     return _rightView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRightViewMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
 }
 
 - (void)dealloc {
@@ -622,6 +724,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _undoManager;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEditing {
     return _isEditing;
 }

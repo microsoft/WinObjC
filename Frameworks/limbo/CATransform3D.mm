@@ -92,6 +92,9 @@ void CATransform3D::MakeOrtho(float left, float right, float bottom, float top, 
     m44 = 1.f;
 }
 
+/**
+ @Status Interoperable
+*/
 CATransform3D CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far) {
     CATransform3D ret;
 
@@ -153,6 +156,9 @@ void CATransform3D::MultiplyBy(CATransform3D* matrix) {
 const CATransform3D CATransform3DIdentity =
     { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
+/**
+ @Status Interoperable
+*/
 bool CATransform3DIsIdentity(CATransform3D curTransform) {
     if (memcmp(&curTransform, &CATransform3DIdentity, sizeof(curTransform)) == 0) {
         return TRUE;
@@ -234,7 +240,10 @@ void CATransform3D::TransformPoints2D(struct CGPoint* points, int count) {
     }
 }
 
-DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeScale, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DMakeScale(float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeScale(x, y, z);
@@ -242,7 +251,10 @@ DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeScale, float, x, float, 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DScale, CATransform3D, cur, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DScale(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeScale(x, y, z);
@@ -251,7 +263,10 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DScale, CATransform3D, cur, f
     return rot;
 }
 
-DEFINE_FUNCTION_STRET_5(CATransform3D, CATransform3DRotate, CATransform3D, cur, float, angle, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DRotate(CATransform3D cur, float angle, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeRotation(angle, -x, -y, -z);
@@ -260,7 +275,10 @@ DEFINE_FUNCTION_STRET_5(CATransform3D, CATransform3DRotate, CATransform3D, cur, 
     return cur;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DMakeRotation, float, angle, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DMakeRotation(float angle, float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeRotation(angle, x, y, z);
@@ -268,7 +286,10 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DMakeRotation, float, angle, 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeTranslation, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DMakeTranslation(float x, float y, float z) {
     CATransform3D ret;
 
     ret.MakeTranslation(x, y, z);
@@ -276,7 +297,10 @@ DEFINE_FUNCTION_STRET_3(CATransform3D, CATransform3DMakeTranslation, float, x, f
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DTranslate, CATransform3D, cur, float, x, float, y, float, z) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float z) {
     CATransform3D rot;
 
     rot.MakeTranslation(x, y, z);
@@ -285,12 +309,18 @@ DEFINE_FUNCTION_STRET_4(CATransform3D, CATransform3DTranslate, CATransform3D, cu
     return rot;
 }
 
-DEFINE_FUNCTION_STRET_2(CATransform3D, CATransform3DConcat, CATransform3D, a, CATransform3D, b) {
+/**
+ @Status Interoperable
+*/
+CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b) {
     (*((CATransform3D*)&a)).MultiplyBy(&b);
 
     return a;
 }
 
+/**
+ @Status Interoperable
+*/
 void CATransform3DTransformPoints(CATransform3D a, CAPoint3D* points, int count) {
     (*((CATransform3D*)&a)).TransformPoints(points, count);
 }

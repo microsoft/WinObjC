@@ -467,7 +467,7 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
         return ret;
 
     /* [BUG: blamb] We should find the "highest score" match, since we may end up in the middle of a directory/filename
-     * match */
+    * match */
 
     return ret;
 }
@@ -611,24 +611,41 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return retArr;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)bundleIdentifier {
     return [_infoDictionary objectForKey:@"CFBundleIdentifier"];
 }
 
+/**
+ @Status Caveat
+ @Notes Always returns +[NSBundle mainBundle]
+*/
 + (NSBundle*)bundleForClass:(id)_class {
     EbrDebugLog("bundleForClass: %s\n", _class ? object_getClassName(_class) : "nil");
     return [self mainBundle];
 }
 
+/**
+ @Status Caveat
+ @Notes Forwards to +[NSBundle bundleWithPath:]
+*/
 + (NSBundle*)bundleWithIdentifier:(NSString*)identifier {
     EbrDebugLog("bundleForIdentifier: %s\n", [identifier UTF8String]);
     return [self bundleWithPath:identifier];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)allBundles {
     return [allBundles retain];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSBundle*)mainBundle {
     if (allBundles == nil) {
         allBundles = [NSMutableArray new];
@@ -642,6 +659,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return [mainBundle retain];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSBundle*)bundleWithPath:(NSString*)path {
     return [[self alloc] initWithPath:path];
 }
@@ -658,6 +678,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithPath:(NSString*)path {
     if (path == nil) {
         return nil;
@@ -720,6 +743,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)table {
     NSString* strRet = nil;
 
@@ -910,6 +936,9 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension {
     NSString* path = [self pathForResource:name ofType:extension];
     if (path == nil)
@@ -918,10 +947,16 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return [NSURL fileURLWithPath:path];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension inDirectory:(NSString*)directory {
     return checkPathNonLocal(name, extension, directory, nil);
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)pathsForResourcesOfType:(NSString*)type inDirectory:(NSString*)directory {
     NSMutableArray* ret = [NSMutableArray array];
 
@@ -953,6 +988,9 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension {
     BundleFile* pFile = findFile(self, name, extension);
     if (pFile) {
@@ -992,6 +1030,9 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension inDirectory:(NSString*)directory {
     BundleFile* pFile = findFileDirectory(self, name, extension, directory);
     NSString* retPath = nil;
@@ -1006,6 +1047,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return retPath;
 }
 
+/**
+ @Status Caveat
+ @Notes Localization parameter is not supported
+*/
 - (NSString*)pathForResource:(NSString*)name
                       ofType:(NSString*)extension
                  inDirectory:(NSString*)directory
@@ -1033,29 +1078,50 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)objectForInfoDictionaryKey:(NSString*)name {
     assert(_infoDictionary != nil);
 
     return [_infoDictionary objectForKey:name];
 }
 
+/**
+ @Status Caveat
+ @Notes Returns bundlePath
+*/
 - (NSString*)resourcePath {
     return [_bundlePath retain];
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)executablePath {
+    UNIMPLEMENTED();
     return [_bundlePath stringByAppendingPathComponent:[NSString stringWithCString:g_globalExecutableName]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)bundlePath {
     return _bundlePath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)infoDictionary {
     return _infoDictionary;
 }
 
+/**
+ @Status Stub
+*/
 - (NSArray*)preferredLocalizations {
+    UNIMPLEMENTED();
     if (_preferredLocalizations == nil) {
         _preferredLocalizations = [[NSMutableArray arrayWithObject:@"en"] retain];
         [_preferredLocalizations addObject:@"Base"];
@@ -1066,7 +1132,11 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return _preferredLocalizations;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations {
+    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {
@@ -1082,7 +1152,11 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations forPreferences:(NSArray*)preferences {
+    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {
@@ -1098,6 +1172,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Returns objc_getClass(name)
+*/
 - (id)classNamed:(NSString*)name {
     char* pName = (char*)[name UTF8String];
 
@@ -1109,6 +1187,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     mainBundlePath = [path copy];
 }
 
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
 - (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSString*)options {
     assert(options == nil);
 
@@ -1127,10 +1209,17 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)pathsForResourcesOfType:(NSString*)type inDirectory:(NSString*)directory {
     return findFilesDirectory(self, _bundlePath, type, directory);
 }
 
+/**
+ @Status Interoperable
+ @Notes Always returns TRUE, NSBundle is loaded @ designated initializer
+*/
 - (BOOL)load {
     return TRUE;
 }

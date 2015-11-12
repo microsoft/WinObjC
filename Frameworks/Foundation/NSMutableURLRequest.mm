@@ -33,6 +33,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addValue:(id)value forHTTPHeaderField:(id)headerName {
     id existing;
 
@@ -44,14 +47,23 @@
     [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(id)value forHTTPHeaderField:(id)headerName {
     [_headerFields setObject:[value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] forKey:headerName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHTTPMethod:(id)method {
     _method.attach([method copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAllHTTPHeaderFields:(id)fields {
     id state = [fields keyEnumerator];
     id key;
@@ -66,31 +78,55 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHTTPBody:(id)body {
     _body.attach([body copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHTTPBodyStream:(id)stream {
     _bodyStream = stream;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setCachePolicy:(NSURLRequestCachePolicy)policy {
+    UNIMPLEMENTED();
     _cachePolicy = policy;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHTTPShouldHandleCookies:(BOOL)shouldHandleCookies {
     _shouldHandleCookies = shouldHandleCookies ? true : false;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setURL:(id)url {
     _url = url;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTimeoutInterval:(double)interval {
+    UNIMPLEMENTED();
     _timeoutInterval = interval;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setHTTPShouldUsePipelining:(BOOL)shouldPipeline {
+    UNIMPLEMENTED();
 }
 
 - (id)copyWithZone:(NSZone*)zone {

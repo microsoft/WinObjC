@@ -15,6 +15,7 @@ typedef enum {
    NSURLCacheStorageNotAllowed,
 } NSURLCacheStoragePolicy;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSURLCache : NSObject {
    NSString  *_path;
    NSUInteger _memoryCapacity;

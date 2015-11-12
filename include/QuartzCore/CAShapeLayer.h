@@ -19,17 +19,17 @@
 #import <QuartzCore/CABase.h>
 #import <QuartzCore/CALayer.h>
 
-CA_EXPORT NSString *const kCAFillRuleNonZero;
-CA_EXPORT NSString *const kCAFillRuleEvenOdd;
+CA_EXPORT NSString* const kCAFillRuleNonZero;
+CA_EXPORT NSString* const kCAFillRuleEvenOdd;
 
 CA_EXPORT_CLASS
 @interface CAShapeLayer : CALayer
 
 @property CGPathRef path;
 @property CGColorRef fillColor;
-@property(copy) NSString *fillRule;
+@property (copy) NSString* fillRule;
 @property CGColorRef strokeColor;
 @property CGFloat lineWidth;
-@property NSString *lineCap;
+@property NSString* lineCap;
 
 @end

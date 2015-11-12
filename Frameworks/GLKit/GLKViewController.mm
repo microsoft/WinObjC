@@ -115,7 +115,12 @@ typedef wchar_t WCHAR;
 }
 
 // TODO: implement me!
+
+/**
+ @Status Stub
+*/
 - (unsigned int)framesPerSecond {
+    UNIMPLEMENTED();
     return 30;
 }
 

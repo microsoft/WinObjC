@@ -25,59 +25,59 @@
 
 // Windows.Media.ClosedCaptioning.ClosedCaptionStyle
 enum _WMCClosedCaptionStyle {
-	WMCClosedCaptionStyleDefault = 0,
-	WMCClosedCaptionStyleMonospacedWithSerifs = 1,
-	WMCClosedCaptionStyleProportionalWithSerifs = 2,
-	WMCClosedCaptionStyleMonospacedWithoutSerifs = 3,
-	WMCClosedCaptionStyleProportionalWithoutSerifs = 4,
-	WMCClosedCaptionStyleCasual = 5,
-	WMCClosedCaptionStyleCursive = 6,
-	WMCClosedCaptionStyleSmallCapitals = 7,
+    WMCClosedCaptionStyleDefault = 0,
+    WMCClosedCaptionStyleMonospacedWithSerifs = 1,
+    WMCClosedCaptionStyleProportionalWithSerifs = 2,
+    WMCClosedCaptionStyleMonospacedWithoutSerifs = 3,
+    WMCClosedCaptionStyleProportionalWithoutSerifs = 4,
+    WMCClosedCaptionStyleCasual = 5,
+    WMCClosedCaptionStyleCursive = 6,
+    WMCClosedCaptionStyleSmallCapitals = 7,
 };
 typedef unsigned WMCClosedCaptionStyle;
 
 // Windows.Media.ClosedCaptioning.ClosedCaptionEdgeEffect
 enum _WMCClosedCaptionEdgeEffect {
-	WMCClosedCaptionEdgeEffectDefault = 0,
-	WMCClosedCaptionEdgeEffectNone = 1,
-	WMCClosedCaptionEdgeEffectRaised = 2,
-	WMCClosedCaptionEdgeEffectDepressed = 3,
-	WMCClosedCaptionEdgeEffectUniform = 4,
-	WMCClosedCaptionEdgeEffectDropShadow = 5,
+    WMCClosedCaptionEdgeEffectDefault = 0,
+    WMCClosedCaptionEdgeEffectNone = 1,
+    WMCClosedCaptionEdgeEffectRaised = 2,
+    WMCClosedCaptionEdgeEffectDepressed = 3,
+    WMCClosedCaptionEdgeEffectUniform = 4,
+    WMCClosedCaptionEdgeEffectDropShadow = 5,
 };
 typedef unsigned WMCClosedCaptionEdgeEffect;
 
 // Windows.Media.ClosedCaptioning.ClosedCaptionOpacity
 enum _WMCClosedCaptionOpacity {
-	WMCClosedCaptionOpacityDefault = 0,
-	WMCClosedCaptionOpacityOneHundredPercent = 1,
-	WMCClosedCaptionOpacitySeventyFivePercent = 2,
-	WMCClosedCaptionOpacityTwentyFivePercent = 3,
-	WMCClosedCaptionOpacityZeroPercent = 4,
+    WMCClosedCaptionOpacityDefault = 0,
+    WMCClosedCaptionOpacityOneHundredPercent = 1,
+    WMCClosedCaptionOpacitySeventyFivePercent = 2,
+    WMCClosedCaptionOpacityTwentyFivePercent = 3,
+    WMCClosedCaptionOpacityZeroPercent = 4,
 };
 typedef unsigned WMCClosedCaptionOpacity;
 
 // Windows.Media.ClosedCaptioning.ClosedCaptionColor
 enum _WMCClosedCaptionColor {
-	WMCClosedCaptionColorDefault = 0,
-	WMCClosedCaptionColorWhite = 1,
-	WMCClosedCaptionColorBlack = 2,
-	WMCClosedCaptionColorRed = 3,
-	WMCClosedCaptionColorGreen = 4,
-	WMCClosedCaptionColorBlue = 5,
-	WMCClosedCaptionColorYellow = 6,
-	WMCClosedCaptionColorMagenta = 7,
-	WMCClosedCaptionColorCyan = 8,
+    WMCClosedCaptionColorDefault = 0,
+    WMCClosedCaptionColorWhite = 1,
+    WMCClosedCaptionColorBlack = 2,
+    WMCClosedCaptionColorRed = 3,
+    WMCClosedCaptionColorGreen = 4,
+    WMCClosedCaptionColorBlue = 5,
+    WMCClosedCaptionColorYellow = 6,
+    WMCClosedCaptionColorMagenta = 7,
+    WMCClosedCaptionColorCyan = 8,
 };
 typedef unsigned WMCClosedCaptionColor;
 
 // Windows.Media.ClosedCaptioning.ClosedCaptionSize
 enum _WMCClosedCaptionSize {
-	WMCClosedCaptionSizeDefault = 0,
-	WMCClosedCaptionSizeFiftyPercent = 1,
-	WMCClosedCaptionSizeOneHundredPercent = 2,
-	WMCClosedCaptionSizeOneHundredFiftyPercent = 3,
-	WMCClosedCaptionSizeTwoHundredPercent = 4,
+    WMCClosedCaptionSizeDefault = 0,
+    WMCClosedCaptionSizeFiftyPercent = 1,
+    WMCClosedCaptionSizeOneHundredPercent = 2,
+    WMCClosedCaptionSizeOneHundredFiftyPercent = 3,
+    WMCClosedCaptionSizeTwoHundredPercent = 4,
 };
 typedef unsigned WMCClosedCaptionSize;
 
@@ -106,4 +106,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCClosedCaptionProperties_DEFINED__
-

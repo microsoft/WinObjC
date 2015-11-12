@@ -34,66 +34,114 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDay:(NSInteger)day {
     _day = day;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMonth:(NSInteger)month {
     _month = month;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setYear:(NSInteger)year {
     _year = year;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSecond:(NSInteger)second {
     _second = second;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinute:(NSInteger)minute {
     _minute = minute;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHour:(NSInteger)hour {
     _hour = hour;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setWeekday:(NSInteger)weekday {
     _weekday = weekday;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setWeek:(NSInteger)week {
     _week = week;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)weekday {
     return _weekday;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)week {
     return _week;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)day {
     return _day;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)month {
     return _month;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)year {
     return _year;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)hour {
     return _hour;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)minute {
     return _minute;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)second {
     return _second;
 }

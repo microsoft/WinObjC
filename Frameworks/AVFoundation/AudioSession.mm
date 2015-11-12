@@ -14,26 +14,47 @@
 //
 //******************************************************************************
 
+#import "Starboard.h"
 #import <AVFoundation/AVFoundation.h>
 
+/**
+ @Status Stub
+*/
 void AudioServicesPlaySystemSound(SystemSoundID soundID) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionGetProperty(AudioSessionPropertyID id, UInt32* dataSize, void* outData) {
+    UNIMPLEMENTED();
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionSetActive(Boolean active) {
+    UNIMPLEMENTED();
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop,
                                 CFStringRef inRunLoopMode,
                                 AudioSessionInterruptionListener inInterruptionListener,
                                 void* inClientData) {
+    UNIMPLEMENTED();
     return 100;
 }
 
+/**
+ @Status Stub
+*/
 OSStatus AudioSessionSetProperty(AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData) {
+    UNIMPLEMENTED();
     return 100;
 }

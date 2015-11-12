@@ -34,26 +34,44 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithChar:(char)num {
     return [[self alloc] initWithChar:num];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedChar:(unsigned char)num {
     return [[self alloc] initWithUnsignedChar:num];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithInteger:(int)num {
     return [self numberWithInt:num];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedInt:(unsigned int)num {
     return [self numberWithInt:num];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedInteger:(NSUInteger)num {
     return [self numberWithInt:num];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithInt:(int)num {
     if (num >= 0 && num < CACHE_NSNUMBERS_BELOW) {
         if (cachedNumbers[num] != nil) {
@@ -70,21 +88,33 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithShort:(short)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithShort:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedShort:(unsigned short)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedShort:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithLong:(long)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithLong:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedLong:(unsigned long)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLong:num] autorelease];
@@ -98,31 +128,49 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [self numberWithInt:0];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithLongLong:(long long)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithLongLong:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithUnsignedLongLong:(unsigned long long)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLongLong:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithBool:(BOOL)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithBool:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithFloat:(float)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithFloat:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithDouble:(double)num {
     NSNumber* ret = [self alloc];
     return [[ret initWithDouble:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithInt:(int)num {
     val.i = num;
     type = integerType;
@@ -131,6 +179,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithInteger:(NSInteger)num {
     val.i = num;
     type = integerType;
@@ -139,6 +190,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithShort:(short)num {
     val.i = num;
     type = integerType;
@@ -147,6 +201,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedShort:(unsigned short)num {
     val.i = num;
     type = integerType;
@@ -155,6 +212,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithLong:(long)num {
     val.i = num;
     type = integerType;
@@ -163,6 +223,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedLong:(unsigned long)num {
     val.i = num;
     type = integerType;
@@ -171,6 +234,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedInt:(unsigned int)num {
     val.i = num;
     type = integerType;
@@ -179,6 +245,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedInteger:(NSUInteger)num {
     val.i = num;
     type = integerType;
@@ -187,6 +256,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithBool:(BOOL)num {
     val.i = num;
     type = integerType;
@@ -196,6 +268,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithChar:(char)num {
     val.i = num;
     type = integerType;
@@ -204,6 +279,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedChar:(unsigned char)num {
     val.i = num;
     type = integerType;
@@ -212,6 +290,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithLongLong:(long long)num {
     val.i = num;
     type = int64Type;
@@ -220,6 +301,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUnsignedLongLong:(unsigned long long)num {
     val.i = num;
     type = int64Type;
@@ -228,6 +312,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFloat:(float)num {
     val.f = num;
     type = floatType;
@@ -236,6 +323,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithDouble:(double)num {
     val.f = num;
     type = doubleType;
@@ -248,10 +338,16 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [self compare:objAddr] == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToNumber:(NSNumber*)objAddr {
     return [self compare:objAddr] == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)compare:(NSNumber*)objAddr {
     if (objAddr == self) {
         return 0;
@@ -283,6 +379,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)intValue {
     if (type == integerType || type == int64Type) {
         return (signed int)val.i;
@@ -291,6 +390,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)unsignedIntValue {
     if (type == integerType || type == int64Type) {
         return (NSUInteger)val.i;
@@ -299,26 +401,44 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (short)shortValue {
     return [self intValue] & 0xFFFF;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)boolValue {
     return [self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (char)charValue {
     return (char)[self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned char)unsignedCharValue {
     return (unsigned char)[self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned short)unsignedShortValue {
     return (unsigned short)[self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)floatValue {
     if (type == integerType || type == int64Type) {
         switch (*objCType) {
@@ -335,6 +455,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (long)longValue {
     if (type == integerType || type == int64Type) {
         return (long)val.i;
@@ -343,6 +466,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned long)unsignedLongValue {
     if (type == integerType || type == int64Type) {
         return (unsigned long)val.i;
@@ -351,6 +477,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned long long)unsignedLongLongValue {
     if (type == integerType || type == int64Type) {
         return (unsigned long long)val.i;
@@ -359,6 +488,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (long long)longLongValue {
     if (type == integerType || type == int64Type) {
         return (signed __int64)val.i;
@@ -376,11 +508,17 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return isBool;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDecimal)decimalValue {
     NSDecimal ret = {[self doubleValue] };
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)doubleValue {
     if (type == integerType || type == int64Type) {
         return (double)val.i;
@@ -389,6 +527,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringValue {
     NSString* ret;
 
@@ -441,6 +582,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [self stringValue];
 }
 
+/**
+ @Status Caveat
+ @Notes Doesn't take NSLocale into account.
+*/
 - (NSString*)descriptionWithLocale:(NSLocale*)locale {
     return [self description];
 }
@@ -480,17 +625,27 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)unsignedIntegerValue {
     return [self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)integerValue {
     return [self intValue];
 }
 
 @end
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
+    UNIMPLEMENTED();
     if (num1->val < num2->val) {
         return -1;
     } else if (num1->val > num2->val) {
@@ -500,39 +655,67 @@ DWORD NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
     }
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalAdd(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val + right->val;
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalSubtract(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val - right->val;
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalDivide(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val / right->val;
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalMultiply(NSDecimal* result, NSDecimal* left, NSDecimal* right, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = left->val * right->val;
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalIsNotANumber(NSDecimal* num) {
+    UNIMPLEMENTED();
     if (num->val != num->val) {
         return TRUE;
     }
     return FALSE;
 }
 
+/**
+ @Status Stub
+*/
 DWORD NSDecimalRound(NSDecimal* result, NSDecimal* num, int scale, DWORD rounding) {
+    UNIMPLEMENTED();
     result->val = num->val;
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 NSString* NSDecimalString(NSDecimal* num, id locale) {
+    UNIMPLEMENTED();
     char szVal[128];
     sprintf(szVal, "%f", num->val);
     return [NSString stringWithCString:szVal];

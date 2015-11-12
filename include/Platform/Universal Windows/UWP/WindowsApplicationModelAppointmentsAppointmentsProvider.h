@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation, WAAARemoveAppointmentOperation;
-@protocol WAAAIAppointmentsProviderLaunchActionVerbsStatics, WAAAIAppointmentsProviderLaunchActionVerbsStatics2, WAAAIAddAppointmentOperation, WAAAIReplaceAppointmentOperation, WAAAIRemoveAppointmentOperation;
+@class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation,
+    WAAARemoveAppointmentOperation;
+@protocol WAAAIAppointmentsProviderLaunchActionVerbsStatics
+, WAAAIAppointmentsProviderLaunchActionVerbsStatics2, WAAAIAddAppointmentOperation, WAAAIReplaceAppointmentOperation,
+    WAAAIRemoveAppointmentOperation;
 
 #include "WindowsApplicationModelAppointments.h"
 #include "WindowsFoundation.h"
@@ -34,11 +37,11 @@
 
 WINRT_EXPORT
 @interface WAAAAppointmentsProviderLaunchActionVerbs : RTObject
-+ (NSString *)addAppointment;
-+ (NSString *)removeAppointment;
-+ (NSString *)replaceAppointment;
-+ (NSString *)showTimeFrame;
-+ (NSString *)showAppointmentDetails;
++ (NSString*)addAppointment;
++ (NSString*)removeAppointment;
++ (NSString*)replaceAppointment;
++ (NSString*)showTimeFrame;
++ (NSString*)showAppointmentDetails;
 @end
 
 #endif // __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
@@ -50,10 +53,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
 @property (readonly) WAAAppointment* appointmentInformation;
-@property (readonly) NSString * sourcePackageFamilyName;
-- (void)reportCompleted:(NSString *)itemId;
+@property (readonly) NSString* sourcePackageFamilyName;
+- (void)reportCompleted:(NSString*)itemId;
 - (void)reportCanceled;
-- (void)reportError:(NSString *)value;
+- (void)reportError:(NSString*)value;
 - (void)dismissUI;
 @end
 
@@ -65,13 +68,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
-@property (readonly) NSString * appointmentId;
+@property (readonly) NSString* appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) id instanceStartDate;
-@property (readonly) NSString * sourcePackageFamilyName;
-- (void)reportCompleted:(NSString *)itemId;
+@property (readonly) NSString* sourcePackageFamilyName;
+- (void)reportCompleted:(NSString*)itemId;
 - (void)reportCanceled;
-- (void)reportError:(NSString *)value;
+- (void)reportError:(NSString*)value;
 - (void)dismissUI;
 @end
 
@@ -83,14 +86,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
-@property (readonly) NSString * appointmentId;
+@property (readonly) NSString* appointmentId;
 @property (readonly) id instanceStartDate;
-@property (readonly) NSString * sourcePackageFamilyName;
+@property (readonly) NSString* sourcePackageFamilyName;
 - (void)reportCompleted;
 - (void)reportCanceled;
-- (void)reportError:(NSString *)value;
+- (void)reportError:(NSString*)value;
 - (void)dismissUI;
 @end
 
 #endif // __WAAARemoveAppointmentOperation_DEFINED__
-

@@ -18,6 +18,7 @@
 #define _NSPARAGRAPHSTYLE_H_
 
 #import <Foundation/NSObject.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 
 enum {
@@ -30,9 +31,10 @@ enum {
 };
 typedef uint32_t NSLineBreakMode;
 
+UIKIT_EXPORT_CLASS
 @interface NSParagraphStyle : NSObject
 
-+ (NSParagraphStyle *)defaultParagraphStyle;
++ (NSParagraphStyle*)defaultParagraphStyle;
 
 - (NSTextAlignment)alignment;
 - (CGFloat)lineSpacing;
@@ -42,10 +44,15 @@ typedef uint32_t NSLineBreakMode;
 - (CGFloat)paragraphSpacingBefore;
 - (CGFloat)headIndent;
 - (CGFloat)tailIndent;
+- (CGFloat)minimumLineHeight;
 - (NSLineBreakMode)lineBreakMode;
+
+@property (nonatomic) CGFloat maximumLineHeight;
+@property (nonatomic) NSInteger defaultTabInterval;
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface NSMutableParagraphStyle : NSParagraphStyle
 
 - (void)setAlignment:(NSTextAlignment)alignment;
@@ -58,6 +65,7 @@ typedef uint32_t NSLineBreakMode;
 - (void)setTailIndent:(CGFloat)aFloat;
 - (void)setLineBreakMode:(NSLineBreakMode)mode;
 - (void)setLineHeightMultiple:(CGFloat)aFloat;
+- (void)setMinimumLineHeight:(CGFloat)aFloat;
 
 @end
 

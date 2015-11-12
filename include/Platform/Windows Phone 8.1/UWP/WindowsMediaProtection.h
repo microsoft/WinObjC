@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion, WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPComponentRenewal;
-@protocol WMPIMediaProtectionManager, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIComponentLoadFailedEventArgs, WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem, WMPIComponentRenewalStatics;
+@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion,
+    WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPComponentRenewal;
+@protocol WMPIMediaProtectionManager
+, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIComponentLoadFailedEventArgs,
+    WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem, WMPIComponentRenewalStatics;
 
 // Windows.Media.Protection.RevocationAndRenewalReasons
 enum _WMPRevocationAndRenewalReasons {
@@ -69,38 +72,37 @@ typedef unsigned WMPGraphicsTrustStatus;
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager * sender, WMPComponentLoadFailedEventArgs * e);
+typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager * sender);
+typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager * sender, WMPServiceRequestedEventArgs * e);
+typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
-
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager * sender, WMPServiceRequestedEventArgs * e);
+typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager * sender);
+typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager * sender, WMPComponentLoadFailedEventArgs * e);
+typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.IMediaProtectionServiceRequest
@@ -108,8 +110,8 @@ typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager * se
 #define __WMPIMediaProtectionServiceRequest_DEFINED__
 
 @protocol WMPIMediaProtectionServiceRequest
-@property (readonly) WFGUID * protectionSystem;
-@property (readonly) WFGUID * type;
+@property (readonly) WFGUID* protectionSystem;
+@property (readonly) WFGUID* type;
 @end
 
 #endif // __WMPIMediaProtectionServiceRequest_DEFINED__
@@ -138,7 +140,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
-@property (readonly) WMPMediaProtectionServiceCompletion * completion;
+@property (readonly) WMPMediaProtectionServiceCompletion* completion;
 @property (readonly) RTObject<WMPIMediaProtectionServiceRequest>* request;
 @end
 
@@ -150,8 +152,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
-@property (readonly) WMPMediaProtectionServiceCompletion * completion;
-@property (readonly) WMPRevocationAndRenewalInformation * information;
+@property (readonly) WMPMediaProtectionServiceCompletion* completion;
+@property (readonly) WMPRevocationAndRenewalInformation* information;
 @end
 
 #endif // __WMPComponentLoadFailedEventArgs_DEFINED__
@@ -173,7 +175,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
-@property (readonly) id<NSFastEnumeration> /*WMPRevocationAndRenewalItem*/  items;
+@property (readonly) id<NSFastEnumeration> /*WMPRevocationAndRenewalItem*/ items;
 @end
 
 #endif // __WMPRevocationAndRenewalInformation_DEFINED__
@@ -184,11 +186,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
-@property (readonly) NSString * headerHash;
-@property (readonly) NSString * name;
-@property (readonly) NSString * publicKeyHash;
+@property (readonly) NSString* headerHash;
+@property (readonly) NSString* name;
+@property (readonly) NSString* publicKeyHash;
 @property (readonly) WMPRevocationAndRenewalReasons reasons;
-@property (readonly) NSString * renewalId;
+@property (readonly) NSString* renewalId;
 @end
 
 #endif // __WMPRevocationAndRenewalItem_DEFINED__
@@ -199,8 +201,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPComponentRenewal : RTObject
-+ (void)renewSystemComponentsAsync:(WMPRevocationAndRenewalInformation *)information success:(void (^)(WMPRenewalStatus))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
++ (void)renewSystemComponentsAsync:(WMPRevocationAndRenewalInformation*)information
+                           success:(void (^)(WMPRenewalStatus))success
+                          progress:(void (^)(unsigned))progress
+                           failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMPComponentRenewal_DEFINED__
-

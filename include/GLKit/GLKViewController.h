@@ -23,8 +23,16 @@
 @class GLKViewController;
 
 @protocol GLKViewControllerDelegate
--(void)glkViewController: (GLKViewController*)controller willPause:(BOOL)paused;
--(void)glkViewControllerUpdate: (GLKViewController*)controller;
+
+/**
+ @Status Interoperable
+*/
+- (void)glkViewController:(GLKViewController*)controller willPause:(BOOL)paused;
+
+/**
+ @Status Interoperable
+*/
+- (void)glkViewControllerUpdate:(GLKViewController*)controller;
 @end
 
 // --------------------------------------------------------------------------------
@@ -34,21 +42,19 @@ GLKIT_EXPORT_CLASS
 
 @property id<GLKViewControllerDelegate> delegate;
 
-@property (readonly) NSTimeInterval     timeSinceFirstResume;
-@property (readonly) NSTimeInterval     timeSinceLastResume;
-@property (readonly) NSTimeInterval     timeSinceLastUpdate;
-@property (readonly) NSTimeInterval     timeSinceLastDraw;
+@property (readonly) NSTimeInterval timeSinceFirstResume;
+@property (readonly) NSTimeInterval timeSinceLastResume;
+@property (readonly) NSTimeInterval timeSinceLastUpdate;
+@property (readonly) NSTimeInterval timeSinceLastDraw;
 
-@property (readonly) unsigned int       framesDisplayed;
-@property (readonly) unsigned int       framesPerSecond;
-@property unsigned int                  preferredFramesPerSecond;
+@property (readonly) unsigned int framesDisplayed;
+@property (readonly) unsigned int framesPerSecond;
+@property unsigned int preferredFramesPerSecond;
 
 @property BOOL paused;
-@property BOOL pauseOnWillResignActive;  // TODO: BK: should both be true.
+@property BOOL pauseOnWillResignActive; // TODO: BK: should both be true.
 @property BOOL resumeOnDidBecomeActive;
 
 // ----------------------------------------
 
-
 @end
-

@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WNHostName, WNEndpointPair;
-@protocol WNIHostNameStatics, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
+@protocol WNIHostNameStatics
+, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
 
 // Windows.Networking.HostNameSortOptions
 enum _WNHostNameSortOptions {
@@ -54,7 +55,7 @@ typedef unsigned WNDomainNameType;
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -65,15 +66,15 @@ typedef unsigned WNDomainNameType;
 
 WINRT_EXPORT
 @interface WNHostName : RTObject <WFIStringable>
-+ (int)compare:(NSString *)value1 value2:(NSString *)value2;
-+ (WNHostName *)createHostName:(NSString *)hostName ACTIVATOR;
-@property (readonly) NSString * canonicalName;
-@property (readonly) NSString * displayName;
-@property (readonly) WNCIPInformation * iPInformation;
-@property (readonly) NSString * rawName;
++ (int)compare:(NSString*)value1 value2:(NSString*)value2;
++ (WNHostName*)createHostName:(NSString*)hostName ACTIVATOR;
+@property (readonly) NSString* canonicalName;
+@property (readonly) NSString* displayName;
+@property (readonly) WNCIPInformation* iPInformation;
+@property (readonly) NSString* rawName;
 @property (readonly) WNHostNameType type;
-- (BOOL)isEqual:(WNHostName *)hostName;
-- (NSString *)toString;
+- (BOOL)isEqual:(WNHostName*)hostName;
+- (NSString*)toString;
 @end
 
 #endif // __WNHostName_DEFINED__
@@ -84,12 +85,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNEndpointPair : RTObject
-+ (WNEndpointPair *)createEndpointPair:(WNHostName *)localHostName localServiceName:(NSString *)localServiceName remoteHostName:(WNHostName *)remoteHostName remoteServiceName:(NSString *)remoteServiceName ACTIVATOR;
-@property (copy) NSString * remoteServiceName;
-@property (copy) WNHostName * remoteHostName;
-@property (copy) NSString * localServiceName;
-@property (copy) WNHostName * localHostName;
++ (WNEndpointPair*)createEndpointPair:(WNHostName*)localHostName
+                     localServiceName:(NSString*)localServiceName
+                       remoteHostName:(WNHostName*)remoteHostName
+                    remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
+@property (copy) NSString* remoteServiceName;
+@property (copy) WNHostName* remoteHostName;
+@property (copy) NSString* localServiceName;
+@property (copy) WNHostName* localHostName;
 @end
 
 #endif // __WNEndpointPair_DEFINED__
-

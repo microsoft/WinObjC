@@ -23,7 +23,6 @@
 @class WDHHtmlUtilities;
 @protocol WDHIHtmlUtilities;
 
-
 #import <Foundation/Foundation.h>
 
 // Windows.Data.Html.HtmlUtilities
@@ -32,8 +31,7 @@
 
 WINRT_EXPORT
 @interface WDHHtmlUtilities : RTObject
-+ (NSString *)convertToText:(NSString *)html;
++ (NSString*)convertToText:(NSString*)html;
 @end
 
 #endif // __WDHHtmlUtilities_DEFINED__
-

@@ -236,6 +236,10 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 }
 
 @implementation GLKTextureInfo
+
+/**
+ @Status Interoperable
+*/
 - (id)initWith:(GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height alphaState:(GLKTextureInfoAlphaState)as {
     _name = tex;
     _target = targ;
@@ -251,6 +255,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 @implementation GLKTextureLoader {
 }
 
+/**
+ @Status Interoperable
+*/
 + (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
@@ -263,10 +270,17 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     return res;
 }
 
+/**
+ @Status Stub
+*/
 + (GLKTextureInfo*)textureWithContentsOfData:(NSData*)data options:(NSDictionary*)opts error:(NSError**)err {
+    UNIMPLEMENTED();
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 + (GLKTextureInfo*)textureWithCGImage:(CGImageRef)img options:(NSDictionary*)opts error:(NSError**)err {
     size_t w = CGImageGetWidth(img);
     size_t h = CGImageGetHeight(img);
@@ -358,6 +372,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:h alphaState:as];
 }
 
+/**
+ @Status Interoperable
+*/
 + (GLKTextureInfo*)cubeMapWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
     if (!provider) {
@@ -476,6 +493,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:sideh alphaState:as];
 }
 
+/**
+ @Status Interoperable
+*/
 + (GLKTextureInfo*)cubeMapWithContentsOfFiles:(NSArray*)fnames options:(NSDictionary*)opts error:(NSError**)err {
     if ([fnames count] != 6) {
         return nil;
@@ -619,7 +639,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_CUBE_MAP width:sideW height:sideH alphaState:as];
 }
 
+/**
+ @Status Stub
+*/
 - (id)initWithShareContext:(NSOpenGLContext*)context {
+    UNIMPLEMENTED();
     return self;
 }
 

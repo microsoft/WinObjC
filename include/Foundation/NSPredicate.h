@@ -14,6 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSArray, NSDictionary;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSPredicate : NSObject <NSCoding, NSCopying>
 
 + (NSPredicate *)predicateWithFormat:(NSString *)format arguments:(va_list)arguments;

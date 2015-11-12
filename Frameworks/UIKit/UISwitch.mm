@@ -34,22 +34,36 @@ const float minX = 21.0f, maxX = 71.0f;
     float dragPos;
     bool _cancelDrag;
 }
+
+/**
+ @Status Interoperable
+*/
 - (void)setOn:(BOOL)on {
     _on = on ? true : false;
     adjustImages(self, _on ? maxX : minX, false);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOn:(BOOL)on animated:(BOOL)animated {
     _on = on ? true : false;
     adjustImages(self, _on ? maxX : minX, animated ? true : false);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setOnTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 - (void)setOffTintColor:(UIColor*)color {
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isOn {
     return _on ? TRUE : FALSE;
 }
@@ -81,6 +95,9 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     pos.size.width = 94;
     pos.size.height = 27;

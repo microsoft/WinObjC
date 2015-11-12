@@ -26,18 +26,31 @@
     idretain _from, _to;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFromValue:(id)value {
     _from.attach([value copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setToValue:(id)value {
     _to.attach([value copy]);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setByValue:(id)value {
+    UNIMPLEMENTED();
     EbrDebugLog("CABasicAnimation::setByValue not supported\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)toValue {
     return _to;
 }

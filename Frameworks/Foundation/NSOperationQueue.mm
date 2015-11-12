@@ -223,6 +223,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     priv = new NSOperationQueuePriv();
 
@@ -249,6 +252,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addOperation:(id)op {
     /*
     //  Add any dependencies
@@ -279,6 +285,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     EbrLockLeave(priv->_threadRunningLock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addOperationWithBlock:(void (^)())block {
     id op = [NSOperation new];
     [op setCompletionBlock:block];
@@ -286,6 +295,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [op release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addOperations:(id)operations waitUntilFinished:(BOOL)wait {
     for (id curOp in operations) {
         [self addOperation:curOp];
@@ -298,14 +310,25 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMaxConcurrentOperationCount:(NSInteger)count {
+    UNIMPLEMENTED();
     priv->_maxConcurrentOperationCount = count;
 }
 
+/**
+ @Status Stub
+*/
 - (NSInteger)maxConcurrentOperationCount {
+    UNIMPLEMENTED();
     return priv->_maxConcurrentOperationCount;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)operations {
     id ret = [NSMutableArray array];
 
@@ -339,6 +362,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)operationCount {
     DWORD ret = 0;
 
@@ -368,6 +394,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancelAllOperations {
     EbrDebugLog("Should lock queue for this\n");
 
@@ -398,6 +427,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)waitUntilAllOperationsAreFinished {
     BOOL isWorking;
 
@@ -411,6 +443,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [priv->workAvailable unlock];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSuspended:(BOOL)suspend {
     if (suspend) {
         [self suspend];
@@ -419,6 +454,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isSuspended {
     [priv->suspendedCondition lock];
     int ret = priv->isSuspended;
@@ -446,12 +484,18 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setName:(id)name {
     id oldName = priv->_name;
     priv->_name = [name copy];
     [oldName release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)name {
     if (priv->_name == nil) {
         char szName[255];
@@ -462,6 +506,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return priv->_name;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)mainQueue {
     if (_mainQueue == nil) {
         _mainQueue = [[self alloc] _initMainThread];
@@ -488,6 +535,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [super release];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)currentQueue {
     if ([NSThread isMainThread]) {
         return [self mainQueue];

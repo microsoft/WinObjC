@@ -33,37 +33,63 @@ double TimeIntervalSinceReferenceDate() {
 }
 
 @implementation NSDate : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (double)timeIntervalSinceReferenceDate {
     return TimeIntervalSinceReferenceDate();
 }
 
+/**
+ @Status Stub
+*/
 + (NSDate*)dateWithString:(NSString*)string {
+    UNIMPLEMENTED();
     return [[[self alloc] initWithString:string] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeIntervalSinceReferenceDate {
     double ret = _curTime;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeIntervalSinceNow {
     double ret = [self timeIntervalSinceReferenceDate] - [NSDate timeIntervalSinceReferenceDate];
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeIntervalSince1970 {
     return [self timeIntervalSinceReferenceDate] + NSTimeIntervalSince1970;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timeIntervalSinceDate:(id)ref {
     return [self timeIntervalSinceReferenceDate] - [ref timeIntervalSinceReferenceDate];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)date {
     return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate()] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)distantPast {
     static id staticInstance;
     if (!staticInstance) {
@@ -73,6 +99,9 @@ double TimeIntervalSinceReferenceDate() {
     return staticInstance;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)distantFuture {
     static id staticInstance;
     if (!staticInstance) {
@@ -82,23 +111,38 @@ double TimeIntervalSinceReferenceDate() {
     return staticInstance;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)dateWithTimeIntervalSinceNow:(double)secondsSinceNow {
     return [[[self allocWithZone:nil] initWithTimeIntervalSinceNow:secondsSinceNow] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)dateByAddingTimeInterval:(double)interval {
     return [[[NSDate allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:_curTime + interval] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)dateWithTimeIntervalSince1970:(double)secondsSince1970 {
     return
         [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-NSTimeIntervalSince1970 + (double)secondsSince1970] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)dateWithTimeInterval:(double)interval sinceDate:(NSDate*)date {
     return [date dateByAddingTimeInterval:interval];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSDate*)dateWithTimeIntervalSinceReferenceDate:(double)secondsSinceRef {
     return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:secondsSinceRef] autorelease];
 }
@@ -108,30 +152,49 @@ double TimeIntervalSinceReferenceDate() {
     return [self init];
 }
 
+/**
+ @Status Stub
+*/
 - (NSDate*)initWithString:(NSString*)string {
+    UNIMPLEMENTED();
     EbrDebugLog("NSDate initWithString not supported\n");
     [self init];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)initWithTimeIntervalSince1970:(double)secondsSince1970 {
     return [self initWithTimeIntervalSinceReferenceDate:-NSTimeIntervalSince1970 + (double)secondsSince1970];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)initWithTimeIntervalSinceNow:(double)secondsSinceNow {
     return [self initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate() + secondsSinceNow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)initWithTimeIntervalSinceReferenceDate:(double)ref {
     _curTime = ref;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)initWithTimeInterval:(double)seconds sinceDate:(NSDate*)date {
     return [self initWithTimeIntervalSinceReferenceDate:[date timeIntervalSinceReferenceDate] + seconds];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)compare:(NSDate*)toDate {
     if (toDate == nil) {
         return -1;
@@ -146,6 +209,9 @@ double TimeIntervalSinceReferenceDate() {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)isEqualToDate:(NSDate*)toDate {
     if (![toDate isKindOfClass:[NSDate class]]) {
         return FALSE;
@@ -178,6 +244,9 @@ double TimeIntervalSinceReferenceDate() {
     return hashRet[0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)earlierDate:(NSDate*)toDate {
     if (_curTime == toDate->_curTime) {
         return self;
@@ -188,6 +257,9 @@ double TimeIntervalSinceReferenceDate() {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)laterDate:(NSDate*)toDate {
     if (_curTime == toDate->_curTime) {
         return self;
@@ -202,6 +274,9 @@ double TimeIntervalSinceReferenceDate() {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)addTimeInterval:(double)seconds {
     NSDate* ret = [[self class] alloc];
     ret->_curTime = _curTime + seconds;
@@ -209,6 +284,9 @@ double TimeIntervalSinceReferenceDate() {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)init {
     _curTime = TimeIntervalSinceReferenceDate();
 

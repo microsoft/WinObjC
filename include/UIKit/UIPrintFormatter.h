@@ -20,7 +20,7 @@
 #import <Foundation/NSObject.h>
 #import <UIKit/UIView.h>
 
-@interface UIPrintFormatter : NSObject<NSCopying>
+@interface UIPrintFormatter : NSObject <NSCopying>
 
 @property (nonatomic) NSInteger startPage;
 @property (nonatomic) UIEdgeInsets contentInsets;
@@ -30,8 +30,8 @@
 @interface UIViewPrintFormatter : UIPrintFormatter
 @end
 
-@interface UIView(UIPrintFormatter)
-- (UIViewPrintFormatter *)viewPrintFormatter;
+@interface UIView (UIPrintFormatter)
+- (UIViewPrintFormatter*)viewPrintFormatter;
 @end
 
 #endif /* _UIPRINTFORMATTER_H_ */

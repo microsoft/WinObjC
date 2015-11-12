@@ -43,6 +43,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithRoundedRect:(CGRect)rect byRoundingCorners:(UIRectCorner)roundingCorners cornerRadii:(CGSize)size {
     UIBezierPath* ret = [self new];
 
@@ -77,6 +80,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithRoundedRect:(CGRect)rect cornerRadius:(CGFloat)radius {
     UIBezierPath* ret = [self new];
 
@@ -110,6 +116,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithArcCenter:(CGPoint)center
                                  radius:(CGFloat)radius
                              startAngle:(CGFloat)startAngle
@@ -122,6 +131,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithRect:(CGRect)rect {
     UIBezierPath* ret = [self new];
 
@@ -130,6 +142,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithCGPath:(CGPathRef)path {
     UIBezierPath* ret = [self new];
 
@@ -138,6 +153,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPathWithOvalInRect:(CGRect)rect {
     UIBezierPath* ret = [self new];
 
@@ -146,14 +164,23 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)bezierPath {
     return [[self new] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendPath:(UIBezierPath*)path {
     CGPathAddPath(_path, getTransform(self), path->_path);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addArcWithCenter:(CGPoint)center
                   radius:(CGFloat)radius
               startAngle:(CGFloat)startAngle
@@ -162,37 +189,61 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     CGPathAddArc(_path, NULL, center.x, center.y, radius, startAngle, endAngle, clockwise == FALSE);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addLineToPoint:(CGPoint)pt {
     CGPathAddLineToPoint(_path, getTransform(self), pt.x, pt.y);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)moveToPoint:(CGPoint)pt {
     CGPathMoveToPoint(_path, getTransform(self), pt.x, pt.y);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)closePath {
     CGPathCloseSubpath(_path);
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPathRef)CGPath {
     return _path;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCGPath:(CGPathRef)path {
     CGPathRetain(path);
     CGPathRelease(_path);
     _path = path;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint {
     CGPathAddQuadCurveToPoint(_path, getTransform(self), controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2 {
     CGPathAddCurveToPoint(
         _path, getTransform(self), controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, endPoint.x, endPoint.y);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)applyTransform:(CGAffineTransform)transform {
     _transform = transform;
     _hasTransform = true;
@@ -205,6 +256,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)fill {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
@@ -219,6 +273,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     CGContextRestoreGState(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addClip {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextBeginPath(ctx);
@@ -232,6 +289,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     CGContextBeginPath(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)stroke {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
@@ -256,22 +316,37 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLineWidth:(CGFloat)width {
     _lineWidth = width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGFloat)lineWidth {
     return _lineWidth;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLineJoinStyle:(CGLineJoin)join {
     _lineJoin = join;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setUsesEvenOddFillRule:(BOOL)usesEvenOdd {
     _usesEvenOddFillRule = usesEvenOdd;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
     if (_pattern) {
         free(_pattern);

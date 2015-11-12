@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 #ifndef GAMEKIT_IMPEXP
- #define GAMEKIT_IMPEXP __declspec(dllimport)
+#define GAMEKIT_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef GAMEKIT_EXPORT
- #ifdef __cplusplus
-  #define GAMEKIT_EXPORT GAMEKIT_IMPEXP extern "C"
-  #define GAMEKIT_EXPORT_CLASS GAMEKIT_IMPEXP 
- #else
-  #define GAMEKIT_EXPORT GAMEKIT_IMPEXP extern  
-  #define GAMEKIT_EXPORT_CLASS GAMEKIT_IMPEXP
- #endif
+#ifdef __cplusplus
+#define GAMEKIT_EXPORT GAMEKIT_IMPEXP extern "C"
+#define GAMEKIT_EXPORT_CLASS GAMEKIT_IMPEXP
+#else
+#define GAMEKIT_EXPORT GAMEKIT_IMPEXP extern
+#define GAMEKIT_EXPORT_CLASS GAMEKIT_IMPEXP
+#endif
 #endif

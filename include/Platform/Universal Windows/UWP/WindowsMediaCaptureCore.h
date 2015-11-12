@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WMCCVariablePhotoSequenceCapture, WMCCVariablePhotoCapturedEventArgs;
-@protocol WMCCIVariablePhotoCapturedEventArgs, WMCCIVariablePhotoSequenceCapture, WMCCIVariablePhotoSequenceCapture2;
+@protocol WMCCIVariablePhotoCapturedEventArgs
+, WMCCIVariablePhotoSequenceCapture, WMCCIVariablePhotoSequenceCapture2;
 
 #include "WindowsFoundation.h"
 #include "WindowsMediaCapture.h"
@@ -34,9 +35,9 @@
 
 WINRT_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
-- (EventRegistrationToken)addPhotoCapturedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
+- (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)stopAsync;
@@ -59,4 +60,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCCVariablePhotoCapturedEventArgs_DEFINED__
-

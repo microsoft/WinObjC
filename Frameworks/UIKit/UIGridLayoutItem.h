@@ -20,9 +20,9 @@
     CGRect _itemFrame;
 }
 - (CGRect)itemFrame;
-/* annotate with type */ -(id)setSection : (id)section;
-/* annotate with type */ -(id)section;
-/* annotate with type */ -(id)setRowObject : (id)rowObject;
-/* annotate with type */ -(id)rowObject;
-/* annotate with type */ -(id)setItemFrame : (CGRect)frame;
+- (id)setSection:(id)section;
+- (id)section;
+- (id)setRowObject:(id)rowObject;
+- (id)rowObject;
+- (id)setItemFrame:(CGRect)frame;
 @end

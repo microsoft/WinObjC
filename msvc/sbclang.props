@@ -38,8 +38,8 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib</StarboardDefaultLibs>
-    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs Condition="'$(Platform)' == 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;Security.lib;CoreLocation.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs Condition="'$(Platform)' != 'ARM'">Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib</StarboardDefaultLibs>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
   </PropertyGroup>
 

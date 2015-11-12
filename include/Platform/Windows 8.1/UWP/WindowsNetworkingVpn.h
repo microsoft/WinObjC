@@ -20,8 +20,15 @@
 #pragma once
 
 #include "interopBase.h"
-@class WNVVpnRoute, WNVVpnNamespaceInfo, WNVVpnInterfaceId, WNVVpnRouteAssignment, WNVVpnNamespaceAssignment, WNVVpnPickedCredential, WNVVpnPacketBuffer, WNVVpnChannelConfiguration, WNVVpnChannel, WNVVpnChannelActivityEventArgs, WNVVpnSystemHealth, WNVVpnPacketBufferList, WNVVpnCustomEditBox, WNVVpnCustomComboBox, WNVVpnCustomTextBox, WNVVpnCustomCheckBox, WNVVpnCustomErrorBox;
-@protocol WNVIVpnPlugIn, WNVIVpnCustomPrompt, WNVIVpnCustomEditBox, WNVIVpnCustomComboBox, WNVIVpnCustomTextBox, WNVIVpnCustomCheckBox, WNVIVpnCustomErrorBox, WNVIVpnRouteFactory, WNVIVpnRoute, WNVIVpnRouteAssignment, WNVIVpnNamespaceInfoFactory, WNVIVpnNamespaceInfo, WNVIVpnNamespaceAssignment, WNVIVpnInterfaceIdFactory, WNVIVpnInterfaceId, WNVIVpnPickedCredential, WNVIVpnSystemHealth, WNVIVpnChannelConfiguration, WNVIVpnChannelActivityEventArgs, WNVIVpnChannel, WNVIVpnChannelStatics, WNVIVpnPacketBufferFactory, WNVIVpnPacketBuffer, WNVIVpnPacketBufferList;
+@class WNVVpnRoute, WNVVpnNamespaceInfo, WNVVpnInterfaceId, WNVVpnRouteAssignment, WNVVpnNamespaceAssignment, WNVVpnPickedCredential,
+    WNVVpnPacketBuffer, WNVVpnChannelConfiguration, WNVVpnChannel, WNVVpnChannelActivityEventArgs, WNVVpnSystemHealth,
+    WNVVpnPacketBufferList, WNVVpnCustomEditBox, WNVVpnCustomComboBox, WNVVpnCustomTextBox, WNVVpnCustomCheckBox, WNVVpnCustomErrorBox;
+@protocol WNVIVpnPlugIn
+, WNVIVpnCustomPrompt, WNVIVpnCustomEditBox, WNVIVpnCustomComboBox, WNVIVpnCustomTextBox, WNVIVpnCustomCheckBox, WNVIVpnCustomErrorBox,
+    WNVIVpnRouteFactory, WNVIVpnRoute, WNVIVpnRouteAssignment, WNVIVpnNamespaceInfoFactory, WNVIVpnNamespaceInfo,
+    WNVIVpnNamespaceAssignment, WNVIVpnInterfaceIdFactory, WNVIVpnInterfaceId, WNVIVpnPickedCredential, WNVIVpnSystemHealth,
+    WNVIVpnChannelConfiguration, WNVIVpnChannelActivityEventArgs, WNVIVpnChannel, WNVIVpnChannelStatics, WNVIVpnPacketBufferFactory,
+    WNVIVpnPacketBuffer, WNVIVpnPacketBufferList;
 
 // Windows.Networking.Vpn.VpnDataPathType
 enum _WNVVpnDataPathType {
@@ -70,11 +77,16 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnPlugIn_DEFINED__
 
 @protocol WNVIVpnPlugIn
-- (void)connect:(WNVVpnChannel *)channel;
-- (void)disconnect:(WNVVpnChannel *)channel;
-- (void)getKeepAlivePayload:(WNVVpnChannel *)channel keepAlivePacket:(WNVVpnPacketBuffer **)keepAlivePacket;
-- (void)encapsulate:(WNVVpnChannel *)channel packets:(WNVVpnPacketBufferList *)packets encapulatedPackets:(WNVVpnPacketBufferList *)encapulatedPackets;
-- (void)decapsulate:(WNVVpnChannel *)channel encapBuffer:(WNVVpnPacketBuffer *)encapBuffer decapsulatedPackets:(WNVVpnPacketBufferList *)decapsulatedPackets controlPacketsToSend:(WNVVpnPacketBufferList *)controlPacketsToSend;
+- (void)connect:(WNVVpnChannel*)channel;
+- (void)disconnect:(WNVVpnChannel*)channel;
+- (void)getKeepAlivePayload:(WNVVpnChannel*)channel keepAlivePacket:(WNVVpnPacketBuffer**)keepAlivePacket;
+- (void)encapsulate:(WNVVpnChannel*)channel
+            packets:(WNVVpnPacketBufferList*)packets
+ encapulatedPackets:(WNVVpnPacketBufferList*)encapulatedPackets;
+- (void)decapsulate:(WNVVpnChannel*)channel
+             encapBuffer:(WNVVpnPacketBuffer*)encapBuffer
+     decapsulatedPackets:(WNVVpnPacketBufferList*)decapsulatedPackets
+    controlPacketsToSend:(WNVVpnPacketBufferList*)controlPacketsToSend;
 @end
 
 #endif // __WNVIVpnPlugIn_DEFINED__
@@ -86,7 +98,7 @@ typedef unsigned WNVVpnPacketBufferStatus;
 @protocol WNVIVpnCustomPrompt
 @property BOOL bordered;
 @property BOOL compulsory;
-@property (copy) NSString * label;
+@property (copy) NSString* label;
 @end
 
 #endif // __WNVIVpnCustomPrompt_DEFINED__
@@ -96,7 +108,7 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnRouteFactory_DEFINED__
 
 @protocol WNVIVpnRouteFactory
-- (WNVVpnRoute *)createVpnRoute:(WNHostName *)address prefixSize:(uint8_t)prefixSize;
+- (WNVVpnRoute*)createVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize;
 @end
 
 #endif // __WNVIVpnRouteFactory_DEFINED__
@@ -106,7 +118,9 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnNamespaceInfoFactory_DEFINED__
 
 @protocol WNVIVpnNamespaceInfoFactory
-- (WNVVpnNamespaceInfo *)createVpnNamespaceInfo:(NSString *)name dnsServerList:(id<NSFastEnumeration> /*WNHostName*/ )dnsServerList proxyServerList:(id<NSFastEnumeration> /*WNHostName*/ )proxyServerList;
+- (WNVVpnNamespaceInfo*)createVpnNamespaceInfo:(NSString*)name
+                                 dnsServerList:(id<NSFastEnumeration> /*WNHostName*/)dnsServerList
+                               proxyServerList:(id<NSFastEnumeration> /*WNHostName*/)proxyServerList;
 @end
 
 #endif // __WNVIVpnNamespaceInfoFactory_DEFINED__
@@ -116,7 +130,7 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnInterfaceIdFactory_DEFINED__
 
 @protocol WNVIVpnInterfaceIdFactory
-- (WNVVpnInterfaceId *)createVpnInterfaceId:(id<NSFastEnumeration> /*UInt8*/ )address;
+- (WNVVpnInterfaceId*)createVpnInterfaceId:(id<NSFastEnumeration> /*UInt8*/)address;
 @end
 
 #endif // __WNVIVpnInterfaceIdFactory_DEFINED__
@@ -126,7 +140,7 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnChannelStatics_DEFINED__
 
 @protocol WNVIVpnChannelStatics
-- (void)processEventAsync:(RTObject *)thirdPartyPlugIn event:(RTObject *)event;
+- (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
 @end
 
 #endif // __WNVIVpnChannelStatics_DEFINED__
@@ -136,7 +150,7 @@ typedef unsigned WNVVpnPacketBufferStatus;
 #define __WNVIVpnPacketBufferFactory_DEFINED__
 
 @protocol WNVIVpnPacketBufferFactory
-- (WNVVpnPacketBuffer *)createVpnPacketBuffer:(WNVVpnPacketBuffer *)parentBuffer offset:(unsigned)offset length:(unsigned)length;
+- (WNVVpnPacketBuffer*)createVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer offset:(unsigned)offset length:(unsigned)length;
 @end
 
 #endif // __WNVIVpnPacketBufferFactory_DEFINED__
@@ -147,9 +161,9 @@ typedef unsigned WNVVpnPacketBufferStatus;
 
 WINRT_EXPORT
 @interface WNVVpnRoute : RTObject
-+ (WNVVpnRoute *)createVpnRoute:(WNHostName *)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
++ (WNVVpnRoute*)createVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
 @property uint8_t prefixSize;
-@property (copy) WNHostName * address;
+@property (copy) WNHostName* address;
 @end
 
 #endif // __WNVVpnRoute_DEFINED__
@@ -160,10 +174,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNamespaceInfo : RTObject
-+ (WNVVpnNamespaceInfo *)createVpnNamespaceInfo:(NSString *)name dnsServerList:(id<NSFastEnumeration> /*WNHostName*/ )dnsServerList proxyServerList:(id<NSFastEnumeration> /*WNHostName*/ )proxyServerList ACTIVATOR;
-@property (copy) id<NSFastEnumeration> /*WNHostName*/  webProxyServers;
-@property (copy) NSString * Namespace;
-@property (copy) id<NSFastEnumeration> /*WNHostName*/  dnsServers;
++ (WNVVpnNamespaceInfo*)createVpnNamespaceInfo:(NSString*)name
+                                 dnsServerList:(id<NSFastEnumeration> /*WNHostName*/)dnsServerList
+                               proxyServerList:(id<NSFastEnumeration> /*WNHostName*/)proxyServerList ACTIVATOR;
+@property (copy) id<NSFastEnumeration> /*WNHostName*/ webProxyServers;
+@property (copy) NSString* Namespace;
+@property (copy) id<NSFastEnumeration> /*WNHostName*/ dnsServers;
 @end
 
 #endif // __WNVVpnNamespaceInfo_DEFINED__
@@ -174,8 +190,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnInterfaceId : RTObject
-+ (WNVVpnInterfaceId *)createVpnInterfaceId:(id<NSFastEnumeration> /*UInt8*/ )address ACTIVATOR;
-- (void)getAddressInfo:(id<NSFastEnumeration> /*UInt8*/ *)id;
++ (WNVVpnInterfaceId*)createVpnInterfaceId:(id<NSFastEnumeration> /*UInt8*/)address ACTIVATOR;
+- (void)getAddressInfo:(id<NSFastEnumeration> /*UInt8*/*)id;
 @end
 
 #endif // __WNVVpnInterfaceId_DEFINED__
@@ -187,10 +203,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/  ipv6InclusionRoutes;
-@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/  ipv6ExclusionRoutes;
-@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/  ipv4InclusionRoutes;
-@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/  ipv4ExclusionRoutes;
+@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/ ipv6InclusionRoutes;
+@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/ ipv6ExclusionRoutes;
+@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/ ipv4InclusionRoutes;
+@property (copy) id<NSFastEnumeration> /*WNVVpnRoute*/ ipv4ExclusionRoutes;
 @property BOOL excludeLocalSubnets;
 @end
 
@@ -203,8 +219,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFUri * proxyAutoConfigUri;
-@property (copy) id<NSFastEnumeration> /*WNVVpnNamespaceInfo*/  namespaceList;
+@property (copy) WFUri* proxyAutoConfigUri;
+@property (copy) id<NSFastEnumeration> /*WNVVpnNamespaceInfo*/ namespaceList;
 @end
 
 #endif // __WNVVpnNamespaceAssignment_DEFINED__
@@ -215,9 +231,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnPickedCredential : RTObject
-@property (readonly) NSString * additionalPin;
-@property (readonly) WSCPasswordCredential * oldPasswordCredential;
-@property (readonly) WSCPasswordCredential * passkeyCredential;
+@property (readonly) NSString* additionalPin;
+@property (readonly) WSCPasswordCredential* oldPasswordCredential;
+@property (readonly) WSCPasswordCredential* passkeyCredential;
 @end
 
 #endif // __WNVVpnPickedCredential_DEFINED__
@@ -228,10 +244,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnPacketBuffer : RTObject
-+ (WNVVpnPacketBuffer *)createVpnPacketBuffer:(WNVVpnPacketBuffer *)parentBuffer offset:(unsigned)offset length:(unsigned)length ACTIVATOR;
++ (WNVVpnPacketBuffer*)createVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer offset:(unsigned)offset length:(unsigned)length ACTIVATOR;
 @property unsigned transportAffinity;
 @property WNVVpnPacketBufferStatus status;
-@property (readonly) WSSBuffer * buffer;
+@property (readonly) WSSBuffer* buffer;
 @end
 
 #endif // __WNVVpnPacketBuffer_DEFINED__
@@ -242,9 +258,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnChannelConfiguration : RTObject
-@property (readonly) NSString * customField;
-@property (readonly) id<NSFastEnumeration> /*WNHostName*/  serverHostNameList;
-@property (readonly) NSString * serverServiceName;
+@property (readonly) NSString* customField;
+@property (readonly) id<NSFastEnumeration> /*WNHostName*/ serverHostNameList;
+@property (readonly) NSString* serverServiceName;
 @end
 
 #endif // __WNVVpnChannelConfiguration_DEFINED__
@@ -255,22 +271,34 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnChannel : RTObject
-+ (void)processEventAsync:(RTObject *)thirdPartyPlugIn event:(RTObject *)event;
-@property (copy) RTObject * plugInContext;
-@property (readonly) WNVVpnChannelConfiguration * configuration;
++ (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
+@property (copy) RTObject* plugInContext;
+@property (readonly) WNVVpnChannelConfiguration* configuration;
 @property (readonly) unsigned id;
-@property (readonly) WNVVpnSystemHealth * systemHealth;
-- (EventRegistrationToken)addActivityChangeEvent:(void(^)(WNVVpnChannel *, WNVVpnChannelActivityEventArgs *))del;
+@property (readonly) WNVVpnSystemHealth* systemHealth;
+- (EventRegistrationToken)addActivityChangeEvent:(void (^)(WNVVpnChannel*, WNVVpnChannelActivityEventArgs*))del;
 - (void)removeActivityChangeEvent:(EventRegistrationToken)tok;
-- (void)associateTransport:(RTObject *)mainOuterTunnelTransport optionalOuterTunnelTransport:(RTObject *)optionalOuterTunnelTransport;
-- (void)start:(id<NSFastEnumeration> /*WNHostName*/ )assignedClientIPv4list assignedClientIPv6list:(id<NSFastEnumeration> /*WNHostName*/ )assignedClientIPv6list vpnInterfaceId:(WNVVpnInterfaceId *)vpnInterfaceId routeScope:(WNVVpnRouteAssignment *)routeScope namespaceScope:(WNVVpnNamespaceAssignment *)namespaceScope mtuSize:(unsigned)mtuSize maxFrameSize:(unsigned)maxFrameSize optimizeForLowCostNetwork:(BOOL)optimizeForLowCostNetwork mainOuterTunnelTransport:(RTObject *)mainOuterTunnelTransport optionalOuterTunnelTransport:(RTObject *)optionalOuterTunnelTransport;
+- (void)associateTransport:(RTObject*)mainOuterTunnelTransport optionalOuterTunnelTransport:(RTObject*)optionalOuterTunnelTransport;
+- (void)start:(id<NSFastEnumeration> /*WNHostName*/)assignedClientIPv4list
+          assignedClientIPv6list:(id<NSFastEnumeration> /*WNHostName*/)assignedClientIPv6list
+                  vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
+                      routeScope:(WNVVpnRouteAssignment*)routeScope
+                  namespaceScope:(WNVVpnNamespaceAssignment*)namespaceScope
+                         mtuSize:(unsigned)mtuSize
+                    maxFrameSize:(unsigned)maxFrameSize
+       optimizeForLowCostNetwork:(BOOL)optimizeForLowCostNetwork
+        mainOuterTunnelTransport:(RTObject*)mainOuterTunnelTransport
+    optionalOuterTunnelTransport:(RTObject*)optionalOuterTunnelTransport;
 - (void)stop;
-- (WNVVpnPickedCredential *)requestCredentials:(WNVVpnCredentialType)credType isRetry:(BOOL)isRetry isSingleSignOnCredential:(BOOL)isSingleSignOnCredential certificate:(WSCCCertificate *)certificate;
-- (void)requestVpnPacketBuffer:(WNVVpnDataPathType)type vpnPacketBuffer:(WNVVpnPacketBuffer **)vpnPacketBuffer;
-- (void)logDiagnosticMessage:(NSString *)message;
-- (void)requestCustomPrompt:(id<NSFastEnumeration> /*WNVIVpnCustomPrompt*/ )customPrompt;
-- (void)setErrorMessage:(NSString *)message;
-- (void)setAllowedSslTlsVersions:(RTObject *)tunnelTransport useTls12:(BOOL)useTls12;
+- (WNVVpnPickedCredential*)requestCredentials:(WNVVpnCredentialType)credType
+                                      isRetry:(BOOL)isRetry
+                     isSingleSignOnCredential:(BOOL)isSingleSignOnCredential
+                                  certificate:(WSCCCertificate*)certificate;
+- (void)requestVpnPacketBuffer:(WNVVpnDataPathType)type vpnPacketBuffer:(WNVVpnPacketBuffer**)vpnPacketBuffer;
+- (void)logDiagnosticMessage:(NSString*)message;
+- (void)requestCustomPrompt:(id<NSFastEnumeration> /*WNVIVpnCustomPrompt*/)customPrompt;
+- (void)setErrorMessage:(NSString*)message;
+- (void)setAllowedSslTlsVersions:(RTObject*)tunnelTransport useTls12:(BOOL)useTls12;
 @end
 
 #endif // __WNVVpnChannel_DEFINED__
@@ -292,7 +320,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnSystemHealth : RTObject
-@property (readonly) WSSBuffer * statementOfHealth;
+@property (readonly) WSSBuffer* statementOfHealth;
 @end
 
 #endif // __WNVVpnSystemHealth_DEFINED__
@@ -305,10 +333,10 @@ WINRT_EXPORT
 @interface WNVVpnPacketBufferList : RTObject
 @property WNVVpnPacketBufferStatus status;
 @property (readonly) unsigned size;
-- (void)append:(WNVVpnPacketBuffer *)nextVpnPacketBuffer;
-- (void)addAtBegin:(WNVVpnPacketBuffer *)nextVpnPacketBuffer;
-- (WNVVpnPacketBuffer *)removeAtEnd;
-- (WNVVpnPacketBuffer *)removeAtBegin;
+- (void)append:(WNVVpnPacketBuffer*)nextVpnPacketBuffer;
+- (void)addAtBegin:(WNVVpnPacketBuffer*)nextVpnPacketBuffer;
+- (WNVVpnPacketBuffer*)removeAtEnd;
+- (WNVVpnPacketBuffer*)removeAtBegin;
 - (void)clear;
 @end
 
@@ -322,9 +350,9 @@ WINRT_EXPORT
 @interface WNVVpnCustomEditBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)create ACTIVATOR;
 @property BOOL noEcho;
-@property (copy) NSString * defaultText;
-@property (readonly) NSString * text;
-@property (copy) NSString * label;
+@property (copy) NSString* defaultText;
+@property (readonly) NSString* text;
+@property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
@@ -338,10 +366,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * label;
+@property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
-@property (copy) id<NSFastEnumeration> /*String*/  optionsText;
+@property (copy) id<NSFastEnumeration> /*String*/ optionsText;
 @property (readonly) unsigned selected;
 @end
 
@@ -354,10 +382,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnCustomTextBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * label;
+@property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
-@property (copy) NSString * displayText;
+@property (copy) NSString* displayText;
 @end
 
 #endif // __WNVVpnCustomTextBox_DEFINED__
@@ -369,7 +397,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnCustomCheckBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * label;
+@property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @property BOOL initialCheckState;
@@ -385,10 +413,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnCustomErrorBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * label;
+@property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
 
 #endif // __WNVVpnCustomErrorBox_DEFINED__
-

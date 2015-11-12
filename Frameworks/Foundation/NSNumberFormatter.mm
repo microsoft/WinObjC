@@ -154,6 +154,9 @@ enum {
     BOOL _localizesFormat;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSNumberFormatterBehavior)defaultFormatterBehavior {
     return _defaultFormatterBehavior;
 }
@@ -188,14 +191,24 @@ enum {
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes Not thoroughly implemented.
+*/
 - (void)setNumberStyle:(NSNumberFormatterStyle)value {
     _numberStyle = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFormatWidth:(NSUInteger)value {
     _formatWidth = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCurrencyCode:(id)currencyCode {
     id old = _currencyCode;
     _currencyCode = [currencyCode copy];
@@ -203,6 +216,10 @@ enum {
     [old release];
 }
 
+/**
+ @Status Caveat
+ @Notes Default value doesn't take locale into account.
+*/
 - (id)currencyCode {
     if (_currencyCode == nil) {
         _currencyCode = @"CAD";
@@ -210,51 +227,91 @@ enum {
     return _currencyCode;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setNegativeFormat:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_negativeFormat release];
     _negativeFormat = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNotANumberSymbol:(id)value {
     value = [value copy];
     [_notANumberSymbol release];
     _notANumberSymbol = value;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setPositiveFormat:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_positiveFormat release];
     _positiveFormat = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDecimalSeparator:(id)value {
     value = [value copy];
     [_decimalSeparator release];
     _decimalSeparator = value;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setUsesSignificantDigits:(BOOL)uses {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinimumSignificantDigits:(NSUInteger)min {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMaximumSignificantDigits:(NSUInteger)min {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Caveat
+ @Notes Default value doesn't take locale into account.
+*/
 - (id)decimalSeparator {
     return _decimalSeparator;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)alwaysShowsDecimalSeparator {
     return _alwaysShowsDecimalSeparator;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAlwaysShowsDecimalSeparator:(BOOL)value {
+    UNIMPLEMENTED();
     _alwaysShowsDecimalSeparator = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setGroupingSeparator:(id)value {
     value = [value copy];
     [_groupingSeparator release];
@@ -266,12 +323,20 @@ enum {
     _formatter->setDecimalFormatSymbols(update);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setPerMillSymbol:(id)value {
+    UNIMPLEMENTED();
     value = [value copy];
     [_perMillSymbol release];
     _perMillSymbol = value;
 }
 
+/**
+ @Status Caveat
+ @Notes Does not respect division when NSNumber derived from string?
+*/
 - (id)multiplier {
     if (_multiplier == nil && _numberStyle == NSNumberFormatterPercentStyle) {
         return [NSNumber numberWithInt:100];
@@ -280,6 +345,9 @@ enum {
     return _multiplier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)maximumFractionDigits {
     if (_customMaximumFractionDigits)
         return _maximumFractionDigits;
@@ -290,6 +358,9 @@ enum {
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)positivePrefix {
     if (_positivePrefix == nil)
         return @"";
@@ -297,6 +368,9 @@ enum {
     return _positivePrefix;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)negativePrefix {
     if (_negativePrefix == nil)
         return @"-";
@@ -304,10 +378,17 @@ enum {
     return _negativePrefix;
 }
 
+/**
+ @Status Stub
+*/
 - (id)currencyDecimalSeparator {
+    UNIMPLEMENTED();
     return _currencyDecimalSeparator;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)positiveSuffix {
     // Suffixes return the percent symbol if specified
 
@@ -321,6 +402,9 @@ enum {
     return _positiveSuffix;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)negativeSuffix {
     // Suffixes return the percent symbol if specified
 
@@ -334,6 +418,9 @@ enum {
     return _negativeSuffix;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)percentSymbol {
     if (_percentSymbol == nil)
         return @"%";
@@ -341,33 +428,57 @@ enum {
     return _percentSymbol;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)positiveFormat {
     return _positiveFormat;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)negativeFormat {
     return _negativeFormat;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinimumFractionDigits:(NSUInteger)value {
+    UNIMPLEMENTED();
     _minimumFractionDigits = value;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setUsesGroupingSeparator:(BOOL)value {
+    UNIMPLEMENTED();
     _formatter->setGroupingUsed(value);
     _usesGroupingSeparator = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumFractionDigits:(NSUInteger)value {
     _formatter->setMaximumFractionDigits(value);
     _customMaximumFractionDigits = YES;
     _maximumFractionDigits = value;
 }
 
+/**
+ @Status Caveat
+ @Notes NSNumberFormatterBehavior10_0 likely crashes.
+*/
 - (void)setFormatterBehavior:(NSNumberFormatterBehavior)value {
     _behavior = (NSNumberFormatterBehavior)value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)groupingSeparator {
     if (_groupingSeparator == nil) {
         id check = [_locale objectForKey:NSLocaleGroupingSeparator];
@@ -381,29 +492,48 @@ enum {
     return _groupingSeparator;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)groupingSize {
     return _groupingSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)currencySymbol {
     return _currencySymbol;
 }
 
+/**
+ @Status Caveat
+ @Notes Just returns nil.
+*/
 - (id)nilSymbol {
     return _nilSymbol;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setGroupingSize:(NSUInteger)value {
     _formatter->setGroupingSize(value);
     _groupingSize = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCurrencySymbol:(id)value {
     value = [value copy];
     [_currencySymbol release];
     _currencySymbol = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPaddingCharacter:(id)value {
     value = [value copy];
     [_paddingCharacter release];
@@ -411,10 +541,17 @@ enum {
     _formatter->setPadCharacter([value UTF8String]);
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRoundingMode:(NSNumberFormatterRoundingMode)value {
+    UNIMPLEMENTED();
     _roundingMode = (NSNumberFormatterRoundingMode)value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumIntegerDigits:(NSUInteger)value {
     _formatter->setMinimumIntegerDigits(value);
     _minimumIntegerDigits = value;
@@ -478,6 +615,10 @@ enum {
     return [number description];
 }
 
+/**
+ @Status Caveat
+ @Notes NSNumberFormatterBehavior10_0 likely crashes.
+*/
 - (id)stringFromNumber:(id)number {
     NSNumberFormatterBehavior check = _behavior;
 
@@ -490,6 +631,10 @@ enum {
         return [self stringFromNumber10_4:number];
 }
 
+/**
+ @Status Caveat
+ @Notes Not thoroughly implemented.
+*/
 - (void)setLocale:(id)value {
     value = [value copy];
     [_locale release];
@@ -604,6 +749,10 @@ static BOOL numberIsNegative(id number) {
     return [number doubleValue] < 0.0 ? YES : NO;
 }
 
+/**
+ @Status Caveat
+ @Notes Doesn't take all format styles into account.
+*/
 - (NSNumber*)numberFromString:(id)string {
     if (string == nil)
         return nil;
@@ -667,6 +816,10 @@ static BOOL numberIsNegative(id number) {
     return TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes Scientific and SpellOut styles assert, the rest default to NoStyle.
+*/
 + (id)localizedStringFromNumber:(id)number numberStyle:(NSNumberFormatterStyle)style {
     id formatter = [self new];
     [formatter setNumberStyle:style];

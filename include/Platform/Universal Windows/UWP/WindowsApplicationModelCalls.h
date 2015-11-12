@@ -20,51 +20,54 @@
 #pragma once
 
 #include "interopBase.h"
-@class WACPhoneCallHistoryEntryAddress, WACPhoneCallHistoryEntry, WACPhoneCallHistoryEntryReader, WACPhoneCallHistoryEntryQueryOptions, WACPhoneCallHistoryStore, WACPhoneCallHistoryManager;
-@protocol WACIPhoneCallHistoryEntry, WACIPhoneCallHistoryEntryAddress, WACIPhoneCallHistoryEntryAddressFactory, WACIPhoneCallHistoryEntryQueryOptions, WACIPhoneCallHistoryEntryReader, WACIPhoneCallHistoryStore, WACIPhoneCallHistoryManagerStatics;
+@class WACPhoneCallHistoryEntryAddress, WACPhoneCallHistoryEntry, WACPhoneCallHistoryEntryReader, WACPhoneCallHistoryEntryQueryOptions,
+    WACPhoneCallHistoryStore, WACPhoneCallHistoryManager;
+@protocol WACIPhoneCallHistoryEntry
+, WACIPhoneCallHistoryEntryAddress, WACIPhoneCallHistoryEntryAddressFactory, WACIPhoneCallHistoryEntryQueryOptions,
+    WACIPhoneCallHistoryEntryReader, WACIPhoneCallHistoryStore, WACIPhoneCallHistoryManagerStatics;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistoryEntryOtherAppReadAccess
 enum _WACPhoneCallHistoryEntryOtherAppReadAccess {
-	WACPhoneCallHistoryEntryOtherAppReadAccessFull = 0,
-	WACPhoneCallHistoryEntryOtherAppReadAccessSystemOnly = 1,
+    WACPhoneCallHistoryEntryOtherAppReadAccessFull = 0,
+    WACPhoneCallHistoryEntryOtherAppReadAccessSystemOnly = 1,
 };
 typedef unsigned WACPhoneCallHistoryEntryOtherAppReadAccess;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistoryEntryMedia
 enum _WACPhoneCallHistoryEntryMedia {
-	WACPhoneCallHistoryEntryMediaAudio = 0,
-	WACPhoneCallHistoryEntryMediaVideo = 1,
+    WACPhoneCallHistoryEntryMediaAudio = 0,
+    WACPhoneCallHistoryEntryMediaVideo = 1,
 };
 typedef unsigned WACPhoneCallHistoryEntryMedia;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistoryEntryRawAddressKind
 enum _WACPhoneCallHistoryEntryRawAddressKind {
-	WACPhoneCallHistoryEntryRawAddressKindPhoneNumber = 0,
-	WACPhoneCallHistoryEntryRawAddressKindCustom = 1,
+    WACPhoneCallHistoryEntryRawAddressKindPhoneNumber = 0,
+    WACPhoneCallHistoryEntryRawAddressKindCustom = 1,
 };
 typedef unsigned WACPhoneCallHistoryEntryRawAddressKind;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistoryEntryQueryDesiredMedia
 enum _WACPhoneCallHistoryEntryQueryDesiredMedia {
-	WACPhoneCallHistoryEntryQueryDesiredMediaNone = 0,
-	WACPhoneCallHistoryEntryQueryDesiredMediaAudio = 1,
-	WACPhoneCallHistoryEntryQueryDesiredMediaVideo = 2,
-	WACPhoneCallHistoryEntryQueryDesiredMediaAll = -1,
+    WACPhoneCallHistoryEntryQueryDesiredMediaNone = 0,
+    WACPhoneCallHistoryEntryQueryDesiredMediaAudio = 1,
+    WACPhoneCallHistoryEntryQueryDesiredMediaVideo = 2,
+    WACPhoneCallHistoryEntryQueryDesiredMediaAll = -1,
 };
 typedef unsigned WACPhoneCallHistoryEntryQueryDesiredMedia;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistoryStoreAccessType
 enum _WACPhoneCallHistoryStoreAccessType {
-	WACPhoneCallHistoryStoreAccessTypeAppEntriesReadWrite = 0,
-	WACPhoneCallHistoryStoreAccessTypeAllEntriesLimitedReadWrite = 1,
-	WACPhoneCallHistoryStoreAccessTypeAllEntriesReadWrite = 2,
+    WACPhoneCallHistoryStoreAccessTypeAppEntriesReadWrite = 0,
+    WACPhoneCallHistoryStoreAccessTypeAllEntriesLimitedReadWrite = 1,
+    WACPhoneCallHistoryStoreAccessTypeAllEntriesReadWrite = 2,
 };
 typedef unsigned WACPhoneCallHistoryStoreAccessType;
 
 // Windows.ApplicationModel.Calls.PhoneCallHistorySourceIdKind
 enum _WACPhoneCallHistorySourceIdKind {
-	WACPhoneCallHistorySourceIdKindCellularPhoneLineId = 0,
-	WACPhoneCallHistorySourceIdKindPackageFamilyName = 1,
+    WACPhoneCallHistorySourceIdKindCellularPhoneLineId = 0,
+    WACPhoneCallHistorySourceIdKindPackageFamilyName = 1,
 };
 typedef unsigned WACPhoneCallHistorySourceIdKind;
 
@@ -79,12 +82,13 @@ typedef unsigned WACPhoneCallHistorySourceIdKind;
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryAddress : RTObject
-+ (WACPhoneCallHistoryEntryAddress*)create:(NSString *)rawAddress rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
++ (WACPhoneCallHistoryEntryAddress*)create:(NSString*)rawAddress
+                            rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
-@property (copy) NSString * rawAddress;
-@property (copy) NSString * displayName;
-@property (copy) NSString * contactId;
+@property (copy) NSString* rawAddress;
+@property (copy) NSString* displayName;
+@property (copy) NSString* contactId;
 @end
 
 #endif // __WACPhoneCallHistoryEntryAddress_DEFINED__
@@ -107,13 +111,13 @@ WINRT_EXPORT
 @property (copy) WFDateTime* startTime;
 @property WACPhoneCallHistorySourceIdKind sourceIdKind;
 @property (copy) WACPhoneCallHistoryEntryAddress* address;
-@property (copy) NSString * sourceId;
-@property (copy) NSString * remoteId;
+@property (copy) NSString* sourceId;
+@property (copy) NSString* remoteId;
 @property WACPhoneCallHistoryEntryOtherAppReadAccess otherAppReadAccess;
 @property BOOL isRinging;
 @property BOOL isVoicemail;
-@property (readonly) NSString * id;
-@property (readonly) NSString * sourceDisplayName;
+@property (readonly) NSString* id;
+@property (readonly) NSString* sourceDisplayName;
 @end
 
 #endif // __WACPhoneCallHistoryEntry_DEFINED__
@@ -148,7 +152,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryStore : RTObject
-- (void)getEntryAsync:(NSString *)callHistoryEntryId success:(void (^)(WACPhoneCallHistoryEntry*))success failure:(void (^)(NSError*))failure;
+- (void)getEntryAsync:(NSString*)callHistoryEntryId
+              success:(void (^)(WACPhoneCallHistoryEntry*))success
+              failure:(void (^)(NSError*))failure;
 - (WACPhoneCallHistoryEntryReader*)getEntryReader;
 - (WACPhoneCallHistoryEntryReader*)getEntryReaderWithOptions:(WACPhoneCallHistoryEntryQueryOptions*)queryOptions;
 - (RTObject<WFIAsyncAction>*)saveEntryAsync:(WACPhoneCallHistoryEntry*)callHistoryEntry;
@@ -158,7 +164,9 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)markEntriesAsSeenAsync:(id<NSFastEnumeration> /* WACPhoneCallHistoryEntry* */)callHistoryEntries;
 - (void)getUnseenCountAsyncWithSuccess:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)markAllAsSeenAsync;
-- (void)getSourcesUnseenCountAsync:(id<NSFastEnumeration> /* NSString * */)sourceIds success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)getSourcesUnseenCountAsync:(id<NSFastEnumeration> /* NSString * */)sourceIds
+                           success:(void (^)(unsigned int))success
+                           failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)markSourcesAsSeenAsync:(id<NSFastEnumeration> /* NSString * */)sourceIds;
 @end
 
@@ -170,8 +178,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryManager : RTObject
-+ (void)requestStoreAsync:(WACPhoneCallHistoryStoreAccessType)accessType success:(void (^)(WACPhoneCallHistoryStore*))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsync:(WACPhoneCallHistoryStoreAccessType)accessType
+                  success:(void (^)(WACPhoneCallHistoryStore*))success
+                  failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACPhoneCallHistoryManager_DEFINED__
-

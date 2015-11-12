@@ -95,6 +95,10 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited system item support
+*/
 - (instancetype)initWithBarButtonSystemItem:(UIBarButtonSystemItem)sysItem target:(id)target action:(SEL)targetSel {
     _width = 35.0f;
 
@@ -297,6 +301,9 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCustomView:(UIView*)view {
     initInternal(self);
 
@@ -306,6 +313,9 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTitle:(NSString*)title style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)targetSel {
     _style = style;
     initInternal(self);
@@ -317,6 +327,9 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithImage:(UIImage*)image style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)targetSel {
     initInternal(self);
 
@@ -341,18 +354,30 @@ static void initControls(UIBarButtonItem* self) {
     _targetSel = (SEL)[connection sel];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStyle:(UIBarButtonItemStyle)style {
     _style = style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIBarButtonItemStyle)style {
     return _style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setWidth:(float)width {
     _width = width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)width {
     return _width;
 }
@@ -421,26 +446,44 @@ static void initControls(UIBarButtonItem* self) {
     return _title;
 }
 
+/**
+ @Status Interoperable
+*/
 - (SEL)action {
     return _targetSel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)customView {
     return _customView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCustomView:(UIView*)view {
     _customView = view;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTarget:(id)target {
     _target = target;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)target {
     return _target;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAction:(SEL)pSel {
     _targetSel = pSel;
 }
@@ -454,6 +497,10 @@ static void initControls(UIBarButtonItem* self) {
     return _image;
 }
 
+/**
+ @Status Caveat
+ @Notes barMetrics parameter not supported
+*/
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
     EbrDebugLog("UIBarButtonItem setBackgroundImage not fully supported\n");
     [_buttonView setBackgroundImage:image forState:state];
@@ -463,10 +510,18 @@ static void initControls(UIBarButtonItem* self) {
     EbrDebugLog("UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBackButtonTitlePositionAdjustment:(UIOffset)position forBarMetrics:(UIBarMetrics)metrics {
+    UNIMPLEMENTED();
     EbrDebugLog("setBackButtonTitlePositionAdjustment not supported\n");
 }
 
+/**
+ @Status Caveat
+ @Notes barMetrics parameter not supported
+*/
 - (void)setBackButtonBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
     EbrDebugLog("UIBarButtonItem setBackButtonBackgroundImage not supported\n");
     _backImage = image;
@@ -497,7 +552,11 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)tintColor {
+    UNIMPLEMENTED();
     [super setTintColor:tintColor];
 
     [_buttonView setTintColor:tintColor];
@@ -506,7 +565,11 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (UIColor*)tintColor {
+    UNIMPLEMENTED();
     return [super tintColor];
 }
 

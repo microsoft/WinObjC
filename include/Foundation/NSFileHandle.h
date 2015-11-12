@@ -22,6 +22,7 @@ FOUNDATION_EXPORT NSString * const NSFileHandleNotificationMonitorModes;
 
 FOUNDATION_EXPORT NSString * const NSFileHandleOperationException;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSFileHandle : NSObject
 
 +fileHandleForReadingAtPath:(NSString *)path;

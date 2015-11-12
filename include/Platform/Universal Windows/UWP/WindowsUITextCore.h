@@ -20,113 +20,122 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest, WUTCCoreTextCompositionSegment, WUTCCoreTextEditContext, WUTCCoreTextTextRequestedEventArgs, WUTCCoreTextSelectionRequestedEventArgs, WUTCCoreTextLayoutRequestedEventArgs, WUTCCoreTextTextUpdatingEventArgs, WUTCCoreTextSelectionUpdatingEventArgs, WUTCCoreTextFormatUpdatingEventArgs, WUTCCoreTextCompositionStartedEventArgs, WUTCCoreTextCompositionCompletedEventArgs, WUTCCoreTextServicesManager, WUTCCoreTextServicesConstants;
+@class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest,
+    WUTCCoreTextCompositionSegment, WUTCCoreTextEditContext, WUTCCoreTextTextRequestedEventArgs, WUTCCoreTextSelectionRequestedEventArgs,
+    WUTCCoreTextLayoutRequestedEventArgs, WUTCCoreTextTextUpdatingEventArgs, WUTCCoreTextSelectionUpdatingEventArgs,
+    WUTCCoreTextFormatUpdatingEventArgs, WUTCCoreTextCompositionStartedEventArgs, WUTCCoreTextCompositionCompletedEventArgs,
+    WUTCCoreTextServicesManager, WUTCCoreTextServicesConstants;
 @class WUTCCoreTextRange;
-@protocol WUTCICoreTextTextRequest, WUTCICoreTextTextRequestedEventArgs, WUTCICoreTextSelectionRequest, WUTCICoreTextSelectionRequestedEventArgs, WUTCICoreTextLayoutBounds, WUTCICoreTextLayoutRequest, WUTCICoreTextLayoutRequestedEventArgs, WUTCICoreTextTextUpdatingEventArgs, WUTCICoreTextSelectionUpdatingEventArgs, WUTCICoreTextFormatUpdatingEventArgs, WUTCICoreTextCompositionStartedEventArgs, WUTCICoreTextCompositionCompletedEventArgs, WUTCICoreTextEditContext, WUTCICoreTextServicesManager, WUTCICoreTextServicesManagerStatics, WUTCICoreTextServicesStatics, WUTCICoreTextCompositionSegment;
+@protocol WUTCICoreTextTextRequest
+, WUTCICoreTextTextRequestedEventArgs, WUTCICoreTextSelectionRequest, WUTCICoreTextSelectionRequestedEventArgs, WUTCICoreTextLayoutBounds,
+    WUTCICoreTextLayoutRequest, WUTCICoreTextLayoutRequestedEventArgs, WUTCICoreTextTextUpdatingEventArgs,
+    WUTCICoreTextSelectionUpdatingEventArgs, WUTCICoreTextFormatUpdatingEventArgs, WUTCICoreTextCompositionStartedEventArgs,
+    WUTCICoreTextCompositionCompletedEventArgs, WUTCICoreTextEditContext, WUTCICoreTextServicesManager, WUTCICoreTextServicesManagerStatics,
+    WUTCICoreTextServicesStatics, WUTCICoreTextCompositionSegment;
 
 // Windows.UI.Text.Core.CoreTextInputScope
 enum _WUTCCoreTextInputScope {
-	WUTCCoreTextInputScopeDefault = 0,
-	WUTCCoreTextInputScopeUrl = 1,
-	WUTCCoreTextInputScopeFilePath = 2,
-	WUTCCoreTextInputScopeFileName = 3,
-	WUTCCoreTextInputScopeEmailUserName = 4,
-	WUTCCoreTextInputScopeEmailAddress = 5,
-	WUTCCoreTextInputScopeUserName = 6,
-	WUTCCoreTextInputScopePersonalFullName = 7,
-	WUTCCoreTextInputScopePersonalNamePrefix = 8,
-	WUTCCoreTextInputScopePersonalGivenName = 9,
-	WUTCCoreTextInputScopePersonalMiddleName = 10,
-	WUTCCoreTextInputScopePersonalSurname = 11,
-	WUTCCoreTextInputScopePersonalNameSuffix = 12,
-	WUTCCoreTextInputScopeAddress = 13,
-	WUTCCoreTextInputScopeAddressPostalCode = 14,
-	WUTCCoreTextInputScopeAddressStreet = 15,
-	WUTCCoreTextInputScopeAddressStateOrProvince = 16,
-	WUTCCoreTextInputScopeAddressCity = 17,
-	WUTCCoreTextInputScopeAddressCountryName = 18,
-	WUTCCoreTextInputScopeAddressCountryShortName = 19,
-	WUTCCoreTextInputScopeCurrencyAmountAndSymbol = 20,
-	WUTCCoreTextInputScopeCurrencyAmount = 21,
-	WUTCCoreTextInputScopeDate = 22,
-	WUTCCoreTextInputScopeDateMonth = 23,
-	WUTCCoreTextInputScopeDateDay = 24,
-	WUTCCoreTextInputScopeDateYear = 25,
-	WUTCCoreTextInputScopeDateMonthName = 26,
-	WUTCCoreTextInputScopeDateDayName = 27,
-	WUTCCoreTextInputScopeNumber = 29,
-	WUTCCoreTextInputScopeSingleCharacter = 30,
-	WUTCCoreTextInputScopePassword = 31,
-	WUTCCoreTextInputScopeTelephoneNumber = 32,
-	WUTCCoreTextInputScopeTelephoneCountryCode = 33,
-	WUTCCoreTextInputScopeTelephoneAreaCode = 34,
-	WUTCCoreTextInputScopeTelephoneLocalNumber = 35,
-	WUTCCoreTextInputScopeTime = 36,
-	WUTCCoreTextInputScopeTimeHour = 37,
-	WUTCCoreTextInputScopeTimeMinuteOrSecond = 38,
-	WUTCCoreTextInputScopeNumberFullWidth = 39,
-	WUTCCoreTextInputScopeAlphanumericHalfWidth = 40,
-	WUTCCoreTextInputScopeAlphanumericFullWidth = 41,
-	WUTCCoreTextInputScopeCurrencyChinese = 42,
-	WUTCCoreTextInputScopeBopomofo = 43,
-	WUTCCoreTextInputScopeHiragana = 44,
-	WUTCCoreTextInputScopeKatakanaHalfWidth = 45,
-	WUTCCoreTextInputScopeKatakanaFullWidth = 46,
-	WUTCCoreTextInputScopeHanja = 47,
-	WUTCCoreTextInputScopeHangulHalfWidth = 48,
-	WUTCCoreTextInputScopeHangulFullWidth = 49,
-	WUTCCoreTextInputScopeSearch = 50,
-	WUTCCoreTextInputScopeFormula = 51,
-	WUTCCoreTextInputScopeSearchIncremental = 52,
-	WUTCCoreTextInputScopeChineseHalfWidth = 53,
-	WUTCCoreTextInputScopeChineseFullWidth = 54,
-	WUTCCoreTextInputScopeNativeScript = 55,
-	WUTCCoreTextInputScopeText = 57,
-	WUTCCoreTextInputScopeChat = 58,
-	WUTCCoreTextInputScopeNameOrPhoneNumber = 59,
-	WUTCCoreTextInputScopeEmailUserNameOrAddress = 60,
-	WUTCCoreTextInputScopePrivate = 61,
-	WUTCCoreTextInputScopeMaps = 62,
-	WUTCCoreTextInputScopePasswordNumeric = 63,
-	WUTCCoreTextInputScopeFormulaNumber = 67,
+    WUTCCoreTextInputScopeDefault = 0,
+    WUTCCoreTextInputScopeUrl = 1,
+    WUTCCoreTextInputScopeFilePath = 2,
+    WUTCCoreTextInputScopeFileName = 3,
+    WUTCCoreTextInputScopeEmailUserName = 4,
+    WUTCCoreTextInputScopeEmailAddress = 5,
+    WUTCCoreTextInputScopeUserName = 6,
+    WUTCCoreTextInputScopePersonalFullName = 7,
+    WUTCCoreTextInputScopePersonalNamePrefix = 8,
+    WUTCCoreTextInputScopePersonalGivenName = 9,
+    WUTCCoreTextInputScopePersonalMiddleName = 10,
+    WUTCCoreTextInputScopePersonalSurname = 11,
+    WUTCCoreTextInputScopePersonalNameSuffix = 12,
+    WUTCCoreTextInputScopeAddress = 13,
+    WUTCCoreTextInputScopeAddressPostalCode = 14,
+    WUTCCoreTextInputScopeAddressStreet = 15,
+    WUTCCoreTextInputScopeAddressStateOrProvince = 16,
+    WUTCCoreTextInputScopeAddressCity = 17,
+    WUTCCoreTextInputScopeAddressCountryName = 18,
+    WUTCCoreTextInputScopeAddressCountryShortName = 19,
+    WUTCCoreTextInputScopeCurrencyAmountAndSymbol = 20,
+    WUTCCoreTextInputScopeCurrencyAmount = 21,
+    WUTCCoreTextInputScopeDate = 22,
+    WUTCCoreTextInputScopeDateMonth = 23,
+    WUTCCoreTextInputScopeDateDay = 24,
+    WUTCCoreTextInputScopeDateYear = 25,
+    WUTCCoreTextInputScopeDateMonthName = 26,
+    WUTCCoreTextInputScopeDateDayName = 27,
+    WUTCCoreTextInputScopeNumber = 29,
+    WUTCCoreTextInputScopeSingleCharacter = 30,
+    WUTCCoreTextInputScopePassword = 31,
+    WUTCCoreTextInputScopeTelephoneNumber = 32,
+    WUTCCoreTextInputScopeTelephoneCountryCode = 33,
+    WUTCCoreTextInputScopeTelephoneAreaCode = 34,
+    WUTCCoreTextInputScopeTelephoneLocalNumber = 35,
+    WUTCCoreTextInputScopeTime = 36,
+    WUTCCoreTextInputScopeTimeHour = 37,
+    WUTCCoreTextInputScopeTimeMinuteOrSecond = 38,
+    WUTCCoreTextInputScopeNumberFullWidth = 39,
+    WUTCCoreTextInputScopeAlphanumericHalfWidth = 40,
+    WUTCCoreTextInputScopeAlphanumericFullWidth = 41,
+    WUTCCoreTextInputScopeCurrencyChinese = 42,
+    WUTCCoreTextInputScopeBopomofo = 43,
+    WUTCCoreTextInputScopeHiragana = 44,
+    WUTCCoreTextInputScopeKatakanaHalfWidth = 45,
+    WUTCCoreTextInputScopeKatakanaFullWidth = 46,
+    WUTCCoreTextInputScopeHanja = 47,
+    WUTCCoreTextInputScopeHangulHalfWidth = 48,
+    WUTCCoreTextInputScopeHangulFullWidth = 49,
+    WUTCCoreTextInputScopeSearch = 50,
+    WUTCCoreTextInputScopeFormula = 51,
+    WUTCCoreTextInputScopeSearchIncremental = 52,
+    WUTCCoreTextInputScopeChineseHalfWidth = 53,
+    WUTCCoreTextInputScopeChineseFullWidth = 54,
+    WUTCCoreTextInputScopeNativeScript = 55,
+    WUTCCoreTextInputScopeText = 57,
+    WUTCCoreTextInputScopeChat = 58,
+    WUTCCoreTextInputScopeNameOrPhoneNumber = 59,
+    WUTCCoreTextInputScopeEmailUserNameOrAddress = 60,
+    WUTCCoreTextInputScopePrivate = 61,
+    WUTCCoreTextInputScopeMaps = 62,
+    WUTCCoreTextInputScopePasswordNumeric = 63,
+    WUTCCoreTextInputScopeFormulaNumber = 67,
 };
 typedef unsigned WUTCCoreTextInputScope;
 
 // Windows.UI.Text.Core.CoreTextInputPaneDisplayPolicy
 enum _WUTCCoreTextInputPaneDisplayPolicy {
-	WUTCCoreTextInputPaneDisplayPolicyAutomatic = 0,
-	WUTCCoreTextInputPaneDisplayPolicyManual = 1,
+    WUTCCoreTextInputPaneDisplayPolicyAutomatic = 0,
+    WUTCCoreTextInputPaneDisplayPolicyManual = 1,
 };
 typedef unsigned WUTCCoreTextInputPaneDisplayPolicy;
 
 // Windows.UI.Text.Core.CoreTextTextUpdatingResult
 enum _WUTCCoreTextTextUpdatingResult {
-	WUTCCoreTextTextUpdatingResultSucceeded = 0,
-	WUTCCoreTextTextUpdatingResultFailed = 1,
+    WUTCCoreTextTextUpdatingResultSucceeded = 0,
+    WUTCCoreTextTextUpdatingResultFailed = 1,
 };
 typedef unsigned WUTCCoreTextTextUpdatingResult;
 
 // Windows.UI.Text.Core.CoreTextSelectionUpdatingResult
 enum _WUTCCoreTextSelectionUpdatingResult {
-	WUTCCoreTextSelectionUpdatingResultSucceeded = 0,
-	WUTCCoreTextSelectionUpdatingResultFailed = 1,
+    WUTCCoreTextSelectionUpdatingResultSucceeded = 0,
+    WUTCCoreTextSelectionUpdatingResultFailed = 1,
 };
 typedef unsigned WUTCCoreTextSelectionUpdatingResult;
 
 // Windows.UI.Text.Core.CoreTextFormatUpdatingResult
 enum _WUTCCoreTextFormatUpdatingResult {
-	WUTCCoreTextFormatUpdatingResultSucceeded = 0,
-	WUTCCoreTextFormatUpdatingResultFailed = 1,
+    WUTCCoreTextFormatUpdatingResultSucceeded = 0,
+    WUTCCoreTextFormatUpdatingResultFailed = 1,
 };
 typedef unsigned WUTCCoreTextFormatUpdatingResult;
 
 // Windows.UI.Text.Core.CoreTextFormatUpdatingReason
 enum _WUTCCoreTextFormatUpdatingReason {
-	WUTCCoreTextFormatUpdatingReasonNone = 0,
-	WUTCCoreTextFormatUpdatingReasonCompositionUnconverted = 1,
-	WUTCCoreTextFormatUpdatingReasonCompositionConverted = 2,
-	WUTCCoreTextFormatUpdatingReasonCompositionTargetUnconverted = 3,
-	WUTCCoreTextFormatUpdatingReasonCompositionTargetConverted = 4,
+    WUTCCoreTextFormatUpdatingReasonNone = 0,
+    WUTCCoreTextFormatUpdatingReasonCompositionUnconverted = 1,
+    WUTCCoreTextFormatUpdatingReasonCompositionConverted = 2,
+    WUTCCoreTextFormatUpdatingReasonCompositionTargetUnconverted = 3,
+    WUTCCoreTextFormatUpdatingReasonCompositionTargetConverted = 4,
 };
 typedef unsigned WUTCCoreTextFormatUpdatingReason;
 
@@ -141,7 +150,7 @@ typedef unsigned WUTCCoreTextFormatUpdatingReason;
 // [struct] Windows.UI.Text.Core.CoreTextRange
 WINRT_EXPORT
 @interface WUTCCoreTextRange : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int startCaretPosition;
 @property int endCaretPosition;
 @end
@@ -152,7 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
-@property (copy) NSString * text;
+@property (copy) NSString* text;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* range;
 - (WFDeferral*)getDeferral;
@@ -205,7 +214,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextCompositionSegment : RTObject
-@property (readonly) NSString * preconversionString;
+@property (readonly) NSString* preconversionString;
 @property (readonly) WUTCCoreTextRange* range;
 @end
 
@@ -217,27 +226,27 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @property BOOL isReadOnly;
 @property WUTCCoreTextInputScope inputScope;
 @property WUTCCoreTextInputPaneDisplayPolicy inputPaneDisplayPolicy;
-- (EventRegistrationToken)addCompositionCompletedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionCompletedEventArgs*))del;
+- (EventRegistrationToken)addCompositionCompletedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionCompletedEventArgs*))del;
 - (void)removeCompositionCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCompositionStartedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionStartedEventArgs*))del;
+- (EventRegistrationToken)addCompositionStartedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextCompositionStartedEventArgs*))del;
 - (void)removeCompositionStartedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFocusRemovedEvent:(void(^)(WUTCCoreTextEditContext*, RTObject*))del;
+- (EventRegistrationToken)addFocusRemovedEvent:(void (^)(WUTCCoreTextEditContext*, RTObject*))del;
 - (void)removeFocusRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addFormatUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextFormatUpdatingEventArgs*))del;
+- (EventRegistrationToken)addFormatUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextFormatUpdatingEventArgs*))del;
 - (void)removeFormatUpdatingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLayoutRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextLayoutRequestedEventArgs*))del;
+- (EventRegistrationToken)addLayoutRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextLayoutRequestedEventArgs*))del;
 - (void)removeLayoutRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionRequestedEventArgs*))del;
+- (EventRegistrationToken)addSelectionRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionRequestedEventArgs*))del;
 - (void)removeSelectionRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionUpdatingEventArgs*))del;
+- (EventRegistrationToken)addSelectionUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextSelectionUpdatingEventArgs*))del;
 - (void)removeSelectionUpdatingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTextRequestedEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextTextRequestedEventArgs*))del;
+- (EventRegistrationToken)addTextRequestedEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextTextRequestedEventArgs*))del;
 - (void)removeTextRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTextUpdatingEvent:(void(^)(WUTCCoreTextEditContext*, WUTCCoreTextTextUpdatingEventArgs*))del;
+- (EventRegistrationToken)addTextUpdatingEvent:(void (^)(WUTCCoreTextEditContext*, WUTCCoreTextTextUpdatingEventArgs*))del;
 - (void)removeTextUpdatingEvent:(EventRegistrationToken)tok;
 - (void)notifyFocusEnter;
 - (void)notifyFocusLeave;
@@ -292,7 +301,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* newSelection;
 @property (readonly) WUTCCoreTextRange* range;
-@property (readonly) NSString * text;
+@property (readonly) NSString* text;
 - (WFDeferral*)getDeferral;
 @end
 
@@ -364,7 +373,7 @@ WINRT_EXPORT
 @interface WUTCCoreTextServicesManager : RTObject
 + (WUTCCoreTextServicesManager*)getForCurrentView;
 @property (readonly) WGLanguage* inputLanguage;
-- (EventRegistrationToken)addInputLanguageChangedEvent:(void(^)(WUTCCoreTextServicesManager*, RTObject*))del;
+- (EventRegistrationToken)addInputLanguageChangedEvent:(void (^)(WUTCCoreTextServicesManager*, RTObject*))del;
 - (void)removeInputLanguageChangedEvent:(EventRegistrationToken)tok;
 - (WUTCCoreTextEditContext*)createEditContext;
 @end
@@ -381,4 +390,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUTCCoreTextServicesConstants_DEFINED__
-

@@ -41,16 +41,19 @@ typedef NSInteger NSStringDrawingOptions;
 @end
 
 @interface NSString (NSStringDrawing)
-- (CGSize)sizeWithAttributes:(NSDictionary *)attrs;
-- (void)drawAtPoint:(CGPoint)point withAttributes:(NSDictionary *)attrs;
+- (CGSize)sizeWithAttributes:(NSDictionary*)attrs;
+- (void)drawAtPoint:(CGPoint)point withAttributes:(NSDictionary*)attrs;
 @end
 
 @interface NSString (NSExtendedStringDrawing)
-- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(NSDictionary *)attributes context:(NSStringDrawingContext *)context;
+- (CGRect)boundingRectWithSize:(CGSize)size
+                       options:(NSStringDrawingOptions)options
+                    attributes:(NSDictionary*)attributes
+                       context:(NSStringDrawingContext*)context;
 @end
 
 @interface NSAttributedString (NSExtendedStringDrawing)
-- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext *)context;
+- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 - (CGSize)size;
 @end
 

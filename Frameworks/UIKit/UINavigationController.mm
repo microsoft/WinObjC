@@ -18,6 +18,8 @@
 #include "UIViewControllerInternal.h"
 #import <UIKit/UIView.h>
 
+const CGFloat UINavigationControllerHideShowBarDuration = .25f;
+
 extern float statusBarHeight;
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);
 bool isOSTarget(NSString* versionStr);
@@ -36,8 +38,6 @@ public:
         _disappearingController = nil;
     }
 };
-
-extern float _UINavigationControllerHideShowBarDuration;
 
 @implementation UINavigationController {
     UINavigationPane* _mainView;
@@ -127,6 +127,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return [super _rotationLocked:curOrientation];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithNavigationBarClass:(id)navBarClass toolbarClass:(id)toolBarClass {
     [super init];
 
@@ -150,6 +153,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithRootViewController:(UIViewController*)controller {
     [super init];
 
@@ -202,6 +208,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)pushViewController:(UIViewController*)controller animated:(BOOL)animated {
     if ([_viewControllers containsObject:controller]) {
         return;
@@ -230,6 +239,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)popViewControllerAnimated:(BOOL)animated {
     if (animated)
         animated = 1;
@@ -252,6 +264,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return controller;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)popToViewController:(UIViewController*)controller animated:(BOOL)animated {
     NSMutableArray* ret = [NSMutableArray array];
     UIViewController* cur = nil;
@@ -280,30 +295,51 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNavigationBarHidden:(BOOL)hidden {
     [self setNavigationBarHidden:hidden animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UINavigationControllerDelegate>)delegate {
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)topViewController {
     return [_viewControllers lastObject];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UINavigationBar*)navigationBar {
     return _navigationBar;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)viewControllers {
     return _viewControllers;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)popToRootViewControllerAnimated:(BOOL)animated {
     if ([_viewControllers count] == 0)
         return [NSArray array];
@@ -311,6 +347,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return [self popToViewController:controller animated:animated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)visibleViewController {
     return [_viewControllers lastObject];
 }
@@ -345,6 +384,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewControllers:(NSArray*)controllers animated:(BOOL)animated {
     //  Go through all controllers
     int count = [controllers count];
@@ -364,6 +406,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [self _showController:[_viewControllers lastObject] animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewControllers:(NSArray*)controllers {
     [self setViewControllers:controllers animated:NO];
 }
@@ -476,6 +521,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [super dismissModalViewControllerAnimated:animated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIToolbar*)toolbar {
     return _toolBar;
 }
@@ -583,6 +631,9 @@ static void rotateViewController(UINavigationController* self) {
     [_toolBar setHidden:TRUE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated {
     _navBarHidden = hidden;
     _didSetNavBarVisibility = TRUE;
@@ -590,10 +641,16 @@ static void rotateViewController(UINavigationController* self) {
     [_mainView setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isNavigationBarHidden {
     return _navBarHidden;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setToolbarHidden:(BOOL)hidden animated:(BOOL)animated {
     _toolBarHidden = hidden;
     _didSetToolBarVisibility = TRUE;
@@ -602,10 +659,16 @@ static void rotateViewController(UINavigationController* self) {
     [_mainView setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setToolbarHidden:(BOOL)hidden {
     [self setToolbarHidden:hidden animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isToolbarHidden {
     return _toolBarHidden;
 }
@@ -797,7 +860,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_setNavBarHiddenAnimated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
             setContainerRectAnimated = TRUE;
         }
         if (_navBarHidden) {
@@ -840,7 +903,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_setToolBarHiddenAnimated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
             setContainerRectAnimated = TRUE;
         }
         if (_toolBarHidden) {
@@ -879,7 +942,7 @@ static void rotateViewController(UINavigationController* self) {
     if (setContainerRect) {
         if (setContainerRectAnimated) {
             [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
         }
         [_containerView setFrame:newContainerFrame];
         CGRect containerBounds;

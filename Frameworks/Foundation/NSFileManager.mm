@@ -39,6 +39,7 @@ DEFN_STR(NSFileTypeDirectory)
 DEFN_STR(NSFileTypeRegular)
 DEFN_STR(NSFileType)
 DEFN_STR(NSFileSize)
+DEFN_STR(NSFileCreationDate)
 DEFN_STR(NSFileModificationDate)
 DEFN_STR(NSFileOwnerAccountName)
 DEFN_STR(NSFileSystemFreeSize)
@@ -179,6 +180,9 @@ static void addAllFiles(id enumerator, id allFiles) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ skipDescendents {
     _skipDescendents = true;
 
@@ -214,6 +218,10 @@ static void addAllFiles(id enumerator, id allFiles) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSFileSize and NSFileCreationDate attributes are supported
+*/
 - (id) /* use typed version */ fileAttributes {
     const char* rootPath = [searchPath UTF8String];
     const char* path = [curFile UTF8String];
@@ -250,6 +258,10 @@ static void addAllFiles(id enumerator, id allFiles) {
 extern "C" bool doLog;
 
 @implementation NSFileManager : NSObject
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)fileExistsAtPath:(id)pathAddr {
     if (pathAddr == nil)
         return FALSE;
@@ -267,6 +279,9 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isReadableFileAtPath:(id)pathAddr {
     const char* path = [pathAddr UTF8String];
 
@@ -278,6 +293,9 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isWritableFileAtPath:(id)pathAddr {
     const char* path = [pathAddr UTF8String];
 
@@ -289,6 +307,9 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)fileExistsAtPath:(id)pathAddr isDirectory:(unsigned char*)isDirectory {
     const char* path = [pathAddr UTF8String];
     struct stat st;
@@ -303,6 +324,10 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes attributes parameter not supported
+*/
 - (BOOL)createDirectoryAtPath:(id)pathAddr attributes:(DWORD)attrs {
     const char* path = [pathAddr UTF8String];
 
@@ -313,6 +338,10 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes attributes parameter not supported.  error parameter is not populated
+*/
 - (BOOL)createDirectoryAtPath:(id)pathAddr withIntermediateDirectories:(BOOL)createIntermediates attributes:(id)attrs error:(id*)err {
     if (createIntermediates) {
         const char* path = [pathAddr UTF8String];
@@ -349,12 +378,19 @@ extern "C" bool doLog;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes attributes parameter not supported. error parameter not supported.
+*/
 - (BOOL)createDirectoryAtURL:(id)url withIntermediateDirectories:(BOOL)createIntermediates attributes:(id)attrs error:(id*)err {
     id path = [url path];
 
     return [self createDirectoryAtPath:path withIntermediateDirectories:createIntermediates attributes:attrs error:err];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)enumeratorAtPath:(id)pathAddr {
     const char* path = [pathAddr UTF8String];
 
@@ -364,6 +400,9 @@ extern "C" bool doLog;
     return directoryEnum;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)changeCurrentDirectoryPath:(id)pathAddr {
     const char* path = [pathAddr UTF8String];
     EbrDebugLog("setting path to %s\n", path);
@@ -373,6 +412,9 @@ extern "C" bool doLog;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)directoryContentsAtPath:(id)pathAddr {
     id enumerator = [NSDirectoryEnumerator new];
     [enumerator initWithPath:[pathAddr UTF8String] shallow:TRUE];
@@ -382,10 +424,17 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)contentsAtPath:(id)pathAddr {
     return [NSData dataWithContentsOfFile:pathAddr];
 }
 
+/**
+ @Status Caveat
+ @Notes Path must exist
+*/
 - (id)contentsOfDirectoryAtPath:(id)pathAddr error:(id*)err {
     EbrDebugLog("contentsOfDirectoryAtPath: %s\n", [pathAddr UTF8String]);
     id enumerator = [NSDirectoryEnumerator new];
@@ -396,7 +445,11 @@ extern "C" bool doLog;
     return ret;
 }
 
-- (id)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
+/**
+ @Status Caveat
+ @Notes Only NSFileSize and NSFileType attributes are supported. traverseLink not supported.
+*/
+- (NSDictionary*)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks {
     if (pathAddr == nil) {
         EbrDebugLog("fileAttributesAtPath nil!");
 
@@ -415,6 +468,11 @@ extern "C" bool doLog;
     id ret = [NSMutableDictionary dictionary];
 
     [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:@"NSFileSize"];
+
+    // NOTE: st_ctime is file creation time on windows for NTFS
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:@"NSFileCreationDate"];
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:@"NSFileModificationDate"];
+
     if (st.st_mode & _S_IFDIR) {
         [ret setValue:NSFileTypeDirectory forKey:@"NSFileType"];
     } else {
@@ -424,14 +482,26 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (id)stringWithFileSystemRepresentation:(char*)path length:(int)length {
+    UNIMPLEMENTED();
     return [NSString stringWithCString:path length:length];
 }
 
+/**
+ @Status Stub
+*/
 - (id)displayNameAtPath:(id)path {
+    UNIMPLEMENTED();
     return path;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSFileSize and NSFileType attributes are supported
+*/
 - (id)attributesOfItemAtPath:(id)pathAddr error:(id*)error {
     if (pathAddr == nil) {
         EbrDebugLog("attributesOfItemAtPath nil!");
@@ -467,12 +537,20 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(id*)err {
+    UNIMPLEMENTED();
     EbrDebugLog("setAttributes not implemented\n");
 
     return TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes error parameter is not populated
+*/
 - (BOOL)removeItemAtPath:(id)pathAddr error:(id*)errRet {
     const char* path = [pathAddr UTF8String];
     EbrDebugLog("removeItemAtPath: %s\n", path);
@@ -490,6 +568,10 @@ extern "C" bool doLog;
     return [self removeItemAtPath:pathAddr error:errRet];
 }
 
+/**
+ @Status Caveat
+ @Notes attributes parameter not supported
+*/
 - (BOOL)createFileAtPath:(id)pathAddr contents:(id)contents attributes:(id)attributes {
     const char* path = [pathAddr UTF8String];
 
@@ -512,6 +594,9 @@ extern "C" bool doLog;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id) /* use typed version */ defaultManager {
     static id defaultManager;
 
@@ -522,6 +607,9 @@ extern "C" bool doLog;
     return defaultManager;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)copyItemAtPath:(id)srcPath toPath:(id)destPath error:(id*)error {
     if (srcPath == nil || destPath == nil) {
         EbrDebugLog("copyItemAtPath: nil!\n");
@@ -567,6 +655,10 @@ extern "C" bool doLog;
     return TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes error parameter is not populated
+*/
 - (BOOL)moveItemAtPath:(id)srcPath toPath:(id)destPath error:(id*)error {
     const char* src = [srcPath UTF8String];
     const char* dest = [destPath UTF8String];
@@ -583,7 +675,11 @@ extern "C" bool doLog;
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 - (id)fileSystemAttributesAtPath:(id)pathAddr {
+    UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
     EbrDebugLog("fileAttributesAtPath: %s\n", path);
@@ -596,7 +692,11 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (id)attributesOfFileSystemForPath:(id)pathAddr error:(id*)error {
+    UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
     EbrDebugLog("fileAttributesAtPath: %s\n", path);
@@ -611,17 +711,28 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (const char*)fileSystemRepresentationWithPath:(id)pathAddr {
+    UNIMPLEMENTED();
     return [pathAddr UTF8String];
 }
 
+/**
+ @Status Stub
+*/
 - (id)destinationOfSymbolicLinkAtPath:(id)path error:(id*)error {
+    UNIMPLEMENTED();
     const char* pPath = [path UTF8String];
     EbrDebugLog("destinationOfSymbolicLinkAtPath: %s\n", pPath);
 
     return [path retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)URLsForDirectory:(DWORD)directory inDomains:(DWORD)domains {
     id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
 
@@ -640,7 +751,11 @@ extern "C" bool doLog;
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (id)URLForDirectory:(DWORD)directory inDomain:(DWORD)domains appropriateForURL:(id)forURL create:(BOOL)create error:(id*)error {
+    UNIMPLEMENTED();
     assert(forURL == nil);
     id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
 
@@ -659,6 +774,10 @@ extern "C" bool doLog;
     return nil;
 }
 
+/**
+ @Status Caveat
+ @Notes Comparing directories not supported
+*/
 - (BOOL)contentsEqualAtPath:(id)pathObj1 andPath:(id)pathObj2 {
     const char* path1 = [pathObj1 UTF8String];
     const char* path2 = [pathObj2 UTF8String];

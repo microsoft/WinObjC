@@ -77,6 +77,9 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return alertPriv->_numButtons++;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithTitle:(NSString*)title
             message:(NSString*)message
            delegate:(id)delegate
@@ -168,6 +171,9 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     objc_storeWeak(&alertPriv->_delegate, delegate);
     alertPriv->_delegateSupportsDidDismiss = [alertPriv->_delegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)];
@@ -175,6 +181,9 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     alertPriv->_delegateSupportsModalCancel = [alertPriv->_delegate respondsToSelector:@selector(modalViewCancel:)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     id ret;
 
@@ -182,26 +191,46 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(id)title {
     alertPriv->_title.attach([title copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ title {
     return alertPriv->_title;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAlertViewStyle:(UIAlertViewStyle)style {
+    UNIMPLEMENTED();
     alertPriv->_style = style;
 }
 
+/**
+ @Status Stub
+*/
 - (UIAlertViewStyle)alertViewStyle {
+    UNIMPLEMENTED();
     return alertPriv->_style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMessage:(id)message {
     alertPriv->_message.attach([message copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)addButtonWithTitle:(id)title {
     if (alertPriv->_otherButtonIndex == -1) {
         if (alertPriv->_cancelText != nil) {
@@ -221,14 +250,23 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)cancelButtonIndex {
     return alertPriv->_cancelButtonIndex;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)firstOtherButtonIndex {
     return alertPriv->_otherButtonIndex;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCancelButtonIndex:(int)index {
     alertPriv->_cancelButtonIndex = index;
 }
@@ -312,6 +350,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dismissWithClickedButtonIndex:(int)index animated:(BOOL)animated {
     [self retain];
     [self autorelease];
@@ -344,10 +385,16 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     hideAlert(self, index, TRUE);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isVisible {
     return alertPriv->_isVisible;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void) /* use typed version */ show {
     float boxWidth = 300.0f;
     id titleFont = [UIFont titleFont];
@@ -560,6 +607,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)buttonTitleAtIndex:(int)index {
     if (index == alertPriv->_cancelButtonIndex) {
         return alertPriv->_cancelText;
@@ -571,7 +621,11 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     return [alertPriv->_buttons[idx]._buttonView currentTitle];
 }
 
+/**
+ @Status Stub
+*/
 - (id)textFieldAtIndex:(int)index {
+    UNIMPLEMENTED();
     // TODO: should return a UITextField.
     return nil;
 }

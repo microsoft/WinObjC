@@ -36,19 +36,18 @@
 - (const char*)fileSystemRepresentationWithPath:(id)pathAddr;
 - (BOOL)contentsEqualAtPath:(id)pathObj1 andPath:(id)pathObj2;
 - (void)dealloc;
-/* annotate with type */ -(id)initWithPath : (const char*)path shallow : (BOOL)shallow;
-/* annotate with type */ -(id)enumeratorAtPath : (id)pathAddr;
-/* annotate with type */ -(id)directoryContentsAtPath : (id)pathAddr;
-/* annotate with type */ -(id)contentsAtPath : (id)pathAddr;
-/* annotate with type */ -(id)contentsOfDirectoryAtPath : (id)pathAddr error : (id*)err;
-/* annotate with type */ -(id)fileAttributesAtPath : (id)pathAddr traverseLink : (DWORD)traveseLinks;
-/* annotate with type */ -(id)stringWithFileSystemRepresentation : (char*)path length : (int)length;
-/* annotate with type */ -(id)displayNameAtPath : (id)path;
-/* annotate with type */ -(id)attributesOfItemAtPath : (id)pathAddr error : (id*)error;
-/* annotate with type */ -(id)fileSystemAttributesAtPath : (id)pathAddr;
-/* annotate with type */ -(id)attributesOfFileSystemForPath : (id)pathAddr error : (id*)error;
-/* annotate with type */ -(id)destinationOfSymbolicLinkAtPath : (id)path error : (id*)error;
-/* annotate with type */ -(id)URLsForDirectory : (DWORD)directory inDomains : (DWORD)domains;
-/* annotate with type */ -(id)URLForDirectory : (DWORD)directory inDomain : (DWORD)domains appropriateForURL
-                                                                            : (id)forURL create : (BOOL)create error : (id*)error;
+- (id)initWithPath:(const char*)path shallow:(BOOL)shallow;
+- (id)enumeratorAtPath:(id)pathAddr;
+- (id)directoryContentsAtPath:(id)pathAddr;
+- (id)contentsAtPath:(id)pathAddr;
+- (id)contentsOfDirectoryAtPath:(id)pathAddr error:(id*)err;
+- (id)fileAttributesAtPath:(id)pathAddr traverseLink:(DWORD)traveseLinks;
+- (id)stringWithFileSystemRepresentation:(char*)path length:(int)length;
+- (id)displayNameAtPath:(id)path;
+- (id)attributesOfItemAtPath:(id)pathAddr error:(id*)error;
+- (id)fileSystemAttributesAtPath:(id)pathAddr;
+- (id)attributesOfFileSystemForPath:(id)pathAddr error:(id*)error;
+- (id)destinationOfSymbolicLinkAtPath:(id)path error:(id*)error;
+- (id)URLsForDirectory:(DWORD)directory inDomains:(DWORD)domains;
+- (id)URLForDirectory:(DWORD)directory inDomain:(DWORD)domains appropriateForURL:(id)forURL create:(BOOL)create error:(id*)error;
 @end

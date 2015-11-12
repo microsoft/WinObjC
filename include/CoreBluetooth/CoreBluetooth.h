@@ -22,11 +22,10 @@
 
 typedef uint32_t CBCentralManagerState;
 
-typedef enum
-{
+typedef enum {
     CBCentralManagerStateUnsupported,
     CBCentralManagerStatePoweredOn,
-    CBCentralManagerStatePoweredOff
+    CBCentralManagerStatePoweredOff,
 };
 
 @protocol CBCentralManagerDelegate
@@ -35,9 +34,9 @@ typedef enum
 COREBLUETOOTH_EXPORT
 @interface CBCentralManager : NSObject {
 }
-@property(readonly) CBCentralManagerState state;
+@property (readonly) CBCentralManagerState state;
 
--(instancetype) initWithDelegate: (id) delegate queue: (id) queue;
+- (instancetype)initWithDelegate:(id)delegate queue:(id)queue;
 @end
 
 #endif

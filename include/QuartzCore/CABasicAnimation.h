@@ -19,8 +19,8 @@
 CA_EXPORT_CLASS
 @interface CABasicAnimation : CAPropertyAnimation
 
-@property(retain) id fromValue;
-@property(retain) id toValue;
-@property(retain) id byValue;
+@property (retain) id fromValue;
+@property (retain) id toValue;
+@property (retain) id byValue;
 
 @end

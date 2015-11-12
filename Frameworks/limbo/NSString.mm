@@ -308,6 +308,9 @@ typedef NSUInteger NSStringCompareOptions;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCString:(const char*)cStr {
     UnicodeString str(cStr, strlen(cStr), US_INV);
 
@@ -315,6 +318,9 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     UnicodeString str;
 
@@ -322,6 +328,9 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCString:(const char*)cStr length:(DWORD)length {
     UnicodeString str(cStr, length, US_INV);
 
@@ -329,6 +338,9 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithUTF8String:(const char*)utf8str {
     UnicodeString str = UnicodeString::fromUTF8(StringPiece(utf8str));
     setToUnicode(self, str);
@@ -336,6 +348,9 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFormat:(NSString*)formatStr, ... {
     va_list reader;
     va_start(reader, formatStr);
@@ -346,12 +361,18 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
     setToFormat(nil, formatStr, pReader, self);
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithString:(NSString*)otherStr {
     UStringHolder s1(otherStr);
     UnicodeString copy = s1.string();
@@ -361,10 +382,16 @@ typedef NSUInteger NSStringCompareOptions;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithString:(NSString*)str {
     return [[[self alloc] initWithString:str] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByAppendingString:(NSString*)str {
     if (str == nil) {
         EbrDebugLog("stringByAppendingString: str = nil!\n");
@@ -401,14 +428,24 @@ return [ret autorelease];
 }
 #endif
 
+/**
+ @Status Stub
+*/
 - (NSString*)stringByAbbreviatingWithTildeInPath {
+    UNIMPLEMENTED();
     return [[self copy] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSString*)string {
     return @"";
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithFormat:(NSString*)formatStr, ... {
     va_list reader;
     va_start(reader, formatStr);
@@ -420,34 +457,56 @@ return [ret autorelease];
     return [objRet autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithCString:(char*)str {
     NSString* ret = [[self alloc] initWithCString:str];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 + (instancetype)stringWithCString:(char*)str encoding:(int)encoding {
     NSString* ret = [[self alloc] initWithCString:str encoding:encoding];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithUTF8String:(char*)str {
     NSString* ret = [[self alloc] initWithUTF8String:str];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithCString:(char*)str length:(DWORD)length {
     NSString* ret = [[self alloc] initWithCString:str length:length];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Stub
+ @Notes Returns NSASCIIStringEncoding
+*/
 + (NSStringEncoding)defaultCStringEncoding {
+    UNIMPLEMENTED();
     return NSASCIIStringEncoding;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 - (instancetype)initWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
     const char* bytes = (const char*)[data bytes];
     DWORD length = [data length];
@@ -535,6 +594,10 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 - (instancetype)initWithBytes:(const char*)bytes length:(unsigned)length encoding:(NSStringEncoding)encoding {
     switch (encoding) {
         case NSWindowsCP1251StringEncoding:
@@ -591,6 +654,10 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available.  CRT types must match when freeWhenDone=YES
+*/
 - (instancetype)initWithBytesNoCopy:(const char*)bytes
                              length:(unsigned)length
                            encoding:(NSStringEncoding)encoding
@@ -605,10 +672,16 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithCharacters:(const WORD*)bytes length:(unsigned)length {
     return [[[self alloc] initWithCharacters:bytes length:length] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCharacters:(const WORD*)bytes length:(DWORD)length {
     UnicodeString str((UChar*)bytes, length);
 
@@ -616,6 +689,10 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes CRT types must match when freeWhenDone=YES
+*/
 - (instancetype)initWithCharactersNoCopy:(const WORD*)bytes length:(DWORD)length freeWhenDone:(BOOL)freeWhenDone {
     strType = NSConstructedString_NoOwn;
     u = new stringData();
@@ -627,6 +704,10 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 - (instancetype)initWithCString:(char*)bytes encoding:(NSStringEncoding)encoding {
     int len = 0;
 
@@ -660,6 +741,9 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithContentsOfFile:(NSString*)path {
     if (path == nil) {
         EbrDebugLog("NSString: path = nil!\n");
@@ -709,6 +793,10 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
     if (!file) {
         EbrDebugLog("WriteToFile: nil!\n");
@@ -762,6 +850,10 @@ return [ret autorelease];
     return TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available.
+*/
 - (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
     if (path == nil) {
         EbrDebugLog("initWithContentsOfFile: path = nil!\n");
@@ -813,6 +905,10 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 - (unsigned)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
     unsigned ret;
 
@@ -842,6 +938,10 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
     NSString* ret = [[self alloc] initWithContentsOfFile:path encoding:encoding error:errorRet];
 
@@ -852,6 +952,10 @@ return [ret autorelease];
     return [self stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 + (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
     NSString* ret = [self alloc];
 
@@ -863,10 +967,17 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithContentsOfFile:(NSString*)path {
     return [[[self alloc] initWithContentsOfFile:path] autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     NSString* ret = [self alloc];
 
@@ -877,6 +988,10 @@ return [ret autorelease];
     return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings available
+*/
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     if (usedEncoding)
         *usedEncoding = NSASCIIStringEncoding;
@@ -897,6 +1012,10 @@ return [ret autorelease];
     return [self cStringUsingEncoding:encoding];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 - (const char*)cStringUsingEncoding:(DWORD)encoding {
     switch (encoding) {
         case NSASCIIStringEncoding:
@@ -984,10 +1103,17 @@ return [ret autorelease];
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (NSStringEncoding)fastestEncoding {
+    UNIMPLEMENTED();
     return NSASCIIStringEncoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (const char*)UTF8String {
     if (strType == NSConstructedString_Unicode) {
         if (u->ConstructedString.constructedStr->utf8String) {
@@ -998,6 +1124,10 @@ return [ret autorelease];
     return (const char*)[self cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
+/**
+ @Status Caveat
+ @Notes options not supported.  Limited encodings supported.
+*/
 - (BOOL)getBytes:(BYTE*)buffer
        maxLength:(unsigned)maxBuf
       usedLength:(unsigned*)usedLength
@@ -1141,6 +1271,9 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getCharacters:(unsigned short*)dest range:(NSRange)range {
     UStringHolder s1(self, range.location, range.length);
 
@@ -1150,6 +1283,9 @@ return [ret autorelease];
     s1.string().extract((UChar*)dest, range.length, error);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getCharacters:(unsigned short*)dest {
     UStringHolder s1(self);
 
@@ -1160,6 +1296,9 @@ return [ret autorelease];
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)lowercaseString {
     UStringHolder s1(self);
 
@@ -1172,6 +1311,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)capitalizedString {
     UStringHolder s1(self);
 
@@ -1184,6 +1326,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)uppercaseString {
     UStringHolder s1(self);
 
@@ -1205,6 +1350,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)stringByDeletingPathExtension {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1226,6 +1374,9 @@ return [ret autorelease];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)stringByDeletingLastPathComponent {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1251,6 +1402,9 @@ return [ret autorelease];
     return @"";
 }
 
+/**
+ @Status Interoperable
+*/
 - (UChar)characterAtIndex:(unsigned)index {
     UStringHolder s1(self);
     DWORD len = s1.string().length();
@@ -1261,6 +1415,9 @@ return [ret autorelease];
     return chars[index];
 }
 
+/**
+ @Status Interoperable
+*/
 - (const unichar*)rawCharacters {
     UStringHolder s1(self);
     DWORD len = s1.string().length();
@@ -1269,6 +1426,9 @@ return [ret autorelease];
     return (const unichar*)chars;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)stringByAppendingPathComponent:(NSString*)pathStr {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1313,6 +1473,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)stringByAppendingPathExtension:(NSString*)extension {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1340,6 +1503,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasSuffix:(NSString*)suffixStr {
     UStringHolder s1(self);
     UStringHolder s2(suffixStr);
@@ -1351,6 +1517,9 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasPrefix:(NSString*)prefixStr {
     UStringHolder s1(self);
     UStringHolder s2(prefixStr);
@@ -1368,6 +1537,9 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)pathExtension {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1393,6 +1565,9 @@ return [ret autorelease];
     return @"";
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)lastPathComponent {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1422,6 +1597,9 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)substringToIndex:(DWORD)anIndex {
     UStringHolder s1(self);
 
@@ -1431,6 +1609,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)substringFromIndex:(DWORD)anIndex {
     UStringHolder s1(self);
 
@@ -1440,6 +1621,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)substringWithRange:(NSRange)range {
     UStringHolder s1(self);
 
@@ -1449,16 +1633,25 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)length {
     UStringHolder s1(self);
 
     return s1.string().length();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToString:(NSString*)compStr {
     if (compStr == nil)
         return FALSE;
@@ -1479,21 +1672,37 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Stub
+ @Notes Forwards to compare:
+*/
 - (int)localizedCaseInsensitiveCompare:(NSString*)compStr {
+    UNIMPLEMENTED();
     UStringHolder s1(self);
     return [self compare:(id)compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, s1.string().length())];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)caseInsensitiveCompare:(NSString*)compStr {
     UStringHolder s1(self);
     return [self compare:(id)compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, s1.string().length())];
 }
 
+/**
+ @Status Stub
+ @Notes Forwards to compare:
+*/
 - (int)localizedCompare:(NSString*)compStr {
+    UNIMPLEMENTED();
     UStringHolder s1(self);
     return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)compare:(NSString*)compStr {
     UStringHolder s1(self);
     return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())];
@@ -1519,11 +1728,21 @@ return [ret autorelease];
     return result;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSAnchoredSearch, NSDiacriticInsensitiveSearch, NSNumericSearch,
+        and NSRegularExpression are supported.
+*/
 - (int)compare:(NSString*)compStr options:(NSStringCompareOptions)options {
     UStringHolder s1(self);
     return [self compare:compStr options:options range:NSMakeRange(0, s1.string().length())];
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSAnchoredSearch, NSDiacriticInsensitiveSearch, NSNumericSearch,
+        and NSRegularExpression are supported.
+*/
 - (int)compare:(NSString*)compStrAddr options:(NSStringCompareOptions)options range:(NSRange)range {
     if (compStrAddr == nil) {
         return -1;
@@ -1593,16 +1812,25 @@ return [ret autorelease];
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)intValue {
     char* str = (char*)[self UTF8String];
 
     return strtol(str, NULL, 10);
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)integerValue {
     return [self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (__int64)longLongValue {
     char* str = (char*)[self UTF8String];
 
@@ -1626,6 +1854,9 @@ return [ret autorelease];
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)floatValue {
     char* str = (char*)[self UTF8String];
 
@@ -1634,6 +1865,9 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)doubleValue {
     char* str = (char*)[self UTF8String];
 
@@ -1669,6 +1903,9 @@ return [ret autorelease];
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet {
     UStringHolder s1(self);
 
@@ -1678,6 +1915,10 @@ return [ret autorelease];
     return range;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
+*/
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(DWORD)options {
     UStringHolder s1(self);
 
@@ -1687,6 +1928,10 @@ return [ret autorelease];
     return range;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
+*/
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(DWORD)options range:(NSRange)range {
     NSRange ret;
 
@@ -1725,14 +1970,24 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getCString:(char*)buf maxLength:(DWORD)maxLength {
     return [self getCString:buf maxLength:maxLength encoding:NSASCIIStringEncoding];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getCString:(char*)buf {
     return [self getCString:buf maxLength:0x7FFFFFFF encoding:NSASCIIStringEncoding];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 - (BOOL)getCString:(char*)buf maxLength:(DWORD)maxLength encoding:(DWORD)encoding {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1757,6 +2012,9 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)componentsSeparatedByString:(NSString*)separators {
     UStringHolder s1(self);
     UStringHolder s2(separators);
@@ -1823,6 +2081,9 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)componentsSeparatedByCharactersInSet:(NSCharacterSet*)set {
     NSMutableArray* result = [NSMutableArray array];
     int length = [self length];
@@ -1845,6 +2106,9 @@ return [ret autorelease];
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByReplacingCharactersInRange:(NSRange)range withString:(NSString*)replacement {
     NSString* ret = [self mutableCopy];
     [ret replaceCharactersInRange:range withString:replacement];
@@ -1853,12 +2117,20 @@ return [ret autorelease];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target withString:(NSString*)replacement {
     int length = [self length];
 
     return [self stringByReplacingOccurrencesOfString:target withString:replacement options:0 range:NSMakeRange(0, length)];
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
+        and NSRegularExpression are supported.
+*/
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target
                                        withString:(NSString*)replacement
                                           options:(DWORD)options
@@ -1886,6 +2158,9 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByTrimmingCharactersInSet:(NSCharacterSet*)charSet {
     UStringHolder s1(self);
     UnicodeString& str1 = s1.string();
@@ -1913,6 +2188,9 @@ return [ret autorelease];
     return [self substringWithRange:NSMakeRange(start, end - start)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSRange)rangeOfString:(NSString*)subStr {
     UStringHolder s1(self);
 
@@ -1927,6 +2205,11 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
+        and NSRegularExpression are supported.
+*/
 - (NSRange)rangeOfString:(NSString*)subStr options:(DWORD)options {
     UStringHolder s1(self);
 
@@ -1941,6 +2224,11 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
+        and NSRegularExpression are supported.
+*/
 - (NSRange)rangeOfString:(NSString*)subStr options:(DWORD)options range:(NSRange)range {
     NSRange ret;
 
@@ -2031,6 +2319,9 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isAbsolutePath {
     char* pStr = (char*)[self UTF8String];
 
@@ -2041,6 +2332,9 @@ return [ret autorelease];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)pathComponents {
     NSMutableArray* ret = [self componentsSeparatedByString:@"/"];
     ret = [[ret mutableCopy] autorelease];
@@ -2064,16 +2358,27 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Simply returns UTF8 converison
+*/
 - (const char*)fileSystemRepresentation {
     return [self UTF8String];
 }
 
+/**
+ @Status Caveat
+ @Notes Simply returns UTF8 converison
+*/
 - (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(DWORD)destMax {
     strncpy(dest, (char*)[self UTF8String], destMax);
 
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSString*)pathWithComponents:(NSArray*)components {
     int count = [components count];
     char outStr[1024];
@@ -2091,6 +2396,10 @@ return [ret autorelease];
     return [self stringWithCString:outStr];
 }
 
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -2106,16 +2415,28 @@ return [ret autorelease];
     return ret;
 }
 
+/**
+ @Status Stub
+ @Notes Forwards to dataUsingEncoding:
+*/
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(DWORD)lossy {
+    UNIMPLEMENTED();
     assert(encoding == NSASCIIStringEncoding || encoding == NSUTF8StringEncoding);
 
     return [self dataUsingEncoding:encoding];
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)stringByExpandingTildeInPath {
+    UNIMPLEMENTED();
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByStandardizingPath {
     NSArray* components = [self componentsSeparatedByString:@"/"];
     int componentsCount = [components count];
@@ -2180,6 +2501,9 @@ static unichar PickWord(unichar c) {
     return c;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)propertyListFromStringsFileFormat {
     NSMutableDictionary* ret = [objc_getClass("NSMutableDictionary") new];
     DWORD length = [self length];
@@ -2461,6 +2785,9 @@ return ret;
     return hash;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByPaddingToLength:(int)length withString:(NSString*)withString startingAtIndex:(int)atIndex {
     UStringHolder s1(self);
 
@@ -2489,6 +2816,10 @@ return ret;
     return [ret autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes encoding parameter not supported
+*/
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(DWORD)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
     unichar* unicode = (unichar*)EbrMalloc(length * 2);
@@ -2523,6 +2854,10 @@ return ret;
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes encoding parameter not supported
+*/
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
     unichar* buffer = (unichar*)EbrMalloc(length * 2);
@@ -2594,6 +2929,9 @@ return ret;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByRemovingPercentEncoding {
     // This method always replaces the percent encoded characters with matching UTF8 characters.
     // Call stringByReplacingPercentEscapesUsingEncoding with NSUTF8StringEncoding option to
@@ -2601,10 +2939,17 @@ return ret;
     return [self stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canBeConvertedToEncoding:(DWORD)encoding {
+    UNIMPLEMENTED();
     return TRUE; //  [BUG: Blatant lie]
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSRange)lineRangeForRange:(NSRange)range {
     NSRange ret;
     int length = [self length];
@@ -2657,6 +3002,9 @@ return ret;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getParagraphStart:(DWORD*)startp end:(DWORD*)endp contentsEnd:(DWORD*)contentsEndp forRange:(NSRange)range {
     UStringHolder s1(self);
     /*
@@ -2710,11 +3058,19 @@ return ret;
         *contentsEndp = contentsEnd;
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)precomposedStringWithCanonicalMapping {
+    UNIMPLEMENTED();
     EbrDebugLog("precomposedStringWithCanonicalMapping??\n");
     return [self retain];
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSStringEnumerationByWords supported
+*/
 - (void)enumerateSubstringsInRange:(NSRange)range options:(DWORD)options usingBlock:(id)usingBlock {
     switch (options) {
         case NSStringEnumerationByWords: {
@@ -2841,6 +3197,9 @@ return ret;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)boolValue {
     UStringHolder s1(self);
     int len = s1.string().length();

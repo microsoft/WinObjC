@@ -25,7 +25,11 @@
 @class GLKView;
 
 @protocol GLKViewDelegate
--(void)glkView:(GLKView*)view drawInRect:(CGRect)rect;
+
+/**
+ @Status Interoperable
+*/
+- (void)glkView:(GLKView*)view drawInRect:(CGRect)rect;
 @end
 
 // --------------------------------------------------------------------------------
@@ -33,23 +37,23 @@
 GLKIT_EXPORT_CLASS
 @interface GLKView : UIView
 
-@property (assign) id<GLKViewDelegate>  delegate;
-@property (retain) EAGLContext*         context;
+@property (assign) id<GLKViewDelegate> delegate;
+@property (retain) EAGLContext* context;
 
-@property (readonly) GLuint             drawableWidth;
-@property (readonly) GLuint             drawableHeight;
+@property (readonly) GLuint drawableWidth;
+@property (readonly) GLuint drawableHeight;
 
-@property GLKViewDrawableColorFormat    drawableColorFormat;
-@property GLKViewDrawableDepthFormat    drawableDepthFormat;
-@property GLKViewDrawableStencilFormat  drawableStencilFormat;
+@property GLKViewDrawableColorFormat drawableColorFormat;
+@property GLKViewDrawableDepthFormat drawableDepthFormat;
+@property GLKViewDrawableStencilFormat drawableStencilFormat;
 
 @property BOOL enableSetNeedsDisplay;
 
 // ----------------------------------------
 
--(id) initWithFrame: (CGRect)rect;
--(id) initWithCoder: (NSCoder*)coder;
+- (id)initWithFrame:(CGRect)rect;
+- (id)initWithCoder:(NSCoder*)coder;
 
--(void) layoutSubviews;
+- (void)layoutSubviews;
 
 @end

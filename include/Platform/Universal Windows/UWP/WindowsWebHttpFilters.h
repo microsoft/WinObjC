@@ -21,20 +21,21 @@
 
 #include "interopBase.h"
 @class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
-@protocol WWHFIHttpFilter, WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter, WWHFIHttpBaseProtocolFilter2;
+@protocol WWHFIHttpFilter
+, WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter, WWHFIHttpBaseProtocolFilter2;
 
 // Windows.Web.Http.Filters.HttpCacheReadBehavior
 enum _WWHFHttpCacheReadBehavior {
-	WWHFHttpCacheReadBehaviorDefault = 0,
-	WWHFHttpCacheReadBehaviorMostRecent = 1,
-	WWHFHttpCacheReadBehaviorOnlyFromCache = 2,
+    WWHFHttpCacheReadBehaviorDefault = 0,
+    WWHFHttpCacheReadBehaviorMostRecent = 1,
+    WWHFHttpCacheReadBehaviorOnlyFromCache = 2,
 };
 typedef unsigned WWHFHttpCacheReadBehavior;
 
 // Windows.Web.Http.Filters.HttpCacheWriteBehavior
 enum _WWHFHttpCacheWriteBehavior {
-	WWHFHttpCacheWriteBehaviorDefault = 0,
-	WWHFHttpCacheWriteBehaviorNoCache = 1,
+    WWHFHttpCacheWriteBehaviorDefault = 0,
+    WWHFHttpCacheWriteBehaviorNoCache = 1,
 };
 typedef unsigned WWHFHttpCacheWriteBehavior;
 
@@ -61,7 +62,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #define __WWHFIHttpFilter_DEFINED__
 
 @protocol WWHFIHttpFilter <WFIClosable>
-- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
+                 success:(void (^)(WWHHttpResponseMessage*))success
+                progress:(void (^)(WWHHttpProgress*))progress
+                 failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -98,9 +102,11 @@ WINRT_EXPORT
 @property (readonly) NSMutableArray* ignorableServerCertificateErrors;
 @property (readonly) WWHFHttpCacheControl* cacheControl;
 @property WWHHttpVersion maxVersion;
-- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
+                 success:(void (^)(WWHHttpResponseMessage*))success
+                progress:(void (^)(WWHHttpProgress*))progress
+                 failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WWHFHttpBaseProtocolFilter_DEFINED__
-

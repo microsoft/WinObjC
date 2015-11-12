@@ -83,5 +83,3 @@ enum _WFMDeprecationType {
     WFMDeprecationTypeRemove = 1,
 };
 typedef unsigned WFMDeprecationType;
-
-

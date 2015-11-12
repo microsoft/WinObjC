@@ -37,6 +37,9 @@ static id _registeredClasses = nil;
     return _registeredClasses;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)registerClass:(id)cls {
     [_registeredClasses addObject:cls];
     return YES;
@@ -79,6 +82,9 @@ static id _registeredClasses = nil;
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client {
     _request.attach([request mutableCopy]);
     _cachedResponse = [response retain];
@@ -86,10 +92,16 @@ static id _registeredClasses = nil;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)client {
     return _client;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)request {
     return _request;
 }

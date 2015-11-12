@@ -64,7 +64,14 @@ UIKIT_EXPORT_CLASS
 @protocol UIPickerViewDataSource <NSObject>
 @required
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
+
+/**
+ @Status Interoperable
+*/
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
 
 @end
@@ -73,12 +80,29 @@ UIKIT_EXPORT_CLASS
 @protocol UIPickerViewDelegate <NSObject>
 @optional
 
+/**
+ @Status Interoperable
+*/
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component;
+
+/**
+ @Status Interoperable
+*/
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component;
 
+/**
+ @Status Interoperable
+*/
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
+
+/**
+ @Status Interoperable
+*/
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view;
 
+/**
+ @Status Interoperable
+*/
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 
 @end

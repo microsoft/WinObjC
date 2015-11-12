@@ -22,12 +22,10 @@
 #include "interopBase.h"
 // Windows.Security.EnterpriseData.ProtectionPolicyEvaluationResult
 enum _WSEProtectionPolicyEvaluationResult {
-	WSEProtectionPolicyEvaluationResultAllowed = 0,
-	WSEProtectionPolicyEvaluationResultBlocked = 1,
-	WSEProtectionPolicyEvaluationResultConsentRequired = 2,
+    WSEProtectionPolicyEvaluationResultAllowed = 0,
+    WSEProtectionPolicyEvaluationResultBlocked = 1,
+    WSEProtectionPolicyEvaluationResultConsentRequired = 2,
 };
 typedef unsigned WSEProtectionPolicyEvaluationResult;
 
-
 #import <Foundation/Foundation.h>
-

@@ -71,19 +71,36 @@ CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* col
     return (CGColorSpaceRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
+/**
+ @Status Stub
+ @Notes Always returns RGBA colorspace
+*/
 CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
+    UNIMPLEMENTED();
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
+/**
+ @Status Stub
+ @Notes Always returns RGB colorspace
+*/
 CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGColorSpaceGetModel not implemented\n");
     return kCGColorSpaceModelRGB;
 }
 
+/**
+ @Status Caveat
+ @Notes Doesn't support all bitmap formats
+*/
 size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef pSpace) {
     switch (((__CGColorSpace*)pSpace)->colorSpace) {
         case _ColorRGBA:
@@ -99,6 +116,9 @@ size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef pSpace) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(_ColorGrayscale);
 }
@@ -117,31 +137,49 @@ CGColorSpaceRef CGColorSpaceCreateWithName(id name) {
     return NULL;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGColorSpaceRelease(CGColorSpaceRef colorSpace) {
     CFRelease((id)colorSpace);
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
     CFRetain((id)colorSpace);
 
     return colorSpace;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGColorRelease(CGColorRef color) {
     CFRelease(color);
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorRetain(CGColorRef color) {
     CFRetain((id)color);
 
     return color;
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorCreateCopy(CGColorRef color) {
     // Revisit?
     return CGColorRetain(color);
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
     CGColorRef ret =
         (CGColorRef)[[_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
@@ -149,6 +187,9 @@ CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
     float curColor[4];
 
@@ -158,18 +199,28 @@ CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
 
     return (CGColorRef)ret;
 }
+
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, id pattern, float components[]) {
     CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithCGPattern:pattern] retain];
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorRef CGColorCreateGenericRGB(float r, float g, float b, float a) {
     CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithRed:r green:g blue:b alpha:a] retain];
 
     return ret;
 }
 
+/**
+ @Status Gap
+*/
 bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     float components1[4] = { 0.0f };
     float components2[4] = { 0.0f };
@@ -186,6 +237,10 @@ bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     return TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited constants supported
+*/
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
     UIColor* ret;
 
@@ -199,12 +254,19 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
     return (CGColorRef)[ret retain];
 }
 
+/**
+ @Status Stub
+*/
 size_t CGColorGetNumberOfComponents(CGColorRef color) {
+    UNIMPLEMENTED();
     /* [BUG: Not all colors have 4 components, but all of the ones we currently
-     * support do!] */
+    * support do!] */
     return 4;
 }
 
+/**
+ @Status Interoperable
+*/
 CGFloat CGColorGetAlpha(CGColorRef color) {
     float components[4];
 
@@ -213,6 +275,10 @@ CGFloat CGColorGetAlpha(CGColorRef color) {
     return (CGFloat)components[3];
 }
 
+/**
+ @Status Stub
+*/
 CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
+    UNIMPLEMENTED();
     return CGColorSpaceCreateDeviceRGB();
 }

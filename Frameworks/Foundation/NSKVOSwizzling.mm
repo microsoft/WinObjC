@@ -18,40 +18,93 @@
 
 static Class NSKVO$class(id self, SEL);
 static Class NSKVO$meta$superclass(Class self, SEL);
+static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key);
+static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key);
 static void NSKVO$dealloc(id self, SEL);
 
-static id nullIMP(id, SEL, ...) {
-    return nil;
+namespace {
+
+// Swizzling stuff
+struct NSKVOSwizzledMethod {
+    std::string key;
+    size_t valueSize;
+    IMP origImp;
+    NSKVOSwizzledMethod(const std::string& key) : key(key), valueSize(0), origImp(nullptr) {
+    }
+    NSKVOSwizzledMethod(const std::string& key, const char* objcType, IMP origImp)
+        : key(key), valueSize(getArgumentSize(objcType)), origImp(origImp) {
+    }
+    NSKVOSwizzledMethod(IMP origImp) : origImp(origImp) {
+    }
+    template <typename... Args>
+    void callOriginal(id self, SEL _cmd, Args... args) {
+        ((void (*)(id, SEL, Args...))origImp)(self, _cmd, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    void callOriginalVariadic(id self, SEL _cmd, Args... args) {
+        ((void (*)(id, SEL, ...))origImp)(self, _cmd, std::forward<Args>(args)...);
+    }
+};
+
+class NSKVOSwizzledClass : public NSKVOClass {
+private:
+    std::unordered_map<SEL, NSKVOSwizzledMethod> _selectorMethodInfo;
+    std::recursive_mutex _mutex;
+    std::function<void(id)> _deallocInstance;
+
+public:
+    NSKVOSwizzledClass(Class originalClass, Class notifyingClass)
+        : NSKVOClass(originalClass, notifyingClass), _selectorMethodInfo(), _mutex() {
+        auto deallocIMP = (void (*)(id, SEL))class_getMethodImplementation(originalClass, @selector(dealloc));
+        _deallocInstance = std::bind(deallocIMP, std::placeholders::_1, @selector(dealloc));
+    }
+    NSKVOSwizzledMethod& swizzledMethod(SEL sel) {
+        std::lock_guard<std::recursive_mutex> lock(_mutex);
+        return _selectorMethodInfo.at(sel);
+    }
+
+    void dealloc(id instance) override {
+        NSKVOClass::dealloc(instance);
+        _deallocInstance(instance);
+    }
+
+    // Two entrypoints into method swizzling: one key-based, one imp-based.
+    void swizzleMethod(SEL sel, IMP newImp);
+    void ensureKeyWillNotify(const std::string& key) override;
+
+private:
+    void _swizzleMethodWithMethodInfo(SEL sel, IMP newImp, NSKVOSwizzledMethod&& methodInfo);
+};
 }
 
-/* static */
-// KVOSwizzledClass::notifyingClassForClass constructs at runtime a notifying version of a given class.
-Class KVOSwizzledClass::notifyingClassForClass(Class originalClass) {
-    std::lock_guard<std::recursive_mutex> lock(s_classMutex);
-
+// NSKVOSwizzledNotifyingClassForClass constructs at runtime a notifying version of a given class.
+// happen only under lock.
+Class NSKVOSwizzledNotifyingClassForClass(Class originalClass) {
     const char* name = class_getName(originalClass);
     auto newName(woc::string::format("_NSKVONotifying_%s", name));
     Class notifyingClass = objc_allocateClassPair(originalClass, newName.c_str(), 0);
     Class notifyingMetaclass = object_getClass(notifyingClass);
 
+    auto swizzledClassInfo(std::shared_ptr<NSKVOSwizzledClass>(new NSKVOSwizzledClass(originalClass, notifyingClass)));
+
     class_replaceMethod(notifyingClass, @selector(dealloc), reinterpret_cast<IMP>(NSKVO$dealloc), "v@:");
     class_replaceMethod(notifyingClass, @selector(class), reinterpret_cast<IMP>(NSKVO$class), "#@:");
     class_replaceMethod(notifyingMetaclass, @selector(superclass), reinterpret_cast<IMP>(NSKVO$meta$superclass), "##:");
 
-    // Sentinel
-    class_addMethod(notifyingMetaclass, @selector(_NSKVO), nullIMP, "v#:");
+    swizzledClassInfo->swizzleMethod(@selector(setObject:forKey:), reinterpret_cast<IMP>(NSKVO$setObject$forKey$));
+    swizzledClassInfo->swizzleMethod(@selector(removeObjectForKey:), reinterpret_cast<IMP>(NSKVO$removeObjectForKey$));
 
     objc_registerClassPair(notifyingClass);
 
-    registerClassPair(notifyingClass, originalClass, std::shared_ptr<KVOClass>(new KVOSwizzledClass(originalClass, notifyingClass)));
+    NSKVOClass::registerClassPair(notifyingClass, originalClass, swizzledClassInfo);
     return notifyingClass;
 }
 
 template <typename T>
 void notifyingSetImpl(id self, SEL _cmd, T val) {
     // These dynamic casts should never fail: we only have these methods
-    // on classes we created a KVOSwizzledClass for.
-    KVOSwizzledClass& trailer(dynamic_cast<KVOSwizzledClass&>(KVOClass::forInstance(self)));
+    // on classes we created a NSKVOSwizzledClass for.
+    NSKVOSwizzledClass& trailer(dynamic_cast<NSKVOSwizzledClass&>(NSKVOClass::forInstance(self)));
     auto& obMethod(trailer.swizzledMethod(_cmd));
     NSString* key = [NSString stringWithUTF8String:obMethod.key.c_str()];
 
@@ -61,7 +114,7 @@ void notifyingSetImpl(id self, SEL _cmd, T val) {
 }
 
 void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
-    KVOSwizzledClass& trailer(dynamic_cast<KVOSwizzledClass&>(KVOClass::forInstance(self)));
+    NSKVOSwizzledClass& trailer(dynamic_cast<NSKVOSwizzledClass&>(NSKVOClass::forInstance(self)));
     auto& obMethod(trailer.swizzledMethod(_cmd));
     auto argSz = obMethod.valueSize;
     auto nStackArgs = argSz / sizeof(unsigned);
@@ -102,7 +155,22 @@ void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     [self didChangeValueForKey:key];
 }
 
-void KVOSwizzledClass::ensureKeyWillNotify(const std::string& key) {
+void NSKVOSwizzledClass::swizzleMethod(SEL sel, IMP newImp) {
+    std::lock_guard<std::recursive_mutex> lock(_mutex);
+    if (_selectorMethodInfo.find(sel) != _selectorMethodInfo.end()) {
+        return;
+    }
+
+    auto origImp = class_getMethodImplementation(originalClass, sel);
+    _swizzleMethodWithMethodInfo(sel, newImp, NSKVOSwizzledMethod{ origImp });
+}
+
+void NSKVOSwizzledClass::_swizzleMethodWithMethodInfo(SEL sel, IMP newImp, NSKVOSwizzledMethod&& methodInfo) {
+    _selectorMethodInfo.emplace(std::piecewise_construct, std::forward_as_tuple(sel), std::forward_as_tuple(std::move(methodInfo)));
+    class_addMethod(notifyingClass, sel, newImp, objc_get_type_encoding(originalClass, sel));
+}
+
+void NSKVOSwizzledClass::ensureKeyWillNotify(const std::string& key) {
     std::lock_guard<std::recursive_mutex> lock(_mutex);
 
     auto accessorName(woc::string::format("set%c%s:", toupper(key[0]), &key[1]));
@@ -179,24 +247,43 @@ void KVOSwizzledClass::ensureKeyWillNotify(const std::string& key) {
     }
 
     auto origImp = class_getMethodImplementation(originalClass, sel);
-    _selectorMethodInfo.emplace(std::piecewise_construct, std::forward_as_tuple(sel), std::forward_as_tuple(key, valueType, origImp));
-
-    class_addMethod(notifyingClass, sel, newImpl, objc_get_type_encoding(originalClass, sel));
+    _swizzleMethodWithMethodInfo(sel, newImpl, { key, valueType, origImp });
 }
 
 //@implementation NSObject (NSKeyValueObservation)
 // - (Class)class
 static Class NSKVO$class(id self, SEL) {
-    return KVOClass::forInstance(self).originalClass;
+    return NSKVOClass::forInstance(self).originalClass;
 }
 
 // + (Class)superclass
 static Class NSKVO$meta$superclass(Class self, SEL) {
-    return class_getSuperclass(KVOClass::forClass(self).originalClass);
+    return class_getSuperclass(NSKVOClass::forClass(self).originalClass);
+}
+
+// - (void)setObject:(id)object forKey:(NSString*)key
+static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key) {
+    NSKVOSwizzledClass& trailer(dynamic_cast<NSKVOSwizzledClass&>(NSKVOClass::forInstance(self)));
+    auto& obMethod(trailer.swizzledMethod(_cmd));
+
+    [self willChangeValueForKey:key];
+    obMethod.callOriginal(self, _cmd, object, key);
+    [self didChangeValueForKey:key];
+}
+
+// - (void)removeObjectForKey:(NSString*)key
+static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key) {
+    NSKVOSwizzledClass& trailer(dynamic_cast<NSKVOSwizzledClass&>(NSKVOClass::forInstance(self)));
+    auto& obMethod(trailer.swizzledMethod(_cmd));
+
+    [self willChangeValueForKey:key];
+    obMethod.callOriginal(self, _cmd, key);
+    [self didChangeValueForKey:key];
 }
 
 // - (void)dealloc
 static void NSKVO$dealloc(id self, SEL) {
-    KVOClass::forInstance(self).dealloc(self);
+    // NSKVOClass::dealloc calls super dealloc for us.
+    NSKVOClass::forClass(object_getClass(self)).dealloc(self);
 }
 //@end

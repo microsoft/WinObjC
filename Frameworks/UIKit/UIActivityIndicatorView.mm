@@ -52,6 +52,10 @@
     [super awakeFromNib];
 }
 
+/**
+ @Status Caveat
+ @Notes style parameter not supported
+*/
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     CGRect frame;
 
@@ -77,9 +81,16 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidesWhenStopped:(BOOL)shouldhide {
     hidesWhenStopped = shouldhide;
 
@@ -88,6 +99,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hidesWhenStopped {
     return hidesWhenStopped;
 }
@@ -116,6 +130,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)startAnimating {
     if (isAnimating) {
         return;
@@ -128,6 +145,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)stopAnimating {
     if (isAnimating) {
         isAnimating = FALSE;
@@ -139,6 +159,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isAnimating {
     return isAnimating;
 }
@@ -160,11 +183,19 @@ static void removeAnimation(UIActivityIndicatorView* self) {
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setColor:(UIColor*)color {
+    UNIMPLEMENTED();
     _color = color;
 }
 
+/**
+ @Status Stub
+*/
 - (UIColor*)color {
+    UNIMPLEMENTED();
     return _color;
 }
 

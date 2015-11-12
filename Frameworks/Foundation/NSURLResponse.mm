@@ -19,6 +19,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSURLResponse
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithURL:(id)url MIMEType:(id)mimeType expectedContentLength:(int)expectedContentLength textEncodingName:(id)textEncodingName {
     _expectedContentLength = expectedContentLength;
     _url = url;
@@ -28,14 +31,23 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)MIMEType {
     return _mimeType;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)textEncodingName {
     return _textEncodingName;
 }
 
+/**
+ @Status Interoperable
+*/
 - (__int64)expectedContentLength {
     if (_expectedContentLength == 0) {
         return -1;
@@ -48,6 +60,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return 401;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)URL {
     return _url;
 }

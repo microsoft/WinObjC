@@ -24,14 +24,23 @@
 
 #include "Platform/EbrPlatform.h"
 
+/**
+ @Status Interoperable
+*/
 void CFRelease(CFTypeRef obj) {
     objc_release_ref((id)obj);
 }
 
+/**
+ @Status Interoperable
+*/
 CFTypeRef CFRetain(CFTypeRef obj) {
     return objc_retain_ref((id)obj);
 }
 
+/**
+ @Status Interoperable
+*/
 CFIndex CFGetRetainCount(CFTypeRef obj) {
     return (CFIndex)objc_getRetainCount((id)obj);
 }
@@ -40,28 +49,50 @@ BOOL CFIsRetained(CFTypeRef obj) {
     return objc_isRetained((id)obj);
 }
 
+/**
+ @Status Interoperable
+*/
 Boolean CFEqual(CFTypeRef obj1, CFTypeRef obj2) {
     return (BOOL)[(id)obj1 isEqual:(id)obj2];
 }
 
+/**
+ @Status Interoperable
+ @Notes May not return an identically compatible value
+*/
 uint32_t CFHash(CFTypeRef obj) {
     return (uint32_t)[(id)obj hash];
 }
 
+/**
+ @Status Stub
+*/
 void CFShow(CFTypeRef obj) {
+    UNIMPLEMENTED();
     EbrDebugLog("CFShow: %s\n", object_getClassName((id)obj));
 }
 
+/**
+ @Status Interoperable
+ @Notes No-op; garbage collection is not supported in WinObjC
+*/
 CFTypeRef CFMakeCollectable(CFTypeRef obj) {
     return obj;
 }
 
+/**
+ @Status Caveat
+ @Notes NSZone not supported
+*/
 __declspec(dllexport) id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
     assert(zone == nil);
 
     return objc_allocateObject(classRef, extraBytes);
 }
 
+/**
+ @Status Interoperable
+*/
 __declspec(dllexport) void NSDeallocateObject(id obj) {
     return objc_deallocateObject(obj);
 }

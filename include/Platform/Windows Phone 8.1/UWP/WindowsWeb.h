@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WWWebError;
-@protocol WWIUriToStreamResolver, WWIWebErrorStatics;
+@protocol WWIUriToStreamResolver
+, WWIWebErrorStatics;
 
 // Windows.Web.WebErrorStatus
 enum _WWWebErrorStatus {
@@ -89,7 +90,7 @@ typedef unsigned WWWebErrorStatus;
 #define __WWIUriToStreamResolver_DEFINED__
 
 @protocol WWIUriToStreamResolver
-- (void)uriToStreamAsync:(WFUri *)uri success:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+- (void)uriToStreamAsync:(WFUri*)uri success:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WWIUriToStreamResolver_DEFINED__
@@ -104,4 +105,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WWWebError_DEFINED__
-

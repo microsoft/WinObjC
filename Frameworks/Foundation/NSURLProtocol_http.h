@@ -65,21 +65,21 @@ typedef struct {
 - (void)dealloc;
 - (id)retain;
 - (void)release;
-/* annotate with type */ -(id)_socketTimeout;
-/* annotate with type */ -(id)run;
-/* annotate with type */ -(id)init;
-/* annotate with type */ -(id)addHTTPRequest : (NSURLProtocol_http*)request;
-/* annotate with type */ -(id)cancelHTTPRequest : (NSURLProtocol_http*)request;
-/* annotate with type */ -(id)_processEvents;
-/* annotate with type */ -(id)initWithRequest : (id)request cachedResponse : (id)response client : (id)client;
-/* annotate with type */ -(id)startLoading;
-/* annotate with type */ -(id)stopLoading;
-/* annotate with type */ -(id)scheduleInRunLoop : (id)runLoop forMode : (id)mode;
-/* annotate with type */ -(id)unscheduleFromRunLoop : (id)runLoop forMode : (id)mode;
-/* annotate with type */ -(id)_setSendRawResponses : (BOOL)raw;
-/* annotate with type */ -(id)continueWithoutCredentialForAuthenticationChallenge : (id)challenge;
-/* annotate with type */ +(id)initialize;
-/* annotate with type */ +(id)initialize;
+- (id)_socketTimeout;
+- (id)run;
+- (id)init;
+- (id)addHTTPRequest:(NSURLProtocol_http*)request;
+- (id)cancelHTTPRequest:(NSURLProtocol_http*)request;
+- (id)_processEvents;
+- (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client;
+- (id)startLoading;
+- (id)stopLoading;
+- (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode;
+- (id)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode;
+- (id)_setSendRawResponses:(BOOL)raw;
+- (id)continueWithoutCredentialForAuthenticationChallenge:(id)challenge;
++ (id)initialize;
++ (id)initialize;
 + (BOOL)canInitWithRequest:(id)request;
 @end
 

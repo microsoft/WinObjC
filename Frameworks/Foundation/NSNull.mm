@@ -59,6 +59,9 @@ static NSNull* nullSingleton;
     return @"<null>";
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSNull*)null {
     return nullSingleton;
 }

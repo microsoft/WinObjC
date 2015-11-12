@@ -28,6 +28,11 @@ id EbrGetExternalCookies(id url) {
 }
 
 @implementation NSHTTPCookieStorage : NSObject
+
+/**
+ @Status Caveat
+ @Notes Only shared with NSURLProtocol request.  Not shared with WebView control.
+*/
 + (NSHTTPCookieStorage*)sharedHTTPCookieStorage {
     static id _shared;
     if (!_shared) {
@@ -78,6 +83,9 @@ id EbrGetExternalCookies(id url) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)cookies {
     if (!_cookies) {
         [self _sync];
@@ -86,6 +94,9 @@ id EbrGetExternalCookies(id url) {
     return [_cookies allValues];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)cookiesForURL:(NSURL*)url {
     id r = [NSMutableArray arrayWithCapacity:[[self cookies] count]];
     id c = [_cookies objectEnumerator];
@@ -135,6 +146,9 @@ id EbrGetExternalCookies(id url) {
     return r;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteCookie:(id)cookie {
     if ([cookie _isExternal]) {
         EbrDeleteExternalCookie(cookie);
@@ -145,6 +159,9 @@ id EbrGetExternalCookies(id url) {
     [self _sync];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCookie:(id)cookie {
     id key;
     if (_cookieAcceptPolicy == NSHTTPCookieAcceptPolicyNever) {
@@ -157,6 +174,10 @@ id EbrGetExternalCookies(id url) {
     [self _sync];
 }
 
+/**
+ @Status Caveat
+ @Notes forURL and mainDocumentURL parameters not supported
+*/
 - (void)setCookies:(id)cookies forURL:(id)url mainDocumentURL:(id)mainURL {
     id c;
     id cookie;
@@ -169,6 +190,9 @@ id EbrGetExternalCookies(id url) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCookieAcceptPolicy:(int)policy {
     _cookieAcceptPolicy = (NSHTTPCookieAcceptPolicy)policy;
 }

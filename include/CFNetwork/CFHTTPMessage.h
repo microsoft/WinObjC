@@ -21,7 +21,7 @@
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFURL.h>
 
-typedef struct __CFHTTPMessage *CFHTTPMessageRef;
+typedef struct __CFHTTPMessage* CFHTTPMessageRef;
 
 SB_EXPORT const CFStringRef kCFHTTPVersion1_0;
 SB_EXPORT const CFStringRef kCFHTTPVersion1_1;
@@ -38,10 +38,13 @@ SB_EXPORT void CFHTTPMessageSetBody(CFHTTPMessageRef message, CFDataRef bodyData
 SB_EXPORT CFStringRef CFHTTPMessageCopyHeaderFieldValue(CFHTTPMessageRef message, CFStringRef headerField);
 
 SB_EXPORT CFHTTPMessageRef CFHTTPMessageCreateEmpty(CFAllocatorRef alloc, Boolean isRequest);
-SB_EXPORT Boolean CFHTTPMessageAppendBytes(CFHTTPMessageRef message, const UInt8 *newBytes, CFIndex numBytes);
+SB_EXPORT Boolean CFHTTPMessageAppendBytes(CFHTTPMessageRef message, const UInt8* newBytes, CFIndex numBytes);
 SB_EXPORT CFDataRef CFHTTPMessageCopySerializedMessage(CFHTTPMessageRef request);
 SB_EXPORT CFStringRef CFHTTPMessageCopyRequestMethod(CFHTTPMessageRef request);
 SB_EXPORT CFURLRef CFHTTPMessageCopyRequestURL(CFHTTPMessageRef request);
-SB_EXPORT CFHTTPMessageRef CFHTTPMessageCreateResponse(CFAllocatorRef alloc, CFIndex statusCode, CFStringRef statusDescription, CFStringRef httpVersion);
+SB_EXPORT CFHTTPMessageRef CFHTTPMessageCreateResponse(CFAllocatorRef alloc,
+                                                       CFIndex statusCode,
+                                                       CFStringRef statusDescription,
+                                                       CFStringRef httpVersion);
 
 #endif /* _CFHTTPMESSAGE_H_ */

@@ -347,11 +347,13 @@
       <IncludeFoundation>true</IncludeFoundation>
       <IncludeCoreFoundation>true</IncludeCoreFoundation>
       <IncludeObjcrt>true</IncludeObjcrt>
+      <IncludeSecurity>true</IncludeSecurity>
+      <IncludeCoreLocation>true</IncludeCoreLocation>
     </PropertyGroup>
   </Target>
-  
+
   <Target
-    Name="RemoveDirIfEmpty" 
+    Name="RemoveDirIfEmpty"
     AfterTargets="CleanSBResources" >
 
     <ItemGroup>
@@ -361,11 +363,11 @@
     <ItemGroup Condition="'@(RemoveDirIfEmpty)' != ''">
       <RemoveDirIfEmpty Remove="%(RemoveDirIfEmpty.Identity)" Condition="'$([System.IO.Directory]::GetFiles(%(RemoveDirIfEmpty.Identity)))' != '' Or '$([System.IO.Directory]::GetDirectories(%(RemoveDirIfEmpty.Identity)))' != ''"/>
     </ItemGroup>
-    
+
     <!-- Only delete directories that are empty, since there could be something useful in them. -->
     <RemoveDir Condition="'@(RemoveDirIfEmpty)' != ''" Directories="@(RemoveDirIfEmpty)" />
   </Target>
-  
+
   <Target
     Name="CleanSBResources"
     DependsOnTargets="ComputeCleanSBResources;$(SBResourceComputeTargets)" >

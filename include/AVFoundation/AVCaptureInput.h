@@ -24,9 +24,9 @@
 
 @interface AVCaptureDeviceInput : NSObject
 
-@property(nonatomic, readonly) AVCaptureDevice *device;
+@property (nonatomic, readonly) AVCaptureDevice* device;
 
-+ (id)deviceInputWithDevice:(AVCaptureDevice *)device error:(NSError **)outError;
++ (id)deviceInputWithDevice:(AVCaptureDevice*)device error:(NSError**)outError;
 
 @end
 

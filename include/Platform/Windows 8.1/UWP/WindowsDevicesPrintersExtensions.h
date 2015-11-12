@@ -20,8 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDPEPrintTaskConfigurationSaveRequestedDeferral, WDPEPrintTaskConfigurationSaveRequest, WDPEPrintTaskConfigurationSaveRequestedEventArgs, WDPEPrintTaskConfiguration, WDPEPrintNotificationEventDetails, WDPEPrintExtensionContext;
-@protocol WDPEIPrintTaskConfigurationSaveRequestedDeferral, WDPEIPrintTaskConfigurationSaveRequest, WDPEIPrintTaskConfigurationSaveRequestedEventArgs, WDPEIPrintTaskConfiguration, WDPEIPrintNotificationEventDetails, WDPEIPrintExtensionContextStatic;
+@class WDPEPrintTaskConfigurationSaveRequestedDeferral, WDPEPrintTaskConfigurationSaveRequest,
+    WDPEPrintTaskConfigurationSaveRequestedEventArgs, WDPEPrintTaskConfiguration, WDPEPrintNotificationEventDetails,
+    WDPEPrintExtensionContext;
+@protocol WDPEIPrintTaskConfigurationSaveRequestedDeferral
+, WDPEIPrintTaskConfigurationSaveRequest, WDPEIPrintTaskConfigurationSaveRequestedEventArgs, WDPEIPrintTaskConfiguration,
+    WDPEIPrintNotificationEventDetails, WDPEIPrintExtensionContextStatic;
 
 #include "WindowsFoundation.h"
 
@@ -42,10 +46,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPEPrintTaskConfigurationSaveRequest : RTObject
-@property (readonly) WFDateTime * deadline;
+@property (readonly) WFDateTime* deadline;
 - (void)cancel;
-- (void)save:(RTObject *)printerExtensionContext;
-- (WDPEPrintTaskConfigurationSaveRequestedDeferral *)getDeferral;
+- (void)save:(RTObject*)printerExtensionContext;
+- (WDPEPrintTaskConfigurationSaveRequestedDeferral*)getDeferral;
 @end
 
 #endif // __WDPEPrintTaskConfigurationSaveRequest_DEFINED__
@@ -56,7 +60,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPEPrintTaskConfigurationSaveRequestedEventArgs : RTObject
-@property (readonly) WDPEPrintTaskConfigurationSaveRequest * request;
+@property (readonly) WDPEPrintTaskConfigurationSaveRequest* request;
 @end
 
 #endif // __WDPEPrintTaskConfigurationSaveRequestedEventArgs_DEFINED__
@@ -67,8 +71,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPEPrintTaskConfiguration : RTObject
-@property (readonly) RTObject * printerExtensionContext;
-- (EventRegistrationToken)addSaveRequestedEvent:(void(^)(WDPEPrintTaskConfiguration *, WDPEPrintTaskConfigurationSaveRequestedEventArgs *))del;
+@property (readonly) RTObject* printerExtensionContext;
+- (EventRegistrationToken)addSaveRequestedEvent:(void (^)(WDPEPrintTaskConfiguration*,
+                                                          WDPEPrintTaskConfigurationSaveRequestedEventArgs*))del;
 - (void)removeSaveRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -80,8 +85,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPEPrintNotificationEventDetails : RTObject
-@property (copy) NSString * eventData;
-@property (readonly) NSString * printerName;
+@property (copy) NSString* eventData;
+@property (readonly) NSString* printerName;
 @end
 
 #endif // __WDPEPrintNotificationEventDetails_DEFINED__
@@ -92,8 +97,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPEPrintExtensionContext : RTObject
-+ (RTObject *)fromDeviceId:(NSString *)deviceId;
++ (RTObject*)fromDeviceId:(NSString*)deviceId;
 @end
 
 #endif // __WDPEPrintExtensionContext_DEFINED__
-

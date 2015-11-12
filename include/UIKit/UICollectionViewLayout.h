@@ -37,42 +37,48 @@ UIKIT_EXPORT_CLASS
     id _collectionView;
 }
 
-@property (nonatomic, readonly) UICollectionView *collectionView;
+@property (nonatomic, readonly) UICollectionView* collectionView;
 
 - (void)prepareLayout;
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect;
+- (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect;
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds;
-- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString *)decorationViewKind;
-- (void)prepareForCollectionViewUpdates:(NSArray *)updateItems;
-- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingDecorationElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
-- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
-- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath;
+- (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString*)decorationViewKind;
+- (void)prepareForCollectionViewUpdates:(NSArray*)updateItems;
+- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingDecorationElementOfKind:(NSString*)elementKind
+                                                                                    atIndexPath:(NSIndexPath*)elementIndexPath;
+- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
+- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString*)elementKind
+                                                                                       atIndexPath:(NSIndexPath*)elementIndexPath;
 
-- (UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString*)decorationViewKind atIndexPath:(NSIndexPath *)indexPath;
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect;
-- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewOfKind:(NSString*)decorationViewKind
+                                                                 atIndexPath:(NSIndexPath*)indexPath;
+- (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath;
 
-- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
+- (UICollectionViewLayoutAttributes*)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath*)itemIndexPath;
 
 - (void)invalidateLayout;
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UICollectionViewLayoutAttributes : NSObject <NSCopying>
 
--(UICollectionViewItemType) representedElementCategory;
+- (UICollectionViewItemType)representedElementCategory;
 
 @property (nonatomic) CGRect frame;
 @property (nonatomic) CGPoint center;
 @property (nonatomic) CATransform3D transform3D;
 @property (nonatomic) NSInteger zIndex;
-@property (nonatomic, retain) NSIndexPath *indexPath;
-@property (nonatomic, readonly) NSString *representedElementKind;
+@property (nonatomic, retain) NSIndexPath* indexPath;
+@property (nonatomic, readonly) NSString* representedElementKind;
 @property (nonatomic) CGFloat alpha;
 
-+ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString *)decorationViewKind withIndexPath:(NSIndexPath*)indexPath;
++ (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString*)supplementaryViewKind withIndexPath:(NSIndexPath*)indexPath;
++ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString*)decorationViewKind withIndexPath:(NSIndexPath*)indexPath;
++ (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath*)indexPath;
 @end
 
 #endif /* _UICOLLECTIONVIEWCLAYOUT_H_ */

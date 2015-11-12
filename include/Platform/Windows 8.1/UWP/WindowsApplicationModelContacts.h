@@ -20,8 +20,16 @@
 #pragma once
 
 #include "interopBase.h"
-@class WACContactCardDelayedDataLoader, WACContactManager, WACContactLaunchActionVerbs, WACContactField, WACContactLocationField, WACContactInstantMessageField, WACKnownContactField, WACContactInformation, WACContact, WACContactPicker, WACContactFieldFactory, WACContactSignificantOther, WACContactWebsite, WACContactEmail, WACContactPhone, WACContactAddress, WACContactConnectedServiceAccount, WACContactDate, WACContactJobInfo;
-@protocol WACIContactManagerStatics, WACIContactLaunchActionVerbsStatics, WACIContactField, WACIContactLocationField, WACIContactInstantMessageField, WACIKnownContactFieldStatics, WACIContactInformation, WACIContactPicker, WACIContactPicker2, WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory, WACIContactSignificantOther, WACIContactWebsite, WACIContactEmail, WACIContactPhone, WACIContactAddress, WACIContactConnectedServiceAccount, WACIContactDate, WACIContactName, WACIContactJobInfo, WACIContact, WACIContact2, WACIContactCardDelayedDataLoader;
+@class WACContactCardDelayedDataLoader, WACContactManager, WACContactLaunchActionVerbs, WACContactField, WACContactLocationField,
+    WACContactInstantMessageField, WACKnownContactField, WACContactInformation, WACContact, WACContactPicker, WACContactFieldFactory,
+    WACContactSignificantOther, WACContactWebsite, WACContactEmail, WACContactPhone, WACContactAddress, WACContactConnectedServiceAccount,
+    WACContactDate, WACContactJobInfo;
+@protocol WACIContactManagerStatics
+, WACIContactLaunchActionVerbsStatics, WACIContactField, WACIContactLocationField, WACIContactInstantMessageField,
+    WACIKnownContactFieldStatics, WACIContactInformation, WACIContactPicker, WACIContactPicker2, WACIContactFieldFactory,
+    WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory, WACIContactSignificantOther, WACIContactWebsite,
+    WACIContactEmail, WACIContactPhone, WACIContactAddress, WACIContactConnectedServiceAccount, WACIContactDate, WACIContactName,
+    WACIContactJobInfo, WACIContact, WACIContact2, WACIContactCardDelayedDataLoader;
 
 // Windows.ApplicationModel.Contacts.ContactFieldType
 enum _WACContactFieldType {
@@ -101,9 +109,9 @@ typedef unsigned WACContactDateKind;
 
 @protocol WACIContactField
 @property (readonly) WACContactFieldCategory category;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WACContactFieldType type;
-@property (readonly) NSString * value;
+@property (readonly) NSString* value;
 @end
 
 #endif // __WACIContactField_DEFINED__
@@ -113,9 +121,12 @@ typedef unsigned WACContactDateKind;
 #define __WACIContactFieldFactory_DEFINED__
 
 @protocol WACIContactFieldFactory
-- (WACContactField *)createField_Default:(NSString *)value type:(WACContactFieldType)type;
-- (WACContactField *)createField_Category:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
-- (WACContactField *)createField_Custom:(NSString *)name value:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
+- (WACContactField*)createField_Default:(NSString*)value type:(WACContactFieldType)type;
+- (WACContactField*)createField_Category:(NSString*)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
+- (WACContactField*)createField_Custom:(NSString*)name
+                                 value:(NSString*)value
+                                  type:(WACContactFieldType)type
+                              category:(WACContactFieldCategory)category;
 @end
 
 #endif // __WACIContactFieldFactory_DEFINED__
@@ -125,9 +136,15 @@ typedef unsigned WACContactDateKind;
 #define __WACIContactLocationFieldFactory_DEFINED__
 
 @protocol WACIContactLocationFieldFactory
-- (WACContactLocationField *)createLocation_Default:(NSString *)unstructuredAddress;
-- (WACContactLocationField *)createLocation_Category:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category;
-- (WACContactLocationField *)createLocation_All:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category street:(NSString *)street city:(NSString *)city region:(NSString *)region country:(NSString *)country postalCode:(NSString *)postalCode;
+- (WACContactLocationField*)createLocation_Default:(NSString*)unstructuredAddress;
+- (WACContactLocationField*)createLocation_Category:(NSString*)unstructuredAddress category:(WACContactFieldCategory)category;
+- (WACContactLocationField*)createLocation_All:(NSString*)unstructuredAddress
+                                      category:(WACContactFieldCategory)category
+                                        street:(NSString*)street
+                                          city:(NSString*)city
+                                        region:(NSString*)region
+                                       country:(NSString*)country
+                                    postalCode:(NSString*)postalCode;
 @end
 
 #endif // __WACIContactLocationFieldFactory_DEFINED__
@@ -137,9 +154,13 @@ typedef unsigned WACContactDateKind;
 #define __WACIContactInstantMessageFieldFactory_DEFINED__
 
 @protocol WACIContactInstantMessageFieldFactory
-- (WACContactInstantMessageField *)createInstantMessage_Default:(NSString *)userName;
-- (WACContactInstantMessageField *)createInstantMessage_Category:(NSString *)userName category:(WACContactFieldCategory)category;
-- (WACContactInstantMessageField *)createInstantMessage_All:(NSString *)userName category:(WACContactFieldCategory)category service:(NSString *)service displayText:(NSString *)displayText verb:(WFUri *)verb;
+- (WACContactInstantMessageField*)createInstantMessage_Default:(NSString*)userName;
+- (WACContactInstantMessageField*)createInstantMessage_Category:(NSString*)userName category:(WACContactFieldCategory)category;
+- (WACContactInstantMessageField*)createInstantMessage_All:(NSString*)userName
+                                                  category:(WACContactFieldCategory)category
+                                                   service:(NSString*)service
+                                               displayText:(NSString*)displayText
+                                                      verb:(WFUri*)verb;
 @end
 
 #endif // __WACIContactInstantMessageFieldFactory_DEFINED__
@@ -160,7 +181,7 @@ typedef unsigned WACContactDateKind;
 
 WINRT_EXPORT
 @interface WACContactCardDelayedDataLoader : RTObject <WFIClosable>
-- (void)setData:(WACContact *)contact;
+- (void)setData:(WACContact*)contact;
 - (void)close;
 @end
 
@@ -172,9 +193,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactManager : RTObject
-+ (void)showContactCard:(WACContact *)contact selection:(WFRect *)selection;
-+ (void)showContactCardWithPlacement:(WACContact *)contact selection:(WFRect *)selection preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (WACContactCardDelayedDataLoader *)showDelayLoadedContactCard:(WACContact *)contact selection:(WFRect *)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
++ (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
++ (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact
+                                                     selection:(WFRect*)selection
+                                            preferredPlacement:(WUPPlacement)preferredPlacement;
 @end
 
 #endif // __WACContactManager_DEFINED__
@@ -185,11 +208,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactLaunchActionVerbs : RTObject
-+ (NSString *)call;
-+ (NSString *)map;
-+ (NSString *)message;
-+ (NSString *)post;
-+ (NSString *)videoCall;
++ (NSString*)call;
++ (NSString*)map;
++ (NSString*)message;
++ (NSString*)post;
++ (NSString*)videoCall;
 @end
 
 #endif // __WACContactLaunchActionVerbs_DEFINED__
@@ -200,13 +223,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactField : RTObject <WACIContactField>
-+ (WACContactField *)createField_Default:(NSString *)value type:(WACContactFieldType)type ACTIVATOR;
-+ (WACContactField *)createField_Category:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category ACTIVATOR;
-+ (WACContactField *)createField_Custom:(NSString *)name value:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category ACTIVATOR;
++ (WACContactField*)createField_Default:(NSString*)value type:(WACContactFieldType)type ACTIVATOR;
++ (WACContactField*)createField_Category:(NSString*)value
+                                    type:(WACContactFieldType)type
+                                category:(WACContactFieldCategory)category ACTIVATOR;
++ (WACContactField*)createField_Custom:(NSString*)name
+                                 value:(NSString*)value
+                                  type:(WACContactFieldType)type
+                              category:(WACContactFieldCategory)category ACTIVATOR;
 @property (readonly) WACContactFieldCategory category;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WACContactFieldType type;
-@property (readonly) NSString * value;
+@property (readonly) NSString* value;
 @end
 
 #endif // __WACContactField_DEFINED__
@@ -217,19 +245,25 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactLocationField : RTObject <WACIContactField>
-+ (WACContactLocationField *)createLocation_Default:(NSString *)unstructuredAddress ACTIVATOR;
-+ (WACContactLocationField *)createLocation_Category:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category ACTIVATOR;
-+ (WACContactLocationField *)createLocation_All:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category street:(NSString *)street city:(NSString *)city region:(NSString *)region country:(NSString *)country postalCode:(NSString *)postalCode ACTIVATOR;
++ (WACContactLocationField*)createLocation_Default:(NSString*)unstructuredAddress ACTIVATOR;
++ (WACContactLocationField*)createLocation_Category:(NSString*)unstructuredAddress category:(WACContactFieldCategory)category ACTIVATOR;
++ (WACContactLocationField*)createLocation_All:(NSString*)unstructuredAddress
+                                      category:(WACContactFieldCategory)category
+                                        street:(NSString*)street
+                                          city:(NSString*)city
+                                        region:(NSString*)region
+                                       country:(NSString*)country
+                                    postalCode:(NSString*)postalCode ACTIVATOR;
 @property (readonly) WACContactFieldCategory category;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WACContactFieldType type;
-@property (readonly) NSString * value;
-@property (readonly) NSString * city;
-@property (readonly) NSString * country;
-@property (readonly) NSString * postalCode;
-@property (readonly) NSString * region;
-@property (readonly) NSString * street;
-@property (readonly) NSString * unstructuredAddress;
+@property (readonly) NSString* value;
+@property (readonly) NSString* city;
+@property (readonly) NSString* country;
+@property (readonly) NSString* postalCode;
+@property (readonly) NSString* region;
+@property (readonly) NSString* street;
+@property (readonly) NSString* unstructuredAddress;
 @end
 
 #endif // __WACContactLocationField_DEFINED__
@@ -240,17 +274,21 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactInstantMessageField : RTObject <WACIContactField>
-+ (WACContactInstantMessageField *)createInstantMessage_Default:(NSString *)userName ACTIVATOR;
-+ (WACContactInstantMessageField *)createInstantMessage_Category:(NSString *)userName category:(WACContactFieldCategory)category ACTIVATOR;
-+ (WACContactInstantMessageField *)createInstantMessage_All:(NSString *)userName category:(WACContactFieldCategory)category service:(NSString *)service displayText:(NSString *)displayText verb:(WFUri *)verb ACTIVATOR;
-@property (readonly) NSString * displayText;
-@property (readonly) WFUri * launchUri;
-@property (readonly) NSString * service;
-@property (readonly) NSString * userName;
++ (WACContactInstantMessageField*)createInstantMessage_Default:(NSString*)userName ACTIVATOR;
++ (WACContactInstantMessageField*)createInstantMessage_Category:(NSString*)userName category:(WACContactFieldCategory)category ACTIVATOR;
++ (WACContactInstantMessageField*)createInstantMessage_All:(NSString*)userName
+                                                  category:(WACContactFieldCategory)category
+                                                   service:(NSString*)service
+                                               displayText:(NSString*)displayText
+                                                      verb:(WFUri*)verb ACTIVATOR;
+@property (readonly) NSString* displayText;
+@property (readonly) WFUri* launchUri;
+@property (readonly) NSString* service;
+@property (readonly) NSString* userName;
 @property (readonly) WACContactFieldCategory category;
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 @property (readonly) WACContactFieldType type;
-@property (readonly) NSString * value;
+@property (readonly) NSString* value;
 @end
 
 #endif // __WACContactInstantMessageField_DEFINED__
@@ -261,12 +299,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACKnownContactField : RTObject
-+ (WACContactFieldType)convertNameToType:(NSString *)name;
-+ (NSString *)convertTypeToName:(WACContactFieldType)type;
-+ (NSString *)email;
-+ (NSString *)instantMessage;
-+ (NSString *)location;
-+ (NSString *)phoneNumber;
++ (WACContactFieldType)convertNameToType:(NSString*)name;
++ (NSString*)convertTypeToName:(WACContactFieldType)type;
++ (NSString*)email;
++ (NSString*)instantMessage;
++ (NSString*)location;
++ (NSString*)phoneNumber;
 @end
 
 #endif // __WACKnownContactField_DEFINED__
@@ -277,14 +315,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactInformation : RTObject
-@property (readonly) id<NSFastEnumeration> /*WACContactField*/  customFields;
-@property (readonly) id<NSFastEnumeration> /*WACContactField*/  emails;
-@property (readonly) id<NSFastEnumeration> /*WACContactInstantMessageField*/  instantMessages;
-@property (readonly) id<NSFastEnumeration> /*WACContactLocationField*/  locations;
-@property (readonly) NSString * name;
-@property (readonly) id<NSFastEnumeration> /*WACContactField*/  phoneNumbers;
-- (void)getThumbnailAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration> /*WACContactField*/ )queryCustomFields:(NSString *)customName;
+@property (readonly) id<NSFastEnumeration> /*WACContactField*/ customFields;
+@property (readonly) id<NSFastEnumeration> /*WACContactField*/ emails;
+@property (readonly) id<NSFastEnumeration> /*WACContactInstantMessageField*/ instantMessages;
+@property (readonly) id<NSFastEnumeration> /*WACContactLocationField*/ locations;
+@property (readonly) NSString* name;
+@property (readonly) id<NSFastEnumeration> /*WACContactField*/ phoneNumbers;
+- (void)getThumbnailAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success
+                             failure:(void (^)(NSError*))failure;
+- (id<NSFastEnumeration> /*WACContactField*/)queryCustomFields:(NSString*)customName;
 @end
 
 #endif // __WACContactInformation_DEFINED__
@@ -297,29 +336,29 @@ WINRT_EXPORT
 @interface WACContact : RTObject
 + (instancetype)create ACTIVATOR;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (copy) NSString * name;
-@property (readonly) id<NSFastEnumeration> /*WACIContactField*/  fields;
-@property (copy) NSString * honorificNamePrefix;
-@property (copy) NSString * yomiFamilyName;
-@property (copy) NSString * lastName;
-@property (copy) NSString * honorificNameSuffix;
-@property (copy) NSString * yomiGivenName;
-@property (copy) NSString * firstName;
-@property (copy) NSString * middleName;
-@property (readonly) NSString * displayName;
-@property (readonly) NSString * yomiDisplayName;
-@property (copy) NSString * notes;
-@property (copy) NSString * id;
-@property (readonly) id<NSFastEnumeration> /*WACContactWebsite*/  websites;
-@property (readonly) id<NSFastEnumeration> /*WACContactAddress*/  addresses;
-@property (readonly) id<NSFastEnumeration> /*WACContactConnectedServiceAccount*/  connectedServiceAccounts;
-@property (readonly) id<NSFastEnumeration> /*String*/  dataSuppliers;
-@property (readonly) id<NSFastEnumeration> /*WACContactEmail*/  emails;
-@property (readonly) id<NSFastEnumeration> /*WACContactDate*/  importantDates;
-@property (readonly) id<NSFastEnumeration> /*WACContactJobInfo*/  jobInfo;
-@property (readonly) id<NSFastEnumeration> /*WACContactPhone*/  phones;
+@property (copy) NSString* name;
+@property (readonly) id<NSFastEnumeration> /*WACIContactField*/ fields;
+@property (copy) NSString* honorificNamePrefix;
+@property (copy) NSString* yomiFamilyName;
+@property (copy) NSString* lastName;
+@property (copy) NSString* honorificNameSuffix;
+@property (copy) NSString* yomiGivenName;
+@property (copy) NSString* firstName;
+@property (copy) NSString* middleName;
+@property (readonly) NSString* displayName;
+@property (readonly) NSString* yomiDisplayName;
+@property (copy) NSString* notes;
+@property (copy) NSString* id;
+@property (readonly) id<NSFastEnumeration> /*WACContactWebsite*/ websites;
+@property (readonly) id<NSFastEnumeration> /*WACContactAddress*/ addresses;
+@property (readonly) id<NSFastEnumeration> /*WACContactConnectedServiceAccount*/ connectedServiceAccounts;
+@property (readonly) id<NSFastEnumeration> /*String*/ dataSuppliers;
+@property (readonly) id<NSFastEnumeration> /*WACContactEmail*/ emails;
+@property (readonly) id<NSFastEnumeration> /*WACContactDate*/ importantDates;
+@property (readonly) id<NSFastEnumeration> /*WACContactJobInfo*/ jobInfo;
+@property (readonly) id<NSFastEnumeration> /*WACContactPhone*/ phones;
 @property (readonly) RTObject<WFCIPropertySet>* providerProperties;
-@property (readonly) id<NSFastEnumeration> /*WACContactSignificantOther*/  significantOthers;
+@property (readonly) id<NSFastEnumeration> /*WACContactSignificantOther*/ significantOthers;
 @end
 
 #endif // __WACContact_DEFINED__
@@ -331,14 +370,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactPicker : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) id<NSFastEnumeration> /*WACContactFieldType*/  desiredFieldsWithContactFieldType;
+@property (readonly) id<NSFastEnumeration> /*WACContactFieldType*/ desiredFieldsWithContactFieldType;
 @property WACContactSelectionMode selectionMode;
-@property (copy) NSString * commitButtonText;
-@property (readonly) id<NSFastEnumeration> /*String*/  desiredFields;
-- (void)pickSingleContactAsyncWithSuccess:(void (^)(WACContactInformation *))success failure:(void (^)(NSError*))failure;
-- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACContactInformation*/ ))success failure:(void (^)(NSError*))failure;
-- (void)pickContactAsyncWithSuccess:(void (^)(WACContact *))success failure:(void (^)(NSError*))failure;
-- (void)pickContactsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACContact*/ ))success failure:(void (^)(NSError*))failure;
+@property (copy) NSString* commitButtonText;
+@property (readonly) id<NSFastEnumeration> /*String*/ desiredFields;
+- (void)pickSingleContactAsyncWithSuccess:(void (^)(WACContactInformation*))success failure:(void (^)(NSError*))failure;
+- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACContactInformation*/))success
+                                     failure:(void (^)(NSError*))failure;
+- (void)pickContactAsyncWithSuccess:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
+- (void)pickContactsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WACContact*/))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACContactPicker_DEFINED__
@@ -348,17 +388,31 @@ WINRT_EXPORT
 #define __WACContactFieldFactory_DEFINED__
 
 WINRT_EXPORT
-@interface WACContactFieldFactory : RTObject <WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory>
+@interface WACContactFieldFactory
+    : RTObject <WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory>
 + (instancetype)create ACTIVATOR;
-- (WACContactField *)createField_Default:(NSString *)value type:(WACContactFieldType)type;
-- (WACContactField *)createField_Category:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
-- (WACContactField *)createField_Custom:(NSString *)name value:(NSString *)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
-- (WACContactLocationField *)createLocation_Default:(NSString *)unstructuredAddress;
-- (WACContactLocationField *)createLocation_Category:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category;
-- (WACContactLocationField *)createLocation_All:(NSString *)unstructuredAddress category:(WACContactFieldCategory)category street:(NSString *)street city:(NSString *)city region:(NSString *)region country:(NSString *)country postalCode:(NSString *)postalCode;
-- (WACContactInstantMessageField *)createInstantMessage_Default:(NSString *)userName;
-- (WACContactInstantMessageField *)createInstantMessage_Category:(NSString *)userName category:(WACContactFieldCategory)category;
-- (WACContactInstantMessageField *)createInstantMessage_All:(NSString *)userName category:(WACContactFieldCategory)category service:(NSString *)service displayText:(NSString *)displayText verb:(WFUri *)verb;
+- (WACContactField*)createField_Default:(NSString*)value type:(WACContactFieldType)type;
+- (WACContactField*)createField_Category:(NSString*)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
+- (WACContactField*)createField_Custom:(NSString*)name
+                                 value:(NSString*)value
+                                  type:(WACContactFieldType)type
+                              category:(WACContactFieldCategory)category;
+- (WACContactLocationField*)createLocation_Default:(NSString*)unstructuredAddress;
+- (WACContactLocationField*)createLocation_Category:(NSString*)unstructuredAddress category:(WACContactFieldCategory)category;
+- (WACContactLocationField*)createLocation_All:(NSString*)unstructuredAddress
+                                      category:(WACContactFieldCategory)category
+                                        street:(NSString*)street
+                                          city:(NSString*)city
+                                        region:(NSString*)region
+                                       country:(NSString*)country
+                                    postalCode:(NSString*)postalCode;
+- (WACContactInstantMessageField*)createInstantMessage_Default:(NSString*)userName;
+- (WACContactInstantMessageField*)createInstantMessage_Category:(NSString*)userName category:(WACContactFieldCategory)category;
+- (WACContactInstantMessageField*)createInstantMessage_All:(NSString*)userName
+                                                  category:(WACContactFieldCategory)category
+                                                   service:(NSString*)service
+                                               displayText:(NSString*)displayText
+                                                      verb:(WFUri*)verb;
 @end
 
 #endif // __WACContactFieldFactory_DEFINED__
@@ -370,8 +424,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactSignificantOther : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * name;
-@property (copy) NSString * description;
+@property (copy) NSString* name;
+@property (copy) NSString* description;
 @end
 
 #endif // __WACContactSignificantOther_DEFINED__
@@ -383,8 +437,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactWebsite : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFUri * uri;
-@property (copy) NSString * description;
+@property (copy) WFUri* uri;
+@property (copy) NSString* description;
 @end
 
 #endif // __WACContactWebsite_DEFINED__
@@ -397,8 +451,8 @@ WINRT_EXPORT
 @interface WACContactEmail : RTObject
 + (instancetype)create ACTIVATOR;
 @property WACContactEmailKind kind;
-@property (copy) NSString * description;
-@property (copy) NSString * address;
+@property (copy) NSString* description;
+@property (copy) NSString* address;
 @end
 
 #endif // __WACContactEmail_DEFINED__
@@ -410,9 +464,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactPhone : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * number;
+@property (copy) NSString* number;
 @property WACContactPhoneKind kind;
-@property (copy) NSString * description;
+@property (copy) NSString* description;
 @end
 
 #endif // __WACContactPhone_DEFINED__
@@ -424,13 +478,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactAddress : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * streetAddress;
-@property (copy) NSString * region;
-@property (copy) NSString * postalCode;
-@property (copy) NSString * locality;
+@property (copy) NSString* streetAddress;
+@property (copy) NSString* region;
+@property (copy) NSString* postalCode;
+@property (copy) NSString* locality;
 @property WACContactAddressKind kind;
-@property (copy) NSString * description;
-@property (copy) NSString * country;
+@property (copy) NSString* description;
+@property (copy) NSString* country;
 @end
 
 #endif // __WACContactAddress_DEFINED__
@@ -442,8 +496,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactConnectedServiceAccount : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * serviceName;
-@property (copy) NSString * id;
+@property (copy) NSString* serviceName;
+@property (copy) NSString* id;
 @end
 
 #endif // __WACContactConnectedServiceAccount_DEFINED__
@@ -458,7 +512,7 @@ WINRT_EXPORT
 @property (copy) NSNumber* year;
 @property (copy) NSNumber* month;
 @property WACContactDateKind kind;
-@property (copy) NSString * description;
+@property (copy) NSString* description;
 @property (copy) NSNumber* day;
 @end
 
@@ -471,15 +525,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactJobInfo : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * title;
-@property (copy) NSString * office;
-@property (copy) NSString * manager;
-@property (copy) NSString * description;
-@property (copy) NSString * department;
-@property (copy) NSString * companyYomiName;
-@property (copy) NSString * companyName;
-@property (copy) NSString * companyAddress;
+@property (copy) NSString* title;
+@property (copy) NSString* office;
+@property (copy) NSString* manager;
+@property (copy) NSString* description;
+@property (copy) NSString* department;
+@property (copy) NSString* companyYomiName;
+@property (copy) NSString* companyName;
+@property (copy) NSString* companyAddress;
 @end
 
 #endif // __WACContactJobInfo_DEFINED__
-

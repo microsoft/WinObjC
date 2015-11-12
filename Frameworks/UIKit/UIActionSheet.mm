@@ -85,6 +85,9 @@ static int addButton(UIActionSheet* self, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithTitle:(id)title
                   delegate:(id)delegate
          cancelButtonTitle:(id)cancelButtonTitle
@@ -160,6 +163,9 @@ static int addButton(UIActionSheet* self, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)showInView:(id)view {
     if ([_delegate respondsToSelector:@selector(willPresentActionSheet:)]) {
         [_delegate willPresentActionSheet:self];
@@ -239,14 +245,23 @@ static int addButton(UIActionSheet* self, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)showFromToolbar:(id)toolbar {
     [self showInView:[toolbar superview]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)showFromTabBar:(id)tabbar {
     [self showInView:[tabbar window]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)showFromBarButtonItem:(id)item animated:(BOOL)animated {
     [self showInView:[[[item _getView] superview] superview]];
 }
@@ -264,15 +279,24 @@ static int addButton(UIActionSheet* self, id text) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title {
     _title = [title copy];
     // TODO: Questionable return type and/or value here
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ title {
     return _title;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)addButtonWithTitle:(NSString*)title {
     int idx = addButton(self, title);
     if (_otherButtonIndex == -1) {
@@ -284,20 +308,33 @@ static int addButton(UIActionSheet* self, id text) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDestructiveButtonIndex:(int)destructiveIndex {
     _destructiveIndex = destructiveIndex;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
     _delegateSupportsDidDismiss = [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setActionSheetStyle:(UIActionSheetStyle)style {
+    UNIMPLEMENTED();
 }
 
 - (id)_didHideAlert {
@@ -368,25 +405,40 @@ static void dismissView(UIActionSheet* self, int index) {
     */
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)buttonTitleAtIndex:(int)index {
     assert(_buttons[index].button != nil);
 
     return [_buttons[index].button currentTitle];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)numberOfButtons {
     return _numButtons;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)cancelButtonIndex {
     return _cancelCustomIndex;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCancelButtonIndex:(NSInteger)index {
     _cancelCustomIndex = index;
     [_buttons[_cancelButtonIndex].button sendControlEventsOnBack:UIControlEventTouchUpInside];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)firstOtherButtonIndex {
     return _otherButtonIndex;
 }
@@ -397,10 +449,17 @@ static void dismissView(UIActionSheet* self, int index) {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)isVisible {
+    UNIMPLEMENTED();
     return [self superview] != nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
     EbrDebugLog("dismissWithClicked .. fire an event?\n");
     return self;

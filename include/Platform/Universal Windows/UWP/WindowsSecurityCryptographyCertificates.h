@@ -20,85 +20,98 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSCCCertificate, WSCCCertificateRequestProperties, WSCCUserCertificateEnrollmentManager, WSCCPfxImportParameters, WSCCCertificateEnrollmentManager, WSCCKeyAttestationHelper, WSCCCertificateQuery, WSCCCertificateStore, WSCCCertificateStores, WSCCKeyAlgorithmNames, WSCCKeyStorageProviderNames, WSCCChainBuildingParameters, WSCCChainValidationParameters, WSCCCertificateChain, WSCCCertificateKeyUsages, WSCCSubjectAlternativeNameInfo, WSCCCmsTimestampInfo, WSCCCmsSignerInfo, WSCCCmsAttachedSignature, WSCCCmsDetachedSignature;
-@protocol WSCCICertificateRequestProperties, WSCCICertificateRequestProperties2, WSCCICertificateRequestProperties3, WSCCICertificateEnrollmentManagerStatics, WSCCICertificateEnrollmentManagerStatics2, WSCCICertificateEnrollmentManagerStatics3, WSCCIKeyAttestationHelperStatics, WSCCIKeyAttestationHelperStatics2, WSCCICertificateStoresStatics, WSCCIUserCertificateEnrollmentManager, WSCCIUserCertificateEnrollmentManager2, WSCCICertificateStore, WSCCICertificateStore2, WSCCIKeyAlgorithmNamesStatics, WSCCIKeyAlgorithmNamesStatics2, WSCCIKeyStorageProviderNamesStatics, WSCCIKeyStorageProviderNamesStatics2, WSCCIChainBuildingParameters, WSCCIChainValidationParameters, WSCCICertificateQuery, WSCCICertificateQuery2, WSCCICertificateChain, WSCCICertificate, WSCCICertificate2, WSCCICertificateFactory, WSCCICmsTimestampInfo, WSCCICmsSignerInfo, WSCCISubjectAlternativeNameInfo, WSCCIPfxImportParameters, WSCCICertificateKeyUsages, WSCCICmsAttachedSignature, WSCCICmsAttachedSignatureFactory, WSCCICmsAttachedSignatureStatics, WSCCICmsDetachedSignature, WSCCICmsDetachedSignatureFactory, WSCCICmsDetachedSignatureStatics;
+@class WSCCCertificate, WSCCCertificateRequestProperties, WSCCUserCertificateEnrollmentManager, WSCCPfxImportParameters,
+    WSCCCertificateEnrollmentManager, WSCCKeyAttestationHelper, WSCCCertificateQuery, WSCCCertificateStore, WSCCCertificateStores,
+    WSCCKeyAlgorithmNames, WSCCKeyStorageProviderNames, WSCCChainBuildingParameters, WSCCChainValidationParameters, WSCCCertificateChain,
+    WSCCCertificateKeyUsages, WSCCSubjectAlternativeNameInfo, WSCCCmsTimestampInfo, WSCCCmsSignerInfo, WSCCCmsAttachedSignature,
+    WSCCCmsDetachedSignature;
+@protocol WSCCICertificateRequestProperties
+, WSCCICertificateRequestProperties2, WSCCICertificateRequestProperties3, WSCCICertificateEnrollmentManagerStatics,
+    WSCCICertificateEnrollmentManagerStatics2, WSCCICertificateEnrollmentManagerStatics3, WSCCIKeyAttestationHelperStatics,
+    WSCCIKeyAttestationHelperStatics2, WSCCICertificateStoresStatics, WSCCIUserCertificateEnrollmentManager,
+    WSCCIUserCertificateEnrollmentManager2, WSCCICertificateStore, WSCCICertificateStore2, WSCCIKeyAlgorithmNamesStatics,
+    WSCCIKeyAlgorithmNamesStatics2, WSCCIKeyStorageProviderNamesStatics, WSCCIKeyStorageProviderNamesStatics2, WSCCIChainBuildingParameters,
+    WSCCIChainValidationParameters, WSCCICertificateQuery, WSCCICertificateQuery2, WSCCICertificateChain, WSCCICertificate,
+    WSCCICertificate2, WSCCICertificateFactory, WSCCICmsTimestampInfo, WSCCICmsSignerInfo, WSCCISubjectAlternativeNameInfo,
+    WSCCIPfxImportParameters, WSCCICertificateKeyUsages, WSCCICmsAttachedSignature, WSCCICmsAttachedSignatureFactory,
+    WSCCICmsAttachedSignatureStatics, WSCCICmsDetachedSignature, WSCCICmsDetachedSignatureFactory, WSCCICmsDetachedSignatureStatics;
 
 // Windows.Security.Cryptography.Certificates.EnrollKeyUsages
 enum _WSCCEnrollKeyUsages {
-	WSCCEnrollKeyUsagesNone = 0,
-	WSCCEnrollKeyUsagesDecryption = 1,
-	WSCCEnrollKeyUsagesSigning = 2,
-	WSCCEnrollKeyUsagesKeyAgreement = 4,
-	WSCCEnrollKeyUsagesAll = 16777215,
+    WSCCEnrollKeyUsagesNone = 0,
+    WSCCEnrollKeyUsagesDecryption = 1,
+    WSCCEnrollKeyUsagesSigning = 2,
+    WSCCEnrollKeyUsagesKeyAgreement = 4,
+    WSCCEnrollKeyUsagesAll = 16777215,
 };
 typedef unsigned WSCCEnrollKeyUsages;
 
 // Windows.Security.Cryptography.Certificates.KeyProtectionLevel
 enum _WSCCKeyProtectionLevel {
-	WSCCKeyProtectionLevelNoConsent = 0,
-	WSCCKeyProtectionLevelConsentOnly = 1,
-	WSCCKeyProtectionLevelConsentWithPassword = 2,
-	WSCCKeyProtectionLevelConsentWithFingerprint = 3,
+    WSCCKeyProtectionLevelNoConsent = 0,
+    WSCCKeyProtectionLevelConsentOnly = 1,
+    WSCCKeyProtectionLevelConsentWithPassword = 2,
+    WSCCKeyProtectionLevelConsentWithFingerprint = 3,
 };
 typedef unsigned WSCCKeyProtectionLevel;
 
 // Windows.Security.Cryptography.Certificates.ExportOption
 enum _WSCCExportOption {
-	WSCCExportOptionNotExportable = 0,
-	WSCCExportOptionExportable = 1,
+    WSCCExportOptionNotExportable = 0,
+    WSCCExportOptionExportable = 1,
 };
 typedef unsigned WSCCExportOption;
 
 // Windows.Security.Cryptography.Certificates.KeySize
 enum _WSCCKeySize {
-	WSCCKeySizeInvalid = 0,
-	WSCCKeySizeRsa2048 = 2048,
-	WSCCKeySizeRsa4096 = 4096,
+    WSCCKeySizeInvalid = 0,
+    WSCCKeySizeRsa2048 = 2048,
+    WSCCKeySizeRsa4096 = 4096,
 };
 typedef unsigned WSCCKeySize;
 
 // Windows.Security.Cryptography.Certificates.InstallOptions
 enum _WSCCInstallOptions {
-	WSCCInstallOptionsNone = 0,
-	WSCCInstallOptionsDeleteExpired = 1,
+    WSCCInstallOptionsNone = 0,
+    WSCCInstallOptionsDeleteExpired = 1,
 };
 typedef unsigned WSCCInstallOptions;
 
 // Windows.Security.Cryptography.Certificates.CertificateChainPolicy
 enum _WSCCCertificateChainPolicy {
-	WSCCCertificateChainPolicyBase = 0,
-	WSCCCertificateChainPolicySsl = 1,
-	WSCCCertificateChainPolicyNTAuthentication = 2,
-	WSCCCertificateChainPolicyMicrosoftRoot = 3,
+    WSCCCertificateChainPolicyBase = 0,
+    WSCCCertificateChainPolicySsl = 1,
+    WSCCCertificateChainPolicyNTAuthentication = 2,
+    WSCCCertificateChainPolicyMicrosoftRoot = 3,
 };
 typedef unsigned WSCCCertificateChainPolicy;
 
 // Windows.Security.Cryptography.Certificates.ChainValidationResult
 enum _WSCCChainValidationResult {
-	WSCCChainValidationResultSuccess = 0,
-	WSCCChainValidationResultUntrusted = 1,
-	WSCCChainValidationResultRevoked = 2,
-	WSCCChainValidationResultExpired = 3,
-	WSCCChainValidationResultIncompleteChain = 4,
-	WSCCChainValidationResultInvalidSignature = 5,
-	WSCCChainValidationResultWrongUsage = 6,
-	WSCCChainValidationResultInvalidName = 7,
-	WSCCChainValidationResultInvalidCertificateAuthorityPolicy = 8,
-	WSCCChainValidationResultBasicConstraintsError = 9,
-	WSCCChainValidationResultUnknownCriticalExtension = 10,
-	WSCCChainValidationResultRevocationInformationMissing = 11,
-	WSCCChainValidationResultRevocationFailure = 12,
-	WSCCChainValidationResultOtherErrors = 13,
+    WSCCChainValidationResultSuccess = 0,
+    WSCCChainValidationResultUntrusted = 1,
+    WSCCChainValidationResultRevoked = 2,
+    WSCCChainValidationResultExpired = 3,
+    WSCCChainValidationResultIncompleteChain = 4,
+    WSCCChainValidationResultInvalidSignature = 5,
+    WSCCChainValidationResultWrongUsage = 6,
+    WSCCChainValidationResultInvalidName = 7,
+    WSCCChainValidationResultInvalidCertificateAuthorityPolicy = 8,
+    WSCCChainValidationResultBasicConstraintsError = 9,
+    WSCCChainValidationResultUnknownCriticalExtension = 10,
+    WSCCChainValidationResultRevocationInformationMissing = 11,
+    WSCCChainValidationResultRevocationFailure = 12,
+    WSCCChainValidationResultOtherErrors = 13,
 };
 typedef unsigned WSCCChainValidationResult;
 
 // Windows.Security.Cryptography.Certificates.SignatureValidationResult
 enum _WSCCSignatureValidationResult {
-	WSCCSignatureValidationResultSuccess = 0,
-	WSCCSignatureValidationResultInvalidParameter = 1,
-	WSCCSignatureValidationResultBadMessage = 2,
-	WSCCSignatureValidationResultInvalidSignature = 3,
-	WSCCSignatureValidationResultOtherErrors = 4,
+    WSCCSignatureValidationResultSuccess = 0,
+    WSCCSignatureValidationResultInvalidParameter = 1,
+    WSCCSignatureValidationResultBadMessage = 2,
+    WSCCSignatureValidationResultInvalidSignature = 3,
+    WSCCSignatureValidationResultOtherErrors = 4,
 };
 typedef unsigned WSCCSignatureValidationResult;
 
@@ -116,25 +129,30 @@ typedef unsigned WSCCSignatureValidationResult;
 WINRT_EXPORT
 @interface WSCCCertificate : RTObject
 + (WSCCCertificate*)createCertificate:(RTObject<WSSIBuffer>*)certBlob ACTIVATOR;
-@property (copy) NSString * friendlyName;
+@property (copy) NSString* friendlyName;
 @property (readonly) NSArray* enhancedKeyUsages;
 @property (readonly) BOOL hasPrivateKey;
 @property (readonly) BOOL isStronglyProtected;
-@property (readonly) NSString * issuer;
+@property (readonly) NSString* issuer;
 @property (readonly) NSArray* serialNumber;
-@property (readonly) NSString * subject;
+@property (readonly) NSString* subject;
 @property (readonly) WFDateTime* validFrom;
 @property (readonly) WFDateTime* validTo;
 @property (readonly) BOOL isSecurityDeviceBound;
-@property (readonly) NSString * keyAlgorithmName;
+@property (readonly) NSString* keyAlgorithmName;
 @property (readonly) WSCCCertificateKeyUsages* keyUsages;
-@property (readonly) NSString * signatureAlgorithmName;
-@property (readonly) NSString * signatureHashAlgorithmName;
+@property (readonly) NSString* signatureAlgorithmName;
+@property (readonly) NSString* signatureHashAlgorithmName;
 @property (readonly) WSCCSubjectAlternativeNameInfo* subjectAlternativeName;
-- (void)buildChainAsync:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(WSCCCertificateChain*))success failure:(void (^)(NSError*))failure;
-- (void)buildChainWithParametersAsync:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates parameters:(WSCCChainBuildingParameters*)parameters success:(void (^)(WSCCCertificateChain*))success failure:(void (^)(NSError*))failure;
+- (void)buildChainAsync:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates
+                success:(void (^)(WSCCCertificateChain*))success
+                failure:(void (^)(NSError*))failure;
+- (void)buildChainWithParametersAsync:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates
+                           parameters:(WSCCChainBuildingParameters*)parameters
+                              success:(void (^)(WSCCCertificateChain*))success
+                              failure:(void (^)(NSError*))failure;
 - (NSArray*)getHashValue;
-- (NSArray*)getHashValueWithAlgorithm:(NSString *)hashAlgorithmName;
+- (NSArray*)getHashValueWithAlgorithm:(NSString*)hashAlgorithmName;
 - (RTObject<WSSIBuffer>*)getCertificateBlob;
 @end
 
@@ -147,23 +165,23 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCertificateRequestProperties : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * subject;
+@property (copy) NSString* subject;
 @property WSCCEnrollKeyUsages keyUsages;
-@property (copy) NSString * keyStorageProviderName;
+@property (copy) NSString* keyStorageProviderName;
 @property unsigned int keySize;
 @property WSCCExportOption exportable;
-@property (copy) NSString * keyAlgorithmName;
-@property (copy) NSString * hashAlgorithmName;
-@property (copy) NSString * friendlyName;
+@property (copy) NSString* keyAlgorithmName;
+@property (copy) NSString* hashAlgorithmName;
+@property (copy) NSString* friendlyName;
 @property WSCCKeyProtectionLevel keyProtectionLevel;
-@property (copy) NSString * smartcardReaderName;
+@property (copy) NSString* smartcardReaderName;
 @property (copy) WSCCCertificate* signingCertificate;
 @property (copy) WSCCCertificate* attestationCredentialCertificate;
 @property BOOL useExistingKey;
 @property (copy) NSArray* curveParameters;
-@property (copy) NSString * curveName;
-@property (copy) NSString * containerNamePrefix;
-@property (copy) NSString * containerName;
+@property (copy) NSString* curveName;
+@property (copy) NSString* containerNamePrefix;
+@property (copy) NSString* containerName;
 @end
 
 #endif // __WSCCCertificateRequestProperties_DEFINED__
@@ -174,11 +192,26 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCUserCertificateEnrollmentManager : RTObject
-- (void)createRequestAsync:(WSCCCertificateRequestProperties*)request success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)installCertificateAsync:(NSString *)certificate installOption:(WSCCInstallOptions)installOption;
-- (RTObject<WFIAsyncAction>*)importPfxDataAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName;
-- (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName keyStorageProvider:(NSString *)keyStorageProvider;
-- (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString *)pfxData password:(NSString *)password pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
+- (void)createRequestAsync:(WSCCCertificateRequestProperties*)request
+                   success:(void (^)(NSString*))success
+                   failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)installCertificateAsync:(NSString*)certificate installOption:(WSCCInstallOptions)installOption;
+- (RTObject<WFIAsyncAction>*)importPfxDataAsync:(NSString*)pfxData
+                                       password:(NSString*)password
+                                     exportable:(WSCCExportOption)exportable
+                             keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel
+                                  installOption:(WSCCInstallOptions)installOption
+                                   friendlyName:(NSString*)friendlyName;
+- (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString*)pfxData
+                                            password:(NSString*)password
+                                          exportable:(WSCCExportOption)exportable
+                                  keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel
+                                       installOption:(WSCCInstallOptions)installOption
+                                        friendlyName:(NSString*)friendlyName
+                                  keyStorageProvider:(NSString*)keyStorageProvider;
+- (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString*)pfxData
+                                                          password:(NSString*)password
+                                               pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
 @end
 
 #endif // __WSCCUserCertificateEnrollmentManager_DEFINED__
@@ -190,13 +223,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCPfxImportParameters : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * readerName;
-@property (copy) NSString * keyStorageProviderName;
+@property (copy) NSString* readerName;
+@property (copy) NSString* keyStorageProviderName;
 @property WSCCKeyProtectionLevel keyProtectionLevel;
 @property WSCCInstallOptions installOptions;
-@property (copy) NSString * friendlyName;
+@property (copy) NSString* friendlyName;
 @property WSCCExportOption exportable;
-@property (copy) NSString * containerNamePrefix;
+@property (copy) NSString* containerNamePrefix;
 @end
 
 #endif // __WSCCPfxImportParameters_DEFINED__
@@ -207,11 +240,26 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateEnrollmentManager : RTObject
-+ (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName keyStorageProvider:(NSString *)keyStorageProvider;
-+ (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString *)pfxData password:(NSString *)password pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
-+ (void)createRequestAsync:(WSCCCertificateRequestProperties*)request success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)installCertificateAsync:(NSString *)certificate installOption:(WSCCInstallOptions)installOption;
-+ (RTObject<WFIAsyncAction>*)importPfxDataAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName;
++ (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString*)pfxData
+                                            password:(NSString*)password
+                                          exportable:(WSCCExportOption)exportable
+                                  keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel
+                                       installOption:(WSCCInstallOptions)installOption
+                                        friendlyName:(NSString*)friendlyName
+                                  keyStorageProvider:(NSString*)keyStorageProvider;
++ (RTObject<WFIAsyncAction>*)importPfxDataToKspWithParametersAsync:(NSString*)pfxData
+                                                          password:(NSString*)password
+                                               pfxImportParameters:(WSCCPfxImportParameters*)pfxImportParameters;
++ (void)createRequestAsync:(WSCCCertificateRequestProperties*)request
+                   success:(void (^)(NSString*))success
+                   failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)installCertificateAsync:(NSString*)certificate installOption:(WSCCInstallOptions)installOption;
++ (RTObject<WFIAsyncAction>*)importPfxDataAsync:(NSString*)pfxData
+                                       password:(NSString*)password
+                                     exportable:(WSCCExportOption)exportable
+                             keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel
+                                  installOption:(WSCCInstallOptions)installOption
+                                   friendlyName:(NSString*)friendlyName;
 + (WSCCUserCertificateEnrollmentManager*)userCertificateEnrollmentManager;
 @end
 
@@ -223,9 +271,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCKeyAttestationHelper : RTObject
-+ (void)decryptTpmAttestationCredentialAsync:(NSString *)credential success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getTpmAttestationCredentialId:(NSString *)credential;
-+ (void)decryptTpmAttestationCredentialWithContainerNameAsync:(NSString *)credential containerName:(NSString *)containerName success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)decryptTpmAttestationCredentialAsync:(NSString*)credential success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getTpmAttestationCredentialId:(NSString*)credential;
++ (void)decryptTpmAttestationCredentialWithContainerNameAsync:(NSString*)credential
+                                                containerName:(NSString*)containerName
+                                                      success:(void (^)(NSString*))success
+                                                      failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCCKeyAttestationHelper_DEFINED__
@@ -238,11 +289,11 @@ WINRT_EXPORT
 @interface WSCCCertificateQuery : RTObject
 + (instancetype)create ACTIVATOR;
 @property (copy) NSArray* thumbprint;
-@property (copy) NSString * issuerName;
+@property (copy) NSString* issuerName;
 @property BOOL hardwareOnly;
-@property (copy) NSString * friendlyName;
+@property (copy) NSString* friendlyName;
 @property (readonly) NSMutableArray* enhancedKeyUsages;
-@property (copy) NSString * storeName;
+@property (copy) NSString* storeName;
 @property BOOL includeExpiredCertificates;
 @property BOOL includeDuplicates;
 @end
@@ -255,7 +306,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateStore : RTObject
-@property (readonly) NSString * name;
+@property (readonly) NSString* name;
 - (void)add:(WSCCCertificate*)certificate;
 - (void)Delete:(WSCCCertificate*)certificate;
 @end
@@ -270,7 +321,7 @@ WINRT_EXPORT
 @interface WSCCCertificateStores : RTObject
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)findAllWithQueryAsync:(WSCCCertificateQuery*)query success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WSCCCertificateStore*)getStoreByName:(NSString *)storeName;
++ (WSCCCertificateStore*)getStoreByName:(NSString*)storeName;
 + (WSCCCertificateStore*)intermediateCertificationAuthorities;
 + (WSCCCertificateStore*)trustedRootCertificationAuthorities;
 @end
@@ -283,16 +334,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCKeyAlgorithmNames : RTObject
-+ (NSString *)dsa;
-+ (NSString *)ecdh256;
-+ (NSString *)ecdh384;
-+ (NSString *)ecdh521;
-+ (NSString *)ecdsa256;
-+ (NSString *)ecdsa384;
-+ (NSString *)ecdsa521;
-+ (NSString *)rsa;
-+ (NSString *)ecdh;
-+ (NSString *)ecdsa;
++ (NSString*)dsa;
++ (NSString*)ecdh256;
++ (NSString*)ecdh384;
++ (NSString*)ecdh521;
++ (NSString*)ecdsa256;
++ (NSString*)ecdsa384;
++ (NSString*)ecdsa521;
++ (NSString*)rsa;
++ (NSString*)ecdh;
++ (NSString*)ecdsa;
 @end
 
 #endif // __WSCCKeyAlgorithmNames_DEFINED__
@@ -303,10 +354,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCKeyStorageProviderNames : RTObject
-+ (NSString *)platformKeyStorageProvider;
-+ (NSString *)smartcardKeyStorageProvider;
-+ (NSString *)softwareKeyStorageProvider;
-+ (NSString *)passportKeyStorageProvider;
++ (NSString*)platformKeyStorageProvider;
++ (NSString*)smartcardKeyStorageProvider;
++ (NSString*)softwareKeyStorageProvider;
++ (NSString*)passportKeyStorageProvider;
 @end
 
 #endif // __WSCCKeyStorageProviderNames_DEFINED__
@@ -411,7 +462,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCCCmsSignerInfo : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * hashAlgorithmName;
+@property (copy) NSString* hashAlgorithmName;
 @property (copy) WSCCCertificate* certificate;
 @property (readonly) WSCCCmsTimestampInfo* timestampInfo;
 @end
@@ -424,7 +475,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCmsAttachedSignature : RTObject
-+ (void)generateSignatureAsync:(RTObject<WSSIBuffer>*)data signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)generateSignatureAsync:(RTObject<WSSIBuffer>*)data
+                       signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers
+                  certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates
+                       success:(void (^)(RTObject<WSSIBuffer>*))success
+                       failure:(void (^)(NSError*))failure;
 + (WSCCCmsAttachedSignature*)createCmsAttachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;
 @property (readonly) NSArray* certificates;
 @property (readonly) NSArray* content;
@@ -440,12 +495,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCmsDetachedSignature : RTObject
-+ (void)generateSignatureAsync:(RTObject<WSSIInputStream>*)data signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (void)generateSignatureAsync:(RTObject<WSSIInputStream>*)data
+                       signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers
+                  certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates
+                       success:(void (^)(RTObject<WSSIBuffer>*))success
+                       failure:(void (^)(NSError*))failure;
 + (WSCCCmsDetachedSignature*)createCmsDetachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;
 @property (readonly) NSArray* certificates;
 @property (readonly) NSArray* signers;
-- (void)verifySignatureAsync:(RTObject<WSSIInputStream>*)data success:(void (^)(WSCCSignatureValidationResult))success failure:(void (^)(NSError*))failure;
+- (void)verifySignatureAsync:(RTObject<WSSIInputStream>*)data
+                     success:(void (^)(WSCCSignatureValidationResult))success
+                     failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCCCmsDetachedSignature_DEFINED__
-

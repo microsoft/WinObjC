@@ -47,6 +47,9 @@ NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification"
     float _windowLevel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)convertRect:(CGRect)rect fromWindow:(UIWindow*)window {
     CGRect ret;
 
@@ -55,6 +58,9 @@ NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification"
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
     return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
 }
@@ -137,6 +143,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return (UIWindow*)m_pMainWindow;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)makeKeyAndVisible {
     [self setHidden:FALSE];
     [self makeKeyWindow];
@@ -144,19 +153,31 @@ static void initInternal(UIWindow* self, CGRect pos) {
     curWindowLevel += 1.0f;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)makeKeyWindow {
     [self becomeKeyWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)becomeKeyWindow {
     _curKeyWindow = self;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIWindowDidBecomeKeyNotification" object:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)resignKeyWindow {
     _curKeyWindow = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isKeyWindow {
     if (_curKeyWindow == self) {
         return TRUE;
@@ -169,10 +190,16 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return [UIApplication sharedApplication];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)rootViewController {
     return (UIResponder*)_rootViewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRootViewController:(UIViewController*)controller {
     _rootViewController = controller;
 
@@ -225,7 +252,11 @@ static void initInternal(UIWindow* self, CGRect pos) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setWindowLevel:(float)level {
+    UNIMPLEMENTED();
     _windowLevel = level;
     CALayer* ourLayer = [self layer];
     GetCACompositor()->setNodeTopWindowLevel((DisplayNode*)[ourLayer _presentationNode], level);
@@ -233,11 +264,19 @@ static void initInternal(UIWindow* self, CGRect pos) {
     [[[UIApplication sharedApplication] windows] sortUsingSelector:@selector(_compareWindowLevel:)];
 }
 
+/**
+ @Status Stub
+*/
 - (float)windowLevel {
+    UNIMPLEMENTED();
     return _windowLevel;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScreen:(UIScreen*)screen {
+    UNIMPLEMENTED();
     return;
 }
 

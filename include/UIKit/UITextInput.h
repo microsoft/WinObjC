@@ -25,7 +25,7 @@ typedef enum {
 
 typedef enum {
     UITextStorageDirectionForward = 0,
-    UITextStorageDirectionBackward
+    UITextStorageDirectionBackward,
 } UITextStorageDirection;
 
 typedef enum {
@@ -36,8 +36,19 @@ typedef enum {
 
 @protocol UIKeyInput <UITextInputTraits>
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteBackward;
-- (void)insertText:(NSString *)text;
+
+/**
+ @Status Stub
+*/
+- (void)insertText:(NSString*)text;
+
+/**
+ @Status Stub
+*/
 - (BOOL)hasText;
 
 @end
@@ -46,22 +57,22 @@ typedef enum {
 
 @protocol UITextInput <UIKeyInput>
 
-@property(nonatomic, readonly) UITextPosition *beginningOfDocument;
-@property(readwrite, copy) UITextRange *selectedTextRange;
-@property(nonatomic, readonly) UITextPosition *endOfDocument;
+@property (nonatomic, readonly) UITextPosition* beginningOfDocument;
+@property (readwrite, copy) UITextRange* selectedTextRange;
+@property (nonatomic, readonly) UITextPosition* endOfDocument;
 
-- (UITextPosition *)positionFromPosition:(UITextPosition *)position offset:(NSInteger)offset;
-- (UITextRange *)textRangeFromPosition:(UITextPosition *)fromPosition toPosition:(UITextPosition *)toPosition;
-- (CGRect)firstRectForRange:(UITextRange *)range;
-- (CGRect)caretRectForPosition:(UITextPosition *)position;
+- (UITextPosition*)positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset;
+- (UITextRange*)textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition;
+- (CGRect)firstRectForRange:(UITextRange*)range;
+- (CGRect)caretRectForPosition:(UITextPosition*)position;
 
 @end
 
 @interface UITextRange : NSObject
 
 @property (nonatomic, readonly, getter=isEmpty) BOOL empty;
-@property (nonatomic, readonly) UITextPosition *end;
-@property (nonatomic, readonly) UITextPosition *start;
+@property (nonatomic, readonly) UITextPosition* end;
+@property (nonatomic, readonly) UITextPosition* start;
 
 @end
 

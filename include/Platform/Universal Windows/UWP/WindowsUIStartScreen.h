@@ -20,35 +20,39 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest, WUSVisualElementsRequestDeferral;
-@protocol WUSISecondaryTile, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3, WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs, WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral;
+@class WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest,
+    WUSVisualElementsRequestDeferral;
+@protocol WUSISecondaryTile
+, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3,
+    WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs,
+    WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral;
 
 // Windows.UI.StartScreen.TileOptions
 enum _WUSTileOptions {
-	WUSTileOptionsNone = 0,
-	WUSTileOptionsShowNameOnLogo = 1,
-	WUSTileOptionsShowNameOnWideLogo = 2,
-	WUSTileOptionsCopyOnDeployment = 4,
+    WUSTileOptionsNone = 0,
+    WUSTileOptionsShowNameOnLogo = 1,
+    WUSTileOptionsShowNameOnWideLogo = 2,
+    WUSTileOptionsCopyOnDeployment = 4,
 };
 typedef unsigned WUSTileOptions;
 
 // Windows.UI.StartScreen.TileSize
 enum _WUSTileSize {
-	WUSTileSizeDefault = 0,
-	WUSTileSizeSquare30x30 = 1,
-	WUSTileSizeSquare70x70 = 2,
-	WUSTileSizeSquare150x150 = 3,
-	WUSTileSizeWide310x150 = 4,
-	WUSTileSizeSquare310x310 = 5,
-	WUSTileSizeSquare71x71 = 6,
-	WUSTileSizeSquare44x44 = 7,
+    WUSTileSizeDefault = 0,
+    WUSTileSizeSquare30x30 = 1,
+    WUSTileSizeSquare70x70 = 2,
+    WUSTileSizeSquare150x150 = 3,
+    WUSTileSizeWide310x150 = 4,
+    WUSTileSizeSquare310x310 = 5,
+    WUSTileSizeSquare71x71 = 6,
+    WUSTileSizeSquare44x44 = 7,
 };
 typedef unsigned WUSTileSize;
 
 // Windows.UI.StartScreen.ForegroundText
 enum _WUSForegroundText {
-	WUSForegroundTextDark = 0,
-	WUSForegroundTextLight = 1,
+    WUSForegroundTextDark = 0,
+    WUSForegroundTextLight = 1,
 };
 typedef unsigned WUSForegroundText;
 
@@ -87,40 +91,61 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUSSecondaryTile : RTObject
-+ (BOOL)exists:(NSString *)tileId;
++ (BOOL)exists:(NSString*)tileId;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)findAllForApplicationAsync:(NSString *)applicationId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findAllForApplicationAsync:(NSString*)applicationId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)findAllForPackageAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WUSSecondaryTile*)createMinimalTile:(NSString *)tileId displayName:(NSString *)displayName arguments:(NSString *)arguments square150x150Logo:(WFUri*)square150x150Logo desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
-+ (WUSSecondaryTile*)createTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference ACTIVATOR;
-+ (WUSSecondaryTile*)createWideTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
-+ (WUSSecondaryTile*)createWithId:(NSString *)tileId ACTIVATOR;
++ (WUSSecondaryTile*)createMinimalTile:(NSString*)tileId
+                           displayName:(NSString*)displayName
+                             arguments:(NSString*)arguments
+                     square150x150Logo:(WFUri*)square150x150Logo
+                           desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
++ (WUSSecondaryTile*)createTile:(NSString*)tileId
+                      shortName:(NSString*)shortName
+                    displayName:(NSString*)displayName
+                      arguments:(NSString*)arguments
+                    tileOptions:(WUSTileOptions)tileOptions
+                  logoReference:(WFUri*)logoReference ACTIVATOR;
++ (WUSSecondaryTile*)createWideTile:(NSString*)tileId
+                          shortName:(NSString*)shortName
+                        displayName:(NSString*)displayName
+                          arguments:(NSString*)arguments
+                        tileOptions:(WUSTileOptions)tileOptions
+                      logoReference:(WFUri*)logoReference
+                  wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
++ (WUSSecondaryTile*)createWithId:(NSString*)tileId ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * shortName;
+@property (copy) NSString* shortName;
 @property (copy) WFUri* logo;
-@property (copy) NSString * tileId;
+@property (copy) NSString* tileId;
 @property BOOL lockScreenDisplayBadgeAndTileText;
 @property (copy) WFUri* lockScreenBadgeLogo;
-@property (copy) NSString * arguments;
+@property (copy) NSString* arguments;
 @property WUSForegroundText foregroundText;
-@property (copy) NSString * displayName;
+@property (copy) NSString* displayName;
 @property (copy) WUColor* backgroundColor;
 @property (copy) WFUri* wideLogo;
 @property WUSTileOptions tileOptions;
 @property (copy) WFUri* smallLogo;
 @property BOOL roamingEnabled;
-@property (copy) NSString * phoneticName;
+@property (copy) NSString* phoneticName;
 @property (readonly) WUSSecondaryTileVisualElements* visualElements;
-- (EventRegistrationToken)addVisualElementsRequestedEvent:(void(^)(WUSSecondaryTile*, WUSVisualElementsRequestedEventArgs*))del;
+- (EventRegistrationToken)addVisualElementsRequestedEvent:(void (^)(WUSSecondaryTile*, WUSVisualElementsRequestedEventArgs*))del;
 - (void)removeVisualElementsRequestedEvent:(EventRegistrationToken)tok;
 - (void)requestCreateAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestCreateAsyncWithPoint:(WFPoint*)invocationPoint success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestCreateAsyncWithRect:(WFRect*)selection success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)requestCreateAsyncWithRectAndPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)requestCreateAsyncWithRectAndPlacement:(WFRect*)selection
+                            preferredPlacement:(WUPPlacement)preferredPlacement
+                                       success:(void (^)(BOOL))success
+                                       failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithPoint:(WFPoint*)invocationPoint success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithRect:(WFRect*)selection success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)requestDeleteAsyncWithRectAndPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)requestDeleteAsyncWithRectAndPlacement:(WFRect*)selection
+                            preferredPlacement:(WUPPlacement)preferredPlacement
+                                       success:(void (^)(BOOL))success
+                                       failure:(void (^)(NSError*))failure;
 - (void)updateAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -161,4 +186,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUSVisualElementsRequestDeferral_DEFINED__
-

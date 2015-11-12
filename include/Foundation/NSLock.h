@@ -11,7 +11,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @class NSDate;
 
 @protocol NSLocking
+
+/**
+ @Status Interoperable
+*/
 -(void)lock;
+
+/**
+ @Status Interoperable
+*/
 -(void)unlock;
 @end
 

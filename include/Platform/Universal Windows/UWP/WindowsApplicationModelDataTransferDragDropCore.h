@@ -20,13 +20,16 @@
 #pragma once
 
 #include "interopBase.h"
-@class WADDCCoreDragInfo, WADDCCoreDragUIOverride, WADDCCoreDragDropManager, WADDCCoreDropOperationTargetRequestedEventArgs, WADDCCoreDragOperation;
-@protocol WADDCICoreDragInfo, WADDCICoreDragUIOverride, WADDCICoreDropOperationTarget, WADDCICoreDragOperation, WADDCICoreDragDropManagerStatics, WADDCICoreDragDropManager, WADDCICoreDropOperationTargetRequestedEventArgs;
+@class WADDCCoreDragInfo, WADDCCoreDragUIOverride, WADDCCoreDragDropManager, WADDCCoreDropOperationTargetRequestedEventArgs,
+    WADDCCoreDragOperation;
+@protocol WADDCICoreDragInfo
+, WADDCICoreDragUIOverride, WADDCICoreDropOperationTarget, WADDCICoreDragOperation, WADDCICoreDragDropManagerStatics,
+    WADDCICoreDragDropManager, WADDCICoreDropOperationTargetRequestedEventArgs;
 
 // Windows.ApplicationModel.DataTransfer.DragDrop.Core.CoreDragUIContentMode
 enum _WADDCCoreDragUIContentMode {
-	WADDCCoreDragUIContentModeAuto = 0,
-	WADDCCoreDragUIContentModeDeferred = 1,
+    WADDCCoreDragUIContentModeAuto = 0,
+    WADDCCoreDragUIContentModeDeferred = 1,
 };
 typedef unsigned WADDCCoreDragUIContentMode;
 
@@ -42,8 +45,14 @@ typedef unsigned WADDCCoreDragUIContentMode;
 #define __WADDCICoreDropOperationTarget_DEFINED__
 
 @protocol WADDCICoreDropOperationTarget
-- (void)enterAsync:(WADDCCoreDragInfo*)dragInfo dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
-- (void)overAsync:(WADDCCoreDragInfo*)dragInfo dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
+- (void)enterAsync:(WADDCCoreDragInfo*)dragInfo
+    dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride
+           success:(void (^)(WADDataPackageOperation))success
+           failure:(void (^)(NSError*))failure;
+- (void)overAsync:(WADDCCoreDragInfo*)dragInfo
+   dragUIOverride:(WADDCCoreDragUIOverride*)dragUIOverride
+          success:(void (^)(WADDataPackageOperation))success
+          failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)leaveAsync:(WADDCCoreDragInfo*)dragInfo;
 - (void)dropAsync:(WADDCCoreDragInfo*)dragInfo success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
@@ -72,7 +81,7 @@ WINRT_EXPORT
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
-@property (copy) NSString * caption;
+@property (copy) NSString* caption;
 - (void)setContentFromSoftwareBitmap:(WGISoftwareBitmap*)softwareBitmap;
 - (void)setContentFromSoftwareBitmapWithAnchorPoint:(WGISoftwareBitmap*)softwareBitmap anchorPoint:(WFPoint*)anchorPoint;
 - (void)clear;
@@ -88,7 +97,7 @@ WINRT_EXPORT
 @interface WADDCCoreDragDropManager : RTObject
 + (WADDCCoreDragDropManager*)getForCurrentView;
 @property BOOL areConcurrentOperationsEnabled;
-- (EventRegistrationToken)addTargetRequestedEvent:(void(^)(WADDCCoreDragDropManager*, WADDCCoreDropOperationTargetRequestedEventArgs*))del;
+- (EventRegistrationToken)addTargetRequestedEvent:(void (^)(WADDCCoreDragDropManager*, WADDCCoreDropOperationTargetRequestedEventArgs*))del;
 - (void)removeTargetRequestedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -121,4 +130,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WADDCCoreDragOperation_DEFINED__
-

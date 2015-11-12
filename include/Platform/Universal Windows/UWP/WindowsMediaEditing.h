@@ -21,19 +21,22 @@
 
 #include "interopBase.h"
 @class WMEMediaOverlay, WMEMediaClip, WMEEmbeddedAudioTrack, WMEBackgroundAudioTrack, WMEMediaComposition, WMEMediaOverlayLayer;
-@protocol WMEIMediaClip, WMEIMediaComposition, WMEIMediaClipStatics, WMEIMediaClipStatics2, WMEIMediaCompositionStatics, WMEIEmbeddedAudioTrack, WMEIBackgroundAudioTrack, WMEIBackgroundAudioTrackStatics, WMEIMediaComposition2, WMEIMediaOverlay, WMEIMediaOverlayFactory, WMEIMediaOverlayLayerFactory, WMEIMediaOverlayLayer;
+@protocol WMEIMediaClip
+, WMEIMediaComposition, WMEIMediaClipStatics, WMEIMediaClipStatics2, WMEIMediaCompositionStatics, WMEIEmbeddedAudioTrack,
+    WMEIBackgroundAudioTrack, WMEIBackgroundAudioTrackStatics, WMEIMediaComposition2, WMEIMediaOverlay, WMEIMediaOverlayFactory,
+    WMEIMediaOverlayLayerFactory, WMEIMediaOverlayLayer;
 
 // Windows.Media.Editing.VideoFramePrecision
 enum _WMEVideoFramePrecision {
-	WMEVideoFramePrecisionNearestFrame = 0,
-	WMEVideoFramePrecisionNearestKeyFrame = 1,
+    WMEVideoFramePrecisionNearestFrame = 0,
+    WMEVideoFramePrecisionNearestKeyFrame = 1,
 };
 typedef unsigned WMEVideoFramePrecision;
 
 // Windows.Media.Editing.MediaTrimmingPreference
 enum _WMEMediaTrimmingPreference {
-	WMEMediaTrimmingPreferenceFast = 0,
-	WMEMediaTrimmingPreferencePrecise = 1,
+    WMEMediaTrimmingPreferenceFast = 0,
+    WMEMediaTrimmingPreferencePrecise = 1,
 };
 typedef unsigned WMEMediaTrimmingPreference;
 
@@ -77,7 +80,10 @@ WINRT_EXPORT
 @interface WMEMediaClip : RTObject
 + (WMEMediaClip*)createFromColor:(WUColor*)color originalDuration:(WFTimeSpan*)originalDuration;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMEMediaClip*))success failure:(void (^)(NSError*))failure;
-+ (void)createFromImageFileAsync:(RTObject<WSIStorageFile>*)file originalDuration:(WFTimeSpan*)originalDuration success:(void (^)(WMEMediaClip*))success failure:(void (^)(NSError*))failure;
++ (void)createFromImageFileAsync:(RTObject<WSIStorageFile>*)file
+                originalDuration:(WFTimeSpan*)originalDuration
+                         success:(void (^)(WMEMediaClip*))success
+                         failure:(void (^)(NSError*))failure;
 + (WMEMediaClip*)createFromSurface:(RTObject<WGDDIDirect3DSurface>*)surface originalDuration:(WFTimeSpan*)originalDuration;
 @property unsigned int selectedEmbeddedAudioTrackIndex;
 @property (copy) WFTimeSpan* trimTimeFromEnd;
@@ -115,7 +121,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEBackgroundAudioTrack : RTObject
 + (WMEBackgroundAudioTrack*)createFromEmbeddedAudioTrack:(WMEEmbeddedAudioTrack*)embeddedAudioTrack;
-+ (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMEBackgroundAudioTrack*))success failure:(void (^)(NSError*))failure;
++ (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file
+                    success:(void (^)(WMEBackgroundAudioTrack*))success
+                    failure:(void (^)(NSError*))failure;
 @property double volume;
 @property (copy) WFTimeSpan* trimTimeFromStart;
 @property (copy) WFTimeSpan* trimTimeFromEnd;
@@ -145,11 +153,33 @@ WINRT_EXPORT
 @property (readonly) NSMutableArray* overlayLayers;
 - (WMEMediaComposition*)clone;
 - (RTObject<WFIAsyncAction>*)saveAsync:(RTObject<WSIStorageFile>*)file;
-- (void)getThumbnailAsync:(WFTimeSpan*)timeFromStart scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight framePrecision:(WMEVideoFramePrecision)framePrecision success:(void (^)(WGIImageStream*))success failure:(void (^)(NSError*))failure;
-- (void)getThumbnailsAsync:(id<NSFastEnumeration> /* WFTimeSpan* */)timesFromStart scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight framePrecision:(WMEVideoFramePrecision)framePrecision success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)renderToFileAsync:(RTObject<WSIStorageFile>*)destination success:(void (^)(WMTTranscodeFailureReason))success progress:(void (^)(double))progress failure:(void (^)(NSError*))failure;
-- (void)renderToFileWithTrimmingPreferenceAsync:(RTObject<WSIStorageFile>*)destination trimmingPreference:(WMEMediaTrimmingPreference)trimmingPreference success:(void (^)(WMTTranscodeFailureReason))success progress:(void (^)(double))progress failure:(void (^)(NSError*))failure;
-- (void)renderToFileWithProfileAsync:(RTObject<WSIStorageFile>*)destination trimmingPreference:(WMEMediaTrimmingPreference)trimmingPreference encodingProfile:(WMMMediaEncodingProfile*)encodingProfile success:(void (^)(WMTTranscodeFailureReason))success progress:(void (^)(double))progress failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WFTimeSpan*)timeFromStart
+              scaledWidth:(int)scaledWidth
+             scaledHeight:(int)scaledHeight
+           framePrecision:(WMEVideoFramePrecision)framePrecision
+                  success:(void (^)(WGIImageStream*))success
+                  failure:(void (^)(NSError*))failure;
+- (void)getThumbnailsAsync:(id<NSFastEnumeration> /* WFTimeSpan* */)timesFromStart
+               scaledWidth:(int)scaledWidth
+              scaledHeight:(int)scaledHeight
+            framePrecision:(WMEVideoFramePrecision)framePrecision
+                   success:(void (^)(NSArray*))success
+                   failure:(void (^)(NSError*))failure;
+- (void)renderToFileAsync:(RTObject<WSIStorageFile>*)destination
+                  success:(void (^)(WMTTranscodeFailureReason))success
+                 progress:(void (^)(double))progress
+                  failure:(void (^)(NSError*))failure;
+- (void)renderToFileWithTrimmingPreferenceAsync:(RTObject<WSIStorageFile>*)destination
+                             trimmingPreference:(WMEMediaTrimmingPreference)trimmingPreference
+                                        success:(void (^)(WMTTranscodeFailureReason))success
+                                       progress:(void (^)(double))progress
+                                        failure:(void (^)(NSError*))failure;
+- (void)renderToFileWithProfileAsync:(RTObject<WSIStorageFile>*)destination
+                  trimmingPreference:(WMEMediaTrimmingPreference)trimmingPreference
+                     encodingProfile:(WMMMediaEncodingProfile*)encodingProfile
+                             success:(void (^)(WMTTranscodeFailureReason))success
+                            progress:(void (^)(double))progress
+                             failure:(void (^)(NSError*))failure;
 - (WMMMediaEncodingProfile*)createDefaultEncodingProfile;
 - (WMCMediaStreamSource*)generateMediaStreamSource;
 - (WMCMediaStreamSource*)generateMediaStreamSourceWithProfile:(WMMMediaEncodingProfile*)encodingProfile;
@@ -172,4 +202,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMEMediaOverlayLayer_DEFINED__
-

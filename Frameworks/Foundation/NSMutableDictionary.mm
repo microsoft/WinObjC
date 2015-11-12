@@ -24,6 +24,9 @@
     return [[self new] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithCapacity:(unsigned)capacity {
     return [[[self alloc] initWithCapacity:capacity] autorelease];
 }
@@ -36,6 +39,9 @@
     return [super init];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCapacity:(unsigned)capacity {
     return [self init];
 }
@@ -49,14 +55,23 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectForKey:(id)key {
     CFDictionaryRemoveValue((CFMutableDictionaryRef)self, (void*)key);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllObjects {
     CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectsForKeys:(NSArray*)keys {
     NSEnumerator* enumerator = [keys objectEnumerator];
 
@@ -69,16 +84,25 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setObject:(id)object forKey:(id)key {
     key = [key copy];
     CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
     [key release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setObject:(id)object forKeyedSubscript:(id)key {
     [self setObject:object forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addEntriesFromDictionary:(NSDictionary*)otherDict {
     for (id curKey in otherDict) {
         id obj = [otherDict objectForKey:curKey];
@@ -95,6 +119,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDictionary:(NSDictionary*)otherDict {
     [self removeAllObjects];
     [self addEntriesFromDictionary:otherDict];

@@ -375,6 +375,11 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 @implementation NSLayoutConstraint
 
 // Constraints are interleaved with predicates. There should be one more constraint than predicate.
+
+/**
+ @Status Caveat
+ @Notes Layout guides are poorly implemented.
+*/
 + (NSArray*)constraintsWithVisualFormat:(NSString*)format
                                 options:(NSLayoutFormatOptions)opts
                                 metrics:(NSDictionary*)metrics
@@ -614,6 +619,10 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes First baseline and baseline layouts are poorly implemented.
+*/
 + (instancetype)constraintWithItem:(id)view1
                          attribute:(NSLayoutAttribute)attr1
                          relatedBy:(NSLayoutRelation)relation

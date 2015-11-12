@@ -573,13 +573,33 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
 @implementation UITableView
 
 // EMPTY -----------------------------------------------
+
+/**
+ @Status Stub
+*/
 - (CGRect)rectForHeaderInSection:(NSInteger)section {
+    UNIMPLEMENTED();
 }
+
+/**
+ @Status Stub
+*/
 - (CGRect)rectForFooterInSection:(NSInteger)section {
+    UNIMPLEMENTED();
 }
+
+/**
+ @Status Stub
+*/
 - (void)scrollToNearestSelectedRowAtScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated {
+    UNIMPLEMENTED();
 }
+
+/**
+ @Status Stub
+*/
 - (void)moveRowAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath {
+    UNIMPLEMENTED();
 }
 // -----------------------------------------------------
 
@@ -612,6 +632,9 @@ static void initInternal(UITableView* self) {
     priv->_separatorStyle = 1;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos style:(UITableViewStyle)style {
     [super initWithFrame:pos];
     [super setDelegate:self];
@@ -674,18 +697,30 @@ static void initInternal(UITableView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSeparatorStyle:(unsigned)style {
     tablePriv->_separatorStyle = style;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     tablePriv->_delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return tablePriv->_delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDataSource:(id<UITableViewDataSource>)dataSource {
     tablePriv->_dataSource = dataSource;
     tablePriv->_needsReload = TRUE;
@@ -693,10 +728,16 @@ static void initInternal(UITableView* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<UITableViewDataSource>)dataSource {
     return tablePriv->_dataSource;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTableHeaderView:(UIView*)view {
     if (tablePriv->_headerView != nil)
         [tablePriv->_headerView removeFromSuperview];
@@ -715,14 +756,23 @@ static void initInternal(UITableView* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)backgroundView {
     return tablePriv->_backgroundView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)tableHeaderView {
     return tablePriv->_headerView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTableFooterView:(UIView*)view {
     if (tablePriv->_footerView != nil)
         [tablePriv->_footerView removeFromSuperview];
@@ -734,17 +784,30 @@ static void initInternal(UITableView* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)tableFooterView {
     return tablePriv->_footerView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAllowsSelectionDuringEditing:(BOOL)canSelect {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAllowsSelection:(BOOL)canSelect {
     tablePriv->_allowsSelection = canSelect;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsSelection {
     return tablePriv->_allowsSelection;
 }
@@ -900,6 +963,9 @@ static void calcCellPositions(UITableView* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)visibleCells {
     id ret = [NSMutableArray array];
 
@@ -927,6 +993,9 @@ static void calcCellPositions(UITableView* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)indexPathsForVisibleRows {
     id ret = [NSMutableArray array];
 
@@ -956,6 +1025,9 @@ static void calcCellPositions(UITableView* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexPath*)indexPathForRowAtPoint:(CGPoint)point {
     int curSectionIndex = 0;
     LLTREE_FOREACH(curNode, tablePriv->_rootNode) {
@@ -980,6 +1052,9 @@ static void calcCellPositions(UITableView* self) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexPath*)indexPathsForRowsInRect:(CGRect)rect {
     id ret = [NSMutableArray array];
     int curSectionIndex = 0;
@@ -1004,10 +1079,16 @@ static void calcCellPositions(UITableView* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfSections {
     return tablePriv->sectionCount();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reloadRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animationType {
     if (animationType != UITableViewRowAnimationNone) {
         [UIView beginAnimations:@"CellMoving" context:nil];
@@ -1104,6 +1185,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reloadData {
     if (tablePriv->_isEnumerating) {
         tablePriv->_needsReload = TRUE;
@@ -1252,6 +1336,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return -1;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dequeueReusableCellWithIdentifier:(NSString*)identifier {
     auto it = tablePriv->_reusableCells.find([identifier UTF8String]);
 
@@ -1298,6 +1385,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath {
     auto it = tablePriv->_reusableCells.find([identifier UTF8String]);
 
@@ -1345,29 +1435,53 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRowHeight:(float)rowHeight {
     tablePriv->_defaultRowHeight = rowHeight;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)rowHeight {
     return tablePriv->_defaultRowHeight;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSeparatorColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSectionHeaderHeight:(float)height {
     tablePriv->_defaultSectionHeaderHeight = height;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)sectionHeaderHeight {
     return tablePriv->_defaultSectionHeaderHeight;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSectionFooterHeight:(float)height {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSectionIndexMinimumDisplayRowCount:(unsigned)numRows {
+    UNIMPLEMENTED();
 }
 
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1579,11 +1693,17 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)selectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition {
     if (indexPath && ![_indexPathsForSelectedItems containsObject:indexPath])
         [self selectItemAtIndexPath:indexPath animated:animated scrollPosition:scrollPosition notifyDelegate:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deselectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated {
     if (indexPath && [_indexPathsForSelectedItems containsObject:indexPath])
         [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
@@ -1597,6 +1717,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITableViewCell*)cellForRowAtIndexPath:(NSIndexPath*)path {
     int section = [path section];
     int row = [path row];
@@ -1608,7 +1731,11 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return tablePriv->sectionAtIndex(section)->rowAtIndex(row)->_view;
 }
 
+/**
+ @Status Stub
+*/
 - (CGRect)rectForRowAtIndexPath:(NSIndexPath*)path {
+    UNIMPLEMENTED();
     int section = [path section];
     int row = [path row];
 
@@ -1627,6 +1754,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)rectForSection:(int)section {
     if (tablePriv->_needsReload) {
         [self reloadData];
@@ -1665,6 +1795,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animate {
     if (tablePriv->_needsReload) {
         [self reloadData];
@@ -1707,10 +1840,17 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     showVisibleCells(self, animate != UITableViewRowAnimationNone);
 }
 
+/**
+ @Status Stub
+*/
 - (void)insertSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animate {
+    UNIMPLEMENTED();
     EbrDebugLog("insertSections not supported\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reloadSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animationType {
     if (animationType != UITableViewRowAnimationNone) {
         [UIView beginAnimations:@"CellMoving" context:nil];
@@ -1807,6 +1947,10 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
 - (void)deleteRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animate {
     int count = [paths count];
 
@@ -1847,6 +1991,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     showVisibleCells(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animate {
     int section = 0;
 
@@ -1882,6 +2029,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     showVisibleCells(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfRowsInSection:(NSInteger)section {
     if (tablePriv->_needsReload) {
         [self reloadData];
@@ -1890,18 +2040,30 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return tablePriv->sectionAtIndex(section)->rowCount();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexPath*)indexPathForSelectedRow {
     return [_indexPathsForSelectedItems anyObject];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)indexPathsForSelectedRows {
     return [_indexPathsForSelectedItems allObjects];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexPath*)indexPathForCell:(UITableViewCell*)cell {
     return [cell indexPath];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundView:(UIView*)view {
     if (tablePriv->_backgroundView == view) {
         return;
@@ -1917,6 +2079,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     [self _setShouldLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollToRowAtIndexPath:(id)indexPath atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated {
     //  Get cell rect
     CGRect cellRect = CGRectNull;
@@ -1949,10 +2114,16 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditing:(BOOL)editing {
     [self setEditing:editing animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     BOOL wasEditing = tablePriv->_isEditing;
     tablePriv->_isEditing = editing;
@@ -1966,6 +2137,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEditing {
     return tablePriv->_isEditing;
 }
@@ -2027,14 +2201,25 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITableViewStyle)style {
     return tablePriv->_style;
 }
 
+/**
+ @Status Stub
+*/
 - (void)beginUpdates {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)endUpdates {
+    UNIMPLEMENTED();
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scroller {
@@ -2077,22 +2262,37 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerNib:(NSNib*)nib forCellReuseIdentifier:(NSString*)identifier {
     [tablePriv->_reusableCellNibs setObject:nib forKey:identifier];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerClass:(id)classId forHeaderFooterViewReuseIdentifier:(id)reuseIdentifier {
     [(NSMutableDictionary*)tablePriv->_reusableHeaderClasses setObject:classId forKey:reuseIdentifier];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerClass:(id)classId forCellReuseIdentifier:(id)reuseIdentifier {
     [(NSMutableDictionary*)tablePriv->_reusableCellClasses setObject:classId forKey:reuseIdentifier];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAllowsMultipleSelection:(BOOL)allow {
     tablePriv->_allowsMultipleSelection = allow;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsMultipleSelection {
     return tablePriv->_allowsMultipleSelection;
 }
@@ -2101,6 +2301,10 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return tablePriv->_isEditing ? tablePriv->_allowsMultipleSelectionDuringEditing : tablePriv->_allowsMultipleSelection;
 }
 
+/**
+ @Status Caveat
+ @Notes always creates and returns a new object
+*/
 - (id)dequeueReusableHeaderFooterViewWithIdentifier:(NSString*)reuseIdentifier {
     id classId = [tablePriv->_reusableHeaderClasses objectForKey:reuseIdentifier];
     if (classId == nil) {

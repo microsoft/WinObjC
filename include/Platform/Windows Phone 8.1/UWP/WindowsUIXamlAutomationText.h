@@ -38,5 +38,3 @@ enum _WUXATTextUnit {
     WUXATTextUnitDocument = 6,
 };
 typedef unsigned WUXATTextUnit;
-
-

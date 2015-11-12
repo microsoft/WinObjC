@@ -44,21 +44,38 @@ typedef wchar_t WCHAR;
     EventRegistrationToken _xamlLoadStartedEventCookie;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScalesPageToFit:(BOOL)scaleToFit {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)delegate {
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isLoading {
     return _isLoading;
 }
 
+/**
+ @Status Caveat
+ @Notes Only URL property in request is used
+*/
 - (void)loadRequest:(NSURLRequest*)request {
     _request = request;
     NSURL* url = [request URL];
@@ -117,6 +134,10 @@ static void initWebKit(UIWebView* self) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes baseURL parameter not supported
+*/
 - (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL {
     _isLoading = true;
     _delayLoadURL = nil;
@@ -127,13 +148,20 @@ static void initWebKit(UIWebView* self) {
     [self sizeToFit];
 }
 
+/**
+ @Status Stub
+*/
 - (void)loadData:(NSData*)data MIMEType:(NSString*)mimeType textEncodingName:(NSString*)encoding baseURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
     _isLoading = true;
     _delayLoadURL = nil;
 
     assert(0 && "loadData:mimeTime:textEncodingName: not implemented");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)stopLoading {
     _isLoading = false;
     [_xamlWebControl stop];
@@ -142,34 +170,59 @@ static void initWebKit(UIWebView* self) {
 - (void)setDetectsPhoneNumbers:(BOOL)detect {
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
     NSString* ret = [_xamlWebControl invokeScript:@"eval" arguments:[NSArray arrayWithObject:string]];
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setDataDetectorTypes:(UIDataDetectorTypes)types {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)canGoBack {
     return _xamlWebControl.canGoBack;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)canGoForward {
     return _xamlWebControl.canGoForward;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reload {
     [_xamlWebControl refresh];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)goBack {
     [_xamlWebControl goBack];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)goForward {
     [_xamlWebControl goForward];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSURLRequest*)request {
     return _request;
 }
@@ -183,7 +236,11 @@ static void initWebKit(UIWebView* self) {
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 - (UIScrollView*)scrollView {
+    UNIMPLEMENTED();
     return _scrollView;
 }
 

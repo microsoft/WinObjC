@@ -20,8 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails, WDBBGattCharacteristicNotificationTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails, WDBBBluetoothLEAdvertisementPublisherTriggerDetails;
-@protocol WDBBIRfcommInboundConnectionInformation, WDBBIRfcommOutboundConnectionInformation, WDBBIRfcommConnectionTriggerDetails, WDBBIGattCharacteristicNotificationTriggerDetails, WDBBIBluetoothLEAdvertisementWatcherTriggerDetails, WDBBIBluetoothLEAdvertisementPublisherTriggerDetails;
+@class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails,
+    WDBBGattCharacteristicNotificationTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails,
+    WDBBBluetoothLEAdvertisementPublisherTriggerDetails;
+@protocol WDBBIRfcommInboundConnectionInformation
+, WDBBIRfcommOutboundConnectionInformation, WDBBIRfcommConnectionTriggerDetails, WDBBIGattCharacteristicNotificationTriggerDetails,
+    WDBBIBluetoothLEAdvertisementWatcherTriggerDetails, WDBBIBluetoothLEAdvertisementPublisherTriggerDetails;
 
 #include "WindowsDevicesBluetoothGenericAttributeProfile.h"
 #include "WindowsDevicesBluetooth.h"
@@ -106,4 +110,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDBBBluetoothLEAdvertisementPublisherTriggerDetails_DEFINED__
-

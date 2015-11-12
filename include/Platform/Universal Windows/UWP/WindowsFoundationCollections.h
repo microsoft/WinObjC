@@ -21,14 +21,16 @@
 
 #include "interopBase.h"
 @class WFCPropertySet, WFCValueSet, WFCStringMap;
-@protocol WFCIVectorChangedEventArgs, WFCIPropertySet, WFCIIterable, WFCIIterator, WFCIVectorView, WFCIVector, WFCIKeyValuePair, WFCIMap, WFCIMapView, WFCIObservableVector, WFCIMapChangedEventArgs, WFCIObservableMap;
+@protocol WFCIVectorChangedEventArgs
+, WFCIPropertySet, WFCIIterable, WFCIIterator, WFCIVectorView, WFCIVector, WFCIKeyValuePair, WFCIMap, WFCIMapView, WFCIObservableVector,
+    WFCIMapChangedEventArgs, WFCIObservableMap;
 
 // Windows.Foundation.Collections.CollectionChange
 enum _WFCCollectionChange {
-	WFCCollectionChangeReset = 0,
-	WFCCollectionChangeItemInserted = 1,
-	WFCCollectionChangeItemRemoved = 2,
-	WFCCollectionChangeItemChanged = 3,
+    WFCCollectionChangeReset = 0,
+    WFCCollectionChangeItemInserted = 1,
+    WFCCollectionChangeItemRemoved = 2,
+    WFCCollectionChangeItemChanged = 3,
 };
 typedef unsigned WFCCollectionChange;
 
@@ -37,9 +39,9 @@ typedef unsigned WFCCollectionChange;
 #import <Foundation/Foundation.h>
 
 // Windows.Foundation.Collections.VectorChangedEventHandler`1
- // Could not generate delegate: Can't marshal 0
+// Could not generate delegate: Can't marshal 0
 // Windows.Foundation.Collections.MapChangedEventHandler`2
- // Could not generate delegate: Can't marshal 0
+// Could not generate delegate: Can't marshal 0
 // Windows.Foundation.Collections.IVectorChangedEventArgs
 #ifndef __WFCIVectorChangedEventArgs_DEFINED__
 #define __WFCIVectorChangedEventArgs_DEFINED__
@@ -56,23 +58,23 @@ typedef unsigned WFCCollectionChange;
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
--(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
--(void)removeObserver: (EventRegistrationToken)receiverToken;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCIPropertySet_DEFINED__
@@ -87,23 +89,23 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
--(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
--(void)removeObserver: (EventRegistrationToken)receiverToken;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCPropertySet_DEFINED__
@@ -118,23 +120,23 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
--(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
--(void)removeObserver: (EventRegistrationToken)receiverToken;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WFCValueSet_DEFINED__
@@ -149,22 +151,21 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
 @end
 
 #endif // __WFCStringMap_DEFINED__
-

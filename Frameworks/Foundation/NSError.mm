@@ -20,12 +20,34 @@
 
 #include <time.h>
 
+/* Error Domains */
+NSString* const NSOSStatusErrorDomain = @"NSOSStatusErrorDomain";
+NSString* const NSWINSOCKErrorDomain = @"NSWINSOCKErrorDomain";
+NSString* const NSWin32ErrorDomain = @"NSWin32ErrorDomain";
+NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
+NSString* const NSMachErrorDomain = @"NSMachErrorDomain";
+
+/* Error Keys */
+NSString* const NSUnderlyingErrorKey = @"NSUnderlyingErrorKey";
+NSString* const NSLocalizedDescriptionKey = @"NSLocalizedDescriptionKey";
+NSString* const NSLocalizedFailureReasonErrorKey = @"NSLocalizedFailureReasonErrorKey";
+NSString* const NSLocalizedRecoveryOptionsErrorKey = @"NSLocalizedRecoveryOptionsErrorKey";
+NSString* const NSLocalizedRecoverySuggestionErrorKey = @"NSLocalizedRecoverySuggestionErrorKey";
+NSString* const NSRecoveryAttempterErrorKey = @"NSRecoveryAttempterErrorKey";
+NSString* const NSStringEncodingErrorKey = @"NSStringEncodingErrorKey";
+NSString* const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
+NSString* const NSURLErrorKey = @"NSURLErrorKey";
+
 @implementation NSError {
     idretaintype(NSString) _domain;
     idretaintype(NSDictionary) _userInfo;
     int _code;
     idretaintype(NSString) _description;
 }
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)errorWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
     NSError* ret = [self alloc];
     ret = [ret initWithDomain:domain code:code userInfo:dict];
@@ -33,6 +55,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
     _domain.attach([domain copy]);
     _code = code;
@@ -58,22 +83,34 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)domain {
     return _domain;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)code {
     return _code;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)userInfo {
     return _userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localizedDescription {
     id ret;
 
-    if ((ret = [_userInfo objectForKey:@"NSLocalizedDescriptionKey"]) != nil) {
+    if ((ret = [_userInfo objectForKey:NSLocalizedDescriptionKey]) != nil) {
         return ret;
     }
 
@@ -83,10 +120,13 @@
     return @"Generic error";
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)localizedFailureReason {
     id ret;
 
-    if ((ret = [_userInfo objectForKey:@"NSLocalizedFailureReasonErrorKey"]) != nil) {
+    if ((ret = [_userInfo objectForKey:NSLocalizedFailureReasonErrorKey]) != nil) {
         return ret;
     }
 

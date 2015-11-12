@@ -110,6 +110,9 @@ static void raRemoveItemAtIndex(NSIndexSet* set, NSUInteger idx) {
     set->_length--;
 }
 
+/**
+ @Status Interoperable
+*/
 static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     if (idx >= r.location && idx < r.location + r.length) {
         return TRUE;
@@ -119,6 +122,10 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 }
 
 @implementation NSIndexSet : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (id)indexSetWithIndexesInRange:(NSRange)range {
     id ret = [NSMutableIndexSet new];
     [ret addIndexesInRange:range];
@@ -126,12 +133,18 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)indexSet {
     id ret = [NSIndexSet new];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)indexSetWithIndex:(NSUInteger)index {
     NSRange range;
     range.location = index;
@@ -143,10 +156,16 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithIndex:(unsigned)index {
     NSRange range;
 
@@ -157,6 +176,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithIndexSet:(NSIndexSet*)other {
     for (unsigned i = 0; i < other->_length; i++) {
         raAddItem(self, other->_ranges[i]);
@@ -165,6 +187,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)count {
     unsigned ret = 0;
 
@@ -181,11 +206,18 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 - (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
+    UNIMPLEMENTED();
     assert(!"indexGreaterThanIndex not implemented!");
     return -1;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)countOfIndexesInRange:(NSRange)range {
     unsigned ret = 0;
 
@@ -208,6 +240,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
     BOOL stop = FALSE;
     for (unsigned int i = 0; i < raCount(self) && !stop; i++) {
@@ -219,6 +254,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)intersectsIndexesInRange:(NSRange)range {
     unsigned first = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, range.location);
 
@@ -237,11 +275,18 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return [self retain];
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)containsIndex:(unsigned)anIndex {
+    UNIMPLEMENTED();
     assert(!"containsIndex not implemented!");
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)firstIndex {
     if (raCount(self) == 0) {
         return NSNotFound;
@@ -251,6 +296,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)lastIndex {
     if (raCount(self) == 0) {
         return NSNotFound;
@@ -260,6 +308,9 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)otherSet {
     if (![otherSet isKindOfClass:[NSIndexSet class]]) {
         return FALSE;
@@ -295,9 +346,17 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
 }
 
 @implementation NSMutableIndexSet : NSIndexSet
+
+/**
+ @Status Stub
+*/
 - (void)addIndexesInRange:(NSRange)aRange {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)removeIndexesInRange:(NSRange)range {
     unsigned pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, range.location);
 
@@ -360,7 +419,11 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)addIndex:(NSUInteger)index {
+    UNIMPLEMENTED();
     NSRange r;
 
     r.location = index;
@@ -369,12 +432,19 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
     [self addIndexesInRange:r];
 }
 
+/**
+ @Status Stub
+*/
 - (void)addIndexes:(NSIndexSet*)other {
+    UNIMPLEMENTED();
     for (unsigned i = 0; i < other->_length; ++i) {
         [self addIndexesInRange:other->_ranges[i]];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeIndex:(NSUInteger)index {
     NSRange r;
 
@@ -384,12 +454,18 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
     [self removeIndexesInRange:r];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeIndexes:(NSIndexSet*)other {
     for (unsigned i = 0; i < other->_length; i++) {
         [self removeIndexesInRange:other->_ranges[i]];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)shiftIndexesStartingAtIndex:(NSUInteger)index by:(NSInteger)delta {
     if (delta < 0) {
         delta = -delta;
@@ -450,6 +526,9 @@ static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)removeAllIndexes {
     _length = 0;
     return self;

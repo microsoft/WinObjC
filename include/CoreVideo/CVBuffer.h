@@ -17,6 +17,6 @@
 #ifndef _CVBUFFER_H_
 #define _CVBUFFER_H_
 
-typedef struct __CVBuffer *CVBufferRef;
+typedef struct __CVBuffer* CVBufferRef;
 
 #endif /* _CVBUFFER_H_ */

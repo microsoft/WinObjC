@@ -23,7 +23,6 @@
 @class WSRInteractiveSession;
 @protocol WSRIInteractiveSessionStatics;
 
-
 #import <Foundation/Foundation.h>
 
 // Windows.System.RemoteDesktop.InteractiveSession
@@ -36,4 +35,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSRInteractiveSession_DEFINED__
-

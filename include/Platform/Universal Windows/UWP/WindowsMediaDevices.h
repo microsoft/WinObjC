@@ -20,182 +20,195 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController, WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl, WMDWhiteBalanceControl, WMDExposureControl, WMDZoomSettings, WMDZoomControl, WMDFocusSettings, WMDFocusControl, WMDRegionOfInterest, WMDRegionsOfInterestControl, WMDExposurePriorityVideoControl, WMDHdrVideoControl, WMDAdvancedPhotoCaptureSettings, WMDAdvancedPhotoControl, WMDOpticalImageStabilizationControl, WMDMediaDeviceControl, WMDLowLagPhotoSequenceControl, WMDLowLagPhotoControl, WMDPhotoConfirmationControl, WMDMediaDeviceControlCapabilities;
-@protocol WMDIDefaultAudioDeviceChangedEventArgs, WMDIMediaDeviceStatics, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIFlashControl2, WMDIExposureCompensationControl, WMDIIsoSpeedControl, WMDIIsoSpeedControl2, WMDIWhiteBalanceControl, WMDIExposureControl, WMDIZoomSettings, WMDIZoomControl, WMDIZoomControl2, WMDIFocusSettings, WMDIFocusControl, WMDIFocusControl2, WMDIRegionOfInterest, WMDIRegionOfInterest2, WMDIRegionsOfInterestControl, WMDIExposurePriorityVideoControl, WMDIHdrVideoControl, WMDIAdvancedPhotoCaptureSettings, WMDIAdvancedPhotoControl, WMDIOpticalImageStabilizationControl, WMDIMediaDeviceController, WMDIAudioDeviceController, WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2, WMDIAdvancedVideoCaptureDeviceController3, WMDIAdvancedVideoCaptureDeviceController4, WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities, WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl, WMDILowLagPhotoControl, WMDIPhotoConfirmationControl;
+@class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController,
+    WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl,
+    WMDWhiteBalanceControl, WMDExposureControl, WMDZoomSettings, WMDZoomControl, WMDFocusSettings, WMDFocusControl, WMDRegionOfInterest,
+    WMDRegionsOfInterestControl, WMDExposurePriorityVideoControl, WMDHdrVideoControl, WMDAdvancedPhotoCaptureSettings,
+    WMDAdvancedPhotoControl, WMDOpticalImageStabilizationControl, WMDMediaDeviceControl, WMDLowLagPhotoSequenceControl,
+    WMDLowLagPhotoControl, WMDPhotoConfirmationControl, WMDMediaDeviceControlCapabilities;
+@protocol WMDIDefaultAudioDeviceChangedEventArgs
+, WMDIMediaDeviceStatics, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIFlashControl2, WMDIExposureCompensationControl,
+    WMDIIsoSpeedControl, WMDIIsoSpeedControl2, WMDIWhiteBalanceControl, WMDIExposureControl, WMDIZoomSettings, WMDIZoomControl,
+    WMDIZoomControl2, WMDIFocusSettings, WMDIFocusControl, WMDIFocusControl2, WMDIRegionOfInterest, WMDIRegionOfInterest2,
+    WMDIRegionsOfInterestControl, WMDIExposurePriorityVideoControl, WMDIHdrVideoControl, WMDIAdvancedPhotoCaptureSettings,
+    WMDIAdvancedPhotoControl, WMDIOpticalImageStabilizationControl, WMDIMediaDeviceController, WMDIAudioDeviceController,
+    WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2, WMDIAdvancedVideoCaptureDeviceController3,
+    WMDIAdvancedVideoCaptureDeviceController4, WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities,
+    WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl, WMDILowLagPhotoControl, WMDIPhotoConfirmationControl;
 
 // Windows.Media.Devices.AudioDeviceRole
 enum _WMDAudioDeviceRole {
-	WMDAudioDeviceRoleDefault = 0,
-	WMDAudioDeviceRoleCommunications = 1,
+    WMDAudioDeviceRoleDefault = 0,
+    WMDAudioDeviceRoleCommunications = 1,
 };
 typedef unsigned WMDAudioDeviceRole;
 
 // Windows.Media.Devices.IsoSpeedPreset
 enum _WMDIsoSpeedPreset {
-	WMDIsoSpeedPresetAuto = 0,
-	WMDIsoSpeedPresetIso50 = 1,
-	WMDIsoSpeedPresetIso80 = 2,
-	WMDIsoSpeedPresetIso100 = 3,
-	WMDIsoSpeedPresetIso200 = 4,
-	WMDIsoSpeedPresetIso400 = 5,
-	WMDIsoSpeedPresetIso800 = 6,
-	WMDIsoSpeedPresetIso1600 = 7,
-	WMDIsoSpeedPresetIso3200 = 8,
-	WMDIsoSpeedPresetIso6400 = 9,
-	WMDIsoSpeedPresetIso12800 = 10,
-	WMDIsoSpeedPresetIso25600 = 11,
+    WMDIsoSpeedPresetAuto = 0,
+    WMDIsoSpeedPresetIso50 = 1,
+    WMDIsoSpeedPresetIso80 = 2,
+    WMDIsoSpeedPresetIso100 = 3,
+    WMDIsoSpeedPresetIso200 = 4,
+    WMDIsoSpeedPresetIso400 = 5,
+    WMDIsoSpeedPresetIso800 = 6,
+    WMDIsoSpeedPresetIso1600 = 7,
+    WMDIsoSpeedPresetIso3200 = 8,
+    WMDIsoSpeedPresetIso6400 = 9,
+    WMDIsoSpeedPresetIso12800 = 10,
+    WMDIsoSpeedPresetIso25600 = 11,
 };
 typedef unsigned WMDIsoSpeedPreset;
 
 // Windows.Media.Devices.CaptureSceneMode
 enum _WMDCaptureSceneMode {
-	WMDCaptureSceneModeAuto = 0,
-	WMDCaptureSceneModeManual = 1,
-	WMDCaptureSceneModeMacro = 2,
-	WMDCaptureSceneModePortrait = 3,
-	WMDCaptureSceneModeSport = 4,
-	WMDCaptureSceneModeSnow = 5,
-	WMDCaptureSceneModeNight = 6,
-	WMDCaptureSceneModeBeach = 7,
-	WMDCaptureSceneModeSunset = 8,
-	WMDCaptureSceneModeCandlelight = 9,
-	WMDCaptureSceneModeLandscape = 10,
-	WMDCaptureSceneModeNightPortrait = 11,
-	WMDCaptureSceneModeBacklit = 12,
+    WMDCaptureSceneModeAuto = 0,
+    WMDCaptureSceneModeManual = 1,
+    WMDCaptureSceneModeMacro = 2,
+    WMDCaptureSceneModePortrait = 3,
+    WMDCaptureSceneModeSport = 4,
+    WMDCaptureSceneModeSnow = 5,
+    WMDCaptureSceneModeNight = 6,
+    WMDCaptureSceneModeBeach = 7,
+    WMDCaptureSceneModeSunset = 8,
+    WMDCaptureSceneModeCandlelight = 9,
+    WMDCaptureSceneModeLandscape = 10,
+    WMDCaptureSceneModeNightPortrait = 11,
+    WMDCaptureSceneModeBacklit = 12,
 };
 typedef unsigned WMDCaptureSceneMode;
 
 // Windows.Media.Devices.MediaCaptureFocusState
 enum _WMDMediaCaptureFocusState {
-	WMDMediaCaptureFocusStateUninitialized = 0,
-	WMDMediaCaptureFocusStateLost = 1,
-	WMDMediaCaptureFocusStateSearching = 2,
-	WMDMediaCaptureFocusStateFocused = 3,
-	WMDMediaCaptureFocusStateFailed = 4,
+    WMDMediaCaptureFocusStateUninitialized = 0,
+    WMDMediaCaptureFocusStateLost = 1,
+    WMDMediaCaptureFocusStateSearching = 2,
+    WMDMediaCaptureFocusStateFocused = 3,
+    WMDMediaCaptureFocusStateFailed = 4,
 };
 typedef unsigned WMDMediaCaptureFocusState;
 
 // Windows.Media.Devices.CameraStreamState
 enum _WMDCameraStreamState {
-	WMDCameraStreamStateNotStreaming = 0,
-	WMDCameraStreamStateStreaming = 1,
-	WMDCameraStreamStateBlockedForPrivacy = 2,
-	WMDCameraStreamStateShutdown = 3,
+    WMDCameraStreamStateNotStreaming = 0,
+    WMDCameraStreamStateStreaming = 1,
+    WMDCameraStreamStateBlockedForPrivacy = 2,
+    WMDCameraStreamStateShutdown = 3,
 };
 typedef unsigned WMDCameraStreamState;
 
 // Windows.Media.Devices.MediaCapturePauseBehavior
 enum _WMDMediaCapturePauseBehavior {
-	WMDMediaCapturePauseBehaviorRetainHardwareResources = 0,
-	WMDMediaCapturePauseBehaviorReleaseHardwareResources = 1,
+    WMDMediaCapturePauseBehaviorRetainHardwareResources = 0,
+    WMDMediaCapturePauseBehaviorReleaseHardwareResources = 1,
 };
 typedef unsigned WMDMediaCapturePauseBehavior;
 
 // Windows.Media.Devices.AdvancedPhotoMode
 enum _WMDAdvancedPhotoMode {
-	WMDAdvancedPhotoModeAuto = 0,
-	WMDAdvancedPhotoModeStandard = 1,
-	WMDAdvancedPhotoModeHdr = 2,
+    WMDAdvancedPhotoModeAuto = 0,
+    WMDAdvancedPhotoModeStandard = 1,
+    WMDAdvancedPhotoModeHdr = 2,
 };
 typedef unsigned WMDAdvancedPhotoMode;
 
 // Windows.Media.Devices.ColorTemperaturePreset
 enum _WMDColorTemperaturePreset {
-	WMDColorTemperaturePresetAuto = 0,
-	WMDColorTemperaturePresetManual = 1,
-	WMDColorTemperaturePresetCloudy = 2,
-	WMDColorTemperaturePresetDaylight = 3,
-	WMDColorTemperaturePresetFlash = 4,
-	WMDColorTemperaturePresetFluorescent = 5,
-	WMDColorTemperaturePresetTungsten = 6,
-	WMDColorTemperaturePresetCandlelight = 7,
+    WMDColorTemperaturePresetAuto = 0,
+    WMDColorTemperaturePresetManual = 1,
+    WMDColorTemperaturePresetCloudy = 2,
+    WMDColorTemperaturePresetDaylight = 3,
+    WMDColorTemperaturePresetFlash = 4,
+    WMDColorTemperaturePresetFluorescent = 5,
+    WMDColorTemperaturePresetTungsten = 6,
+    WMDColorTemperaturePresetCandlelight = 7,
 };
 typedef unsigned WMDColorTemperaturePreset;
 
 // Windows.Media.Devices.ZoomTransitionMode
 enum _WMDZoomTransitionMode {
-	WMDZoomTransitionModeAuto = 0,
-	WMDZoomTransitionModeDirect = 1,
-	WMDZoomTransitionModeSmooth = 2,
+    WMDZoomTransitionModeAuto = 0,
+    WMDZoomTransitionModeDirect = 1,
+    WMDZoomTransitionModeSmooth = 2,
 };
 typedef unsigned WMDZoomTransitionMode;
 
 // Windows.Media.Devices.FocusPreset
 enum _WMDFocusPreset {
-	WMDFocusPresetAuto = 0,
-	WMDFocusPresetManual = 1,
-	WMDFocusPresetAutoMacro = 2,
-	WMDFocusPresetAutoNormal = 3,
-	WMDFocusPresetAutoInfinity = 4,
-	WMDFocusPresetAutoHyperfocal = 5,
+    WMDFocusPresetAuto = 0,
+    WMDFocusPresetManual = 1,
+    WMDFocusPresetAutoMacro = 2,
+    WMDFocusPresetAutoNormal = 3,
+    WMDFocusPresetAutoInfinity = 4,
+    WMDFocusPresetAutoHyperfocal = 5,
 };
 typedef unsigned WMDFocusPreset;
 
 // Windows.Media.Devices.FocusMode
 enum _WMDFocusMode {
-	WMDFocusModeAuto = 0,
-	WMDFocusModeSingle = 1,
-	WMDFocusModeContinuous = 2,
-	WMDFocusModeManual = 3,
+    WMDFocusModeAuto = 0,
+    WMDFocusModeSingle = 1,
+    WMDFocusModeContinuous = 2,
+    WMDFocusModeManual = 3,
 };
 typedef unsigned WMDFocusMode;
 
 // Windows.Media.Devices.ManualFocusDistance
 enum _WMDManualFocusDistance {
-	WMDManualFocusDistanceInfinity = 0,
-	WMDManualFocusDistanceHyperfocal = 1,
-	WMDManualFocusDistanceNearest = 2,
+    WMDManualFocusDistanceInfinity = 0,
+    WMDManualFocusDistanceHyperfocal = 1,
+    WMDManualFocusDistanceNearest = 2,
 };
 typedef unsigned WMDManualFocusDistance;
 
 // Windows.Media.Devices.AutoFocusRange
 enum _WMDAutoFocusRange {
-	WMDAutoFocusRangeFullRange = 0,
-	WMDAutoFocusRangeMacro = 1,
-	WMDAutoFocusRangeNormal = 2,
+    WMDAutoFocusRangeFullRange = 0,
+    WMDAutoFocusRangeMacro = 1,
+    WMDAutoFocusRangeNormal = 2,
 };
 typedef unsigned WMDAutoFocusRange;
 
 // Windows.Media.Devices.RegionOfInterestType
 enum _WMDRegionOfInterestType {
-	WMDRegionOfInterestTypeUnknown = 0,
-	WMDRegionOfInterestTypeFace = 1,
+    WMDRegionOfInterestTypeUnknown = 0,
+    WMDRegionOfInterestTypeFace = 1,
 };
 typedef unsigned WMDRegionOfInterestType;
 
 // Windows.Media.Devices.HdrVideoMode
 enum _WMDHdrVideoMode {
-	WMDHdrVideoModeOff = 0,
-	WMDHdrVideoModeOn = 1,
-	WMDHdrVideoModeAuto = 2,
+    WMDHdrVideoModeOff = 0,
+    WMDHdrVideoModeOn = 1,
+    WMDHdrVideoModeAuto = 2,
 };
 typedef unsigned WMDHdrVideoMode;
 
 // Windows.Media.Devices.OpticalImageStabilizationMode
 enum _WMDOpticalImageStabilizationMode {
-	WMDOpticalImageStabilizationModeOff = 0,
-	WMDOpticalImageStabilizationModeOn = 1,
-	WMDOpticalImageStabilizationModeAuto = 2,
+    WMDOpticalImageStabilizationModeOff = 0,
+    WMDOpticalImageStabilizationModeOn = 1,
+    WMDOpticalImageStabilizationModeAuto = 2,
 };
 typedef unsigned WMDOpticalImageStabilizationMode;
 
 // Windows.Media.Devices.CaptureUse
 enum _WMDCaptureUse {
-	WMDCaptureUseNone = 0,
-	WMDCaptureUsePhoto = 1,
-	WMDCaptureUseVideo = 2,
+    WMDCaptureUseNone = 0,
+    WMDCaptureUsePhoto = 1,
+    WMDCaptureUseVideo = 2,
 };
 typedef unsigned WMDCaptureUse;
 
 // Windows.Media.Devices.MediaCaptureOptimization
 enum _WMDMediaCaptureOptimization {
-	WMDMediaCaptureOptimizationDefault = 0,
-	WMDMediaCaptureOptimizationQuality = 1,
-	WMDMediaCaptureOptimizationLatency = 2,
-	WMDMediaCaptureOptimizationPower = 3,
-	WMDMediaCaptureOptimizationLatencyThenQuality = 4,
-	WMDMediaCaptureOptimizationLatencyThenPower = 5,
-	WMDMediaCaptureOptimizationPowerAndQuality = 6,
+    WMDMediaCaptureOptimizationDefault = 0,
+    WMDMediaCaptureOptimizationQuality = 1,
+    WMDMediaCaptureOptimizationLatency = 2,
+    WMDMediaCaptureOptimizationPower = 3,
+    WMDMediaCaptureOptimizationLatencyThenQuality = 4,
+    WMDMediaCaptureOptimizationLatencyThenPower = 5,
+    WMDMediaCaptureOptimizationPowerAndQuality = 6,
 };
 typedef unsigned WMDMediaCaptureOptimization;
 
@@ -212,7 +225,7 @@ typedef unsigned WMDMediaCaptureOptimization;
 #define __WMDIDefaultAudioDeviceChangedEventArgs_DEFINED__
 
 @protocol WMDIDefaultAudioDeviceChangedEventArgs
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -225,7 +238,8 @@ typedef unsigned WMDMediaCaptureOptimization;
 @protocol WMDIMediaDeviceController
 - (NSArray*)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
 #endif // __WMDIMediaDeviceController_DEFINED__
@@ -236,7 +250,7 @@ typedef unsigned WMDMediaCaptureOptimization;
 
 WINRT_EXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -248,7 +262,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -260,14 +274,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDMediaDevice : RTObject
-+ (NSString *)getAudioCaptureSelector;
-+ (NSString *)getAudioRenderSelector;
-+ (NSString *)getVideoCaptureSelector;
-+ (NSString *)getDefaultAudioCaptureId:(WMDAudioDeviceRole)role;
-+ (NSString *)getDefaultAudioRenderId:(WMDAudioDeviceRole)role;
-+ (EventRegistrationToken)addDefaultAudioCaptureDeviceChangedEvent:(void(^)(RTObject*, WMDDefaultAudioCaptureDeviceChangedEventArgs*))del;
++ (NSString*)getAudioCaptureSelector;
++ (NSString*)getAudioRenderSelector;
++ (NSString*)getVideoCaptureSelector;
++ (NSString*)getDefaultAudioCaptureId:(WMDAudioDeviceRole)role;
++ (NSString*)getDefaultAudioRenderId:(WMDAudioDeviceRole)role;
++ (EventRegistrationToken)addDefaultAudioCaptureDeviceChangedEvent:(void (^)(RTObject*, WMDDefaultAudioCaptureDeviceChangedEventArgs*))del;
 + (void)removeDefaultAudioCaptureDeviceChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addDefaultAudioRenderDeviceChangedEvent:(void(^)(RTObject*, WMDDefaultAudioRenderDeviceChangedEventArgs*))del;
++ (EventRegistrationToken)addDefaultAudioRenderDeviceChangedEvent:(void (^)(RTObject*, WMDDefaultAudioRenderDeviceChangedEventArgs*))del;
 + (void)removeDefaultAudioRenderDeviceChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -283,7 +297,8 @@ WINRT_EXPORT
 @property BOOL muted;
 - (NSArray*)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
 #endif // __WMDAudioDeviceController_DEFINED__
@@ -329,9 +344,10 @@ WINRT_EXPORT
 - (BOOL)tryGetPowerlineFrequency:(WMCPowerlineFrequency*)value;
 - (NSArray*)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
-- (void)setDeviceProperty:(NSString *)propertyId propertyValue:(RTObject*)propertyValue;
-- (RTObject*)getDeviceProperty:(NSString *)propertyId;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (void)setDeviceProperty:(NSString*)propertyId propertyValue:(RTObject*)propertyValue;
+- (RTObject*)getDeviceProperty:(NSString*)propertyId;
 @end
 
 #endif // __WMDVideoDeviceController_DEFINED__
@@ -713,4 +729,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMDMediaDeviceControlCapabilities_DEFINED__
-

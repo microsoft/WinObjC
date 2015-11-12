@@ -22,7 +22,7 @@
 #import <CFNetwork/CFHTTPMessage.h>
 #import <stdint.h>
 
-typedef struct __CFHTTPAuthentication *CFHTTPAuthenticationRef;
+typedef struct __CFHTTPAuthentication* CFHTTPAuthenticationRef;
 
 enum {
     kCFStreamErrorHTTPAuthenticationTypeUnsupported = -1000,
@@ -40,12 +40,15 @@ CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationUsername;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationPassword;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationAccountDomain;
 
-CFNETWORK_EXPORT Boolean CFHTTPMessageApplyCredentialDictionary(CFHTTPMessageRef request, CFHTTPAuthenticationRef auth, CFDictionaryRef dict, CFStreamError *err);
+CFNETWORK_EXPORT Boolean CFHTTPMessageApplyCredentialDictionary(CFHTTPMessageRef request,
+                                                                CFHTTPAuthenticationRef auth,
+                                                                CFDictionaryRef dict,
+                                                                CFStreamError* err);
 CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresAccountDomain(CFHTTPAuthenticationRef auth);
 CFNETWORK_EXPORT CFHTTPAuthenticationRef CFHTTPAuthenticationCreateFromResponse(CFAllocatorRef alloc, CFHTTPMessageRef reply);
 CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyMethod(CFHTTPAuthenticationRef auth);
 CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyRealm(CFHTTPAuthenticationRef auth);
-CFNETWORK_EXPORT Boolean CFHTTPAuthenticationIsValid(CFHTTPAuthenticationRef auth, CFStreamError *err);
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationIsValid(CFHTTPAuthenticationRef auth, CFStreamError* err);
 CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresUserNameAndPassword(CFHTTPAuthenticationRef auth);
 
 #endif // _CFHTTPAUTHENTICATION_H_

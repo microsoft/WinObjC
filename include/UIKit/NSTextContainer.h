@@ -18,14 +18,29 @@
 #define _NSTEXTCONTAINER_H_
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSRange.h>
+#import <UIKit/NSParagraphStyle.h>
 
 @class NSArray;
 
 @interface NSTextContainer : NSObject
 
-@property(copy, nonatomic) NSArray *exclusionPaths;
+@property (copy, nonatomic) NSArray* exclusionPaths;
+@property (nonatomic) NSInteger maximumNumberOfLines;
+@property (nonatomic) CGFloat lineFragmentPadding;
+@property (nonatomic) NSLineBreakMode lineBreakMode;
+@end
 
+@interface NSLayoutManager : NSObject
+- (NSRange)glyphRangeForCharacterRange:(NSRange)range actualCharacterRange:(NSRange*)ret;
+- (NSUInteger)characterIndexForPoint:(CGPoint)point
+                             inTextContainer:(NSTextContainer*)container
+    fractionOfDistanceBetweenInsertionPoints:(CGFloat*)distance;
+- (CGRect)boundingRectForGlyphRange:(NSRange)range inTextContainer:(NSTextContainer*)container;
+@end
+
+@interface NSTextStorage : NSObject
+- (NSUInteger)length;
 @end
 
 #endif /* _NSTEXTCONTAINER_H_ */
-

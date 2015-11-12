@@ -28,6 +28,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addCharactersInString:(NSString*)str {
     UStringHolder s1(str);
     UnicodeString& str1 = s1.string();
@@ -38,10 +41,16 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addCharactersInRange:(NSRange)range {
     _icuSet->add(range.location, range.location + range.length);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeCharactersInString:(NSString*)str {
     UStringHolder s1(str);
     UnicodeString& str1 = s1.string();
@@ -52,18 +61,30 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)formUnionWithCharacterSet:(NSCharacterSet*)other {
     _icuSet->addAll(*other->_icuSet);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)formIntersectionWithCharacterSet:(NSCharacterSet*)other {
     _icuSet->retainAll(*other->_icuSet);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeCharactersInSet:(NSCharacterSet*)other {
     _icuSet->removeAll(*other->_icuSet);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllCharacters {
     _icuSet->clear();
 }

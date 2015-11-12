@@ -43,10 +43,16 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     dispatch_set_wakeup_callback(DispatchMainRunLoopWakeup, NULL);
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSRunLoop*)currentRunLoop {
     return [[NSThread currentThread] _runLoop];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSRunLoop*)mainRunLoop {
     return [[NSThread mainThread] _runLoop];
 }
@@ -151,6 +157,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return didPerform;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)currentMode {
     return _currentMode;
 }
@@ -159,6 +168,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [[self stateForMode:_currentMode] wakeUp];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)limitDateForMode:(NSString*)mode {
     NSRunLoopState* state = [self stateForMode:mode];
 
@@ -192,6 +204,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return [state limitDateForMode:mode];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date {
     NSRunLoopState* state = [self stateForMode:mode];
 
@@ -222,6 +237,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     pthread_mutex_unlock(&_modeLock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)runMode:(NSString*)mode beforeDate:(NSDate*)date {
     if (self != [NSRunLoop currentRunLoop]) {
         EbrDebugLog("Warning: attempted running alternate runloop - running current runloop for 1s instead!\n");
@@ -250,6 +268,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return (limitDate != nil);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)runUntilDate:(NSDate*)date {
     while ([self runMode:NSDefaultRunLoopMode beforeDate:date]) {
         if ([date timeIntervalSinceNow] <= 0) {
@@ -258,6 +279,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)run {
     // Calling -run w/o a pool in place is valid, which is why we need one here
     // for the NSDate. Could get rid of the pool if the date was not autoreleased.
@@ -268,6 +292,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     _stop = false;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
     NSArray* modeStates = [self statesForMode:mode];
 
@@ -278,6 +305,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [modeStates release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
     NSArray* modeStates = [self statesForMode:mode];
 
@@ -288,6 +318,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [modeStates release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addTimer:(NSTimer*)timer forMode:(NSString*)mode {
     NSArray* modeStates = [self statesForMode:mode];
 
@@ -298,7 +331,11 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [modeStates release];
 }
 
+/**
+ @Status Stub
+*/
 - (void)addPort:(id)port forMode:(id)mode {
+    UNIMPLEMENTED();
     EbrDebugLog("NSRunLoop addPort not supported\n");
 }
 
@@ -381,6 +418,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)performSelector:(SEL)selector target:(NSObject*)target argument:(NSObject*)argument order:(int)order modes:(NSArray*)modes {
     NSArray* performModes = [self resolveCommonModes:modes];
     NSOrderedPerform* perform =
@@ -403,6 +443,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [perform release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancelPerformSelector:(const char*)selector target:(NSObject*)target argument:(NSObject*)argument {
     [_orderedLock lock];
     int count = [_orderedPerforms count];
@@ -417,6 +460,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [_orderedLock unlock];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancelPerformSelectorsWithTarget:(NSObject*)target {
     [_orderedLock lock];
     int count = [_orderedPerforms count];
@@ -431,6 +477,10 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [_orderedLock unlock];
 }
 
+/**
+ @Status Interoperable
+ @Notes CFRunLoop and NSRunLoop are the same object.  Returns self.
+*/
 - (NSRunLoop*)getCFRunLoop {
     return self;
 }

@@ -266,6 +266,11 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
 
     std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyValue> _valueOverrides;
 }
+
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
 + (NSString*)dateFormatFromTemplate:(NSString*)dateTemplate options:(NSUInteger)options locale:(NSLocale*)locale {
     UErrorCode error = U_ZERO_ERROR;
     icu::Locale* icuLocale = [locale _createICULocale];
@@ -368,10 +373,18 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     return copy;
 }
 
+/**
+ @Status Caveat
+ @Notes allowNaturalLanguage parameter not supported
+*/
 - (instancetype)initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag {
     return [self initWithDateFormat:format allowNaturalLanguage:flag locale:[NSLocale currentLocale]];
 }
 
+/**
+ @Status Caveat
+ @Notes allowNaturalLanguage parameter not supported
+*/
 - (instancetype)initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSLocale*)locale {
     if (flag == YES) {
         [NSException raiseWithLogging:@"NSDateFormatterException" format:@"allowNatrualLanguage = YES not supported"];
@@ -399,6 +412,9 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     return [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCalendar:(NSCalendar*)cal {
     if (_calendar == cal)
         return;
@@ -407,10 +423,16 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSCalendar*)calendar {
     return _calendar;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTimeZone:(NSTimeZone*)zone {
     if (_timeZone == zone)
         return;
@@ -419,10 +441,16 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSTimeZone*)timeZone {
     return _timeZone;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLocale:(NSLocale*)locale {
     if (_locale == locale)
         return;
@@ -431,18 +459,30 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSLocale*)locale {
     return _locale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLenient:(BOOL)lenient {
     [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)lenient {
     return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDateFormat:(NSString*)format {
     if (_dateFormat == format)
         return;
@@ -451,10 +491,16 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)dateFormat {
     return _dateFormat;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDateStyle:(NSDateFormatterStyle)style {
     if (_dateStyle == style)
         return;
@@ -462,10 +508,16 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDateFormatterStyle)dateStyle {
     return _dateStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTimeStyle:(NSDateFormatterStyle)style {
     if (_timeStyle == style)
         return;
@@ -473,10 +525,16 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDateFormatterStyle)timeStyle {
     return _timeStyle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringFromDate:(NSDate*)date {
     if (date == nil)
         return nil;
@@ -488,6 +546,9 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     return NSStringFromICU(str);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)dateFromString:(NSString*)str {
     UStringHolder uStr(str);
     UErrorCode status = U_ZERO_ERROR;
@@ -514,66 +575,114 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAMSymbol:(NSString*)symbol {
     [self _setFormatterProperty:ICUPropertyMapper::amSymbol withValue:ICUPropertyValue(symbol)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)AMSymbol {
     return (NSString*)[self _getFormatterProperty:ICUPropertyMapper::amSymbol]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPMSymbol:(NSString*)symbol {
     [self _setFormatterProperty:ICUPropertyMapper::pmSymbol withValue:ICUPropertyValue(symbol)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)PMSymbol {
     return (NSString*)[self _getFormatterProperty:ICUPropertyMapper::pmSymbol]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setShortStandaloneWeekdaySymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::shortStandaloneWeekdaySymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)shortStandaloneWeekdaySymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::shortStandaloneWeekdaySymbols]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setWeekdaySymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::weekdaySymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)weekdaySymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::weekdaySymbols]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setShortWeekdaySymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::shortWeekdaySymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)shortWeekdaySymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::shortWeekdaySymbols]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStandaloneWeekdaySymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::standaloneWeekdaySymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)standaloneWeekdaySymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::standaloneWeekdaySymbols]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStandaloneMonthSymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::standaloneMonthSymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)standaloneMonthSymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::standaloneMonthSymbols]._objValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMonthSymbols:(NSArray*)symbols {
     [self _setFormatterProperty:ICUPropertyMapper::monthSymbols withValue:ICUPropertyValue(symbols)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)monthSymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::monthSymbols]._objValue;
 }

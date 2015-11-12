@@ -25,9 +25,9 @@
 - (BOOL)containsObjectForRead:(id)object;
 - (BOOL)containsObjectForWrite:(id)object;
 - (BOOL)containsObjectForException:(id)object;
-/* annotate with type */ -(id)init;
-/* annotate with type */ -(id)addObjectForRead : (id)object;
-/* annotate with type */ -(id)addObjectForWrite : (id)object;
-/* annotate with type */ -(id)addObjectForException : (id)object;
-/* annotate with type */ -(id)waitForSelectWithOutputSet : (id*)outputSetX beforeDate : (id)beforeDate;
+- (id)init;
+- (id)addObjectForRead:(id)object;
+- (id)addObjectForWrite:(id)object;
+- (id)addObjectForException:(id)object;
+- (id)waitForSelectWithOutputSet:(id*)outputSetX beforeDate:(id)beforeDate;
 @end

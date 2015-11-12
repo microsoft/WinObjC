@@ -23,11 +23,15 @@
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef const struct __CTFramesetter *CTFramesetterRef;
+typedef const struct __CTFramesetter* CTFramesetterRef;
 
-CORETEXT_EXPORT CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes);
+CORETEXT_EXPORT CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter,
+                                                    CFRange stringRange,
+                                                    CGPathRef path,
+                                                    CFDictionaryRef frameAttributes);
 CORETEXT_EXPORT CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string);
-CORETEXT_EXPORT CGSize CTFramesetterSuggestFrameSizeWithConstraints(CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange);
+CORETEXT_EXPORT CGSize CTFramesetterSuggestFrameSizeWithConstraints(
+    CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange);
 
 DISABLE_IMPLICIT_BRIDGING
 

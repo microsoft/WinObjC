@@ -33,6 +33,10 @@ DWORD uuid_unparse(BYTE* uuid, char* out);
 DWORD uuid_generate(BYTE* uuid);
 
 @implementation UIDevice : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (id) /* use typed version */ currentDevice {
     if (_currentDevice == nil) {
         _currentDevice = [UIDevice new];
@@ -42,23 +46,40 @@ DWORD uuid_generate(BYTE* uuid);
     return _currentDevice;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void) /* use typed version */ beginGeneratingDeviceOrientationNotifications {
     _isGeneratingEvents++;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isGeneratingDeviceOrientationNotifications {
     return _isGeneratingEvents > 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void) /* use typed version */ endGeneratingDeviceOrientationNotifications {
     _isGeneratingEvents--;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setBatteryMonitoringEnabled:(BOOL)enable {
+    UNIMPLEMENTED();
     _batteryMonitoringEnabled = enable != 0;
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)isBatteryMonitoringEnabled {
+    UNIMPLEMENTED();
     return _batteryMonitoringEnabled;
 }
 
@@ -131,6 +152,9 @@ if ( [curView isKindOfClass:popoverClass] ) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIDeviceOrientation)orientation {
     if (_isGeneratingEvents) {
         return _curOrientation;
@@ -139,6 +163,9 @@ if ( [curView isKindOfClass:popoverClass] ) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIUserInterfaceIdiom)userInterfaceIdiom {
     if (!GetCACompositor()->isTablet()) {
         return UIUserInterfaceIdiomPhone;
@@ -147,7 +174,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (id) /* use typed version */ model {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil) {
@@ -165,6 +196,9 @@ if ( [curView isKindOfClass:popoverClass] ) {
 #endif
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ name {
     return @"Starboard";
 }
@@ -173,7 +207,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
     return [self model];
 }
 
+/**
+ @Status Stub
+*/
 - (id) /* use typed version */ systemVersion {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil)
@@ -188,7 +226,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
 #endif
 }
 
+/**
+ @Status Stub
+*/
 - (id) /* use typed version */ systemName {
+    UNIMPLEMENTED();
 #ifdef REPORT_STARBOARD_METRICS
     static id ret;
     if (ret == nil)
@@ -199,7 +241,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
 #endif
 }
 
+/**
+ @Status Stub
+*/
 - (id) /* use typed version */ uniqueIdentifier {
+    UNIMPLEMENTED();
 #if 0
 static id ret = nil;
 if (ret == nil) {
@@ -230,7 +276,11 @@ return ret;
 #endif
 }
 
+/**
+ @Status Stub
+*/
 - (id) /* use typed version */ identifierForVendor {
+    UNIMPLEMENTED();
 #if 0
 static id ret = nil;
 if ( ret == nil ) {
@@ -261,11 +311,19 @@ return ret;
 #endif
 }
 
+/**
+ @Status Stub
+*/
 - (float)screenPhysicalWidth {
+    UNIMPLEMENTED();
     return EbrGetDeviceInfo()->devicePhysWidth;
 }
 
+/**
+ @Status Stub
+*/
 - (float)screenPhysicalHeight {
+    UNIMPLEMENTED();
     return EbrGetDeviceInfo()->devicePhysHeight;
 }
 
@@ -273,11 +331,19 @@ return ret;
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (float)batteryLevel {
+    UNIMPLEMENTED();
     return 1.f;
 }
 
+/**
+ @Status Stub
+*/
 - (UIDeviceBatteryState)batteryState {
+    UNIMPLEMENTED();
     return UIDeviceBatteryStateFull;
 }
 
@@ -285,7 +351,12 @@ return ret;
     return @"Starboard";
 }
 
+/**
+ @Status Stub
+ @Notes Always returns YES
+*/
 - (BOOL)isMultitaskingSupported {
+    UNIMPLEMENTED();
     return TRUE;
 }
 

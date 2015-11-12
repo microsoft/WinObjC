@@ -29,10 +29,16 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithCapacity:(NSUInteger)capacity {
     return [[[self alloc] initWithCapacity:capacity] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
     if (capacity < 16)
         capacity = 16;
@@ -43,10 +49,16 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)string {
     return [[self new] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertString:(NSString*)str atIndex:(NSUInteger)idx {
     UStringHolder s1(self);
     UStringHolder s2(str);
@@ -56,6 +68,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     setToUnicode(self, curStr);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)str {
     UStringHolder s1(self);
     UStringHolder s2(str);
@@ -65,6 +80,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     setToUnicode(self, curStr);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteCharactersInRange:(NSRange)range {
     UStringHolder s1(self);
     UnicodeString& curStr = s1.string();
@@ -73,6 +91,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     setToUnicode(self, curStr);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendFormat:(NSString*)formatStr, ... {
     void setToFormat(NSString * inst, NSString * format, va_list list, NSString * string);
 
@@ -86,6 +107,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     [self appendString:endStr];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendString:(NSString*)str {
     UStringHolder s1(self);
     UStringHolder s2(str);
@@ -118,12 +142,18 @@ void setToUnicode(NSString* inst, UnicodeString& str);
         [self appendString:[array objectAtIndex:index]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setString:(NSString*)str {
     UStringHolder s1(str);
 
     setToUnicode(self, s1.string());
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)replaceOccurrencesOfString:(id)target withString:(id)replacement options:(DWORD)options range:(NSRange)range {
     if (target == nil) {
         // NSRaiseException(NSInvalidArgumentException,self,_cmd,@"nil target object");

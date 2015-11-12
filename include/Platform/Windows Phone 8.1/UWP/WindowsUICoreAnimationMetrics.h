@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WUCAAnimationDescription, WUCAPropertyAnimation, WUCAScaleAnimation, WUCATranslationAnimation, WUCAOpacityAnimation;
-@protocol WUCAIPropertyAnimation, WUCAIScaleAnimation, WUCAIOpacityAnimation, WUCAIAnimationDescription, WUCAIAnimationDescriptionFactory;
+@protocol WUCAIPropertyAnimation
+, WUCAIScaleAnimation, WUCAIOpacityAnimation, WUCAIAnimationDescription, WUCAIAnimationDescriptionFactory;
 
 // Windows.UI.Core.AnimationMetrics.PropertyAnimationType
 enum _WUCAPropertyAnimationType {
@@ -105,10 +106,10 @@ typedef unsigned WUCAAnimationEffectTarget;
 #define __WUCAIPropertyAnimation_DEFINED__
 
 @protocol WUCAIPropertyAnimation
-@property (readonly) WFPoint * control1;
-@property (readonly) WFPoint * control2;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) WFPoint* control1;
+@property (readonly) WFPoint* control2;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
@@ -120,10 +121,10 @@ typedef unsigned WUCAAnimationEffectTarget;
 
 WINRT_EXPORT
 @interface WUCAAnimationDescription : RTObject
-+ (WUCAAnimationDescription *)createInstance:(WUCAAnimationEffect)effect target:(WUCAAnimationEffectTarget)target ACTIVATOR;
-@property (readonly) id<NSFastEnumeration> /*WUCAIPropertyAnimation*/  animations;
-@property (readonly) WFTimeSpan * delayLimit;
-@property (readonly) WFTimeSpan * staggerDelay;
++ (WUCAAnimationDescription*)createInstance:(WUCAAnimationEffect)effect target:(WUCAAnimationEffectTarget)target ACTIVATOR;
+@property (readonly) id<NSFastEnumeration> /*WUCAIPropertyAnimation*/ animations;
+@property (readonly) WFTimeSpan* delayLimit;
+@property (readonly) WFTimeSpan* staggerDelay;
 @property (readonly) float staggerDelayFactor;
 @property (readonly) int zOrder;
 @end
@@ -136,10 +137,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCAPropertyAnimation : RTObject <WUCAIPropertyAnimation>
-@property (readonly) WFPoint * control1;
-@property (readonly) WFPoint * control2;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) WFPoint* control1;
+@property (readonly) WFPoint* control2;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
@@ -155,11 +156,11 @@ WINRT_EXPORT
 @property (readonly) float finalScaleY;
 @property (readonly) NSNumber* initialScaleX;
 @property (readonly) NSNumber* initialScaleY;
-@property (readonly) WFPoint * normalizedOrigin;
-@property (readonly) WFPoint * control1;
-@property (readonly) WFPoint * control2;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) WFPoint* normalizedOrigin;
+@property (readonly) WFPoint* control1;
+@property (readonly) WFPoint* control2;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
@@ -171,10 +172,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCATranslationAnimation : RTObject <WUCAIPropertyAnimation>
-@property (readonly) WFPoint * control1;
-@property (readonly) WFPoint * control2;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) WFPoint* control1;
+@property (readonly) WFPoint* control2;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
@@ -188,12 +189,11 @@ WINRT_EXPORT
 @interface WUCAOpacityAnimation : RTObject <WUCAIPropertyAnimation>
 @property (readonly) float finalOpacity;
 @property (readonly) NSNumber* initialOpacity;
-@property (readonly) WFPoint * control1;
-@property (readonly) WFPoint * control2;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) WFPoint* control1;
+@property (readonly) WFPoint* control2;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
 #endif // __WUCAOpacityAnimation_DEFINED__
-

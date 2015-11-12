@@ -637,6 +637,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSInvocation*)invocationWithMethodSignature:(id)methodSignature {
     NSInvocation* ret = [self alloc];
     ret->_methodSignature = [methodSignature retain];
@@ -644,6 +647,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTarget:(id)targetObj {
     if (args[0]) {
         EbrFree(args[0]);
@@ -651,10 +657,16 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     args[0] = copyArgument(self, &targetObj, 0);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)target {
     return *((id*)args[0]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSelector:(SEL)targSelector {
     uint32_t argSelectorEmu = (uint32_t)targSelector;
 
@@ -664,14 +676,23 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     args[1] = copyArgument(self, &argSelectorEmu, 1);
 }
 
+/**
+ @Status Interoperable
+*/
 - (SEL)selector {
     return *((SEL*)args[1]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMethodSignature*)methodSignature {
     return _methodSignature;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
         EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
@@ -699,6 +720,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     args[index] = copyArgument(self, buf, index);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
         EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
@@ -711,6 +735,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     memcpy(buf, args[index], size);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)retainArguments {
     if (!retainArguments) {
         retainArguments = true;
@@ -731,6 +758,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getReturnValue:(void*)buf {
     char* type = (char*)[_methodSignature methodReturnType];
     int length = getArgumentSize(type);
@@ -738,6 +768,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     memcpy(buf, returnValue, length);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setReturnValue:(void*)buf {
     char* type = (char*)[_methodSignature methodReturnType];
     int length = getArgumentSize(type);
@@ -782,12 +815,20 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes as above
+*/
 - (void)invokeWithTarget:(id)target {
     [self setTarget:target];
 
     [self invoke];
 }
 
+/**
+ @Status Caveat
+ @Notes For variadics, only works with 6 stack args max.
+*/
 - (void)invoke {
     char* type = (char*)[_methodSignature methodReturnType];
     int returnSize = getArgumentSize(type);

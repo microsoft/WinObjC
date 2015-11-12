@@ -69,6 +69,9 @@ CGContextImpl* __CGContext::Backing() {
     return _backing;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetBlendMode(CGContextRef ctx, CGBlendMode mode) {
     ctx->Backing()->CGContextSetBlendMode(mode);
 }
@@ -77,47 +80,82 @@ CGBlendMode CGContextGetBlendMode(CGContextRef ctx) {
     return ctx->Backing()->CGContextGetBlendMode();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float* components) {
     return ctx->Backing()->CGContextSetFillPattern(pattern, components);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextSetPatternPhase not implemented\n");
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetCharacterSpacing(CGContextRef ctx, float spacing) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextSetCharacterSpacing not implemented\n");
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextShowTextAtPoint(CGContextRef pContext, float x, float y, const char* str, size_t length) {
     pContext->Backing()->CGContextShowTextAtPoint(x, y, str, length);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextShowGlyphsAtPoint(CGContextRef ctx, float x, float y, const CGGlyph* glyphs, unsigned count) {
     ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, (WORD*)glyphs, count);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
     ctx->Backing()->CGContextShowGlyphsWithAdvances((WORD*)glyphs, advances, count);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextShowGlyphs(CGContextRef ctx, const CGGlyph* glyphs, unsigned count) {
     ctx->Backing()->CGContextShowGlyphs((WORD*)glyphs, count);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetFont(CGContextRef ctx, CGFontRef font) {
     ctx->Backing()->CGContextSetFont((id)font);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetFontSize(CGContextRef ctx, float ptSize) {
     ctx->Backing()->CGContextSetFontSize(ptSize);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetTextMatrix(CGContextRef ctx, CGAffineTransform matrix) {
     ctx->Backing()->CGContextSetTextMatrix(matrix);
 }
 
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGContextGetTextMatrix, CGContextRef, ctx) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGContextGetTextMatrix(CGContextRef ctx) {
     CGAffineTransform ret;
 
     ctx->Backing()->CGContextGetTextMatrix(&ret);
@@ -125,38 +163,65 @@ DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGContextGetTextMatrix, CGContextRef,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetTextPosition(CGContextRef ctx, float x, float y) {
     ctx->Backing()->CGContextSetTextPosition(x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetTextDrawingMode(CGContextRef ctx, CGTextDrawingMode mode) {
     ctx->Backing()->CGContextSetTextDrawingMode(mode);
 }
 
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGContextGetCTM, CGContextRef, ctx) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGContextGetCTM(CGContextRef ctx) {
     return ctx->Backing()->CGContextGetCTM();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextTranslateCTM(CGContextRef ctx, float x, float y) {
     ctx->Backing()->CGContextTranslateCTM(x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextScaleCTM(CGContextRef ctx, float sx, float sy) {
     ctx->Backing()->CGContextScaleCTM(sx, sy);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextRotateCTM(CGContextRef ctx, float angle) {
     ctx->Backing()->CGContextRotateCTM(angle);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextConcatCTM(CGContextRef ctx, CGAffineTransform t) {
     ctx->Backing()->CGContextConcatCTM(t);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetCTM(CGContextRef ctx, CGAffineTransform transform) {
     ctx->Backing()->CGContextSetCTM(transform);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextRelease(CGContextRef ctx) {
     if (!ctx) {
         EbrDebugLog("CGCOntextRelease NULL!\n");
@@ -166,6 +231,9 @@ void CGContextRelease(CGContextRef ctx) {
     CFRelease((id)ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextDrawImage(CGContextRef ctx, CGRect rct, CGImageRef img) {
     if (img == NULL) {
         EbrDebugLog("Img == NULL!\n");
@@ -183,56 +251,97 @@ void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect
     ctx->Backing()->CGContextDrawImageRect(img, src, dst);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextDrawTiledImage(CGContextRef ctx, CGRect rct, CGImageRef img) {
     ctx->Backing()->CGContextDrawTiledImage(rct, img);
 }
 
+/**
+ @Status Caveat
+ @Notes Limited bitmap format support
+*/
 void CGContextClipToMask(CGContextRef ctx, CGRect dest, CGImageRef img) {
     ctx->Backing()->CGContextClipToMask(dest, img);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetGrayFillColor(CGContextRef ctx, float gray, float alpha) {
     ctx->Backing()->CGContextSetGrayFillColor(gray, alpha);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetStrokeColor(CGContextRef ctx, const float* components) {
     ctx->Backing()->CGContextSetStrokeColor((float*)components);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetStrokeColorWithColor(CGContextRef ctx, CGColorRef color) {
     ctx->Backing()->CGContextSetStrokeColorWithColor((id)color);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetFillColorWithColor(CGContextRef ctx, CGColorRef color) {
     ctx->Backing()->CGContextSetFillColorWithColor((id)color);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetFillColor(CGContextRef ctx, const float* components) {
     ctx->Backing()->CGContextSetFillColor((float*)components);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetFillColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSelectFont(CGContextRef ctx, const char* name, float size, CGTextEncoding encoding) {
     ctx->Backing()->CGContextSelectFont((char*)name, size, encoding);
 }
 
-DEFINE_FUNCTION_STRET_1(CGPoint, CGContextGetTextPosition, CGContextRef, ctx) {
+/**
+ @Status Interoperable
+*/
+CGPoint CGContextGetTextPosition(CGContextRef ctx) {
     CGPoint ret;
     ctx->Backing()->CGContextGetTextPosition(&ret);
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSaveGState(CGContextRef ctx) {
     ctx->Backing()->CGContextSaveGState();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextRestoreGState(CGContextRef ctx) {
     ctx->Backing()->CGContextRestoreGState();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextClearRect(CGContextRef ctx, CGRect rct) {
     if (!ctx) {
         return;
@@ -241,108 +350,187 @@ void CGContextClearRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextClearRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextFillRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextFillRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextClosePath(CGContextRef ctx) {
     ctx->Backing()->CGContextClosePath();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextAddRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddRects(CGContextRef ctx, const CGRect* rct, unsigned count) {
     for (unsigned i = 0; i < count; i++) {
         CGContextAddRect(ctx, rct[i]);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddLineToPoint(CGContextRef ctx, float x, float y) {
     ctx->Backing()->CGContextAddLineToPoint(x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddCurveToPoint(CGContextRef ctx, float cp1x, float cp1y, float cp2x, float cp2y, float x, float y) {
     ctx->Backing()->CGContextAddCurveToPoint(cp1x, cp1y, cp2x, cp2y, x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddQuadCurveToPoint(CGContextRef ctx, float cpx, float cpy, float x, float y) {
     ctx->Backing()->CGContextAddQuadCurveToPoint(cpx, cpy, x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextMoveToPoint(CGContextRef ctx, float x, float y) {
     ctx->Backing()->CGContextMoveToPoint(x, y);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddArc(CGContextRef ctx, float x, float y, float radius, float startAngle, float endAngle, bool clockwise) {
     ctx->Backing()->CGContextAddArc(x, y, radius, startAngle, endAngle, clockwise);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddArcToPoint(CGContextRef ctx, float x1, float y1, float x2, float y2, float radius) {
     ctx->Backing()->CGContextAddArcToPoint(x1, y1, x2, y2, radius);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddEllipseInRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextAddEllipseInRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextStrokeEllipseInRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextStrokeEllipseInRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextFillEllipseInRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
     ctx->Backing()->CGContextAddPath((id)path);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextStrokePath(CGContextRef ctx) {
     ctx->Backing()->CGContextStrokePath();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextStrokeRect(CGContextRef ctx, CGRect rct) {
     ctx->Backing()->CGContextStrokeRect(rct);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextStrokeRectWithWidth(CGContextRef ctx, CGRect rct, float width) {
     ctx->Backing()->CGContextStrokeRectWithWidth(rct, width);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextFillPath(CGContextRef ctx) {
     ctx->Backing()->CGContextFillPath();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextEOFillPath(CGContextRef ctx) {
     ctx->Backing()->CGContextEOFillPath();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextEOClip(CGContextRef ctx) {
     ctx->Backing()->CGContextEOClip();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextDrawPath(CGContextRef ctx, CGPathDrawingMode mode) {
     ctx->Backing()->CGContextDrawPath(mode);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextFlush(CGContextRef ctx) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 bool CGContextIsPathEmpty(CGContextRef ctx) {
     return ctx->Backing()->CGContextIsPathEmpty() != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextBeginPath(CGContextRef ctx) {
     ctx->Backing()->CGContextBeginPath();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextDrawLinearGradient(
     CGContextRef ctx, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     ctx->Backing()->CGContextDrawLinearGradient(gradient, startPoint, endPoint, options);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextDrawRadialGradient(CGContextRef ctx,
                                  CGGradientRef gradient,
                                  CGPoint startCenter,
@@ -353,35 +541,63 @@ void CGContextDrawRadialGradient(CGContextRef ctx,
     ctx->Backing()->CGContextDrawRadialGradient(gradient, startCenter, startRadius, endCenter, endRadius, options);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextDrawShading(CGContextRef ctx, CGShadingRef shading) {
+    UNIMPLEMENTED();
     // CGContextDrawLinearGradient(ctx, (CGGradientRef) shading->_gradient,
     // shading->_start, shading->_end, 0);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextDrawLayerInRect(CGContextRef ctx, CGRect destRect, CGLayerRef layer) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextDrawLayerInRect(destRect, layer);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextDrawLayerAtPoint(CGContextRef ctx, CGPoint destPoint, CGLayerRef layer) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextDrawLayerAtPoint(destPoint, layer);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetLineDash(CGContextRef ctx, float phase, const float* lengths, unsigned count) {
     ctx->Backing()->CGContextSetLineDash(phase, (float*)lengths, count);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetMiterLimit(CGContextRef ctx, float limit) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetMiterLimit(limit);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetLineJoin(CGContextRef ctx, CGLineJoin lineJoin) {
     ctx->Backing()->CGContextSetLineJoin(lineJoin);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
     ctx->Backing()->CGContextSetLineCap(lineCap);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetLineWidth(CGContextRef ctx, float width) {
     if (!ctx) {
         EbrDebugLog("CGContextSetLineWidth: no context!\n");
@@ -391,74 +607,140 @@ void CGContextSetLineWidth(CGContextRef ctx, float width) {
     ctx->Backing()->CGContextSetLineWidth(width);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShouldAntialias(CGContextRef ctx, bool shouldAntialias) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetShouldAntialias(shouldAntialias);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent intent) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 void CGContextReplacePathWithStrokedPath(CGContextRef context) {
+    UNIMPLEMENTED();
     EbrDebugLog("CGContextReplacePathWithStrokedPath not implemented\n");
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextClip(CGContextRef ctx) {
     ctx->Backing()->CGContextClip();
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGContextGetClipBoundingBox, CGContextRef, ctx) {
+/**
+ @Status Interoperable
+*/
+CGRect CGContextGetClipBoundingBox(CGContextRef ctx) {
     CGRect ret;
     ctx->Backing()->CGContextGetClipBoundingBox(&ret);
 
     return ret;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGContextGetPathBoundingBox, CGContextRef, ctx) {
+/**
+ @Status Interoperable
+*/
+CGRect CGContextGetPathBoundingBox(CGContextRef ctx) {
     CGRect ret;
     ctx->Backing()->CGContextGetPathBoundingBox(&ret);
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextClipToRect(CGContextRef ctx, CGRect rct) {
     CGContextBeginPath(ctx);
     CGContextAddRect(ctx, rct);
     CGContextClip(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextClipToRects(CGContextRef ctx, const CGRect* rects, unsigned count) {
     CGContextBeginPath(ctx);
     CGContextAddRects(ctx, rects, count);
     CGContextClip(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count) {
     CGContextMoveToPoint(pContext, pt[0].x, pt[0].y);
     for (unsigned i = 1; i < count; i++) {
@@ -466,18 +748,35 @@ void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count)
     }
 }
 
+/**
+ @Status Stub
+*/
 void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextBeginTransparencyLayer((id)auxInfo);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextEndTransparencyLayer(CGContextRef ctx) {
+    UNIMPLEMENTED();
     ctx->Backing()->CGContextEndTransparencyLayer();
 }
 
+/**
+ @Status Stub
+ @Notes Always returns RGBA
+*/
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
+    UNIMPLEMENTED();
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
+/**
+ @Status Caveat
+ @Notes Limited bitmap formats available
+*/
 CGContextRef CGBitmapContextCreate(void* data,
                                    size_t width,
                                    size_t height,
@@ -563,6 +862,9 @@ CGContextRef CGBitmapContextCreate(void* data,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsigned count) {
     CGContextBeginPath(ctx);
     for (unsigned k = 0; k < count; k += 2) {
@@ -572,7 +874,11 @@ void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsi
     CGContextStrokePath(ctx);
 }
 
+/**
+ @Status Stub
+*/
 CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef ctx) {
+    UNIMPLEMENTED();
     return (CGInterpolationQuality)0;
 }
 
@@ -589,38 +895,70 @@ void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font) {
     rect->size.height = textSize->height;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetGrayStrokeColor(CGContextRef ctx, float gray, float alpha) {
     ctx->Backing()->CGContextSetGrayStrokeColor(gray, alpha);
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
+    UNIMPLEMENTED();
     [colorSpace retain];
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetAlpha(CGContextRef ctx, float a) {
     ctx->Backing()->CGContextSetAlpha(a);
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGContextConvertRectToDeviceSpace, CGContextRef, ctx, CGRect, rct) {
+/**
+ @Status Stub
+*/
+CGRect CGContextConvertRectToDeviceSpace(CGContextRef ctx, CGRect rct) {
+    UNIMPLEMENTED();
     return rct;
 }
 
-DEFINE_FUNCTION_STRET_2(CGRect, CGContextConvertRectToUserSpace, CGContextRef, ctx, CGRect, rct) {
+/**
+ @Status Stub
+*/
+CGRect CGContextConvertRectToUserSpace(CGContextRef ctx, CGRect rct) {
+    UNIMPLEMENTED();
     return rct;
 }
 
-DEFINE_FUNCTION_STRET_2(CGPoint, CGContextConvertPointToUserSpace, CGContextRef, ctx, CGPoint, pt) {
+/**
+ @Status Stub
+*/
+CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
+    UNIMPLEMENTED();
     return pt;
 }
 
-DEFINE_FUNCTION_STRET_2(CGPoint, CGContextConvertPointToDeviceSpace, CGContextRef, ctx, CGPoint, pt) {
+/**
+ @Status Stub
+*/
+CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+    UNIMPLEMENTED();
     return pt;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetRGBFillColor(CGContextRef ctx, float r, float g, float b, float a) {
     ctx->Backing()->CGContextSetRGBFillColor(r, g, b, a);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, float a) {
     if (!ctx) {
         EbrDebugLog("CGContextSetRGBStrokeColor: no context!\n");
@@ -630,29 +968,52 @@ void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, flo
     ctx->Backing()->CGContextSetRGBStrokeColor(r, g, b, a);
 }
 
+/**
+ @Status Interoperable
+*/
 void CGContextShowText(CGContextRef ctx, const char* str, unsigned count) {
 }
 
+/**
+ @Status Interoperable
+*/
 CGContextRef CGContextRetain(CGContextRef ctx) {
     CFRetain((id)ctx);
     return ctx;
 }
 
+/**
+ @Status Stub
+*/
 void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, float blur, CGColorRef color) {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGBitmapContextGetWidth(CGContextRef ctx) {
     return ctx->Backing()->DestImage()->Backing()->Width();
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGBitmapContextGetHeight(CGContextRef ctx) {
     return ctx->Backing()->DestImage()->Backing()->Height();
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGBitmapContextGetBytesPerRow(CGContextRef ctx) {
     return ctx->Backing()->DestImage()->Backing()->BytesPerRow();
 }
 
+/**
+ @Status Caveat
+ @Notes Only returns kCGImageAlphaFirst or kCGImageAlphaLast
+*/
 CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef ctx) {
     if (!ctx) {
         EbrDebugLog("CGBitmapContextGetAlphaInfo: nil!\n");
@@ -674,10 +1035,18 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef ctx) {
     return (CGImageAlphaInfo)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void* CGBitmapContextGetData(CGContextRef ctx) {
     return ctx->Backing()->DestImage()->Backing()->StaticImageData();
 }
 
+/**
+ @Status Caveat
+ @Notes Has no copy-on-write semantics; bitmap returned is the source bitmap representing
+        the CGContext
+*/
 CGImageRef CGBitmapContextCreateImage(CGContextRef ctx) {
     if (!ctx) {
         EbrDebugLog("CGBitmapContextCreateImage: NULL context provided!\n");

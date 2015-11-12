@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSMutableString;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSMutableAttributedString : NSAttributedString
 
 -(NSMutableString *)mutableString;

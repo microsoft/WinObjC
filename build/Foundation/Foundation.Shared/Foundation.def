@@ -1,9 +1,11 @@
 LIBRARY Foundation
    EXPORTS
-     _OBJC_CLASS_CFConstantString    CONSTANT
-     __objc_class_name_CFConstantString    CONSTANT
-     _OBJC_CLASS_NSArray    DATA
-     __objc_class_name_NSArray    CONSTANT
+     _OBJC_CLASS_CFConstantString CONSTANT
+     __objc_class_name_CFConstantString CONSTANT
+     _OBJC_CLASS_NSArray DATA
+     __objc_class_name_NSArray CONSTANT
+     _OBJC_CLASS_NSAttributedString DATA
+     __objc_class_name_NSAttributedString CONSTANT
      _OBJC_CLASS_NSEnumerator    DATA
      __objc_class_name_NSEnumerator    CONSTANT
      _OBJC_CLASS_NSMutableArray    DATA
@@ -90,6 +92,8 @@ LIBRARY Foundation
      __objc_class_name_NSIndexPath    CONSTANT
      _OBJC_CLASS_NSIndexSet    DATA
      __objc_class_name_NSIndexSet    CONSTANT
+     _OBJC_CLASS_NSManagedObjectModel    DATA
+     __objc_class_name_NSManagedObjectModel    CONSTANT
      _OBJC_CLASS_NSMutableIndexSet    DATA
      __objc_class_name_NSMutableIndexSet    CONSTANT
      _OBJC_CLASS_NSUserDefaults    DATA
@@ -129,12 +133,52 @@ LIBRARY Foundation
      _OBJC_CLASS_NSKeyedArchiver DATA
      __objc_class_name_NSKeyedArchiver    CONSTANT
      _OBJC_CLASS_NSKeyedUnarchiver DATA
-	 __objc_class_name_NSKeyedUnarchiver	CONSTANT
+     __objc_class_name_NSKeyedUnarchiver	CONSTANT
      _OBJC_CLASS_NSPropertyListSerialization DATA
-	 __objc_class_name_NSPropertyListSerialization	CONSTANT
+     __objc_class_name_NSPropertyListSerialization	CONSTANT
      _OBJC_CLASS_NSLocale DATA
      __objc_class_name_NSLocale    CONSTANT
      _OBJC_CLASS_NSUUID DATA
      __objc_class_name_NSUUID    CONSTANT
      _OBJC_CLASS_NSCountedSet DATA
      __objc_class_name_NSCountedSet CONSTANT
+     _OBJC_CLASS_NSOrderedSet DATA
+     __objc_class_name_NSOrderedSet CONSTANT
+     _OBJC_CLASS_NSMutableOrderedSet DATA
+     __objc_class_name_NSMutableOrderedSet CONSTANT
+     _OBJC_CLASS_NSCFBridgeBase DATA
+     __objc_class_name_NSCFBridgeBase CONSTANT
+     _OBJC_CLASS_NSHTTPCookieStorage DATA
+     __objc_class_name_NSHTTPCookieStorage CONSTANT
+     _OBJC_CLASS_NSURLSessionTask DATA
+     __objc_class_name_NSURLSessionTask CONSTANT
+     _OBJC_CLASS_NSURLSessionDownloadTask DATA
+     __objc_class_name_NSURLSessionDownloadTask CONSTANT
+     _OBJC_CLASS_NSURLSessionDataTask DATA
+     __objc_class_name_NSURLSessionDataTask CONSTANT
+     _OBJC_CLASS_NSURLSessionConfiguration DATA
+     __objc_class_name_NSURLSessionConfiguration CONSTANT
+     _OBJC_CLASS_NSURLSession DATA
+     __objc_class_name_NSURLSession CONSTANT
+     _OBJC_CLASS_NSTask    DATA
+     __objc_class_name_NSTask    CONSTANT
+     _OBJC_CLASS_NSURLCache    DATA
+     __objc_class_name_NSURLCache    CONSTANT
+     _OBJC_CLASS_NSCachedURLResponse    DATA
+     __objc_class_name_NSCachedURLResponse    CONSTANT
+     _OBJC_CLASS_NSRegularExpression    DATA
+     __objc_class_name_NSRegularExpression    CONSTANT
+     _OBJC_CLASS_NSPredicate    DATA
+     __objc_class_name_NSPredicate    CONSTANT
+     _OBJC_CLASS_NSFileHandle    DATA
+     __objc_class_name_NSFileHandle    CONSTANT
+     _OBJC_CLASS_NSMutableAttributedString    DATA
+     __objc_class_name_NSMutableAttributedString    CONSTANT
+     _OBJC_CLASS_NSPersistentStoreCoordinator    DATA
+     __objc_class_name_NSPersistentStoreCoordinator    CONSTANT
+     _OBJC_CLASS_CTTelephonyNetworkInfo    DATA
+     __objc_class_name_CTTelephonyNetworkInfo    CONSTANT
+     _OBJC_CLASS_NSManagedObjectContext    DATA
+     __objc_class_name_NSManagedObjectContext    CONSTANT
+
+ 

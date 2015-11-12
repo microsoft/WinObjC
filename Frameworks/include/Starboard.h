@@ -17,6 +17,11 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
+// Placeholder for unimplemented logging and telemetry
+#define UNIMPLEMENTED()
+#define FAIL_FAST()
+#define FAIL_FAST_MSG(format, ...)
+
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
@@ -61,27 +66,6 @@ static inline float m_assert_float() {
 #define logPerf(...)
 
 #ifdef __OBJC__
-#define DEFINE_FUNCTION_FLOATRET_1(func, arg0type, arg0name) float func(arg0type arg0name)
-#define DEFINE_FUNCTION_STRET_6(                                                                                                           \
-    rettype, func, arg0type, arg0name, arg1type, arg1name, arg2type, arg2name, arg3type, arg3name, arg4type, arg4name, arg5type, arg5name) \
-    rettype func(arg0type arg0name, arg1type arg1name, arg2type arg2name, arg3type arg3name, arg4type arg4name, arg5type arg5name)
-
-#define DEFINE_FUNCTION_STRET_5(                                                                                       \
-    rettype, func, arg0type, arg0name, arg1type, arg1name, arg2type, arg2name, arg3type, arg3name, arg4type, arg4name) \
-    rettype func(arg0type arg0name, arg1type arg1name, arg2type arg2name, arg3type arg3name, arg4type arg4name)
-
-#define DEFINE_FUNCTION_STRET_4(rettype, func, arg0type, arg0name, arg1type, arg1name, arg2type, arg2name, arg3type, arg3name) \
-    rettype func(arg0type arg0name, arg1type arg1name, arg2type arg2name, arg3type arg3name)
-
-#define DEFINE_FUNCTION_STRET_3(rettype, func, arg0type, arg0name, arg1type, arg1name, arg2type, arg2name) \
-    rettype func(arg0type arg0name, arg1type arg1name, arg2type arg2name)
-
-#define DEFINE_FUNCTION_STRET_2(rettype, func, arg0type, arg0name, arg1type, arg1name) rettype func(arg0type arg0name, arg1type arg1name)
-
-#define DEFINE_FUNCTION_STRET_1(rettype, func, arg0type, arg0name) rettype func(arg0type arg0name)
-
-#define DECLARE_FUNCTION_PARAMS(...)
-#define EbrFloatArg float
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 

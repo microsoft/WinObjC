@@ -19,11 +19,11 @@
 @class NSFetchRequest;
 
 @interface NSFetchedPropertyDescription : NSPropertyDescription {
-   NSFetchRequest *_fetchRequest;
+    NSFetchRequest* _fetchRequest;
 }
 
--(NSFetchRequest *)fetchRequest;
+- (NSFetchRequest*)fetchRequest;
 
--(void)setFetchRequest:(NSFetchRequest *)value;
+- (void)setFetchRequest:(NSFetchRequest*)value;
 
 @end

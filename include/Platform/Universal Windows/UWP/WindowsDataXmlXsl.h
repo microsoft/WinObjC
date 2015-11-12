@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDXXXsltProcessor;
-@protocol WDXXIXsltProcessor, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
+@protocol WDXXIXsltProcessor
+, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
 
 #include "WindowsDataXmlDom.h"
 
@@ -34,9 +35,8 @@
 WINRT_EXPORT
 @interface WDXXXsltProcessor : RTObject
 + (WDXXXsltProcessor*)createInstance:(WDXDXmlDocument*)document ACTIVATOR;
-- (NSString *)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
+- (NSString*)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
 - (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;
 @end
 
 #endif // __WDXXXsltProcessor_DEFINED__
-

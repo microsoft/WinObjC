@@ -34,10 +34,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSOperationQueuePriority)queuePriority {
     return priv->priority;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addDependency:(id)operation {
     if (priv->dependencies == nil) {
         priv->dependencies = [[NSMutableArray alloc] init];
@@ -45,6 +51,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [priv->dependencies addObject:operation];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setQueuePriority:(NSOperationQueuePriority)priority {
     priv->priority = priority;
 }
@@ -54,16 +63,25 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCompletionBlock:(void (^)(void))block {
     id oldBlock = priv->completionBlock;
     priv->completionBlock = [block copy];
     [oldBlock release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void (^)(void))completionBlock {
     return priv->completionBlock;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isReady {
     //  Note, check dependencies when we get them
     int count = [priv->dependencies count];
@@ -78,18 +96,30 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isCancelled {
     return priv->cancelled != 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isFinished {
     return priv->finished != 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isExecuting {
     return priv->executing != 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)start {
     if (!priv->executing && !priv->finished) {
         bool execute = false;
@@ -121,6 +151,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancel {
     if (priv->cancelled == 0) {
         pthread_mutex_lock(&priv->finishLock);
@@ -131,9 +164,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)main {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)waitUntilFinished {
     pthread_mutex_lock(&priv->finishLock);
     if (![self isFinished]) {
@@ -142,6 +181,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     pthread_mutex_unlock(&priv->finishLock);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dependencies {
     return priv->dependencies;
 }

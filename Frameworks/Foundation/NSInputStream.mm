@@ -28,6 +28,10 @@
 #endif
 
 @implementation NSInputStream : NSStream
+
+/**
+ @Status Interoperable
+*/
 + (id)inputStreamWithFileAtPath:(id)file {
     NSInputStream* ret = [self alloc];
 
@@ -40,18 +44,27 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)inputStreamWithData:(id)data {
     id ret = [self alloc];
 
     return [[ret initWithData:data] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithData:(id)data {
     _data = data;
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithFileAtPath:(id)file {
     if (file == nil) {
         EbrDebugLog("initWithFileAtPath: nil!\n");
@@ -68,6 +81,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)read:(char*)buf maxLength:(unsigned)maxLength {
     if (_data == nil) {
         int ret = EbrFread(buf, 1, maxLength, fp);
@@ -93,6 +109,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasBytesAvailable {
     if (_data == nil) {
         if (!fp) {

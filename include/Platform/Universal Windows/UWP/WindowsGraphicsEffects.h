@@ -20,8 +20,8 @@
 #pragma once
 
 #include "interopBase.h"
-@protocol WGEIGraphicsEffectSource, WGEIGraphicsEffect;
-
+@protocol WGEIGraphicsEffectSource
+, WGEIGraphicsEffect;
 
 #import <Foundation/Foundation.h>
 
@@ -39,8 +39,7 @@
 #define __WGEIGraphicsEffect_DEFINED__
 
 @protocol WGEIGraphicsEffect <WGEIGraphicsEffectSource>
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @end
 
 #endif // __WGEIGraphicsEffect_DEFINED__
-

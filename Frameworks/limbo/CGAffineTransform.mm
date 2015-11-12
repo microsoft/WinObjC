@@ -19,22 +19,10 @@
 
 const CGAffineTransform CGAffineTransformIdentity = { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformConcat,
-                        ArgTypeWordPtr,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformConcat, CGAffineTransform, t2, CGAffineTransform, t1) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformConcat(CGAffineTransform t2, CGAffineTransform t1) {
     CGAffineTransform ret;
 
     ret.a = t2.a * t1.a + t2.b * t1.c;
@@ -47,22 +35,10 @@ DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformConcat, CGAffineTran
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(
-    ArgTypeWord, CGAffineTransformMake, ArgTypeWordPtr, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat, ArgTypeFloat)
-DEFINE_FUNCTION_STRET_6(CGAffineTransform,
-                        CGAffineTransformMake,
-                        EbrFloatArg,
-                        a,
-                        EbrFloatArg,
-                        b,
-                        EbrFloatArg,
-                        c,
-                        EbrFloatArg,
-                        d,
-                        EbrFloatArg,
-                        tx,
-                        EbrFloatArg,
-                        ty) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformMake(float a, float b, float c, float d, float tx, float ty) {
     CGAffineTransform ret;
 
     ret.a = a;
@@ -75,8 +51,10 @@ DEFINE_FUNCTION_STRET_6(CGAffineTransform,
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord, CGAffineTransformMakeTranslation, ArgTypeWordPtr, ArgTypeWord, ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformMakeTranslation, EbrFloatArg, tx, EbrFloatArg, ty) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformMakeTranslation(float tx, float ty) {
     CGAffineTransform ret;
 
     ret.a = 1.0f;
@@ -89,8 +67,10 @@ DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformMakeTranslation, Ebr
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord, CGAffineTransformMakeScale, ArgTypeWordPtr, ArgTypeWord, ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformMakeScale, EbrFloatArg, sx, EbrFloatArg, sy) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformMakeScale(float sx, float sy) {
     CGAffineTransform ret;
     ret.a = sx;
     ret.b = 0.0f;
@@ -102,8 +82,10 @@ DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformMakeScale, EbrFloatA
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord, CGAffineTransformMakeRotation, ArgTypeWordPtr, ArgTypeWord)
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformMakeRotation, EbrFloatArg, angle) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformMakeRotation(float angle) {
     CGAffineTransform ret;
 
     if (IS_NEAR(angle, ((float)kPi / 2.0f), 0.0001f)) {
@@ -126,17 +108,10 @@ DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformMakeRotation, EbrFlo
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformRotate,
-                        ArgTypeWordPtr,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
-DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformRotate, CGAffineTransform, curTransform, EbrFloatArg, angle) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformRotate(CGAffineTransform curTransform, float angle) {
     CGAffineTransform ret;
 
     ret = CGAffineTransformMakeRotation(angle);
@@ -145,18 +120,10 @@ DEFINE_FUNCTION_STRET_2(CGAffineTransform, CGAffineTransformRotate, CGAffineTran
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformTranslate,
-                        ArgTypeWordPtr,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
-DEFINE_FUNCTION_STRET_3(CGAffineTransform, CGAffineTransformTranslate, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformTranslate(CGAffineTransform curTransform, float x, float y) {
     CGAffineTransform trans;
 
     trans = CGAffineTransformMakeTranslation(x, y);
@@ -165,27 +132,20 @@ DEFINE_FUNCTION_STRET_3(CGAffineTransform, CGAffineTransformTranslate, CGAffineT
     return trans;
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformScale,
-                        ArgTypeWordPtr,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
-DEFINE_FUNCTION_STRET_3(CGAffineTransform, CGAffineTransformScale, CGAffineTransform, curTransform, EbrFloatArg, x, EbrFloatArg, y) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformScale(CGAffineTransform curTransform, float x, float y) {
     CGAffineTransform scale;
 
     scale = CGAffineTransformMakeScale(x, y);
     return CGAffineTransformConcat(scale, curTransform);
 }
 
-DECLARE_FUNCTION_PARAMS(
-    ArgTypeWord, CGAffineTransformInvert, ArgTypeWordPtr, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
-DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformInvert, CGAffineTransform, curTransform) {
+/**
+ @Status Interoperable
+*/
+CGAffineTransform CGAffineTransformInvert(CGAffineTransform curTransform) {
     float determinant = (curTransform.a * curTransform.d - curTransform.c * curTransform.b);
 
     if (determinant == 0) {
@@ -203,8 +163,9 @@ DEFINE_FUNCTION_STRET_1(CGAffineTransform, CGAffineTransformInvert, CGAffineTran
     return ret;
 }
 
-DECLARE_FUNCTION_PARAMS(
-    ArgTypeWord, CGAffineTransformIsIdentity, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord, ArgTypeWord)
+/**
+ @Status Interoperable
+*/
 bool CGAffineTransformIsIdentity(CGAffineTransform curTransform) {
     if (memcmp(&curTransform, &CGAffineTransformIdentity, sizeof(curTransform)) == 0) {
         return true;
@@ -213,20 +174,9 @@ bool CGAffineTransformIsIdentity(CGAffineTransform curTransform) {
     }
 }
 
-DECLARE_FUNCTION_PARAMS(ArgTypeWord,
-                        CGAffineTransformEqualToTransform,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord,
-                        ArgTypeWord)
+/**
+ @Status Interoperable
+*/
 bool CGAffineTransformEqualToTransform(CGAffineTransform t2, CGAffineTransform t1) {
     if (memcmp(&t1, &t2, sizeof(CGAffineTransform)) == 0) {
         return TRUE;

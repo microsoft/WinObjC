@@ -368,6 +368,9 @@ DWORD CGFontGetGlyphs(id font, WORD* str, DWORD length, WORD* glyphs) {
     return glyphsOut;
 }
 
+/**
+ @Status Interoperable
+*/
 CFDataRef CGFontCopyTableForTag(CGFontRef font, uint32_t tag) {
     //  Get the font
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
@@ -389,6 +392,10 @@ CFDataRef CGFontCopyTableForTag(CGFontRef font, uint32_t tag) {
     return (CFDataRef)ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Returns family name
+*/
 CFStringRef CGFontCopyFullName(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
@@ -399,35 +406,56 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
     return (CFStringRef)[[NSString stringWithCString:face->family_name] retain];
 }
 
+/**
+ @Status Interoperable
+*/
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
     [cgDataProvider retain];
     return (CGFontRef)[[_LazyUIFont fontWithData:cgDataProvider] retain];
 }
 
+/**
+ @Status Interoperable
+*/
 void CGFontRelease(CGFontRef font) {
     [(id)font release];
 }
 
+/**
+ @Status Interoperable
+*/
 CGFontRef CGFontRetain(CGFontRef font) {
     [(id)font retain];
 
     return font;
 }
 
+/**
+ @Status Interoperable
+*/
 int CGFontGetUnitsPerEm(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)[font _sizingFontHandle];
     return face->units_per_EM;
 }
 
+/**
+ @Status Interoperable
+*/
 int CGFontGetXHeight(CGFontRef font) {
     return (int)[font xHeight];
 }
 
+/**
+ @Status Interoperable
+*/
 CGFontRef CGFontCreateWithFontName(CFStringRef name) {
     return (CGFontRef)[[_LazyUIFont fontWithName:(NSString*)name size:1.0f] retain];
 }
 
+/**
+ @Status Interoperable
+*/
 bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count, int* advances) {
     DWORD i;
 
@@ -452,7 +480,10 @@ bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count,
     return 1;
 }
 
-DEFINE_FUNCTION_STRET_1(CGRect, CGFontGetFontBBox, CGFontRef, font) {
+/**
+ @Status Interoperable
+*/
+CGRect CGFontGetFontBBox(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
 
@@ -465,6 +496,9 @@ DEFINE_FUNCTION_STRET_1(CGRect, CGFontGetFontBBox, CGFontRef, font) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, CGRect bboxes[]) {
     DWORD i;
 
@@ -508,7 +542,11 @@ bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, C
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 int CGFontGetLeading(CGFontRef font) {
+    UNIMPLEMENTED();
     //  Get the font
     FT_Face face = (FT_Face)[font _sizingFontHandle];
 
@@ -516,17 +554,26 @@ int CGFontGetLeading(CGFontRef font) {
     return 5;
 }
 
+/**
+ @Status Interoperable
+*/
 int CGFontGetAscent(CGFontRef font) {
     //  Get the font
     FT_Face face = (FT_Face)[font _sizingFontHandle];
     return face->ascender;
 }
 
+/**
+ @Status Interoperable
+*/
 int CGFontGetDescent(CGFontRef font) {
     FT_Face face = (FT_Face)[font _sizingFontHandle];
     return face->descender;
 }
 
+/**
+ @Status Interoperable
+*/
 int CGFontGetCapHeight(CGFontRef font) {
     FT_Face face = (FT_Face)[font _sizingFontHandle];
 
@@ -677,6 +724,9 @@ void _CGFontUnlock() {
 
 @end
 
+/**
+ @Status Interoperable
+*/
 CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
     _CTFrameSetter* ret = [_CTFrameSetter alloc];
     ret->_attributedString = (NSString*)string;
@@ -835,6 +885,9 @@ static id createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* siz
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
     CGRect frameSize;
     [path _getBoundingBox:&frameSize];
@@ -845,6 +898,9 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
     return (CTFrameRef)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     id str = [string string];
     NSRange lineRange;
@@ -860,7 +916,12 @@ CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
     return (CTLineRef)line;
 }
 
+/**
+ @Status Stub
+ @Notes Line is not truncated
+*/
 CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
+    UNIMPLEMENTED();
     id str = ((_CTLine*)line)->_str;
     NSRange lineRange = ((_CTLine*)line)->_strRange;
 
@@ -873,6 +934,9 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncati
     return (CTLineRef)ret;
 }
 
+/**
+ @Status Caveat
+*/
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
     CGSize ret;
@@ -887,10 +951,16 @@ CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CFArrayRef CTFrameGetLines(CTFrameRef frame) {
     return (CFArrayRef)(id)((_CTFrame*)frame)->_lines;
 }
 
+/**
+ @Status Interoperable
+*/
 void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
     if (range.length == 0) {
         range.length = 0x7FFFFFF;
@@ -906,6 +976,9 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 CFRange CTLineGetStringRange(CTLineRef line) {
     CFRange ret;
     NSRange range = ((_CTLine*)line)->_strRange;
@@ -915,6 +988,11 @@ CFRange CTLineGetStringRange(CTLineRef line) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Values only reflect the typographical maximums for the font - string is only evaulated
+        for width
+*/
 double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     id font = [_LazyUIFont defaultFont];
     if (ascent)
@@ -930,10 +1008,18 @@ double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* desc
     return size.width;
 }
 
+/**
+ @Status Stub
+ @Notes Returns 0.0
+*/
 double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth) {
+    UNIMPLEMENTED();
     return 0.0;
 }
 
+/**
+ @Status Interoperable
+*/
 CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
     return (CFArrayRef)[((_CTLine*)line)->_runs retain];
 }
@@ -944,7 +1030,11 @@ const CFStringRef kCTBackgroundCornerRadiusAttributeName = (const CFStringRef) @
 const CFStringRef kCTBackgroundLineWidthAttributeName = (const CFStringRef) @"kCTBackgroundLineWidthAttributeName";
 const CFStringRef kCTSuperscriptAttributeName = (const CFStringRef) @"kCTSuperscriptAttributeName";
 
+/**
+ @Status Stub
+*/
 CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
+    UNIMPLEMENTED();
     id ret = [NSMutableDictionary new];
     [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"BLACK") forKey:(id)kCTBackgroundStrokeColorAttributeName];
     [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"WHITE") forKey:(id)kCTBackgroundFillColorAttributeName];
@@ -954,6 +1044,11 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
     return (CFDictionaryRef)ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only font face, size and text color attributes are supported.  Background fill is
+        always white.
+*/
 void CTLineDraw(CTLineRef line, CGContextRef ctx) {
     for (_CTRun* curRun in (NSArray*)((_CTLine*)line)->_runs) {
         id string = curRun->_stringFragment;
@@ -982,17 +1077,29 @@ void CTLineDraw(CTLineRef line, CGContextRef ctx) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 id CTFontDescriptorCreateWithAttributes(id fontAttributes) {
     return [fontAttributes copy];
 }
 
+/**
+ @Status Stub
+ @Notes Always returns Helvetica 12-point font
+*/
 CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix) {
+    UNIMPLEMENTED();
     if (size == 0.0f)
         size = 12.0f;
     id ret = [[_LazyUIFont fontWithName:@"Helvetica" size:size] retain];
     return (CTFontRef)ret;
 }
 
+/**
+ @Status Caveat
+ @Notes transform and attributes parameters not supported
+*/
 CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, CGAffineTransform* xform, id attributes) {
     if (size == 0.0f)
         size = 12.0f;
@@ -1000,6 +1107,10 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, CGAffineT
     return (CTFontRef)ret;
 }
 
+/**
+ @Status Caveat
+ @Notes orientation parameter not supported
+*/
 double CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph* glyphs, CGSize* advances, size_t count) {
     DWORD i;
     double total = 0.0f;
@@ -1031,15 +1142,24 @@ double CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph
     return total;
 }
 
+/**
+ @Status Interoperable
+*/
 float CTFontGetAscent(CTFontRef font) {
     //  Get the font
     return [font ascender];
 }
 
+/**
+ @Status Interoperable
+*/
 float CTFontGetDescent(CTFontRef font) {
     return [font descender];
 }
 
+/**
+ @Status Interoperable
+*/
 float CTFontGetSize(CTFontRef font) {
     float ret = [font pointSize];
 
@@ -1050,15 +1170,26 @@ CTFontRef CTFontCopyGraphicsFont(CGFontRef font, CFDictionaryRef attributes) {
     return (CTFontRef)[font retain];
 }
 
+/**
+ @Status Caveat
+ @Notes Always returns font family name
+*/
 CFStringRef CTFontCopyPostScriptName(CTFontRef font) {
     return (CFStringRef)[[font fontName] retain];
 }
 
+/**
+ @Status Interoperable
+*/
 CFStringRef CTFontCopyFamilyName(CTFontRef font) {
     return (CFStringRef)[[font fontName] retain];
 }
 
+/**
+ @Status Stub
+*/
 CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount) {
+    UNIMPLEMENTED();
     return (CTParagraphStyleRef)[NSObject new];
 }
 
@@ -1080,14 +1211,23 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEmpty {
     return _empty;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextPosition*)start {
     return _start;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITextPosition*)end {
     return _end;
 }

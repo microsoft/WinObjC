@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSLauncherUIOptions, WSLauncherOptions, WSLauncher;
-@protocol WSILauncherUIOptions, WSILauncherOptions, WSILauncherViewOptions, WSILauncherStatics;
+@protocol WSILauncherUIOptions
+, WSILauncherOptions, WSILauncherViewOptions, WSILauncherStatics;
 
 // Windows.System.ProcessorArchitecture
 enum _WSProcessorArchitecture {
@@ -197,9 +198,9 @@ typedef unsigned WSVirtualKey;
 
 WINRT_EXPORT
 @interface WSLauncherUIOptions : RTObject
-@property (copy) WFRect * selectionRect;
+@property (copy) WFRect* selectionRect;
 @property WUPPlacement preferredPlacement;
-@property (copy) WFPoint * invocationPoint;
+@property (copy) WFPoint* invocationPoint;
 @end
 
 #endif // __WSLauncherUIOptions_DEFINED__
@@ -212,12 +213,12 @@ WINRT_EXPORT
 @interface WSLauncherOptions : RTObject
 + (instancetype)create ACTIVATOR;
 @property BOOL treatAsUntrusted;
-@property (copy) NSString * preferredApplicationPackageFamilyName;
-@property (copy) NSString * preferredApplicationDisplayName;
-@property (copy) WFUri * fallbackUri;
+@property (copy) NSString* preferredApplicationPackageFamilyName;
+@property (copy) NSString* preferredApplicationDisplayName;
+@property (copy) WFUri* fallbackUri;
 @property BOOL displayApplicationPicker;
-@property (copy) NSString * contentType;
-@property (readonly) WSLauncherUIOptions * uI;
+@property (copy) NSString* contentType;
+@property (readonly) WSLauncherUIOptions* uI;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
@@ -230,10 +231,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSLauncher : RTObject
 + (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file options:(WSLauncherOptions *)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriAsync:(WFUri *)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithOptionsAsync:(WFUri *)uri options:(WSLauncherOptions *)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file
+                           options:(WSLauncherOptions*)options
+                           success:(void (^)(BOOL))success
+                           failure:(void (^)(NSError*))failure;
++ (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsAsync:(WFUri*)uri
+                          options:(WSLauncherOptions*)options
+                          success:(void (^)(BOOL))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSLauncher_DEFINED__
-

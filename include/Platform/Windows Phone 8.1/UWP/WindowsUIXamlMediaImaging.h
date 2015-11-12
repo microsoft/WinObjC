@@ -20,8 +20,13 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUXMIDownloadProgressEventArgs, WUXMIBitmapSource, WUXMIBitmapImage, WUXMIRenderTargetBitmap, WUXMISurfaceImageSource, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap;
-@protocol WUXMIIBitmapImage, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory, WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIBitmapSource, WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIDownloadProgressEventArgs, WUXMIIRenderTargetBitmap, WUXMIIRenderTargetBitmapStatics, WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIVirtualSurfaceImageSource, WUXMIIVirtualSurfaceImageSourceFactory, WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory;
+@class WUXMIDownloadProgressEventArgs, WUXMIBitmapSource, WUXMIBitmapImage, WUXMIRenderTargetBitmap, WUXMISurfaceImageSource,
+    WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap;
+@protocol WUXMIIBitmapImage
+, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory, WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIBitmapSource,
+    WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIDownloadProgressEventArgs, WUXMIIRenderTargetBitmap,
+    WUXMIIRenderTargetBitmapStatics, WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIVirtualSurfaceImageSource,
+    WUXMIIVirtualSurfaceImageSourceFactory, WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory;
 
 // Windows.UI.Xaml.Media.Imaging.BitmapCreateOptions
 enum _WUXMIBitmapCreateOptions {
@@ -45,26 +50,25 @@ typedef unsigned WUXMIDecodePixelType;
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void(^WXExceptionRoutedEventHandler)(RTObject * sender, WXExceptionRoutedEventArgs * e);
+typedef void (^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventHandler
 #ifndef __WUXMIDownloadProgressEventHandler__DEFINED
 #define __WUXMIDownloadProgressEventHandler__DEFINED
-typedef void(^WUXMIDownloadProgressEventHandler)(RTObject * sender, WUXMIDownloadProgressEventArgs * e);
+typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
 #endif // __WUXMIDownloadProgressEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject * sender, WXRoutedEventArgs * e);
+typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
-
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventHandler
 #ifndef __WUXMIDownloadProgressEventHandler__DEFINED
 #define __WUXMIDownloadProgressEventHandler__DEFINED
-typedef void(^WUXMIDownloadProgressEventHandler)(RTObject * sender, WUXMIDownloadProgressEventArgs * e);
+typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
 #endif // __WUXMIDownloadProgressEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventArgs
@@ -85,12 +89,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (RTObject *)getValue:(WXDependencyProperty *)dp;
-- (void)setValue:(WXDependencyProperty *)dp value:(RTObject *)value;
-- (void)clearValue:(WXDependencyProperty *)dp;
-- (RTObject *)readLocalValue:(WXDependencyProperty *)dp;
-- (RTObject *)getAnimationBaseValue:(WXDependencyProperty *)dp;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (RTObject*)getValue:(WXDependencyProperty*)dp;
+- (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
+- (void)clearValue:(WXDependencyProperty*)dp;
+- (RTObject*)readLocalValue:(WXDependencyProperty*)dp;
+- (RTObject*)getAnimationBaseValue:(WXDependencyProperty*)dp;
 @end
 
 #endif // __WXDependencyObject_DEFINED__
@@ -114,8 +118,8 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
-+ (WXDependencyProperty *)pixelHeightProperty;
-+ (WXDependencyProperty *)pixelWidthProperty;
++ (WXDependencyProperty*)pixelHeightProperty;
++ (WXDependencyProperty*)pixelWidthProperty;
 - (void)setSource:(RTObject<WSSIRandomAccessStream>*)streamSource;
 - (RTObject<WFIAsyncAction>*)setSourceAsync:(RTObject<WSSIRandomAccessStream>*)streamSource;
 @end
@@ -129,17 +133,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
 + (instancetype)create ACTIVATOR;
-+ (WUXMIBitmapImage *)createInstanceWithUriSource:(WFUri *)uriSource ACTIVATOR;
++ (WUXMIBitmapImage*)createInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
 @property WUXMIDecodePixelType decodePixelType;
-@property (copy) WFUri * uriSource;
+@property (copy) WFUri* uriSource;
 @property int decodePixelWidth;
 @property int decodePixelHeight;
 @property WUXMIBitmapCreateOptions createOptions;
-+ (WXDependencyProperty *)createOptionsProperty;
-+ (WXDependencyProperty *)decodePixelHeightProperty;
-+ (WXDependencyProperty *)decodePixelWidthProperty;
-+ (WXDependencyProperty *)uriSourceProperty;
-+ (WXDependencyProperty *)decodePixelTypeProperty;
++ (WXDependencyProperty*)createOptionsProperty;
++ (WXDependencyProperty*)decodePixelHeightProperty;
++ (WXDependencyProperty*)decodePixelWidthProperty;
++ (WXDependencyProperty*)uriSourceProperty;
++ (WXDependencyProperty*)decodePixelTypeProperty;
 - (EventRegistrationToken)addDownloadProgressEvent:(WUXMIDownloadProgressEventHandler)del;
 - (void)removeDownloadProgressEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
@@ -159,10 +163,10 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
-+ (WXDependencyProperty *)pixelHeightProperty;
-+ (WXDependencyProperty *)pixelWidthProperty;
-- (RTObject<WFIAsyncAction>*)renderAsync:(WXUIElement *)element;
-- (RTObject<WFIAsyncAction>*)renderToSizeAsync:(WXUIElement *)element scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight;
++ (WXDependencyProperty*)pixelHeightProperty;
++ (WXDependencyProperty*)pixelWidthProperty;
+- (RTObject<WFIAsyncAction>*)renderAsync:(WXUIElement*)element;
+- (RTObject<WFIAsyncAction>*)renderToSizeAsync:(WXUIElement*)element scaledWidth:(int)scaledWidth scaledHeight:(int)scaledHeight;
 - (void)getPixelsAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -184,8 +188,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIVirtualSurfaceImageSource : WUXMISurfaceImageSource
-+ (WUXMIVirtualSurfaceImageSource *)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
-+ (WUXMIVirtualSurfaceImageSource *)createInstanceWithDimensionsAndOpacity:(int)pixelWidth pixelHeight:(int)pixelHeight isOpaque:(BOOL)isOpaque ACTIVATOR;
++ (WUXMIVirtualSurfaceImageSource*)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
++ (WUXMIVirtualSurfaceImageSource*)createInstanceWithDimensionsAndOpacity:(int)pixelWidth
+                                                              pixelHeight:(int)pixelHeight
+                                                                 isOpaque:(BOOL)isOpaque ACTIVATOR;
 @end
 
 #endif // __WUXMIVirtualSurfaceImageSource_DEFINED__
@@ -196,10 +202,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIWriteableBitmap : WUXMIBitmapSource
-+ (WUXMIWriteableBitmap *)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
++ (WUXMIWriteableBitmap*)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* pixelBuffer;
 - (void)invalidate;
 @end
 
 #endif // __WUXMIWriteableBitmap_DEFINED__
-

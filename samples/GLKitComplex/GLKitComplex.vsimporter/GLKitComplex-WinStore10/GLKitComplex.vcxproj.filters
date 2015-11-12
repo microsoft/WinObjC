@@ -106,4 +106,7 @@
       <Filter>Assets</Filter>
     </SBResourceCopy>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+  </ItemGroup>
 </Project>

@@ -20,8 +20,41 @@
 #pragma once
 
 #include "interopBase.h"
-@class WWHHHttpContentHeaderCollection, WWHHHttpRequestHeaderCollection, WWHHHttpResponseHeaderCollection, WWHHHttpContentDispositionHeaderValue, WWHHHttpContentCodingHeaderValueCollection, WWHHHttpLanguageHeaderValueCollection, WWHHHttpContentRangeHeaderValue, WWHHHttpMediaTypeHeaderValue, WWHHHttpMediaTypeWithQualityHeaderValueCollection, WWHHHttpContentCodingWithQualityHeaderValueCollection, WWHHHttpLanguageRangeWithQualityHeaderValueCollection, WWHHHttpCredentialsHeaderValue, WWHHHttpCacheDirectiveHeaderValueCollection, WWHHHttpConnectionOptionHeaderValueCollection, WWHHHttpCookiePairHeaderValueCollection, WWHHHttpExpectationHeaderValueCollection, WWHHHttpTransferCodingHeaderValueCollection, WWHHHttpProductInfoHeaderValueCollection, WWHHHttpMethodHeaderValueCollection, WWHHHttpChallengeHeaderValueCollection, WWHHHttpDateOrDeltaHeaderValue, WWHHHttpNameValueHeaderValue, WWHHHttpChallengeHeaderValue, WWHHHttpConnectionOptionHeaderValue, WWHHHttpContentCodingHeaderValue, WWHHHttpCookiePairHeaderValue, WWHHHttpExpectationHeaderValue, WWHHHttpLanguageRangeWithQualityHeaderValue, WWHHHttpMediaTypeWithQualityHeaderValue, WWHHHttpProductHeaderValue, WWHHHttpProductInfoHeaderValue, WWHHHttpContentCodingWithQualityHeaderValue, WWHHHttpTransferCodingHeaderValue;
-@protocol WWHHIHttpContentHeaderCollection, WWHHIHttpRequestHeaderCollection, WWHHIHttpResponseHeaderCollection, WWHHIHttpCacheDirectiveHeaderValueCollection, WWHHIHttpChallengeHeaderValueStatics, WWHHIHttpChallengeHeaderValueFactory, WWHHIHttpChallengeHeaderValue, WWHHIHttpChallengeHeaderValueCollection, WWHHIHttpCredentialsHeaderValueStatics, WWHHIHttpCredentialsHeaderValueFactory, WWHHIHttpCredentialsHeaderValue, WWHHIHttpConnectionOptionHeaderValueStatics, WWHHIHttpConnectionOptionHeaderValueFactory, WWHHIHttpConnectionOptionHeaderValue, WWHHIHttpConnectionOptionHeaderValueCollection, WWHHIHttpContentCodingHeaderValueStatics, WWHHIHttpContentCodingHeaderValueFactory, WWHHIHttpContentCodingHeaderValue, WWHHIHttpContentCodingHeaderValueCollection, WWHHIHttpContentDispositionHeaderValueStatics, WWHHIHttpContentDispositionHeaderValueFactory, WWHHIHttpContentDispositionHeaderValue, WWHHIHttpContentRangeHeaderValueStatics, WWHHIHttpContentRangeHeaderValueFactory, WWHHIHttpContentRangeHeaderValue, WWHHIHttpCookiePairHeaderValueStatics, WWHHIHttpCookiePairHeaderValueFactory, WWHHIHttpCookiePairHeaderValue, WWHHIHttpCookiePairHeaderValueCollection, WWHHIHttpDateOrDeltaHeaderValueStatics, WWHHIHttpDateOrDeltaHeaderValue, WWHHIHttpExpectationHeaderValueStatics, WWHHIHttpExpectationHeaderValueFactory, WWHHIHttpExpectationHeaderValue, WWHHIHttpExpectationHeaderValueCollection, WWHHIHttpLanguageHeaderValueCollection, WWHHIHttpLanguageRangeWithQualityHeaderValueStatics, WWHHIHttpLanguageRangeWithQualityHeaderValueFactory, WWHHIHttpLanguageRangeWithQualityHeaderValue, WWHHIHttpLanguageRangeWithQualityHeaderValueCollection, WWHHIHttpMediaTypeHeaderValueStatics, WWHHIHttpMediaTypeHeaderValueFactory, WWHHIHttpMediaTypeHeaderValue, WWHHIHttpMediaTypeWithQualityHeaderValueStatics, WWHHIHttpMediaTypeWithQualityHeaderValueFactory, WWHHIHttpMediaTypeWithQualityHeaderValue, WWHHIHttpMediaTypeWithQualityHeaderValueCollection, WWHHIHttpMethodHeaderValueCollection, WWHHIHttpNameValueHeaderValueStatics, WWHHIHttpNameValueHeaderValueFactory, WWHHIHttpNameValueHeaderValue, WWHHIHttpProductHeaderValueStatics, WWHHIHttpProductHeaderValueFactory, WWHHIHttpProductHeaderValue, WWHHIHttpProductInfoHeaderValueStatics, WWHHIHttpProductInfoHeaderValueFactory, WWHHIHttpProductInfoHeaderValue, WWHHIHttpProductInfoHeaderValueCollection, WWHHIHttpContentCodingWithQualityHeaderValueStatics, WWHHIHttpContentCodingWithQualityHeaderValueFactory, WWHHIHttpContentCodingWithQualityHeaderValue, WWHHIHttpContentCodingWithQualityHeaderValueCollection, WWHHIHttpTransferCodingHeaderValueStatics, WWHHIHttpTransferCodingHeaderValueFactory, WWHHIHttpTransferCodingHeaderValue, WWHHIHttpTransferCodingHeaderValueCollection;
+@class WWHHHttpContentHeaderCollection, WWHHHttpRequestHeaderCollection, WWHHHttpResponseHeaderCollection,
+    WWHHHttpContentDispositionHeaderValue, WWHHHttpContentCodingHeaderValueCollection, WWHHHttpLanguageHeaderValueCollection,
+    WWHHHttpContentRangeHeaderValue, WWHHHttpMediaTypeHeaderValue, WWHHHttpMediaTypeWithQualityHeaderValueCollection,
+    WWHHHttpContentCodingWithQualityHeaderValueCollection, WWHHHttpLanguageRangeWithQualityHeaderValueCollection,
+    WWHHHttpCredentialsHeaderValue, WWHHHttpCacheDirectiveHeaderValueCollection, WWHHHttpConnectionOptionHeaderValueCollection,
+    WWHHHttpCookiePairHeaderValueCollection, WWHHHttpExpectationHeaderValueCollection, WWHHHttpTransferCodingHeaderValueCollection,
+    WWHHHttpProductInfoHeaderValueCollection, WWHHHttpMethodHeaderValueCollection, WWHHHttpChallengeHeaderValueCollection,
+    WWHHHttpDateOrDeltaHeaderValue, WWHHHttpNameValueHeaderValue, WWHHHttpChallengeHeaderValue, WWHHHttpConnectionOptionHeaderValue,
+    WWHHHttpContentCodingHeaderValue, WWHHHttpCookiePairHeaderValue, WWHHHttpExpectationHeaderValue,
+    WWHHHttpLanguageRangeWithQualityHeaderValue, WWHHHttpMediaTypeWithQualityHeaderValue, WWHHHttpProductHeaderValue,
+    WWHHHttpProductInfoHeaderValue, WWHHHttpContentCodingWithQualityHeaderValue, WWHHHttpTransferCodingHeaderValue;
+@protocol WWHHIHttpContentHeaderCollection
+, WWHHIHttpRequestHeaderCollection, WWHHIHttpResponseHeaderCollection, WWHHIHttpCacheDirectiveHeaderValueCollection,
+    WWHHIHttpChallengeHeaderValueStatics, WWHHIHttpChallengeHeaderValueFactory, WWHHIHttpChallengeHeaderValue,
+    WWHHIHttpChallengeHeaderValueCollection, WWHHIHttpCredentialsHeaderValueStatics, WWHHIHttpCredentialsHeaderValueFactory,
+    WWHHIHttpCredentialsHeaderValue, WWHHIHttpConnectionOptionHeaderValueStatics, WWHHIHttpConnectionOptionHeaderValueFactory,
+    WWHHIHttpConnectionOptionHeaderValue, WWHHIHttpConnectionOptionHeaderValueCollection, WWHHIHttpContentCodingHeaderValueStatics,
+    WWHHIHttpContentCodingHeaderValueFactory, WWHHIHttpContentCodingHeaderValue, WWHHIHttpContentCodingHeaderValueCollection,
+    WWHHIHttpContentDispositionHeaderValueStatics, WWHHIHttpContentDispositionHeaderValueFactory, WWHHIHttpContentDispositionHeaderValue,
+    WWHHIHttpContentRangeHeaderValueStatics, WWHHIHttpContentRangeHeaderValueFactory, WWHHIHttpContentRangeHeaderValue,
+    WWHHIHttpCookiePairHeaderValueStatics, WWHHIHttpCookiePairHeaderValueFactory, WWHHIHttpCookiePairHeaderValue,
+    WWHHIHttpCookiePairHeaderValueCollection, WWHHIHttpDateOrDeltaHeaderValueStatics, WWHHIHttpDateOrDeltaHeaderValue,
+    WWHHIHttpExpectationHeaderValueStatics, WWHHIHttpExpectationHeaderValueFactory, WWHHIHttpExpectationHeaderValue,
+    WWHHIHttpExpectationHeaderValueCollection, WWHHIHttpLanguageHeaderValueCollection, WWHHIHttpLanguageRangeWithQualityHeaderValueStatics,
+    WWHHIHttpLanguageRangeWithQualityHeaderValueFactory, WWHHIHttpLanguageRangeWithQualityHeaderValue,
+    WWHHIHttpLanguageRangeWithQualityHeaderValueCollection, WWHHIHttpMediaTypeHeaderValueStatics, WWHHIHttpMediaTypeHeaderValueFactory,
+    WWHHIHttpMediaTypeHeaderValue, WWHHIHttpMediaTypeWithQualityHeaderValueStatics, WWHHIHttpMediaTypeWithQualityHeaderValueFactory,
+    WWHHIHttpMediaTypeWithQualityHeaderValue, WWHHIHttpMediaTypeWithQualityHeaderValueCollection, WWHHIHttpMethodHeaderValueCollection,
+    WWHHIHttpNameValueHeaderValueStatics, WWHHIHttpNameValueHeaderValueFactory, WWHHIHttpNameValueHeaderValue,
+    WWHHIHttpProductHeaderValueStatics, WWHHIHttpProductHeaderValueFactory, WWHHIHttpProductHeaderValue,
+    WWHHIHttpProductInfoHeaderValueStatics, WWHHIHttpProductInfoHeaderValueFactory, WWHHIHttpProductInfoHeaderValue,
+    WWHHIHttpProductInfoHeaderValueCollection, WWHHIHttpContentCodingWithQualityHeaderValueStatics,
+    WWHHIHttpContentCodingWithQualityHeaderValueFactory, WWHHIHttpContentCodingWithQualityHeaderValue,
+    WWHHIHttpContentCodingWithQualityHeaderValueCollection, WWHHIHttpTransferCodingHeaderValueStatics,
+    WWHHIHttpTransferCodingHeaderValueFactory, WWHHIHttpTransferCodingHeaderValue, WWHHIHttpTransferCodingHeaderValueCollection;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
@@ -37,7 +70,7 @@
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -60,24 +93,24 @@ WINRT_EXPORT
 @property (copy) WWHHHttpContentRangeHeaderValue* contentRange;
 @property (readonly) WWHHHttpContentCodingHeaderValueCollection* contentEncoding;
 @property (readonly) WWHHHttpLanguageHeaderValueCollection* contentLanguage;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
-- (void)append:(NSString *)name value:(NSString *)value;
-- (BOOL)tryAppendWithoutValidation:(NSString *)name value:(NSString *)value;
-- (NSString *)toString;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (void)append:(NSString*)name value:(NSString*)value;
+- (BOOL)tryAppendWithoutValidation:(NSString*)name value:(NSString*)value;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentHeaderCollection_DEFINED__
@@ -91,7 +124,7 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 @property (copy) WWHHHttpCredentialsHeaderValue* authorization;
 @property (copy) WWHHHttpCredentialsHeaderValue* proxyAuthorization;
-@property (copy) NSString * from;
+@property (copy) NSString* from;
 @property (copy) WFUri* referer;
 @property (copy) id ifUnmodifiedSince;
 @property (copy) id date;
@@ -107,24 +140,24 @@ WINRT_EXPORT
 @property (readonly) WWHHHttpTransferCodingHeaderValueCollection* transferEncoding;
 @property (readonly) WWHHHttpProductInfoHeaderValueCollection* userAgent;
 @property (readonly) WWHHHttpExpectationHeaderValueCollection* expect;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
-- (void)append:(NSString *)name value:(NSString *)value;
-- (BOOL)tryAppendWithoutValidation:(NSString *)name value:(NSString *)value;
-- (NSString *)toString;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (void)append:(NSString*)name value:(NSString*)value;
+- (BOOL)tryAppendWithoutValidation:(NSString*)name value:(NSString*)value;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpRequestHeaderCollection_DEFINED__
@@ -146,24 +179,24 @@ WINRT_EXPORT
 @property (readonly) WWHHHttpChallengeHeaderValueCollection* proxyAuthenticate;
 @property (readonly) WWHHHttpTransferCodingHeaderValueCollection* transferEncoding;
 @property (readonly) WWHHHttpChallengeHeaderValueCollection* wwwAuthenticate;
-- (id)objectForKey: (id)key;
+- (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject: (id)obj;
+- (NSArray*)allKeysForObject:(id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
--(void)setObject: (id)obj forKey: (id)key;
--(void)setObject:(id)object forKeyedSubscript:(id)key;
--(void)removeObjectForKey: (id)key;
--(void)removeAllObjects;
--(void)removeObjectsForKeys:(NSArray*)keys;
--(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
--(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
--(void)setDictionary: (NSDictionary*)dict;
-- (void)append:(NSString *)name value:(NSString *)value;
-- (BOOL)tryAppendWithoutValidation:(NSString *)name value:(NSString *)value;
-- (NSString *)toString;
+- (void)setObject:(id)obj forKey:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
+- (void)removeObjectForKey:(id)key;
+- (void)removeAllObjects;
+- (void)removeObjectsForKeys:(NSArray*)keys;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+- (void)setDictionary:(NSDictionary*)dict;
+- (void)append:(NSString*)name value:(NSString*)value;
+- (BOOL)tryAppendWithoutValidation:(NSString*)name value:(NSString*)value;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpResponseHeaderCollection_DEFINED__
@@ -174,16 +207,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpContentDispositionHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpContentDispositionHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input contentDispositionHeaderValue:(WWHHHttpContentDispositionHeaderValue**)contentDispositionHeaderValue;
-+ (WWHHHttpContentDispositionHeaderValue*)create:(NSString *)dispositionType ACTIVATOR;
++ (WWHHHttpContentDispositionHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input contentDispositionHeaderValue:(WWHHHttpContentDispositionHeaderValue**)contentDispositionHeaderValue;
++ (WWHHHttpContentDispositionHeaderValue*)create:(NSString*)dispositionType ACTIVATOR;
 @property (copy) id size;
-@property (copy) NSString * name;
-@property (copy) NSString * fileNameStar;
-@property (copy) NSString * fileName;
-@property (copy) NSString * dispositionType;
+@property (copy) NSString* name;
+@property (copy) NSString* fileNameStar;
+@property (copy) NSString* fileName;
+@property (copy) NSString* dispositionType;
 @property (readonly) NSMutableArray* parameters;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentDispositionHeaderValue_DEFINED__
@@ -197,19 +230,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentCodingHeaderValueCollection_DEFINED__
@@ -223,19 +254,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpLanguageHeaderValueCollection_DEFINED__
@@ -246,16 +275,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpContentRangeHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpContentRangeHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input contentRangeHeaderValue:(WWHHHttpContentRangeHeaderValue**)contentRangeHeaderValue;
++ (WWHHHttpContentRangeHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input contentRangeHeaderValue:(WWHHHttpContentRangeHeaderValue**)contentRangeHeaderValue;
 + (WWHHHttpContentRangeHeaderValue*)createFromLength:(uint64_t)length ACTIVATOR;
 + (WWHHHttpContentRangeHeaderValue*)createFromRange:(uint64_t)from to:(uint64_t)to ACTIVATOR;
 + (WWHHHttpContentRangeHeaderValue*)createFromRangeWithLength:(uint64_t)from to:(uint64_t)to length:(uint64_t)length ACTIVATOR;
-@property (copy) NSString * unit;
+@property (copy) NSString* unit;
 @property (readonly) id firstBytePosition;
 @property (readonly) id lastBytePosition;
 @property (readonly) id length;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentRangeHeaderValue_DEFINED__
@@ -266,13 +295,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpMediaTypeHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpMediaTypeHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input mediaTypeHeaderValue:(WWHHHttpMediaTypeHeaderValue**)mediaTypeHeaderValue;
-+ (WWHHHttpMediaTypeHeaderValue*)create:(NSString *)mediaType ACTIVATOR;
-@property (copy) NSString * mediaType;
-@property (copy) NSString * charSet;
++ (WWHHHttpMediaTypeHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input mediaTypeHeaderValue:(WWHHHttpMediaTypeHeaderValue**)mediaTypeHeaderValue;
++ (WWHHHttpMediaTypeHeaderValue*)create:(NSString*)mediaType ACTIVATOR;
+@property (copy) NSString* mediaType;
+@property (copy) NSString* charSet;
 @property (readonly) NSMutableArray* parameters;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpMediaTypeHeaderValue_DEFINED__
@@ -286,19 +315,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpMediaTypeWithQualityHeaderValueCollection_DEFINED__
@@ -312,19 +339,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentCodingWithQualityHeaderValueCollection_DEFINED__
@@ -338,19 +363,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpLanguageRangeWithQualityHeaderValueCollection_DEFINED__
@@ -361,14 +384,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpCredentialsHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpCredentialsHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input credentialsHeaderValue:(WWHHHttpCredentialsHeaderValue**)credentialsHeaderValue;
-+ (WWHHHttpCredentialsHeaderValue*)createFromScheme:(NSString *)scheme ACTIVATOR;
-+ (WWHHHttpCredentialsHeaderValue*)createFromSchemeWithToken:(NSString *)scheme token:(NSString *)token ACTIVATOR;
++ (WWHHHttpCredentialsHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input credentialsHeaderValue:(WWHHHttpCredentialsHeaderValue**)credentialsHeaderValue;
++ (WWHHHttpCredentialsHeaderValue*)createFromScheme:(NSString*)scheme ACTIVATOR;
++ (WWHHHttpCredentialsHeaderValue*)createFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
 @property (readonly) NSMutableArray* parameters;
-@property (readonly) NSString * scheme;
-@property (readonly) NSString * token;
-- (NSString *)toString;
+@property (readonly) NSString* scheme;
+@property (readonly) NSString* token;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpCredentialsHeaderValue_DEFINED__
@@ -386,19 +409,17 @@ WINRT_EXPORT
 @property (copy) id maxAge;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpCacheDirectiveHeaderValueCollection_DEFINED__
@@ -412,19 +433,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpConnectionOptionHeaderValueCollection_DEFINED__
@@ -438,19 +457,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpCookiePairHeaderValueCollection_DEFINED__
@@ -464,19 +481,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpExpectationHeaderValueCollection_DEFINED__
@@ -490,19 +505,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpTransferCodingHeaderValueCollection_DEFINED__
@@ -516,19 +529,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpProductInfoHeaderValueCollection_DEFINED__
@@ -542,19 +553,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpMethodHeaderValueCollection_DEFINED__
@@ -568,19 +577,17 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
-- (void)parseAdd:(NSString *)input;
-- (BOOL)tryParseAdd:(NSString *)input;
-- (NSString *)toString;
+- (void)parseAdd:(NSString*)input;
+- (BOOL)tryParseAdd:(NSString*)input;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpChallengeHeaderValueCollection_DEFINED__
@@ -591,11 +598,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpDateOrDeltaHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpDateOrDeltaHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input dateOrDeltaHeaderValue:(WWHHHttpDateOrDeltaHeaderValue**)dateOrDeltaHeaderValue;
++ (WWHHHttpDateOrDeltaHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input dateOrDeltaHeaderValue:(WWHHHttpDateOrDeltaHeaderValue**)dateOrDeltaHeaderValue;
 @property (readonly) id date;
 @property (readonly) id delta;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpDateOrDeltaHeaderValue_DEFINED__
@@ -606,13 +613,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpNameValueHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpNameValueHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input nameValueHeaderValue:(WWHHHttpNameValueHeaderValue**)nameValueHeaderValue;
-+ (WWHHHttpNameValueHeaderValue*)createFromName:(NSString *)name ACTIVATOR;
-+ (WWHHHttpNameValueHeaderValue*)createFromNameWithValue:(NSString *)name value:(NSString *)value ACTIVATOR;
-@property (copy) NSString * value;
-@property (readonly) NSString * name;
-- (NSString *)toString;
++ (WWHHHttpNameValueHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input nameValueHeaderValue:(WWHHHttpNameValueHeaderValue**)nameValueHeaderValue;
++ (WWHHHttpNameValueHeaderValue*)createFromName:(NSString*)name ACTIVATOR;
++ (WWHHHttpNameValueHeaderValue*)createFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
+@property (copy) NSString* value;
+@property (readonly) NSString* name;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpNameValueHeaderValue_DEFINED__
@@ -623,14 +630,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpChallengeHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpChallengeHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input challengeHeaderValue:(WWHHHttpChallengeHeaderValue**)challengeHeaderValue;
-+ (WWHHHttpChallengeHeaderValue*)createFromScheme:(NSString *)scheme ACTIVATOR;
-+ (WWHHHttpChallengeHeaderValue*)createFromSchemeWithToken:(NSString *)scheme token:(NSString *)token ACTIVATOR;
++ (WWHHHttpChallengeHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input challengeHeaderValue:(WWHHHttpChallengeHeaderValue**)challengeHeaderValue;
++ (WWHHHttpChallengeHeaderValue*)createFromScheme:(NSString*)scheme ACTIVATOR;
++ (WWHHHttpChallengeHeaderValue*)createFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
 @property (readonly) NSMutableArray* parameters;
-@property (readonly) NSString * scheme;
-@property (readonly) NSString * token;
-- (NSString *)toString;
+@property (readonly) NSString* scheme;
+@property (readonly) NSString* token;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpChallengeHeaderValue_DEFINED__
@@ -641,11 +648,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpConnectionOptionHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpConnectionOptionHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input connectionOptionHeaderValue:(WWHHHttpConnectionOptionHeaderValue**)connectionOptionHeaderValue;
-+ (WWHHHttpConnectionOptionHeaderValue*)create:(NSString *)token ACTIVATOR;
-@property (readonly) NSString * token;
-- (NSString *)toString;
++ (WWHHHttpConnectionOptionHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input connectionOptionHeaderValue:(WWHHHttpConnectionOptionHeaderValue**)connectionOptionHeaderValue;
++ (WWHHHttpConnectionOptionHeaderValue*)create:(NSString*)token ACTIVATOR;
+@property (readonly) NSString* token;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpConnectionOptionHeaderValue_DEFINED__
@@ -656,11 +663,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpContentCodingHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpContentCodingHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input contentCodingHeaderValue:(WWHHHttpContentCodingHeaderValue**)contentCodingHeaderValue;
-+ (WWHHHttpContentCodingHeaderValue*)create:(NSString *)contentCoding ACTIVATOR;
-@property (readonly) NSString * contentCoding;
-- (NSString *)toString;
++ (WWHHHttpContentCodingHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input contentCodingHeaderValue:(WWHHHttpContentCodingHeaderValue**)contentCodingHeaderValue;
++ (WWHHHttpContentCodingHeaderValue*)create:(NSString*)contentCoding ACTIVATOR;
+@property (readonly) NSString* contentCoding;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentCodingHeaderValue_DEFINED__
@@ -671,13 +678,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpCookiePairHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpCookiePairHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input cookiePairHeaderValue:(WWHHHttpCookiePairHeaderValue**)cookiePairHeaderValue;
-+ (WWHHHttpCookiePairHeaderValue*)createFromName:(NSString *)name ACTIVATOR;
-+ (WWHHHttpCookiePairHeaderValue*)createFromNameWithValue:(NSString *)name value:(NSString *)value ACTIVATOR;
-@property (copy) NSString * value;
-@property (readonly) NSString * name;
-- (NSString *)toString;
++ (WWHHHttpCookiePairHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input cookiePairHeaderValue:(WWHHHttpCookiePairHeaderValue**)cookiePairHeaderValue;
++ (WWHHHttpCookiePairHeaderValue*)createFromName:(NSString*)name ACTIVATOR;
++ (WWHHHttpCookiePairHeaderValue*)createFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
+@property (copy) NSString* value;
+@property (readonly) NSString* name;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpCookiePairHeaderValue_DEFINED__
@@ -688,14 +695,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpExpectationHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpExpectationHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input expectationHeaderValue:(WWHHHttpExpectationHeaderValue**)expectationHeaderValue;
-+ (WWHHHttpExpectationHeaderValue*)createFromName:(NSString *)name ACTIVATOR;
-+ (WWHHHttpExpectationHeaderValue*)createFromNameWithValue:(NSString *)name value:(NSString *)value ACTIVATOR;
-@property (copy) NSString * value;
-@property (readonly) NSString * name;
++ (WWHHHttpExpectationHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input expectationHeaderValue:(WWHHHttpExpectationHeaderValue**)expectationHeaderValue;
++ (WWHHHttpExpectationHeaderValue*)createFromName:(NSString*)name ACTIVATOR;
++ (WWHHHttpExpectationHeaderValue*)createFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
+@property (copy) NSString* value;
+@property (readonly) NSString* name;
 @property (readonly) NSMutableArray* parameters;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpExpectationHeaderValue_DEFINED__
@@ -706,13 +713,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpLanguageRangeWithQualityHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpLanguageRangeWithQualityHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input languageRangeWithQualityHeaderValue:(WWHHHttpLanguageRangeWithQualityHeaderValue**)languageRangeWithQualityHeaderValue;
-+ (WWHHHttpLanguageRangeWithQualityHeaderValue*)createFromLanguageRange:(NSString *)languageRange ACTIVATOR;
-+ (WWHHHttpLanguageRangeWithQualityHeaderValue*)createFromLanguageRangeWithQuality:(NSString *)languageRange quality:(double)quality ACTIVATOR;
-@property (readonly) NSString * languageRange;
++ (WWHHHttpLanguageRangeWithQualityHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input
+    languageRangeWithQualityHeaderValue:(WWHHHttpLanguageRangeWithQualityHeaderValue**)languageRangeWithQualityHeaderValue;
++ (WWHHHttpLanguageRangeWithQualityHeaderValue*)createFromLanguageRange:(NSString*)languageRange ACTIVATOR;
++ (WWHHHttpLanguageRangeWithQualityHeaderValue*)createFromLanguageRangeWithQuality:(NSString*)languageRange
+                                                                           quality:(double)quality ACTIVATOR;
+@property (readonly) NSString* languageRange;
 @property (readonly) id quality;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpLanguageRangeWithQualityHeaderValue_DEFINED__
@@ -723,15 +732,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpMediaTypeWithQualityHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpMediaTypeWithQualityHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input mediaTypeWithQualityHeaderValue:(WWHHHttpMediaTypeWithQualityHeaderValue**)mediaTypeWithQualityHeaderValue;
-+ (WWHHHttpMediaTypeWithQualityHeaderValue*)createFromMediaType:(NSString *)mediaType ACTIVATOR;
-+ (WWHHHttpMediaTypeWithQualityHeaderValue*)createFromMediaTypeWithQuality:(NSString *)mediaType quality:(double)quality ACTIVATOR;
++ (WWHHHttpMediaTypeWithQualityHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input
+    mediaTypeWithQualityHeaderValue:(WWHHHttpMediaTypeWithQualityHeaderValue**)mediaTypeWithQualityHeaderValue;
++ (WWHHHttpMediaTypeWithQualityHeaderValue*)createFromMediaType:(NSString*)mediaType ACTIVATOR;
++ (WWHHHttpMediaTypeWithQualityHeaderValue*)createFromMediaTypeWithQuality:(NSString*)mediaType quality:(double)quality ACTIVATOR;
 @property (copy) id quality;
-@property (copy) NSString * mediaType;
-@property (copy) NSString * charSet;
+@property (copy) NSString* mediaType;
+@property (copy) NSString* charSet;
 @property (readonly) NSMutableArray* parameters;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpMediaTypeWithQualityHeaderValue_DEFINED__
@@ -742,13 +752,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpProductHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpProductHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input productHeaderValue:(WWHHHttpProductHeaderValue**)productHeaderValue;
-+ (WWHHHttpProductHeaderValue*)createFromName:(NSString *)productName ACTIVATOR;
-+ (WWHHHttpProductHeaderValue*)createFromNameWithVersion:(NSString *)productName productVersion:(NSString *)productVersion ACTIVATOR;
-@property (readonly) NSString * name;
-@property (readonly) NSString * version;
-- (NSString *)toString;
++ (WWHHHttpProductHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input productHeaderValue:(WWHHHttpProductHeaderValue**)productHeaderValue;
++ (WWHHHttpProductHeaderValue*)createFromName:(NSString*)productName ACTIVATOR;
++ (WWHHHttpProductHeaderValue*)createFromNameWithVersion:(NSString*)productName productVersion:(NSString*)productVersion ACTIVATOR;
+@property (readonly) NSString* name;
+@property (readonly) NSString* version;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpProductHeaderValue_DEFINED__
@@ -759,13 +769,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpProductInfoHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpProductInfoHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input productInfoHeaderValue:(WWHHHttpProductInfoHeaderValue**)productInfoHeaderValue;
-+ (WWHHHttpProductInfoHeaderValue*)createFromComment:(NSString *)productComment ACTIVATOR;
-+ (WWHHHttpProductInfoHeaderValue*)createFromNameWithVersion:(NSString *)productName productVersion:(NSString *)productVersion ACTIVATOR;
-@property (readonly) NSString * comment;
++ (WWHHHttpProductInfoHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input productInfoHeaderValue:(WWHHHttpProductInfoHeaderValue**)productInfoHeaderValue;
++ (WWHHHttpProductInfoHeaderValue*)createFromComment:(NSString*)productComment ACTIVATOR;
++ (WWHHHttpProductInfoHeaderValue*)createFromNameWithVersion:(NSString*)productName productVersion:(NSString*)productVersion ACTIVATOR;
+@property (readonly) NSString* comment;
 @property (readonly) WWHHHttpProductHeaderValue* product;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpProductInfoHeaderValue_DEFINED__
@@ -776,13 +786,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpContentCodingWithQualityHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpContentCodingWithQualityHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input contentCodingWithQualityHeaderValue:(WWHHHttpContentCodingWithQualityHeaderValue**)contentCodingWithQualityHeaderValue;
-+ (WWHHHttpContentCodingWithQualityHeaderValue*)createFromValue:(NSString *)contentCoding ACTIVATOR;
-+ (WWHHHttpContentCodingWithQualityHeaderValue*)createFromValueWithQuality:(NSString *)contentCoding quality:(double)quality ACTIVATOR;
-@property (readonly) NSString * contentCoding;
++ (WWHHHttpContentCodingWithQualityHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input
+    contentCodingWithQualityHeaderValue:(WWHHHttpContentCodingWithQualityHeaderValue**)contentCodingWithQualityHeaderValue;
++ (WWHHHttpContentCodingWithQualityHeaderValue*)createFromValue:(NSString*)contentCoding ACTIVATOR;
++ (WWHHHttpContentCodingWithQualityHeaderValue*)createFromValueWithQuality:(NSString*)contentCoding quality:(double)quality ACTIVATOR;
+@property (readonly) NSString* contentCoding;
 @property (readonly) id quality;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpContentCodingWithQualityHeaderValue_DEFINED__
@@ -793,13 +804,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHHttpTransferCodingHeaderValue : RTObject <WFIStringable>
-+ (WWHHHttpTransferCodingHeaderValue*)parse:(NSString *)input;
-+ (BOOL)tryParse:(NSString *)input transferCodingHeaderValue:(WWHHHttpTransferCodingHeaderValue**)transferCodingHeaderValue;
-+ (WWHHHttpTransferCodingHeaderValue*)create:(NSString *)input ACTIVATOR;
++ (WWHHHttpTransferCodingHeaderValue*)parse:(NSString*)input;
++ (BOOL)tryParse:(NSString*)input transferCodingHeaderValue:(WWHHHttpTransferCodingHeaderValue**)transferCodingHeaderValue;
++ (WWHHHttpTransferCodingHeaderValue*)create:(NSString*)input ACTIVATOR;
 @property (readonly) NSMutableArray* parameters;
-@property (readonly) NSString * value;
-- (NSString *)toString;
+@property (readonly) NSString* value;
+- (NSString*)toString;
 @end
 
 #endif // __WWHHHttpTransferCodingHeaderValue_DEFINED__
-

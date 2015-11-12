@@ -24,9 +24,9 @@
 
 @interface AVCaptureVideoPreviewLayer : CALayer
 
-@property(copy) NSString *videoGravity;
+@property (copy) NSString* videoGravity;
 
-- (id)initWithSession:(AVCaptureSession *)session;
+- (id)initWithSession:(AVCaptureSession*)session;
 
 @end
 

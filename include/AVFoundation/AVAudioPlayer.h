@@ -37,15 +37,15 @@ AVFOUNDATION_EXPORT_CLASS
 @property (assign) id delegate;
 @property NSInteger numberOfLoops;
 @property (readonly) NSTimeInterval duration;
-@property (readonly) NSURL *url;
+@property (readonly) NSURL* url;
 @property float pan;
 
 - (void)pause;
 - (void)stop;
 - (BOOL)play;
-- (id)initWithContentsOfURL:(NSURL *)url error:(NSError **)outError;
+- (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError;
 - (BOOL)prepareToPlay;
-- (id)initWithData:(NSData *)data error:(NSError **)outError;
+- (id)initWithData:(NSData*)data error:(NSError**)outError;
 
 @end
 

@@ -56,6 +56,9 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)begin {
     if (_rootTransaction == NULL) {
         _rootTransaction = [CATransaction new];
@@ -66,6 +69,9 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     _curTransaction = ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)commit {
     if (_curTransaction != NULL) {
         CATransaction* rel = _curTransaction;
@@ -91,35 +97,63 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     }
 }
 
+/**
+ @Status Stub
+*/
 + (void)flush {
+    UNIMPLEMENTED();
     EbrDebugLog("CATransaction flush?\n");
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)disableActions {
     return [self _currentTransaction]->_disableActions;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setDisableActions:(BOOL)disable {
     [self _currentTransaction]->_disableActions = disable;
 }
 
+/**
+ @Status Stub
+*/
 + (void)setCompletionBlock:(id)block {
+    UNIMPLEMENTED();
     *((char*)0) = 0;
     [self _currentTransaction]->_completionBlock = [block copy];
 }
 
+/**
+ @Status Stub
+*/
 + (id)completionBlock {
+    UNIMPLEMENTED();
     return [self _currentTransaction]->_completionBlock;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationDuration:(double)duration {
     [self _currentTransaction]->_duration = duration;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)setAnimationTimingFunction:(id)timing {
     [self _currentTransaction]->_timingFunction = timing;
 }
 
+/**
+ @Status Caveat
+ @Notes Only kCATransactionDisableActions and kCATransactionAnimationDuration supported
+*/
 + (void)setValue:(NSObject*)anObject forKey:(NSString*)keyName {
     if (strcmp([keyName UTF8String], "kCATransactionDisableActions") == 0) {
         [self setDisableActions:[anObject boolValue]];

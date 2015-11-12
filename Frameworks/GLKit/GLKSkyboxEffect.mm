@@ -84,6 +84,9 @@ const char* psSrc =
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)prepareToDraw {
     if (!_inited) {
         _inited = TRUE;
@@ -117,6 +120,9 @@ const char* psSrc =
     [super prepareToDraw]; // will call updateShaderMaterialParams.
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)draw {
     bool depthTest = glIsEnabled(GL_DEPTH_TEST);
     if (depthTest) {

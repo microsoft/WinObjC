@@ -361,6 +361,9 @@ static void drawString(UIFont* font,
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -370,6 +373,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -379,6 +385,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -388,6 +397,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawAtPoint:(CGPoint)pt withFont:(UIFont*)font {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -420,6 +432,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawAtPoint:(CGPoint)pt
              forWidth:(float)forWidth
              withFont:(UIFont*)font
@@ -445,6 +460,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)drawAtPoint:(CGPoint)pt
              forWidth:(float)forWidth
              withFont:(UIFont*)font
@@ -468,6 +486,9 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize ret;
     WORD* str = (WORD*)[self rawCharacters];
@@ -482,6 +503,9 @@ static void drawString(UIFont* font,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size {
     CGSize ret;
     WORD* str = (WORD*)[self rawCharacters];
@@ -496,6 +520,9 @@ static void drawString(UIFont* font,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize ret;
     WORD* str = (WORD*)[self rawCharacters];
@@ -524,6 +551,9 @@ static void drawString(UIFont* font,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeWithFont:(UIFont*)font
            minFontSize:(float)minFontSize
         actualFontSize:(float*)actualFontSize
@@ -547,6 +577,9 @@ static void drawString(UIFont* font,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeWithFont:(UIFont*)font {
     if (font == nil) {
         font = [objc_getClass("UIFont") defaultFont];

@@ -48,6 +48,10 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
 
     BOOL _willSave;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _domains = [NSMutableDictionary new];
     _searchList = [[NSMutableArray allocWithZone:nil] initWithCapacity:64];
@@ -76,6 +80,14 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return self;
 }
 
++ (BOOL)automaticallyNotifiersObserversForKey:(NSString*)key {
+    // This class uses setObject:forKey: as a setter, and has no key-specific setters.
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
 + (NSUserDefaults*)standardUserDefaults {
     static NSUserDefaults* standard;
 
@@ -106,6 +118,9 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dictionaryRepresentation {
     if (_dictionaryRep == nil)
         _dictionaryRep = [[self _buildDictionaryRep] retain];
@@ -113,10 +128,16 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return _dictionaryRep;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)registerDefaults:(id)values {
     [[_domains objectForKey:NSRegistrationDomain] addEntriesFromDictionary:values];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableDictionary*)persistentDomainForName:(id)name {
     NSMutableDictionary* result = [NSMutableDictionary dictionary];
     NSPersistentDomain* domain = [NSPersistentDomain persistantDomainWithName:name];
@@ -132,14 +153,23 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removePersistentDomainForName:(id)name {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPersistentDomain:(id)domain forName:(NSString*)name {
     EbrDebugLog("Setting domain for %s\n", [name UTF8String]);
     [_domains setObject:domain forKey:name];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)synchronize {
     /*
     if ( ![NSThread isMainThread] ) {
@@ -156,6 +186,9 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return [_domains objectForKey:[[NSProcessInfo processInfo] processName]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)objectForKey:(NSString*)defaultName {
     NSInteger i, count = [_searchList count];
 
@@ -171,30 +204,45 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dataForKey:(NSString*)defaultName {
     id data = [self objectForKey:defaultName];
 
     return [data isKindOfClass:[NSData class]] ? data : nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)stringForKey:(NSString*)defaultName {
     id string = [self objectForKey:defaultName];
 
     return [string isKindOfClass:[NSString class]] ? string : nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)arrayForKey:(NSString*)defaultName {
     id array = [self objectForKey:defaultName];
 
     return [array isKindOfClass:[NSArray class]] ? array : nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)dictionaryForKey:(NSString*)defaultName {
     id dictionary = [self objectForKey:defaultName];
 
     return [dictionary isKindOfClass:[NSDictionary class]] ? dictionary : nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)boolForKey:(NSString*)defaultName {
     id object = [self objectForKey:defaultName];
 
@@ -207,6 +255,9 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)integerForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
@@ -228,6 +279,9 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)floatForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
@@ -235,6 +289,9 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
                                                      ([number isKindOfClass:[NSNumber class]] ? [number floatValue] : 0.0f);
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)doubleForKey:(NSString*)defaultName {
     id number = [self objectForKey:defaultName];
 
@@ -299,6 +356,9 @@ static id deepCopyValue(id obj) {
     return [obj copy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setObject:(id)value forKey:(NSString*)key {
     if (value == nil) {
         return;
@@ -333,10 +393,16 @@ static id deepCopyValue(id obj) {
     [self setObject:value forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBool:(int)value forKey:(NSString*)defaultName {
     [self setObject:value ? @"YES" : @"NO" forKey:defaultName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setInteger:(int)value forKey:(NSString*)defaultName {
     [self setObject:[NSNumber numberWithInteger:value] forKey:defaultName];
 }
@@ -345,20 +411,32 @@ static id deepCopyValue(id obj) {
     [self setObject:[NSNumber numberWithLongLong:value] forKey:defaultName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFloat:(float)value forKey:(NSString*)defaultName {
     [self setObject:[NSNumber numberWithFloat:value] forKey:defaultName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDouble:(double)value forKey:(NSString*)defaultName {
     [self setObject:[NSNumber numberWithDouble:value] forKey:defaultName];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObjectForKey:(NSString*)key {
     [[self persistantDomain] removeObjectForKey:key];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)stringArrayForKey:(NSString*)key {
     id array = [self objectForKey:key];
     NSInteger count;
@@ -375,8 +453,6 @@ static id deepCopyValue(id obj) {
 }
 
 - (id)valueForKey:(NSString*)key {
-    // EbrDebugLog("Warning: calling objectForKey for valueForKey\n");
-
     return [self objectForKey:key];
 }
 
@@ -399,17 +475,14 @@ static id deepCopyValue(id obj) {
 }
 
 - (void)setValue:(id)value forKey:(NSString*)key {
-    EbrDebugLog("Warning: callling setObjectForKey for setValueForKey\n");
-
     [self setObject:value forKey:key];
 }
 
+/**
+ @Status Stub
+*/
 + (void)resetStandardUserDefaults {
+    UNIMPLEMENTED();
     EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
 }
-
-- (void)addObserver:(id)observer forKeyPath:(id)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
-    EbrDebugLog("NSUserDefaults: abbObserver for \"%s\"\n", [keyPath UTF8String]);
-}
-
 @end

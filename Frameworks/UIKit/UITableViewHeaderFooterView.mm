@@ -24,6 +24,9 @@
     idretaintype(UILabel) _textLabel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithReuseIdentifier:(NSString*)identifier {
     CGRect pos;
 
@@ -34,10 +37,16 @@
     return [self initWithFrame:pos];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)backgroundView {
     return _backgroundView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundView:(UIView*)backgroundView {
     if (_backgroundView != backgroundView) {
         [_backgroundView removeFromSuperview];
@@ -54,7 +63,11 @@
     }
 }
 
+/**
+ @Status Stub
+*/
 - (UIView*)contentView {
+    UNIMPLEMENTED();
     return _contentView;
 }
 
@@ -62,6 +75,9 @@
     _contentView = contentView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UILabel*)textLabel {
     if (_textLabel == nil) {
         CGRect bounds;

@@ -21,13 +21,14 @@
 
 @class UILabel;
 
+UIKIT_EXPORT_CLASS
 @interface UITableViewHeaderFooterView : UIView
 
-@property(nonatomic, retain) UIView *backgroundView;
-@property(nonatomic, readonly, retain) UILabel *textLabel;
-@property(nonatomic, readonly, retain) UIView *contentView;
+@property (nonatomic, retain) UIView* backgroundView;
+@property (nonatomic, readonly, retain) UILabel* textLabel;
+@property (nonatomic, readonly, retain) UIView* contentView;
 
-- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
+- (id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 
 @end
 

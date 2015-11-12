@@ -149,28 +149,46 @@ static void initInternal(UISlider* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)value {
     return _value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumValue:(float)value {
     _min = value;
     sizeViews(self, false);
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)minimumValue {
     return _min;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumValue:(float)value {
     _max = value;
     sizeViews(self, false);
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)maximumValue {
     return _max;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(float)value {
     [self setValue:value animated:FALSE];
 }
@@ -189,6 +207,9 @@ static void initInternal(UISlider* self) {
 - (void)setContinuous {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setThumbImage:(UIImage*)image forState:(NSUInteger)state {
     _dot = image;
     if (state == 0) {
@@ -200,6 +221,9 @@ static void initInternal(UISlider* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumTrackImage:(UIImage*)image forState:(NSUInteger)state {
     [_sliderLeftView setImage:image];
     _sliderLeft = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
@@ -215,6 +239,9 @@ static void initInternal(UISlider* self) {
     _sliderLeft = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMaximumTrackImage:(UIImage*)image forState:(NSUInteger)state {
     [_sliderRightView setImage:image];
     _sliderRight = [image stretchableImageWithLeftCapWidth:3 topCapHeight:0];
@@ -277,10 +304,18 @@ static void initInternal(UISlider* self) {
     [_sliderThumbView setHidden:hide];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMaximumTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMinimumTrackTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 @end

@@ -22,16 +22,16 @@ extern "C" {
 #endif
 
 enum {
-    kCCBlockSizeAES128        = 16
+    kCCBlockSizeAES128 = 16,
 };
 
 enum {
-    kCCKeySizeAES256          = 32,
+    kCCKeySizeAES256 = 32,
 };
 
-#define CC_SHA256_DIGEST_LENGTH     32
+#define CC_SHA256_DIGEST_LENGTH 32
 
-void CCHmac(uint32_t alg, uint8_t *key, uint32_t keylength, uint8_t *msg, int msglength, void *out);
+void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out);
 
 enum {
     kCCAlgorithmAES128 = 0,
@@ -43,41 +43,39 @@ enum {
     kCCAlgorithmBlowfish
 };
 
-enum
-{
+enum {
     kCCHmacAlgSHA1,
     kCCHmacAlgMD5,
     kCCHmacAlgSHA256,
     kCCHmacAlgSHA384,
     kCCHmacAlgSHA512,
-    kCCHmacAlgSHA224
+    kCCHmacAlgSHA224,
 };
 
 typedef int32_t CCCryptorStatus;
 
 enum {
-    kCCSuccess          = 0,
+    kCCSuccess = 0,
 };
 
-typedef struct _CCCryptor *CCCryptorRef;
+typedef struct _CCCryptor* CCCryptorRef;
 
 enum {
     kCCEncrypt = 0,
     kCCDecrypt,
 };
 
-int32_t CCCrypt(
-                uint32_t op,         /* kCCEncrypt, etc. */
-                uint32_t alg,        /* kCCAlgorithmAES128, etc. */
-                uint32_t options,      /* kCCOptionPKCS7Padding, etc. */
-                const void *key,
+int32_t CCCrypt(uint32_t op, /* kCCEncrypt, etc. */
+                uint32_t alg, /* kCCAlgorithmAES128, etc. */
+                uint32_t options, /* kCCOptionPKCS7Padding, etc. */
+                const void* key,
                 size_t keyLength,
-                const void *iv,         /* optional initialization vector */
-                const void *dataIn,     /* optional per op and alg */
+                const void* iv, /* optional initialization vector */
+                const void* dataIn, /* optional per op and alg */
                 size_t dataInLength,
-                void *dataOut,          /* data RETURNED here */
+                void* dataOut, /* data RETURNED here */
                 size_t dataOutAvailable,
-                size_t *dataOutMoved);
+                size_t* dataOutMoved);
 
 #ifdef __cplusplus
 }

@@ -34,6 +34,10 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
 
 @implementation NSArray
+
+/**
+ @Status Interoperable
+*/
 + (NSArray*)arrayWithObjects:(NSObject*)first, ... {
     va_list pReader;
     va_start(pReader, first);
@@ -56,6 +60,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)arrayWithObject:(NSObject*)obj {
     NSArray* ret = [self new];
     CFArrayAppendValue((CFMutableArrayRef)ret, (const void*)obj);
@@ -71,12 +78,18 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)array {
     NSArray* ret = [self new];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)arrayWithObjects:(id*)objs count:(NSUInteger)count {
     NSArray* ret = [self alloc];
 
@@ -85,17 +98,26 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)arrayWithArray:(NSArray*)arrayToCopy {
     NSArray* ret = [[self alloc] initWithArray:arrayToCopy];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)arrayWithContentsOfFile:(NSString*)filename {
     id ret = [[self alloc] initWithContentsOfFile:filename];
 
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)initWithObjects:(NSObject*)first, ... {
     va_list pReader;
     va_start(pReader, first);
@@ -118,6 +140,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)initWithObjects:(id*)objs count:(NSUInteger)count {
     _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, count, true);
 
@@ -130,6 +155,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)initWithContentsOfFile:(NSString*)filename {
     const char* file = (char*)[filename UTF8String];
 
@@ -162,6 +190,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)count {
     return CFArrayGetCount((CFArrayRef)self);
 }
@@ -171,6 +202,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)lastObject {
     int count = [self count];
 
@@ -181,6 +215,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return [self objectAtIndex:count - 1];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)firstObject {
     int count = [self count];
 
@@ -191,6 +228,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return [self objectAtIndex:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
         EbrDebugLog("objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self));
@@ -200,10 +240,16 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return (id)CFArrayGetValueAtIndex((CFArrayRef)self, index);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)objectAtIndexedSubscript:(NSUInteger)index {
     return [self objectAtIndex:index];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)indexOfObject:(id)obj {
     int count = CFArrayGetCount((CFArrayRef)self);
 
@@ -217,6 +263,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return NSNotFound;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))pred {
     int count = CFArrayGetCount((CFArrayRef)self);
 
@@ -237,6 +286,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))pred {
     int count = CFArrayGetCount((CFArrayRef)self);
 
@@ -256,6 +308,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return NSNotFound;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)indexOfObject:(id)obj inRange:(NSRange)range {
     unsigned count = CFArrayGetCount((CFArrayRef)self);
 
@@ -269,6 +324,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return NSNotFound;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)indexOfObjectIdenticalTo:(id)obj {
     int count = CFArrayGetCount((CFArrayRef)self);
 
@@ -292,6 +350,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)initWithArray:(NSArray*)arrayToCopy {
     if (arrayToCopy != nil &&
         (object_getClass(arrayToCopy) == [NSArrayConcrete class] || object_getClass(arrayToCopy) == [NSMutableArrayConcrete class])) {
@@ -321,6 +382,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)initWithArray:(id)arrayToCopy copyItems:(BOOL)copyFlag {
     [self init];
 
@@ -386,6 +450,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return numRet;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)makeObjectsPerformSelector:(SEL)selector {
     id enumerator = [self objectEnumerator];
 
@@ -403,6 +470,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)makeObjectsPerformSelector:(SEL)selector withObject:(NSObject*)obj {
     id enumerator = [self objectEnumerator];
 
@@ -414,6 +484,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)containsObject:(NSObject*)obj {
     for (NSObject* curObj in self) {
         if ([curObj isEqual:obj]) {
@@ -424,6 +497,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)componentsJoinedByString:(NSString*)str {
     id ret = [NSMutableString new];
     id enumerator = [self objectEnumerator];
@@ -446,6 +522,9 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
 
 typedef NSInteger (*compFuncType)(id, id, void*);
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sortedArrayUsingFunction:(compFuncType)compFunc context:(void*)context {
     NSArray* ret = [NSMutableArray arrayWithArray:self];
     [ret sortUsingFunction:compFunc context:context];
@@ -453,6 +532,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sortedArrayUsingComparator:(NSComparator)comparator {
     NSArray* ret = [NSMutableArray arrayWithArray:self];
 
@@ -461,6 +543,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)filteredArrayUsingPredicate:(NSPredicate*)predicate {
     NSArray* ret = [NSMutableArray arrayWithArray:self];
     [ret filterUsingPredicate:predicate];
@@ -480,16 +565,25 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSEnumerator*)objectEnumerator {
     id ret = [NSEnumerator enumeratorWithIterator:CFArrayGetValueEnumerator forObject:self nextFunction:CFArrayGetNextValue];
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSEnumerator*)reverseObjectEnumerator {
     return [NSEnumerator enumeratorWithArrayReverse:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sortedArrayUsingSelector:(SEL)selector {
     NSArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
@@ -499,6 +593,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors {
     NSArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
@@ -508,6 +605,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)subarrayWithRange:(NSRange)range {
     NSArray* newArray = [NSArray new];
 
@@ -519,6 +619,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)firstObjectCommonWithArray:(NSArray*)array {
     int i, count = [self count];
 
@@ -533,6 +636,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)arrayByAddingObject:(NSObject*)obj {
     NSArray* newArray = [[[self class] alloc] initWithArray:self];
 
@@ -541,6 +647,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)arrayByAddingObjectsFromArray:(NSArray*)arr {
     NSArray* newArray = [[[self class] alloc] initWithArray:self];
 
@@ -555,6 +664,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [newArray autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)pathsMatchingExtensions:(NSArray*)extensions {
     id ret = [[NSMutableArray alloc] init];
 
@@ -579,6 +691,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)indexOfObject:(NSObject*)obj
               inSortedRange:(NSRange)range
                     options:(NSBinarySearchingOptions)options
@@ -660,6 +775,10 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
     EbrDebugLog("Writing array to file %s\n", [file UTF8String]);
 
@@ -694,6 +813,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return NSAllocateObject((Class)self, 0, zone);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getObjects:(id*)objects {
     NSUInteger i, count = [self count];
 
@@ -702,10 +824,16 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateObjectsUsingBlock:(void (^)(id, NSUInteger, BOOL*))block {
     [self enumerateObjectsWithOptions:0 usingBlock:block];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateObjectsWithOptions:(NSUInteger)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
     int i, count = [self count];
 
@@ -724,6 +852,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getObjects:(id*)objects range:(NSRange)range {
     unsigned count = [self count];
     unsigned loc = range.location;
@@ -755,6 +886,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToArray:(NSArray*)otherArray {
     if ([self count] != [otherArray count]) {
         return NO;
@@ -773,6 +907,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
     unsigned idx = [indexes firstIndex];
     id ret = [NSMutableArray array];

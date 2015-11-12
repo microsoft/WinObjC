@@ -22,7 +22,9 @@
 #include "interopBase.h"
 @class WUXINotifyCollectionChangedEventArgs;
 @class WUXITypeName;
-@protocol WUXIIBindableIterable, WUXIIBindableIterator, WUXIIBindableVector, WUXIIBindableVectorView, WUXIINotifyCollectionChanged, WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory, WUXIIBindableObservableVector;
+@protocol WUXIIBindableIterable
+, WUXIIBindableIterator, WUXIIBindableVector, WUXIIBindableVectorView, WUXIINotifyCollectionChanged, WUXIINotifyCollectionChangedEventArgs,
+    WUXIINotifyCollectionChangedEventArgsFactory, WUXIIBindableObservableVector;
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedAction
 enum _WUXINotifyCollectionChangedAction {
@@ -46,34 +48,33 @@ typedef unsigned WUXITypeKind;
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject * e);
+typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject * sender, WUXINotifyCollectionChangedEventArgs * e);
+typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
-
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
 WINRT_EXPORT
 @interface WUXITypeName : NSObject
-+ (instancetype)new;
-@property (copy) NSString * name;
++ (instancetype) new;
+@property (copy) NSString* name;
 @property WUXITypeKind kind;
 @end
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject * sender, WUXINotifyCollectionChangedEventArgs * e);
+typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject * e);
+typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.IBindableIterable
@@ -91,7 +92,7 @@ typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObser
 #define __WUXIIBindableIterator_DEFINED__
 
 @protocol WUXIIBindableIterator
-@property (readonly) RTObject * current;
+@property (readonly) RTObject* current;
 @property (readonly) BOOL hasCurrent;
 - (BOOL)moveNext;
 @end
@@ -104,13 +105,13 @@ typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObser
 
 @protocol WUXIIBindableVector <WUXIIBindableIterable>
 @property (readonly) unsigned size;
-- (RTObject *)getAt:(unsigned)index;
+- (RTObject*)getAt:(unsigned)index;
 - (RTObject<WUXIIBindableVectorView>*)getView;
-- (BOOL)indexOf:(RTObject *)value index:(unsigned*)index;
-- (void)setAt:(unsigned)index value:(RTObject *)value;
-- (void)insertAt:(unsigned)index value:(RTObject *)value;
+- (BOOL)indexOf:(RTObject*)value index:(unsigned*)index;
+- (void)setAt:(unsigned)index value:(RTObject*)value;
+- (void)insertAt:(unsigned)index value:(RTObject*)value;
 - (void)removeAt:(unsigned)index;
-- (void)append:(RTObject *)value;
+- (void)append:(RTObject*)value;
 - (void)removeAtEnd;
 - (void)clear;
 - (RTObject<WUXIIBindableIterator>*)first;
@@ -124,8 +125,8 @@ typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObser
 
 @protocol WUXIIBindableVectorView <WUXIIBindableIterable>
 @property (readonly) unsigned size;
-- (RTObject *)getAt:(unsigned)index;
-- (BOOL)indexOf:(RTObject *)value index:(unsigned*)index;
+- (RTObject*)getAt:(unsigned)index;
+- (BOOL)indexOf:(RTObject*)value index:(unsigned*)index;
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
@@ -149,13 +150,13 @@ typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObser
 @protocol WUXIIBindableObservableVector <WUXIIBindableVector, WUXIIBindableIterable>
 - (EventRegistrationToken)addVectorChangedEvent:(WUXIBindableVectorChangedEventHandler)del;
 - (void)removeVectorChangedEvent:(EventRegistrationToken)tok;
-- (RTObject *)getAt:(unsigned)index;
+- (RTObject*)getAt:(unsigned)index;
 - (RTObject<WUXIIBindableVectorView>*)getView;
-- (BOOL)indexOf:(RTObject *)value index:(unsigned*)index;
-- (void)setAt:(unsigned)index value:(RTObject *)value;
-- (void)insertAt:(unsigned)index value:(RTObject *)value;
+- (BOOL)indexOf:(RTObject*)value index:(unsigned*)index;
+- (void)setAt:(unsigned)index value:(RTObject*)value;
+- (void)insertAt:(unsigned)index value:(RTObject*)value;
 - (void)removeAt:(unsigned)index;
-- (void)append:(RTObject *)value;
+- (void)append:(RTObject*)value;
 - (void)removeAtEnd;
 - (void)clear;
 - (RTObject<WUXIIBindableIterator>*)first;
@@ -177,4 +178,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXINotifyCollectionChangedEventArgs_DEFINED__
-

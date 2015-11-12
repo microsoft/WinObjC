@@ -170,6 +170,9 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)displayLinkWithTarget:(NSObject*)target selector:(SEL)selector {
     CADisplayLink* ret = [self alloc];
 
@@ -183,15 +186,24 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)duration {
     // assume 60 FPS.
     return (1.0 / (60.0 / (double)_frameInterval));
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)frameInterval {
     return _frameInterval;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrameInterval:(NSInteger)interval {
     if (interval < 1) {
         interval = 1;
@@ -213,14 +225,23 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeFromRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)mode {
     removeFromRunloops(self, runLoop, mode);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setPaused:(BOOL)paused {
     _isPaused = paused != FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isPaused {
     return _isPaused;
 }
@@ -232,6 +253,9 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)invalidate {
     removeFromRunloops(self);
     removeFromUpdateList(self);
@@ -239,6 +263,9 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     _target = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addToRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)mode {
     id modesArray = [_addedRunLoops objectForKey:mode];
     if (modesArray == nil) {
@@ -271,6 +298,9 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)timestamp {
     return _timestamp;
 }

@@ -42,16 +42,60 @@ UIKIT_EXPORT const float UIScrollViewDecelerationRateFast;
 
 @protocol UIScrollViewDelegate <NSObject>
 @optional
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView;
+
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView;
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView;

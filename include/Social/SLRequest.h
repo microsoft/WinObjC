@@ -17,14 +17,17 @@
 #import <Social/SLServiceTypes.h>
 
 enum {
-   SLRequestMethodGET,
-   SLRequestMethodPOST,
-   SLRequestMethodDELETE
+    SLRequestMethodGET,
+    SLRequestMethodPOST,
+    SLRequestMethodDELETE,
 };
 typedef uint32_t SLRequestMethod;
 
 @interface SLRequest : NSObject
 
-+ (SLRequest *)requestForServiceType:(NSString *)serviceType requestMethod:(SLRequestMethod)requestMethod URL:(NSURL *)url parameters:(NSDictionary *)parameters;
++ (SLRequest*)requestForServiceType:(NSString*)serviceType
+                      requestMethod:(SLRequestMethod)requestMethod
+                                URL:(NSURL*)url
+                         parameters:(NSDictionary*)parameters;
 
 @end

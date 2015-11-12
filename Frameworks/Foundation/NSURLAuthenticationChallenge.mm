@@ -24,11 +24,20 @@
 @end
 
 @implementation NSURLAuthenticationChallenge : NSObject
+
+/**
+ @Status Stub
+*/
 - (NSUInteger)previousFailureCount {
+    UNIMPLEMENTED();
     return 0;
 }
 
+/**
+ @Status Stub
+*/
 - (id)protectionSpace {
+    UNIMPLEMENTED();
     return _protectionSpace;
 }
 
@@ -38,7 +47,11 @@
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (id)sender {
+    UNIMPLEMENTED();
     return _sender;
 }
 

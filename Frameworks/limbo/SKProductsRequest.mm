@@ -28,10 +28,17 @@ typedef wchar_t WCHAR;
 @end
 
 @implementation SKPayment : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (SKPayment*)paymentWithProduct:(SKProduct*)product {
     return [[self alloc] initWithProductIdentifier:product.productIdentifier];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)paymentWithProductIdentifier:(NSString*)identifier {
     return [[self alloc] initWithProductIdentifier:identifier];
 }
@@ -69,6 +76,9 @@ typedef wchar_t WCHAR;
     SKProductsResponse* _response;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithProductIdentifiers:(NSArray*)identifiers {
     _identifiers = [identifiers mutableCopy];
     return [super init];
@@ -84,6 +94,9 @@ typedef wchar_t WCHAR;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)start {
     _response = [[SKProductsResponse alloc] init];
 

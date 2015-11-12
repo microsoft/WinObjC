@@ -23,6 +23,9 @@
     BOOL _ascending;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
     _selector = @selector(compare:);
     _keyPath = keyPath;
@@ -30,16 +33,25 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending {
     id ret = [[self alloc] initWithKey:keyPath ascending:ascending];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)sortDescriptorWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
     id ret = [[self alloc] initWithKey:keyPath ascending:ascending selector:selector];
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithKey:(NSString*)keyPath ascending:(BOOL)ascending selector:(SEL)selector {
     const char* keyName = (const char*)[keyPath UTF8String];
 
@@ -53,10 +65,16 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)key {
     return _keyPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)compareObject:(NSObject*)object1 toObject:(NSObject*)object2 {
     id val1 = [object1 valueForKeyPath:_keyPath];
     id val2 = [object2 valueForKeyPath:_keyPath];

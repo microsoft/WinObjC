@@ -28,12 +28,19 @@ typedef unsigned short unichar;
 #define NO 0
 
 @implementation NSScanner : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)scannerWithString:(id)str {
     NSScanner* ret = [self alloc];
 
     return [[ret initWithString:str] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithString:(id)string {
     self = [self init];
     _string = [string copy];
@@ -46,6 +53,9 @@ typedef unsigned short unichar;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)string {
     return _string;
 }
@@ -57,18 +67,31 @@ typedef unsigned short unichar;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSCharacterSet*)charactersToBeSkipped {
     return _skipSet;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)caseSensitive {
     return _isCaseSensitive;
 }
 
+/**
+ @Status Stub
+*/
 - (id)locale {
+    UNIMPLEMENTED();
     return _locale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCharactersToBeSkipped:(id)set {
     if (set != _skipSet) {
         set = [set retain];
@@ -77,11 +100,18 @@ typedef unsigned short unichar;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCaseSensitive:(BOOL)flag {
     _isCaseSensitive = flag;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setLocale:(id)locale {
+    UNIMPLEMENTED();
     if (locale != _locale) {
         locale = [locale retain];
         [_locale release];
@@ -89,6 +119,9 @@ typedef unsigned short unichar;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isAtEnd {
     NSUInteger length = [_string length];
     NSUInteger currentLocation = _location;
@@ -104,15 +137,24 @@ typedef unsigned short unichar;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)scanLocation {
     // return _location < _len ? _location : _len - 1;
     return _location;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setScanLocation:(NSUInteger)pos {
     _location = pos;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanInt:(int*)valuep {
     long long scanValue = 0;
 
@@ -131,6 +173,9 @@ typedef unsigned short unichar;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanInteger:(int*)valuep {
     long long scanValue = 0;
 
@@ -149,6 +194,9 @@ typedef unsigned short unichar;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanLongLong:(long long*)valuep {
 #define long_long_MAX 0x7fffffffffffffffLL
 #define long_long_MIN (-0x7fffffffffffffffLL - 1)
@@ -205,6 +253,9 @@ typedef unsigned short unichar;
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanFloat:(float*)valuep {
     double d;
     BOOL r;
@@ -216,6 +267,9 @@ typedef unsigned short unichar;
     return r;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanDouble:(double*)valuep {
     /*
     // "...returns HUGE_VAL or -HUGE_VAL on overflow, 0.0 on underflow." hmm...
@@ -282,6 +336,9 @@ typedef unsigned short unichar;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanHexInt:(unsigned*)valuep {
     enum {
         STATE_SPACE,
@@ -376,6 +433,9 @@ typedef unsigned short unichar;
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanHexLongLong:(unsigned long long*)valuep {
     enum {
         STATE_SPACE,
@@ -469,6 +529,9 @@ typedef unsigned short unichar;
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanString:(id)string intoString:(NSString**)stringp {
     unsigned int length = [_string length];
     DWORD compareOption = 0;
@@ -516,6 +579,9 @@ typedef unsigned short unichar;
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanUpToString:(id)string intoString:(NSString**)stringp {
     int oldLocation = _location;
 
@@ -563,6 +629,9 @@ typedef unsigned short unichar;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanCharactersFromSet:(id)charset intoString:(NSString**)stringp {
     unsigned int length = (unsigned int)[_string length];
     unichar* result = (unichar*)malloc(length * sizeof(unichar));
@@ -595,6 +664,9 @@ typedef unsigned short unichar;
     return scanStarted;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)scanUpToCharactersFromSet:(id)charset intoString:(NSString**)stringp {
     unsigned int length = (unsigned int)[_string length];
     unichar* result = (unichar*)malloc(length * sizeof(unichar));

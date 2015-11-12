@@ -32,6 +32,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)blockOperationWithBlock:(void (^)())block {
     id ret = [self new];
     [ret addExecutionBlock:block];

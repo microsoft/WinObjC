@@ -72,10 +72,18 @@
     return [self _getICUCalendar]->clone();
 }
 
+/**
+ @Status Caveat
+ @Notes Always returns a gregorian calendar
+*/
 + (NSCalendar*)currentCalendar {
     return [[[self alloc] initWithCalendarIdentifier:@"NSGregorianCalendar"] autorelease];
 }
 
+/**
+ @Status Caveat
+ @Notes Identifier parameter unused; always returns Gregorian calendar
+*/
 - (instancetype)initWithCalendarIdentifier:(NSString*)identifier {
     _identifier = [identifier copy];
     _timeZone = [[NSTimeZone defaultTimeZone] copy];
@@ -93,38 +101,63 @@
     [super dealloc];
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)calendarIdentifier {
+    UNIMPLEMENTED();
     return _identifier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)firstWeekday {
     return (NSUInteger)[self _getICUCalendar]->getFirstDayOfWeek();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)minimumDaysInFirstWeek {
     return (NSUInteger)[self _getICUCalendar]->getMinimalDaysInFirstWeek();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSTimeZone*)timeZone {
     return _timeZone;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSLocale*)locale {
     return _locale;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFirstWeekday:(NSUInteger)weekday {
     firstWeekDay = weekday;
     firstWeekDaySet = TRUE;
     _calendarNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setMinimumDaysInFirstWeek:(NSUInteger)days {
     minimumDaysInFirstWeek = days;
     minimumDaysInFirstWeekSet = TRUE;
     _calendarNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTimeZone:(NSTimeZone*)timeZone {
     timeZone = [timeZone retain];
     [_timeZone release];
@@ -132,6 +165,9 @@
     _calendarNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setLocale:(NSLocale*)locale {
     locale = [locale retain];
     [_locale release];
@@ -139,6 +175,10 @@
     _calendarNeedsRebuilding = TRUE;
 }
 
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
 - (NSDate*)dateByAddingComponents:(NSDateComponents*)components toDate:(NSDate*)toDate options:(NSUInteger)options {
     double time = [toDate timeIntervalSince1970];
 
@@ -217,6 +257,9 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)dateFromComponents:(NSDateComponents*)components {
     NSInteger check;
 
@@ -254,6 +297,9 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDateComponents*)components:(NSUInteger)unitFlags fromDate:(NSDate*)date {
     double time = [date timeIntervalSince1970];
 
@@ -283,11 +329,19 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     return [ret autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     EbrDebugLog("ordinalityOfUnit not supported\n");
     return 0;
 }
 
+/**
+ @Status Caveat
+ @Notes options parameter not supported
+*/
 - (NSDateComponents*)components:(NSUInteger)unitFlags fromDate:(NSDate*)fromDate toDate:(NSDate*)toDate options:(NSUInteger)options {
     UErrorCode status = U_ZERO_ERROR;
     Calendar* copy = calendarCopyWithTZAndDate(self, fromDate);
@@ -316,7 +370,11 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     return [ret autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     // HACK: implement me!
     *datep = [date retain];
     return NO;
@@ -354,7 +412,11 @@ static UCalendarDateFields icuFieldFromUnit(NSCalendarUnit unit) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
+    UNIMPLEMENTED();
     NSRange ret;
 
     double time = [date timeIntervalSince1970];

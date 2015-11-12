@@ -117,7 +117,11 @@ CGImageRef CGImageBacking::CopyOnWrite() {
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 const CGFloat* CGColorGetComponents(CGColorRef color) {
+    UNIMPLEMENTED();
     float* ret = (float*)malloc(sizeof(float) * 4);
 
     [color getColors:ret];
@@ -125,16 +129,24 @@ const CGFloat* CGColorGetComponents(CGColorRef color) {
     return ret;
 }
 
+/**
+ @Status Stub
+ @Notes Calls CGImageCreateWithPNGDataProvider
+*/
 CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
+    UNIMPLEMENTED();
     assert(decode == NULL);
 
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
     return (CGImageRef)[img CGImage];
 }
 
+/**
+ @Status Interoperable
+*/
 CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             const CGFloat decode[],
                                             bool shouldInterpolate,
@@ -146,6 +158,11 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
     return (CGImageRef)[img CGImage];
 }
 
+/**
+ @Status Caveat
+ @Notes Doesn't support copy-on-write semantics - returns an unlinked copy of the source
+        image cropped to the specified rectangle.
+*/
 CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     if (ref == NULL) {
         EbrDebugLog("CGImageCreateWithImageInRect: ref = NULL!\n");
@@ -186,6 +203,11 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     return (CGImageRef)newImage;
 }
 
+/**
+ @Status Interoperable
+ @Notes Doesn't support copy-on-write semantics - returns an unlinked copy of the source
+        image.
+*/
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     if (!ref)
         return nil;
@@ -218,6 +240,10 @@ CGImageRef CGImageCreateCopy(CGImageRef ref) {
     return (CGImageRef)newImage;
 }
 
+/**
+ @Status Caveat
+ @Notes colorSpace parameter ignored
+*/
 CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef colorSpace) {
     CGImageRef newImage = new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
 
@@ -247,6 +273,10 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
     return (CGImageRef)newImage;
 }
 
+/**
+ @Status Caveat
+ @Notes Source image must be RGBA32.
+*/
 CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     CGImageRef newImage;
 
@@ -329,6 +359,11 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     return (CGImageRef)newImage;
 }
 
+/**
+ @Status Caveat
+ @Notes Only 32bpp RGBA source format supported. Returns an 8bpp grayscale alpha mask one-time
+        copy of source bitmap.
+*/
 CGImageRef CGImageMaskCreate(size_t width,
                              size_t height,
                              size_t bitsPerComponent,
@@ -371,6 +406,10 @@ CGImageRef CGImageMaskCreate(size_t width,
     return (CGImageRef)newImage;
 }
 
+/**
+ @Status Caveat
+ @Notes Only returns kCGImageAlphaFirst or kCGImageAlphaLast
+*/
 CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
     if (!img) {
         EbrDebugLog("CGImageGetAlphaInfo: nil!\n");
@@ -406,6 +445,9 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
 
 @end
 
+/**
+ @Status Interoperable
+*/
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     char* pPtr = (char*)img->Backing()->LockImageData();
     CGImageDataProvider* ret = [[CGImageDataProvider alloc] initWithBytesNoCopy:pPtr
@@ -416,12 +458,18 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
     CGColorSpaceRef ret = (CGColorSpaceRef) new __CGColorSpace(img->Backing()->SurfaceFormat());
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetBitsPerPixel(CGImageRef img) {
     if (!img) {
         EbrDebugLog("CGImageGetBitsPerPixel: nil!\n");
@@ -447,6 +495,9 @@ size_t CGImageGetBitsPerPixel(CGImageRef img) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetBitsPerComponent(CGImageRef img) {
     if (!img) {
         EbrDebugLog("CGImageGetBitsPerComponent: nil!\n");
@@ -477,6 +528,9 @@ size_t CGImageGetBitsPerComponent(CGImageRef img) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetWidth(CGImageRef img) {
     if (!img)
         return 0;
@@ -484,6 +538,9 @@ size_t CGImageGetWidth(CGImageRef img) {
     return img->Backing()->Width();
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetHeight(CGImageRef img) {
     if (!img)
         return 0;
@@ -491,16 +548,26 @@ size_t CGImageGetHeight(CGImageRef img) {
     return img->Backing()->Height();
 }
 
+/**
+ @Status Interoperable
+*/
 void CGImageRelease(CGImageRef img) {
     // EbrDebugLog("Releasing %x\n", img);
     CFRelease((id)img);
 }
 
+/**
+ @Status Interoperable
+*/
 CGImageRef CGImageRetain(CGImageRef img) {
     CFRetain((id)img);
     return img;
 }
 
+/**
+ @Status Caveat
+ @Notes Only returns kCGImageAlpha information
+*/
 CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
     if (!img)
         return (CGBitmapInfo)0;
@@ -531,6 +598,9 @@ CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
     return (CGBitmapInfo)ret;
 }
 
+/**
+ @Status Interoperable
+*/
 size_t CGImageGetBytesPerRow(CGImageRef img) {
     if (!img)
         return 0;
@@ -551,6 +621,11 @@ size_t CGImageGetBytesPerRow(CGImageRef img) {
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Limited bitmap formats available. decode, shouldInterpolate and intent parameters
+        ignored.
+*/
 CGImageRef CGImageCreate(size_t width,
                          size_t height,
                          size_t bitsPerComponent,

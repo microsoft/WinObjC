@@ -33,16 +33,25 @@ NSUInteger NSSetTableCount(NSSet* set);
     return [[NSSet allocWithZone:zone] initWithSet:self];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)setWithCapacity:(unsigned)capacity {
     return [[[self alloc] initWithCapacity:capacity] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObjectsFromArray:(NSArray*)array {
     for (id curObj in array) {
         [self addObject:curObj];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSet:(NSSet*)other {
     if (self == other) {
         return;
@@ -55,22 +64,34 @@ NSUInteger NSSetTableCount(NSSet* set);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unionSet:(NSSet*)other {
     for (id curObj in other) {
         [self addObject:curObj];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllObjects {
     NSSetTableRemoveAllObjects(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)minusSet:(NSSet*)other {
     for (id curObj in other) {
         [self removeObject:curObj];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)intersectSet:(NSSet*)other {
     id* removeObjects = NULL;
     int removeObjectsCount = 0, removeObjectsCapacity = 0;
@@ -91,15 +112,24 @@ NSUInteger NSSetTableCount(NSSet* set);
     EbrFree(removeObjects);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCapacity:(unsigned)capacity {
     NSSetTableInit(self, capacity);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addObject:(id)object {
     NSSetTableAddObject(self, object);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeObject:(id)object {
     NSSetTableRemoveObject(self, object);
 }

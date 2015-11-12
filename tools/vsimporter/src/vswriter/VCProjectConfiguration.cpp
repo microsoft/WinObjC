@@ -96,6 +96,35 @@ void VCProjectConfiguration::writeSummary(pugi::xml_node& parent) const
   }
 }
 
+static void pruneDescendants(pugi::xml_node& node, const std::string& configName)
+{
+  // Remove any child nodes that don't match the configuration name
+  for (pugi::xml_node child = node.first_child(); child; )
+  {
+    // Figure out next sibling immediately, in case we remove things from the tree
+    pugi::xml_node nextSibling = child.next_sibling();
+
+    // Try to get the VSImporterConfigname attribute
+    pugi::xml_attribute sbConfigNameAttr = child.attribute("VSImporterConfigName");
+
+    // Figure out if property node should be kept
+    bool keepNode = !sbConfigNameAttr || sbConfigNameAttr.value() == configName;
+
+    // Remove things, as necessary
+    if (keepNode) {
+      if (sbConfigNameAttr) {
+        child.remove_attribute(sbConfigNameAttr);
+      }
+      pruneDescendants(child, configName);
+    } else {
+      node.remove_child(child);
+    }
+
+    // Go on to next child
+    child = nextSibling;
+  }
+}
+
 void VCProjectConfiguration::writeProperties(pugi::xml_node& proto) const
 {
   // Insert nodes after the bookmark
@@ -106,6 +135,9 @@ void VCProjectConfiguration::writeProperties(pugi::xml_node& proto) const
     std::string configCond = getVSConfigurationPlatformCond(m_name, platform.first);
     pugi::xml_node configPropsGroup = parent.insert_copy_before(proto, prevSibling);
     configPropsGroup.append_attribute("Condition") = configCond.c_str();
+
+    // Remove nodes not applicable to current configuration
+    pruneDescendants(configPropsGroup, m_name);
 
     pugi::xml_node tempNode = proto.parent().append_child("Temp");
     writePropertiesMap(platform.second->getProperties(), tempNode);
@@ -140,6 +172,9 @@ void VCProjectConfiguration::writeItemDefinitions(pugi::xml_node& proto) const
     std::string configCond = getVSConfigurationPlatformCond(m_name, platform.first);
     pugi::xml_node itemDefsGroup = parent.insert_copy_before(proto, prevSibling);
     itemDefsGroup.append_attribute("Condition") = configCond.c_str();
+
+    // Remove nodes not applicable to current configuration
+    pruneDescendants(itemDefsGroup, m_name);
 
     pugi::xml_node tempNode = proto.parent().append_child("Temp");
     const ItemDefinitionsMap& itemDefs = platform.second->getItemDefinitions();

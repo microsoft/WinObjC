@@ -22,6 +22,10 @@
 #include "NSStreamInternal.h"
 
 @implementation NSOutputStream : NSStream
+
+/**
+ @Status Interoperable
+*/
 + (id)outputStreamToFileAtPath:(id)file append:(BOOL)append {
     id ret = [self alloc];
 
@@ -30,6 +34,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)outputStreamToMemory {
     id ret = [self alloc];
 
@@ -38,6 +45,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initToFileAtPath:(id)file append:(BOOL)append {
     _append = append;
 
@@ -47,12 +57,18 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initToMemory {
     data = [NSMutableData new];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)write:(char*)buf maxLength:(NSUInteger)maxLength {
     if (data) {
         [data appendBytes:buf length:maxLength];
@@ -108,6 +124,10 @@
     [super dealloc];
 }
 
+/**
+ @Status Caveat
+ @Notes Always returns YES
+*/
 - (BOOL)hasSpaceAvailable {
     return YES;
 }

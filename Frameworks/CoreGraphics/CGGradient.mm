@@ -138,6 +138,9 @@ void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locatio
     _count = count;
 }
 
+/**
+ @Status Interoperable
+*/
 CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
                                                   const float* components,
                                                   const float* locations,
@@ -148,6 +151,9 @@ CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const float* locations) {
     CGGradientRef ret = new __CGGradient();
     ret->initWithColors(colors, locations, colorSpace);
@@ -155,10 +161,16 @@ CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 void CGGradientRelease(CGGradientRef gradient) {
     CFRelease((id)gradient);
 }
 
+/**
+ @Status Interoperable
+*/
 CGGradientRef CGGradientRetain(CGGradientRef gradient) {
     CFRetain((id)gradient);
     return gradient;
