@@ -19,6 +19,7 @@
 
 #import <Foundation/NSTask.h>
 #import <Foundation/NSURLRequest.h>
+#import <Foundation/NSURLSessionConfiguration.h>
 
 @class NSURLResponse;
 @class NSURLCache;
@@ -65,7 +66,6 @@ FOUNDATION_EXPORT_CLASS
 
 @class NSURLCredential;
 @class NSURLAuthenticationChallenge;
-@class NSURLSessionConfiguration;
 
 typedef NS_ENUM(NSInteger, NSURLSessionAuthChallengeDisposition) {
     NSURLSessionAuthChallengeUseCredential = 0,

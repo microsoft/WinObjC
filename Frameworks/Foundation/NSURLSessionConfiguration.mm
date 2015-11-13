@@ -108,4 +108,8 @@
     return [[[NSURLSessionConfiguration alloc] initBackgroundSession:identifier] autorelease];
 }
 
++ (NSURLSessionConfiguration*)backgroundSessionConfiguration:(NSString*)identifier {
+    return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+}
+
 @end

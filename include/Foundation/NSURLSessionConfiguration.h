@@ -43,6 +43,8 @@ FOUNDATION_EXPORT_CLASS
 + (NSURLSessionConfiguration*)defaultSessionConfiguration;
 + (NSURLSessionConfiguration*)ephemeralSessionConfiguration;
 + (NSURLSessionConfiguration*)backgroundSessionConfigurationWithIdentifier:(NSString*)identifier;
+// Deprecated, calls into backgroundSessionConfigurationWithIdentifier
++ (NSURLSessionConfiguration *)backgroundSessionConfiguration:(NSString *)identifier;
 @property (readonly, copy) NSString* identifier;
 @property (copy) NSDictionary* HTTPAdditionalHeaders;
 @property NSURLRequestNetworkServiceType networkServiceType;
