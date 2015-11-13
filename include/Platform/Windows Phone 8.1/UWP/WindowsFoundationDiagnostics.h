@@ -20,8 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDLoggingChannel, WFDLoggingActivity, WFDLoggingSession, WFDLogFileGeneratedEventArgs, WFDFileLoggingSession;
-@protocol WFDITracingStatusChangedEventArgs, WFDIAsyncCausalityTracerStatics, WFDIErrorReportingSettings, WFDILoggingChannel, WFDILoggingChannelFactory, WFDILoggingActivity, WFDILoggingActivityFactory, WFDILoggingSession, WFDILoggingSessionFactory, WFDILogFileGeneratedEventArgs, WFDIFileLoggingSession, WFDIFileLoggingSessionFactory;
+@class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDLoggingChannel, WFDLoggingActivity,
+    WFDLoggingSession, WFDLogFileGeneratedEventArgs, WFDFileLoggingSession;
+@protocol WFDITracingStatusChangedEventArgs
+, WFDIAsyncCausalityTracerStatics, WFDIErrorReportingSettings, WFDILoggingChannel, WFDILoggingChannelFactory, WFDILoggingActivity,
+    WFDILoggingActivityFactory, WFDILoggingSession, WFDILoggingSessionFactory, WFDILogFileGeneratedEventArgs, WFDIFileLoggingSession,
+    WFDIFileLoggingSessionFactory;
 
 // Windows.Foundation.Diagnostics.CausalityTraceLevel
 enum _WFDCausalityTraceLevel {
@@ -108,13 +112,13 @@ typedef unsigned WFDLoggingLevel;
 @protocol WFDILoggingChannel <WFIClosable>
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
-@property (readonly) NSString * name;
-- (EventRegistrationToken)addLoggingEnabledEvent:(void(^)(RTObject<WFDILoggingChannel>*, RTObject *))del;
+@property (readonly) NSString* name;
+- (EventRegistrationToken)addLoggingEnabledEvent:(void (^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
 - (void)removeLoggingEnabledEvent:(EventRegistrationToken)tok;
-- (void)logMessage:(NSString *)eventString;
-- (void)logMessageWithLevel:(NSString *)eventString level:(WFDLoggingLevel)level;
-- (void)logValuePair:(NSString *)value1 value2:(int)value2;
-- (void)logValuePairWithLevel:(NSString *)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
+- (void)logMessage:(NSString*)eventString;
+- (void)logMessageWithLevel:(NSString*)eventString level:(WFDLoggingLevel)level;
+- (void)logValuePair:(NSString*)value1 value2:(int)value2;
+- (void)logValuePairWithLevel:(NSString*)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
 - (void)close;
 @end
 
@@ -125,8 +129,11 @@ typedef unsigned WFDLoggingLevel;
 #define __WFDILoggingSession_DEFINED__
 
 @protocol WFDILoggingSession <WFIClosable>
-@property (readonly) NSString * name;
-- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder fileName:(NSString *)fileName success:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString* name;
+- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
+               fileName:(NSString*)fileName
+                success:(void (^)(WSStorageFile*))success
+                failure:(void (^)(NSError*))failure;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
@@ -140,13 +147,13 @@ typedef unsigned WFDLoggingLevel;
 #define __WFDIFileLoggingSession_DEFINED__
 
 @protocol WFDIFileLoggingSession <WFIClosable>
-@property (readonly) NSString * name;
-- (EventRegistrationToken)addLogFileGeneratedEvent:(void(^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs *))del;
+@property (readonly) NSString* name;
+- (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
-- (void)closeAndSaveToFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+- (void)closeAndSaveToFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -170,12 +177,31 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDAsyncCausalityTracer : RTObject
-+ (void)traceOperationCreation:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID *)platformId operationId:(uint64_t)operationId operationName:(NSString *)operationName relatedContext:(uint64_t)relatedContext;
-+ (void)traceOperationCompletion:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID *)platformId operationId:(uint64_t)operationId status:(WFAsyncStatus)status;
-+ (void)traceOperationRelation:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID *)platformId operationId:(uint64_t)operationId relation:(WFDCausalityRelation)relation;
-+ (void)traceSynchronousWorkStart:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source platformId:(WFGUID *)platformId operationId:(uint64_t)operationId work:(WFDCausalitySynchronousWork)work;
-+ (void)traceSynchronousWorkCompletion:(WFDCausalityTraceLevel)traceLevel source:(WFDCausalitySource)source work:(WFDCausalitySynchronousWork)work;
-+ (EventRegistrationToken)addTracingStatusChangedEvent:(void(^)(RTObject*, WFDTracingStatusChangedEventArgs *))del;
++ (void)traceOperationCreation:(WFDCausalityTraceLevel)traceLevel
+                        source:(WFDCausalitySource)source
+                    platformId:(WFGUID*)platformId
+                   operationId:(uint64_t)operationId
+                 operationName:(NSString*)operationName
+                relatedContext:(uint64_t)relatedContext;
++ (void)traceOperationCompletion:(WFDCausalityTraceLevel)traceLevel
+                          source:(WFDCausalitySource)source
+                      platformId:(WFGUID*)platformId
+                     operationId:(uint64_t)operationId
+                          status:(WFAsyncStatus)status;
++ (void)traceOperationRelation:(WFDCausalityTraceLevel)traceLevel
+                        source:(WFDCausalitySource)source
+                    platformId:(WFGUID*)platformId
+                   operationId:(uint64_t)operationId
+                      relation:(WFDCausalityRelation)relation;
++ (void)traceSynchronousWorkStart:(WFDCausalityTraceLevel)traceLevel
+                           source:(WFDCausalitySource)source
+                       platformId:(WFGUID*)platformId
+                      operationId:(uint64_t)operationId
+                             work:(WFDCausalitySynchronousWork)work;
++ (void)traceSynchronousWorkCompletion:(WFDCausalityTraceLevel)traceLevel
+                                source:(WFDCausalitySource)source
+                                  work:(WFDCausalitySynchronousWork)work;
++ (EventRegistrationToken)addTracingStatusChangedEvent:(void (^)(RTObject*, WFDTracingStatusChangedEventArgs*))del;
 + (void)removeTracingStatusChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -200,16 +226,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingChannel : RTObject <WFDILoggingChannel, WFIClosable>
-+ (WFDLoggingChannel *)create:(NSString *)name ACTIVATOR;
++ (WFDLoggingChannel*)create:(NSString*)name ACTIVATOR;
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
-@property (readonly) NSString * name;
-- (EventRegistrationToken)addLoggingEnabledEvent:(void(^)(RTObject<WFDILoggingChannel>*, RTObject *))del;
+@property (readonly) NSString* name;
+- (EventRegistrationToken)addLoggingEnabledEvent:(void (^)(RTObject<WFDILoggingChannel>*, RTObject*))del;
 - (void)removeLoggingEnabledEvent:(EventRegistrationToken)tok;
-- (void)logMessage:(NSString *)eventString;
-- (void)logMessageWithLevel:(NSString *)eventString level:(WFDLoggingLevel)level;
-- (void)logValuePair:(NSString *)value1 value2:(int)value2;
-- (void)logValuePairWithLevel:(NSString *)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
+- (void)logMessage:(NSString*)eventString;
+- (void)logMessageWithLevel:(NSString*)eventString level:(WFDLoggingLevel)level;
+- (void)logValuePair:(NSString*)value1 value2:(int)value2;
+- (void)logValuePairWithLevel:(NSString*)value1 value2:(int)value2 level:(WFDLoggingLevel)level;
 - (void)close;
 @end
 
@@ -221,10 +247,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingActivity : RTObject <WFIClosable>
-+ (WFDLoggingActivity *)createLoggingActivity:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
-+ (WFDLoggingActivity *)createLoggingActivityWithLevel:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel level:(WFDLoggingLevel)level ACTIVATOR;
-@property (readonly) WFGUID * id;
-@property (readonly) NSString * name;
++ (WFDLoggingActivity*)createLoggingActivity:(NSString*)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
++ (WFDLoggingActivity*)createLoggingActivityWithLevel:(NSString*)activityName
+                                       loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel
+                                                level:(WFDLoggingLevel)level ACTIVATOR;
+@property (readonly) WFGUID* id;
+@property (readonly) NSString* name;
 - (void)close;
 @end
 
@@ -236,9 +264,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
-+ (WFDLoggingSession *)create:(NSString *)name ACTIVATOR;
-@property (readonly) NSString * name;
-- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder fileName:(NSString *)fileName success:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
++ (WFDLoggingSession*)create:(NSString*)name ACTIVATOR;
+@property (readonly) NSString* name;
+- (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
+               fileName:(NSString*)fileName
+                success:(void (^)(WSStorageFile*))success
+                failure:(void (^)(NSError*))failure;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
@@ -253,7 +284,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLogFileGeneratedEventArgs : RTObject
-@property (readonly) WSStorageFile * file;
+@property (readonly) WSStorageFile* file;
 @end
 
 #endif // __WFDLogFileGeneratedEventArgs_DEFINED__
@@ -264,16 +295,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
-+ (WFDFileLoggingSession *)create:(NSString *)name ACTIVATOR;
-@property (readonly) NSString * name;
-- (EventRegistrationToken)addLogFileGeneratedEvent:(void(^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs *))del;
++ (WFDFileLoggingSession*)create:(NSString*)name ACTIVATOR;
+@property (readonly) NSString* name;
+- (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;
 - (void)addLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
 - (void)addLoggingChannelWithLevel:(RTObject<WFDILoggingChannel>*)loggingChannel maxLevel:(WFDLoggingLevel)maxLevel;
 - (void)removeLoggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel;
-- (void)closeAndSaveToFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+- (void)closeAndSaveToFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WFDFileLoggingSession_DEFINED__
-

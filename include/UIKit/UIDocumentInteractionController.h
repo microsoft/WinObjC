@@ -21,17 +21,17 @@
 
 @protocol UIDocumentInteractionControllerDelegate;
 
-@interface UIDocumentInteractionController : NSObject<UIActionSheetDelegate>
+@interface UIDocumentInteractionController : NSObject <UIActionSheetDelegate>
 
-@property (nonatomic,assign) id<UIDocumentInteractionControllerDelegate> delegate;
+@property (nonatomic, assign) id<UIDocumentInteractionControllerDelegate> delegate;
 
-+ (UIDocumentInteractionController *)interactionControllerWithURL:(NSURL *)url;
++ (UIDocumentInteractionController*)interactionControllerWithURL:(NSURL*)url;
 
 - (BOOL)presentPreviewAnimated:(BOOL)animated;
 
 @end
 
-@protocol UIDocumentInteractionControllerDelegate<NSObject>
+@protocol UIDocumentInteractionControllerDelegate <NSObject>
 @end
 
 #endif /* _UIDOCUMENTINTERACTIONCONTROLLER_H_ */

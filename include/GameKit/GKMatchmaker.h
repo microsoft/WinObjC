@@ -29,17 +29,16 @@
 @property (nonatomic, assign) NSUInteger maxPlayers;
 @property (nonatomic, assign) NSUInteger minPlayers;
 @property (nonatomic, assign) NSUInteger playerGroup;
-@property (nonatomic, retain) NSArray *playersToInvite;
+@property (nonatomic, retain) NSArray* playersToInvite;
 
 @end
 
 @interface GKMatchmaker : NSObject
 
-@property (nonatomic, copy) void (^inviteHandler)(GKInvite *acceptedInvite, NSArray *playerIDsToInvite);
+@property (nonatomic, copy) void (^inviteHandler)(GKInvite* acceptedInvite, NSArray* playerIDsToInvite);
 
-+ (GKMatchmaker *)sharedMatchmaker;
++ (GKMatchmaker*)sharedMatchmaker;
 
 @end
-
 
 #endif /* _GKMATCHMAKER_H_ */

@@ -21,7 +21,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFontDescriptor.h>
 
-enum { UIFontTextStyleBody };
+enum {
+    UIFontTextStyleBody,
+};
 
 extern NSString* UIFontSymbolicTrait;
 extern NSString* UIFontDescriptorTraitsAttribute;
@@ -57,7 +59,8 @@ typedef enum : uint32_t {
 
 typedef NSUInteger UIFontTextStyle;
 
-UIKIT_EXPORT_CLASS @interface UIFontDescriptor : NSObject + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle : (NSUInteger)stytle;
+UIKIT_EXPORT_CLASS 
+@interface UIFontDescriptor : NSObject + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle : (NSUInteger)stytle;
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)name size:(CGFloat)size;
 + (UIFontDescriptor*)fontDescriptorWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)size;
 

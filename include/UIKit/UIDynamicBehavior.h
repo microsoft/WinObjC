@@ -21,8 +21,6 @@
 
 @interface UIDynamicBehavior : NSObject
 
-
-
 @end
 
 #endif /* _UIDYNAMICBEHAVIOR_H_ */

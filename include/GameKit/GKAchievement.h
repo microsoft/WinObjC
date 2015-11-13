@@ -26,16 +26,16 @@
 GAMEKIT_EXPORT_CLASS
 @interface GKAchievement : NSObject
 
-+ (void)loadAchievementsWithCompletionHandler:(void (^)(NSArray *achievements, NSError *error))completionHandler;
-+ (void)resetAchievementsWithCompletionHandler:(void (^)(NSError *error))completionHandler;
++ (void)loadAchievementsWithCompletionHandler:(void (^)(NSArray* achievements, NSError* error))completionHandler;
++ (void)resetAchievementsWithCompletionHandler:(void (^)(NSError* error))completionHandler;
 
-- (id)initWithIdentifier:(NSString *)identifier;
+- (id)initWithIdentifier:(NSString*)identifier;
 
-- (void)reportAchievementWithCompletionHandler:(void (^)(NSError *error))completionHandler;
+- (void)reportAchievementWithCompletionHandler:(void (^)(NSError* error))completionHandler;
 
-@property(nonatomic, retain) NSString *identifier;
-@property(nonatomic, assign) double percentComplete;
-@property(nonatomic, assign) BOOL showsCompletionBanner;
+@property (nonatomic, retain) NSString* identifier;
+@property (nonatomic, assign) double percentComplete;
+@property (nonatomic, assign) BOOL showsCompletionBanner;
 
 @end
 

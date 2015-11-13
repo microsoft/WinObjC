@@ -21,28 +21,29 @@
 
 #include "interopBase.h"
 @class WNHostName, WNEndpointPair;
-@protocol WNIHostNameStatics, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
+@protocol WNIHostNameStatics
+, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
 
 // Windows.Networking.HostNameSortOptions
 enum _WNHostNameSortOptions {
-	WNHostNameSortOptionsNone = 0,
-	WNHostNameSortOptionsOptimizeForLongConnections = 2,
+    WNHostNameSortOptionsNone = 0,
+    WNHostNameSortOptionsOptimizeForLongConnections = 2,
 };
 typedef unsigned WNHostNameSortOptions;
 
 // Windows.Networking.HostNameType
 enum _WNHostNameType {
-	WNHostNameTypeDomainName = 0,
-	WNHostNameTypeIpv4 = 1,
-	WNHostNameTypeIpv6 = 2,
-	WNHostNameTypeBluetooth = 3,
+    WNHostNameTypeDomainName = 0,
+    WNHostNameTypeIpv4 = 1,
+    WNHostNameTypeIpv6 = 2,
+    WNHostNameTypeBluetooth = 3,
 };
 typedef unsigned WNHostNameType;
 
 // Windows.Networking.DomainNameType
 enum _WNDomainNameType {
-	WNDomainNameTypeSuffix = 0,
-	WNDomainNameTypeFullyQualified = 1,
+    WNDomainNameTypeSuffix = 0,
+    WNDomainNameTypeFullyQualified = 1,
 };
 typedef unsigned WNDomainNameType;
 
@@ -56,7 +57,7 @@ typedef unsigned WNDomainNameType;
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -67,15 +68,15 @@ typedef unsigned WNDomainNameType;
 
 WINRT_EXPORT
 @interface WNHostName : RTObject <WFIStringable>
-+ (int)compare:(NSString *)value1 value2:(NSString *)value2;
-+ (WNHostName*)createHostName:(NSString *)hostName ACTIVATOR;
-@property (readonly) NSString * canonicalName;
-@property (readonly) NSString * displayName;
++ (int)compare:(NSString*)value1 value2:(NSString*)value2;
++ (WNHostName*)createHostName:(NSString*)hostName ACTIVATOR;
+@property (readonly) NSString* canonicalName;
+@property (readonly) NSString* displayName;
 @property (readonly) WNCIPInformation* iPInformation;
-@property (readonly) NSString * rawName;
+@property (readonly) NSString* rawName;
 @property (readonly) WNHostNameType type;
 - (BOOL)isEqual:(WNHostName*)hostName;
-- (NSString *)toString;
+- (NSString*)toString;
 @end
 
 #endif // __WNHostName_DEFINED__
@@ -86,12 +87,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNEndpointPair : RTObject
-+ (WNEndpointPair*)createEndpointPair:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName remoteHostName:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName ACTIVATOR;
-@property (copy) NSString * remoteServiceName;
++ (WNEndpointPair*)createEndpointPair:(WNHostName*)localHostName
+                     localServiceName:(NSString*)localServiceName
+                       remoteHostName:(WNHostName*)remoteHostName
+                    remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
+@property (copy) NSString* remoteServiceName;
 @property (copy) WNHostName* remoteHostName;
-@property (copy) NSString * localServiceName;
+@property (copy) NSString* localServiceName;
 @property (copy) WNHostName* localHostName;
 @end
 
 #endif // __WNEndpointPair_DEFINED__
-

@@ -14,8 +14,19 @@
 //
 //******************************************************************************
 
+#include <sys/cdefs.h>
+
+#ifndef _SYS_UTSNAME_H_
+#define _SYS_UTSNAME_H_
+
 struct utsname {
     char machine[32];
 };
 
+__BEGIN_DECLS
+
 int uname(struct utsname* uname);
+
+__END_DECLS
+
+#endif

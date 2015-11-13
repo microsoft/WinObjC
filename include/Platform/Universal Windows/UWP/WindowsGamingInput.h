@@ -22,25 +22,26 @@
 #include "interopBase.h"
 @class WGIHeadset, WGIGamepad;
 @class WGIGamepadReading, WGIGamepadVibration;
-@protocol WGIIGameController, WGIIGamepad, WGIIGamepadStatics, WGIIHeadset;
+@protocol WGIIGameController
+, WGIIGamepad, WGIIGamepadStatics, WGIIHeadset;
 
 // Windows.Gaming.Input.GamepadButtons
 enum _WGIGamepadButtons {
-	WGIGamepadButtonsNone = 0,
-	WGIGamepadButtonsMenu = 1,
-	WGIGamepadButtonsView = 2,
-	WGIGamepadButtonsA = 4,
-	WGIGamepadButtonsB = 8,
-	WGIGamepadButtonsX = 16,
-	WGIGamepadButtonsY = 32,
-	WGIGamepadButtonsDPadUp = 64,
-	WGIGamepadButtonsDPadDown = 128,
-	WGIGamepadButtonsDPadLeft = 256,
-	WGIGamepadButtonsDPadRight = 512,
-	WGIGamepadButtonsLeftShoulder = 1024,
-	WGIGamepadButtonsRightShoulder = 2048,
-	WGIGamepadButtonsLeftThumbstick = 4096,
-	WGIGamepadButtonsRightThumbstick = 8192,
+    WGIGamepadButtonsNone = 0,
+    WGIGamepadButtonsMenu = 1,
+    WGIGamepadButtonsView = 2,
+    WGIGamepadButtonsA = 4,
+    WGIGamepadButtonsB = 8,
+    WGIGamepadButtonsX = 16,
+    WGIGamepadButtonsY = 32,
+    WGIGamepadButtonsDPadUp = 64,
+    WGIGamepadButtonsDPadDown = 128,
+    WGIGamepadButtonsDPadLeft = 256,
+    WGIGamepadButtonsDPadRight = 512,
+    WGIGamepadButtonsLeftShoulder = 1024,
+    WGIGamepadButtonsRightShoulder = 2048,
+    WGIGamepadButtonsLeftThumbstick = 4096,
+    WGIGamepadButtonsRightThumbstick = 8192,
 };
 typedef unsigned WGIGamepadButtons;
 
@@ -53,7 +54,7 @@ typedef unsigned WGIGamepadButtons;
 // [struct] Windows.Gaming.Input.GamepadReading
 WINRT_EXPORT
 @interface WGIGamepadReading : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property uint64_t timestamp;
 @property WGIGamepadButtons buttons;
 @property double leftTrigger;
@@ -67,7 +68,7 @@ WINRT_EXPORT
 // [struct] Windows.Gaming.Input.GamepadVibration
 WINRT_EXPORT
 @interface WGIGamepadVibration : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double leftMotor;
 @property double rightMotor;
 @property double leftTrigger;
@@ -82,11 +83,11 @@ WINRT_EXPORT
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
 @property (readonly) WSUser* user;
-- (EventRegistrationToken)addHeadsetConnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (EventRegistrationToken)addHeadsetConnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetDisconnectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUserChangedEvent:(void(^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addUserChangedEvent:(void (^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
 - (void)removeUserChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -98,8 +99,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIHeadset : RTObject
-@property (readonly) NSString * captureDeviceId;
-@property (readonly) NSString * renderDeviceId;
+@property (readonly) NSString* captureDeviceId;
+@property (readonly) NSString* renderDeviceId;
 @end
 
 #endif // __WGIHeadset_DEFINED__
@@ -115,18 +116,17 @@ WINRT_EXPORT
 @property (readonly) WSUser* user;
 @property (copy) WGIGamepadVibration* vibration;
 + (NSArray*)gamepads;
-- (EventRegistrationToken)addHeadsetConnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (EventRegistrationToken)addHeadsetConnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void(^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
+- (EventRegistrationToken)addHeadsetDisconnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetDisconnectedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUserChangedEvent:(void(^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addUserChangedEvent:(void (^)(RTObject<WGIIGameController>*, WSUserChangedEventArgs*))del;
 - (void)removeUserChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addGamepadAddedEvent:(void(^)(RTObject*, WGIGamepad*))del;
++ (EventRegistrationToken)addGamepadAddedEvent:(void (^)(RTObject*, WGIGamepad*))del;
 + (void)removeGamepadAddedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addGamepadRemovedEvent:(void(^)(RTObject*, WGIGamepad*))del;
++ (EventRegistrationToken)addGamepadRemovedEvent:(void (^)(RTObject*, WGIGamepad*))del;
 + (void)removeGamepadRemovedEvent:(EventRegistrationToken)tok;
 - (WGIGamepadReading*)getCurrentReading;
 @end
 
 #endif // __WGIGamepad_DEFINED__
-

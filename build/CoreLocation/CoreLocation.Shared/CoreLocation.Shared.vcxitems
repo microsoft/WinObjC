@@ -22,6 +22,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLLocation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLLocationManager.mm" />
   </ItemGroup>
   <ItemGroup>

@@ -24,14 +24,14 @@
 
 enum {
     GKLeaderboardPlayerScopeGlobal = 0,
-    GKLeaderboardPlayerScopeFriendsOnly = 1
+    GKLeaderboardPlayerScopeFriendsOnly = 1,
 };
 typedef uint32_t GKLeaderboardPlayerScope;
 
 enum {
     GKLeaderboardTimeScopeToday = 0,
     GKLeaderboardTimeScopeWeek = 1,
-    GKLeaderboardTimeScopeAllTime = 2
+    GKLeaderboardTimeScopeAllTime = 2,
 };
 typedef uint32_t GKLeaderboardTimeScope;
 
@@ -40,18 +40,18 @@ typedef uint32_t GKLeaderboardTimeScope;
 
 @interface GKLeaderboard : NSObject
 
-@property (nonatomic, retain) NSString *category;
+@property (nonatomic, retain) NSString* category;
 @property (nonatomic, assign) GKLeaderboardPlayerScope playerScope;
 @property (nonatomic, assign) GKLeaderboardTimeScope timeScope;
 @property (nonatomic, assign) NSRange range;
-@property (nonatomic, readonly, retain) NSArray *scores;
-@property (nonatomic, readonly, retain) GKScore *localPlayerScore;
+@property (nonatomic, readonly, retain) NSArray* scores;
+@property (nonatomic, readonly, retain) GKScore* localPlayerScore;
 @property (readonly, getter=isLoading) BOOL loading;
 
-+ (void)loadCategoriesWithCompletionHandler:(void (^)(NSArray *categories, NSArray *titles, NSError *error))completionHandler;
++ (void)loadCategoriesWithCompletionHandler:(void (^)(NSArray* categories, NSArray* titles, NSError* error))completionHandler;
 
-- (id)initWithPlayerIDs:(NSArray *)playerIDs;
-- (void)loadScoresWithCompletionHandler:(void (^)(NSArray *scores, NSError *error))completionHandler;
+- (id)initWithPlayerIDs:(NSArray*)playerIDs;
+- (void)loadScoresWithCompletionHandler:(void (^)(NSArray* scores, NSError* error))completionHandler;
 
 @end
 

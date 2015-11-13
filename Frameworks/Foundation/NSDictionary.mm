@@ -52,6 +52,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary : NSObject
 
++ (BOOL)automaticallyNotifiersObserversForKey:(NSString*)key {
+    // This class uses setObject:forKey: as a setter, and has no key-specific setters.
+    return NO;
+}
+
 /**
  @Status Interoperable
 */
@@ -792,6 +797,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             break;
         }
     }
+}
+
+/**
+   @Status Caveat
+   @Notes enumeration options are not implemented.
+*/
+- (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
+    [self enumerateKeysAndObjectsUsingBlock:block];
 }
 
 /**

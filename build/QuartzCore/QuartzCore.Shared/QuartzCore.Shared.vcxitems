@@ -25,8 +25,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\CATransform3D.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAAnimation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CABasicAnimation.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAConstants.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CADisplayLink.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAEAGLLayer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAGradientLayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CALayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAMediaTimingFunction.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAPropertyAnimation.mm" />
@@ -34,7 +36,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATextLayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATransaction.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATransition.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAConstants.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAEAGLLayer.h" />  

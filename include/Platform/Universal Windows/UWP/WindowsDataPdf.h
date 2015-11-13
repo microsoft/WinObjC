@@ -21,14 +21,15 @@
 
 #include "interopBase.h"
 @class WDPPdfPageRenderOptions, WDPPdfPageDimensions, WDPPdfPage, WDPPdfDocument;
-@protocol WDPIPdfPageDimensions, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
+@protocol WDPIPdfPageDimensions
+, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
 
 // Windows.Data.Pdf.PdfPageRotation
 enum _WDPPdfPageRotation {
-	WDPPdfPageRotationNormal = 0,
-	WDPPdfPageRotationRotate90 = 1,
-	WDPPdfPageRotationRotate180 = 2,
-	WDPPdfPageRotationRotate270 = 3,
+    WDPPdfPageRotationNormal = 0,
+    WDPPdfPageRotationRotate90 = 1,
+    WDPPdfPageRotationRotate180 = 2,
+    WDPPdfPageRotationRotate270 = 3,
 };
 typedef unsigned WDPPdfPageRotation;
 
@@ -93,7 +94,8 @@ WINRT_EXPORT
 @property (readonly) WDPPdfPageRotation rotation;
 @property (readonly) WFSize* size;
 - (RTObject<WFIAsyncAction>*)renderToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream;
-- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream options:(WDPPdfPageRenderOptions*)options;
+- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream
+                                                    options:(WDPPdfPageRenderOptions*)options;
 - (RTObject<WFIAsyncAction>*)preparePageAsync;
 - (void)close;
 @end
@@ -107,13 +109,20 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPPdfDocument : RTObject
 + (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file
+                             password:(NSString*)password
+                              success:(void (^)(WDPPdfDocument*))success
+                              failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
+                    success:(void (^)(WDPPdfDocument*))success
+                    failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
+                               password:(NSString*)password
+                                success:(void (^)(WDPPdfDocument*))success
+                                failure:(void (^)(NSError*))failure;
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned int pageCount;
 - (WDPPdfPage*)getPage:(unsigned int)pageIndex;
 @end
 
 #endif // __WDPPdfDocument_DEFINED__
-

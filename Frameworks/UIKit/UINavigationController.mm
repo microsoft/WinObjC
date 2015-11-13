@@ -18,6 +18,8 @@
 #include "UIViewControllerInternal.h"
 #import <UIKit/UIView.h>
 
+const CGFloat UINavigationControllerHideShowBarDuration = .25f;
+
 extern float statusBarHeight;
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);
 bool isOSTarget(NSString* versionStr);
@@ -36,8 +38,6 @@ public:
         _disappearingController = nil;
     }
 };
-
-extern float _UINavigationControllerHideShowBarDuration;
 
 @implementation UINavigationController {
     UINavigationPane* _mainView;
@@ -860,7 +860,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_setNavBarHiddenAnimated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
             setContainerRectAnimated = TRUE;
         }
         if (_navBarHidden) {
@@ -903,7 +903,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_setToolBarHiddenAnimated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
             setContainerRectAnimated = TRUE;
         }
         if (_toolBarHidden) {
@@ -942,7 +942,7 @@ static void rotateViewController(UINavigationController* self) {
     if (setContainerRect) {
         if (setContainerRectAnimated) {
             [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:_UINavigationControllerHideShowBarDuration];
+            [UIView setAnimationDuration:UINavigationControllerHideShowBarDuration];
         }
         [_containerView setFrame:newContainerFrame];
         CGRect containerBounds;

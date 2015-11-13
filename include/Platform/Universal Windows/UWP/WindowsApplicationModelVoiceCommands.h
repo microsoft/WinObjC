@@ -20,31 +20,36 @@
 #pragma once
 
 #include "interopBase.h"
-@class WAVVoiceCommandDefinition, WAVVoiceCommandDefinitionManager, WAVVoiceCommandContentTile, WAVVoiceCommandUserMessage, WAVVoiceCommand, WAVVoiceCommandResponse, WAVVoiceCommandConfirmationResult, WAVVoiceCommandDisambiguationResult, WAVVoiceCommandServiceConnection, WAVVoiceCommandCompletedEventArgs;
-@protocol WAVIVoiceCommandDefinitionManagerStatics, WAVIVoiceCommandDefinition, WAVIVoiceCommandContentTile, WAVIVoiceCommandUserMessage, WAVIVoiceCommand, WAVIVoiceCommandCompletedEventArgs, WAVIVoiceCommandDisambiguationResult, WAVIVoiceCommandConfirmationResult, WAVIVoiceCommandServiceConnection, WAVIVoiceCommandServiceConnectionStatics, WAVIVoiceCommandResponseStatics, WAVIVoiceCommandResponse;
+@class WAVVoiceCommandDefinition, WAVVoiceCommandDefinitionManager, WAVVoiceCommandContentTile, WAVVoiceCommandUserMessage, WAVVoiceCommand,
+    WAVVoiceCommandResponse, WAVVoiceCommandConfirmationResult, WAVVoiceCommandDisambiguationResult, WAVVoiceCommandServiceConnection,
+    WAVVoiceCommandCompletedEventArgs;
+@protocol WAVIVoiceCommandDefinitionManagerStatics
+, WAVIVoiceCommandDefinition, WAVIVoiceCommandContentTile, WAVIVoiceCommandUserMessage, WAVIVoiceCommand,
+    WAVIVoiceCommandCompletedEventArgs, WAVIVoiceCommandDisambiguationResult, WAVIVoiceCommandConfirmationResult,
+    WAVIVoiceCommandServiceConnection, WAVIVoiceCommandServiceConnectionStatics, WAVIVoiceCommandResponseStatics, WAVIVoiceCommandResponse;
 
 // Windows.ApplicationModel.VoiceCommands.VoiceCommandContentTileType
 enum _WAVVoiceCommandContentTileType {
-	WAVVoiceCommandContentTileTypeTitleOnly = 0,
-	WAVVoiceCommandContentTileTypeTitleWithText = 1,
-	WAVVoiceCommandContentTileTypeTitleWith68x68Icon = 2,
-	WAVVoiceCommandContentTileTypeTitleWith68x68IconAndText = 3,
-	WAVVoiceCommandContentTileTypeTitleWith68x92Icon = 4,
-	WAVVoiceCommandContentTileTypeTitleWith68x92IconAndText = 5,
-	WAVVoiceCommandContentTileTypeTitleWith280x140Icon = 6,
-	WAVVoiceCommandContentTileTypeTitleWith280x140IconAndText = 7,
+    WAVVoiceCommandContentTileTypeTitleOnly = 0,
+    WAVVoiceCommandContentTileTypeTitleWithText = 1,
+    WAVVoiceCommandContentTileTypeTitleWith68x68Icon = 2,
+    WAVVoiceCommandContentTileTypeTitleWith68x68IconAndText = 3,
+    WAVVoiceCommandContentTileTypeTitleWith68x92Icon = 4,
+    WAVVoiceCommandContentTileTypeTitleWith68x92IconAndText = 5,
+    WAVVoiceCommandContentTileTypeTitleWith280x140Icon = 6,
+    WAVVoiceCommandContentTileTypeTitleWith280x140IconAndText = 7,
 };
 typedef unsigned WAVVoiceCommandContentTileType;
 
 // Windows.ApplicationModel.VoiceCommands.VoiceCommandCompletionReason
 enum _WAVVoiceCommandCompletionReason {
-	WAVVoiceCommandCompletionReasonUnknown = 0,
-	WAVVoiceCommandCompletionReasonCommunicationFailed = 1,
-	WAVVoiceCommandCompletionReasonResourceLimitsExceeded = 2,
-	WAVVoiceCommandCompletionReasonCanceled = 3,
-	WAVVoiceCommandCompletionReasonTimeoutExceeded = 4,
-	WAVVoiceCommandCompletionReasonAppLaunched = 5,
-	WAVVoiceCommandCompletionReasonCompleted = 6,
+    WAVVoiceCommandCompletionReasonUnknown = 0,
+    WAVVoiceCommandCompletionReasonCommunicationFailed = 1,
+    WAVVoiceCommandCompletionReasonResourceLimitsExceeded = 2,
+    WAVVoiceCommandCompletionReasonCanceled = 3,
+    WAVVoiceCommandCompletionReasonTimeoutExceeded = 4,
+    WAVVoiceCommandCompletionReasonAppLaunched = 5,
+    WAVVoiceCommandCompletionReasonCompleted = 6,
 };
 typedef unsigned WAVVoiceCommandCompletionReason;
 
@@ -63,9 +68,9 @@ typedef unsigned WAVVoiceCommandCompletionReason;
 
 WINRT_EXPORT
 @interface WAVVoiceCommandDefinition : RTObject
-@property (readonly) NSString * language;
-@property (readonly) NSString * name;
-- (RTObject<WFIAsyncAction>*)setPhraseListAsync:(NSString *)phraseListName phraseList:(id<NSFastEnumeration> /* NSString * */)phraseList;
+@property (readonly) NSString* language;
+@property (readonly) NSString* name;
+- (RTObject<WFIAsyncAction>*)setPhraseListAsync:(NSString*)phraseListName phraseList:(id<NSFastEnumeration> /* NSString * */)phraseList;
 @end
 
 #endif // __WAVVoiceCommandDefinition_DEFINED__
@@ -89,13 +94,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandContentTile : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * title;
-@property (copy) NSString * textLine3;
-@property (copy) NSString * textLine2;
-@property (copy) NSString * textLine1;
+@property (copy) NSString* title;
+@property (copy) NSString* textLine3;
+@property (copy) NSString* textLine2;
+@property (copy) NSString* textLine1;
 @property (copy) RTObject<WSIStorageFile>* image;
 @property WAVVoiceCommandContentTileType contentTileType;
-@property (copy) NSString * appLaunchArgument;
+@property (copy) NSString* appLaunchArgument;
 @property (copy) RTObject* appContext;
 @end
 
@@ -108,8 +113,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * spokenMessage;
-@property (copy) NSString * displayMessage;
+@property (copy) NSString* spokenMessage;
+@property (copy) NSString* displayMessage;
 @end
 
 #endif // __WAVVoiceCommandUserMessage_DEFINED__
@@ -120,7 +125,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommand : RTObject
-@property (readonly) NSString * commandName;
+@property (readonly) NSString* commandName;
 @property (readonly) NSDictionary* properties;
 @property (readonly) WMSSpeechRecognitionResult* speechRecognitionResult;
 @end
@@ -134,12 +139,16 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandResponse : RTObject
 + (WAVVoiceCommandResponse*)createResponse:(WAVVoiceCommandUserMessage*)userMessage;
-+ (WAVVoiceCommandResponse*)createResponseWithTiles:(WAVVoiceCommandUserMessage*)message contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
-+ (WAVVoiceCommandResponse*)createResponseForPrompt:(WAVVoiceCommandUserMessage*)message repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage;
-+ (WAVVoiceCommandResponse*)createResponseForPromptWithTiles:(WAVVoiceCommandUserMessage*)message repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
++ (WAVVoiceCommandResponse*)createResponseWithTiles:(WAVVoiceCommandUserMessage*)message
+                                       contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
++ (WAVVoiceCommandResponse*)createResponseForPrompt:(WAVVoiceCommandUserMessage*)message
+                                      repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage;
++ (WAVVoiceCommandResponse*)createResponseForPromptWithTiles:(WAVVoiceCommandUserMessage*)message
+                                               repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage
+                                                contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
 @property (copy) WAVVoiceCommandUserMessage* repeatMessage;
 @property (copy) WAVVoiceCommandUserMessage* message;
-@property (copy) NSString * appLaunchArgument;
+@property (copy) NSString* appLaunchArgument;
 @property (readonly) NSMutableArray* voiceCommandContentTiles;
 + (unsigned int)maxSupportedVoiceCommandContentTiles;
 @end
@@ -176,11 +185,16 @@ WINRT_EXPORT
 @interface WAVVoiceCommandServiceConnection : RTObject
 + (WAVVoiceCommandServiceConnection*)fromAppServiceTriggerDetails:(WAAAppServiceTriggerDetails*)triggerDetails;
 @property (readonly) WGLanguage* language;
-- (EventRegistrationToken)addVoiceCommandCompletedEvent:(void(^)(WAVVoiceCommandServiceConnection*, WAVVoiceCommandCompletedEventArgs*))del;
+- (EventRegistrationToken)addVoiceCommandCompletedEvent:(void (^)(WAVVoiceCommandServiceConnection*,
+                                                                  WAVVoiceCommandCompletedEventArgs*))del;
 - (void)removeVoiceCommandCompletedEvent:(EventRegistrationToken)tok;
 - (void)getVoiceCommandAsyncWithSuccess:(void (^)(WAVVoiceCommand*))success failure:(void (^)(NSError*))failure;
-- (void)requestConfirmationAsync:(WAVVoiceCommandResponse*)response success:(void (^)(WAVVoiceCommandConfirmationResult*))success failure:(void (^)(NSError*))failure;
-- (void)requestDisambiguationAsync:(WAVVoiceCommandResponse*)response success:(void (^)(WAVVoiceCommandDisambiguationResult*))success failure:(void (^)(NSError*))failure;
+- (void)requestConfirmationAsync:(WAVVoiceCommandResponse*)response
+                         success:(void (^)(WAVVoiceCommandConfirmationResult*))success
+                         failure:(void (^)(NSError*))failure;
+- (void)requestDisambiguationAsync:(WAVVoiceCommandResponse*)response
+                           success:(void (^)(WAVVoiceCommandDisambiguationResult*))success
+                           failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)reportProgressAsync:(WAVVoiceCommandResponse*)response;
 - (RTObject<WFIAsyncAction>*)reportSuccessAsync:(WAVVoiceCommandResponse*)response;
 - (RTObject<WFIAsyncAction>*)reportFailureAsync:(WAVVoiceCommandResponse*)response;
@@ -199,4 +213,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WAVVoiceCommandCompletedEventArgs_DEFINED__
-

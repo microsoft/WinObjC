@@ -30,8 +30,8 @@
 - (void)setTotalCostLimit:(NSUInteger)lim;
 - (void)setObject:(id)obj forKey:(id)key;
 - (id)objectForKey:(id)key;
-- (NSString *)name;
-- (void)setName:(NSString *)cacheName;
+- (NSString*)name;
+- (void)setName:(NSString*)cacheName;
 - (void)setObject:(id)obj forKey:(id)key cost:(NSUInteger)num;
 - (void)removeObjectForKey:(id)key;
 - (void)removeAllObjects;

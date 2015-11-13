@@ -23,8 +23,8 @@
     id _keyPath;
 }
 
-+ animationWithKeyPath:(NSString *)keyPath;
-@property (copy) NSString *keyPath;
++ animationWithKeyPath:(NSString*)keyPath;
+@property (copy) NSString* keyPath;
 @property (getter=isAdditive) BOOL additive;
 @property (getter=isCumulative) BOOL cumulative;
 

@@ -22,21 +22,19 @@
 #include "interopBase.h"
 // Windows.Media.Render.AudioRenderCategory
 enum _WMRAudioRenderCategory {
-	WMRAudioRenderCategoryOther = 0,
-	WMRAudioRenderCategoryForegroundOnlyMedia = 1,
-	WMRAudioRenderCategoryBackgroundCapableMedia = 2,
-	WMRAudioRenderCategoryCommunications = 3,
-	WMRAudioRenderCategoryAlerts = 4,
-	WMRAudioRenderCategorySoundEffects = 5,
-	WMRAudioRenderCategoryGameEffects = 6,
-	WMRAudioRenderCategoryGameMedia = 7,
-	WMRAudioRenderCategoryGameChat = 8,
-	WMRAudioRenderCategorySpeech = 9,
-	WMRAudioRenderCategoryMovie = 10,
-	WMRAudioRenderCategoryMedia = 11,
+    WMRAudioRenderCategoryOther = 0,
+    WMRAudioRenderCategoryForegroundOnlyMedia = 1,
+    WMRAudioRenderCategoryBackgroundCapableMedia = 2,
+    WMRAudioRenderCategoryCommunications = 3,
+    WMRAudioRenderCategoryAlerts = 4,
+    WMRAudioRenderCategorySoundEffects = 5,
+    WMRAudioRenderCategoryGameEffects = 6,
+    WMRAudioRenderCategoryGameMedia = 7,
+    WMRAudioRenderCategoryGameChat = 8,
+    WMRAudioRenderCategorySpeech = 9,
+    WMRAudioRenderCategoryMovie = 10,
+    WMRAudioRenderCategoryMedia = 11,
 };
 typedef unsigned WMRAudioRenderCategory;
 
-
 #import <Foundation/Foundation.h>
-

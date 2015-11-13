@@ -79,6 +79,7 @@
 #import "UISegmentedControl.h"
 #import "UIActivityIndicatorView.h"
 #import "UIPopoverController.h"
+#import "UIPopoverPresentationController.h"
 #import "UINavigationBar.h"
 #import "UITextView.h"
 #import "UIDataDetectors.h"

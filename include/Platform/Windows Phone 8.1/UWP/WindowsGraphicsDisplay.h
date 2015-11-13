@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WGDDisplayInformation, WGDDisplayProperties;
-@protocol WGDIDisplayInformationStatics, WGDIDisplayInformation, WGDIDisplayPropertiesStatics;
+@protocol WGDIDisplayInformationStatics
+, WGDIDisplayInformation, WGDIDisplayPropertiesStatics;
 
 // Windows.Graphics.Display.DisplayOrientations
 enum _WGDDisplayOrientations {
@@ -51,14 +52,13 @@ typedef unsigned WGDResolutionScale;
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void(^WGDDisplayPropertiesEventHandler)(RTObject * sender);
+typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
-
 
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void(^WGDDisplayPropertiesEventHandler)(RTObject * sender);
+typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
 
 // Windows.Graphics.Display.DisplayInformation
@@ -67,7 +67,7 @@ typedef void(^WGDDisplayPropertiesEventHandler)(RTObject * sender);
 
 WINRT_EXPORT
 @interface WGDDisplayInformation : RTObject
-+ (WGDDisplayInformation *)getForCurrentView;
++ (WGDDisplayInformation*)getForCurrentView;
 @property (readonly) WGDDisplayOrientations currentOrientation;
 @property (readonly) float logicalDpi;
 @property (readonly) WGDDisplayOrientations nativeOrientation;
@@ -77,15 +77,15 @@ WINRT_EXPORT
 @property (readonly) BOOL stereoEnabled;
 + (WGDDisplayOrientations)autoRotationPreferences;
 + (void)setAutoRotationPreferences:(WGDDisplayOrientations)value;
-- (EventRegistrationToken)addColorProfileChangedEvent:(void(^)(WGDDisplayInformation *, RTObject *))del;
+- (EventRegistrationToken)addColorProfileChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeColorProfileChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDpiChangedEvent:(void(^)(WGDDisplayInformation *, RTObject *))del;
+- (EventRegistrationToken)addDpiChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeDpiChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOrientationChangedEvent:(void(^)(WGDDisplayInformation *, RTObject *))del;
+- (EventRegistrationToken)addOrientationChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeOrientationChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStereoEnabledChangedEvent:(void(^)(WGDDisplayInformation *, RTObject *))del;
+- (EventRegistrationToken)addStereoEnabledChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeStereoEnabledChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void(^)(WGDDisplayInformation *, RTObject *))del;
++ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
 + (void)removeDisplayContentsInvalidatedEvent:(EventRegistrationToken)tok;
 - (void)getColorProfileAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 @end
@@ -119,4 +119,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WGDDisplayProperties_DEFINED__
-

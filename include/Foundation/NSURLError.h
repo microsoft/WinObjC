@@ -60,8 +60,8 @@ enum {
     NSURLErrorDownloadDecodingFailedToComplete = -3007,
 };
 
-FOUNDATION_EXPORT NSString * const NSURLErrorDomain;
-FOUNDATION_EXPORT NSString * const NSURLErrorFailingURLStringErrorKey;
-FOUNDATION_EXPORT NSString * const NSURLErrorKey;
-FOUNDATION_EXPORT NSString * const NSURLErrorFailingURLErrorKey;
-FOUNDATION_EXPORT NSString * const NSURLErrorFailingURLPeerTrustErrorKey;
+FOUNDATION_EXPORT NSString* const NSURLErrorDomain;
+FOUNDATION_EXPORT NSString* const NSURLErrorFailingURLStringErrorKey;
+FOUNDATION_EXPORT NSString* const NSURLErrorKey;
+FOUNDATION_EXPORT NSString* const NSURLErrorFailingURLErrorKey;
+FOUNDATION_EXPORT NSString* const NSURLErrorFailingURLPeerTrustErrorKey;

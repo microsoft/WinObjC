@@ -122,7 +122,10 @@ void mergeNodes(pugi::xml_node toNode, pugi::xml_node& fromNode)
   unsigned maxDistance = std::distance(toNode.begin(), toNode.end());
 
   // Merge children
-  for (pugi::xml_node fromNodeChild = fromNode.first_child(); fromNodeChild; fromNodeChild = fromNodeChild.next_sibling()) {
+  for (pugi::xml_node fromNodeChild = fromNode.first_child(); fromNodeChild; ) {
+    // Figure out next sibling immediately, in case of node removal
+    pugi::xml_node nextSibling = fromNodeChild.next_sibling();
+
     // Find appropriate merge point
     pugi::xml_node toNodeChild = findSimilarNode(fromNodeChild, toNode, maxDistance);
     if (toNodeChild) {
@@ -130,6 +133,9 @@ void mergeNodes(pugi::xml_node toNode, pugi::xml_node& fromNode)
     } else {
       toNode.append_copy(fromNodeChild);
     }
+
+    // Proceed to next sibling
+    fromNodeChild = nextSibling;
   }
 
   // Erase fromNode

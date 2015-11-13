@@ -42,15 +42,14 @@ WINRT_EXPORT
 + (BOOL)compare:(RTObject<WSSIBuffer>*)object1 object2:(RTObject<WSSIBuffer>*)object2;
 + (RTObject<WSSIBuffer>*)generateRandom:(unsigned)length;
 + (unsigned)generateRandomNumber;
-+ (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /*UInt8*/ )value;
-+ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /*UInt8*/ *)value;
-+ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
-+ (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;
-+ (NSString *)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString *)value encoding:(WSCBinaryStringEncoding)encoding;
-+ (NSString *)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /*UInt8*/)value;
++ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /*UInt8*/*)value;
++ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString*)value;
++ (NSString*)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString*)value;
++ (NSString*)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString*)value encoding:(WSCBinaryStringEncoding)encoding;
++ (NSString*)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
 @end
 
 #endif // __WSCCryptographicBuffer_DEFINED__
-

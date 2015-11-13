@@ -35,15 +35,15 @@ WINRT_EXPORT
 @interface RTObject : NSObject {
 #ifdef _WRL_CLIENT_H_
 @public
-	Microsoft::WRL::ComPtr<IInspectable> comObj;
+    Microsoft::WRL::ComPtr<IInspectable> comObj;
 
     // For composable objects, this is the original interface.
-	Microsoft::WRL::ComPtr<IInspectable> innerInterface;
+    Microsoft::WRL::ComPtr<IInspectable> innerInterface;
 #endif
 }
 - (id)internalObject;
 #ifdef _WRL_CLIENT_H_
-- (void)setComObj: (Microsoft::WRL::ComPtr<IInspectable>) obj;
+- (void)setComObj:(Microsoft::WRL::ComPtr<IInspectable>)obj;
 #endif
 @end
 
@@ -51,23 +51,23 @@ WINRT_EXPORT
 #define GUID_DEFINED
 #if defined(__midl)
 typedef struct {
-    unsigned long  Data1;
+    unsigned long Data1;
     unsigned short Data2;
     unsigned short Data3;
-    byte           Data4[ 8 ];
+    byte Data4[8];
 } GUID;
 #else
 typedef struct _GUID {
-    unsigned long  Data1;
+    unsigned long Data1;
     unsigned short Data2;
     unsigned short Data3;
-    unsigned char  Data4[ 8 ];
+    unsigned char Data4[8];
 } GUID;
 #endif
 #endif
 
 @interface WFGUID : RTObject
-@property unsigned long	 Data1;
+@property unsigned long Data1;
 @property unsigned short Data2;
 @property unsigned short Data3;
 @property (readonly) unsigned char* Data4;
@@ -86,12 +86,9 @@ typedef struct _GUID {
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
-typedef struct EventRegistrationToken
-{
-	__int64 value;
-} 	EventRegistrationToken;
+typedef struct EventRegistrationToken { __int64 value; } EventRegistrationToken;
 
 #ifdef __cplusplus
 }
@@ -109,10 +106,10 @@ typedef _Return_type_success_(return >= 0) long HRESULT;
 #endif // !_HRESULT_DEFINED
 
 enum _WFAsyncStatus {
-	WFAsyncStatusStarted = 0,
-	WFAsyncStatusCompleted,
-	WFAsyncStatusCanceled,
-	WFAsyncStatusError,
+    WFAsyncStatusStarted = 0,
+    WFAsyncStatusCompleted,
+    WFAsyncStatusCanceled,
+    WFAsyncStatusError,
 };
 typedef unsigned WFAsyncStatus;
 
@@ -120,13 +117,13 @@ enum _RTCollectionOperation {
     COItemChanged,
     COItemInserted,
     COItemRemoved,
-    COReset
+    COReset,
 };
 typedef unsigned RTCollectionOperation;
 
 typedef void (^RTCollectionListener)(NSObject* srcCollection, RTCollectionOperation op, id loc);
 
 @protocol RTObservableCollection
-- (EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
-- (void)removeObserver: (EventRegistrationToken)receiverToken;
+- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
+- (void)removeObserver:(EventRegistrationToken)receiverToken;
 @end

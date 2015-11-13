@@ -20,15 +20,22 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities, WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities, WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl, WMDCFrameController;
+@class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities,
+    WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities,
+    WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl,
+    WMDCFrameController;
 @class RTArray_C_WFNVector2, RTArray_C_WFPoint;
-@protocol WMDCICameraIntrinsicsFactory, WMDCICameraIntrinsics, WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities, WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2, WMDCIFrameExposureControl, WMDCIFrameExposureCompensationControl, WMDCIFrameIsoSpeedControl, WMDCIFrameFocusControl, WMDCIFrameFlashControl, WMDCIFrameController, WMDCIFrameController2, WMDCIVariablePhotoSequenceController;
+@protocol WMDCICameraIntrinsicsFactory
+, WMDCICameraIntrinsics, WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities,
+    WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2,
+    WMDCIFrameExposureControl, WMDCIFrameExposureCompensationControl, WMDCIFrameIsoSpeedControl, WMDCIFrameFocusControl,
+    WMDCIFrameFlashControl, WMDCIFrameController, WMDCIFrameController2, WMDCIVariablePhotoSequenceController;
 
 // Windows.Media.Devices.Core.FrameFlashMode
 enum _WMDCFrameFlashMode {
-	WMDCFrameFlashModeDisable = 0,
-	WMDCFrameFlashModeEnable = 1,
-	WMDCFrameFlashModeGlobal = 2,
+    WMDCFrameFlashModeDisable = 0,
+    WMDCFrameFlashModeEnable = 1,
+    WMDCFrameFlashModeGlobal = 2,
 };
 typedef unsigned WMDCFrameFlashMode;
 
@@ -237,4 +244,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMDCFrameController_DEFINED__
-

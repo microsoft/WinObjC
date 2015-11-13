@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDPStorageDevice, WDPServiceDevice;
-@protocol WDPIStorageDeviceStatics, WDPIServiceDeviceStatics;
+@protocol WDPIStorageDeviceStatics
+, WDPIServiceDeviceStatics;
 
 // Windows.Devices.Portable.ServiceDeviceType
 enum _WDPServiceDeviceType {
@@ -43,8 +44,8 @@ typedef unsigned WDPServiceDeviceType;
 
 WINRT_EXPORT
 @interface WDPStorageDevice : RTObject
-+ (WSStorageFolder *)fromId:(NSString *)deviceId;
-+ (NSString *)getDeviceSelector;
++ (WSStorageFolder*)fromId:(NSString*)deviceId;
++ (NSString*)getDeviceSelector;
 @end
 
 #endif // __WDPStorageDevice_DEFINED__
@@ -55,9 +56,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPServiceDevice : RTObject
-+ (NSString *)getDeviceSelector:(WDPServiceDeviceType)serviceType;
-+ (NSString *)getDeviceSelectorFromServiceId:(WFGUID *)serviceId;
++ (NSString*)getDeviceSelector:(WDPServiceDeviceType)serviceType;
++ (NSString*)getDeviceSelectorFromServiceId:(WFGUID*)serviceId;
 @end
 
 #endif // __WDPServiceDevice_DEFINED__
-

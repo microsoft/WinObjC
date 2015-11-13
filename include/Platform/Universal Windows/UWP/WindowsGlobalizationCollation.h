@@ -22,7 +22,8 @@
 #include "interopBase.h"
 @class WGCCharacterGrouping, WGCCharacterGroupings;
 @class RTArray_C_WGCCharacterGrouping;
-@protocol WGCICharacterGrouping, WGCICharacterGroupings;
+@protocol WGCICharacterGrouping
+, WGCICharacterGroupings;
 
 #include "WindowsFoundationCollections.h"
 
@@ -34,8 +35,8 @@
 
 WINRT_EXPORT
 @interface WGCCharacterGrouping : RTObject
-@property (readonly) NSString * first;
-@property (readonly) NSString * label;
+@property (readonly) NSString* first;
+@property (readonly) NSString* label;
 @end
 
 #endif // __WGCCharacterGrouping_DEFINED__
@@ -50,12 +51,9 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (NSString *)lookup:(NSString *)text;
+- (NSString*)lookup:(NSString*)text;
 @end
 
 #endif // __WGCCharacterGroupings_DEFINED__
-

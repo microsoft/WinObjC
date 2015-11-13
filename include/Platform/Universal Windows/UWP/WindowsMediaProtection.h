@@ -20,37 +20,41 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion, WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPMediaProtectionPMPServer;
-@protocol WMPIMediaProtectionManager, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIServiceRequestedEventArgs2, WMPIComponentLoadFailedEventArgs, WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem, WMPIMediaProtectionPMPServerFactory, WMPIMediaProtectionPMPServer;
+@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion,
+    WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPMediaProtectionPMPServer;
+@protocol WMPIMediaProtectionManager
+, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIServiceRequestedEventArgs2,
+    WMPIComponentLoadFailedEventArgs, WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem,
+    WMPIMediaProtectionPMPServerFactory, WMPIMediaProtectionPMPServer;
 
 // Windows.Media.Protection.RevocationAndRenewalReasons
 enum _WMPRevocationAndRenewalReasons {
-	WMPRevocationAndRenewalReasonsUserModeComponentLoad = 1,
-	WMPRevocationAndRenewalReasonsKernelModeComponentLoad = 2,
-	WMPRevocationAndRenewalReasonsAppComponent = 4,
-	WMPRevocationAndRenewalReasonsGlobalRevocationListLoadFailed = 16,
-	WMPRevocationAndRenewalReasonsInvalidGlobalRevocationListSignature = 32,
-	WMPRevocationAndRenewalReasonsGlobalRevocationListAbsent = 4096,
-	WMPRevocationAndRenewalReasonsComponentRevoked = 8192,
-	WMPRevocationAndRenewalReasonsInvalidComponentCertificateExtendedKeyUse = 16384,
-	WMPRevocationAndRenewalReasonsComponentCertificateRevoked = 32768,
-	WMPRevocationAndRenewalReasonsInvalidComponentCertificateRoot = 65536,
-	WMPRevocationAndRenewalReasonsComponentHighSecurityCertificateRevoked = 131072,
-	WMPRevocationAndRenewalReasonsComponentLowSecurityCertificateRevoked = 262144,
-	WMPRevocationAndRenewalReasonsBootDriverVerificationFailed = 1048576,
-	WMPRevocationAndRenewalReasonsComponentSignedWithTestCertificate = 16777216,
-	WMPRevocationAndRenewalReasonsEncryptionFailure = 268435456,
+    WMPRevocationAndRenewalReasonsUserModeComponentLoad = 1,
+    WMPRevocationAndRenewalReasonsKernelModeComponentLoad = 2,
+    WMPRevocationAndRenewalReasonsAppComponent = 4,
+    WMPRevocationAndRenewalReasonsGlobalRevocationListLoadFailed = 16,
+    WMPRevocationAndRenewalReasonsInvalidGlobalRevocationListSignature = 32,
+    WMPRevocationAndRenewalReasonsGlobalRevocationListAbsent = 4096,
+    WMPRevocationAndRenewalReasonsComponentRevoked = 8192,
+    WMPRevocationAndRenewalReasonsInvalidComponentCertificateExtendedKeyUse = 16384,
+    WMPRevocationAndRenewalReasonsComponentCertificateRevoked = 32768,
+    WMPRevocationAndRenewalReasonsInvalidComponentCertificateRoot = 65536,
+    WMPRevocationAndRenewalReasonsComponentHighSecurityCertificateRevoked = 131072,
+    WMPRevocationAndRenewalReasonsComponentLowSecurityCertificateRevoked = 262144,
+    WMPRevocationAndRenewalReasonsBootDriverVerificationFailed = 1048576,
+    WMPRevocationAndRenewalReasonsComponentSignedWithTestCertificate = 16777216,
+    WMPRevocationAndRenewalReasonsEncryptionFailure = 268435456,
 };
 typedef unsigned WMPRevocationAndRenewalReasons;
 
 // Windows.Media.Protection.GraphicsTrustStatus
 enum _WMPGraphicsTrustStatus {
-	WMPGraphicsTrustStatusTrustNotRequired = 0,
-	WMPGraphicsTrustStatusTrustEstablished = 1,
-	WMPGraphicsTrustStatusEnvironmentNotSupported = 2,
-	WMPGraphicsTrustStatusDriverNotSupported = 3,
-	WMPGraphicsTrustStatusDriverSigningFailure = 4,
-	WMPGraphicsTrustStatusUnknownFailure = 5,
+    WMPGraphicsTrustStatusTrustNotRequired = 0,
+    WMPGraphicsTrustStatusTrustEstablished = 1,
+    WMPGraphicsTrustStatusEnvironmentNotSupported = 2,
+    WMPGraphicsTrustStatusDriverNotSupported = 3,
+    WMPGraphicsTrustStatusDriverSigningFailure = 4,
+    WMPGraphicsTrustStatusUnknownFailure = 5,
 };
 typedef unsigned WMPGraphicsTrustStatus;
 
@@ -60,40 +64,39 @@ typedef unsigned WMPGraphicsTrustStatus;
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
+typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
+typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
+typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
+typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
+typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
+typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.IMediaProtectionServiceRequest
@@ -178,11 +181,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
-@property (readonly) NSString * headerHash;
-@property (readonly) NSString * name;
-@property (readonly) NSString * publicKeyHash;
+@property (readonly) NSString* headerHash;
+@property (readonly) NSString* name;
+@property (readonly) NSString* publicKeyHash;
 @property (readonly) WMPRevocationAndRenewalReasons reasons;
-@property (readonly) NSString * renewalId;
+@property (readonly) NSString* renewalId;
 @end
 
 #endif // __WMPRevocationAndRenewalItem_DEFINED__
@@ -198,4 +201,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMPMediaProtectionPMPServer_DEFINED__
-

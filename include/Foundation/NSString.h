@@ -25,7 +25,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 typedef uint16_t unichar;
 
-enum { NSStringEncodingConversionAllowLossy = 1, NSStringEncodingConversionExternalRepresentation = 2 };
+enum {
+    NSStringEncodingConversionAllowLossy = 1,
+    NSStringEncodingConversionExternalRepresentation = 2,
+};
 typedef uint32_t NSStringEncodingConversionOptions;
 
 typedef NSUInteger NSStringEnumerationOptions;

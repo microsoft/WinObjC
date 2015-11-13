@@ -21,7 +21,9 @@
 
 #include "interopBase.h"
 @class WDBRRfcommDeviceService, WDBRRfcommServiceId, WDBRRfcommServiceProvider;
-@protocol WDBRIRfcommServiceIdStatics, WDBRIRfcommServiceId, WDBRIRfcommDeviceServiceStatics, WDBRIRfcommDeviceService, WDBRIRfcommDeviceService2, WDBRIRfcommServiceProviderStatics, WDBRIRfcommServiceProvider;
+@protocol WDBRIRfcommServiceIdStatics
+, WDBRIRfcommServiceId, WDBRIRfcommDeviceServiceStatics, WDBRIRfcommDeviceService, WDBRIRfcommDeviceService2,
+    WDBRIRfcommServiceProviderStatics, WDBRIRfcommServiceProvider;
 
 #include "WindowsDevicesBluetooth.h"
 #include "WindowsFoundation.h"
@@ -48,16 +50,18 @@
 
 WINRT_EXPORT
 @interface WDBRRfcommDeviceService : RTObject <WFIClosable>
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 @property (readonly) WNHostName* connectionHostName;
-@property (readonly) NSString * connectionServiceName;
+@property (readonly) NSString* connectionServiceName;
 @property (readonly) WNSSocketProtectionLevel maxProtectionLevel;
 @property (readonly) WNSSocketProtectionLevel protectionLevel;
 @property (readonly) WDBRRfcommServiceId* serviceId;
 @property (readonly) WDBBluetoothDevice* device;
 - (void)getSdpRawAttributesAsyncWithSuccess:(void (^)(NSDictionary*))success failure:(void (^)(NSError*))failure;
-- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(NSDictionary*))success failure:(void (^)(NSError*))failure;
+- (void)getSdpRawAttributesWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
+                                      success:(void (^)(NSDictionary*))success
+                                      failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -79,7 +83,7 @@ WINRT_EXPORT
 + (WDBRRfcommServiceId*)phoneBookAccessPse;
 + (WDBRRfcommServiceId*)serialPort;
 - (unsigned int)asShortId;
-- (NSString *)asString;
+- (NSString*)asString;
 @end
 
 #endif // __WDBRRfcommServiceId_DEFINED__
@@ -90,7 +94,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBRRfcommServiceProvider : RTObject
-+ (void)createAsync:(WDBRRfcommServiceId*)serviceId success:(void (^)(WDBRRfcommServiceProvider*))success failure:(void (^)(NSError*))failure;
++ (void)createAsync:(WDBRRfcommServiceId*)serviceId
+            success:(void (^)(WDBRRfcommServiceProvider*))success
+            failure:(void (^)(NSError*))failure;
 @property (readonly) NSMutableDictionary* sdpRawAttributes;
 @property (readonly) WDBRRfcommServiceId* serviceId;
 - (void)startAdvertising:(WNSStreamSocketListener*)listener;
@@ -98,4 +104,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDBRRfcommServiceProvider_DEFINED__
-

@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 #ifndef UIKIT_IMPEXP
- #define UIKIT_IMPEXP __declspec(dllimport)
+#define UIKIT_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef UIKIT_EXPORT
- #ifdef __cplusplus
-  #define UIKIT_EXPORT UIKIT_IMPEXP extern "C"
-  #define UIKIT_EXPORT_CLASS UIKIT_IMPEXP 
- #else
-  #define UIKIT_EXPORT UIKIT_IMPEXP extern  
-  #define UIKIT_EXPORT_CLASS UIKIT_IMPEXP
- #endif
+#ifdef __cplusplus
+#define UIKIT_EXPORT UIKIT_IMPEXP extern "C"
+#define UIKIT_EXPORT_CLASS UIKIT_IMPEXP
+#else
+#define UIKIT_EXPORT UIKIT_IMPEXP extern
+#define UIKIT_EXPORT_CLASS UIKIT_IMPEXP
+#endif
 #endif

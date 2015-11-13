@@ -23,8 +23,8 @@
 GAMEKIT_EXPORT_CLASS
 @interface GKLeaderboardViewController : UIViewController
 
-@property(nonatomic, assign) id<GKLeaderboardViewControllerDelegate> leaderboardDelegate;
-@property(nonatomic, retain) NSString *category;
-@property(nonatomic, assign) GKLeaderboardTimeScope timeScope;
+@property (nonatomic, assign) id<GKLeaderboardViewControllerDelegate> leaderboardDelegate;
+@property (nonatomic, retain) NSString* category;
+@property (nonatomic, assign) GKLeaderboardTimeScope timeScope;
 
 @end

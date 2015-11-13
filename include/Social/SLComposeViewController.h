@@ -22,21 +22,21 @@
 
 enum {
     SLComposeViewControllerResultCancelled,
-    SLComposeViewControllerResultDone
+    SLComposeViewControllerResultDone,
 };
 typedef uint32_t SLComposeViewControllerResult;
 
-typedef void (^SLComposeViewControllerCompletionHandler) (SLComposeViewControllerResult result);
+typedef void (^SLComposeViewControllerCompletionHandler)(SLComposeViewControllerResult result);
 
 SOCIAL_EXPORT_CLASS
 @interface SLComposeViewController : UIViewController
 
-+ (SLComposeViewController *)composeViewControllerForServiceType:(NSString *)serviceType;
-+ (BOOL)isAvailableForServiceType:(NSString *)serviceType;
++ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType;
++ (BOOL)isAvailableForServiceType:(NSString*)serviceType;
 
-- (BOOL)setInitialText:(NSString *)text;
-- (BOOL)addURL:(NSURL *)url;
-- (BOOL)addImage:(UIImage *)image;
+- (BOOL)setInitialText:(NSString*)text;
+- (BOOL)addURL:(NSURL*)url;
+- (BOOL)addImage:(UIImage*)image;
 
 @property (nonatomic, copy) SLComposeViewControllerCompletionHandler completionHandler;
 

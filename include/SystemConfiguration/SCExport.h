@@ -15,15 +15,15 @@
 //******************************************************************************
 
 #ifndef SC_IMPEXP
- #define SC_IMPEXP __declspec(dllimport)
+#define SC_IMPEXP __declspec(dllimport)
 #endif
 
 #ifndef SC_EXPORT
- #ifdef __cplusplus
-  #define SC_EXPORT SC_IMPEXP extern "C"
-  #define SC_EXPORT_CLASS SC_IMPEXP 
- #else
-  #define SC_EXPORT SC_IMPEXP extern  
-  #define SC_EXPORT_CLASS SC_IMPEXP
- #endif
+#ifdef __cplusplus
+#define SC_EXPORT SC_IMPEXP extern "C"
+#define SC_EXPORT_CLASS SC_IMPEXP
+#else
+#define SC_EXPORT SC_IMPEXP extern
+#define SC_EXPORT_CLASS SC_IMPEXP
+#endif
 #endif

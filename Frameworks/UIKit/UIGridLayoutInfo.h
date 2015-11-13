@@ -28,12 +28,12 @@
 - (float)dimension;
 - (BOOL)horizontal;
 - (CGSize)contentSize;
-/* annotate with type */ -(id)setHorizontal : (BOOL)horizontal;
-/* annotate with type */ -(id)setDimension : (float)dimension;
-/* annotate with type */ -(id)setRowAlignmentOptions : (id)options;
-/* annotate with type */ -(id)init;
-/* annotate with type */ -(id)sections;
-/* annotate with type */ -(id)addSection;
-/* annotate with type */ -(id)invalidate : (BOOL)arg;
-/* annotate with type */ -(id)setContentSize : (CGSize)size;
+- (id)setHorizontal:(BOOL)horizontal;
+- (id)setDimension:(float)dimension;
+- (id)setRowAlignmentOptions:(id)options;
+- (id)init;
+- (id)sections;
+- (id)addSection;
+- (id)invalidate:(BOOL)arg;
+- (id)setContentSize:(CGSize)size;
 @end

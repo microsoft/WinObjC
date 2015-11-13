@@ -18,6 +18,6 @@
 
 @interface GKGameCenterViewController : UINavigationController
 
-@property(nonatomic, assign) id<GKGameCenterControllerDelegate> gameCenterDelegate;
+@property (nonatomic, assign) id<GKGameCenterControllerDelegate> gameCenterDelegate;
 
 @end

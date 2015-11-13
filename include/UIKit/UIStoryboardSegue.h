@@ -23,7 +23,7 @@
 UIKIT_EXPORT_CLASS
 @interface UIStoryboardSegue : NSObject
 
-@property (nonatomic, readonly) NSString *identifier;
+@property (nonatomic, readonly) NSString* identifier;
 @property (nonatomic, readonly) id destinationViewController;
 @property (nonatomic, readonly) id sourceViewController;
 

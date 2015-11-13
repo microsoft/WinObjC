@@ -21,8 +21,8 @@
 
 #include "interopBase.h"
 @class WSPDBackgroundEnergyDiagnostics, WSPDForegroundEnergyDiagnostics;
-@protocol WSPDIBackgroundEnergyDiagnosticsStatics, WSPDIForegroundEnergyDiagnosticsStatics;
-
+@protocol WSPDIBackgroundEnergyDiagnosticsStatics
+, WSPDIForegroundEnergyDiagnosticsStatics;
 
 #import <Foundation/Foundation.h>
 
@@ -51,4 +51,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSPDForegroundEnergyDiagnostics_DEFINED__
-

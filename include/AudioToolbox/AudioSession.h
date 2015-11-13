@@ -23,7 +23,7 @@
 #import <stdint.h>
 
 enum {
-    kAudioSessionNoError =  0,
+    kAudioSessionNoError = 0,
     kAudioSessionNotInitialized = '!ini',
     kAudioSessionAlreadyInitialized = 'init',
     kAudioSessionInitializationError = 'ini?',
@@ -37,18 +37,18 @@ enum {
 };
 
 enum {
-    kAudioSessionInterruptionType_ShouldResume    = 'irsm',
-    kAudioSessionInterruptionType_ShouldNotResume = '!rsm'
+    kAudioSessionInterruptionType_ShouldResume = 'irsm',
+    kAudioSessionInterruptionType_ShouldNotResume = '!rsm',
 };
 typedef uint32_t AudioSessionInterruptionType;
 typedef uint32_t AudioSessionPropertyID;
-typedef void (*AudioSessionPropertyListener)(void *inClientData, AudioSessionPropertyID inID, UInt32 inDataSize, const void *inData);
+typedef void (*AudioSessionPropertyListener)(void* inClientData, AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData);
 
 enum {
     kAudioSessionProperty_PreferredHardwareSampleRate = 'hwsr',
     kAudioSessionProperty_PreferredHardwareIOBufferDuration = 'iobd',
     kAudioSessionProperty_AudioCategory = 'acat',
-    kAudioSessionProperty_AudioRouteChange  = 'roch',
+    kAudioSessionProperty_AudioRouteChange = 'roch',
     kAudioSessionProperty_CurrentHardwareSampleRate = 'chsr',
     kAudioSessionProperty_CurrentHardwareInputNumberChannels = 'chic',
     kAudioSessionProperty_CurrentHardwareOutputNumberChannels = 'choc',
@@ -77,14 +77,14 @@ enum {
 };
 
 enum {
-    AVAudioSessionInterruptionFlags_ShouldResume = 1
+    AVAudioSessionInterruptionFlags_ShouldResume = 1,
 };
 
 typedef uint32_t AudioSessionPropertyID;
 
 enum {
     kAudioSessionBeginInterruption = 1,
-    kAudioSessionEndInterruption = 0
+    kAudioSessionEndInterruption = 0,
 };
 
 enum {
@@ -96,12 +96,17 @@ enum {
     kAudioSessionCategory_AudioProcessing = 'proc'
 };
 
-typedef void (*AudioSessionInterruptionListener)(void *inClientData, UInt32 inInterruptionState);
+typedef void (*AudioSessionInterruptionListener)(void* inClientData, UInt32 inInterruptionState);
 
-AUDIOTOOLBOX_EXPORT OSStatus AudioSessionGetProperty(AudioSessionPropertyID id, UInt32 *dataSize, void *outData);
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionGetProperty(AudioSessionPropertyID id, UInt32* dataSize, void* outData);
 AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetActive(Boolean active);
-AUDIOTOOLBOX_EXPORT OSStatus AudioSessionAddPropertyListener(AudioSessionPropertyID inID, AudioSessionPropertyListener inProc, void *inClientData);
-AUDIOTOOLBOX_EXPORT OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop, CFStringRef inRunLoopMode, AudioSessionInterruptionListener inInterruptionListener, void *inClientData);
-AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetProperty(AudioSessionPropertyID inID, UInt32 inDataSize, const void *inData);
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionAddPropertyListener(AudioSessionPropertyID inID,
+                                                             AudioSessionPropertyListener inProc,
+                                                             void* inClientData);
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop,
+                                                    CFStringRef inRunLoopMode,
+                                                    AudioSessionInterruptionListener inInterruptionListener,
+                                                    void* inClientData);
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetProperty(AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData);
 
 #endif // _AUDIOSESSION_H_

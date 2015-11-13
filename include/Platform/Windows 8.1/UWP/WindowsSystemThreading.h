@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSTThreadPoolTimer, WSTThreadPool;
-@protocol WSTIThreadPoolStatics, WSTIThreadPoolTimer, WSTIThreadPoolTimerStatics;
+@protocol WSTIThreadPoolStatics
+, WSTIThreadPoolTimer, WSTIThreadPoolTimerStatics;
 
 // Windows.System.Threading.WorkItemPriority
 enum _WSTWorkItemPriority {
@@ -42,38 +43,37 @@ typedef unsigned WSTWorkItemOptions;
 // Windows.System.Threading.TimerDestroyedHandler
 #ifndef __WSTTimerDestroyedHandler__DEFINED
 #define __WSTTimerDestroyedHandler__DEFINED
-typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer * timer);
+typedef void (^WSTTimerDestroyedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerDestroyedHandler__DEFINED
 
 // Windows.System.Threading.TimerElapsedHandler
 #ifndef __WSTTimerElapsedHandler__DEFINED
 #define __WSTTimerElapsedHandler__DEFINED
-typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer * timer);
+typedef void (^WSTTimerElapsedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerElapsedHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
 #ifndef __WSTWorkItemHandler__DEFINED
 #define __WSTWorkItemHandler__DEFINED
-typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
+typedef void (^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #endif // __WSTWorkItemHandler__DEFINED
-
 
 // Windows.System.Threading.TimerElapsedHandler
 #ifndef __WSTTimerElapsedHandler__DEFINED
 #define __WSTTimerElapsedHandler__DEFINED
-typedef void(^WSTTimerElapsedHandler)(WSTThreadPoolTimer * timer);
+typedef void (^WSTTimerElapsedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerElapsedHandler__DEFINED
 
 // Windows.System.Threading.TimerDestroyedHandler
 #ifndef __WSTTimerDestroyedHandler__DEFINED
 #define __WSTTimerDestroyedHandler__DEFINED
-typedef void(^WSTTimerDestroyedHandler)(WSTThreadPoolTimer * timer);
+typedef void (^WSTTimerDestroyedHandler)(WSTThreadPoolTimer* timer);
 #endif // __WSTTimerDestroyedHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
 #ifndef __WSTWorkItemHandler__DEFINED
 #define __WSTWorkItemHandler__DEFINED
-typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
+typedef void (^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #endif // __WSTWorkItemHandler__DEFINED
 
 // Windows.System.Threading.ThreadPoolTimer
@@ -82,12 +82,16 @@ typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 
 WINRT_EXPORT
 @interface WSTThreadPoolTimer : RTObject
-+ (WSTThreadPoolTimer *)createPeriodicTimer:(WSTTimerElapsedHandler)handler period:(WFTimeSpan *)period;
-+ (WSTThreadPoolTimer *)createTimer:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan *)delay;
-+ (WSTThreadPoolTimer *)createPeriodicTimerWithCompletion:(WSTTimerElapsedHandler)handler period:(WFTimeSpan *)period destroyed:(WSTTimerDestroyedHandler)destroyed;
-+ (WSTThreadPoolTimer *)createTimerWithCompletion:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan *)delay destroyed:(WSTTimerDestroyedHandler)destroyed;
-@property (readonly) WFTimeSpan * delay;
-@property (readonly) WFTimeSpan * period;
++ (WSTThreadPoolTimer*)createPeriodicTimer:(WSTTimerElapsedHandler)handler period:(WFTimeSpan*)period;
++ (WSTThreadPoolTimer*)createTimer:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan*)delay;
++ (WSTThreadPoolTimer*)createPeriodicTimerWithCompletion:(WSTTimerElapsedHandler)handler
+                                                  period:(WFTimeSpan*)period
+                                               destroyed:(WSTTimerDestroyedHandler)destroyed;
++ (WSTThreadPoolTimer*)createTimerWithCompletion:(WSTTimerElapsedHandler)handler
+                                           delay:(WFTimeSpan*)delay
+                                       destroyed:(WSTTimerDestroyedHandler)destroyed;
+@property (readonly) WFTimeSpan* delay;
+@property (readonly) WFTimeSpan* period;
 - (void)cancel;
 @end
 
@@ -101,8 +105,9 @@ WINRT_EXPORT
 @interface WSTThreadPool : RTObject
 + (RTObject<WFIAsyncAction>*)runAsync:(WSTWorkItemHandler)handler;
 + (RTObject<WFIAsyncAction>*)runWithPriorityAsync:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority;
-+ (RTObject<WFIAsyncAction>*)runWithPriorityAndOptionsAsync:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority options:(WSTWorkItemOptions)options;
++ (RTObject<WFIAsyncAction>*)runWithPriorityAndOptionsAsync:(WSTWorkItemHandler)handler
+                                                   priority:(WSTWorkItemPriority)priority
+                                                    options:(WSTWorkItemOptions)options;
 @end
 
 #endif // __WSTThreadPool_DEFINED__
-

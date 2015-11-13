@@ -40,7 +40,9 @@ CFNETWORK_EXPORT const CFStringRef kCFProxyTypeKey;
 CFNETWORK_EXPORT const CFStringRef kCFProxyUsernameKey;
 
 CFNETWORK_EXPORT CFDictionaryRef CFNetworkCopySystemProxySettings();
-CFNETWORK_EXPORT CFArrayRef CFNetworkCopyProxiesForAutoConfigurationScript(CFStringRef proxyAutoConfigurationScript, CFURLRef targetURL, CFErrorRef *err);
+CFNETWORK_EXPORT CFArrayRef CFNetworkCopyProxiesForAutoConfigurationScript(CFStringRef proxyAutoConfigurationScript,
+                                                                           CFURLRef targetURL,
+                                                                           CFErrorRef* err);
 CFNETWORK_EXPORT CFArrayRef CFNetworkCopyProxiesForURL(CFURLRef url, CFDictionaryRef proxySettings);
 
 #endif // _CFPROXYSUPPORT_H_

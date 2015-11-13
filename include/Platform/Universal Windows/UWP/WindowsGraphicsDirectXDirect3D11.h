@@ -21,29 +21,30 @@
 
 #include "interopBase.h"
 @class WGDDDirect3DMultisampleDescription, WGDDDirect3DSurfaceDescription;
-@protocol WGDDIDirect3DDevice, WGDDIDirect3DSurface;
+@protocol WGDDIDirect3DDevice
+, WGDDIDirect3DSurface;
 
 // Windows.Graphics.DirectX.Direct3D11.Direct3DUsage
 enum _WGDDDirect3DUsage {
-	WGDDDirect3DUsageDefault = 0,
-	WGDDDirect3DUsageImmutable = 1,
-	WGDDDirect3DUsageDynamic = 2,
-	WGDDDirect3DUsageStaging = 3,
+    WGDDDirect3DUsageDefault = 0,
+    WGDDDirect3DUsageImmutable = 1,
+    WGDDDirect3DUsageDynamic = 2,
+    WGDDDirect3DUsageStaging = 3,
 };
 typedef unsigned WGDDDirect3DUsage;
 
 // Windows.Graphics.DirectX.Direct3D11.Direct3DBindings
 enum _WGDDDirect3DBindings {
-	WGDDDirect3DBindingsVertexBuffer = 1,
-	WGDDDirect3DBindingsIndexBuffer = 2,
-	WGDDDirect3DBindingsConstantBuffer = 4,
-	WGDDDirect3DBindingsShaderResource = 8,
-	WGDDDirect3DBindingsStreamOutput = 16,
-	WGDDDirect3DBindingsRenderTarget = 32,
-	WGDDDirect3DBindingsDepthStencil = 64,
-	WGDDDirect3DBindingsUnorderedAccess = 128,
-	WGDDDirect3DBindingsDecoder = 512,
-	WGDDDirect3DBindingsVideoEncoder = 1024,
+    WGDDDirect3DBindingsVertexBuffer = 1,
+    WGDDDirect3DBindingsIndexBuffer = 2,
+    WGDDDirect3DBindingsConstantBuffer = 4,
+    WGDDDirect3DBindingsShaderResource = 8,
+    WGDDDirect3DBindingsStreamOutput = 16,
+    WGDDDirect3DBindingsRenderTarget = 32,
+    WGDDDirect3DBindingsDepthStencil = 64,
+    WGDDDirect3DBindingsUnorderedAccess = 128,
+    WGDDDirect3DBindingsDecoder = 512,
+    WGDDDirect3DBindingsVideoEncoder = 1024,
 };
 typedef unsigned WGDDDirect3DBindings;
 
@@ -55,7 +56,7 @@ typedef unsigned WGDDDirect3DBindings;
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DMultisampleDescription
 WINRT_EXPORT
 @interface WGDDDirect3DMultisampleDescription : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int count;
 @property int quality;
 @end
@@ -63,7 +64,7 @@ WINRT_EXPORT
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DSurfaceDescription
 WINRT_EXPORT
 @interface WGDDDirect3DSurfaceDescription : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int width;
 @property int height;
 @property WGDDirectXPixelFormat format;
@@ -101,4 +102,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WGDDIDirect3DSurface_DEFINED__
-

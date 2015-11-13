@@ -115,6 +115,16 @@ int viewCount = 0;
     // EbrDebugLog("%d: Allocing %s (%x)\n", viewCount, object_getClassName(self), (id) self);
 }
 
+- (void)initAccessibility {
+    self.isAccessibilityElement = FALSE;
+    self.accessibilityTraits = UIAccessibilityTraitNone;
+    [self updateAccessibility];
+}
+
+- (void)updateAccessibility {
+    IWUpdateAccessibility(self.layer, self);
+}
+
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIView* ret = [super allocWithZone:zone];
 
@@ -129,6 +139,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [self setOpaque:TRUE];
     [self setFrame:pos];
     [self setNeedsDisplay];
+    [self initAccessibility];
 
     return self;
 }
@@ -648,6 +659,8 @@ static float doRound(float f) {
     if (self->priv->translatesAutoresizingMaskIntoConstraints) {
         [self autoLayoutUpdateConstraints];
     }
+
+    self.accessibilityFrame = self.frame;
 }
 
 /**
@@ -2429,21 +2442,6 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)drawRect:(CGRect)pos {
-}
-
-- (void)setAccessibilityLabel:(NSString*)label {
-}
-
-- (void)setAccessibilityHint:(NSString*)hint {
-}
-
-- (void)setAccessibilityTraits:(UIAccessibilityTraits)traits {
-}
-
-- (void)setAccessibilityViewIsModal:(BOOL)modal {
-}
-
-- (void)setIsAccessibilityElement:(BOOL)enabled {
 }
 
 /**

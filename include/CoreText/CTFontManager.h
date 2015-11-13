@@ -26,11 +26,11 @@ enum {
     kCTFontManagerScopeNone = 0,
     kCTFontManagerScopeProcess = 1,
     kCTFontManagerScopeUser = 2,
-    kCTFontManagerScopeSession = 3
+    kCTFontManagerScopeSession = 3,
 };
 typedef uint32_t CTFontManagerScope;
 
-SB_EXPORT bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef *error);
-SB_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef * error);
+SB_EXPORT bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error);
+SB_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error);
 
 #endif /* _CTFONTMANAGER_H_ */

@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDCKnownDeviceTypes, WDCIOControlCode, WDCCustomDevice;
-@protocol WDCIKnownDeviceTypesStatics, WDCIIOControlCode, WDCIIOControlCodeFactory, WDCICustomDeviceStatics, WDCICustomDevice;
+@protocol WDCIKnownDeviceTypesStatics
+, WDCIIOControlCode, WDCIIOControlCodeFactory, WDCICustomDeviceStatics, WDCICustomDevice;
 
 // Windows.Devices.Custom.IOControlAccessMode
 enum _WDCIOControlAccessMode {
@@ -90,7 +91,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDCIOControlCode : RTObject <WDCIIOControlCode>
-+ (WDCIOControlCode *)createIOControlCode:(unsigned short)deviceType function:(unsigned short)function accessMode:(WDCIOControlAccessMode)accessMode bufferingMethod:(WDCIOControlBufferingMethod)bufferingMethod ACTIVATOR;
++ (WDCIOControlCode*)createIOControlCode:(unsigned short)deviceType
+                                function:(unsigned short)function
+                              accessMode:(WDCIOControlAccessMode)accessMode
+                         bufferingMethod:(WDCIOControlBufferingMethod)bufferingMethod ACTIVATOR;
 @property (readonly) WDCIOControlAccessMode accessMode;
 @property (readonly) WDCIOControlBufferingMethod bufferingMethod;
 @property (readonly) unsigned controlCode;
@@ -106,13 +110,24 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDCCustomDevice : RTObject
-+ (NSString *)getDeviceSelector:(WFGUID *)classGuid;
-+ (void)fromIdAsync:(NSString *)deviceId desiredAccess:(WDCDeviceAccessMode)desiredAccess sharingMode:(WDCDeviceSharingMode)sharingMode success:(void (^)(WDCCustomDevice *))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(WFGUID*)classGuid;
++ (void)fromIdAsync:(NSString*)deviceId
+      desiredAccess:(WDCDeviceAccessMode)desiredAccess
+        sharingMode:(WDCDeviceSharingMode)sharingMode
+            success:(void (^)(WDCCustomDevice*))success
+            failure:(void (^)(NSError*))failure;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-- (void)sendIOControlAsync:(RTObject<WDCIIOControlCode>*)ioControlCode inputBuffer:(RTObject<WSSIBuffer>*)inputBuffer outputBuffer:(RTObject<WSSIBuffer>*)outputBuffer success:(void (^)(unsigned))success failure:(void (^)(NSError*))failure;
-- (void)trySendIOControlAsync:(RTObject<WDCIIOControlCode>*)ioControlCode inputBuffer:(RTObject<WSSIBuffer>*)inputBuffer outputBuffer:(RTObject<WSSIBuffer>*)outputBuffer success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)sendIOControlAsync:(RTObject<WDCIIOControlCode>*)ioControlCode
+               inputBuffer:(RTObject<WSSIBuffer>*)inputBuffer
+              outputBuffer:(RTObject<WSSIBuffer>*)outputBuffer
+                   success:(void (^)(unsigned))success
+                   failure:(void (^)(NSError*))failure;
+- (void)trySendIOControlAsync:(RTObject<WDCIIOControlCode>*)ioControlCode
+                  inputBuffer:(RTObject<WSSIBuffer>*)inputBuffer
+                 outputBuffer:(RTObject<WSSIBuffer>*)outputBuffer
+                      success:(void (^)(BOOL))success
+                      failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDCCustomDevice_DEFINED__
-

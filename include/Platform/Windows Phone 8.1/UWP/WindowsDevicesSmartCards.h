@@ -20,8 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy, WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral;
-@protocol WDSISmartCardReaderStatics, WDSISmartCardReader, WDSICardAddedEventArgs, WDSICardRemovedEventArgs, WDSISmartCard, WDSISmartCardProvisioningStatics, WDSISmartCardProvisioning, WDSISmartCardPinResetRequest, WDSISmartCardPinResetDeferral, WDSISmartCardPinPolicy, WDSISmartCardChallengeContext;
+@class WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy,
+    WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral;
+@protocol WDSISmartCardReaderStatics
+, WDSISmartCardReader, WDSICardAddedEventArgs, WDSICardRemovedEventArgs, WDSISmartCard, WDSISmartCardProvisioningStatics,
+    WDSISmartCardProvisioning, WDSISmartCardPinResetRequest, WDSISmartCardPinResetDeferral, WDSISmartCardPinPolicy,
+    WDSISmartCardChallengeContext;
 
 // Windows.Devices.SmartCards.SmartCardReaderKind
 enum _WDSSmartCardReaderKind {
@@ -65,14 +69,13 @@ typedef unsigned WDSSmartCardPinCharacterPolicyOption;
 // Windows.Devices.SmartCards.SmartCardPinResetHandler
 #ifndef __WDSSmartCardPinResetHandler__DEFINED
 #define __WDSSmartCardPinResetHandler__DEFINED
-typedef void(^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning * sender, WDSSmartCardPinResetRequest * request);
+typedef void (^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning* sender, WDSSmartCardPinResetRequest* request);
 #endif // __WDSSmartCardPinResetHandler__DEFINED
-
 
 // Windows.Devices.SmartCards.SmartCardPinResetHandler
 #ifndef __WDSSmartCardPinResetHandler__DEFINED
 #define __WDSSmartCardPinResetHandler__DEFINED
-typedef void(^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning * sender, WDSSmartCardPinResetRequest * request);
+typedef void (^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning* sender, WDSSmartCardPinResetRequest* request);
 #endif // __WDSSmartCardPinResetHandler__DEFINED
 
 // Windows.Devices.SmartCards.SmartCardReader
@@ -81,18 +84,18 @@ typedef void(^WDSSmartCardPinResetHandler)(WDSSmartCardProvisioning * sender, WD
 
 WINRT_EXPORT
 @interface WDSSmartCardReader : RTObject
-+ (NSString *)getDeviceSelector;
-+ (NSString *)getDeviceSelectorWithKind:(WDSSmartCardReaderKind)kind;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSmartCardReader *))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSString * deviceId;
++ (NSString*)getDeviceSelector;
++ (NSString*)getDeviceSelectorWithKind:(WDSSmartCardReaderKind)kind;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSmartCardReader*))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString* deviceId;
 @property (readonly) WDSSmartCardReaderKind kind;
-@property (readonly) NSString * name;
-- (EventRegistrationToken)addCardAddedEvent:(void(^)(WDSSmartCardReader *, WDSCardAddedEventArgs *))del;
+@property (readonly) NSString* name;
+- (EventRegistrationToken)addCardAddedEvent:(void (^)(WDSSmartCardReader*, WDSCardAddedEventArgs*))del;
 - (void)removeCardAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCardRemovedEvent:(void(^)(WDSSmartCardReader *, WDSCardRemovedEventArgs *))del;
+- (EventRegistrationToken)addCardRemovedEvent:(void (^)(WDSSmartCardReader*, WDSCardRemovedEventArgs*))del;
 - (void)removeCardRemovedEvent:(EventRegistrationToken)tok;
 - (void)getStatusAsyncWithSuccess:(void (^)(WDSSmartCardReaderStatus))success failure:(void (^)(NSError*))failure;
-- (void)findAllCardsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WDSSmartCard*/ ))success failure:(void (^)(NSError*))failure;
+- (void)findAllCardsAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WDSSmartCard*/))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmartCardReader_DEFINED__
@@ -103,7 +106,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCard : RTObject
-@property (readonly) WDSSmartCardReader * reader;
+@property (readonly) WDSSmartCardReader* reader;
 - (void)getStatusAsyncWithSuccess:(void (^)(WDSSmartCardStatus))success failure:(void (^)(NSError*))failure;
 - (void)getAnswerToResetAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 @end
@@ -116,7 +119,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCardAddedEventArgs : RTObject
-@property (readonly) WDSSmartCard * smartCard;
+@property (readonly) WDSSmartCard* smartCard;
 @end
 
 #endif // __WDSCardAddedEventArgs_DEFINED__
@@ -127,7 +130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCardRemovedEventArgs : RTObject
-@property (readonly) WDSSmartCard * smartCard;
+@property (readonly) WDSSmartCard* smartCard;
 @end
 
 #endif // __WDSCardRemovedEventArgs_DEFINED__
@@ -138,14 +141,23 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardProvisioning : RTObject
-+ (void)fromSmartCardAsync:(WDSSmartCard *)card success:(void (^)(WDSSmartCardProvisioning *))success failure:(void (^)(NSError*))failure;
-+ (void)requestVirtualSmartCardCreationAsync:(NSString *)friendlyName administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey pinPolicy:(WDSSmartCardPinPolicy *)pinPolicy success:(void (^)(WDSSmartCardProvisioning *))success failure:(void (^)(NSError*))failure;
-+ (void)requestVirtualSmartCardCreationAsyncWithCardId:(NSString *)friendlyName administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey pinPolicy:(WDSSmartCardPinPolicy *)pinPolicy cardId:(WFGUID *)cardId success:(void (^)(WDSSmartCardProvisioning *))success failure:(void (^)(NSError*))failure;
-+ (void)requestVirtualSmartCardDeletionAsync:(WDSSmartCard *)card success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-@property (readonly) WDSSmartCard * smartCard;
-- (void)getIdAsyncWithSuccess:(void (^)(WFGUID *))success failure:(void (^)(NSError*))failure;
-- (void)getNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-- (void)getChallengeContextAsyncWithSuccess:(void (^)(WDSSmartCardChallengeContext *))success failure:(void (^)(NSError*))failure;
++ (void)fromSmartCardAsync:(WDSSmartCard*)card success:(void (^)(WDSSmartCardProvisioning*))success failure:(void (^)(NSError*))failure;
++ (void)requestVirtualSmartCardCreationAsync:(NSString*)friendlyName
+                           administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
+                                   pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
+                                     success:(void (^)(WDSSmartCardProvisioning*))success
+                                     failure:(void (^)(NSError*))failure;
++ (void)requestVirtualSmartCardCreationAsyncWithCardId:(NSString*)friendlyName
+                                     administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
+                                             pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
+                                                cardId:(WFGUID*)cardId
+                                               success:(void (^)(WDSSmartCardProvisioning*))success
+                                               failure:(void (^)(NSError*))failure;
++ (void)requestVirtualSmartCardDeletionAsync:(WDSSmartCard*)card success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@property (readonly) WDSSmartCard* smartCard;
+- (void)getIdAsyncWithSuccess:(void (^)(WFGUID*))success failure:(void (^)(NSError*))failure;
+- (void)getNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)getChallengeContextAsyncWithSuccess:(void (^)(WDSSmartCardChallengeContext*))success failure:(void (^)(NSError*))failure;
 - (void)requestPinChangeAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestPinResetAsync:(WDSSmartCardPinResetHandler)handler success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -188,8 +200,11 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIBuffer>* challenge;
 - (void)verifyResponseAsync:(RTObject<WSSIBuffer>*)response success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)provisionAsync:(RTObject<WSSIBuffer>*)response formatCard:(BOOL)formatCard;
-- (RTObject<WFIAsyncAction>*)provisionAsyncWithNewCardId:(RTObject<WSSIBuffer>*)response formatCard:(BOOL)formatCard newCardId:(WFGUID *)newCardId;
-- (RTObject<WFIAsyncAction>*)changeAdministrativeKeyAsync:(RTObject<WSSIBuffer>*)response newAdministrativeKey:(RTObject<WSSIBuffer>*)newAdministrativeKey;
+- (RTObject<WFIAsyncAction>*)provisionAsyncWithNewCardId:(RTObject<WSSIBuffer>*)response
+                                              formatCard:(BOOL)formatCard
+                                               newCardId:(WFGUID*)newCardId;
+- (RTObject<WFIAsyncAction>*)changeAdministrativeKeyAsync:(RTObject<WSSIBuffer>*)response
+                                     newAdministrativeKey:(RTObject<WSSIBuffer>*)newAdministrativeKey;
 - (void)close;
 @end
 
@@ -202,8 +217,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSSmartCardPinResetRequest : RTObject
 @property (readonly) RTObject<WSSIBuffer>* challenge;
-@property (readonly) WFDateTime * deadline;
-- (WDSSmartCardPinResetDeferral *)getDeferral;
+@property (readonly) WFDateTime* deadline;
+- (WDSSmartCardPinResetDeferral*)getDeferral;
 - (void)setResponse:(RTObject<WSSIBuffer>*)response;
 @end
 
@@ -219,4 +234,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDSSmartCardPinResetDeferral_DEFINED__
-

@@ -20,6 +20,24 @@
 
 #include <time.h>
 
+/* Error Domains */
+NSString* const NSOSStatusErrorDomain = @"NSOSStatusErrorDomain";
+NSString* const NSWINSOCKErrorDomain = @"NSWINSOCKErrorDomain";
+NSString* const NSWin32ErrorDomain = @"NSWin32ErrorDomain";
+NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
+NSString* const NSMachErrorDomain = @"NSMachErrorDomain";
+
+/* Error Keys */
+NSString* const NSUnderlyingErrorKey = @"NSUnderlyingErrorKey";
+NSString* const NSLocalizedDescriptionKey = @"NSLocalizedDescriptionKey";
+NSString* const NSLocalizedFailureReasonErrorKey = @"NSLocalizedFailureReasonErrorKey";
+NSString* const NSLocalizedRecoveryOptionsErrorKey = @"NSLocalizedRecoveryOptionsErrorKey";
+NSString* const NSLocalizedRecoverySuggestionErrorKey = @"NSLocalizedRecoverySuggestionErrorKey";
+NSString* const NSRecoveryAttempterErrorKey = @"NSRecoveryAttempterErrorKey";
+NSString* const NSStringEncodingErrorKey = @"NSStringEncodingErrorKey";
+NSString* const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
+NSString* const NSURLErrorKey = @"NSURLErrorKey";
+
 @implementation NSError {
     idretaintype(NSString) _domain;
     idretaintype(NSDictionary) _userInfo;
@@ -92,7 +110,7 @@
 - (NSString*)localizedDescription {
     id ret;
 
-    if ((ret = [_userInfo objectForKey:@"NSLocalizedDescriptionKey"]) != nil) {
+    if ((ret = [_userInfo objectForKey:NSLocalizedDescriptionKey]) != nil) {
         return ret;
     }
 
@@ -108,7 +126,7 @@
 - (NSString*)localizedFailureReason {
     id ret;
 
-    if ((ret = [_userInfo objectForKey:@"NSLocalizedFailureReasonErrorKey"]) != nil) {
+    if ((ret = [_userInfo objectForKey:NSLocalizedFailureReasonErrorKey]) != nil) {
         return ret;
     }
 

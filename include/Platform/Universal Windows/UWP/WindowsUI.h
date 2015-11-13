@@ -22,15 +22,15 @@
 #include "interopBase.h"
 @class WUColorHelper, WUColors;
 @class WUColor;
-@protocol WUIColorHelper, WUIColorHelperStatics, WUIColors, WUIColorsStatics;
-
+@protocol WUIColorHelper
+, WUIColorHelperStatics, WUIColors, WUIColorsStatics;
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Color
 WINRT_EXPORT
 @interface WUColor : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property uint8_t a;
 @property uint8_t r;
 @property uint8_t g;
@@ -198,4 +198,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUColors_DEFINED__
-

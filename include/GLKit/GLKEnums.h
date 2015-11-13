@@ -21,14 +21,14 @@
 
 enum _GLKLightingType {
     GLKLightingTypePerVertex = 0,
-    GLKLightingTypePerPixel
+    GLKLightingTypePerPixel,
 };
 typedef unsigned int GLKLightingType;
 
 enum _GLKFogMode {
     GLKFogModeExp = 0,
     GLKFogModeExp2,
-    GLKFogModeLinear
+    GLKFogModeLinear,
 };
 typedef unsigned int GLKFogMode;
 
@@ -44,7 +44,7 @@ typedef unsigned int GLKTextureEnvMode;
 enum _GLKTextureTarget {
     GLKTextureTarget2D = GL_TEXTURE_2D,
     GLKTextureTargetCubeMap = GL_TEXTURE_CUBE_MAP,
-    GLKTextureTargetCt = 2
+    GLKTextureTargetCt = 2,
 };
 typedef unsigned int GLKTextureTarget;
 
@@ -82,13 +82,12 @@ typedef GLuint GLKViewDrawableColorFormat;
 enum _GLKViewDrawableDepthFormat {
     GLKViewDrawableDepthFormatNone = 0,
     GLKViewDrawableDepthFormat16,
-    GLKViewDrawableDepthFormat24
+    GLKViewDrawableDepthFormat24,
 };
 typedef GLuint GLKViewDrawableDepthFormat;
 
 enum _GLKViewDrawableStencilFormat {
     GLKViewDrawableStencilFormatNone = 0,
-    GLKViewDrawableStencilFormat8
+    GLKViewDrawableStencilFormat8,
 };
 typedef GLuint GLKViewDrawableStencilFormat;
-

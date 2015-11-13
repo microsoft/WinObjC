@@ -36,24 +36,32 @@ typedef struct __CFNetService* CFNetServiceRef;
 
 struct CFNetServiceClientContext {
     CFIndex version;
-    void *info;
+    void* info;
     CFAllocatorRetainCallBack retain;
     CFAllocatorReleaseCallBack release;
     CFAllocatorCopyDescriptionCallBack copyDescription;
 };
 typedef struct CFNetServiceClientContext CFNetServiceClientContext;
 
-typedef void (*CFNetServiceBrowserClientCallBack) (CFNetServiceBrowserRef browser, CFOptionFlags flags, CFTypeRef domainOrService, CFStreamError* error, void* info);
-typedef void (*CFNetServiceClientCallBack) (CFNetServiceRef theService, CFStreamError* error, void* info);
+typedef void (*CFNetServiceBrowserClientCallBack)(
+    CFNetServiceBrowserRef browser, CFOptionFlags flags, CFTypeRef domainOrService, CFStreamError* error, void* info);
+typedef void (*CFNetServiceClientCallBack)(CFNetServiceRef theService, CFStreamError* error, void* info);
 
-SB_EXPORT CFNetServiceBrowserRef CFNetServiceBrowserCreate(CFAllocatorRef alloc, CFNetServiceBrowserClientCallBack clientCB, CFNetServiceClientContext *clientContext);
+SB_EXPORT CFNetServiceBrowserRef CFNetServiceBrowserCreate(CFAllocatorRef alloc,
+                                                           CFNetServiceBrowserClientCallBack clientCB,
+                                                           CFNetServiceClientContext* clientContext);
 SB_EXPORT void CFNetServiceBrowserScheduleWithRunLoop(CFNetServiceBrowserRef browser, CFRunLoopRef runLoop, CFStringRef runLoopMode);
-SB_EXPORT Boolean CFNetServiceBrowserSearchForDomains(CFNetServiceBrowserRef browser, Boolean registrationDomains, CFStreamError *error);
+SB_EXPORT Boolean CFNetServiceBrowserSearchForDomains(CFNetServiceBrowserRef browser, Boolean registrationDomains, CFStreamError* error);
 SB_EXPORT void CFNetServiceBrowserUnscheduleFromRunLoop(CFNetServiceBrowserRef browser, CFRunLoopRef runLoop, CFStringRef runLoopMode);
-SB_EXPORT void CFNetServiceBrowserStopSearch(CFNetServiceBrowserRef browser, CFStreamError *error);
+SB_EXPORT void CFNetServiceBrowserStopSearch(CFNetServiceBrowserRef browser, CFStreamError* error);
 SB_EXPORT void CFNetServiceBrowserInvalidate(CFNetServiceBrowserRef browser);
-SB_EXPORT Boolean CFNetServiceBrowserSearchForServices(CFNetServiceBrowserRef browser, CFStringRef domain, CFStringRef serviceType, CFStreamError *error);
-SB_EXPORT Boolean CFNetServiceSetClient(CFNetServiceRef theService, CFNetServiceClientCallBack clientCB, CFNetServiceClientContext *clientContext);
+SB_EXPORT Boolean CFNetServiceBrowserSearchForServices(CFNetServiceBrowserRef browser,
+                                                       CFStringRef domain,
+                                                       CFStringRef serviceType,
+                                                       CFStreamError* error);
+SB_EXPORT Boolean CFNetServiceSetClient(CFNetServiceRef theService,
+                                        CFNetServiceClientCallBack clientCB,
+                                        CFNetServiceClientContext* clientContext);
 SB_EXPORT void CFNetServiceCancel(CFNetServiceRef theService);
 SB_EXPORT CFStringRef CFNetServiceGetName(CFNetServiceRef theService);
 SB_EXPORT void CFNetServiceUnscheduleFromRunLoop(CFNetServiceRef theService, CFRunLoopRef runLoop, CFStringRef runLoopMode);

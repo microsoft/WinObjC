@@ -80,6 +80,11 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
     return self;
 }
 
++ (BOOL)automaticallyNotifiersObserversForKey:(NSString*)key {
+    // This class uses setObject:forKey: as a setter, and has no key-specific setters.
+    return NO;
+}
+
 /**
  @Status Interoperable
 */
@@ -448,8 +453,6 @@ static id deepCopyValue(id obj) {
 }
 
 - (id)valueForKey:(NSString*)key {
-    // EbrDebugLog("Warning: calling objectForKey for valueForKey\n");
-
     return [self objectForKey:key];
 }
 
@@ -472,8 +475,6 @@ static id deepCopyValue(id obj) {
 }
 
 - (void)setValue:(id)value forKey:(NSString*)key {
-    EbrDebugLog("Warning: callling setObjectForKey for setValueForKey\n");
-
     [self setObject:value forKey:key];
 }
 
@@ -484,9 +485,4 @@ static id deepCopyValue(id obj) {
     UNIMPLEMENTED();
     EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
 }
-
-- (void)addObserver:(id)observer forKeyPath:(id)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
-    EbrDebugLog("NSUserDefaults: abbObserver for \"%s\"\n", [keyPath UTF8String]);
-}
-
 @end

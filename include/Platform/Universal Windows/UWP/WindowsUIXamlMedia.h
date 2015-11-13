@@ -20,162 +20,191 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection, WUXMFontFamily, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection, WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode, WUXMGeneralTransform, WUXMGeometry, WUXMGradientStop, WUXMImageSource, WUXMPathFigure, WUXMPathSegment, WUXMProjection, WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMArcSegment, WUXMBezierSegment, WUXMBitmapCache, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMMatrix3DProjection, WUXMPathGeometry, WUXMPlaneProjection, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment, WUXMQuadraticBezierSegment, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTileBrush, WUXMTransform, WUXMCompositeTransform, WUXMImageBrush, WUXMLinearGradientBrush, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform, WUXMTransformGroup, WUXMTranslateTransform;
+@class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection,
+    WUXMFontFamily, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection,
+    WUXMPointCollection, WUXMRenderingEventArgs, WUXMTimelineMarkerCollection, WUXMTransformCollection, WUXMBrush, WUXMCacheMode,
+    WUXMGeneralTransform, WUXMGeometry, WUXMGradientStop, WUXMImageSource, WUXMPathFigure, WUXMPathSegment, WUXMProjection,
+    WUXMRateChangedRoutedEventArgs, WUXMTimelineMarker, WUXMTimelineMarkerRoutedEventArgs, WUXMArcSegment, WUXMBezierSegment,
+    WUXMBitmapCache, WUXMEllipseGeometry, WUXMGeometryGroup, WUXMGradientBrush, WUXMLineGeometry, WUXMLineSegment, WUXMMatrix3DProjection,
+    WUXMPathGeometry, WUXMPlaneProjection, WUXMPolyBezierSegment, WUXMPolyLineSegment, WUXMPolyQuadraticBezierSegment,
+    WUXMQuadraticBezierSegment, WUXMRectangleGeometry, WUXMSolidColorBrush, WUXMTileBrush, WUXMTransform, WUXMCompositeTransform,
+    WUXMImageBrush, WUXMLinearGradientBrush, WUXMMatrixTransform, WUXMRotateTransform, WUXMScaleTransform, WUXMSkewTransform,
+    WUXMTransformGroup, WUXMTranslateTransform;
 @class WUXMMatrix;
-@class RTArray_C_Double, RTArray_C_WFPoint, RTArray_C_WUXMGeometry, RTArray_C_WUXMGradientStop, RTArray_C_WUXMPathFigure, RTArray_C_WUXMPathSegment, RTArray_C_WUXMTimelineMarker, RTArray_C_WUXMTransform;
-@protocol WUXMIVisualTreeHelper, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIMatrixHelper, WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory, WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform, WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory, WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathFigure, WUXMIPathFigureStatics, WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs, WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIArcSegment, WUXMIArcSegmentStatics, WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIBitmapCache, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup, WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry, WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics, WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIPolyBezierSegment, WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment, WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMIRectangleGeometry, WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITileBrush, WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform, WUXMICompositeTransformStatics, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics, WUXMILinearGradientBrushFactory, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics, WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup, WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics;
+@class RTArray_C_Double, RTArray_C_WFPoint, RTArray_C_WUXMGeometry, RTArray_C_WUXMGradientStop, RTArray_C_WUXMPathFigure,
+    RTArray_C_WUXMPathSegment, RTArray_C_WUXMTimelineMarker, RTArray_C_WUXMTransform;
+@protocol WUXMIVisualTreeHelper
+, WUXMIVisualTreeHelperStatics, WUXMIVisualTreeHelperStatics2, WUXMIPartialMediaFailureDetectedEventArgs, WUXMIMatrixHelper,
+    WUXMIMatrixHelperStatics, WUXMICompositionTarget, WUXMICompositionTargetStatics, WUXMIFontFamily, WUXMIFontFamilyFactory,
+    WUXMIRenderingEventArgs, WUXMIBrush, WUXMIBrushStatics, WUXMIBrushFactory, WUXMICacheMode, WUXMICacheModeFactory, WUXMIGeneralTransform,
+    WUXMIGeneralTransformOverrides, WUXMIGeneralTransformFactory, WUXMIGeometry, WUXMIGeometryStatics, WUXMIGeometryFactory,
+    WUXMIGradientStop, WUXMIGradientStopStatics, WUXMIImageSource, WUXMIImageSourceFactory, WUXMIPathFigure, WUXMIPathFigureStatics,
+    WUXMIPathSegment, WUXMIPathSegmentFactory, WUXMIProjection, WUXMIProjectionFactory, WUXMIRateChangedRoutedEventArgs,
+    WUXMITimelineMarker, WUXMITimelineMarkerStatics, WUXMITimelineMarkerRoutedEventArgs, WUXMIArcSegment, WUXMIArcSegmentStatics,
+    WUXMIBezierSegment, WUXMIBezierSegmentStatics, WUXMIBitmapCache, WUXMIEllipseGeometry, WUXMIEllipseGeometryStatics, WUXMIGeometryGroup,
+    WUXMIGeometryGroupStatics, WUXMIGradientBrush, WUXMIGradientBrushStatics, WUXMIGradientBrushFactory, WUXMILineGeometry,
+    WUXMILineGeometryStatics, WUXMILineSegment, WUXMILineSegmentStatics, WUXMIMatrix3DProjection, WUXMIMatrix3DProjectionStatics,
+    WUXMIPathGeometry, WUXMIPathGeometryStatics, WUXMIPlaneProjection, WUXMIPlaneProjectionStatics, WUXMIPolyBezierSegment,
+    WUXMIPolyBezierSegmentStatics, WUXMIPolyLineSegment, WUXMIPolyLineSegmentStatics, WUXMIPolyQuadraticBezierSegment,
+    WUXMIPolyQuadraticBezierSegmentStatics, WUXMIQuadraticBezierSegment, WUXMIQuadraticBezierSegmentStatics, WUXMIRectangleGeometry,
+    WUXMIRectangleGeometryStatics, WUXMISolidColorBrush, WUXMISolidColorBrushStatics, WUXMISolidColorBrushFactory, WUXMITileBrush,
+    WUXMITileBrushStatics, WUXMITileBrushFactory, WUXMITransform, WUXMITransformFactory, WUXMICompositeTransform,
+    WUXMICompositeTransformStatics, WUXMIImageBrush, WUXMIImageBrushStatics, WUXMILinearGradientBrush, WUXMILinearGradientBrushStatics,
+    WUXMILinearGradientBrushFactory, WUXMIMatrixTransform, WUXMIMatrixTransformStatics, WUXMIRotateTransform, WUXMIRotateTransformStatics,
+    WUXMIScaleTransform, WUXMIScaleTransformStatics, WUXMISkewTransform, WUXMISkewTransformStatics, WUXMITransformGroup,
+    WUXMITransformGroupStatics, WUXMITranslateTransform, WUXMITranslateTransformStatics;
 
 // Windows.UI.Xaml.Media.MediaElementState
 enum _WUXMMediaElementState {
-	WUXMMediaElementStateClosed = 0,
-	WUXMMediaElementStateOpening = 1,
-	WUXMMediaElementStateBuffering = 2,
-	WUXMMediaElementStatePlaying = 3,
-	WUXMMediaElementStatePaused = 4,
-	WUXMMediaElementStateStopped = 5,
+    WUXMMediaElementStateClosed = 0,
+    WUXMMediaElementStateOpening = 1,
+    WUXMMediaElementStateBuffering = 2,
+    WUXMMediaElementStatePlaying = 3,
+    WUXMMediaElementStatePaused = 4,
+    WUXMMediaElementStateStopped = 5,
 };
 typedef unsigned WUXMMediaElementState;
 
 // Windows.UI.Xaml.Media.AlignmentX
 enum _WUXMAlignmentX {
-	WUXMAlignmentXLeft = 0,
-	WUXMAlignmentXCenter = 1,
-	WUXMAlignmentXRight = 2,
+    WUXMAlignmentXLeft = 0,
+    WUXMAlignmentXCenter = 1,
+    WUXMAlignmentXRight = 2,
 };
 typedef unsigned WUXMAlignmentX;
 
 // Windows.UI.Xaml.Media.AlignmentY
 enum _WUXMAlignmentY {
-	WUXMAlignmentYTop = 0,
-	WUXMAlignmentYCenter = 1,
-	WUXMAlignmentYBottom = 2,
+    WUXMAlignmentYTop = 0,
+    WUXMAlignmentYCenter = 1,
+    WUXMAlignmentYBottom = 2,
 };
 typedef unsigned WUXMAlignmentY;
 
 // Windows.UI.Xaml.Media.AudioCategory
 enum _WUXMAudioCategory {
-	WUXMAudioCategoryOther = 0,
-	WUXMAudioCategoryForegroundOnlyMedia = 1,
-	WUXMAudioCategoryBackgroundCapableMedia = 2,
-	WUXMAudioCategoryCommunications = 3,
-	WUXMAudioCategoryAlerts = 4,
-	WUXMAudioCategorySoundEffects = 5,
-	WUXMAudioCategoryGameEffects = 6,
-	WUXMAudioCategoryGameMedia = 7,
-	WUXMAudioCategoryGameChat = 8,
-	WUXMAudioCategorySpeech = 9,
-	WUXMAudioCategoryMovie = 10,
-	WUXMAudioCategoryMedia = 11,
+    WUXMAudioCategoryOther = 0,
+    WUXMAudioCategoryForegroundOnlyMedia = 1,
+    WUXMAudioCategoryBackgroundCapableMedia = 2,
+    WUXMAudioCategoryCommunications = 3,
+    WUXMAudioCategoryAlerts = 4,
+    WUXMAudioCategorySoundEffects = 5,
+    WUXMAudioCategoryGameEffects = 6,
+    WUXMAudioCategoryGameMedia = 7,
+    WUXMAudioCategoryGameChat = 8,
+    WUXMAudioCategorySpeech = 9,
+    WUXMAudioCategoryMovie = 10,
+    WUXMAudioCategoryMedia = 11,
 };
 typedef unsigned WUXMAudioCategory;
 
 // Windows.UI.Xaml.Media.AudioDeviceType
 enum _WUXMAudioDeviceType {
-	WUXMAudioDeviceTypeConsole = 0,
-	WUXMAudioDeviceTypeMultimedia = 1,
-	WUXMAudioDeviceTypeCommunications = 2,
+    WUXMAudioDeviceTypeConsole = 0,
+    WUXMAudioDeviceTypeMultimedia = 1,
+    WUXMAudioDeviceTypeCommunications = 2,
 };
 typedef unsigned WUXMAudioDeviceType;
 
 // Windows.UI.Xaml.Media.BrushMappingMode
 enum _WUXMBrushMappingMode {
-	WUXMBrushMappingModeAbsolute = 0,
-	WUXMBrushMappingModeRelativeToBoundingBox = 1,
+    WUXMBrushMappingModeAbsolute = 0,
+    WUXMBrushMappingModeRelativeToBoundingBox = 1,
 };
 typedef unsigned WUXMBrushMappingMode;
 
 // Windows.UI.Xaml.Media.ColorInterpolationMode
 enum _WUXMColorInterpolationMode {
-	WUXMColorInterpolationModeScRgbLinearInterpolation = 0,
-	WUXMColorInterpolationModeSRgbLinearInterpolation = 1,
+    WUXMColorInterpolationModeScRgbLinearInterpolation = 0,
+    WUXMColorInterpolationModeSRgbLinearInterpolation = 1,
 };
 typedef unsigned WUXMColorInterpolationMode;
 
 // Windows.UI.Xaml.Media.ElementCompositeMode
 enum _WUXMElementCompositeMode {
-	WUXMElementCompositeModeInherit = 0,
-	WUXMElementCompositeModeSourceOver = 1,
-	WUXMElementCompositeModeMinBlend = 2,
+    WUXMElementCompositeModeInherit = 0,
+    WUXMElementCompositeModeSourceOver = 1,
+    WUXMElementCompositeModeMinBlend = 2,
 };
 typedef unsigned WUXMElementCompositeMode;
 
 // Windows.UI.Xaml.Media.FillRule
 enum _WUXMFillRule {
-	WUXMFillRuleEvenOdd = 0,
-	WUXMFillRuleNonzero = 1,
+    WUXMFillRuleEvenOdd = 0,
+    WUXMFillRuleNonzero = 1,
 };
 typedef unsigned WUXMFillRule;
 
 // Windows.UI.Xaml.Media.GradientSpreadMethod
 enum _WUXMGradientSpreadMethod {
-	WUXMGradientSpreadMethodPad = 0,
-	WUXMGradientSpreadMethodReflect = 1,
-	WUXMGradientSpreadMethodRepeat = 2,
+    WUXMGradientSpreadMethodPad = 0,
+    WUXMGradientSpreadMethodReflect = 1,
+    WUXMGradientSpreadMethodRepeat = 2,
 };
 typedef unsigned WUXMGradientSpreadMethod;
 
 // Windows.UI.Xaml.Media.MediaCanPlayResponse
 enum _WUXMMediaCanPlayResponse {
-	WUXMMediaCanPlayResponseNotSupported = 0,
-	WUXMMediaCanPlayResponseMaybe = 1,
-	WUXMMediaCanPlayResponseProbably = 2,
+    WUXMMediaCanPlayResponseNotSupported = 0,
+    WUXMMediaCanPlayResponseMaybe = 1,
+    WUXMMediaCanPlayResponseProbably = 2,
 };
 typedef unsigned WUXMMediaCanPlayResponse;
 
 // Windows.UI.Xaml.Media.PenLineCap
 enum _WUXMPenLineCap {
-	WUXMPenLineCapFlat = 0,
-	WUXMPenLineCapSquare = 1,
-	WUXMPenLineCapRound = 2,
-	WUXMPenLineCapTriangle = 3,
+    WUXMPenLineCapFlat = 0,
+    WUXMPenLineCapSquare = 1,
+    WUXMPenLineCapRound = 2,
+    WUXMPenLineCapTriangle = 3,
 };
 typedef unsigned WUXMPenLineCap;
 
 // Windows.UI.Xaml.Media.PenLineJoin
 enum _WUXMPenLineJoin {
-	WUXMPenLineJoinMiter = 0,
-	WUXMPenLineJoinBevel = 1,
-	WUXMPenLineJoinRound = 2,
+    WUXMPenLineJoinMiter = 0,
+    WUXMPenLineJoinBevel = 1,
+    WUXMPenLineJoinRound = 2,
 };
 typedef unsigned WUXMPenLineJoin;
 
 // Windows.UI.Xaml.Media.Stereo3DVideoPackingMode
 enum _WUXMStereo3DVideoPackingMode {
-	WUXMStereo3DVideoPackingModeNone = 0,
-	WUXMStereo3DVideoPackingModeSideBySide = 1,
-	WUXMStereo3DVideoPackingModeTopBottom = 2,
+    WUXMStereo3DVideoPackingModeNone = 0,
+    WUXMStereo3DVideoPackingModeSideBySide = 1,
+    WUXMStereo3DVideoPackingModeTopBottom = 2,
 };
 typedef unsigned WUXMStereo3DVideoPackingMode;
 
 // Windows.UI.Xaml.Media.Stereo3DVideoRenderMode
 enum _WUXMStereo3DVideoRenderMode {
-	WUXMStereo3DVideoRenderModeMono = 0,
-	WUXMStereo3DVideoRenderModeStereo = 1,
+    WUXMStereo3DVideoRenderModeMono = 0,
+    WUXMStereo3DVideoRenderModeStereo = 1,
 };
 typedef unsigned WUXMStereo3DVideoRenderMode;
 
 // Windows.UI.Xaml.Media.Stretch
 enum _WUXMStretch {
-	WUXMStretchNone = 0,
-	WUXMStretchFill = 1,
-	WUXMStretchUniform = 2,
-	WUXMStretchUniformToFill = 3,
+    WUXMStretchNone = 0,
+    WUXMStretchFill = 1,
+    WUXMStretchUniform = 2,
+    WUXMStretchUniformToFill = 3,
 };
 typedef unsigned WUXMStretch;
 
 // Windows.UI.Xaml.Media.StyleSimulations
 enum _WUXMStyleSimulations {
-	WUXMStyleSimulationsNone = 0,
-	WUXMStyleSimulationsBoldSimulation = 1,
-	WUXMStyleSimulationsItalicSimulation = 2,
-	WUXMStyleSimulationsBoldItalicSimulation = 3,
+    WUXMStyleSimulationsNone = 0,
+    WUXMStyleSimulationsBoldSimulation = 1,
+    WUXMStyleSimulationsItalicSimulation = 2,
+    WUXMStyleSimulationsBoldItalicSimulation = 3,
 };
 typedef unsigned WUXMStyleSimulations;
 
 // Windows.UI.Xaml.Media.SweepDirection
 enum _WUXMSweepDirection {
-	WUXMSweepDirectionCounterclockwise = 0,
-	WUXMSweepDirectionClockwise = 1,
+    WUXMSweepDirectionCounterclockwise = 0,
+    WUXMSweepDirectionClockwise = 1,
 };
 typedef unsigned WUXMSweepDirection;
 
@@ -190,28 +219,27 @@ typedef unsigned WUXMSweepDirection;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void(^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
+typedef void (^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
+typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Matrix
 WINRT_EXPORT
 @interface WUXMMatrix : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property double m11;
 @property double m12;
 @property double m21;
@@ -223,13 +251,13 @@ WINRT_EXPORT
 // Windows.UI.Xaml.Media.RateChangedRoutedEventHandler
 #ifndef __WUXMRateChangedRoutedEventHandler__DEFINED
 #define __WUXMRateChangedRoutedEventHandler__DEFINED
-typedef void(^WUXMRateChangedRoutedEventHandler)(RTObject* sender, WUXMRateChangedRoutedEventArgs* e);
+typedef void (^WUXMRateChangedRoutedEventHandler)(RTObject* sender, WUXMRateChangedRoutedEventArgs* e);
 #endif // __WUXMRateChangedRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.TimelineMarkerRoutedEventHandler
 #ifndef __WUXMTimelineMarkerRoutedEventHandler__DEFINED
 #define __WUXMTimelineMarkerRoutedEventHandler__DEFINED
-typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimelineMarkerRoutedEventArgs* e);
+typedef void (^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimelineMarkerRoutedEventArgs* e);
 #endif // __WUXMTimelineMarkerRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.IGeneralTransformOverrides
@@ -252,8 +280,12 @@ WINRT_EXPORT
 @interface WUXMVisualTreeHelper : RTObject
 + (id<NSFastEnumeration>)findElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree;
 + (id<NSFastEnumeration>)findElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree;
-+ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
-+ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesRect:(WFRect*)intersectingRect subtree:(WXUIElement*)subtree includeAllElements:(BOOL)includeAllElements;
++ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint
+                                                       subtree:(WXUIElement*)subtree
+                                            includeAllElements:(BOOL)includeAllElements;
++ (id<NSFastEnumeration>)findAllElementsInHostCoordinatesRect:(WFRect*)intersectingRect
+                                                      subtree:(WXUIElement*)subtree
+                                           includeAllElements:(BOOL)includeAllElements;
 + (WXDependencyObject*)getChild:(WXDependencyObject*)reference childIndex:(int)childIndex;
 + (int)getChildrenCount:(WXDependencyObject*)reference;
 + (WXDependencyObject*)getParent:(WXDependencyObject*)reference;
@@ -295,9 +327,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMCompositionTarget : RTObject
-+ (EventRegistrationToken)addRenderingEvent:(void(^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addRenderingEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeRenderingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addSurfaceContentsLostEvent:(void(^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addSurfaceContentsLostEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeSurfaceContentsLostEvent:(EventRegistrationToken)tok;
 @end
 
@@ -313,14 +345,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -333,7 +363,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMFontFamily : RTObject
-@property (readonly) NSString * source;
+@property (readonly) NSString* source;
 @end
 
 #endif // __WUXMFontFamily_DEFINED__
@@ -348,14 +378,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -372,14 +400,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -396,14 +422,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -420,14 +444,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -444,14 +466,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -479,14 +499,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -503,14 +521,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
 
-- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
-- (void)removeObjectAtIndex: (NSUInteger)idx;
-- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
-- (void)addObject: (id)obj;
+- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
+- (void)removeObjectAtIndex:(NSUInteger)idx;
+- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
+- (void)addObject:(id)obj;
 - (void)removeLastObject;
 
 @end
@@ -692,9 +708,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * type;
+@property (copy) NSString* type;
 @property (copy) WFTimeSpan* time;
-@property (copy) NSString * text;
+@property (copy) NSString* text;
 + (WXDependencyProperty*)textProperty;
 + (WXDependencyProperty*)timeProperty;
 + (WXDependencyProperty*)typeProperty;
@@ -1068,7 +1084,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMLinearGradientBrush : WUXMGradientBrush
 + (instancetype)create ACTIVATOR;
-+ (WUXMLinearGradientBrush*)createInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection angle:(double)angle ACTIVATOR;
++ (WUXMLinearGradientBrush*)createInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection
+                                                                       angle:(double)angle ACTIVATOR;
 @property (copy) WFPoint* startPoint;
 @property (copy) WFPoint* endPoint;
 + (WXDependencyProperty*)endPointProperty;
@@ -1173,4 +1190,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXMTranslateTransform_DEFINED__
-

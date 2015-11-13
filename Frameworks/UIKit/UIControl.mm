@@ -58,6 +58,11 @@
     return self;
 }
 
+- (void)initAccessibility {
+    [super initAccessibility];
+    self.isAccessibilityElement = TRUE;
+}
+
 - (void)addEventConnection:(UIRuntimeEventConnection*)connection {
     [_registeredActions addObject:connection];
 }
@@ -169,6 +174,12 @@
 
     [self setNeedsDisplay];
     [self setNeedsLayout];
+    
+    if (enabled) {
+        self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
+    } else {
+        self.accessibilityTraits |= UIAccessibilityTraitNotEnabled;
+    }
 }
 
 /**

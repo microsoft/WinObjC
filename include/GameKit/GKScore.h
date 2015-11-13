@@ -28,14 +28,14 @@ GAMEKIT_EXPORT_CLASS
 
 @property (nonatomic, assign) int64_t value;
 @property (nonatomic, readonly, assign) NSInteger rank;
-@property (nonatomic, readonly, retain) NSString *playerID;
-@property (nonatomic, readonly, retain) NSDate *date;
-@property (nonatomic, readonly, retain) NSString *formattedValue;
+@property (nonatomic, readonly, retain) NSString* playerID;
+@property (nonatomic, readonly, retain) NSDate* date;
+@property (nonatomic, readonly, retain) NSString* formattedValue;
 @property (nonatomic, assign) uint64_t context;
-@property (nonatomic, retain) NSString *category;
+@property (nonatomic, retain) NSString* category;
 
-- (id)initWithCategory:(NSString *)category;
-- (void)reportScoreWithCompletionHandler:(void (^)(NSError *error))completionHandler;
+- (id)initWithCategory:(NSString*)category;
+- (void)reportScoreWithCompletionHandler:(void (^)(NSError* error))completionHandler;
 
 @end
 

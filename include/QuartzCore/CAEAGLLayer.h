@@ -19,11 +19,11 @@
 
 CA_EXPORT_CLASS
 @interface CAEAGLLayer : CALayer
-@property(copy) NSDictionary *drawableProperties;
+@property (copy) NSDictionary* drawableProperties;
 @end
 
 @class WXCSwapChainPanel;
 
-@interface CAEAGLLayer(WinObjC)
-@property(readonly) WXCSwapChainPanel *swapChainPanel;
+@interface CAEAGLLayer (WinObjC)
+@property (readonly) WXCSwapChainPanel* swapChainPanel;
 @end

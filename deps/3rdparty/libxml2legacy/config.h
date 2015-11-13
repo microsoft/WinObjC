@@ -303,12 +303,12 @@
 
 /* Visual Studio 14 2015 and Windows Apps specific */
 #define _CRT_SECURE_NO_WARNINGS
+#define getcwd(buf, size) NULL
+#define getenv(name) NULL
 
 /* Std C name mangling work-around MSVC 2013 Windows 8.1 and Windows Phone 8.1 */
 #if _MSC_VER < 1900
 #define snprintf _snprintf
-#define getcwd(buf, size) NULL
-#define getenv(name) NULL
 #endif
 
 /* ss_family is not defined here, use __ss_family instead */

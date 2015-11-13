@@ -26,7 +26,7 @@
 GAMEKIT_EXPORT_CLASS
 @interface GKAchievementViewController : UINavigationController
 
-@property(nonatomic, assign) id<GKAchievementViewControllerDelegate> achievementDelegate;
+@property (nonatomic, assign) id<GKAchievementViewControllerDelegate> achievementDelegate;
 
 @end
 

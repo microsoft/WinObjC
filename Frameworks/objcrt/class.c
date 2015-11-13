@@ -2,6 +2,7 @@
 //
 // Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
 //   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -1004,4 +1005,14 @@ OBJCRT_EXPORT void objc_registerClassPair(Class cls) {
 
 OBJCRT_EXPORT void* object_getIndexedIvars(id obj) {
     return (void*)((uint8_t*)obj + OBJC_ID_PADDED(class_getInstanceSize(object_getClass(obj))));
+}
+
+Property class_getProperty(Class cls, const char* name) {
+    OBJC_NOT_IMPLEMENTED_ERROR("class_getProperty is not yet implemented");
+    return Nil;
+}
+
+Property* class_copyPropertyList(Class cls, unsigned int* outCount) {
+    OBJC_NOT_IMPLEMENTED_ERROR("class_copyPropertyList is not yet implemented");
+    return Nil;
 }

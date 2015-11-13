@@ -21,7 +21,7 @@
 #import <CoreFoundation/CFString.h>
 
 enum {
-    kCTFontClassMaskShift = 28
+    kCTFontClassMaskShift = 28,
 };
 
 enum {

@@ -14,15 +14,17 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UIDocument.h>
 #import <CoreData/NSManagedObjectContext.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIManagedDocument : UIDocument {
 }
 
-- (id)initWithFileURL:(NSURL *)url;
+- (id)initWithFileURL:(NSURL*)url;
 
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain, readonly) NSManagedObjectContext* managedObjectContext;
 @property (readonly) UIDocumentState documentState;
 
 @end

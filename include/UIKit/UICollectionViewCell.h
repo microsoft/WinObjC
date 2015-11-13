@@ -21,9 +21,9 @@
 #import <UIKit/UICollectionReusableView.h>
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewCell : UICollectionReusableView 
+@interface UICollectionViewCell : UICollectionReusableView
 
-@property (nonatomic, readonly) UIView *contentView;
+@property (nonatomic, readonly) UIView* contentView;
 /*
 @property (nonatomic, retain) UIView *selectedBackgroundView;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;

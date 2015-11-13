@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSAWWebAuthenticationResult, WSAWWebAuthenticationBroker;
-@protocol WSAWIWebAuthenticationResult, WSAWIWebAuthenticationBrokerStatics;
+@protocol WSAWIWebAuthenticationResult
+, WSAWIWebAuthenticationBrokerStatics;
 
 // Windows.Security.Authentication.Web.WebAuthenticationStatus
 enum _WSAWWebAuthenticationStatus {
@@ -49,7 +50,7 @@ typedef unsigned WSAWWebAuthenticationOptions;
 
 WINRT_EXPORT
 @interface WSAWWebAuthenticationResult : RTObject
-@property (readonly) NSString * responseData;
+@property (readonly) NSString* responseData;
 @property (readonly) unsigned responseErrorDetail;
 @property (readonly) WSAWWebAuthenticationStatus responseStatus;
 @end
@@ -62,10 +63,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWWebAuthenticationBroker : RTObject
-+ (void)authenticateWithCallbackUriAsync:(WSAWWebAuthenticationOptions)options requestUri:(WFUri *)requestUri callbackUri:(WFUri *)callbackUri success:(void (^)(WSAWWebAuthenticationResult *))success failure:(void (^)(NSError*))failure;
-+ (void)authenticateWithoutCallbackUriAsync:(WSAWWebAuthenticationOptions)options requestUri:(WFUri *)requestUri success:(void (^)(WSAWWebAuthenticationResult *))success failure:(void (^)(NSError*))failure;
-+ (WFUri *)getCurrentApplicationCallbackUri;
++ (void)authenticateWithCallbackUriAsync:(WSAWWebAuthenticationOptions)options
+                              requestUri:(WFUri*)requestUri
+                             callbackUri:(WFUri*)callbackUri
+                                 success:(void (^)(WSAWWebAuthenticationResult*))success
+                                 failure:(void (^)(NSError*))failure;
++ (void)authenticateWithoutCallbackUriAsync:(WSAWWebAuthenticationOptions)options
+                                 requestUri:(WFUri*)requestUri
+                                    success:(void (^)(WSAWWebAuthenticationResult*))success
+                                    failure:(void (^)(NSError*))failure;
++ (WFUri*)getCurrentApplicationCallbackUri;
 @end
 
 #endif // __WSAWWebAuthenticationBroker_DEFINED__
-

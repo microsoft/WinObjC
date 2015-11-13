@@ -21,8 +21,8 @@
 
 #include "interopBase.h"
 @class WSEEasClientDeviceInformation;
-@protocol WSEIEasClientDeviceInformation, WSEIEasClientDeviceInformation2;
-
+@protocol WSEIEasClientDeviceInformation
+, WSEIEasClientDeviceInformation2;
 
 #import <Foundation/Foundation.h>
 
@@ -33,15 +33,14 @@
 WINRT_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) NSString * friendlyName;
+@property (readonly) NSString* friendlyName;
 @property (readonly) WFGUID* id;
-@property (readonly) NSString * operatingSystem;
-@property (readonly) NSString * systemManufacturer;
-@property (readonly) NSString * systemProductName;
-@property (readonly) NSString * systemSku;
-@property (readonly) NSString * systemFirmwareVersion;
-@property (readonly) NSString * systemHardwareVersion;
+@property (readonly) NSString* operatingSystem;
+@property (readonly) NSString* systemManufacturer;
+@property (readonly) NSString* systemProductName;
+@property (readonly) NSString* systemSku;
+@property (readonly) NSString* systemFirmwareVersion;
+@property (readonly) NSString* systemHardwareVersion;
 @end
 
 #endif // __WSEEasClientDeviceInformation_DEFINED__
-

@@ -24,11 +24,11 @@
 
 @interface UIAttachmentBehavior : UIDynamicBehavior
 
-@property(nonatomic, readonly, copy) NSArray *items;
-@property(readwrite, nonatomic) CGFloat length;
-@property(readwrite, nonatomic) CGFloat damping;
-@property(readwrite, nonatomic) CGFloat frequency;
-@property(readwrite, nonatomic) CGPoint anchorPoint;
+@property (nonatomic, readonly, copy) NSArray* items;
+@property (readwrite, nonatomic) CGFloat length;
+@property (readwrite, nonatomic) CGFloat damping;
+@property (readwrite, nonatomic) CGFloat frequency;
+@property (readwrite, nonatomic) CGPoint anchorPoint;
 
 - (instancetype)initWithItem:(id<UIDynamicItem>)item attachedToAnchor:(CGPoint)point;
 

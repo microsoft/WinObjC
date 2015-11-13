@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSFetchRequest;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSManagedObjectModel : NSObject
 
 + (NSManagedObjectModel *)modelByMergingModels:(NSArray *)models;

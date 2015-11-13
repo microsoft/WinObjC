@@ -17,8 +17,8 @@
 #ifndef __ADSUPPORT_H
 #define __ADSUPPORT_H
 
-UIKIT_EXPORT 
-@interface ASIdentifierManager : NSObject 
+UIKIT_EXPORT
+@interface ASIdentifierManager : NSObject
 
 @property (nonatomic, readonly) NSUUID* advertisingIdentifier;
 @property (nonatomic, readonly, getter=isAdvertisingTrackingEnabled) BOOL advertisingTrackingEnabled;

@@ -337,8 +337,13 @@ static bool validateState(UIControlState state) {
     return true;
 }
 
+- (void)initAccessibility {
+    [super initAccessibility];
+    self.accessibilityTraits = UIAccessibilityTraitButton;
+}
+
 /**
- @Status Interoperable
+   @Status Interoperable
 */
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     if (!validateState(state)) {
@@ -394,6 +399,8 @@ static bool validateState(UIControlState state) {
     _states[state].title.attach([title copy]);
     [self setNeedsLayout];
     [self layoutSubviews];
+
+    self.accessibilityLabel = title;
 }
 
 /**

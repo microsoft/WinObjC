@@ -23,6 +23,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFArray.mm" />
+	<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFBundle.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFConstants.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFData.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionary.mm" />

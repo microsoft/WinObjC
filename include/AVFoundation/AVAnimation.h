@@ -20,8 +20,8 @@
 #import <StarboardExport.h>
 #import <Foundation/Foundation.h>
 
-SB_EXPORT NSString * const AVLayerVideoGravityResize;
-SB_EXPORT NSString * const AVLayerVideoGravityResizeAspect;
-SB_EXPORT NSString * const AVLayerVideoGravityResizeAspectFill;
+SB_EXPORT NSString* const AVLayerVideoGravityResize;
+SB_EXPORT NSString* const AVLayerVideoGravityResizeAspect;
+SB_EXPORT NSString* const AVLayerVideoGravityResizeAspectFill;
 
 #endif /* _AVANIMATION_H_ */

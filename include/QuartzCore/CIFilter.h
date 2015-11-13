@@ -19,13 +19,13 @@
 @class NSMutableDictionary;
 
 @interface CIFilter : NSObject {
-   NSMutableDictionary *_keyValues;
+    NSMutableDictionary* _keyValues;
 }
 
-+(CIFilter *)filterWithName:(NSString *)name;
--(void)setDefaults;
++ (CIFilter*)filterWithName:(NSString*)name;
+- (void)setDefaults;
 
--valueForKey:(NSString *)key;
--(void)setValue:value forKey:(NSString *)key;
+- valueForKey:(NSString*)key;
+- (void)setValue:value forKey:(NSString*)key;
 
 @end

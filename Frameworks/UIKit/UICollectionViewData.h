@@ -40,13 +40,13 @@
 - (unsigned)numberOfItemsBeforeSection:(int)section;
 - (unsigned)globalIndexForItemAtIndexPath:(id)indexPath;
 - (CGRect)collectionViewContentRect;
-/* annotate with type */ -(id)initWithCollectionView : (id)collectionView layout : (id)layout;
-/* annotate with type */ -(id)validateLayoutInRect : (CGRect)rect;
-/* annotate with type */ -(id)setLayoutIsPrepared : (BOOL)layoutIsPrepared;
-/* annotate with type */ -(id)setContentSize : (CGSize)size;
-/* annotate with type */ -(id)prepareToLoadData;
-/* annotate with type */ -(id)layoutAttributesForElementsInRect : (CGRect)rect;
-/* annotate with type */ -(id)updateItemCounts;
-/* annotate with type */ -(id)invalidate;
-/* annotate with type */ -(id)indexPathForItemAtGlobalIndex : (NSInteger)index;
+- (id)initWithCollectionView:(id)collectionView layout:(id)layout;
+- (id)validateLayoutInRect:(CGRect)rect;
+- (id)setLayoutIsPrepared:(BOOL)layoutIsPrepared;
+- (id)setContentSize:(CGSize)size;
+- (id)prepareToLoadData;
+- (id)layoutAttributesForElementsInRect:(CGRect)rect;
+- (id)updateItemCounts;
+- (id)invalidate;
+- (id)indexPathForItemAtGlobalIndex:(NSInteger)index;
 @end

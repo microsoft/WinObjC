@@ -18,10 +18,9 @@
 #import <CoreFoundation/CFDate.h>
 #import <QuartzCore/CABase.h>
 
-enum CADisplayLinkRunMode
-{
+enum CADisplayLinkRunMode {
     CADisplayLinkSyncMode,
-    CADisplayLinkTimerMode
+    CADisplayLinkTimerMode,
 };
 
 @class NSRunLoop;
@@ -30,15 +29,15 @@ enum CADisplayLinkRunMode
 CA_EXPORT_CLASS
 @interface CADisplayLink : NSObject
 
-@property(nonatomic) NSInteger frameInterval;
-@property(readonly, nonatomic) CFTimeInterval timestamp;
-@property(readonly, nonatomic) CFTimeInterval duration;
-@property(getter=isPaused, nonatomic) BOOL paused;
+@property (nonatomic) NSInteger frameInterval;
+@property (readonly, nonatomic) CFTimeInterval timestamp;
+@property (readonly, nonatomic) CFTimeInterval duration;
+@property (getter=isPaused, nonatomic) BOOL paused;
 
-+ (CADisplayLink *)displayLinkWithTarget:(id)target selector:(SEL)sel;
++ (CADisplayLink*)displayLinkWithTarget:(id)target selector:(SEL)sel;
 
 - (void)invalidate;
-- (void)addToRunLoop:(NSRunLoop *)runloop forMode:(NSString *)mode;
-- (void)removeFromRunLoop:(NSRunLoop *)runloop forMode:(NSString *)mode;
+- (void)addToRunLoop:(NSRunLoop*)runloop forMode:(NSString*)mode;
+- (void)removeFromRunLoop:(NSRunLoop*)runloop forMode:(NSString*)mode;
 
 @end

@@ -20,8 +20,18 @@
 #pragma once
 
 #include "interopBase.h"
-@class WASSearchPaneQueryLinguisticDetails, WASSearchPaneVisibilityChangedEventArgs, WASSearchPaneQueryChangedEventArgs, WASSearchPaneQuerySubmittedEventArgs, WASSearchPaneResultSuggestionChosenEventArgs, WASSearchSuggestionCollection, WASSearchPaneSuggestionsRequestDeferral, WASSearchPaneSuggestionsRequest, WASSearchPaneSuggestionsRequestedEventArgs, WASLocalContentSuggestionSettings, WASSearchPane, WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
-@protocol WASISearchPaneQueryLinguisticDetails, WASISearchPaneVisibilityChangedEventArgs, WASISearchPaneQueryChangedEventArgs, WASISearchPaneQuerySubmittedEventArgs, WASISearchPaneQuerySubmittedEventArgsWithLinguisticDetails, WASISearchPaneResultSuggestionChosenEventArgs, WASISearchSuggestionCollection, WASISearchPaneSuggestionsRequestDeferral, WASISearchPaneSuggestionsRequest, WASISearchPaneSuggestionsRequestedEventArgs, WASILocalContentSuggestionSettings, WASISearchPaneStatics, WASISearchPaneStaticsWithHideThisApplication, WASISearchPane, WASISearchQueryLinguisticDetailsFactory, WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
+@class WASSearchPaneQueryLinguisticDetails, WASSearchPaneVisibilityChangedEventArgs, WASSearchPaneQueryChangedEventArgs,
+    WASSearchPaneQuerySubmittedEventArgs, WASSearchPaneResultSuggestionChosenEventArgs, WASSearchSuggestionCollection,
+    WASSearchPaneSuggestionsRequestDeferral, WASSearchPaneSuggestionsRequest, WASSearchPaneSuggestionsRequestedEventArgs,
+    WASLocalContentSuggestionSettings, WASSearchPane, WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral,
+    WASSearchSuggestionsRequest;
+@protocol WASISearchPaneQueryLinguisticDetails
+, WASISearchPaneVisibilityChangedEventArgs, WASISearchPaneQueryChangedEventArgs, WASISearchPaneQuerySubmittedEventArgs,
+    WASISearchPaneQuerySubmittedEventArgsWithLinguisticDetails, WASISearchPaneResultSuggestionChosenEventArgs,
+    WASISearchSuggestionCollection, WASISearchPaneSuggestionsRequestDeferral, WASISearchPaneSuggestionsRequest,
+    WASISearchPaneSuggestionsRequestedEventArgs, WASILocalContentSuggestionSettings, WASISearchPaneStatics,
+    WASISearchPaneStaticsWithHideThisApplication, WASISearchPane, WASISearchQueryLinguisticDetailsFactory, WASISearchQueryLinguisticDetails,
+    WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
@@ -33,9 +43,9 @@
 #define __WASISearchPaneQueryChangedEventArgs_DEFINED__
 
 @protocol WASISearchPaneQueryChangedEventArgs
-@property (readonly) NSString * language;
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
-@property (readonly) NSString * queryText;
+@property (readonly) NSString* language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString* queryText;
 @end
 
 #endif // __WASISearchPaneQueryChangedEventArgs_DEFINED__
@@ -46,7 +56,7 @@
 
 WINRT_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
-@property (readonly) id<NSFastEnumeration> /*String*/  queryTextAlternatives;
+@property (readonly) id<NSFastEnumeration> /*String*/ queryTextAlternatives;
 @property (readonly) unsigned queryTextCompositionLength;
 @property (readonly) unsigned queryTextCompositionStart;
 @end
@@ -70,9 +80,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
-@property (readonly) NSString * language;
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
-@property (readonly) NSString * queryText;
+@property (readonly) NSString* language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString* queryText;
 @end
 
 #endif // __WASSearchPaneQueryChangedEventArgs_DEFINED__
@@ -83,9 +93,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchPaneQuerySubmittedEventArgs : RTObject
-@property (readonly) NSString * language;
-@property (readonly) NSString * queryText;
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
+@property (readonly) NSString* language;
+@property (readonly) NSString* queryText;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @end
 
 #endif // __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
@@ -96,7 +106,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchPaneResultSuggestionChosenEventArgs : RTObject
-@property (readonly) NSString * tag;
+@property (readonly) NSString* tag;
 @end
 
 #endif // __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
@@ -108,10 +118,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 @property (readonly) unsigned size;
-- (void)appendQuerySuggestion:(NSString *)text;
-- (void)appendQuerySuggestions:(id<NSFastEnumeration> /*String*/ )suggestions;
-- (void)appendResultSuggestion:(NSString *)text detailText:(NSString *)detailText tag:(NSString *)tag image:(RTObject<WSSIRandomAccessStreamReference>*)image imageAlternateText:(NSString *)imageAlternateText;
-- (void)appendSearchSeparator:(NSString *)label;
+- (void)appendQuerySuggestion:(NSString*)text;
+- (void)appendQuerySuggestions:(id<NSFastEnumeration> /*String*/)suggestions;
+- (void)appendResultSuggestion:(NSString*)text
+                    detailText:(NSString*)detailText
+                           tag:(NSString*)tag
+                         image:(RTObject<WSSIRandomAccessStreamReference>*)image
+            imageAlternateText:(NSString*)imageAlternateText;
+- (void)appendSearchSeparator:(NSString*)label;
 @end
 
 #endif // __WASSearchSuggestionCollection_DEFINED__
@@ -134,8 +148,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchPaneSuggestionsRequest : RTObject
 @property (readonly) BOOL isCanceled;
-@property (readonly) WASSearchSuggestionCollection * searchSuggestionCollection;
-- (WASSearchPaneSuggestionsRequestDeferral *)getDeferral;
+@property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
+- (WASSearchPaneSuggestionsRequestDeferral*)getDeferral;
 @end
 
 #endif // __WASSearchPaneSuggestionsRequest_DEFINED__
@@ -146,10 +160,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchPaneSuggestionsRequestedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
-@property (readonly) WASSearchPaneSuggestionsRequest * request;
-@property (readonly) NSString * language;
-@property (readonly) WASSearchPaneQueryLinguisticDetails * linguisticDetails;
-@property (readonly) NSString * queryText;
+@property (readonly) WASSearchPaneSuggestionsRequest* request;
+@property (readonly) NSString* language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString* queryText;
 @end
 
 #endif // __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
@@ -162,9 +176,9 @@ WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)create ACTIVATOR;
 @property BOOL enabled;
-@property (copy) NSString * aqsFilter;
-@property (readonly) id<NSFastEnumeration> /*WSStorageFolder*/  locations;
-@property (readonly) id<NSFastEnumeration> /*String*/  propertiesToMatch;
+@property (copy) NSString* aqsFilter;
+@property (readonly) id<NSFastEnumeration> /*WSStorageFolder*/ locations;
+@property (readonly) id<NSFastEnumeration> /*String*/ propertiesToMatch;
 @end
 
 #endif // __WASLocalContentSuggestionSettings_DEFINED__
@@ -176,28 +190,28 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchPane : RTObject
 + (void)hideThisApplication;
-+ (WASSearchPane *)getForCurrentView;
++ (WASSearchPane*)getForCurrentView;
 @property BOOL showOnKeyboardInput;
 @property BOOL searchHistoryEnabled;
-@property (copy) NSString * searchHistoryContext;
-@property (copy) NSString * placeholderText;
-@property (readonly) NSString * language;
-@property (readonly) NSString * queryText;
+@property (copy) NSString* searchHistoryContext;
+@property (copy) NSString* placeholderText;
+@property (readonly) NSString* language;
+@property (readonly) NSString* queryText;
 @property (readonly) BOOL visible;
-- (EventRegistrationToken)addQueryChangedEvent:(void(^)(WASSearchPane *, WASSearchPaneQueryChangedEventArgs *))del;
+- (EventRegistrationToken)addQueryChangedEvent:(void (^)(WASSearchPane*, WASSearchPaneQueryChangedEventArgs*))del;
 - (void)removeQueryChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addQuerySubmittedEvent:(void(^)(WASSearchPane *, WASSearchPaneQuerySubmittedEventArgs *))del;
+- (EventRegistrationToken)addQuerySubmittedEvent:(void (^)(WASSearchPane*, WASSearchPaneQuerySubmittedEventArgs*))del;
 - (void)removeQuerySubmittedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addResultSuggestionChosenEvent:(void(^)(WASSearchPane *, WASSearchPaneResultSuggestionChosenEventArgs *))del;
+- (EventRegistrationToken)addResultSuggestionChosenEvent:(void (^)(WASSearchPane*, WASSearchPaneResultSuggestionChosenEventArgs*))del;
 - (void)removeResultSuggestionChosenEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSuggestionsRequestedEvent:(void(^)(WASSearchPane *, WASSearchPaneSuggestionsRequestedEventArgs *))del;
+- (EventRegistrationToken)addSuggestionsRequestedEvent:(void (^)(WASSearchPane*, WASSearchPaneSuggestionsRequestedEventArgs*))del;
 - (void)removeSuggestionsRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVisibilityChangedEvent:(void(^)(WASSearchPane *, WASSearchPaneVisibilityChangedEventArgs *))del;
+- (EventRegistrationToken)addVisibilityChangedEvent:(void (^)(WASSearchPane*, WASSearchPaneVisibilityChangedEventArgs*))del;
 - (void)removeVisibilityChangedEvent:(EventRegistrationToken)tok;
-- (void)setLocalContentSuggestionSettings:(WASLocalContentSuggestionSettings *)settings;
+- (void)setLocalContentSuggestionSettings:(WASLocalContentSuggestionSettings*)settings;
 - (void)showOverloadDefault;
-- (void)showOverloadWithQuery:(NSString *)query;
-- (BOOL)trySetQueryText:(NSString *)query;
+- (void)showOverloadWithQuery:(NSString*)query;
+- (BOOL)trySetQueryText:(NSString*)query;
 @end
 
 #endif // __WASSearchPane_DEFINED__
@@ -208,8 +222,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
-+ (WASSearchQueryLinguisticDetails *)createInstance:(id<NSFastEnumeration> /*String*/ )queryTextAlternatives queryTextCompositionStart:(unsigned)queryTextCompositionStart queryTextCompositionLength:(unsigned)queryTextCompositionLength ACTIVATOR;
-@property (readonly) id<NSFastEnumeration> /*String*/  queryTextAlternatives;
++ (WASSearchQueryLinguisticDetails*)createInstance:(id<NSFastEnumeration> /*String*/)queryTextAlternatives
+                         queryTextCompositionStart:(unsigned)queryTextCompositionStart
+                        queryTextCompositionLength:(unsigned)queryTextCompositionLength ACTIVATOR;
+@property (readonly) id<NSFastEnumeration> /*String*/ queryTextAlternatives;
 @property (readonly) unsigned queryTextCompositionLength;
 @property (readonly) unsigned queryTextCompositionStart;
 @end
@@ -234,9 +250,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 @property (readonly) BOOL isCanceled;
-@property (readonly) WASSearchSuggestionCollection * searchSuggestionCollection;
-- (WASSearchSuggestionsRequestDeferral *)getDeferral;
+@property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
+- (WASSearchSuggestionsRequestDeferral*)getDeferral;
 @end
 
 #endif // __WASSearchSuggestionsRequest_DEFINED__
-

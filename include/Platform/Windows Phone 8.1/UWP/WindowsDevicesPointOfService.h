@@ -20,8 +20,23 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport, WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs, WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms, WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport, WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs, WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader, WDPMagneticStripeReader;
-@protocol WDPIUnifiedPosErrorData, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeScannerDataReceivedEventArgs, WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs, WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerStatics, WDPIBarcodeScanner, WDPIMagneticStripeReaderEncryptionAlgorithmsStatics, WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData, WDPIMagneticStripeReaderReport, WDPIMagneticStripeReaderBankCardDataReceivedEventArgs, WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs, WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPIMagneticStripeReaderErrorOccurredEventArgs, WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities, WDPIMagneticStripeReaderStatics, WDPIMagneticStripeReader, WDPIClaimedBarcodeScanner, WDPIClaimedMagneticStripeReader;
+@class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport,
+    WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs,
+    WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms,
+    WDPMagneticStripeReaderCardTypes, WDPMagneticStripeReaderTrackData, WDPMagneticStripeReaderReport,
+    WDPMagneticStripeReaderBankCardDataReceivedEventArgs, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs,
+    WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPMagneticStripeReaderErrorOccurredEventArgs,
+    WDPMagneticStripeReaderStatusUpdatedEventArgs, WDPMagneticStripeReaderCapabilities, WDPClaimedMagneticStripeReader,
+    WDPMagneticStripeReader;
+@protocol WDPIUnifiedPosErrorData
+, WDPIBarcodeScannerStatusUpdatedEventArgs, WDPIBarcodeSymbologiesStatics, WDPIBarcodeScannerDataReceivedEventArgs,
+    WDPIBarcodeScannerReport, WDPIBarcodeScannerErrorOccurredEventArgs, WDPIBarcodeScannerImagePreviewReceivedEventArgs,
+    WDPIBarcodeScannerCapabilities, WDPIBarcodeScannerStatics, WDPIBarcodeScanner, WDPIMagneticStripeReaderEncryptionAlgorithmsStatics,
+    WDPIMagneticStripeReaderCardTypesStatics, WDPIMagneticStripeReaderTrackData, WDPIMagneticStripeReaderReport,
+    WDPIMagneticStripeReaderBankCardDataReceivedEventArgs, WDPIMagneticStripeReaderAamvaCardDataReceivedEventArgs,
+    WDPIMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs, WDPIMagneticStripeReaderErrorOccurredEventArgs,
+    WDPIMagneticStripeReaderStatusUpdatedEventArgs, WDPIMagneticStripeReaderCapabilities, WDPIMagneticStripeReaderStatics,
+    WDPIMagneticStripeReader, WDPIClaimedBarcodeScanner, WDPIClaimedMagneticStripeReader;
 
 // Windows.Devices.PointOfService.UnifiedPosErrorSeverity
 enum _WDPUnifiedPosErrorSeverity {
@@ -139,7 +154,7 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 WINRT_EXPORT
 @interface WDPUnifiedPosErrorData : RTObject
 @property (readonly) unsigned extendedReason;
-@property (readonly) NSString * message;
+@property (readonly) NSString* message;
 @property (readonly) WDPUnifiedPosErrorReason reason;
 @property (readonly) WDPUnifiedPosErrorSeverity severity;
 @end
@@ -164,7 +179,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeSymbologies : RTObject
-+ (NSString *)getName:(unsigned)scanDataType;
++ (NSString*)getName:(unsigned)scanDataType;
 + (unsigned)ausPost;
 + (unsigned)aztec;
 + (unsigned)canPost;
@@ -281,7 +296,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerDataReceivedEventArgs : RTObject
-@property (readonly) WDPBarcodeScannerReport * report;
+@property (readonly) WDPBarcodeScannerReport* report;
 @end
 
 #endif // __WDPBarcodeScannerDataReceivedEventArgs_DEFINED__
@@ -292,9 +307,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScannerErrorOccurredEventArgs : RTObject
-@property (readonly) WDPUnifiedPosErrorData * errorData;
+@property (readonly) WDPUnifiedPosErrorData* errorData;
 @property (readonly) BOOL isRetriable;
-@property (readonly) WDPBarcodeScannerReport * partialInputData;
+@property (readonly) WDPBarcodeScannerReport* partialInputData;
 @end
 
 #endif // __WDPBarcodeScannerErrorOccurredEventArgs_DEFINED__
@@ -330,20 +345,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPBarcodeScanner : RTObject
-+ (void)getDefaultAsyncWithSuccess:(void (^)(WDPBarcodeScanner *))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBarcodeScanner *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-@property (readonly) WDPBarcodeScannerCapabilities * capabilities;
-@property (readonly) NSString * deviceId;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPBarcodeScanner *, WDPBarcodeScannerStatusUpdatedEventArgs *))del;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPBarcodeScanner*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
+@property (readonly) WDPBarcodeScannerCapabilities* capabilities;
+@property (readonly) NSString* deviceId;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPBarcodeScanner*, WDPBarcodeScannerStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
-- (void)claimScannerAsyncWithSuccess:(void (^)(WDPClaimedBarcodeScanner *))success failure:(void (^)(NSError*))failure;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-- (void)getSupportedSymbologiesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*UInt32*/ ))success failure:(void (^)(NSError*))failure;
+- (void)claimScannerAsyncWithSuccess:(void (^)(WDPClaimedBarcodeScanner*))success failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)getSupportedSymbologiesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*UInt32*/))success failure:(void (^)(NSError*))failure;
 - (void)isSymbologySupportedAsync:(unsigned)barcodeSymbology success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /*String*/ )statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration> /*String*/ )getSupportedProfiles;
-- (BOOL)isProfileSupported:(NSString *)profile;
+- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /*String*/)statisticsCategories
+                        success:(void (^)(RTObject<WSSIBuffer>*))success
+                        failure:(void (^)(NSError*))failure;
+- (id<NSFastEnumeration> /*String*/)getSupportedProfiles;
+- (BOOL)isProfileSupported:(NSString*)profile;
 @end
 
 #endif // __WDPBarcodeScanner_DEFINED__
@@ -366,27 +383,28 @@ WINRT_EXPORT
 @interface WDPClaimedBarcodeScanner : RTObject <WFIClosable>
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDPClaimedBarcodeScanner *, WDPBarcodeScannerDataReceivedEventArgs *))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void (^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerDataReceivedEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WDPClaimedBarcodeScanner *, WDPBarcodeScannerErrorOccurredEventArgs *))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WDPClaimedBarcodeScanner*, WDPBarcodeScannerErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addImagePreviewReceivedEvent:(void(^)(WDPClaimedBarcodeScanner *, WDPBarcodeScannerImagePreviewReceivedEventArgs *))del;
+- (EventRegistrationToken)addImagePreviewReceivedEvent:(void (^)(WDPClaimedBarcodeScanner*,
+                                                                 WDPBarcodeScannerImagePreviewReceivedEventArgs*))del;
 - (void)removeImagePreviewReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner *))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTriggerPressedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner *))del;
+- (EventRegistrationToken)addTriggerPressedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeTriggerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTriggerReleasedEvent:(void(^)(RTObject*, WDPClaimedBarcodeScanner *))del;
+- (EventRegistrationToken)addTriggerReleasedEvent:(void (^)(RTObject*, WDPClaimedBarcodeScanner*))del;
 - (void)removeTriggerReleasedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)enableAsync;
 - (RTObject<WFIAsyncAction>*)disableAsync;
 - (void)retainDevice;
-- (RTObject<WFIAsyncAction>*)setActiveSymbologiesAsync:(id<NSFastEnumeration> /*UInt32*/ )symbologies;
-- (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /*String*/ )statisticsCategories;
+- (RTObject<WFIAsyncAction>*)setActiveSymbologiesAsync:(id<NSFastEnumeration> /*UInt32*/)symbologies;
+- (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /*String*/)statisticsCategories;
 // Failed to generate member UpdateStatisticsAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,String>)
-- (RTObject<WFIAsyncAction>*)setActiveProfileAsync:(NSString *)profile;
+- (RTObject<WFIAsyncAction>*)setActiveProfileAsync:(NSString*)profile;
 - (void)close;
 @end
 
@@ -442,11 +460,11 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIBuffer>* cardAuthenticationData;
 @property (readonly) unsigned cardAuthenticationDataLength;
 @property (readonly) unsigned cardType;
-@property (readonly) NSDictionary * /*String, String*/  properties;
-@property (readonly) WDPMagneticStripeReaderTrackData * track1;
-@property (readonly) WDPMagneticStripeReaderTrackData * track2;
-@property (readonly) WDPMagneticStripeReaderTrackData * track3;
-@property (readonly) WDPMagneticStripeReaderTrackData * track4;
+@property (readonly) NSDictionary* /*String, String*/ properties;
+@property (readonly) WDPMagneticStripeReaderTrackData* track1;
+@property (readonly) WDPMagneticStripeReaderTrackData* track2;
+@property (readonly) WDPMagneticStripeReaderTrackData* track3;
+@property (readonly) WDPMagneticStripeReaderTrackData* track4;
 @end
 
 #endif // __WDPMagneticStripeReaderReport_DEFINED__
@@ -457,15 +475,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderBankCardDataReceivedEventArgs : RTObject
-@property (readonly) NSString * accountNumber;
-@property (readonly) NSString * expirationDate;
-@property (readonly) NSString * firstName;
-@property (readonly) NSString * middleInitial;
-@property (readonly) WDPMagneticStripeReaderReport * report;
-@property (readonly) NSString * serviceCode;
-@property (readonly) NSString * suffix;
-@property (readonly) NSString * surname;
-@property (readonly) NSString * title;
+@property (readonly) NSString* accountNumber;
+@property (readonly) NSString* expirationDate;
+@property (readonly) NSString* firstName;
+@property (readonly) NSString* middleInitial;
+@property (readonly) WDPMagneticStripeReaderReport* report;
+@property (readonly) NSString* serviceCode;
+@property (readonly) NSString* suffix;
+@property (readonly) NSString* surname;
+@property (readonly) NSString* title;
 @end
 
 #endif // __WDPMagneticStripeReaderBankCardDataReceivedEventArgs_DEFINED__
@@ -476,25 +494,25 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs : RTObject
-@property (readonly) NSString * address;
-@property (readonly) NSString * birthDate;
-@property (readonly) NSString * city;
-@property (readonly) NSString * Class;
-@property (readonly) NSString * endorsements;
-@property (readonly) NSString * expirationDate;
-@property (readonly) NSString * eyeColor;
-@property (readonly) NSString * firstName;
-@property (readonly) NSString * gender;
-@property (readonly) NSString * hairColor;
-@property (readonly) NSString * height;
-@property (readonly) NSString * licenseNumber;
-@property (readonly) NSString * postalCode;
-@property (readonly) WDPMagneticStripeReaderReport * report;
-@property (readonly) NSString * restrictions;
-@property (readonly) NSString * state;
-@property (readonly) NSString * suffix;
-@property (readonly) NSString * surname;
-@property (readonly) NSString * weight;
+@property (readonly) NSString* address;
+@property (readonly) NSString* birthDate;
+@property (readonly) NSString* city;
+@property (readonly) NSString* Class;
+@property (readonly) NSString* endorsements;
+@property (readonly) NSString* expirationDate;
+@property (readonly) NSString* eyeColor;
+@property (readonly) NSString* firstName;
+@property (readonly) NSString* gender;
+@property (readonly) NSString* hairColor;
+@property (readonly) NSString* height;
+@property (readonly) NSString* licenseNumber;
+@property (readonly) NSString* postalCode;
+@property (readonly) WDPMagneticStripeReaderReport* report;
+@property (readonly) NSString* restrictions;
+@property (readonly) NSString* state;
+@property (readonly) NSString* suffix;
+@property (readonly) NSString* surname;
+@property (readonly) NSString* weight;
 @end
 
 #endif // __WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs_DEFINED__
@@ -505,7 +523,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs : RTObject
-@property (readonly) WDPMagneticStripeReaderReport * report;
+@property (readonly) WDPMagneticStripeReaderReport* report;
 @end
 
 #endif // __WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs_DEFINED__
@@ -516,8 +534,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderErrorOccurredEventArgs : RTObject
-@property (readonly) WDPUnifiedPosErrorData * errorData;
-@property (readonly) WDPMagneticStripeReaderReport * partialInputData;
+@property (readonly) WDPUnifiedPosErrorData* errorData;
+@property (readonly) WDPMagneticStripeReaderReport* partialInputData;
 @property (readonly) WDPMagneticStripeReaderTrackErrorType track1Status;
 @property (readonly) WDPMagneticStripeReaderTrackErrorType track2Status;
 @property (readonly) WDPMagneticStripeReaderTrackErrorType track3Status;
@@ -545,7 +563,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPMagneticStripeReaderCapabilities : RTObject
 @property (readonly) WDPMagneticStripeReaderAuthenticationLevel authenticationLevel;
-@property (readonly) NSString * cardAuthentication;
+@property (readonly) NSString* cardAuthentication;
 @property (readonly) BOOL isIsoSupported;
 @property (readonly) BOOL isJisOneSupported;
 @property (readonly) BOOL isJisTwoSupported;
@@ -570,28 +588,32 @@ WINRT_EXPORT
 @property BOOL isDisabledOnDataReceived;
 @property BOOL isDecodeDataEnabled;
 @property unsigned dataEncryptionAlgorithm;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) BOOL isDeviceAuthenticated;
 @property (readonly) BOOL isEnabled;
-- (EventRegistrationToken)addAamvaCardDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader *, WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs *))del;
+- (EventRegistrationToken)addAamvaCardDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
+                                                                  WDPMagneticStripeReaderAamvaCardDataReceivedEventArgs*))del;
 - (void)removeAamvaCardDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBankCardDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader *, WDPMagneticStripeReaderBankCardDataReceivedEventArgs *))del;
+- (EventRegistrationToken)addBankCardDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
+                                                                 WDPMagneticStripeReaderBankCardDataReceivedEventArgs*))del;
 - (void)removeBankCardDataReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WDPClaimedMagneticStripeReader *, WDPMagneticStripeReaderErrorOccurredEventArgs *))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WDPClaimedMagneticStripeReader*,
+                                                          WDPMagneticStripeReaderErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void(^)(RTObject*, WDPClaimedMagneticStripeReader *))del;
+- (EventRegistrationToken)addReleaseDeviceRequestedEvent:(void (^)(RTObject*, WDPClaimedMagneticStripeReader*))del;
 - (void)removeReleaseDeviceRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVendorSpecificDataReceivedEvent:(void(^)(WDPClaimedMagneticStripeReader *, WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs *))del;
+- (EventRegistrationToken)addVendorSpecificDataReceivedEvent:(void (^)(WDPClaimedMagneticStripeReader*,
+                                                                       WDPMagneticStripeReaderVendorSpecificCardDataReceivedEventArgs*))del;
 - (void)removeVendorSpecificDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)enableAsync;
 - (RTObject<WFIAsyncAction>*)disableAsync;
 - (void)retainDevice;
 - (void)setErrorReportingType:(WDPMagneticStripeReaderErrorReportingType)value;
 - (void)retrieveDeviceAuthenticationDataAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)authenticateDeviceAsync:(id<NSFastEnumeration> /*UInt8*/ )responseToken;
-- (RTObject<WFIAsyncAction>*)deAuthenticateDeviceAsync:(id<NSFastEnumeration> /*UInt8*/ )responseToken;
-- (RTObject<WFIAsyncAction>*)updateKeyAsync:(NSString *)key keyName:(NSString *)keyName;
-- (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /*String*/ )statisticsCategories;
+- (RTObject<WFIAsyncAction>*)authenticateDeviceAsync:(id<NSFastEnumeration> /*UInt8*/)responseToken;
+- (RTObject<WFIAsyncAction>*)deAuthenticateDeviceAsync:(id<NSFastEnumeration> /*UInt8*/)responseToken;
+- (RTObject<WFIAsyncAction>*)updateKeyAsync:(NSString*)key keyName:(NSString*)keyName;
+- (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /*String*/)statisticsCategories;
 // Failed to generate member UpdateStatisticsAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,String>)
 - (void)close;
 @end
@@ -604,20 +626,21 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPMagneticStripeReader : RTObject
-+ (void)getDefaultAsyncWithSuccess:(void (^)(WDPMagneticStripeReader *))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPMagneticStripeReader *))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelector;
-@property (readonly) WDPMagneticStripeReaderCapabilities * capabilities;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDPMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector;
+@property (readonly) WDPMagneticStripeReaderCapabilities* capabilities;
 @property (readonly) WDPMagneticStripeReaderAuthenticationProtocol deviceAuthenticationProtocol;
-@property (readonly) NSString * deviceId;
-@property (readonly) id<NSFastEnumeration> /*UInt32*/  supportedCardTypes;
-- (EventRegistrationToken)addStatusUpdatedEvent:(void(^)(WDPMagneticStripeReader *, WDPMagneticStripeReaderStatusUpdatedEventArgs *))del;
+@property (readonly) NSString* deviceId;
+@property (readonly) id<NSFastEnumeration> /*UInt32*/ supportedCardTypes;
+- (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPMagneticStripeReader*, WDPMagneticStripeReaderStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
-- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-- (void)claimReaderAsyncWithSuccess:(void (^)(WDPClaimedMagneticStripeReader *))success failure:(void (^)(NSError*))failure;
-- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /*String*/ )statisticsCategories success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
+- (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)claimReaderAsyncWithSuccess:(void (^)(WDPClaimedMagneticStripeReader*))success failure:(void (^)(NSError*))failure;
+- (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /*String*/)statisticsCategories
+                        success:(void (^)(RTObject<WSSIBuffer>*))success
+                        failure:(void (^)(NSError*))failure;
 - (WDPMagneticStripeReaderErrorReportingType)getErrorReportingType;
 @end
 
 #endif // __WDPMagneticStripeReader_DEFINED__
-

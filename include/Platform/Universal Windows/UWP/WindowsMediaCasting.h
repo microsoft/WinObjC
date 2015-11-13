@@ -20,37 +20,40 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection, WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
-@protocol WMCICastingSource, WMCICastingConnectionErrorOccurredEventArgs, WMCICastingConnection, WMCICastingDevice, WMCICastingDeviceStatics, WMCICastingDeviceSelectedEventArgs, WMCICastingDevicePickerFilter, WMCICastingDevicePicker;
+@class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection,
+    WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
+@protocol WMCICastingSource
+, WMCICastingConnectionErrorOccurredEventArgs, WMCICastingConnection, WMCICastingDevice, WMCICastingDeviceStatics,
+    WMCICastingDeviceSelectedEventArgs, WMCICastingDevicePickerFilter, WMCICastingDevicePicker;
 
 // Windows.Media.Casting.CastingPlaybackTypes
 enum _WMCCastingPlaybackTypes {
-	WMCCastingPlaybackTypesNone = 0,
-	WMCCastingPlaybackTypesAudio = 1,
-	WMCCastingPlaybackTypesVideo = 2,
-	WMCCastingPlaybackTypesPicture = 4,
+    WMCCastingPlaybackTypesNone = 0,
+    WMCCastingPlaybackTypesAudio = 1,
+    WMCCastingPlaybackTypesVideo = 2,
+    WMCCastingPlaybackTypesPicture = 4,
 };
 typedef unsigned WMCCastingPlaybackTypes;
 
 // Windows.Media.Casting.CastingConnectionErrorStatus
 enum _WMCCastingConnectionErrorStatus {
-	WMCCastingConnectionErrorStatusSucceeded = 0,
-	WMCCastingConnectionErrorStatusDeviceDidNotRespond = 1,
-	WMCCastingConnectionErrorStatusDeviceError = 2,
-	WMCCastingConnectionErrorStatusDeviceLocked = 3,
-	WMCCastingConnectionErrorStatusProtectedPlaybackFailed = 4,
-	WMCCastingConnectionErrorStatusInvalidCastingSource = 5,
-	WMCCastingConnectionErrorStatusUnknown = 6,
+    WMCCastingConnectionErrorStatusSucceeded = 0,
+    WMCCastingConnectionErrorStatusDeviceDidNotRespond = 1,
+    WMCCastingConnectionErrorStatusDeviceError = 2,
+    WMCCastingConnectionErrorStatusDeviceLocked = 3,
+    WMCCastingConnectionErrorStatusProtectedPlaybackFailed = 4,
+    WMCCastingConnectionErrorStatusInvalidCastingSource = 5,
+    WMCCastingConnectionErrorStatusUnknown = 6,
 };
 typedef unsigned WMCCastingConnectionErrorStatus;
 
 // Windows.Media.Casting.CastingConnectionState
 enum _WMCCastingConnectionState {
-	WMCCastingConnectionStateDisconnected = 0,
-	WMCCastingConnectionStateConnected = 1,
-	WMCCastingConnectionStateRendering = 2,
-	WMCCastingConnectionStateDisconnecting = 3,
-	WMCCastingConnectionStateConnecting = 4,
+    WMCCastingConnectionStateDisconnected = 0,
+    WMCCastingConnectionStateConnected = 1,
+    WMCCastingConnectionStateRendering = 2,
+    WMCCastingConnectionStateDisconnecting = 3,
+    WMCCastingConnectionStateConnecting = 4,
 };
 typedef unsigned WMCCastingConnectionState;
 
@@ -80,7 +83,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
 @property (readonly) WMCCastingConnectionErrorStatus errorStatus;
-@property (readonly) NSString * message;
+@property (readonly) NSString* message;
 @end
 
 #endif // __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
@@ -91,13 +94,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingDevice : RTObject
-+ (NSString *)getDeviceSelector:(WMCCastingPlaybackTypes)type;
-+ (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString *)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelector:(WMCCastingPlaybackTypes)type;
++ (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource
+                                        success:(void (^)(NSString*))success
+                                        failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString*)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsCastingAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSString * friendlyName;
+@property (readonly) NSString* friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 - (void)getSupportedCastingPlaybackTypesAsyncWithSuccess:(void (^)(WMCCastingPlaybackTypes))success failure:(void (^)(NSError*))failure;
 - (WMCCastingConnection*)createCastingConnection;
 @end
@@ -123,11 +128,13 @@ WINRT_EXPORT
 @property (copy) WMCCastingSource* source;
 @property (readonly) WMCCastingDevice* device;
 @property (readonly) WMCCastingConnectionState state;
-- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WMCCastingConnection*, WMCCastingConnectionErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WMCCastingConnection*, WMCCastingConnectionErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMCCastingConnection*, RTObject*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void (^)(WMCCastingConnection*, RTObject*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (void)requestStartCastingAsync:(WMCCastingSource*)value success:(void (^)(WMCCastingConnectionErrorStatus))success failure:(void (^)(NSError*))failure;
+- (void)requestStartCastingAsync:(WMCCastingSource*)value
+                         success:(void (^)(WMCCastingConnectionErrorStatus))success
+                         failure:(void (^)(NSError*))failure;
 - (void)disconnectAsyncWithSuccess:(void (^)(WMCCastingConnectionErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -168,9 +175,9 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;
-- (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void(^)(WMCCastingDevicePicker*, RTObject*))del;
+- (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void (^)(WMCCastingDevicePicker*, RTObject*))del;
 - (void)removeCastingDevicePickerDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCastingDeviceSelectedEvent:(void(^)(WMCCastingDevicePicker*, WMCCastingDeviceSelectedEventArgs*))del;
+- (EventRegistrationToken)addCastingDeviceSelectedEvent:(void (^)(WMCCastingDevicePicker*, WMCCastingDeviceSelectedEventArgs*))del;
 - (void)removeCastingDeviceSelectedEvent:(EventRegistrationToken)tok;
 - (void)show:(WFRect*)selection;
 - (void)showWithPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
@@ -178,4 +185,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCCastingDevicePicker_DEFINED__
-

@@ -32,7 +32,7 @@ enum {
     GKPeerStateUnavailable,
     GKPeerStateConnected,
     GKPeerStateDisconnected,
-    GKPeerStateConnecting
+    GKPeerStateConnecting,
 };
 typedef uint32_t GKPeerConnectionState;
 
@@ -47,14 +47,14 @@ typedef uint32_t GKPeerConnectionState;
 
 @property (assign) id<GKSessionDelegate> delegate;
 @property (getter=isAvailable) BOOL available;
-@property (readonly) NSString *peerID;
+@property (readonly) NSString* peerID;
 
-- (id)initWithSessionID:(NSString *)sessionID displayName:(NSString *)name sessionMode:(GKSessionMode)mode;
+- (id)initWithSessionID:(NSString*)sessionID displayName:(NSString*)name sessionMode:(GKSessionMode)mode;
 - (void)disconnectFromAllPeers;
-- (void)setDataReceiveHandler:(id)handler withContext:(void *)context;
-- (BOOL)sendDataToAllPeers:(NSData *)data withDataMode:(GKSendDataMode)mode error:(NSError **)error;
-- (BOOL)sendData:(NSData *)data toPeers:(NSArray *)peers withDataMode:(GKSendDataMode)mode error:(NSError **)error;
-- (NSString *)displayNameForPeer:(NSString *)peerID;
+- (void)setDataReceiveHandler:(id)handler withContext:(void*)context;
+- (BOOL)sendDataToAllPeers:(NSData*)data withDataMode:(GKSendDataMode)mode error:(NSError**)error;
+- (BOOL)sendData:(NSData*)data toPeers:(NSArray*)peers withDataMode:(GKSendDataMode)mode error:(NSError**)error;
+- (NSString*)displayNameForPeer:(NSString*)peerID;
 
 @end
 

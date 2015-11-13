@@ -19,7 +19,7 @@
 
 #import <CoreFoundation/CFBase.h>
 
-#define COREAUDIOTYPES_VERSION  1300
+#define COREAUDIOTYPES_VERSION 1300
 
 #define kAudioUnitSampleFractionBits 24
 
@@ -29,7 +29,7 @@ typedef int32_t AudioChannelLayoutTag;
 typedef struct {
     UInt32 mNumberChannels;
     UInt32 mDataByteSize;
-    void *mData;
+    void* mData;
 } AudioBuffer;
 
 typedef struct {
@@ -110,7 +110,9 @@ enum : unsigned int {
 enum {
     kAudioFormatFlagsNativeEndian = 0,
     kAudioFormatFlagsCanonical = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked,
-    kAudioFormatFlagsAudioUnitCanonical = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved | (kAudioUnitSampleFractionBits << kLinearPCMFormatFlagsSampleFractionShift),
+    kAudioFormatFlagsAudioUnitCanonical = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked |
+                                          kAudioFormatFlagIsNonInterleaved |
+                                          (kAudioUnitSampleFractionBits << kLinearPCMFormatFlagsSampleFractionShift),
     kAudioFormatFlagsNativeFloatPacked = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked
 };
 
@@ -142,6 +144,7 @@ typedef struct {
     UInt32 mReserved;
 } AudioTimeStamp;
 
-#define TestAudioFormatNativeEndian(f) ((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
+#define TestAudioFormatNativeEndian(f) \
+    ((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
 
 #endif /* _COREAUDIOTYPES_H_ */

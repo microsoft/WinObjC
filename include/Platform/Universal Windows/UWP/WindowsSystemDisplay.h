@@ -23,7 +23,6 @@
 @class WSDDisplayRequest;
 @protocol WSDIDisplayRequest;
 
-
 #import <Foundation/Foundation.h>
 
 // Windows.System.Display.DisplayRequest
@@ -38,4 +37,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSDDisplayRequest_DEFINED__
-

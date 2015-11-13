@@ -22,7 +22,7 @@
 
 @interface AVPlayerLayer : CALayer
 
-+ (AVPlayerLayer *)playerLayerWithPlayer:(AVPlayer *)player;
++ (AVPlayerLayer*)playerLayerWithPlayer:(AVPlayer*)player;
 
 @end
 

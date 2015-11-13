@@ -16,7 +16,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSObject.h>
 
-@class NSArray, NSData, NSMutableDictionary, NSDictionary, NSMutableArray;
+@class NSArray;
+@class NSData;
+@class NSMutableDictionary;
+@class NSDictionary;
+@class NSMutableArray;
+@class NSURL;
 
 FOUNDATION_EXPORT NSString* const NSGlobalDomain;
 FOUNDATION_EXPORT NSString* const NSArgumentDomain;

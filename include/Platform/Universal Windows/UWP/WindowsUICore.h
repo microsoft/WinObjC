@@ -20,104 +20,116 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs, WUCCharacterReceivedEventArgs, WUCCoreWindowEventArgs, WUCInputEnabledEventArgs, WUCKeyEventArgs, WUCPointerEventArgs, WUCTouchHitTestingEventArgs, WUCWindowSizeChangedEventArgs, WUCVisibilityChangedEventArgs, WUCIdleDispatchedHandlerArgs, WUCAcceleratorKeyEventArgs, WUCCoreAcceleratorKeys, WUCCoreWindowResizeManager, WUCCoreIndependentInputSource, WUCCoreComponentInputSource, WUCBackRequestedEventArgs, WUCSystemNavigationManager;
+@class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs,
+    WUCCharacterReceivedEventArgs, WUCCoreWindowEventArgs, WUCInputEnabledEventArgs, WUCKeyEventArgs, WUCPointerEventArgs,
+    WUCTouchHitTestingEventArgs, WUCWindowSizeChangedEventArgs, WUCVisibilityChangedEventArgs, WUCIdleDispatchedHandlerArgs,
+    WUCAcceleratorKeyEventArgs, WUCCoreAcceleratorKeys, WUCCoreWindowResizeManager, WUCCoreIndependentInputSource,
+    WUCCoreComponentInputSource, WUCBackRequestedEventArgs, WUCSystemNavigationManager;
 @class WUCCorePhysicalKeyStatus, WUCCoreProximityEvaluation;
-@protocol WUCICoreWindowEventArgs, WUCIAutomationProviderRequestedEventArgs, WUCICharacterReceivedEventArgs, WUCIInputEnabledEventArgs, WUCIKeyEventArgs, WUCIPointerEventArgs, WUCITouchHitTestingEventArgs, WUCIWindowActivatedEventArgs, WUCIWindowSizeChangedEventArgs, WUCIVisibilityChangedEventArgs, WUCICoreWindow, WUCICoreWindow2, WUCICoreWindowStatic, WUCIAcceleratorKeyEventArgs, WUCICoreAcceleratorKeys, WUCICoreDispatcher, WUCICoreDispatcher2, WUCICoreDispatcherWithTaskPriority, WUCIIdleDispatchedHandlerArgs, WUCICoreCursor, WUCICoreCursorFactory, WUCIInitializeWithCoreWindow, WUCICoreWindowResizeManager, WUCICoreWindowResizeManagerLayoutCapability, WUCICoreWindowResizeManagerStatics, WUCICoreInputSourceBase, WUCICorePointerInputSource, WUCICoreKeyboardInputSource, WUCICoreComponentFocusable, WUCICoreTouchHitTesting, WUCISystemNavigationManager, WUCISystemNavigationManager2, WUCISystemNavigationManagerStatics, WUCIBackRequestedEventArgs;
+@protocol WUCICoreWindowEventArgs
+, WUCIAutomationProviderRequestedEventArgs, WUCICharacterReceivedEventArgs, WUCIInputEnabledEventArgs, WUCIKeyEventArgs,
+    WUCIPointerEventArgs, WUCITouchHitTestingEventArgs, WUCIWindowActivatedEventArgs, WUCIWindowSizeChangedEventArgs,
+    WUCIVisibilityChangedEventArgs, WUCICoreWindow, WUCICoreWindow2, WUCICoreWindowStatic, WUCIAcceleratorKeyEventArgs,
+    WUCICoreAcceleratorKeys, WUCICoreDispatcher, WUCICoreDispatcher2, WUCICoreDispatcherWithTaskPriority, WUCIIdleDispatchedHandlerArgs,
+    WUCICoreCursor, WUCICoreCursorFactory, WUCIInitializeWithCoreWindow, WUCICoreWindowResizeManager,
+    WUCICoreWindowResizeManagerLayoutCapability, WUCICoreWindowResizeManagerStatics, WUCICoreInputSourceBase, WUCICorePointerInputSource,
+    WUCICoreKeyboardInputSource, WUCICoreComponentFocusable, WUCICoreTouchHitTesting, WUCISystemNavigationManager,
+    WUCISystemNavigationManager2, WUCISystemNavigationManagerStatics, WUCIBackRequestedEventArgs;
 
 // Windows.UI.Core.CoreWindowActivationState
 enum _WUCCoreWindowActivationState {
-	WUCCoreWindowActivationStateCodeActivated = 0,
-	WUCCoreWindowActivationStateDeactivated = 1,
-	WUCCoreWindowActivationStatePointerActivated = 2,
+    WUCCoreWindowActivationStateCodeActivated = 0,
+    WUCCoreWindowActivationStateDeactivated = 1,
+    WUCCoreWindowActivationStatePointerActivated = 2,
 };
 typedef unsigned WUCCoreWindowActivationState;
 
 // Windows.UI.Core.CoreCursorType
 enum _WUCCoreCursorType {
-	WUCCoreCursorTypeArrow = 0,
-	WUCCoreCursorTypeCross = 1,
-	WUCCoreCursorTypeCustom = 2,
-	WUCCoreCursorTypeHand = 3,
-	WUCCoreCursorTypeHelp = 4,
-	WUCCoreCursorTypeIBeam = 5,
-	WUCCoreCursorTypeSizeAll = 6,
-	WUCCoreCursorTypeSizeNortheastSouthwest = 7,
-	WUCCoreCursorTypeSizeNorthSouth = 8,
-	WUCCoreCursorTypeSizeNorthwestSoutheast = 9,
-	WUCCoreCursorTypeSizeWestEast = 10,
-	WUCCoreCursorTypeUniversalNo = 11,
-	WUCCoreCursorTypeUpArrow = 12,
-	WUCCoreCursorTypeWait = 13,
+    WUCCoreCursorTypeArrow = 0,
+    WUCCoreCursorTypeCross = 1,
+    WUCCoreCursorTypeCustom = 2,
+    WUCCoreCursorTypeHand = 3,
+    WUCCoreCursorTypeHelp = 4,
+    WUCCoreCursorTypeIBeam = 5,
+    WUCCoreCursorTypeSizeAll = 6,
+    WUCCoreCursorTypeSizeNortheastSouthwest = 7,
+    WUCCoreCursorTypeSizeNorthSouth = 8,
+    WUCCoreCursorTypeSizeNorthwestSoutheast = 9,
+    WUCCoreCursorTypeSizeWestEast = 10,
+    WUCCoreCursorTypeUniversalNo = 11,
+    WUCCoreCursorTypeUpArrow = 12,
+    WUCCoreCursorTypeWait = 13,
 };
 typedef unsigned WUCCoreCursorType;
 
 // Windows.UI.Core.CoreDispatcherPriority
 enum _WUCCoreDispatcherPriority {
-	WUCCoreDispatcherPriorityIdle = -2,
-	WUCCoreDispatcherPriorityLow = -1,
-	WUCCoreDispatcherPriorityNormal = 0,
-	WUCCoreDispatcherPriorityHigh = 1,
+    WUCCoreDispatcherPriorityIdle = -2,
+    WUCCoreDispatcherPriorityLow = -1,
+    WUCCoreDispatcherPriorityNormal = 0,
+    WUCCoreDispatcherPriorityHigh = 1,
 };
 typedef unsigned WUCCoreDispatcherPriority;
 
 // Windows.UI.Core.CoreProcessEventsOption
 enum _WUCCoreProcessEventsOption {
-	WUCCoreProcessEventsOptionProcessOneAndAllPending = 0,
-	WUCCoreProcessEventsOptionProcessOneIfPresent = 1,
-	WUCCoreProcessEventsOptionProcessUntilQuit = 2,
-	WUCCoreProcessEventsOptionProcessAllIfPresent = 3,
+    WUCCoreProcessEventsOptionProcessOneAndAllPending = 0,
+    WUCCoreProcessEventsOptionProcessOneIfPresent = 1,
+    WUCCoreProcessEventsOptionProcessUntilQuit = 2,
+    WUCCoreProcessEventsOptionProcessAllIfPresent = 3,
 };
 typedef unsigned WUCCoreProcessEventsOption;
 
 // Windows.UI.Core.CoreWindowFlowDirection
 enum _WUCCoreWindowFlowDirection {
-	WUCCoreWindowFlowDirectionLeftToRight = 0,
-	WUCCoreWindowFlowDirectionRightToLeft = 1,
+    WUCCoreWindowFlowDirectionLeftToRight = 0,
+    WUCCoreWindowFlowDirectionRightToLeft = 1,
 };
 typedef unsigned WUCCoreWindowFlowDirection;
 
 // Windows.UI.Core.CoreVirtualKeyStates
 enum _WUCCoreVirtualKeyStates {
-	WUCCoreVirtualKeyStatesNone = 0,
-	WUCCoreVirtualKeyStatesDown = 1,
-	WUCCoreVirtualKeyStatesLocked = 2,
+    WUCCoreVirtualKeyStatesNone = 0,
+    WUCCoreVirtualKeyStatesDown = 1,
+    WUCCoreVirtualKeyStatesLocked = 2,
 };
 typedef unsigned WUCCoreVirtualKeyStates;
 
 // Windows.UI.Core.CoreAcceleratorKeyEventType
 enum _WUCCoreAcceleratorKeyEventType {
-	WUCCoreAcceleratorKeyEventTypeCharacter = 2,
-	WUCCoreAcceleratorKeyEventTypeDeadCharacter = 3,
-	WUCCoreAcceleratorKeyEventTypeKeyDown = 0,
-	WUCCoreAcceleratorKeyEventTypeKeyUp = 1,
-	WUCCoreAcceleratorKeyEventTypeSystemCharacter = 6,
-	WUCCoreAcceleratorKeyEventTypeSystemDeadCharacter = 7,
-	WUCCoreAcceleratorKeyEventTypeSystemKeyDown = 4,
-	WUCCoreAcceleratorKeyEventTypeSystemKeyUp = 5,
-	WUCCoreAcceleratorKeyEventTypeUnicodeCharacter = 8,
+    WUCCoreAcceleratorKeyEventTypeCharacter = 2,
+    WUCCoreAcceleratorKeyEventTypeDeadCharacter = 3,
+    WUCCoreAcceleratorKeyEventTypeKeyDown = 0,
+    WUCCoreAcceleratorKeyEventTypeKeyUp = 1,
+    WUCCoreAcceleratorKeyEventTypeSystemCharacter = 6,
+    WUCCoreAcceleratorKeyEventTypeSystemDeadCharacter = 7,
+    WUCCoreAcceleratorKeyEventTypeSystemKeyDown = 4,
+    WUCCoreAcceleratorKeyEventTypeSystemKeyUp = 5,
+    WUCCoreAcceleratorKeyEventTypeUnicodeCharacter = 8,
 };
 typedef unsigned WUCCoreAcceleratorKeyEventType;
 
 // Windows.UI.Core.CoreProximityEvaluationScore
 enum _WUCCoreProximityEvaluationScore {
-	WUCCoreProximityEvaluationScoreClosest = 0,
-	WUCCoreProximityEvaluationScoreFarthest = 2147483647,
+    WUCCoreProximityEvaluationScoreClosest = 0,
+    WUCCoreProximityEvaluationScoreFarthest = 2147483647,
 };
 typedef unsigned WUCCoreProximityEvaluationScore;
 
 // Windows.UI.Core.CoreInputDeviceTypes
 enum _WUCCoreInputDeviceTypes {
-	WUCCoreInputDeviceTypesNone = 0,
-	WUCCoreInputDeviceTypesTouch = 1,
-	WUCCoreInputDeviceTypesPen = 2,
-	WUCCoreInputDeviceTypesMouse = 4,
+    WUCCoreInputDeviceTypesNone = 0,
+    WUCCoreInputDeviceTypesTouch = 1,
+    WUCCoreInputDeviceTypesPen = 2,
+    WUCCoreInputDeviceTypesMouse = 4,
 };
 typedef unsigned WUCCoreInputDeviceTypes;
 
 // Windows.UI.Core.AppViewBackButtonVisibility
 enum _WUCAppViewBackButtonVisibility {
-	WUCAppViewBackButtonVisibilityVisible = 0,
-	WUCAppViewBackButtonVisibilityCollapsed = 1,
+    WUCAppViewBackButtonVisibilityVisible = 0,
+    WUCAppViewBackButtonVisibilityCollapsed = 1,
 };
 typedef unsigned WUCAppViewBackButtonVisibility;
 
@@ -128,22 +140,21 @@ typedef unsigned WUCAppViewBackButtonVisibility;
 // Windows.UI.Core.DispatchedHandler
 #ifndef __WUCDispatchedHandler__DEFINED
 #define __WUCDispatchedHandler__DEFINED
-typedef void(^WUCDispatchedHandler)();
+typedef void (^WUCDispatchedHandler)();
 #endif // __WUCDispatchedHandler__DEFINED
 
 // Windows.UI.Core.IdleDispatchedHandler
 #ifndef __WUCIdleDispatchedHandler__DEFINED
 #define __WUCIdleDispatchedHandler__DEFINED
-typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
+typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #endif // __WUCIdleDispatchedHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Core.CorePhysicalKeyStatus
 WINRT_EXPORT
 @interface WUCCorePhysicalKeyStatus : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned int repeatCount;
 @property unsigned int scanCode;
 @property BOOL isExtendedKey;
@@ -155,7 +166,7 @@ WINRT_EXPORT
 // [struct] Windows.UI.Core.CoreProximityEvaluation
 WINRT_EXPORT
 @interface WUCCoreProximityEvaluation : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int score;
 @property (copy) WFPoint* adjustedPoint;
 @end
@@ -163,13 +174,13 @@ WINRT_EXPORT
 // Windows.UI.Core.DispatchedHandler
 #ifndef __WUCDispatchedHandler__DEFINED
 #define __WUCDispatchedHandler__DEFINED
-typedef void(^WUCDispatchedHandler)();
+typedef void (^WUCDispatchedHandler)();
 #endif // __WUCDispatchedHandler__DEFINED
 
 // Windows.UI.Core.IdleDispatchedHandler
 #ifndef __WUCIdleDispatchedHandler__DEFINED
 #define __WUCIdleDispatchedHandler__DEFINED
-typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
+typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #endif // __WUCIdleDispatchedHandler__DEFINED
 
 // Windows.UI.Core.ICoreWindowEventArgs
@@ -196,39 +207,39 @@ typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property (copy) WUCCoreCursor* pointerCursor;
 @property (readonly) WFPoint* pointerPosition;
 @property (readonly) BOOL visible;
-- (EventRegistrationToken)addActivatedEvent:(void(^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
+- (EventRegistrationToken)addActivatedEvent:(void (^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAutomationProviderRequestedEvent:(void(^)(WUCCoreWindow*, WUCAutomationProviderRequestedEventArgs*))del;
+- (EventRegistrationToken)addAutomationProviderRequestedEvent:(void (^)(WUCCoreWindow*, WUCAutomationProviderRequestedEventArgs*))del;
 - (void)removeAutomationProviderRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(WUCCoreWindow*, WUCCharacterReceivedEventArgs*))del;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void (^)(WUCCoreWindow*, WUCCharacterReceivedEventArgs*))del;
 - (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WUCCoreWindow*, WUCCoreWindowEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WUCCoreWindow*, WUCCoreWindowEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addInputEnabledEvent:(void(^)(WUCCoreWindow*, WUCInputEnabledEventArgs*))del;
+- (EventRegistrationToken)addInputEnabledEvent:(void (^)(WUCCoreWindow*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyDownEvent:(void(^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyDownEvent:(void (^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
 - (void)removeKeyDownEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyUpEvent:(void(^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyUpEvent:(void (^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
 - (void)removeKeyUpEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerCaptureLostEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteredEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerWheelChangedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerWheelChangedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSizeChangedEvent:(void(^)(WUCCoreWindow*, WUCWindowSizeChangedEventArgs*))del;
+- (EventRegistrationToken)addSizeChangedEvent:(void (^)(WUCCoreWindow*, WUCWindowSizeChangedEventArgs*))del;
 - (void)removeSizeChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTouchHitTestingEvent:(void(^)(WUCCoreWindow*, WUCTouchHitTestingEventArgs*))del;
+- (EventRegistrationToken)addTouchHitTestingEvent:(void (^)(WUCCoreWindow*, WUCTouchHitTestingEventArgs*))del;
 - (void)removeTouchHitTestingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVisibilityChangedEvent:(void(^)(WUCCoreWindow*, WUCVisibilityChangedEventArgs*))del;
+- (EventRegistrationToken)addVisibilityChangedEvent:(void (^)(WUCCoreWindow*, WUCVisibilityChangedEventArgs*))del;
 - (void)removeVisibilityChangedEvent:(EventRegistrationToken)tok;
 - (void)activate;
 - (void)close;
@@ -245,7 +256,7 @@ typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #define __WUCICoreAcceleratorKeys_DEFINED__
 
 @protocol WUCICoreAcceleratorKeys
-- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void(^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
+- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void (^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -268,7 +279,7 @@ typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @protocol WUCICoreInputSourceBase
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property BOOL isInputEnabled;
-- (EventRegistrationToken)addInputEnabledEvent:(void(^)(RTObject*, WUCInputEnabledEventArgs*))del;
+- (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
 @end
 
@@ -282,19 +293,19 @@ typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property (readonly) BOOL hasCapture;
 @property (copy) WUCCoreCursor* pointerCursor;
 @property (readonly) WFPoint* pointerPosition;
-- (EventRegistrationToken)addPointerCaptureLostEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteredEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerWheelChangedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerWheelChangedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
 - (void)releasePointerCapture;
 - (void)setPointerCapture;
@@ -310,7 +321,7 @@ WINRT_EXPORT
 @interface WUCCoreDispatcher : RTObject <WUCICoreAcceleratorKeys>
 @property (readonly) BOOL hasThreadAccess;
 @property WUCCoreDispatcherPriority currentPriority;
-- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void(^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
+- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void (^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 - (void)processEvents:(WUCCoreProcessEventsOption)options;
 - (RTObject<WFIAsyncAction>*)runAsync:(WUCCoreDispatcherPriority)priority agileCallback:(WUCDispatchedHandler)agileCallback;
@@ -318,7 +329,10 @@ WINRT_EXPORT
 - (BOOL)shouldYield;
 - (BOOL)shouldYieldToPriority:(WUCCoreDispatcherPriority)priority;
 - (void)stopProcessEvents;
-- (void)tryRunAsync:(WUCCoreDispatcherPriority)priority agileCallback:(WUCDispatchedHandler)agileCallback success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryRunAsync:(WUCCoreDispatcherPriority)priority
+      agileCallback:(WUCDispatchedHandler)agileCallback
+            success:(void (^)(BOOL))success
+            failure:(void (^)(NSError*))failure;
 - (void)tryRunIdleAsync:(WUCIdleDispatchedHandler)agileCallback success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -353,39 +367,39 @@ WINRT_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* customProperties;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) BOOL visible;
-- (EventRegistrationToken)addActivatedEvent:(void(^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
+- (EventRegistrationToken)addActivatedEvent:(void (^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAutomationProviderRequestedEvent:(void(^)(WUCCoreWindow*, WUCAutomationProviderRequestedEventArgs*))del;
+- (EventRegistrationToken)addAutomationProviderRequestedEvent:(void (^)(WUCCoreWindow*, WUCAutomationProviderRequestedEventArgs*))del;
 - (void)removeAutomationProviderRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(WUCCoreWindow*, WUCCharacterReceivedEventArgs*))del;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void (^)(WUCCoreWindow*, WUCCharacterReceivedEventArgs*))del;
 - (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addClosedEvent:(void(^)(WUCCoreWindow*, WUCCoreWindowEventArgs*))del;
+- (EventRegistrationToken)addClosedEvent:(void (^)(WUCCoreWindow*, WUCCoreWindowEventArgs*))del;
 - (void)removeClosedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addInputEnabledEvent:(void(^)(WUCCoreWindow*, WUCInputEnabledEventArgs*))del;
+- (EventRegistrationToken)addInputEnabledEvent:(void (^)(WUCCoreWindow*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyDownEvent:(void(^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyDownEvent:(void (^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
 - (void)removeKeyDownEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyUpEvent:(void(^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyUpEvent:(void (^)(WUCCoreWindow*, WUCKeyEventArgs*))del;
 - (void)removeKeyUpEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerCaptureLostEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteredEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerWheelChangedEvent:(void(^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerWheelChangedEvent:(void (^)(WUCCoreWindow*, WUCPointerEventArgs*))del;
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSizeChangedEvent:(void(^)(WUCCoreWindow*, WUCWindowSizeChangedEventArgs*))del;
+- (EventRegistrationToken)addSizeChangedEvent:(void (^)(WUCCoreWindow*, WUCWindowSizeChangedEventArgs*))del;
 - (void)removeSizeChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTouchHitTestingEvent:(void(^)(WUCCoreWindow*, WUCTouchHitTestingEventArgs*))del;
+- (EventRegistrationToken)addTouchHitTestingEvent:(void (^)(WUCCoreWindow*, WUCTouchHitTestingEventArgs*))del;
 - (void)removeTouchHitTestingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVisibilityChangedEvent:(void(^)(WUCCoreWindow*, WUCVisibilityChangedEventArgs*))del;
+- (EventRegistrationToken)addVisibilityChangedEvent:(void (^)(WUCCoreWindow*, WUCVisibilityChangedEventArgs*))del;
 - (void)removeVisibilityChangedEvent:(EventRegistrationToken)tok;
 - (void)activate;
 - (void)close;
@@ -555,7 +569,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
-- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void(^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
+- (EventRegistrationToken)addAcceleratorKeyActivatedEvent:(void (^)(WUCCoreDispatcher*, WUCAcceleratorKeyEventArgs*))del;
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -585,21 +599,21 @@ WINRT_EXPORT
 @property (copy) WUCCoreCursor* pointerCursor;
 @property (readonly) BOOL hasCapture;
 @property (readonly) WFPoint* pointerPosition;
-- (EventRegistrationToken)addInputEnabledEvent:(void(^)(RTObject*, WUCInputEnabledEventArgs*))del;
+- (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerCaptureLostEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteredEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerWheelChangedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerWheelChangedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
 - (void)releasePointerCapture;
 - (void)setPointerCapture;
@@ -619,33 +633,33 @@ WINRT_EXPORT
 @property (copy) WUCCoreCursor* pointerCursor;
 @property (readonly) BOOL hasCapture;
 @property (readonly) WFPoint* pointerPosition;
-- (EventRegistrationToken)addInputEnabledEvent:(void(^)(RTObject*, WUCInputEnabledEventArgs*))del;
+- (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerCaptureLostEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerEnteredEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerEnteredEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerEnteredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerExitedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerExitedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerExitedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerMovedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerMovedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerMovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerPressedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerPressedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerPressedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerReleasedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerReleasedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerReleasedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPointerWheelChangedEvent:(void(^)(RTObject*, WUCPointerEventArgs*))del;
+- (EventRegistrationToken)addPointerWheelChangedEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerWheelChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCharacterReceivedEvent:(void(^)(RTObject*, WUCCharacterReceivedEventArgs*))del;
+- (EventRegistrationToken)addCharacterReceivedEvent:(void (^)(RTObject*, WUCCharacterReceivedEventArgs*))del;
 - (void)removeCharacterReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyDownEvent:(void(^)(RTObject*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyDownEvent:(void (^)(RTObject*, WUCKeyEventArgs*))del;
 - (void)removeKeyDownEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addKeyUpEvent:(void(^)(RTObject*, WUCKeyEventArgs*))del;
+- (EventRegistrationToken)addKeyUpEvent:(void (^)(RTObject*, WUCKeyEventArgs*))del;
 - (void)removeKeyUpEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addGotFocusEvent:(void(^)(RTObject*, WUCCoreWindowEventArgs*))del;
+- (EventRegistrationToken)addGotFocusEvent:(void (^)(RTObject*, WUCCoreWindowEventArgs*))del;
 - (void)removeGotFocusEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLostFocusEvent:(void(^)(RTObject*, WUCCoreWindowEventArgs*))del;
+- (EventRegistrationToken)addLostFocusEvent:(void (^)(RTObject*, WUCCoreWindowEventArgs*))del;
 - (void)removeLostFocusEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTouchHitTestingEvent:(void(^)(RTObject*, WUCTouchHitTestingEventArgs*))del;
+- (EventRegistrationToken)addTouchHitTestingEvent:(void (^)(RTObject*, WUCTouchHitTestingEventArgs*))del;
 - (void)removeTouchHitTestingEvent:(EventRegistrationToken)tok;
 - (void)releasePointerCapture;
 - (void)setPointerCapture;
@@ -673,9 +687,8 @@ WINRT_EXPORT
 @interface WUCSystemNavigationManager : RTObject
 + (WUCSystemNavigationManager*)getForCurrentView;
 @property WUCAppViewBackButtonVisibility appViewBackButtonVisibility;
-- (EventRegistrationToken)addBackRequestedEvent:(void(^)(RTObject*, WUCBackRequestedEventArgs*))del;
+- (EventRegistrationToken)addBackRequestedEvent:(void (^)(RTObject*, WUCBackRequestedEventArgs*))del;
 - (void)removeBackRequestedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WUCSystemNavigationManager_DEFINED__
-

@@ -22,23 +22,21 @@
 #include "interopBase.h"
 // Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint
 enum _WUXATTextPatternRangeEndpoint {
-	WUXATTextPatternRangeEndpointStart = 0,
-	WUXATTextPatternRangeEndpointEnd = 1,
+    WUXATTextPatternRangeEndpointStart = 0,
+    WUXATTextPatternRangeEndpointEnd = 1,
 };
 typedef unsigned WUXATTextPatternRangeEndpoint;
 
 // Windows.UI.Xaml.Automation.Text.TextUnit
 enum _WUXATTextUnit {
-	WUXATTextUnitCharacter = 0,
-	WUXATTextUnitFormat = 1,
-	WUXATTextUnitWord = 2,
-	WUXATTextUnitLine = 3,
-	WUXATTextUnitParagraph = 4,
-	WUXATTextUnitPage = 5,
-	WUXATTextUnitDocument = 6,
+    WUXATTextUnitCharacter = 0,
+    WUXATTextUnitFormat = 1,
+    WUXATTextUnitWord = 2,
+    WUXATTextUnitLine = 3,
+    WUXATTextUnitParagraph = 4,
+    WUXATTextUnitPage = 5,
+    WUXATTextUnitDocument = 6,
 };
 typedef unsigned WUXATTextUnit;
 
-
 #import <Foundation/Foundation.h>
-

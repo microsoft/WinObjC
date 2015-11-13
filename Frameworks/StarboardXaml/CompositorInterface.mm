@@ -1259,6 +1259,10 @@ public:
         GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement internalObject]);
         return genericControlTexture;
     }
+
+    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
+        node->SetAccessibilityInfo(info);
+    }
 };
 
 void SetUIHandlers();

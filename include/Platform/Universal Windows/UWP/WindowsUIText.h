@@ -22,400 +22,402 @@
 #include "interopBase.h"
 @class WUTTextConstants, WUTFontWeights;
 @class WUTFontWeight;
-@protocol WUTITextConstantsStatics, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTIFontWeights, WUTIFontWeightsStatics;
+@protocol WUTITextConstantsStatics
+, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTIFontWeights,
+    WUTIFontWeightsStatics;
 
 // Windows.UI.Text.CaretType
 enum _WUTCaretType {
-	WUTCaretTypeNormal = 0,
-	WUTCaretTypeNull = 1,
+    WUTCaretTypeNormal = 0,
+    WUTCaretTypeNull = 1,
 };
 typedef unsigned WUTCaretType;
 
 // Windows.UI.Text.FindOptions
 enum _WUTFindOptions {
-	WUTFindOptionsNone = 0,
-	WUTFindOptionsWord = 2,
-	WUTFindOptionsCase = 4,
+    WUTFindOptionsNone = 0,
+    WUTFindOptionsWord = 2,
+    WUTFindOptionsCase = 4,
 };
 typedef unsigned WUTFindOptions;
 
 // Windows.UI.Text.FormatEffect
 enum _WUTFormatEffect {
-	WUTFormatEffectOff = 0,
-	WUTFormatEffectOn = 1,
-	WUTFormatEffectToggle = 2,
-	WUTFormatEffectUndefined = 3,
+    WUTFormatEffectOff = 0,
+    WUTFormatEffectOn = 1,
+    WUTFormatEffectToggle = 2,
+    WUTFormatEffectUndefined = 3,
 };
 typedef unsigned WUTFormatEffect;
 
 // Windows.UI.Text.HorizontalCharacterAlignment
 enum _WUTHorizontalCharacterAlignment {
-	WUTHorizontalCharacterAlignmentLeft = 0,
-	WUTHorizontalCharacterAlignmentRight = 1,
-	WUTHorizontalCharacterAlignmentCenter = 2,
+    WUTHorizontalCharacterAlignmentLeft = 0,
+    WUTHorizontalCharacterAlignmentRight = 1,
+    WUTHorizontalCharacterAlignmentCenter = 2,
 };
 typedef unsigned WUTHorizontalCharacterAlignment;
 
 // Windows.UI.Text.LetterCase
 enum _WUTLetterCase {
-	WUTLetterCaseLower = 0,
-	WUTLetterCaseUpper = 1,
+    WUTLetterCaseLower = 0,
+    WUTLetterCaseUpper = 1,
 };
 typedef unsigned WUTLetterCase;
 
 // Windows.UI.Text.LineSpacingRule
 enum _WUTLineSpacingRule {
-	WUTLineSpacingRuleUndefined = 0,
-	WUTLineSpacingRuleSingle = 1,
-	WUTLineSpacingRuleOneAndHalf = 2,
-	WUTLineSpacingRuleDouble = 3,
-	WUTLineSpacingRuleAtLeast = 4,
-	WUTLineSpacingRuleExactly = 5,
-	WUTLineSpacingRuleMultiple = 6,
-	WUTLineSpacingRulePercent = 7,
+    WUTLineSpacingRuleUndefined = 0,
+    WUTLineSpacingRuleSingle = 1,
+    WUTLineSpacingRuleOneAndHalf = 2,
+    WUTLineSpacingRuleDouble = 3,
+    WUTLineSpacingRuleAtLeast = 4,
+    WUTLineSpacingRuleExactly = 5,
+    WUTLineSpacingRuleMultiple = 6,
+    WUTLineSpacingRulePercent = 7,
 };
 typedef unsigned WUTLineSpacingRule;
 
 // Windows.UI.Text.LinkType
 enum _WUTLinkType {
-	WUTLinkTypeUndefined = 0,
-	WUTLinkTypeNotALink = 1,
-	WUTLinkTypeClientLink = 2,
-	WUTLinkTypeFriendlyLinkName = 3,
-	WUTLinkTypeFriendlyLinkAddress = 4,
-	WUTLinkTypeAutoLink = 5,
-	WUTLinkTypeAutoLinkEmail = 6,
-	WUTLinkTypeAutoLinkPhone = 7,
-	WUTLinkTypeAutoLinkPath = 8,
+    WUTLinkTypeUndefined = 0,
+    WUTLinkTypeNotALink = 1,
+    WUTLinkTypeClientLink = 2,
+    WUTLinkTypeFriendlyLinkName = 3,
+    WUTLinkTypeFriendlyLinkAddress = 4,
+    WUTLinkTypeAutoLink = 5,
+    WUTLinkTypeAutoLinkEmail = 6,
+    WUTLinkTypeAutoLinkPhone = 7,
+    WUTLinkTypeAutoLinkPath = 8,
 };
 typedef unsigned WUTLinkType;
 
 // Windows.UI.Text.MarkerAlignment
 enum _WUTMarkerAlignment {
-	WUTMarkerAlignmentUndefined = 0,
-	WUTMarkerAlignmentLeft = 1,
-	WUTMarkerAlignmentCenter = 2,
-	WUTMarkerAlignmentRight = 3,
+    WUTMarkerAlignmentUndefined = 0,
+    WUTMarkerAlignmentLeft = 1,
+    WUTMarkerAlignmentCenter = 2,
+    WUTMarkerAlignmentRight = 3,
 };
 typedef unsigned WUTMarkerAlignment;
 
 // Windows.UI.Text.MarkerStyle
 enum _WUTMarkerStyle {
-	WUTMarkerStyleUndefined = 0,
-	WUTMarkerStyleParenthesis = 1,
-	WUTMarkerStyleParentheses = 2,
-	WUTMarkerStylePeriod = 3,
-	WUTMarkerStylePlain = 4,
-	WUTMarkerStyleMinus = 5,
-	WUTMarkerStyleNoNumber = 6,
+    WUTMarkerStyleUndefined = 0,
+    WUTMarkerStyleParenthesis = 1,
+    WUTMarkerStyleParentheses = 2,
+    WUTMarkerStylePeriod = 3,
+    WUTMarkerStylePlain = 4,
+    WUTMarkerStyleMinus = 5,
+    WUTMarkerStyleNoNumber = 6,
 };
 typedef unsigned WUTMarkerStyle;
 
 // Windows.UI.Text.MarkerType
 enum _WUTMarkerType {
-	WUTMarkerTypeUndefined = 0,
-	WUTMarkerTypeNone = 1,
-	WUTMarkerTypeBullet = 2,
-	WUTMarkerTypeArabic = 3,
-	WUTMarkerTypeLowercaseEnglishLetter = 4,
-	WUTMarkerTypeUppercaseEnglishLetter = 5,
-	WUTMarkerTypeLowercaseRoman = 6,
-	WUTMarkerTypeUppercaseRoman = 7,
-	WUTMarkerTypeUnicodeSequence = 8,
-	WUTMarkerTypeCircledNumber = 9,
-	WUTMarkerTypeBlackCircleWingding = 10,
-	WUTMarkerTypeWhiteCircleWingding = 11,
-	WUTMarkerTypeArabicWide = 12,
-	WUTMarkerTypeSimplifiedChinese = 13,
-	WUTMarkerTypeTraditionalChinese = 14,
-	WUTMarkerTypeJapanSimplifiedChinese = 15,
-	WUTMarkerTypeJapanKorea = 16,
-	WUTMarkerTypeArabicDictionary = 17,
-	WUTMarkerTypeArabicAbjad = 18,
-	WUTMarkerTypeHebrew = 19,
-	WUTMarkerTypeThaiAlphabetic = 20,
-	WUTMarkerTypeThaiNumeric = 21,
-	WUTMarkerTypeDevanagariVowel = 22,
-	WUTMarkerTypeDevanagariConsonant = 23,
-	WUTMarkerTypeDevanagariNumeric = 24,
+    WUTMarkerTypeUndefined = 0,
+    WUTMarkerTypeNone = 1,
+    WUTMarkerTypeBullet = 2,
+    WUTMarkerTypeArabic = 3,
+    WUTMarkerTypeLowercaseEnglishLetter = 4,
+    WUTMarkerTypeUppercaseEnglishLetter = 5,
+    WUTMarkerTypeLowercaseRoman = 6,
+    WUTMarkerTypeUppercaseRoman = 7,
+    WUTMarkerTypeUnicodeSequence = 8,
+    WUTMarkerTypeCircledNumber = 9,
+    WUTMarkerTypeBlackCircleWingding = 10,
+    WUTMarkerTypeWhiteCircleWingding = 11,
+    WUTMarkerTypeArabicWide = 12,
+    WUTMarkerTypeSimplifiedChinese = 13,
+    WUTMarkerTypeTraditionalChinese = 14,
+    WUTMarkerTypeJapanSimplifiedChinese = 15,
+    WUTMarkerTypeJapanKorea = 16,
+    WUTMarkerTypeArabicDictionary = 17,
+    WUTMarkerTypeArabicAbjad = 18,
+    WUTMarkerTypeHebrew = 19,
+    WUTMarkerTypeThaiAlphabetic = 20,
+    WUTMarkerTypeThaiNumeric = 21,
+    WUTMarkerTypeDevanagariVowel = 22,
+    WUTMarkerTypeDevanagariConsonant = 23,
+    WUTMarkerTypeDevanagariNumeric = 24,
 };
 typedef unsigned WUTMarkerType;
 
 // Windows.UI.Text.ParagraphAlignment
 enum _WUTParagraphAlignment {
-	WUTParagraphAlignmentUndefined = 0,
-	WUTParagraphAlignmentLeft = 1,
-	WUTParagraphAlignmentCenter = 2,
-	WUTParagraphAlignmentRight = 3,
-	WUTParagraphAlignmentJustify = 4,
+    WUTParagraphAlignmentUndefined = 0,
+    WUTParagraphAlignmentLeft = 1,
+    WUTParagraphAlignmentCenter = 2,
+    WUTParagraphAlignmentRight = 3,
+    WUTParagraphAlignmentJustify = 4,
 };
 typedef unsigned WUTParagraphAlignment;
 
 // Windows.UI.Text.ParagraphStyle
 enum _WUTParagraphStyle {
-	WUTParagraphStyleUndefined = 0,
-	WUTParagraphStyleNone = 1,
-	WUTParagraphStyleNormal = 2,
-	WUTParagraphStyleHeading1 = 3,
-	WUTParagraphStyleHeading2 = 4,
-	WUTParagraphStyleHeading3 = 5,
-	WUTParagraphStyleHeading4 = 6,
-	WUTParagraphStyleHeading5 = 7,
-	WUTParagraphStyleHeading6 = 8,
-	WUTParagraphStyleHeading7 = 9,
-	WUTParagraphStyleHeading8 = 10,
-	WUTParagraphStyleHeading9 = 11,
+    WUTParagraphStyleUndefined = 0,
+    WUTParagraphStyleNone = 1,
+    WUTParagraphStyleNormal = 2,
+    WUTParagraphStyleHeading1 = 3,
+    WUTParagraphStyleHeading2 = 4,
+    WUTParagraphStyleHeading3 = 5,
+    WUTParagraphStyleHeading4 = 6,
+    WUTParagraphStyleHeading5 = 7,
+    WUTParagraphStyleHeading6 = 8,
+    WUTParagraphStyleHeading7 = 9,
+    WUTParagraphStyleHeading8 = 10,
+    WUTParagraphStyleHeading9 = 11,
 };
 typedef unsigned WUTParagraphStyle;
 
 // Windows.UI.Text.PointOptions
 enum _WUTPointOptions {
-	WUTPointOptionsNone = 0,
-	WUTPointOptionsIncludeInset = 1,
-	WUTPointOptionsStart = 32,
-	WUTPointOptionsClientCoordinates = 256,
-	WUTPointOptionsAllowOffClient = 512,
-	WUTPointOptionsTransform = 1024,
-	WUTPointOptionsNoHorizontalScroll = 65536,
-	WUTPointOptionsNoVerticalScroll = 262144,
+    WUTPointOptionsNone = 0,
+    WUTPointOptionsIncludeInset = 1,
+    WUTPointOptionsStart = 32,
+    WUTPointOptionsClientCoordinates = 256,
+    WUTPointOptionsAllowOffClient = 512,
+    WUTPointOptionsTransform = 1024,
+    WUTPointOptionsNoHorizontalScroll = 65536,
+    WUTPointOptionsNoVerticalScroll = 262144,
 };
 typedef unsigned WUTPointOptions;
 
 // Windows.UI.Text.RangeGravity
 enum _WUTRangeGravity {
-	WUTRangeGravityUIBehavior = 0,
-	WUTRangeGravityBackward = 1,
-	WUTRangeGravityForward = 2,
-	WUTRangeGravityInward = 3,
-	WUTRangeGravityOutward = 4,
+    WUTRangeGravityUIBehavior = 0,
+    WUTRangeGravityBackward = 1,
+    WUTRangeGravityForward = 2,
+    WUTRangeGravityInward = 3,
+    WUTRangeGravityOutward = 4,
 };
 typedef unsigned WUTRangeGravity;
 
 // Windows.UI.Text.SelectionOptions
 enum _WUTSelectionOptions {
-	WUTSelectionOptionsStartActive = 1,
-	WUTSelectionOptionsAtEndOfLine = 2,
-	WUTSelectionOptionsOvertype = 4,
-	WUTSelectionOptionsActive = 8,
-	WUTSelectionOptionsReplace = 16,
+    WUTSelectionOptionsStartActive = 1,
+    WUTSelectionOptionsAtEndOfLine = 2,
+    WUTSelectionOptionsOvertype = 4,
+    WUTSelectionOptionsActive = 8,
+    WUTSelectionOptionsReplace = 16,
 };
 typedef unsigned WUTSelectionOptions;
 
 // Windows.UI.Text.SelectionType
 enum _WUTSelectionType {
-	WUTSelectionTypeNone = 0,
-	WUTSelectionTypeInsertionPoint = 1,
-	WUTSelectionTypeNormal = 2,
-	WUTSelectionTypeInlineShape = 7,
-	WUTSelectionTypeShape = 8,
+    WUTSelectionTypeNone = 0,
+    WUTSelectionTypeInsertionPoint = 1,
+    WUTSelectionTypeNormal = 2,
+    WUTSelectionTypeInlineShape = 7,
+    WUTSelectionTypeShape = 8,
 };
 typedef unsigned WUTSelectionType;
 
 // Windows.UI.Text.TabAlignment
 enum _WUTTabAlignment {
-	WUTTabAlignmentLeft = 0,
-	WUTTabAlignmentCenter = 1,
-	WUTTabAlignmentRight = 2,
-	WUTTabAlignmentDecimal = 3,
-	WUTTabAlignmentBar = 4,
+    WUTTabAlignmentLeft = 0,
+    WUTTabAlignmentCenter = 1,
+    WUTTabAlignmentRight = 2,
+    WUTTabAlignmentDecimal = 3,
+    WUTTabAlignmentBar = 4,
 };
 typedef unsigned WUTTabAlignment;
 
 // Windows.UI.Text.TabLeader
 enum _WUTTabLeader {
-	WUTTabLeaderSpaces = 0,
-	WUTTabLeaderDots = 1,
-	WUTTabLeaderDashes = 2,
-	WUTTabLeaderLines = 3,
-	WUTTabLeaderThickLines = 4,
-	WUTTabLeaderEquals = 5,
+    WUTTabLeaderSpaces = 0,
+    WUTTabLeaderDots = 1,
+    WUTTabLeaderDashes = 2,
+    WUTTabLeaderLines = 3,
+    WUTTabLeaderThickLines = 4,
+    WUTTabLeaderEquals = 5,
 };
 typedef unsigned WUTTabLeader;
 
 // Windows.UI.Text.TextGetOptions
 enum _WUTTextGetOptions {
-	WUTTextGetOptionsNone = 0,
-	WUTTextGetOptionsAdjustCrlf = 1,
-	WUTTextGetOptionsUseCrlf = 2,
-	WUTTextGetOptionsUseObjectText = 4,
-	WUTTextGetOptionsAllowFinalEop = 8,
-	WUTTextGetOptionsNoHidden = 32,
-	WUTTextGetOptionsIncludeNumbering = 64,
-	WUTTextGetOptionsFormatRtf = 8192,
+    WUTTextGetOptionsNone = 0,
+    WUTTextGetOptionsAdjustCrlf = 1,
+    WUTTextGetOptionsUseCrlf = 2,
+    WUTTextGetOptionsUseObjectText = 4,
+    WUTTextGetOptionsAllowFinalEop = 8,
+    WUTTextGetOptionsNoHidden = 32,
+    WUTTextGetOptionsIncludeNumbering = 64,
+    WUTTextGetOptionsFormatRtf = 8192,
 };
 typedef unsigned WUTTextGetOptions;
 
 // Windows.UI.Text.TextSetOptions
 enum _WUTTextSetOptions {
-	WUTTextSetOptionsNone = 0,
-	WUTTextSetOptionsUnicodeBidi = 1,
-	WUTTextSetOptionsUnlink = 8,
-	WUTTextSetOptionsUnhide = 16,
-	WUTTextSetOptionsCheckTextLimit = 32,
-	WUTTextSetOptionsFormatRtf = 8192,
-	WUTTextSetOptionsApplyRtfDocumentDefaults = 16384,
+    WUTTextSetOptionsNone = 0,
+    WUTTextSetOptionsUnicodeBidi = 1,
+    WUTTextSetOptionsUnlink = 8,
+    WUTTextSetOptionsUnhide = 16,
+    WUTTextSetOptionsCheckTextLimit = 32,
+    WUTTextSetOptionsFormatRtf = 8192,
+    WUTTextSetOptionsApplyRtfDocumentDefaults = 16384,
 };
 typedef unsigned WUTTextSetOptions;
 
 // Windows.UI.Text.TextRangeUnit
 enum _WUTTextRangeUnit {
-	WUTTextRangeUnitCharacter = 0,
-	WUTTextRangeUnitWord = 1,
-	WUTTextRangeUnitSentence = 2,
-	WUTTextRangeUnitParagraph = 3,
-	WUTTextRangeUnitLine = 4,
-	WUTTextRangeUnitStory = 5,
-	WUTTextRangeUnitScreen = 6,
-	WUTTextRangeUnitSection = 7,
-	WUTTextRangeUnitWindow = 8,
-	WUTTextRangeUnitCharacterFormat = 9,
-	WUTTextRangeUnitParagraphFormat = 10,
-	WUTTextRangeUnitObject = 11,
-	WUTTextRangeUnitHardParagraph = 12,
-	WUTTextRangeUnitCluster = 13,
-	WUTTextRangeUnitBold = 14,
-	WUTTextRangeUnitItalic = 15,
-	WUTTextRangeUnitUnderline = 16,
-	WUTTextRangeUnitStrikethrough = 17,
-	WUTTextRangeUnitProtectedText = 18,
-	WUTTextRangeUnitLink = 19,
-	WUTTextRangeUnitSmallCaps = 20,
-	WUTTextRangeUnitAllCaps = 21,
-	WUTTextRangeUnitHidden = 22,
-	WUTTextRangeUnitOutline = 23,
-	WUTTextRangeUnitShadow = 24,
-	WUTTextRangeUnitImprint = 25,
-	WUTTextRangeUnitDisabled = 26,
-	WUTTextRangeUnitRevised = 27,
-	WUTTextRangeUnitSubscript = 28,
-	WUTTextRangeUnitSuperscript = 29,
-	WUTTextRangeUnitFontBound = 30,
-	WUTTextRangeUnitLinkProtected = 31,
+    WUTTextRangeUnitCharacter = 0,
+    WUTTextRangeUnitWord = 1,
+    WUTTextRangeUnitSentence = 2,
+    WUTTextRangeUnitParagraph = 3,
+    WUTTextRangeUnitLine = 4,
+    WUTTextRangeUnitStory = 5,
+    WUTTextRangeUnitScreen = 6,
+    WUTTextRangeUnitSection = 7,
+    WUTTextRangeUnitWindow = 8,
+    WUTTextRangeUnitCharacterFormat = 9,
+    WUTTextRangeUnitParagraphFormat = 10,
+    WUTTextRangeUnitObject = 11,
+    WUTTextRangeUnitHardParagraph = 12,
+    WUTTextRangeUnitCluster = 13,
+    WUTTextRangeUnitBold = 14,
+    WUTTextRangeUnitItalic = 15,
+    WUTTextRangeUnitUnderline = 16,
+    WUTTextRangeUnitStrikethrough = 17,
+    WUTTextRangeUnitProtectedText = 18,
+    WUTTextRangeUnitLink = 19,
+    WUTTextRangeUnitSmallCaps = 20,
+    WUTTextRangeUnitAllCaps = 21,
+    WUTTextRangeUnitHidden = 22,
+    WUTTextRangeUnitOutline = 23,
+    WUTTextRangeUnitShadow = 24,
+    WUTTextRangeUnitImprint = 25,
+    WUTTextRangeUnitDisabled = 26,
+    WUTTextRangeUnitRevised = 27,
+    WUTTextRangeUnitSubscript = 28,
+    WUTTextRangeUnitSuperscript = 29,
+    WUTTextRangeUnitFontBound = 30,
+    WUTTextRangeUnitLinkProtected = 31,
 };
 typedef unsigned WUTTextRangeUnit;
 
 // Windows.UI.Text.TextScript
 enum _WUTTextScript {
-	WUTTextScriptUndefined = 0,
-	WUTTextScriptAnsi = 1,
-	WUTTextScriptEastEurope = 2,
-	WUTTextScriptCyrillic = 3,
-	WUTTextScriptGreek = 4,
-	WUTTextScriptTurkish = 5,
-	WUTTextScriptHebrew = 6,
-	WUTTextScriptArabic = 7,
-	WUTTextScriptBaltic = 8,
-	WUTTextScriptVietnamese = 9,
-	WUTTextScriptDefault = 10,
-	WUTTextScriptSymbol = 11,
-	WUTTextScriptThai = 12,
-	WUTTextScriptShiftJis = 13,
-	WUTTextScriptGB2312 = 14,
-	WUTTextScriptHangul = 15,
-	WUTTextScriptBig5 = 16,
-	WUTTextScriptPC437 = 17,
-	WUTTextScriptOem = 18,
-	WUTTextScriptMac = 19,
-	WUTTextScriptArmenian = 20,
-	WUTTextScriptSyriac = 21,
-	WUTTextScriptThaana = 22,
-	WUTTextScriptDevanagari = 23,
-	WUTTextScriptBengali = 24,
-	WUTTextScriptGurmukhi = 25,
-	WUTTextScriptGujarati = 26,
-	WUTTextScriptOriya = 27,
-	WUTTextScriptTamil = 28,
-	WUTTextScriptTelugu = 29,
-	WUTTextScriptKannada = 30,
-	WUTTextScriptMalayalam = 31,
-	WUTTextScriptSinhala = 32,
-	WUTTextScriptLao = 33,
-	WUTTextScriptTibetan = 34,
-	WUTTextScriptMyanmar = 35,
-	WUTTextScriptGeorgian = 36,
-	WUTTextScriptJamo = 37,
-	WUTTextScriptEthiopic = 38,
-	WUTTextScriptCherokee = 39,
-	WUTTextScriptAboriginal = 40,
-	WUTTextScriptOgham = 41,
-	WUTTextScriptRunic = 42,
-	WUTTextScriptKhmer = 43,
-	WUTTextScriptMongolian = 44,
-	WUTTextScriptBraille = 45,
-	WUTTextScriptYi = 46,
-	WUTTextScriptLimbu = 47,
-	WUTTextScriptTaiLe = 48,
-	WUTTextScriptNewTaiLue = 49,
-	WUTTextScriptSylotiNagri = 50,
-	WUTTextScriptKharoshthi = 51,
-	WUTTextScriptKayahli = 52,
-	WUTTextScriptUnicodeSymbol = 53,
-	WUTTextScriptEmoji = 54,
-	WUTTextScriptGlagolitic = 55,
-	WUTTextScriptLisu = 56,
-	WUTTextScriptVai = 57,
-	WUTTextScriptNKo = 58,
-	WUTTextScriptOsmanya = 59,
-	WUTTextScriptPhagsPa = 60,
-	WUTTextScriptGothic = 61,
-	WUTTextScriptDeseret = 62,
-	WUTTextScriptTifinagh = 63,
+    WUTTextScriptUndefined = 0,
+    WUTTextScriptAnsi = 1,
+    WUTTextScriptEastEurope = 2,
+    WUTTextScriptCyrillic = 3,
+    WUTTextScriptGreek = 4,
+    WUTTextScriptTurkish = 5,
+    WUTTextScriptHebrew = 6,
+    WUTTextScriptArabic = 7,
+    WUTTextScriptBaltic = 8,
+    WUTTextScriptVietnamese = 9,
+    WUTTextScriptDefault = 10,
+    WUTTextScriptSymbol = 11,
+    WUTTextScriptThai = 12,
+    WUTTextScriptShiftJis = 13,
+    WUTTextScriptGB2312 = 14,
+    WUTTextScriptHangul = 15,
+    WUTTextScriptBig5 = 16,
+    WUTTextScriptPC437 = 17,
+    WUTTextScriptOem = 18,
+    WUTTextScriptMac = 19,
+    WUTTextScriptArmenian = 20,
+    WUTTextScriptSyriac = 21,
+    WUTTextScriptThaana = 22,
+    WUTTextScriptDevanagari = 23,
+    WUTTextScriptBengali = 24,
+    WUTTextScriptGurmukhi = 25,
+    WUTTextScriptGujarati = 26,
+    WUTTextScriptOriya = 27,
+    WUTTextScriptTamil = 28,
+    WUTTextScriptTelugu = 29,
+    WUTTextScriptKannada = 30,
+    WUTTextScriptMalayalam = 31,
+    WUTTextScriptSinhala = 32,
+    WUTTextScriptLao = 33,
+    WUTTextScriptTibetan = 34,
+    WUTTextScriptMyanmar = 35,
+    WUTTextScriptGeorgian = 36,
+    WUTTextScriptJamo = 37,
+    WUTTextScriptEthiopic = 38,
+    WUTTextScriptCherokee = 39,
+    WUTTextScriptAboriginal = 40,
+    WUTTextScriptOgham = 41,
+    WUTTextScriptRunic = 42,
+    WUTTextScriptKhmer = 43,
+    WUTTextScriptMongolian = 44,
+    WUTTextScriptBraille = 45,
+    WUTTextScriptYi = 46,
+    WUTTextScriptLimbu = 47,
+    WUTTextScriptTaiLe = 48,
+    WUTTextScriptNewTaiLue = 49,
+    WUTTextScriptSylotiNagri = 50,
+    WUTTextScriptKharoshthi = 51,
+    WUTTextScriptKayahli = 52,
+    WUTTextScriptUnicodeSymbol = 53,
+    WUTTextScriptEmoji = 54,
+    WUTTextScriptGlagolitic = 55,
+    WUTTextScriptLisu = 56,
+    WUTTextScriptVai = 57,
+    WUTTextScriptNKo = 58,
+    WUTTextScriptOsmanya = 59,
+    WUTTextScriptPhagsPa = 60,
+    WUTTextScriptGothic = 61,
+    WUTTextScriptDeseret = 62,
+    WUTTextScriptTifinagh = 63,
 };
 typedef unsigned WUTTextScript;
 
 // Windows.UI.Text.UnderlineType
 enum _WUTUnderlineType {
-	WUTUnderlineTypeUndefined = 0,
-	WUTUnderlineTypeNone = 1,
-	WUTUnderlineTypeSingle = 2,
-	WUTUnderlineTypeWords = 3,
-	WUTUnderlineTypeDouble = 4,
-	WUTUnderlineTypeDotted = 5,
-	WUTUnderlineTypeDash = 6,
-	WUTUnderlineTypeDashDot = 7,
-	WUTUnderlineTypeDashDotDot = 8,
-	WUTUnderlineTypeWave = 9,
-	WUTUnderlineTypeThick = 10,
-	WUTUnderlineTypeThin = 11,
-	WUTUnderlineTypeDoubleWave = 12,
-	WUTUnderlineTypeHeavyWave = 13,
-	WUTUnderlineTypeLongDash = 14,
-	WUTUnderlineTypeThickDash = 15,
-	WUTUnderlineTypeThickDashDot = 16,
-	WUTUnderlineTypeThickDashDotDot = 17,
-	WUTUnderlineTypeThickDotted = 18,
-	WUTUnderlineTypeThickLongDash = 19,
+    WUTUnderlineTypeUndefined = 0,
+    WUTUnderlineTypeNone = 1,
+    WUTUnderlineTypeSingle = 2,
+    WUTUnderlineTypeWords = 3,
+    WUTUnderlineTypeDouble = 4,
+    WUTUnderlineTypeDotted = 5,
+    WUTUnderlineTypeDash = 6,
+    WUTUnderlineTypeDashDot = 7,
+    WUTUnderlineTypeDashDotDot = 8,
+    WUTUnderlineTypeWave = 9,
+    WUTUnderlineTypeThick = 10,
+    WUTUnderlineTypeThin = 11,
+    WUTUnderlineTypeDoubleWave = 12,
+    WUTUnderlineTypeHeavyWave = 13,
+    WUTUnderlineTypeLongDash = 14,
+    WUTUnderlineTypeThickDash = 15,
+    WUTUnderlineTypeThickDashDot = 16,
+    WUTUnderlineTypeThickDashDotDot = 17,
+    WUTUnderlineTypeThickDotted = 18,
+    WUTUnderlineTypeThickLongDash = 19,
 };
 typedef unsigned WUTUnderlineType;
 
 // Windows.UI.Text.VerticalCharacterAlignment
 enum _WUTVerticalCharacterAlignment {
-	WUTVerticalCharacterAlignmentTop = 0,
-	WUTVerticalCharacterAlignmentBaseline = 1,
-	WUTVerticalCharacterAlignmentBottom = 2,
+    WUTVerticalCharacterAlignmentTop = 0,
+    WUTVerticalCharacterAlignmentBaseline = 1,
+    WUTVerticalCharacterAlignmentBottom = 2,
 };
 typedef unsigned WUTVerticalCharacterAlignment;
 
 // Windows.UI.Text.FontStretch
 enum _WUTFontStretch {
-	WUTFontStretchUndefined = 0,
-	WUTFontStretchUltraCondensed = 1,
-	WUTFontStretchExtraCondensed = 2,
-	WUTFontStretchCondensed = 3,
-	WUTFontStretchSemiCondensed = 4,
-	WUTFontStretchNormal = 5,
-	WUTFontStretchSemiExpanded = 6,
-	WUTFontStretchExpanded = 7,
-	WUTFontStretchExtraExpanded = 8,
-	WUTFontStretchUltraExpanded = 9,
+    WUTFontStretchUndefined = 0,
+    WUTFontStretchUltraCondensed = 1,
+    WUTFontStretchExtraCondensed = 2,
+    WUTFontStretchCondensed = 3,
+    WUTFontStretchSemiCondensed = 4,
+    WUTFontStretchNormal = 5,
+    WUTFontStretchSemiExpanded = 6,
+    WUTFontStretchExpanded = 7,
+    WUTFontStretchExtraExpanded = 8,
+    WUTFontStretchUltraExpanded = 9,
 };
 typedef unsigned WUTFontStretch;
 
 // Windows.UI.Text.FontStyle
 enum _WUTFontStyle {
-	WUTFontStyleNormal = 0,
-	WUTFontStyleOblique = 1,
-	WUTFontStyleItalic = 2,
+    WUTFontStyleNormal = 0,
+    WUTFontStyleOblique = 1,
+    WUTFontStyleItalic = 2,
 };
 typedef unsigned WUTFontStyle;
 
@@ -428,7 +430,7 @@ typedef unsigned WUTFontStyle;
 // [struct] Windows.UI.Text.FontWeight
 WINRT_EXPORT
 @interface WUTFontWeight : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned short weight;
 @end
 
@@ -453,13 +455,13 @@ WINRT_EXPORT
 - (RTObject<WUTITextParagraphFormat>*)getDefaultParagraphFormat;
 - (RTObject<WUTITextRange>*)getRange:(int)startPosition endPosition:(int)endPosition;
 - (RTObject<WUTITextRange>*)getRangeFromPoint:(WFPoint*)point options:(WUTPointOptions)options;
-- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)loadFromStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (void)redo;
 - (void)saveToStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (void)setDefaultCharacterFormat:(RTObject<WUTITextCharacterFormat>*)value;
 - (void)setDefaultParagraphFormat:(RTObject<WUTITextParagraphFormat>*)value;
-- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
 - (void)undo;
 @end
 
@@ -476,11 +478,11 @@ WINRT_EXPORT
 @property (copy) RTObject<WUTITextRange>* formattedText;
 @property WUTRangeGravity gravity;
 @property (readonly) int length;
-@property (copy) NSString * link;
+@property (copy) NSString* link;
 @property (copy) RTObject<WUTITextParagraphFormat>* paragraphFormat;
 @property int startPosition;
 @property (readonly) int storyLength;
-@property (copy) NSString * text;
+@property (copy) NSString* text;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
@@ -489,16 +491,24 @@ WINRT_EXPORT
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 - (int)expand:(WUTTextRangeUnit)unit;
-- (int)findText:(NSString *)value scanLength:(int)scanLength options:(WUTFindOptions)options;
+- (int)findText:(NSString*)value scanLength:(int)scanLength options:(WUTFindOptions)options;
 - (void)getCharacterUtf32:(unsigned int*)value offset:(int)offset;
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
-- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign options:(WUTPointOptions)options point:(WFPoint**)point;
+- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
+   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+         options:(WUTPointOptions)options
+           point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
-- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inRange:(RTObject<WUTITextRange>*)range;
-- (void)insertImage:(int)width height:(int)height ascent:(int)ascent verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign alternateText:(NSString *)alternateText value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)insertImage:(int)width
+             height:(int)height
+             ascent:(int)ascent
+      verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+      alternateText:(NSString*)alternateText
+              value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
 - (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
@@ -510,7 +520,7 @@ WINRT_EXPORT
 - (void)setIndex:(WUTTextRangeUnit)unit index:(int)index extend:(BOOL)extend;
 - (void)setPoint:(WFPoint*)point options:(WUTPointOptions)options extend:(BOOL)extend;
 - (void)setRange:(int)startPosition endPosition:(int)endPosition;
-- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
@@ -530,7 +540,7 @@ WINRT_EXPORT
 - (int)moveLeft:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
 - (int)moveRight:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
 - (int)moveUp:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
-- (void)typeText:(NSString *)value;
+- (void)typeText:(NSString*)value;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
@@ -539,16 +549,24 @@ WINRT_EXPORT
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 - (int)expand:(WUTTextRangeUnit)unit;
-- (int)findText:(NSString *)value scanLength:(int)scanLength options:(WUTFindOptions)options;
+- (int)findText:(NSString*)value scanLength:(int)scanLength options:(WUTFindOptions)options;
 - (void)getCharacterUtf32:(unsigned int*)value offset:(int)offset;
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
-- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign options:(WUTPointOptions)options point:(WFPoint**)point;
+- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
+   verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+         options:(WUTPointOptions)options
+           point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
-- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inRange:(RTObject<WUTITextRange>*)range;
-- (void)insertImage:(int)width height:(int)height ascent:(int)ascent verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign alternateText:(NSString *)alternateText value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)insertImage:(int)width
+             height:(int)height
+             ascent:(int)ascent
+      verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
+      alternateText:(NSString*)alternateText
+              value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
 - (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
@@ -560,7 +578,7 @@ WINRT_EXPORT
 - (void)setIndex:(WUTTextRangeUnit)unit index:(int)index extend:(BOOL)extend;
 - (void)setPoint:(WFPoint*)point options:(WUTPointOptions)options extend:(BOOL)extend;
 - (void)setRange:(int)startPosition endPosition:(int)endPosition;
-- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
@@ -581,9 +599,9 @@ WINRT_EXPORT
 @property WUTFormatEffect hidden;
 @property WUTFormatEffect italic;
 @property float kerning;
-@property (copy) NSString * languageTag;
+@property (copy) NSString* languageTag;
 @property (readonly) WUTLinkType linkType;
-@property (copy) NSString * name;
+@property (copy) NSString* name;
 @property WUTFormatEffect outline;
 @property float position;
 @property WUTFormatEffect protectedText;
@@ -681,4 +699,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WUTFontWeights_DEFINED__
-

@@ -31,24 +31,24 @@ enum {
 
 @interface NSUbiquitousKeyValueStore : NSObject
 
-- (long long)longLongForKey:(NSString *)key;
-- (id)objectForKey:(NSString *)aKey;
-- (void)setObject:(id)anObject forKey:(NSString *)aKey;
-- (void)removeObjectForKey:(NSString *)aKey;
+- (long long)longLongForKey:(NSString*)key;
+- (id)objectForKey:(NSString*)aKey;
+- (void)setObject:(id)anObject forKey:(NSString*)aKey;
+- (void)removeObjectForKey:(NSString*)aKey;
 - (BOOL)synchronize;
-- (NSDictionary *)dictionaryRepresentation;
-- (void)setLongLong:(long long)value forKey:(NSString *)aKey;
-- (NSString *)stringForKey:(NSString *)aKey;
-- (void)setString:(NSString *)aString forKey:(NSString *)aKey;
-- (BOOL)boolForKey:(NSString *)aKey;
-- (void)setBool:(BOOL)value forKey:(NSString *)aKey;
+- (NSDictionary*)dictionaryRepresentation;
+- (void)setLongLong:(long long)value forKey:(NSString*)aKey;
+- (NSString*)stringForKey:(NSString*)aKey;
+- (void)setString:(NSString*)aString forKey:(NSString*)aKey;
+- (BOOL)boolForKey:(NSString*)aKey;
+- (void)setBool:(BOOL)value forKey:(NSString*)aKey;
 
-+ (NSUbiquitousKeyValueStore *)defaultStore;
++ (NSUbiquitousKeyValueStore*)defaultStore;
 
 @end
 
-SB_EXPORT NSString *const NSUbiquitousKeyValueStoreChangedKeysKey;
-SB_EXPORT NSString *const NSUbiquitousKeyValueStoreDidChangeExternallyNotification;
-SB_EXPORT NSString *const NSUbiquitousKeyValueStoreChangeReasonKey;
+SB_EXPORT NSString* const NSUbiquitousKeyValueStoreChangedKeysKey;
+SB_EXPORT NSString* const NSUbiquitousKeyValueStoreDidChangeExternallyNotification;
+SB_EXPORT NSString* const NSUbiquitousKeyValueStoreChangeReasonKey;
 
 #endif /* _NSUBIQUITOUSKEYVALUESTORE_H_ */

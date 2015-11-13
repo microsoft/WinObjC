@@ -38,11 +38,11 @@ CFNETWORK_EXPORT const CFStringRef kCFStreamSSLCertificates;
 CFNETWORK_EXPORT const CFStringRef kCFStreamSSLIsServer;
 
 typedef enum {
-   kCFStreamSocketSecurityNone = 0,
-   kCFStreamSocketSecuritySSLv2,
-   kCFStreamSocketSecuritySSLv3,
-   kCFStreamSocketSecuritySSLv23,
-   kCFStreamSocketSecurityTLSv1
+    kCFStreamSocketSecurityNone = 0,
+    kCFStreamSocketSecuritySSLv2,
+    kCFStreamSocketSecuritySSLv3,
+    kCFStreamSocketSecuritySSLv23,
+    kCFStreamSocketSecurityTLSv1
 } CFStreamSocketSecurityProtocol;
 
 CFNETWORK_EXPORT const CFStringRef kCFStreamSocketSecurityLevelNone;
@@ -65,41 +65,45 @@ CFNETWORK_EXPORT const int kCFStreamErrorDomainSOCKS;
 CFNETWORK_EXPORT const int kCFStreamErrorDomainSSL;
 
 enum {
-   kCFStreamErrorSOCKSSubDomainNone = 0,
-   kCFStreamErrorSOCKSSubDomainVersionCode = 1,
-   kCFStreamErrorSOCKS4SubDomainResponse = 2,
-   kCFStreamErrorSOCKS5SubDomainUserPass = 3,
-   kCFStreamErrorSOCKS5SubDomainMethod = 4,
-   kCFStreamErrorSOCKS5SubDomainResponse = 5
+    kCFStreamErrorSOCKSSubDomainNone = 0,
+    kCFStreamErrorSOCKSSubDomainVersionCode = 1,
+    kCFStreamErrorSOCKS4SubDomainResponse = 2,
+    kCFStreamErrorSOCKS5SubDomainUserPass = 3,
+    kCFStreamErrorSOCKS5SubDomainMethod = 4,
+    kCFStreamErrorSOCKS5SubDomainResponse = 5
 };
 
 /* kCFStreamErrorSOCKSSubDomainNone*/
 enum {
-   kCFStreamErrorSOCKS5BadResponseAddr = 1,
-   kCFStreamErrorSOCKS5BadState  = 2,
-   kCFStreamErrorSOCKSUnknownClientVersion = 3
-};
-   
-   
-/* kCFStreamErrorSOCKS4SubDomainResponse*/
-enum {
-   kCFStreamErrorSOCKS4RequestFailed = 91,
-   kCFStreamErrorSOCKS4IdentdFailed = 92,
-   kCFStreamErrorSOCKS4IdConflict = 93
-};
-   
-/* kCFStreamErrorSOCKS5SubDomainMethod*/
-enum {
-   kSOCKS5NoAcceptableMethod     = 0xFF
+    kCFStreamErrorSOCKS5BadResponseAddr = 1,
+    kCFStreamErrorSOCKS5BadState = 2,
+    kCFStreamErrorSOCKSUnknownClientVersion = 3,
 };
 
-CFNETWORK_EXPORT Boolean CFSocketStreamPairSetSecurityProtocol (CFReadStreamRef socketReadStream,CFWriteStreamRef socketWriteStream,CFStreamSocketSecurityProtocol securityProtocol);
+/* kCFStreamErrorSOCKS4SubDomainResponse*/
+enum {
+    kCFStreamErrorSOCKS4RequestFailed = 91,
+    kCFStreamErrorSOCKS4IdentdFailed = 92,
+    kCFStreamErrorSOCKS4IdConflict = 93,
+};
+
+/* kCFStreamErrorSOCKS5SubDomainMethod*/
+enum {
+    kSOCKS5NoAcceptableMethod = 0xFF,
+};
+
+CFNETWORK_EXPORT Boolean CFSocketStreamPairSetSecurityProtocol(CFReadStreamRef socketReadStream,
+                                                               CFWriteStreamRef socketWriteStream,
+                                                               CFStreamSocketSecurityProtocol securityProtocol);
 
 CFNETWORK_EXPORT SInt32 CFSocketStreamSOCKSGetError(CFStreamError* error);
 
 CFNETWORK_EXPORT SInt32 CFSocketStreamSOCKSGetErrorSubdomain(CFStreamError* error);
 
-CFNETWORK_EXPORT void CFStreamCreatePairWithSocketToCFHost (CFAllocatorRef alloc,CFHostRef host,SInt32 port,CFReadStreamRef *readStream,CFWriteStreamRef *writeStream);
+CFNETWORK_EXPORT void CFStreamCreatePairWithSocketToCFHost(
+    CFAllocatorRef alloc, CFHostRef host, SInt32 port, CFReadStreamRef* readStream, CFWriteStreamRef* writeStream);
 
-CFNETWORK_EXPORT void CFStreamCreatePairWithSocketToNetService (CFAllocatorRef alloc,CFNetServiceRef service,CFReadStreamRef *readStream,CFWriteStreamRef *writeStream);
-
+CFNETWORK_EXPORT void CFStreamCreatePairWithSocketToNetService(CFAllocatorRef alloc,
+                                                               CFNetServiceRef service,
+                                                               CFReadStreamRef* readStream,
+                                                               CFWriteStreamRef* writeStream);

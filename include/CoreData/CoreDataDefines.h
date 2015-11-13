@@ -17,5 +17,4 @@
 #ifndef _COREDATADEFINES_H
 #define _COREDATADEFINES_H
 
-
 #endif /* _COREDATADEFINES_H */

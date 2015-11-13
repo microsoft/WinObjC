@@ -22,7 +22,10 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UICollectionViewLayout.h>
 
-enum { UICollectionViewScrollDirectionVertical, UICollectionViewScrollDirectionHorizontal };
+enum {
+    UICollectionViewScrollDirectionVertical,
+    UICollectionViewScrollDirectionHorizontal,
+};
 typedef uint32_t UICollectionViewScrollDirection;
 
 typedef enum _UIFlowLayoutHorizontalAlignment {
@@ -34,8 +37,8 @@ typedef enum _UIFlowLayoutHorizontalAlignment {
 
 typedef uint32_t UIFlowLayoutHorizontalAlignment;
 
-SB_EXPORT NSString* const UICollectionElementKindSectionHeader;
-SB_EXPORT NSString* const UICollectionElementKindSectionFooter;
+UIKIT_EXPORT NSString* const UICollectionElementKindSectionHeader;
+UIKIT_EXPORT NSString* const UICollectionElementKindSectionFooter;
 
 @protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
 

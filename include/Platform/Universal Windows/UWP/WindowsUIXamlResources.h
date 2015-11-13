@@ -21,8 +21,8 @@
 
 #include "interopBase.h"
 @class WUXRCustomXamlResourceLoader;
-@protocol WUXRICustomXamlResourceLoader, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
-
+@protocol WUXRICustomXamlResourceLoader
+, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
 
 #import <Foundation/Foundation.h>
 
@@ -31,7 +31,10 @@
 #define __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
 
 @protocol WUXRICustomXamlResourceLoaderOverrides
-- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
+- (RTObject*)getResource:(NSString*)resourceId
+              objectType:(NSString*)objectType
+            propertyName:(NSString*)propertyName
+            propertyType:(NSString*)propertyType;
 @end
 
 #endif // __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
@@ -45,8 +48,10 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
-- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
+- (RTObject*)getResource:(NSString*)resourceId
+              objectType:(NSString*)objectType
+            propertyName:(NSString*)propertyName
+            propertyType:(NSString*)propertyType;
 @end
 
 #endif // __WUXRCustomXamlResourceLoader_DEFINED__
-

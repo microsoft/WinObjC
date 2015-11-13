@@ -17,25 +17,25 @@
 @interface UIToolbar : UIView {
 @public
 }
-/* annotate with type */ -(id)sizeThatFits : (CGSize)curSize;
-/* annotate with type */ -(id)initWithCoder : (id)coder;
-/* annotate with type */ -(id)initWithFrame : (CGRect)frame;
-/* annotate with type */ -(id)setDelegate : (id)delegateAddr;
-/* annotate with type */ -(id)setBarStyle : (DWORD)style;
-/* annotate with type */ -(id)setButtonBarTrackingMode : (DWORD)mode;
-/* annotate with type */ -(id)viewWithTag : (DWORD)tag;
-/* annotate with type */ -(id)showSelectionForButton : (DWORD)button;
-/* annotate with type */ -(id)registerButtonGroup : (DWORD)group withButtons : (DWORD)withButtons withCount : (DWORD)withCount;
-/* annotate with type */ -(id)showButtonGroup : (DWORD)group withDuration : (DWORD)withDuration;
-/* annotate with type */ -(id)buttonClicked : (DWORD)button;
-/* annotate with type */ -(id)setItems : (id)items;
-/* annotate with type */ -(id)setTranslucent : (BOOL)translucent;
-/* annotate with type */ -(id)setTintColor : (id)color;
-/* annotate with type */ -(id)tintColor;
-/* annotate with type */ -(id)items;
-/* annotate with type */ -(id)setItems : (id)items animated : (BOOL)animated;
-/* annotate with type */ -(id)setFrame : (CGRect)frame;
-/* annotate with type */ -(id)dealloc;
-/* annotate with type */ -(id)setBackgroundImage : (id)image forToolbarPosition : (DWORD)position barMetrics : (DWORD)metrics;
-/* annotate with type */ -(id)setBarTintColor : (id)color;
+- (id)sizeThatFits:(CGSize)curSize;
+- (id)initWithCoder:(id)coder;
+- (id)initWithFrame:(CGRect)frame;
+- (id)setDelegate:(id)delegateAddr;
+- (id)setBarStyle:(DWORD)style;
+- (id)setButtonBarTrackingMode:(DWORD)mode;
+- (id)viewWithTag:(DWORD)tag;
+- (id)showSelectionForButton:(DWORD)button;
+- (id)registerButtonGroup:(DWORD)group withButtons:(DWORD)withButtons withCount:(DWORD)withCount;
+- (id)showButtonGroup:(DWORD)group withDuration:(DWORD)withDuration;
+- (id)buttonClicked:(DWORD)button;
+- (id)setItems:(id)items;
+- (id)setTranslucent:(BOOL)translucent;
+- (id)setTintColor:(id)color;
+- (id)tintColor;
+- (id)items;
+- (id)setItems:(id)items animated:(BOOL)animated;
+- (id)setFrame:(CGRect)frame;
+- (id)dealloc;
+- (id)setBackgroundImage:(id)image forToolbarPosition:(DWORD)position barMetrics:(DWORD)metrics;
+- (id)setBarTintColor:(id)color;
 @end

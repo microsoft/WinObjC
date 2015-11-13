@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties, WSFStorageItemContentProperties, WSFBasicProperties;
-@protocol WSFIThumbnailProperties, WSFIStorageItemExtraProperties, WSFIStorageItemContentProperties, WSFIMusicProperties, WSFIImageProperties, WSFIVideoProperties, WSFIDocumentProperties, WSFIBasicProperties;
+@class WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties,
+    WSFStorageItemContentProperties, WSFBasicProperties;
+@protocol WSFIThumbnailProperties
+, WSFIStorageItemExtraProperties, WSFIStorageItemContentProperties, WSFIMusicProperties, WSFIImageProperties, WSFIVideoProperties,
+    WSFIDocumentProperties, WSFIBasicProperties;
 
 // Windows.Storage.FileProperties.PropertyPrefetchOptions
 enum _WSFPropertyPrefetchOptions {
@@ -117,7 +120,12 @@ typedef unsigned WSFVideoOrientation;
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -128,7 +136,10 @@ typedef unsigned WSFVideoOrientation;
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -149,8 +160,16 @@ typedef unsigned WSFVideoOrientation;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -161,7 +180,7 @@ typedef unsigned WSFVideoOrientation;
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString * contentType;
+@property (readonly) NSString* contentType;
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -170,14 +189,23 @@ typedef unsigned WSFVideoOrientation;
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol
+    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -188,12 +216,17 @@ typedef unsigned WSFVideoOrientation;
 #define __WSFStorageItemThumbnail_DEFINED__
 
 WINRT_EXPORT
-@interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
+@interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
+                                               WSSIContentTypeProvider,
+                                               WSSIRandomAccessStream,
+                                               WSSIOutputStream,
+                                               WFIClosable,
+                                               WSSIInputStream>
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
 @property (readonly) uint64_t position;
-@property (readonly) NSString * contentType;
+@property (readonly) NSString* contentType;
 @property (readonly) unsigned originalHeight;
 @property (readonly) unsigned originalWidth;
 @property (readonly) BOOL returnedSmallerCachedSize;
@@ -203,8 +236,16 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -218,20 +259,20 @@ WINRT_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 @property unsigned year;
 @property unsigned trackNumber;
-@property (copy) NSString * title;
-@property (copy) NSString * subtitle;
+@property (copy) NSString* title;
+@property (copy) NSString* subtitle;
 @property unsigned rating;
-@property (copy) NSString * publisher;
-@property (copy) NSString * artist;
-@property (copy) NSString * albumArtist;
-@property (copy) NSString * album;
+@property (copy) NSString* publisher;
+@property (copy) NSString* artist;
+@property (copy) NSString* albumArtist;
+@property (copy) NSString* album;
 @property (readonly) unsigned bitrate;
-@property (readonly) id<NSFastEnumeration> /*String*/  composers;
-@property (readonly) id<NSFastEnumeration> /*String*/  conductors;
-@property (readonly) WFTimeSpan * duration;
-@property (readonly) id<NSFastEnumeration> /*String*/  genre;
-@property (readonly) id<NSFastEnumeration> /*String*/  producers;
-@property (readonly) id<NSFastEnumeration> /*String*/  writers;
+@property (readonly) id<NSFastEnumeration> /*String*/ composers;
+@property (readonly) id<NSFastEnumeration> /*String*/ conductors;
+@property (readonly) WFTimeSpan* duration;
+@property (readonly) id<NSFastEnumeration> /*String*/ genre;
+@property (readonly) id<NSFastEnumeration> /*String*/ producers;
+@property (readonly) id<NSFastEnumeration> /*String*/ writers;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
@@ -248,21 +289,21 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 @property unsigned year;
-@property (copy) NSString * title;
-@property (copy) NSString * subtitle;
+@property (copy) NSString* title;
+@property (copy) NSString* subtitle;
 @property unsigned rating;
-@property (copy) NSString * publisher;
+@property (copy) NSString* publisher;
 @property (readonly) unsigned bitrate;
-@property (readonly) id<NSFastEnumeration> /*String*/  directors;
-@property (readonly) WFTimeSpan * duration;
+@property (readonly) id<NSFastEnumeration> /*String*/ directors;
+@property (readonly) WFTimeSpan* duration;
 @property (readonly) unsigned height;
-@property (readonly) id<NSFastEnumeration> /*String*/  keywords;
+@property (readonly) id<NSFastEnumeration> /*String*/ keywords;
 @property (readonly) NSNumber* latitude;
 @property (readonly) NSNumber* longitude;
 @property (readonly) WSFVideoOrientation orientation;
-@property (readonly) id<NSFastEnumeration> /*String*/  producers;
+@property (readonly) id<NSFastEnumeration> /*String*/ producers;
 @property (readonly) unsigned width;
-@property (readonly) id<NSFastEnumeration> /*String*/  writers;
+@property (readonly) id<NSFastEnumeration> /*String*/ writers;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
@@ -278,17 +319,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
-@property (copy) NSString * title;
+@property (copy) NSString* title;
 @property unsigned rating;
-@property (copy) WFDateTime * dateTaken;
-@property (copy) NSString * cameraModel;
-@property (copy) NSString * cameraManufacturer;
+@property (copy) WFDateTime* dateTaken;
+@property (copy) NSString* cameraModel;
+@property (copy) NSString* cameraManufacturer;
 @property (readonly) unsigned height;
-@property (readonly) id<NSFastEnumeration> /*String*/  keywords;
+@property (readonly) id<NSFastEnumeration> /*String*/ keywords;
 @property (readonly) NSNumber* latitude;
 @property (readonly) NSNumber* longitude;
 @property (readonly) WSFPhotoOrientation orientation;
-@property (readonly) id<NSFastEnumeration> /*String*/  peopleNames;
+@property (readonly) id<NSFastEnumeration> /*String*/ peopleNames;
 @property (readonly) unsigned width;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
@@ -305,10 +346,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
-@property (copy) NSString * title;
-@property (copy) NSString * comment;
-@property (readonly) id<NSFastEnumeration> /*String*/  author;
-@property (readonly) id<NSFastEnumeration> /*String*/  keywords;
+@property (copy) NSString* title;
+@property (copy) NSString* comment;
+@property (readonly) id<NSFastEnumeration> /*String*/ author;
+@property (readonly) id<NSFastEnumeration> /*String*/ keywords;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
@@ -324,10 +365,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
-- (void)getMusicPropertiesAsyncWithSuccess:(void (^)(WSFMusicProperties *))success failure:(void (^)(NSError*))failure;
-- (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties *))success failure:(void (^)(NSError*))failure;
-- (void)getImagePropertiesAsyncWithSuccess:(void (^)(WSFImageProperties *))success failure:(void (^)(NSError*))failure;
-- (void)getDocumentPropertiesAsyncWithSuccess:(void (^)(WSFDocumentProperties *))success failure:(void (^)(NSError*))failure;
+- (void)getMusicPropertiesAsyncWithSuccess:(void (^)(WSFMusicProperties*))success failure:(void (^)(NSError*))failure;
+- (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties*))success failure:(void (^)(NSError*))failure;
+- (void)getImagePropertiesAsyncWithSuccess:(void (^)(WSFImageProperties*))success failure:(void (^)(NSError*))failure;
+- (void)getDocumentPropertiesAsyncWithSuccess:(void (^)(WSFDocumentProperties*))success failure:(void (^)(NSError*))failure;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
@@ -343,8 +384,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
-@property (readonly) WFDateTime * dateModified;
-@property (readonly) WFDateTime * itemDate;
+@property (readonly) WFDateTime* dateModified;
+@property (readonly) WFDateTime* itemDate;
 @property (readonly) uint64_t size;
 // Failed to generate member RetrievePropertiesAsync (Can't marshal Windows.Foundation.Collections.IMap`2<String,System.Object>)
 // Failed to generate member SavePropertiesAsync (Can't marshal Windows.Foundation.Collections.IKeyValuePair`2<String,System.Object>)
@@ -352,4 +393,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSFBasicProperties_DEFINED__
-

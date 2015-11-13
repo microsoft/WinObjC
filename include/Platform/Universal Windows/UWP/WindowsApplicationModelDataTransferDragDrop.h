@@ -22,16 +22,14 @@
 #include "interopBase.h"
 // Windows.ApplicationModel.DataTransfer.DragDrop.DragDropModifiers
 enum _WADDDragDropModifiers {
-	WADDDragDropModifiersNone = 0,
-	WADDDragDropModifiersShift = 1,
-	WADDDragDropModifiersControl = 2,
-	WADDDragDropModifiersAlt = 4,
-	WADDDragDropModifiersLeftButton = 8,
-	WADDDragDropModifiersMiddleButton = 16,
-	WADDDragDropModifiersRightButton = 32,
+    WADDDragDropModifiersNone = 0,
+    WADDDragDropModifiersShift = 1,
+    WADDDragDropModifiersControl = 2,
+    WADDDragDropModifiersAlt = 4,
+    WADDDragDropModifiersLeftButton = 8,
+    WADDDragDropModifiersMiddleButton = 16,
+    WADDDragDropModifiersRightButton = 32,
 };
 typedef unsigned WADDDragDropModifiers;
 
-
 #import <Foundation/Foundation.h>
-

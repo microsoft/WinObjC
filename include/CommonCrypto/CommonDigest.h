@@ -18,7 +18,7 @@
 #define __COMMON_DIGEST_H
 
 // This header file is not yet implemented
-typedef struct CC_MD5_State *CC_MD5_CTX;
+typedef struct CC_MD5_State* CC_MD5_CTX;
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,9 +26,9 @@ extern "C" {
 
 #define CC_MD5_DIGEST_LENGTH 16
 
-int CC_MD5_Init(CC_MD5_CTX *ctx);
-int CC_MD5_Update(CC_MD5_CTX *ctx, const void *data, unsigned int len);
-int CC_MD5_Final(unsigned char *out, CC_MD5_CTX *ctx);
+int CC_MD5_Init(CC_MD5_CTX* ctx);
+int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len);
+int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx);
 
 #ifdef __cplusplus
 }

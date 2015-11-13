@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-
 #import <Foundation/NSObject.h>
 
 /* Used by name in CoreFoundation */

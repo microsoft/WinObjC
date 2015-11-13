@@ -18,11 +18,13 @@
 #define _CAGRADIENTLAYER_H_
 
 #import <QuartzCore/CALayer.h>
+#import <GLKit/GLKitExport.h>
 
+GLKIT_EXPORT_CLASS
 @interface CAGradientLayer : CALayer
 
-@property(copy) NSArray *colors;
-@property(copy) NSArray *locations;
+@property (copy) NSArray* colors;
+@property (copy) NSArray* locations;
 @property CGPoint startPoint;
 @property CGPoint endPoint;
 

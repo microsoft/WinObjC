@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WARResourceLoader;
-@protocol WARIResourceLoader, WARIResourceLoader2, WARIResourceLoaderStatics, WARIResourceLoaderStatics2, WARIResourceLoaderFactory;
+@protocol WARIResourceLoader
+, WARIResourceLoader2, WARIResourceLoaderStatics, WARIResourceLoaderStatics2, WARIResourceLoaderFactory;
 
 #include "WindowsFoundation.h"
 
@@ -31,16 +32,15 @@
 
 WINRT_EXPORT
 @interface WARResourceLoader : RTObject
-+ (WARResourceLoader *)getForCurrentView;
-+ (WARResourceLoader *)getForCurrentViewWithName:(NSString *)name;
-+ (WARResourceLoader *)getForViewIndependentUse;
-+ (WARResourceLoader *)getForViewIndependentUseWithName:(NSString *)name;
-+ (NSString *)getStringForReference:(WFUri *)uri;
-+ (WARResourceLoader *)createResourceLoaderByName:(NSString *)name ACTIVATOR;
++ (WARResourceLoader*)getForCurrentView;
++ (WARResourceLoader*)getForCurrentViewWithName:(NSString*)name;
++ (WARResourceLoader*)getForViewIndependentUse;
++ (WARResourceLoader*)getForViewIndependentUseWithName:(NSString*)name;
++ (NSString*)getStringForReference:(WFUri*)uri;
++ (WARResourceLoader*)createResourceLoaderByName:(NSString*)name ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-- (NSString *)getString:(NSString *)resource;
-- (NSString *)getStringForUri:(WFUri *)uri;
+- (NSString*)getString:(NSString*)resource;
+- (NSString*)getStringForUri:(WFUri*)uri;
 @end
 
 #endif // __WARResourceLoader_DEFINED__
-

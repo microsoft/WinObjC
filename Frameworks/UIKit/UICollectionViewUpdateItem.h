@@ -33,10 +33,9 @@ typedef DWORD UICollectionUpdateAction;
 }
 - (UICollectionUpdateAction)updateAction;
 - (BOOL)isSectionOperation;
-/* annotate with type */ -(id)initWithAction : (UICollectionUpdateAction)updateAction forIndexPath : (id)indexPath;
-/* annotate with type */ -(id)initWithInitialIndexPath : (id)initialIndexPath finalIndexPath : (id)finalIndexPath updateAction
-                                                                                               : (UICollectionUpdateAction)updateAction;
-/* annotate with type */ -(id)indexPathBeforeUpdate;
-/* annotate with type */ -(id)setIndexPathBeforeUpdate : (id)indexPath;
-/* annotate with type */ -(id)indexPathAfterUpdate;
+- (id)initWithAction:(UICollectionUpdateAction)updateAction forIndexPath:(id)indexPath;
+- (id)initWithInitialIndexPath:(id)initialIndexPath finalIndexPath:(id)finalIndexPath updateAction:(UICollectionUpdateAction)updateAction;
+- (id)indexPathBeforeUpdate;
+- (id)setIndexPathBeforeUpdate:(id)indexPath;
+- (id)indexPathAfterUpdate;
 @end

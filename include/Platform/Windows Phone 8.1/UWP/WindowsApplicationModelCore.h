@@ -21,7 +21,10 @@
 
 #include "interopBase.h"
 @class WACCoreApplication, WACCoreApplicationView, WACUnhandledErrorDetectedEventArgs, WACUnhandledError;
-@protocol WACIFrameworkView, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit, WACICoreImmersiveApplication, WACICoreImmersiveApplication2, WACICoreApplicationUnhandledError, WACICoreApplicationView, WACICoreApplicationView2, WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
+@protocol WACIFrameworkView
+, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit, WACICoreImmersiveApplication,
+    WACICoreImmersiveApplication2, WACICoreApplicationUnhandledError, WACICoreApplicationView, WACICoreApplicationView2,
+    WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsUICore.h"
@@ -34,9 +37,9 @@
 #define __WACIFrameworkView_DEFINED__
 
 @protocol WACIFrameworkView
-- (void)initialize:(WACCoreApplicationView *)applicationView;
-- (void)setWindow:(WUCCoreWindow *)window;
-- (void)load:(NSString *)entryPoint;
+- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)setWindow:(WUCCoreWindow*)window;
+- (void)load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end
@@ -58,7 +61,7 @@
 #define __WACICoreApplicationUnhandledError_DEFINED__
 
 @protocol WACICoreApplicationUnhandledError
-- (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void(^)(RTObject*, WACUnhandledErrorDetectedEventArgs *))del;
+- (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void (^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
 - (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -70,25 +73,25 @@
 
 WINRT_EXPORT
 @interface WACCoreApplication : RTObject
-+ (WACCoreApplicationView *)createNewView:(NSString *)runtimeType entryPoint:(NSString *)entryPoint;
-+ (WACCoreApplicationView *)getCurrentView;
++ (WACCoreApplicationView*)createNewView:(NSString*)runtimeType entryPoint:(NSString*)entryPoint;
++ (WACCoreApplicationView*)getCurrentView;
 + (void)run:(RTObject<WACIFrameworkViewSource>*)viewSource;
 + (void)runWithActivationFactories:(RTObject<WFIGetActivationFactory>*)activationFactoryCallback;
-+ (WACCoreApplicationView *)createNewViewFromMainView;
++ (WACCoreApplicationView*)createNewViewFromMainView;
 + (void)exit;
 + (void)incrementApplicationUseCount;
 + (void)decrementApplicationUseCount;
-+ (WACCoreApplicationView *)mainView;
-+ (id<NSFastEnumeration> /*WACCoreApplicationView*/ )views;
-+ (NSString *)id;
++ (WACCoreApplicationView*)mainView;
++ (id<NSFastEnumeration> /*WACCoreApplicationView*/)views;
++ (NSString*)id;
 + (RTObject<WFCIPropertySet>*)properties;
-+ (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void(^)(RTObject*, WACUnhandledErrorDetectedEventArgs *))del;
++ (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void (^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
 + (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addExitingEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addExitingEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeExitingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addResumingEvent:(void(^)(RTObject*, RTObject *))del;
++ (EventRegistrationToken)addResumingEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeResumingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addSuspendingEvent:(void(^)(RTObject*, WASuspendingEventArgs *))del;
++ (EventRegistrationToken)addSuspendingEvent:(void (^)(RTObject*, WASuspendingEventArgs*))del;
 + (void)removeSuspendingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -100,11 +103,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACCoreApplicationView : RTObject
-@property (readonly) WUCCoreWindow * coreWindow;
+@property (readonly) WUCCoreWindow* coreWindow;
 @property (readonly) BOOL isHosted;
 @property (readonly) BOOL isMain;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (EventRegistrationToken)addActivatedEvent:(void(^)(WACCoreApplicationView *, RTObject<WAAIActivatedEventArgs>*))del;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (EventRegistrationToken)addActivatedEvent:(void (^)(WACCoreApplicationView*, RTObject<WAAIActivatedEventArgs>*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -116,7 +119,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACUnhandledErrorDetectedEventArgs : RTObject
-@property (readonly) WACUnhandledError * unhandledError;
+@property (readonly) WACUnhandledError* unhandledError;
 @end
 
 #endif // __WACUnhandledErrorDetectedEventArgs_DEFINED__
@@ -132,4 +135,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WACUnhandledError_DEFINED__
-

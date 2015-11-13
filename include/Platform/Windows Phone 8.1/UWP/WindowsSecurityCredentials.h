@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSCPasswordCredential, WSCPasswordVault, WSCPasswordCredentialPropertyStore, WSCWebAccountProvider, WSCWebAccount;
-@protocol WSCIPasswordCredential, WSCICredentialFactory, WSCIPasswordVault, WSCIWebAccountProviderFactory, WSCIWebAccountFactory, WSCIWebAccountProvider, WSCIWebAccount;
+@protocol WSCIPasswordCredential
+, WSCICredentialFactory, WSCIPasswordVault, WSCIWebAccountProviderFactory, WSCIWebAccountFactory, WSCIWebAccountProvider, WSCIWebAccount;
 
 // Windows.Security.Credentials.WebAccountState
 enum _WSCWebAccountState {
@@ -40,11 +41,11 @@ typedef unsigned WSCWebAccountState;
 
 WINRT_EXPORT
 @interface WSCPasswordCredential : RTObject
-+ (WSCPasswordCredential *)createPasswordCredential:(NSString *)resource userName:(NSString *)userName password:(NSString *)password ACTIVATOR;
++ (WSCPasswordCredential*)createPasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * userName;
-@property (copy) NSString * resource;
-@property (copy) NSString * password;
+@property (copy) NSString* userName;
+@property (copy) NSString* resource;
+@property (copy) NSString* password;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (void)retrievePassword;
 @end
@@ -58,12 +59,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSCPasswordVault : RTObject
 + (instancetype)create ACTIVATOR;
-- (void)add:(WSCPasswordCredential *)credential;
-- (void)remove:(WSCPasswordCredential *)credential;
-- (WSCPasswordCredential *)retrieve:(NSString *)resource userName:(NSString *)userName;
-- (id<NSFastEnumeration> /*WSCPasswordCredential*/ )findAllByResource:(NSString *)resource;
-- (id<NSFastEnumeration> /*WSCPasswordCredential*/ )findAllByUserName:(NSString *)userName;
-- (id<NSFastEnumeration> /*WSCPasswordCredential*/ )retrieveAll;
+- (void)add:(WSCPasswordCredential*)credential;
+- (void)remove:(WSCPasswordCredential*)credential;
+- (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
+- (id<NSFastEnumeration> /*WSCPasswordCredential*/)findAllByResource:(NSString*)resource;
+- (id<NSFastEnumeration> /*WSCPasswordCredential*/)findAllByUserName:(NSString*)userName;
+- (id<NSFastEnumeration> /*WSCPasswordCredential*/)retrieveAll;
 @end
 
 #endif // __WSCPasswordVault_DEFINED__
@@ -103,10 +104,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider *)createWebAccountProvider:(NSString *)id displayName:(NSString *)displayName iconUri:(WFUri *)iconUri ACTIVATOR;
-@property (readonly) NSString * displayName;
-@property (readonly) WFUri * iconUri;
-@property (readonly) NSString * id;
++ (WSCWebAccountProvider*)createWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
+@property (readonly) NSString* displayName;
+@property (readonly) WFUri* iconUri;
+@property (readonly) NSString* id;
 @end
 
 #endif // __WSCWebAccountProvider_DEFINED__
@@ -117,11 +118,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCWebAccount : RTObject
-+ (WSCWebAccount *)createWebAccount:(WSCWebAccountProvider *)webAccountProvider userName:(NSString *)userName state:(WSCWebAccountState)state ACTIVATOR;
++ (WSCWebAccount*)createWebAccount:(WSCWebAccountProvider*)webAccountProvider
+                          userName:(NSString*)userName
+                             state:(WSCWebAccountState)state ACTIVATOR;
 @property (readonly) WSCWebAccountState state;
-@property (readonly) NSString * userName;
-@property (readonly) WSCWebAccountProvider * webAccountProvider;
+@property (readonly) NSString* userName;
+@property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
 
 #endif // __WSCWebAccount_DEFINED__
-

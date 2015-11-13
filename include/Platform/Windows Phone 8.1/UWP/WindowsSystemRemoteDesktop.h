@@ -23,7 +23,6 @@
 @class WSRInteractiveSession;
 @protocol WSRIInteractiveSessionStatics;
 
-
 // Windows.System.RemoteDesktop.InteractiveSession
 #ifndef __WSRInteractiveSession_DEFINED__
 #define __WSRInteractiveSession_DEFINED__
@@ -34,4 +33,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WSRInteractiveSession_DEFINED__
-

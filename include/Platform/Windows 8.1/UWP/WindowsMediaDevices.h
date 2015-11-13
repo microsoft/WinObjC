@@ -20,8 +20,18 @@
 #pragma once
 
 #include "interopBase.h"
-@class WMDDialRequestedEventArgs, WMDRedialRequestedEventArgs, WMDKeypadPressedEventArgs, WMDCallControl, WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController, WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl, WMDWhiteBalanceControl, WMDExposureControl, WMDFocusControl, WMDRegionOfInterest, WMDRegionsOfInterestControl, WMDMediaDeviceControl, WMDLowLagPhotoSequenceControl, WMDLowLagPhotoControl, WMDMediaDeviceControlCapabilities;
-@protocol WMDIDialRequestedEventArgs, WMDIRedialRequestedEventArgs, WMDIKeypadPressedEventArgs, WMDICallControl, WMDICallControlStatics, WMDIDefaultAudioDeviceChangedEventArgs, WMDIMediaDeviceStatics, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIExposureCompensationControl, WMDIIsoSpeedControl, WMDIWhiteBalanceControl, WMDIExposureControl, WMDIFocusControl, WMDIRegionOfInterest, WMDIRegionsOfInterestControl, WMDIMediaDeviceController, WMDIAudioDeviceController, WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2, WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities, WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl, WMDILowLagPhotoControl;
+@class WMDDialRequestedEventArgs, WMDRedialRequestedEventArgs, WMDKeypadPressedEventArgs, WMDCallControl,
+    WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController,
+    WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl,
+    WMDWhiteBalanceControl, WMDExposureControl, WMDFocusControl, WMDRegionOfInterest, WMDRegionsOfInterestControl, WMDMediaDeviceControl,
+    WMDLowLagPhotoSequenceControl, WMDLowLagPhotoControl, WMDMediaDeviceControlCapabilities;
+@protocol WMDIDialRequestedEventArgs
+, WMDIRedialRequestedEventArgs, WMDIKeypadPressedEventArgs, WMDICallControl, WMDICallControlStatics, WMDIDefaultAudioDeviceChangedEventArgs,
+    WMDIMediaDeviceStatics, WMDISceneModeControl, WMDITorchControl, WMDIFlashControl, WMDIExposureCompensationControl, WMDIIsoSpeedControl,
+    WMDIWhiteBalanceControl, WMDIExposureControl, WMDIFocusControl, WMDIRegionOfInterest, WMDIRegionsOfInterestControl,
+    WMDIMediaDeviceController, WMDIAudioDeviceController, WMDIVideoDeviceController, WMDIAdvancedVideoCaptureDeviceController2,
+    WMDIMediaDeviceControl, WMDIMediaDeviceControlCapabilities, WMDIAdvancedVideoCaptureDeviceController, WMDILowLagPhotoSequenceControl,
+    WMDILowLagPhotoControl;
 
 // Windows.Media.Devices.TelephonyKey
 enum _WMDTelephonyKey {
@@ -125,52 +135,51 @@ typedef unsigned WMDCaptureUse;
 // Windows.Media.Devices.CallControlEventHandler
 #ifndef __WMDCallControlEventHandler__DEFINED
 #define __WMDCallControlEventHandler__DEFINED
-typedef void(^WMDCallControlEventHandler)(WMDCallControl * sender);
+typedef void (^WMDCallControlEventHandler)(WMDCallControl* sender);
 #endif // __WMDCallControlEventHandler__DEFINED
 
 // Windows.Media.Devices.DialRequestedEventHandler
 #ifndef __WMDDialRequestedEventHandler__DEFINED
 #define __WMDDialRequestedEventHandler__DEFINED
-typedef void(^WMDDialRequestedEventHandler)(WMDCallControl * sender, WMDDialRequestedEventArgs * e);
+typedef void (^WMDDialRequestedEventHandler)(WMDCallControl* sender, WMDDialRequestedEventArgs* e);
 #endif // __WMDDialRequestedEventHandler__DEFINED
 
 // Windows.Media.Devices.KeypadPressedEventHandler
 #ifndef __WMDKeypadPressedEventHandler__DEFINED
 #define __WMDKeypadPressedEventHandler__DEFINED
-typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl * sender, WMDKeypadPressedEventArgs * e);
+typedef void (^WMDKeypadPressedEventHandler)(WMDCallControl* sender, WMDKeypadPressedEventArgs* e);
 #endif // __WMDKeypadPressedEventHandler__DEFINED
 
 // Windows.Media.Devices.RedialRequestedEventHandler
 #ifndef __WMDRedialRequestedEventHandler__DEFINED
 #define __WMDRedialRequestedEventHandler__DEFINED
-typedef void(^WMDRedialRequestedEventHandler)(WMDCallControl * sender, WMDRedialRequestedEventArgs * e);
+typedef void (^WMDRedialRequestedEventHandler)(WMDCallControl* sender, WMDRedialRequestedEventArgs* e);
 #endif // __WMDRedialRequestedEventHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // Windows.Media.Devices.CallControlEventHandler
 #ifndef __WMDCallControlEventHandler__DEFINED
 #define __WMDCallControlEventHandler__DEFINED
-typedef void(^WMDCallControlEventHandler)(WMDCallControl * sender);
+typedef void (^WMDCallControlEventHandler)(WMDCallControl* sender);
 #endif // __WMDCallControlEventHandler__DEFINED
 
 // Windows.Media.Devices.DialRequestedEventHandler
 #ifndef __WMDDialRequestedEventHandler__DEFINED
 #define __WMDDialRequestedEventHandler__DEFINED
-typedef void(^WMDDialRequestedEventHandler)(WMDCallControl * sender, WMDDialRequestedEventArgs * e);
+typedef void (^WMDDialRequestedEventHandler)(WMDCallControl* sender, WMDDialRequestedEventArgs* e);
 #endif // __WMDDialRequestedEventHandler__DEFINED
 
 // Windows.Media.Devices.RedialRequestedEventHandler
 #ifndef __WMDRedialRequestedEventHandler__DEFINED
 #define __WMDRedialRequestedEventHandler__DEFINED
-typedef void(^WMDRedialRequestedEventHandler)(WMDCallControl * sender, WMDRedialRequestedEventArgs * e);
+typedef void (^WMDRedialRequestedEventHandler)(WMDCallControl* sender, WMDRedialRequestedEventArgs* e);
 #endif // __WMDRedialRequestedEventHandler__DEFINED
 
 // Windows.Media.Devices.KeypadPressedEventHandler
 #ifndef __WMDKeypadPressedEventHandler__DEFINED
 #define __WMDKeypadPressedEventHandler__DEFINED
-typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl * sender, WMDKeypadPressedEventArgs * e);
+typedef void (^WMDKeypadPressedEventHandler)(WMDCallControl* sender, WMDKeypadPressedEventArgs* e);
 #endif // __WMDKeypadPressedEventHandler__DEFINED
 
 // Windows.Media.Devices.IDefaultAudioDeviceChangedEventArgs
@@ -178,7 +187,7 @@ typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl * sender, WMDKeypadPr
 #define __WMDIDefaultAudioDeviceChangedEventArgs_DEFINED__
 
 @protocol WMDIDefaultAudioDeviceChangedEventArgs
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -189,9 +198,10 @@ typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl * sender, WMDKeypadPr
 #define __WMDIMediaDeviceController_DEFINED__
 
 @protocol WMDIMediaDeviceController
-- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/ )getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
 #endif // __WMDIMediaDeviceController_DEFINED__
@@ -202,7 +212,7 @@ typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl * sender, WMDKeypadPr
 
 WINRT_EXPORT
 @interface WMDDialRequestedEventArgs : RTObject
-@property (readonly) RTObject * contact;
+@property (readonly) RTObject* contact;
 - (void)handled;
 @end
 
@@ -236,8 +246,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCallControl : RTObject
-+ (WMDCallControl *)getDefault;
-+ (WMDCallControl *)fromId:(NSString *)deviceId;
++ (WMDCallControl*)getDefault;
++ (WMDCallControl*)fromId:(NSString*)deviceId;
 @property (readonly) BOOL hasRinger;
 - (EventRegistrationToken)addAnswerRequestedEvent:(WMDCallControlEventHandler)del;
 - (void)removeAnswerRequestedEvent:(EventRegistrationToken)tok;
@@ -251,7 +261,7 @@ WINRT_EXPORT
 - (void)removeKeypadPressedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addRedialRequestedEvent:(WMDRedialRequestedEventHandler)del;
 - (void)removeRedialRequestedEvent:(EventRegistrationToken)tok;
-- (uint64_t)indicateNewIncomingCall:(BOOL)enableRinger callerId:(NSString *)callerId;
+- (uint64_t)indicateNewIncomingCall:(BOOL)enableRinger callerId:(NSString*)callerId;
 - (uint64_t)indicateNewOutgoingCall;
 - (void)indicateActiveCall:(uint64_t)callToken;
 - (void)endCall:(uint64_t)callToken;
@@ -265,7 +275,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -277,7 +287,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
-@property (readonly) NSString * id;
+@property (readonly) NSString* id;
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
@@ -289,14 +299,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDMediaDevice : RTObject
-+ (NSString *)getAudioCaptureSelector;
-+ (NSString *)getAudioRenderSelector;
-+ (NSString *)getVideoCaptureSelector;
-+ (NSString *)getDefaultAudioCaptureId:(WMDAudioDeviceRole)role;
-+ (NSString *)getDefaultAudioRenderId:(WMDAudioDeviceRole)role;
-+ (EventRegistrationToken)addDefaultAudioCaptureDeviceChangedEvent:(void(^)(RTObject *, WMDDefaultAudioCaptureDeviceChangedEventArgs *))del;
++ (NSString*)getAudioCaptureSelector;
++ (NSString*)getAudioRenderSelector;
++ (NSString*)getVideoCaptureSelector;
++ (NSString*)getDefaultAudioCaptureId:(WMDAudioDeviceRole)role;
++ (NSString*)getDefaultAudioRenderId:(WMDAudioDeviceRole)role;
++ (EventRegistrationToken)addDefaultAudioCaptureDeviceChangedEvent:(void (^)(RTObject*, WMDDefaultAudioCaptureDeviceChangedEventArgs*))del;
 + (void)removeDefaultAudioCaptureDeviceChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addDefaultAudioRenderDeviceChangedEvent:(void(^)(RTObject *, WMDDefaultAudioRenderDeviceChangedEventArgs *))del;
++ (EventRegistrationToken)addDefaultAudioRenderDeviceChangedEvent:(void (^)(RTObject*, WMDDefaultAudioRenderDeviceChangedEventArgs*))del;
 + (void)removeDefaultAudioRenderDeviceChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -310,9 +320,10 @@ WINRT_EXPORT
 @interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
 @property float volumePercent;
 @property BOOL muted;
-- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/ )getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
 #endif // __WMDAudioDeviceController_DEFINED__
@@ -324,35 +335,36 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
 @property WMDCaptureUse primaryUse;
-@property (readonly) WMDWhiteBalanceControl * whiteBalanceControl;
-@property (readonly) WMDExposureCompensationControl * exposureCompensationControl;
-@property (readonly) WMDExposureControl * exposureControl;
-@property (readonly) WMDFlashControl * flashControl;
-@property (readonly) WMDFocusControl * focusControl;
-@property (readonly) WMDIsoSpeedControl * isoSpeedControl;
-@property (readonly) WMDLowLagPhotoControl * lowLagPhoto;
-@property (readonly) WMDLowLagPhotoSequenceControl * lowLagPhotoSequence;
-@property (readonly) WMDRegionsOfInterestControl * regionsOfInterestControl;
-@property (readonly) WMDSceneModeControl * sceneModeControl;
-@property (readonly) WMDTorchControl * torchControl;
-@property (readonly) WMDMediaDeviceControl * pan;
-@property (readonly) WMDMediaDeviceControl * roll;
-@property (readonly) WMDMediaDeviceControl * whiteBalance;
-@property (readonly) WMDMediaDeviceControl * zoom;
-@property (readonly) WMDMediaDeviceControl * backlightCompensation;
-@property (readonly) WMDMediaDeviceControl * brightness;
-@property (readonly) WMDMediaDeviceControl * contrast;
-@property (readonly) WMDMediaDeviceControl * exposure;
-@property (readonly) WMDMediaDeviceControl * focus;
-@property (readonly) WMDMediaDeviceControl * hue;
-@property (readonly) WMDMediaDeviceControl * tilt;
+@property (readonly) WMDWhiteBalanceControl* whiteBalanceControl;
+@property (readonly) WMDExposureCompensationControl* exposureCompensationControl;
+@property (readonly) WMDExposureControl* exposureControl;
+@property (readonly) WMDFlashControl* flashControl;
+@property (readonly) WMDFocusControl* focusControl;
+@property (readonly) WMDIsoSpeedControl* isoSpeedControl;
+@property (readonly) WMDLowLagPhotoControl* lowLagPhoto;
+@property (readonly) WMDLowLagPhotoSequenceControl* lowLagPhotoSequence;
+@property (readonly) WMDRegionsOfInterestControl* regionsOfInterestControl;
+@property (readonly) WMDSceneModeControl* sceneModeControl;
+@property (readonly) WMDTorchControl* torchControl;
+@property (readonly) WMDMediaDeviceControl* pan;
+@property (readonly) WMDMediaDeviceControl* roll;
+@property (readonly) WMDMediaDeviceControl* whiteBalance;
+@property (readonly) WMDMediaDeviceControl* zoom;
+@property (readonly) WMDMediaDeviceControl* backlightCompensation;
+@property (readonly) WMDMediaDeviceControl* brightness;
+@property (readonly) WMDMediaDeviceControl* contrast;
+@property (readonly) WMDMediaDeviceControl* exposure;
+@property (readonly) WMDMediaDeviceControl* focus;
+@property (readonly) WMDMediaDeviceControl* hue;
+@property (readonly) WMDMediaDeviceControl* tilt;
 - (BOOL)trySetPowerlineFrequency:(WMCPowerlineFrequency)value;
 - (BOOL)tryGetPowerlineFrequency:(WMCPowerlineFrequency*)value;
-- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/ )getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
+- (id<NSFastEnumeration> /*WMMIMediaEncodingProperties*/)getAvailableMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
 - (RTObject<WMMIMediaEncodingProperties>*)getMediaStreamProperties:(WMCMediaStreamType)mediaStreamType;
-- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
-- (void)setDeviceProperty:(NSString *)propertyId propertyValue:(RTObject *)propertyValue;
-- (RTObject *)getDeviceProperty:(NSString *)propertyId;
+- (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType
+                                   mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
+- (void)setDeviceProperty:(NSString*)propertyId propertyValue:(RTObject*)propertyValue;
+- (RTObject*)getDeviceProperty:(NSString*)propertyId;
 @end
 
 #endif // __WMDVideoDeviceController_DEFINED__
@@ -363,7 +375,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDSceneModeControl : RTObject
-@property (readonly) id<NSFastEnumeration> /*WMDCaptureSceneMode*/  supportedModes;
+@property (readonly) id<NSFastEnumeration> /*WMDCaptureSceneMode*/ supportedModes;
 @property (readonly) WMDCaptureSceneMode value;
 - (RTObject<WFIAsyncAction>*)setValueAsync:(WMDCaptureSceneMode)sceneMode;
 @end
@@ -425,7 +437,7 @@ WINRT_EXPORT
 @interface WMDIsoSpeedControl : RTObject
 @property (readonly) WMDIsoSpeedPreset preset;
 @property (readonly) BOOL supported;
-@property (readonly) id<NSFastEnumeration> /*WMDIsoSpeedPreset*/  supportedPresets;
+@property (readonly) id<NSFastEnumeration> /*WMDIsoSpeedPreset*/ supportedPresets;
 - (RTObject<WFIAsyncAction>*)setPresetAsync:(WMDIsoSpeedPreset)preset;
 @end
 
@@ -456,13 +468,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDExposureControl : RTObject
 @property (readonly) BOOL Auto;
-@property (readonly) WFTimeSpan * max;
-@property (readonly) WFTimeSpan * min;
-@property (readonly) WFTimeSpan * step;
+@property (readonly) WFTimeSpan* max;
+@property (readonly) WFTimeSpan* min;
+@property (readonly) WFTimeSpan* step;
 @property (readonly) BOOL supported;
-@property (readonly) WFTimeSpan * value;
+@property (readonly) WFTimeSpan* value;
 - (RTObject<WFIAsyncAction>*)setAutoAsync:(BOOL)value;
-- (RTObject<WFIAsyncAction>*)setValueAsync:(WFTimeSpan *)shutterDuration;
+- (RTObject<WFIAsyncAction>*)setValueAsync:(WFTimeSpan*)shutterDuration;
 @end
 
 #endif // __WMDExposureControl_DEFINED__
@@ -478,7 +490,7 @@ WINRT_EXPORT
 @property (readonly) WMDFocusPreset preset;
 @property (readonly) unsigned step;
 @property (readonly) BOOL supported;
-@property (readonly) id<NSFastEnumeration> /*WMDFocusPreset*/  supportedPresets;
+@property (readonly) id<NSFastEnumeration> /*WMDFocusPreset*/ supportedPresets;
 @property (readonly) unsigned value;
 - (RTObject<WFIAsyncAction>*)setPresetAsync:(WMDFocusPreset)preset;
 - (RTObject<WFIAsyncAction>*)setPresetWithCompletionOptionAsync:(WMDFocusPreset)preset completeBeforeFocus:(BOOL)completeBeforeFocus;
@@ -495,7 +507,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFRect * bounds;
+@property (copy) WFRect* bounds;
 @property BOOL autoWhiteBalanceEnabled;
 @property BOOL autoFocusEnabled;
 @property BOOL autoExposureEnabled;
@@ -513,8 +525,8 @@ WINRT_EXPORT
 @property (readonly) BOOL autoFocusSupported;
 @property (readonly) BOOL autoWhiteBalanceSupported;
 @property (readonly) unsigned maxRegions;
-- (RTObject<WFIAsyncAction>*)setRegionsAsync:(id<NSFastEnumeration> /*WMDRegionOfInterest*/ )regions;
-- (RTObject<WFIAsyncAction>*)setRegionsWithLockAsync:(id<NSFastEnumeration> /*WMDRegionOfInterest*/ )regions lockValues:(BOOL)lockValues;
+- (RTObject<WFIAsyncAction>*)setRegionsAsync:(id<NSFastEnumeration> /*WMDRegionOfInterest*/)regions;
+- (RTObject<WFIAsyncAction>*)setRegionsWithLockAsync:(id<NSFastEnumeration> /*WMDRegionOfInterest*/)regions lockValues:(BOOL)lockValues;
 - (RTObject<WFIAsyncAction>*)clearRegionsAsync;
 @end
 
@@ -526,7 +538,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDMediaDeviceControl : RTObject
-@property (readonly) WMDMediaDeviceControlCapabilities * capabilities;
+@property (readonly) WMDMediaDeviceControlCapabilities* capabilities;
 - (BOOL)tryGetValue:(double*)value;
 - (BOOL)trySetValue:(double)value;
 - (BOOL)tryGetAuto:(BOOL*)value;
@@ -550,8 +562,8 @@ WINRT_EXPORT
 @property (readonly) unsigned maxPastPhotos;
 @property (readonly) float maxPhotosPerSecond;
 @property (readonly) BOOL supported;
-- (WMMMediaRatio *)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
-- (WMMMediaRatio *)getCurrentFrameRate;
+- (WMMMediaRatio*)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
+- (WMMMediaRatio*)getCurrentFrameRate;
 @end
 
 #endif // __WMDLowLagPhotoSequenceControl_DEFINED__
@@ -566,8 +578,8 @@ WINRT_EXPORT
 @property BOOL thumbnailEnabled;
 @property unsigned desiredThumbnailSize;
 @property (readonly) unsigned hardwareAcceleratedThumbnailSupported;
-- (WMMMediaRatio *)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
-- (WMMMediaRatio *)getCurrentFrameRate;
+- (WMMMediaRatio*)getHighestConcurrentFrameRate:(RTObject<WMMIMediaEncodingProperties>*)captureProperties;
+- (WMMMediaRatio*)getCurrentFrameRate;
 @end
 
 #endif // __WMDLowLagPhotoControl_DEFINED__
@@ -587,4 +599,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WMDMediaDeviceControlCapabilities_DEFINED__
-

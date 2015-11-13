@@ -29,6 +29,9 @@
 #include "UIGridLayoutInfo.h"
 #include "UIGridLayoutItem.h"
 
+NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
+NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
+
 @implementation UICollectionViewFlowLayout {
     struct {
         unsigned int delegateSizeForItem : 1;

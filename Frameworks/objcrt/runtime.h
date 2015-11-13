@@ -2,6 +2,7 @@
 //
 // Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
 //   Jonathan Schleifer <js@webkeks.org>. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -43,6 +44,7 @@ extern "C" {
 
 typedef struct objc_class* Class;
 typedef struct objc_method* Method;
+typedef struct objc_property* Property;
 typedef struct objc_object* id;
 typedef struct objc_ivar* Ivar;
 typedef const struct objc_selector* SEL;
@@ -206,6 +208,11 @@ extern OBJCRT_EXPORT IMP class_replaceMethod(Class, SEL, IMP, const char*);
 extern OBJCRT_EXPORT Ivar class_getInstanceVariable(Class cls, const char* name);
 extern OBJCRT_EXPORT Ivar* class_copyIvarList(Class cls, unsigned int* outCount);
 extern OBJCRT_EXPORT Method class_getInstanceMethod(Class cls, SEL name);
+extern OBJCRT_EXPORT Property class_getProperty(Class cls, const char* name);
+extern OBJCRT_EXPORT Property* class_copyPropertyList(Class cls, unsigned int* outCount);
+
+extern OBJCRT_EXPORT const char* property_getAttributes(Property property);
+extern OBJCRT_EXPORT const char* property_getName(Property property);
 
 extern OBJCRT_EXPORT SEL method_getName(Method m);
 extern OBJCRT_EXPORT char* method_copyReturnType(Method m);
@@ -249,8 +256,8 @@ extern OBJCRT_EXPORT id objc_allocateObject(Class classRef, unsigned int extraBy
 extern OBJCRT_EXPORT void objc_deallocateObject(id obj);
 
 // Not yet exposed in runtime.h due to conflicting or even missing declarations of objc_associationPolicy.
-//extern OBJCRT_EXPORT void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
-//extern OBJCRT_EXPORT id objc_getAssociatedObject(id self, void* key);
+// extern OBJCRT_EXPORT void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
+// extern OBJCRT_EXPORT id objc_getAssociatedObject(id self, void* key);
 extern OBJCRT_EXPORT void objc_removeAssociatedObjects(id self);
 
 OBJCRT_EXPORT Class object_getClass(id obj_);

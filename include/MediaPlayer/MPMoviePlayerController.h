@@ -129,10 +129,10 @@ UIKIT_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 @class MPMovieAccessLog;
 @class MPMovieErrorLog;
 
-UIKIT_EXPORT 
-@interface MPMoviePlayerController : NSObject<MPMediaPlayback, NSObject>
+UIKIT_EXPORT
+@interface MPMoviePlayerController : NSObject <MPMediaPlayback, NSObject>
 
-- (instancetype)initWithContentURL : (NSURL*)url;
+- (instancetype)initWithContentURL:(NSURL*)url;
 - (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
 - (void)playPrerollAdWithCompletionHandler:(void (^)(NSError* error))completionHandler;
 - (UIImage*)thumbnailImageAtTime:(NSTimeInterval)playbackTime timeOption:(MPMovieTimeOption)option;

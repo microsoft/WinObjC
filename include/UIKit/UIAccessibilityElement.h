@@ -29,20 +29,30 @@
 
 #import "UIAccessibility.h"
 
-@interface UIAccessibilityElement : NSObject {
-    NSString *_accessibilityLabel;
-    NSString *_accessibilityHint;
-    NSString *_accessibilityValue;
-    CGRect _accessibilityFrame;
-    UIAccessibilityTraits _accessibilityTraits;
-}
+@interface UIAccessibilityElement : NSObject <UIAccessibility>
 
 - (id)initWithAccessibilityContainer:(id)container;
 
-@property (nonatomic, retain) NSString *accessibilityLabel;
-@property (nonatomic, retain) NSString *accessibilityHint;
-@property (nonatomic, retain) NSString *accessibilityValue;
-@property (nonatomic, assign) CGRect accessibilityFrame;
-@property (nonatomic, assign) UIAccessibilityTraits accessibilityTraits;
+@property (assign) UIView* accessibilityContainer;
+
+@property BOOL isAccessibilityElement;
+
+@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityHint;
+@property (copy) NSString* accessibilityValue;
+
+@property UIAccessibilityTraits accessibilityTraits;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+
+@property (nonatomic) CGRect accessibilityFrame;
+@property (copy) UIBezierPath* accessibilityPath;
+@property CGPoint accessibilityActivationPoint;
+
+@property (retain) NSString* accessibilityLanguage;
+
+@property BOOL accessibilityElementsHidden;
+@property BOOL shouldGroupAccessibilityChildren;
+
+@property BOOL accessibilityViewIsModal;
 
 @end

@@ -25,15 +25,7 @@ typedef struct __SecTrust* SecTrustRef;
 
 typedef const struct __SecRandom* SecRandomRef;
 
-OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);
-
 enum {
     errSecSuccess = 0, /* No error. */
     errSecItemNotFound = -25300, /* The specified item could not be found in the keychain. */
 };
-
-OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
-
-OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
-
-OSStatus SecItemDelete(CFDictionaryRef query);

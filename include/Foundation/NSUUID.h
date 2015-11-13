@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-
 #import <Foundation/NSObject.h>
 
 FOUNDATION_EXPORT_CLASS

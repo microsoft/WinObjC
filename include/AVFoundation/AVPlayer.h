@@ -23,7 +23,7 @@
 
 @interface AVPlayer : NSObject
 
-+ (id)playerWithURL:(NSURL *)URL;
++ (id)playerWithURL:(NSURL*)URL;
 
 - (void)play;
 - (void)pause;

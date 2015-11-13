@@ -20,7 +20,7 @@
 #if defined(COREDATA_INSIDE_BUILD)
 #define COREDATA_EXPORT extern "C" __declspec(dllexport)
 #else
-#define COREDATA_EXPORT extern "C" __declspec(dllimport) 
+#define COREDATA_EXPORT extern "C" __declspec(dllimport)
 #endif
 #else
 #define COREDATA_EXPORT extern "C"
@@ -39,4 +39,3 @@
 #endif
 
 #endif
-

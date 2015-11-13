@@ -20,9 +20,12 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDTSemanticTextQuery, WDTUnicodeCharacters, WDTAlternateWordForm, WDTWordSegment, WDTWordsSegmenter, WDTSelectableWordSegment, WDTSelectableWordsSegmenter;
+@class WDTSemanticTextQuery, WDTUnicodeCharacters, WDTAlternateWordForm, WDTWordSegment, WDTWordsSegmenter, WDTSelectableWordSegment,
+    WDTSelectableWordsSegmenter;
 @class WDTTextSegment;
-@protocol WDTISemanticTextQueryFactory, WDTISemanticTextQuery, WDTIUnicodeCharactersStatics, WDTIAlternateWordForm, WDTISelectableWordSegment, WDTIWordSegment, WDTIWordsSegmenter, WDTIWordsSegmenterFactory, WDTISelectableWordsSegmenter, WDTISelectableWordsSegmenterFactory;
+@protocol WDTISemanticTextQueryFactory
+, WDTISemanticTextQuery, WDTIUnicodeCharactersStatics, WDTIAlternateWordForm, WDTISelectableWordSegment, WDTIWordSegment,
+    WDTIWordsSegmenter, WDTIWordsSegmenterFactory, WDTISelectableWordsSegmenter, WDTISelectableWordsSegmenterFactory;
 
 // Windows.Data.Text.UnicodeGeneralCategory
 enum _WDTUnicodeGeneralCategory {
@@ -82,22 +85,23 @@ typedef unsigned WDTAlternateNormalizationFormat;
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTSelectableWordSegment*/  words);
+typedef void (^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/ precedingWords,
+                                                           id<NSFastEnumeration> /*WDTSelectableWordSegment*/ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTWordSegment*/  words);
+typedef void (^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/ precedingWords,
+                                                 id<NSFastEnumeration> /*WDTWordSegment*/ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
-
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Data.Text.TextSegment
 WINRT_EXPORT
 @interface WDTTextSegment : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned startPosition;
 @property unsigned length;
 @end
@@ -105,13 +109,15 @@ WINRT_EXPORT
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTWordSegment*/  words);
+typedef void (^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTWordSegment*/ precedingWords,
+                                                 id<NSFastEnumeration> /*WDTWordSegment*/ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/  precedingWords, id<NSFastEnumeration> /*WDTSelectableWordSegment*/  words);
+typedef void (^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /*WDTSelectableWordSegment*/ precedingWords,
+                                                           id<NSFastEnumeration> /*WDTSelectableWordSegment*/ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SemanticTextQuery
@@ -120,10 +126,10 @@ typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> 
 
 WINRT_EXPORT
 @interface WDTSemanticTextQuery : RTObject
-+ (WDTSemanticTextQuery *)create:(NSString *)aqsFilter ACTIVATOR;
-+ (WDTSemanticTextQuery *)createWithLanguage:(NSString *)aqsFilter filterLanguage:(NSString *)filterLanguage ACTIVATOR;
-- (id<NSFastEnumeration> /*WDTTextSegment*/ )find:(NSString *)content;
-- (id<NSFastEnumeration> /*WDTTextSegment*/ )findInProperty:(NSString *)propertyContent propertyName:(NSString *)propertyName;
++ (WDTSemanticTextQuery*)create:(NSString*)aqsFilter ACTIVATOR;
++ (WDTSemanticTextQuery*)createWithLanguage:(NSString*)aqsFilter filterLanguage:(NSString*)filterLanguage ACTIVATOR;
+- (id<NSFastEnumeration> /*WDTTextSegment*/)find:(NSString*)content;
+- (id<NSFastEnumeration> /*WDTTextSegment*/)findInProperty:(NSString*)propertyContent propertyName:(NSString*)propertyName;
 @end
 
 #endif // __WDTSemanticTextQuery_DEFINED__
@@ -161,9 +167,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTAlternateWordForm : RTObject
-@property (readonly) NSString * alternateText;
+@property (readonly) NSString* alternateText;
 @property (readonly) WDTAlternateNormalizationFormat normalizationFormat;
-@property (readonly) WDTTextSegment * sourceTextSegment;
+@property (readonly) WDTTextSegment* sourceTextSegment;
 @end
 
 #endif // __WDTAlternateWordForm_DEFINED__
@@ -174,9 +180,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTWordSegment : RTObject
-@property (readonly) id<NSFastEnumeration> /*WDTAlternateWordForm*/  alternateForms;
-@property (readonly) WDTTextSegment * sourceTextSegment;
-@property (readonly) NSString * text;
+@property (readonly) id<NSFastEnumeration> /*WDTAlternateWordForm*/ alternateForms;
+@property (readonly) WDTTextSegment* sourceTextSegment;
+@property (readonly) NSString* text;
 @end
 
 #endif // __WDTWordSegment_DEFINED__
@@ -187,11 +193,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTWordsSegmenter : RTObject
-+ (WDTWordsSegmenter *)createWithLanguage:(NSString *)language ACTIVATOR;
-@property (readonly) NSString * resolvedLanguage;
-- (WDTWordSegment *)getTokenAt:(NSString *)text startIndex:(unsigned)startIndex;
-- (id<NSFastEnumeration> /*WDTWordSegment*/ )getTokens:(NSString *)text;
-- (void)tokenize:(NSString *)text startIndex:(unsigned)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
++ (WDTWordsSegmenter*)createWithLanguage:(NSString*)language ACTIVATOR;
+@property (readonly) NSString* resolvedLanguage;
+- (WDTWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned)startIndex;
+- (id<NSFastEnumeration> /*WDTWordSegment*/)getTokens:(NSString*)text;
+- (void)tokenize:(NSString*)text startIndex:(unsigned)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTWordsSegmenter_DEFINED__
@@ -202,8 +208,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTSelectableWordSegment : RTObject
-@property (readonly) WDTTextSegment * sourceTextSegment;
-@property (readonly) NSString * text;
+@property (readonly) WDTTextSegment* sourceTextSegment;
+@property (readonly) NSString* text;
 @end
 
 #endif // __WDTSelectableWordSegment_DEFINED__
@@ -214,12 +220,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
-+ (WDTSelectableWordsSegmenter *)createWithLanguage:(NSString *)language ACTIVATOR;
-@property (readonly) NSString * resolvedLanguage;
-- (WDTSelectableWordSegment *)getTokenAt:(NSString *)text startIndex:(unsigned)startIndex;
-- (id<NSFastEnumeration> /*WDTSelectableWordSegment*/ )getTokens:(NSString *)text;
-- (void)tokenize:(NSString *)text startIndex:(unsigned)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
++ (WDTSelectableWordsSegmenter*)createWithLanguage:(NSString*)language ACTIVATOR;
+@property (readonly) NSString* resolvedLanguage;
+- (WDTSelectableWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned)startIndex;
+- (id<NSFastEnumeration> /*WDTSelectableWordSegment*/)getTokens:(NSString*)text;
+- (void)tokenize:(NSString*)text startIndex:(unsigned)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTSelectableWordsSegmenter_DEFINED__
-

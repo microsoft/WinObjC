@@ -21,7 +21,7 @@
 
 @interface GKNotificationBanner : NSObject
 
-+ (void)showBannerWithTitle:(NSString *)title message:(NSString *)message completionHandler:(void (^)(void))completionHandler;
++ (void)showBannerWithTitle:(NSString*)title message:(NSString*)message completionHandler:(void (^)(void))completionHandler;
 
 @end
 

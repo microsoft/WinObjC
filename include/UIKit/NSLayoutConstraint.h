@@ -21,8 +21,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
 
-#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
-SB_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keysString, ...);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)
+SB_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString* keysString, ...);
 
 enum {
     UILayoutPriorityRequired = 1000,
@@ -71,10 +71,9 @@ typedef enum {
 } NSLayoutAttribute;
 
 typedef enum {
-	NSLayoutConstraintOrientationHorizontal = 0,
-	NSLayoutConstraintOrientationVertical = 1
+    NSLayoutConstraintOrientationHorizontal = 0,
+    NSLayoutConstraintOrientationVertical = 1,
 } NSLayoutConstraintOrientation;
-
 
 enum {
     /* choose only one of these */
@@ -87,14 +86,14 @@ enum {
     NSLayoutFormatAlignAllCenterX = NSLayoutAttributeCenterX,
     NSLayoutFormatAlignAllCenterY = NSLayoutAttributeCenterY,
     NSLayoutFormatAlignAllBaseline = NSLayoutAttributeBaseline,
-   
+
     NSLayoutFormatAlignmentMask = 0xFF,
- 
+
     /* choose only one of these three */
     NSLayoutFormatDirectionLeadingToTrailing = 0 << 8, // default
     NSLayoutFormatDirectionLeftToRight = 1 << 8,
     NSLayoutFormatDirectionRightToLeft = 2 << 8,
- 
+
     NSLayoutFormatDirectionMask = 0x3 << 8,
 };
 typedef uint32_t NSLayoutFormatOptions;
@@ -108,7 +107,7 @@ typedef enum {
 @class NSDictionary, NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface NSLayoutConstraint : NSObject<NSCoding> 
+@interface NSLayoutConstraint : NSObject <NSCoding>
 
 @property (readonly, assign) id firstItem;
 @property (readonly, assign) id secondItem;
@@ -119,8 +118,17 @@ UIKIT_EXPORT_CLASS
 @property NSLayoutPriority priority;
 @property CGFloat constant;
 
-+ (NSArray *)constraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
-+ (instancetype)constraintWithItem:(id)view1 attribute:(NSLayoutAttribute)attr1 relatedBy:(NSLayoutRelation)relation toItem:(id)view2 attribute:(NSLayoutAttribute)attr2 multiplier:(CGFloat)multiplier constant:(CGFloat)c;
++ (NSArray*)constraintsWithVisualFormat:(NSString*)format
+                                options:(NSLayoutFormatOptions)opts
+                                metrics:(NSDictionary*)metrics
+                                  views:(NSDictionary*)views;
++ (instancetype)constraintWithItem:(id)view1
+                         attribute:(NSLayoutAttribute)attr1
+                         relatedBy:(NSLayoutRelation)relation
+                            toItem:(id)view2
+                         attribute:(NSLayoutAttribute)attr2
+                        multiplier:(CGFloat)multiplier
+                          constant:(CGFloat)c;
 
 @end
 

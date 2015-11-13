@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSPHardwareToken, WSPHardwareIdentification;
-@protocol WSPIHardwareToken, WSPIHardwareIdentificationStatics;
+@protocol WSPIHardwareToken
+, WSPIHardwareIdentificationStatics;
 
 #include "WindowsStorageStreams.h"
 
@@ -44,8 +45,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPHardwareIdentification : RTObject
-+ (WSPHardwareToken *)getPackageSpecificToken:(RTObject<WSSIBuffer>*)nonce;
++ (WSPHardwareToken*)getPackageSpecificToken:(RTObject<WSSIBuffer>*)nonce;
 @end
 
 #endif // __WSPHardwareIdentification_DEFINED__
-

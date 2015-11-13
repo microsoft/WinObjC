@@ -18,6 +18,7 @@
 #define _NSPARAGRAPHSTYLE_H_
 
 #import <Foundation/NSObject.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 
 enum {
@@ -30,6 +31,7 @@ enum {
 };
 typedef uint32_t NSLineBreakMode;
 
+UIKIT_EXPORT_CLASS
 @interface NSParagraphStyle : NSObject
 
 + (NSParagraphStyle*)defaultParagraphStyle;
@@ -50,6 +52,7 @@ typedef uint32_t NSLineBreakMode;
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface NSMutableParagraphStyle : NSParagraphStyle
 
 - (void)setAlignment:(NSTextAlignment)alignment;

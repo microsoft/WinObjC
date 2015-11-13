@@ -15,13 +15,12 @@
 //******************************************************************************
 
 enum {
-   kCGNormalWindowLevel,
-   kCGFloatingWindowLevel,
-   kCGTornOffMenuWindowLevel,
-   kCGMainMenuWindowLevel,
-   kCGStatusWindowLevel,
-   kCGModalPanelWindowLevel,
-   kCGPopUpMenuWindowLevel,
-   kCGScreenSaverWindowLevel,
+    kCGNormalWindowLevel,
+    kCGFloatingWindowLevel,
+    kCGTornOffMenuWindowLevel,
+    kCGMainMenuWindowLevel,
+    kCGStatusWindowLevel,
+    kCGModalPanelWindowLevel,
+    kCGPopUpMenuWindowLevel,
+    kCGScreenSaverWindowLevel,
 };
-

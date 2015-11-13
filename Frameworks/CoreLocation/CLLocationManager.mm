@@ -26,68 +26,68 @@ typedef wchar_t WCHAR;
 @implementation CLLocationManager : NSObject
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)requestWhenInUseAuthorization {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)requestAlwaysAuthorization {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (CLAuthorizationStatus)authorizationStatus {
     return kCLAuthorizationStatusNotDetermined;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)locationServicesEnabled {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)deferredLocationUpdatesAvailable {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)significantLocationChangeMonitoringAvailable {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)headingAvailable {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)isMonitoringAvailableForClass:(Class)regionClass {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (BOOL)isRangingAvailable {
     return false;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (instancetype)init {
     if (self = [super init]) {
@@ -98,7 +98,7 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)dealloc {
     // Perform class-specific dealloc here.
@@ -106,31 +106,31 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)startUpdatingLocation {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)stopUpdatingLocation {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)requestLocation {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance timeout:(NSTimeInterval)timeout {
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)disallowDeferredLocationUpdates {
 }

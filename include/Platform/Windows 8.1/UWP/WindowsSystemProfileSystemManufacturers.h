@@ -23,15 +23,13 @@
 @class WSPSSmbiosInformation;
 @protocol WSPSISmbiosInformationStatics;
 
-
 // Windows.System.Profile.SystemManufacturers.SmbiosInformation
 #ifndef __WSPSSmbiosInformation_DEFINED__
 #define __WSPSSmbiosInformation_DEFINED__
 
 WINRT_EXPORT
 @interface WSPSSmbiosInformation : RTObject
-+ (NSString *)serialNumber;
++ (NSString*)serialNumber;
 @end
 
 #endif // __WSPSSmbiosInformation_DEFINED__
-

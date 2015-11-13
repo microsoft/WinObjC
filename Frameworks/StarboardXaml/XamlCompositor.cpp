@@ -24,6 +24,9 @@
 #include <robuffer.h>
 #include <collection.h>
 #include <assert.h>
+
+#include <windows.ui.xaml.automation.peers.h>
+
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
@@ -155,7 +158,7 @@ static XamlCompositorCS::Controls::EventedStoryboard ^
         return (XamlCompositorCS::Controls::EventedStoryboard ^ )(Platform::Object ^ )anim->_xamlAnimation;
     }
 
-    DisplayNode::DisplayNode() {
+DisplayNode::DisplayNode() {
     _xamlNode = (Platform::Object ^ )XamlCompositorCS::Controls::CALayerXaml::CreateLayer();
     isRoot = false;
     parent = NULL;
@@ -321,6 +324,17 @@ void DisplayNode::SetBackgroundColor(float r, float g, float b, float a) {
     if (!isRoot && !topMost) {
         xamlNode->SetBackgroundColor(r, g, b, a);
     }
+}
+
+void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info)
+{
+    /* Disabled for now
+    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    auto peer = (XamlCompositorCS::Controls::CALayerXamlAutomationPeer^)Windows::UI::Xaml::Automation::Peers::FrameworkElementAutomationPeer::FromElement(xamlNode);
+
+    assert(xamlNode != nullptr);
+    assert(peer != nullptr);
+    */
 }
 
 void UpdateRootNode() {

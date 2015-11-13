@@ -23,6 +23,46 @@
 #include "HashFn.h"
 #include "Etc.h"
 
+NSString* const NSURLFileScheme = @"NSURLFileScheme";
+NSString* const NSURLAttributeModificationDateKey = @"NSURLAttributeModificationDateKey";
+NSString* const NSURLContentAccessDateKey = @"NSURLContentAccessDateKey";
+NSString* const NSURLContentModificationDateKey = @"NSURLContentModificationDateKey";
+NSString* const NSURLCreationDateKey = @"NSURLCreationDateKey";
+NSString* const NSURLCustomIconKey = @"NSURLCustomIconKey";
+NSString* const NSURLEffectiveIconKey = @"NSURLEffectiveIconKey";
+NSString* const NSURLFileResourceIdentifierKey = @"NSURLFileResourceIdentifierKey";
+NSString* const NSURLFileResourceTypeKey = @"NSURLFileResourceIdentifierKey";
+NSString* const NSURLFileSecurityKey = @"NSURLFileSecurityKey";
+NSString* const NSURLHasHiddenExtensionKey = @"NSURLHasHiddenExtensionKey";
+NSString* const NSURLIsDirectoryKey = @"NSURLIsDirectoryKey";
+NSString* const NSURLIsExcludedFromBackupKey = @"NSURLIsExcludedFromBackupKey";
+NSString* const NSURLIsExecutableKey = @"NSURLIsExecutableKey";
+NSString* const NSURLIsHiddenKey = @"NSURLIsHiddenKey";
+NSString* const NSURLIsMountTriggerKey = @"NSURLIsMountTriggerKey";
+NSString* const NSURLIsPackageKey = @"NSURLIsPackageKey";
+NSString* const NSURLIsReadableKey = @"NSURLIsReadableKey";
+NSString* const NSURLIsRegularFileKey = @"NSURLIsRegularFileKey";
+NSString* const NSURLIsSymbolicLinkKey = @"NSURLIsSymbolicLinkKey";
+NSString* const NSURLIsSystemImmutableKey = @"NSURLIsSystemImmutableKey";
+NSString* const NSURLIsUserImmutableKey = @"NSURLIsUserImmutableKey";
+NSString* const NSURLIsVolumeKey = @"NSURLIsVolumeKey";
+NSString* const NSURLIsWritableKey = @"NSURLIsWritableKey";
+NSString* const NSURLLabelColorKey = @"NSURLLabelColorKey";
+NSString* const NSURLLabelNumberKey = @"NSURLLabelNumberKey";
+NSString* const NSURLLinkCountKey = @"NSURLLinkCountKey";
+NSString* const NSURLLocalizedLabelKey = @"NSURLLocalizedLabelKey";
+NSString* const NSURLLocalizedNameKey = @"NSURLLocalizedNameKey";
+NSString* const NSURLLocalizedTypeDescriptionKey = @"NSURLLocalizedTypeDescriptionKey";
+NSString* const NSURLNameKey = @"NSURLNameKey";
+NSString* const NSURLParentDirectoryURLKey = @"NSURLParentDirectoryURLKey";
+NSString* const NSURLPathKey = @"NSURLPathKey";
+NSString* const NSURLPreferredIOBlockSizeKey = @"NSURLPreferredIOBlockSizeKey";
+NSString* const NSURLTypeIdentifierKey = @"NSURLTypeIdentifierKey";
+NSString* const NSURLVolumeIdentifierKey = @"NSURLVolumeIdentifierKey";
+NSString* const NSURLVolumeURLKey = @"NSURLVolumeURLKey";
+NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
+NSString* const NSURLFileSizeKey = @"NSURLFileSizeKey";
+
 struct EbrURL {
     xmlURIPtr uriForAppending() {
         //  Copy our URI

@@ -21,28 +21,29 @@
 
 #include "interopBase.h"
 @class WAEFExtendedExecutionForegroundRevokedEventArgs, WAEFExtendedExecutionForegroundSession;
-@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs, WAEFIExtendedExecutionForegroundSession;
+@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs
+, WAEFIExtendedExecutionForegroundSession;
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundResult
 enum _WAEFExtendedExecutionForegroundResult {
-	WAEFExtendedExecutionForegroundResultAllowed = 0,
-	WAEFExtendedExecutionForegroundResultDenied = 1,
+    WAEFExtendedExecutionForegroundResultAllowed = 0,
+    WAEFExtendedExecutionForegroundResultDenied = 1,
 };
 typedef unsigned WAEFExtendedExecutionForegroundResult;
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundRevokedReason
 enum _WAEFExtendedExecutionForegroundRevokedReason {
-	WAEFExtendedExecutionForegroundRevokedReasonResumed = 0,
-	WAEFExtendedExecutionForegroundRevokedReasonSystemPolicy = 1,
+    WAEFExtendedExecutionForegroundRevokedReasonResumed = 0,
+    WAEFExtendedExecutionForegroundRevokedReasonSystemPolicy = 1,
 };
 typedef unsigned WAEFExtendedExecutionForegroundRevokedReason;
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundReason
 enum _WAEFExtendedExecutionForegroundReason {
-	WAEFExtendedExecutionForegroundReasonUnspecified = 0,
-	WAEFExtendedExecutionForegroundReasonSavingData = 1,
-	WAEFExtendedExecutionForegroundReasonBackgroundAudio = 2,
-	WAEFExtendedExecutionForegroundReasonUnconstrained = 3,
+    WAEFExtendedExecutionForegroundReasonUnspecified = 0,
+    WAEFExtendedExecutionForegroundReasonSavingData = 1,
+    WAEFExtendedExecutionForegroundReasonBackgroundAudio = 2,
+    WAEFExtendedExecutionForegroundReasonUnconstrained = 3,
 };
 typedef unsigned WAEFExtendedExecutionForegroundReason;
 
@@ -79,12 +80,11 @@ WINRT_EXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
 + (instancetype)create ACTIVATOR;
 @property WAEFExtendedExecutionForegroundReason reason;
-@property (copy) NSString * description;
-- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
+@property (copy) NSString* description;
+- (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEFExtendedExecutionForegroundResult))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WAEFExtendedExecutionForegroundSession_DEFINED__
-

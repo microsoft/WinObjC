@@ -20,8 +20,10 @@
 #pragma once
 
 #include "interopBase.h"
-@class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker, WSPFolderPicker;
-@protocol WSPIFileOpenPicker, WSPIFileSavePicker, WSPIFolderPicker;
+@class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker,
+    WSPFolderPicker;
+@protocol WSPIFileOpenPicker
+, WSPIFileSavePicker, WSPIFolderPicker;
 
 // Windows.Storage.Pickers.PickerViewMode
 enum _WSPPickerViewMode {
@@ -90,11 +92,11 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) NSString * settingsIdentifier;
-@property (copy) NSString * commitButtonText;
-@property (readonly) id<NSFastEnumeration> /*String*/  fileTypeFilter;
-- (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
-- (void)pickMultipleFilesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WSStorageFile*/ ))success failure:(void (^)(NSError*))failure;
+@property (copy) NSString* settingsIdentifier;
+@property (copy) NSString* commitButtonText;
+@property (readonly) id<NSFastEnumeration> /*String*/ fileTypeFilter;
+- (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)pickMultipleFilesAsyncWithSuccess:(void (^)(id<NSFastEnumeration> /*WSStorageFile*/))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSPFileOpenPicker_DEFINED__
@@ -107,14 +109,16 @@ WINRT_EXPORT
 @interface WSPFileSavePicker : RTObject
 + (instancetype)create ACTIVATOR;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) WSStorageFile * suggestedSaveFile;
-@property (copy) NSString * suggestedFileName;
-@property (copy) NSString * settingsIdentifier;
-@property (copy) NSString * defaultFileExtension;
-@property (copy) NSString * commitButtonText;
-// Failed to generate property FileTypeChoices (Can't marshal Windows.Foundation.Collections.IMap`2<String,Windows.Foundation.Collections.IVector`1<String>>)
-// Failed to generate member get_FileTypeChoices (Can't marshal Windows.Foundation.Collections.IMap`2<String,Windows.Foundation.Collections.IVector`1<String>>)
-- (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile *))success failure:(void (^)(NSError*))failure;
+@property (copy) WSStorageFile* suggestedSaveFile;
+@property (copy) NSString* suggestedFileName;
+@property (copy) NSString* settingsIdentifier;
+@property (copy) NSString* defaultFileExtension;
+@property (copy) NSString* commitButtonText;
+// Failed to generate property FileTypeChoices (Can't marshal
+// Windows.Foundation.Collections.IMap`2<String,Windows.Foundation.Collections.IVector`1<String>>)
+// Failed to generate member get_FileTypeChoices (Can't marshal
+// Windows.Foundation.Collections.IMap`2<String,Windows.Foundation.Collections.IVector`1<String>>)
+- (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSPFileSavePicker_DEFINED__
@@ -128,11 +132,10 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) NSString * settingsIdentifier;
-@property (copy) NSString * commitButtonText;
-@property (readonly) id<NSFastEnumeration> /*String*/  fileTypeFilter;
-- (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder *))success failure:(void (^)(NSError*))failure;
+@property (copy) NSString* settingsIdentifier;
+@property (copy) NSString* commitButtonText;
+@property (readonly) id<NSFastEnumeration> /*String*/ fileTypeFilter;
+- (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSPFolderPicker_DEFINED__
-

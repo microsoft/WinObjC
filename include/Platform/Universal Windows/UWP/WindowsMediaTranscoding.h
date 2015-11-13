@@ -21,21 +21,22 @@
 
 #include "interopBase.h"
 @class WMTPrepareTranscodeResult, WMTMediaTranscoder;
-@protocol WMTIMediaTranscoder2, WMTIMediaTranscoder, WMTIPrepareTranscodeResult;
+@protocol WMTIMediaTranscoder2
+, WMTIMediaTranscoder, WMTIPrepareTranscodeResult;
 
 // Windows.Media.Transcoding.MediaVideoProcessingAlgorithm
 enum _WMTMediaVideoProcessingAlgorithm {
-	WMTMediaVideoProcessingAlgorithmDefault = 0,
-	WMTMediaVideoProcessingAlgorithmMrfCrf444 = 1,
+    WMTMediaVideoProcessingAlgorithmDefault = 0,
+    WMTMediaVideoProcessingAlgorithmMrfCrf444 = 1,
 };
 typedef unsigned WMTMediaVideoProcessingAlgorithm;
 
 // Windows.Media.Transcoding.TranscodeFailureReason
 enum _WMTTranscodeFailureReason {
-	WMTTranscodeFailureReasonNone = 0,
-	WMTTranscodeFailureReasonUnknown = 1,
-	WMTTranscodeFailureReasonInvalidProfile = 2,
-	WMTTranscodeFailureReasonCodecNotFound = 3,
+    WMTTranscodeFailureReasonNone = 0,
+    WMTTranscodeFailureReasonUnknown = 1,
+    WMTTranscodeFailureReasonInvalidProfile = 2,
+    WMTTranscodeFailureReasonCodecNotFound = 3,
 };
 typedef unsigned WMTTranscodeFailureReason;
 
@@ -73,15 +74,30 @@ WINRT_EXPORT
 @property BOOL hardwareAccelerationEnabled;
 @property BOOL alwaysReencode;
 @property WMTMediaVideoProcessingAlgorithm videoProcessingAlgorithm;
-- (void)addAudioEffect:(NSString *)activatableClassId;
-- (void)addAudioEffectWithSettings:(NSString *)activatableClassId effectRequired:(BOOL)effectRequired configuration:(RTObject<WFCIPropertySet>*)configuration;
-- (void)addVideoEffect:(NSString *)activatableClassId;
-- (void)addVideoEffectWithSettings:(NSString *)activatableClassId effectRequired:(BOOL)effectRequired configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)addAudioEffect:(NSString*)activatableClassId;
+- (void)addAudioEffectWithSettings:(NSString*)activatableClassId
+                    effectRequired:(BOOL)effectRequired
+                     configuration:(RTObject<WFCIPropertySet>*)configuration;
+- (void)addVideoEffect:(NSString*)activatableClassId;
+- (void)addVideoEffectWithSettings:(NSString*)activatableClassId
+                    effectRequired:(BOOL)effectRequired
+                     configuration:(RTObject<WFCIPropertySet>*)configuration;
 - (void)clearEffects;
-- (void)prepareFileTranscodeAsync:(RTObject<WSIStorageFile>*)source destination:(RTObject<WSIStorageFile>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)prepareStreamTranscodeAsync:(RTObject<WSSIRandomAccessStream>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
-- (void)prepareMediaStreamSourceTranscodeAsync:(RTObject<WMCIMediaSource>*)source destination:(RTObject<WSSIRandomAccessStream>*)destination profile:(WMMMediaEncodingProfile*)profile success:(void (^)(WMTPrepareTranscodeResult*))success failure:(void (^)(NSError*))failure;
+- (void)prepareFileTranscodeAsync:(RTObject<WSIStorageFile>*)source
+                      destination:(RTObject<WSIStorageFile>*)destination
+                          profile:(WMMMediaEncodingProfile*)profile
+                          success:(void (^)(WMTPrepareTranscodeResult*))success
+                          failure:(void (^)(NSError*))failure;
+- (void)prepareStreamTranscodeAsync:(RTObject<WSSIRandomAccessStream>*)source
+                        destination:(RTObject<WSSIRandomAccessStream>*)destination
+                            profile:(WMMMediaEncodingProfile*)profile
+                            success:(void (^)(WMTPrepareTranscodeResult*))success
+                            failure:(void (^)(NSError*))failure;
+- (void)prepareMediaStreamSourceTranscodeAsync:(RTObject<WMCIMediaSource>*)source
+                                   destination:(RTObject<WSSIRandomAccessStream>*)destination
+                                       profile:(WMMMediaEncodingProfile*)profile
+                                       success:(void (^)(WMTPrepareTranscodeResult*))success
+                                       failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMTMediaTranscoder_DEFINED__
-

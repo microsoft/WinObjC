@@ -25,9 +25,9 @@
 
 // Windows.Security.Cryptography.BinaryStringEncoding
 enum _WSCBinaryStringEncoding {
-	WSCBinaryStringEncodingUtf8 = 0,
-	WSCBinaryStringEncodingUtf16LE = 1,
-	WSCBinaryStringEncodingUtf16BE = 2,
+    WSCBinaryStringEncodingUtf8 = 0,
+    WSCBinaryStringEncodingUtf16LE = 1,
+    WSCBinaryStringEncodingUtf16BE = 2,
 };
 typedef unsigned WSCBinaryStringEncoding;
 
@@ -46,13 +46,12 @@ WINRT_EXPORT
 + (unsigned int)generateRandomNumber;
 + (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /* uint8_t */)value;
 + (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /* uint8_t */*)value;
-+ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
-+ (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;
-+ (NSString *)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString *)value encoding:(WSCBinaryStringEncoding)encoding;
-+ (NSString *)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString*)value;
++ (NSString*)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString*)value;
++ (NSString*)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString*)value encoding:(WSCBinaryStringEncoding)encoding;
++ (NSString*)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
 @end
 
 #endif // __WSCCryptographicBuffer_DEFINED__
-

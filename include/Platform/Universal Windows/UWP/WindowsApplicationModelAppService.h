@@ -20,34 +20,37 @@
 #pragma once
 
 #include "interopBase.h"
-@class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs, WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
-@protocol WAAIAppServiceDeferral, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceTriggerDetails, WAAIAppServiceRequest, WAAIAppServiceResponse, WAAIAppServiceCatalogStatics, WAAIAppServiceConnection;
+@class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs,
+    WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
+@protocol WAAIAppServiceDeferral
+, WAAIAppServiceClosedEventArgs, WAAIAppServiceRequestReceivedEventArgs, WAAIAppServiceTriggerDetails, WAAIAppServiceRequest,
+    WAAIAppServiceResponse, WAAIAppServiceCatalogStatics, WAAIAppServiceConnection;
 
 // Windows.ApplicationModel.AppService.AppServiceClosedStatus
 enum _WAAAppServiceClosedStatus {
-	WAAAppServiceClosedStatusCompleted = 0,
-	WAAAppServiceClosedStatusCanceled = 1,
-	WAAAppServiceClosedStatusResourceLimitsExceeded = 2,
-	WAAAppServiceClosedStatusUnknown = 3,
+    WAAAppServiceClosedStatusCompleted = 0,
+    WAAAppServiceClosedStatusCanceled = 1,
+    WAAAppServiceClosedStatusResourceLimitsExceeded = 2,
+    WAAAppServiceClosedStatusUnknown = 3,
 };
 typedef unsigned WAAAppServiceClosedStatus;
 
 // Windows.ApplicationModel.AppService.AppServiceConnectionStatus
 enum _WAAAppServiceConnectionStatus {
-	WAAAppServiceConnectionStatusSuccess = 0,
-	WAAAppServiceConnectionStatusAppNotInstalled = 1,
-	WAAAppServiceConnectionStatusAppUnavailable = 2,
-	WAAAppServiceConnectionStatusAppServiceUnavailable = 3,
-	WAAAppServiceConnectionStatusUnknown = 4,
+    WAAAppServiceConnectionStatusSuccess = 0,
+    WAAAppServiceConnectionStatusAppNotInstalled = 1,
+    WAAAppServiceConnectionStatusAppUnavailable = 2,
+    WAAAppServiceConnectionStatusAppServiceUnavailable = 3,
+    WAAAppServiceConnectionStatusUnknown = 4,
 };
 typedef unsigned WAAAppServiceConnectionStatus;
 
 // Windows.ApplicationModel.AppService.AppServiceResponseStatus
 enum _WAAAppServiceResponseStatus {
-	WAAAppServiceResponseStatusSuccess = 0,
-	WAAAppServiceResponseStatusFailure = 1,
-	WAAAppServiceResponseStatusResourceLimitsExceeded = 2,
-	WAAAppServiceResponseStatusUnknown = 3,
+    WAAAppServiceResponseStatusSuccess = 0,
+    WAAAppServiceResponseStatusFailure = 1,
+    WAAAppServiceResponseStatusResourceLimitsExceeded = 2,
+    WAAAppServiceResponseStatusUnknown = 3,
 };
 typedef unsigned WAAAppServiceResponseStatus;
 
@@ -109,11 +112,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * packageFamilyName;
-@property (copy) NSString * appServiceName;
-- (EventRegistrationToken)addRequestReceivedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
+@property (copy) NSString* packageFamilyName;
+@property (copy) NSString* appServiceName;
+- (EventRegistrationToken)addRequestReceivedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
 - (void)removeRequestReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addServiceClosedEvent:(void(^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;
+- (EventRegistrationToken)addServiceClosedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;
 - (void)removeServiceClosedEvent:(EventRegistrationToken)tok;
 - (void)openAsyncWithSuccess:(void (^)(WAAAppServiceConnectionStatus))success failure:(void (^)(NSError*))failure;
 - (void)sendMessageAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponse*))success failure:(void (^)(NSError*))failure;
@@ -152,8 +155,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
 @property (readonly) WAAAppServiceConnection* appServiceConnection;
-@property (readonly) NSString * callerPackageFamilyName;
-@property (readonly) NSString * name;
+@property (readonly) NSString* callerPackageFamilyName;
+@property (readonly) NSString* name;
 @end
 
 #endif // __WAAAppServiceTriggerDetails_DEFINED__
@@ -164,8 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceCatalog : RTObject
-+ (void)findAppServiceProvidersAsync:(NSString *)appServiceName success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findAppServiceProvidersAsync:(NSString*)appServiceName success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceCatalog_DEFINED__
-

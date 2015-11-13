@@ -17,7 +17,7 @@
 #ifndef _UIACTIVITY_H_
 #define _UIACTIVITY_H_
 
-#import <StarboardExport.h>
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 UIKIT_EXPORT NSString* const UIActivityTypePostToFacebook;
@@ -31,8 +31,8 @@ UIKIT_EXPORT NSString* const UIActivityTypeAssignToContact;
 UIKIT_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
 UIKIT_EXPORT NSString* const UIActivityTypeAirDrop;
 
-UIKIT_EXPORT 
-@interface UIActivity : NSObject 
+UIKIT_EXPORT_CLASS
+@interface UIActivity : NSObject
 
 - (void)activityDidFinish:(BOOL)finished;
 

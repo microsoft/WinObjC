@@ -22,13 +22,15 @@
 #include "interopBase.h"
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
-@protocol WDIIMouseCapabilities, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs, WDIIMouseDevice, WDIIMouseDeviceStatics;
+@protocol WDIIMouseCapabilities
+, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs,
+    WDIIMouseDevice, WDIIMouseDeviceStatics;
 
 // Windows.Devices.Input.PointerDeviceType
 enum _WDIPointerDeviceType {
-	WDIPointerDeviceTypeTouch = 0,
-	WDIPointerDeviceTypePen = 1,
-	WDIPointerDeviceTypeMouse = 2,
+    WDIPointerDeviceTypeTouch = 0,
+    WDIPointerDeviceTypePen = 1,
+    WDIPointerDeviceTypeMouse = 2,
 };
 typedef unsigned WDIPointerDeviceType;
 
@@ -40,7 +42,7 @@ typedef unsigned WDIPointerDeviceType;
 // [struct] Windows.Devices.Input.PointerDeviceUsage
 WINRT_EXPORT
 @interface WDIPointerDeviceUsage : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned int usagePage;
 @property unsigned int usage;
 @property int minLogical;
@@ -54,7 +56,7 @@ WINRT_EXPORT
 // [struct] Windows.Devices.Input.MouseDelta
 WINRT_EXPORT
 @interface WDIMouseDelta : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property int x;
 @property int y;
 @end
@@ -85,7 +87,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDIMouseDevice : RTObject
 + (WDIMouseDevice*)getForCurrentView;
-- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
+- (EventRegistrationToken)addMouseMovedEvent:(void (^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -142,4 +144,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDITouchCapabilities_DEFINED__
-

@@ -18,7 +18,7 @@
     
     _welcomeLabel = [[UILabel alloc] initWithFrame: bounds];
     [_welcomeLabel setBackgroundColor: nil];
-    [_welcomeLabel setTextColor: [UIColor whiteColor]];
+    [_welcomeLabel setTextColor: [UIColor blueColor]];
     [_welcomeLabel setText: @"Hello Islandwood!"];
     [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 48.0f]];
     [_welcomeLabel setTextAlignment: UITextAlignmentCenter];
@@ -39,12 +39,18 @@
     [_draggableButton setTitle: @"Move me!" forState: UIControlStateNormal];
     [_draggableButton setTintColor:[UIColor whiteColor]];
     _draggableButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 50.0f, 100.0f, 40.0f);
+    [_draggableButton addTarget: self action: @selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_mainWindow addSubview: _draggableButton];
     
     UIPanGestureRecognizer *moveButton = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(buttonPanned:)];
     [_draggableButton addGestureRecognizer: moveButton];
     
     [_mainWindow makeKeyAndVisible];
+}
+
+-(void) buttonPressed: (UIButton*)button
+{
+    [_welcomeLabel setText: @"Got a touch!"];
 }
 
 -(void) buttonPanned: (UIPanGestureRecognizer *) gesture

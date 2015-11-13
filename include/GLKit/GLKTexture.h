@@ -49,20 +49,19 @@ GLKIT_EXPORT_CLASS
 
 @property (readonly) GLKTextureInfoOrigin textureOrigin;
 
--(id)initWith: (GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height alphaState:(GLKTextureInfoAlphaState)as;
+- (id)initWith:(GLuint)tex target:(GLuint)targ width:(GLuint)width height:(GLuint)height alphaState:(GLKTextureInfoAlphaState)as;
 @end
 
 GLKIT_EXPORT_CLASS
 @interface GLKTextureLoader : NSObject
 
-+(GLKTextureInfo*)textureWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err;
-+(GLKTextureInfo*)textureWithContentsOfData: (NSData*)data options: (NSDictionary*)opts error: (NSError**)err;
-+(GLKTextureInfo*)textureWithCGImage: (CGImageRef)img options: (NSDictionary*)opts error: (NSError**)err;
++ (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err;
++ (GLKTextureInfo*)textureWithContentsOfData:(NSData*)data options:(NSDictionary*)opts error:(NSError**)err;
++ (GLKTextureInfo*)textureWithCGImage:(CGImageRef)img options:(NSDictionary*)opts error:(NSError**)err;
 
-+(GLKTextureInfo*)cubeMapWithContentsOfFile: (NSString*)fname options: (NSDictionary*)opts error: (NSError**)err;
-+(GLKTextureInfo*)cubeMapWithContentsOfFiles: (NSArray*)fnames options: (NSDictionary*)opts error: (NSError**)err;
++ (GLKTextureInfo*)cubeMapWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err;
++ (GLKTextureInfo*)cubeMapWithContentsOfFiles:(NSArray*)fnames options:(NSDictionary*)opts error:(NSError**)err;
 
--(id)initWithShareContext:(NSOpenGLContext*)context;
+- (id)initWithShareContext:(NSOpenGLContext*)context;
 
 @end
-

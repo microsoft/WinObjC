@@ -24,9 +24,9 @@
 UIKIT_EXPORT_CLASS
 @interface UIStoryboard : NSObject
 
-+ (UIStoryboard *)storyboardWithName:(NSString *)name bundle:(NSBundle *)storyboardBundleOrNil;
++ (UIStoryboard*)storyboardWithName:(NSString*)name bundle:(NSBundle*)storyboardBundleOrNil;
 
-- (id)instantiateViewControllerWithIdentifier:(NSString *)identifier;
+- (id)instantiateViewControllerWithIdentifier:(NSString*)identifier;
 - (id)instantiateInitialViewController;
 
 @end

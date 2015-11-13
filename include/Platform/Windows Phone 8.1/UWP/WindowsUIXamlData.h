@@ -20,9 +20,16 @@
 #pragma once
 
 #include "interopBase.h"
-@class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingBase, WUXDBinding, WUXDBindingExpressionBase, WUXDBindingExpression, WUXDCollectionViewSource, WUXDRelativeSource, WUXDBindingOperations;
+@class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingBase, WUXDBinding, WUXDBindingExpressionBase,
+    WUXDBindingExpression, WUXDCollectionViewSource, WUXDRelativeSource, WUXDBindingOperations;
 @class WUXDLoadMoreItemsResult;
-@protocol WUXDIBinding, WUXDIValueConverter, WUXDIBindingFactory, WUXDIBinding2, WUXDIBindingBase, WUXDIBindingBaseFactory, WUXDIBindingExpression, WUXDIBindingExpressionFactory, WUXDIBindingExpressionBase, WUXDIBindingExpressionBaseFactory, WUXDICollectionViewSource, WUXDICollectionView, WUXDICollectionViewSourceStatics, WUXDICurrentChangingEventArgs, WUXDICurrentChangingEventArgsFactory, WUXDICollectionViewGroup, WUXDICustomProperty, WUXDICustomPropertyProvider, WUXDINotifyPropertyChanged, WUXDIPropertyChangedEventArgs, WUXDIPropertyChangedEventArgsFactory, WUXDIRelativeSource, WUXDIRelativeSourceFactory, WUXDIBindingOperations, WUXDIBindingOperationsStatics, WUXDISupportIncrementalLoading, WUXDICollectionViewFactory;
+@protocol WUXDIBinding
+, WUXDIValueConverter, WUXDIBindingFactory, WUXDIBinding2, WUXDIBindingBase, WUXDIBindingBaseFactory, WUXDIBindingExpression,
+    WUXDIBindingExpressionFactory, WUXDIBindingExpressionBase, WUXDIBindingExpressionBaseFactory, WUXDICollectionViewSource,
+    WUXDICollectionView, WUXDICollectionViewSourceStatics, WUXDICurrentChangingEventArgs, WUXDICurrentChangingEventArgsFactory,
+    WUXDICollectionViewGroup, WUXDICustomProperty, WUXDICustomPropertyProvider, WUXDINotifyPropertyChanged, WUXDIPropertyChangedEventArgs,
+    WUXDIPropertyChangedEventArgsFactory, WUXDIRelativeSource, WUXDIRelativeSourceFactory, WUXDIBindingOperations,
+    WUXDIBindingOperationsStatics, WUXDISupportIncrementalLoading, WUXDICollectionViewFactory;
 
 // Windows.UI.Xaml.Data.BindingMode
 enum _WUXDBindingMode {
@@ -56,33 +63,32 @@ typedef unsigned WUXDUpdateSourceTrigger;
 // Windows.UI.Xaml.Data.CurrentChangingEventHandler
 #ifndef __WUXDCurrentChangingEventHandler__DEFINED
 #define __WUXDCurrentChangingEventHandler__DEFINED
-typedef void(^WUXDCurrentChangingEventHandler)(RTObject * sender, WUXDCurrentChangingEventArgs * e);
+typedef void (^WUXDCurrentChangingEventHandler)(RTObject* sender, WUXDCurrentChangingEventArgs* e);
 #endif // __WUXDCurrentChangingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Data.PropertyChangedEventHandler
 #ifndef __WUXDPropertyChangedEventHandler__DEFINED
 #define __WUXDPropertyChangedEventHandler__DEFINED
-typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyChangedEventArgs * e);
+typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyChangedEventArgs* e);
 #endif // __WUXDPropertyChangedEventHandler__DEFINED
-
 
 // [struct] Windows.UI.Xaml.Data.LoadMoreItemsResult
 WINRT_EXPORT
 @interface WUXDLoadMoreItemsResult : NSObject
-+ (instancetype)new;
++ (instancetype) new;
 @property unsigned count;
 @end
 
 // Windows.UI.Xaml.Data.CurrentChangingEventHandler
 #ifndef __WUXDCurrentChangingEventHandler__DEFINED
 #define __WUXDCurrentChangingEventHandler__DEFINED
-typedef void(^WUXDCurrentChangingEventHandler)(RTObject * sender, WUXDCurrentChangingEventArgs * e);
+typedef void (^WUXDCurrentChangingEventHandler)(RTObject* sender, WUXDCurrentChangingEventArgs* e);
 #endif // __WUXDCurrentChangingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Data.PropertyChangedEventHandler
 #ifndef __WUXDPropertyChangedEventHandler__DEFINED
 #define __WUXDPropertyChangedEventHandler__DEFINED
-typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyChangedEventArgs * e);
+typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyChangedEventArgs* e);
 #endif // __WUXDPropertyChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Data.IValueConverter
@@ -90,8 +96,8 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 #define __WUXDIValueConverter_DEFINED__
 
 @protocol WUXDIValueConverter
-- (RTObject *)convert:(RTObject *)value targetType:(WUXITypeName *)targetType parameter:(RTObject *)parameter language:(NSString *)language;
-- (RTObject *)convertBack:(RTObject *)value targetType:(WUXITypeName *)targetType parameter:(RTObject *)parameter language:(NSString *)language;
+- (RTObject*)convert:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
+- (RTObject*)convertBack:(RTObject*)value targetType:(WUXITypeName*)targetType parameter:(RTObject*)parameter language:(NSString*)language;
 @end
 
 #endif // __WUXDIValueConverter_DEFINED__
@@ -102,23 +108,23 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 
 @protocol WUXDICollectionView
 // Failed to generate property CollectionGroups (Can't marshal Windows.Foundation.Collections.IObservableVector`1<System.Object>)
-@property (readonly) RTObject * currentItem;
+@property (readonly) RTObject* currentItem;
 @property (readonly) int currentPosition;
 @property (readonly) BOOL hasMoreItems;
 @property (readonly) BOOL isCurrentAfterLast;
 @property (readonly) BOOL isCurrentBeforeFirst;
-- (EventRegistrationToken)addCurrentChangedEvent:(void(^)(RTObject*, RTObject *))del;
+- (EventRegistrationToken)addCurrentChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeCurrentChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addCurrentChangingEvent:(WUXDCurrentChangingEventHandler)del;
 - (void)removeCurrentChangingEvent:(EventRegistrationToken)tok;
 // Failed to generate member get_CollectionGroups (Can't marshal Windows.Foundation.Collections.IObservableVector`1<System.Object>)
-- (BOOL)moveCurrentTo:(RTObject *)item;
+- (BOOL)moveCurrentTo:(RTObject*)item;
 - (BOOL)moveCurrentToPosition:(int)index;
 - (BOOL)moveCurrentToFirst;
 - (BOOL)moveCurrentToLast;
 - (BOOL)moveCurrentToNext;
 - (BOOL)moveCurrentToPrevious;
-- (void)loadMoreItemsAsync:(unsigned)count success:(void (^)(WUXDLoadMoreItemsResult *))success failure:(void (^)(NSError*))failure;
+- (void)loadMoreItemsAsync:(unsigned)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 // Could not find base class Windows.Foundation.Collections.IObservableVector`1<System.Object> type information
 @end
 
@@ -129,7 +135,7 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 #define __WUXDICollectionViewGroup_DEFINED__
 
 @protocol WUXDICollectionViewGroup
-@property (readonly) RTObject * group;
+@property (readonly) RTObject* group;
 // Failed to generate property GroupItems (Can't marshal Windows.Foundation.Collections.IObservableVector`1<System.Object>)
 // Failed to generate member get_GroupItems (Can't marshal Windows.Foundation.Collections.IObservableVector`1<System.Object>)
 @end
@@ -143,12 +149,12 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 @protocol WUXDICustomProperty
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
-@property (readonly) NSString * name;
-@property (readonly) WUXITypeName * type;
-- (RTObject *)getValue:(RTObject *)target;
-- (void)setValue:(RTObject *)target value:(RTObject *)value;
-- (RTObject *)getIndexedValue:(RTObject *)target index:(RTObject *)index;
-- (void)setIndexedValue:(RTObject *)target value:(RTObject *)value index:(RTObject *)index;
+@property (readonly) NSString* name;
+@property (readonly) WUXITypeName* type;
+- (RTObject*)getValue:(RTObject*)target;
+- (void)setValue:(RTObject*)target value:(RTObject*)value;
+- (RTObject*)getIndexedValue:(RTObject*)target index:(RTObject*)index;
+- (void)setIndexedValue:(RTObject*)target value:(RTObject*)value index:(RTObject*)index;
 @end
 
 #endif // __WUXDICustomProperty_DEFINED__
@@ -158,10 +164,10 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 #define __WUXDICustomPropertyProvider_DEFINED__
 
 @protocol WUXDICustomPropertyProvider
-@property (readonly) WUXITypeName * type;
-- (RTObject<WUXDICustomProperty>*)getCustomProperty:(NSString *)name;
-- (RTObject<WUXDICustomProperty>*)getIndexedProperty:(NSString *)name type:(WUXITypeName *)type;
-- (NSString *)getStringRepresentation;
+@property (readonly) WUXITypeName* type;
+- (RTObject<WUXDICustomProperty>*)getCustomProperty:(NSString*)name;
+- (RTObject<WUXDICustomProperty>*)getIndexedProperty:(NSString*)name type:(WUXITypeName*)type;
+- (NSString*)getStringRepresentation;
 @end
 
 #endif // __WUXDICustomPropertyProvider_DEFINED__
@@ -183,7 +189,7 @@ typedef void(^WUXDPropertyChangedEventHandler)(RTObject * sender, WUXDPropertyCh
 
 @protocol WUXDISupportIncrementalLoading
 @property (readonly) BOOL hasMoreItems;
-- (void)loadMoreItemsAsync:(unsigned)count success:(void (^)(WUXDLoadMoreItemsResult *))success failure:(void (^)(NSError*))failure;
+- (void)loadMoreItemsAsync:(unsigned)count success:(void (^)(WUXDLoadMoreItemsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WUXDISupportIncrementalLoading_DEFINED__
@@ -217,7 +223,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDPropertyChangedEventArgs : RTObject
-@property (readonly) NSString * propertyName;
+@property (readonly) NSString* propertyName;
 @end
 
 #endif // __WUXDPropertyChangedEventArgs_DEFINED__
@@ -229,12 +235,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) WUCCoreDispatcher * dispatcher;
-- (RTObject *)getValue:(WXDependencyProperty *)dp;
-- (void)setValue:(WXDependencyProperty *)dp value:(RTObject *)value;
-- (void)clearValue:(WXDependencyProperty *)dp;
-- (RTObject *)readLocalValue:(WXDependencyProperty *)dp;
-- (RTObject *)getAnimationBaseValue:(WXDependencyProperty *)dp;
+@property (readonly) WUCCoreDispatcher* dispatcher;
+- (RTObject*)getValue:(WXDependencyProperty*)dp;
+- (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
+- (void)clearValue:(WXDependencyProperty*)dp;
+- (RTObject*)readLocalValue:(WXDependencyProperty*)dp;
+- (RTObject*)getAnimationBaseValue:(WXDependencyProperty*)dp;
 @end
 
 #endif // __WXDependencyObject_DEFINED__
@@ -258,15 +264,15 @@ WINRT_EXPORT
 @interface WUXDBinding : WUXDBindingBase
 + (instancetype)create ACTIVATOR;
 @property WUXDUpdateSourceTrigger updateSourceTrigger;
-@property (copy) RTObject * targetNullValue;
-@property (copy) RTObject * fallbackValue;
-@property (copy) RTObject * source;
-@property (copy) WUXDRelativeSource * relativeSource;
-@property (copy) WXPropertyPath * path;
+@property (copy) RTObject* targetNullValue;
+@property (copy) RTObject* fallbackValue;
+@property (copy) RTObject* source;
+@property (copy) WUXDRelativeSource* relativeSource;
+@property (copy) WXPropertyPath* path;
 @property WUXDBindingMode mode;
-@property (copy) NSString * elementName;
-@property (copy) RTObject * converterParameter;
-@property (copy) NSString * converterLanguage;
+@property (copy) NSString* elementName;
+@property (copy) RTObject* converterParameter;
+@property (copy) NSString* converterLanguage;
 @property (copy) RTObject<WUXDIValueConverter>* converter;
 @end
 
@@ -288,8 +294,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBindingExpression : WUXDBindingExpressionBase
-@property (readonly) RTObject * dataItem;
-@property (readonly) WUXDBinding * parentBinding;
+@property (readonly) RTObject* dataItem;
+@property (readonly) WUXDBinding* parentBinding;
 - (void)updateSource;
 @end
 
@@ -302,14 +308,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
 + (instancetype)create ACTIVATOR;
-@property (copy) RTObject * source;
-@property (copy) WXPropertyPath * itemsPath;
+@property (copy) RTObject* source;
+@property (copy) WXPropertyPath* itemsPath;
 @property BOOL isSourceGrouped;
 @property (readonly) RTObject<WUXDICollectionView>* view;
-+ (WXDependencyProperty *)isSourceGroupedProperty;
-+ (WXDependencyProperty *)itemsPathProperty;
-+ (WXDependencyProperty *)sourceProperty;
-+ (WXDependencyProperty *)viewProperty;
++ (WXDependencyProperty*)isSourceGroupedProperty;
++ (WXDependencyProperty*)itemsPathProperty;
++ (WXDependencyProperty*)sourceProperty;
++ (WXDependencyProperty*)viewProperty;
 @end
 
 #endif // __WUXDCollectionViewSource_DEFINED__
@@ -332,8 +338,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBindingOperations : RTObject
-+ (void)setBinding:(WXDependencyObject *)target dp:(WXDependencyProperty *)dp binding:(WUXDBindingBase *)binding;
++ (void)setBinding:(WXDependencyObject*)target dp:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 @end
 
 #endif // __WUXDBindingOperations_DEFINED__
-

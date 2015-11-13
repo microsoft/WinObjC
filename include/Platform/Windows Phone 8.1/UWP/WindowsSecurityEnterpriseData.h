@@ -44,11 +44,18 @@ typedef unsigned WSEFileProtectionStatus;
 
 WINRT_EXPORT
 @interface WSEFileRevocationManager : RTObject
-+ (void)protectAsync:(RTObject<WSIStorageItem>*)storageItem enterpriseIdentity:(NSString *)enterpriseIdentity success:(void (^)(WSEFileProtectionStatus))success failure:(void (^)(NSError*))failure;
-+ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)sourceStorageItem targetStorageItem:(RTObject<WSIStorageItem>*)targetStorageItem success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)revoke:(NSString *)enterpriseIdentity;
-+ (void)getStatusAsync:(RTObject<WSIStorageItem>*)storageItem success:(void (^)(WSEFileProtectionStatus))success failure:(void (^)(NSError*))failure;
++ (void)protectAsync:(RTObject<WSIStorageItem>*)storageItem
+  enterpriseIdentity:(NSString*)enterpriseIdentity
+             success:(void (^)(WSEFileProtectionStatus))success
+             failure:(void (^)(NSError*))failure;
++ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)sourceStorageItem
+          targetStorageItem:(RTObject<WSIStorageItem>*)targetStorageItem
+                    success:(void (^)(BOOL))success
+                    failure:(void (^)(NSError*))failure;
++ (void)revoke:(NSString*)enterpriseIdentity;
++ (void)getStatusAsync:(RTObject<WSIStorageItem>*)storageItem
+               success:(void (^)(WSEFileProtectionStatus))success
+               failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSEFileRevocationManager_DEFINED__
-

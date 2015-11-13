@@ -22,11 +22,11 @@
 #include "UIKit/UIGeometry.h"
 
 CA_EXPORT_CLASS
-@interface CATextLayer : CALayer 
+@interface CATextLayer : CALayer
 @property CFTypeRef font;
 @property CGFloat fontSize;
-@property(copy) NSString *alignmentMode;
-@property(copy) id string;
+@property (copy) NSString* alignmentMode;
+@property (copy) id string;
 
 @end
 

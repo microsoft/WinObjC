@@ -20,8 +20,19 @@
 #pragma once
 
 #include "interopBase.h"
-@class WABAlarmApplicationManager, WABBackgroundExecutionManager, WABBackgroundTaskRegistration, WABBackgroundTaskDeferral, WABBackgroundTaskProgressEventArgs, WABBackgroundTaskCompletedEventArgs, WABBackgroundTaskBuilder, WABBackgroundWorkCost, WABSystemTrigger, WABSystemCondition, WABNetworkOperatorNotificationTrigger, WABTimeTrigger, WABMaintenanceTrigger, WABDeviceUseTrigger, WABDeviceServicingTrigger, WABLocationTrigger, WABNetworkOperatorHotspotAuthenticationTrigger, WABPushNotificationTrigger;
-@protocol WABIAlarmApplicationManagerStatics, WABIBackgroundExecutionManagerStatics, WABIBackgroundTaskInstance, WABIBackgroundWorkCostStatics, WABIBackgroundTaskDeferral, WABIBackgroundTaskInstance2, WABIBackgroundTask, WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistrationStatics, WABIBackgroundTaskBuilder, WABIBackgroundTrigger, WABIBackgroundCondition, WABIBackgroundTaskBuilder2, WABIBackgroundTaskCompletedEventArgs, WABIBackgroundTaskProgressEventArgs, WABISystemTrigger, WABISystemTriggerFactory, WABISystemCondition, WABISystemConditionFactory, WABINetworkOperatorNotificationTrigger, WABINetworkOperatorNotificationTriggerFactory, WABITimeTrigger, WABITimeTriggerFactory, WABIMaintenanceTrigger, WABIMaintenanceTriggerFactory, WABIDeviceUseTrigger, WABIDeviceServicingTrigger, WABILocationTrigger, WABILocationTriggerFactory, WABINetworkOperatorHotspotAuthenticationTrigger, WABIPushNotificationTriggerFactory;
+@class WABAlarmApplicationManager, WABBackgroundExecutionManager, WABBackgroundTaskRegistration, WABBackgroundTaskDeferral,
+    WABBackgroundTaskProgressEventArgs, WABBackgroundTaskCompletedEventArgs, WABBackgroundTaskBuilder, WABBackgroundWorkCost,
+    WABSystemTrigger, WABSystemCondition, WABNetworkOperatorNotificationTrigger, WABTimeTrigger, WABMaintenanceTrigger, WABDeviceUseTrigger,
+    WABDeviceServicingTrigger, WABLocationTrigger, WABNetworkOperatorHotspotAuthenticationTrigger, WABPushNotificationTrigger;
+@protocol WABIAlarmApplicationManagerStatics
+, WABIBackgroundExecutionManagerStatics, WABIBackgroundTaskInstance, WABIBackgroundWorkCostStatics, WABIBackgroundTaskDeferral,
+    WABIBackgroundTaskInstance2, WABIBackgroundTask, WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistrationStatics,
+    WABIBackgroundTaskBuilder, WABIBackgroundTrigger, WABIBackgroundCondition, WABIBackgroundTaskBuilder2,
+    WABIBackgroundTaskCompletedEventArgs, WABIBackgroundTaskProgressEventArgs, WABISystemTrigger, WABISystemTriggerFactory,
+    WABISystemCondition, WABISystemConditionFactory, WABINetworkOperatorNotificationTrigger, WABINetworkOperatorNotificationTriggerFactory,
+    WABITimeTrigger, WABITimeTriggerFactory, WABIMaintenanceTrigger, WABIMaintenanceTriggerFactory, WABIDeviceUseTrigger,
+    WABIDeviceServicingTrigger, WABILocationTrigger, WABILocationTriggerFactory, WABINetworkOperatorHotspotAuthenticationTrigger,
+    WABIPushNotificationTriggerFactory;
 
 // Windows.ApplicationModel.Background.AlarmAccessStatus
 enum _WABAlarmAccessStatus {
@@ -124,38 +135,39 @@ typedef unsigned WABLocationTriggerType;
 // Windows.ApplicationModel.Background.BackgroundTaskCanceledEventHandler
 #ifndef __WABBackgroundTaskCanceledEventHandler__DEFINED
 #define __WABBackgroundTaskCanceledEventHandler__DEFINED
-typedef void(^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender, WABBackgroundTaskCancellationReason reason);
+typedef void (^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender,
+                                                      WABBackgroundTaskCancellationReason reason);
 #endif // __WABBackgroundTaskCanceledEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskCompletedEventHandler
 #ifndef __WABBackgroundTaskCompletedEventHandler__DEFINED
 #define __WABBackgroundTaskCompletedEventHandler__DEFINED
-typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration * sender, WABBackgroundTaskCompletedEventArgs * args);
+typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
 #endif // __WABBackgroundTaskCompletedEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskProgressEventHandler
 #ifndef __WABBackgroundTaskProgressEventHandler__DEFINED
 #define __WABBackgroundTaskProgressEventHandler__DEFINED
-typedef void(^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration * sender, WABBackgroundTaskProgressEventArgs * args);
+typedef void (^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
 #endif // __WABBackgroundTaskProgressEventHandler__DEFINED
-
 
 // Windows.ApplicationModel.Background.BackgroundTaskCanceledEventHandler
 #ifndef __WABBackgroundTaskCanceledEventHandler__DEFINED
 #define __WABBackgroundTaskCanceledEventHandler__DEFINED
-typedef void(^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender, WABBackgroundTaskCancellationReason reason);
+typedef void (^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender,
+                                                      WABBackgroundTaskCancellationReason reason);
 #endif // __WABBackgroundTaskCanceledEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskProgressEventHandler
 #ifndef __WABBackgroundTaskProgressEventHandler__DEFINED
 #define __WABBackgroundTaskProgressEventHandler__DEFINED
-typedef void(^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration * sender, WABBackgroundTaskProgressEventArgs * args);
+typedef void (^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
 #endif // __WABBackgroundTaskProgressEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskCompletedEventHandler
 #ifndef __WABBackgroundTaskCompletedEventHandler__DEFINED
 #define __WABBackgroundTaskCompletedEventHandler__DEFINED
-typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration * sender, WABBackgroundTaskCompletedEventArgs * args);
+typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
 #endif // __WABBackgroundTaskCompletedEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.IBackgroundTaskInstance
@@ -163,14 +175,14 @@ typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistrat
 #define __WABIBackgroundTaskInstance_DEFINED__
 
 @protocol WABIBackgroundTaskInstance
-@property (readonly) WFGUID * instanceId;
+@property (readonly) WFGUID* instanceId;
 @property unsigned progress;
 @property (readonly) unsigned suspendedCount;
-@property (readonly) WABBackgroundTaskRegistration * task;
-@property (readonly) RTObject * triggerDetails;
+@property (readonly) WABBackgroundTaskRegistration* task;
+@property (readonly) RTObject* triggerDetails;
 - (EventRegistrationToken)addCanceledEvent:(WABBackgroundTaskCanceledEventHandler)del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
-- (WABBackgroundTaskDeferral *)getDeferral;
+- (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
 #endif // __WABIBackgroundTaskInstance_DEFINED__
@@ -181,7 +193,7 @@ typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistrat
 
 @protocol WABIBackgroundTaskInstance2 <WABIBackgroundTaskInstance>
 - (unsigned)getThrottleCount:(WABBackgroundTaskThrottleCounter)counter;
-- (WABBackgroundTaskDeferral *)getDeferral;
+- (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
 #endif // __WABIBackgroundTaskInstance2_DEFINED__
@@ -201,8 +213,8 @@ typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistrat
 #define __WABIBackgroundTaskRegistration_DEFINED__
 
 @protocol WABIBackgroundTaskRegistration
-@property (readonly) NSString * name;
-@property (readonly) WFGUID * taskId;
+@property (readonly) NSString* name;
+@property (readonly) WFGUID* taskId;
 - (EventRegistrationToken)addCompletedEvent:(WABBackgroundTaskCompletedEventHandler)del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addProgressEvent:(WABBackgroundTaskProgressEventHandler)del;
@@ -249,11 +261,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WABBackgroundExecutionManager : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
-+ (void)requestAccessForApplicationAsync:(NSString *)applicationId success:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
++ (void)requestAccessForApplicationAsync:(NSString*)applicationId
+                                 success:(void (^)(WABBackgroundAccessStatus))success
+                                 failure:(void (^)(NSError*))failure;
 + (void)removeAccess;
-+ (void)removeAccessForApplication:(NSString *)applicationId;
++ (void)removeAccessForApplication:(NSString*)applicationId;
 + (WABBackgroundAccessStatus)getAccessStatus;
-+ (WABBackgroundAccessStatus)getAccessStatusForApplication:(NSString *)applicationId;
++ (WABBackgroundAccessStatus)getAccessStatusForApplication:(NSString*)applicationId;
 @end
 
 #endif // __WABBackgroundExecutionManager_DEFINED__
@@ -264,9 +278,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration>
-@property (readonly) NSString * name;
-@property (readonly) WFGUID * taskId;
-+ (NSDictionary * /*GUID, WABIBackgroundTaskRegistration*/ )allTasks;
+@property (readonly) NSString* name;
+@property (readonly) WFGUID* taskId;
++ (NSDictionary* /*GUID, WABIBackgroundTaskRegistration*/)allTasks;
 - (EventRegistrationToken)addCompletedEvent:(WABBackgroundTaskCompletedEventHandler)del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addProgressEvent:(WABBackgroundTaskProgressEventHandler)del;
@@ -293,7 +307,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBackgroundTaskProgressEventArgs : RTObject
-@property (readonly) WFGUID * instanceId;
+@property (readonly) WFGUID* instanceId;
 @property (readonly) unsigned progress;
 @end
 
@@ -305,7 +319,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBackgroundTaskCompletedEventArgs : RTObject
-@property (readonly) WFGUID * instanceId;
+@property (readonly) WFGUID* instanceId;
 - (void)checkResult;
 @end
 
@@ -318,12 +332,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WABBackgroundTaskBuilder : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) NSString * taskEntryPoint;
-@property (copy) NSString * name;
+@property (copy) NSString* taskEntryPoint;
+@property (copy) NSString* name;
 @property BOOL cancelOnConditionLoss;
 - (void)setTrigger:(RTObject<WABIBackgroundTrigger>*)trigger;
 - (void)addCondition:(RTObject<WABIBackgroundCondition>*)condition;
-- (WABBackgroundTaskRegistration *)Register;
+- (WABBackgroundTaskRegistration*)Register;
 @end
 
 #endif // __WABBackgroundTaskBuilder_DEFINED__
@@ -345,7 +359,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSystemTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABSystemTrigger *)create:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABSystemTrigger*)create:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) BOOL oneShot;
 @property (readonly) WABSystemTriggerType triggerType;
 @end
@@ -358,7 +372,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSystemCondition : RTObject <WABIBackgroundCondition>
-+ (WABSystemCondition *)create:(WABSystemConditionType)conditionType ACTIVATOR;
++ (WABSystemCondition*)create:(WABSystemConditionType)conditionType ACTIVATOR;
 @property (readonly) WABSystemConditionType conditionType;
 @end
 
@@ -370,8 +384,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABNetworkOperatorNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABNetworkOperatorNotificationTrigger *)create:(NSString *)networkAccountId ACTIVATOR;
-@property (readonly) NSString * networkAccountId;
++ (WABNetworkOperatorNotificationTrigger*)create:(NSString*)networkAccountId ACTIVATOR;
+@property (readonly) NSString* networkAccountId;
 @end
 
 #endif // __WABNetworkOperatorNotificationTrigger_DEFINED__
@@ -382,7 +396,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABTimeTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABTimeTrigger *)create:(unsigned)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABTimeTrigger*)create:(unsigned)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) unsigned freshnessTime;
 @property (readonly) BOOL oneShot;
 @end
@@ -395,7 +409,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMaintenanceTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABMaintenanceTrigger *)create:(unsigned)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABMaintenanceTrigger*)create:(unsigned)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) unsigned freshnessTime;
 @property (readonly) BOOL oneShot;
 @end
@@ -409,8 +423,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WABDeviceUseTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)create ACTIVATOR;
-- (void)requestAsyncSimple:(NSString *)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(NSString *)deviceId arguments:(NSString *)arguments success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
+- (void)requestAsyncSimple:(NSString*)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(NSString*)deviceId
+                        arguments:(NSString*)arguments
+                          success:(void (^)(WABDeviceTriggerResult))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABDeviceUseTrigger_DEFINED__
@@ -422,8 +439,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WABDeviceServicingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)create ACTIVATOR;
-- (void)requestAsyncSimple:(NSString *)deviceId expectedDuration:(WFTimeSpan *)expectedDuration success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(NSString *)deviceId expectedDuration:(WFTimeSpan *)expectedDuration arguments:(NSString *)arguments success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
+- (void)requestAsyncSimple:(NSString*)deviceId
+          expectedDuration:(WFTimeSpan*)expectedDuration
+                   success:(void (^)(WABDeviceTriggerResult))success
+                   failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(NSString*)deviceId
+                 expectedDuration:(WFTimeSpan*)expectedDuration
+                        arguments:(NSString*)arguments
+                          success:(void (^)(WABDeviceTriggerResult))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABDeviceServicingTrigger_DEFINED__
@@ -434,7 +458,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABLocationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABLocationTrigger *)create:(WABLocationTriggerType)triggerType ACTIVATOR;
++ (WABLocationTrigger*)create:(WABLocationTriggerType)triggerType ACTIVATOR;
 @property (readonly) WABLocationTriggerType triggerType;
 @end
 
@@ -457,9 +481,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABPushNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABPushNotificationTrigger *)create:(NSString *)applicationId ACTIVATOR;
++ (WABPushNotificationTrigger*)create:(NSString*)applicationId ACTIVATOR;
 + (instancetype)create ACTIVATOR;
 @end
 
 #endif // __WABPushNotificationTrigger_DEFINED__
-

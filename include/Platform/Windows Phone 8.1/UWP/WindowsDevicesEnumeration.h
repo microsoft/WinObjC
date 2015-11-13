@@ -20,8 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate, WDEDeviceInformationCollection, WDEDeviceWatcher, WDEDeviceInformation, WDEDeviceAccessChangedEventArgs, WDEDeviceAccessInformation;
-@protocol WDEIEnclosureLocation, WDEIDeviceInformationUpdate, WDEIDeviceWatcher, WDEIDeviceInformationStatics, WDEIDeviceInformation, WDEIDeviceAccessChangedEventArgs, WDEIDeviceAccessInformation, WDEIDeviceAccessInformationStatics;
+@class WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate, WDEDeviceInformationCollection, WDEDeviceWatcher,
+    WDEDeviceInformation, WDEDeviceAccessChangedEventArgs, WDEDeviceAccessInformation;
+@protocol WDEIEnclosureLocation
+, WDEIDeviceInformationUpdate, WDEIDeviceWatcher, WDEIDeviceInformationStatics, WDEIDeviceInformation, WDEIDeviceAccessChangedEventArgs,
+    WDEIDeviceAccessInformation, WDEIDeviceAccessInformationStatics;
 
 // Windows.Devices.Enumeration.DeviceClass
 enum _WDEDeviceClass {
@@ -86,7 +89,12 @@ typedef unsigned WDEDeviceAccessStatus;
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -97,7 +105,10 @@ typedef unsigned WDEDeviceAccessStatus;
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -118,8 +129,16 @@ typedef unsigned WDEDeviceAccessStatus;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -130,7 +149,7 @@ typedef unsigned WDEDeviceAccessStatus;
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString * contentType;
+@property (readonly) NSString* contentType;
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -139,14 +158,23 @@ typedef unsigned WDEDeviceAccessStatus;
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol
+    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -157,8 +185,13 @@ typedef unsigned WDEDeviceAccessStatus;
 #define __WDEDeviceThumbnail_DEFINED__
 
 WINRT_EXPORT
-@interface WDEDeviceThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
-@property (readonly) NSString * contentType;
+@interface WDEDeviceThumbnail : RTObject <WSSIRandomAccessStreamWithContentType,
+                                          WSSIContentTypeProvider,
+                                          WSSIRandomAccessStream,
+                                          WSSIOutputStream,
+                                          WFIClosable,
+                                          WSSIInputStream>
+@property (readonly) NSString* contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -168,8 +201,16 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned))success progress:(void (^)(unsigned))progress failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
+            count:(unsigned)count
+          options:(WSSInputStreamOptions)options
+          success:(void (^)(RTObject<WSSIBuffer>*))success
+         progress:(void (^)(unsigned))progress
+          failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
+           success:(void (^)(unsigned))success
+          progress:(void (^)(unsigned))progress
+           failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -194,8 +235,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
-@property (readonly) NSString * id;
-@property (readonly) NSDictionary * /*String, SObject*/  properties;
+@property (readonly) NSString* id;
+@property (readonly) NSDictionary* /*String, SObject*/ properties;
 @end
 
 #endif // __WDEDeviceInformationUpdate_DEFINED__
@@ -218,15 +259,15 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDEDeviceWatcher : RTObject
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void(^)(WDEDeviceWatcher *, WDEDeviceInformation *))del;
+- (EventRegistrationToken)addAddedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformation*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDEDeviceWatcher *, RTObject *))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDEDeviceWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void(^)(WDEDeviceWatcher *, WDEDeviceInformationUpdate *))del;
+- (EventRegistrationToken)addRemovedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void(^)(WDEDeviceWatcher *, RTObject *))del;
+- (EventRegistrationToken)addStoppedEvent:(void (^)(WDEDeviceWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void(^)(WDEDeviceWatcher *, WDEDeviceInformationUpdate *))del;
+- (EventRegistrationToken)addUpdatedEvent:(void (^)(WDEDeviceWatcher*, WDEDeviceInformationUpdate*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -240,25 +281,36 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformation : RTObject
-+ (void)createFromIdAsync:(NSString *)deviceId success:(void (^)(WDEDeviceInformation *))success failure:(void (^)(NSError*))failure;
-+ (void)createFromIdAsyncAdditionalProperties:(NSString *)deviceId additionalProperties:(id<NSFastEnumeration> /*String*/ )additionalProperties success:(void (^)(WDEDeviceInformation *))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncWithSuccess:(void (^)(WDEDeviceInformationCollection *))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncDeviceClass:(WDEDeviceClass)deviceClass success:(void (^)(WDEDeviceInformationCollection *))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncAqsFilter:(NSString *)aqsFilter success:(void (^)(WDEDeviceInformationCollection *))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /*String*/ )additionalProperties success:(void (^)(WDEDeviceInformationCollection *))success failure:(void (^)(NSError*))failure;
-+ (WDEDeviceWatcher *)createWatcher;
-+ (WDEDeviceWatcher *)createWatcherDeviceClass:(WDEDeviceClass)deviceClass;
-+ (WDEDeviceWatcher *)createWatcherAqsFilter:(NSString *)aqsFilter;
-+ (WDEDeviceWatcher *)createWatcherAqsFilterAndAdditionalProperties:(NSString *)aqsFilter additionalProperties:(id<NSFastEnumeration> /*String*/ )additionalProperties;
-@property (readonly) WDEEnclosureLocation * enclosureLocation;
-@property (readonly) NSString * id;
++ (void)createFromIdAsync:(NSString*)deviceId success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
++ (void)createFromIdAsyncAdditionalProperties:(NSString*)deviceId
+                         additionalProperties:(id<NSFastEnumeration> /*String*/)additionalProperties
+                                      success:(void (^)(WDEDeviceInformation*))success
+                                      failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncWithSuccess:(void (^)(WDEDeviceInformationCollection*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncDeviceClass:(WDEDeviceClass)deviceClass
+                        success:(void (^)(WDEDeviceInformationCollection*))success
+                        failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncAqsFilter:(NSString*)aqsFilter
+                      success:(void (^)(WDEDeviceInformationCollection*))success
+                      failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
+                                additionalProperties:(id<NSFastEnumeration> /*String*/)additionalProperties
+                                             success:(void (^)(WDEDeviceInformationCollection*))success
+                                             failure:(void (^)(NSError*))failure;
++ (WDEDeviceWatcher*)createWatcher;
++ (WDEDeviceWatcher*)createWatcherDeviceClass:(WDEDeviceClass)deviceClass;
++ (WDEDeviceWatcher*)createWatcherAqsFilter:(NSString*)aqsFilter;
++ (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
+                                              additionalProperties:(id<NSFastEnumeration> /*String*/)additionalProperties;
+@property (readonly) WDEEnclosureLocation* enclosureLocation;
+@property (readonly) NSString* id;
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isEnabled;
-@property (readonly) NSString * name;
-@property (readonly) NSDictionary * /*String, SObject*/  properties;
-- (void)update:(WDEDeviceInformationUpdate *)updateInfo;
-- (void)getThumbnailAsyncWithSuccess:(void (^)(WDEDeviceThumbnail *))success failure:(void (^)(NSError*))failure;
-- (void)getGlyphThumbnailAsyncWithSuccess:(void (^)(WDEDeviceThumbnail *))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString* name;
+@property (readonly) NSDictionary* /*String, SObject*/ properties;
+- (void)update:(WDEDeviceInformationUpdate*)updateInfo;
+- (void)getThumbnailAsyncWithSuccess:(void (^)(WDEDeviceThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getGlyphThumbnailAsyncWithSuccess:(void (^)(WDEDeviceThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDEDeviceInformation_DEFINED__
@@ -280,13 +332,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceAccessInformation : RTObject
-+ (WDEDeviceAccessInformation *)createFromId:(NSString *)deviceId;
-+ (WDEDeviceAccessInformation *)createFromDeviceClassId:(WFGUID *)deviceClassId;
-+ (WDEDeviceAccessInformation *)createFromDeviceClass:(WDEDeviceClass)deviceClass;
++ (WDEDeviceAccessInformation*)createFromId:(NSString*)deviceId;
++ (WDEDeviceAccessInformation*)createFromDeviceClassId:(WFGUID*)deviceClassId;
++ (WDEDeviceAccessInformation*)createFromDeviceClass:(WDEDeviceClass)deviceClass;
 @property (readonly) WDEDeviceAccessStatus currentStatus;
-- (EventRegistrationToken)addAccessChangedEvent:(void(^)(WDEDeviceAccessInformation *, WDEDeviceAccessChangedEventArgs *))del;
+- (EventRegistrationToken)addAccessChangedEvent:(void (^)(WDEDeviceAccessInformation*, WDEDeviceAccessChangedEventArgs*))del;
 - (void)removeAccessChangedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WDEDeviceAccessInformation_DEFINED__
-

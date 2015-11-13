@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WDPPdfPageRenderOptions, WDPPdfPageDimensions, WDPPdfPage, WDPPdfDocument;
-@protocol WDPIPdfPageDimensions, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
+@protocol WDPIPdfPageDimensions
+, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
 
 // Windows.Data.Pdf.PdfPageRotation
 enum _WDPPdfPageRotation {
@@ -44,12 +45,12 @@ typedef unsigned WDPPdfPageRotation;
 WINRT_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)create ACTIVATOR;
-@property (copy) WFRect * sourceRect;
+@property (copy) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
 @property unsigned destinationWidth;
 @property unsigned destinationHeight;
-@property WFGUID * bitmapEncoderId;
-@property (copy) WUColor * backgroundColor;
+@property WFGUID* bitmapEncoderId;
+@property (copy) WUColor* backgroundColor;
 @end
 
 #endif // __WDPPdfPageRenderOptions_DEFINED__
@@ -60,11 +61,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPdfPageDimensions : RTObject
-@property (readonly) WFRect * artBox;
-@property (readonly) WFRect * bleedBox;
-@property (readonly) WFRect * cropBox;
-@property (readonly) WFRect * mediaBox;
-@property (readonly) WFRect * trimBox;
+@property (readonly) WFRect* artBox;
+@property (readonly) WFRect* bleedBox;
+@property (readonly) WFRect* cropBox;
+@property (readonly) WFRect* mediaBox;
+@property (readonly) WFRect* trimBox;
 @end
 
 #endif // __WDPPdfPageDimensions_DEFINED__
@@ -85,13 +86,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
-@property (readonly) WDPPdfPageDimensions * dimensions;
+@property (readonly) WDPPdfPageDimensions* dimensions;
 @property (readonly) unsigned index;
 @property (readonly) float preferredZoom;
 @property (readonly) WDPPdfPageRotation rotation;
-@property (readonly) WFSize * size;
+@property (readonly) WFSize* size;
 - (RTObject<WFIAsyncAction>*)renderToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream;
-- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream options:(WDPPdfPageRenderOptions *)options;
+- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream
+                                                    options:(WDPPdfPageRenderOptions*)options;
 - (RTObject<WFIAsyncAction>*)preparePageAsync;
 - (void)close;
 @end
@@ -104,14 +106,21 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPdfDocument : RTObject
-+ (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument *))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file password:(NSString *)password success:(void (^)(WDPPdfDocument *))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream success:(void (^)(WDPPdfDocument *))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream password:(NSString *)password success:(void (^)(WDPPdfDocument *))success failure:(void (^)(NSError*))failure;
++ (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file
+                             password:(NSString*)password
+                              success:(void (^)(WDPPdfDocument*))success
+                              failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
+                    success:(void (^)(WDPPdfDocument*))success
+                    failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
+                               password:(NSString*)password
+                                success:(void (^)(WDPPdfDocument*))success
+                                failure:(void (^)(NSError*))failure;
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned pageCount;
-- (WDPPdfPage *)getPage:(unsigned)pageIndex;
+- (WDPPdfPage*)getPage:(unsigned)pageIndex;
 @end
 
 #endif // __WDPPdfDocument_DEFINED__
-

@@ -23,6 +23,7 @@
 #include <direct.h>
 #include <sys\stat.h>
 #include <map>
+#include <regex>
 
 #include "Platform/EbrPlatform.h"
 #include "Starboard.h"
@@ -849,8 +850,9 @@ bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
         mkdir(dirOut);
         return true;
     }
-    if (_stricmp(dirName, "C:") == 0) {
-        sprintf_s(dirOut, maxLen, "C:");
+    static std::regex drive("[a-zA-Z]:");
+    if (std::regex_match(dirName, drive)) {
+        sprintf_s(dirOut, maxLen, dirName);
         return true;
     }
     sprintf_s(dirOut, maxLen, FSROOT "\\%s", dirName);
@@ -884,7 +886,8 @@ int EbrChdir(const char* path) {
     return 0;
 }
 
-extern "C" __declspec(dllexport) void dbg_printf(const char* fmt, ...) {
+IWPLATFORM_EXPORT
+void dbg_printf(const char* fmt, ...) {
 #ifdef _DEBUG
     va_list va;
 

@@ -31,9 +31,17 @@ typedef struct {
     CGPoint* points;
 } CGPathElement;
 
-typedef enum { kCGLineCapButt, kCGLineCapRound, kCGLineCapSquare } CGLineCap;
+typedef enum {
+    kCGLineCapButt,
+    kCGLineCapRound,
+    kCGLineCapSquare,
+} CGLineCap;
 
-typedef enum { kCGLineJoinMiter, kCGLineJoinRound, kCGLineJoinBevel } CGLineJoin;
+typedef enum {
+    kCGLineJoinMiter,
+    kCGLineJoinRound,
+    kCGLineJoinBevel,
+} CGLineJoin;
 
 typedef void (*CGPathApplierFunction)(void* info, const CGPathElement* element);
 

@@ -20,53 +20,60 @@
 #pragma once
 
 #include "interopBase.h"
-@class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult, WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids, WDBGGattCharacteristicUuids, WDBGGattDescriptorUuids, WDBGGattReliableWriteTransaction, WDBGGattPresentationFormatTypes;
-@protocol WDBGIGattDeviceServiceStatics, WDBGIGattCharacteristicStatics, WDBGIGattCharacteristic, WDBGIGattCharacteristic2, WDBGIGattDescriptorStatics, WDBGIGattDescriptor, WDBGIGattPresentationFormatStatics, WDBGIGattPresentationFormatTypesStatics, WDBGIGattPresentationFormat, WDBGIGattValueChangedEventArgs, WDBGIGattServiceUuidsStatics, WDBGIGattServiceUuidsStatics2, WDBGIGattCharacteristicUuidsStatics, WDBGIGattCharacteristicUuidsStatics2, WDBGIGattDescriptorUuidsStatics, WDBGIGattReliableWriteTransaction, WDBGIGattReadResult, WDBGIGattReadClientCharacteristicConfigurationDescriptorResult, WDBGIGattDeviceService, WDBGIGattDeviceService2;
+@class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult,
+    WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids,
+    WDBGGattCharacteristicUuids, WDBGGattDescriptorUuids, WDBGGattReliableWriteTransaction, WDBGGattPresentationFormatTypes;
+@protocol WDBGIGattDeviceServiceStatics
+, WDBGIGattCharacteristicStatics, WDBGIGattCharacteristic, WDBGIGattCharacteristic2, WDBGIGattDescriptorStatics, WDBGIGattDescriptor,
+    WDBGIGattPresentationFormatStatics, WDBGIGattPresentationFormatTypesStatics, WDBGIGattPresentationFormat,
+    WDBGIGattValueChangedEventArgs, WDBGIGattServiceUuidsStatics, WDBGIGattServiceUuidsStatics2, WDBGIGattCharacteristicUuidsStatics,
+    WDBGIGattCharacteristicUuidsStatics2, WDBGIGattDescriptorUuidsStatics, WDBGIGattReliableWriteTransaction, WDBGIGattReadResult,
+    WDBGIGattReadClientCharacteristicConfigurationDescriptorResult, WDBGIGattDeviceService, WDBGIGattDeviceService2;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties
 enum _WDBGGattCharacteristicProperties {
-	WDBGGattCharacteristicPropertiesNone = 0,
-	WDBGGattCharacteristicPropertiesBroadcast = 1,
-	WDBGGattCharacteristicPropertiesRead = 2,
-	WDBGGattCharacteristicPropertiesWriteWithoutResponse = 4,
-	WDBGGattCharacteristicPropertiesWrite = 8,
-	WDBGGattCharacteristicPropertiesNotify = 16,
-	WDBGGattCharacteristicPropertiesIndicate = 32,
-	WDBGGattCharacteristicPropertiesAuthenticatedSignedWrites = 64,
-	WDBGGattCharacteristicPropertiesExtendedProperties = 128,
-	WDBGGattCharacteristicPropertiesReliableWrites = 256,
-	WDBGGattCharacteristicPropertiesWritableAuxiliaries = 512,
+    WDBGGattCharacteristicPropertiesNone = 0,
+    WDBGGattCharacteristicPropertiesBroadcast = 1,
+    WDBGGattCharacteristicPropertiesRead = 2,
+    WDBGGattCharacteristicPropertiesWriteWithoutResponse = 4,
+    WDBGGattCharacteristicPropertiesWrite = 8,
+    WDBGGattCharacteristicPropertiesNotify = 16,
+    WDBGGattCharacteristicPropertiesIndicate = 32,
+    WDBGGattCharacteristicPropertiesAuthenticatedSignedWrites = 64,
+    WDBGGattCharacteristicPropertiesExtendedProperties = 128,
+    WDBGGattCharacteristicPropertiesReliableWrites = 256,
+    WDBGGattCharacteristicPropertiesWritableAuxiliaries = 512,
 };
 typedef unsigned WDBGGattCharacteristicProperties;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattClientCharacteristicConfigurationDescriptorValue
 enum _WDBGGattClientCharacteristicConfigurationDescriptorValue {
-	WDBGGattClientCharacteristicConfigurationDescriptorValueNone = 0,
-	WDBGGattClientCharacteristicConfigurationDescriptorValueNotify = 1,
-	WDBGGattClientCharacteristicConfigurationDescriptorValueIndicate = 2,
+    WDBGGattClientCharacteristicConfigurationDescriptorValueNone = 0,
+    WDBGGattClientCharacteristicConfigurationDescriptorValueNotify = 1,
+    WDBGGattClientCharacteristicConfigurationDescriptorValueIndicate = 2,
 };
 typedef unsigned WDBGGattClientCharacteristicConfigurationDescriptorValue;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattProtectionLevel
 enum _WDBGGattProtectionLevel {
-	WDBGGattProtectionLevelPlain = 0,
-	WDBGGattProtectionLevelAuthenticationRequired = 1,
-	WDBGGattProtectionLevelEncryptionRequired = 2,
-	WDBGGattProtectionLevelEncryptionAndAuthenticationRequired = 3,
+    WDBGGattProtectionLevelPlain = 0,
+    WDBGGattProtectionLevelAuthenticationRequired = 1,
+    WDBGGattProtectionLevelEncryptionRequired = 2,
+    WDBGGattProtectionLevelEncryptionAndAuthenticationRequired = 3,
 };
 typedef unsigned WDBGGattProtectionLevel;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattWriteOption
 enum _WDBGGattWriteOption {
-	WDBGGattWriteOptionWriteWithResponse = 0,
-	WDBGGattWriteOptionWriteWithoutResponse = 1,
+    WDBGGattWriteOptionWriteWithResponse = 0,
+    WDBGGattWriteOptionWriteWithoutResponse = 1,
 };
 typedef unsigned WDBGGattWriteOption;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattCommunicationStatus
 enum _WDBGGattCommunicationStatus {
-	WDBGGattCommunicationStatusSuccess = 0,
-	WDBGGattCommunicationStatusUnreachable = 1,
+    WDBGGattCommunicationStatusSuccess = 0,
+    WDBGGattCommunicationStatusUnreachable = 1,
 };
 typedef unsigned WDBGGattCommunicationStatus;
 
@@ -93,12 +100,12 @@ typedef unsigned WDBGGattCommunicationStatus;
 
 WINRT_EXPORT
 @interface WDBGGattDeviceService : RTObject <WFIClosable>
-+ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
-+ (NSString *)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
-+ (NSString *)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString*)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
++ (NSString*)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 @property (readonly) unsigned short attributeHandle;
-@property (readonly) NSString * deviceId;
+@property (readonly) NSString* deviceId;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBBluetoothLEDevice* device;
 @property (readonly) NSArray* parentServices;
@@ -122,18 +129,30 @@ WINRT_EXPORT
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WDBGGattCharacteristicProperties characteristicProperties;
 @property (readonly) NSArray* presentationFormats;
-@property (readonly) NSString * userDescription;
+@property (readonly) NSString* userDescription;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBGGattDeviceService* service;
-- (EventRegistrationToken)addValueChangedEvent:(void(^)(WDBGGattCharacteristic*, WDBGGattValueChangedEventArgs*))del;
+- (EventRegistrationToken)addValueChangedEvent:(void (^)(WDBGGattCharacteristic*, WDBGGattValueChangedEventArgs*))del;
 - (void)removeValueChangedEvent:(EventRegistrationToken)tok;
 - (NSArray*)getDescriptors:(WFGUID*)descriptorUuid;
 - (void)readValueAsyncWithSuccess:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
-- (void)writeValueWithOptionAsync:(RTObject<WSSIBuffer>*)value writeOption:(WDBGGattWriteOption)writeOption success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
-- (void)readClientCharacteristicConfigurationDescriptorAsyncWithSuccess:(void (^)(WDBGGattReadClientCharacteristicConfigurationDescriptorResult*))success failure:(void (^)(NSError*))failure;
-- (void)writeClientCharacteristicConfigurationDescriptorAsync:(WDBGGattClientCharacteristicConfigurationDescriptorValue)clientCharacteristicConfigurationDescriptorValue success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
+- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
+                            success:(void (^)(WDBGGattReadResult*))success
+                            failure:(void (^)(NSError*))failure;
+- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value
+                success:(void (^)(WDBGGattCommunicationStatus))success
+                failure:(void (^)(NSError*))failure;
+- (void)writeValueWithOptionAsync:(RTObject<WSSIBuffer>*)value
+                      writeOption:(WDBGGattWriteOption)writeOption
+                          success:(void (^)(WDBGGattCommunicationStatus))success
+                          failure:(void (^)(NSError*))failure;
+- (void)readClientCharacteristicConfigurationDescriptorAsyncWithSuccess:
+            (void (^)(WDBGGattReadClientCharacteristicConfigurationDescriptorResult*))success
+                                                                failure:(void (^)(NSError*))failure;
+- (void)writeClientCharacteristicConfigurationDescriptorAsync:
+            (WDBGGattClientCharacteristicConfigurationDescriptorValue)clientCharacteristicConfigurationDescriptorValue
+                                                      success:(void (^)(WDBGGattCommunicationStatus))success
+                                                      failure:(void (^)(NSError*))failure;
 - (NSArray*)getAllDescriptors;
 @end
 
@@ -150,8 +169,12 @@ WINRT_EXPORT
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WFGUID* uuid;
 - (void)readValueAsyncWithSuccess:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
+- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
+                            success:(void (^)(WDBGGattReadResult*))success
+                            failure:(void (^)(NSError*))failure;
+- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value
+                success:(void (^)(WDBGGattCommunicationStatus))success
+                failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDBGGattDescriptor_DEFINED__
@@ -396,4 +419,3 @@ WINRT_EXPORT
 @end
 
 #endif // __WDBGGattPresentationFormatTypes_DEFINED__
-

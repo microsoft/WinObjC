@@ -18,10 +18,10 @@
 
 #include "Foundation/NSOrderedSet.h"
 
-@implementation NSOrderedSet : NSObject
+@implementation NSOrderedSet
 
 @end
 
-@implementation NSMutableOrderedSet : NSOrderedSet
+@implementation NSMutableOrderedSet
 
 @end

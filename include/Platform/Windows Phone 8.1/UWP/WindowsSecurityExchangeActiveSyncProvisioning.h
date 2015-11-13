@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WSEEasComplianceResults, WSEEasClientSecurityPolicy, WSEEasClientDeviceInformation;
-@protocol WSEIEasClientDeviceInformation, WSEIEasClientSecurityPolicy, WSEIEasComplianceResults, WSEIEasComplianceResults2;
+@protocol WSEIEasClientDeviceInformation
+, WSEIEasClientSecurityPolicy, WSEIEasComplianceResults, WSEIEasComplianceResults2;
 
 // Windows.Security.ExchangeActiveSyncProvisioning.EasRequireEncryptionResult
 enum _WSEEasRequireEncryptionResult {
@@ -179,14 +180,14 @@ WINRT_EXPORT
 + (instancetype)create ACTIVATOR;
 @property BOOL requireEncryption;
 @property unsigned passwordHistory;
-@property (copy) WFTimeSpan * passwordExpiration;
+@property (copy) WFTimeSpan* passwordExpiration;
 @property uint8_t minPasswordLength;
 @property uint8_t minPasswordComplexCharacters;
 @property uint8_t maxPasswordFailedAttempts;
-@property (copy) WFTimeSpan * maxInactivityTimeLock;
+@property (copy) WFTimeSpan* maxInactivityTimeLock;
 @property BOOL disallowConvenienceLogon;
-- (WSEEasComplianceResults *)checkCompliance;
-- (void)applyAsyncWithSuccess:(void (^)(WSEEasComplianceResults *))success failure:(void (^)(NSError*))failure;
+- (WSEEasComplianceResults*)checkCompliance;
+- (void)applyAsyncWithSuccess:(void (^)(WSEEasComplianceResults*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSEEasClientSecurityPolicy_DEFINED__
@@ -198,13 +199,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)create ACTIVATOR;
-@property (readonly) NSString * friendlyName;
-@property (readonly) WFGUID * id;
-@property (readonly) NSString * operatingSystem;
-@property (readonly) NSString * systemManufacturer;
-@property (readonly) NSString * systemProductName;
-@property (readonly) NSString * systemSku;
+@property (readonly) NSString* friendlyName;
+@property (readonly) WFGUID* id;
+@property (readonly) NSString* operatingSystem;
+@property (readonly) NSString* systemManufacturer;
+@property (readonly) NSString* systemProductName;
+@property (readonly) NSString* systemSku;
 @end
 
 #endif // __WSEEasClientDeviceInformation_DEFINED__
-

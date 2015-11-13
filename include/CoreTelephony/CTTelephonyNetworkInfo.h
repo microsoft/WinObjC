@@ -19,9 +19,10 @@
 
 #import <CoreTelephony/CTCarrier.h>
 
-NSString* const CTRadioAccessTechnologyEdge;
-NSString* const CTRadioAccessTechnologyGPRS;
+FOUNDATION_EXPORT NSString* const CTRadioAccessTechnologyEdge;
+FOUNDATION_EXPORT NSString* const CTRadioAccessTechnologyGPRS;
 
+FOUNDATION_EXPORT_CLASS
 @interface CTTelephonyNetworkInfo : NSObject
 @property (nonatomic, readonly) CTCarrier* subscriberCellularProvider;
 @property (nonatomic, copy) void (^subscriberCellularProviderDidUpdateNotifier)(CTCarrier*);

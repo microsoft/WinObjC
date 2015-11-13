@@ -22,13 +22,13 @@
 enum {
     GKPlayerStateUnknown,
     GKPlayerStateConnected,
-    GKPlayerStateDisconnected
+    GKPlayerStateDisconnected,
 };
 typedef uint32_t GKPlayerConnectionState;
 
 enum {
     GKMatchSendDataReliable,
-    GKMatchSendDataUnreliable
+    GKMatchSendDataUnreliable,
 };
 typedef int32_t GKMatchSendDataMode;
 
@@ -42,12 +42,12 @@ typedef int32_t GKMatchSendDataMode;
 @interface GKMatch : NSObject
 
 @property (nonatomic, assign) id<GKMatchDelegate> delegate;
-@property (nonatomic, readonly) NSArray *playerIDs;
+@property (nonatomic, readonly) NSArray* playerIDs;
 @property (nonatomic, readonly) NSUInteger expectedPlayerCount;
 
 - (void)disconnect;
-- (BOOL)sendDataToAllPlayers:(NSData *)data withDataMode:(GKMatchSendDataMode)mode error:(NSError **)error;
-- (BOOL)sendData:(NSData *)data toPlayers:(NSArray *)playerIDs withDataMode:(GKMatchSendDataMode)mode error:(NSError **)error;
+- (BOOL)sendDataToAllPlayers:(NSData*)data withDataMode:(GKMatchSendDataMode)mode error:(NSError**)error;
+- (BOOL)sendData:(NSData*)data toPlayers:(NSArray*)playerIDs withDataMode:(GKMatchSendDataMode)mode error:(NSError**)error;
 
 @end
 

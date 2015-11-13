@@ -21,7 +21,8 @@
 
 #include "interopBase.h"
 @class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
-@protocol WWHFIHttpFilter, WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter;
+@protocol WWHFIHttpFilter
+, WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter;
 
 // Windows.Web.Http.Filters.HttpCacheReadBehavior
 enum _WWHFHttpCacheReadBehavior {
@@ -59,7 +60,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #define __WWHFIHttpFilter_DEFINED__
 
 @protocol WWHFIHttpFilter <WFIClosable>
-- (void)sendRequestAsync:(WWHHttpRequestMessage *)request success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
+                 success:(void (^)(WWHHttpResponseMessage*))success
+                progress:(void (^)(WWHHttpProgress*))progress
+                 failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -85,19 +89,21 @@ WINRT_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)create ACTIVATOR;
 @property BOOL useProxy;
-@property (copy) WSCPasswordCredential * serverCredential;
-@property (copy) WSCPasswordCredential * proxyCredential;
+@property (copy) WSCPasswordCredential* serverCredential;
+@property (copy) WSCPasswordCredential* proxyCredential;
 @property unsigned maxConnectionsPerServer;
-@property (copy) WSCCCertificate * clientCertificate;
+@property (copy) WSCCCertificate* clientCertificate;
 @property BOOL automaticDecompression;
 @property BOOL allowUI;
 @property BOOL allowAutoRedirect;
-@property (readonly) WWHFHttpCacheControl * cacheControl;
-@property (readonly) WWHHttpCookieManager * cookieManager;
-@property (readonly) id<NSFastEnumeration> /*WSCCChainValidationResult*/  ignorableServerCertificateErrors;
-- (void)sendRequestAsync:(WWHHttpRequestMessage *)request success:(void (^)(WWHHttpResponseMessage *))success progress:(void (^)(WWHHttpProgress *))progress failure:(void (^)(NSError*))failure;
+@property (readonly) WWHFHttpCacheControl* cacheControl;
+@property (readonly) WWHHttpCookieManager* cookieManager;
+@property (readonly) id<NSFastEnumeration> /*WSCCChainValidationResult*/ ignorableServerCertificateErrors;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
+                 success:(void (^)(WWHHttpResponseMessage*))success
+                progress:(void (^)(WWHHttpProgress*))progress
+                 failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WWHFHttpBaseProtocolFilter_DEFINED__
-

@@ -20,8 +20,14 @@
 #pragma once
 
 #include "interopBase.h"
-@class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails, WGPOPrintQualityOptionDetails, WGPOPrintColorModeOptionDetails, WGPOPrintDuplexOptionDetails, WGPOPrintCollationOptionDetails, WGPOPrintStapleOptionDetails, WGPOPrintHolePunchOptionDetails, WGPOPrintBindingOptionDetails, WGPOPrintCustomTextOptionDetails, WGPOPrintCustomItemDetails, WGPOPrintCustomItemListOptionDetails, WGPOPrintTaskOptionChangedEventArgs, WGPOPrintTaskOptionDetails;
-@protocol WGPOIPrintOptionDetails, WGPOIPrintNumberOptionDetails, WGPOIPrintTextOptionDetails, WGPOIPrintItemListOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintCustomTextOptionDetails, WGPOIPrintCustomItemDetails, WGPOIPrintCustomItemListOptionDetails, WGPOIPrintTaskOptionChangedEventArgs, WGPOIPrintTaskOptionDetails, WGPOIPrintTaskOptionDetailsStatic;
+@class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails,
+    WGPOPrintQualityOptionDetails, WGPOPrintColorModeOptionDetails, WGPOPrintDuplexOptionDetails, WGPOPrintCollationOptionDetails,
+    WGPOPrintStapleOptionDetails, WGPOPrintHolePunchOptionDetails, WGPOPrintBindingOptionDetails, WGPOPrintCustomTextOptionDetails,
+    WGPOPrintCustomItemDetails, WGPOPrintCustomItemListOptionDetails, WGPOPrintTaskOptionChangedEventArgs, WGPOPrintTaskOptionDetails;
+@protocol WGPOIPrintOptionDetails
+, WGPOIPrintNumberOptionDetails, WGPOIPrintTextOptionDetails, WGPOIPrintItemListOptionDetails, WGPOIPrintCustomOptionDetails,
+    WGPOIPrintCustomTextOptionDetails, WGPOIPrintCustomItemDetails, WGPOIPrintCustomItemListOptionDetails,
+    WGPOIPrintTaskOptionChangedEventArgs, WGPOIPrintTaskOptionDetails, WGPOIPrintTaskOptionDetailsStatic;
 
 // Windows.Graphics.Printing.OptionDetails.PrintOptionStates
 enum _WGPOPrintOptionStates {
@@ -49,12 +55,12 @@ typedef unsigned WGPOPrintOptionType;
 #define __WGPOIPrintOptionDetails_DEFINED__
 
 @protocol WGPOIPrintOptionDetails
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
 @property WGPOPrintOptionStates state;
-@property (readonly) RTObject * value;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (readonly) RTObject* value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOIPrintOptionDetails_DEFINED__
@@ -66,7 +72,7 @@ typedef unsigned WGPOPrintOptionType;
 @protocol WGPOIPrintNumberOptionDetails <WGPOIPrintOptionDetails>
 @property (readonly) unsigned maxValue;
 @property (readonly) unsigned minValue;
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOIPrintNumberOptionDetails_DEFINED__
@@ -77,7 +83,7 @@ typedef unsigned WGPOPrintOptionType;
 
 @protocol WGPOIPrintTextOptionDetails <WGPOIPrintOptionDetails>
 @property (readonly) unsigned maxCharacters;
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOIPrintTextOptionDetails_DEFINED__
@@ -89,7 +95,7 @@ typedef unsigned WGPOPrintOptionType;
 @protocol WGPOIPrintItemListOptionDetails <WGPOIPrintOptionDetails>
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOIPrintItemListOptionDetails_DEFINED__
@@ -99,8 +105,8 @@ typedef unsigned WGPOPrintOptionType;
 #define __WGPOIPrintCustomOptionDetails_DEFINED__
 
 @protocol WGPOIPrintCustomOptionDetails <WGPOIPrintOptionDetails>
-@property (copy) NSString * displayName;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (copy) NSString* displayName;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOIPrintCustomOptionDetails_DEFINED__
@@ -112,13 +118,13 @@ typedef unsigned WGPOPrintOptionType;
 WINRT_EXPORT
 @interface WGPOPrintCopiesOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintNumberOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 @property (readonly) unsigned maxValue;
 @property (readonly) unsigned minValue;
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOPrintCopiesOptionDetails_DEFINED__
@@ -131,11 +137,11 @@ WINRT_EXPORT
 @interface WGPOPrintMediaSizeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (readonly) RTObject* value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -149,11 +155,11 @@ WINRT_EXPORT
 @interface WGPOPrintMediaTypeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (readonly) RTObject* value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -166,12 +172,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintOrientationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -184,12 +190,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintQualityOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -203,11 +209,11 @@ WINRT_EXPORT
 @interface WGPOPrintColorModeOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (readonly) RTObject* value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -220,12 +226,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintDuplexOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -238,12 +244,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintCollationOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -256,12 +262,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintStapleOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -274,12 +280,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGPOPrintHolePunchOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -293,11 +299,11 @@ WINRT_EXPORT
 @interface WGPOPrintBindingOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintItemListOptionDetails>
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
-- (BOOL)trySetValue:(RTObject *)value;
+@property (readonly) RTObject* value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -309,14 +315,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomTextOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails>
-@property (copy) NSString * displayName;
+@property (copy) NSString* displayName;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 @property unsigned maxCharacters;
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 @end
 
 #endif // __WGPOPrintCustomTextOptionDetails_DEFINED__
@@ -327,8 +333,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintCustomItemDetails : RTObject
-@property (copy) NSString * itemDisplayName;
-@property (readonly) NSString * itemId;
+@property (copy) NSString* itemDisplayName;
+@property (readonly) NSString* itemId;
 @end
 
 #endif // __WGPOPrintCustomItemDetails_DEFINED__
@@ -338,17 +344,18 @@ WINRT_EXPORT
 #define __WGPOPrintCustomItemListOptionDetails_DEFINED__
 
 WINRT_EXPORT
-@interface WGPOPrintCustomItemListOptionDetails : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
-@property (copy) NSString * displayName;
+@interface WGPOPrintCustomItemListOptionDetails
+    : RTObject <WGPOIPrintOptionDetails, WGPOIPrintCustomOptionDetails, WGPOIPrintItemListOptionDetails>
+@property (copy) NSString* displayName;
 @property WGPOPrintOptionStates state;
-@property (copy) NSString * errorText;
-@property (readonly) NSString * optionId;
+@property (copy) NSString* errorText;
+@property (readonly) NSString* optionId;
 @property (readonly) WGPOPrintOptionType optionType;
-@property (readonly) RTObject * value;
+@property (readonly) RTObject* value;
 // Failed to generate property Items (Cannot marshal contained object of unknown type System.Object)
-- (BOOL)trySetValue:(RTObject *)value;
+- (BOOL)trySetValue:(RTObject*)value;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
-- (void)addItem:(NSString *)itemId displayName:(NSString *)displayName;
+- (void)addItem:(NSString*)itemId displayName:(NSString*)displayName;
 // Failed to generate member get_Items (Cannot marshal contained object of unknown type System.Object)
 @end
 
@@ -360,7 +367,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintTaskOptionChangedEventArgs : RTObject
-@property (readonly) RTObject * optionId;
+@property (readonly) RTObject* optionId;
 @end
 
 #endif // __WGPOPrintTaskOptionChangedEventArgs_DEFINED__
@@ -370,7 +377,7 @@ WINRT_EXPORT
 #define __WGPIPrintTaskOptionsCore_DEFINED__
 
 @protocol WGPIPrintTaskOptionsCore
-- (WGPPrintPageDescription *)getPageDescription:(unsigned)jobPageNumber;
+- (WGPPrintPageDescription*)getPageDescription:(unsigned)jobPageNumber;
 @end
 
 #endif // __WGPIPrintTaskOptionsCore_DEFINED__
@@ -380,7 +387,7 @@ WINRT_EXPORT
 #define __WGPIPrintTaskOptionsCoreUIConfiguration_DEFINED__
 
 @protocol WGPIPrintTaskOptionsCoreUIConfiguration
-@property (readonly) id<NSFastEnumeration> /*String*/  displayedOptions;
+@property (readonly) id<NSFastEnumeration> /*String*/ displayedOptions;
 @end
 
 #endif // __WGPIPrintTaskOptionsCoreUIConfiguration_DEFINED__
@@ -391,17 +398,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGPOPrintTaskOptionDetails : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreUIConfiguration>
-+ (WGPOPrintTaskOptionDetails *)getFromPrintTaskOptions:(WGPPrintTaskOptions *)printTaskOptions;
-@property (readonly) NSDictionary * /*String, WGPOIPrintOptionDetails*/  options;
-@property (readonly) id<NSFastEnumeration> /*String*/  displayedOptions;
-- (EventRegistrationToken)addBeginValidationEvent:(void(^)(WGPOPrintTaskOptionDetails *, RTObject *))del;
++ (WGPOPrintTaskOptionDetails*)getFromPrintTaskOptions:(WGPPrintTaskOptions*)printTaskOptions;
+@property (readonly) NSDictionary* /*String, WGPOIPrintOptionDetails*/ options;
+@property (readonly) id<NSFastEnumeration> /*String*/ displayedOptions;
+- (EventRegistrationToken)addBeginValidationEvent:(void (^)(WGPOPrintTaskOptionDetails*, RTObject*))del;
 - (void)removeBeginValidationEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOptionChangedEvent:(void(^)(WGPOPrintTaskOptionDetails *, WGPOPrintTaskOptionChangedEventArgs *))del;
+- (EventRegistrationToken)addOptionChangedEvent:(void (^)(WGPOPrintTaskOptionDetails*, WGPOPrintTaskOptionChangedEventArgs*))del;
 - (void)removeOptionChangedEvent:(EventRegistrationToken)tok;
-- (WGPOPrintCustomItemListOptionDetails *)createItemListOption:(NSString *)optionId displayName:(NSString *)displayName;
-- (WGPOPrintCustomTextOptionDetails *)createTextOption:(NSString *)optionId displayName:(NSString *)displayName;
-- (WGPPrintPageDescription *)getPageDescription:(unsigned)jobPageNumber;
+- (WGPOPrintCustomItemListOptionDetails*)createItemListOption:(NSString*)optionId displayName:(NSString*)displayName;
+- (WGPOPrintCustomTextOptionDetails*)createTextOption:(NSString*)optionId displayName:(NSString*)displayName;
+- (WGPPrintPageDescription*)getPageDescription:(unsigned)jobPageNumber;
 @end
 
 #endif // __WGPOPrintTaskOptionDetails_DEFINED__
-

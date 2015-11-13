@@ -467,7 +467,7 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
         return ret;
 
     /* [BUG: blamb] We should find the "highest score" match, since we may end up in the middle of a directory/filename
-     * match */
+    * match */
 
     return ret;
 }
@@ -667,8 +667,6 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
 }
 
 + (NSBundle*)bundleWithURL:(NSURL*)url {
-    EbrDebugLog("bundleWithURL: %s\n", [[url absoluteString] UTF8String]);
-
     if ([url isFileURL]) {
         return [[self alloc] initWithPath:[url path]];
     } else {
@@ -676,6 +674,18 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
         assert(0);
         return nil;
     }
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithUrl:(NSURL*)url {
+    if ([url isFileURL]) {
+        return [self initwithPath:[url path]];
+    }
+
+    EbrDebugLog("bad URL\n");
+    return nil;
 }
 
 /**

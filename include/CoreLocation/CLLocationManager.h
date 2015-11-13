@@ -33,7 +33,12 @@ typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
     kCLAuthorizationStatusAuthorizedWhenInUse
 };
 
-enum _CLActivityType { CLActivityTypeOther = 1, CLActivityTypeAutomotiveNavigation, CLActivityTypeFitness, CLActivityTypeOtherNavigation };
+enum _CLActivityType {
+    CLActivityTypeOther = 1,
+    CLActivityTypeAutomotiveNavigation,
+    CLActivityTypeFitness,
+    CLActivityTypeOtherNavigation,
+};
 typedef uint32_t CLActivityType;
 
 CORELOCATION_EXPORT_CLASS

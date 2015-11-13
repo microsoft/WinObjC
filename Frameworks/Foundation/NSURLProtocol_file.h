@@ -22,12 +22,12 @@
     id _path;
     EbrFile* fpIn;
 }
-/* annotate with type */ -(id)initWithRequest : (id)request cachedResponse : (id)response client : (id)client;
-/* annotate with type */ -(id)startLoading;
-/* annotate with type */ -(id)stopLoading;
-/* annotate with type */ -(id)statusVersion : (id)versionStr;
-/* annotate with type */ -(id)scheduleInRunLoop : (id)runLoop forMode : (id)mode;
-/* annotate with type */ -(id)_doFileLoad;
-/* annotate with type */ -(id)unscheduleFromRunLoop : (id)runLoop forMode : (id)mode;
+- (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client;
+- (id)startLoading;
+- (id)stopLoading;
+- (id)statusVersion:(id)versionStr;
+- (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode;
+- (id)_doFileLoad;
+- (id)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode;
 + (BOOL)canInitWithRequest:(id)request;
 @end
