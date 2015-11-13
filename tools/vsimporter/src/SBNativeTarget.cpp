@@ -45,15 +45,18 @@ SBNativeTarget* SBNativeTarget::create(const PBXTarget* target, const StringSet&
 bool SBNativeTarget::init()
 {
   // Verify that target's build type is valid
-  if (m_target->getProductType() == "com.apple.product-type.library.static") {
+  String productType = m_target->getProductType();
+  if (productType == "com.apple.product-type.library.static") {
     m_type = TargetStaticLib;
-  } else if (m_target->getProductType() == "com.apple.product-type.framework") {
+  } else if (productType == "com.apple.product-type.framework") {
     m_type = TargetStaticLib;
     SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library. This is experimental behaviour." << std::endl;
-  } else if (m_target->getProductType() == "com.apple.product-type.application") {
+  } else if (productType == "com.apple.product-type.application") {
     m_type = TargetApplication;
+  } else if (productType == "com.apple.product-type.bundle") {
+    m_type = TargetBundle;
   } else {
-    SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << m_target->getProductType() << "\"." << std::endl;
+    SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << productType << "\"." << std::endl;
     return false;
   }
 
@@ -83,7 +86,7 @@ VCProject* SBNativeTarget::constructVCProject(VSTemplateProject* projTemplate)
 
   // Write variables file for App targets
   for (auto bs : m_buildSettings) {
-    if (getProductType() == TargetApplication) {
+    if (getProductType() == TargetApplication || getProductType() == TargetBundle) {
       String configName = bs.first;
       BuildSettings* configBS = bs.second;
 

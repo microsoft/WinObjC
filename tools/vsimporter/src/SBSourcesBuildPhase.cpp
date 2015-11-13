@@ -41,6 +41,16 @@ SBSourcesBuildPhase::SBSourcesBuildPhase(const PBXSourcesBuildPhase* phase, cons
 
 void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
 {
+  // We don't support source compilation when building bundles
+  TargetProductType productType = m_parentTarget.getProductType();
+  if (productType == TargetBundle)
+  {
+    if (!m_phase->getBuildFileList().empty()) {
+      SBLog::warning() << "Ignoring all source files in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
+    }
+    return;
+  }
+
   SBBuildPhase::writeVSFileDescriptions(proj, "Text");
 
   String xcProjectDir = m_parentTarget.getProject().getProjectDir();

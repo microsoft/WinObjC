@@ -32,6 +32,7 @@
     <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_DataModelDirCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
+    <SBResourceCompileAfterTargets Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">BuildLink</SBResourceCompileAfterTargets>
     <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies</SBResourceComputeTargets>
   </PropertyGroup>
 
