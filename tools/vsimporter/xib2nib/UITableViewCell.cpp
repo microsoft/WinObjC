@@ -20,6 +20,11 @@ UITableViewCell::UITableViewCell()
 {
     _indentationLevel = 0;
     _indentationWidth = 0;
+    _selectionStyle = 0;
+    _reuseIdentifier = NULL;
+    _detailTextLabel = NULL;
+    _imageView = NULL;
+    _textLabel = NULL;
 }
 
 void UITableViewCell::InitFromXIB(XIBObject *obj)
@@ -36,6 +41,15 @@ void UITableViewCell::InitFromXIB(XIBObject *obj)
     _selectionStyle = obj->GetInt("IBUISelectionStyle", 0);
     _indentationLevel = obj->GetInt("IBUIIndentationLevel", 0);
     if ( obj->FindMember("IBUIIndentationWidth") ) _indentationWidth = obj->FindMember("IBUIIndentationWidth")->floatValue();
+}
+
+void UITableViewCell::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    obj->_outputClassName = "UITableViewCell";
+
+    _contentView = (UIView *)obj->FindMember("contentView");
 }
 
 void UITableViewCell::Awaken()

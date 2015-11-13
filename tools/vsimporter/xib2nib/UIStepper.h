@@ -16,25 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class UITableViewCell :
+class UIStepper :
     public UIView
 {
-private:
-    const char *_reuseIdentifier;
-    UIView *_contentView;
-    UIView *_imageView, *_textLabel, *_detailTextLabel;
-    bool _backgroundColorSet;
-    int _selectionStyle;
-    int _indentationLevel;
-    float _indentationWidth;
-
 public:
-    UITableViewCell();
-    virtual void Awaken();
+    UIStepper();
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-
-    ObjectConverter *Clone();
 };
 

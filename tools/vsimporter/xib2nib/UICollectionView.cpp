@@ -14,27 +14,33 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "UIView.h"
-class UITableViewCell :
-    public UIView
+#include "UICollectionView.h"
+
+UICollectionView::UICollectionView()
 {
-private:
-    const char *_reuseIdentifier;
-    UIView *_contentView;
-    UIView *_imageView, *_textLabel, *_detailTextLabel;
-    bool _backgroundColorSet;
-    int _selectionStyle;
-    int _indentationLevel;
-    float _indentationWidth;
+}
 
-public:
-    UITableViewCell();
-    virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+void UICollectionView::InitFromXIB(XIBObject *obj)
+{
+    UIView::InitFromXIB(obj);
 
-    ObjectConverter *Clone();
-};
+    obj->_outputClassName = "UICollectionView";
+}
 
+void UICollectionView::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    obj->_outputClassName = "UICollectionView";
+}
+
+void UICollectionView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
+{
+    writer->_allUIObjects->AddMember(NULL, this);
+    UIView::ConvertStaticMappings(writer, obj);
+}
+
+ObjectConverter *UICollectionView::Clone()
+{
+    return new UICollectionView();
+}

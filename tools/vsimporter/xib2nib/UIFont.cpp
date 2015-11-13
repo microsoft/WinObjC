@@ -56,12 +56,19 @@ void UIFont::InitFromStory(XIBObject *obj)
 
     const char *fontType = getAttrib("type");
 
-    if ( strcmp(fontType, "system") == 0 ) {
-        _fontName = "Helvetica";
-    } else if ( strcmp(fontType, "boldSystem") == 0 ) {
-        _fontName = "Helvetica-Bold";
-    } else {
-        assert(0);
+    if (fontType) {
+        if (strcmp(fontType, "system") == 0) {
+            _fontName = "Helvetica";
+        }
+        else if (strcmp(fontType, "boldSystem") == 0) {
+            _fontName = "Helvetica-Bold";
+        }
+        else {
+            assert(0);
+        }
+    }
+    else {
+        _fontName = getAttrib("name");
     }
 
     obj->_outputClassName = "UIFont";

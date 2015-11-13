@@ -16,20 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class UITableViewCell :
+class UITableViewCellContentView :
     public UIView
 {
 private:
-    const char *_reuseIdentifier;
-    UIView *_contentView;
-    UIView *_imageView, *_textLabel, *_detailTextLabel;
-    bool _backgroundColorSet;
-    int _selectionStyle;
-    int _indentationLevel;
-    float _indentationWidth;
 
 public:
-    UITableViewCell();
+    UITableViewCellContentView();
     virtual void Awaken();
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);

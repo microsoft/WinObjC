@@ -14,27 +14,27 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "UIView.h"
-class UITableViewCell :
-    public UIView
+#include "UIStepper.h"
+
+UIStepper::UIStepper()
 {
-private:
-    const char *_reuseIdentifier;
-    UIView *_contentView;
-    UIView *_imageView, *_textLabel, *_detailTextLabel;
-    bool _backgroundColorSet;
-    int _selectionStyle;
-    int _indentationLevel;
-    float _indentationWidth;
+}
 
-public:
-    UITableViewCell();
-    virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+void UIStepper::InitFromXIB(XIBObject *obj)
+{
+    UIView::InitFromXIB(obj);
 
-    ObjectConverter *Clone();
-};
+    _outputClassName = "UIStepper";
+}
 
+void UIStepper::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    _outputClassName = "UIStepper";
+}
+
+void UIStepper::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
+{
+    UIView::ConvertStaticMappings(writer, obj);
+}
