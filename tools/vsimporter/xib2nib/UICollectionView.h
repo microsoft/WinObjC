@@ -4,7 +4,6 @@ class UICollectionView :
     public UIView
 {
 private:
-    UIView *_contentView;
 
 public:
     UICollectionView();

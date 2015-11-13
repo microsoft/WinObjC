@@ -291,7 +291,9 @@ void XIBArray::InitFromStory(XIBObject *obj)
 
 void XIBArray::EmitObject(NIBWriter *writer)
 {
-    if (!_className) _className = "NSArray";
+    if (!_className) {
+        _className = "NSArray";
+    }
 
     if ( (_members.size() == 0 ||
         _members[0]->_name == NULL ||
