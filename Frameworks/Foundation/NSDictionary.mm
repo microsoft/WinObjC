@@ -52,7 +52,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary : NSObject
 
-+ (BOOL)automaticallyNotifiersObserversForKey:(NSString*)key {
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
     return NO;
 }
