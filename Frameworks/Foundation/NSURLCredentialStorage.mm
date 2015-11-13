@@ -14,21 +14,18 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSURLSession.h"
+#import <Foundation/NSURLCredentialStorage.h>
+#import <Starboard.h>
+#import <Windows.h>
 
-@implementation NSURLSessionTask
+@implementation NSURLCredentialStorage
 
-@end
+- (instancetype)init {
+    self = [super init];
+    return self;
+}
 
-@implementation NSURLSessionDownloadTask
-
-@end
-
-@implementation NSURLSessionDataTask
-
-@end
-
-@implementation NSURLSession
-
++ (NSURLCredentialStorage*)sharedCredentialStorage {
+    return [[[NSURLCredentialStorage alloc] init] autorelease];
+}
 @end

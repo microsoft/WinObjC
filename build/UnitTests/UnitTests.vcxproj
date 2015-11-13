@@ -227,6 +227,7 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocationManager.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120d_app.dll">

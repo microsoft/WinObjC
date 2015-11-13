@@ -63,24 +63,9 @@ FOUNDATION_EXPORT_CLASS
 
 @end
 
-FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionConfiguration : NSObject
-
-@property (nonatomic) BOOL allowsCellularAccess;
-@property (nonatomic) NSURLCache* URLCache;
-@property (nonatomic) NSURLRequestCachePolicy requestCachePolicy;
-@property (nonatomic) NSTimeInterval timeoutIntervalForResource;
-@property (nonatomic) NSTimeInterval timeoutIntervalForRequest;
-@property (nonatomic) NSUInteger HTTPMaximumConnectionsPerHost;
-
-+ (instancetype)ephemeralSessionConfiguration;
-+ (instancetype)defaultSessionConfiguration;
-+ (instancetype)backgroundSessionConfiguration:(NSString*)name;
-
-@end
-
 @class NSURLCredential;
 @class NSURLAuthenticationChallenge;
+@class NSURLSessionConfiguration;
 
 typedef NS_ENUM(NSInteger, NSURLSessionAuthChallengeDisposition) {
     NSURLSessionAuthChallengeUseCredential = 0,
