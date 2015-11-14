@@ -17,34 +17,66 @@
 #ifndef _UIPAGEVIEWCONTROLLER_H_
 #define _UIPAGEVIEWCONTROLLER_H_
 
-#import <Foundation/NSObject.h>
+#import "UIKitExport.h"
+
+#import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
 
-enum {
+typedef NS_ENUM(NSInteger, UIPageViewControllerNavigationDirection) {
     UIPageViewControllerNavigationDirectionForward,
-    UIPageViewControllerNavigationDirectionReverse,
+    UIPageViewControllerNavigationDirectionReverse
 };
-typedef int32_t UIPageViewControllerNavigationDirection;
 
-enum {
+typedef NS_ENUM(NSInteger, UIPageViewControllerTransitionStyle) {
     UIPageViewControllerTransitionStylePageCurl = 0,
-    UIPageViewControllerTransitionStyleScroll = 1,
+    UIPageViewControllerTransitionStyleScroll = 1
 };
-typedef int32_t UIPageViewControllerTransitionStyle;
 
-enum {
+typedef NS_ENUM(NSInteger, UIPageViewControllerNavigationOrientation) {
     UIPageViewControllerNavigationOrientationHorizontal = 0,
-    UIPageViewControllerNavigationOrientationVertical = 1,
+    UIPageViewControllerNavigationOrientationVertical = 1
 };
-typedef int32_t UIPageViewControllerNavigationOrientation;
+
+typedef NS_ENUM(NSInteger, UIPageViewControllerSpineLocation) {
+    UIPageViewControllerSpineLocationNone = 0,
+    UIPageViewControllerSpineLocationMin = 1,
+    UIPageViewControllerSpineLocationMid = 2,
+    UIPageViewControllerSpineLocationMax = 3
+};
+
+UIKIT_EXPORT extern NSString* const UIPageViewControllerOptionSpineLocationKey;
+UIKIT_EXPORT extern NSString* const UIPageViewControllerOptionInterPageSpacingKey;
+
+@class UIPageViewController;
 
 UIKIT_EXPORT_CLASS
 @protocol UIPageViewControllerDataSource <NSObject>
+
+- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController 
+     viewControllerBeforeViewController:(UIViewController*)viewController;
+- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController 
+      viewControllerAfterViewController:(UIViewController*)viewController;
+
+@optional
+- (NSInteger)presentationCountForPageViewController:(UIPageViewController*)pageViewController;
+- (NSInteger)presentationIndexForPageViewController:(UIPageViewController*)pageViewController;
+
 @end
 
 UIKIT_EXPORT_CLASS
 @protocol UIPageViewControllerDelegate <NSObject>
+
 @optional
+- (void)pageViewController:(UIPageViewController*)pageViewController willTransitionToViewControllers:(NSArray*)pendingViewControllers;
+- (void)pageViewController:(UIPageViewController*)pageViewController 
+        didFinishAnimating:(BOOL)finished 
+   previousViewControllers:(NSArray*)previousViewControllers 
+       transitionCompleted:(BOOL)completed;
+- (UIPageViewControllerSpineLocation)pageViewController:(UIPageViewController*)pageViewController 
+                   spineLocationForInterfaceOrientation:(UIInterfaceOrientation)orientation;
+- (UIInterfaceOrientationMask)pageViewControllerSupportedInterfaceOrientations:(UIPageViewController*)pageViewController;
+- (UIInterfaceOrientation)pageViewControllerPreferredInterfaceOrientationForPresentation:(UIPageViewController*)pageViewController;
+
 @end
 
 UIKIT_EXPORT_CLASS
@@ -54,15 +86,19 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, assign) id<UIPageViewControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray* gestureRecognizers;
 @property (nonatomic, readonly) NSArray* viewControllers;
+@property (nonatomic, readonly) UIPageViewControllerNavigationOrientation navigationOrientation;
+@property (nonatomic, readonly) UIPageViewControllerSpineLocation spineLocation;
+@property (nonatomic, readonly) UIPageViewControllerTransitionStyle transitionStyle;
+@property (nonatomic, getter=isDoubleSided) BOOL doubleSided;
 
 - (void)setViewControllers:(NSArray*)viewControllers
                  direction:(UIPageViewControllerNavigationDirection)direction
                   animated:(BOOL)animated
                 completion:(void (^)(BOOL finished))completion;
-- (id)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
-        navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation
-                      options:(NSDictionary*)options;
-
+- (instancetype)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
+                  navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation
+                                options:(NSDictionary*)options;
+                      
 @end
 
 #endif /* _UIPAGEVIEWCONTROLLER_H_ */
