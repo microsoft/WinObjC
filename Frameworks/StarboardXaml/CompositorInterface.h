@@ -150,6 +150,8 @@ public:
     float _fontSize;
     float _lineHeight;
     bool _centerVertically;
+    bool _isBold = false;
+    bool _isItalic = false;
 
     DisplayTextureXamlGlyphs();
     ~DisplayTextureXamlGlyphs();
