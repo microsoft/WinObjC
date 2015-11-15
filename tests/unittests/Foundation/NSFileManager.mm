@@ -23,6 +23,7 @@
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSNumber.h>
 #include <Foundation/NSDate.h>
+#include <Foundation/NSURL.h>
 #include "stdlib.h"
 #include "windows.h"
 
@@ -36,7 +37,8 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     wchar_t dir[_MAX_DIR];
     ASSERT_TRUE(::_wsplitpath_s(fullPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
 
-    // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\NSFileManagerUT.txt
+    // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
+    ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
     ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
     NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar *)fullPath length:_MAX_PATH];
 
@@ -67,4 +69,56 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     ASSERT_TRUE_MSG(fileStatus.st_size == [attributes fileSize], "failed to check file size for %@", testFileFullPath);
 }
 
+
+TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
+    // get test startup full path
+    wchar_t startUpPath[_MAX_PATH];
+    GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);
+
+    // construct the start up dir
+    wchar_t drive[_MAX_DRIVE];
+    wchar_t dir[_MAX_DIR];
+    ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
+    ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
+
+    // change current dir to app start up path
+    ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
+    wchar_t currentDir[_MAX_PATH];
+    DWORD ret = GetCurrentDirectoryW(_MAX_PATH, currentDir);
+    ASSERT_TRUE(ret > 0 && ret < _MAX_PATH);
+    LOG_INFO("Change current dir to:%@", [NSString stringWithCharacters:(const unichar *)currentDir length:_MAX_PATH]);
+
+    // construct target URL using current directory and relative URL
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSURL *baseURL = [NSURL URLWithString: [manager currentDirectoryPath]];
+    NSURL *targetURL = [NSURL URLWithString: @"data/" relativeToURL:baseURL];
+    
+    // enumerate target URL
+    NSArray* urlContents = [manager contentsOfDirectoryAtURL:targetURL 
+                                  includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey] 
+                                                     options:(NSDirectoryEnumerationOptions)0 
+                                                       error:nil];
+
+    // verify only one file exists
+    const NSString* c_expectedFileName = @"NSFileManagerUT.txt";
+    ASSERT_TRUE_MSG([urlContents count] == 1, "Should have one file named %@", c_expectedFileName);
+
+    // break file URL into comopnents, get last object of it - which is the file name, and verify name is the expected
+    NSURL* targetFileURL = [urlContents firstObject];
+    NSString* acutalFileName = [[targetFileURL pathComponents] lastObject];
+    ASSERT_OBJCEQ_MSG(c_expectedFileName, acutalFileName, "FileName isn't the same");
+
+    // construct file path for target file and get its attrbutes from windows side
+    wchar_t targetFileFullPath[_MAX_PATH];
+    ASSERT_TRUE(wcscpy_s(targetFileFullPath, _countof(targetFileFullPath), currentDir) == 0);
+    ASSERT_TRUE(wcscat_s(targetFileFullPath, _countof(targetFileFullPath), L"\\data\\NSFileManagerUT.txt") == 0);
+    struct _stat fileStatus = {0};
+    ASSERT_TRUE(::_wstat(targetFileFullPath, &fileStatus) == 0);
+
+    // check NSURL property of NSURLContentModificationDateKey is the same as file modification date
+    NSDate* expectedModificationDate = [NSDate dateWithTimeIntervalSince1970:fileStatus.st_mtime];
+    NSDate* actualModificationDate = [targetFileURL propertyForKey:NSURLContentModificationDateKey];
+    ASSERT_TRUE_MSG(actualModificationDate != nil, "failed to get ModificationDate from %@", targetFileURL);
+    ASSERT_OBJCEQ_MSG(expectedModificationDate, actualModificationDate, "failed to check modification date for %@", targetFileURL);
+}
 

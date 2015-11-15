@@ -26,12 +26,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSDictionary;
 @class NSError;
 
-FOUNDATION_EXPORT NSString* const NSURLFileScheme;
+// Keys that apply to file system URLs.
+FOUNDATION_EXPORT NSString* const NSURLAddedToDirectoryDateKey;
 FOUNDATION_EXPORT NSString* const NSURLAttributeModificationDateKey;
+FOUNDATION_EXPORT NSString* const NSURLFileScheme;
 FOUNDATION_EXPORT NSString* const NSURLContentAccessDateKey;
 FOUNDATION_EXPORT NSString* const NSURLContentModificationDateKey;
 FOUNDATION_EXPORT NSString* const NSURLCreationDateKey;
 FOUNDATION_EXPORT NSString* const NSURLCustomIconKey;
+FOUNDATION_EXPORT NSString* const NSURLDocumentIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLEffectiveIconKey;
 FOUNDATION_EXPORT NSString* const NSURLFileResourceIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeKey;
@@ -63,8 +66,23 @@ FOUNDATION_EXPORT NSString* const NSURLPreferredIOBlockSizeKey;
 FOUNDATION_EXPORT NSString* const NSURLTypeIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLVolumeIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLVolumeURLKey;
-FOUNDATION_EXPORT NSString* const NSURLTotalFileAllocatedSizeKey;
+
+// Possible values for the NSURLFileResourceTypeKey key.
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeNamedPipe;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeCharacterSpecial;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeDirectory;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeBlockSpecial;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeRegular;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeSymbolicLink;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeSocket;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeUnknown;
+
+// Keys that apply to properties of files.
 FOUNDATION_EXPORT NSString* const NSURLFileSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLFileAllocatedSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLIsAliasFileKey;
+FOUNDATION_EXPORT NSString* const NSURLTotalFileAllocatedSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLTotalFileSizeKey;
 
 struct EbrURL;
 
@@ -72,7 +90,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSURL : NSObject <NSCopying, NSCoding>
 
 - initWithScheme:(NSString*)scheme host:(NSString*)host path:(NSString*)path;
-- initFileURLWithPath:(NSString*)path;
+- (instancetype)initFileURLWithPath:(NSString*)path;
 - initWithString:(NSString*)string;
 - initWithString:(NSString*)string relativeToURL:(NSURL*)parent;
 
@@ -83,14 +101,14 @@ FOUNDATION_EXPORT_CLASS
 
 - (NSString*)absoluteString;
 - (NSString*)parameterString;
-- propertyForKey:(NSString*)key;
+-(id)propertyForKey:(NSString *)propertyKey;
 
 - (NSString*)scheme;
 - (NSString*)host;
 - (NSString*)user;
 - (NSString*)password;
 - (NSString*)fragment;
-- (NSString*)path;
+@property(readonly, copy) NSString* path;
 - (NSNumber*)port;
 - (NSString*)query;
 - (NSString*)relativePath;
@@ -103,7 +121,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSURL*)absoluteURL;
 - (NSURL*)baseURL;
 
-- (BOOL)setProperty:property forKey:(NSString*)key;
+- (BOOL)setProperty:(id)propertyValue forKey:(NSString *)propertyKey;
 
 - (BOOL)setResourceData:(NSData*)data;
 

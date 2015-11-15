@@ -119,7 +119,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -157,7 +157,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,7 +168,7 @@
       </OtherCFlags>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -180,7 +180,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

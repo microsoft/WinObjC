@@ -25,12 +25,15 @@
 
 #define NSURLMAXLEN SIZE_MAX
 
-NSString* const NSURLFileScheme = @"NSURLFileScheme";
+// Keys that apply to file system URLs.
+NSString* const NSURLAddedToDirectoryDateKey = @"NSURLAddedToDirectoryDateKey";
 NSString* const NSURLAttributeModificationDateKey = @"NSURLAttributeModificationDateKey";
+NSString* const NSURLFileScheme = @"NSURLFileScheme";
 NSString* const NSURLContentAccessDateKey = @"NSURLContentAccessDateKey";
 NSString* const NSURLContentModificationDateKey = @"NSURLContentModificationDateKey";
 NSString* const NSURLCreationDateKey = @"NSURLCreationDateKey";
 NSString* const NSURLCustomIconKey = @"NSURLCustomIconKey";
+NSString* const NSURLDocumentIdentifierKey = @"NSURLDocumentIdentifierKey";
 NSString* const NSURLEffectiveIconKey = @"NSURLEffectiveIconKey";
 NSString* const NSURLFileResourceIdentifierKey = @"NSURLFileResourceIdentifierKey";
 NSString* const NSURLFileResourceTypeKey = @"NSURLFileResourceIdentifierKey";
@@ -62,8 +65,23 @@ NSString* const NSURLPreferredIOBlockSizeKey = @"NSURLPreferredIOBlockSizeKey";
 NSString* const NSURLTypeIdentifierKey = @"NSURLTypeIdentifierKey";
 NSString* const NSURLVolumeIdentifierKey = @"NSURLVolumeIdentifierKey";
 NSString* const NSURLVolumeURLKey = @"NSURLVolumeURLKey";
-NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
+
+// Possible values for the NSURLFileResourceTypeKey key.
+NSString* const NSURLFileResourceTypeNamedPipe = @"NSURLFileResourceTypeNamedPipe";
+NSString* const NSURLFileResourceTypeCharacterSpecial = @"NSURLFileResourceTypeCharacterSpecial";
+NSString* const NSURLFileResourceTypeDirectory = @"NSURLFileResourceTypeDirectory";
+NSString* const NSURLFileResourceTypeBlockSpecial = @"NSURLFileResourceTypeBlockSpecial";
+NSString* const NSURLFileResourceTypeRegular = @"NSURLFileResourceTypeRegular";
+NSString* const NSURLFileResourceTypeSymbolicLink = @"NSURLFileResourceTypeSymbolicLink";
+NSString* const NSURLFileResourceTypeSocket = @"NSURLFileResourceTypeSocket";
+NSString* const NSURLFileResourceTypeUnknown = @"NSURLFileResourceTypeUnknown";
+
+// Keys that apply to properties of files.
 NSString* const NSURLFileSizeKey = @"NSURLFileSizeKey";
+NSString* const NSURLFileAllocatedSizeKey = @"NSURLFileAllocatedSizeKey";
+NSString* const NSURLIsAliasFileKey = @"NSURLIsAliasFileKey";
+NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
+NSString* const NSURLTotalFileSizeKey = @"NSURLTotalFileSizeKey";
 
 static void StripSlashes(char* pPath) {
     size_t length = strnlen_s(pPath, NSURLMAXLEN);
@@ -497,10 +515,12 @@ struct EbrURL {
     }
 };
 
-@implementation NSURL : NSObject {
-    struct EbrURL *_uri, *_fullUri;
+@implementation NSURL{
+    struct EbrURL* _uri;
+    struct EbrURL* _fullUri;
     id _baseURL;
-    idretain _absoluteString;
+    idretaint<NSString> _absoluteString;
+    idretaint<NSMutableDictionary> _properties;
 }
 
 static void buildURIs(NSURL* self, const char* pStr, id baseURL) {
@@ -625,6 +645,8 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
     buildFullURI(self, baseURL);
 
+    // initialize source dictionary for this URL
+    _properties = [NSMutableDictionary dictionary];
     return self;
 }
 
@@ -775,7 +797,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-+ (NSURL*)fileURLWithPath:(id)path {
++ (NSURL*)fileURLWithPath:(NSString *)path {
     return [[[self alloc] initFileURLWithPath:path] autorelease];
 }
 
@@ -811,6 +833,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     _absoluteString = nil;
+    _properties = nil;
 
     [super dealloc];
 }
@@ -999,7 +1022,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-- (id)path {
+- (NSString*)path {
     if (!_fullUri) {
         return nil;
     }
@@ -1016,7 +1039,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-- (id)pathComponents {
+- (NSArray*)pathComponents {
     return [[self path] pathComponents];
 }
 
@@ -1124,9 +1147,25 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     if (error) {
         *error = nil;
     }
-    EbrDebugLog("NSURL::setResourceValue not supported\n");
+
     return TRUE;
 }
 
-//
+/**
+ @Status Caveat
+ @Notes there is no property key validitiy check yet
+*/
+- (BOOL)setProperty:(id)propertyValue forKey : (NSString *)propertyKey {
+    // TODO: do a check if propertyKey is a valid key
+    [_properties setObject:propertyValue forKey:propertyKey];
+
+    return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+-(id)propertyForKey:(NSString *)propertyKey {
+    return [_properties objectForKey:propertyKey ];
+}
 @end
