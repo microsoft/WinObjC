@@ -301,6 +301,7 @@
       <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ObjectiveCARC>
     </ClangCompile>
     <ClangCompile Include="..\..\tests\unittests\StarboardAutoIdTests_NoARC.mm" />
+    <ClangCompile Include="..\..\tests\unittests\UIApplication.m" />
     <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCachedURLResponse.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLCredential.mm" />

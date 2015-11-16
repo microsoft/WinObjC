@@ -52,9 +52,6 @@ void EbrPlatformHideKeyboard(void) {
 void EbrSetApplicationBadgeNumber(int) {
 }
 
-void EbrOpenURL(const char* url) {
-}
-
 void EbrPauseSound(void) {
 }
 

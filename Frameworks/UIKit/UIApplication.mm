@@ -37,6 +37,7 @@
 #include "UIApplicationInternal.h"
 typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
+#include "UrlLauncher.h"
 
 #include "UIEmptyController.h"
 
@@ -47,12 +48,6 @@ typedef wchar_t WCHAR;
 #include <math.h>
 
 #include "UWP/WindowsUINotifications.h"
-
-#include <COMIncludes.h>
-#import <WRL/client.h>
-#include <COMIncludes_End.h>
-
-using namespace Microsoft::WRL;
 
 NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
 NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
@@ -149,6 +144,9 @@ extern EbrEvent _applicationStateChanged;
 bool _drawingAllowed = true;
 
 NSMutableDictionary* curGesturesDict;
+
+// Used to query for Url scheme handlers or launch an app with a Url
+UrlLauncher* _launcher;
 
 typedef struct {
     float x, y;
@@ -1218,41 +1216,17 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)openURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    NSString* scheme = [url scheme];
-    if ([scheme isEqualToString:@"fbauth"]) {
-        return FALSE;
-    }
-    if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"] || [scheme isEqualToString:@"mailto"]) {
-        EbrOpenURL((char*)[[url absoluteString] UTF8String]);
-        return TRUE;
-    } else {
-        id delegate = [self delegate];
-
-        if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
-            EbrDebugLog("Sending URL %x to %x\n", url, delegate);
-            return [delegate application:self handleOpenURL:url];
-        }
-    }
-
-    return FALSE;
+    return [_launcher _openURL:url];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)canOpenURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    EbrDebugLog("UIApplication: Can open URL %s?\n", [[url absoluteString] UTF8String]);
-    NSString* scheme = [url scheme];
-    if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return [_launcher _canOpenURL:url];
 }
 
 /**
@@ -1402,7 +1376,14 @@ static void printViews(id curView, int level) {
     }
 
     _curNotifications = [NSMutableArray new];
+    _launcher = [[UrlLauncher alloc] initWithLauncher:[WSLauncher class]];
 
+    return self;
+}
+
+// Allow us to init parts of UIApplication for unit tests, without the need for an actual UI
+- (instancetype)_initForTestingWithLauncher:(Class)launcher {
+    _launcher = [[UrlLauncher alloc] initWithLauncher:launcher];
     return self;
 }
 
