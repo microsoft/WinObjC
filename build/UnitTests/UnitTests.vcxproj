@@ -217,6 +217,7 @@
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
+    <ClangCompile Include="..\..\tests\unittests\NSDateFormatter.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURL.m" />
