@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -23,7 +23,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFArray.mm" />
-	<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFBundle.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFAttributedString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFAttributedStringInternal.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFBundle.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFConstants.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFData.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionary.mm" />
@@ -42,7 +44,7 @@
     <None Include="$(MSBuildThisFileDirectory)\CoreFoundation.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionary.h" />  
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionary.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
