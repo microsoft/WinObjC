@@ -21,20 +21,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFontDescriptor.h>
 
-FOUNDATION_EXPORT NSString* const UIFontTextStyleTitle1;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleTitle2;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleTitle3;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleHeadline;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleSubheadline;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleBody;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleFootnote;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleCaption1;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleCaption2;
-FOUNDATION_EXPORT NSString* const UIFontTextStyleCallout;
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle1;
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle2;
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle3;
+UIKIT_EXPORT NSString* const UIFontTextStyleHeadline;
+UIKIT_EXPORT NSString* const UIFontTextStyleSubheadline;
+UIKIT_EXPORT NSString* const UIFontTextStyleBody;
+UIKIT_EXPORT NSString* const UIFontTextStyleFootnote;
+UIKIT_EXPORT NSString* const UIFontTextStyleCaption1;
+UIKIT_EXPORT NSString* const UIFontTextStyleCaption2;
+UIKIT_EXPORT NSString* const UIFontTextStyleCallout;
 
-FOUNDATION_EXPORT NSString* const UIFontSymbolicTrait;
-FOUNDATION_EXPORT NSString* const UIFontDescriptorTraitsAttribute;
-FOUNDATION_EXPORT NSString* const UIFontDescriptorFamilyAttribute;
+UIKIT_EXPORT NSString* const UIFontSymbolicTrait;
+UIKIT_EXPORT NSString* const UIFontDescriptorTraitsAttribute;
+UIKIT_EXPORT NSString* const UIFontDescriptorFamilyAttribute;
 
 typedef NS_ENUM (uint32_t, UIFontDescriptorSymbolicTraits) {
     /* Typeface info (lower 16 bits of UIFontDescriptorSymbolicTraits ) */
