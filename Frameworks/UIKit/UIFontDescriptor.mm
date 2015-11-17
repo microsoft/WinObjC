@@ -28,6 +28,11 @@ NSString* const UIFontTextStyleCaption1 = @"UICTFontTextStyleCaption1";
 NSString* const UIFontTextStyleCaption2 = @"UICTFontTextStyleCaption2";
 NSString* const UIFontTextStyleCallout = @"UICTFontTextStyleCallout";
 
+NSString* const UIFontDescriptorFamilyAttribute = @"UIFontDescriptorFamilyAttribute";
+NSString* const UIFontDescriptorTraitsAttribute = @"UIFontDescriptorTraitsAttribute";
+
+NSString* const UIFontSymbolicTrait = @"UIFontSymbolicTrait";
+
 NSString* const SystemFontName = @"SegoeUI";
 
 /**
