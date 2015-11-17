@@ -3,6 +3,7 @@
     <Project OutputDirectory="$projectname$-WinStore10" File="App.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32" ReplaceParameters="true" Deployable="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">App.vcxproj.filters</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package-native.appxmanifest</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="default.rd.xml">default.rd.xml</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\LockScreenLogo.scale-200.png">LockScreenLogo.scale-200.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\SplashScreen.scale-200.png">SplashScreen.scale-200.png</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\Square44x44Logo.scale-200.png">Square44x44Logo.scale-200.png</ProjectItem>
