@@ -71,19 +71,19 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    NSURLSessionConfiguration* copy = [[self class] allocWithZone:zone];
+    NSURLSessionConfiguration* copy = [[[self class] allocWithZone:zone] init];
     copy.identifier = _identifier;
     copy.networkServiceType = _networkServiceType;
     copy.allowsCellularAccess = _allowsCellularAccess;
     copy.timeoutIntervalForRequest = _timeoutIntervalForRequest;
     copy.timeoutIntervalForResource = _timeoutIntervalForResource;
     copy.HTTPCookieAcceptPolicy = _HTTPCookieAcceptPolicy;
-    copy.HTTPCookieStorage = [[_HTTPCookieStorage copy] autorelease];
+    copy.HTTPCookieStorage = _HTTPCookieStorage;
     copy.HTTPShouldSetCookies = _HTTPShouldSetCookies;
     copy.TLSMaximumSupportedProtocol = _TLSMaximumSupportedProtocol;
     copy.TLSMinimumSupportedProtocol = _TLSMinimumSupportedProtocol;
-    copy.URLCredentialStorage = [[_URLCredentialStorage copy] autorelease];
-    copy.URLCache = [[_URLCache copy] autorelease];
+    copy.URLCredentialStorage = _URLCredentialStorage;
+    copy.URLCache = _URLCache;
     copy.requestCachePolicy = _requestCachePolicy;
     copy.HTTPMaximumConnectionsPerHost = _HTTPMaximumConnectionsPerHost;
     copy.HTTPAdditionalHeaders = _HTTPAdditionalHeaders;
