@@ -111,6 +111,9 @@
     <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>

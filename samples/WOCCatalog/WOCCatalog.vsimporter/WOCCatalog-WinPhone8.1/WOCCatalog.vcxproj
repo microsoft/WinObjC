@@ -125,6 +125,7 @@
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
