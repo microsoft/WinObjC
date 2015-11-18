@@ -103,6 +103,8 @@ typedef struct objc_ivar* Ivar;
 
 __BEGIN_DECLS
 
+IMP objc_msg_lookup(id obj, SEL sel);
+
 struct objc_method_description* protocol_copyMethodDescriptionList(Protocol*, BOOL, BOOL, unsigned int*);
 
 BOOL protocol_conformsToProtocol(Protocol*, Protocol*);

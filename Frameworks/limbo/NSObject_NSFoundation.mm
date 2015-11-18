@@ -21,6 +21,7 @@
 #include <Starboard/String.h>
 #import "NSObjectInternal.h"
 #include "../Foundation/NSValueTransformers.h"
+#include "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #include "../objcrt/runtime.h"
 
 #include "CoreGraphics/CGAffineTransform.h"
@@ -143,35 +144,53 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return true;
 }
 
+static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
+    auto countSelectorString(woc::string::format("countOf%c%s", toupper(key[0]), &key[1]));
+    auto objectInAtSelectorString(woc::string::format("objectIn%c%sAtIndex:", toupper(key[0]), &key[1]));
+    auto objectsAtSelectorString(woc::string::format("%sAtIndexes:", key));
+
+    auto countSelector(sel_registerName(countSelectorString.c_str()));
+    auto objectInAtSelector(sel_registerName(objectInAtSelectorString.c_str()));
+    auto objectsAtSelector(sel_registerName(objectsAtSelectorString.c_str()));
+
+    // If it doesn't respond to countOfX, or it doesn't respond to either
+    // objectIn or objectsAt, bail.
+    if (![self respondsToSelector:countSelector] ||
+        !([self respondsToSelector:objectInAtSelector] ||
+          [self respondsToSelector:objectsAtSelector])) {
+        return false;
+    }
+
+    *ret = [_NSKeyProxyArray proxyArrayForObject:self key:[NSString stringWithUTF8String:key]];
+    return true;
+}
+
+- (id)_valueForKeyPath:(NSString*)path finalGetter:(SEL)finalGetterSelector {
+    std::string keyPath([path UTF8String]);
+
+    auto pointPosition = keyPath.find('.');
+    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
+        return [self performSelector:finalGetterSelector withObject:path];
+    }
+
+    std::string keyComponent(keyPath, 0, pointPosition);
+    keyPath.erase(0, pointPosition + 1);
+
+    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
+    return [subValue _valueForKeyPath:[NSString stringWithUTF8String:keyPath.c_str()] finalGetter:finalGetterSelector];
+}
+
 /**
  @Status Caveat
  @Notes Does not support aggregate functions.
 */
 - (id)valueForKeyPath:(NSString*)path {
-    const char* keyPath = [path UTF8String];
-
-    if (strstr(keyPath, ".") == NULL && strstr(keyPath, "@") == NULL) {
-        return [self valueForKey:path];
-    }
-
-    char* dup = _strdup(keyPath);
-    char* save;
-    char* curPath = strtok_s(dup, ".", &save);
-    id ret = self;
-
-    while (curPath) {
-        ret = [ret valueForKey:[NSString stringWithUTF8String:curPath]];
-        curPath = strtok_s(NULL, ".", &save);
-    }
-
-    free(dup);
-
-    return ret;
+    return [self _valueForKeyPath:path finalGetter:@selector(valueForKey:)];
 }
 
 /**
  @Status Caveat
- @Notes Does not support set/array adapters
+ @Notes Does not support set adapters
 */
 - (id)valueForKey:(NSString*)key {
     if ([key length] == 0) {
@@ -185,13 +204,37 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
         return ret;
     }
 
-    // TODO: Add NSMutableArray and NSMutableSet adapters and their support machinery.
+    if (tryGetArrayAdapter(self, rawKey, &ret)) {
+        return ret;
+    }
+    // TODO: Add NSMutableSet adapter and its support machinery.
 
     if ([[self class] accessInstanceVariablesDirectly] && tryGetViaIvar(self, rawKey, &ret)) {
         return ret;
     }
 
     return [self valueForUndefinedKey:key];
+}
+
+static id _mutableArrayFromValue(id self, NSString* key, id value) {
+    if ([value isKindOfClass:[_NSKeyProxyArray class]]) {
+        return [value _mutableProxy];
+    }
+    return [_NSMutableKeyProxyArray proxyArrayForObject:self key:key];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSMutableArray*)mutableArrayValueForKey:(NSString*)key {
+    return _mutableArrayFromValue(self, key, [self valueForKey:key]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSMutableArray*)mutableArrayValueForKeyPath:(NSString*)keyPath {
+    return [self _valueForKeyPath:keyPath finalGetter:@selector(mutableArrayValueForKey:)];
 }
 
 /**

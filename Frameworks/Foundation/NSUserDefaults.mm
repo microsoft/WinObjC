@@ -508,24 +508,6 @@ static id deepCopyValue(id obj) {
     return [self objectForKey:key];
 }
 
-- (NSMutableArray*)mutableArrayValueForKey:(NSString*)key {
-    id obj = [self objectForKey:key];
-    if (!obj)
-        return nil;
-
-    if (![obj isKindOfClass:[NSArray class]]) {
-        assert(0);
-        return nil;
-    }
-
-    if (![obj isKindOfClass:[NSMutableArray class]]) {
-        obj = [obj mutableCopy];
-        [self setObject:obj forKey:key];
-    }
-
-    return obj;
-}
-
 - (void)setValue:(id)value forKey:(NSString*)key {
     [self setObject:value forKey:key];
 }

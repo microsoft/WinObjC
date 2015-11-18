@@ -191,6 +191,8 @@ struct objc_protocol_list {
 #define YES (BOOL)1
 #define NO (BOOL)0
 
+extern OBJCRT_EXPORT IMP objc_msg_lookup(id obj, SEL sel);
+
 extern OBJCRT_EXPORT SEL sel_registerName(const char*);
 extern OBJCRT_EXPORT const char* sel_getName(SEL);
 extern OBJCRT_EXPORT BOOL sel_isEqual(SEL, SEL);
