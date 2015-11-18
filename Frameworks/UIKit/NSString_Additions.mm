@@ -17,6 +17,8 @@
 #include "Starboard.h"
 #include <UIKit/UIKit.h>
 #include "CGFontInternal.h"
+#include "CoreGraphics/CGContext.h"
+#include "Foundation/NSMutableDictionary.h"
 #include <assert.h>
 
 void NSStringForceinclude() {
@@ -416,6 +418,37 @@ static void drawString(UIFont* font,
     return fontExtent;
 }
 
+/**
+ @Status Caveat
+ @Notes Currently UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset will be ignored.
+*/
+- (void)drawAtPoint:(CGPoint)pt withAttributes:(NSDictionary*)attrs {
+    if (attrs == nil) {
+        return;
+    }
+
+    // TODO enable UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset
+    UIColor* uiShadowColor = [attrs valueForKey:UITextAttributeTextShadowColor];
+    NSValue* textShadowOffset = [attrs valueForKey:UITextAttributeTextShadowOffset];
+    if (uiShadowColor != nil && textShadowOffset != nil) {
+        CGSize offset = [textShadowOffset sizeValue];
+        CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), offset, 0, [uiShadowColor CGColor]);
+    } else if (textShadowOffset != nil) {
+        CGSize offset = [textShadowOffset sizeValue];
+        CGContextSetShadow(UIGraphicsGetCurrentContext(), offset, 0);
+    }
+
+    UIColor* uiTextColor = [attrs valueForKey:UITextAttributeTextColor];
+    if (uiTextColor != nil) {
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [uiTextColor CGColor]);
+    }
+
+    UIFont* uiFont = [attrs valueForKey:UITextAttributeFont];
+    if (uiFont != nil) {
+        [self drawAtPoint:pt withFont:uiFont];
+    }
+}
+
 - (CGSize)drawAtPoint:(CGPoint)pt forWidth:(float)forWidth withFont:(UIFont*)font {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -597,5 +630,39 @@ static void drawString(UIFont* font,
     drawString(font, NULL, str, [self length], rct, UILineBreakModeClip, UITextAlignmentLeft, &ret);
 
     return ret;
+}
+
+/**
+ @Status Caveat
+ @Notes Currently UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset will be ignored.
+*/
+- (CGSize)sizeWithAttributes:(NSDictionary*)attrs {
+    CGSize ret;
+    if (attrs == nil) {
+        return ret;
+    }
+
+    UIColor* uiShadowColor = [attrs valueForKey:UITextAttributeTextShadowColor];
+    NSValue* textShadowOffset = [attrs valueForKey:UITextAttributeTextShadowOffset];
+
+    // TODO enable UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset
+    if (uiShadowColor != nil && textShadowOffset != nil) {
+        CGSize offset = textShadowOffset.sizeValue;
+        CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), offset, 0, [uiShadowColor CGColor]);
+    } else if (textShadowOffset != nil) {
+        CGSize offset = textShadowOffset.sizeValue;
+        CGContextSetShadow(UIGraphicsGetCurrentContext(), offset, 0);
+    }
+
+    UIColor* uiTextColor = [attrs valueForKey:UITextAttributeTextColor];
+    if (uiTextColor != nil) {
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [uiTextColor CGColor]);
+    }
+
+    UIFont* uiFont = [attrs valueForKey:UITextAttributeFont];
+    if (uiFont != nil) {
+        ret = [self sizeWithFont:uiFont];
+        return ret;
+    }
 }
 @end
