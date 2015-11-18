@@ -55,8 +55,6 @@ struct winrt_isa {
     //  The ObjC isa points to IW_IInspectable - the realCls member lives immediately BEHIND IW_Inspectable
     void* inspectable[6];
 };
-
-typedef struct winrt_isa* WinRT_isa;
 #endif
 
 struct objc_class {
@@ -81,7 +79,11 @@ struct objc_class {
     void* ivar_offsets;
     struct objc_property_list* properties;
 };
+#else // if defined(OBJCRT)
+struct winrt_isa;
 #endif
+
+typedef struct winrt_isa* WinRT_isa;
 
 typedef enum {
     OBJC_ASSOCIATION_ASSIGN = 0x0000,

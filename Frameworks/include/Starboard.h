@@ -26,8 +26,6 @@
 #define IWPLATFORM_EXPORT
 #endif
 
-#include "ErrorHandling.h"
-
 //
 // Helper macros for NSLog
 //
@@ -45,9 +43,6 @@ extern "C" void dbg_printf(const char* fmt, ...);
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
-
-// Placeholder for unimplemented logging and telemetry
-#define UNIMPLEMENTED() dbg_printf("*******Stub %s not implemented at %s:%d*******\r\n", __FUNCTION__, __FILE__, __LINE__);
 
 #include <assert.h>
 #include <stdio.h>
@@ -93,17 +88,7 @@ public:
         _clsName = name;
     }
 
-    operator id() {
-        if (_clsRef == nil) {
-            _clsRef = objc_getClass(_clsName);
-            if (_clsRef == nil) {
-                EbrDebugLog("Couldn't lazy lookup objc class %s\n", _clsName);
-                assert(_clsRef);
-            }
-        }
-
-        return _clsRef;
-    }
+    operator id();
 };
 
 template <typename T>
@@ -141,6 +126,21 @@ public:
 #else
 typedef void* id;
 #endif
+
+#include "ErrorHandling.h"
+
+// This has to be after the error handling header since that brings in FAIL_FAST_IF_MSG. The error-handling code uses IWLazyClassLookup
+// so this can't be before ErrorHandling's include.
+#ifdef __OBJC__
+inline IWLazyClassLookup::operator id() {
+    if (_clsRef == nil) {
+        _clsRef = objc_getClass(_clsName);
+        FAIL_FAST_IF_MSG(E_NOTIMPL, !_clsRef, "Couldn't lazy lookup objc class %hs\n", _clsName);
+    }
+
+    return _clsRef;
+}
+#endif // __OBJC__
 
 #include "CACompositor.h"
 

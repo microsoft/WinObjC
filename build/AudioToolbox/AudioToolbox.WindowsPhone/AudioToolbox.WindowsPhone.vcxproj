@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.WindowsPhone\CoreFoundation.WindowsPhone.vcxproj">
+      <Project>{5ddce358-cc33-40ce-87d2-fef7eb1221cd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.WindowsPhone\objcrt.WindowsPhone.vcxproj">
       <Project>{2ab1b594-97f6-4793-a887-6cb72edc1c42}</Project>
     </ProjectReference>

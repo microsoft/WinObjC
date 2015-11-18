@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -27,6 +27,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Windows\CoreFoundation.Windows.vcxproj">
+      <Project>{ed0f4033-106a-432d-818f-b2ae6a251be9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Windows\objcrt.Windows.vcxproj">
       <Project>{1ccd9c7d-4f10-4ece-a783-3d03d1a375c2}</Project>
     </ProjectReference>
