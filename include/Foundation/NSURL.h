@@ -99,29 +99,32 @@ FOUNDATION_EXPORT_CLASS
 + URLWithString:(NSString*)string relativeToURL:(NSURL*)parent;
 + (id)fileURLWithPath:(NSString*)path isDirectory:(BOOL)isDir;
 
-- (NSString*)absoluteString;
-- (NSString*)parameterString;
--(id)propertyForKey:(NSString *)propertyKey;
+@property (readonly, copy) NSString* absoluteString;
+@property (readonly, copy) NSString* parameterString;
 
-- (NSString*)scheme;
-- (NSString*)host;
-- (NSString*)user;
-- (NSString*)password;
-- (NSString*)fragment;
-@property(readonly, copy) NSString* path;
-- (NSNumber*)port;
-- (NSString*)query;
-- (NSString*)relativePath;
-- (NSString*)relativeString;
-- (NSString*)resourceSpecifier;
+- (id)propertyForKey:(NSString*)propertyKey;
 
-- (BOOL)isFileURL;
+@property (readonly, copy) NSString* scheme;
+@property (readonly, copy) NSString* host;
+@property (readonly, copy) NSString* user;
+@property (readonly, copy) NSString* password;
+@property (readonly, copy) NSString* fragment;
+@property (readonly, copy) NSString* path;
 
-- (NSURL*)standardizedURL;
-- (NSURL*)absoluteURL;
-- (NSURL*)baseURL;
+@property (readonly, copy) NSNumber* port;
+@property (readonly, copy) NSString* query;
+@property (readonly, copy) NSString* relativePath;
+@property (readonly, copy) NSString* relativeString;
+@property (readonly, copy) NSString* resourceSpecifier;
 
-- (BOOL)setProperty:(id)propertyValue forKey:(NSString *)propertyKey;
+- (BOOL)isFileReferenceURL;
+
+@property (readonly, getter=isFileURL) BOOL fileURL;
+@property (readonly, copy) NSURL* standardizedURL;
+@property (readonly, copy) NSURL* absoluteURL;
+@property (readonly, copy) NSURL* baseURL;
+
+- (BOOL)setProperty:(id)propertyValue forKey:(NSString*)propertyKey;
 
 - (BOOL)setResourceData:(NSData*)data;
 

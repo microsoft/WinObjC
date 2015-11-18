@@ -85,7 +85,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 @implementation NSDirectoryEnumerator {
     idretaint<NSMutableDictionary> _rootFiles;
     idretaint<NSString> _currentFile;
-    std::vector<idretaint<NSDirectoryEnumerator> > _currrentEnumerator;
+    std::vector<idretaint<NSDirectoryEnumerator>> _currrentEnumerator;
     int _currentDepth;
     BOOL _skipDescendents;
     idretaint<NSString> _searchPath;
@@ -96,28 +96,28 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /*
-* This function search files/directories in a directory path. It starts with rootpath and subpath.  
-* (e.g., rootpath is "." and subPath is "saved"). the search will start at "./saved" seach path.  which is "saved" sub-directory of 
-* current working directory. together, rootpath + subpath is called searchPath. 
+* This function search files/directories in a directory path. It starts with rootpath and subpath.
+* (e.g., rootpath is "." and subPath is "saved"). the search will start at "./saved" seach path.  which is "saved" sub-directory of
+* current working directory. together, rootpath + subpath is called searchPath.
 *
 * Search behaviour:  if shallow is YES, the search only happens at the top level of the search path. if shallow is NO,  the search
-* will happen recusively on search path and any of its subdirectories as well. 
+* will happen recusively on search path and any of its subdirectories as well.
 
 * Search Result: If returnNSURL is YES, the result objArray will contains NSURL object, if returnNSURL is NO, however,
-* the result objectArray contains NSString object. either of which represent a file or direcotry found during the search 
-* If specifying returnNSURL as YES, NSDirectoryEnumerationOptions is used to exclude specified results. e.g., NSDirectoryEnumerationSkipsHiddenFiles
-* will exclude hidden files from the result. Also, If specifying returnNSURL as YES, A NSArray of keys (property bag) can be passed in, so that
-* specified properties for the file or drectiroy can be prefeched and included in returned NSURL object. 
+* the result objectArray contains NSString object. either of which represent a file or direcotry found during the search
+* If specifying returnNSURL as YES, NSDirectoryEnumerationOptions is used to exclude specified results. e.g.,
+NSDirectoryEnumerationSkipsHiddenFiles
+* will exclude hidden files from the result. Also, If specifying returnNSURL as YES, A NSArray of keys (property bag) can be passed in, so
+that
+* specified properties for the file or drectiroy can be prefeched and included in returned NSURL object.
 */
-static void searchRecursive(
-    const char* rootpath,
-    const char* subpath,
-    BOOL shallow,
-    id objArray, 
-    NSArray* keys,
-    NSDirectoryEnumerationOptions mask,
-    BOOL returnNSURL) {
-
+static void searchRecursive(const char* rootpath,
+                            const char* subpath,
+                            BOOL shallow,
+                            id objArray,
+                            NSArray* keys,
+                            NSDirectoryEnumerationOptions mask,
+                            BOOL returnNSURL) {
     std::string _searchPath = rootpath;
     if (_searchPath[_searchPath.length() - 1] != '/') {
         _searchPath.append("/");
@@ -150,22 +150,22 @@ static void searchRecursive(
                 if (keys != nil) { // caller wants to fetch some properties for this URL
                     NSDictionary* fileAttributes = fileAttributesForFilePath(fileFullPath.c_str());
                     if (fileAttributes != nil) {
-                        NSURL* newURL = [NSURL fileURLWithPath: [NSString stringWithCString:fileFullPath.c_str()]];
+                        NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithCString:fileFullPath.c_str()]];
                         for (NSString* key in keys) {
                             if ([key isEqualToString:NSURLContentModificationDateKey]) {
-                                BOOL ret = [newURL setProperty:[fileAttributes objectForKey:NSFileModificationDate] 
+                                BOOL ret = [newURL setProperty:[fileAttributes objectForKey:NSFileModificationDate]
                                                         forKey:NSURLContentModificationDateKey];
 
                                 assert(ret);
                             } else {
-                                //TODO: add aditional properties, not needed in 1511.
+                                // TODO: add aditional properties, not needed in 1511.
                             }
                         }
 
                         [objArray addObject:newURL];
                     }
                 }
-                
+
             } else {
                 NSString* newStr = [NSString stringWithCString:filename.c_str()];
                 [objArray addObject:newStr];
@@ -184,10 +184,10 @@ static void searchRecursive(
 }
 
 - (instancetype)initWithPath:(const char*)path
-                       shallow:(BOOL)shallow 
-    includingPropertiesForKeys:(NSArray*)keys 
-                       options:(NSDirectoryEnumerationOptions)mask 
-                   returnNSURL:(BOOL)returnNSURL {
+                     shallow:(BOOL)shallow
+  includingPropertiesForKeys:(NSArray*)keys
+                     options:(NSDirectoryEnumerationOptions)mask
+                 returnNSURL:(BOOL)returnNSURL {
     _rootFiles.attach([NSMutableArray new]);
     _searchPath = [NSString stringWithCString:path];
     searchRecursive(path, "", shallow, _rootFiles, keys, mask, returnNSURL);
@@ -212,7 +212,7 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     }
 }
 
-- (NSMutableArray *)allObjects {
+- (NSMutableArray*)allObjects {
     id ret = [NSMutableArray array];
     id curEnum = [_rootFiles objectEnumerator];
 
@@ -251,10 +251,6 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
 - (void)dealloc {
     _rootFiles = nil;
     _currentFile = nil;
-    for (int i = 0; i <= _currentDepth; i++) {
-        _currrentEnumerator[i] = nil;
-        _currrentEnumerator.pop_back();
-    }
     _searchPath = nil;
 
     [super dealloc];
@@ -303,8 +299,7 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     return ret;
 }
 
-static NSDictionary* fileAttributesForFilePath(const char *path) {
-
+static NSDictionary* fileAttributesForFilePath(const char* path) {
     struct stat st;
 
     // check if file exist or not
@@ -343,7 +338,6 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
 }
 
 @end
-
 
 /// NSFileManager implementation
 @implementation NSFileManager {
@@ -435,7 +429,7 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
 
 /**
  @Status Caveat
- @Notes Fetching directory contents, return an array of NSURL objects. Currently ignoring passed in mask 
+ @Notes Fetching directory contents, return an array of NSURL objects. Currently ignoring passed in mask
    and only support prefecch NSURLContentModificationDateKey
 */
 - (NSArray*)contentsOfDirectoryAtURL:(NSURL*)url
@@ -463,10 +457,10 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
     }
 
     id enumerator = [[NSDirectoryEnumerator alloc] initWithPath:[[url path] UTF8String]
-                                  shallow:YES
-               includingPropertiesForKeys:keys
-                                  options:mask
-                                  returnNSURL:YES];
+                                                        shallow:YES
+                                     includingPropertiesForKeys:keys
+                                                        options:mask
+                                                    returnNSURL:YES];
 
     // by enumerating the directory, construct the direcotry contents at this URL
     id ret = [enumerator allObjects];
@@ -480,11 +474,11 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
 */
 - (NSArray*)contentsOfDirectoryAtPath:(NSString*)pathAddr error:(NSError**)error {
     id enumerator = [NSDirectoryEnumerator new];
-    enumerator = [enumerator initWithPath:[pathAddr UTF8String] 
-                                  shallow:YES 
+    enumerator = [enumerator initWithPath:[pathAddr UTF8String]
+                                  shallow:YES
                includingPropertiesForKeys:nil
                                   options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
-                                  returnNSURL:NO];
+                              returnNSURL:NO];
 
     id ret = [enumerator allObjects];
     [enumerator release];
@@ -509,11 +503,11 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
     const char* path = [pathAddr UTF8String];
 
     NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
-    [directoryEnum initWithPath:path 
-                        shallow:FALSE
-     includingPropertiesForKeys:nil
-                        options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
-                    returnNSURL:NO];
+    [directoryEnum initWithPath:path
+                           shallow:FALSE
+        includingPropertiesForKeys:nil
+                           options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                       returnNSURL:NO];
 
     return directoryEnum;
 }
@@ -1222,10 +1216,10 @@ static NSDictionary* fileAttributesForFilePath(const char *path) {
 */
 - (NSArray*)directoryContentsAtPath:(NSString*)pathAddr {
     id enumerator = [[[NSDirectoryEnumerator alloc] initWithPath:[pathAddr UTF8String]
-                                                        shallow:YES
-                                     includingPropertiesForKeys:nil
-                                                        options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
-                                                    returnNSURL:NO] autorelease];
+                                                         shallow:YES
+                                      includingPropertiesForKeys:nil
+                                                         options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                     returnNSURL:NO] autorelease];
 
     id ret = [enumerator allObjects];
     return ret;

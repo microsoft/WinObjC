@@ -87,7 +87,7 @@ static void StripSlashes(char* pPath) {
     size_t length = strnlen_s(pPath, NSURLMAXLEN);
     while (length > 0 && pPath[length - 1] == '/') {
         pPath[length - 1] = '\0';
-        length --;
+        length--;
     }
 }
 
@@ -357,10 +357,7 @@ struct EbrURL {
 
         //  Strip out parameter
         char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]()
-        {
-            free(newPath);
-        });
+        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -373,7 +370,7 @@ struct EbrURL {
 
         SetPath(newPath, _parameters);
     }
-    
+
     void AppendExtension(const char* pPath) {
         int newLen = 2; // size of ".";
 
@@ -386,10 +383,7 @@ struct EbrURL {
         }
 
         char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]()
-        {
-            free(newPath);
-        });
+        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -412,10 +406,7 @@ struct EbrURL {
         }
 
         char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]()
-        {
-            free(newPath);
-        });
+        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -450,10 +441,7 @@ struct EbrURL {
         }
 
         char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]()
-        {
-            free(newPath);
-        });
+        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -471,12 +459,10 @@ struct EbrURL {
                 } else {
                     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "/") != 0);
                 }
-            }
-            else if (0 == strnlen_s(_path, NSURLMAXLEN)) {
+            } else if (0 == strnlen_s(_path, NSURLMAXLEN)) {
                 // Edge case for when the path is empty
                 FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "../") != 0);
-            }
-            else if (lastComponentIndex != std::string::npos) {
+            } else if (lastComponentIndex != std::string::npos) {
                 FAIL_FAST_HR_IF(E_UNEXPECTED, strncpy_s(newPath, newLen, _path, lastComponentIndex) != 0);
                 newPath[lastComponentIndex] = '\0';
             }
@@ -498,10 +484,7 @@ struct EbrURL {
         }
 
         char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]()
-        {
-            free(newPath);
-        });
+        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
 
@@ -515,7 +498,7 @@ struct EbrURL {
     }
 };
 
-@implementation NSURL{
+@implementation NSURL {
     struct EbrURL* _uri;
     struct EbrURL* _fullUri;
     id _baseURL;
@@ -698,7 +681,6 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return [ret autorelease];
 }
 
-
 /**
  @Status Interoperable
 */
@@ -725,7 +707,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-- (NSURL*) URLByDeletingPathExtension {
+- (NSURL*)URLByDeletingPathExtension {
     NSURL* ret = [[[self class] alloc] init];
     ret->_uri = _uri->Clone();
     ret->_uri->DeleteExtension();
@@ -735,7 +717,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Stub
 */
-- (NSURL*) URLByResolvingSymlinksInPath {
+- (NSURL*)URLByResolvingSymlinksInPath {
     UNIMPLEMENTED();
     return self;
 }
@@ -744,7 +726,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
  @Status Caveat
  @Notes Does not resolve symlinks in path or check /private
  */
-- (NSURL*) URLByStandardizingPath {
+- (NSURL*)URLByStandardizingPath {
     NSURL* ret = [[[self class] alloc] init];
     ret->_uri = _uri->Clone();
     if ([[self scheme] isEqualToString:@"file"]) {
@@ -797,7 +779,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-+ (NSURL*)fileURLWithPath:(NSString *)path {
++ (NSURL*)fileURLWithPath:(NSString*)path {
     return [[[self alloc] initFileURLWithPath:path] autorelease];
 }
 
@@ -1081,6 +1063,15 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 }
 
 /**
+ @Status stub
+ @Notes unlikely we will support FileReferenceURL ever
+*/
+- (BOOL)isFileReferenceURL {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
  @Status Interoperable
 */
 - (BOOL)isFileURL {
@@ -1155,7 +1146,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
  @Status Caveat
  @Notes there is no property key validitiy check yet
 */
-- (BOOL)setProperty:(id)propertyValue forKey : (NSString *)propertyKey {
+- (BOOL)setProperty:(id)propertyValue forKey:(NSString*)propertyKey {
     // TODO: do a check if propertyKey is a valid key
     [_properties setObject:propertyValue forKey:propertyKey];
 
@@ -1165,7 +1156,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
--(id)propertyForKey:(NSString *)propertyKey {
-    return [_properties objectForKey:propertyKey ];
+- (id)propertyForKey:(NSString*)propertyKey {
+    return [_properties objectForKey:propertyKey];
 }
 @end
