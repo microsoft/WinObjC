@@ -32,6 +32,7 @@
     <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_DataModelDirCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
+    <SBResourceCompileAfterTargets Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">BuildLink</SBResourceCompileAfterTargets>
     <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies</SBResourceComputeTargets>
   </PropertyGroup>
 
@@ -39,7 +40,7 @@
     Name="SBResourceCompile"
     BeforeTargets="$(SBResourceCompileBeforeTargets)"
     AfterTargets="$(SBResourceCompileAfterTargets)"
-    DependsOnTargets="$(SBResourceCompileDependsOn);SBResourceCopy;SBResourcePackage" />
+    DependsOnTargets="$(SBResourceCompileDependsOn);_SBResourceCopy;SBResourcePackage" />
 
   <Target
     Name="CheckForMultiplePlists"
@@ -103,7 +104,7 @@
   </Target>
 
   <Target
-    Name="SBResourceCopy"
+    Name="_SBResourceCopy"
     DependsOnTargets="ComputeResourceCopyOptions"
     Inputs="@(SBResourceCopy)"
     Outputs="@(SBResourceCopy->'%(OutputFile)')"
@@ -112,7 +113,9 @@
     <Message Importance="high"
       Text="Copying assets" />
 
-    <MakeDir Directories="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <MakeDir
+      Condition="'%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
+      Directories="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
 
     <Copy
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
@@ -132,7 +135,9 @@
       Importance="High"
       Text="%(XibCompile.Identity)" />
 
-    <MakeDir Directories="@(XibCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <MakeDir
+      Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
+      Directories="@(XibCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
 
     <Exec
       Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
@@ -151,7 +156,10 @@
       Importance="High"
       Text="%(StoryboardCompile.Identity)" />
 
-    <MakeDir Directories="@(StoryboardCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <MakeDir
+      Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
+      Directories="@(StoryboardCompile->Metadata('IntermediateFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+
     <Exec
       Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
       Command="&quot;$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe&quot; &quot;%(StoryboardCompile.Identity)&quot; &quot;%(StoryboardCompile.IntermediateFile)&quot;" />
@@ -165,18 +173,22 @@
     Inputs="%(DataModelCompileFile.SourceFile);%(DataModelCompileFile.Identity)">
 
     <Message
+      Condition="'%(DataModelCompileFile.ExcludedFromBuild)' != 'true' and Exists('%(DataModelCompileFile.SourceFile)')"
       Importance="High"
-      Condition="Exists('%(DataModelCompileFile.SourceFile)')"
       Text="Data Model compilation not currently supported. Ignoring %(DataModelCompileFile.SourceFile)" />
 
     <Message
+      Condition="'%(DataModelCompileFile.ExcludedFromBuild)' != 'true' and !Exists('%(DataModelCompileFile.SourceFile)')"
       Importance="High"
-      Condition="!Exists('%(DataModelCompileFile.SourceFile)')"
       Text="%(DataModelCompileFile.SourceFile) does not exist. Project will never be up to date." />
 
-    <MakeDir Directories="@(DataModelCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <MakeDir
+      Condition="'%(DataModelCompileFile.ExcludedFromBuild)' != 'true'"
+      Directories="@(DataModelCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
 
-    <WriteLinesToFile File="%(DataModelCompileFile.OutputFile)"
+    <WriteLinesToFile
+      Condition="'%(DataModelCompileFile.ExcludedFromBuild)' != 'true'"
+      File="%(DataModelCompileFile.OutputFile)"
       Lines="Data Model compilation not currently supported."
       Overwrite="true"
       Encoding="Unicode"/>
@@ -190,12 +202,17 @@
     Inputs="%(DataModelDirCompileFile.SourceFile);%(DataModelDirCompileFile.Identity)">
 
     <Message
+      Condition="'%(DataModelDirCompileFile.ExcludedFromBuild)' != 'true'"
       Importance="High"
       Text="Data Model Directory compilation not currently supported. Ignoring %(DataModelDirCompileFile.SourceFile)" />
 
-    <MakeDir Directories="@(DataModelDirCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
+    <MakeDir
+      Condition="'%(DataModelDirCompileFile.ExcludedFromBuild)' != 'true'"
+      Directories="@(DataModelDirCompileFile->Metadata('OutputFile')->DirectoryName()->Distinct()->ClearMetadata())" />
 
-    <WriteLinesToFile File="%(DataModelDirCompileFile.OutputFile)"
+    <WriteLinesToFile
+      Condition="'%(DataModelDirCompileFile.ExcludedFromBuild)' != 'true'"
+      File="%(DataModelDirCompileFile.OutputFile)"
       Lines="Data Model Directory compilation not currently supported."
       Overwrite="true"
       Encoding="Unicode"/>
@@ -209,15 +226,21 @@
     Inputs="%(AssetCatalogCompileFile.SourceFile);%(AssetCatalogCompileFile.Identity)">
 
     <Message
+      Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
       Importance="High"
       Text="%(AssetCatalogCompileFile.SourceFile)" />
 
-    <RemoveDir Directories="%(AssetCatalogCompileFile.OutputDir)" />
-    <MakeDir Directories="%(AssetCatalogCompileFile.OutputDir)" />
+    <RemoveDir
+      Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
+      Directories="%(AssetCatalogCompileFile.OutputDir)" />
+
+    <MakeDir
+      Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
+      Directories="%(AssetCatalogCompileFile.OutputDir)" />
 
     <Exec
-      Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
-      Command="&quot;$(MSBuildThisFileDirectory)..\bin\acbuilder.exe&quot; --target-device iphone --target-device ipad --compile &quot;%(AssetCatalogCompileFile.OutputDir)&quot; &quot;%(AssetCatalogCompileFile.SourceFile)&quot;" />
+      Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
+      Command="&quot;$(MSBuildThisFileDirectory)..\bin\acbuilder.exe&quot; --notices --target-device iphone --target-device ipad --compile &quot;%(AssetCatalogCompileFile.OutputDir)&quot; &quot;%(AssetCatalogCompileFile.SourceFile)&quot;" />
 
     <ItemGroup>
       <SBResourceCopy Include="%(AssetCatalogCompileFile.OutputDir)\**\*" />
@@ -280,9 +303,10 @@
       <DataModelCompile>
         <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(DataModelCompile.VariantDir)', '%(DataModelCompile.Filename)')).mom.dummy</IntermediateFile>
       </DataModelCompile>
-      <DataModelCompileFile Condition="'%(DataModelCompile.ExcludedFromBuild)' != 'true'" Include="%(DataModelCompile.Identity);%(DataModelCompile.Identity)\**\*">
+      <DataModelCompileFile Include="%(DataModelCompile.Identity);%(DataModelCompile.Identity)\**\*">
         <SourceFile>%(DataModelCompile.Identity)</SourceFile>
         <OutputFile>%(DataModelCompile.IntermediateFile)</OutputFile>
+        <ExcludedFromBuild>%(DataModelCompile.ExcludedFromBuild)</ExcludedFromBuild>
       </DataModelCompileFile>
     </ItemGroup>
   </Target>
@@ -293,25 +317,27 @@
       <DataModelDirCompile>
         <IntermediateFile>$([System.IO.Path]::Combine('$(IntDir)', '%(DataModelDirCompile.VariantDir)', '%(DataModelDirCompile.Filename)')).momc.dummy</IntermediateFile>
       </DataModelDirCompile>
-      <DataModelDirCompileFile Condition="'%(DataModelDirCompile.ExcludedFromBuild)' != 'true'" Include="%(DataModelDirCompile.Identity);%(DataModelDirCompile.Identity)\**\*">
+      <DataModelDirCompileFile Include="%(DataModelDirCompile.Identity);%(DataModelDirCompile.Identity)\**\*">
         <SourceFile>%(DataModelDirCompile.Identity)</SourceFile>
         <OutputFile>%(DataModelDirCompile.IntermediateFile)</OutputFile>
+        <ExcludedFromBuild>%(DataModelDirCompile.ExcludedFromBuild)</ExcludedFromBuild>
       </DataModelDirCompileFile>
     </ItemGroup>
   </Target>
 
   <Target Name="ComputeAssetCatalogCompileOptions">
     <ItemGroup Condition="'@(AssetCatalogCompile)' != ''">
-      <!-- Remove items excluded from the build, so we can get an accurate count later -->
-      <AssetCatalogCompile Remove="@(AssetCatalogCompile->WithMetadataValue('ExcludedFromBuild', 'true'))" />
       <!-- Fix up IntermediateFile to use VariantDir -->
       <AssetCatalogCompile>
         <IntermediateDir>$([System.IO.Path]::Combine('$(IntDir)', 'AssetCatalog'))</IntermediateDir>
       </AssetCatalogCompile>
-      <AssetCatalogCompileFile Condition="'%(AssetCatalogCompile.ExcludedFromBuild)' != 'true'" Include="%(AssetCatalogCompile.Identity);%(AssetCatalogCompile.Identity)\**\*">
+      <AssetCatalogCompileFile Include="%(AssetCatalogCompile.Identity);%(AssetCatalogCompile.Identity)\**\*">
         <SourceFile>%(AssetCatalogCompile.Identity)</SourceFile>
         <OutputDir>%(AssetCatalogCompile.IntermediateDir)</OutputDir>
+        <ExcludedFromBuild>%(AssetCatalogCompile.ExcludedFromBuild)</ExcludedFromBuild>
       </AssetCatalogCompileFile>
+      <!-- Remove items excluded from the build, so we can get an accurate count later -->
+      <AssetCatalogCompile Remove="@(AssetCatalogCompile->WithMetadataValue('ExcludedFromBuild', 'true'))" />
     </ItemGroup>
   </Target>
 

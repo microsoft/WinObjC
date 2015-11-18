@@ -298,6 +298,8 @@ const std::unordered_set<std::string>& NSKVOClass::valueDependingKeys(const std:
 }
 
 void NSKVOClass::dealloc(id instance) {
+    // WE CANNOT USE instance AS AN OBJECT IN HERE.
+    // It has been deallocated, and we are updating our bookkeeping.
     std::lock_guard<std::recursive_mutex> lock(_mutex);
     for (auto i = _notifiersByInstance.begin(); i != _notifiersByInstance.end();) {
         if (std::get<0>(i->first) == instance) {
@@ -309,10 +311,6 @@ void NSKVOClass::dealloc(id instance) {
 
     for (auto i = _keypathNotifiersByInstance.begin(); i != _keypathNotifiersByInstance.end(); ++i) {
         if (std::get<0>(i->first) == instance && i->second.size() > 0) {
-            // TODO: We have to be able to throw an exception DURING DEALLOC and have
-            // the object properly deallocated.
-            // The FAIL_FAST is a compromise right now because we can't.
-            FAIL_FAST_MSG("Instance of %s deallocated with observers still registered.", class_getName(originalClass));
             [NSException raise:NSInvalidArgumentException
                         format:@"Instance of %s deallocated with observers still registered.", class_getName(originalClass)];
         }

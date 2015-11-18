@@ -31,6 +31,7 @@ public:
     XIBObjectString(const char *str);
     XIBObjectString();
     const char *stringValue();
+    int intValue();
     bool EqualToString(const char *str);;
     void EmitObject(NIBWriter *writer);
     void InitFromStory(XIBObject *obj);

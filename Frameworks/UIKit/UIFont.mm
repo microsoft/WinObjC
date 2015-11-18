@@ -22,6 +22,8 @@
 #include "Foundation/NSArray.h"
 #include "Foundation/NSFileManager.h"
 #include "UIKit/UIFont.h"
+#include "UIKit/UIFontDescriptor.h"
+#include "UIFontDescriptorInternal.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -42,6 +44,7 @@ NSMutableDictionary* _fontDataCache;
 @public
     void *_font, *_sizingFont;
     idretaintype(NSString) _name;
+    UIFontDescriptor* _descriptor;
     idretain _fileName;
     float _size;
     float _horizontalScale;
@@ -214,6 +217,17 @@ ret->height += ascenderDelta;
     [g_fontCache setObject:(id)ret forKey:(id)ret];
 
     return [ret autorelease];
+}
+
+/**
+ @Status Interoperable
+ @Tags          Font
+ @Public        Yes
+*/
++ (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
+    UIFont* font = [UIFont fontWithName:[descriptor _getFontName] size:fontSize];
+    font->_descriptor = [descriptor retain];
+    return font;
 }
 
 + (UIFont*)messageFont {
@@ -498,30 +512,52 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
+ @Framework     Foundation
+ @Tags          Font
+ @Public        Yes
+*/
+- (UIFontDescriptor*)fontDescriptor {
+    return self->_descriptor;
+}
+
+/**
+ @Status Interoperable
+ @Framework     Foundation
+ @Tags          Font
+ @Public        Yes
 */
 + (float)smallSystemFontSize {
-    return 12.0f;
+    return [UIFontDescriptor _getSystemSmallFontSize];
 }
 
 /**
  @Status Interoperable
+ @Framework     Foundation
+ @Tags          Font
+ @Public        Yes
 */
 + (float)systemFontSize {
-    return 14.0f;
+    return [UIFontDescriptor _getSystemFontSize];
 }
 
 /**
  @Status Interoperable
+ @Framework     Foundation
+ @Tags          Font
+ @Public        Yes
 */
 + (float)labelFontSize {
-    return 17.0f;
+    return [UIFontDescriptor _getLabelFontSize];
 }
 
 /**
  @Status Interoperable
+ @Framework     Foundation
+ @Tags          Font
+ @Public        Yes
 */
 + (float)buttonFontSize {
-    return 14.0f;
+    return [UIFontDescriptor _getButtonFontSize];
 }
 
 - (NSUInteger)hash {
@@ -549,7 +585,7 @@ void loadFont(UIFont* self) {
 - (void)dealloc {
     _fileName = nil;
     _name = nil;
-
+    _descriptor = nil;
     [super dealloc];
 }
 

@@ -76,6 +76,72 @@ id valueFromDataWithType(void* data, const char* objcType) {
     }
     return [NSValue valueWithBytes:data objCType:objcType];
 }
+
+bool dataWithTypeFromValue(void* data, const char* objcType, id value) {
+    switch (objcType[0]) {
+        case '@':
+            woc::ValueTransformer<id>::store(value, data);
+            break;
+        case '#':
+            woc::ValueTransformer<Class>::store(value, data);
+            break;
+        case 'c':
+            woc::ValueTransformer<char>::store(value, data);
+            break;
+        case 'i':
+            woc::ValueTransformer<int>::store(value, data);
+            break;
+        case 's':
+            woc::ValueTransformer<short>::store(value, data);
+            break;
+        case 'l':
+            woc::ValueTransformer<long>::store(value, data);
+            break;
+        case 'q':
+            woc::ValueTransformer<long long>::store(value, data);
+            break;
+        case 'C':
+            woc::ValueTransformer<unsigned char>::store(value, data);
+            break;
+        case 'I':
+            woc::ValueTransformer<unsigned int>::store(value, data);
+            break;
+        case 'S':
+            woc::ValueTransformer<unsigned short>::store(value, data);
+            break;
+        case 'L':
+            woc::ValueTransformer<unsigned long>::store(value, data);
+            break;
+        case 'Q':
+            woc::ValueTransformer<unsigned long long>::store(value, data);
+            break;
+        case 'f':
+            woc::ValueTransformer<float>::store(value, data);
+            break;
+        case 'd':
+            woc::ValueTransformer<double>::store(value, data);
+            break;
+        case 'B':
+            woc::ValueTransformer<bool>::store(value, data);
+            break;
+        case '*':
+        case '^':
+        case '?':
+            // We cannot box/unbox arbitrary pointers or char*.
+            return false;
+        default:
+            NSValue* nsv = static_cast<NSValue*>(value);
+            if (getArgumentSize(objcType) == getArgumentSize([nsv objCType])) {
+                [nsv getValue:data];
+            } else {
+                // If the argument types don't match in size, we just say
+                // that this key can't be coded.
+                return false;
+            }
+            break;
+    }
+    return true;
+}
 }
 
 template <>

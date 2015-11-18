@@ -23,6 +23,8 @@
 #include "HashFn.h"
 #include "Etc.h"
 
+#define NSURLMAXLEN SIZE_MAX
+
 NSString* const NSURLFileScheme = @"NSURLFileScheme";
 NSString* const NSURLAttributeModificationDateKey = @"NSURLAttributeModificationDateKey";
 NSString* const NSURLContentAccessDateKey = @"NSURLContentAccessDateKey";
@@ -62,6 +64,14 @@ NSString* const NSURLVolumeIdentifierKey = @"NSURLVolumeIdentifierKey";
 NSString* const NSURLVolumeURLKey = @"NSURLVolumeURLKey";
 NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
 NSString* const NSURLFileSizeKey = @"NSURLFileSizeKey";
+
+static void StripSlashes(char* pPath) {
+    size_t length = strnlen_s(pPath, NSURLMAXLEN);
+    while (length > 0 && pPath[length - 1] == '/') {
+        pPath[length - 1] = '\0';
+        length --;
+    }
+}
 
 struct EbrURL {
     xmlURIPtr uriForAppending() {
@@ -117,22 +127,24 @@ struct EbrURL {
 
         //  Remove parameters and any trailing / from the path we report to the app
         if (_uri->path) {
-            _path = (char*)malloc(strlen(_uri->path) + 1);
-            strcpy(_path, _uri->path);
+            size_t newSize = strnlen_s(_uri->path, NSURLMAXLEN) + 1;
+            _path = (char*)malloc(newSize);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, newSize, _uri->path) != 0);
 
             char* params = strstr(_path, ";");
             if (params != NULL) {
                 *params = 0;
                 params++;
 
-                _parameters = (char*)malloc(strlen(params) + 1);
-                strcpy(_parameters, params);
+                size_t newParamSize = strnlen_s(params, NSURLMAXLEN) + 1;
+                _parameters = (char*)malloc(newParamSize);
+                FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, newParamSize, params) != 0);
             }
 
-            //  Remove trailing /
-            if (strlen(_path) > 0) {
-                if (_path[strlen(_path) - 1] == '/') {
-                    _path[strlen(_path) - 1] = 0;
+            //  Remove trailing /, except in "/" case where the path points to root
+            if (strnlen_s(_path, newSize) > 1) {
+                if (_path[strnlen_s(_path, newSize) - 1] == '/') {
+                    _path[strnlen_s(_path, newSize) - 1] = '\0';
                 }
             }
         }
@@ -152,12 +164,17 @@ struct EbrURL {
     }
 
     ~EbrURL() {
-        if (_uri)
+        if (_uri) {
             xmlFreeURI(_uri);
-        if (_parameters)
+        }
+
+        if (_parameters) {
             free(_parameters);
-        if (_path)
+        }
+
+        if (_path) {
             free(_path);
+        }
     }
 
     EbrURL() {
@@ -184,24 +201,24 @@ struct EbrURL {
         _uri = xmlCreateURI();
 
         if (pScheme) {
-            _uri->scheme = (char*)xmlMalloc(strlen(pScheme) + 1);
-            strcpy(_uri->scheme, pScheme);
+            _uri->scheme = (char*)xmlMalloc(strnlen_s(pScheme, NSURLMAXLEN) + 1);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->scheme, NSURLMAXLEN, pScheme) != 0);
         }
         if (pHost) {
-            _uri->server = (char*)xmlMalloc(strlen(pHost) + 1);
-            strcpy(_uri->server, pHost);
+            _uri->server = (char*)xmlMalloc(strnlen_s(pHost, NSURLMAXLEN) + 1);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->server, NSURLMAXLEN, pHost) != 0);
         }
         if (pPath) {
-            _uri->path = (char*)xmlMalloc(strlen(pPath) + 1);
-            strcpy(_uri->path, pPath);
+            _uri->path = (char*)xmlMalloc(strnlen_s(pPath, NSURLMAXLEN) + 1);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->path, NSURLMAXLEN, pPath) != 0);
         }
         ProcessURI();
     }
 
     static char* escape(const char* in, const char* escapeChars) {
-        char* ret = (char*)malloc(strlen(in) * 3 + 1);
+        char* ret = (char*)malloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
         int retLen = 0;
-        int inLen = strlen(in);
+        int inLen = strnlen_s(in, NSURLMAXLEN);
         const char* hex = "0123456789ABCDEF";
 
         for (int i = 0; i < inLen; i++) {
@@ -232,13 +249,16 @@ struct EbrURL {
 
         char* escaped = escape(pStr, "{}\"[]");
         _uri = xmlParseURI(escaped);
-        if (_uri)
+        if (_uri) {
             ProcessURI();
+        }
+
         if (!_uri) {
             char* str = (char*)xmlPathToURI((xmlChar*)escaped);
             _uri = xmlParseURI(str);
             xmlFree(str);
         }
+
         free(escaped);
         if (_uri) {
             ProcessURI();
@@ -262,7 +282,7 @@ struct EbrURL {
         ProcessURI();
     }
 
-    void SetPath(char* path, char* params) {
+    void SetPath(const char* path, char* params) {
         char* oldPath = _path;
         char* oldParams = _parameters;
 
@@ -272,54 +292,208 @@ struct EbrURL {
         int newLen = 16;
 
         if (path) {
-            _path = (char*)malloc(strlen(path) + 1);
-            strcpy(_path, path);
-            newLen += strlen(_path);
+            _path = (char*)malloc(strnlen_s(path, NSURLMAXLEN) + 1);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, NSURLMAXLEN, path) != 0);
+            newLen += strnlen_s(_path, NSURLMAXLEN);
         }
         if (params) {
-            _parameters = (char*)malloc(strlen(params) + 1);
-            strcpy(_parameters, params);
-            newLen += strlen(params);
+            _parameters = (char*)malloc(strnlen_s(params, NSURLMAXLEN) + 1);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, NSURLMAXLEN, params) != 0);
+            newLen += strnlen_s(params, NSURLMAXLEN);
         }
 
         //  Strip out parameter
         char* newPath = (char*)xmlMalloc(newLen);
-        strcpy(newPath, "");
-        if (path)
-            strcat(newPath, path);
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+        if (path) {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, path) != 0);
+        }
+
         if (params) {
-            strcat(newPath, ";");
-            strcat(newPath, params);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, ";") != 0);
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, params) != 0);
         }
 
         xmlFree(_uri->path);
         _uri->path = newPath;
 
-        if (oldPath)
+        if (oldPath) {
             free(oldPath);
-        if (oldParams)
+        }
+
+        if (oldParams) {
             free(oldParams);
+        }
     }
 
     void AppendPath(char* pPath) {
         int newLen = 16;
 
-        if (_path)
-            newLen += strlen(_path);
-        if (pPath)
-            newLen += strlen(pPath);
+        if (_path) {
+            newLen += strnlen_s(_path, NSURLMAXLEN);
+        }
+
+        if (pPath) {
+            newLen += strnlen_s(pPath, NSURLMAXLEN);
+        }
 
         //  Strip out parameter
         char* newPath = (char*)malloc(newLen);
-        strcpy(newPath, "");
-        if (_path)
-            strcpy(newPath, _path);
-        strcat(newPath, "/");
-        strcat(newPath, pPath);
+        auto cleanupTemps = wil::ScopeExit([&]()
+        {
+            free(newPath);
+        });
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+        if (_path) {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, _path) != 0);
+        }
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, "/") != 0);
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, pPath) != 0);
         xmlNormalizeURIPath(newPath);
 
         SetPath(newPath, _parameters);
-        free(newPath);
+    }
+    
+    void AppendExtension(const char* pPath) {
+        int newLen = 2; // size of ".";
+
+        if (_path) {
+            newLen += strnlen_s(_path, NSURLMAXLEN);
+        }
+
+        if (pPath) {
+            newLen += strnlen_s(pPath, NSURLMAXLEN);
+        }
+
+        char* newPath = (char*)malloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]()
+        {
+            free(newPath);
+        });
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+        if (_path) {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, _path) != 0);
+        }
+
+        if (0 != strcmp(newPath, "/")) {
+            StripSlashes(newPath);
+        }
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, ".") != 0);
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, pPath) != 0);
+        SetPath(newPath, _parameters);
+    }
+
+    void DeleteExtension() {
+        int newLen = 1; // size of ""
+        if (_path) {
+            newLen += strnlen_s(_path, NSURLMAXLEN);
+        }
+
+        char* newPath = (char*)malloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]()
+        {
+            free(newPath);
+        });
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+        if (_path) {
+            size_t lastComponentIndex = 0;
+            size_t extensionIndex = std::string::npos;
+            char* pLastComponent = strrchr(_path, '/');
+            if (pLastComponent) {
+                lastComponentIndex = static_cast<unsigned int>(pLastComponent - _path);
+            }
+
+            char* pExtension = strrchr(_path, '.');
+            if (pExtension) {
+                extensionIndex = static_cast<unsigned int>(pExtension - _path);
+            }
+
+            if (extensionIndex != std::string::npos && extensionIndex > lastComponentIndex) {
+                FAIL_FAST_HR_IF(E_UNEXPECTED, strncpy_s(newPath, newLen, _path, extensionIndex) != 0);
+                newPath[extensionIndex] = '\0';
+            } else {
+                // If no extension exists within the url, simply return without changing _path
+                return;
+            }
+        }
+
+        SetPath(newPath, _parameters);
+    }
+
+    void DeleteLastPathComponent() {
+        int newLen = 5; // size of "/../"
+        if (_path) {
+            newLen += strnlen_s(_path, NSURLMAXLEN);
+        }
+
+        char* newPath = (char*)malloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]()
+        {
+            free(newPath);
+        });
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+        if (_path) {
+            char* pLastComponent = strrchr(_path, '/');
+            size_t lastComponentIndex = std::string::npos;
+            if (pLastComponent) {
+                lastComponentIndex = static_cast<unsigned int>(pLastComponent - _path);
+            }
+
+            if (lastComponentIndex == 0) {
+                if (1 == strnlen_s(_path, NSURLMAXLEN)) {
+                    // iOS behavior conflicts with documentation in this case.
+                    // The documentation claims "/" is the new path, while actually "/../" is returned.
+                    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "/../") != 0);
+                } else {
+                    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "/") != 0);
+                }
+            }
+            else if (0 == strnlen_s(_path, NSURLMAXLEN)) {
+                // Edge case for when the path is empty
+                FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "../") != 0);
+            }
+            else if (lastComponentIndex != std::string::npos) {
+                FAIL_FAST_HR_IF(E_UNEXPECTED, strncpy_s(newPath, newLen, _path, lastComponentIndex) != 0);
+                newPath[lastComponentIndex] = '\0';
+            }
+        } else {
+            // Edge case for when the path is empty
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "../") != 0);
+        }
+
+        SetPath(newPath, _parameters);
+    }
+
+    void StandardizePath() {
+        NSString* path = [[NSString alloc] initWithUTF8String:_path];
+        const char* standardizedPath = [[path stringByStandardizingPath] UTF8String];
+
+        int newLen = 1; // size of ""
+        if (_path) {
+            newLen += strnlen_s(standardizedPath, NSURLMAXLEN);
+        }
+
+        char* newPath = (char*)malloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]()
+        {
+            free(newPath);
+        });
+
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
+
+        if (standardizedPath) {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, standardizedPath) != 0);
+        }
+
+        xmlNormalizeURIPath(newPath);
+        SetPath(newPath, _parameters);
+        [path release];
     }
 };
 
@@ -371,8 +545,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
  @Status Interoperable
 */
 - (instancetype)initFileURLWithPath:(NSString*)path {
-    if (path == nil)
+    if (path == nil) {
         return nil;
+    }
 
     NSURL* baseURL = nil;
     char szBasePath[4096] = "";
@@ -381,31 +556,28 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         EbrGetcwd(szBasePath, sizeof(szBasePath));
 
         //  Add trailing /
-        if (strlen(szBasePath) > 0 && szBasePath[strlen(szBasePath) - 1] != '/')
-            strcat(szBasePath, "/");
+        if (strnlen_s(szBasePath, NSURLMAXLEN) > 0 && szBasePath[strnlen_s(szBasePath, NSURLMAXLEN) - 1] != '/') {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szBasePath, NSURLMAXLEN, "/") != 0);
+        }
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strlen(pPath) + 16);
-    strcpy(szPath, pPath);
+    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
-    while (strlen(szPath) > 0 && szPath[strlen(szPath) - 1] == '/') {
-        szPath[strlen(szPath) - 1] = 0;
+    while (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] == '/') {
+        szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] = 0;
     }
 
     BOOL isDirectory = FALSE;
-    if (EbrAccess(szPath, 0) == -1 || EbrIsDir(szPath))
+    if (EbrAccess(szPath, 0) == -1 || EbrIsDir(szPath)) {
         isDirectory = TRUE;
+    }
+
     free(szPath);
 
     return [self initFileURLWithPath:path isDirectory:isDirectory];
-}
-
-static void StripSlashes(char* pPath) {
-    while (strlen(pPath) > 0 && pPath[strlen(pPath) - 1] == '/') {
-        pPath[strlen(pPath) - 1] = 0;
-    }
 }
 
 /**
@@ -419,8 +591,9 @@ static void StripSlashes(char* pPath) {
         EbrGetcwd(szBasePath, sizeof(szBasePath));
 
         //  Add trailing /
-        if (strlen(szBasePath) > 0 && szBasePath[strlen(szBasePath) - 1] != '/')
-            strcat(szBasePath, "/");
+        if (strnlen_s(szBasePath, NSURLMAXLEN) > 0 && szBasePath[strnlen_s(szBasePath, NSURLMAXLEN) - 1] != '/') {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szBasePath, NSURLMAXLEN, "/") != 0);
+        }
 
         baseURL = [NSURL alloc];
         initPath(baseURL, "file", "localhost", szBasePath);
@@ -428,17 +601,18 @@ static void StripSlashes(char* pPath) {
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strlen(pPath) + 16);
-    strcpy(szPath, pPath);
+    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
-    while (strlen(szPath) > 0 && szPath[strlen(szPath) - 1] == '/') {
-        szPath[strlen(szPath) - 1] = 0;
+    while (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] == '/') {
+        szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] = 0;
     }
     if (isDirectory) {
         //  Add trailing /
-        if (strlen(szPath) > 0 && szPath[strlen(szPath) - 1] != '/')
-            strcat(szPath, "/");
+        if (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] != '/') {
+            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
+        }
     }
 
     if (baseURL == nil) {
@@ -446,6 +620,7 @@ static void StripSlashes(char* pPath) {
     } else {
         initPath(self, NULL, NULL, szPath);
     }
+
     free(szPath);
 
     buildFullURI(self, baseURL);
@@ -458,6 +633,14 @@ static void StripSlashes(char* pPath) {
 */
 - (instancetype)initWithString:(NSString*)string {
     return [self initWithString:string relativeToURL:nil];
+}
+
+/**
+ @Status Stub
+*/
+- (NSURL*)fileReferenceURL {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 /**
@@ -476,13 +659,14 @@ static void StripSlashes(char* pPath) {
         return nil;
     }
 
-    NSURL* ret = [[self class] alloc];
+    NSURL* ret = [[[self class] alloc] init];
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strlen(pPath) + 16);
-    strcpy(szPath, pPath);
+    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
     StripSlashes(szPath);
-    if (isDirectory)
-        strcat(szPath, "/");
+    if (isDirectory) {
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
+    }
 
     ret->_uri = _uri->Clone();
     ret->_uri->AppendPath(szPath);
@@ -492,12 +676,68 @@ static void StripSlashes(char* pPath) {
     return [ret autorelease];
 }
 
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByAppendingPathExtension:(NSString*)pathExtension {
+    NSURL* ret = [[[self class] alloc] init];
+
+    ret->_uri = _uri->Clone();
+    ret->_uri->AppendExtension([pathExtension UTF8String]);
+    buildFullURI(ret, nil);
+
+    return [ret autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByDeletingLastPathComponent {
+    NSURL* ret = [[[self class] alloc] init];
+    ret->_uri = _uri->Clone();
+    ret->_uri->DeleteLastPathComponent();
+    return [ret autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*) URLByDeletingPathExtension {
+    NSURL* ret = [[[self class] alloc] init];
+    ret->_uri = _uri->Clone();
+    ret->_uri->DeleteExtension();
+    return [ret autorelease];
+}
+
+/**
+ @Status Stub
+*/
+- (NSURL*) URLByResolvingSymlinksInPath {
+    UNIMPLEMENTED();
+    return self;
+}
+
+/**
+ @Status Caveat
+ @Notes Does not resolve symlinks in path or check /private
+ */
+- (NSURL*) URLByStandardizingPath {
+    NSURL* ret = [[[self class] alloc] init];
+    ret->_uri = _uri->Clone();
+    if ([[self scheme] isEqualToString:@"file"]) {
+        ret->_uri->StandardizePath();
+    }
+    return [ret autorelease];
+}
+
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(id)string relativeToURL:(id)parent {
-    if (string == nil)
+    if (string == nil) {
         return nil;
+    }
 
     const char* pURL = [string UTF8String];
     buildURIs(self, pURL, parent);
@@ -510,15 +750,17 @@ static void StripSlashes(char* pPath) {
 }
 
 - (id)initWithString:(id)string relativeToURL:(id)parent isDirectory:(DWORD)isDirectory {
-    if (string == nil)
+    if (string == nil) {
         return nil;
+    }
 
     const char* pURL = [string UTF8String];
-    char* szPath = (char*)malloc(strlen(pURL) + 16);
-    strcpy(szPath, pURL);
+    char* szPath = (char*)malloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
+    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pURL) != 0);
     StripSlashes(szPath);
-    if (isDirectory)
-        strcat(szPath, "/");
+    if (isDirectory) {
+        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
+    }
 
     buildURIs(self, szPath, parent);
     free(szPath);
@@ -560,10 +802,14 @@ static void StripSlashes(char* pPath) {
 
 - (void)dealloc {
     [_baseURL release];
-    if (_uri)
+    if (_uri) {
         delete _uri;
-    if (_fullUri)
+    }
+
+    if (_fullUri) {
         delete _fullUri;
+    }
+
     _absoluteString = nil;
 
     [super dealloc];
@@ -601,7 +847,7 @@ static void StripSlashes(char* pPath) {
 
 - (unsigned)hash {
     if (_fullUri->_path) {
-        return murmurHash3(_fullUri->_path, strlen(_fullUri->_path), 0x834cba12);
+        return murmurHash3(_fullUri->_path, strnlen_s(_fullUri->_path, NSURLMAXLEN), 0x834cba12);
     }
     return 0;
 }
@@ -609,53 +855,15 @@ static void StripSlashes(char* pPath) {
 - (BOOL)isEqual:(id)other {
     NSURL* otherURL;
 
-    if (self == other)
+    if (self == other) {
         return YES;
+    }
 
-    if (![other isKindOfClass:[NSURL class]])
+    if (![other isKindOfClass:[NSURL class]]) {
         return NO;
+    }
 
-    otherURL = other;
-    if (otherURL->_fullUri->_scheme && _fullUri->_scheme) {
-        if (strcmp(otherURL->_fullUri->_scheme, _fullUri->_scheme) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_scheme != _fullUri->_scheme)
-        return NO;
-
-    if (otherURL->_fullUri->_server && _fullUri->_server) {
-        if (strcmp(otherURL->_fullUri->_server, _fullUri->_server) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_server != _fullUri->_server)
-        return NO;
-
-    if (otherURL->_fullUri->_path && _fullUri->_path) {
-        if (strcmp(otherURL->_fullUri->_path, _fullUri->_path) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_path != _fullUri->_path)
-        return NO;
-
-    if (otherURL->_fullUri->_parameters && _fullUri->_parameters) {
-        if (strcmp(otherURL->_fullUri->_parameters, _fullUri->_parameters) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_parameters != _fullUri->_parameters)
-        return NO;
-
-    if (otherURL->_fullUri->_query && _fullUri->_query) {
-        if (strcmp(otherURL->_fullUri->_query, _fullUri->_query) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_query != _fullUri->_query)
-        return NO;
-
-    if (otherURL->_fullUri->_fragment && _fullUri->_fragment) {
-        if (strcmp(otherURL->_fullUri->_fragment, _fullUri->_fragment) != 0)
-            return NO;
-    } else if (otherURL->_fullUri->_fragment != _fullUri->_fragment)
-        return NO;
-
-    if (otherURL->_fullUri->_port != _fullUri->_port)
-        return NO;
-
-    return YES;
+    return ([[other absoluteString] isEqual:[self absoluteString]]);
 }
 
 /**
@@ -666,8 +874,10 @@ static void StripSlashes(char* pPath) {
         return [self absoluteString];
     } else {
         char* uriStr = (char*)xmlSaveUri(_uri->_uri);
-        if (uriStr == NULL)
+        if (uriStr == NULL) {
             return nil;
+        }
+
         id ret = [NSString stringWithCString:uriStr];
         xmlFree(uriStr);
 
@@ -682,14 +892,18 @@ static void StripSlashes(char* pPath) {
     if (_absoluteString == nil) {
         if (_fullUri) {
             char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
-            if (uriStr == NULL)
+            if (uriStr == NULL) {
                 return nil;
+            }
+
             _absoluteString = [NSString stringWithCString:uriStr];
             xmlFree(uriStr);
         } else {
             char* uriStr = (char*)xmlSaveUri(_uri->_uri);
-            if (uriStr == NULL)
+            if (uriStr == NULL) {
                 return nil;
+            }
+
             _absoluteString = [NSString stringWithCString:uriStr];
             xmlFree(uriStr);
         }
@@ -703,8 +917,9 @@ static void StripSlashes(char* pPath) {
 */
 - (NSString*)resourceSpecifier {
     char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
-    if (uriStr == NULL)
+    if (uriStr == NULL) {
         return nil;
+    }
 
     char* schemeSkipped = uriStr;
     if (_fullUri->_scheme != NULL) {
@@ -725,8 +940,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (NSString*)parameterString {
-    if (!_fullUri->_parameters)
+    if (!_fullUri->_parameters) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_parameters];
 
@@ -737,10 +953,13 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (NSString*)scheme {
-    if (!_fullUri)
+    if (!_fullUri) {
         return nil;
-    if (!_fullUri->_scheme)
+    }
+
+    if (!_fullUri->_scheme) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_scheme];
 
@@ -751,11 +970,13 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (NSString*)host {
-    if (!_fullUri)
+    if (!_fullUri) {
         return nil;
+    }
 
-    if (!_fullUri->_server)
+    if (!_fullUri->_server) {
         return @"";
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_server];
 
@@ -766,8 +987,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (NSString*)fragment {
-    if (!_fullUri->_fragment)
+    if (!_fullUri->_fragment) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_fragment];
 
@@ -778,10 +1000,13 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (id)path {
-    if (!_fullUri)
+    if (!_fullUri) {
         return nil;
-    if (!_fullUri->_path)
+    }
+
+    if (!_fullUri->_path) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_path];
 
@@ -799,8 +1024,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (id)port {
-    if (_fullUri->_port == -1)
+    if (_fullUri->_port == -1) {
         return nil;
+    }
 
     return [NSNumber numberWithInt:_fullUri->_port];
 }
@@ -809,8 +1035,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (id)query {
-    if (!_fullUri->_query)
+    if (!_fullUri->_query) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_fullUri->_query];
 
@@ -821,8 +1048,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (id)relativePath {
-    if (!_uri->_path)
+    if (!_uri->_path) {
         return nil;
+    }
 
     id ret = [NSString stringWithCString:(char*)_uri->_path];
 
@@ -851,8 +1079,9 @@ static void StripSlashes(char* pPath) {
  @Status Interoperable
 */
 - (id)absoluteURL {
-    if (_baseURL == nil)
+    if (_baseURL == nil) {
         return self;
+    }
 
     return [NSURL URLWithString:[self absoluteString]];
 }
@@ -892,8 +1121,9 @@ static void StripSlashes(char* pPath) {
 */
 - (BOOL)setResourceValue:(id)value forKey:(id)key error:(NSError**)error {
     UNIMPLEMENTED();
-    if (error)
+    if (error) {
         *error = nil;
+    }
     EbrDebugLog("NSURL::setResourceValue not supported\n");
     return TRUE;
 }

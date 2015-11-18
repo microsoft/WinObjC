@@ -24,36 +24,30 @@
     [self tableView].allowsSelection = NO;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return 1;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 50;
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
+    return 100;
 }
 
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     }
-    
+
     [super viewDidLoad];
-    
-    self.title = @"SearchBar";
-    
+
+    self.title = @"UISearchBar";
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0, 0.0, cell.bounds.size.width, 40.0)];
-    //self.searchBar.delegate = self;
-    searchBar.showsCancelButton = YES;
-    searchBar.showsBookmarkButton = YES;
-    [cell addSubview: searchBar];
-    [searchBar setAutoresizingMask: UIViewAutoresizingFlexibleWidth];
-    
+
+    UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(10, 10, cell.bounds.size.width, 80)];
+    [searchBar setPrompt:@"This is the prompt"];
+    [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+    [cell addSubview:searchBar];
+
     return cell;
 }
 

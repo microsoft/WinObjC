@@ -49,12 +49,14 @@ UIKIT_EXPORT_CLASS
 + (NSArray*)screens;
 
 @property (nonatomic, readonly) CGRect bounds;
+@property (nonatomic, readonly) CGRect nativeBounds;
 @property (nonatomic, readonly) CGRect applicationFrame;
 @property (nonatomic, readonly, copy) NSArray* availableModes; // only ever returns the currentMode
 @property (nonatomic, retain) UIScreenMode* currentMode; // ignores any attempt to set this
 @property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly, retain) UIScreenMode* preferredMode;
 @property (nonatomic, readonly) CGFloat nativeScale;
+@property (nonatomic, readonly) CGFloat brightness;
+@property (nonatomic, readonly, retain) UIScreenMode* preferredMode;
 
 @end
 

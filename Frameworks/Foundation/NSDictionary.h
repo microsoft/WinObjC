@@ -17,6 +17,11 @@
 #ifndef __NSDICTIONARY_H
 #define __NSDICTIONARY_H
 
+typedef NS_ENUM(NSUInteger, NSEnumerationOptions) {
+    NSEnumerationConcurrent = 1,
+    NSEnumerationReverse
+};
+
 class __CFDictionary;
 #define __CFDICTIONARY_SIZE_BYTES (0x54)
 @interface NSDictionary : NSObject {
@@ -63,6 +68,7 @@ class __CFDictionary;
 - (NSString*)stringFromQueryComponents;
 - (void)getObjects:(id*)objects andKeys:(id*)keys;
 - (void)enumerateKeysAndObjectsUsingBlock:(id)block;
+- (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block;
 - (NSArray*)objectsForKeys:(NSArray*)keys notFoundMarker:(id)notFoundMarker;
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObj, ...;
 + (instancetype)dictionaryWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count;

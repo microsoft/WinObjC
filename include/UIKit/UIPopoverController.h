@@ -81,15 +81,4 @@ typedef NSUInteger UIPopoverArrowDirection;
 
 @end
 
-@protocol UIPopoverPresentationControllerDelegate
-@end
-
-@interface UIPopoverPresentationController : UIViewController
-@property (nonatomic, retain) UIBarButtonItem* barButtonItem;
-@property (nonatomic) NSUInteger permittedArrowDirections;
-@property (nonatomic, retain) UIView* sourceView;
-@property (nonatomic) CGRect sourceRect;
-@property (nonatomic) id delegate;
-@end
-
 #endif /* _UIPOPOVERCONTROLLER_H_ */

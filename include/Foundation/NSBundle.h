@@ -50,7 +50,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations forPreferences:(NSArray*)preferences;
 
 - initWithPath:(NSString*)path;
-
+- initWithUrl:(NSURL*)url;
 - (NSString*)bundlePath;
 - (NSString*)resourcePath;
 - (NSURL*)bundleURL;

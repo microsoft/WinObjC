@@ -168,3 +168,30 @@ LIBRARY UIKit
      __objc_class_name_UIManagedDocument CONSTANT
      _OBJC_CLASS_UIDocument DATA
      __objc_class_name_UIDocument CONSTANT
+     _OBJC_CLASS_UIAccessibilityElement DATA
+	 __objc_class_name_UIAccessibilityElement	CONSTANT
+
+     UIAccessibilityPostNotification
+     UIAccessibilityIsVoiceOverRunning
+
+     UIAccessibilityTraitNone
+     UIAccessibilityTraitButton
+     UIAccessibilityTraitLink
+     UIAccessibilityTraitSearchField
+     UIAccessibilityTraitImage
+     UIAccessibilityTraitSelected
+     UIAccessibilityTraitPlaysSound
+     UIAccessibilityTraitKeyboardKey
+     UIAccessibilityTraitStaticText
+     UIAccessibilityTraitSummaryElement
+     UIAccessibilityTraitNotEnabled
+     UIAccessibilityTraitUpdatesFrequently
+     UIAccessibilityTraitStartsMediaSession
+     UIAccessibilityTraitAdjustable
+     UIAccessibilityTraitAllowsDirectInteraction
+     UIAccessibilityTraitCausesPageTurn
+     UIAccessibilityTraitHeader
+     UIAccessibilityScreenChangedNotification
+     UIAccessibilityLayoutChangedNotification
+     UIAccessibilityAnnouncementNotification
+     UIAccessibilityPageScrolledNotification

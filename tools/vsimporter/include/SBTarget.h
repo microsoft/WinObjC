@@ -30,7 +30,8 @@ class VSTemplateProject;
 enum TargetProductType {
   TargetProductUnknown = 0,
   TargetApplication = 1,
-  TargetStaticLib = 2
+  TargetStaticLib = 2,
+  TargetBundle = 3
 };
 
 typedef std::map<String, BuildSettings*> BuildSettingsMap;

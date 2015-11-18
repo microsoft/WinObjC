@@ -35,6 +35,7 @@
 #include "UILabel.h"
 #include "UIRuntimeAccessibilityConfiguration.h"
 #include "UITableViewCell.h"
+#include "UITableViewCellContentView.h"
 #include "UITextField.h"
 #include "UITextView.h"
 #include "UITabBarController.h"
@@ -56,6 +57,9 @@
 #include "MKMapView.h"
 #include "UISlider.h"
 #include "NSLayoutConstraint.h"
+#include "UICollectionViewCell.h"
+#include "UICollectionView.h"
+#include "UIStepper.h"
 #include "_UILayoutGuide.h"
 #include <assert.h>
 
@@ -150,6 +154,8 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "fontDescription", UIFont)
     IS_CONVERTER(ret, className, "tableViewController", UITableViewController)
     IS_CONVERTER(ret, className, "tableView", UITableView)
+    IS_CONVERTER(ret, className, "tableViewCell", UITableViewCell)
+    IS_CONVERTER(ret, className, "tableViewCellContentView", UITableViewCellContentView)
     IS_CONVERTER(ret, className, "textField", UITextField)
     IS_CONVERTER(ret, className, "textView", UITextView)
     IS_CONVERTER(ret, className, "button", UIButton)
@@ -165,6 +171,12 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "viewControllerLayoutGuide", _UILayoutGuide)
     IS_CONVERTER(ret, className, "datePicker", UIDatePicker)
     IS_CONVERTER(ret, className, "slider", UISlider)
+    IS_CONVERTER(ret, className, "collectionReusableView", UICollectionReusableView)
+    IS_CONVERTER(ret, className, "collectionViewCell", UICollectionViewCell)
+    IS_CONVERTER(ret, className, "collectionView", UICollectionView)
+    IS_CONVERTER(ret, className, "pickerView", UIPickerView)
+    IS_CONVERTER(ret, className, "segmentedControl", UISegmentedControl)
+    IS_CONVERTER(ret, className, "stepper", UIStepper)
 
     if ( ret == NULL ) {
 #ifdef _DEBUG

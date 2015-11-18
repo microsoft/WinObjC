@@ -55,6 +55,10 @@ const char *XIBObjectString::stringValue() {
     return _strVal;
 }
 
+int XIBObjectString::intValue() {
+    return atoi(_strVal);
+}
+
 bool XIBObjectString::EqualToString(const char *str)
 {
     if ( strcmp(_strVal, str) == 0 ) {
@@ -287,6 +291,10 @@ void XIBArray::InitFromStory(XIBObject *obj)
 
 void XIBArray::EmitObject(NIBWriter *writer)
 {
+    if (!_className) {
+        _className = "NSArray";
+    }
+
     if ( (_members.size() == 0 ||
         _members[0]->_name == NULL ||
         strcmp(_members[0]->_name, "EncodedWithXMLCoder") != 0) &&
@@ -298,7 +306,6 @@ void XIBArray::EmitObject(NIBWriter *writer)
 
         _members.insert(_members.begin(), newMember);
     }
-    if ( !_className ) _className = "NSArray";
     this->_outputClassName = _className;
     //printf("NSArray\n");
     for ( int i = 0; i < _members.size(); i ++ ) {

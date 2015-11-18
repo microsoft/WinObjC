@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\AccessibilityInternal.h" />
+  </ItemGroup>
 </Project>

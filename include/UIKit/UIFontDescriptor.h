@@ -21,15 +21,22 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFontDescriptor.h>
 
-enum {
-    UIFontTextStyleBody,
-};
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle1;
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle2;
+UIKIT_EXPORT NSString* const UIFontTextStyleTitle3;
+UIKIT_EXPORT NSString* const UIFontTextStyleHeadline;
+UIKIT_EXPORT NSString* const UIFontTextStyleSubheadline;
+UIKIT_EXPORT NSString* const UIFontTextStyleBody;
+UIKIT_EXPORT NSString* const UIFontTextStyleFootnote;
+UIKIT_EXPORT NSString* const UIFontTextStyleCaption1;
+UIKIT_EXPORT NSString* const UIFontTextStyleCaption2;
+UIKIT_EXPORT NSString* const UIFontTextStyleCallout;
 
-extern NSString* UIFontSymbolicTrait;
-extern NSString* UIFontDescriptorTraitsAttribute;
-extern NSString* UIFontDescriptorFamilyAttribute;
+UIKIT_EXPORT NSString* const UIFontSymbolicTrait;
+UIKIT_EXPORT NSString* const UIFontDescriptorTraitsAttribute;
+UIKIT_EXPORT NSString* const UIFontDescriptorFamilyAttribute;
 
-typedef enum : uint32_t {
+typedef NS_ENUM (uint32_t, UIFontDescriptorSymbolicTraits) {
     /* Typeface info (lower 16 bits of UIFontDescriptorSymbolicTraits ) */
     UIFontDescriptorTraitItalic = 1u << 0,
     UIFontDescriptorTraitBold = 1u << 1,
@@ -40,10 +47,8 @@ typedef enum : uint32_t {
     UIFontDescriptorTraitUIOptimized = 1u << 12,
     UIFontDescriptorTraitTightLeading = 1u << 15,
     UIFontDescriptorTraitLooseLeading = 1u << 16,
-
     /* Font appearance info (upper 16 bits of UIFontDescriptorSymbolicTraits */
     UIFontDescriptorClassMask = 0xF0000000,
-
     UIFontDescriptorClassUnknown = 0u << 28,
     UIFontDescriptorClassOldStyleSerifs = 1u << 28,
     UIFontDescriptorClassTransitionalSerifs = 2u << 28,
@@ -55,18 +60,21 @@ typedef enum : uint32_t {
     UIFontDescriptorClassOrnamentals = 9u << 28,
     UIFontDescriptorClassScripts = 10u << 28,
     UIFontDescriptorClassSymbolic = 12u << 28
-} UIFontDescriptorSymbolicTraits;
+};
 
 typedef NSUInteger UIFontTextStyle;
 
-UIKIT_EXPORT_CLASS 
-@interface UIFontDescriptor : NSObject + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle : (NSUInteger)stytle;
-+ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)name size:(CGFloat)size;
-+ (UIFontDescriptor*)fontDescriptorWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)size;
+UIKIT_EXPORT_CLASS
 
+@interface UIFontDescriptor : NSObject
+
++ (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style;
++ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size;
+- (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits;
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes;
+- (id)objectForKey:(NSString*)anAttribute;
 
-@property (nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits;
+@property (nonatomic, readonly) UIFontDescriptorSymbolicTraits symbolicTraits;
 
 @end
 

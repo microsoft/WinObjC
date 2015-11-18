@@ -24,9 +24,16 @@
 #include "UIKit/UIImage.h"
 #include "UIKit/UISegmentedControl.h"
 
+static const CGFloat c_marginBottom = 10;
+static const CGFloat c_marginLeftAndRight = 10;
+static const CGFloat c_defaultTextFieldHeight = 24;
+static const CGFloat c_marginTopForPrompt = 10;
+static const float c_defaultFontSize = 15.0;
+static const CGFloat c_scopeButtonMarginTop = 20;
+
 @implementation UISearchBar {
     idretaintype(UITextField) _textField;
-    idretaintype(UILabel) _label;
+    idretaintype(UILabel) _promptLabel;
     idretaintype(UISegmentedControl) _scopeButtons;
     idretaintype(NSString) _placeholder;
     BOOL _scopeButtonsHidden;
@@ -34,32 +41,16 @@
 }
 
 static void initInternal(UISearchBar* self) {
-    CGRect frame;
-
-    for (int i = 0; i < 5; i++) {
-        id view = [UIView new];
-        [self addSubview:view];
-    }
-
-    frame = [self frame];
-    frame.origin.x = 20;
-    frame.size.width -= 20;
-
+    CGRect frame = [self frame];
     self->_textField.attach([[UITextField alloc] initWithFrame:frame]);
     [self->_textField setDelegate:(id<UITextFieldDelegate>)self];
     [self->_textField setBorderStyle:UITextBorderStyleRoundedRect];
     [self->_textField addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
-    [self->_textField setFont:[UIFont systemFontOfSize:15.0f]];
+    [self->_textField setFont:[UIFont systemFontOfSize:c_defaultFontSize]];
     if (self->_placeholder != nil) {
         [self->_textField setPlaceholder:self->_placeholder];
     }
     [self addSubview:self->_textField];
-
-    self->_label.attach([[UILabel alloc] initWithFrame:frame]);
-    [self->_label setText:@"Find:"];
-    [self->_label setBackgroundColor:nil];
-    [self->_label setTextColor:[UIColor darkGrayColor]];
-    [self addSubview:self->_label];
 
     UIImage* navGradient = [[UIImage imageNamed:@"/img/navgradient-default.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
     UIImageSetLayerContents([self layer], navGradient);
@@ -67,6 +58,24 @@ static void initInternal(UISearchBar* self) {
 
 - (BOOL)resignFirstResponder {
     return [_textField resignFirstResponder];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPrompt:(NSString*)prompt {
+    if (_promptLabel == nil) {
+        CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
+
+        self->_promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
+        [self->_promptLabel setTextAlignment:NSTextAlignmentCenter];
+        [self->_promptLabel setBackgroundColor:nil];
+        [self->_promptLabel setTextColor:[UIColor blackColor]];
+        [self addSubview:self->_promptLabel];
+    }
+
+    _prompt = prompt;
+    [self setNeedsDisplay];
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -127,7 +136,6 @@ static void initInternal(UISearchBar* self) {
 
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
-
     initInternal(self);
 
     return self;
@@ -225,32 +233,25 @@ static void initInternal(UISearchBar* self) {
 }
 
 - (void)layoutSubviews {
-    CGRect bounds;
+    CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
+    [_promptLabel setFrame:promptFrame];
+    [self->_promptLabel setText:_prompt];
 
-    bounds = [self bounds];
-
-    CGRect textFrame;
-    textFrame = bounds;
-    textFrame.origin.x = 50;
-    textFrame.size.width -= 60;
-    textFrame.size.height = 25;
-    textFrame.origin.y = bounds.size.height / 2.0f - textFrame.size.height / 2.0f;
+    CGFloat textFieldOriginY = self.frame.size.height - c_defaultTextFieldHeight - c_marginBottom;
+    CGRect textFrame = { { c_marginLeftAndRight, textFieldOriginY },
+                         { self.frame.size.width - (2 * c_marginLeftAndRight), c_defaultTextFieldHeight } };
 
     if (!_scopeButtonsHidden) {
         if (_scopeButtons) {
-            textFrame.origin.y += 20;
-            [_scopeButtons setFrame:textFrame];
-            textFrame.origin.y -= 40;
+            CGRect scopeButtonsFrame = textFrame;
+            scopeButtonsFrame.origin.y = scopeButtonsFrame.origin.y + textFrame.size.height + c_scopeButtonMarginTop;
+            [_scopeButtons setFrame:scopeButtonsFrame];
         }
     } else {
         [_scopeButtons setHidden:TRUE];
     }
 
     [_textField setFrame:textFrame];
-    textFrame.origin.x = 10;
-    textFrame.size.width = 40;
-
-    [_label setFrame:textFrame];
 }
 
 - (BOOL)textField:(id)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)newString {
@@ -306,7 +307,7 @@ static void initInternal(UISearchBar* self) {
 
 - (void)dealloc {
     _textField = nil;
-    _label = nil;
+    _promptLabel = nil;
     _scopeButtons = nil;
     _placeholder = nil;
     [super dealloc];

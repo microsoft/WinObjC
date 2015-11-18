@@ -5,6 +5,7 @@
          AppxPackagePayload takes care of the copying in that case -->
     <SBResourcesDir Condition="'$(AppContainerApplication)' != 'true'">$(OutDir)</SBResourcesDir>
     <SBResourcesDir Condition="'$(AppContainerApplication)' == 'true'"></SBResourcesDir>
+    <SBResourcesDir Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">$(OutDir)\$(TargetName).bundle</SBResourcesDir>
     <SBResourceArchive>$(OutDir)\app.zip</SBResourceArchive>
   </PropertyGroup>
 </Project>

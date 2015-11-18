@@ -39,7 +39,6 @@ FOUNDATION_EXPORT_CLASS
    id _response;
    unsigned _storagePolicy;
    BOOL _didRetain, _didRelease;
-   id _mutableData;
 }
 
 +(BOOL)canHandleRequest:(NSURLRequest *)request;

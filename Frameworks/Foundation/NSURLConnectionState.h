@@ -19,15 +19,13 @@
     BOOL _isRunning;
     id _error;
     idretain _wakeUp;
+    NSMutableData* _receivedData;
 }
-- (BOOL)isRunning;
+@property (nonatomic, readonly, retain) NSData* receivedData;
+@property (nonatomic, readonly, retain) NSURLResponse* response;
+@property (nonatomic, readonly, retain) NSError* error;
 - (id)init;
-- (id)dealloc;
-- (id)receiveAllDataInMode:(id)mode;
-- (id)connection:(id)connection didReceiveData:(id)data;
-- (id)setError:(id)error;
-- (id)error;
-- (id)_doneWakeup;
-- (id)connection:(id)connection didFailWithError:(id)error;
-- (id)connectionDidFinishLoading:(id)connection;
+- (BOOL)isRunning;
+- (void)receiveAllDataInMode:(id)mode;
+- (void)_doneWakeup;
 @end

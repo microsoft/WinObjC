@@ -54,6 +54,11 @@ typedef enum {
     UIModalPresentationPageSheet,
     UIModalPresentationFormSheet,
     UIModalPresentationCurrentContext,
+    UIModalPresentationCustom,
+    UIModalPresentationOverFullScreen,
+    UIModalPresentationOverCurrentContext,
+    UIModalPresentationPopover,
+    UIModalPresentationNone = -1
 } UIModalPresentationStyle;
 
 typedef enum {
@@ -63,7 +68,8 @@ typedef enum {
     UIModalTransitionStylePartialCurl,
 } UIModalTransitionStyle;
 
-@class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController, UIStoryboard;
+@class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController, UIStoryboard, UIPresentationController,
+    UIPopoverPresentationController;
 
 UIKIT_EXPORT_CLASS
 @interface UIViewController : UIResponder <NSCoding>
@@ -153,6 +159,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) UISplitViewController* splitViewController;
 @property (nonatomic, readonly, retain) UISearchDisplayController* searchDisplayController; // stub
 
+@property (nonatomic, readonly) UIPopoverPresentationController* popoverPresentationController;
+@property (nonatomic, readonly) UIPresentationController* presentationController;
+
 // stubs
 @property (nonatomic, retain) UITabBarItem* tabBarItem;
 @property (nonatomic, readonly, retain) UITabBarController* tabBarController;
@@ -167,6 +176,22 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic) BOOL automaticallyAdjustsScrollViewInsets;
 @property (nonatomic) BOOL extendedLayoutIncludesOpaqueBars;
+
+// UIAccessibility properties.
+@property BOOL isAccessibilityElement;
+@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityHint;
+@property (copy) NSString* accessibilityValue;
+@property UIAccessibilityTraits accessibilityTraits;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
+@property (nonatomic) CGRect accessibilityFrame;
+@property (copy) UIBezierPath* accessibilityPath;
+@property CGPoint accessibilityActivationPoint;
+@property (retain) NSString* accessibilityLanguage;
+@property BOOL accessibilityElementsHidden;
+@property BOOL shouldGroupAccessibilityChildren;
+@property BOOL accessibilityViewIsModal;
+@property (copy) NSString* accessibilityIdentifier;
 
 @end
 

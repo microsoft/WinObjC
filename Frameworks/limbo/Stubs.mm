@@ -234,29 +234,47 @@ NSString* const SLServiceTypeFacebook = @"SLServiceTypeFacebook";
 @implementation SLComposeViewController
 @end
 
+/**
+@Status Stub
+*/
 __declspec(dllexport) extern "C" mach_port_t mach_host_self(void) {
+    UNIMPLEMENTED();
     return (mach_port_t)0xBAADF00D;
 }
 
+/**
+@Status Stub
+*/
 __declspec(dllexport) extern "C" int host_page_size(mach_port_t port, vm_size_t* sizeOut) {
+    UNIMPLEMENTED();
     return 65536;
 }
 int vm_page_size = 65536;
 
+/**
+@Status Stub
+*/
 __declspec(dllexport) extern "C" int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize) {
-    assert(type == HOST_VM_INFO);
-    assert(*dataOutSize >= sizeof(vm_statistics));
-    *dataOutSize = sizeof(vm_statistics);
+    if (type == HOST_VM_INFO && *dataOutSize >= sizeof(vm_statistics)) {
+        *dataOutSize = sizeof(vm_statistics);
 
-    vm_statistics* ret = (vm_statistics*)dataOut;
-    memset(ret, 0, sizeof(vm_statistics));
+        vm_statistics* ret = (vm_statistics*)dataOut;
+        memset(ret, 0, sizeof(vm_statistics));
 
-    ret->free_count = 512 * 1024 * 1024 / 65536;
+        ret->free_count = 512 * 1024 * 1024 / 65536;
+    }
+    else {
+        UNIMPLEMENTED();
+    }
+
     return 0;
 }
 
+/**
+@Status Stub
+*/
 __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* b, int len) {
-    assert(0);
+    UNIMPLEMENTED();
     return NULL;
 }
 

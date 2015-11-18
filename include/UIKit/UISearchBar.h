@@ -77,7 +77,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UIKeyboardType keyboardType;
 @property (nonatomic) UIOffset searchTextPositionAdjustment;
 @property (nonatomic) UISearchBarStyle searchBarStyle;
-@property (nonatomic) NSString* prompt;
+@property (nonatomic, copy) NSString* prompt;
 
 - (void)setShowsCancelButton:(BOOL)showsCancelButton animated:(BOOL)animated;
 - (void)setImage:(UIImage*)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state;

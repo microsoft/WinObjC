@@ -36,6 +36,7 @@
 #include "UIViewControllerInternal.h"
 #include "AutoLayout.h"
 #include "UIViewControllerInternal.h"
+#include "UIKit/UIPopoverPresentationController.h"
 
 NSString* const UITransitionContextFromViewControllerKey = (NSString * const) @"UITransitionContextFromViewControllerKey";
 NSString* const UITransitionContextToViewControllerKey = (NSString * const) @"UITransitionContextToViewControllerKey";
@@ -892,6 +893,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 /**
  @Status Interoperable
 */
+- (UIPopoverPresentationController*)popoverPresentationController {
+    return priv->_popoverPresentationController;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setView:(UIView*)newView {
     if (newView == priv->view)
         return;
@@ -1058,7 +1066,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [controller view];
         controller->priv->_parentViewController = self;
         controller->priv->_presentingViewController = self;
-        [controller performSelector:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] afterDelay:0.0];
+        [controller performSelector:@selector(_addToTop:)
+                           onThread:[NSThread currentThread]
+                         withObject:[NSNumber numberWithInt:animated]
+                      waitUntilDone:YES];
     }
 
     /*
@@ -1283,6 +1294,25 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     priv->_isRootView = true;
 
     if (priv->_parentViewController != nil) {
+        // TODO: This implementation satisfies the contract that the popoverPresentationController is not nil when presenting a
+        // UIViewController with modalPresentationType equal to UIModalPresentationPopover.
+        // The full implementation will need to utilize the UIPresentationController for UIViewController presentations
+        if (priv->_presentationStyle == UIModalPresentationPopover) {
+            if (priv->_popoverPresentationController != nil) {
+                [priv->_popoverPresentationController release];
+            }
+
+            priv->_popoverPresentationController =
+                [[UIPopoverPresentationController alloc] initWithPresentedViewController:self
+                                                                presentingViewController:priv->_parentViewController];
+
+            if (priv->_presentationController != nil) {
+                [priv->_presentationController release];
+            }
+
+            priv->_presentationController = priv->_popoverPresentationController;
+        }
+
         float endY = 0;
 
         UIView* view = [self view];
@@ -1898,7 +1928,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
         if ([[cur identifier] isEqualToString:identifier]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -1929,7 +1959,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
         if ([[cur destination] isEqualToString:destination]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -2049,7 +2079,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     //  Remove us from being the parent of our child view controller.
     //  Should we call controller->removeFromParentViewController instead?
-    for (UIViewController* curController in (NSArray*)priv->_childViewControllers) {
+    for (UIViewController* curController in(NSArray*)priv->_childViewControllers) {
         curController->priv->_parentViewController = nil;
     }
 

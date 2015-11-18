@@ -34,6 +34,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\category.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\class.c" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\error-handling.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\exception.cpp">
       <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>

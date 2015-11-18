@@ -15,7 +15,8 @@
 //******************************************************************************
 
 #import <UIKit/UIKit.h>
+#import <UIKit/UIScreen.h>
 
-@interface SBDisplayModeViewController : UITableViewController<UIPickerViewDataSource, UIPickerViewDelegate>
-@property (nonatomic, retain) NSMutableArray *rows;
+@interface SBDisplayModeViewController : UITableViewController <UIPickerViewDataSource, UIPickerViewDelegate>
+@property (nonatomic, retain) NSMutableArray* rows;
 @end
