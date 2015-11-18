@@ -57,6 +57,7 @@ CORELOCATION_EXPORT_CLASS
 - (void)requestWhenInUseAuthorization;
 + (CLAuthorizationStatus)authorizationStatus;
 + (BOOL)deferredLocationUpdatesAvailable;
++ (BOOL)locationServicesEnabled;
 + (BOOL)significantLocationChangeMonitoringAvailable;
 + (BOOL)headingAvailable;
 + (BOOL)isMonitoringAvailableForClass:(Class)regionClass;

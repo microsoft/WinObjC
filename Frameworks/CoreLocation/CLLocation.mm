@@ -53,6 +53,14 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
 /**
  @Status Stub
 */
+CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coordinate) {
+    UNIMPLEMENTED();
+    return FALSE;
+}
+
+/**
+ @Status Stub
+*/
 - (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
     UNIMPLEMENTED();
     return (CLLocationDistance)0;
