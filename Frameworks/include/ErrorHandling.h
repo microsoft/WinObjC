@@ -17,7 +17,6 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
-#include <Foundation/FoundationExport.h>
 #include <winerror.h>
 
 #ifdef __OBJC__
