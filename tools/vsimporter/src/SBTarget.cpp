@@ -192,7 +192,7 @@ String SBTarget::makeRelativePath(const String& path, const String& absRoot) con
 
 SBTarget* SBTarget::getPossibleTarget(const PBXBuildFile* buildFile)
 {
-  static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework"};
+  static const char* const _productWildcards[] = {"lib*.a", "*.app", "*.framework", "*.bundle"};
   static StringVec productWildcards(_productWildcards, _productWildcards + sizeof(_productWildcards) / sizeof(char*));
 
   sbAssert(buildFile);
@@ -274,6 +274,7 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
     String execName = configBS.second->getValue("EXECUTABLE_NAME");
     if (getProductType() == TargetStaticLib)
       execName = sb_fname(execName);
+
     if (!execName.empty())
       projConfig->setProperty("TargetName", execName);
   }

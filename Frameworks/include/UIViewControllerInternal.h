@@ -35,6 +35,8 @@ struct UIViewControllerPriv {
     idretaintype(UIViewController) _modalViewController;
     idretaintype(UISearchDisplayController) _searchDisplayController;
     __unsafe_unretained id _presentingViewController, _presentedViewController;
+    __unsafe_unretained id _popoverPresentationController;
+    __unsafe_unretained id _presentationController;
     idretaintype(NSDictionary) _externalObjects;
     __unsafe_unretained id _parentViewController;
     idretaintype(NSString) nibName;

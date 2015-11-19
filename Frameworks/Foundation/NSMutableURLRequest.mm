@@ -130,13 +130,13 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    NSURLRequest* ret =
-        [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:0 timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
+    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url
+                                                     cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                 timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
     ret->_headerFields = [_headerFields mutableCopy];
     ret->_method.attach([_method copy]);
     ret->_body.attach([_body copy]);
     ret->_shouldHandleCookies = _shouldHandleCookies;
-    ret->_shouldDiscardData = _shouldDiscardData;
     ret->_cachePolicy = _cachePolicy;
     ret->_bodyStream = _bodyStream;
 

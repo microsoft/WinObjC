@@ -338,6 +338,9 @@ public:
         _centerVertically = centerVertically;
         _lineHeight = [font ascender] - [font descender];
 
+        int mask = [font fontDescriptor].symbolicTraits;
+        _isBold = (mask & UIFontDescriptorTraitBold) > 0;
+        _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
         ConstructGlyphs([[font fontName] UTF8String], (const wchar_t*)[text rawCharacters], [text length]);
     }
 };
@@ -1258,6 +1261,10 @@ public:
     DisplayTexture* CreateDisplayTextureForElement(id xamlElement) {
         GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement internalObject]);
         return genericControlTexture;
+    }
+
+    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
+        node->SetAccessibilityInfo(info);
     }
 };
 

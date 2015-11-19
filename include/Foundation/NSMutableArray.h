@@ -47,6 +47,9 @@ FOUNDATION_EXPORT_CLASS
 
 -(void)sortUsingComparator:(NSComparator)cmptr;
 
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
+- (void)setObject:(id)anObject atIndexedSubscript:(NSUInteger)index;
+
 @end
 
 @interface NSMutableArrayConcrete : NSMutableArray

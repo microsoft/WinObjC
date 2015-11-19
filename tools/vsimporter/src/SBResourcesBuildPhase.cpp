@@ -39,8 +39,10 @@ SBResourcesBuildPhase::SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase
 
 void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
 {
-  if (m_parentTarget.getProductType() != TargetApplication)
+  TargetProductType productType = m_parentTarget.getProductType();
+  if (productType != TargetApplication && productType != TargetBundle) {
     return;
+  }
 
   SBBuildPhase::writeVSFileDescriptions(proj, "SBResourceCopy");
 

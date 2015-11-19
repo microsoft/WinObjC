@@ -50,14 +50,14 @@
  @Status Interoperable
 */
 - (id)initWithURL:(id)url {
-    return [self initWithURL:url cachePolicy:nil timeoutInterval:30.0];
+    return [self initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
 }
 
 /**
  @Status Interoperable
 */
 + (id)requestWithURL:(id)url {
-    id ret = [[self alloc] initWithURL:url cachePolicy:nil timeoutInterval:30.0];
+    id ret = [[self alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
 
     return [ret autorelease];
 }
@@ -119,12 +119,12 @@
 }
 
 - (id)mutableCopy {
-    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:0 timeoutInterval:30.0];
+    NSURLRequest* ret =
+        [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
     ret->_headerFields = [_headerFields mutableCopy];
     ret->_method.attach([_method copy]);
     ret->_body.attach([_body copy]);
     ret->_shouldHandleCookies = _shouldHandleCookies;
-    ret->_shouldDiscardData = _shouldDiscardData;
     ret->_cachePolicy = _cachePolicy;
     ret->_bodyStream = _bodyStream;
 
@@ -165,16 +165,6 @@
     }
 
     return nil;
-}
-
-- (id)_setShouldDiscardData:(BOOL)shouldDiscardData {
-    _shouldDiscardData = shouldDiscardData != FALSE;
-
-    return 0;
-}
-
-- (BOOL)_shouldDiscardData {
-    return _shouldDiscardData;
 }
 
 /**

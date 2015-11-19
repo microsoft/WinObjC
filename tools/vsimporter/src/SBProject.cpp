@@ -355,10 +355,13 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
   for (auto target : m_existingTargets) {
     // Construct template name
     String templateName;
-    if (target.second->getProductType() == TargetApplication) {
+    TargetProductType productType = target.second->getProductType();
+    if (productType == TargetApplication) {
       templateName = outputFormat + "-" + "App";
-    } else if (target.second->getProductType() == TargetStaticLib) {
+    } else if (productType == TargetStaticLib) {
       templateName = outputFormat + "-" + "StaticLib";
+    } else if (productType == TargetBundle) {
+      templateName = outputFormat + "-" + "Bundle";
     } else if (target.first->getType() == "PBXAggregateTarget") {
       templateName = outputFormat + "-" + "Aggregate";
     } else {
@@ -389,8 +392,11 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
         sln.addPlatform(platformName);
       }
     
-      // Add a referenced to the shared headers project
-      proj->addSharedProject(headerProj);
+      // Add a referenced to the shared headers project to targets that compile things
+      if (productType == TargetApplication || productType == TargetStaticLib)
+      {
+        proj->addSharedProject(headerProj);
+      }
     
       // Add the project to the solution
       VSBuildableSolutionProject* slnProj = sln.addProject(proj, projFolder);

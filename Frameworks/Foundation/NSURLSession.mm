@@ -29,10 +29,6 @@
 
 @end
 
-@implementation NSURLSessionConfiguration
-
-@end
-
 @implementation NSURLSession
 
 @end

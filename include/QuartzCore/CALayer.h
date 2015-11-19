@@ -62,8 +62,10 @@ CA_EXPORT NSString* const kCAGravityResizeAspectFill;
 
 #if defined(__cplusplus)
 class CAPrivateInfo;
+struct IWAccessibilityInfo;
 #else
 typedef void* CAPrivateInfo;
+typedef void* IWAccessibilityInfo;
 #endif
 
 CA_EXPORT_CLASS
@@ -158,6 +160,12 @@ CA_EXPORT_CLASS
 - (id)presentationLayer;
 
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
+
+- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
+
+- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
+
+- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
 
 @end
 

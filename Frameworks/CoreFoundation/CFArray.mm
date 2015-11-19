@@ -435,6 +435,13 @@ void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const voi
 /**
  @Status Interoperable
 */
+void CFArraySetValueAtIndex(CFMutableArrayRef self,CFIndex index,const void *value) {
+    _LazyArrOffset.member(self)->replaceObject((id)value, index);
+}
+
+/**
+ @Status Interoperable
+*/
 void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** values, CFIndex newCount) {
     CFIndex curPos = range.location;
     const id* newValues = (const id*)values;

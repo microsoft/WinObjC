@@ -164,6 +164,16 @@ void UIView::InitFromStory(XIBObject *obj)
             _contentMode = UIViewContentModeScaleAspectFill;
         } else if ( strcmp(mode, "scaleAspectFit") == 0 ) {
             _contentMode = UIViewContentModeScaleAspectFit;
+        } else if ( strcmp(mode, "TopLeft") == 0 ) {
+            _contentMode = UIViewContentModeTopLeft;
+        } else if ( strcmp(mode, "bottomLeft") == 0 ) {
+            _contentMode = UIViewContentModeBottomLeft;
+        } else if (strcmp(mode, "right") == 0) {
+            _contentMode = UIViewContentModeRight;
+        } else if (strcmp(mode, "top") == 0) {
+            _contentMode = UIViewContentModeTop;
+        } else if (strcmp(mode, "bottom") == 0) {
+            _contentMode = UIViewContentModeBottom;
         } else {
             assert(0);
         }

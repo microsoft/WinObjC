@@ -52,7 +52,14 @@ SBFrameworksBuildPhase::SBFrameworksBuildPhase(const PBXFrameworksBuildPhase* ph
 
 void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
 {
+  // We don't support linking with frameworks when building bundles
   TargetProductType productType = m_parentTarget.getProductType();
+  if (productType == TargetBundle) {
+    if (!m_phase->getBuildFileList().empty()) {
+      SBLog::warning() << "Ignoring all frameworkss in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
+    }
+    return;
+  }
 
   String linkTarget;
   if (productType == TargetApplication)

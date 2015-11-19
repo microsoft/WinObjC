@@ -214,13 +214,8 @@ static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
 
         const char* valueType = [sig getArgumentTypeAtIndex:2];
         std::vector<uint8_t> data(getArgumentSize(valueType));
-        if (valueType[0] == '@') { // Method is expecting an object: give it the object directly
-            memcpy(data.data(), &value, sizeof(id));
-        } else if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
-            // We can't box or unbox char* or arbitrary pointers.
+        if (!woc::dataWithTypeFromValue(data.data(), valueType, value)) {
             return false;
-        } else if ([value isKindOfClass:[NSValue class]]) {
-            [static_cast<NSValue*>(value) getValue:data.data()];
         }
 
         [invocation setTarget:self];
@@ -243,68 +238,12 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     const char* argType = curIvar->type;
 
     void* destination = reinterpret_cast<char*>(self) + offset;
-    switch (argType[0]) {
-        case '@':
-            [*reinterpret_cast<id*>(destination) release];
-            woc::ValueTransformer<id>::store(value, destination);
-            break;
-        case '#':
-            woc::ValueTransformer<Class>::store(value, destination);
-            break;
-        case 'c':
-            woc::ValueTransformer<char>::store(value, destination);
-            break;
-        case 'i':
-            woc::ValueTransformer<int>::store(value, destination);
-            break;
-        case 's':
-            woc::ValueTransformer<short>::store(value, destination);
-            break;
-        case 'l':
-            woc::ValueTransformer<long>::store(value, destination);
-            break;
-        case 'q':
-            woc::ValueTransformer<long long>::store(value, destination);
-            break;
-        case 'C':
-            woc::ValueTransformer<unsigned char>::store(value, destination);
-            break;
-        case 'I':
-            woc::ValueTransformer<unsigned int>::store(value, destination);
-            break;
-        case 'S':
-            woc::ValueTransformer<unsigned short>::store(value, destination);
-            break;
-        case 'L':
-            woc::ValueTransformer<unsigned long>::store(value, destination);
-            break;
-        case 'Q':
-            woc::ValueTransformer<unsigned long long>::store(value, destination);
-            break;
-        case 'f':
-            woc::ValueTransformer<float>::store(value, destination);
-            break;
-        case 'd':
-            woc::ValueTransformer<double>::store(value, destination);
-            break;
-        case 'B':
-            woc::ValueTransformer<bool>::store(value, destination);
-            break;
-        case '*':
-        case '^':
-        case '?':
-            // We cannot box/unbox arbitrary pointers or char*.
-            return false;
-        default:
-            NSValue* nsv = static_cast<NSValue*>(value);
-            if (getArgumentSize(argType) == getArgumentSize([nsv objCType])) {
-                [nsv getValue:destination];
-            } else {
-                // If the argument types don't match in size, we just say
-                // that this key can't be coded.
-                return false;
-            }
-            break;
+    if (!woc::dataWithTypeFromValue(destination, argType, value)) {
+        return false;
+    }
+    if (argType[0] == '@') {
+        // retain object-type ivar, old value is _not_ released (iOS/OS X behavior)
+        [*reinterpret_cast<id*>(destination) retain];
     }
 
     return true;
@@ -341,6 +280,24 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     }
 
     [self setValue:val forUndefinedKey:key];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setValue:(id)value forKeyPath:(NSString*)path {
+    std::string keyPath([path UTF8String]);
+
+    auto pointPosition = keyPath.find('.');
+    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
+        [self setValue:value forKey:path];
+        return;
+    }
+
+    std::string keyComponent(keyPath, 0, pointPosition);
+
+    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
+    [subValue setValue:value forKeyPath:[NSString stringWithUTF8String:keyPath.c_str() + pointPosition + 1]];
 }
 
 /**

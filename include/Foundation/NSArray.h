@@ -102,8 +102,6 @@ FOUNDATION_EXPORT_CLASS
 - (void)enumerateObjectsAtIndexes: (NSIndexSet*)range options: (NSEnumerationOptions)opts usingBlock:(void (^)(id object, NSUInteger index, BOOL *stop))block;
 
 - (NSUInteger)indexOfObject:(id)obj inSortedRange:(NSRange)r options:(NSBinarySearchingOptions)opts usingComparator:(NSComparator)cmp;
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
-- (void)setObject:(id)anObject atIndexedSubscript:(NSUInteger)index;
 
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 

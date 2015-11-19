@@ -126,6 +126,23 @@ TEST(Foundation, NSUUID) {
         [[uuidShort description] UTF8String]);
 }
 
+@interface TestKVOSelfObserver : NSObject {
+    id _dummy;
+}
+@end
+@implementation TestKVOSelfObserver
+- (id)init {
+    if (self = [super init]) {
+        [self addObserver:self forKeyPath:@"dummy" options:0 context:nullptr];
+    }
+    return self;
+}
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"dummy"];
+    [super dealloc];
+}
+@end
+
 @interface TestKVOChange: NSObject
 @property (nonatomic, copy) NSString* keypath;
 @property (nonatomic, assign /*weak but no arc*/) id object;
@@ -502,12 +519,21 @@ TEST(Foundation, KeyValueObservation) {
         NSMutableDictionary* observed = [NSMutableDictionary dictionary];
         TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
+        [observed setObject:[[[TestKVOObject alloc] init] autorelease] forKey:@"subKey"];
+
         [observed addObserver:observer forKeyPath:@"arbitraryValue" options:NSKeyValueObservingOptionNew context:NULL];
+        [observed addObserver:observer forKeyPath:@"subKey.basicObjectProperty" options:NSKeyValueObservingOptionNew context:NULL];
+
         [observed setObject:@"Whatever" forKey:@"arbitraryValue"];
+        [observed setValue:@"Whatever2" forKeyPath:@"arbitraryValue"];
+        [observed setValue:@"Whatever2" forKeyPath:@"subKey.basicObjectProperty"];
 
         EXPECT_EQ_MSG([[observer changesForKeypath:@"arbitraryValue"] count],
-                      1,
+                      2,
                       "On a NSMutableDictionary, a change notification for arbitraryValue.");
+        EXPECT_EQ_MSG([[observer changesForKeypath:@"subKey.basicObjectProperty"] count],
+                      1,
+                      "On a NSMutableDictionary, a change notification for subKey.basicObjectProperty.");
     }
     { // Deregistration test
         TestKVOObject* observed = [[TestKVOObject alloc] init];
@@ -809,5 +835,9 @@ TEST(Foundation, KeyValueObservation) {
 
         EXPECT_ANY_THROW_MSG([observed removeObserver:observer forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(1)],
                              "Removing an unregistered observer should throw an exception.");
+    }
+    { // Test deallocation of an object that is its own observer
+        TestKVOSelfObserver* observed = [[TestKVOSelfObserver alloc] init];
+        EXPECT_NO_THROW([observed release]);
     }
 }

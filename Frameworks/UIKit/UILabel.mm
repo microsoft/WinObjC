@@ -22,6 +22,7 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIColor.h"
 #include "UIKit/UILabel.h"
+#include "UIKit/UIAccessibility.h"
 
 #include "CGContextInternal.h"
 
@@ -46,6 +47,7 @@
     BOOL _isHighlighted;
     UIBaselineAdjustment _baselineAdjustment;
 }
+
 - (void)adjustFontSizeToFit {
     if (_numberOfLines != 1) {
         [self adjustTextLayerSize];
@@ -177,8 +179,13 @@
     return self;
 }
 
+- (void)initAccessibility {
+    [super initAccessibility];
+    self.accessibilityTraits = UIAccessibilityTraitStaticText;
+}
+
 /**
- @Status Interoperable
+   @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
@@ -212,11 +219,14 @@
     }
     if (newStr == nil || ![_text isEqual:newStr]) {
         _text.attach([newStr copy]);
+        
         if (_adjustFontSize) {
             [self adjustFontSizeToFit];
         } else {
             [self adjustTextLayerSize];
         }
+
+        self.accessibilityValue = newStr;
     }
 }
 

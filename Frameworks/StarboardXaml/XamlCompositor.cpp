@@ -24,6 +24,9 @@
 #include <robuffer.h>
 #include <collection.h>
 #include <assert.h>
+
+#include <windows.ui.xaml.automation.peers.h>
+
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
@@ -323,6 +326,17 @@ void DisplayNode::SetBackgroundColor(float r, float g, float b, float a) {
     }
 }
 
+void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
+    /* Disabled for now
+    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    auto peer =
+    (XamlCompositorCS::Controls::CALayerXamlAutomationPeer^)Windows::UI::Xaml::Automation::Peers::FrameworkElementAutomationPeer::FromElement(xamlNode);
+
+    assert(xamlNode != nullptr);
+    assert(peer != nullptr);
+    */
+}
+
 void UpdateRootNode() {
 }
 
@@ -544,6 +558,8 @@ DisplayTextureXamlGlyphs::~DisplayTextureXamlGlyphs() {
     _xamlTextbox.Set(NULL);
 }
 
+Platform::String ^ charToPlatformString(const char* str);
+
 void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar_t* str, int length) {
     XamlCompositorCS::Controls::CATextLayerXaml ^ textLayer =
         (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
@@ -556,6 +572,14 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textColor.B = (unsigned char)(_color[2] * 255.0f);
     textColor.A = (unsigned char)(_color[3] * 255.0f);
     textControl->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(textColor);
+    textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(charToPlatformString(fontName));
+    if (_isBold) {
+        textControl->FontWeight = Windows::UI::Text::FontWeights::Bold;
+    }
+
+    if (_isItalic) {
+        textControl->FontStyle = Windows::UI::Text::FontStyle::Italic;
+    }
 
     switch (_horzAlignment) {
         case alignLeft:
@@ -573,6 +597,15 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textControl->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
     textControl->LineStackingStrategy = Windows::UI::Xaml::LineStackingStrategy::BlockLineHeight;
     textControl->LineHeight = _lineHeight;
+}
+
+Platform::String ^ charToPlatformString(const char* str) {
+    if (!str) {
+        return nullptr;
+    }
+
+    std::wstring widStr(str, str + strlen(str));
+    return ref new Platform::String(widStr.c_str());
 }
 
 void DisplayTextureXamlGlyphs::Measure(float width, float height) {

@@ -104,6 +104,16 @@ void UIColor::InitFromStory(XIBObject *obj)
             _systemName = sysColor;
             _white = 0.6f;
             _a = 0.6f;
+        } else if (strcmp(sysColor, "groupTableViewBackgroundColor") == 0) {
+            _colorSpaceOut = colorSpaceWhite;
+            _systemName = sysColor;
+            _white = 1.0f;
+            _a = 0.6f;
+        } else if (strcmp(sysColor, "tableCellGroupedBackgroundColor") == 0) {
+            _colorSpaceOut = colorSpaceWhite;
+            _systemName = sysColor;
+            _white = 1.0f;
+            _a = 0.6f;
         } else {
             assert(0);
         }

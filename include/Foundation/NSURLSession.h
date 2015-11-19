@@ -19,6 +19,7 @@
 
 #import <Foundation/NSTask.h>
 #import <Foundation/NSURLRequest.h>
+#import <Foundation/NSURLSessionConfiguration.h>
 
 @class NSURLResponse;
 @class NSURLCache;
@@ -60,22 +61,6 @@ FOUNDATION_EXPORT_CLASS
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionDataTask : NSURLSessionTask
-
-@end
-
-FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionConfiguration : NSObject
-
-@property (nonatomic) BOOL allowsCellularAccess;
-@property (nonatomic) NSURLCache* URLCache;
-@property (nonatomic) NSURLRequestCachePolicy requestCachePolicy;
-@property (nonatomic) NSTimeInterval timeoutIntervalForResource;
-@property (nonatomic) NSTimeInterval timeoutIntervalForRequest;
-@property (nonatomic) NSUInteger HTTPMaximumConnectionsPerHost;
-
-+ (instancetype)ephemeralSessionConfiguration;
-+ (instancetype)defaultSessionConfiguration;
-+ (instancetype)backgroundSessionConfiguration:(NSString*)name;
 
 @end
 

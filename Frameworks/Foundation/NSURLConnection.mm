@@ -22,7 +22,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSURLConnectionState.h"
 #include "Foundation/NSURLConnection.h"
 
-@implementation NSURLConnection : NSObject
+@implementation NSURLConnection
 
 /**
  @Status Interoperable
@@ -50,9 +50,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Caveat
  @Notes NSError returned is not detailed
 */
-+ (id)sendSynchronousRequest:(id)request returningResponse:(NSURLResponse**)responsep error:(NSError**)errorp {
-    id state = [[[NSURLConnectionState alloc] init] autorelease];
-    id connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
++ (NSData*)sendSynchronousRequest:(id)request returningResponse:(NSURLResponse**)responsep error:(NSError**)errorp {
+    NSURLConnectionState* state = [[[NSURLConnectionState alloc] init] autorelease];
+    NSURLConnection* connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
 
     if (connection == nil) {
         if (errorp != NULL) {
@@ -70,16 +70,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [state receiveAllDataInMode:mode];
     [connection unscheduleFromRunLoop:[NSRunLoop currentRunLoop] forMode:mode];
 
-    id result = [[((NSURLConnection*)connection)->_mutableData retain] autorelease];
+    id result = state.receivedData;
 
     [connection cancel];
 
     if (errorp != NULL) {
-        *errorp = [state error];
+        *errorp = state.error;
     }
 
     if (responsep != NULL) {
-        *responsep = [[((NSURLConnection*)connection)->_response retain] autorelease];
+        *responsep = state.response;
     }
 
     [connection release];
@@ -132,7 +132,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [_protocol release];
     [_delegate release];
     [_response release];
-    [_mutableData release];
     [super dealloc];
 }
 
@@ -190,11 +189,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 - (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     EbrDebugLog("URL protocol did receive response\n");
-
-    if (_mutableData == nil) {
-        _mutableData = [[NSMutableData alloc] init];
-    }
-
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
     [_delegate setError:[NSError errorWithDomain:@"Bad response code" code:[response statusCode] userInfo:nil]];
@@ -214,14 +208,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 - (void)URLProtocol:(id)urlProtocol didLoadData:(id)data {
     EbrDebugLog("URL protocol did load data\n");
-    if (_mutableData == nil) {
-        _mutableData = [[NSMutableData alloc] init];
-    }
-
-    if (![_request _shouldDiscardData]) {
-        [_mutableData appendData:data];
-    }
-
     if ([_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
         [_delegate connection:self didReceiveData:data];
     }

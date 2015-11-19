@@ -180,5 +180,5 @@ LIBRARY Foundation
      __objc_class_name_CTTelephonyNetworkInfo    CONSTANT
      _OBJC_CLASS_NSManagedObjectContext    DATA
      __objc_class_name_NSManagedObjectContext    CONSTANT
-
- 
+     _OBJC_CLASS_NSAssertionHandler DATA
+     __objc_class_name_NSAssertionHandler CONSTANT

@@ -100,6 +100,13 @@ void PBXNativeTarget::getBuildSettings(VariableCollection& settings) const
 
     settings.insert("EXECUTABLE_NAME", productName);
     settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
+  } else if (m_productType == "com.apple.product-type.bundle") {
+    if (productFileType != "wrapper.cfbundle") {
+      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" bundle target." << std::endl;
+    }
+
+    settings.insert("EXECUTABLE_NAME", productName);
+    settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
   }
 
   settings.insert("PRODUCT_NAME", productName);

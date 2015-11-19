@@ -205,9 +205,6 @@ struct _mach_timeval {
     return pthread_mutex_trylock(&_mutex) == 0;
 }
 
-/**
- @Status Interoperable
-*/
 - (void)lockWhenCondition:(NSInteger)condition {
     int rc;
 

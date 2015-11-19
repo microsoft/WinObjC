@@ -24,12 +24,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSOperation
 
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
+    // This class dispatches its own notifications.
+    return NO;
+}
+
 + (id)allocWithZone:(NSZone*)zone {
     NSOperation* ret = [super allocWithZone:zone];
 
     ret->priv = new NSOperationPriv();
-
-    [ret addObserver:(id)ret forKeyPath:@"isFinished" options:0 context:nil];
 
     return ret;
 }
@@ -139,15 +142,53 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         if (execute) {
             [self willChangeValueForKey:@"isExecuting"];
         }
-        [self willChangeValueForKey:@"isFinished"];
-        pthread_mutex_lock(&priv->finishLock);
-        priv->finished = 1;
-        [self didChangeValueForKey:@"isFinished"];
-        if (execute) {
-            priv->executing = 0;
-            [self didChangeValueForKey:@"isExecuting"];
-        }
-        pthread_mutex_unlock(&priv->finishLock);
+
+        [self _setFinished:YES andPerformUnderLock:^{
+            if (execute) {
+                priv->executing = 0;
+                [self didChangeValueForKey:@"isExecuting"];
+            }
+        }];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setFinished:(BOOL)finished {
+    [self _setFinished:finished andPerformUnderLock:nil];
+}
+
+- (void)_setFinished:(BOOL)finished andPerformUnderLock:(void(^)())block {
+    // yes, this is ugly: priv->finished is an int though.
+    int newValue = finished ? 1 : 0;
+    pthread_mutex_lock(&priv->finishLock);
+
+    [self willChangeValueForKey:@"isFinished"];
+
+    if (priv->finished != newValue) {
+        priv->finished = newValue;
+    }
+
+    [self didChangeValueForKey:@"isFinished"];
+
+    if (block) {
+        block();
+    }
+
+    if (newValue == 1) {
+        pthread_cond_broadcast(&priv->finishCondition);
+    }
+
+    pthread_mutex_unlock(&priv->finishLock);
+
+    // This may seem unintuitive, but the completion
+    // block is intended to be called even if the operation
+    // is cancelled.
+    if (newValue == 1 && priv->completionBlock != nil) {
+        priv->completionBlock();
+        [priv->completionBlock release];
+        priv->completionBlock = nil;
     }
 }
 
@@ -188,26 +229,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return priv->dependencies;
 }
 
-- (void)observeValueForKeyPath:(id)keyPath ofObject:(id)obj change:(id)changeDictionary context:(void*)context {
-    pthread_mutex_lock(&priv->finishLock);
-    int finished = [self isFinished];
-    if (finished) {
-        pthread_cond_broadcast(&priv->finishCondition);
-    }
-    pthread_mutex_unlock(&priv->finishLock);
-
-    // Someone might do something stupid like waitUntilFinished in the completion block,
-    // which would deadlock if these weren't separated.
-    if (finished && priv->completionBlock != nil) {
-        priv->completionBlock();
-        [priv->completionBlock release];
-        priv->completionBlock = nil;
-    }
-}
-
 - (void)dealloc {
     assert(priv->completionBlock == nil);
-    [self removeObserver:self forKeyPath:@"isFinished"];
     delete priv;
     [super dealloc];
 }

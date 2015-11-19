@@ -118,6 +118,9 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
 
             if ( obj ) {
                 XIBObject *objectId = curObject->FindMember("objectID");
+                if (!objectId) {
+                    objectId = curObject->FindMember("id");
+                }
                 int objId = objectId->intValue();
 
                 //  Attempt to find any associated custom class name

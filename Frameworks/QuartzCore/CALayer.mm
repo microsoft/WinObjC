@@ -2349,6 +2349,11 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
 - (NSObject*)presentationValueForKey:(NSString*)key {
     return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
 }
+
+- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
+    GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
+}
+
 @end
 
 void SetCACompositor(CACompositorInterface* compositorInterface) {

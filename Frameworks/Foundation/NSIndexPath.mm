@@ -198,4 +198,12 @@
     return [self indexAtPosition:0];
 }
 
+/**
+ @Status Stub
+*/
+- (NSIndexPath*)indexPathByRemovingLastIndex {
+    UNIMPLEMENTED();
+    return self;
+}
+
 @end
