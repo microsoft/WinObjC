@@ -33,6 +33,10 @@ public:
     ClConstraint* _constraint;
 };
 
+extern "C" bool InitializeAutoLayout() {
+    return true;
+}
+
 class AutoLayoutProperties {
 public:
     AutoLayoutProperties(UIView* view)
@@ -303,7 +307,7 @@ public:
             // To facilitate this, we update frames for views we depend on (and thus their autosizing, and
             // constraints) before setting our own.
             // TODO: last baseline
-            for (NSLayoutConstraint* constraint in (NSArray*)childPriv->associatedConstraints) {
+            for (NSLayoutConstraint* constraint in(NSArray*)childPriv->associatedConstraints) {
                 UIView* item = (UIView*)constraint.firstItem;
                 if (item != nil && item != self && constraint.firstAttribute == NSLayoutAttributeBaseline) {
                     [item autoLayoutSetFrameToView:self fromView:topView];

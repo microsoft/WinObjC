@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
-    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Windows 8.1</TargetOsAndVersion>
+    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Universal Windows</TargetOsAndVersion>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
   </PropertyGroup>
   <ImportGroup>

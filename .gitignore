@@ -21,3 +21,5 @@ dirlistout
 filelist.bat
 filelistout
 files.eld
+*.bitremoved
+Documents/
