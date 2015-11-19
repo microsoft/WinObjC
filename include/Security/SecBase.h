@@ -16,14 +16,19 @@
 
 #pragma once
 
-#ifndef SECURITY_EXPORT
-#ifdef __cplusplus
-#define SECURITY_EXPORT extern "C"
-#else
-#define SECURITY_EXPORT extern
-#endif
+#ifndef SECURITY_IMPEXP
+#define SECURITY_IMPEXP __declspec(dllimport)
 #endif
 
+#ifndef SECURITY_EXPORT
+#ifdef __cplusplus
+#define SECURITY_EXPORT extern "C" SECURITY_IMPEXP
+#define SECURITY_EXPORT_CLASS SECURITY_IMPEXP
+#else
+#define SECURITY_EXPORT extern SECURITY_IMPEXP
+#define SECURITY_EXPORT_CLASS SECURITY_IMPEXP
+#endif
+#endif
 enum {
     errSecSuccess = 0, /* No error. */
     errSecUnimplemented = -4,
