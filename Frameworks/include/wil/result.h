@@ -2504,11 +2504,12 @@ namespace wil
             return E_UNEXPECTED;
         }
 #endif
-        catch (ResultException const &re)
+        // These catches are intentionally by value to mitigate bug 5488436
+        catch (ResultException re)
         {
             return re.GetErrorCode();
         }
-        catch (std::bad_alloc const &)
+        catch (std::bad_alloc)
         {
             return E_OUTOFMEMORY;
         }
@@ -2680,7 +2681,8 @@ namespace wil
                 throw;
             }
 #endif
-            catch (ResultException const &re)
+            // These catches are intentionally by value to mitigate bug 5488436
+            catch (ResultException re)
             {
                 ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, re.GetErrorCode(), message, ReportFailureOptions::SuppressAction);
 
@@ -2688,7 +2690,7 @@ namespace wil
                 // we can be confident that it has already been logged -- just re-throw it.
                 throw;
             }
-            catch (std::bad_alloc const &)
+            catch (std::bad_alloc)
             {
                 ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, E_OUTOFMEMORY, message);
             }
