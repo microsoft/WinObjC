@@ -89,7 +89,6 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
         woc::string::format("get%c%s", toupper(key[0]), &key[1]), key, woc::string::format("is%c%s", toupper(key[0]), &key[1]),
     };
 
-    SEL selector = nullptr;
     Class cls = object_getClass(self);
     for (auto& possibleSelString : possibleSelectors) {
         auto possibleSelector = sel_registerName(possibleSelString.c_str());
@@ -169,7 +168,7 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
         return false;
     }
 
-    *ret = [_NSKeyProxyArray proxyArrayForObject:self key:[NSString stringWithUTF8String:key]];
+    *ret = [_NSKeyProxyArray proxyArrayForObject:self key:[NSString stringWithUTF8String:key] ivar:nullptr];
     return true;
 }
 
@@ -226,18 +225,21 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     return [self valueForUndefinedKey:key];
 }
 
-static id _mutableArrayFromValue(id self, NSString* key, id value) {
-    if ([value isKindOfClass:[_NSKeyProxyArray class]]) {
-        return [value _mutableProxy];
-    }
-    return [_NSMutableKeyProxyArray proxyArrayForObject:self key:key];
-}
-
 /**
  @Status Interoperable
 */
 - (NSMutableArray*)mutableArrayValueForKey:(NSString*)key {
-    return _mutableArrayFromValue(self, key, [self valueForKey:key]);
+    if ([key length] == 0) {
+        // Bail quickly
+        return [self valueForUndefinedKey:key];
+    }
+
+    const char* rawKey = [key UTF8String];
+
+    auto accessor = KVCGetterForPropertyName(self, rawKey);
+    struct objc_ivar *ivar = KVCIvarForPropertyName(self, rawKey);
+
+    return [_NSMutableKeyProxyArray proxyArrayForObject:self key:key ivar:ivar];
 }
 
 /**
@@ -567,7 +569,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 
     [NSException raiseWithLogging:@"SelectorNotFound" format:@"%@", err];
 }
-@end
+ @end
 
 /** Included to force TU to be linked - remove once exported as DLL **/
 __declspec(dllexport) void NSObjForceinclude() {

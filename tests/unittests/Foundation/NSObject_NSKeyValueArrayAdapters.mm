@@ -23,6 +23,8 @@
     NSObject* notAnArray;
 
     BOOL fakeMutableInserted;
+
+    NSObject* backedByIvar;
 }
 @end
 
@@ -68,11 +70,14 @@ TEST(Foundation, NSObject_KeyPathLookup) {
 }
 
 TEST(Foundation, NSObject_KVCArrayAdapters) {
-    TestArrayAdapterObject* testObject = [[TestArrayAdapterObject alloc] init];
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
 
     NSArray* fakeCollection = [testObject valueForKey:@"fakeCollection"];
     EXPECT_OBJCEQ(@(3), [fakeCollection objectAtIndex:3]);
+}
 
+TEST(Foundation, NSObject_KVCArrayMutableAdapters) {
+    TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
     NSMutableArray* fakeMutableCollection = [testObject mutableArrayValueForKey:@"fakeMutableCollection"];
     EXPECT_NO_THROW([fakeMutableCollection addObject:@(10)]);
     EXPECT_OBJCEQ(@(10), [fakeMutableCollection objectAtIndex:10]);
@@ -96,6 +101,10 @@ TEST(Foundation, NSObject_KVCArrayAdapters) {
     NSMutableArray* mutableSubArray = [testDictionary mutableArrayValueForKeyPath:@"key.subkey.subkey2"];
     EXPECT_TRUE([mutableSubArray isKindOfClass:[NSMutableArray class]]);
     EXPECT_ANY_THROW([mutableSubArray addObject:@"Invalid"]);
+
+    NSMutableArray* mutableWasNil = [testObject mutableArrayValueForKey:@"backedByIvar"];
+    EXPECT_NO_THROW([mutableWasNil addObject:@"Hello"]);
+    EXPECT_OBJCEQ(@"Hello", [[testObject valueForKey:@"backedByIvar"] firstObject]);
 }
 
 TEST(Foundation, NSUserDefaults_KVCArray) {
@@ -104,5 +113,34 @@ TEST(Foundation, NSUserDefaults_KVCArray) {
     EXPECT_OBJCNE(nil, mutableSetting);
     EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
     EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"userPref1"] containsObject:@"Another"]);
+
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"nonexistentPreference"];
+    mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"nonexistentPreference"];
+    EXPECT_OBJCNE(nil, mutableSetting);
+    EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
+    EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"nonexistentPreference"] containsObject:@"Another"]);
+
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+TEST(Foundation, NSObject_KVCArrayChangePropagation) {
+    NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
+    [dictionary setObject:@[@"1"] forKey:@"array"];
+
+    NSMutableArray* mutableVersionOfDictionaryArray = [dictionary mutableArrayValueForKeyPath:@"array"];
+
+    EXPECT_OBJCEQ(@"1", [mutableVersionOfDictionaryArray objectAtIndex:0]);
+
+    [dictionary setObject:@[@"2"] forKey:@"array"];
+
+    // The value in index 0 should be updated even though we only requested mutableArray* once.
+    EXPECT_OBJCEQ(@"2", [mutableVersionOfDictionaryArray objectAtIndex:0]);
+}
+
+TEST(Foundation, NSObject_KVCArrayAutovivification) {
+    NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
+    NSMutableArray* nonexistentMutableArray = [dictionary mutableArrayValueForKey:@"new"];
+    EXPECT_NO_THROW([nonexistentMutableArray addObject:@"Hello"]);
+    EXPECT_EQ(1, [[dictionary objectForKey:@"new"] count]);
+    EXPECT_OBJCEQ(@"Hello", [[dictionary objectForKey:@"new"] firstObject]);
 }
