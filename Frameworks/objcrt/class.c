@@ -1008,11 +1008,27 @@ OBJCRT_EXPORT void* object_getIndexedIvars(id obj) {
 }
 
 Property class_getProperty(Class cls, const char* name) {
+#ifdef OBJC_APP_BRINGUP
+    char buffer[1024] = { 0 };
+    sprintf_s(buffer, sizeof(buffer), "*******Function [%s]: not implemented*******\r\n", __FUNCTION__);
+    OutputDebugStringA(buffer);
+#else
     OBJC_NOT_IMPLEMENTED_ERROR("class_getProperty is not yet implemented");
+#endif
+
     return Nil;
 }
 
 Property* class_copyPropertyList(Class cls, unsigned int* outCount) {
+#ifdef OBJC_APP_BRINGUP
+    char buffer[1024] = { 0 };
+    sprintf_s(buffer, sizeof(buffer), "*******Function [%s]: not implemented*******\r\n", __FUNCTION__);
+    OutputDebugStringA(buffer);
+#else
     OBJC_NOT_IMPLEMENTED_ERROR("class_copyPropertyList is not yet implemented");
+#endif
+
+    // TODO: Implement
+    *outCount = 0;
     return Nil;
 }
