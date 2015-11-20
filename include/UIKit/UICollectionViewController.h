@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewController.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,22 +19,26 @@
 //
 //******************************************************************************
 
-#ifndef _UICOLLECTIONVIEWCONTROLLER_H_
-#define _UICOLLECTIONVIEWCONTROLLER_H_
+#pragma once
 
-#import "UIKitExport.h"
-#import <UIKit/UIViewController.h>
+#import <UIKit/UIKit.h>
+#import <UIKit/UIKitExport.h>
 
 @class UICollectionView;
 @class UICollectionViewLayout;
+@class UICollectionViewController;
 
+// Simple controller-wrapper around UICollectionView.
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewController : UIViewController
+@interface UICollectionViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (nonatomic, retain) UICollectionView* collectionView;
-
+// Designated initializer.
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout*)layout;
 
-@end
+// Internally used collection view. If not set, created during loadView.
+@property (nonatomic, strong) UICollectionView* collectionView;
 
-#endif /* _UICOLLECTIONVIEWCONTROLLER_H_ */
+// Defaults to YES, and if YES, any selection is cleared in viewWillAppear:
+@property (nonatomic, assign) BOOL clearsSelectionOnViewWillAppear;
+
+@end

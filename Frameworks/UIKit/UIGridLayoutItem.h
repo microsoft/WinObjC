@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutItem.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,15 +19,17 @@
 //
 //******************************************************************************
 
-@interface UIGridLayoutItem : NSObject {
-@public
-    id _section, _rowObject;
-    CGRect _itemFrame;
-}
-- (CGRect)itemFrame;
-- (id)setSection:(id)section;
-- (id)section;
-- (id)setRowObject:(id)rowObject;
-- (id)rowObject;
-- (id)setItemFrame:(CGRect)frame;
+#pragma once
+
+#import <UIKit/UIKit.h>
+
+@class UIGridLayoutSection, UIGridLayoutRow;
+
+// Represents a single grid item; only created for non-uniform-sized grids.
+@interface UIGridLayoutItem : NSObject
+
+@property (nonatomic, unsafe_unretained) UIGridLayoutSection *section;
+@property (nonatomic, unsafe_unretained) UIGridLayoutRow *rowObject;
+@property (nonatomic, assign) CGRect itemFrame;
+
 @end

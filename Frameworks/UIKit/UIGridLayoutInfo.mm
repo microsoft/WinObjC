@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutInfo.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,67 +19,73 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIGridLayoutInfo.h"
-#include "UIGridLayoutSection.h"
+#import <UIKit/UIKit.h>
+#import "UIGridLayoutInfo.h"
+#import "UIGridLayoutSection.h"
+#import "UIGridLayoutItem.h"
 
-@implementation UIGridLayoutInfo : NSObject
-- (id)setHorizontal:(BOOL)horizontal {
-    _horizontal = horizontal;
-    return 0;
+@interface UIGridLayoutInfo () {
+    NSMutableArray *_sections;
+    CGRect _visibleBounds;
+    CGSize _layoutSize;
+    BOOL _isValid;
 }
+@property (nonatomic, strong) NSMutableArray *sections;
+@end
 
-- (BOOL)horizontal {
-    return _horizontal;
-}
+@implementation UIGridLayoutInfo
 
-- (id)setDimension:(float)dimension {
-    _dimension = dimension;
-    return 0;
-}
-
-- (float)dimension {
-    return _dimension;
-}
-
-- (id)setRowAlignmentOptions:(id)options {
-    _rowAlignmentOptions = [options copy];
-    return 0;
-}
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
 
 - (id)init {
-    _sections.attach([NSMutableArray new]);
+    if ((self = [super init])) {
+        _sections = [NSMutableArray new];
+    }
     return self;
 }
 
-- (id)sections {
-    return _sections;
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass(self.class), self, self.dimension, self.horizontal, NSStringFromCGSize(self.contentSize), self.sections];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
+
+- (UIGridLayoutInfo *)snapshot {
+    UIGridLayoutInfo *layoutInfo = [self.class new];
+    layoutInfo.sections = self.sections;
+    layoutInfo.rowAlignmentOptions = self.rowAlignmentOptions;
+    layoutInfo.usesFloatingHeaderFooter = self.usesFloatingHeaderFooter;
+    layoutInfo.dimension = self.dimension;
+    layoutInfo.horizontal = self.horizontal;
+    layoutInfo.leftToRight = self.leftToRight;
+    layoutInfo.contentSize = self.contentSize;
+    return layoutInfo;
+}
+
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
+    UIGridLayoutSection *section = self.sections[(NSUInteger)indexPath.section];
+    CGRect itemFrame;
+    if (section.fixedItemSize) {
+        itemFrame = (CGRect){.size=section.itemSize};
+    }else {
+        itemFrame = [section.items[(NSUInteger)indexPath.item] itemFrame];
+    }
+    return itemFrame;
 }
 
 - (id)addSection {
-    id section = [UIGridLayoutSection new];
-    [section setRowAlignmentOptions:(id)_rowAlignmentOptions];
-    [section setLayoutInfo:self];
+    UIGridLayoutSection *section = [UIGridLayoutSection new];
+    section.rowAlignmentOptions = self.rowAlignmentOptions;
+    section.layoutInfo = self;
     [_sections addObject:section];
     [self invalidate:NO];
     return section;
 }
 
-- (id)invalidate:(BOOL)arg {
+- (void)invalidate:(BOOL)arg {
     _isValid = NO;
-    return 0;
-}
-
-- (id)setContentSize:(CGSize)size {
-    _contentSize = size;
-    return 0;
-}
-
-- (CGSize)contentSize {
-    return _contentSize;
 }
 
 @end

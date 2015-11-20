@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutSection.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,52 +21,60 @@
 
 #pragma once
 
-#include "UIGridLayoutInfo.h"
+#import <UIKit/UIKit.h>
 
-@interface UIGridLayoutSection : NSObject {
-@public
-    idretaintype(NSMutableArray) _items, _rows;
-    idretain _rowAlignmentOptions;
-    id _layoutInfo;
-    float _verticalInterstice, _horizontalInterstice;
-    UIEdgeInsets _sectionMargins;
-    float _headerDimension, _footerDimension;
-    CGRect _headerFrame, _footerFrame, _frame;
-    NSInteger _itemsByRowCount;
-    NSInteger _itemsCount;
-    NSInteger _indexOfIncompleteRow;
-    CGSize _itemSize;
-    BOOL _fixedItemSize;
-    BOOL _isValid;
-}
-- (float)verticalInterstice;
-- (float)horizontalInterstice;
-- (unsigned)itemsCount;
-- (unsigned)itemsByRowCount;
-- (int)indexOfIncompleteRow;
-- (BOOL)fixedItemSize;
-- (UIGridLayoutInfo*)layoutInfo;
-- (UIEdgeInsets)sectionMargins;
-- (CGSize)itemSize;
-- (CGRect)frame;
-- (CGRect)headerFrame;
-- (CGRect)footerFrame;
-- (id)init;
-- (id)setRowAlignmentOptions:(id)options;
-- (id)rowAlignmentOptions;
-- (id)setLayoutInfo:(id)info;
-- (id)setVerticalInterstice:(float)vertical;
-- (id)setHorizontalInterstice:(float)horizontal;
-- (id)setSectionMargins:(UIEdgeInsets)margins;
-- (id)setItemSize:(CGSize)size;
-- (id)setFrame:(CGRect)frame;
-- (id)setHeaderDimension:(float)dim;
-- (id)setFooterDimension:(float)dim;
-- (id)addItem;
-- (id)addRow;
-- (id)setItemsCount:(int)itemsCount;
-- (id)setFixedItemSize:(BOOL)fixed;
-- (id)rows;
-- (id)items;
-- (id)computeLayout;
+@class UIGridLayoutInfo, UIGridLayoutRow, UIGridLayoutItem;
+
+@interface UIGridLayoutSection : NSObject
+
+@property (nonatomic, strong, readonly) NSArray *items;
+@property (nonatomic, strong, readonly) NSArray *rows;
+
+// fast path for equal-size items
+@property (nonatomic, assign) BOOL fixedItemSize;
+@property (nonatomic, assign) CGSize itemSize;
+// depending on fixedItemSize, this either is a _ivar or queries items.
+@property (nonatomic, assign) NSInteger itemsCount;
+
+@property (nonatomic, assign) CGFloat verticalInterstice;
+@property (nonatomic, assign) CGFloat horizontalInterstice;
+@property (nonatomic, assign) UIEdgeInsets sectionMargins;
+
+@property (nonatomic, assign) CGRect frame;
+@property (nonatomic, assign) CGRect headerFrame;
+@property (nonatomic, assign) CGRect footerFrame;
+@property (nonatomic, assign) CGFloat headerDimension;
+@property (nonatomic, assign) CGFloat footerDimension;
+@property (nonatomic, unsafe_unretained) UIGridLayoutInfo *layoutInfo;
+@property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
+
+@property (nonatomic, assign, readonly) CGFloat otherMargin;
+@property (nonatomic, assign, readonly) CGFloat beginMargin;
+@property (nonatomic, assign, readonly) CGFloat endMargin;
+@property (nonatomic, assign, readonly) CGFloat actualGap;
+@property (nonatomic, assign, readonly) CGFloat lastRowBeginMargin;
+@property (nonatomic, assign, readonly) CGFloat lastRowEndMargin;
+@property (nonatomic, assign, readonly) CGFloat lastRowActualGap;
+@property (nonatomic, assign, readonly) BOOL lastRowIncomplete;
+@property (nonatomic, assign, readonly) NSInteger itemsByRowCount;
+@property (nonatomic, assign, readonly) NSInteger indexOfImcompleteRow; // typo as of iOS6B3
+
+//- (UIGridLayoutSection *)copyFromLayoutInfo:(UIGridLayoutInfo *)layoutInfo;
+
+// Faster variant of invalidate/compute
+- (void)recomputeFromIndex:(NSInteger)index;
+
+// Invalidate layout. Destroys rows.
+- (void)invalidate;
+
+// Compute layout. Creates rows.
+- (void)computeLayout;
+
+- (UIGridLayoutItem *)addItem;
+
+- (UIGridLayoutRow *)addRow;
+
+// Copy snapshot of current object
+- (UIGridLayoutSection *)snapshot;
+
 @end

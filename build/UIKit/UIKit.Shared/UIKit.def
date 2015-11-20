@@ -195,3 +195,12 @@ LIBRARY UIKit
      UIAccessibilityLayoutChangedNotification
      UIAccessibilityAnnouncementNotification
      UIAccessibilityPageScrolledNotification
+
+     UICollectionElementKindSectionHeader
+     UICollectionElementKindSectionFooter
+     UIFlowLayoutCommonRowHorizontalAlignmentKey
+     UIFlowLayoutLastRowHorizontalAlignmentKey
+     UIFlowLayoutRowVerticalAlignmentKey
+     UICollectionElementKindCell
+     UICollectionElementKindDecorationView
+     

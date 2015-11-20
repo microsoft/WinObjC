@@ -1,9 +1,10 @@
 //******************************************************************************
 //
-// UIGridLayoutItem.m
-// PSPDFKit
+//  UICollectionViewLayout+Internals.h
+//  FMUICollectionView
 //
-// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+// Created by Scott Talbot on 27/02/13.
+// Copyright (c) 2013 Scott Talbot. All rights reserved.
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
@@ -19,15 +20,21 @@
 //
 //******************************************************************************
 
-#import "UIGridLayoutItem.h"
+#pragma once
 
-@implementation UIGridLayoutItem
+#import <UIKit/UICollectionViewLayout.h>
 
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - NSObject
+@interface UICollectionViewLayout (Internals)
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p itemFrame:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.itemFrame)];
-}
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewClassDict;
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewNibDict;
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewExternalObjectsTables;
+
+@end
+
+@interface UICollectionViewLayoutAttributes (Internals)
+
+@property (readonly) BOOL isPinnedSupplementaryView;
+-(void)setPinned:(BOOL)isPinned;
 
 @end

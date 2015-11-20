@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewFlowLayout.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,25 +19,23 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <algorithm>
-
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSIndexPath.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIKit/UICollectionViewFlowLayout.h"
-
-#include "UIGridLayoutSection.h"
-#include "UIGridLayoutRow.h"
-#include "UIGridLayoutInfo.h"
-#include "UIGridLayoutItem.h"
+#import <UIKit/UIKit.h>
+#import "UIGridLayoutItem.h"
+#import "UIGridLayoutInfo.h"
+#import "UIGridLayoutRow.h"
+#import "UIGridLayoutSection.h"
+#import "UICollectionViewLayout+Internals.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
 
+// this is not exposed in UICollectionViewFlowLayout
+NSString* const UIFlowLayoutCommonRowHorizontalAlignmentKey = @"UIFlowLayoutCommonRowHorizontalAlignmentKey";
+NSString* const UIFlowLayoutLastRowHorizontalAlignmentKey = @"UIFlowLayoutLastRowHorizontalAlignmentKey";
+NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalAlignmentKey";
+
 @implementation UICollectionViewFlowLayout {
+    // class needs to have same iVar layout as UICollectionViewLayout
     struct {
         unsigned int delegateSizeForItem : 1;
         unsigned int delegateReferenceSizeForHeader : 1;
@@ -52,419 +55,223 @@ NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKind
     CGSize _headerReferenceSize;
     CGSize _footerReferenceSize;
     UIEdgeInsets _sectionInset;
-    idretaintype(UIGridLayoutInfo) _data;
+    UIGridLayoutInfo* _data;
     CGSize _currentLayoutSize;
-    idretain _insertedItemsAttributesDict;
-    idretain _insertedSectionHeadersAttributesDict;
-    idretain _insertedSectionFootersAttributesDict;
-    idretain _deletedItemsAttributesDict;
-    idretain _deletedSectionHeadersAttributesDict;
-    idretain _deletedSectionFootersAttributesDict;
+    NSMutableDictionary* _insertedItemsAttributesDict;
+    NSMutableDictionary* _insertedSectionHeadersAttributesDict;
+    NSMutableDictionary* _insertedSectionFootersAttributesDict;
+    NSMutableDictionary* _deletedItemsAttributesDict;
+    NSMutableDictionary* _deletedSectionHeadersAttributesDict;
+    NSMutableDictionary* _deletedSectionFootersAttributesDict;
     UICollectionViewScrollDirection _scrollDirection;
-    idretaintype(NSMutableDictionary) _rowAlignmentsOptionsDictionary;
-    idretain _cachedItemsRects;
+    NSDictionary* _rowAlignmentsOptionsDictionary;
     CGRect _visibleBounds;
-}
-void commonInit(UICollectionViewFlowLayout* self) {
-    self->_itemSize = CGSizeMake(50.f, 50.f);
-    self->_lineSpacing = 10.f;
-    self->_interitemSpacing = 10.f;
-    self->_scrollDirection = UICollectionViewScrollDirectionVertical;
+    char filler[200]; // [HACK] Our class needs to be larger than Apple's class for the superclass change to work.
 }
 
+@synthesize rowAlignmentOptions = _rowAlignmentsOptionsDictionary;
+@synthesize minimumLineSpacing = _lineSpacing;
+@synthesize minimumInteritemSpacing = _interitemSpacing;
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
+
+/**
+   @Public No
+*/
+- (void)commonInit {
+    _itemSize = CGSizeMake(50.f, 50.f);
+    _lineSpacing = 10.f;
+    _interitemSpacing = 10.f;
+    _sectionInset = UIEdgeInsetsZero;
+    _scrollDirection = UICollectionViewScrollDirectionVertical;
+    _headerReferenceSize = CGSizeZero;
+    _footerReferenceSize = CGSizeZero;
+}
+
+/**
+   @Status Interoperable
+*/
 - (id)init {
-    [super init];
-    commonInit(self);
+    if ((self = [super init])) {
+        [self commonInit];
 
-    _rowAlignmentsOptionsDictionary.attach([NSMutableDictionary new]);
-    [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:UIFlowLayoutHorizontalAlignmentJustify]
-                                        forKey:@"UIFlowLayoutCommonRowHorizontalAlignmentKey"];
-    [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:UIFlowLayoutHorizontalAlignmentJustify]
-                                        forKey:@"UIFlowLayoutLastRowHorizontalAlignmentKey"];
-    [_rowAlignmentsOptionsDictionary setObject:[NSNumber numberWithInt:1] forKey:@"UIFlowLayoutRowVerticalAlignmentKey"];
-    return self;
-}
-
-- (id)initWithCoder:(id)decoder {
-    [super initWithCoder:decoder];
-    commonInit(self);
-
-    // Some properties are not set if they're default (like minimumInteritemSpacing == 10)
-    if ([decoder containsValueForKey:@"UIItemSize"])
-        _itemSize = [decoder decodeCGSizeForKey:@"UIItemSize"];
-    if ([decoder containsValueForKey:@"UIInteritemSpacing"])
-        _interitemSpacing = [decoder decodeFloatForKey:@"UIInteritemSpacing"];
-    if ([decoder containsValueForKey:@"UILineSpacing"])
-        _lineSpacing = [decoder decodeFloatForKey:@"UILineSpacing"];
-    if ([decoder containsValueForKey:@"UIFooterReferenceSize"])
-        _footerReferenceSize = [decoder decodeCGSizeForKey:@"UIFooterReferenceSize"];
-    if ([decoder containsValueForKey:@"UIHeaderReferenceSize"])
-        _headerReferenceSize = [decoder decodeCGSizeForKey:@"UIHeaderReferenceSize"];
-    if ([decoder containsValueForKey:@"UISectionInset"])
-        _sectionInset = [decoder decodeUIEdgeInsetsForKey:@"UISectionInset"];
-    if ([decoder containsValueForKey:@"UIScrollDirection"])
-        _scrollDirection = [decoder decodeIntegerForKey:@"UIScrollDirection"];
-    return self;
-}
-
-- (void)awakeFromNib {
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setScrollDirection:(UICollectionViewScrollDirection)direction {
-    _scrollDirection = direction;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setItemSize:(CGSize)size {
-    _itemSize = size;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGSize)itemSize {
-    return _itemSize;
-}
-
-- (id)setHeaderReferenceSize:(CGSize)size {
-    return self;
-}
-
-- (id)setFooterReferenceSize:(CGSize)size {
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setMinimumInteritemSpacing:(float)spacing {
-    _interitemSpacing = spacing;
-}
-
-/**
- @Status Interoperable
-*/
-- (float)minimumInteritemSpacing {
-    return _interitemSpacing;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setMinimumLineSpacing:(float)spacing {
-    _lineSpacing = spacing;
-}
-
-/**
- @Status Interoperable
-*/
-- (float)minimumLineSpacing {
-    return _lineSpacing;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setSectionInset:(UIEdgeInsets)sectionInset {
-    if (!UIEdgeInsetsEqualToEdgeInsets(sectionInset, _sectionInset)) {
-        _sectionInset = sectionInset;
-        [self invalidateLayout];
-    }
-}
-
-- (void)prepareLayout {
-    _cachedItemsRects = [NSMutableDictionary dictionary];
-
-    _data.attach([UIGridLayoutInfo new]); // clear old layout data
-    [_data setHorizontal:_scrollDirection == UICollectionViewScrollDirectionHorizontal];
-
-    _visibleBounds = [[self collectionView] bounds];
-    CGSize collectionViewSize = _visibleBounds.size;
-    [_data setDimension:[_data horizontal] ? collectionViewSize.height : collectionViewSize.width];
-    [_data setRowAlignmentOptions:(id)_rowAlignmentsOptionsDictionary];
-    [self fetchItemsInfo];
-}
-
-- (id)fetchItemsInfo {
-    [self getSizingInfos];
-    [self updateItemsLayout];
-    return self;
-}
-
-- (void)invalidateLayout {
-    [super invalidateLayout];
-    _cachedItemsRects = nil;
-    _data = nil;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGSize)collectionViewContentSize {
-    if (!_data)
-        [self prepareLayout];
-
-    return [_data contentSize];
-}
-
-- (id)updateItemsLayout {
-    CGSize contentSize = CGSizeMake(0, 0);
-
-    for (UIGridLayoutSection* section in [_data sections]) {
-        [section computeLayout];
-
-        // update section offset to make frame absolute (section only calculates relative)
-        CGRect origSectionFrame, sectionFrame;
-
-        sectionFrame = [section frame];
-        origSectionFrame = sectionFrame;
-
-        UIEdgeInsets sectionMargins;
-
-        sectionMargins = [section sectionMargins];
-        if ([_data horizontal]) {
-            sectionFrame.origin.x += contentSize.width;
-            contentSize.width += origSectionFrame.size.width + origSectionFrame.origin.x;
-            contentSize.height =
-                std::max(contentSize.height,
-                         origSectionFrame.size.height + origSectionFrame.origin.y + sectionMargins.top + sectionMargins.bottom);
-        } else {
-            sectionFrame.origin.y += contentSize.height;
-            contentSize.height += origSectionFrame.size.height + origSectionFrame.origin.y;
-            contentSize.width =
-                std::max(contentSize.width,
-                         origSectionFrame.size.width + origSectionFrame.origin.x + sectionMargins.left + sectionMargins.right);
-        }
-        [section setFrame:sectionFrame];
-    }
-    [_data setContentSize:contentSize];
-    return self;
-}
-
-- (id)getSizingInfos {
-    assert([[_data sections] count] == 0);
-
-    id<UICollectionViewDelegateFlowLayout> flowDataSource = [_collectionView delegate];
-
-    BOOL implementsSizeDelegate = [flowDataSource respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)];
-    BOOL implementsHeaderReferenceDelegate =
-        [flowDataSource respondsToSelector:@selector(collectionView:layout:referenceSizeForHeaderInSection:)];
-    BOOL implementsFooterReferenceDelegate =
-        [flowDataSource respondsToSelector:@selector(collectionView:layout:referenceSizeForFooterInSection:)];
-
-    NSUInteger numberOfSections = [_collectionView numberOfSections];
-    for (NSUInteger section = 0; section < numberOfSections; section++) {
-        id layoutSection = [_data addSection];
-        [layoutSection setVerticalInterstice:[_data horizontal] ? _interitemSpacing : _lineSpacing];
-        [layoutSection setHorizontalInterstice:![_data horizontal] ? _interitemSpacing : _lineSpacing];
-
-        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
-            UIEdgeInsets insets;
-            insets = [flowDataSource collectionView:_collectionView layout:self insetForSectionAtIndex:section];
-            [layoutSection setSectionMargins:insets];
-        } else {
-            [layoutSection setSectionMargins:_sectionInset];
-        }
-
-        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)]) {
-            CGFloat minimumLineSpacing =
-                [flowDataSource collectionView:_collectionView layout:self minimumLineSpacingForSectionAtIndex:section];
-            if ([_data horizontal]) {
-                [layoutSection setHorizontalInterstice:minimumLineSpacing];
-            } else {
-                [layoutSection setVerticalInterstice:minimumLineSpacing];
-            }
-        }
-
-        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
-            CGFloat minimumInterimSpacing =
-                [flowDataSource collectionView:_collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
-            if ([_data horizontal]) {
-                [layoutSection setVerticalInterstice:minimumInterimSpacing];
-            } else {
-                [layoutSection setHorizontalInterstice:minimumInterimSpacing];
-            }
-        }
-
-        CGSize headerReferenceSize;
-        if (implementsHeaderReferenceDelegate) {
-            headerReferenceSize = [flowDataSource collectionView:_collectionView layout:self referenceSizeForHeaderInSection:section];
-        } else {
-            headerReferenceSize = _headerReferenceSize;
-        }
-        [layoutSection setHeaderDimension:[_data horizontal] ? headerReferenceSize.width : headerReferenceSize.height];
-
-        CGSize footerReferenceSize;
-        if (implementsFooterReferenceDelegate) {
-            footerReferenceSize = [flowDataSource collectionView:_collectionView layout:self referenceSizeForFooterInSection:section];
-        } else {
-            footerReferenceSize = _footerReferenceSize;
-        }
-        [layoutSection setFooterDimension:[_data horizontal] ? footerReferenceSize.width : footerReferenceSize.height];
-
-        NSUInteger numberOfItems = [_collectionView numberOfItemsInSection:section];
-
-        // if delegate implements size delegate, query it for all items
-        if (implementsSizeDelegate) {
-            for (NSUInteger item = 0; item < numberOfItems; item++) {
-                id indexPath = [NSIndexPath indexPathForItem:item inSection:section];
-                CGSize itemSize;
-
-                if (implementsSizeDelegate) {
-                    itemSize = [flowDataSource collectionView:_collectionView layout:self sizeForItemAtIndexPath:indexPath];
-                } else {
-                    itemSize = _itemSize;
-                }
-
-                id layoutItem = [layoutSection addItem];
-                CGRect rect = CGRectMake(0, 0, itemSize.width, itemSize.height);
-                [layoutItem setItemFrame:rect];
-            }
-            // if not, go the fast path
-        } else {
-            [layoutSection setFixedItemSize:YES];
-            [layoutSection setItemSize:_itemSize];
-            [layoutSection setItemsCount:numberOfItems];
-        }
+        // set default values for row alignment.
+        _rowAlignmentsOptionsDictionary = @{
+            UIFlowLayoutCommonRowHorizontalAlignmentKey : @(UIFlowLayoutHorizontalAlignmentJustify),
+            UIFlowLayoutLastRowHorizontalAlignmentKey : @(UIFlowLayoutHorizontalAlignmentJustify),
+            // TODO: those values are some enum. find out what that is.
+            UIFlowLayoutRowVerticalAlignmentKey : @(1),
+        };
     }
     return self;
 }
 
-- (id)layoutAttributesForItemAtIndexPath:(id)indexPath {
-    return [self _buildLayoutAttributesForItemAtIndexPath:indexPath];
-}
+/**
+   @Status Interoperable
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    if ((self = [super initWithCoder:decoder])) {
+        [self commonInit];
 
-- (id)_buildLayoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
-    if (!_data)
-        [self prepareLayout];
-
-    UIGridLayoutSection* section = [[_data sections] objectAtIndex:[indexPath section]];
-    id row = nil;
-    CGRect itemFrame = CGRectMake(0, 0, 0, 0);
-
-    if ([section fixedItemSize] && [section itemsByRowCount] > 0 &&
-        [indexPath item] / [section itemsByRowCount] < (NSInteger)[[section rows] count]) {
-        row = [[section rows] objectAtIndex:[indexPath item] / [section itemsByRowCount]];
-        NSUInteger itemIndex = [indexPath item] % [section itemsByRowCount];
-        id itemRects = [row itemRects];
-        itemFrame = [[itemRects objectAtIndex:itemIndex] CGRectValue];
-    } else if ([indexPath item] < (NSInteger)[[section items] count]) {
-        UIGridLayoutItem* item = [[section items] objectAtIndex:[indexPath item]];
-        row = [item rowObject];
-        itemFrame = [item itemFrame];
+        // Some properties are not set if they're default (like minimumInteritemSpacing == 10)
+        if ([decoder containsValueForKey:@"UIItemSize"])
+            self.itemSize = [decoder decodeCGSizeForKey:@"UIItemSize"];
+        if ([decoder containsValueForKey:@"UIInteritemSpacing"])
+            self.minimumInteritemSpacing = [decoder decodeFloatForKey:@"UIInteritemSpacing"];
+        if ([decoder containsValueForKey:@"UILineSpacing"])
+            self.minimumLineSpacing = [decoder decodeFloatForKey:@"UILineSpacing"];
+        if ([decoder containsValueForKey:@"UIFooterReferenceSize"])
+            self.footerReferenceSize = [decoder decodeCGSizeForKey:@"UIFooterReferenceSize"];
+        if ([decoder containsValueForKey:@"UIHeaderReferenceSize"])
+            self.headerReferenceSize = [decoder decodeCGSizeForKey:@"UIHeaderReferenceSize"];
+        if ([decoder containsValueForKey:@"UISectionInset"])
+            self.sectionInset = [decoder decodeUIEdgeInsetsForKey:@"UISectionInset"];
+        if ([decoder containsValueForKey:@"UIScrollDirection"])
+            self.scrollDirection = (UICollectionViewScrollDirection)[decoder decodeIntegerForKey:@"UIScrollDirection"];
     }
-
-    id layoutAttributes = [[[self class] layoutAttributesClass] layoutAttributesForCellWithIndexPath:indexPath];
-
-    // calculate item rect
-    CGRect normalizedRowFrame = [row rowFrame];
-    normalizedRowFrame.origin.x += [section frame].origin.x;
-    normalizedRowFrame.origin.y += [section frame].origin.y;
-    [layoutAttributes setFrame:CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x,
-                                          normalizedRowFrame.origin.y + itemFrame.origin.y,
-                                          itemFrame.size.width,
-                                          itemFrame.size.height)];
-
-    return layoutAttributes;
+    return self;
 }
 
-- (id)layoutAttributesForElementsInRect:(CGRect)rect {
-    return [self _buildLayoutAttributesForElementsInRect:rect];
+/**
+   @Status Interoperable
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    [super encodeWithCoder:coder];
+    [coder encodeCGSize:self.itemSize forKey:@"UIItemSize"];
+    [coder encodeFloat:(float)self.minimumInteritemSpacing forKey:@"UIInteritemSpacing"];
+    [coder encodeFloat:(float)self.minimumLineSpacing forKey:@"UILineSpacing"];
+    [coder encodeCGSize:self.footerReferenceSize forKey:@"UIFooterReferenceSize"];
+    [coder encodeCGSize:self.headerReferenceSize forKey:@"UIHeaderReferenceSize"];
+    [coder encodeUIEdgeInsets:self.sectionInset forKey:@"UISectionInset"];
+    [coder encodeInteger:self.scrollDirection forKey:@"UIScrollDirection"];
 }
 
-- (id)_buildLayoutAttributesForElementsInRect:(CGRect)rect {
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UICollectionViewLayout
+
+static char kUICachedItemRectsKey;
+
+/**
+   @Status Interoperable
+*/
+- (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
     // Apple calls _layoutAttributesForItemsInRect
     if (!_data)
         [self prepareLayout];
 
-    id layoutAttributesArray = [NSMutableArray array];
-    for (UIGridLayoutSection* section in [_data sections]) {
-        CGRect frame;
-
-        frame = [section frame];
-        if (CGRectIntersectsRect(frame, rect)) {
+    NSMutableArray* layoutAttributesArray = [NSMutableArray array];
+    for (UIGridLayoutSection* section in _data.sections) {
+        CGRect sectionFrame = section.frame;
+        if (CGRectIntersectsRect(section.frame, rect)) {
             // if we have fixed size, calculate item frames only once.
-            // this also uses the default PSTFlowLayoutCommonRowHorizontalAlignmentKey alignment
+            // this also uses the default UIFlowLayoutCommonRowHorizontalAlignmentKey alignment
             // for the last row. (we want this effect!)
-            id rectCache = _cachedItemsRects;
-            NSUInteger sectionIndex = [[_data sections] indexOfObjectIdenticalTo:section];
+            NSMutableDictionary* rectCache = objc_getAssociatedObject(self, &kUICachedItemRectsKey);
+            NSUInteger sectionIndex = [_data.sections indexOfObjectIdenticalTo:section];
 
-            CGRect normalizedHeaderFrame;
-            normalizedHeaderFrame = [section headerFrame];
+            CGRect normalizedHeaderFrame = section.headerFrame;
+            normalizedHeaderFrame.origin.x += section.frame.origin.x;
+            normalizedHeaderFrame.origin.y += section.frame.origin.y;
 
-            normalizedHeaderFrame.origin.x += frame.origin.x;
-            normalizedHeaderFrame.origin.y += frame.origin.y;
+            BOOL isPinned = FALSE;
+            if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+                if (self.sectionHeadersPinToVisibleBounds && rect.size.height > 1.f) {
+                    if (normalizedHeaderFrame.origin.y < rect.origin.y) {
+                        normalizedHeaderFrame.origin.y = rect.origin.y;
+                        isPinned = TRUE;
+                    }
+                }
+            } else {
+                if (self.sectionHeadersPinToVisibleBounds && rect.size.width > 1.f) {
+                    if (normalizedHeaderFrame.origin.x < rect.origin.x) {
+                        normalizedHeaderFrame.origin.x = rect.origin.x;
+                        isPinned = TRUE;
+                    }
+                }
+            }
+
             if (!CGRectIsEmpty(normalizedHeaderFrame) && CGRectIntersectsRect(normalizedHeaderFrame, rect)) {
-                id layoutAttributes = [[[self class] layoutAttributesClass]
-                    layoutAttributesForSupplementaryViewOfKind:@"UICollectionElementKindSectionHeader"
-                                                 withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
-                [layoutAttributes setFrame:normalizedHeaderFrame];
+                UICollectionViewLayoutAttributes* layoutAttributes = [[self.class layoutAttributesClass]
+                    layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                 withIndexPath:[NSIndexPath indexPathForItem:0 inSection:(NSInteger)sectionIndex]];
+                layoutAttributes.frame = normalizedHeaderFrame;
+                [layoutAttributes setPinned: isPinned];
                 [layoutAttributesArray addObject:layoutAttributes];
             }
 
-            id itemRects = [rectCache objectForKey:[NSNumber numberWithInt:sectionIndex]];
-            if (!itemRects && [section fixedItemSize] && [[section rows] count]) {
-                itemRects = [[[section rows] objectAtIndex:0] itemRects];
+            NSArray* itemRects = rectCache[@(sectionIndex)];
+            if (!itemRects && section.fixedItemSize && section.rows.count) {
+                itemRects = [(section.rows)[0] itemRects];
                 if (itemRects)
-                    [rectCache setObject:itemRects forKey:[NSNumber numberWithInt:sectionIndex]];
+                    rectCache[@(sectionIndex)] = itemRects;
             }
 
-            for (UIGridLayoutRow* row in [section rows]) {
-                CGRect normalizedRowFrame;
+            for (UIGridLayoutRow* row in section.rows) {
+                CGRect normalizedRowFrame = row.rowFrame;
 
-                normalizedRowFrame = [row rowFrame];
-                normalizedRowFrame.origin.x += frame.origin.x;
-                normalizedRowFrame.origin.y += frame.origin.y;
+                normalizedRowFrame.origin.x += section.frame.origin.x;
+                normalizedRowFrame.origin.y += section.frame.origin.y;
+
                 if (CGRectIntersectsRect(normalizedRowFrame, rect)) {
                     // TODO be more fine-grained for items
 
-                    for (unsigned itemIndex = 0; itemIndex < [row itemCount]; itemIndex++) {
-                        id layoutAttributes;
+                    for (NSInteger itemIndex = 0; itemIndex < row.itemCount; itemIndex++) {
+                        UICollectionViewLayoutAttributes* layoutAttributes;
                         NSUInteger sectionItemIndex;
                         CGRect itemFrame;
-                        if ([row fixedItemSize]) {
-                            itemFrame = [[itemRects objectAtIndex:itemIndex] CGRectValue];
-                            sectionItemIndex = [row index] * [section itemsByRowCount] + itemIndex;
+                        if (row.fixedItemSize) {
+                            itemFrame = [itemRects[(NSUInteger)itemIndex] CGRectValue];
+                            sectionItemIndex = (NSUInteger)(row.index * section.itemsByRowCount + itemIndex);
                         } else {
-                            UIGridLayoutItem* item = [[row items] objectAtIndex:itemIndex];
-                            sectionItemIndex = [[section items] indexOfObjectIdenticalTo:item];
-
-                            itemFrame = [item itemFrame];
+                            UIGridLayoutItem* item = row.items[(NSUInteger)itemIndex];
+                            sectionItemIndex = [section.items indexOfObjectIdenticalTo:item];
+                            itemFrame = item.itemFrame;
                         }
 
-                        CGRect itemRect = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x,
-                                                     normalizedRowFrame.origin.y + itemFrame.origin.y,
-                                                     itemFrame.size.width,
-                                                     itemFrame.size.height);
-                        if (CGRectIntersectsRect(itemRect, rect)) {
-                            layoutAttributes = [[[self class] layoutAttributesClass]
-                                layoutAttributesForCellWithIndexPath:[NSIndexPath indexPathForItem:sectionItemIndex
-                                                                                         inSection:sectionIndex]];
-                            [layoutAttributes setFrame:CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x,
-                                                                  normalizedRowFrame.origin.y + itemFrame.origin.y,
-                                                                  itemFrame.size.width,
-                                                                  itemFrame.size.height)];
+                        CGRect normalisedItemFrame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x,
+                                                                normalizedRowFrame.origin.y + itemFrame.origin.y,
+                                                                itemFrame.size.width,
+                                                                itemFrame.size.height);
+
+                        if (CGRectIntersectsRect(normalisedItemFrame, rect)) {
+                            layoutAttributes = [[self.class layoutAttributesClass]
+                                layoutAttributesForCellWithIndexPath:[NSIndexPath indexPathForItem:(NSInteger)sectionItemIndex
+                                                                                         inSection:(NSInteger)sectionIndex]];
+                            layoutAttributes.frame = normalisedItemFrame;
                             [layoutAttributesArray addObject:layoutAttributes];
                         }
                     }
                 }
             }
 
-            CGRect normalizedFooterFrame;
+            CGRect normalizedFooterFrame = section.footerFrame;
+            normalizedFooterFrame.origin.x += section.frame.origin.x;
+            normalizedFooterFrame.origin.y += section.frame.origin.y;
 
-            normalizedFooterFrame = [section footerFrame];
-            normalizedFooterFrame.origin.x += frame.origin.x;
-            normalizedFooterFrame.origin.y += frame.origin.y;
+            isPinned = FALSE;
+            if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+                if (self.sectionFootersPinToVisibleBounds && rect.size.height > 1.f) {
+                    if ((normalizedFooterFrame.origin.y + normalizedFooterFrame.size.height) > (rect.origin.y + rect.size.height)) {
+                        normalizedFooterFrame.origin.y = (rect.origin.y + rect.size.height) - normalizedFooterFrame.size.height;
+                        isPinned = TRUE;
+                    }
+                }
+            } else {
+                if (self.sectionFootersPinToVisibleBounds && rect.size.width > 1.f) {
+                    if ((normalizedFooterFrame.origin.x + normalizedFooterFrame.size.width) > (rect.origin.x + rect.size.width)) {
+                        normalizedFooterFrame.origin.x = (rect.origin.x + rect.size.height) - normalizedFooterFrame.size.width;
+                        isPinned = TRUE;
+                    }
+                }
+            }
+
             if (!CGRectIsEmpty(normalizedFooterFrame) && CGRectIntersectsRect(normalizedFooterFrame, rect)) {
-                id layoutAttributes = [[[self class] layoutAttributesClass]
-                    layoutAttributesForSupplementaryViewOfKind:@"UICollectionElementKindSectionFooter"
-                                                 withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
-                [layoutAttributes setFrame:normalizedFooterFrame];
+                UICollectionViewLayoutAttributes* layoutAttributes = [[self.class layoutAttributesClass]
+                    layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+                                                 withIndexPath:[NSIndexPath indexPathForItem:0 inSection:(NSInteger)sectionIndex]];
+                layoutAttributes.frame = normalizedFooterFrame;
+                [layoutAttributes setPinned: isPinned];
                 [layoutAttributesArray addObject:layoutAttributes];
             }
         }
@@ -472,34 +279,269 @@ void commonInit(UICollectionViewFlowLayout* self) {
     return layoutAttributesArray;
 }
 
-- (id)layoutAttributesForSupplementaryViewOfKind:(id)kind atIndexPath:(NSIndexPath*)indexPath {
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
     if (!_data)
         [self prepareLayout];
 
-    NSUInteger sectionIndex = [indexPath section];
-    id layoutAttributes = nil;
+    UIGridLayoutSection* section = _data.sections[(NSUInteger)indexPath.section];
+    UIGridLayoutRow* row = nil;
+    CGRect itemFrame = CGRectZero;
 
-    if (sectionIndex < [[_data sections] count]) {
-        id section = [[_data sections] objectAtIndex:sectionIndex];
+    if (section.fixedItemSize && section.itemsByRowCount > 0 && indexPath.item / section.itemsByRowCount < (NSInteger)section.rows.count) {
+        row = section.rows[(NSUInteger)(indexPath.item / section.itemsByRowCount)];
+        NSUInteger itemIndex = (NSUInteger)(indexPath.item % section.itemsByRowCount);
+        NSArray* itemRects = [row itemRects];
+        itemFrame = [itemRects[itemIndex] CGRectValue];
+    } else if (indexPath.item < (NSInteger)section.items.count) {
+        UIGridLayoutItem* item = section.items[(NSUInteger)indexPath.item];
+        row = item.rowObject;
+        itemFrame = item.itemFrame;
+    }
+
+    UICollectionViewLayoutAttributes* layoutAttributes =
+        [[self.class layoutAttributesClass] layoutAttributesForCellWithIndexPath:indexPath];
+
+    // calculate item rect
+    CGRect normalizedRowFrame = row.rowFrame;
+    normalizedRowFrame.origin.x += section.frame.origin.x;
+    normalizedRowFrame.origin.y += section.frame.origin.y;
+    layoutAttributes.frame = CGRectMake(normalizedRowFrame.origin.x + itemFrame.origin.x,
+                                        normalizedRowFrame.origin.y + itemFrame.origin.y,
+                                        itemFrame.size.width,
+                                        itemFrame.size.height);
+
+    return layoutAttributes;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
+    if (!_data)
+        [self prepareLayout];
+
+    NSUInteger sectionIndex = (NSUInteger)indexPath.section;
+    UICollectionViewLayoutAttributes* layoutAttributes = nil;
+
+    if (sectionIndex < _data.sections.count) {
+        UIGridLayoutSection* section = _data.sections[sectionIndex];
 
         CGRect normalizedFrame = CGRectZero;
-        if ([kind isEqualToString:@"UICollectionElementKindSectionHeader"]) {
-            normalizedFrame = [section headerFrame];
-        } else if ([kind isEqualToString:@"UICollectionElementKindSectionFooter"]) {
-            normalizedFrame = [section footerFrame];
+        if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+            normalizedFrame = section.headerFrame;
+        } else if ([kind isEqualToString:UICollectionElementKindSectionFooter]) {
+            normalizedFrame = section.footerFrame;
         }
 
         if (!CGRectIsEmpty(normalizedFrame)) {
-            normalizedFrame.origin.x += [section frame].origin.x;
-            normalizedFrame.origin.y += [section frame].origin.y;
+            normalizedFrame.origin.x += section.frame.origin.x;
+            normalizedFrame.origin.y += section.frame.origin.y;
 
-            layoutAttributes = [[[self class] layoutAttributesClass]
+            layoutAttributes = [[self.class layoutAttributesClass]
                 layoutAttributesForSupplementaryViewOfKind:kind
-                                             withIndexPath:[NSIndexPath indexPathForItem:0 inSection:sectionIndex]];
-            [layoutAttributes setFrame:normalizedFrame];
+                                             withIndexPath:[NSIndexPath indexPathForItem:0 inSection:(NSInteger)sectionIndex]];
+            layoutAttributes.frame = normalizedFrame;
         }
     }
     return layoutAttributes;
+}
+
+/**
+   @Status Stub
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewWithReuseIdentifier:(NSString*)identifier
+                                                                              atIndexPath:(NSIndexPath*)indexPath {
+    return nil;
+}
+
+/**
+   @Status Interoperable
+*/
+- (CGSize)collectionViewContentSize {
+    if (!_data)
+        [self prepareLayout];
+
+    return _data.contentSize;
+}
+
+- (void)setSectionInset:(UIEdgeInsets)sectionInset {
+    if (!UIEdgeInsetsEqualToEdgeInsets(sectionInset, _sectionInset)) {
+        _sectionInset = sectionInset;
+        [self invalidateLayout];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Invalidating the Layout
+
+/**
+   @Status Interoperable
+*/
+- (void)invalidateLayout {
+    [super invalidateLayout];
+    objc_setAssociatedObject(self, &kUICachedItemRectsKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    _data = nil;
+}
+
+/**
+   @Status Interoperable
+*/
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
+    // we need to recalculate on width changes
+    if ((_visibleBounds.size.width != newBounds.size.width && self.scrollDirection == UICollectionViewScrollDirectionVertical) ||
+        (_visibleBounds.size.height != newBounds.size.height && self.scrollDirection == UICollectionViewScrollDirectionHorizontal)) {
+        _visibleBounds = self.collectionView.bounds;
+        return YES;
+    }
+    return NO;
+}
+
+// return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity {
+    return proposedContentOffset;
+}
+
+/**
+   @Status Interoperable
+*/
+- (void)prepareLayout {
+    // custom ivars
+    objc_setAssociatedObject(self, &kUICachedItemRectsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+    _data = [UIGridLayoutInfo new]; // clear old layout data
+    _data.horizontal = self.scrollDirection == UICollectionViewScrollDirectionHorizontal;
+    _visibleBounds = self.collectionView.bounds;
+    CGSize collectionViewSize = _visibleBounds.size;
+    _data.dimension = _data.horizontal ? collectionViewSize.height : collectionViewSize.width;
+    _data.rowAlignmentOptions = _rowAlignmentsOptionsDictionary;
+    [self fetchItemsInfo];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Private
+
+/**
+   @Public No
+*/
+- (void)fetchItemsInfo {
+    [self getSizingInfos];
+    [self updateItemsLayout];
+}
+
+// get size of all items (if delegate is implemented)
+/**
+   @Public No
+*/
+- (void)getSizingInfos {
+    NSAssert(_data.sections.count == 0, @"Grid layout is already populated?");
+
+    id<UICollectionViewDelegateFlowLayout> flowDataSource = (id<UICollectionViewDelegateFlowLayout>)self.collectionView.delegate;
+
+    BOOL implementsSizeDelegate = [flowDataSource respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)];
+    BOOL implementsHeaderReferenceDelegate =
+        [flowDataSource respondsToSelector:@selector(collectionView:layout:referenceSizeForHeaderInSection:)];
+    BOOL implementsFooterReferenceDelegate =
+        [flowDataSource respondsToSelector:@selector(collectionView:layout:referenceSizeForFooterInSection:)];
+
+    NSInteger numberOfSections = [self.collectionView numberOfSections];
+    for (NSInteger section = 0; section < numberOfSections; section++) {
+        UIGridLayoutSection* layoutSection = [_data addSection];
+        layoutSection.verticalInterstice = _data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
+        layoutSection.horizontalInterstice = !_data.horizontal ? self.minimumInteritemSpacing : self.minimumLineSpacing;
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
+            layoutSection.sectionMargins = [flowDataSource collectionView:self.collectionView layout:self insetForSectionAtIndex:section];
+        } else {
+            layoutSection.sectionMargins = self.sectionInset;
+        }
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumLineSpacingForSectionAtIndex:)]) {
+            CGFloat minimumLineSpacing =
+                [flowDataSource collectionView:self.collectionView layout:self minimumLineSpacingForSectionAtIndex:section];
+            if (_data.horizontal) {
+                layoutSection.horizontalInterstice = minimumLineSpacing;
+            } else {
+                layoutSection.verticalInterstice = minimumLineSpacing;
+            }
+        }
+
+        if ([flowDataSource respondsToSelector:@selector(collectionView:layout:minimumInteritemSpacingForSectionAtIndex:)]) {
+            CGFloat minimumInterimSpacing =
+                [flowDataSource collectionView:self.collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
+            if (_data.horizontal) {
+                layoutSection.verticalInterstice = minimumInterimSpacing;
+            } else {
+                layoutSection.horizontalInterstice = minimumInterimSpacing;
+            }
+        }
+
+        CGSize headerReferenceSize;
+        if (implementsHeaderReferenceDelegate) {
+            headerReferenceSize = [flowDataSource collectionView:self.collectionView layout:self referenceSizeForHeaderInSection:section];
+        } else {
+            headerReferenceSize = self.headerReferenceSize;
+        }
+        layoutSection.headerDimension = _data.horizontal ? headerReferenceSize.width : headerReferenceSize.height;
+
+        CGSize footerReferenceSize;
+        if (implementsFooterReferenceDelegate) {
+            footerReferenceSize = [flowDataSource collectionView:self.collectionView layout:self referenceSizeForFooterInSection:section];
+        } else {
+            footerReferenceSize = self.footerReferenceSize;
+        }
+        layoutSection.footerDimension = _data.horizontal ? footerReferenceSize.width : footerReferenceSize.height;
+
+        NSInteger numberOfItems = [self.collectionView numberOfItemsInSection:section];
+
+        // if delegate implements size delegate, query it for all items
+        if (implementsSizeDelegate) {
+            for (NSInteger item = 0; item < numberOfItems; item++) {
+                NSIndexPath* indexPath = [NSIndexPath indexPathForItem:item inSection:(NSInteger)section];
+                CGSize itemSize = implementsSizeDelegate ?
+                                      [flowDataSource collectionView:self.collectionView layout:self sizeForItemAtIndexPath:indexPath] :
+                                      self.itemSize;
+
+                UIGridLayoutItem* layoutItem = [layoutSection addItem];
+                layoutItem.itemFrame = (CGRect){.size = itemSize };
+            }
+            // if not, go the fast path
+        } else {
+            layoutSection.fixedItemSize = YES;
+            layoutSection.itemSize = self.itemSize;
+            layoutSection.itemsCount = numberOfItems;
+        }
+    }
+}
+
+/**
+   @Public No
+*/
+- (void)updateItemsLayout {
+    CGSize contentSize = CGSizeZero;
+    for (UIGridLayoutSection* section in _data.sections) {
+        [section computeLayout];
+
+        // update section offset to make frame absolute (section only calculates relative)
+        CGRect sectionFrame = section.frame;
+        if (_data.horizontal) {
+            sectionFrame.origin.x += contentSize.width;
+            contentSize.width += section.frame.size.width + section.frame.origin.x;
+            contentSize.height =
+                MAX(contentSize.height,
+                    sectionFrame.size.height + section.frame.origin.y + section.sectionMargins.top + section.sectionMargins.bottom);
+        } else {
+            sectionFrame.origin.y += contentSize.height;
+            contentSize.height += sectionFrame.size.height + section.frame.origin.y;
+            contentSize.width =
+                MAX(contentSize.width,
+                    sectionFrame.size.width + section.frame.origin.x + section.sectionMargins.left + section.sectionMargins.right);
+        }
+        section.frame = sectionFrame;
+    }
+    _data.contentSize = contentSize;
 }
 
 @end
