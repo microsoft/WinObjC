@@ -268,15 +268,23 @@ __declspec(dllexport) bool isOSTarget(NSString* versionStr) {
     return false;
 }
 
-@implementation NSBundle : NSObject {
+@interface NSBundle () {
     NSDictionary* _infoDictionary;
     NSDictionary* _localizedStrings;
-    NSString* _bundlePath;
     NSMutableArray* _preferredLocalizations;
 
     struct BundleFile* _files;
-    int _numFiles, _maxFiles;
+    int _numFiles;
+    int _maxFiles;
 }
+
+@property (readwrite, copy) NSURL* bundleURL;
+@property (readwrite, copy) NSString* bundlePath;
+
+@end
+
+@implementation NSBundle
+
 static void ScanDir(NSBundle* self, char* curDirectory, const char* path) {
     EbrDir* dir = EbrOpenDir(path);
     if (dir) {
@@ -640,7 +648,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Status Interoperable
 */
 + (NSArray*)allBundles {
-    return [allBundles retain];
+    return allBundles;
 }
 
 /**
@@ -652,23 +660,22 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     if (mainBundle == nil && mainBundlePath != nil) {
-        mainBundle = [self bundleWithPath:mainBundlePath];
-        [mainBundle retain];
+        mainBundle = [[self bundleWithPath:mainBundlePath] retain];
     }
 
-    return [mainBundle retain];
+    return mainBundle;
 }
 
 /**
  @Status Interoperable
 */
 + (NSBundle*)bundleWithPath:(NSString*)path {
-    return [[self alloc] initWithPath:path];
+    return [[[self alloc] initWithPath:path] autorelease];
 }
 
 + (NSBundle*)bundleWithURL:(NSURL*)url {
     if ([url isFileURL]) {
-        return [[self alloc] initWithPath:[url path]];
+        return [[[self alloc] initWithPath:[url path]] autorelease];
     } else {
         EbrDebugLog("bad URL\n");
         assert(0);
@@ -696,61 +703,78 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
         return nil;
     }
 
-    [allBundles addObject:self];
-    _bundlePath = [path copy];
-    if (![_bundlePath hasSuffix:@"/"]) {
-        _bundlePath = [[_bundlePath stringByAppendingString:@"/"] retain];
-    }
+    if (self = [super init]) {
+        [allBundles addObject:self];
 
-    logPerf("Scanning assets");
-    scanBundle(self, _bundlePath);
-    logPerf("Assets scanned");
+        if (![path hasSuffix:@"/"]) {
+            _bundlePath = [[path stringByAppendingString:@"/"] retain];
+        } else {
+            _bundlePath = [path copy];
+        }
 
-    NSData* data = nil;
+        _bundleURL = [[NSURL fileURLWithPath:_bundlePath] retain];
 
-    if (data == nil) {
-        NSString* nextPath = [path stringByAppendingPathComponent:@"Info.plist"];
-        data = [NSData dataWithContentsOfFile:nextPath];
-        path = nextPath;
-    }
-    if (data == nil) {
-        NSString* nextPath = [path stringByAppendingPathComponent:@"Contents/Info.plist"];
-        data = [NSData dataWithContentsOfFile:nextPath];
-        path = nextPath;
-    }
+        logPerf("Scanning assets");
+        scanBundle(self, _bundlePath);
+        logPerf("Assets scanned");
 
-    if ([data length] > 0) {
-        _infoDictionary =
-            [[NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0]
+        NSData* data = nil;
+
+        if (data == nil) {
+            NSString* nextPath = [path stringByAppendingPathComponent:@"Info.plist"];
+            data = [NSData dataWithContentsOfFile:nextPath];
+            path = nextPath;
+        }
+        if (data == nil) {
+            NSString* nextPath = [path stringByAppendingPathComponent:@"Contents/Info.plist"];
+            data = [NSData dataWithContentsOfFile:nextPath];
+            path = nextPath;
+        }
+
+        if ([data length] > 0) {
+            _infoDictionary = [
+                [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0]
                 retain];
 
-        //  Find localized sttrings
-        NSString* stringPath = [self pathForResource:@"Localizable" ofType:@"strings"];
+            //  Find localized sttrings
+            NSString* stringPath = [self pathForResource:@"Localizable" ofType:@"strings"];
 
-        if (stringPath != nil) {
-            NSData* stringData = [NSData dataWithContentsOfFile:stringPath];
-            if ([stringData length] > 0) {
-                char* bytes = (char*)[stringData bytes];
-                if (*((WORD*)bytes) == 0xFFFE || *((WORD*)bytes) == 0xFEFF) {
-                    NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF16BigEndianStringEncoding] autorelease];
-                    _localizedStrings = [[str propertyListFromStringsFileFormat] retain];
-                } else if (*((WORD*)bytes) != 0xbbef) {
-                    _localizedStrings = [[NSPropertyListSerialization propertyListFromData:stringData
-                                                                          mutabilityOption:NSPropertyListImmutable
-                                                                                    format:0
-                                                                          errorDescription:0] retain];
-                }
+            if (stringPath != nil) {
+                NSData* stringData = [NSData dataWithContentsOfFile:stringPath];
+                if ([stringData length] > 0) {
+                    char* bytes = (char*)[stringData bytes];
+                    if (*((WORD*)bytes) == 0xFFFE || *((WORD*)bytes) == 0xFEFF) {
+                        NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF16BigEndianStringEncoding] autorelease];
+                        _localizedStrings = [[str propertyListFromStringsFileFormat] retain];
+                    } else if (*((WORD*)bytes) != 0xbbef) {
+                        _localizedStrings = [[NSPropertyListSerialization propertyListFromData:stringData
+                                                                              mutabilityOption:NSPropertyListImmutable
+                                                                                        format:0
+                                                                              errorDescription:0] retain];
+                    }
 
-                if (_localizedStrings == nil) {
-                    NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding] autorelease];
-                    _localizedStrings = [str propertyListFromStringsFileFormat];
+                    if (_localizedStrings == nil) {
+                        NSString* str = [[[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding] autorelease];
+                        _localizedStrings = [[str propertyListFromStringsFileFormat] retain];
+                    }
                 }
             }
         }
+
+        logPerf("Bundle initialized");
     }
 
-    logPerf("Bundle initialized");
     return self;
+}
+
+- (void)dealloc {
+    [_infoDictionary release];
+    [_localizedStrings release];
+    [_preferredLocalizations release];
+    [_bundleURL release];
+    [_bundlePath release];
+
+    [super dealloc];
 }
 
 /**
@@ -777,10 +801,10 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
             if (path != nil) {
                 NSData* stringData = [NSData dataWithContentsOfFile:path];
                 char* bytes = (char*)[stringData bytes];
-                stringDict = [[NSPropertyListSerialization propertyListFromData:stringData
-                                                               mutabilityOption:NSPropertyListImmutable
-                                                                         format:0
-                                                               errorDescription:0] retain];
+                stringDict = [NSPropertyListSerialization propertyListFromData:stringData
+                                                              mutabilityOption:NSPropertyListImmutable
+                                                                        format:0
+                                                              errorDescription:0];
 
                 [tables setObject:stringDict forKey:table];
             }
@@ -1102,7 +1126,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Notes Returns bundlePath
 */
 - (NSString*)resourcePath {
-    return [_bundlePath retain];
+    return [[_bundlePath retain] autorelease];
 }
 
 /**
@@ -1111,13 +1135,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 - (NSString*)executablePath {
     UNIMPLEMENTED();
     return [_bundlePath stringByAppendingPathComponent:[NSString stringWithCString:g_globalExecutableName]];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)bundlePath {
-    return _bundlePath;
 }
 
 /**
