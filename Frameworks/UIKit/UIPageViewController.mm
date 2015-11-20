@@ -105,9 +105,8 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                 [self setContentOffset:CGPointMake(currentFrame.size.width, 0) animated:YES];
                 break;
             default:
-                // TODO: Use proper error handling when that becomes available.
-                assert(0);
-                break;
+                NSLog(@"Parameter 'direction' out of range");
+                FAIL_FAST();
         }
 
         // Completion handler called in scrollViewDidEndScrollingAnimation
@@ -298,9 +297,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             }
             break;
         default:
-            // TODO: Use proper error handling when that becomes available.
-            assert(0);
-            break;
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter 'direction' out of range." userInfo:nil];
     }
 
     for (int i = 0; i < viewControllers.count; i++) {
