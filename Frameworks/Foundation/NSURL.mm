@@ -676,7 +676,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     ret->_uri = _uri->Clone();
     ret->_uri->AppendPath(szPath);
     free(szPath);
-    buildFullURI(ret, nil);
+    buildFullURI(ret, _baseURL);
 
     return [ret autorelease];
 }
@@ -689,7 +689,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
     ret->_uri = _uri->Clone();
     ret->_uri->AppendExtension([pathExtension UTF8String]);
-    buildFullURI(ret, nil);
+    buildFullURI(ret, _baseURL);
 
     return [ret autorelease];
 }

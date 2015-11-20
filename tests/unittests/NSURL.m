@@ -157,3 +157,30 @@ TEST(NSFoundation, NSURLTests) {
     [testURL6 release];
     [testURL7 release];
 }
+
+TEST(NSFoundation, NSURL_URLByAppendingPathComponent) {
+    NSURL* fileURL = [NSURL fileURLWithPath:@"."];
+    NSURL* newFileURL = [fileURL URLByAppendingPathComponent:@"Hello.txt"];
+    ASSERT_TRUE_MSG([newFileURL isFileURL], "The passed URL should be a file URL type");
+
+    NSString* fileURLString = [fileURL absoluteString];
+    NSString* newFileURLString = [newFileURL absoluteString];
+    fileURLString = [fileURLString stringByAppendingString:@"Hello.txt"];
+    ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
+}
+
+TEST(NSFoundation, NSURL_URLByAppendingPathExtension) {
+    NSURL* fileURL = [NSURL fileURLWithPath:@"usr"];
+    NSURL* newFileURL = [fileURL URLByAppendingPathExtension:@"World.txt"];
+    ASSERT_TRUE_MSG([newFileURL isFileURL], "The passed URL should be a file URL type");
+
+    NSString* fileURLString = [fileURL absoluteString];
+    NSString* newFileURLString = [newFileURL absoluteString];
+    if ([fileURLString length] > 0) {
+        fileURLString = [fileURLString substringToIndex:[fileURLString length] - 1];
+    } else {
+        ASSERT_TRUE_MSG(false, "fileURLString string length cannot be ZERO!");
+    }
+    fileURLString = [fileURLString stringByAppendingString:@".World.txt"];
+    ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
+}
