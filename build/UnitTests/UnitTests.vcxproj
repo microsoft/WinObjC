@@ -308,6 +308,7 @@
     <ClangCompile Include="..\..\tests\unittests\NSURLCredential.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLProtectionSpace.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURLCredentialStorage.m" />
+    <ClangCompile Include="..\..\tests\unittests\CFBinaryHeap.m" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp140d_app.dll">

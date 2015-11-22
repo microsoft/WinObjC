@@ -120,6 +120,7 @@ CFNumberType,
 CFBooleanType,
 CGLayerType,
 CFBundleType,
+CFBinaryHeap,
 } CFTypeIDs;
 
 DWORD CFGetTypeID(id cfobj)
@@ -130,6 +131,9 @@ return CFStringType;
 }
 if ( [objType isKindOfClass:[NSDictionary class]] ) {
 return CFDictionaryType;
+}
+if ( [objType isKindOfClass:[CFBinaryHeap class]] ) {
+return CFBinaryHeap;
 }
 if ( [objType isKindOfClass:[NSArray class]] ) {
 return CFArrayType;
@@ -150,6 +154,11 @@ return CFBundleType;
 assert(0);
 
 return 0;
+}
+
+DWORD CFBinaryHeapGetTypeID()
+{
+return CFBinaryHeap;
 }
 
 DWORD CFDictionaryGetTypeID()
