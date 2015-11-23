@@ -40,6 +40,7 @@
 
     ret->_path = [name stringByAppendingString:@".storyboardc"];
 
+    //  If no storyboard bundle is specified, search the main bundle
     if (bundle == nil) {
         bundle = [NSBundle mainBundle];
     }
@@ -93,6 +94,8 @@
     id obj = [nibLoader loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
     int count = [obj count];
 
+    [nibLoader autorelease];
+
     for (int i = 0; i < count; i++) {
         id curObj = [obj objectAtIndex:i];
 
@@ -100,8 +103,6 @@
             return curObj;
         }
     }
-
-    [nibLoader release];
 
     return nil;
 }
