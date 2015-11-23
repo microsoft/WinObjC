@@ -542,6 +542,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 
     priv->nibName = [coder decodeObjectForKey:@"UINibName"];
+
+    //  Attempt to locate resources from the same bundle as the unarchiver that's loading us
+    if ( [coder respondsToSelector: @selector(_bundle)] ) {
+        priv->nibBundle = [coder _bundle];
+    }
     priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
 
     priv->toolbarItems = [coder decodeObjectForKey:@"UIToolbarItems"];
@@ -669,12 +674,14 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     NSString* nibPath = nil;
 
     if (priv->nibName != nil) {
-        if (priv->nibBundle != nil) {
-            nibPath = [priv->nibBundle pathForResource:priv->nibName ofType:@"nib"];
+        NSBundle *bundle = priv->nibBundle;
+
+        if ( bundle == nil ) {
+            bundle = [NSBundle mainBundle];
         }
 
-        if (nibPath == nil)
-            nibPath = [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib"];
+        nibPath = [bundle pathForResource:priv->nibName ofType:@"nib"];
+
         if (nibPath == nil) {
             NSString* storyboardPath = [priv->_storyboard _path];
 
@@ -683,10 +690,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                 runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
                 EbrDebugLog("Searching = %s\n", (char*)[runtimePath UTF8String]);
-                nibPath = [[NSBundle mainBundle] pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
+                nibPath = [bundle pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
 
                 if (nibPath == nil) {
-                    nibPath = [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
+                    nibPath = [bundle pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
                 }
             }
         }

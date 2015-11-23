@@ -23,11 +23,13 @@
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIStoryboard.h>
+#import <NSNibInternal.h>
 
 @implementation UIStoryboard {
     idretaintype(NSString) _entryPoint;
     idretaintype(NSDictionary) _fileMap;
     idretaintype(NSString) _path;
+    idretaintype(NSBundle) _bundle;
 }
 
 /**
@@ -48,6 +50,7 @@
         if (storyInfo) {
             ret->_entryPoint = [storyInfo objectForKey:@"UIStoryboardDesignatedEntryPointIdentifier"];
             ret->_fileMap = [storyInfo objectForKey:@"UIViewControllerIdentifiersToNibNames"];
+            ret->_bundle = bundle;
 
             return ret;
         }
@@ -70,9 +73,9 @@
     runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
     EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
-    pathToNib = [[NSBundle mainBundle] pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
+    pathToNib = [_bundle pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
     if (pathToNib == nil) {
-        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
+        pathToNib = [_bundle pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
     }
     EbrDebugLog("Found %s\n", [pathToNib UTF8String]);
 
@@ -85,7 +88,9 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    id obj = [[NSNib alloc] loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
+    NSNib *nibLoader = [NSNib alloc];
+    [nibLoader _setBundle: _bundle];
+    id obj = [nibLoader loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
     int count = [obj count];
 
     for (int i = 0; i < count; i++) {
@@ -95,6 +100,8 @@
             return curObj;
         }
     }
+
+    [nibLoader release];
 
     return nil;
 }
@@ -114,9 +121,9 @@
     runtimePath = [runtimePath stringByAppendingString:(id) @".nib"];
 
     EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
-    pathToNib = [[NSBundle mainBundle] pathForResource:(id) @"runtime" ofType:@"nib" inDirectory:runtimePath];
+    pathToNib = [_bundle pathForResource:(id) @"runtime" ofType:@"nib" inDirectory:runtimePath];
     if (pathToNib == nil) {
-        pathToNib = [[NSBundle mainBundle] pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
+        pathToNib = [_bundle pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
     }
 
     id proxyObjects[2];
