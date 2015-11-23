@@ -27,31 +27,49 @@
 static IWLazyClassLookup _LazyUIProxyObject("UIProxyObject");
 static IWLazyClassLookup _LazyUIWindow("UIWindow");
 
+NSString * const UINibExternalObjects = @"UINibExternalObjects";
+
 @implementation NSNib {
-    idretain _bundle;
+    idretaintype(NSData) _data;
 }
 
 /**
  @Status Interoperable
 */
-- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject {
-    return [self loadNib:filename withOwner:ownerObject proxies:nil];
-}
 
-/**
- @Status Interoperable
-*/
-- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
-    NSData* data = [NSData dataWithContentsOfFile:filename];
++(NSNib *) nibWithNibName:(NSString *)name bundle:(NSBundle *) bundle
+{
+    NSData* data = [NSData dataWithContentsOfFile:name];
     if (data == nil) {
-        data = [NSData dataWithContentsOfFile:[filename stringByAppendingPathComponent:@"/runtime.nib"]];
+        data = [NSData dataWithContentsOfFile:[name stringByAppendingPathComponent:@"/runtime.nib"]];
     }
 
-    return [self loadNibWithData:data withOwner:ownerObject proxies:proxies];
+    if ( data == nil ) {
+        return nil;
+    }
+
+    return [self nibWithData: data bundle: bundle];
 }
 
-- (NSArray*)loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies {
-    char* bytes = (char*)[data bytes];
+/**
+ @Status Interoperable
+*/
+
++(NSNib *) nibWithData:(NSData *)data bundle:(NSBundle *) bundle
+{
+    NSNib *ret = [self alloc];
+    ret->_data = data;
+    ret->_bundle = bundle;
+
+    return [ret autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+
+- (NSArray*)instantiateWithOwner:(id)ownerObject options: (NSDictionary*)options {
+    char* bytes = (char*)[_data bytes];
     if (!bytes) {
         return nil;
     }
@@ -67,6 +85,8 @@ static IWLazyClassLookup _LazyUIWindow("UIWindow");
     [_LazyUIProxyObject addProxyObject:nil withName:@"IBFirstResponder" forCoder:prop];
     [_LazyUIProxyObject addProxyObject:ownerObject withName:@"IBFilesOwner" forCoder:prop];
 
+    NSDictionary *proxies = options[UINibExternalObjects];
+
     for (id key in proxies) {
         id curObj = [proxies objectForKey:key];
 
@@ -74,7 +94,7 @@ static IWLazyClassLookup _LazyUIWindow("UIWindow");
     }
 
     [prop _setBundle:(id)_bundle];
-    [prop initForReadingWithData:data];
+    [prop initForReadingWithData:_data];
     // id allObjects = prop("decodeObjectForKey:", @"UINibObjectsKey");
     NSArray* connections = [prop decodeObjectForKey:@"UINibConnectionsKey"];
     NSArray* topLevelObjects = [prop decodeObjectForKey:@"UINibTopLevelObjectsKey"];
@@ -116,16 +136,8 @@ static IWLazyClassLookup _LazyUIWindow("UIWindow");
     return ret;
 }
 
-- (void)_setBundle:(NSBundle*)bundle {
-    _bundle = bundle;
-}
-
-- (NSBundle*)_bundle {
-    return _bundle;
-}
-
 - (void)dealloc {
-    _bundle = nil;
+    _data = nil;
     [super dealloc];
 }
 

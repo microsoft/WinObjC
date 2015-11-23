@@ -89,12 +89,9 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib *nibLoader = [NSNib alloc];
-    [nibLoader _setBundle: _bundle];
-    id obj = [nibLoader loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
+    NSNib* nib = [NSNib nibWithNibName: pathToNib bundle: _bundle];
+    id obj = [nib instantiateWithOwner:uiApplication options: @{UINibExternalObjects : proxyObjectsDict} ];
     int count = [obj count];
-
-    [nibLoader autorelease];
 
     for (int i = 0; i < count; i++) {
         id curObj = [obj objectAtIndex:i];
@@ -136,9 +133,8 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    id nib = [NSNib alloc];
-    id obj = [nib loadNib:pathToNib withOwner:uiApplication proxies:proxyObjectsDict];
-    [nib release];
+    NSNib* nib = [NSNib nibWithNibName: pathToNib bundle: _bundle];
+    id obj = [nib instantiateWithOwner:uiApplication options: @{UINibExternalObjects : proxyObjectsDict} ];
     int count = [obj count];
 
     for (int i = 0; i < count; i++) {

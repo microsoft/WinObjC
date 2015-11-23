@@ -676,6 +676,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     if (priv->nibName != nil) {
         NSBundle *bundle = priv->nibBundle;
 
+        //  Search the bundle we were passed on initialization for the .nib file given to us. 
+        //  If no bundle was specified, search the main application bundle.
         if ( bundle == nil ) {
             bundle = [NSBundle mainBundle];
         }
@@ -683,6 +685,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         nibPath = [bundle pathForResource:priv->nibName ofType:@"nib"];
 
         if (nibPath == nil) {
+            //  If a storyboard was provided to us, use it as part of the search path
             NSString* storyboardPath = [priv->_storyboard _path];
 
             if (storyboardPath != nil) {
@@ -746,9 +749,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
-            NSNib* nib = [NSNib alloc];
-            [nib loadNib:[NSString stringWithCString:openname] withOwner:self proxies:proxyObjectsDict];
-            [nib release];
+            NSNib* nib = [NSNib nibWithNibName: [NSString stringWithCString:openname] bundle: priv->nibBundle];
+            [nib instantiateWithOwner:self options: @{UINibExternalObjects : proxyObjectsDict} ];
             priv->_externalObjects = nil;
         } else {
             assert(0);

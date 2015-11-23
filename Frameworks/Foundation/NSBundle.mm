@@ -24,6 +24,7 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSFileManager.h"
+#include "Foundation/NSNib.h"
 
 #include <sys/stat.h>
 
@@ -1227,10 +1228,8 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
         EbrDebugLog("*** NIB not found ***\n");
         return nil;
     } else {
-        NSNib* nib = [NSNib alloc];
-        [nib _setBundle:self];
-        NSArray* topLevelObjects = [nib loadNib:nibFile withOwner:owner];
-        [nib release];
+        NSNib* nib = [NSNib nibWithNibName: nibFile bundle: self];
+        NSArray* topLevelObjects = [nib instantiateWithOwner: owner options: nil];
 
         return topLevelObjects;
     }
@@ -1241,6 +1240,20 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 */
 - (NSArray*)pathsForResourcesOfType:(NSString*)type inDirectory:(NSString*)directory {
     return findFilesDirectory(self, _bundlePath, type, directory);
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray*)URLsForResourcesWithExtension:(NSString*)type subdirectory:(NSString*)directory {
+    NSArray *paths = findFilesDirectory(self, _bundlePath, type, directory);
+
+    NSMutableArray *ret = [NSMutableArray new];
+    for ( NSString *path in paths ) {
+        [ret addObject: [NSURL fileURLWithPath: path]];
+    }
+
+    return [ret autorelease];
 }
 
 /**
