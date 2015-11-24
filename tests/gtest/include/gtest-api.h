@@ -66,13 +66,21 @@ std::vector<char> Format(const char* message, Args ... args)
 
 }
 
-#ifdef __OBJC__
+#if defined(__OBJC__) && ! __has_feature(objc_arc)
 namespace GTestLogPrivate
 {
 template<typename ... Args>
 std::vector<char> Format(NSString* message, Args ... args)
 {
     return Format([message UTF8String], std::forward<Args>(args)...);
+}
+}
+
+namespace testing {
+namespace internal {
+inline std::ostream& operator<<(std::ostream& os, const id& object) {
+    return os << (char*)([[object description] UTF8String]);
+}
 }
 }
 
@@ -100,14 +108,6 @@ inline ::testing::AssertionResult CompareObjectsNotEqual(
     }
 
     return ::testing::internal::CmpHelperOpFailure(expectedExpression, actualExpression, expected, actual, "!=");
-}
-}
-}
-
-namespace testing {
-namespace internal {
-inline std::ostream& operator<<(std::ostream& os, const id& object) {
-    return os << (char*)([[object description] UTF8String]);
 }
 }
 }

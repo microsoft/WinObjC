@@ -268,6 +268,7 @@
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
+    <ClangCompile Include="..\..\tests\unittests\LifetimeCounting.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
     <ClangCompile Include="..\..\tests\unittests\NSDateFormatter.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
@@ -296,6 +297,11 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
     <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
+    <ClangCompile Include="..\..\tests\unittests\StarboardAutoIdTests_ARC.mm">
+      <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ObjectiveCARC>
+      <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="..\..\tests\unittests\StarboardAutoIdTests_NoARC.mm" />
     <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCachedURLResponse.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLCredential.mm" />
@@ -345,6 +351,9 @@
       <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\tests\unittests\StarboardAutoIdTests.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
