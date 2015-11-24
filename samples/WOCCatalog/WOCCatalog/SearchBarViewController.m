@@ -43,8 +43,9 @@
     self.title = @"UISearchBar";
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 
-    UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(10, 10, cell.bounds.size.width, 80)];
-    [searchBar setPrompt:@"This is the prompt"];
+    UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 80)];
+    [searchBar setPrompt:@"UISearchBar prompt"];
+    [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"photo5.jpg"] forState:UIControlStateNormal];
     [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     [cell addSubview:searchBar];
 

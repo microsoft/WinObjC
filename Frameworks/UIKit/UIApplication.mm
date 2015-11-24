@@ -46,7 +46,6 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
-
 NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
 NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
 
@@ -1475,10 +1474,10 @@ static void printViews(id curView, int level) {
 
 /**
  @Status Stub
+ This will return UIRemoteNotificationTypeNone until we interop with our Notification system.
 */
 - (unsigned)enabledRemoteNotificationTypes {
-    UNIMPLEMENTED();
-    return 0;
+    return UIRemoteNotificationTypeNone;
 }
 
 /**

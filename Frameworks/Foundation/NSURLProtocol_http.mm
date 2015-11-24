@@ -617,26 +617,9 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
 
             case didReceiveRedirect:
                 if (!_hasCancelled) {
-                    EbrDebugLog("Redirect to %s?\n", [[[e.obj2 URL] absoluteString] UTF8String]);
-                    id newRequest = [_client URLProtocol:self willSendRequest:e.obj1 redirectResponse:e.obj2];
-                    if (newRequest == nil) {
-                        if (!_hasCancelled) {
-                            _isFinished = TRUE;
-                            id userInfo = [NSDictionary dictionaryWithObject:@"Connection timed out" forKey:@"NSLocalizedDescriptionKey"];
-                            id error = [NSError errorWithDomain:@"NSURLErrorDomain" code:1234 userInfo:userInfo];
-
-                            [_client URLProtocol:self didFailWithError:error];
-                            [self autorelease];
-                        }
-                    } else {
-                        _request = newRequest;
-                        _curURL = [_request URL];
-                        [g_multiHandler performSelector:@selector(addHTTPRequest:)
-                                               onThread:g_multiThread
-                                             withObject:self
-                                          waitUntilDone:FALSE];
-                        [self autorelease];
-                    }
+                    EbrDebugLog("Redirect to %s\n", [[[e.obj2 URL] absoluteString] UTF8String]);
+                    [_client URLProtocol:self wasRedirectedToRequest:e.obj1 redirectResponse:e.obj2];
+                    [self stopLoading];
                 }
                 [e.obj1 release];
                 [e.obj2 release];

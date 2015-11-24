@@ -98,26 +98,42 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (id)initWithRequest:(id)request delegate:(id)delegate startImmediately:(BOOL)startLoading {
-    _request = [request copy];
-    id cls = [NSURLProtocol _URLProtocolClassForRequest:request];
-    if (cls == nil) {
-        return nil;
+    if (self = [super init]) {
+        @try {
+            [self _setRequest:request];
+        } @catch(NSException* exception) {
+            [self release];
+            return nil;
+        }
+
+        _delegate = [delegate retain];
+
+        if (startLoading) {
+            [self start];
+        }
+
     }
-
-    if ((_protocol = [[cls alloc] initWithRequest:_request
-                                   cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:_request]
-                                           client:self]) == nil) {
-        [self dealloc];
-        return nil;
-    }
-
-    _delegate = [delegate retain];
-
-    if (startLoading) {
-        [self start];
-    }
-
     return self;
+}
+
+- (BOOL)_setRequest:(NSURLRequest*)request {
+    NSURLRequest* copiedRequest = [[request copy] autorelease];
+
+    id cls = [NSURLProtocol _URLProtocolClassForRequest:copiedRequest];
+    if (!cls || ![cls canInitWithRequest:copiedRequest]) {
+        return NO;
+    }
+
+    _protocol = [[cls alloc] initWithRequest:copiedRequest
+                                   cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:copiedRequest]
+                                           client:self];
+    if (!_protocol) {
+        return NO;
+    }
+
+    _request = [copiedRequest retain];
+
+    return YES;
 }
 
 /**
@@ -151,6 +167,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
+    _scheduled = YES;
     [_protocol scheduleInRunLoop:runLoop forMode:mode];
 }
 
@@ -159,6 +176,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 - (void)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
     [_protocol unscheduleFromRunLoop:runLoop forMode:mode];
+    _scheduled = NO;
 }
 
 - (void)URLProtocol:(id)urlProtocol didFailWithError:(id)error {
@@ -177,18 +195,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _delegate = nil;
 }
 
-- (id)URLProtocol:(id)urlProtocol willSendRequest:(id)request redirectResponse:(id)response {
-    id ret = request;
-
-    if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
-        ret = [_delegate connection:self willSendRequest:request redirectResponse:response];
-    }
-
-    return ret;
-}
-
 - (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
-    EbrDebugLog("URL protocol did receive response\n");
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
     [_delegate setError:[NSError errorWithDomain:@"Bad response code" code:[response statusCode] userInfo:nil]];
@@ -207,14 +214,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)URLProtocol:(id)urlProtocol didLoadData:(id)data {
-    EbrDebugLog("URL protocol did load data\n");
     if ([_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
         [_delegate connection:self didReceiveData:data];
     }
 }
 
 - (void)URLProtocolDidFinishLoading:(id)urlProtocol {
-    EbrDebugLog("URL protocol did finish loading\n");
     /*
     if(_storagePolicy==NSURLCacheStorageNotAllowed) {
     //[[NSURLCache sharedURLCache] removeCachedResponseForRequest:_request];
@@ -261,6 +266,27 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     } else {
         [_delegate connection:self didReceiveAuthenticationChallenge:challenge];
     }
+}
+
+- (void)URLProtocol:(NSURLProtocol *)urlProtocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse*)response {
+    [_protocol stopLoading];
+    NSURLRequest* newRequest = request;
+    if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
+        newRequest = [_delegate connection:self willSendRequest:request redirectResponse:response];
+    }
+    [_protocol release];
+    _protocol = nil;
+
+    if (!newRequest) {
+        [self cancel];
+        return;
+    }
+    [self _setRequest:newRequest]; // regenerates _protocol
+
+    if (_scheduled) {
+        [_protocol scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:@"NSURLConnectionRequestMode"];
+    }
+    [_protocol startLoading];
 }
 
 #if 0
@@ -341,18 +367,6 @@ _delegate = nil;
 return [super dealloc];
 }
 #endif
-
-- (id)retain {
-    return [super retain];
-}
-
-- (void)release {
-    [super release];
-}
-
-- (id)autorelease {
-    return [super autorelease];
-}
 
 - (id)_protocol {
     return _protocol;

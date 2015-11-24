@@ -14,6 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 -(void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 -(void)useCredential:(NSURLCredential *)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 -(void)cancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
+-(void)rejectProtectionSpaceAndContinueWithChallenge:(NSURLAuthenticationChallenge*)challenge;
 @end
 
 @interface NSURLAuthenticationChallenge : NSObject {

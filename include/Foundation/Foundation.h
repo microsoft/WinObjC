@@ -108,11 +108,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSUnarchiver.h>
 #import <Foundation/NSUndoManager.h>
 #import <Foundation/NSURL.h>
-#import <Foundation/NSURLSession.h>
 #import <Foundation/NSMutableURLRequest.h>
 #import <Foundation/NSURLConnection.h>
 #import <Foundation/NSURLDownload.h>
 #import <Foundation/NSURLResponse.h>
+#import <Foundation/NSURLSessionConfiguration.h>
+#import <Foundation/NSURLSession.h>
+#import <Foundation/NSURLSessionTask.h>
+#import <Foundation/NSURLSessionDataTask.h>
+#import <Foundation/NSURLSessionDownloadTask.h>
 #import <Foundation/NSUserDefaults.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSValueTransformer.h>

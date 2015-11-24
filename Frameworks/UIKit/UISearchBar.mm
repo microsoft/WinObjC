@@ -252,6 +252,10 @@ static void initInternal(UISearchBar* self) {
     }
 
     [_textField setFrame:textFrame];
+
+    if (_backgroundImage != nil) {
+        [_textField setBackground:_backgroundImage];
+    }
 }
 
 - (BOOL)textField:(id)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)newString {
@@ -310,6 +314,7 @@ static void initInternal(UISearchBar* self) {
     _promptLabel = nil;
     _scopeButtons = nil;
     _placeholder = nil;
+    [_backgroundImage release];
     [super dealloc];
 }
 
@@ -342,7 +347,40 @@ static void initInternal(UISearchBar* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Caveat
+*/
 - (void)setSearchFieldBackgroundImage:(UIImage*)image forState:(UIControlState)state {
+    if (image == nil) {
+        return;
+    }
+
+    UIImage* newImage = [image copy];
+    [_backgroundImage release];
+    _backgroundImage = newImage;
+
+    if (state == UIControlStateNormal) {
+        [self->_textField setBorderStyle:UITextBorderStyleNone];
+        [_textField setBackground:_backgroundImage];
+        [self setNeedsDisplay];
+    } else if (state == UIControlStateDisabled) {
+        NSLog(@"UIControlStateDisabled is not supported");
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes  Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled. Other states will be ignored.
+*/
+- (UIImage*)searchFieldBackgroundImageForState:(UIControlState)state {
+    if (state == UIControlStateNormal) {
+        return _backgroundImage;
+    } else if (state == UIControlStateDisabled) {
+        UNIMPLEMENTED();
+    } else {
+        NSLog(@"Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled.");
+    }
+    return nil;
 }
 
 /**

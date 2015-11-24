@@ -269,18 +269,17 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setBackground:(UIImage*)image {
-    UNIMPLEMENTED();
     _background = image;
+    [self setNeedsDisplay];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIImage*)background {
-    UNIMPLEMENTED();
     return _background;
 }
 
@@ -308,6 +307,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         if ([[self layer] borderWidth] == 0.0f || _borderStyle == UITextBorderStyleRoundedRect) {
             switch (_borderStyle) {
                 case UITextBorderStyleLine: {
+                    // If a background image is set, it takes preference over all borderstyles and the background image is shown, except for
+                    // UITextBorderStyleRoundedRect.
+                    if (_background != nil) {
+                        break;
+                    }
+
                     rect = [self bounds];
                     rect.origin.x += 1.0f;
                     rect.origin.y += 1.0f;
@@ -336,6 +341,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
                 }
 
                 case UITextBorderStyleBezel: {
+                    // If a background image is set, it takes preference over all borderstyles and the background image is shown, except for
+                    // UITextBorderStyleRoundedRect.
+                    if (_background != nil) {
+                        break;
+                    }
+
                     rect = [self bounds];
                     id image =
                         [[UIImage imageNamed:@"/img/TextFieldBezel@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
@@ -344,6 +355,13 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
                 } break;
             }
         }
+    }
+
+    // Out of the 4 border styles that ios supports now, UITextBorderStyleRoundedRect takes preference over background image, for all others
+    // borderstyles if there is a background image, it is shown and not the borderstyle. This is the default behaviour in ios.
+    if (_background != nil && _borderStyle != UITextBorderStyleRoundedRect) {
+        rect = [self bounds];
+        [_background drawInRect:rect];
     }
 
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)textColor);
