@@ -1216,10 +1216,9 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
- @Status Caveat
- @Notes options parameter not supported
+ @Status Interoperable
 */
-- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSString*)options {
+- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options {
     assert(options == nil);
 
     NSString* nibFile = [self pathForResource:name ofType:@"nib"];
@@ -1229,7 +1228,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
         return nil;
     } else {
         NSNib* nib = [NSNib nibWithNibName: nibFile bundle: self];
-        NSArray* topLevelObjects = [nib instantiateWithOwner: owner options: nil];
+        NSArray* topLevelObjects = [nib instantiateWithOwner: owner options: options];
 
         return topLevelObjects;
     }

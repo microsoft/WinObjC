@@ -42,10 +42,9 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
     NSData* data = [NSData dataWithContentsOfFile:name];
     if (data == nil) {
         data = [NSData dataWithContentsOfFile:[name stringByAppendingPathComponent:@"/runtime.nib"]];
-    }
-
-    if ( data == nil ) {
-        return nil;
+        if ( data == nil ) {
+            return nil;
+        }
     }
 
     return [self nibWithData: data bundle: bundle];
@@ -57,6 +56,10 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
 
 +(NSNib *) nibWithData:(NSData *)data bundle:(NSBundle *) bundle
 {
+    if ( data == nil ) {
+        return nil;
+    }
+
     NSNib *ret = [self alloc];
     ret->_data = data;
     ret->_bundle = bundle;
@@ -69,7 +72,7 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
 */
 
 - (NSArray*)instantiateWithOwner:(id)ownerObject options: (NSDictionary*)options {
-    char* bytes = (char*)[_data bytes];
+    const char* bytes = (const char *) [_data bytes];
     if (!bytes) {
         return nil;
     }
@@ -137,7 +140,6 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
 }
 
 - (void)dealloc {
-    _data = nil;
     [super dealloc];
 }
 

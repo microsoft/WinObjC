@@ -23,7 +23,6 @@
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIStoryboard.h>
-#import <NSNibInternal.h>
 
 @implementation UIStoryboard {
     idretaintype(NSString) _entryPoint;
@@ -41,17 +40,18 @@
     ret->_path = [name stringByAppendingString:@".storyboardc"];
 
     //  If no storyboard bundle is specified, search the main bundle
-    if (bundle == nil) {
-        bundle = [NSBundle mainBundle];
+    NSBundle *storyboardBundle = bundle;
+    if (storyboardBundle == nil) {
+        storyboardBundle = [NSBundle mainBundle];
     }
-    id storyInfoPath = [bundle pathForResource:@"Info" ofType:@"plist" inDirectory:(id)ret->_path];
+    NSString *storyInfoPath = [storyboardBundle pathForResource:@"Info" ofType:@"plist" inDirectory: ret->_path];
 
     if (storyInfoPath != nil) {
-        id storyInfo = [NSDictionary dictionaryWithContentsOfFile:storyInfoPath];
+        NSDictionary* storyInfo = [NSDictionary dictionaryWithContentsOfFile:storyInfoPath];
         if (storyInfo) {
             ret->_entryPoint = [storyInfo objectForKey:@"UIStoryboardDesignatedEntryPointIdentifier"];
             ret->_fileMap = [storyInfo objectForKey:@"UIViewControllerIdentifiersToNibNames"];
-            ret->_bundle = bundle;
+            ret->_bundle = storyboardBundle;
 
             return ret;
         }
@@ -64,11 +64,11 @@
  @Status Interoperable
 */
 - (UIViewController*)instantiateInitialViewController {
-    id fileName = [_fileMap objectForKey:_entryPoint];
+    NSString *fileName = [_fileMap objectForKey:_entryPoint];
 
-    id uiApplication = [UIApplication sharedApplication];
+    UIApplication *uiApplication = [UIApplication sharedApplication];
 
-    id pathToNib = nil;
+    NSString *pathToNib = nil;
 
     NSString* runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:@".nib"];
@@ -109,11 +109,11 @@
 */
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
-    id fileName = [_fileMap objectForKey:(id)identifier];
+    NSString *fileName = [_fileMap objectForKey:(id)identifier];
 
-    id uiApplication = [UIApplication sharedApplication];
+    UIApplication *uiApplication = [UIApplication sharedApplication];
 
-    id pathToNib = nil;
+    NSString *pathToNib = nil;
 
     id runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:(id) @".nib"];
