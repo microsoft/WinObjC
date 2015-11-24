@@ -169,7 +169,6 @@ struct _EbrThread_t {
 typedef _EbrThread_t* EbrThread_t;
 
 IWPLATFORM_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
-IWPLATFORM_EXPORT unsigned __int64 EbrGetAbsoluteTime();
 IWPLATFORM_EXPORT double EbrGetMediaTime();
 IWPLATFORM_EXPORT void EbrSetAPC(int signal, void (*func)(int));
 IWPLATFORM_EXPORT void EbrCallAPC(pthread_t thread, int signal, int param);

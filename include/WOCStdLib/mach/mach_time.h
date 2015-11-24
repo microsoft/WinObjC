@@ -17,21 +17,21 @@
 #ifndef __MACH_TIME_H
 #define __MACH_TIME_H
 
+__BEGIN_DECLS
+
 struct mach_timebase_info {
     uint32_t numer, denom;
 };
 
+__END_DECLS
+
 typedef struct mach_timebase_info *mach_timebase_info_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 kern_return_t mach_timebase_info(mach_timebase_info_t tinfo);
 uint64_t mach_absolute_time();
 
-#ifdef __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif

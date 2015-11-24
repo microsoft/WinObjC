@@ -867,10 +867,6 @@ int EbrMunmap(void* addr, uint32_t size) {
     return -1;
 }
 
-unsigned __int64 EbrGetAbsoluteTime() {
-    return GetTickCount64();
-}
-
 bool EbrMkdir(const char* path) {
     return _mkdir(CPathMapper(path)) == 0;
 }
