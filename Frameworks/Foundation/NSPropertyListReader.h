@@ -19,12 +19,6 @@ struct NSPropertyListReaderA {
 #define FORMAT "00"
 #define TRAILER_SIZE (sizeof(uint8_t) * 2 + sizeof(uint64_t) * 3)
 
-    typedef enum {
-        kCFPropertyListImmutable = 0,
-        kCFPropertyListMutableContainers,
-        kCFPropertyListMutableContainersAndLeaves
-    } CFOptionFlags;
-
     idt(NSData) _data;
     CFOptionFlags _flags;
 
