@@ -202,7 +202,7 @@ __CFMutableAttributedString::~__CFMutableAttributedString() {
 void __CFMutableAttributedString::fixAttributesIfNotEditing() {
     if (!_editingMode) {
         _cleanEmptyLists();
-        // TODO: 5244778, 5244811 - UI Kit extensions add extra operations that ought to be deferred here.
+        // TODO: 5815703, 5237845 - need more UIKit support before fixing attributes for fonts or paragraphs
     }
 }
 

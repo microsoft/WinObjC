@@ -21,13 +21,12 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSAttributedString.h>
 
-enum {
+typedef NS_OPTIONS(NSInteger, NSStringDrawingOptions) {
     NSStringDrawingTruncatesLastVisibleLine = 1 << 5,
     NSStringDrawingUsesLineFragmentOrigin = 1 << 0,
     NSStringDrawingUsesFontLeading = 1 << 1,
     NSStringDrawingUsesDeviceMetrics = 1 << 3,
 };
-typedef NSInteger NSStringDrawingOptions;
 
 @interface NSStringDrawingContext : NSObject
 
@@ -53,8 +52,14 @@ typedef NSInteger NSStringDrawingOptions;
 @end
 
 @interface NSAttributedString (NSExtendedStringDrawing)
+- (void)drawAtPoint:(CGPoint)point;
+- (void)drawInRect:(CGRect)rect;
+- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
 - (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
-- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(NSDictionary*)attributes context:(NSStringDrawingContext*)context;
+- (CGRect)boundingRectWithSize:(CGSize)size
+                       options:(NSStringDrawingOptions)options
+                    attributes:(NSDictionary*)attributes
+                       context:(NSStringDrawingContext*)context;
 - (CGSize)size;
 @end
 

@@ -21,6 +21,7 @@
 #include <Foundation\NSAttributedString.h>
 #include <Foundation\NSDictionary.h>
 #include <Foundation\NSMutableAttributedString.h>
+#include <UIKit\UIKit.h>
 
 void assertAttributeAt(
     NSAttributedString* aStr, NSString* attrName, id expectedValue, NSUInteger expectedLocation, NSUInteger expectedLength) {
@@ -314,17 +315,17 @@ TEST(Foundation, AttributedString_AddAttributes) {
 }
 
 TEST(Foundation, AttributedString_InitWithString) {
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"foo"];
-    ASSERT_OBJCEQ(@"foo", [aStr string]);
+    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ"];
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
     assertAttributeAt(aStr, NSFontAttributeName, nil, 0, 3);
 }
 
 TEST(Foundation, AttributedString_InitWithStringAttributes) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
 
-    ASSERT_OBJCEQ(@"foo", [aStr string]);
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
 
     assertAttributeAt(aStr, @"key1", @"value1", 0, 3);
@@ -334,10 +335,10 @@ TEST(Foundation, AttributedString_InitWithStringAttributes) {
 
 TEST(Foundation, AttributedString_InitWithAttributedString) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStrBase = [[NSAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSAttributedString* aStrBase = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
     NSAttributedString* aStr = [[NSAttributedString alloc] initWithAttributedString:aStrBase];
 
-    ASSERT_OBJCEQ(@"foo", [aStr string]);
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
 
     assertAttributeAt(aStr, @"key1", @"value1", 0, 3);
@@ -347,7 +348,7 @@ TEST(Foundation, AttributedString_InitWithAttributedString) {
 
 TEST(Foundation, AttributedString_AttributeAtIndexNoRange) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
 
     ASSERT_OBJCEQ(@"value1", [aStr attribute:@"key1" atIndex:1 effectiveRange:nil]);
     ASSERT_OBJCEQ(@"value2", [aStr attribute:@"key2" atIndex:1 effectiveRange:nil]);
@@ -401,26 +402,29 @@ TEST(Foundation, AttributedString_AttributesAtIndexInRange) {
 TEST(Foundation, AttributedString_AppendAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
+    [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
 
-    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStr2 = [[NSAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", @"notvalue3", @"key3", nil];
+    NSAttributedString* aStr2 = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
 
     [aStr appendAttributedString:aStr2];
 
     assertAttributeAt(aStr, @"key1", @"value1", 2, 7);
     assertAttributeAt(aStr, @"key2", @"value2", 6, 3);
-    ASSERT_OBJCEQ(@"AAAAAAfoo", [aStr string]);
+    assertAttributeAt(aStr, @"key3", @"value3", 2, 4);
+    assertAttributeAt(aStr, @"key3", @"notvalue3", 6, 3);
+    ASSERT_OBJCEQ(@"AAAAAAOBJ", [aStr string]);
 }
 
 TEST(Foundation, AttributedString_DeleteCharactersInRange) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr = [[NSMutableAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSMutableAttributedString* aStr = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
 
     [aStr deleteCharactersInRange:NSMakeRange(1, 1)];
 
     assertAttributeAt(aStr, @"key1", @"value1", 0, 2);
     assertAttributeAt(aStr, @"key2", @"value2", 0, 2);
-    ASSERT_OBJCEQ(@"fo", [aStr string]);
+    ASSERT_OBJCEQ(@"OJ", [aStr string]);
 }
 
 TEST(Foundation, AttributedString_DeleteCharactersInRangeEmptyString) {
@@ -434,7 +438,7 @@ TEST(Foundation, AttributedString_InsertAttributedString) {
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr insertAttributedString:aStr2 atIndex:5];
@@ -442,7 +446,7 @@ TEST(Foundation, AttributedString_InsertAttributedString) {
     assertAttributeAt(aStr, @"key1", @"value1", 2, 5);
     assertAttributeAt(aStr, @"key1", @"value1", 8, 1);
     assertAttributeAt(aStr, @"key2", @"value2", 5, 3);
-    ASSERT_OBJCEQ(@"AAAAAfooA", [aStr string]);
+    ASSERT_OBJCEQ(@"AAAAAOBJA", [aStr string]);
 }
 
 TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) {
@@ -450,7 +454,7 @@ TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) 
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr replaceCharactersInRange:NSMakeRange(2, 2) withAttributedString:aStr2];
@@ -458,7 +462,7 @@ TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) 
     assertAttributeAt(aStr, @"key1", @"value1", 2, 2);
     assertAttributeAt(aStr, @"key1", @"value1", 5, 2);
     assertAttributeAt(aStr, @"key2", @"value2", 2, 3);
-    ASSERT_OBJCEQ(@"AAfooAA", [aStr string]);
+    ASSERT_OBJCEQ(@"AAOBJAA", [aStr string]);
 }
 
 TEST(Foundation, AttributedString_SetAttributedString) {
@@ -467,7 +471,7 @@ TEST(Foundation, AttributedString_SetAttributedString) {
     [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"foo" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr setAttributedString:aStr2];
@@ -475,7 +479,7 @@ TEST(Foundation, AttributedString_SetAttributedString) {
     assertAttributeAt(aStr, @"key1", @"value1", 0, 2);
     assertAttributeAt(aStr, @"key2", @"value2", 0, 3);
     assertAttributeAt(aStr, @"key3", nil, 0, 3);
-    ASSERT_OBJCEQ(@"foo", [aStr string]);
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
 }
 
 TEST(Foundation, AttributedString_ThrowsBounds) {
@@ -487,4 +491,104 @@ TEST(Foundation, AttributedString_ThrowsBounds) {
     }
     CATCH_POPULATE_NSERROR(&error);
     ASSERT_EQ(E_BOUNDS, error.code);
+}
+
+// UI Kit extensions
+
+void assertFontTraitAt(NSAttributedString* aStr,
+                       NSUInteger expectedLocation,
+                       NSUInteger expectedLength,
+                       UIFontDescriptorSymbolicTraits trait) {
+    NSRange outRange;
+
+    UIFont* font = reinterpret_cast<UIFont*>([aStr attribute:NSFontAttributeName atIndex:expectedLocation effectiveRange:&outRange]);
+
+    ASSERT_OBJCNE(nil, font);
+    ASSERT_NE(0, [[font fontDescriptor] symbolicTraits] & trait);
+    ASSERT_EQ(expectedLocation, outRange.location);
+    ASSERT_EQ(expectedLength, outRange.length);
+}
+
+void assertFontTraitNotAt(NSAttributedString* aStr,
+                          NSUInteger expectedLocation,
+                          NSUInteger expectedLength,
+                          UIFontDescriptorSymbolicTraits trait) {
+    NSRange outRange;
+
+    UIFont* font = reinterpret_cast<UIFont*>([aStr attribute:NSFontAttributeName atIndex:expectedLocation effectiveRange:&outRange]);
+
+    ASSERT_OBJCNE(nil, font);
+    ASSERT_EQ(0, [[font fontDescriptor] symbolicTraits] & trait);
+    ASSERT_EQ(expectedLocation, outRange.location);
+    ASSERT_EQ(expectedLength, outRange.length);
+}
+
+TEST(Foundation, AttributedString_InitWithData_HtmlBasic) {
+    NSAttributedString* aStr = [[NSAttributedString alloc] initWithData:[@"<b>OBJ</b>" dataUsingEncoding:NSUTF8StringEncoding]
+                                                                options:@{
+                                                                    NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType
+                                                                }
+                                                     documentAttributes:nil
+                                                                  error:nil];
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
+    assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
+}
+
+TEST(Foundation, AttributedString_InitWithData_HtmlFontTraitsAndBreak) {
+    NSAttributedString* aStr =
+        [[NSAttributedString alloc] initWithData:[@"<b>AAA<i>BBB<u>C<br></u></i>AAAA</b>" dataUsingEncoding:NSUTF8StringEncoding]
+                                         options:@{
+                                             NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType
+                                         }
+                              documentAttributes:nil
+                                           error:nil];
+    ASSERT_OBJCEQ(@"AAABBBC\r\nAAAA", [aStr string]);
+
+    assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
+    assertFontTraitNotAt(aStr, 0, 3, UIFontDescriptorTraitItalic);
+
+    assertFontTraitAt(aStr, 3, 4, UIFontDescriptorTraitBold);
+    assertFontTraitAt(aStr, 3, 4, UIFontDescriptorTraitItalic);
+
+    assertAttributeAt(aStr, NSUnderlineStyleAttributeName, @(NSUnderlineStyleSingle), 6, 1);
+
+    assertFontTraitAt(aStr, 9, 4, UIFontDescriptorTraitBold);
+    assertFontTraitNotAt(aStr, 9, 4, UIFontDescriptorTraitItalic);
+}
+
+TEST(Foundation, AttributedString_InitWithData_PlainText) {
+    NSAttributedString* aStr = [[NSAttributedString alloc] initWithData:[@"OBJ" dataUsingEncoding:NSUTF8StringEncoding]
+                                                                options:@{
+                                                                    NSDocumentTypeDocumentAttribute : NSPlainTextDocumentType
+                                                                }
+                                                     documentAttributes:nil
+                                                                  error:nil];
+    ASSERT_OBJCEQ(@"OBJ", [aStr string]);
+    ASSERT_EQ(0, [[aStr attributesAtIndex:0 effectiveRange:nil] count]);
+}
+
+TEST(Foundation, AttributedString_InitWithData_BadEncodingOption) {
+    NSError* error = nil;
+    NSAttributedString* aStr =
+        [[NSAttributedString alloc] initWithData:[@"OBJ" dataUsingEncoding:NSUTF8StringEncoding]
+                                         options:@{
+                                             NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
+                                             NSCharacterEncodingDocumentAttribute : @(NSUTF32LittleEndianStringEncoding)
+                                         }
+                              documentAttributes:nil
+                                           error:&error];
+    ASSERT_OBJCNE(nil, error);
+}
+
+TEST(Foundation, AttributedString_InitWithData_NilInput) {
+    NSError* error = nil;
+    NSAttributedString* aStr =
+        [[NSAttributedString alloc] initWithData:nil
+                                         options:@{
+                                             NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
+                                             NSCharacterEncodingDocumentAttribute : @(NSUTF32LittleEndianStringEncoding)
+                                         }
+                              documentAttributes:nil
+                                           error:&error];
+    ASSERT_OBJCEQ(nil, aStr);
 }

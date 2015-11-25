@@ -19,32 +19,6 @@
 
 #import "Starboard.h"
 
-NSString* const NSFontAttributeName = (NSString * const) @"NSFontAttributeName";
-NSString* const NSParagraphStyleAttributeName = (NSString * const) @"NSParagraphStyleAttributeName";
-NSString* const NSForegroundColorAttributeName = (NSString * const) @"NSForegroundColorAttributeName";
-NSString* const NSBackgroundColorAttributeName = (NSString * const) @"NSBackgroundColorAttributeName";
-NSString* const NSLigatureAttributeName = (NSString * const) @"NSLigatureAttributeName";
-NSString* const NSKernAttributeName = (NSString * const) @"NSKernAttributeName";
-NSString* const NSStrikethroughStyleAttributeName = (NSString * const) @"NSStrikethroughStyleAttributeName";
-NSString* const NSUnderlineStyleAttributeName = (NSString * const) @"NSUnderlineStyleAttributeName";
-NSString* const NSStrokeColorAttributeName = (NSString * const) @"NSStrokeColorAttributeName";
-NSString* const NSStrokeWidthAttributeName = (NSString * const) @"NSStrokeWidthAttributeName";
-NSString* const NSShadowAttributeName = (NSString * const) @"NSShadowAttributeName";
-NSString* const NSTextEffectAttributeName = (NSString * const) @"NSTextEffectAttributeName";
-NSString* const NSAttachmentAttributeName = (NSString * const) @"NSAttachmentAttributeName";
-NSString* const NSLinkAttributeName = (NSString * const) @"NSLinkAttributeName";
-NSString* const NSBaselineOffsetAttributeName = (NSString * const) @"NSBaselineOffsetAttributeName";
-NSString* const NSUnderlineColorAttributeName = (NSString * const) @"NSUnderlineColorAttributeName";
-NSString* const NSStrikethroughColorAttributeName = (NSString * const) @"NSStrikethroughColorAttributeName";
-NSString* const NSObliquenessAttributeName = (NSString * const) @"NSObliquenessAttributeName";
-NSString* const NSExpansionAttributeName = (NSString * const) @"NSExpansionAttributeName";
-NSString* const NSWritingDirectionAttributeName = (NSString * const) @"NSWritingDirectionAttributeName";
-NSString* const NSVerticalGlyphFormAttributeName = (NSString * const) @"NSVerticalGlyphFormAttributeName";
-
-NSString* const NSDocumentTypeDocumentAttribute = (NSString * const) @"NSDocumentTypeDocumentAttribute";
-NSString* const NSHTMLTextDocumentType = (NSString * const) @"NSHTMLTextDocumentType";
-NSString* const NSCharacterEncodingDocumentAttribute = (NSString * const) @"NSCharacterEncodingDocumentAttribute";
-
 @implementation NSAttributedString
 
 + (instancetype)allocWithZone:(NSZone*)zone {

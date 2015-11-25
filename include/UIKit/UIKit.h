@@ -124,6 +124,8 @@
 // only add if core data is included on 10.6
 //#import "NSFetchedResultsController.h"
 
+#import <UIKit/NSAttributedString+UIKitAdditions.h>
+#import <UIKit/NSMutableAttributedString+UIKitAdditions.h>
 #import <UIKit/NSText.h>
 #import <UIKit/NSParagraphStyle.h>
 #import <UIKit/UILocalNotification.h>
@@ -154,4 +156,5 @@
 #import <UIKit/UIMotionEffect.h>
 #import <UIKit/UIPrintInfo.h>
 #import <UIKit/UIPrintFormatter.h>
+
 #import <UIKit/UIUserNotificationSettings.h>
