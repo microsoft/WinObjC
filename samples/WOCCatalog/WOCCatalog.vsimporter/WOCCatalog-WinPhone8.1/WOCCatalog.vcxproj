@@ -102,6 +102,7 @@
     <Image Include="Assets\StoreLogo.scale-240.png" />
     <Image Include="Assets\WideLogo.scale-240.png" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
+    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
@@ -124,7 +125,6 @@
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />

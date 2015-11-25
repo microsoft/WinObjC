@@ -120,12 +120,6 @@ static NSString* viewTitleKeyName = @"ViewName";
     [self.menuItems
         addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"GLKit", viewTitleKeyName, glkitController, controllerKeyName, nil]];
 
-    // TextView
-    /* TextViewViewController *textViewController = [[TextViewViewController alloc] init];
-     [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                @"TextView", viewTitleKeyName,
-                                textViewController, controllerKeyName,
-                                nil]];*/
     // Text Display
     TextDrawerController* textDrawerController = [[TextDrawerController alloc] init];
     [self.menuItems
