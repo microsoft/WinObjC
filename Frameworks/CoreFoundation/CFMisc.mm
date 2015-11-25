@@ -64,7 +64,9 @@ COREFOUNDATION_EXPORT extern "C" unsigned int sleep(useconds_t secs) {
 COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
     if (strcmp(name, "hw.machine") == 0) {
         const int required = 8;
+        size_t receivedOutSize = 0;
         if (outSize) {
+            receivedOutSize = *outSize;
             // If there's no buffer, we have to return the nr. of bytes required for
             // this response.
             *outSize = !out ? required : std::min(*outSize, (size_t)required);
@@ -72,8 +74,10 @@ COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char* name, void* out, s
             return -1;
         }
 
-        if (out)
-            strncpy((char*)out, "winobjc", *outSize); // outsize is <= required here
+        if (out) {
+            size_t sizeToCopy = (*outSize == 0) ? (*outSize) : (*outSize - 1);
+            strncpy_s((char*)out, receivedOutSize, "winobjc", sizeToCopy); // outsize is <= required here
+        }
         return *outSize < required ? ENOMEM : 0;
     }
     return -1;

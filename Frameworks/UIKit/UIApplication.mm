@@ -789,32 +789,41 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
 static void printViews(id curView, int level) {
     char szOut[2048];
-    strcpy(szOut, "");
+    strcpy_s(szOut, sizeof(szOut), "");
 
     for (int i = 0; i < level * 2; i++) {
-        sprintf(&szOut[strlen(szOut)], " ");
+        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " ");
     }
-    sprintf(&szOut[strlen(szOut)], "%s @ 0x%08x ", object_getClassName(curView), (unsigned int)curView);
+    sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), "%s @ 0x%08x ", object_getClassName(curView), (unsigned int)curView);
 
     if ([curView isHidden] || [curView alpha] <= 0.01f) {
-        sprintf(&szOut[strlen(szOut)], " (hidden) ");
+        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (hidden) ");
     }
     if (![curView isUserInteractionEnabled]) {
-        sprintf(&szOut[strlen(szOut)], " (interaction disabled) ");
+        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (interaction disabled) ");
     }
     if ([curView isOpaque]) {
-        sprintf(&szOut[strlen(szOut)], " (opaque) ");
+        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (opaque) ");
     }
     if ([curView respondsToSelector:@selector(text)]) {
         id text = [curView text];
-        sprintf(&szOut[strlen(szOut)], " (text=\"%s\") ", [text UTF8String]);
+        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (text=\"%s\") ", [text UTF8String]);
     }
 
     CGRect rect;
     rect = [curView frame];
     id fmt = [NSString stringWithFormat:@"{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
-    // sprintf(&szOut[strlen(szOut)], "{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width,
-    // rect.size.height);
+
+    /*
+    sprintf_s(&szOut[szOutLength],
+              sizeof(szOut) - strlen(szOut),
+              "{%f, %f}{%f, %f}\n",
+              rect.origin.x,
+              rect.origin.y,
+              rect.size.width,
+              rect.size.height);
+    */
+
     EbrDebugLog("%s%s", szOut, [fmt UTF8String]);
 
     for (unsigned i = 0; i < [[curView subviews] count]; i++) {

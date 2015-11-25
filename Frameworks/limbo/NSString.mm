@@ -2373,7 +2373,7 @@ return [ret autorelease];
  @Notes Simply returns UTF8 converison
 */
 - (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(DWORD)destMax {
-    strncpy(dest, (char*)[self UTF8String], destMax);
+    strncpy_s(dest, destMax, [self UTF8String], destMax);
 
     return TRUE;
 }
@@ -2385,14 +2385,14 @@ return [ret autorelease];
     int count = [components count];
     char outStr[1024];
 
-    strcpy(outStr, "");
+    strcpy_s(outStr, sizeof(outStr), "");
 
     for (int i = 0; i < count; i++) {
         char* curComponent = (char*)[[components objectAtIndex:i] UTF8String];
 
-        strcat(outStr, curComponent);
+        strcat_s(outStr, sizeof(outStr), curComponent);
         if (i < count - 1 && strcmp(curComponent, "/") != 0)
-            strcat(outStr, "/");
+            strcat_s(outStr, sizeof(outStr), "/");
     }
 
     return [self stringWithCString:outStr];
@@ -2876,7 +2876,6 @@ const int s_oneByte = 16;
         // Check if multibyte character. Highest order bit in utf8 indicates surrogate pairs.
         if (currentCharacter & 0x80 || ![set characterIsMember:currentCharacter]) {
             if (lastTouchedCharacterIndex != (i - 1)) {
-
                 // Get a substring based on the bytes offset by the last touched index to the current index
                 // Length is the length everything between i and the last encoded character exclusively.
                 NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))
@@ -2886,7 +2885,6 @@ const int s_oneByte = 16;
 
                 [returnValue appendString:part];
                 [part release];
-
             }
 
             lastTouchedCharacterIndex = i;
@@ -2900,7 +2898,6 @@ const int s_oneByte = 16;
     if (lastTouchedCharacterIndex == -1) {
         return [[self retain] autorelease];
     } else if (lastTouchedCharacterIndex != lengthOfBytes - 1) {
-
         // Get the rest of the characters that weren't encoded.
         // Length is the length everything between i and the last encoded character exclusively.
         NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))

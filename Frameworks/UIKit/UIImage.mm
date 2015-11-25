@@ -395,12 +395,13 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     }
 
     if (strrchr(path, '.') != NULL && GetCACompositor()->screenScale() > 1.5f) {
-        char* newStr = (char*)malloc(strlen(path) + 10);
+        size_t newStrSize = strlen(path) + 10;
+        char* newStr = (char*)malloc(newStrSize);
         const char* pathEnd = strrchr(path, '.');
         memcpy(newStr, path, pathEnd - path);
         newStr[pathEnd - path] = 0;
-        strcat(newStr, "@2x");
-        strcat(newStr, pathEnd);
+        strcat_s(newStr, newStrSize, "@2x");
+        strcat_s(newStr, newStrSize, pathEnd);
 
         pathStr = _strdup(newStr);
 

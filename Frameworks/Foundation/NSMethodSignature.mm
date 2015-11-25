@@ -89,12 +89,14 @@ int getArgumentSize(const char* type);
         assert(offsetLength > 0);
 
         if (ret->returnType == NULL) {
-            ret->returnType = (char*)calloc(typeLength + 1, 1);
-            strncpy(ret->returnType, typeStart, typeLength);
+            int returnTypeSize = typeLength + 1;
+            ret->returnType = (char*)calloc(returnTypeSize, 1);
+            strncpy_s(ret->returnType, returnTypeSize, typeStart, typeLength);
             ret->returnOffset = atoi(typeEnd);
         } else {
-            ret->arguments[ret->numArguments] = (char*)calloc(typeLength + 1, 1);
-            strncpy(ret->arguments[ret->numArguments], typeStart, typeLength);
+            int argumentsSize = typeLength + 1;
+            ret->arguments[ret->numArguments] = (char*)calloc(argumentsSize, 1);
+            strncpy_s(ret->arguments[ret->numArguments], argumentsSize, typeStart, typeLength);
             ret->argumentOffsets[ret->numArguments] = atoi(typeEnd);
 
             ret->numArguments++;

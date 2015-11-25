@@ -31,9 +31,9 @@
 * California.
 *
 * Contributor(s):
-*	Carl D. Worth <cworth@cworth.org>
-*	Kristian Høgsberg <krh@redhat.com>
-*	Chris Wilson <chris@chris-wilson.co.uk>
+*   Carl D. Worth <cworth@cworth.org>
+*   Kristian Høgsberg <krh@redhat.com>
+*   Chris Wilson <chris@chris-wilson.co.uk>
 */
 
 #include <math.h>
@@ -398,7 +398,9 @@ bool CGPNGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CG
 }
 
 CGPNGImageBacking::CGPNGImageBacking(const char* filename) {
-    _fileName = (char*)strcpy((char*)malloc(strlen(filename) + 1), filename);
+    size_t fileNameSize = strlen(filename) + 1;
+    _fileName = (char*)malloc(fileNameSize);
+    strcpy_s(_fileName, fileNameSize, filename);
     Decode(NULL, 0);
 }
 

@@ -195,7 +195,7 @@ CGPoint CGPointFromString(NSString* strPt) {
     CGPoint ret;
 
     char* str = (char*)[strPt UTF8String];
-    sscanf(str, "{%f, %f}", &ret.x, &ret.y);
+    sscanf_s(str, "{%f, %f}", &ret.x, &ret.y);
     return ret;
 }
 
@@ -206,7 +206,7 @@ CGSize CGSizeFromString(NSString* strSize) {
     CGSize ret;
 
     char* str = (char*)[strSize UTF8String];
-    sscanf(str, "{%f, %f}", &ret.width, &ret.height);
+    sscanf_s(str, "{%f, %f}", &ret.width, &ret.height);
     return ret;
 }
 
@@ -217,7 +217,7 @@ CGRect CGRectFromString(NSString* strRect) {
     CGRect ret;
 
     char* str = (char*)[strRect UTF8String];
-    sscanf(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
+    sscanf_s(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
     return ret;
 }
 
@@ -255,8 +255,7 @@ __declspec(dllexport) extern "C" int host_statistics(mach_port_t port, int type,
         memset(ret, 0, sizeof(vm_statistics));
 
         ret->free_count = 512 * 1024 * 1024 / 65536;
-    }
-    else {
+    } else {
         UNIMPLEMENTED();
     }
 
