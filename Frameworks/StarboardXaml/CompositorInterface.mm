@@ -431,7 +431,7 @@ public:
         _fromValue = [fromValue retain];
         _toValue = [toValue retain];
 
-        beginTime = timingProperties->_beginTime;
+        beginTime = timingProperties->_beginTime - CACurrentMediaTime();
         duration = timingProperties->_duration;
         autoReverse = (bool)timingProperties->_autoReverses;
         repeatCount = timingProperties->_repeatCount;

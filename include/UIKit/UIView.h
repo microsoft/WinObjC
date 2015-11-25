@@ -206,6 +206,8 @@ UIKIT_EXPORT_CLASS
 
 - (CGSize)intrinsicContentSize;
 - (void)invalidateIntrinsicContentSize;
+- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets;
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates;
 
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
@@ -221,7 +223,12 @@ UIKIT_EXPORT_CLASS
                  completion:(void (^)(BOOL finished))completion;
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-
++ (void)animateKeyframesWithDuration:(NSTimeInterval)duration
+                               delay:(NSTimeInterval)delay
+                             options:(UIViewKeyframeAnimationOptions)options
+                          animations:(void (^)(void))animations
+                          completion:(void (^)(BOOL finished))completion;
++ (void)addKeyframeWithRelativeStartTime:(double)frameStartTime relativeDuration:(double)frameDuration animations:(void (^)(void))animation;
 // the block-based transition methods are not currently implemented
 + (void)transitionWithView:(UIView*)view
                   duration:(NSTimeInterval)duration

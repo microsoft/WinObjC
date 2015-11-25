@@ -36,22 +36,34 @@
 
 @class UINavigationBar, UIToolbar, UIViewController;
 
+typedef enum {
+    UINavigationControllerOperationNone,
+    UINavigationControllerOperationPush,
+    UINavigationControllerOperationPop
+} UINavigationControllerOperation;
+
 @protocol UINavigationControllerDelegate <NSObject>
+
 @optional
 
-/**
- @Status Interoperable
-*/
 - (void)navigationController:(UINavigationController*)navigationController
        didShowViewController:(UIViewController*)viewController
                     animated:(BOOL)animated;
 
-/**
- @Status Interoperable
-*/
 - (void)navigationController:(UINavigationController*)navigationController
       willShowViewController:(UIViewController*)viewController
                     animated:(BOOL)animated;
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController*)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController*)fromVC;
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController*)navigationController
+                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController
+                                                    toViewController:(UIViewController*)toVC;
+
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController;
+
+- (UIInterfaceOrientationMask)navigationControllerSupportedInterfaceOrientations:(UINavigationController*)navigationController;
+
 @end
 
 typedef enum {
@@ -104,16 +116,5 @@ UIKIT_EXPORT_CLASS
 @end
 
 UIKIT_EXPORT const CGFloat UINavigationControllerHideShowBarDuration;
-
-enum {
-    UINavigationControllerOperationPush,
-    UINavigationControllerOperationPop,
-};
-
-typedef NSUInteger UINavigationControllerOperation;
-
-@protocol UIViewControllerTransitioningDelegate
-
-@end
 
 #endif /* _UINAVIGATIONCONTROLLER_H_ */

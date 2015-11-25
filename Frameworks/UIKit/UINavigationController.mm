@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 #include "UIViewControllerInternal.h"
+#import <UIKit/UIViewController.h>
 #import <UIKit/UIView.h>
 
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
@@ -51,6 +52,7 @@ public:
     BOOL _showAnimated;
     BOOL _destroyOld;
     BOOL _pushingView;
+    BOOL _poppingView;
     idretaintype(UIView) _containerView;
     CGRect _containerRect, _navRect;
 
@@ -261,6 +263,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [_viewControllers removeLastObject];
     [_navigationBar popNavigationItemAnimated:animated];
     _pushingView = false;
+    _poppingView = true;
     [self _showController:[_viewControllers lastObject] animated:animated];
     _destroyOld = true;
 
@@ -812,18 +815,50 @@ static void rotateViewController(UINavigationController* self) {
         [_curController notifyViewWillAppear:_showAnimated];
 
         if (_showAnimated) {
-            AnimationNotificationParams* params = new AnimationNotificationParams(_curController, oldController);
-            [UIView beginAnimations:@"TransitionAnimation" context:params];
-            [UIView setAnimationDelegate:self];
-            [UIView setAnimationDidStopSelector:@selector(transitionStopped:didFinish:context:)];
-            //[UIView setAnimationTransition:5 forView:self cache:TRUE];
+            // Check if the delagate is using custom animations.
+            if ([_delegate respondsToSelector:@selector(navigationController:
+                                                  animationControllerForOperation:
+                                                               fromViewController:
+                                                                 toViewController:)]) {
+                // Grab the developers animator.
+                UINavigationControllerOperation operation;
+                if (_pushingView) {
+                    operation = UINavigationControllerOperationPush;
+                } else if (_poppingView) {
+                    operation = UINavigationControllerOperationPop;
+                } else {
+                    operation = UINavigationControllerOperationNone;
+                }
+                id<UIViewControllerAnimatedTransitioning> animator = [_delegate navigationController:self
+                                                                     animationControllerForOperation:operation
+                                                                                  fromViewController:oldControllerView
+                                                                                    toViewController:_curControllerView];
+                // Create the context to be utilized by the developers animation.
+                id<UIViewControllerContextTransitioning> transitionContext =
+                    [[_UIViewControllerContextTransitioning alloc] initWithContainerView:_containerView
+                                                                            withFromView:oldControllerView
+                                                                              withToView:_curControllerView
+                                                                  withFromViewController:oldController
+                                                                    withToViewController:_curController
+                                                                            withAnimator:animator];
+                // Start animation.
+                [animator animateTransition:transitionContext];
+                [transitionContext release];
 
-            bool fromLeft = !_pushingView;
-            [UIView _setPageTransitionForView:_mainView fromLeft:fromLeft];
+            } else {
+                AnimationNotificationParams* params = new AnimationNotificationParams(_curController, oldController);
+                [UIView beginAnimations:@"TransitionAnimation" context:params];
+                [UIView setAnimationDelegate:self];
+                [UIView setAnimationDidStopSelector:@selector(transitionStopped:didFinish:context:)];
+                //[UIView setAnimationTransition:5 forView:self cache:TRUE];
 
+                bool fromLeft = !_pushingView;
+                [UIView _setPageTransitionForView:_mainView fromLeft:fromLeft];
+            }
             //  Disable input on the navigation bar so that the user can't
             //  mess with the state until the animation is done
             [_navigationBar setUserInteractionEnabled:FALSE];
+
         } else {
             //  Enable input on the navigation bar - we're not presenting animated
             //  and the navigation bar may have been disabled in pushViewController/popViewContorller

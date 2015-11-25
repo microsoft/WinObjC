@@ -38,9 +38,6 @@
 #include "UIViewControllerInternal.h"
 #include "UIKit/UIPopoverPresentationController.h"
 
-NSString* const UITransitionContextFromViewControllerKey = (NSString * const) @"UITransitionContextFromViewControllerKey";
-NSString* const UITransitionContextToViewControllerKey = (NSString * const) @"UITransitionContextToViewControllerKey";
-
 @interface _TransitionNotifier : NSObject
 @end
 
@@ -543,7 +540,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     priv->nibName = [coder decodeObjectForKey:@"UINibName"];
 
     //  Attempt to locate resources from the same bundle as the unarchiver that's loading us
-    if ( [coder respondsToSelector: @selector(_bundle)] ) {
+    if ([coder respondsToSelector:@selector(_bundle)]) {
         priv->nibBundle = [coder _bundle];
     }
     priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
@@ -668,11 +665,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     NSString* nibPath = nil;
 
     if (priv->nibName != nil) {
-        NSBundle *bundle = priv->nibBundle;
+        NSBundle* bundle = priv->nibBundle;
 
-        //  Search the bundle we were passed on initialization for the .nib file given to us. 
+        //  Search the bundle we were passed on initialization for the .nib file given to us.
         //  If no bundle was specified, search the main application bundle.
-        if ( bundle == nil ) {
+        if (bundle == nil) {
             bundle = [NSBundle mainBundle];
         }
 
@@ -743,8 +740,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
-            NSNib* nib = [NSNib nibWithNibName: [NSString stringWithCString:openname] bundle: priv->nibBundle];
-            [nib instantiateWithOwner:self options: @{UINibExternalObjects : proxyObjectsDict} ];
+            NSNib* nib = [NSNib nibWithNibName:[NSString stringWithCString:openname] bundle:priv->nibBundle];
+            [nib instantiateWithOwner:self options:@{ UINibExternalObjects : proxyObjectsDict }];
             priv->_externalObjects = nil;
         } else {
             assert(0);

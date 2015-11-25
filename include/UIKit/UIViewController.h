@@ -197,14 +197,59 @@ UIKIT_EXPORT_CLASS
 
 UIKIT_EXPORT NSString* const UITransitionContextFromViewControllerKey;
 UIKIT_EXPORT NSString* const UITransitionContextToViewControllerKey;
+UIKIT_EXPORT NSString* const UITransitionContextFromViewKey;
+UIKIT_EXPORT NSString* const UITransitionContextToViewKey;
 
 @protocol UIViewControllerContextTransitioning
 - (UIView*)containerView;
 - (UIViewController*)viewControllerForKey:(NSString*)key;
 - (void)completeTransition:(BOOL)animated;
+- (CGRect)initialFrameForViewController:(UIViewController*)vc;
+- (CGRect)finalFrameForViewController:(UIViewController*)vc;
+- (void)finishInteractiveTransition;
+- (void)cancelInteractiveTransition;
+- (void)updateInteractiveTransition:(CGFloat)percentComplete;
+- (void)completeTransition:(BOOL)didComplete;
+- (BOOL)transitionWasCancelled;
+- (BOOL)isAnimated;
+- (BOOL)isInteractive;
+- (CGAffineTransform)targetTransform;
+- (UIView*)viewForKey:(NSString*)key;
+- (UIModalPresentationStyle)presentationStyle;
 @end
 
 @protocol UIViewControllerAnimatedTransitioning
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext;
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
+- (void)animationEnded:(BOOL)transitionCompleted;
 @end
 
+@protocol UIPercentDrivenInteractiveTransition
+@property (nonatomic, assign) UIViewAnimationCurve completionCurve;
+@property (readonly) CGFloat duration;
+@property (readonly) CGFloat percentComplete;
+- (void)updateInteractiveTransition:(CGFloat)percentComplete;
+- (void)cancelInteractiveTransition;
+- (void)finishInteractiveTransition;
+@end
+
+@protocol UIViewControllerInteractiveTransitioning
+- (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
+- (UIViewAnimationCurve)completionCurve;
+- completionSpeed;
+@end
+
+@protocol UIViewControllerTransitioningDelegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController*)presented
+                                                                  presentingController:(UIViewController*)presenting
+                                                                      sourceController:(UIViewController*)source;
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController*)dismissed;
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator;
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator;
+- (UIPresentationController*)presentationControllerForPresentedViewController:(UIViewController*)presented
+                                                     presentingViewController:(UIViewController*)presenting
+                                                         sourceViewController:(UIViewController*)source;
+
+@end
 #endif /* _UIVIEWCONTROLLER_H_ */

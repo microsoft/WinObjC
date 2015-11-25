@@ -164,6 +164,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextRange.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIViewControllerContextTransitioning.mm" />
 
   </ItemGroup>
   <ItemGroup>
