@@ -28,12 +28,14 @@ static const CGFloat c_marginBottom = 10;
 static const CGFloat c_marginLeftAndRight = 10;
 static const CGFloat c_defaultTextFieldHeight = 24;
 static const CGFloat c_marginTopForPrompt = 10;
-static const float c_defaultFontSize = 15.0;
+static const float c_defaultFontSize = 22;
 static const CGFloat c_scopeButtonMarginTop = 20;
+static NSString* cancelButtonText = @"Cancel";
 
 @implementation UISearchBar {
     idretaintype(UITextField) _textField;
     idretaintype(UILabel) _promptLabel;
+    idretaintype(UIButton) _cancelButton;
     idretaintype(UISegmentedControl) _scopeButtons;
     idretaintype(NSString) _placeholder;
     BOOL _scopeButtonsHidden;
@@ -163,10 +165,26 @@ static void initInternal(UISearchBar* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setShowsCancelButton:(BOOL)shows {
-    UNIMPLEMENTED();
+    _showsCancelButton = shows;
+
+    if (_showsCancelButton == false) {
+        if (_cancelButton != nil) {
+            [_cancelButton removeFromSuperview];
+            _cancelButton = nil;
+        }
+    } else {
+        if (_cancelButton == nil) {
+            self->_cancelButton.attach([[UIButton alloc] init]);
+            [self->_cancelButton setBackgroundColor:nil];
+            [self->_cancelButton setTitle:cancelButtonText forState:UIControlStateNormal];
+            [self addSubview:self->_cancelButton];
+        }
+    }
+
+    [self setNeedsLayout];
 }
 
 /**
@@ -233,14 +251,28 @@ static void initInternal(UISearchBar* self) {
 }
 
 - (void)layoutSubviews {
+    // display the prompt
     CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
     [_promptLabel setFrame:promptFrame];
     [self->_promptLabel setText:_prompt];
 
+    // display the textField
     CGFloat textFieldOriginY = self.frame.size.height - c_defaultTextFieldHeight - c_marginBottom;
     CGRect textFrame = { { c_marginLeftAndRight, textFieldOriginY },
                          { self.frame.size.width - (2 * c_marginLeftAndRight), c_defaultTextFieldHeight } };
 
+    // display the cancelButton on right side of textField
+    if (_showsCancelButton) {
+        CGSize cancelButtonSize = [cancelButtonText sizeWithFont:[UIFont systemFontOfSize:c_defaultFontSize]];
+        textFrame.size.width = textFrame.size.width - cancelButtonSize.width - (2 * c_marginLeftAndRight);
+        CGRect cancelButttonFrame = { { self.frame.size.width - (2 * c_marginLeftAndRight) - cancelButtonSize.width, textFrame.origin.y },
+                                      { cancelButtonSize.width, cancelButtonSize.height } };
+        [_cancelButton setFrame:cancelButttonFrame];
+    }
+
+    [_textField setFrame:textFrame];
+
+    // display the scopebuttons below textField
     if (!_scopeButtonsHidden) {
         if (_scopeButtons) {
             CGRect scopeButtonsFrame = textFrame;
@@ -249,12 +281,6 @@ static void initInternal(UISearchBar* self) {
         }
     } else {
         [_scopeButtons setHidden:TRUE];
-    }
-
-    [_textField setFrame:textFrame];
-
-    if (_backgroundImage != nil) {
-        [_textField setBackground:_backgroundImage];
     }
 }
 
@@ -310,10 +336,6 @@ static void initInternal(UISearchBar* self) {
 }
 
 - (void)dealloc {
-    _textField = nil;
-    _promptLabel = nil;
-    _scopeButtons = nil;
-    _placeholder = nil;
     [_backgroundImage release];
     [super dealloc];
 }

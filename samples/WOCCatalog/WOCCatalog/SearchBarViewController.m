@@ -25,7 +25,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return 4;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -43,11 +43,28 @@
     self.title = @"UISearchBar";
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 
-    UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 80)];
-    [searchBar setPrompt:@"UISearchBar prompt"];
-    [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"photo5.jpg"] forState:UIControlStateNormal];
-    [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-    [cell addSubview:searchBar];
+    if (indexPath.row == 0) {
+        UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
+        [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell addSubview:searchBar];
+    } else if (indexPath.row == 1) {
+        UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
+        [searchBar setPrompt:@"UISearchBar prompt"];
+        [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell addSubview:searchBar];
+    } else if (indexPath.row == 2) {
+        UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
+        [searchBar setPrompt:@"UISearchBar with bg image"];
+        [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"photo5.jpg"] forState:UIControlStateNormal];
+        [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell addSubview:searchBar];
+    } else if (indexPath.row == 3) {
+        UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
+        [searchBar setPrompt:@"UISearchBar with cancel button"];
+        searchBar.showsCancelButton = true;
+        [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell addSubview:searchBar];
+    }
 
     return cell;
 }
