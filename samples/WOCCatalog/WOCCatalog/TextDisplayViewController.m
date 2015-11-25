@@ -38,7 +38,7 @@ NSMutableArray* rows;
 
     NSString* title;
 
-    // Add new test cases here
+    // Add new test cases here order can effect cell height
     title = @"Blue Bold System Font Of Size 16";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:0]]];
     title = @"CGSize";
@@ -58,6 +58,11 @@ NSMutableArray* rows;
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:6]]];
     title = @"CGSize";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:7]]];
+
+    title = @"Capatalized Alphabet Drawn in a circle. Black Background Green Text Size 12 Default Font";
+    [rows
+        addObject:[self makeTestCellWithTitle:title
+                          WithAccessoryUIView:[self makeTextDrawer:8 WithCustomHeight:300 WithCustomBackgroundColor:[UIColor blackColor]]]];
 
     title = @"UITextView with 18pt Ariel Font Scrollable White Text";
     [rows addObject:[self makeTestCellWithTitle:title WithSubUIView:[self basicUITextView]]];
@@ -185,6 +190,9 @@ NSMutableArray* rows;
         case 7:
             [self sizeWithOffset:rect];
             break;
+        case 8:
+            [self drawAtPointCircleText:rect];
+            break;
     }
 }
 
@@ -297,4 +305,25 @@ NSMutableArray* rows;
                                                                      withAttributes:attrs];
 }
 
+- (void)drawAtPointCircleText:(CGRect)rect {
+    UIFont* font = [UIFont boldSystemFontOfSize:12];
+    UIColor* color = [UIColor greenColor];
+    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
+
+    CGPoint center = NSMakePoint(rect.size.width / 2, rect.size.height / 2);
+    CGFloat radius = center.x * 0.50f;
+
+    // Loop through each char in the string and place it around the center point.
+    for (int i = 0; i < TestString.length; i++) {
+        UIFont* font = [UIFont boldSystemFontOfSize:14];
+        NSString* letter = [TestString substringWithRange:NSMakeRange(i, 1)];
+
+        CGSize letterSize = [letter sizeWithAttributes:@{ UITextAttributeFont : font }];
+        CGFloat temp = M_PI - (i * (2 * M_PI / CharsToDisplayInRing));
+        CGFloat xCord = center.x + (radius * sin(temp)) - (letterSize.width / 2.0);
+        CGFloat yCord = center.y + (radius * cos(temp)) - (letterSize.height / 2.0);
+
+        [letter drawAtPoint:CGPointMake(xCord, yCord) withAttributes:attrs];
+    }
+}
 @end
