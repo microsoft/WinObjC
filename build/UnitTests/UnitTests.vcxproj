@@ -263,6 +263,7 @@
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSUserDefaults.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_NSArray.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation_NSAttributedString.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />

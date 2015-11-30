@@ -209,7 +209,7 @@ public:
         }
 
         //  Call retain function on object
-        if (retain && callbacks.retain != 0)
+        if ((retain) && (callbacks.retain != 0))
             object = retainObj(object);
 
         assert(object != 0);
@@ -435,7 +435,7 @@ void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const voi
 /**
  @Status Interoperable
 */
-void CFArraySetValueAtIndex(CFMutableArrayRef self,CFIndex index,const void *value) {
+void CFArraySetValueAtIndex(CFMutableArrayRef self, CFIndex index, const void* value) {
     _LazyArrOffset.member(self)->replaceObject((id)value, index);
 }
 
