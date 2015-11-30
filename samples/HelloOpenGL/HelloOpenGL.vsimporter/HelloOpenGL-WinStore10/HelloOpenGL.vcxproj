@@ -117,8 +117,12 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">HelloOpenGL-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">HelloOpenGL-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
-    <Text Include="HelloOpenGL-Debug-xcvars.txt" />
-    <Text Include="HelloOpenGL-Release-xcvars.txt" />
+    <Text Include="HelloOpenGL-Debug-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="HelloOpenGL-Release-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />

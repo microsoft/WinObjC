@@ -154,8 +154,12 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">WOCCatalog-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">WOCCatalog-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
-    <Text Include="WOCCatalog-Debug-xcvars.txt" />
-    <Text Include="WOCCatalog-Release-xcvars.txt" />
+    <Text Include="WOCCatalog-Debug-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="WOCCatalog-Release-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />

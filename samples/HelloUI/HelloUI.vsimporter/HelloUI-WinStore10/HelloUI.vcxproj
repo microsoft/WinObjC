@@ -114,8 +114,12 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">HelloUI-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">HelloUI-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
-    <Text Include="HelloUI-Debug-xcvars.txt" />
-    <Text Include="HelloUI-Release-xcvars.txt" />
+    <Text Include="HelloUI-Debug-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="HelloUI-Release-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />
