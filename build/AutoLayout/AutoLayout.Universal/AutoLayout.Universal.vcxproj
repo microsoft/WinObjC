@@ -176,6 +176,7 @@
       <ModuleDefinitionFile>..\AutoLayout.Shared\AutoLayout.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -232,6 +233,7 @@
       <ModuleDefinitionFile>..\AutoLayout.Shared\AutoLayout.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -288,6 +290,7 @@
       <ModuleDefinitionFile>..\AutoLayout.Shared\AutoLayout.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
