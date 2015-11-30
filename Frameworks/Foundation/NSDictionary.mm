@@ -636,7 +636,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self objectForKey:NSFileCreationDate];
 }
 
-- (id)classForArchiver {
+- (id)classForCoder {
     return [NSDictionary class];
 }
 

@@ -2478,7 +2478,7 @@ return [ret autorelease];
     return [NSString pathWithComponents:components];
 }
 
-- (id)classForArchiver {
+- (id)classForCoder {
     return [NSString class];
 }
 

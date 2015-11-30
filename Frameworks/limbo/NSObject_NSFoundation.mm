@@ -32,7 +32,7 @@
 #include <unordered_set>
 #include <functional>
 
-@implementation NSObject (Foundation)
+@implementation NSObject (KeyValueCoding)
 
 /**
  @Status Interoperable
@@ -373,37 +373,9 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
     [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
 }
+@end
 
-/**
- @Status Stub
-*/
-- (Class)classForArchiver {
-    UNIMPLEMENTED();
-    return [self class];
-}
-
-/**
- @Status Interoperable
-*/
-- (Class)classForKeyedArchiver {
-    return [self classForArchiver];
-}
-
-/**
- @Status Stub
-*/
-- (id)replacementObjectForArchiver:(id)a {
-    UNIMPLEMENTED();
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)replacementObjectForKeyedArchiver:(id)a {
-    return [self replacementObjectForArchiver:a];
-}
-
+@implementation NSObject (Foundation)
 /**
  @Status Interoperable
 */

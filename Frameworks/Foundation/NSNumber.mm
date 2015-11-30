@@ -574,7 +574,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return objCType;
 }
 
-- (id)classForArchiver {
+- (id)classForCoder {
     return [NSNumber class];
 }
 
