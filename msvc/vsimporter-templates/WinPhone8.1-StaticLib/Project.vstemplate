@@ -1,7 +1,0 @@
-<VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
-  <TemplateContent>
-    <Project OutputDirectory="$projectname$-WinPhone8.1" File="StaticLib.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">StaticLib.vcxproj.filters</ProjectItem>
-    </Project>
-  </TemplateContent>
-</VSTemplate>

@@ -91,7 +91,6 @@ void printUsage(const char *execName, bool full, int exitCode)
   std::cout << "    -allschemes" << "\t\t    process all schemes" << std::endl;
   std::cout << "    -configuration NAME" << "\t    specify configuration to use" << std::endl;
   std::cout << "    -xcconfig FILE" << "\t    apply build settings defined in FILE as overrides" << std::endl;
-  std::cout << "    -format FORMAT" << "\t    winstore8.1 | winphone8.1 | winstore10 (default)" << std::endl;
   std::cout << "    -version" << "\t\t    print the tool version" << std::endl;
 
 done:
@@ -103,7 +102,6 @@ int main(int argc, char* argv[])
   StringSet targets, configurations, schemes;
   String sdkRoot, projectPath, xcconfigPath, workspacePath;
   String logVerbosity("warning");
-  String outputFormat("winstore10");
   int projectSet = 0;
   int workspaceSet = 0;
   int interactiveFlag = 0;
@@ -127,7 +125,6 @@ int main(int argc, char* argv[])
     {"workspace", required_argument, &workspaceSet, 1},
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
-    {"format", required_argument, 0, 0},
     {0, 0, 0, 0}
   };
 
@@ -176,9 +173,6 @@ int main(int argc, char* argv[])
     case 13:
       schemes.insert(optarg);
       break;
-    case 15:
-      outputFormat = strToLower(optarg);
-      break;
     default:
       // Do nothing
       break;
@@ -199,17 +193,8 @@ int main(int argc, char* argv[])
     optind++;
   }
 
-  // Validate and record output format
-  if (outputFormat == "winstore8.1") {
-    outputFormat = "WinStore8.1";
-  } else if (outputFormat == "winphone8.1") {
-    outputFormat = "WinPhone8.1";
-  } else if (outputFormat == "winstore10") {
-    outputFormat = "WinStore10";
-  } else {
-    sbValidate(0, "Unrecognized output format: " + outputFormat);
-  }
-  settingsManager.setGlobalVar("VSIMPORTER_OUTPUT_FORMAT", outputFormat);
+  // Set output format
+  settingsManager.setGlobalVar("VSIMPORTER_OUTPUT_FORMAT", "WinStore10");
 
   // Set logging level
   SBLogLevel logLevel;
