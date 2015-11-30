@@ -200,7 +200,7 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #define NS_DEPRECATED_IOS(x, y)
 
 #ifdef __cplusplus
-#define NS_OPTIONS(_t, __n) \
+#define NS_OPTIONS(_t, _n) \
     _t _n;                  \
     enum : _t
 #else
