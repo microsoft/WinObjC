@@ -3,6 +3,7 @@
 *.suo
 *.user
 *.orig
+*.opendb
 ipch
 Debug
 Release
@@ -23,4 +24,4 @@ filelistout
 files.eld
 *.bitremoved
 Documents/
-*.opendb
+Library/
