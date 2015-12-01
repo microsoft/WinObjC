@@ -242,13 +242,6 @@ __declspec(dllexport) extern "C" mach_port_t mach_host_self(void) {
     return (mach_port_t)0xBAADF00D;
 }
 
-/**
-@Status Stub
-*/
-__declspec(dllexport) extern "C" int host_page_size(mach_port_t port, vm_size_t* sizeOut) {
-    UNIMPLEMENTED();
-    return 65536;
-}
 int vm_page_size = 65536;
 
 /**

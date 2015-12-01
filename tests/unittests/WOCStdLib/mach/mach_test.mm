@@ -14,29 +14,16 @@
 //
 //******************************************************************************
 
-typedef int integer_t;
+#include "gtest-api.h"
+#import <mach/mach.h>
+#include <mach/mach_defs.h>
 
-#include "message.h"
-#include "vm_statistics.h"
-#include "mach_defs.h"
-#include "sys/_types.h"
+TEST(Starboard, MachInterfaceSanity) {
+    vm_size_t pageSize = 0;
 
-#define HOST_VM_INFO    1
-
-typedef void *host_info_t;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern int vm_page_size;
-
-// Always returns 0.
-mach_port_t mach_host_self(void);
-
-// Parameter port will be ignored
-kern_return_t host_page_size(host_t host, vm_size_t* pageSize);
-
-int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize);
-#ifdef __cplusplus
+    // We pass a value of '0' as the first parameter to host_page_size, as it ignores its first parameter.
+    kern_return_t retVal = host_page_size(0, &pageSize);
+    
+    ASSERT_EQ_MSG(retVal, KERN_SUCCESS, "FAILED: host_page_size failed");
+    ASSERT_GT_MSG(pageSize, 0, "FAILED: Reported page size is invalid");
 }
-#endif

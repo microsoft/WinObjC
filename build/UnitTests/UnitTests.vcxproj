@@ -287,6 +287,7 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
+    <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp140d_app.dll">
