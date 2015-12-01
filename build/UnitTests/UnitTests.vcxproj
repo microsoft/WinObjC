@@ -55,7 +55,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
     <RootNamespace>UnitTests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
@@ -68,8 +67,6 @@
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
-    <OneCoreBinary>true</OneCoreBinary>
-    <CopyVcOnecoreDlls>true</CopyVcOnecoreDlls>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -340,43 +337,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\msvc\starboard-cmdline.targets" />
   </ImportGroup>
-     <!-- Properties for being a OneCore only (non-store) binary -->
-  <ItemDefinitionGroup Condition="'$(OneCoreBinary)'=='true'">
-    <Link>
-      <AdditionalOptions>%(AdditionalOptions) /APPCONTAINER:NO</AdditionalOptions>
-      <AdditionalDependencies>mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">$(VCInstallDir)\lib\onecore;$(VCInstallDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="'$(Platform)'=='ARM'">$(VCInstallDir)\lib\onecore\arm;$(VCInstallDir)\lib\arm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-
-  <Target Name="EnsureOnecoreLibsExist" BeforeTargets="PrepareForBuild" Condition="'$(OneCoreBinary)'=='true'">
-    <Error Condition="!Exists('$(VCInstallDir)\lib\onecore')" Text="$(VCInstallDir)\lib\onecore is missing." />
-  </Target>
-
-  <!-- Copy the VCLibs DLLs next to some of our inner/outer loop tests for local execution -->
-  <PropertyGroup>
-    <VcBinTag Condition="'$(Platform)'=='Win32'">x86</VcBinTag>
-    <VcBinTag Condition="'$(Platform)'!='Win32'">$(Platform)</VcBinTag>
-    <VcRedistDir Condition="'$(Configuration)'=='Release'">$(VCInstallDir)\redist\onecore\$(VcBinTag)\Microsoft.VC140.CRT</VcRedistDir>
-    <VcRedistDir Condition="'$(Configuration)'=='Debug'">$(VCInstallDir)\redist\onecore\debug_nonredist\$(VcBinTag)\Microsoft.VC140.DebugCRT</VcRedistDir>
-  </PropertyGroup>
-  
-  <ItemGroup Condition="'$(Configuration)'=='Release'">
-    <VCBinFile Include="$(VcRedistDir)\msvcp140.dll"/>
-    <VCBinFile Include="$(VcRedistDir)\vccorlib140.dll"/>
-    <VCBinFile Include="$(VcRedistDir)\vcruntime140.dll"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <VCBinFile Include="$(VcRedistDir)\msvcp140d.dll"/>
-    <VCBinFile Include="$(VcRedistDir)\vccorlib140d.dll"/>
-    <VCBinFile Include="$(VcRedistDir)\vcruntime140d.dll"/>
-  </ItemGroup>
-
-  <Target Name="VCCopyFilesToOutputDirectory" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(CopyVcOnecoreDlls)'=='true'">
-    <Copy
-        SourceFiles="@(VCBinFile)"
-        DestinationFolder="$(OutDir)"/>
-  </Target>
 </Project>
