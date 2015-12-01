@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "TextDisplayViewController.h"
-#include "Foundation/NSMutableDictionary.h"
+
 int const NumberOfDrawWithAttrTestCases = 4;
 int const NumberOfSizeWithAttrTestCases = 5;
 int const DefaultHeightOfCell = 70;
@@ -200,14 +200,14 @@ NSMutableArray* rows;
     UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
     UIColor* color = [UIColor blueColor];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
-    [TestString drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
+    [TestString drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
 }
 
 - (void)drawAtPointWithFont:(CGRect)rect {
     UIFont* font = [UIFont fontWithName:@"Arial" size:18];
     UIColor* color = [UIColor greenColor];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
-    [TestString drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
+    [TestString drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
 }
 
 // ShadowColor and ShadowOffset is currently Unsupported
@@ -226,7 +226,7 @@ NSMutableArray* rows;
                                                                      shadowOffset,
                                                                      UITextAttributeTextShadowOffset,
                                                                      nil];
-    [TestString drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
+    [TestString drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
 }
 
 // ShadowOffset is currently Unsupported
@@ -242,7 +242,7 @@ NSMutableArray* rows;
                                                                      shadowOffset,
                                                                      UITextAttributeTextShadowOffset,
                                                                      nil];
-    [TestString drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
+    [TestString drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2) withAttributes:attrs];
 }
 
 - (void)sizeBasic:(CGRect)rect {
@@ -250,7 +250,7 @@ NSMutableArray* rows;
     UIColor* color = [UIColor blackColor];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
     CGSize cgSize = [TestString sizeWithAttributes:attrs];
-    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2)
+    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
                                                                      withAttributes:attrs];
 }
 
@@ -259,7 +259,7 @@ NSMutableArray* rows;
     UIColor* color = [UIColor blackColor];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
     CGSize cgSize = [TestString sizeWithAttributes:attrs];
-    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2)
+    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
                                                                      withAttributes:attrs];
 }
 
@@ -282,7 +282,7 @@ NSMutableArray* rows;
                                                                      UITextAttributeTextShadowOffset,
                                                                      nil];
     CGSize cgSize = [TestString sizeWithAttributes:attrs];
-    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2)
+    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
                                                                      withAttributes:attrs];
 }
 
@@ -301,7 +301,7 @@ NSMutableArray* rows;
                                                                      UITextAttributeTextShadowOffset,
                                                                      nil];
     CGSize cgSize = [TestString sizeWithAttributes:attrs];
-    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:NSMakePoint(rect.origin.x, rect.size.height / 2)
+    [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
                                                                      withAttributes:attrs];
 }
 
@@ -310,7 +310,7 @@ NSMutableArray* rows;
     UIColor* color = [UIColor greenColor];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
 
-    CGPoint center = NSMakePoint(rect.size.width / 2, rect.size.height / 2);
+    CGPoint center = CGPointMake(rect.size.width / 2, rect.size.height / 2);
     CGFloat radius = center.x * 0.50f;
 
     // Loop through each char in the string and place it around the center point.
