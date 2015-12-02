@@ -91,6 +91,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
         // Recenter the view. This will cancel any scroll animations.
         [self setContentOffset:targetOffset animated:NO];
+        [self _updateVisibleRemoveHidden:true];
 
         // TODO: Vertical pages.
         switch (direction) {
@@ -117,7 +118,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
         [self _replaceController:controller atIndex:1];
         [self setContentOffset:currentOffset animated:NO];
-        [self _updateVisible];
+        [self _updateVisibleRemoveHidden:true];
 
         if(completion) {
             completion(YES);
@@ -168,7 +169,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     CGPoint currentOffset = self.contentOffset;
     [self _shiftContent:&currentOffset];
-    [self _updateVisible];
+    [self _updateVisibleRemoveHidden:true];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -200,23 +201,50 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     [super layoutSubviews];
 }
 
-- (void)_updateVisible {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self _updateVisibleRemoveHidden:false];
+}
+
+- (void)_updateVisibleRemoveHidden:(BOOL)remove {
     CGRect currentFrame = self.frame;
     CGPoint currentOffset = self.contentOffset;
+    int activeController = 0;
 
     // TODO: Vertical direction.
-    // Check bounds on the items we have visible, and release them if we don't see them anymore.
-    for (int i = 0; i < c_numVisiblePages; i++) {
-        CGFloat left = i * currentFrame.size.width;
-        CGFloat right = left + currentFrame.size.width;
 
-        if (left >= currentOffset.x + currentFrame.size.width || right <= currentOffset.x) {
-            [self _replaceController:nil atIndex:i];
-        } else {
-            // TODO: Should this only be edge-triggered?
-            if (_controllers[i] == nil) {
-                // TODO: Call delegate to get more, stop scrolling if there are none.
-                // TODO: Call pageViewController:willTransitionToViewControllers:
+    // There's a possibility when scrolling that we covered the length of more than one page. In that event we can't just iterate through
+    // each left to right, since we might skip a page. Instead we should find an active page and iterate outwards.
+    for (int i = 0; i < c_numVisiblePages; i++) {
+        if (_controllers[i] != nil) {
+            activeController = i;
+            break;
+        }
+    }
+
+    // Check bounds on the items we have visible, and release them if we don't see them anymore.
+    for (int n = -1; n < 2; n+=2) {
+        for (int i = activeController; (i < c_numVisiblePages) && (i >= 0); i+=n) {
+            CGFloat left = i * currentFrame.size.width;
+            CGFloat right = left + currentFrame.size.width;
+
+            if (left >= currentOffset.x + currentFrame.size.width || right <= currentOffset.x) {
+                if (remove) {
+                    [self _replaceController:nil atIndex:i];
+                }
+            } else {
+                // TODO: Should this only be edge-triggered?
+                if (_controllers[i] == nil) {
+                    // TODO: Call delegate to get more, stop scrolling if there are none.
+                    UIViewController* nextController;
+                    if (n > 0) {
+                        nextController = [[_viewController dataSource] pageViewController:_viewController viewControllerAfterViewController:_controllers[i-1]];
+                    } else {
+                        nextController = [[_viewController dataSource] pageViewController:_viewController viewControllerBeforeViewController:_controllers[i+1]];
+                    }
+                    [self _replaceController:nextController atIndex:i];
+
+                    // TODO: Call pageViewController:willTransitionToViewControllers:
+                }
             }
         }
     }
