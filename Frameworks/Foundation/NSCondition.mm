@@ -109,7 +109,7 @@ struct _mach_timeval {
         case 0:
             return YES;
 
-        case 0x274c /* ETIMEDOUT in ios */:
+        case ETIMEDOUT:
             if ((rc = pthread_mutex_unlock(&_mutex)) != 0) {
                 [NSException raise:NSInvalidArgumentException format:@"failed to unlock %@ (errno: %d)", self, rc];
             }
@@ -201,6 +201,9 @@ struct _mach_timeval {
     pthread_cond_wait(&_cond, &_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)tryLock {
     return pthread_mutex_trylock(&_mutex) == 0;
 }

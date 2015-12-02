@@ -43,58 +43,62 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification;
 FOUNDATION_EXPORT_CLASS
 @interface NSUserDefaults : NSObject
 
-- init;
-- initWithUser:(NSString*)user;
-
+// Getting the Shared NSUserDefaults Instance
 + (NSUserDefaults*)standardUserDefaults;
 + (void)resetStandardUserDefaults;
 
-- (void)addSuiteNamed:(NSString*)name;
-- (void)removeSuiteNamed:(NSString*)name;
+// Initializing an NSUserDefaults Object
+- (instancetype)init;
+- (instancetype)initWithUser:(NSString*)user;
+- (instancetype)initWithSuiteName:(NSString*)suitename;
 
-- (NSArray*)searchList;
-- (void)setSearchList:(NSArray*)array;
+// Registering Defaults
+- (void)registerDefaults:(NSDictionary*)dictionary;
 
-- (NSDictionary*)dictionaryRepresentation;
+// Getting Default Values
+- (NSArray*)arrayForKey:(NSString*)defaultName;
+- (BOOL)boolForKey:(NSString*)defaultName;
+- (NSData*)dataForKey:(NSString*)defaultName;
+- (NSDictionary*)dictionaryForKey:(NSString*)defaultName;
+- (float)floatForKey:(NSString*)defaultName;
+- (NSInteger)integerForKey:(NSString*)defaultName;
+- (id)objectForKey:(NSString*)defaultName;
+- (NSArray*)stringArrayForKey:(NSString*)defaultName;
+- (NSString*)stringForKey:(NSString*)defaultName;
+- (double)doubleForKey:(NSString*)defaultName;
+- (NSURL*)URLForKey:(NSString*)defaultName;
 
-- (void)registerDefaults:(NSDictionary*)values;
+// Setting Default Values
+- (void)setBool:(BOOL)value forKey:(NSString*)defaultName;
+- (void)setFloat:(float)value forKey:(NSString*)defaultName;
+- (void)setInteger:(NSInteger)value forKey:(NSString*)defaultName;
+- (void)setObject:(id)value forKey:(NSString*)defaultName;
+- (void)setDouble:(double)value forKey:(NSString*)defaultName;
+- (void)setURL:(NSURL*)url forKey:(NSString*)defaultName;
 
-- (NSArray*)volatileDomainNames;
-- (NSArray*)persistentDomainNames;
+// Removing Defaults
+- (void)removeObjectForKey:(NSString*)defaultName;
 
-- (NSDictionary*)volatileDomainForName:(NSString*)name;
-- (NSDictionary*)persistentDomainForName:(NSString*)name;
-
-- (void)setVolatileDomain:(NSDictionary*)domain forName:(NSString*)name;
-- (void)setPersistentDomain:(NSDictionary*)domain forName:(NSString*)name;
-
-- (void)removeVolatileDomainForName:(NSString*)name;
-- (void)removePersistentDomainForName:(NSString*)name;
-
+// Maintaining Persistent Domains
 - (BOOL)synchronize;
+- (NSDictionary*)persistentDomainForName:(NSString*)domainName;
+- (NSArray*)persistentDomainNames;
+- (void)removePersistentDomainForName:(NSString*)domainName;
+- (void)setPersistentDomain:(NSDictionary*)domain forName:(NSString*)domainName;
 
-- objectForKey:(NSString*)key;
-- (NSData*)dataForKey:(NSString*)key;
-- (NSString*)stringForKey:(NSString*)key;
-- (NSArray*)arrayForKey:(NSString*)key;
-- (NSDictionary*)dictionaryForKey:(NSString*)key;
-- (NSArray*)stringArrayForKey:(NSString*)key;
-- (BOOL)boolForKey:(NSString*)key;
-- (NSInteger)integerForKey:(NSString*)key;
-- (float)floatForKey:(NSString*)key;
-- (double)doubleForKey:(NSString*)key;
-- (NSURL*)URLForKey:(NSString*)key;
-
-- (void)setObject:value forKey:(NSString*)key;
-- (void)setBool:(BOOL)value forKey:(NSString*)key;
-- (void)setInteger:(NSInteger)value forKey:(NSString*)key;
-- (void)setFloat:(float)value forKey:(NSString*)key;
-- (void)setDouble:(double)value forKey:(NSString*)key;
-- (void)setURL:(NSURL*)value forKey:(NSString*)key;
-
-- (void)removeObjectForKey:(NSString*)key;
-
+// Accessing Managed Environment Keys
 - (BOOL)objectIsForcedForKey:(NSString*)key;
 - (BOOL)objectIsForcedForKey:(NSString*)key inDomain:(NSString*)domain;
+
+// Managing the Search List
+- (NSDictionary*)dictionaryRepresentation;
+- (void)removeVolatileDomainForName:(NSString*)domainName;
+- (void)setVolatileDomain:(NSDictionary*)domain forName:(NSString*)domainName;
+- (NSDictionary*)volatileDomainForName:(NSString*)domainName;
+@property (readonly, copy) NSArray* volatileDomainNames;
+
+// Maintaining Suites
+- (void)addSuiteNamed:(NSString*)suiteName;
+- (void)removeSuiteNamed:(NSString*)suiteName;
 
 @end

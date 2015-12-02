@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -27,71 +27,56 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
-      <Project>{2FB40E04-969C-4484-AE3B-CBD6620A8256}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Foundation\Foundation.Universal\Foundation.Universal.vcxproj">
-      <Project>{49AA9208-07ED-4F9C-94AC-C6CF9097E809}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
-      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
+    <ProjectReference Include="..\..\lib\SecurityLib.Windows\SecurityLib.Windows.vcxproj">
+      <Project>{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B60665D-5A2D-4F96-8D52-06B5E886F29F}</ProjectGuid>
+    <ProjectGuid>{6FF5CFD7-3E46-4182-9F76-C315F69B6C13}</ProjectGuid>
     <RootNamespace>Security</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
-    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
     <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>..\..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutputName>Security</OutputName>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
-    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -166,12 +151,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -188,12 +174,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -211,12 +198,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -233,12 +221,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -256,12 +245,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -278,12 +268,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>..\Security.Shared\Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DSECURITY_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>

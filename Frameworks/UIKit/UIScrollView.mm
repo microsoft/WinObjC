@@ -519,6 +519,11 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
         // Stop scrolling:
         if (_displayLink != nil) {
             hideScrollersAction(self);
+            if (_animationReason == ANIMATION_USER) {
+                if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+                    [self.delegate scrollViewDidEndScrollingAnimation:self];
+                }
+            }
         }
         [_displayLink invalidate];
         _displayLink = nil;
@@ -1523,9 +1528,15 @@ static float clipToPage(float start, float curOffset, float velocity, float page
             BOOL willDecelerate = TRUE;
             BOOL decelerateAnimation = FALSE;
 
-            if ([_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
-                CGPoint dest = calcInertialDestination(self, _contentOffset, -velocity);
+            CGPoint dest;
+            if (self.pagingEnabled) {
+                dest.x = clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
+                dest.y = clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
+            } else {
+                dest = calcInertialDestination(self, _contentOffset, -velocity);
+            }
 
+            if ([_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
                 CGPoint old = dest;
                 [_delegate scrollViewWillEndDragging:self withVelocity:-velocity targetContentOffset:&dest];
                 if (old != dest) {
@@ -1547,11 +1558,6 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 
             if (!decelerateAnimation) {
                 if (_pagingEnabled) {
-                    CGPoint dest;
-
-                    dest.x = clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
-                    dest.y = clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
-
                     doAnimatedScroll(self, dest, ANIMATION_PAGING);
                     if ([_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
                         [_delegate scrollViewWillBeginDecelerating:self];
@@ -1641,8 +1647,10 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-    // If we get a touch down, cancel any scrolling we were doing:
-    cancelScrolling(self);
+    if (self.scrollEnabled) {
+        // If we get a touch down, cancel any scrolling we were doing:
+        cancelScrolling(self);
+    }
 }
 
 - (void)layoutSubviews {

@@ -27,6 +27,8 @@
 
 #include "IcuHelper.h"
 
+#include <Starboard/String.h>
+
 enum NSStringType {
     NSUninitializedString = 0,
     NSConstructedString_Unicode = 0x7FFFFFFF,
@@ -2438,7 +2440,7 @@ return [ret autorelease];
  @Status Interoperable
 */
 - (NSString*)stringByStandardizingPath {
-    NSMutableArray* components = [NSMutableArray arrayWithArray: [self componentsSeparatedByString:@"/"]];
+    NSMutableArray* components = [NSMutableArray arrayWithArray:[self componentsSeparatedByString:@"/"]];
     int componentsCount = [components count];
     int lastComponentLen = 0;
 
@@ -2852,6 +2854,65 @@ return ret;
     EbrFree(result);
 
     return ret;
+}
+
+NSString* s_percentEncodedFormat = @"%%%s%X";
+const int s_oneByte = 16;
+
+/**
+ * @Status Interoperable
+ */
+- (NSString*)stringByAddingPercentEncodingWithAllowedCharacters:(NSCharacterSet*)set {
+    NSMutableString* returnValue = [NSMutableString stringWithCapacity:[self length] * 2];
+
+    NSData* dataOfString = [self dataUsingEncoding:NSUTF8StringEncoding];
+    const unsigned char* bytesOfString = (const unsigned char*)dataOfString.bytes;
+    int lastTouchedCharacterIndex = -1;
+    int lengthOfBytes = [dataOfString length];
+
+    for (int i = 0; i < lengthOfBytes; i++) {
+        const unsigned char currentCharacter = bytesOfString[i];
+
+        // Check if multibyte character. Highest order bit in utf8 indicates surrogate pairs.
+        if (currentCharacter & 0x80 || ![set characterIsMember:currentCharacter]) {
+            if (lastTouchedCharacterIndex != (i - 1)) {
+
+                // Get a substring based on the bytes offset by the last touched index to the current index
+                // Length is the length everything between i and the last encoded character exclusively.
+                NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))
+                                                                length:(i - (lastTouchedCharacterIndex + 1))
+                                                              encoding:NSUTF8StringEncoding
+                                                          freeWhenDone:false];
+
+                [returnValue appendString:part];
+                [part release];
+
+            }
+
+            lastTouchedCharacterIndex = i;
+
+            // Append "%XX" where XX is the hex representation of the bytes for the current character.
+            [returnValue appendFormat:s_percentEncodedFormat, (currentCharacter < s_oneByte ? "0" : ""), currentCharacter];
+        }
+    }
+
+    // If we haven't encoded anything.
+    if (lastTouchedCharacterIndex == -1) {
+        return [[self retain] autorelease];
+    } else if (lastTouchedCharacterIndex != lengthOfBytes - 1) {
+
+        // Get the rest of the characters that weren't encoded.
+        // Length is the length everything between i and the last encoded character exclusively.
+        NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))
+                                                        length:(lengthOfBytes - (lastTouchedCharacterIndex + 1))
+                                                      encoding:NSUTF8StringEncoding
+                                                  freeWhenDone:false];
+
+        [returnValue appendString:part];
+        [part release];
+    }
+
+    return returnValue;
 }
 
 /**

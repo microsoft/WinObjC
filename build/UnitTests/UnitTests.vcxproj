@@ -18,6 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Security\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj">
+      <Project>{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -30,6 +35,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <IslandwoodDRT>false</IslandwoodDRT>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -100,7 +106,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -119,7 +125,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -157,7 +163,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,7 +174,7 @@
       </OtherCFlags>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -180,7 +186,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>copy "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -195,16 +201,26 @@
     <ClangCompile Include="..\..\tests\unittests\Accessibility.mm" />
     <ClangCompile Include="..\..\tests\unittests\CFUUID.m" />
     <ClangCompile Include="..\..\tests\unittests\corefoundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocation.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
+    <ClangCompile Include="..\..\tests\unittests\ErrorHandling.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSLocale.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSObject_NSKeyValueArrayAdapters.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSBundle.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSCondition.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSOperation.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSFileManager.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_NSAttributedString.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSUserDefaults.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\Foundation_NSData.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
+    <ClangCompile Include="..\..\tests\unittests\NSDateFormatter.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURL.m" />
@@ -212,6 +228,7 @@
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_assoc.mm" />
     <ClangCompile Include="..\..\tests\unittests\Security_SecItem.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Security_GenericPassword.mm" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_after.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_api.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_apply.m" />
@@ -228,7 +245,6 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_bit63.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
-    <ClangCompile Include="..\..\tests\unittests\CoreLocation\CoreLocation_CLLocationManager.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
   </ItemGroup>
   <ItemGroup>

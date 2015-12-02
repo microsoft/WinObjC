@@ -34,6 +34,9 @@ struct BundleFile;
 FOUNDATION_EXPORT_CLASS
 @interface NSBundle : NSObject
 
+@property (readonly, copy) NSURL* bundleURL;
+@property (readonly, copy) NSString* bundlePath;
+
 + (NSArray*)allBundles;
 + (NSArray*)allFrameworks;
 
@@ -51,9 +54,7 @@ FOUNDATION_EXPORT_CLASS
 
 - initWithPath:(NSString*)path;
 - initWithUrl:(NSURL*)url;
-- (NSString*)bundlePath;
 - (NSString*)resourcePath;
-- (NSURL*)bundleURL;
 - (NSString*)builtInPlugInsPath;
 - (NSDictionary*)infoDictionary;
 - (NSDictionary*)localizedInfoDictionary;

@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewLayout.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,137 +19,424 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <UIKit/UIKit.h>
+#import "UICollectionViewItemKey.h"
+#import "UICollectionViewData.h"
+#import "UICollectionViewUpdateItem.h"
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSIndexSet.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UICollectionViewItemKey.h"
-#include "UICollectionViewUpdateItem.h"
-#include "UIKit/UICollectionViewLayout.h"
+@interface UICollectionView ()
+- (id)currentUpdate;
+- (NSDictionary*)visibleViewsDict;
+- (UICollectionViewData*)collectionViewData;
+- (CGRect)visibleBoundRects; // visibleBounds is flagged as private API (wtf)
+@end
 
-#include "UICollectionViewData.h"
+@interface UICollectionReusableView ()
+- (void)setIndexPath:(NSIndexPath*)indexPath;
+@end
 
-@implementation UICollectionViewLayout {
-    idretaintype(NSMutableDictionary) _decorationViewClassDict;
-    idretaintype(NSMutableDictionary) _decorationViewNibDict;
-    idretaintype(NSMutableDictionary) _decorationViewExternalObjectsTables;
-    idretaintype(NSMutableDictionary) _initialAnimationLayoutAttributesDict;
-    idretaintype(NSMutableDictionary) _finalAnimationLayoutAttributesDict;
-    idretaintype(NSMutableIndexSet) _insertedSectionsSet, _deletedSectionsSet;
+@interface UICollectionViewUpdateItem ()
+- (BOOL)isSectionOperation;
+@end
+
+@interface UICollectionViewLayoutAttributes () {
+    struct {
+        unsigned int isCellKind : 1;
+        unsigned int isDecorationView : 1;
+        unsigned int isHidden : 1;
+        unsigned int isPinned : 1;
+    } _layoutFlags;
+}
+@property (nonatomic) UICollectionViewItemType elementCategory;
+@property (nonatomic, copy) NSString* elementKind;
+@end
+
+@interface UICollectionViewUpdateItem ()
+- (NSIndexPath*)indexPath;
+@end
+
+@implementation UICollectionViewLayoutAttributes
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Static
+
+/**
+   @Status Interoperable
+*/
++ (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath*)indexPath {
+    UICollectionViewLayoutAttributes* attributes = [self new];
+    attributes.elementKind = UICollectionElementKindCell;
+    attributes.elementCategory = UICollectionViewItemTypeCell;
+    attributes.indexPath = indexPath;
+    return attributes;
 }
 
-- (instancetype)init {
-    _decorationViewClassDict = [[NSMutableDictionary new] autorelease];
-    _decorationViewNibDict = [[NSMutableDictionary new] autorelease];
-    _decorationViewExternalObjectsTables = [[NSMutableDictionary new] autorelease];
-    _initialAnimationLayoutAttributesDict = [[NSMutableDictionary new] autorelease];
-    _finalAnimationLayoutAttributesDict = [[NSMutableDictionary new] autorelease];
-    _insertedSectionsSet = [[NSMutableIndexSet new] autorelease];
-    _deletedSectionsSet = [[NSMutableIndexSet new] autorelease];
+/**
+   @Status Interoperable
+*/
++ (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString*)elementKind withIndexPath:(NSIndexPath*)indexPath {
+    UICollectionViewLayoutAttributes* attributes = [self new];
+    attributes.elementCategory = UICollectionViewItemTypeSupplementaryView;
+    attributes.elementKind = elementKind;
+    attributes.indexPath = indexPath;
+    return attributes;
+}
+
+/**
+   @Status Interoperable
+*/
++ (instancetype)layoutAttributesForDecorationViewOfKind:(NSString*)elementKind withIndexPath:(NSIndexPath*)indexPath {
+    UICollectionViewLayoutAttributes* attributes = [self new];
+    attributes.elementCategory = UICollectionViewItemTypeDecorationView;
+    attributes.elementKind = elementKind;
+    attributes.indexPath = indexPath;
+    return attributes;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
+
+/**
+   @Status Interoperable
+*/
+- (id)init {
+    if ((self = [super init])) {
+        _alpha = 1.f;
+        _transform3D = CATransform3DIdentity;
+    }
     return self;
 }
 
-- (id)initWithCoder:(id)coder {
-    [self init];
+/**
+   @Status Interoperable
+*/
+- (NSUInteger)hash {
+    return ([_elementKind hash] * 31) + [_indexPath hash];
+}
+
+/**
+   @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if ([other isKindOfClass:self.class]) {
+        UICollectionViewLayoutAttributes* otherLayoutAttributes = (UICollectionViewLayoutAttributes*)other;
+        if (_elementCategory == otherLayoutAttributes.elementCategory && [_elementKind isEqual:otherLayoutAttributes.elementKind] &&
+            [_indexPath isEqual:otherLayoutAttributes.indexPath]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+/**
+   @Status Interoperable
+*/
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>",
+                                      NSStringFromClass(self.class),
+                                      self,
+                                      NSStringFromCGRect(self.frame),
+                                      self.indexPath,
+                                      self.elementKind];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewItemType)representedElementCategory {
+    return _elementCategory;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Private
+
+/**
+   @Public No
+*/
+- (NSString*)representedElementKind {
+    return self.elementKind;
+}
+
+/**
+   @Public No
+*/
+- (BOOL)isDecorationView {
+    return self.representedElementCategory == UICollectionViewItemTypeDecorationView;
+}
+
+/**
+   @Public No
+*/
+- (BOOL)isSupplementaryView {
+    return self.representedElementCategory == UICollectionViewItemTypeSupplementaryView;
+}
+
+/**
+   @Public No
+*/
+- (BOOL)isPinnedSupplementaryView {
+    return (self.representedElementCategory == UICollectionViewItemTypeSupplementaryView) &&
+           (_layoutFlags.isPinned);
+}
+
+/**
+   @Public No
+*/
+- (BOOL)isCell {
+    return self.representedElementCategory == UICollectionViewItemTypeCell;
+}
+
+/**
+   @Public No
+*/
+- (void)updateFrame {
+    _frame = (CGRect){ { _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
+}
+
+/**
+   @Public No
+*/
+- (void)setPinned:(BOOL)pinned {
+    _layoutFlags.isPinned = pinned ? 1 : 0;
+}
+
+/**
+   @Public No
+*/
+- (void)setSize:(CGSize)size {
+    _size = size;
+    [self updateFrame];
+}
+
+/**
+   @Public No
+*/
+- (void)setCenter:(CGPoint)center {
+    _center = center;
+    [self updateFrame];
+}
+
+/**
+   @Public No
+*/
+- (void)setFrame:(CGRect)frame {
+    _frame = frame;
+    _size = _frame.size;
+    _center = (CGPoint){ CGRectGetMidX(_frame), CGRectGetMidY(_frame) };
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSCopying
+
+/**
+   @Status Interoperable
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UICollectionViewLayoutAttributes* layoutAttributes = [self.class new];
+    layoutAttributes.indexPath = self.indexPath;
+    layoutAttributes.elementKind = self.elementKind;
+    layoutAttributes.elementCategory = self.elementCategory;
+    layoutAttributes.frame = self.frame;
+    layoutAttributes.center = self.center;
+    layoutAttributes.size = self.size;
+    layoutAttributes.transform3D = self.transform3D;
+    layoutAttributes.alpha = self.alpha;
+    layoutAttributes.zIndex = self.zIndex;
+    layoutAttributes.hidden = self.isHidden;
+    return layoutAttributes;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UICollection/UICollection interoperability
+
+#if 0
+
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
+    NSMethodSignature* signature = [super methodSignatureForSelector:selector];
+    if (!signature) {
+        NSString* selString = NSStringFromSelector(selector);
+        if ([selString hasPrefix:@"_"]) {
+            SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
+            signature = [super methodSignatureForSelector:cleanedSelector];
+        }
+    }
+    return signature;
+}
+
+- (void)forwardInvocation:(NSInvocation*)invocation {
+    NSString* selString = NSStringFromSelector([invocation selector]);
+    if ([selString hasPrefix:@"_"]) {
+        SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
+        if ([self respondsToSelector:cleanedSelector]) {
+            invocation.selector = cleanedSelector;
+            [invocation invokeWithTarget:self];
+        }
+    } else {
+        [super forwardInvocation:invocation];
+    }
+}
+
+#endif
+
+@end
+
+@interface UICollectionViewLayout () {
+    __unsafe_unretained UICollectionView* _collectionView;
+    CGSize _collectionViewBoundsSize;
+    NSMutableDictionary* _initialAnimationLayoutAttributesDict;
+    NSMutableDictionary* _finalAnimationLayoutAttributesDict;
+    NSMutableIndexSet* _deletedSectionsSet;
+    NSMutableIndexSet* _insertedSectionsSet;
+    NSMutableDictionary* _decorationViewClassDict;
+    NSMutableDictionary* _decorationViewNibDict;
+    NSMutableDictionary* _decorationViewExternalObjectsTables;
+}
+@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewClassDict;
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewNibDict;
+@property (nonatomic, copy, readonly) NSDictionary* decorationViewExternalObjectsTables;
+@end
+
+@implementation UICollectionViewLayout
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
+
+/**
+   @Status Interoperable
+*/
+- (id)init {
+    if ((self = [super init])) {
+        _decorationViewClassDict = [NSMutableDictionary new];
+        _decorationViewNibDict = [NSMutableDictionary new];
+        _decorationViewExternalObjectsTables = [NSMutableDictionary new];
+        _initialAnimationLayoutAttributesDict = [NSMutableDictionary new];
+        _finalAnimationLayoutAttributesDict = [NSMutableDictionary new];
+        _insertedSectionsSet = [NSMutableIndexSet new];
+        _deletedSectionsSet = [NSMutableIndexSet new];
+    }
     return self;
 }
 
-- (id)setCollectionView:(id)collectionView {
-    _collectionView = collectionView;
-    return 0;
-}
-
 /**
- @Status Interoperable
+   @Status Interoperable
 */
-- (id)collectionView {
-    return _collectionView;
+- (void)awakeFromNib {
+    [super awakeFromNib];
 }
 
 /**
- @Status Interoperable
+   @Status Interoperable
 */
-- (void)registerClass:(id)viewClass forDecorationViewOfKind:(id)decorationViewKind {
-    [_decorationViewClassDict setObject:viewClass forKey:decorationViewKind];
+- (void)setCollectionView:(UICollectionView*)collectionView {
+    if (collectionView != _collectionView) {
+        _collectionView = collectionView;
+    }
 }
 
-/**
- @Status Interoperable
-*/
-- (void)prepareLayout {
-}
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Invalidating the Layout
 
 /**
- @Status Interoperable
+   @Status Interoperable
 */
 - (void)invalidateLayout {
     [[_collectionView collectionViewData] invalidate];
     [_collectionView setNeedsLayout];
 }
 
-+ (id)layoutAttributesClass {
-    return [UICollectionViewLayoutAttributes class];
-}
-
-- (id)decorationViewClassDict {
-    return _decorationViewClassDict;
-}
-
-- (id)decorationViewNibDict {
-    return _decorationViewNibDict;
-}
-
-- (id)decorationViewExternalObjectsTables {
-    return _decorationViewExternalObjectsTables;
-}
-
 /**
- @Status Interoperable
+   @Status Stub
 */
-- (id)initialLayoutAttributesForAppearingItemAtIndexPath:(id)itemIndexPath {
-    id attrs =
-        [_initialAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
-
-    if ([_insertedSectionsSet containsIndex:[itemIndexPath section]]) {
-        attrs = [attrs copy];
-        [attrs setAlpha:0];
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
+    // not sure about his..
+    if ((self.collectionView.bounds.size.width != newBounds.size.width) ||
+        (self.collectionView.bounds.size.height != newBounds.size.height)) {
+        return YES;
     }
-    return attrs;
+    return NO;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Providing Layout Attributes
+
+/**
+   @Status Interoperable
+*/
++ (Class)layoutAttributesClass {
+    return UICollectionViewLayoutAttributes.class;
 }
 
 /**
- @Status Interoperable
+   @Status Interoperable
 */
-- (id)finalLayoutAttributesForDisappearingItemAtIndexPath:(id)itemIndexPath {
-    id attrs =
-        [_finalAnimationLayoutAttributesDict objectForKey:[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
-
-    if ([_deletedSectionsSet containsIndex:[itemIndexPath section]]) {
-        attrs = [attrs copy];
-        [attrs setAlpha:0];
-    }
-    return attrs;
+- (void)prepareLayout {
 }
 
 /**
- @Status Interoperable
+   @Status Interoperable
 */
-- (void)prepareForCollectionViewUpdates:(id)updateItems {
-    id update = [_collectionView currentUpdate];
+- (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
+    return nil;
+}
 
-    for (id view in [[_collectionView visibleViewsDict] objectEnumerator]) {
-        id attr = [[view layoutAttributes] copy];
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
+    return nil;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
+    return nil;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
+    return nil;
+}
+
+// return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
+/**
+   @Status Interoperable
+*/
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity {
+    return proposedContentOffset;
+}
+
+/**
+   @Status Interoperable
+*/
+- (CGSize)collectionViewContentSize {
+    return CGSizeZero;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Responding to Collection View Updates
+
+/**
+   @Status Interoperable
+*/
+- (void)prepareForCollectionViewUpdates:(NSArray*)updateItems {
+    NSDictionary* update = [_collectionView currentUpdate];
+
+    for (UICollectionReusableView* view in [[_collectionView visibleViewsDict] objectEnumerator]) {
+        UICollectionViewLayoutAttributes* attr = [view.layoutAttributes copy];
         if (attr) {
-            if ([attr isCell]) {
-                UICollectionViewData* data = [update objectForKey:@"oldModel"];
-                NSInteger index = [data globalIndexForItemAtIndexPath:[attr indexPath]];
+            if (attr.isCell) {
+                NSUInteger index = [update[@"oldModel"] globalIndexForItemAtIndexPath:[attr indexPath]];
                 if (index != NSNotFound) {
                     [attr setIndexPath:[attr indexPath]];
                 }
             }
-            [_initialAnimationLayoutAttributesDict setObject:attr
-                                                      forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]];
+            _initialAnimationLayoutAttributesDict[[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:attr]] = attr;
         }
     }
 
@@ -152,242 +444,160 @@
 
     CGRect bounds = [_collectionView visibleBoundRects];
 
-    for (id attr in [collectionViewData layoutAttributesForElementsInRect:bounds]) {
-        if ([attr isCell]) {
-            NSInteger index = [collectionViewData globalIndexForItemAtIndexPath:[attr indexPath]];
+    for (UICollectionViewLayoutAttributes* attr in [collectionViewData layoutAttributesForElementsInRect:bounds]) {
+        if (attr.isCell) {
+            NSInteger index = (NSInteger)[collectionViewData globalIndexForItemAtIndexPath:attr.indexPath];
 
-            index = [[[update objectForKey:@"newToOldIndexMap"] objectAtIndex:index] intValue];
+            index = [update[@"newToOldIndexMap"][(NSUInteger)index] integerValue];
             if (index != NSNotFound) {
-                id finalAttrs = [attr copy];
-                [finalAttrs setIndexPath:[[update objectForKey:@"oldModel"] indexPathForItemAtGlobalIndex:index]];
+                UICollectionViewLayoutAttributes* finalAttrs = [attr copy];
+                [finalAttrs setIndexPath:[update[@"oldModel"] indexPathForItemAtGlobalIndex:index]];
                 [finalAttrs setAlpha:0];
-                [_finalAnimationLayoutAttributesDict setObject:finalAttrs
-                                                        forKey:[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:finalAttrs]];
+                _finalAnimationLayoutAttributesDict[[UICollectionViewItemKey collectionItemKeyForLayoutAttributes:finalAttrs]] = finalAttrs;
             }
         }
     }
 
-    for (id updateItem in updateItems) {
-        UICollectionUpdateAction action = [updateItem updateAction];
+    for (UICollectionViewUpdateItem* updateItem in updateItems) {
+        UICollectionUpdateAction action = updateItem.updateAction;
 
         if ([updateItem isSectionOperation]) {
             if (action == UICollectionUpdateActionReload) {
-                [_deletedSectionsSet addIndex:[[updateItem indexPathBeforeUpdate] section]];
-                [_insertedSectionsSet addIndex:[[updateItem indexPathAfterUpdate] section]];
+                [_deletedSectionsSet addIndex:(NSUInteger)[[updateItem indexPathBeforeUpdate] section]];
+                [_insertedSectionsSet addIndex:(NSUInteger)[updateItem indexPathAfterUpdate].section];
             } else {
-                id indexSet = action == UICollectionUpdateActionInsert ? _insertedSectionsSet : _deletedSectionsSet;
-                [indexSet addIndex:[[updateItem indexPath] section]];
+                NSMutableIndexSet* indexSet = action == UICollectionUpdateActionInsert ? _insertedSectionsSet : _deletedSectionsSet;
+                [indexSet addIndex:(NSUInteger)[updateItem indexPath].section];
             }
         } else {
             if (action == UICollectionUpdateActionDelete) {
-                id key = [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathBeforeUpdate]];
+                UICollectionViewItemKey* key =
+                    [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathBeforeUpdate]];
 
-                id attrs = [[_finalAnimationLayoutAttributesDict objectForKey:key] copy];
+                UICollectionViewLayoutAttributes* attrs = [_finalAnimationLayoutAttributesDict[key] copy];
 
                 if (attrs) {
                     [attrs setAlpha:0];
-                    [_finalAnimationLayoutAttributesDict setObject:attrs forKey:key];
+                    _finalAnimationLayoutAttributesDict[key] = attrs;
                 }
             } else if (action == UICollectionUpdateActionReload || action == UICollectionUpdateActionInsert) {
-                id key = [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathAfterUpdate]];
-                id attrs = [[_initialAnimationLayoutAttributesDict objectForKey:key] copy];
+                UICollectionViewItemKey* key =
+                    [UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:[updateItem indexPathAfterUpdate]];
+                UICollectionViewLayoutAttributes* attrs = [_initialAnimationLayoutAttributesDict[key] copy];
 
                 if (attrs) {
                     [attrs setAlpha:0];
-                    [_initialAnimationLayoutAttributesDict setObject:attrs forKey:key];
+                    _initialAnimationLayoutAttributesDict[key] = attrs;
                 }
             }
         }
     }
 }
 
-- (id)finalizeCollectionViewUpdates {
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath {
+    UICollectionViewLayoutAttributes* attrs =
+        _initialAnimationLayoutAttributesDict[[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
+
+    if ([_insertedSectionsSet containsIndex:(NSUInteger)[itemIndexPath section]]) {
+        attrs = [attrs copy];
+        [attrs setAlpha:0];
+    }
+    return attrs;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath*)itemIndexPath {
+    UICollectionViewLayoutAttributes* attrs =
+        _finalAnimationLayoutAttributesDict[[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:itemIndexPath]];
+
+    if ([_deletedSectionsSet containsIndex:(NSUInteger)[itemIndexPath section]]) {
+        attrs = [attrs copy];
+        [attrs setAlpha:0];
+    }
+    return attrs;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString*)elementKind
+                                                                                      atIndexPath:(NSIndexPath*)elementIndexPath {
+    UICollectionViewLayoutAttributes* attrs =
+        _initialAnimationLayoutAttributesDict[[UICollectionViewItemKey collectionItemKeyForCellWithIndexPath:elementIndexPath]];
+
+    if ([_insertedSectionsSet containsIndex:(NSUInteger)[elementIndexPath section]]) {
+        attrs = [attrs copy];
+        [attrs setAlpha:0];
+    }
+    return attrs;
+}
+
+/**
+   @Status Interoperable
+*/
+- (UICollectionViewLayoutAttributes*)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString*)elementKind
+                                                                                   atIndexPath:(NSIndexPath*)elementIndexPath {
+    return nil;
+}
+
+/**
+   @Status Interoperable
+*/
+- (void)finalizeCollectionViewUpdates {
     [_initialAnimationLayoutAttributesDict removeAllObjects];
     [_finalAnimationLayoutAttributesDict removeAllObjects];
     [_deletedSectionsSet removeAllIndexes];
     [_insertedSectionsSet removeAllIndexes];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Registering Decoration Views
+
+/**
+   @Status Interoperable
+*/
+- (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString*)kind {
+    _decorationViewClassDict[kind] = viewClass;
+}
+
+/**
+   @Status Interoperable
+*/
+- (void)registerNib:(UINib*)nib forDecorationViewOfKind:(NSString*)kind {
+    _decorationViewNibDict[kind] = nib;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Private
+
+/**
+   @Public No
+*/
+- (void)setCollectionViewBoundsSize:(CGSize)size {
+    _collectionViewBoundsSize = size;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSCoding
+
+/**
+   @Status Interoperable
+*/
+- (id)initWithCoder:(NSCoder*)coder {
+    if ((self = [self init])) {
+    }
     return self;
 }
 
-@end
-
-@implementation UICollectionViewLayoutAttributes {
-    UICollectionViewItemType _elementCategory;
-    idretain _elementKind;
-    idretain _indexPath;
-    CGRect _frame;
-    CGSize _size;
-    CGPoint _center;
-    BOOL _hidden;
-    NSInteger _zIndex;
-    float _alpha;
-    CATransform3D _transform3D;
-}
-
-- (id)init {
-    _alpha = 1.0f;
-    _transform3D = CATransform3DMakeTranslation(0, 0, 0);
-    return self;
-}
-
-- (BOOL)isDecorationView {
-    return [self representedElementCategory] == UICollectionViewItemTypeDecorationView;
-}
-
-- (BOOL)isSupplementaryView {
-    return [self representedElementCategory] == UICollectionViewItemTypeSupplementaryView;
-}
-
-- (BOOL)isCell {
-    return [self representedElementCategory] == UICollectionViewItemTypeCell;
-}
-
-+ (id)layoutAttributesForSupplementaryViewOfKind:(id)elementKind withIndexPath:(id)indexPath {
-    UICollectionViewLayoutAttributes* attributes = [self new];
-    attributes->_elementCategory = UICollectionViewItemTypeSupplementaryView;
-    attributes->_elementKind.attach([elementKind copy]);
-    attributes->_indexPath = indexPath;
-    return attributes;
-}
-
-+ (id)layoutAttributesForCellWithIndexPath:(id)indexPath {
-    UICollectionViewLayoutAttributes* attributes = [self new];
-    attributes->_elementKind = @"UICollectionElementKindCell";
-    attributes->_elementCategory = UICollectionViewItemTypeCell;
-    attributes->_indexPath = indexPath;
-    return attributes;
-}
-
 /**
- @Status Interoperable
+   @Status Interoperable
 */
-+ (id)layoutAttributesForDecorationViewOfKind:(id)elementKind withIndexPath:(id)indexPath {
-    UICollectionViewLayoutAttributes* attributes = [self new];
-    attributes->_elementCategory = UICollectionViewItemTypeDecorationView;
-    attributes->_elementKind.attach([elementKind copy]);
-    attributes->_indexPath = indexPath;
-    return attributes;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setFrame:(CGRect)frame {
-    _frame = frame;
-    _size = frame.size;
-    _center = CGPoint::point(CGRectGetMidX(_frame), CGRectGetMidY(_frame));
-}
-
-/**
- @Status Interoperable
-*/
-- (CGRect)frame {
-    return _frame;
-}
-
-- (CGSize)size {
-    return _size;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGPoint)center {
-    return _center;
-}
-
-/**
- @Status Interoperable
-*/
-- (CATransform3D)transform3D {
-    return _transform3D;
-}
-
-/**
- @Status Interoperable
-*/
-- (float)alpha {
-    return _alpha;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setAlpha:(float)alpha {
-    _alpha = alpha;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setCenter:(CGPoint)center {
-    _center = center;
-    _frame = CGRectMake((_center.x - _frame.size.width / 2), (_center.y - _frame.size.height / 2), _frame.size.width, _frame.size.height);
-}
-
-- (BOOL)isHidden {
-    return _hidden;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setZIndex:(NSInteger)index {
-    _zIndex = index;
-}
-
-/**
- @Status Interoperable
-*/
-- (int)zIndex {
-    return _zIndex;
-}
-
-- (id)elementKind {
-    return _elementKind;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)representedElementKind {
-    return _elementKind;
-}
-
-/**
- @Status Interoperable
-*/
-- (UICollectionViewItemType)representedElementCategory {
-    return _elementCategory;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)indexPath {
-    return _indexPath;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setIndexPath:(id)indexPath {
-    _indexPath = indexPath;
-}
-
-- (id)copyWithZone:(NSZone*)zone {
-    UICollectionViewLayoutAttributes* layoutAttributes = [[self class] new];
-    layoutAttributes->_indexPath = _indexPath;
-    layoutAttributes->_elementKind = _elementKind;
-    layoutAttributes->_elementCategory = _elementCategory;
-    layoutAttributes->_frame = _frame;
-    layoutAttributes->_center = _center;
-    layoutAttributes->_size = _size;
-    layoutAttributes->_transform3D = _transform3D;
-    layoutAttributes->_alpha = _alpha;
-    layoutAttributes->_zIndex = _zIndex;
-    layoutAttributes->_hidden = _hidden;
-    return layoutAttributes;
+- (void)encodeWithCoder:(NSCoder*)coder {
 }
 
 @end

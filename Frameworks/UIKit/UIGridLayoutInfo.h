@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutInfo.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,24 +21,39 @@
 
 #pragma once
 
-@interface UIGridLayoutInfo : NSObject {
-@public
-    BOOL _horizontal;
-    float _dimension;
-    idretain _rowAlignmentOptions;
-    idretaintype(NSMutableArray) _sections;
-    BOOL _isValid;
-    CGSize _contentSize;
-}
-- (float)dimension;
-- (BOOL)horizontal;
-- (CGSize)contentSize;
-- (id)setHorizontal:(BOOL)horizontal;
-- (id)setDimension:(float)dimension;
-- (id)setRowAlignmentOptions:(id)options;
-- (id)init;
-- (id)sections;
-- (id)addSection;
-- (id)invalidate:(BOOL)arg;
-- (id)setContentSize:(CGSize)size;
+#import <UIKit/UIKit.h>
+
+@class UIGridLayoutSection;
+
+/*
+ Every UICollectionViewLayout has a UIGridLayoutInfo attached.
+ Is used extensively in UICollectionViewFlowLayout.
+ */
+@interface UIGridLayoutInfo : NSObject
+
+@property (nonatomic, strong, readonly) NSArray *sections;
+@property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
+@property (nonatomic, assign) BOOL usesFloatingHeaderFooter;
+
+// Vertical/horizontal dimension (depending on horizontal)
+// Used to create row objects
+@property (nonatomic, assign) CGFloat dimension;
+
+@property (nonatomic, assign) BOOL horizontal;
+@property (nonatomic, assign) BOOL leftToRight;
+@property (nonatomic, assign) CGSize contentSize;
+
+// Frame for specific UIGridLayoutItem.
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+// Add new section. Invalidates layout.
+- (UIGridLayoutSection *)addSection;
+
+// forces the layout to recompute on next access
+// TODO; what's the parameter for?
+- (void)invalidate:(BOOL)arg;
+
+// Make a copy of the current state.
+- (UIGridLayoutInfo *)snapshot;
+
 @end

@@ -33,6 +33,7 @@
 #import "PhotogridViewController.h"
 #import "BezierViewController.h"
 #import "AutoLayoutViewController.h"
+#import "PageViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -183,7 +184,13 @@ static NSString *viewTitleKeyName = @"ViewName";
                                photoGridViewController, controllerKeyName,
                                nil]];
 
-    // CollectionView
+    // PageView
+    PageViewController *pageViewController = [[PageViewController alloc] init];
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               @"Page View", viewTitleKeyName,
+                               pageViewController, controllerKeyName,
+                               nil]];
+    // Bezier
     BezierViewController *bezierViewController = [[BezierViewController alloc] init];
     [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                @"Beizier Paths", viewTitleKeyName,

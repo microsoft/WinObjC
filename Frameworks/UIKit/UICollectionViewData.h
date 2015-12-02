@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewData.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,39 +19,72 @@
 //
 //******************************************************************************
 
-@interface UICollectionViewData : NSObject {
-@public
-    CGRect _validLayoutRect;
-    UICollectionView* _collectionView;
-    UICollectionViewFlowLayout* _layout;
-    idretain _cachedLayoutAttributes;
-    CGSize _contentSize;
-    struct {
-        unsigned int contentSizeIsValid : 1;
-        unsigned int itemCountsAreValid : 1;
-        unsigned int layoutIsPrepared : 1;
-    } _collectionViewDataFlags;
+#pragma once
 
-    NSInteger _numItems;
-    NSInteger _numSections;
-    NSInteger* _sectionItemCounts;
-}
-- (BOOL)_filterAttribs:(id)evaluatedObject bindings:(id)bindings;
-- (void)validateItemCounts;
-- (BOOL)layoutIsPrepared;
-- (unsigned)numberOfSections;
-- (unsigned)numberOfItems;
-- (unsigned)numberOfItemsInSection:(int)section;
-- (unsigned)numberOfItemsBeforeSection:(int)section;
-- (unsigned)globalIndexForItemAtIndexPath:(id)indexPath;
+#import <UIKit/UICollectionViewCommon.h>
+
+@class UICollectionView, UICollectionViewLayout, UICollectionViewLayoutAttributes;
+
+@interface UICollectionViewData : NSObject
+
+// Designated initializer.
+- (id)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout;
+
+// Ensure data is valid. may fetches items from dataSource and layout.
+- (void)validateLayoutInRect:(CGRect)rect;
+
+- (CGRect)rectForItemAtIndexPath:(NSIndexPath*)indexPath;
+
+/*
+ - (CGRect)rectForSupplementaryElementOfKind:(id)arg1 atIndexPath:(id)arg2;
+ - (CGRect)rectForDecorationElementOfKind:(id)arg1 atIndexPath:(id)arg2;
+ - (CGRect)rectForGlobalItemIndex:(int)arg1;
+*/
+
+// No idea (yet)
+- (NSUInteger)globalIndexForItemAtIndexPath:(NSIndexPath*)indexPath;
+
+- (NSIndexPath*)indexPathForItemAtGlobalIndex:(NSInteger)index;
+
+// Fetch layout attributes
+- (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect;
+
+/*
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UICollectionViewLayoutAttributes *)layoutAttributesForElementsInSection:(NSInteger)section;
+- (UICollectionViewLayoutAttributes *)layoutAttributesForGlobalItemIndex:(NSInteger)index;
+- (UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
+- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryElementOfKind:(id)arg1 atIndexPath:(NSIndexPath *)indexPath;
+ - (id)existingSupplementaryLayoutAttributesInSection:(int)arg1;
+*/
+
+// Make data to re-evaluate dataSources.
+- (void)invalidate;
+
+// Access cached item data
+- (NSInteger)numberOfItemsBeforeSection:(NSInteger)section;
+
+- (NSInteger)numberOfItemsInSection:(NSInteger)section;
+
+- (NSInteger)numberOfItems;
+
+- (NSInteger)numberOfSections;
+
+// Total size of the content.
 - (CGRect)collectionViewContentRect;
-- (id)initWithCollectionView:(id)collectionView layout:(id)layout;
-- (id)validateLayoutInRect:(CGRect)rect;
-- (id)setLayoutIsPrepared:(BOOL)layoutIsPrepared;
-- (id)setContentSize:(CGSize)size;
-- (id)prepareToLoadData;
-- (id)layoutAttributesForElementsInRect:(CGRect)rect;
-- (id)updateItemCounts;
-- (id)invalidate;
-- (id)indexPathForItemAtGlobalIndex:(NSInteger)index;
+
+@property (readonly) BOOL layoutIsPrepared;
+
+/*
+ - (void)_setLayoutAttributes:(id)arg1 atGlobalItemIndex:(int)arg2;
+ - (void)_setupMutableIndexPath:(id*)arg1 forGlobalItemIndex:(int)arg2;
+ - (id)_screenPageForPoint:(struct CGPoint { float x1; float x2; })arg1;
+ - (void)_validateContentSize;
+ - (void)_validateItemCounts;
+ - (void)_updateItemCounts;
+ - (void)_loadEverything;
+ - (void)_prepareToLoadData;
+ - (void)invalidate:(BOOL)arg1;
+ */
+
 @end

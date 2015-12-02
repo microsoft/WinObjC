@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewItemKey.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,21 +19,25 @@
 //
 //******************************************************************************
 
-#include "UIKit/UICollectionViewLayout.h"
+#pragma once
 
-@interface UICollectionViewItemKey : NSObject {
-@public
-    idretain _identifier;
-    idretain _indexPath;
-    UICollectionViewItemType _type;
-}
-- (unsigned)hash;
-- (UICollectionViewItemType)type;
-- (BOOL)isEqual:(UICollectionViewItemKey*)other;
-- (id)indexPath;
-- (id)setIndexPath:(id)path;
-- (id)identifier;
-- (id)copyWithZone:(id)zone;
+#import <UIKit/UIKit.h>
+
+UIKIT_EXPORT NSString* const UICollectionElementKindCell;
+UIKIT_EXPORT NSString* const UICollectionElementKindDecorationView;
+@class UICollectionViewLayoutAttributes;
+
+NSString* UICollectionViewItemTypeToString(UICollectionViewItemType type); // debug helper
+
+// Used in NSDictionaries
+@interface UICollectionViewItemKey : NSObject <NSCopying>
+
 + (id)collectionItemKeyForLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes;
-+ (id)collectionItemKeyForCellWithIndexPath:(id)indexPath;
+
++ (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath*)indexPath;
+
+@property (nonatomic, assign) UICollectionViewItemType type;
+@property (nonatomic, strong) NSIndexPath* indexPath;
+@property (nonatomic, strong) NSString* identifier;
+
 @end

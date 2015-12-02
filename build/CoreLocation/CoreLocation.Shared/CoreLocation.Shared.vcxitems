@@ -22,13 +22,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLLocation.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLLocationManager.mm" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)\CoreLocation.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
 </Project>

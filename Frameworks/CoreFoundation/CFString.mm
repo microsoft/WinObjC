@@ -31,6 +31,13 @@ void CFStringAppend(CFMutableStringRef str, CFStringRef append) {
 }
 
 /**
+ @Status Interoperable
+*/
+void CFStringReplace(CFMutableStringRef str, CFRange range, CFStringRef replacement) {
+    [(NSMutableString*)str replaceCharactersInRange:{ range.location, range.length } withString:(NSString*)replacement];
+}
+
+/**
  @Status Caveat
  @Notes Limited encodings supported
 */

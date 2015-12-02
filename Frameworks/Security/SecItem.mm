@@ -15,7 +15,14 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include <array>
+#include <utility>
+#import <Foundation/NSDictionary.h>
 #import <Security/SecItem.h>
+#import <Starboard.h>
+
+#import "SecItemHandlerProtocol.h"
+#import "GenericPasswordItemHandler.h"
 
 const CFStringRef kSecClass = static_cast<CFStringRef>(@"class");
 const CFStringRef kSecClassGenericPassword = static_cast<CFStringRef>(@"genp");
@@ -65,34 +72,97 @@ const CFStringRef kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly = static_cast<
 const CFStringRef kSecAttrAccessibleWhenUnlocked = static_cast<CFStringRef>(@"ak");
 const CFStringRef kSecAttrAccessibleWhenUnlockedThisDeviceOnly = static_cast<CFStringRef>(@"aku");
 
+std::array<std::pair<NSString*, idretainp<id<SecItemHandler>>>, 1>& GetItemHandlers() {
+    // using a array here instead of a dictionary because there will only ever be a handful of
+    // handlers so iterating to find the right one should be fast enough and have less overhead than a dictionary.
+    static std::array<std::pair<NSString*, idretainp<id<SecItemHandler>>>, 1> s_itemHandlers{ {
+        { static_cast<NSString*>(kSecClassGenericPassword), [[GenericPasswordItemHandler new] autorelease] },
+    } };
+
+    return s_itemHandlers;
+}
+
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only GenericPassword items can be updated
 */
 OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate) {
-    UNIMPLEMENTED();
-    return 0;
+    // Each handler could have some matching items so go ahead and
+    // forward along to all of them. This means that error handling
+    // will get a little tricky though. Fail on the first error and
+    // make no attempt to rollback or whatever. Whatever happens, happens.
+    for (const auto& handlerPair : GetItemHandlers()) {
+        OSStatus status =
+            [handlerPair.second update:static_cast<NSDictionary*>(query) withAttributes:static_cast<NSDictionary*>(attributesToUpdate)];
+        if (status != errSecSuccess) {
+            return status;
+        }
+    }
+
+    return errSecSuccess;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only GenericPassword items can be added
 */
 OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result) {
-    UNIMPLEMENTED();
-    return 0;
+    NSDictionary* nsAttributes = static_cast<NSDictionary*>(attributes);
+    if (nsAttributes == nil) {
+        return errSecParam;
+    }
+
+    id classType = [nsAttributes objectForKey:static_cast<NSString*>(kSecClass)];
+    if (classType == nil) {
+        return errSecParam;
+    }
+
+    for (const auto& handlerPair : GetItemHandlers()) {
+        if ([classType isEqualToString:handlerPair.first]) {
+            return [handlerPair.second add:static_cast<NSDictionary*>(attributes) withResult:(id*)(result)];
+        }
+    }
+
+    return errSecParam;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only GenericPassword items can be deleted
 */
 OSStatus SecItemDelete(CFDictionaryRef query) {
-    UNIMPLEMENTED();
-    return 0;
+    // Each handler could have some matching items so go ahead and
+    // forward along to all of them. This means that error handling
+    // will get a little tricky though. Fail on the first error and
+    // make no attempt to rollback or whatever. Whatever happens, happens.
+    for (const auto& handlerPair : GetItemHandlers()) {
+        OSStatus status = [handlerPair.second remove:static_cast<NSDictionary*>(query)];
+        if (status != errSecSuccess) {
+            return status;
+        }
+    }
+
+    return errSecSuccess;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only GenericPassword items can be queried
 */
 OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result) {
-    UNIMPLEMENTED();
-    return 0;
+    // Each handler could have some matching items so go ahead and
+    // forward along to all of them. This means that error handling
+    // will get a little tricky though. Fail on the first error and
+    // make no attempt to rollback or whatever. Whatever happens, happens.
+    for (const auto& handlerPair : GetItemHandlers()) {
+        OSStatus status = [handlerPair.second query:static_cast<NSDictionary*>(query) withResult:(id*)(result)];
+        if (status != errSecSuccess) {
+            return status;
+        }
+    }
+
+    // TODO: all results need combined into one (assuming not nil result). As written only the last result
+    // gets applied which is fine until more than handler exists.
+
+    return errSecSuccess;
 }

@@ -26,12 +26,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSDictionary;
 @class NSError;
 
-FOUNDATION_EXPORT NSString* const NSURLFileScheme;
+// Keys that apply to file system URLs.
+FOUNDATION_EXPORT NSString* const NSURLAddedToDirectoryDateKey;
 FOUNDATION_EXPORT NSString* const NSURLAttributeModificationDateKey;
+FOUNDATION_EXPORT NSString* const NSURLFileScheme;
 FOUNDATION_EXPORT NSString* const NSURLContentAccessDateKey;
 FOUNDATION_EXPORT NSString* const NSURLContentModificationDateKey;
 FOUNDATION_EXPORT NSString* const NSURLCreationDateKey;
 FOUNDATION_EXPORT NSString* const NSURLCustomIconKey;
+FOUNDATION_EXPORT NSString* const NSURLDocumentIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLEffectiveIconKey;
 FOUNDATION_EXPORT NSString* const NSURLFileResourceIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeKey;
@@ -63,8 +66,23 @@ FOUNDATION_EXPORT NSString* const NSURLPreferredIOBlockSizeKey;
 FOUNDATION_EXPORT NSString* const NSURLTypeIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLVolumeIdentifierKey;
 FOUNDATION_EXPORT NSString* const NSURLVolumeURLKey;
-FOUNDATION_EXPORT NSString* const NSURLTotalFileAllocatedSizeKey;
+
+// Possible values for the NSURLFileResourceTypeKey key.
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeNamedPipe;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeCharacterSpecial;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeDirectory;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeBlockSpecial;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeRegular;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeSymbolicLink;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeSocket;
+FOUNDATION_EXPORT NSString* const NSURLFileResourceTypeUnknown;
+
+// Keys that apply to properties of files.
 FOUNDATION_EXPORT NSString* const NSURLFileSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLFileAllocatedSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLIsAliasFileKey;
+FOUNDATION_EXPORT NSString* const NSURLTotalFileAllocatedSizeKey;
+FOUNDATION_EXPORT NSString* const NSURLTotalFileSizeKey;
 
 struct EbrURL;
 
@@ -72,7 +90,7 @@ FOUNDATION_EXPORT_CLASS
 @interface NSURL : NSObject <NSCopying, NSCoding>
 
 - initWithScheme:(NSString*)scheme host:(NSString*)host path:(NSString*)path;
-- initFileURLWithPath:(NSString*)path;
+- (instancetype)initFileURLWithPath:(NSString*)path;
 - initWithString:(NSString*)string;
 - initWithString:(NSString*)string relativeToURL:(NSURL*)parent;
 
@@ -81,29 +99,32 @@ FOUNDATION_EXPORT_CLASS
 + URLWithString:(NSString*)string relativeToURL:(NSURL*)parent;
 + (id)fileURLWithPath:(NSString*)path isDirectory:(BOOL)isDir;
 
-- (NSString*)absoluteString;
-- (NSString*)parameterString;
-- propertyForKey:(NSString*)key;
+@property (readonly, copy) NSString* absoluteString;
+@property (readonly, copy) NSString* parameterString;
 
-- (NSString*)scheme;
-- (NSString*)host;
-- (NSString*)user;
-- (NSString*)password;
-- (NSString*)fragment;
-- (NSString*)path;
-- (NSNumber*)port;
-- (NSString*)query;
-- (NSString*)relativePath;
-- (NSString*)relativeString;
-- (NSString*)resourceSpecifier;
+- (id)propertyForKey:(NSString*)propertyKey;
 
-- (BOOL)isFileURL;
+@property (readonly, copy) NSString* scheme;
+@property (readonly, copy) NSString* host;
+@property (readonly, copy) NSString* user;
+@property (readonly, copy) NSString* password;
+@property (readonly, copy) NSString* fragment;
+@property (readonly, copy) NSString* path;
 
-- (NSURL*)standardizedURL;
-- (NSURL*)absoluteURL;
-- (NSURL*)baseURL;
+@property (readonly, copy) NSNumber* port;
+@property (readonly, copy) NSString* query;
+@property (readonly, copy) NSString* relativePath;
+@property (readonly, copy) NSString* relativeString;
+@property (readonly, copy) NSString* resourceSpecifier;
 
-- (BOOL)setProperty:property forKey:(NSString*)key;
+- (BOOL)isFileReferenceURL;
+
+@property (readonly, getter=isFileURL) BOOL fileURL;
+@property (readonly, copy) NSURL* standardizedURL;
+@property (readonly, copy) NSURL* absoluteURL;
+@property (readonly, copy) NSURL* baseURL;
+
+- (BOOL)setProperty:(id)propertyValue forKey:(NSString*)propertyKey;
 
 - (BOOL)setResourceData:(NSData*)data;
 

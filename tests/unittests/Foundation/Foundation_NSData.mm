@@ -15,17 +15,17 @@
 //******************************************************************************
 
 #include "gtest-api.h"
-#import <CoreLocation/CoreLocation.h>
 
-TEST(CoreLocation, CLLocationManager_SanityTest) {
-    LOG_INFO("CLLocationManager sanity test: ");
+#import <Foundation/NSString.h>
+#import <Foundation/NSData.h>
 
-    ASSERT_FALSE_MSG([CLLocationManager deferredLocationUpdatesAvailable], "FAILED: deferredLocationUpdatesAvailable is not supported!\n");
-    ASSERT_FALSE_MSG([CLLocationManager significantLocationChangeMonitoringAvailable],
-                     "FAILED: significantLocationChangeMonitoringAvailable is not supported!\n");
-    ASSERT_FALSE_MSG([CLLocationManager headingAvailable], "FAILED: headingAvailable is not supported!\n");
-    ASSERT_FALSE_MSG([CLLocationManager isRangingAvailable], "FAILED: isRangingAvailable is not supported!\n");
-
-    // TODO::
-    // todo-nithishm-11022015 - Add more tests as the implementation gets completed.
+TEST(Foundation, NSData_Base64EncodeDecode) {
+    NSString* testString = @"SGVsbG8gV29ybGQh";
+    NSData* decodedData = [[[NSData alloc] initWithBase64EncodedString:testString options:0] autorelease];
+    NSString* encodedString = [decodedData base64EncodedStringWithOptions:0];
+    ASSERT_TRUE_MSG([testString isEqualToString:encodedString],
+                    "Failed: Base64 encoded testString: %@ decoded to: %@ does not equal re-encoded string:%@",
+                    testString,
+                    decodedData,
+                    encodedString);
 }

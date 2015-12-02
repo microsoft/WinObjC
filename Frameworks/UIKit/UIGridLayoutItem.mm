@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutItem.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,38 +19,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIGridLayoutItem.h"
+#import "UIGridLayoutItem.h"
 
-@implementation UIGridLayoutItem : NSObject
-- (id)setSection:(id)section {
-    _section = section;
-    return 0;
-}
+@implementation UIGridLayoutItem
 
-- (id)section {
-    return _section;
-}
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
 
-- (id)setRowObject:(id)rowObject {
-    _rowObject = rowObject;
-    return 0;
-}
-
-- (id)rowObject {
-    return _rowObject;
-}
-
-- (id)setItemFrame:(CGRect)frame {
-    _itemFrame = frame;
-    return 0;
-}
-
-- (CGRect)itemFrame {
-    return _itemFrame;
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p itemFrame:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.itemFrame)];
 }
 
 @end

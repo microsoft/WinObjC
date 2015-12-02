@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UICollectionViewItemKey.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,66 +19,83 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "UICollectionViewItemKey.h"
-#include "UIKit/UICollectionViewLayout.h"
+#import <UIKit/UIKit.h>
+#import "UICollectionViewItemKey.h"
 
-@implementation UICollectionViewItemKey : NSObject
+NSString* const UICollectionElementKindCell = @"UICollectionElementKindCell";
+NSString* const UICollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";
+
+@implementation UICollectionViewItemKey
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Static
+
++ (id)collectionItemKeyForCellWithIndexPath:(NSIndexPath*)indexPath {
+    UICollectionViewItemKey* key = [self.class new];
+    key.indexPath = indexPath;
+    key.type = UICollectionViewItemTypeCell;
+    key.identifier = UICollectionElementKindCell;
+    return key;
+}
+
 + (id)collectionItemKeyForLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes {
-    UICollectionViewItemKey* key = [self new];
-    key->_indexPath = [layoutAttributes indexPath];
-    UICollectionViewItemType const itemType = [layoutAttributes representedElementCategory];
-    key->_type = itemType;
-    key->_identifier = [layoutAttributes representedElementKind];
+    UICollectionViewItemKey* key = [self.class new];
+    key.indexPath = layoutAttributes.indexPath;
+    UICollectionViewItemType const itemType = layoutAttributes.representedElementCategory;
+    key.type = itemType;
+    key.identifier = layoutAttributes.representedElementKind;
     return key;
 }
 
-+ (id)collectionItemKeyForCellWithIndexPath:(id)indexPath {
-    UICollectionViewItemKey* key = [self new];
-    key->_indexPath = indexPath;
-    key->_type = UICollectionViewItemTypeCell;
-    key->_identifier = @"UICollectionElementKindCell";
-    return key;
+NSString* UICollectionViewItemTypeToString(UICollectionViewItemType type) {
+    switch (type) {
+        case UICollectionViewItemTypeCell:
+            return @"Cell";
+        case UICollectionViewItemTypeDecorationView:
+            return @"Decoration";
+        case UICollectionViewItemTypeSupplementaryView:
+            return @"Supplementary";
+        default:
+            return @"<INVALID>";
+    }
 }
 
-- (unsigned)hash {
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p Type = %@ Identifier=%@ IndexPath = %@>",
+                                      NSStringFromClass(self.class),
+                                      self,
+                                      UICollectionViewItemTypeToString(self.type),
+                                      _identifier,
+                                      self.indexPath];
+}
+
+- (NSUInteger)hash {
     return (([_indexPath hash] + _type) * 31) + [_identifier hash];
 }
 
-- (UICollectionViewItemType)type {
-    return _type;
-}
-
-- (id)indexPath {
-    return _indexPath;
-}
-
-- (id)setIndexPath:(id)path {
-    _indexPath = path;
-    return self;
-}
-
-- (id)identifier {
-    return _identifier;
-}
-
-- (BOOL)isEqual:(UICollectionViewItemKey*)other {
-    if ([other isKindOfClass:[UICollectionViewItemKey class]]) {
+- (BOOL)isEqual:(id)other {
+    if ([other isKindOfClass:self.class]) {
+        UICollectionViewItemKey* otherKeyItem = (UICollectionViewItemKey*)other;
         // identifier might be nil?
-        if (_type == other->_type && [_indexPath isEqual:[other indexPath]] &&
-            ([(NSString*)_identifier isEqualToString:(id)other->_identifier] || (id)_identifier == other->_identifier)) {
+        if (_type == otherKeyItem.type && [_indexPath isEqual:otherKeyItem.indexPath] &&
+            ([_identifier isEqualToString:otherKeyItem.identifier] || _identifier == otherKeyItem.identifier)) {
             return YES;
         }
     }
     return NO;
 }
 
-- (id)copyWithZone:(id)zone {
-    UICollectionViewItemKey* itemKey = [UICollectionViewItemKey new];
-    itemKey->_indexPath = _indexPath;
-    itemKey->_type = _type;
-    itemKey->_identifier = _identifier;
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone*)zone {
+    UICollectionViewItemKey* itemKey = [self.class new];
+    itemKey.indexPath = self.indexPath;
+    itemKey.type = self.type;
+    itemKey.identifier = self.identifier;
     return itemKey;
 }
 

@@ -910,12 +910,24 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #define THROW_HR_IF_TRUE_MSG        THROW_HR_IF_MSG
 #endif  // WIL_ENABLE_EXCEPTIONS
 
+//*****************************************************************************
+// Objective-C Error Macros
+//*****************************************************************************
+
+#define THROW_NS_HR(hr)                    __R_FN(Objc_Throw_Hr)(__R_INFO(#hr) wil::verify_hresult(hr), nullptr)
+#define THROW_NS_HR_MSG(hr, msg, ...)      __R_FN(Objc_Throw_Hr)(__R_INFO(#hr) wil::verify_hresult(hr), msg, __VA_ARGS__)
+
+#define CATCH_THROW_NSEXCEPTION()       catch (...) { _rethrowAsNSException(); }
+
+#define CATCH_POPULATE_NSERROR(error)   catch (...) { _catchAndPopulateNSError(error); }
+
 namespace wil
 {
     // Indicates the kind of message / failure type that was used to produce a given error
     enum class FailureType
     {
         Exception,          // THROW_...
+        ObjCException,      // OBJC_THROW_...
         Return,             // RETURN_..._LOG or RETURN_..._MSG
         ReturnPreRelease,   // RETURN_...
         Log,                // LOG_...
@@ -1007,6 +1019,9 @@ namespace wil
         {
         case FailureType::Exception:
             pszType = "Exception";
+            break;
+        case FailureType::ObjCException:
+            pszType = "Objective-C Exception";
             break;
         case FailureType::Return:
             pszType = "ReturnHr";
@@ -2477,11 +2492,24 @@ namespace wil
         {
             throw;
         }
-        catch (ResultException const &re)
+#ifdef __OBJC__
+        catch (NSException* e)
+        {
+            // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+            NSNumber* hresultValue = [e.userInfo objectForKey:_hresultErrorDictKey()];
+            if (hresultValue) {
+                return [hresultValue unsignedIntValue];
+            }
+
+            return E_UNEXPECTED;
+        }
+#endif
+        // These catches are intentionally by value to mitigate bug 5488436
+        catch (ResultException re)
         {
             return re.GetErrorCode();
         }
-        catch (std::bad_alloc const &)
+        catch (std::bad_alloc)
         {
             return E_OUTOFMEMORY;
         }
@@ -2643,7 +2671,18 @@ namespace wil
             {
                 throw;
             }
-            catch (ResultException const &re)
+#ifdef __OBJC__
+            catch (NSException* e)
+            {
+                // Log this exception before rethrowing it.
+                HRESULT hr = [[e.userInfo objectForKey:_hresultErrorDictKey()] unsignedIntValue];
+                ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, hr, message);
+
+                throw;
+            }
+#endif
+            // These catches are intentionally by value to mitigate bug 5488436
+            catch (ResultException re)
             {
                 ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, re.GetErrorCode(), message, ReportFailureOptions::SuppressAction);
 
@@ -2651,7 +2690,7 @@ namespace wil
                 // we can be confident that it has already been logged -- just re-throw it.
                 throw;
             }
-            catch (std::bad_alloc const &)
+            catch (std::bad_alloc)
             {
                 ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, E_OUTOFMEMORY, message);
             }
@@ -2753,6 +2792,7 @@ namespace wil
             switch (type)
             {
             case FailureType::Exception:
+            case FailureType::ObjCException:
                 failureCount = RecordException(hr);
                 break;
             case FailureType::Return:
@@ -2899,6 +2939,12 @@ namespace wil
 
                     throw ResultException(failure);
                 }
+#ifdef __OBJC__
+                else if (type == FailureType::ObjCException)
+                {
+                    @throw _exceptionFromFailureInfo(failure);
+                }
+#endif
             }
         }
 
@@ -4106,7 +4152,7 @@ namespace wil
                 wil::details::ReportFailure_HrMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, E_UNEXPECTED, formatString, argList);
             }
 
-            __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
+            __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
             {
                 if (condition)
                 {
@@ -4668,6 +4714,14 @@ namespace wil
                     __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_NtStatusMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL status, formatString, argList);
                 }
                 return status;
+            }
+
+            __R_DIRECT_NORET_METHOD(void, Objc_Throw_Hr)(__R_DIRECT_FN_PARAMS HRESULT hr, PCSTR formatString, ...)
+            {
+                __R_FN_LOCALS;
+                va_list argList;
+                va_start(argList, formatString);
+                wil::details::ReportFailure_HrMsg(__R_DIRECT_FN_CALL FailureType::ObjCException, hr, formatString, argList);
             }
 #endif // WIL_ENABLE_EXCEPTIONS
 

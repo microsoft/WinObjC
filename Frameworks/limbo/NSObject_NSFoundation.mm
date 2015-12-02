@@ -21,6 +21,7 @@
 #include <Starboard/String.h>
 #import "NSObjectInternal.h"
 #include "../Foundation/NSValueTransformers.h"
+#include "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #include "../objcrt/runtime.h"
 
 #include "CoreGraphics/CGAffineTransform.h"
@@ -40,7 +41,12 @@
     return YES;
 }
 
-static struct objc_ivar* ivarForPropertyName(Class cls, const char* propName) {
+struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
+    Class cls = object_getClass(self);
+    if (![cls accessInstanceVariablesDirectly]) {
+        return nullptr;
+    }
+
     // For a given property x, our search order should be:
     // _x, _isX, x, isX.
     // If none of these is found, we don't support KVC for this key.
@@ -71,10 +77,11 @@ static struct objc_ivar* ivarForPropertyName(Class cls, const char* propName) {
             return *foundIvar;
         }
     }
+
     return nullptr;
 }
 
-static bool tryGetViaAccessor(NSObject* self, const char* key, id* ret) {
+SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
     // The possible getter selectors for a key x are -getX, -x, and -isX.
     // If we can't find any of these, we fall back to ivar lookup.
     // Key length is caller-checked.
@@ -82,24 +89,27 @@ static bool tryGetViaAccessor(NSObject* self, const char* key, id* ret) {
         woc::string::format("get%c%s", toupper(key[0]), &key[1]), key, woc::string::format("is%c%s", toupper(key[0]), &key[1]),
     };
 
-    SEL selector = nullptr;
+    Class cls = object_getClass(self);
     for (auto& possibleSelString : possibleSelectors) {
         auto possibleSelector = sel_registerName(possibleSelString.c_str());
-        if ([object_getClass(self) instancesRespondToSelector:possibleSelector]) {
-            selector = possibleSelector;
-            break;
+        if ([cls instancesRespondToSelector:possibleSelector]) {
+            return possibleSelector;
         }
     }
 
-    if (!selector) {
+    return nullptr;
+}
+
+bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
+    if (!getter) {
         return false;
     }
 
-    NSMethodSignature* sig = [self methodSignatureForSelector:selector];
+    NSMethodSignature* sig = [self methodSignatureForSelector:getter];
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
     [invocation setTarget:self];
-    [invocation setSelector:selector];
+    [invocation setSelector:getter];
     [invocation invoke];
 
     const char* valueType = [sig methodReturnType];
@@ -124,15 +134,13 @@ static bool tryGetViaAccessor(NSObject* self, const char* key, id* ret) {
     return true;
 }
 
-static bool tryGetViaIvar(id self, const char* propName, id* ret) {
-    Class cls = object_getClass(self);
-    auto curIvar = ivarForPropertyName(cls, propName);
-    if (!curIvar) {
+bool KVCGetViaIvar(id self, struct objc_ivar* ivar, id* ret) {
+    if (!ivar) {
         return false;
     }
 
-    const char* ivarType = curIvar->type;
-    void* data = reinterpret_cast<char*>(self) + curIvar->offset;
+    const char* ivarType = ivar->type;
+    void* data = reinterpret_cast<char*>(self) + ivar->offset;
 
     // We can't box or unbox char* or arbitrary pointers.
     if (ivarType[0] == '*' || ivarType[0] == '^' || ivarType[0] == '?') {
@@ -143,35 +151,53 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return true;
 }
 
+static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
+    auto countSelectorString(woc::string::format("countOf%c%s", toupper(key[0]), &key[1]));
+    auto objectInAtSelectorString(woc::string::format("objectIn%c%sAtIndex:", toupper(key[0]), &key[1]));
+    auto objectsAtSelectorString(woc::string::format("%sAtIndexes:", key));
+
+    auto countSelector(sel_registerName(countSelectorString.c_str()));
+    auto objectInAtSelector(sel_registerName(objectInAtSelectorString.c_str()));
+    auto objectsAtSelector(sel_registerName(objectsAtSelectorString.c_str()));
+
+    // If it doesn't respond to countOfX, or it doesn't respond to either
+    // objectIn or objectsAt, bail.
+    if (![self respondsToSelector:countSelector] ||
+        !([self respondsToSelector:objectInAtSelector] ||
+          [self respondsToSelector:objectsAtSelector])) {
+        return false;
+    }
+
+    *ret = [_NSKeyProxyArray proxyArrayForObject:self key:[NSString stringWithUTF8String:key] ivar:nullptr];
+    return true;
+}
+
+- (id)_valueForKeyPath:(NSString*)path finalGetter:(SEL)finalGetterSelector {
+    std::string keyPath([path UTF8String]);
+
+    auto pointPosition = keyPath.find('.');
+    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
+        return [self performSelector:finalGetterSelector withObject:path];
+    }
+
+    std::string keyComponent(keyPath, 0, pointPosition);
+    keyPath.erase(0, pointPosition + 1);
+
+    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
+    return [subValue _valueForKeyPath:[NSString stringWithUTF8String:keyPath.c_str()] finalGetter:finalGetterSelector];
+}
+
 /**
  @Status Caveat
  @Notes Does not support aggregate functions.
 */
 - (id)valueForKeyPath:(NSString*)path {
-    const char* keyPath = [path UTF8String];
-
-    if (strstr(keyPath, ".") == NULL && strstr(keyPath, "@") == NULL) {
-        return [self valueForKey:path];
-    }
-
-    char* dup = _strdup(keyPath);
-    char* save;
-    char* curPath = strtok_s(dup, ".", &save);
-    id ret = self;
-
-    while (curPath) {
-        ret = [ret valueForKey:[NSString stringWithUTF8String:curPath]];
-        curPath = strtok_s(NULL, ".", &save);
-    }
-
-    free(dup);
-
-    return ret;
+    return [self _valueForKeyPath:path finalGetter:@selector(valueForKey:)];
 }
 
 /**
  @Status Caveat
- @Notes Does not support set/array adapters
+ @Notes Does not support set adapters
 */
 - (id)valueForKey:(NSString*)key {
     if ([key length] == 0) {
@@ -180,18 +206,47 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     }
 
     const char* rawKey = [key UTF8String];
+    auto accessor = KVCGetterForPropertyName(self, rawKey);
     id ret = nil;
-    if (tryGetViaAccessor(self, rawKey, &ret)) {
+    if (KVCGetViaAccessor(self, accessor, &ret)) {
         return ret;
     }
 
-    // TODO: Add NSMutableArray and NSMutableSet adapters and their support machinery.
+    if (tryGetArrayAdapter(self, rawKey, &ret)) {
+        return ret;
+    }
+    // TODO: Add NSMutableSet adapter and its support machinery.
 
-    if ([[self class] accessInstanceVariablesDirectly] && tryGetViaIvar(self, rawKey, &ret)) {
+    auto ivar = KVCIvarForPropertyName(self, rawKey);
+    if (ivar && KVCGetViaIvar(self, ivar, &ret)) {
         return ret;
     }
 
     return [self valueForUndefinedKey:key];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSMutableArray*)mutableArrayValueForKey:(NSString*)key {
+    if ([key length] == 0) {
+        // Bail quickly
+        return [self valueForUndefinedKey:key];
+    }
+
+    const char* rawKey = [key UTF8String];
+
+    auto accessor = KVCGetterForPropertyName(self, rawKey);
+    struct objc_ivar *ivar = KVCIvarForPropertyName(self, rawKey);
+
+    return [_NSMutableKeyProxyArray proxyArrayForObject:self key:key ivar:ivar];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSMutableArray*)mutableArrayValueForKeyPath:(NSString*)keyPath {
+    return [self _valueForKeyPath:keyPath finalGetter:@selector(mutableArrayValueForKey:)];
 }
 
 /**
@@ -203,10 +258,22 @@ static bool tryGetViaIvar(id self, const char* propName, id* ret) {
     return nil;
 }
 
-static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
+SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
     auto accessorName(woc::string::format("set%c%s:", toupper(key[0]), &key[1]));
     auto sel = sel_registerName(accessorName.c_str());
-    NSMethodSignature* sig = [self methodSignatureForSelector:sel];
+    if ([[self class] instancesRespondToSelector:sel]) {
+        return sel;
+    }
+
+    return nullptr;
+}
+
+bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
+    if (!setter) {
+        return false;
+    }
+
+    NSMethodSignature* sig = [self methodSignatureForSelector:setter];
 
     // 3 arguments: self, selector, new value.
     if (sig && [sig numberOfArguments] == 3) {
@@ -219,7 +286,7 @@ static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
         }
 
         [invocation setTarget:self];
-        [invocation setSelector:sel];
+        [invocation setSelector:setter];
         [invocation setArgument:data.data() atIndex:2];
         [invocation invoke];
         return true;
@@ -227,15 +294,13 @@ static bool trySetViaAccessor(NSObject* self, const char* key, id value) {
     return false;
 }
 
-static bool trySetViaIvar(NSObject* self, const char* key, id value) {
-    Class cls = object_getClass(self);
-    auto curIvar = ivarForPropertyName(cls, key);
-    if (!curIvar) {
+bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
+    if (!ivar) {
         return false;
     }
 
-    uint32_t offset = curIvar->offset;
-    const char* argType = curIvar->type;
+    uint32_t offset = ivar->offset;
+    const char* argType = ivar->type;
 
     void* destination = reinterpret_cast<char*>(self) + offset;
     if (!woc::dataWithTypeFromValue(destination, argType, value)) {
@@ -260,18 +325,19 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
     }
 
     const char* rawKey = [key UTF8String];
-    if (trySetViaAccessor(self, rawKey, val)) {
+    if (KVCSetViaAccessor(self, KVCSetterForPropertyName(self, rawKey), val)) {
         return;
     }
 
-    if ([[self class] accessInstanceVariablesDirectly]) {
+    auto ivar = KVCIvarForPropertyName(self, rawKey);
+    if (ivar) {
         BOOL shouldNotify = [[self class] automaticallyNotifiesObserversForKey:key];
 
         if (shouldNotify) {
             [self willChangeValueForKey:key];
         }
 
-        if (trySetViaIvar(self, rawKey, val)) {
+        if (KVCSetViaIvar(self, ivar, val)) {
             if (shouldNotify) {
                 [self didChangeValueForKey:key];
             }
@@ -503,7 +569,7 @@ static bool trySetViaIvar(NSObject* self, const char* key, id value) {
 
     [NSException raiseWithLogging:@"SelectorNotFound" format:@"%@", err];
 }
-@end
+ @end
 
 /** Included to force TU to be linked - remove once exported as DLL **/
 __declspec(dllexport) void NSObjForceinclude() {

@@ -548,6 +548,19 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
 
 /**
  @Status Interoperable
+ */
++ (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle {
+    static NSDateFormatter *s_formatterForCurrentLocale = [[NSDateFormatter alloc] init];
+
+    s_formatterForCurrentLocale.dateStyle = dateStyle;
+    s_formatterForCurrentLocale.timeStyle = timeStyle;
+    NSString* formattedDate = [s_formatterForCurrentLocale stringFromDate:date];
+
+    return formattedDate;
+}
+
+/**
+ @Status Interoperable
 */
 - (NSDate*)dateFromString:(NSString*)str {
     UStringHolder uStr(str);

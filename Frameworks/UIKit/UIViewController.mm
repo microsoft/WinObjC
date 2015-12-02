@@ -542,6 +542,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 
     priv->nibName = [coder decodeObjectForKey:@"UINibName"];
+
+    //  Attempt to locate resources from the same bundle as the unarchiver that's loading us
+    if ( [coder respondsToSelector: @selector(_bundle)] ) {
+        priv->nibBundle = [coder _bundle];
+    }
     priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
 
     priv->toolbarItems = [coder decodeObjectForKey:@"UIToolbarItems"];
@@ -669,13 +674,18 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     NSString* nibPath = nil;
 
     if (priv->nibName != nil) {
-        if (priv->nibBundle != nil) {
-            nibPath = [priv->nibBundle pathForResource:priv->nibName ofType:@"nib"];
+        NSBundle *bundle = priv->nibBundle;
+
+        //  Search the bundle we were passed on initialization for the .nib file given to us. 
+        //  If no bundle was specified, search the main application bundle.
+        if ( bundle == nil ) {
+            bundle = [NSBundle mainBundle];
         }
 
-        if (nibPath == nil)
-            nibPath = [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib"];
+        nibPath = [bundle pathForResource:priv->nibName ofType:@"nib"];
+
         if (nibPath == nil) {
+            //  If a storyboard was provided to us, use it as part of the search path
             NSString* storyboardPath = [priv->_storyboard _path];
 
             if (storyboardPath != nil) {
@@ -683,10 +693,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                 runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
                 EbrDebugLog("Searching = %s\n", (char*)[runtimePath UTF8String]);
-                nibPath = [[NSBundle mainBundle] pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
+                nibPath = [bundle pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
 
                 if (nibPath == nil) {
-                    nibPath = [[NSBundle mainBundle] pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
+                    nibPath = [bundle pathForResource:priv->nibName ofType:@"nib" inDirectory:storyboardPath];
                 }
             }
         }
@@ -739,9 +749,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
-            NSNib* nib = [NSNib alloc];
-            [nib loadNib:[NSString stringWithCString:openname] withOwner:self proxies:proxyObjectsDict];
-            [nib release];
+            NSNib* nib = [NSNib nibWithNibName: [NSString stringWithCString:openname] bundle: priv->nibBundle];
+            [nib instantiateWithOwner:self options: @{UINibExternalObjects : proxyObjectsDict} ];
             priv->_externalObjects = nil;
         } else {
             assert(0);

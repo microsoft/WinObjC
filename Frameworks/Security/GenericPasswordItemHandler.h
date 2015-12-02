@@ -14,14 +14,22 @@
 //
 //******************************************************************************
 
-@interface NSNib : NSObject {
-@public
-    idretain _bundle;
-}
-- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject;
-- (NSArray*)loadNib:(NSString*)filename withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
-- (NSArray*)loadNibWithData:(NSData*)data withOwner:(id)ownerObject proxies:(NSDictionary*)proxies;
-- (void)_setBundle:(NSBundle*)bundle;
-- (NSBundle*)_bundle;
-- (void)dealloc;
+#pragma once
+#import "SecItemHandlerProtocol.h"
+
+// This is really not cool and shouldn't be needed. The projections need to handle including standard windows headers
+// or not rely windows types
+using WCHAR = wchar_t;
+#import <UWP/WindowsSecurityCredentials.h>
+
+@interface GenericPasswordItemHandler : NSObject <SecItemHandler>
+
+- (instancetype)init;
+- (instancetype)initWithVault:(WSCPasswordVault*)vault;
+
+- (OSStatus)update:(NSDictionary*)queryDictionary withAttributes:(NSDictionary*)attributesToUpdate;
+- (OSStatus)add:(NSDictionary*)attributes withResult:(id*)result;
+- (OSStatus)remove:(NSDictionary*)queryDictionary;
+- (OSStatus)query:(NSDictionary*)queryDictionary withResult:(id*)result;
+
 @end

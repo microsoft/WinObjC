@@ -23,6 +23,7 @@
 enum _CLError {
     kCLErrorLocationUnknown = 0,
     kCLErrorDenied = 1,
+    kCLErrorNetwork = 2,
 };
 typedef uint32_t CLError;
 
@@ -52,13 +53,13 @@ CORELOCATION_EXPORT CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocation
 CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coordinate);
 
 CORELOCATION_EXPORT_CLASS
-@interface CLLocation : NSObject
+@interface CLLocation : NSObject <NSCopying>
 
 @property (readonly, nonatomic) CLLocationCoordinate2D coordinate;
 @property (readonly, nonatomic) CLLocationDistance altitude;
 // TODO::
 // todo-nithishm-11022015 - Need to implement CLFloor.
-// @property(readonly, nonatomic, copy) CLFloor *floor;
+// @property(readonly, nonatomic, copy) CLFloor* floor;
 @property (readonly, nonatomic) CLLocationAccuracy horizontalAccuracy;
 @property (readonly, nonatomic) CLLocationAccuracy verticalAccuracy;
 @property (readonly, nonatomic, copy) NSDate* timestamp;

@@ -14,6 +14,22 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
 #ifndef _NSATTRIBUTEDSTRING_H_
 #define _NSATTRIBUTEDSTRING_H_
 
@@ -61,10 +77,7 @@ enum {
 };
 typedef int32_t NSUnderlineStyle;
 
-enum { 
-    NSAttributedStringEnumerationReverse = (1UL << 1), 
-    NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20) 
-};
+enum { NSAttributedStringEnumerationReverse = (1UL << 1), NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20) };
 typedef uint32_t NSAttributedStringEnumerationOptions;
 
 @class NSDictionary;
@@ -73,22 +86,19 @@ typedef uint32_t NSAttributedStringEnumerationOptions;
 FOUNDATION_EXPORT_CLASS
 @interface NSAttributedString : NSObject <NSCopying, NSCoding, NSMutableCopying>
 
-- (instancetype)initWithString:(NSString *)string;
-- (instancetype)initWithAttributedString:(NSAttributedString *)attributedString;
-- (instancetype)initWithString:(NSString *)string attributes : (NSDictionary *)attributes;
-- (instancetype)initWithData:(NSData*)data options : (NSDictionary*)options documentAttributes : (NSDictionary*)docAttrs error : (NSError**)error;
+- (instancetype)initWithString:(NSString*)string;
+- (instancetype)initWithAttributedString:(NSAttributedString*)attributedString;
+- (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes;
 
-- (BOOL)isEqualToAttributedString:(NSAttributedString*)other;
-
-@property(readonly, copy) NSString *string;
-@property(readonly) NSUInteger length;
+@property (readonly, copy) NSString* string;
+@property (readonly) NSUInteger length;
 
 - (NSDictionary*)attributesAtIndex:(NSUInteger)location effectiveRange:(NSRange*)range;
 - (NSDictionary*)attributesAtIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange;
 
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range;
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange;
-- (BOOL)isEqualToAttributedString:(NSAttributedString *)string;
+- (BOOL)isEqualToAttributedString:(NSAttributedString*)string;
 
 - (NSAttributedString*)attributedSubstringFromRange:(NSRange)range;
 
@@ -97,11 +107,14 @@ FOUNDATION_EXPORT_CLASS
                    options:(NSAttributedStringEnumerationOptions)opts
                 usingBlock:(void (^)(id value, NSRange range, BOOL* stop))block;
 
-- fixAttributesInRange:(NSRange)range;
-
 - (void)enumerateAttributesInRange:(NSRange)enumerationRange
                            options:(NSAttributedStringEnumerationOptions)opts
-                        usingBlock:(void (^)(NSDictionary *attrs, NSRange range, BOOL *stop))block;
+                        usingBlock:(void (^)(NSDictionary* attrs, NSRange range, BOOL* stop))block;
+
+// UI Kit extension functions
+// TODO 5244778: Move these into a class extension header
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)options documentAttributes:(NSDictionary*)docAttrs error:(NSError**)error;
+- fixAttributesInRange:(NSRange)range;
 @end
 
 #endif /* _NSATTRIBUTEDSTRING_H_ */

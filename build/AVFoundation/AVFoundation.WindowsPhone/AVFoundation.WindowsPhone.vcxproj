@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.WindowsPhone\CoreFoundation.WindowsPhone.vcxproj">
+      <Project>{5ddce358-cc33-40ce-87d2-fef7eb1221cd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Foundation\Foundation.WindowsPhone\Foundation.WindowsPhone.vcxproj">
       <Project>{231c4f3c-9efc-4718-bab1-459c41fe63b4}</Project>
     </ProjectReference>

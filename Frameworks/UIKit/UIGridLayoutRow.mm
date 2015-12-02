@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutRow.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,151 +19,87 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <UIKit/UIKit.h>
+#import "UIGridLayoutRow.h"
+#import "UIGridLayoutSection.h"
+#import "UIGridLayoutItem.h"
+#import "UIGridLayoutInfo.h"
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSValue.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIKit/UICollectionViewFlowLayout.h"
+@interface UIGridLayoutRow () {
+    NSMutableArray *_items;
+    BOOL _isValid;
+    int _verticalAlignement;
+    int _horizontalAlignement;
+}
+@property (nonatomic, strong) NSArray *items;
+@end
 
-#include "UIGridLayoutRow.h"
-#include "UIGridLayoutItem.h"
-#include "UIGridLayoutSection.h"
+@implementation UIGridLayoutRow
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - NSObject
 
-@implementation UIGridLayoutRow : NSObject
 - (id)init {
-    _items.attach([NSMutableArray new]);
-    return self;
-}
-
-- (id)setFixedItemSize:(BOOL)fixed {
-    _fixedItemSize = fixed;
-    return self;
-}
-
-- (id)setRowFrame:(CGRect)frame {
-    memcpy(&_rowFrame, &frame, sizeof(CGRect));
-    return self;
-}
-
-- (CGRect)rowFrame {
-    return _rowFrame;
-}
-
-- (id)setComplete:(BOOL)complete {
-    _complete = complete;
-    return self;
-}
-
-- (id)setSection:(id)section {
-    _section = section;
-    return self;
-}
-
-- (id)setIndex:(NSInteger)index {
-    _index = index;
-    return self;
-}
-
-- (unsigned)index {
-    return _index;
-}
-
-- (id)setItemCount:(NSInteger)count {
-    _itemCount = count;
-    return self;
-}
-
-- (unsigned)itemCount {
-    if (_fixedItemSize) {
-        return _itemCount;
-    } else {
-        return [(NSMutableArray*)_items count];
+    if ((self = [super init])) {
+        _items = [NSMutableArray new];
     }
-}
-
-- (BOOL)fixedItemSize {
-    return _fixedItemSize;
-}
-
-- (id)items {
-    return _items;
-}
-
-- (id)addItem:(id)item {
-    [(NSMutableArray*)_items addObject:item];
-    [item setRowObject:self];
-    [self invalidate];
     return self;
 }
 
-- (id)invalidate {
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p frame:%@ index:%ld items:%@>", NSStringFromClass(self.class), self, NSStringFromCGRect(self.rowFrame), (long)self.index, self.items];
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Public
+
+- (void)invalidate {
     _isValid = NO;
-    _rowSize = CGSizeMake(0, 0);
-    _rowFrame = CGRectMake(0, 0, 0, 0);
-    return self;
+    _rowSize = CGSizeZero;
+    _rowFrame = CGRectZero;
 }
 
-- (id)layoutRow {
-    [self layoutRowAndGenerateRectArray:NO];
-    return self;
-}
-
-- (CGSize)rowSize {
-    return _rowSize;
-}
-
-- (id)itemRects {
+- (NSArray *)itemRects {
     return [self layoutRowAndGenerateRectArray:YES];
 }
 
-- (id)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {
-    id rects = generateRectArray ? [NSMutableArray array] : nil;
+- (void)layoutRow {
+    [self layoutRowAndGenerateRectArray:NO];
+}
 
+- (NSArray *)layoutRowAndGenerateRectArray:(BOOL)generateRectArray {
+    NSMutableArray *rects = generateRectArray ? [NSMutableArray array] : nil;
     if (!_isValid || generateRectArray) {
         // properties for aligning
-        BOOL isHorizontal = [[_section layoutInfo] horizontal];
-        BOOL isLastRow = [_section indexOfIncompleteRow] == _index;
-        UIFlowLayoutHorizontalAlignment horizontalAlignment =
-            [[[_section rowAlignmentOptions] objectForKey:isLastRow ? @"UIFlowLayoutLastRowHorizontalAlignmentKey" :
-                                                                      @"UIFlowLayoutCommonRowHorizontalAlignmentKey"] integerValue];
+        BOOL isHorizontal = self.section.layoutInfo.horizontal;
+        BOOL isLastRow = self.section.indexOfImcompleteRow == self.index;
+        UIFlowLayoutHorizontalAlignment horizontalAlignment = [self.section.rowAlignmentOptions[isLastRow ? UIFlowLayoutLastRowHorizontalAlignmentKey : UIFlowLayoutCommonRowHorizontalAlignmentKey] integerValue];
 
         // calculate space that's left over if we would align it from left to right.
-        CGFloat leftOverSpace = [[_section layoutInfo] dimension];
-
-        UIEdgeInsets sectionMargins;
-        sectionMargins = [_section sectionMargins];
+        CGFloat leftOverSpace = self.section.layoutInfo.dimension;
         if (isHorizontal) {
-            leftOverSpace -= sectionMargins.top + sectionMargins.bottom;
-        } else {
-            leftOverSpace -= sectionMargins.left + sectionMargins.right;
+            leftOverSpace -= self.section.sectionMargins.top + self.section.sectionMargins.bottom;
+        }else {
+            leftOverSpace -= self.section.sectionMargins.left + self.section.sectionMargins.right;
         }
 
         // calculate the space that we have left after counting all items.
         // UICollectionView is smart and lays out items like they would have been placed on a full row
         // So we need to calculate the "usedItemCount" with using the last item as a reference size.
         // This allows us to correctly justify-place the items in the grid.
-        NSUInteger usedItemCount = 0;
-        NSUInteger itemIndex = 0;
-        CGFloat spacing = isHorizontal ? [_section verticalInterstice] : [_section horizontalInterstice];
+        NSInteger usedItemCount = 0;
+        NSInteger itemIndex = 0;
+        CGFloat spacing = isHorizontal ? self.section.verticalInterstice : self.section.horizontalInterstice;
         // the last row should justify as if it is filled with more (invisible) items so that the whole
         // UICollectionView feels more like a grid than a random line of blocks
-        while (itemIndex < [self itemCount] || isLastRow) {
+        while (itemIndex < self.itemCount || isLastRow) {
             CGFloat nextItemSize;
             // first we need to find the size (width/height) of the next item to fit
-            if (!_fixedItemSize) {
-                id item = [(NSMutableArray*)_items objectAtIndex:MIN(itemIndex, [self itemCount] - 1)];
-
-                CGRect itemFrame;
-                itemFrame = [item itemFrame];
-                nextItemSize = isHorizontal ? itemFrame.size.height : itemFrame.size.width;
-            } else {
-                CGSize itemSize;
-                itemSize = [_section itemSize];
-                nextItemSize = isHorizontal ? itemSize.height : itemSize.width;
+            if (!self.fixedItemSize) {
+                UIGridLayoutItem *item = self.items[(NSUInteger)MIN(itemIndex, self.itemCount - 1)];
+                nextItemSize = isHorizontal ? item.itemFrame.size.height : item.itemFrame.size.width;
+            }else {
+                nextItemSize = isHorizontal ? self.section.itemSize.height : self.section.itemSize.width;
             }
 
             // the first item does not add a separator spacing,
@@ -182,29 +123,26 @@
 
         // push everything to the right if right-aligning and divide in half for centered
         // currently there is no public API supporting this behavior
-        CGPoint itemOffset = CGPoint::point(0, 0);
+        CGPoint itemOffset = CGPointZero;
         if (horizontalAlignment == UIFlowLayoutHorizontalAlignmentRight) {
             itemOffset.x += leftOverSpace;
-        } else if (horizontalAlignment == UIFlowLayoutHorizontalAlignmentCentered ||
-                   (horizontalAlignment == UIFlowLayoutHorizontalAlignmentJustify && usedItemCount == 1)) {
+        }else if (horizontalAlignment == UIFlowLayoutHorizontalAlignmentCentered ||
+                (horizontalAlignment == UIFlowLayoutHorizontalAlignmentJustify && usedItemCount == 1)) {
             // Special case one item row to split leftover space in half
             itemOffset.x += leftOverSpace / 2;
         }
 
         // calculate the justified spacing among all items in a row if we are using
-        // the default PSTFlowLayoutHorizontalAlignmentJustify layout
+        // the default UIFlowLayoutHorizontalAlignmentJustify layout
         CGFloat interSpacing = usedItemCount <= 1 ? 0 : leftOverSpace / (CGFloat)(usedItemCount - 1);
 
         // calculate row frame as union of all items
-        CGRect frame = CGRectMake(0, 0, 0, 0);
-
-        CGSize itemSize;
-        itemSize = [_section itemSize];
-        CGRect itemFrame = CGRectMake(0, 0, itemSize.width, itemSize.height);
-        for (itemIndex = 0; itemIndex < [self itemCount]; itemIndex++) {
-            id item = nil;
-            if (!_fixedItemSize) {
-                item = [(NSMutableArray*)_items objectAtIndex:itemIndex];
+        CGRect frame = CGRectZero;
+        CGRect itemFrame = (CGRect){.size=self.section.itemSize};
+        for (itemIndex = 0; itemIndex < self.itemCount; itemIndex++) {
+            UIGridLayoutItem *item = nil;
+            if (!self.fixedItemSize) {
+                item = self.items[(NSUInteger)itemIndex];
                 itemFrame = [item itemFrame];
             }
             // depending on horizontal/vertical for an item size (height/width),
@@ -213,18 +151,18 @@
             // space divided by the number of intervals
             if (isHorizontal) {
                 itemFrame.origin.y = itemOffset.y;
-                itemOffset.y += itemFrame.size.height + [_section verticalInterstice];
+                itemOffset.y += itemFrame.size.height + self.section.verticalInterstice;
                 if (horizontalAlignment == UIFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.y += interSpacing;
                 }
-            } else {
+            }else {
                 itemFrame.origin.x = itemOffset.x;
-                itemOffset.x += itemFrame.size.width + [_section horizontalInterstice];
+                itemOffset.x += itemFrame.size.width + self.section.horizontalInterstice;
                 if (horizontalAlignment == UIFlowLayoutHorizontalAlignmentJustify) {
                     itemOffset.x += interSpacing;
                 }
             }
-            [item setItemFrame:itemFrame]; // might call nil; don't care
+            item.itemFrame = itemFrame; // might call nil; don't care
             [rects addObject:[NSValue valueWithCGRect:itemFrame]];
             frame = CGRectUnion(frame, itemFrame);
         }
@@ -233,6 +171,37 @@
         _isValid = YES;
     }
     return rects;
+}
+
+- (void)addItem:(UIGridLayoutItem *)item {
+    [_items addObject:item];
+    item.rowObject = self;
+    [self invalidate];
+}
+
+- (UIGridLayoutRow *)snapshot {
+    UIGridLayoutRow *snapshotRow = [self.class new];
+    snapshotRow.section = self.section;
+    snapshotRow.items = self.items;
+    snapshotRow.rowSize = self.rowSize;
+    snapshotRow.rowFrame = self.rowFrame;
+    snapshotRow.index = self.index;
+    snapshotRow.complete = self.complete;
+    snapshotRow.fixedItemSize = self.fixedItemSize;
+    snapshotRow.itemCount = self.itemCount;
+    return snapshotRow;
+}
+
+- (UIGridLayoutRow *)copyFromSection:(UIGridLayoutSection *)section {
+    return nil; // ???
+}
+
+- (NSInteger)itemCount {
+    if (self.fixedItemSize) {
+        return _itemCount;
+    }else {
+        return (NSInteger)self.items.count;
+    }
 }
 
 @end

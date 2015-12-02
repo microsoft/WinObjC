@@ -75,6 +75,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [super dealloc];
 }
 
+- (id)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
 @end
 
 @implementation NSCachedURLResponse : NSObject

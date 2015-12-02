@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-// This header file is not yet implemented
+#pragma once
 
-#import <CoreFoundation/CFDictionary.h>
+#import <Security/SecBase.h>
 #import <Security/SecItem.h>
 
 typedef struct __SecIdentity* SecIdentityRef;
@@ -24,8 +24,3 @@ typedef struct __SecIdentity* SecIdentityRef;
 typedef struct __SecTrust* SecTrustRef;
 
 typedef const struct __SecRandom* SecRandomRef;
-
-enum {
-    errSecSuccess = 0, /* No error. */
-    errSecItemNotFound = -25300, /* The specified item could not be found in the keychain. */
-};

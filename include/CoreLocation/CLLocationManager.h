@@ -46,18 +46,18 @@ CORELOCATION_EXPORT_CLASS
 
 @property (copy, nonatomic) NSString* purpose;
 @property (assign, nonatomic) id<CLLocationManagerDelegate> delegate;
+@property (assign, nonatomic) BOOL pausesLocationUpdatesAutomatically;
 @property (assign, nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (readonly, nonatomic) BOOL locationServicesEnabled;
 @property (assign, nonatomic) CLActivityType activityType;
 @property (assign, nonatomic) CLLocationDistance distanceFilter;
 @property (readonly, nonatomic) CLLocation* location;
-@property (readonly, nonatomic) NSSet* monitoredRegions;
 
 - (void)requestAlwaysAuthorization;
 - (void)requestWhenInUseAuthorization;
 + (CLAuthorizationStatus)authorizationStatus;
-+ (BOOL)locationServicesEnabled;
 + (BOOL)deferredLocationUpdatesAvailable;
++ (BOOL)locationServicesEnabled;
 + (BOOL)significantLocationChangeMonitoringAvailable;
 + (BOOL)headingAvailable;
 + (BOOL)isMonitoringAvailableForClass:(Class)regionClass;

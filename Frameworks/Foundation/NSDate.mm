@@ -34,6 +34,11 @@ double TimeIntervalSinceReferenceDate() {
 
 @implementation NSDate : NSObject
 
+// Number of seconds between Jan 1, 1601 UTC (Windows FILETIME) and Jan 1, 1970 UTC (POSIX/Epoch time)
+static const int64_t c_windowsToUnixNumSecondsOffset = 11644473600LL;
+// Ratio between 100ns (Windows FILETIME unit) and 1s (POSIX/Epoch time unit)
+static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
+
 /**
  @Status Interoperable
 */
@@ -309,6 +314,18 @@ double TimeIntervalSinceReferenceDate() {
     NSString* str = [formatter stringForObjectValue:self];
 
     return str;
+}
+
+/**
+ * Converts a Windows Gps epoch to NSDate.
+ * @param  {int64_t} windowsFileTime Windows file time
+ * @return {NSDate*}
+ */
++ (NSDate*)_dateWithWindowsGPSTime:(int64_t)windowsFileTime {
+    // First convert Windows Gps epoch to Unix epoch.
+    // Note: this corrects for the 10 year base time difference between gps epoch (1980) and  posix epoch (1970)
+    int64_t posixEpoch = (windowsFileTime / c_windowsToUnixTimeUnitRatio) - c_windowsToUnixNumSecondsOffset * 1000LL;
+    return [NSDate dateWithTimeIntervalSince1970:(double)posixEpoch];
 }
 
 @end

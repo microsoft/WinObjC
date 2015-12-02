@@ -47,14 +47,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButton.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButtonContent.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIClassSwapper.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionView.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewCell.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewController.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewFlowLayout.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayout.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIColor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIControl.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDevice.mm" />
@@ -66,10 +58,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGeometry.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGestureRecognizer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGraphicsFunctions.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImage.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageNibPlaceholder.mm" />
@@ -84,7 +72,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINib.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
-	<ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPickerView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverPresentationController.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPresentationController.mm" />
@@ -132,18 +120,39 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIToolbar.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIWebView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISwipeGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionView.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewCell.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewController.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewFlowLayout.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayout.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIClassSwapper.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObjectPair.h" />
@@ -158,5 +167,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIToolbar.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayout+Internals.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.h" />
   </ItemGroup>
 </Project>

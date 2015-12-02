@@ -183,7 +183,7 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
         if (mainNibFile != nil) {
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
             if (nibPath != nil) {
-                NSArray* obj = [[[NSNib alloc] loadNib:nibPath withOwner:uiApplication] retain];
+                NSArray* obj = [[[NSNib nibWithNibName: nibPath bundle: [NSBundle mainBundle]] instantiateWithOwner: uiApplication options: nil] retain];
                 int count = [obj count];
 
                 for (int i = 0; i < count; i++) {

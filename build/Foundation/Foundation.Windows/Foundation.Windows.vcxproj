@@ -152,13 +152,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -178,13 +179,14 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -204,13 +206,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -230,13 +233,14 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -256,13 +260,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -282,13 +287,14 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;icudt.lib;icuin.lib;icuuc.lib;libxml2.lib;ws2_32.lib;libeay32.lib;ssleay32.lib;libz.lib;icudata.lib;libcurl_imp.lib;libdispatch.lib;ObjCUWP.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\Foundation.Shared\Foundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

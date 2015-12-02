@@ -17,6 +17,24 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
+#include <winerror.h>
+
+#ifdef __OBJC__
+#import <Foundation/NSException.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSError.h>
+namespace wil { struct FailureInfo; }
+
+// These are internal helper functions for our error-handling facilities. They are only intended to be called
+// internally through WIL.
+
+static void _rethrowAsNSException();
+static void _catchAndPopulateNSError(NSError** outError);
+
+#endif
+
 // We need to do a bit of work to be able to pull in the result.h file and all of its error handling helpers
 
 #pragma push_macro("PCWSTR")
@@ -222,5 +240,90 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((O
 #pragma pop_macro("FAST_FAIL_FATAL_APP_EXIT")
 #pragma pop_macro("STATUS_NO_MEMORY")
 #pragma pop_macro("DEFINE_ENUM_FLAG_OPERATORS")
+
+//*****************************************************************************
+// WinObjC Extensions
+//*****************************************************************************
+
+// This should be used for functions which have no implementation yet:
+#define UNIMPLEMENTED() \
+    if (failFastOnUnimplemented()) { \
+        FAIL_FAST_HR(E_NOTIMPL); \
+    } else { \
+        LOG_HR_MSG(E_NOTIMPL, "Stubbed function called!"); \
+    }
+
+// This should be used to convey information along with the fact that something isn't implemented. For example, if we have a
+// portion of a function implemented but we've hit something unsupported:
+#define UNIMPLEMENTED_WITH_MSG(msg, ...) \
+    if (failFastOnUnimplemented()) { \
+        FAIL_FAST_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
+    } else { \
+        LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
+    }
+
+// None of this should be used directly and is just support code for WIL's Objective-C helpers:
+
+// This would ideally be in objcrt's error-handling.mm but we can't rethrow exceptions in DLLs outside of where they were caught.
+// Pending a fix for that (issue #5483680), we inline the functions that do exception rethrowing so they're not inside a DLL:
+#ifdef __OBJC__
+
+// We need to lazy-load these because we may use them from CoreFoundation and it does not have access to Foundation directly.
+static IWLazyClassLookup _LazyNSString("NSString");
+static IWLazyClassLookup _LazyNSError("NSError");
+static IWLazyClassLookup _LazyNSException("NSException");
+
+static NSString* _exceptionName() {
+    static NSString* s_exceptionName = [[_LazyNSString alloc] initWithCString:"WinObjC Exception"];
+    return s_exceptionName;
+}
+
+static NSString* _hresultDomain () {
+    static NSString* s_hresultDomain = [[_LazyNSString alloc] initWithCString:"HRESULT"];
+    return s_hresultDomain;
+}
+
+static void _rethrowAsNSException() {
+    try {
+        throw;
+    } catch (NSException*) {
+        // Already an NSException and we need to catch it so the catch (...) doesn't:
+        throw;
+    } catch (wil::ResultException re) {
+        @throw _exceptionFromFailureInfo(re.GetFailureInfo());
+    } catch (...) {
+        @throw [_LazyNSException exceptionWithName:_exceptionName() reason:_stringFromHresult(wil::ResultFromCaughtException()) userInfo:nil];
+    }
+}
+
+static void _catchAndPopulateNSError(NSError** outError) {
+    NSError* error;
+
+    try {
+        throw;
+    } catch (NSException* e) {
+        unsigned errorCode = E_UNEXPECTED;
+
+        // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+        NSNumber* hresultValue = [e.userInfo objectForKey:[_LazyNSString stringWithCString:"hresult"]];
+        if (hresultValue) {
+            errorCode = [hresultValue unsignedIntValue];
+        }
+
+        error = [_LazyNSError errorWithDomain:_exceptionName() code:errorCode userInfo:e.userInfo];
+    } catch (wil::ResultException re) {
+        error = _errorFromFailureInfo(re.GetFailureInfo());
+    } catch (...) {
+        error = [_LazyNSError errorWithDomain:_hresultDomain() code:wil::ResultFromCaughtException() userInfo:nil];
+    }
+
+    if (outError) {
+        *outError = error;
+    } else {
+        HRESULT code = error.code;
+        LOG_HR_MSG(code, "NSError occurred where caller is ignoring value: %hs", [[error description] UTF8String]);
+    }
+}
+#endif // __OBJC__
 
 #endif // __ERRORHANDLING_H

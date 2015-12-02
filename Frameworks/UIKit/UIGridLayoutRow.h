@@ -1,5 +1,10 @@
 //******************************************************************************
 //
+// UIGridLayoutRow.h
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+//
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,36 +21,39 @@
 
 #pragma once
 
-#include "UIGridLayoutSection.h"
+#import <UIKit/UIKit.h>
 
-@interface UIGridLayoutRow : NSObject {
-@public
-    idretain _items;
-    UIGridLayoutSection* _section;
-    BOOL _fixedItemSize;
-    NSInteger _index;
-    BOOL _isValid;
-    CGSize _rowSize;
-    CGRect _rowFrame;
-    BOOL _complete;
-    NSInteger _itemCount;
-}
-- (unsigned)index;
-- (unsigned)itemCount;
-- (BOOL)fixedItemSize;
-- (CGRect)rowFrame;
-- (CGSize)rowSize;
-- (id)init;
-- (id)setFixedItemSize:(BOOL)fixed;
-- (id)setRowFrame:(CGRect)frame;
-- (id)setComplete:(BOOL)complete;
-- (id)setSection:(id)section;
-- (id)setIndex:(NSInteger)index;
-- (id)setItemCount:(NSInteger)count;
-- (id)items;
-- (id)addItem:(id)item;
-- (id)invalidate;
-- (id)layoutRow;
-- (id)itemRects;
-- (id)layoutRowAndGenerateRectArray:(BOOL)generateRectArray;
+@class UIGridLayoutSection, UIGridLayoutItem;
+
+@interface UIGridLayoutRow : NSObject
+
+@property (nonatomic, unsafe_unretained) UIGridLayoutSection *section;
+@property (nonatomic, strong, readonly) NSArray *items;
+@property (nonatomic, assign) CGSize rowSize;
+@property (nonatomic, assign) CGRect rowFrame;
+@property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) BOOL complete;
+@property (nonatomic, assign) BOOL fixedItemSize;
+
+// @steipete addition for row-fastPath
+@property (nonatomic, assign) NSInteger itemCount;
+
+//- (UIGridLayoutRow *)copyFromSection:(UIGridLayoutSection *)section; // ???
+
+// Add new item to items array.
+- (void)addItem:(UIGridLayoutItem *)item;
+
+// Layout current row (if invalid)
+- (void)layoutRow;
+
+// @steipete: Helper to save code in UICollectionViewFlowLayout.
+// Returns the item rects when fixedItemSize is enabled.
+- (NSArray *)itemRects;
+
+//  Set current row frame invalid.
+- (void)invalidate;
+
+// Copy a snapshot of the current row data
+- (UIGridLayoutRow *)snapshot;
+
 @end

@@ -19,13 +19,20 @@
 #include <Foundation/NSObject.h>
 #include <Foundation/NSException.h>
 
+#include <assert.h>
 #include <new> // For placement new
 #include <type_traits>
+
+#import "Starboard.h"
 
 // ObjC class type for CF*Refs that have no equivalent NS version.
 FOUNDATION_EXPORT_CLASS
 @interface NSCFBridgeBase : NSObject
 @end
+
+// NSCFBridgeBase lives in Foundation. CFBridgeBase is expected to be used from CoreFoundation.
+// To avoid a circular dependency between CoreFoundation and Foundation, do a lazy lookup here.
+static IWLazyClassLookup _LazyNSCFBridgeBase("NSCFBridgeBase");
 
 //
 // CFBridgeBase acts as the base class for bridged classes.
@@ -51,10 +58,10 @@ struct CFBridgeBaseState {
     void (*destruct)(CFBridgeBaseState* self);
 };
 
-template<typename Bridge>
+template <typename Bridge>
 struct CFBridgeBase : CFBridgeBaseState {
     template <typename... Args>
-    static Bridge* alloc(Class cls, Args&& ...args) {
+    static Bridge* alloc(Class cls, Args&&... args) {
         // Do static validation here since this code must be hit and the full Bridge type isn't realized in the class's scope:
         static_assert(offsetof(Bridge, isa) == 0, "Isa must be first element: Make sure there are no virtuals or multiple inheritance!");
         static_assert(std::is_base_of<CFBridgeBase<Bridge>, Bridge>::value, "CFBridgeBase<Bridge> must be the base of Bridge!");
@@ -64,9 +71,10 @@ struct CFBridgeBase : CFBridgeBaseState {
 
         // If we have no tolled bridge class, default to NSCFBridgeBase for retain/release semantics:
         if (!cls) {
-            cls = [NSCFBridgeBase class];
+            cls = [_LazyNSCFBridgeBase class];
         } else if (class_getInstanceSize(cls) != nsObjectSize) {
-            [NSException raise:@"Invalid CFBridgeBase instantiation" format:@"Bridged classes cannot have ivars!"];
+            // Bridged classes cannot have ivars
+            THROW_NS_HR(E_INVALIDARG);
         }
 
         // This is the real allocation for the object, being careful to allocate through the ObjC runtime,
@@ -75,7 +83,7 @@ struct CFBridgeBase : CFBridgeBaseState {
         auto originalIsa = reinterpret_cast<CFBridgeBase*>(newObject)->isa;
 
         // Call the constructor on the C-struct that is our private state:
-        auto returnValue = new(reinterpret_cast<void*>(newObject)) Bridge(std::forward<Args>(args)...);
+        auto returnValue = new (reinterpret_cast<void*>(newObject)) Bridge(std::forward<Args>(args)...);
 
         // After the placement-new, our constructor leaves the original values in an unspecified state.
         // Re-asign the isa so we're not leaving it in an unspecified state:
@@ -93,7 +101,7 @@ private:
 
 // This will generally come in as the NS version of the type, since it's expected we'll
 // deallocate via a call to -dealloc.
-template<typename Derived>
+template <typename Derived>
 static inline void bridgeDealloc(Derived self) {
     auto bridgeBase = reinterpret_cast<CFBridgeBaseState*>(self);
     bridgeBase->destruct(bridgeBase);

@@ -38,13 +38,13 @@
 
 enum {
     UIImageOrientationUp,
-    UIImageOrientationDown,   // 180 deg rotation
-    UIImageOrientationLeft,   // 90 deg CCW
-    UIImageOrientationRight,   // 90 deg CW
-    UIImageOrientationUpMirrored,    // as above but image mirrored along
+    UIImageOrientationDown, // 180 deg rotation
+    UIImageOrientationLeft, // 90 deg CCW
+    UIImageOrientationRight, // 90 deg CW
+    UIImageOrientationUpMirrored, // as above but image mirrored along
     // other axis. horizontal flip
-    UIImageOrientationDownMirrored,  // horizontal flip
-    UIImageOrientationLeftMirrored,  // vertical flip
+    UIImageOrientationDownMirrored, // horizontal flip
+    UIImageOrientationLeftMirrored, // vertical flip
     UIImageOrientationRightMirrored, // vertical flip
 };
 typedef uint32_t UIImageOrientation;
@@ -55,34 +55,30 @@ enum {
 };
 typedef uint32_t UIImageResizingMode;
 
-enum {
-   UIImageRenderingModeAutomatic,
-   UIImageRenderingModeAlwaysOriginal,
-   UIImageRenderingModeAlwaysTemplate
-};
+enum { UIImageRenderingModeAutomatic, UIImageRenderingModeAlwaysOriginal, UIImageRenderingModeAlwaysTemplate };
 typedef int32_t UIImageRenderingMode;
 
 UIKIT_EXPORT_CLASS
-@interface UIImage : NSObject 
+@interface UIImage : NSObject
 
-+ (UIImage *)imageNamed:(NSString *)name;           // Note, this caches the images somewhat like iPhone OS 2ish in that it never releases them. :)
-+ (UIImage *)imageWithData:(NSData *)data;
-+ (UIImage *)imageWithContentsOfFile:(NSString *)path;
-+ (UIImage *)imageWithCGImage:(CGImageRef)imageRef;
-+ (UIImage *)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
-+ (UIImage *)imageWithData:(NSData *)data scale:(CGFloat)scale;
-+ (UIImage *)animatedImageWithImages:(NSArray *)images duration:(NSTimeInterval)duration;
++ (UIImage*)imageNamed:(NSString*)name; // Note, this caches the images somewhat like iPhone OS 2ish in that it never releases them. :)
++ (UIImage*)imageWithData:(NSData*)data;
++ (UIImage*)imageWithContentsOfFile:(NSString*)path;
++ (UIImage*)imageWithCGImage:(CGImageRef)imageRef;
++ (UIImage*)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
++ (UIImage*)imageWithData:(NSData*)data scale:(CGFloat)scale;
++ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration;
 
 // Starboard additions:
 - (CGRect)_imageStretch;
 
-- (id)initWithData:(NSData *)data;
-- (id)initWithContentsOfFile:(NSString *)path;
+- (id)initWithData:(NSData*)data;
+- (id)initWithContentsOfFile:(NSString*)path;
 - (id)initWithCGImage:(CGImageRef)imageRef;
 - (id)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
 
-- (UIImage *)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
-- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets;
+- (UIImage*)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
+- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets;
 
 // the draw methods will all check the scale of the current context and attempt to use the best representation it can
 - (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
@@ -90,31 +86,32 @@ UIKIT_EXPORT_CLASS
 - (void)drawAtPoint:(CGPoint)point;
 - (void)drawInRect:(CGRect)rect;
 
-- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode;
-- (id)initWithData:(NSData *)data scale:(CGFloat)scale;
-- (UIImage *)imageWithRenderingMode:(UIImageRenderingMode)renderingMode;
+- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode;
+- (id)initWithData:(NSData*)data scale:(CGFloat)scale;
+- (UIImage*)imageWithRenderingMode:(UIImageRenderingMode)renderingMode;
 
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic, readonly) NSTimeInterval duration;
 @property (nonatomic, readonly) NSInteger leftCapWidth;
 @property (nonatomic, readonly) NSInteger topCapHeight;
-@property (nonatomic, readonly) UIImageOrientation imageOrientation;    // not implemented
+@property (nonatomic, readonly) UIImageRenderingMode renderingMode;
+@property (nonatomic, readonly) UIImageOrientation imageOrientation; // not implemented
 
 // note that these properties return always the 2x represention if it exists!
 @property (nonatomic, readonly) CGImageRef CGImage;
 @property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly) NSArray *images;
+@property (nonatomic, readonly) NSArray* images;
 
 @end
 
-UIKIT_EXPORT void UIImageWriteToSavedPhotosAlbum(UIImage *image, id completionTarget, SEL completionSelector, void *contextInfo);
-UIKIT_EXPORT void UISaveVideoAtPathToSavedPhotosAlbum(NSString *videoPath, id completionTarget, SEL completionSelector, void *contextInfo);
-UIKIT_EXPORT BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString *videoPath);
+UIKIT_EXPORT void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo);
+UIKIT_EXPORT void UISaveVideoAtPathToSavedPhotosAlbum(NSString* videoPath, id completionTarget, SEL completionSelector, void* contextInfo);
+UIKIT_EXPORT BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString* videoPath);
 
 // both of these use .CGImage to generate the image data - note what this means for multi-scale images!
-UIKIT_EXPORT NSData *UIImageJPEGRepresentation(UIImage *image, CGFloat compressionQuality);
-UIKIT_EXPORT NSData *UIImagePNGRepresentation(UIImage *image);
+UIKIT_EXPORT NSData* UIImageJPEGRepresentation(UIImage* image, CGFloat compressionQuality);
+UIKIT_EXPORT NSData* UIImagePNGRepresentation(UIImage* image);
 
-void UIImageSetLayerContents(CALayer *layer, UIImage *image);
+void UIImageSetLayerContents(CALayer* layer, UIImage* image);
 
 #endif /* _UIIMAGE_H_ */

@@ -25,6 +25,10 @@
 #include "Foundation/NSData.h"
 #include "Foundation/NSURL.h"
 #include "Foundation/NSDirectoryEnumerator.h"
+#import <Foundation/NSDictionary.h>
+
+#include <string>
+#include <vector>
 
 #include <sys/stat.h>
 #include <errno.h>
@@ -77,32 +81,54 @@ NSString* const NSFileProtectionComplete = @"NSFileProtectionComplete";
 NSString* const NSFileProtectionCompleteUnlessOpen = @"NSFileProtectionCompleteUnlessOpen";
 NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileProtectionCompleteUntilFirstUserAuthentication";
 
+/// NSDirectoryEnumerator implementation
 @implementation NSDirectoryEnumerator {
-    idretain rootFiles;
-    idretain curFile;
-    idretain enumerators;
-    idretain curEnumerator[32];
-    int curDepth;
-    bool _skipDescendents;
-    idretain searchPath;
+    idretaint<NSMutableDictionary> _rootFiles;
+    idretaint<NSString> _currentFile;
+    std::vector<idretaint<NSDirectoryEnumerator>> _currrentEnumerator;
+    int _currentDepth;
+    BOOL _skipDescendents;
+    idretaint<NSString> _searchPath;
 }
 
 - (instancetype)init {
     return self;
 }
 
-static void searchRecursive(const char* rootpath, const char* subpath, id objArray, BOOL shallow) {
-    char searchPath[4096];
-    strcpy_s(searchPath, _countof(searchPath), rootpath);
-    if (searchPath[strlen(searchPath) - 1] != '/') {
-        strcat_s(searchPath, _countof(searchPath), "/");
-    }
-    strcat_s(searchPath, _countof(searchPath), subpath);
-    if (searchPath[strlen(searchPath) - 1] != '/') {
-        strcat_s(searchPath, _countof(searchPath), "/");
+/*
+* This function search files/directories in a directory path. It starts with rootpath and subpath.
+* (e.g., rootpath is "." and subPath is "saved"). the search will start at "./saved" seach path.  which is "saved" sub-directory of
+* current working directory. together, rootpath + subpath is called searchPath.
+*
+* Search behaviour:  if shallow is YES, the search only happens at the top level of the search path. if shallow is NO,  the search
+* will happen recusively on search path and any of its subdirectories as well.
+
+* Search Result: If returnNSURL is YES, the result objArray will contains NSURL object, if returnNSURL is NO, however,
+* the result objectArray contains NSString object. either of which represent a file or direcotry found during the search
+* If specifying returnNSURL as YES, NSDirectoryEnumerationOptions is used to exclude specified results. e.g.,
+NSDirectoryEnumerationSkipsHiddenFiles
+* will exclude hidden files from the result. Also, If specifying returnNSURL as YES, A NSArray of keys (property bag) can be passed in, so
+that
+* specified properties for the file or drectiroy can be prefeched and included in returned NSURL object.
+*/
+static void searchRecursive(const char* rootpath,
+                            const char* subpath,
+                            BOOL shallow,
+                            id objArray,
+                            NSArray* keys,
+                            NSDirectoryEnumerationOptions mask,
+                            BOOL returnNSURL) {
+    std::string _searchPath = rootpath;
+    if (_searchPath[_searchPath.length() - 1] != '/') {
+        _searchPath.append("/");
     }
 
-    EbrDir* ebrDir = EbrOpenDir(searchPath);
+    _searchPath.append(subpath);
+    if (_searchPath[_searchPath.length() - 1] != '/') {
+        _searchPath.push_back('/');
+    }
+
+    EbrDir* ebrDir = EbrOpenDir(_searchPath.c_str());
     if (ebrDir != NULL) {
         EbrDirEnt dirEnt;
         while (EbrReadDir(ebrDir, &dirEnt)) {
@@ -110,20 +136,44 @@ static void searchRecursive(const char* rootpath, const char* subpath, id objArr
                 continue;
             }
 
-            char filename[4096];
-            strcpy_s(filename, _countof(filename), subpath);
-
-            if (strlen(filename) > 0 && filename[strlen(filename) - 1] != '/') {
-                strcat_s(filename, _countof(filename), "/");
+            std::string filename = subpath;
+            if (filename.length() > 0 && filename[filename.length() - 1] != '/') {
+                filename.push_back('/');
             }
-            strcat_s(filename, _countof(filename), dirEnt.fileName);
 
-            id newStr = [NSString stringWithCString:filename];
-            [objArray addObject:newStr];
+            filename.append(dirEnt.fileName);
+            if (returnNSURL) {
+                // TODO: ignore all mask for now, not needed for 1511
+                std::string fileFullPath = _searchPath;
+                fileFullPath.append(filename);
+
+                if (keys != nil) { // caller wants to fetch some properties for this URL
+                    NSDictionary* fileAttributes = fileAttributesForFilePath(fileFullPath.c_str());
+                    if (fileAttributes != nil) {
+                        NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithCString:fileFullPath.c_str()]];
+                        for (NSString* key in keys) {
+                            if ([key isEqualToString:NSURLContentModificationDateKey]) {
+                                BOOL ret = [newURL setProperty:[fileAttributes objectForKey:NSFileModificationDate]
+                                                        forKey:NSURLContentModificationDateKey];
+
+                                assert(ret);
+                            } else {
+                                // TODO: add aditional properties, not needed in 1511.
+                            }
+                        }
+
+                        [objArray addObject:newURL];
+                    }
+                }
+
+            } else {
+                NSString* newStr = [NSString stringWithCString:filename.c_str()];
+                [objArray addObject:newStr];
+            }
 
             if (!shallow) {
                 if (dirEnt.isDir) {
-                    searchRecursive(rootpath, filename, objArray, shallow);
+                    searchRecursive(rootpath, filename.c_str(), shallow, objArray, keys, mask, returnNSURL);
                 }
             }
         }
@@ -133,22 +183,24 @@ static void searchRecursive(const char* rootpath, const char* subpath, id objArr
     return;
 }
 
-- (id)initWithPath:(const char*)path shallow:(BOOL)shallow {
-    rootFiles.attach([NSMutableArray new]);
-    searchRecursive(path, "", rootFiles, shallow);
-    searchPath = [NSString stringWithCString:path];
-
-    curEnumerator[0] = [rootFiles objectEnumerator];
-    curDepth = 0;
-
+- (instancetype)initWithPath:(const char*)path
+                     shallow:(BOOL)shallow
+  includingPropertiesForKeys:(NSArray*)keys
+                     options:(NSDirectoryEnumerationOptions)mask
+                 returnNSURL:(BOOL)returnNSURL {
+    _rootFiles.attach([NSMutableArray new]);
+    _searchPath = [NSString stringWithCString:path];
+    searchRecursive(path, "", shallow, _rootFiles, keys, mask, returnNSURL);
+    _currrentEnumerator.push_back([_rootFiles objectEnumerator]);
+    _currentDepth = 0;
     return self;
 }
 
-static void addAllFiles(id enumerator, id allFiles) {
+static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFiles) {
     id curObj = [enumerator nextObject];
 
     while (curObj != nil) {
-        if ([curObj isKindOfClass:[NSString class]]) {
+        if ([curObj isKindOfClass:[NSString class]] || [curObj isKindOfClass:[NSURL class]]) {
             [allFiles addObject:curObj];
         } else {
             id subEnum = [curObj objectEnumerator];
@@ -160,9 +212,9 @@ static void addAllFiles(id enumerator, id allFiles) {
     }
 }
 
-- (id) /* use typed version */ allObjects {
+- (NSMutableArray*)allObjects {
     id ret = [NSMutableArray array];
-    id curEnum = [rootFiles objectEnumerator];
+    id curEnum = [_rootFiles objectEnumerator];
 
     addAllFiles(curEnum, ret);
 
@@ -182,7 +234,7 @@ static void addAllFiles(id enumerator, id allFiles) {
     maxCount = 1;
 
     while (maxCount > 0) {
-        id next = [state->extra[0] nextObject];
+        id next = [(id)state->extra[0] nextObject];
         if (next == nil) {
             break;
         }
@@ -197,13 +249,9 @@ static void addAllFiles(id enumerator, id allFiles) {
 }
 
 - (void)dealloc {
-    rootFiles = nil;
-    curFile = nil;
-    enumerators = nil;
-    for (int i = 0; i <= curDepth; i++) {
-        curEnumerator[i] = nil;
-    }
-    searchPath = nil;
+    _rootFiles = nil;
+    _currentFile = nil;
+    _searchPath = nil;
 
     [super dealloc];
 }
@@ -225,28 +273,45 @@ static void addAllFiles(id enumerator, id allFiles) {
 - (id) /* use typed version */ nextObject {
     id curObj, ret = nil;
 
-    while (curDepth >= 0) {
-        curObj = [curEnumerator[curDepth] nextObject];
+    while (_currentDepth >= 0) {
+        curObj = [_currrentEnumerator[_currentDepth] nextObject];
         if (curObj == nil) {
-            curEnumerator[curDepth] = nil;
-            curDepth--;
+            _currrentEnumerator[_currentDepth] = nil;
+            _currrentEnumerator.pop_back();
+            _currentDepth--;
             _skipDescendents = false;
             continue;
         }
 
-        if ([curObj isKindOfClass:[NSString class]]) {
+        if ([curObj isKindOfClass:[NSString class]] || [curObj isKindOfClass:[NSURL class]]) {
             ret = curObj;
             break;
         } else {
             if (!_skipDescendents) {
-                curDepth++;
-                assert(curDepth < 32);
-                curEnumerator[curDepth] = [curObj objectEnumerator];
+                _currentDepth++;
+                _currrentEnumerator.push_back([curObj objectEnumerator]);
             }
         }
     }
 
-    curFile = ret;
+    _currentFile = ret;
+
+    return ret;
+}
+
+static NSDictionary* fileAttributesForFilePath(const char* path) {
+    struct stat st;
+
+    // check if file exist or not
+    if (EbrStat(path, &st) == -1) {
+        return nil;
+    }
+
+    NSDictionary* ret = [NSMutableDictionary dictionary];
+    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
+    [ret setValue:NSFileTypeRegular forKey:NSFileType];
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:NSFileCreationDate];
+    [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_mtime] forKey:NSFileModificationDate];
 
     return ret;
 }
@@ -256,8 +321,8 @@ static void addAllFiles(id enumerator, id allFiles) {
  @Notes Only NSFileSize and NSFileCreationDate attributes are supported
 */
 - (NSDictionary*)fileAttributes {
-    const char* rootPath = [searchPath UTF8String];
-    const char* path = [curFile UTF8String];
+    const char* rootPath = [_searchPath UTF8String];
+    const char* path = [_currentFile UTF8String];
 
     char fullPath[4096];
 
@@ -269,29 +334,16 @@ static void addAllFiles(id enumerator, id allFiles) {
 
     EbrDebugLog("fileAttributesAtPath: %s\n", fullPath);
 
-    struct stat st;
-
-    if (EbrStat(fullPath, &st) == -1) {
-        assert(0);
-        return nil;
-    }
-
-    id ret = [NSMutableDictionary dictionary];
-
-    [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
-    [ret setValue:NSFileTypeRegular forKey:NSFileType];
-
-    id date = [NSDate dateWithTimeIntervalSince1970:(double)st.st_ctime];
-    [ret setValue:NSFileCreationDate forKey:date];
-
-    return ret;
+    return fileAttributesForFilePath(fullPath);
 }
 
 @end
 
-extern "C" bool doLog;
-
-@implementation NSFileManager : NSObject
+/// NSFileManager implementation
+@implementation NSFileManager {
+    // instance variable to keep current directory path.
+    idretaint<NSString> _currentDirectoryPath;
+}
 
 // Creating a File Manager
 
@@ -299,11 +351,7 @@ extern "C" bool doLog;
  @Status Interoperable
 */
 + (NSFileManager*)defaultManager {
-    static id defaultManager;
-
-    if (defaultManager == nil) {
-        defaultManager = [self alloc];
-    }
+    static id defaultManager = [[self alloc] init];
 
     return defaultManager;
 }
@@ -312,6 +360,8 @@ extern "C" bool doLog;
  @Status Interoperable
 */
 - (instancetype)init {
+    // on init, current Directory path is specified as "/" for current working directory
+    _currentDirectoryPath = [NSString stringWithCString:"/"];
     return self;
 }
 
@@ -372,32 +422,63 @@ extern "C" bool doLog;
 */
 - (NSURL*)containerURLForSecurityApplicationGroupIdentifier:(NSString*)groupIdentifier {
     UNIMPLEMENTED();
-
     return nil;
 }
 
 // Discovering Directory Contents
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Fetching directory contents, return an array of NSURL objects. Currently ignoring passed in mask
+   and only support prefecch NSURLContentModificationDateKey
 */
 - (NSArray*)contentsOfDirectoryAtURL:(NSURL*)url
           includingPropertiesForKeys:(NSArray*)keys
                              options:(NSDirectoryEnumerationOptions)mask
                                error:(NSError**)error {
-    // TODO: this is needed for 1511
-    UNIMPLEMENTED();
-    return nil;
+    if (error) {
+        *error = nil;
+    }
+
+    // check existence of target dir
+    auto isDir = NO;
+    if (![self fileExistsAtPath:url.absoluteString isDirectory:&isDir]) {
+        if (error) {
+            // TODO: standardize the error code and message
+            *error = [NSError errorWithDomain:@"Target path does not exist" code:100 userInfo:nil];
+        }
+        return nil;
+    } else if (!isDir) {
+        // TODO: standardize the error code and message
+        if (error) {
+            *error = [NSError errorWithDomain:@"Target Path is not a directory" code:100 userInfo:nil];
+        }
+        return nil;
+    }
+
+    id enumerator = [[NSDirectoryEnumerator alloc] initWithPath:[[url path] UTF8String]
+                                                        shallow:YES
+                                     includingPropertiesForKeys:keys
+                                                        options:mask
+                                                    returnNSURL:YES];
+
+    // by enumerating the directory, construct the direcotry contents at this URL
+    id ret = [enumerator allObjects];
+    [enumerator release];
+    return ret;
 }
 
 /**
  @Status Caveat
  @Notes Path must exist
 */
-- (NSArray*)contentsOfDirectoryAtPath:(id)pathAddr error:(NSError**)err {
-    EbrDebugLog("contentsOfDirectoryAtPath: %s\n", [pathAddr UTF8String]);
+- (NSArray*)contentsOfDirectoryAtPath:(NSString*)pathAddr error:(NSError**)error {
     id enumerator = [NSDirectoryEnumerator new];
-    [enumerator initWithPath:[pathAddr UTF8String] shallow:TRUE];
+    enumerator = [enumerator initWithPath:[pathAddr UTF8String]
+                                  shallow:YES
+               includingPropertiesForKeys:nil
+                                  options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                              returnNSURL:NO];
 
     id ret = [enumerator allObjects];
     [enumerator release];
@@ -422,7 +503,11 @@ extern "C" bool doLog;
     const char* path = [pathAddr UTF8String];
 
     NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
-    [directoryEnum initWithPath:path shallow:FALSE];
+    [directoryEnum initWithPath:path
+                           shallow:FALSE
+        includingPropertiesForKeys:nil
+                           options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                       returnNSURL:NO];
 
     return directoryEnum;
 }
@@ -759,7 +844,7 @@ extern "C" bool doLog;
 /**
  @Status Interoperable
 */
-- (BOOL)fileExistsAtPath:(id)pathAddr {
+- (BOOL)fileExistsAtPath:(NSString*)pathAddr {
     if (pathAddr == nil) {
         return FALSE;
     }
@@ -781,7 +866,7 @@ extern "C" bool doLog;
 /**
  @Status Interoperable
 */
-- (BOOL)fileExistsAtPath:(id)pathAddr isDirectory:(BOOL*)isDirectory {
+- (BOOL)fileExistsAtPath:(NSString*)pathAddr isDirectory:(BOOL*)isDirectory {
     const char* path = [pathAddr UTF8String];
     struct stat st;
 
@@ -922,8 +1007,6 @@ extern "C" bool doLog;
 */
 - (BOOL)setAttributes:(id)attribs ofItemAtPath:(id)pathAddr error:(NSError**)err {
     UNIMPLEMENTED();
-    EbrDebugLog("setAttributes not implemented\n");
-
     return TRUE;
 }
 
@@ -1026,13 +1109,17 @@ extern "C" bool doLog;
 /**
  @Status Interoperable
 */
-- (BOOL)changeCurrentDirectoryPath:(id)pathAddr {
-    const char* path = [pathAddr UTF8String];
-    EbrDebugLog("setting path to %s\n", path);
+- (BOOL)changeCurrentDirectoryPath:(NSString*)path {
+    _currentDirectoryPath = path;
 
-    EbrChdir(path);
+    const char* pathAddress = [path UTF8String];
+    EbrChdir(pathAddress);
 
     return TRUE;
+}
+
+- (NSString*)currentDirectoryPath {
+    return _currentDirectoryPath;
 }
 
 // Deprecated Methods
@@ -1110,7 +1197,7 @@ extern "C" bool doLog;
 /**
  @Status Stub
 */
-- (id)fileSystemAttributesAtPath:(id)pathAddr {
+- (NSDictionary*)fileSystemAttributesAtPath:(NSString*)pathAddr {
     UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
@@ -1127,12 +1214,14 @@ extern "C" bool doLog;
 /**
  @Status Interoperable
 */
-- (id)directoryContentsAtPath:(id)pathAddr {
-    id enumerator = [NSDirectoryEnumerator new];
-    [enumerator initWithPath:[pathAddr UTF8String] shallow:TRUE];
+- (NSArray*)directoryContentsAtPath:(NSString*)pathAddr {
+    id enumerator = [[[NSDirectoryEnumerator alloc] initWithPath:[pathAddr UTF8String]
+                                                         shallow:YES
+                                      includingPropertiesForKeys:nil
+                                                         options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                     returnNSURL:NO] autorelease];
 
     id ret = [enumerator allObjects];
-    [enumerator release];
     return ret;
 }
 
@@ -1195,7 +1284,8 @@ extern "C" bool doLog;
 }
 
 - (void)dealloc {
-    EbrDebugLog("Warning: NSFileManager dealloced\n");
+    _currentDirectoryPath = nil;
+    [super dealloc];
 }
 
 @end

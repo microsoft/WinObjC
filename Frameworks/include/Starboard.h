@@ -26,17 +26,23 @@
 #define IWPLATFORM_EXPORT
 #endif
 
-#include "ErrorHandling.h"
+//
+// Helper macros for NSLog
+//
+// DLog displays output only when with DEBUG setting.
+#if (defined(DEBUG) || defined(_DEBUG))
+#define DLog(fmt, ...) NSLog((@"%s [Line \"%d\"] : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define DLog(...)
+#endif
+// VLog always displays output regardless of the DEBUG setting.
+#define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 extern "C" void dbg_printf(const char* fmt, ...);
 #define EbrDebugLog(...) dbg_printf(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
-
-// Placeholder for unimplemented logging and telemetry
-#define UNIMPLEMENTED() \
-    dbg_printf("*******Stub %s not implemented at %s:%d*******\r\n", __FUNCTION__, __FILE__, __LINE__);
 
 #include <assert.h>
 #include <stdio.h>
@@ -82,17 +88,7 @@ public:
         _clsName = name;
     }
 
-    operator id() {
-        if (_clsRef == nil) {
-            _clsRef = objc_getClass(_clsName);
-            if (_clsRef == nil) {
-                EbrDebugLog("Couldn't lazy lookup objc class %s\n", _clsName);
-                assert(_clsRef);
-            }
-        }
-
-        return _clsRef;
-    }
+    operator id();
 };
 
 template <typename T>
@@ -130,6 +126,21 @@ public:
 #else
 typedef void* id;
 #endif
+
+#include "ErrorHandling.h"
+
+// This has to be after the error handling header since that brings in FAIL_FAST_IF_MSG. The error-handling code uses IWLazyClassLookup
+// so this can't be before ErrorHandling's include.
+#ifdef __OBJC__
+inline IWLazyClassLookup::operator id() {
+    if (_clsRef == nil) {
+        _clsRef = objc_getClass(_clsName);
+        FAIL_FAST_IF_MSG(E_NOTIMPL, !_clsRef, "Couldn't lazy lookup objc class %hs\n", _clsName);
+    }
+
+    return _clsRef;
+}
+#endif // __OBJC__
 
 #include "CACompositor.h"
 
@@ -253,7 +264,7 @@ public:
 #define EbrRealloc realloc
 #define EbrFree free
 #define EbrCalloc calloc
-#define idt(type) type*
+#define idt(type) type *
 
 #ifdef __OBJC__
 extern "C" BOOL object_isMethodFromClass(id dwObj, SEL pSel, const char* fromClass);
@@ -373,7 +384,7 @@ public:
     }
 
     idretaint<objtype>& operator=(const idretaint<objtype>& val) {
-        return *this = val._val;
+        return (*this = val._val);
     }
 
     idretaint<objtype>& operator=(idretaint<objtype>&& other) {
@@ -411,6 +422,11 @@ public:
     }
 
     idretainp(const idretainp<objtype>&) = delete;
+
+    idretainp(idretainp<objtype>&& other) {
+        _val = other._val;
+        other._val = nil;
+    }
 
     ~idretainp() {
         [_val release];

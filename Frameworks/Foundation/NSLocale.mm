@@ -20,30 +20,100 @@
 #include <unicode/datefmt.h>
 #include <unicode/dtfmtsym.h>
 #include <unicode/locid.h>
+using WCHAR = wchar_t;
+#import <UWP/WindowsSystemUserProfile.h>
 
-NSString* const NSLocaleCountryCode = @"NSLocaleCountryCode";
-NSString* const NSLocaleLanguageCode = @"NSLocaleLanguageCode";
-NSString* const NSLocaleVariantCode = @"NSLocaleVariantCode";
 NSString* const NSLocaleIdentifier = @"NSLocaleIdentifier";
-
-NSString* const NSLocaleGroupingSeparator = @"NSLocaleGroupingSeparator";
-NSString* const NSLocaleDecimalSeparator = @"NSLocaleDecimalSeparator";
+NSString* const NSLocaleLanguageCode = @"NSLocaleLanguageCode";
+NSString* const NSLocaleCountryCode = @"NSLocaleCountryCode";
+NSString* const NSLocaleScriptCode = @"NSLocaleScriptCode";
+NSString* const NSLocaleVariantCode = @"NSLocaleVariantCode";
+NSString* const NSLocaleExemplarCharacterSet = @"NSLocaleExemplarCharacterSet";
 NSString* const NSLocaleCalendar = @"NSLocaleCalendar";
-NSString* const NSLocaleCurrencyCode = @"NSLocaleCurrencyCode";
-NSString* const NSLocaleCurrencySymbol = @"NSLocaleCurrencySymbol";
+NSString* const NSLocaleCollationIdentifier = @"NSLocaleCollationIdentifier";
 NSString* const NSLocaleUsesMetricSystem = @"NSLocaleUsesMetricSystem";
 NSString* const NSLocaleMeasurementSystem = @"NSLocaleMeasurementSystem";
-
-NSString* const NSLocaleScriptCode = @"NSLocaleScriptCode";
-NSString* const NSLocaleExemplarCharacterSet = @"NSLocaleExemplarCharacterSet";
-NSString* const NSLocaleCollationIdentifier = @"NSLocaleCollationIdentifier";
+NSString* const NSLocaleDecimalSeparator = @"NSLocaleDecimalSeparator";
+NSString* const NSLocaleGroupingSeparator = @"NSLocaleGroupingSeparator";
+NSString* const NSLocaleCurrencySymbol = @"NSLocaleCurrencySymbol";
+NSString* const NSLocaleCurrencyCode = @"NSLocaleCurrencyCode";
+NSString* const NSLocaleCollatorIdentifier = @"NSLocaleCollatorIdentifier";
+NSString* const NSLocaleQuotationBeginDelimiterKey = @"NSLocaleQuotationBeginDelimiterKey";
+NSString* const NSLocaleQuotationEndDelimiterKey = @"NSLocaleQuotationEndDelimiterKey";
+NSString* const NSLocaleAlternateQuotationBeginDelimiterKey = @"NSLocaleAlternateQuotationBeginDelimiterKey";
+NSString* const NSLocaleAlternateQuotationEndDelimiterKey = @"NSLocaleAlternateQuotationEndDelimiterKey";
 
 NSString* const NSCurrentLocaleDidChangeNotification = @"NSCurrentLocaleDidChangeNotification";
 
 static NSLocale* _currentLocale;
 
 @implementation NSLocale {
+    // NSArray<NSString*>* _userPreferredLanguages;
+    NSArray* _userPreferredLanguages;
+    // NSArray<NSString*>* userPreferredCurrencies;
+    NSArray* _userPreferredCurrencies;
+    NSString* _userPreferredLanguage;
+    // _userPreferredLanguage seperated by "-" and stored as an array of NSStrings.
+    // NSArray<NSString*>* _userPreferredLanguagesSeperatedByString;
+    NSArray* _userPreferredLanguagesSeperatedByString;
     icu::Locale _locale;
+}
+
+/**
+ * KVC accessor for NSLocaleIdentifier.
+ * @return {NSString*} the key for the locale identifier..
+ */
+- (NSString*)getNSLocaleIdentifier {
+    return [[_userPreferredLanguage retain] autorelease];
+}
+
+/**
+ * KVC accessor for NSLocaleLanguageCode.
+ * @return {NSString*} the key for the locale language code.
+ */
+- (NSString*)getNSLocaleLanguageCode {
+    if ([_userPreferredLanguagesSeperatedByString count] > 0) {
+        return [_userPreferredLanguagesSeperatedByString objectAtIndex:0];
+    } else {
+        return nil;
+    }
+}
+
+/**
+ * KVC accessor for NSLocaleCountryCode.
+ * @return {NSString*} the key for the locale country code.
+ */
+- (NSString*)getNSLocaleCountryCode {
+    if ([_userPreferredLanguagesSeperatedByString count] > 1) {
+        return [_userPreferredLanguagesSeperatedByString objectAtIndex:1];
+    } else {
+        return nil;
+    }
+}
+
+/**
+ * KVC accessor for NSLocaleVariantCode.
+ * @return {NSString*} the key for the locale variant code.
+ */
+- (NSString*)getNSLocaleVariantCode {
+    if ([_userPreferredLanguagesSeperatedByString count] > 2) {
+        return [_userPreferredLanguagesSeperatedByString objectAtIndex:3];
+    } else {
+        return nil;
+    }
+}
+
+/**
+ * KVC accessor for NSLocaleCurrencyCode.
+ * @return {NSString*} the key for the currency code associated with the locale.
+ */
+- (NSString*)getNSLocaleCurrencyCode {
+    // NSArray<NSString*>* componentStrings
+    if ([_userPreferredCurrencies count] > 0) {
+        return [_userPreferredCurrencies objectAtIndex:0];
+    } else {
+        return nil;
+    }
 }
 
 - (icu::Locale*)_createICULocale {
@@ -51,9 +121,33 @@ static NSLocale* _currentLocale;
 }
 
 - (instancetype)init {
-    _locale = icu::Locale();
+    if (self = [super init]) {
+        _userPreferredLanguages = [[WSUGlobalizationPreferences languages] retain];
+
+        if ([_userPreferredLanguages count] > 0) {
+            const char* language = static_cast<const char*>([[_userPreferredLanguages objectAtIndex:0] UTF8String]);
+            _locale = icu::Locale(language);
+            _userPreferredLanguage = [[_userPreferredLanguages objectAtIndex:0] retain];
+            _userPreferredLanguagesSeperatedByString = [[_userPreferredLanguage componentsSeparatedByString:@"-"] retain];
+        } else {
+            _locale = icu::Locale();
+            _userPreferredLanguage = nil;
+            _userPreferredLanguagesSeperatedByString = nil;
+        }
+
+        _userPreferredCurrencies = [[WSUGlobalizationPreferences currencies] retain];
+    }
 
     return self;
+}
+
+- (void)dealloc {
+    [_userPreferredLanguagesSeperatedByString release];
+    [_userPreferredLanguage release];
+    [_userPreferredLanguages release];
+    [_userPreferredCurrencies release];
+
+    [super dealloc];
 }
 
 /**
@@ -97,6 +191,15 @@ static NSLocale* _currentLocale;
     }
 }
 
+/**
+ @Status Caveat
+ @Notes Only NSLocaleIdentifier, NSLocaleLanguageCode, NSLocaleCountryCode, NSLocaleVariantCode and NSLocaleCurrencySymbol is supported.
+*/
+- (id)objectForKey:(id)key {
+    // Using Accessor Search Patterns here.
+    return [self valueForKey:key];
+}
+
 + (void)initialize {
     if (self == [NSLocale class]) {
         _currentLocale = [self new];
@@ -104,10 +207,19 @@ static NSLocale* _currentLocale;
 }
 
 /**
- @Status Caveat
- @Notes May not match system settings
+ @Status Interoperable
 */
 + (instancetype)currentLocale {
-    return _currentLocale;
+    return [[_currentLocale retain] autorelease];
 }
+
++ (NSArray*)preferredLanguages {
+    return [WSUGlobalizationPreferences languages];
+}
+
+- (id)valueForUndefinedKey:(NSString*)key {
+    // We always return nil for valueForKey we do not support.
+    return nil;
+}
+
 @end

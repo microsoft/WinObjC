@@ -282,17 +282,27 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Internal.Shared", "Headers\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{83BDC65C-1E0A-482B-886C-52B78B8B9C97}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Universal", "Security\Security.Universal\Security.Universal.vcxproj", "{1B60665D-5A2D-4F96-8D52-06B5E886F29F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Universal", "Security\dll\Security.Universal\Security.Universal.vcxproj", "{1B60665D-5A2D-4F96-8D52-06B5E886F29F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Windows", "Security\Security.Windows\Security.Windows.vcxproj", "{6FF5CFD7-3E46-4182-9F76-C315F69B6C13}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Windows", "Security\dll\Security.Windows\Security.Windows.vcxproj", "{6FF5CFD7-3E46-4182-9F76-C315F69B6C13}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.WindowsPhone", "Security\Security.WindowsPhone\Security.WindowsPhone.vcxproj", "{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.WindowsPhone", "Security\dll\Security.WindowsPhone\Security.WindowsPhone.vcxproj", "{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Shared", "Security\Security.Shared\Security.Shared.vcxitems", "{76C111B1-74F9-46BC-9D92-723F19018F77}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Security.Shared", "Security\dll\Security.Shared\Security.Shared.vcxitems", "{76C111B1-74F9-46BC-9D92-723F19018F77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{39652785-AD0E-4E07-82CA-0DB0594C48ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{2E8079EB-DB3B-42D3-863C-14A1F7114F1A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityLib.Shared", "Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems", "{85D6E320-1E94-4CC8-ADF3-2D87621B9C24}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityLib.Universal", "Security\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj", "{BE591B6E-DC7E-4669-9F41-4898C271C417}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityLib.Windows", "Security\lib\SecurityLib.Windows\SecurityLib.Windows.vcxproj", "{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityLib.WindowsPhone", "Security\lib\SecurityLib.WindowsPhone\SecurityLib.WindowsPhone.vcxproj", "{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreLocation", "CoreLocation", "{52E0654B-3B43-4514-B48B-6BAE3E580A6F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Shared", "CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems", "{F4C2AE05-4DE4-4422-AB5D-2765FC612BE1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Windows", "CoreLocation\CoreLocation.Windows\CoreLocation.Windows.vcxproj", "{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1}"
 EndProject
@@ -304,10 +314,9 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{49aa9208-07ed-4f9c-94ac-c6cf9097e809}*SharedItemsImports = 4
 		AVFoundation\AVFoundation.Shared\AVFoundation.Shared.vcxitems*{e040b9f4-b89a-480c-9f0d-d3e904769372}*SharedItemsImports = 4
-		Security\Security.Shared\Security.Shared.vcxitems*{6ff5cfd7-3e46-4182-9f76-c315f69b6c13}*SharedItemsImports = 4
+		Security\dll\Security.Shared\Security.Shared.vcxitems*{6ff5cfd7-3e46-4182-9f76-c315f69b6c13}*SharedItemsImports = 4
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{00d9c3e9-f324-4fd0-a857-61122339e726}*SharedItemsImports = 4
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{3243fc44-21d3-4255-8fd8-85cbc4bc08bd}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{f4c2ae05-4de4-4422-ab5d-2765fc612be1}*SharedItemsImports = 9
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{d14f485e-b029-44d3-a65d-fe6340b1ebcd}*SharedItemsImports = 4
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{2983879b-50ad-439c-8253-d8bdfebf7ee0}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{aa0c8e83-62d3-4e3c-98a5-6a25077474d2}*SharedItemsImports = 4
@@ -319,11 +328,11 @@ Global
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{23d3982a-12a6-46af-9221-9cc062a38d75}*SharedItemsImports = 4
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{b9229809-1232-4faf-bb1f-1a63d205ffe6}*SharedItemsImports = 4
 		UIKit\UIKit.Shared\UIKit.Shared.vcxitems*{b3177bac-2e11-4ef2-976b-2b8b4632fa4a}*SharedItemsImports = 4
+		Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems*{85d6e320-1e94-4cc8-adf3-2d87621b9c24}*SharedItemsImports = 9
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{c48cc570-7de6-44af-bfe1-03256fea59bb}*SharedItemsImports = 4
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{8ea9a3b0-43d2-4349-8444-77b7941482ea}*SharedItemsImports = 4
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{c30e62e2-9c92-472b-9d0f-e44791da6673}*SharedItemsImports = 4
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{b46cbd1b-cffd-43c2-962b-c7a8defbd879}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{ee65195f-8b43-4b9d-b0c0-da54166ef6f1}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{8fff6d4a-429f-4926-b60c-727a0d6bb599}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{bb965052-1af9-4d41-b8ca-65ea7ea62cc5}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{9e4c5bfa-ad28-4907-a597-f5f6487d49c8}*SharedItemsImports = 4
@@ -331,11 +340,11 @@ Global
 		AVFoundation\AVFoundation.Shared\AVFoundation.Shared.vcxitems*{75f79b8d-7025-4f7b-8e51-ce43cc9f6d18}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{6053551e-a1fc-4301-b0de-0cb3a7751cdc}*SharedItemsImports = 9
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{f0df962c-3de8-449a-8955-039d7299ba29}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{0745ef57-35b6-42c5-8eb2-fc74a09f77b7}*SharedItemsImports = 4
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{2ab1b594-97f6-4793-a887-6cb72edc1c42}*SharedItemsImports = 4
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{797cf916-7cc2-4bce-93be-dc9e8b1cc58d}*SharedItemsImports = 4
+		Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems*{910a1d74-f35c-4145-baed-80acbbc2dad7}*SharedItemsImports = 4
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{47c7d4e5-0d07-4594-bc73-a926816cb312}*SharedItemsImports = 9
-		Security\Security.Shared\Security.Shared.vcxitems*{d3f69c85-24c8-4c6d-b5cd-10efb2957edb}*SharedItemsImports = 4
+		Security\dll\Security.Shared\Security.Shared.vcxitems*{d3f69c85-24c8-4c6d-b5cd-10efb2957edb}*SharedItemsImports = 4
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{004e2c18-3bd8-436e-b3c2-d2fe64bc3c76}*SharedItemsImports = 4
 		OpenGLES\OpenGLES.Shared\OpenGLES.Shared.vcxitems*{124dedf4-7dc3-4d56-96d8-85d509b73dd0}*SharedItemsImports = 4
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{064ea074-9f01-4abe-9e04-69f882f898df}*SharedItemsImports = 9
@@ -344,6 +353,7 @@ Global
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{a9a7193f-74b9-4944-9de0-2a0d3ca48808}*SharedItemsImports = 9
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{231c4f3c-9efc-4718-bab1-459c41fe63b4}*SharedItemsImports = 4
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{43e56b50-92cc-46d9-b951-2b51f89be279}*SharedItemsImports = 4
+		Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems*{567a7e4b-41cb-4b48-8fdb-ed9e2a234606}*SharedItemsImports = 4
 		StarboardXaml\StarboardXaml.Shared\StarboardXaml.Shared.vcxitems*{829bce35-3a8d-4e73-b56b-455b07ad935e}*SharedItemsImports = 9
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{2377da3d-6d87-433d-ae72-49f94e020525}*SharedItemsImports = 9
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{23350084-036d-41c9-837c-2874b3426d8e}*SharedItemsImports = 4
@@ -354,6 +364,7 @@ Global
 		OpenGLES\OpenGLES.Shared\OpenGLES.Shared.vcxitems*{08473230-c9e2-4759-b69c-de5f26f325cc}*SharedItemsImports = 9
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{29901be9-6238-43b8-99fa-6e381297b16c}*SharedItemsImports = 4
 		AVFoundation\AVFoundation.Shared\AVFoundation.Shared.vcxitems*{681582d2-ea21-4dcf-a1fa-aba4630a5280}*SharedItemsImports = 4
+		Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems*{be591b6e-dc7e-4669-9f41-4898c271c417}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{679d3da0-b218-44ee-9c73-fe6262773772}*SharedItemsImports = 4
 		UIKit\UIKit.Shared\UIKit.Shared.vcxitems*{43ecb8c4-2c55-4eba-a0a8-5e511789fa6d}*SharedItemsImports = 4
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{c6f2fb00-05db-47c6-b1a0-f73060b89c1b}*SharedItemsImports = 4
@@ -362,11 +373,10 @@ Global
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{d9bba177-5624-43bf-ace5-cc68949598e4}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{8f151898-cfce-4333-bebd-036721e64ba8}*SharedItemsImports = 4
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{d2e58e18-41e6-4644-8c60-d7027c052441}*SharedItemsImports = 4
-		Security\Security.Shared\Security.Shared.vcxitems*{1b60665d-5a2d-4f96-8d52-06b5e886f29f}*SharedItemsImports = 4
+		Security\dll\Security.Shared\Security.Shared.vcxitems*{1b60665d-5a2d-4f96-8d52-06b5e886f29f}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{c53cec05-b3b6-4963-bdbf-3eb670adeb90}*SharedItemsImports = 4
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{0df2ba6c-d067-4da7-993f-97995ae68321}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{ed0f4033-106a-432d-818f-b2ae6a251be9}*SharedItemsImports = 4
-		CoreLocation\CoreLocation.Shared\CoreLocation.Shared.vcxitems*{a03b9e82-d421-4cbc-8c94-24f0aa9ebbce}*SharedItemsImports = 4
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{71596d8a-c60b-46a3-953c-e667a5eeb077}*SharedItemsImports = 4
 		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{77299427-3095-497d-bbbc-1345b4074840}*SharedItemsImports = 9
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{3fe9e4dd-b0ed-4676-b3ce-d46240bd033e}*SharedItemsImports = 4
@@ -378,7 +388,7 @@ Global
 		Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
 		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{1ccd9c7d-4f10-4ece-a783-3d03d1a375c2}*SharedItemsImports = 4
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{5ddce358-cc33-40ce-87d2-fef7eb1221cd}*SharedItemsImports = 4
-		Security\Security.Shared\Security.Shared.vcxitems*{76c111b1-74f9-46bc-9d92-723f19018f77}*SharedItemsImports = 9
+		Security\dll\Security.Shared\Security.Shared.vcxitems*{76c111b1-74f9-46bc-9d92-723f19018f77}*SharedItemsImports = 9
 		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{2fb40e04-969c-4484-ae3b-cbd6620a8256}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{c7c02737-7cbe-42b3-9a2c-c8814a942fa4}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{53c1de43-571b-4088-be26-7795f16a49ec}*SharedItemsImports = 4
@@ -1808,6 +1818,78 @@ Global
 		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}.Release Windows Phone 8.1|x86.Build.0 = Release|Win32
 		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}.Release Windows Universal|ARM.ActiveCfg = Release|ARM
 		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB}.Release Windows Universal|x86.ActiveCfg = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug All|ARM.ActiveCfg = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug All|ARM.Build.0 = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug All|x86.ActiveCfg = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug All|x86.Build.0 = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows 8.1|ARM.ActiveCfg = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows 8.1|x86.ActiveCfg = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Phone 8.1|ARM.ActiveCfg = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Phone 8.1|x86.ActiveCfg = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Universal|ARM.ActiveCfg = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Universal|ARM.Build.0 = Debug|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Universal|x86.ActiveCfg = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Debug Windows Universal|x86.Build.0 = Debug|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release All|ARM.ActiveCfg = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release All|ARM.Build.0 = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release All|x86.ActiveCfg = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release All|x86.Build.0 = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows 8.1|ARM.ActiveCfg = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows 8.1|x86.ActiveCfg = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Phone 8.1|ARM.ActiveCfg = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Phone 8.1|x86.ActiveCfg = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Universal|ARM.ActiveCfg = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Universal|ARM.Build.0 = Release|ARM
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Universal|x86.ActiveCfg = Release|Win32
+		{BE591B6E-DC7E-4669-9F41-4898C271C417}.Release Windows Universal|x86.Build.0 = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug All|ARM.ActiveCfg = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug All|ARM.Build.0 = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug All|x86.ActiveCfg = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug All|x86.Build.0 = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows 8.1|ARM.ActiveCfg = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows 8.1|ARM.Build.0 = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows 8.1|x86.ActiveCfg = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows 8.1|x86.Build.0 = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows Phone 8.1|ARM.ActiveCfg = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows Phone 8.1|x86.ActiveCfg = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows Universal|ARM.ActiveCfg = Debug|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Debug Windows Universal|x86.ActiveCfg = Debug|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release All|ARM.ActiveCfg = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release All|ARM.Build.0 = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release All|x86.ActiveCfg = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release All|x86.Build.0 = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows 8.1|ARM.ActiveCfg = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows 8.1|ARM.Build.0 = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows 8.1|x86.ActiveCfg = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows 8.1|x86.Build.0 = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows Phone 8.1|ARM.ActiveCfg = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows Phone 8.1|x86.ActiveCfg = Release|Win32
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows Universal|ARM.ActiveCfg = Release|ARM
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}.Release Windows Universal|x86.ActiveCfg = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug All|ARM.ActiveCfg = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug All|ARM.Build.0 = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug All|x86.ActiveCfg = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug All|x86.Build.0 = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows 8.1|ARM.ActiveCfg = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows 8.1|x86.ActiveCfg = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Phone 8.1|ARM.ActiveCfg = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Phone 8.1|ARM.Build.0 = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Phone 8.1|x86.ActiveCfg = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Phone 8.1|x86.Build.0 = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Universal|ARM.ActiveCfg = Debug|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Debug Windows Universal|x86.ActiveCfg = Debug|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release All|ARM.ActiveCfg = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release All|ARM.Build.0 = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release All|x86.ActiveCfg = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release All|x86.Build.0 = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows 8.1|ARM.ActiveCfg = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows 8.1|x86.ActiveCfg = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Phone 8.1|ARM.ActiveCfg = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Phone 8.1|ARM.Build.0 = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Phone 8.1|x86.ActiveCfg = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Phone 8.1|x86.Build.0 = Release|Win32
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Universal|ARM.ActiveCfg = Release|ARM
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606}.Release Windows Universal|x86.ActiveCfg = Release|Win32
 		{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1}.Debug All|ARM.ActiveCfg = Debug|ARM
 		{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1}.Debug All|ARM.Build.0 = Debug|ARM
 		{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1}.Debug All|x86.ActiveCfg = Debug|Win32
@@ -1961,11 +2043,16 @@ Global
 		{23D3982A-12A6-46AF-9221-9CC062A38D75} = {3592746A-40FA-451F-82E7-0C8CBB5F3A7E}
 		{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
 		{C0DB71AA-0F89-41AC-BB7D-C0CB5458F4F9} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
-		{1B60665D-5A2D-4F96-8D52-06B5E886F29F} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
-		{6FF5CFD7-3E46-4182-9F76-C315F69B6C13} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
-		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
-		{76C111B1-74F9-46BC-9D92-723F19018F77} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
-		{F4C2AE05-4DE4-4422-AB5D-2765FC612BE1} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
+		{1B60665D-5A2D-4F96-8D52-06B5E886F29F} = {39652785-AD0E-4E07-82CA-0DB0594C48ED}
+		{6FF5CFD7-3E46-4182-9F76-C315F69B6C13} = {39652785-AD0E-4E07-82CA-0DB0594C48ED}
+		{D3F69C85-24C8-4C6D-B5CD-10EFB2957EDB} = {39652785-AD0E-4E07-82CA-0DB0594C48ED}
+		{76C111B1-74F9-46BC-9D92-723F19018F77} = {39652785-AD0E-4E07-82CA-0DB0594C48ED}
+		{39652785-AD0E-4E07-82CA-0DB0594C48ED} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
+		{2E8079EB-DB3B-42D3-863C-14A1F7114F1A} = {83BDC65C-1E0A-482B-886C-52B78B8B9C97}
+		{85D6E320-1E94-4CC8-ADF3-2D87621B9C24} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
+		{BE591B6E-DC7E-4669-9F41-4898C271C417} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
+		{910A1D74-F35C-4145-BAED-80ACBBC2DAD7} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
+		{567A7E4B-41CB-4B48-8FDB-ED9E2A234606} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
 		{EE65195F-8B43-4B9D-B0C0-DA54166EF6F1} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
 		{0745EF57-35B6-42C5-8EB2-FC74A09F77B7} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
 		{A03B9E82-D421-4CBC-8C94-24F0AA9EBBCE} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}

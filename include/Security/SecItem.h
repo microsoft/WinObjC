@@ -16,21 +16,9 @@
 
 #pragma once
 
+#import <Security/SecBase.h>
 #import <CoreFoundation/CoreFoundation.h>
-
-#ifndef SECURITY_IMPEXP
-#define SECURITY_IMPEXP __declspec(dllimport)
-#endif
-
-#ifndef SECURITY_EXPORT
-#ifdef __cplusplus
-#define SECURITY_EXPORT SECURITY_IMPEXP extern "C"
-#define SECURITY_EXPORT_CLASS SECURITY_IMPEXP
-#else
-#define SECURITY_EXPORT SECURITY_IMPEXP extern
-#define SECURITY_EXPORT_CLASS SECURITY_IMPEXP
-#endif
-#endif
+#import <CoreFoundation/CFDictionary.h>
 
 SECURITY_EXPORT const CFStringRef kSecClass;
 SECURITY_EXPORT const CFStringRef kSecClassGenericPassword;
@@ -86,14 +74,10 @@ SECURITY_EXPORT const CFStringRef kSecMatchLimit;
 SECURITY_EXPORT const CFStringRef kSecMatchLimitOne;
 SECURITY_EXPORT const CFStringRef kSecMatchLimitAll;
 
-SECURITY_EXPORT
-OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
+SECURITY_EXPORT OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
 
-SECURITY_EXPORT
-OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
+SECURITY_EXPORT OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
 
-SECURITY_EXPORT
-OSStatus SecItemDelete(CFDictionaryRef query);
+SECURITY_EXPORT OSStatus SecItemDelete(CFDictionaryRef query);
 
-SECURITY_EXPORT
-OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);
+SECURITY_EXPORT OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);

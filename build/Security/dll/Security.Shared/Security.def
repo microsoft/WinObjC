@@ -1,0 +1,61 @@
+LIBRARY Security
+    EXPORTS
+        SecItemUpdate
+        SecItemAdd
+        SecItemDelete
+        SecItemCopyMatching
+
+        kSecClass DATA
+        kSecClassGenericPassword DATA
+        kSecClassInternetPassword DATA
+        kSecClassCertificate DATA
+        kSecClassKey DATA
+        kSecClassIdentity DATA
+
+        kSecAttrAccessible DATA
+        kSecAttrAccessibleAfterFirstUnlock DATA
+        kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly DATA
+        kSecAttrAccessibleAlways DATA
+        kSecAttrAccessibleAlwaysThisDeviceOnly DATA
+        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly DATA
+        kSecAttrAccessibleWhenUnlocked DATA
+        kSecAttrAccessibleWhenUnlockedThisDeviceOnly DATA
+
+        kSecAttrAccessGroup DATA
+        kSecAttrCreationDate DATA
+        kSecAttrModificationDate DATA
+        kSecAttrDescription DATA
+        kSecAttrComment DATA
+        kSecAttrCreator DATA
+        kSecAttrType DATA
+        kSecAttrLabel DATA
+        kSecAttrIsInvisible DATA
+        kSecAttrIsNegative DATA
+        kSecAttrAccount DATA
+        kSecAttrService DATA
+        kSecAttrGeneric DATA
+
+        kSecValueData DATA
+        kSecValueRef DATA
+        kSecValuePersistentRef DATA
+
+        kSecReturnData DATA
+        kSecReturnAttributes DATA
+        kSecReturnRef DATA
+        kSecReturnPersistentRef DATA
+
+        kSecUseItemList DATA
+
+        kSecMatchPolicy DATA
+        kSecMatchItemList DATA
+        kSecMatchSearchList DATA
+        kSecMatchIssuers DATA
+        kSecMatchEmailAddressIfPresent DATA
+        kSecMatchSubjectContains DATA
+        kSecMatchCaseInsensitive DATA
+        kSecMatchTrustedOnly DATA
+        kSecMatchValidOnDate DATA
+        kSecMatchLimit DATA
+        kSecMatchLimitOne DATA
+        kSecMatchLimitAll DATA
+

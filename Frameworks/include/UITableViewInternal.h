@@ -9,6 +9,8 @@ class TableViewRow;
 class ReusableCell;
 class VisibleComponents;
 
+@class UICollectionViewData;
+
 struct UITableViewPriv {
     id<UITableViewDelegate> _delegate; // this should be idweak
     id<UITableViewDataSource> _dataSource;

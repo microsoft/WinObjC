@@ -17,8 +17,6 @@
 #import <CoreFoundation/CoreFoundation.h>
 #include "Starboard.h"
 
-static IWLazyClassLookup _LazyNSString("NSString");
-
 // Won't work so great with continuations... FIXME sometime
 
 static bool charInNSString(CFStringRef str, short ch) {

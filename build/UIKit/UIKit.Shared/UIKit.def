@@ -169,7 +169,7 @@ LIBRARY UIKit
      _OBJC_CLASS_UIDocument DATA
      __objc_class_name_UIDocument CONSTANT
      _OBJC_CLASS_UIAccessibilityElement DATA
-	 __objc_class_name_UIAccessibilityElement	CONSTANT
+     __objc_class_name_UIAccessibilityElement	CONSTANT
 
      UIAccessibilityPostNotification
      UIAccessibilityIsVoiceOverRunning
@@ -195,3 +195,12 @@ LIBRARY UIKit
      UIAccessibilityLayoutChangedNotification
      UIAccessibilityAnnouncementNotification
      UIAccessibilityPageScrolledNotification
+
+     UICollectionElementKindSectionHeader
+     UICollectionElementKindSectionFooter
+     UIFlowLayoutCommonRowHorizontalAlignmentKey
+     UIFlowLayoutLastRowHorizontalAlignmentKey
+     UIFlowLayoutRowVerticalAlignmentKey
+     UICollectionElementKindCell
+     UICollectionElementKindDecorationView
+     
