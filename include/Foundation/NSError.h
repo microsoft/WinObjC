@@ -26,6 +26,7 @@ FOUNDATION_EXPORT NSString * const NSLocalizedFailureReasonErrorKey;
 FOUNDATION_EXPORT NSString * const NSLocalizedRecoveryOptionsErrorKey;
 FOUNDATION_EXPORT NSString * const NSLocalizedRecoverySuggestionErrorKey;
 FOUNDATION_EXPORT NSString * const NSRecoveryAttempterErrorKey;
+FOUNDATION_EXPORT NSString * const NSDebugDescriptionKey;
 
 FOUNDATION_EXPORT NSString * const NSStringEncodingErrorKey;
 FOUNDATION_EXPORT NSString * const NSFilePathErrorKey;

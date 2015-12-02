@@ -37,6 +37,7 @@ NSString* const NSRecoveryAttempterErrorKey = @"NSRecoveryAttempterErrorKey";
 NSString* const NSStringEncodingErrorKey = @"NSStringEncodingErrorKey";
 NSString* const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
 NSString* const NSURLErrorKey = @"NSURLErrorKey";
+NSString* const NSDebugDescriptionKey = @"NSDebugDescription";
 
 @implementation NSError {
     idretaintype(NSString) _domain;
