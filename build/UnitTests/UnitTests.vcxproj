@@ -53,8 +53,14 @@
       <Project>{a03b9e82-d421-4cbc-8c94-24f0aa9ebbce}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
     <RootNamespace>UnitTests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
