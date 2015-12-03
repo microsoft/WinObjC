@@ -83,6 +83,7 @@ void printUsage(const char *execName, bool full, int exitCode)
   std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
   std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
   std::cout << "    -sdk SDKROOT" << "\t    specify path to WinObjC SDK root (by default calculated from binary's location)" << std::endl;
+  std::cout << "    -relativepath" << "\t    write a relative WinObjC SDK path to project files" << std::endl;
   std::cout << "    -project PATH" << "\t    specify project to process" << std::endl;
   std::cout << "    -workspace PATH" << "\t    specify workspace to process" << std::endl;
   std::cout << "    -target NAME" << "\t    specify target to process" << std::endl;
@@ -105,6 +106,7 @@ int main(int argc, char* argv[])
   int projectSet = 0;
   int workspaceSet = 0;
   int interactiveFlag = 0;
+  int relativeSdkFlag = 0;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
@@ -125,6 +127,7 @@ int main(int argc, char* argv[])
     {"workspace", required_argument, &workspaceSet, 1},
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
+    {"relativepath", no_argument, &relativeSdkFlag, 1},
     {0, 0, 0, 0}
   };
 
@@ -255,11 +258,13 @@ int main(int argc, char* argv[])
   sbValidate(!binaryDir.empty(), "Failed to resolve binary directory.");
   settingsManager.setGlobalVar("VSIMPORTER_BINARY_DIR", binaryDir);
   settingsManager.setGlobalVar("VSIMPORTER_INTERACTIVE", interactiveFlag ? "YES" : "NO");
+  settingsManager.setGlobalVar("VSIMPORTER_RELATIVE_SDK_PATH", relativeSdkFlag ? "YES" : "NO");
   if (!sdkRoot.empty()) {
-    sdkRoot = joinPaths(binaryDir, posixPath(sdkRoot));
-    sdkRoot = platformPath(sanitizePath(sdkRoot));
-    settingsManager.setGlobalVar("WINOBJC_SDK_ROOT", sdkRoot);
+    sdkRoot = joinPaths(getcwd(), sdkRoot);
+  } else {
+    sdkRoot = joinPaths(binaryDir, "..");
   }
+  settingsManager.setGlobalVar("WINOBJC_SDK_ROOT", sdkRoot);
 
   // Read xcconfig file specified from the command line
   if (!xcconfigPath.empty())
