@@ -1,13 +1,17 @@
 # Welcome to the Windows Bridge for iOS project preview
+The Windows Bridge for iOS (also referred to as **WinObjC**) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Apps (UWAs) that will run on any Windows 10 device using iOS APIs and Objective-C code.
 
-## What is WinObjC?
-Windows Bridge for iOS (also referred to as **WinObjC**) is a Microsoft open source project that provides an Objective-C development environment for Visual Studio on Windows. In addition, WinObjC provides support for iOS API compatibility.
+The following sections will help you get started. For more information, check out:
 
-The following sections will help you get started, and you can view our [wiki](https://github.com/Microsoft/WinObjC/wiki) for more detailed information.
+1. [Our wiki](https://github.com/Microsoft/WinObjC/wiki)
+2. [Our website on Windows Dev Center](https://dev.windows.com/bridges/ios)
 
-## Where to get it
+If you'd like to support the project, please consider [submitting your app](https://dev.windows.com/en-us/bridges/ios/app-submission) to help us test our app analysis tool. You can read more about the effort and what we're working on [here](https://blogs.windows.com/buildingapps/2015/11/18/windows-bridge-for-ios-where-we-are-and-where-we-are-headed/).
 
+
+## Where to get the bridge
 Download the latest pre-built Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.151119/winobjc.zip).
+
 
 ## Getting started with WinObjC
 To use WinObjC, there are a few requirements. You need:
@@ -20,42 +24,32 @@ To use WinObjC, there are a few requirements. You need:
 
 The best way to get started with WinObjC is to run one of the samples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls.
 
-**NOTE:** The following instructions are for getting started using the ***pre-built SDK*** rather than building the sdk from source. If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki) instead. 
+**NOTE:** The following instructions are for getting started using the ***pre-built SDK*** rather than building the SDK from source. If you're building the SDK from the source code, follow the instructions on the [wiki](https://github.com/Microsoft/WinObjC/wiki) instead. 
 
 To run the sample:
 
 1. Extract the SDK zip file to a local directory
-
 2. Navigate to *winobjc/samples/WOCCatalog* in the extracted directory
-
 3. Double-click on *WOCCatalog-WinStore10.sln* to open in VS2015
-
 4. In VS2015 right-click on the WOCCatalog (Universal Windows) project
-
 5. Select **Set as StartUp project**
-
 6. Use **Ctrl-F5** to build and run the app
 
+For guidance on importing your own Xcode project and other tips, see the [wiki](https://github.com/Microsoft/WinObjC/wiki)
 
-For guidance about importing your own Xcode project and other Windows Bridge for iOS SDK details, see the [wiki](https://github.com/Microsoft/WinObjC/wiki)
 
 ## Contributions
+See our [contribution guidance in the wiki](https://github.com/Microsoft/WinObjC/wiki/How-to-Contribute) for details on how to contribute to the project.
 
-See our [contribution guidance](Contributing.md) for details on how to contribute to the WinObjC project.
 
 ## What's still under development?
-As this project is still under active development, there are many features that are not yet complete:
+As this project is still under active development, there are many features that are not yet complete. You can check out [our roadmap in the wiki](https://github.com/Microsoft/WinObjC/wiki/Roadmap) for more information.
 
-1. x86 only today; ARM support coming soon
-2. Compiler optimizations will not work and will likely crash clang, debug builds only for now
-3. Autolayout
-4. Storyboard support
-5. MapKit
-6. AssetsLibrary
-7. AddressBook
-8. Ads
-9. Objective-C annotations
-10. Media Capture and Playback
 
-## Problems?
-If you have any questions, we're listening and will do our best to help. Just go to http://stackoverflow.com/ and tag your questions with **WinObjC**. You can also get more information at our [wiki](https://github.com/Microsoft/WinObjC/wiki)
+## Questions
+If you have any questions, we're listening and will do our best to help. There are lots of ways you can get in touch or find out more:
+
+1. [File an issue](https://github.com/Microsoft/WinObjC/issues/new) to let us know about bugs and missing or incomplete features and APIs you need.
+2. Follow [@WindowsDev on Twitter](https://twitter.com/windowsdev) and interact with our team using the [#WinObjC hashtag](https://twitter.com/hashtag/WinObjC).
+3. Go to http://stackoverflow.com/ and tag your questions with **WinObjC**.
+4. You can also find answers to lots of common questions at our [wiki](https://github.com/Microsoft/WinObjC/wiki)
