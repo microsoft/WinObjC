@@ -34,6 +34,7 @@ using WCHAR = wchar_t;
 #include <windows.security.cryptography.h>
 #include <windows.storage.streams.h>
 #include <COMIncludes_End.h>
+#include <string>
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::Security::Cryptography;
@@ -160,10 +161,21 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)initWithBytes:(const void*)bytes length:(unsigned)length {
-    _bytes = (uint8_t*)malloc(length);
+    _bytes = nullptr;
     _freeWhenDone = TRUE;
-    memcpy(_bytes, bytes, length);
     _length = length;
+
+    if (_length) {
+        _bytes = (uint8_t*)EbrMalloc(_length);
+        if (!_bytes) {
+            [self release];
+            return nil;
+        }
+    }
+
+    if (_length && _bytes) {
+        memcpy(_bytes, bytes, _length);
+    }
 
     return self;
 }
@@ -240,31 +252,7 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)initWithContentsOfFile:(NSString*)filename {
-    if (filename == nil) {
-        return nil;
-    }
-
-    char* fname = (char*)[filename UTF8String];
-
-    EbrDebugLog("NSData opening %s\n", fname);
-    EbrFile* fpIn = EbrFopen(fname, "rb");
-    if (fpIn) {
-        EbrFseek(fpIn, 0, SEEK_END);
-        _length = EbrFtell(fpIn);
-        EbrFseek(fpIn, 0, SEEK_SET);
-
-        _bytes = (uint8_t*)malloc(_length);
-        _freeWhenDone = TRUE;
-        _length = EbrFread(_bytes, 1, _length, fpIn);
-        EbrFclose(fpIn);
-    } else {
-        EbrDebugLog("NSData couldn't open %s for read\n", fname);
-        _bytes = NULL;
-        _length = 0;
-        return nil;
-    }
-
-    return self;
+    return [self initWithContentsOfFile:filename options:0 error:nullptr];
 }
 
 /**
@@ -356,10 +344,14 @@ using namespace Windows::Foundation;
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
+    _bytes = nullptr;
+    _length = 0;
+
     if (filename == nil) {
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
+        [self release];
         return nil;
     }
 
@@ -368,21 +360,31 @@ using namespace Windows::Foundation;
     EbrDebugLog("NSData extended-opening %s\n", fname);
     EbrFile* fpIn = EbrFopen(fname, "rb");
     if (fpIn) {
+        auto closeFile = wil::ScopeExit([&]() { EbrFclose(fpIn); });
+
         EbrFseek(fpIn, 0, SEEK_END);
-        _length = EbrFtell(fpIn);
+        size_t length = EbrFtell(fpIn);
         EbrFseek(fpIn, 0, SEEK_SET);
 
-        _bytes = (uint8_t*)malloc(_length);
-        _freeWhenDone = TRUE;
-        _length = EbrFread(_bytes, 1, _length, fpIn);
-        EbrFclose(fpIn);
+        if (length) {
+            _bytes = (uint8_t*)EbrMalloc(length);
+            if (!_bytes) {
+                if (error) {
+                    *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
+                }
+                [self release];
+                return nil;
+            }
+
+            _freeWhenDone = TRUE;
+            _length = EbrFread(_bytes, 1, length, fpIn);
+        }
     } else {
         EbrDebugLog("NSData couldn't open %s for read (extended)\n", fname);
-        _bytes = NULL;
-        _length = 0;
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
+        [self release];
         return nil;
     }
 
@@ -537,30 +539,19 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (NSString*)description {
-    const char* hex = "0123456789abcdef";
     const char* bytes = (const char*)[self bytes];
     NSUInteger length = [self length];
-    NSUInteger pos = 0, i;
-    char* cString;
+    NSMutableString* ret = [NSMutableString stringWithCapacity:1 + length * 2 + (length / 4)];
 
-    cString = (char*)malloc(1 + length * 2 + (length / 4) + 1);
+    [ret appendString:@"<"];
 
-    cString[pos++] = '<';
-    for (i = 0; i < length;) {
-        unsigned char byte = bytes[i];
-
-        cString[pos++] = hex[byte >> 4];
-        cString[pos++] = hex[byte & 0x0F];
-        i++;
-
+    for (auto i = 0; i < length;) {
+        [ret appendFormat:@"%02X", bytes[i++]];
         if ((i % 4) == 0 && i < length) {
-            cString[pos++] = ' ';
+           [ret appendString:@" "];
         }
     }
-    cString[pos++] = '>';
-
-    NSString* ret = [[[NSString alloc] initWithBytes:cString length:pos encoding:NSUTF8StringEncoding] autorelease];
-    free(cString);
+    [ret appendString:@">"];
 
     return ret;
 }
@@ -580,8 +571,9 @@ using namespace Windows::Foundation;
 }
 
 - (void)dealloc {
-    if (_freeWhenDone) {
+    if (_freeWhenDone && _bytes) {
         free(_bytes);
+        _bytes = nullptr;
     }
 
     [super dealloc];
