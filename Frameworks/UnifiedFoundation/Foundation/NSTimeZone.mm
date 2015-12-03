@@ -25,53 +25,111 @@
 #include <unicode/gregocal.h>
 #include <windows.h>
 
-static NSTimeZone* _defaultTimeZone;
-static dispatch_once_t _systemTimeZoneInit;
-static NSTimeZone* _systemTimeZone;
+#import <vector>
+
+@interface NSTimeZone ()
+@property (nonatomic, readwrite, copy) NSString* description;
+@property (nonatomic, readwrite, copy) NSDate* nextDaylightSavingTimeTransition;
+@property (nonatomic, readwrite, copy) NSString* abbreviation;
+@property (nonatomic, readwrite, copy) NSString* name;
+@property (nonatomic, readwrite, copy) NSData* data;
+@property (nonatomic, readwrite) NSTimeInterval daylightSavingTimeOffset;
+@property (nonatomic, readwrite) BOOL isDaylightSavingTime;
+@property (nonatomic, readwrite) NSInteger secondsFromGMT;
+@end
+
+static NSTimeZone* s_defaultTimeZone;
+static StrongId<NSDictionary> s_abbreviationDictionary;
+static StrongId<NSTimeZone> s_systemTimeZone;
+static NSArray* s_KnownTimeZoneNames;
+
+// This value is negative as TIME_ZONE_INFORMATION has an opposite sign for bias than icu.
+
+const static int c_minutesToMilliseconds = -60000;
 
 @implementation NSTimeZone {
     icu::TimeZone* _icuTZ;
 }
-+ (void)_setTimeZoneToSystemSettings:(icu::TimeZone*)tz {
-    /* Implement me! */
+
++ (void)initialize {
+    [self _setDefaultAbbreviationDictionary];
+    s_KnownTimeZoneNames = [[self abbreviationDictionary] allValues];
+}
+
++ (void)_setTimeZoneToSystemSettings:(NSTimeZone*)timeZone {
+    s_systemTimeZone = timeZone;
 }
 
 + (NSTimeZone*)_getSystemTZ {
-    dispatch_once(&_systemTimeZoneInit,
-                  ^{
-                      _systemTimeZone = [self alloc];
-                      _systemTimeZone->_icuTZ = icu_48::TimeZone::createDefault();
-                      [self _setTimeZoneToSystemSettings:_systemTimeZone->_icuTZ];
-                  });
+    @synchronized(self) {
+        if (!s_systemTimeZone) {
+            // Get current locale.
+            NSLocale* currentLocale = [NSLocale currentLocale];
+            NSString* countryCode = [currentLocale getNSLocaleCountryCode];
 
-    return _systemTimeZone;
+            // Get time zone info from system.
+            TIME_ZONE_INFORMATION timeZoneInfo;
+            GetTimeZoneInformation(&timeZoneInfo);
+
+            // TIME_ZONE_INFORMATION offset is in minutes, icu needs milliseconds
+            int milliseconds = timeZoneInfo.Bias * c_minutesToMilliseconds;
+
+            UErrorCode status = U_ZERO_ERROR;
+            icu::StringEnumeration* timeZoneIds =
+                icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, [countryCode UTF8String], &milliseconds, status);
+
+            NSTimeZone* systemTimeZone = [[NSTimeZone alloc] init];
+
+            // Did we find a suitable time zone?
+            if (timeZoneIds->count(status) > 0) {
+                const UnicodeString* zoneId = timeZoneIds->snext(status);
+
+                systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+            } else {
+                // Try again without country code.
+                icu::StringEnumeration* timeZoneIds =
+                    icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, NULL, &milliseconds, status);
+
+                if (timeZoneIds->count(status) > 0) {
+                    const UnicodeString* zoneId = timeZoneIds->snext(status);
+
+                    systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+                } else {
+                    // There are no predefined time zones that match the system settings + language
+
+                    systemTimeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+                }
+            }
+
+            [self _setTimeZoneToSystemSettings:systemTimeZone];
+        }
+        return s_systemTimeZone;
+    }
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Uses language to determine region for time zone. Only picks first of possible time zones in region.
 */
 + (instancetype)systemTimeZone {
-    UNIMPLEMENTED();
     return [self _getSystemTZ];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (void)resetSystemTimeZone {
-    UNIMPLEMENTED();
-    [self _setTimeZoneToSystemSettings:[self _getSystemTZ]->_icuTZ];
+    s_systemTimeZone = nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (instancetype)defaultTimeZone {
-    UNIMPLEMENTED();
     NSTimeZone* ret;
 
-    if (_defaultTimeZone != nil) {
-        ret = _defaultTimeZone;
+    if (s_defaultTimeZone != nil) {
+        ret = s_defaultTimeZone;
     } else {
         ret = [self systemTimeZone];
     }
@@ -83,17 +141,15 @@ static NSTimeZone* _systemTimeZone;
 */
 + (void)setDefaultTimeZone:(NSTimeZone*)zone {
     zone = [zone retain];
-    [_defaultTimeZone release];
-    _defaultTimeZone = zone;
+    [s_defaultTimeZone release];
+    s_defaultTimeZone = zone;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSArray*)knownTimeZoneNames {
-    UNIMPLEMENTED();
-    //  TODO
-    return [NSArray arrayWithObject:@"America/Los_Angeles"];
+    return s_KnownTimeZoneNames;
 }
 
 - (icu::TimeZone*)_createICUTimeZone {
@@ -111,12 +167,11 @@ static NSTimeZone* _systemTimeZone;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (instancetype)localTimeZone {
-    UNIMPLEMENTED();
-    if (_defaultTimeZone != nil) {
-        return [[_defaultTimeZone retain] autorelease];
+    if (s_defaultTimeZone != nil) {
+        return [[s_defaultTimeZone retain] autorelease];
     }
     return [self systemTimeZone];
 }
@@ -139,13 +194,161 @@ static NSTimeZone* _systemTimeZone;
 /**
  @Status Interoperable
 */
-+ (instancetype)timeZoneWithAbbreviation:(NSString*)name {
-    NSTimeZone* ret = [self alloc];
-    const char* nameStr = [name UTF8String];
-    icu_48::TimeZone* tz = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString(nameStr));
-    int foo = tz->getRawOffset();
-    ret->_icuTZ = tz;
-    return [ret autorelease];
++ (instancetype)timeZoneWithAbbreviation:(NSString*)abbreviation {
+    return [self timeZoneWithName:[s_abbreviationDictionary objectForKey:abbreviation]];
+}
+
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+/**
+ @Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        // Can't encode/decode ICU object. Potentially recreate system TZ?
+        _description = [[coder decodeObjectForKey:@"description"] retain];
+        _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
+        _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
+        _name = [[coder decodeObjectForKey:@"name"] retain];
+        _data = [[coder decodeObjectOfClass:[NSData class] forKey:@"data"] retain];
+        _daylightSavingTimeOffset = [coder decodeDoubleForKey:@"daylightSavingTimeOffset"];
+        _isDaylightSavingTime = [coder decodeBoolForKey:@"isDaylightSavingTime"];
+        _secondsFromGMT = [coder decodeInt64ForKey:@"secondsFromGMT"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    // Can't encode/decode ICU object. Potentially recreate system TZ?
+    [coder encodeObject:_description forKey:@"description"];
+    [coder encodeObject:_nextDaylightSavingTimeTransition forKey:@"nextDaylightSavingTimeTransition"];
+    [coder encodeObject:_abbreviation forKey:@"abbreviation"];
+    [coder encodeObject:_name forKey:@"name"];
+    [coder encodeObject:_data forKey:@"data"];
+    [coder encodeDouble:_daylightSavingTimeOffset forKey:@"daylightSavingTimeOffset"];
+    [coder encodeBool:_isDaylightSavingTime forKey:@"isDaylightSavingTime"];
+    [coder encodeInt64:_secondsFromGMT forKey:@"secondsFromGMT"];
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)setAbbreviationDictionary:(NSDictionary*)dict {
+    @synchronized(self) {
+        s_abbreviationDictionary = dict;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSDictionary*)abbreviationDictionary {
+    @synchronized(self) {
+        return s_abbreviationDictionary;
+    }
+}
+
++ (void)_setDefaultAbbreviationDictionary {
+    UErrorCode status = U_ZERO_ERROR;
+    icu::StringEnumeration* abbreviations = icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, NULL, NULL, status);
+
+    if (abbreviations->count(status) > 0 && status == U_ZERO_ERROR) {
+        NSMutableDictionary* defaultDictionary = [NSMutableDictionary dictionary];
+
+        const UnicodeString* abbreviation = abbreviations->snext(status);
+
+        while (abbreviation != NULL && status == U_ZERO_ERROR) {
+            icu::TimeZone* timeZone = icu::TimeZone::createTimeZone(*abbreviation);
+            icu_48::UnicodeString name;
+            icu_48::UnicodeString id;
+
+            timeZone->getDisplayName(name);
+            timeZone->getID(id);
+
+            std::vector<UChar> tempName(name.length());
+            std::vector<UChar> tempId(id.length());
+
+            UErrorCode status = U_ZERO_ERROR;
+            int length = name.extract(tempName.data(), tempName.size(), status);
+
+            int length2 = id.extract(tempId.data(), tempId.size(), status);
+
+            NSString* nsName = [[NSString alloc] initWithCharacters:(unichar*)tempName.data() length:length];
+            NSString* nsId = [[NSString alloc] initWithCharacters:(unichar*)tempId.data() length:length2];
+
+            [defaultDictionary setObject:nsId forKey:nsName];
+
+            abbreviation = abbreviations->snext(status);
+        }
+
+        [self setAbbreviationDictionary:defaultDictionary];
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes Data is unused currently. Data is "The data from the time-zone files located at /usr/share/zoneinfo."
+*/
++ (NSTimeZone*)timeZoneWithName:(NSString*)name data:(NSData*)data {
+    NSTimeZone* ret = [NSTimeZone timeZoneWithName:name];
+    ret.data = data;
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithName:(NSString*)name {
+    if (self = [self init]) {
+        self->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString([name UTF8String]));
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithName:(NSString*)name data:(NSData*)data {
+    if (self = [self initWithName:name]) {
+        self.data = data;
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqualToTimeZone:(NSTimeZone*)timeZone {
+    if ([[self name] isEqualToString:[timeZone name]]) {
+        return (self.data == timeZone.data || [self.data isEqual:timeZone.data]);
+    }
+    return false;
+}
+
+/**
+ @Status Stub
+*/
+- (NSString*)abbreviationForDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return @"";
+}
+
+/**
+ @Status Stub
+*/
+- (NSTimeInterval)daylightSavingTimeOffsetForDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (NSDate*)nextDaylightSavingTimeTransitionAfterDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return _nextDaylightSavingTimeTransition;
 }
 
 /**

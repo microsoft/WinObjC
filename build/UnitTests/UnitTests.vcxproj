@@ -272,6 +272,7 @@
     <ClangCompile Include="..\..\tests\unittests\NSJSONSerialization.m" />
     <ClangCompile Include="..\..\tests\unittests\NSString.m" />
     <ClangCompile Include="..\..\tests\unittests\NSLayoutConstraint.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSTimeZone.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURL.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_sanity.m" />
     <ClangCompile Include="..\..\tests\unittests\objcrt_runtime.mm" />
