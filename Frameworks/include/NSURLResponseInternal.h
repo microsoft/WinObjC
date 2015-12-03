@@ -2,7 +2,7 @@
 
 @interface NSURLResponse () {
 @public
-    idretain _url, _mimeType, _textEncodingName;
+    idretain _mimeType, _textEncodingName, _HTTPVersion, _url;
     int _expectedContentLength;
 }
 @end
