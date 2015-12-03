@@ -62,19 +62,12 @@ IMP objc_not_found_handler(id obj, SEL sel) {
         return objc_forward_handler(obj, sel);
 
 // TODO: Switch to a runtime-configurable setting
-#ifdef OBJC_APP_BRINGUP
-    char buffer[1024] = { 0 };
-    sprintf_s(buffer, sizeof(buffer), "*******Class [%s]: method [%s]: not implemented*******\r\n", object_getClassName(obj), sel_getName(sel));
-    OutputDebugStringA(buffer);
-
-    return (IMP)nil_method;
-#else
     OBJC_NOT_IMPLEMENTED_ERROR("Selector %c[%s] is not implemented for class %s on object 0x%x!",
                                (is_class ? '+' : '-'),
                                sel_getName(sel),
                                object_getClassName(obj),
                                obj);
-#endif
+    return (IMP)nil_method;
 }
 
 BOOL class_respondsToSelector(Class cls, SEL sel) {
