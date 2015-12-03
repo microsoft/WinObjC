@@ -118,6 +118,14 @@ static void initWebKit(UIWebView* self) {
     [self setNeedsLayout];
 }
 
+- (instancetype)init {
+    [super init];
+
+    initWebKit(self);
+
+    return self;
+}
+
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
