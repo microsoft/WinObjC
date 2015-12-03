@@ -10,7 +10,7 @@ If you'd like to support the project, please consider [submitting your app](http
 
 
 ## Where to get the bridge
-Download the latest pre-built Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.151119/winobjc.zip).
+Download the latest pre-built Windows Bridge for iOS SDK [here](https://github.com/Microsoft/WinObjC/releases/download/0.1.0.151203/winobjc.zip).
 
 
 ## Getting started with WinObjC
