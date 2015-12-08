@@ -17,11 +17,14 @@
 #import <Foundation/Foundation.h>
 #import <functional>
 #import <Starboard.h>
+#import <Windows.h>
 
 #import <map>
 #import <mutex>
 #import <condition_variable>
 
+#import "NSRunLoopSource.h"
+#import "NSURLSession-Internal.h"
 #import "NSURLSessionTask-Internal.h"
 
 const int64_t NSURLSessionTransferSizeUnknown = -1LL;
@@ -112,6 +115,11 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     bool _invalidating;
     std::mutex _mutex;
     std::condition_variable _taskRemovalCondition;
+
+    NSThread *_taskDispatchThread;
+    NSRunLoopSource *_runLoopCancelSource;
+
+    uint32_t _threadInitializedFuse;
 }
 @property (readwrite, copy) NSURLSessionConfiguration* configuration;
 @property (readwrite, retain) id<NSURLSessionDelegate> delegate;
@@ -183,11 +191,34 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     [_delegate release];
     [_delegateQueue release];
     [_allTasks release];
+    [_taskDispatchThread release];
+    [_runLoopCancelSource release];
     [super dealloc];
 }
 
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
+}
+
+- (void)_ensureTaskDispatchThreadIsRunning {
+    // TODO(DH): this should be an atomic<bool>, but atomics require an intrinsic we can't emit right now.
+    if(InterlockedCompareExchange(&_threadInitializedFuse, 0x1, 0x0) == 0x0) {
+        _runLoopCancelSource = [[NSRunLoopSource alloc] init];
+        _taskDispatchThread = [[NSThread alloc] initWithTarget:self selector:@selector(_taskDispatchThreadBody:) object:nil];
+        [_taskDispatchThread start];
+    }
+}
+
+- (void)_taskDispatchThreadBody:(id)sender {
+    NSRunLoop* currentRunLoop = [NSRunLoop currentRunLoop];
+    [currentRunLoop addInputSource:_runLoopCancelSource forMode:@"kCFRunLoopDefaultMode"];
+    while(!_invalidating) {
+        [currentRunLoop runUntilDate:[NSDate distantFuture]];
+    }
+}
+
+- (NSThread*)_taskDispatchThread {
+    return _taskDispatchThread;
 }
 
 - (void)_dispatchUnsupportedFailureToCompletionBlock:(NSURLSessionTaskCompletionHandler)completionHandler {
@@ -203,6 +234,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     }
 
     [_allTasks addObject:task];
+    [self _ensureTaskDispatchThreadIsRunning];
 }
 
 - (void)_registerDownloadTask:(NSURLSessionTask*)task withCompletionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler {
@@ -215,6 +247,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     }
 
     [_allTasks addObject:task];
+    [self _ensureTaskDispatchThreadIsRunning];
 }
 
 - (void)_deregisterTask:(NSURLSessionTask*)task {
@@ -441,6 +474,8 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 
     self.delegate = nil;
     self.delegateQueue = nil;
+
+    [_runLoopCancelSource _trigger];
 }
 
 /**

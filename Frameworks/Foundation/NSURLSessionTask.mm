@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Starboard.h>
+#import "NSURLSession-Internal.h"
 #import "NSURLSessionTask-Internal.h"
 
 const float NSURLSessionTaskPriorityHigh = 1.0f;
@@ -25,7 +26,6 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 @interface NSURLSessionTask () {
     NSURLProtocol* _protocolConnection;
     NSURLSessionConfiguration* _configuration;
-    NSThread* _initialThread;
 }
 @end
 
@@ -74,7 +74,6 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     [_error release];
     [_configuration release];
     [_protocolConnection release];
-    [_initialThread release];
     [super dealloc];
 }
 
@@ -110,9 +109,6 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
             return;
         }
 
-        if (!_initialThread) {
-            _initialThread = [[NSThread currentThread] retain];
-        }
         [self _startLoading];
         self.state = NSURLSessionTaskStateRunning;
     }
@@ -137,7 +133,7 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 }
 
 - (void)_startLoading {
-    [self performSelector:@selector(__startLoadingThread) onThread:_initialThread withObject:nil waitUntilDone:NO];
+    [self performSelector:@selector(__startLoadingThread) onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread] withObject:nil waitUntilDone:NO];
 }
 
 /*
@@ -154,9 +150,13 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     [self _signalCompletionInState:NSURLSessionTaskStateCanceling withError:nil];
 }
 
-- (void)_stopLoading {
+- (void)__stopLoadingThread {
     [_protocolConnection stopLoading];
     _protocolConnection = nil;
+}
+
+- (void)_stopLoading {
+    [self performSelector:@selector(__stopLoadingThread) onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread] withObject:nil waitUntilDone:YES];
 }
 
 /*
