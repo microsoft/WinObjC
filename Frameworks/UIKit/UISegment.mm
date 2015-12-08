@@ -34,8 +34,8 @@ static idretain _buttonFill[2];
     _buttonRight[0] =
         [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
-    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 1)];
+    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 6, 0, 6)];
+    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 6, 0, 6)];
 
     return self;
 }
@@ -58,7 +58,7 @@ static idretain _buttonFill[2];
     [self setOpaque:FALSE];
     _textColor[0] = [UIColor darkGrayColor];
     _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:12.0f];
+    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
     return self;
 }
@@ -72,7 +72,7 @@ static idretain _buttonFill[2];
     [self setOpaque:FALSE];
     _textColor[0] = [UIColor darkGrayColor];
     _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:12.0f];
+    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
     return self;
 }
@@ -87,7 +87,7 @@ static idretain _buttonFill[2];
     [self setOpaque:FALSE];
     _textColor[0] = [UIColor darkGrayColor];
     _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:12.0f];
+    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
     return self;
 }

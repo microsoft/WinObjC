@@ -55,10 +55,9 @@ static int addButton(UIActionSheet* self, id text) {
     id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
     id ret = [[UIButton alloc] initWithFrame:frame];
+	[ret setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [ret setTitle:text forState:0];
-    [ret setTitleColor:[UIColor whiteColor] forState:0];
-    [ret setBackgroundImage:buttonBackground forState:0];
-    [ret setBackgroundImage:buttonPressed forState:1];
+    [ret setTitleColor:[UIColor blackColor] forState:0];
     [ret setTag:self->_numButtons];
     [ret addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -115,7 +114,7 @@ static int addButton(UIActionSheet* self, id text) {
 
         _titleLabel = [[UILabel alloc] initWithFrame:frame];
         [_titleLabel setText:_title];
-        [_titleLabel setTextColor:[UIColor whiteColor]];
+        [_titleLabel setTextColor:[UIColor blackColor]];
         [_titleLabel setBackgroundColor:nil];
 
         _totalHeight += 50.0f;

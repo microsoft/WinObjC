@@ -153,7 +153,7 @@ static void createLabel(UIButton* self) {
     if (isOSTarget(@"7.0")) {
         _defaultColor = [UIColor blackColor];
     } else {
-        _defaultColor = [UIColor whiteColor];
+        _defaultColor = [UIColor blackColor];
     }
 
     if ([coder containsValueForKey:@"UIButtonType"]) {
@@ -298,7 +298,7 @@ static void createLabel(UIButton* self) {
     if (isOSTarget(@"7.0")) {
         _defaultColor = [UIColor blackColor];
     } else {
-        _defaultColor = [UIColor whiteColor];
+        _defaultColor = [UIColor blackColor];
     }
 
     _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
@@ -668,7 +668,16 @@ static UIImage* backgroundImageForButtonType(UIButtonType type) {
 }
 
 static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
-    return nil;
+    UIImage* background = nil;
+
+    switch (type) {
+        case UIButtonTypeRoundedRect:
+        case UIButtonTypeRoundedRectLegacy:
+            background = [[UIImage imageNamed:@"/img/rounded-button-pressed@2x.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:11];
+            break;
+    }
+
+    return background;
 }
 
 /**
@@ -714,8 +723,7 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     [ret setBackgroundImage:selectedBackground forState:1];
 
     if (type == UIButtonTypeRoundedRect || type == UIButtonTypeRoundedRectLegacy) {
-        [ret setTitleColor:[UIColor colorWithRed:0.0f green:0.47f blue:0.84f alpha:1.0f] forState:0];
-        [ret setTitleColor:[UIColor lightTextColor] forState:1];
+        [ret setTitleColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f] forState:0];
     }
 
     return [ret autorelease];

@@ -234,7 +234,7 @@ ret->height += ascenderDelta;
     static id mFont;
 
     if (mFont == nil) {
-        mFont = [[self systemFontOfSize:20.0f] retain];
+        mFont = [[self systemFontOfSize:15.0f] retain];
     }
 
     return mFont;
@@ -244,7 +244,7 @@ ret->height += ascenderDelta;
     static id tFont;
 
     if (tFont == nil) {
-        tFont = [[self systemFontOfSize:26.0f] retain];
+        tFont = [[self systemFontOfSize:20.0f] retain];
     }
 
     return tFont;
