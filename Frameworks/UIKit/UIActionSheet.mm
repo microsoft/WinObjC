@@ -51,9 +51,6 @@ static int addButton(UIActionSheet* self, id text) {
 
     self->_totalHeight += 40.0f;
 
-    id buttonBackground = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-    id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-
     id ret = [[UIButton alloc] initWithFrame:frame];
 	[ret setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [ret setTitle:text forState:0];

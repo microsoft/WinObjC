@@ -284,7 +284,7 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
 
     id ret = [[UIButton alloc] initWithFrame:frame];
     [ret setTitle:text forState:0];
-    [ret setTitleColor:[UIColor whiteColor] forState:0];
+    [ret setTitleColor:[UIColor blackColor] forState:0];
     [ret setBackgroundImage:buttonBackground forState:0];
     [ret setBackgroundImage:buttonPressed forState:1];
     [ret setTag:index];
