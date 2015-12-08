@@ -75,7 +75,11 @@ class XCConfigPrinter : public VarPrintFunc {
 public:
   virtual ~XCConfigPrinter() {}
   XCConfigPrinter(OFStream& out) : m_ofs(out) {}
-  void print(const String& varName, const String& varValue) const { m_ofs << varName << " = " << trim(varValue) << std::endl; }
+  void print(const String& varName, const String& varValue) const {
+    if (!strBeginsWith(varName, "VSIMPORTER")) {
+      m_ofs << varName << " = " << trim(varValue) << std::endl;
+    }
+  }
 private:
   OFStream& m_ofs;
 };
