@@ -77,8 +77,7 @@ void SBTarget::validateSDK()
   for (auto bs : m_buildSettings) {
     const VariableCollectionHierarchy& vch = bs.second->getHierarchy();
     String sdkRoot = vch.getValue("SDKROOT", vch.size() - 2);
-    sdkRoot = sb_basename(sdkRoot);
-    strToLower(sdkRoot);
+    sdkRoot = strToLower(sb_basename(sdkRoot));
     if (!strBeginsWith(sdkRoot, "iphoneos")) {
       SBLog::warning() << "The \"" << bs.first << "\" configuration of the \"" << getName() << "\" target does not target an iOS SDK." << std::endl;
     }

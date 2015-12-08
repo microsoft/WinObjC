@@ -32,7 +32,7 @@ bool queryBoolSelection(const String& queryMessage)
     std::cout << queryMessage << " [Y,n]: ";
     
     getline(std::cin, action);
-    strToLower(action);
+    action = strToLower(action);
     
     if (action.empty())
       action = "y";
