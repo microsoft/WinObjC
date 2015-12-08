@@ -54,7 +54,7 @@ struct RowData {
     [super initWithFrame:pos];
     [super setDelegate:(id<UIScrollViewDelegate>)self];
     [self setShowsVerticalScrollIndicator:FALSE];
-    [self setBackgroundColor:[UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0]];
+    [self setBackgroundColor:[UIColor windowsControlDefaultBackgroundColor]];
 
     return self;
 }

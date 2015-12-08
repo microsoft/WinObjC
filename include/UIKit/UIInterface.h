@@ -45,6 +45,7 @@ typedef enum {
 + (UIColor *)underPageBackgroundColor;
 + (UIColor *)scrollViewTexturedBackgroundColor;
 + (UIColor *)windowsControlFocusedColor;
++ (UIColor *)windowsControlDefaultBackgroundColor;
 + (UIColor *)windowsTableViewSelectionBackgroundColor;
 @end
 
