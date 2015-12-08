@@ -471,7 +471,7 @@ static void initInternal(UITableViewCell* self) {
         _cellOldBackgroundColor = _cellBackgroundColor;
         switch (_selectionStyle) {
             case UITableViewCellSelectionStyleBlue:
-                [self setBackgroundColor:[UIColor colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0]];
+                [self setBackgroundColor:[UIColor windowsTableViewCellSelectionBackgroundColor]];
                 break;
 
             case UITableViewCellSelectionStyleGray:
