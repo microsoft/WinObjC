@@ -361,7 +361,7 @@ static void positionScrollers(UIScrollView* self) {
     if (_contentSize.width != size.width || _contentSize.height != size.height) {
         _contentSize = size;
         if (_displayLink == nil || _animationReason != ANIMATION_USER) {
-            [self setContentOffset:_contentOffset];
+            [self setContentOffset:_contentOffset animated:NO];
         }
         [self setNeedsLayout];
     }
@@ -385,7 +385,8 @@ static void positionScrollers(UIScrollView* self) {
  @Status Interoperable
 */
 - (void)setContentOffset:(CGPoint)offset {
-    [self setContentOffset:offset animated:NO];
+    // Changing the offset without specifying animated should not cancel gestures.
+    changeContentOffset(self, offset, NO, false);
 }
 
 static bool bounceClamp(float& val, float min, float max) {
@@ -519,14 +520,14 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
         // Stop scrolling:
         if (_displayLink != nil) {
             hideScrollersAction(self);
+            [_displayLink invalidate];
+            _displayLink = nil;
             if (_animationReason == ANIMATION_USER) {
                 if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
                     [self.delegate scrollViewDidEndScrollingAnimation:self];
                 }
             }
         }
-        [_displayLink invalidate];
-        _displayLink = nil;
 
         changeContentOffset(self, offset, animated, false);
     }
@@ -1171,7 +1172,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     clipPoint(self, curOffset, false);
 
     if (curOffset != _contentOffset) {
-        [self setContentOffset:curOffset];
+        [self setContentOffset:curOffset animated:NO];
     }
 }
 
