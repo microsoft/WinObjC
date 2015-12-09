@@ -20,8 +20,19 @@
 #include <unicode/datefmt.h>
 #include <unicode/dtfmtsym.h>
 #include <unicode/locid.h>
+
 using WCHAR = wchar_t;
-#import <UWP/WindowsSystemUserProfile.h>
+
+#include <COMIncludes.h>
+#include <wrl/client.h>
+#include <wrl/wrappers/corewrappers.h>
+#include <windows.system.userprofile.h>
+#include <COMIncludes_End.h>
+
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::System::UserProfile;
+using namespace ABI::Windows::Foundation::Collections;
+using namespace Windows::Foundation;
 
 NSString* const NSLocaleIdentifier = @"NSLocaleIdentifier";
 NSString* const NSLocaleLanguageCode = @"NSLocaleLanguageCode";
@@ -122,7 +133,7 @@ static NSLocale* _currentLocale;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _userPreferredLanguages = [[WSUGlobalizationPreferences languages] retain];
+        _userPreferredLanguages = [[NSLocale preferredLanguages] retain];
 
         if ([_userPreferredLanguages count] > 0) {
             const char* language = static_cast<const char*>([[_userPreferredLanguages objectAtIndex:0] UTF8String]);
@@ -135,7 +146,32 @@ static NSLocale* _currentLocale;
             _userPreferredLanguagesSeperatedByString = nil;
         }
 
-        _userPreferredCurrencies = [[WSUGlobalizationPreferences currencies] retain];
+        ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
+        RETURN_NULL_IF_FAILED(
+            GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
+                                 &globalizationPreferences));
+
+        ComPtr<IVectorView<HSTRING>> currencies;
+        RETURN_NULL_IF_FAILED(globalizationPreferences->get_Currencies(currencies.GetAddressOf()));
+
+        unsigned int size = 0;
+        RETURN_NULL_IF_FAILED(currencies->get_Size(&size));
+
+        NSMutableArray* nsCurrencies = [[NSMutableArray new] autorelease];
+        unsigned int rawLength;
+
+        for (unsigned int i = 0; i < size; ++i) {
+            Wrappers::HString wrlString;
+            RETURN_NULL_IF_FAILED(currencies->GetAt(i, wrlString.GetAddressOf()));
+
+            const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
+
+            [nsCurrencies
+                addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
+                              autorelease]];
+        }
+
+        _userPreferredCurrencies = [nsCurrencies retain];
     }
 
     return self;
@@ -214,7 +250,31 @@ static NSLocale* _currentLocale;
 }
 
 + (NSArray*)preferredLanguages {
-    return [WSUGlobalizationPreferences languages];
+    ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
+                             &globalizationPreferences));
+
+    ComPtr<IVectorView<HSTRING>> languages;
+    RETURN_NULL_IF_FAILED(globalizationPreferences->get_Languages(languages.GetAddressOf()));
+
+    unsigned int size = 0;
+    RETURN_NULL_IF_FAILED(languages->get_Size(&size));
+
+    NSMutableArray* toRet = [[NSMutableArray new] autorelease];
+    unsigned int rawLength;
+
+    for (unsigned int i = 0; i < size; ++i) {
+        Wrappers::HString wrlString;
+        RETURN_NULL_IF_FAILED(languages->GetAt(i, wrlString.GetAddressOf()));
+
+        const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
+
+        [toRet addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
+                             autorelease]];
+    }
+
+    return toRet;
 }
 
 - (id)valueForUndefinedKey:(NSString*)key {

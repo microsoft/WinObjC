@@ -18,6 +18,7 @@
 
 using WCHAR = wchar_t;
 
+#include <string>
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSError.h"
 #include "Foundation/NSString.h"
@@ -54,18 +55,12 @@ using namespace Windows::Foundation;
     }
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
-    HRESULT result = GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
-                                          &cryptographicBufferStatics);
-    if (FAILED_LOG(result)) {
-        return nil;
-    }
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                             &cryptographicBufferStatics));
 
     Wrappers::HString encodedString;
-    result = cryptographicBufferStatics->EncodeToBase64String(wrlBuffer.Get(), encodedString.GetAddressOf());
-
-    if (FAILED_LOG(result)) {
-        return nil;
-    }
+    RETURN_NULL_IF_FAILED(cryptographicBufferStatics->EncodeToBase64String(wrlBuffer.Get(), encodedString.GetAddressOf()));
 
     unsigned int rawLength;
     const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
@@ -80,24 +75,38 @@ using namespace Windows::Foundation;
 - (instancetype)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
     // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
     // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
-    RTObject<WSSIBuffer>* decodedBuffer = [WSCCryptographicBuffer decodeFromBase64String:base64String];
-    ComPtr<IInspectable> wrlBuffer(reinterpret_cast<IInspectable*>([decodedBuffer internalObject]));
-    ComPtr<IBufferByteAccess> bufferAccess;
-    HRESULT result = wrlBuffer.As(&bufferAccess);
 
-    // What do I do with an error?
-    if (FAILED_LOG(result)) {
-        return nil;
-    }
+    ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                             &cryptographicBufferStatics));
+
+    const char* rawNSString = [base64String UTF8String];
+    int rawNSLength = ::strlen(rawNSString);
+
+    int length = ::MultiByteToWideChar(CP_UTF8, 0, rawNSString, rawNSLength, nullptr, 0);
+    RETURN_NULL_IF(length <= 0);
+
+    std::wstring base64WString(length, '\0');
+
+    length = ::MultiByteToWideChar(CP_UTF8, 0, rawNSString, rawNSLength, &base64WString[0], length);
+    RETURN_NULL_IF(length <= 0);
+
+    Wrappers::HStringReference wrlBase64String(base64WString.c_str());
+
+    ComPtr<IBuffer> wrlBuffer;
+    RETURN_NULL_IF_FAILED(cryptographicBufferStatics->DecodeFromBase64String(wrlBase64String.Get(), wrlBuffer.GetAddressOf()));
+
+    ComPtr<IBufferByteAccess> bufferAccess;
+    RETURN_NULL_IF_FAILED(wrlBuffer.As(&bufferAccess));
 
     uint8_t* rawBuffer;
-    result = bufferAccess->Buffer(&rawBuffer);
+    RETURN_NULL_IF_FAILED(bufferAccess->Buffer(&rawBuffer));
 
-    if (FAILED_LOG(result)) {
-        return nil;
-    }
+    unsigned int bufferLength;
+    RETURN_NULL_IF_FAILED(wrlBuffer->get_Length(&bufferLength));
 
-    return [self initWithBytes:rawBuffer length:[decodedBuffer length]];
+    return [self initWithBytes:rawBuffer length:bufferLength];
 }
 
 /**
