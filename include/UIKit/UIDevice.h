@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -26,11 +28,11 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitExport.h>
 
-UIKIT_EXPORT NSString *const UIDeviceOrientationDidChangeNotification;
+UIKIT_EXPORT NSString* const UIDeviceOrientationDidChangeNotification;
 
 typedef enum {
     UIDeviceOrientationUnknown,
@@ -56,55 +58,52 @@ enum {
 };
 typedef uint32_t UIDeviceBatteryState;
 
-#define UI_USER_INTERFACE_IDIOM() \
-    ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? \
-    [[UIDevice currentDevice] userInterfaceIdiom] : \
-    UIUserInterfaceIdiomPhone)
+#define UI_USER_INTERFACE_IDIOM()                                                                                                  \
+    ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom] : \
+                                                                                   UIUserInterfaceIdiomPhone)
 
-#define UIDeviceOrientationIsPortrait(orientation)  \
-    ((orientation) == UIDeviceOrientationPortrait || \
-    (orientation) == UIDeviceOrientationPortraitUpsideDown)
+#define UIDeviceOrientationIsPortrait(orientation) \
+    ((orientation) == UIDeviceOrientationPortrait || (orientation) == UIDeviceOrientationPortraitUpsideDown)
 
 #define UIDeviceOrientationIsLandscape(orientation) \
-    ((orientation) == UIDeviceOrientationLandscapeLeft || \
-    (orientation) == UIDeviceOrientationLandscapeRight)
+    ((orientation) == UIDeviceOrientationLandscapeLeft || (orientation) == UIDeviceOrientationLandscapeRight)
 
 UIKIT_EXPORT_CLASS
 @interface UIDevice : NSObject {
     UIDeviceOrientation _curOrientation;
-    int                 _isGeneratingEvents;
-    bool                _batteryMonitoringEnabled;
+    int _isGeneratingEvents;
+    bool _batteryMonitoringEnabled;
 }
 
-+ (UIDevice *)currentDevice;
++ (UIDevice*)currentDevice;
 
-@property (nonatomic, readonly, retain) NSString *name;
-@property (nonatomic, readonly) UIUserInterfaceIdiom userInterfaceIdiom;                    // always returns UIUserInterfaceIdiomDesktop
-@property (nonatomic, readonly) UIDeviceOrientation orientation;                            // always returns UIDeviceOrientationPortrait
-@property (nonatomic, readonly,getter=isMultitaskingSupported) BOOL multitaskingSupported;  // always returns YES
-@property (nonatomic, readonly, retain) NSString *systemName;
-@property (nonatomic, readonly, retain) NSString *systemVersion;
-@property (nonatomic, readonly, retain) NSString *model;
-@property (nonatomic, readonly, getter=isGeneratingDeviceOrientationNotifications) BOOL generatesDeviceOrientationNotifications; // aways returns NO
-@property (nonatomic, readonly, retain) NSString *uniqueIdentifier;
-@property (nonatomic, readonly, retain) NSUUID *identifierForVendor;
+@property (nonatomic, readonly, retain) NSString* name;
+@property (nonatomic, readonly) UIUserInterfaceIdiom userInterfaceIdiom; // always returns UIUserInterfaceIdiomDesktop
+@property (nonatomic, readonly) UIDeviceOrientation orientation; // always returns UIDeviceOrientationPortrait
+@property (nonatomic, readonly, getter=isMultitaskingSupported) BOOL multitaskingSupported; // always returns YES
+@property (nonatomic, readonly, retain) NSString* systemName;
+@property (nonatomic, retain) NSString* systemVersion;
+@property (nonatomic, readonly, retain) NSString* model;
+@property (nonatomic, readonly, getter=isGeneratingDeviceOrientationNotifications)
+    BOOL generatesDeviceOrientationNotifications; // aways returns NO
+@property (nonatomic, readonly, retain) NSString* uniqueIdentifier;
+@property (nonatomic, readonly, retain) NSUUID* identifierForVendor;
 @property (nonatomic, readonly) float batteryLevel;
 @property (nonatomic, readonly) UIDeviceBatteryState batteryState;
 @property (nonatomic, getter=isBatteryMonitoringEnabled) BOOL batteryMonitoringEnabled;
-
-- (void)beginGeneratingDeviceOrientationNotifications;  // no effect
-- (void)endGeneratingDeviceOrientationNotifications;    // no effect
+- (void)beginGeneratingDeviceOrientationNotifications; // no effect
+- (void)endGeneratingDeviceOrientationNotifications; // no effect
 
 @end
 
-@interface UIDevice(UIDeviceStarboardAdditions)
-@property (nonatomic, readonly, retain) NSString *nativePlatformName;
-@property (nonatomic, readonly, retain) NSString *nativeManufacturer;
-@property (nonatomic, readonly, retain) NSString *nativeModel;
-@property (nonatomic, readonly, retain) NSString *nativeProductName;
-@property (nonatomic, readonly, retain) NSString *nativeSerialNo;
-@property (nonatomic, readonly, retain) NSString *nativeCarrier;
-@property (nonatomic, readonly, retain) NSString *nativeOSVersion;
+@interface UIDevice (UIDeviceStarboardAdditions)
+@property (nonatomic, readonly, retain) NSString* nativePlatformName;
+@property (nonatomic, readonly, retain) NSString* nativeManufacturer;
+@property (nonatomic, readonly, retain) NSString* nativeModel;
+@property (nonatomic, readonly, retain) NSString* nativeProductName;
+@property (nonatomic, readonly, retain) NSString* nativeSerialNo;
+@property (nonatomic, readonly, retain) NSString* nativeCarrier;
+@property (nonatomic, readonly, retain) NSString* nativeOSVersion;
 
 @property (nonatomic, readonly) int nativeResolutionWidth;
 @property (nonatomic, readonly) int nativeResolutionHeight;
@@ -112,6 +111,5 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) float screenPhysicalWidth;
 @property (nonatomic, readonly) float screenPhysicalHeight;
 
-+(uint64_t) _deviceTotalMemory;
++ (uint64_t)_deviceTotalMemory;
 @end
-
