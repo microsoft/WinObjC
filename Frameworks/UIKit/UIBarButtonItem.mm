@@ -639,7 +639,7 @@ static void initControls(UIBarButtonItem* self) {
 - (void)setAccessibilityLabel:(NSString*)label {
 }
 
-- (UIView*)_getView {
+- (UIView*)getView {
     if (_customView != nil) {
         return _customView;
     } else {

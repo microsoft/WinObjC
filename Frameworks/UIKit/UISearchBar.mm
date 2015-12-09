@@ -419,4 +419,8 @@ static void initInternal(UISearchBar* self) {
     UNIMPLEMENTED();
     [self setTintColor:color];
 }
+
+- (UITextField*)_searchField {
+    return _textField;
+}
 @end
