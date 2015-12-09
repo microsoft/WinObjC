@@ -24,6 +24,11 @@ class VCProject;
 class VCProjectItem;
 class BuildSettings;
 
-void addFileToVS(const String& itemHint, const PBXFile* file, VCProject& proj, const BuildSettings& bs);
-void addBuildFileToVS(const String& itemHint, const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs);
+struct VCItemHint {
+  String defaultType;
+  String pathOverride;
+};
+
+void addFileToVS(const PBXFile* file, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint = NULL);
+void addBuildFileToVS(const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint = NULL);
 VCProjectItem* addRelativeFilePathToVS(const String& itemName, const String& filePath, const String& filterPath, VCProject& proj, const BuildSettings& bs);
