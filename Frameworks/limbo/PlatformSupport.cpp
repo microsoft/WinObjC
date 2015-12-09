@@ -35,9 +35,6 @@
 void EbrBlockIfBackground() {
 }
 
-void EbrThreadDissociate() {
-}
-
 void EbrEventInit(EbrEvent* pEvent) {
     *pEvent = (void*)neosmart::NeoCreateEvent(false, false);
 }

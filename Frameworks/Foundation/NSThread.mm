@@ -23,70 +23,40 @@
 #include <pthread.h>
 #include "Platform/EbrPlatform.h"
 
-#include "../objcrt/runtime.h"
+#include <mutex>
+
+static const NSUInteger kNSThreadDefaultStackSize = 1024 * 1024;
+static const double kNSThreadDefaultPriority = 0.5;
 
 pthread_key_t tlsNSThread, tlsNSThreadRunLoop;
 
-typedef struct {
-    SEL sel;
-    NSObject* obj;
-    NSObject* param;
-    NSThread* threadObj;
-    char* stackBase;
-    NSUInteger stackSize;
-} selectorThreadParam;
+static std::mutex s_mainThreadMutex;
+static StrongId<NSThread> s_mainThread;
+static BOOL s_isMultiThreaded = NO;
 
-NSThread* mainThread;
-
-int runningCount = 0;
-BOOL isMultiThreaded = FALSE;
-
-class __exit_exception {};
-
-void* selectorThread(void* param) {
-    selectorThreadParam* pParam = (selectorThreadParam*)param;
-
-    _EbrThread_t* newInfo = new _EbrThread_t();
-    newInfo->tid = pthread_self();
-
-    EbrDebugLog("Running threads: %d\n", EbrIncrement((int*)&runningCount));
-
-    pthread_setspecific(tlsNSThread, (void*)(DWORD)pParam->threadObj);
-
-    id thing = (id)pParam->obj;
-    Class cls = object_getClass(thing);
-    IMP foo = class_getMethodImplementation(cls, pParam->sel);
-    foo(pParam->obj, pParam->sel, pParam->param);
-
-    pParam->threadObj->_isFinished = TRUE;
-    EbrDecrement((int*)&runningCount);
-    [pParam->obj release];
-    if (pParam->param != nil)
-        [pParam->param release];
-
-    if (pParam->stackBase)
-        EbrFree(pParam->stackBase);
-    [pParam->threadObj release];
-    EbrThreadDissociate();
-
-    return NULL;
-}
-
-@implementation NSThread : NSObject {
-    NSObject* _target;
-    bool _retainTarget;
+@interface NSThread () {
+    StrongId<NSObject> _target;
     SEL _selector;
-    NSObject* _object;
-    double _priority;
-    NSUInteger _stackSize;
-    BOOL _cancelled;
-    NSRunLoop* _runLoop;
-    idretain _threadDictionary;
-    idretain _name;
-}
+    StrongId<NSObject> _object;
 
+    double _threadPriority;
+
+    StrongId<NSRunLoop> _runLoop;
+
+    StrongId<NSDictionary> _threadDictionary;
+    StrongId<NSString> _name;
+}
++ (NSThread*)_threadObjectFromCurrentThread;
+- (void)_associateWithCurrentThread;
+
+@property (atomic, readwrite, getter=isExecuting) BOOL executing;
+@property (atomic, readwrite, getter=isCancelled) BOOL cancelled;
+@property (atomic, readwrite, getter=isFinished) BOOL finished;
+@end
+
+@implementation NSThread
 /**
- @Status Interoperable
+@Status Interoperable
 */
 + (void)detachNewThreadSelector:(SEL)selector toTarget:(NSObject*)obj withObject:(NSObject*)objParam {
     NSThread* ret = [[self alloc] initWithTarget:obj selector:selector object:objParam];
@@ -95,200 +65,204 @@ void* selectorThread(void* param) {
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
-+ (void)sleepForTimeInterval:(double)interval {
++ (void)sleepForTimeInterval:(NSTimeInterval)interval {
     EbrBlockIfBackground();
 
-    __int64 nsecs = (__int64)(interval * 1000000000.0);
+    __int64 nsecs = static_cast<__int64>(interval * 1000000000.0);
     EbrSleep(nsecs);
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 + (void)sleepUntilDate:(NSDate*)date {
     EbrBlockIfBackground();
 
     NSTimeInterval interval = [date timeIntervalSinceNow];
     if (interval > 0.0) {
-        __int64 nsecs = (__int64)(interval * 1000000000.0);
-        EbrSleep(nsecs);
+        [self sleepForTimeInterval:interval];
     }
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 + (void)setThreadPriority:(double)priority {
     UNIMPLEMENTED();
     NSThread* curThread = [self currentThread];
-    curThread->_priority = priority;
+    [curThread setThreadPriority:priority];
 }
 
 /**
- @Status Stub
-*/
-- (void)setStackSize:(NSUInteger)size {
-    UNIMPLEMENTED();
-    EbrDebugLog("Stack size: %d\n", size);
-    _stackSize = size;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSThread*)initWithTarget:(NSObject*)target selector:(SEL)selector object:(NSObject*)objParam {
-    _target = [target retain];
-    _selector = selector;
-    _object = objParam != nil ? [objParam retain] : nil;
-    _stackSize = 1024 * 1024;
-    _priority = 0.5f;
-    _runLoop = [NSRunLoop new];
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isCancelled {
-    return _cancelled;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isFinished {
-    return _isFinished;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)cancel {
-    _cancelled = TRUE;
-}
-
-/**
- @Status Stub
-*/
-- (NSUInteger)stackSize {
-    UNIMPLEMENTED();
-    return _stackSize;
-}
-
-- (void)dealloc {
-    [_runLoop release];
-    [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSObject*)init {
-    _selector = @selector(main);
-    _stackSize = 1024 * 1024;
-    _target = self;
-    _retainTarget = true;
-    _priority = 0.5f;
-    _runLoop = [NSRunLoop new];
-
-    return self;
-}
-
-- (void)associateWithCurrentThread {
-    pthread_setspecific(tlsNSThread, (void*)self);
-    mainThread = self;
-}
-
-/**
- @Status Stub
- @Notes Currently asserts.
-*/
-+ (void)exit {
-    UNIMPLEMENTED();
-    EbrDebugLog("NSThread::exit\n");
-    assert(0);
-}
-
-/**
- @Status Interoperable
-*/
-+ (BOOL)isMainThread {
-    NSThread* ret = (NSThread*)pthread_getspecific(tlsNSThread);
-
-    return ret == mainThread;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isMainThread {
-    return self == mainThread;
-}
-
-/**
- @Status Interoperable
-*/
-+ (BOOL)isMultiThreaded {
-    return isMultiThreaded;
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSThread*)mainThread {
-    return mainThread;
-}
-
-- (double)threadPriority {
-    return _priority;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)threadDictionary {
-    if (_threadDictionary == nil) {
-        _threadDictionary.attach([NSMutableDictionary new]);
-    }
-
-    return (NSDictionary*)_threadDictionary;
-}
-
-/**
- @Status Stub
+@Status Stub
 */
 + (double)threadPriority {
     UNIMPLEMENTED();
     NSThread* curThread = [self currentThread];
-
-    return curThread->_priority;
+    return [curThread threadPriority];
 }
 
 /**
- @Status Interoperable
+@Status Stub
+*/
+- (void)setThreadPriority:(double)priority {
+    UNIMPLEMENTED();
+    _threadPriority = priority;
+}
+
+/**
+@Status Stub
+*/
+- (double)threadPriority {
+    UNIMPLEMENTED();
+    return _threadPriority;
+}
+
+/**
+@Status Interoperable
+*/
+- (NSObject*)init {
+    if (self = [super init]) {
+        _stackSize = kNSThreadDefaultStackSize;
+        _threadPriority = kNSThreadDefaultPriority;
+        _runLoop.attach([NSRunLoop new]);
+    }
+    return self;
+}
+
+/**
+@Status Interoperable
+*/
+- (NSThread*)initWithTarget:(NSObject*)target selector:(SEL)selector object:(NSObject*)objParam {
+    if (self = [self init]) { // call our own designated initializer
+        _target = target;
+        _selector = selector;
+        _object = objParam;
+    }
+    return self;
+}
+
+/**
+@Status Interoperable
+*/
+- (void)cancel {
+    self.cancelled = YES;
+}
+
+- (void)_associateWithCurrentThread {
+    pthread_setspecific(tlsNSThread, reinterpret_cast<void*>(self));
+}
+
+- (void)_associateWithMainThread {
+    std::lock_guard<std::mutex> lock(s_mainThreadMutex);
+    [self _associateWithCurrentThread];
+    if (s_mainThread && s_mainThread != self) {
+        [NSException raise:NSInternalInconsistencyException format:@"+[NSThread mainThread] already associated with %@; attempt to usurp by %@.", static_cast<id>(s_mainThread), self];
+        return;
+    }
+    s_mainThread = self;
+}
+
++ (NSThread*)_threadObjectFromCurrentThread {
+    return reinterpret_cast<NSThread*>(pthread_getspecific(tlsNSThread));
+}
+
+/**
+@Status Interoperable
+*/
++ (BOOL)isMainThread {
+    return [self _threadObjectFromCurrentThread] == [self mainThread];
+}
+
+/**
+@Status Interoperable
+*/
+- (BOOL)isMainThread {
+    return self == [[self class] mainThread];
+}
+
+/**
+@Status Interoperable
+*/
++ (BOOL)isMultiThreaded {
+    return s_isMultiThreaded;
+}
+
+/**
+@Status Interoperable
+*/
++ (NSThread*)mainThread {
+    std::lock_guard<std::mutex> lock(s_mainThreadMutex);
+    return s_mainThread;
+}
+
+/**
+@Status Interoperable
+*/
+- (NSDictionary*)threadDictionary {
+    if (!_threadDictionary) {
+        _threadDictionary.attach([NSMutableDictionary new]);
+    }
+
+    return _threadDictionary;
+}
+
+struct ThreadBodyData {
+    StrongId<NSThread> thread;
+};
+
+static void* _threadBody(void* context) {
+    ThreadBodyData* bodyData = reinterpret_cast<ThreadBodyData*>(context);
+
+    [bodyData->thread _associateWithCurrentThread];
+
+    // The body of every NSThread boils down to calling -main.
+    [bodyData->thread setExecuting:YES];
+    [bodyData->thread main];
+    [bodyData->thread setFinished:YES];
+    [bodyData->thread setExecuting:NO];
+
+    // Allocated in -start.
+    delete bodyData;
+
+    return NULL;
+}
+
+/**
+@Status Interoperable
 */
 - (void)start {
-    isMultiThreaded = TRUE;
-    selectorThreadParam* pParam = (selectorThreadParam*)malloc(sizeof(selectorThreadParam));
+    s_isMultiThreaded = YES;
 
-    pParam->stackSize = _stackSize;
-    pParam->sel = _selector;
-    pParam->obj = _retainTarget ? [_target retain] : _target;
-
-    pParam->param = _object;
-    pParam->threadObj = [self retain];
+    ThreadBodyData* bodyData = new ThreadBodyData{self};
+    // bodyData is deleted in _threadBody when the thread exits.
 
     pthread_t newThread;
-    pParam->stackBase = NULL;
     pthread_attr_t attrs;
     pthread_attr_init(&attrs);
 
-    pthread_attr_setstacksize(&attrs, 1024 * 1024);
-    pthread_create(&newThread, &attrs, selectorThread, pParam);
+    pthread_attr_setstacksize(&attrs, _stackSize);
+    pthread_create(&newThread, &attrs, _threadBody, bodyData);
     pthread_attr_destroy(&attrs);
+}
+
+/**
+@Status Interoperable
+*/
+- (void)main {
+    if (_target) {
+        auto targetImp = reinterpret_cast<void (*)(id, SEL, id)>(objc_msg_lookup(_target, _selector));
+        targetImp(_target, _selector, _object);
+    }
+}
+
+/**
+@Status Stub
+*/
++ (void)exit {
+    UNIMPLEMENTED();
 }
 
 - (NSRunLoop*)_runLoop {
@@ -296,31 +270,46 @@ void* selectorThread(void* param) {
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)setName:(NSString*)name {
     _name.attach([name copy]);
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (NSString*)name {
-    return (NSString*)_name;
+    return [[_name retain] autorelease];
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 + (NSThread*)currentThread {
-    NSThread* ret = (NSThread*)pthread_getspecific(tlsNSThread);
+    NSThread* currentThread = [[self class] _threadObjectFromCurrentThread];
 
-    if (ret == nil) {
-        EbrDebugLog("Warning: NSThread not associated with thread\n");
-        ret = [NSThread new];
-        pthread_setspecific(tlsNSThread, (void*)ret);
+    if (currentThread == nil) {
+        currentThread = [NSThread new];
+        [currentThread _associateWithCurrentThread];
     }
-    return ret;
+    return currentThread;
+}
+
+/**
+@Status Stub
+*/
++ (NSArray*)callStackReturnAddresses {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+@Status Stub
+*/
++ (NSArray*)callStackSymbols {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 + (void)initialize {

@@ -156,27 +156,10 @@ IWPLATFORM_EXPORT EbrDir* EbrOpenDir(const char* path);
 IWPLATFORM_EXPORT bool EbrReadDir(EbrDir* pDir, EbrDirEnt* ent);
 IWPLATFORM_EXPORT void EbrCloseDir(EbrDir* pDir);
 
-struct _EbrThread_t {
-    uint32_t mask;
-    uint32_t termRoutine;
-    pthread_t tid;
-    uint32_t threadID;
-    uint32_t ret;
-    uint32_t startAddr, startParam;
-    uint32_t stackBase, stackSize;
-};
-
-typedef _EbrThread_t* EbrThread_t;
-
 IWPLATFORM_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
 IWPLATFORM_EXPORT double EbrGetMediaTime();
 IWPLATFORM_EXPORT void EbrSetAPC(int signal, void (*func)(int));
 IWPLATFORM_EXPORT void EbrCallAPC(pthread_t thread, int signal, int param);
-IWPLATFORM_EXPORT int EbrThreadCreateGuest(EbrThread_t* tid, const pthread_attr_t* attr, uint32_t addr, uint32_t arg);
-IWPLATFORM_EXPORT EbrThread_t EbrThreadSelf();
-IWPLATFORM_EXPORT void EbrThreadAssociate(EbrThread_t pInfo, uint32_t stackBase, uint32_t stackSize);
-IWPLATFORM_EXPORT void EbrThreadDissociate();
-IWPLATFORM_EXPORT uint32_t EbrThreadGetList(EbrThread_t* listOut);
 IWPLATFORM_EXPORT void EbrPlatformInit();
 IWPLATFORM_EXPORT void EbrShowKeyboard();
 IWPLATFORM_EXPORT void EbrHideKeyboard();

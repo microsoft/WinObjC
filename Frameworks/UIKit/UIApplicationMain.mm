@@ -106,7 +106,7 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
     void ForceInclusion();
     ForceInclusion();
 
-    [[NSThread currentThread] associateWithCurrentThread];
+    [[NSThread currentThread] _associateWithMainThread];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
     outerPool = [NSAutoreleasePoolWarn new];
@@ -276,7 +276,7 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
 }
 
 int UIApplicationMainLoop() {
-    [[NSThread currentThread] associateWithCurrentThread];
+    [[NSThread currentThread] _associateWithMainThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
     for (;;) {
