@@ -22,7 +22,6 @@
 #include "XCBuildConfiguration.h"
 #include "XCConfigurationList.h"
 #include "SBWorkspace.h"
-#include "EnvironmentVariableCollection.h"
 #include "VariableCollectionManager.h"
 #include "BuildSettings.h"
 
@@ -32,7 +31,6 @@ BuildSettings::BuildSettings(const PBXProject* project)
   VariableCollectionManager& manager = VariableCollectionManager::get();
 
   // Construct a rudimentary settings hierarchy
-  addLevel(&EnvironmentVariableCollection::get());
   addLevel(manager.getDefaultSettings());
   addLevel(manager.getProjectSettings(project));
   addLevel(manager.getGlobalSettings());
@@ -62,7 +60,6 @@ BuildSettings::BuildSettings(const PBXTarget* target, const String& configName)
   VariableCollectionManager& manager = VariableCollectionManager::get();
 
   // Construct the settings hierarchy
-  addLevel(&EnvironmentVariableCollection::get());
   addLevel(manager.getDefaultSettings());
   addLevel(manager.getProjectSettings(project));
   addLevel(manager.getTargetSettings(target));

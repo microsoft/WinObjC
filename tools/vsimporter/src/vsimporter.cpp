@@ -266,6 +266,11 @@ int main(int argc, char* argv[])
   }
   settingsManager.setGlobalVar("WINOBJC_SDK_ROOT", sdkRoot);
 
+  // Add useful environment variables to global settings
+  String username;
+  sbValidate(sb_getenv("USERNAME", username), "Failed to get current username.");
+  settingsManager.setGlobalVar("USER", username);
+
   // Read xcconfig file specified from the command line
   if (!xcconfigPath.empty())
     settingsManager.processGlobalConfigFile(xcconfigPath);

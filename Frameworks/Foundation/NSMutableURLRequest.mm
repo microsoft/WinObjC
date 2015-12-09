@@ -23,16 +23,6 @@
 
 @implementation NSMutableURLRequest
 
-- (id)initWithURL:(id)url {
-    _url = [url absoluteURL];
-    _timeoutInterval = 30.0;
-    _headerFields = [NSMutableDictionary new];
-    _method = @"GET";
-    _shouldHandleCookies = true;
-
-    return self;
-}
-
 /**
  @Status Interoperable
 */
@@ -130,17 +120,22 @@
 }
 
 - (id)copyWithZone:(NSZone*)zone {
-    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url
-                                                     cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                 timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
+    NSMutableURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:(id)_url
+                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                        timeoutInterval:30.0]; /* [BUG: Make it copy all properties] */
     ret->_headerFields = [_headerFields mutableCopy];
     ret->_method.attach([_method copy]);
     ret->_body.attach([_body copy]);
     ret->_shouldHandleCookies = _shouldHandleCookies;
     ret->_cachePolicy = _cachePolicy;
     ret->_bodyStream = _bodyStream;
+    ret.mainDocumentURL = _mainDocumentURL;
 
     return ret;
 }
 
+- (void)dealloc {
+    [_mainDocumentURL release];
+    [super dealloc];
+}
 @end

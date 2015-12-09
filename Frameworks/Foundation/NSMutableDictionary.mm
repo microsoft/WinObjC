@@ -127,7 +127,7 @@
     [self addEntriesFromDictionary:otherDict];
 }
 
-- (id)classForArchiver {
+- (id)classForCoder {
     return [NSMutableDictionary class];
 }
 
