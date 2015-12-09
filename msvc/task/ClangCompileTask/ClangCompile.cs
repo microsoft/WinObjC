@@ -574,6 +574,13 @@ namespace ClangCompile
         HeaderMapEnum HeaderMapValue;
 
         [PropertyPage(
+            DisplayName = "Framework-style header map entries",
+            Description = "Add framework-style entries to header map.",
+            Category = "General",
+            IncludeInCommandLine = false)]
+        public bool HeaderMapAddFrameworkEntries { get; set; }
+
+        [PropertyPage(
             Category = "General",
             DisplayName = "Header Map Include",
             Description = "Header Map Include",

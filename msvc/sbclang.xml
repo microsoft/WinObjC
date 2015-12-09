@@ -91,6 +91,12 @@
         Description="User a header map containing all headers in the VS project, as well as any headers found in the same directory as the source files being compiled."
         Name="Combined" />
     </EnumProperty>
+    <BoolProperty
+      IncludeInCommandLine="False"
+      Category="General"
+      DisplayName="Framework-style header map entries"
+      Description="Add framework-style entries to header map."
+      Name="HeaderMapAddFrameworkEntries" />
     <StringProperty
       Visible="False"
       Category="General"

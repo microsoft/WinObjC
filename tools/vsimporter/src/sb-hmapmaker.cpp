@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "hmapmaker.h"
+#include "tokenizer.h"
 #include "sbassert.h"
 #include "fileutils.h"
 
@@ -48,7 +49,19 @@ void writeHMap(const String& outputFile, const StringVec& inVec)
 
   StringVec::const_iterator it = inVec.begin();
   for (; it != inVec.end(); ++it) {
-    hmap.addMapping(sb_basename(*it), *it);
+    // Tokenize line using tabs
+    // The first token should always be the full path to the header
+    StringVec tokens;
+    tokenize(*it, tokens, "\t", "", "", "", "");
+
+    // If no explicit mapping(s) specified, default to the filename
+    if (tokens.size() == 1) {
+      tokens.push_back(sb_basename(tokens[0]));
+    }
+
+    for (unsigned i = 1; i < tokens.size(); i++) {
+      hmap.addMapping(tokens[i], tokens[0]);
+    }
   }
 
   hmap.writeMap(outFile);

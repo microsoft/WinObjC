@@ -208,6 +208,7 @@
     <ProjectHMapFilename>$(IntDir)$(MSBuildProjectName)-project</ProjectHMapFilename>
     <CombinedHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Combined'))</CombinedHMapRequired>
     <ProjectHMapRequired>@(ClangCompile->AnyHaveMetadataValue('HeaderMap','Project'))</ProjectHMapRequired>
+    <HMapAddFrameworkEntries>@(ClangCompile->AnyHaveMetadataValue('HeaderMapAddFrameworkEntries','true'))</HMapAddFrameworkEntries>
   </PropertyGroup>
 
   <Target
@@ -322,6 +323,7 @@
       <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.hpp" />
       <HeaderMapEntry Include="%(ClangCompile.RootDir)%(ClangCompile.Directory)*.pch" />
       <HeaderMapEntry Include="%(ClInclude.FullPath)" />
+      <HeaderMapEntry Condition="'$(HMapAddFrameworkEntries)' == 'true'" Include="%(ClInclude.FullPath)&#x9;$(TargetName)/%(ClInclude.Filename)%(ClInclude.Extension)" />
       <HeaderMap Include="$(CombinedHMapFilename)" />
     </ItemGroup>
   </Target>
@@ -350,6 +352,7 @@
 
     <ItemGroup>
       <HeaderMapEntry Include="%(ClInclude.FullPath)" />
+      <HeaderMapEntry Condition="'$(HMapAddFrameworkEntries)' == 'true'" Include="%(ClInclude.FullPath)&#x9;$(TargetName)/%(ClInclude.Filename)%(ClInclude.Extension)" />
       <HeaderMap Include="$(ProjectHMapFilename)" />
     </ItemGroup>
 
@@ -416,7 +419,7 @@
     <!-- Figure out which header map to use -->
     <ItemGroup>
       <ClangCompile>
-        <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Project'">-iquote"$(ProjectHMapFilename).hmap"</HeaderMapInclude>
+        <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Project'">-I"$(ProjectHMapFilename).hmap"</HeaderMapInclude>
         <HeaderMapInclude Condition="'%(ClangCompile.HeaderMap)' == 'Combined'">-I"$(CombinedHMapFilename).hmap"</HeaderMapInclude>
       </ClangCompile>
     </ItemGroup>

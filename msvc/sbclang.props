@@ -26,6 +26,7 @@
       <DebugInformation Condition="'%(ClangCompile.DebugInformation)' == ''">true</DebugInformation>
       <ExceptionHandling Condition="'%(ClangCompile.ExceptionHandling)' == ''">true</ExceptionHandling>
       <HeaderMap Condition="'%(ClangCompile.HeaderMap)' == ''">Disabled</HeaderMap>
+      <HeaderMapAddFrameworkEntries Condition="'%(ClangCompile.HeaderMapAddFrameworkEntries)' == ''">true</HeaderMapAddFrameworkEntries>
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
       <ObjectiveCModules Condition="'%(ClangCompile.ObjectiveCModules)' == ''">false</ObjectiveCModules>
