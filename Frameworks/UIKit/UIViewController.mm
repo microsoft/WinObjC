@@ -1333,7 +1333,25 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (parentWindow != nil) {
             [parentWindow addSubview:view];
         } else {
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:1] addSubview:view];
+            /*
+                This is a workaround for VSO 5794762.
+                Right now, every application has a popup window at level 100000. If we
+                naively try to present into it, we'll bifurcate the application UI across
+                two different stacked windows and break touch event handling.
+
+                Mitigate that by avoiding the application's popup window when looking for the
+                topmost window.
+            */
+            UIWindow* applicationPopupWindow = [[UIApplication sharedApplication] _popupWindow];
+            NSArray* windows = [[UIApplication sharedApplication] windows];
+            NSUInteger index = [windows count] - 1;
+            UIWindow *window = nil;
+            do {
+                window = [windows objectAtIndex:index];
+                index--;
+            } while(window == applicationPopupWindow);
+
+            [window addSubview:view];
         }
 
         if (animated) {
