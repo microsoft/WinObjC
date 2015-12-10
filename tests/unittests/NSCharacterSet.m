@@ -96,3 +96,28 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     testCharacter(URLQueryAllowedCharacterSet, URLQueryAllowedCharacterSetString);
     testCharacter(URLUserAllowedCharacterSet, URLUserAllowedCharacterSetString);
 }
+
+TEST(Foundation, NSCharacterSet_MutableCopy) {
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet* mutableSet = [alphaNumeric mutableCopy];
+    [mutableSet addCharactersInString:@"!"];
+
+    NSString* bangOnlyString = @"!";
+
+    NSRange foundAlphaRange = [bangOnlyString rangeOfCharacterFromSet:alphaNumeric];
+    ASSERT_EQ_MSG(NSNotFound, foundAlphaRange.location, "mutable copy should not have mutated the original!");
+    NSRange foundBangRange = [bangOnlyString rangeOfCharacterFromSet:mutableSet];
+    ASSERT_NE(NSNotFound, foundBangRange.location);
+
+    EXPECT_NO_THROW([mutableSet release]);
+}
+
+TEST(Foundation, NSCharacterSet_InvertTest) {
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+    NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSCharacterSet* invertedSet = [alphaNumeric invertedSet];
+
+    NSRange foundNonAlphaRange = [alphaNumericString rangeOfCharacterFromSet:invertedSet];
+
+    ASSERT_EQ(NSNotFound, foundNonAlphaRange.location);
+}

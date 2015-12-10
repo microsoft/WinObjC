@@ -238,7 +238,7 @@ static UnicodeSet* setWithCharacters(char* chars) {
 
 - (id)mutableCopy {
     NSCharacterSet* ret = [NSMutableCharacterSet alloc];
-    ret->_icuSet = new UnicodeSet(*_icuSet);
+    ret->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
 
     return ret;
 }
@@ -254,7 +254,7 @@ static UnicodeSet* setWithCharacters(char* chars) {
 */
 - (instancetype)invertedSet {
     NSCharacterSet* ret = [NSMutableCharacterSet alloc];
-    ret->_icuSet = new UnicodeSet(*_icuSet);
+    ret->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
     ret->_icuSet->complement();
 
     return [ret autorelease];
