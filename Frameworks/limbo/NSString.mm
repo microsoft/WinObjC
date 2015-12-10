@@ -246,9 +246,6 @@ void setToUnicode(NSString* inst, UnicodeString& str) {
     }
 }
 
-@implementation NSRegularExpression
-@end
-
 int formatPrintfU(WORD* out, int maxLen, const WORD* fmt, va_list pReader);
 
 UnicodeString EbrUnicodePrintf(NSString* format, va_list list) {
@@ -1960,7 +1957,7 @@ return [ret autorelease];
     }
     if (pos == range.length) {
         ret.length = 0;
-        ret.location = 0x7fffffff;
+        ret.location = NSNotFound;
     } else {
         ret.location = pos + range.location;
         ret.length = 1;
@@ -2142,7 +2139,7 @@ return [ret autorelease];
         NSRange subrange;
 
         subrange = [self rangeOfString:target options:options range:range];
-        if (subrange.location == 0x7fffffff) {
+        if (subrange.location == NSNotFound) {
             //  Nothing to replace
             if (object_getClass(self) == [CFConstantString class]) {
                 return self;
@@ -2250,8 +2247,6 @@ return [ret autorelease];
 
         NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:subStr options:regOptions error:NULL];
 
-        ret.location = 0;
-        ret.length = 0x7fffffff;
         ret = [regExp rangeOfFirstMatchInString:self options:searchOptions range:range];
         [regExp release];
 
@@ -2268,7 +2263,7 @@ return [ret autorelease];
             ret.location = range.location + loc;
             ret.length = str2.length();
         } else {
-            ret.location = 0x7fffffff;
+            ret.location = NSNotFound;
             ret.length = 0;
             return ret;
         }
@@ -2300,19 +2295,19 @@ return [ret autorelease];
         ret.location = range.location + matchPos;
         ret.length = matchLen;
     } else {
-        ret.location = 0x7fffffff;
+        ret.location = NSNotFound;
         ret.length = 0;
     }
 
     if (options & NSAnchoredSearch) {
         if (options & NSBackwardsSearch) {
             if (ret.location + ret.length != range.location + range.length) {
-                ret.location = 0x7fffffff;
+                ret.location = NSNotFound;
                 ret.length = 0;
             }
         } else {
             if (ret.location != 0) {
-                ret.location = 0x7fffffff;
+                ret.location = NSNotFound;
                 ret.length = 0;
             }
         }
