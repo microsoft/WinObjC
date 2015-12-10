@@ -2067,7 +2067,7 @@ static float doRound(float f) {
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
     UNIMPLEMENTED();
-    EbrDebugLog("%s not supported\n", __func__);
+    completion(YES);
 }
 
 /**
