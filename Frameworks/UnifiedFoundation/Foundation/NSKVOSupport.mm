@@ -330,16 +330,12 @@ void NSKVOClass::dealloc(id instance) {
     // WE CANNOT USE instance AS AN OBJECT IN HERE.
     // It has been deallocated, and we are updating our bookkeeping.
     std::lock_guard<std::recursive_mutex> lock(_mutex);
-    for (auto i = _notifiersByInstance.begin(); i != _notifiersByInstance.end();) {
-        if (std::get<0>(i->first) == instance) {
-            i = _notifiersByInstance.erase(i);
-        } else {
-            ++i;
-        }
-    }
+    _notifiersByInstance.erase(instance);
 
-    for (auto i = _keypathNotifiersByInstance.begin(); i != _keypathNotifiersByInstance.end(); ++i) {
-        if (std::get<0>(i->first) == instance && i->second.size() > 0) {
+    auto copiedKeypathNotifiers(std::move(_keypathNotifiersByInstance[instance]));
+    _keypathNotifiersByInstance.erase(instance);
+    for (auto i = copiedKeypathNotifiers.begin(); i != copiedKeypathNotifiers.end(); ++i) {
+        if (i->second.size() > 0) {
             [NSException raise:NSInvalidArgumentException
                         format:@"Instance of %s deallocated with observers still registered.", class_getName(originalClass)];
         }
@@ -380,7 +376,8 @@ void NSKVOClass::registerClassPair(Class notifyingClass, Class originalClass, st
 void NSKVOClass::_removeNotifier(id instance, const std::string& key, const NSKVONotifier* notifier) {
     std::lock_guard<std::recursive_mutex> lock(_mutex);
 
-    auto& notifierSet = _notifiersByInstance[std::make_tuple(instance, key)];
+    auto& instanceNotifiers = _notifiersByInstance[instance];
+    auto& notifierSet = instanceNotifiers[key];
     auto found = std::find_if(notifierSet.begin(),
                               notifierSet.end(),
                               [notifier](const std::weak_ptr<NSKVONotifier>& searchingNotifier) -> bool {
@@ -455,7 +452,7 @@ std::shared_ptr<NSKVONotifier> NSKVOClass::_linkedNotifierForLeaf(id instance,
 
     notifier->setDeregistrationHook(std::bind(&NSKVOClass::_removeNotifier, this, instance, keyComponent, std::placeholders::_1));
 
-    _notifiersByInstance[std::make_tuple(instance, keyComponent)].emplace_back(notifier);
+    _notifiersByInstance[instance][keyComponent].emplace_back(notifier);
 
     _currentlyManipulatingKeys.erase(keyComponent);
 
@@ -468,14 +465,14 @@ void NSKVOClass::addObserver(
     std::shared_ptr<NSKVONotifier> finalNotifier(new NSKVOFinalNotifier{ *this, observer, observedInstance, options, context, keypath });
 
     auto rootNotifier = _linkedNotifierForLeaf(observedInstance, keypath, finalNotifier);
-    _keypathNotifiersByInstance[std::make_tuple(observedInstance, keypath)].emplace(std::move(rootNotifier));
+    _keypathNotifiersByInstance[observedInstance][keypath].emplace(std::move(rootNotifier));
 }
 
 template <typename TContext>
 void NSKVOClass::removeObserver(id instance, id observer, const std::string& keypath, TContext context) {
     std::lock_guard<std::recursive_mutex> lock(_mutex);
 
-    auto& keypathNotifiers(_keypathNotifiersByInstance[std::make_tuple(instance, keypath)]);
+    auto& keypathNotifiers(_keypathNotifiersByInstance[instance][keypath]);
     auto copiedNotifiers(keypathNotifiers);
     for (const auto& notifier : copiedNotifiers) {
         if (notifier->matches(observer, keypath, context)) {
@@ -503,7 +500,7 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
     }
     _currentlyManipulatingKeys.emplace(key);
 
-    auto copiedNotifiers(_notifiersByInstance[std::make_tuple(instance, key)]);
+    auto copiedNotifiers(_notifiersByInstance[instance][key]);
     for (const auto& notifier : copiedNotifiers) {
         auto lockedNotifier(notifier.lock());
         if (lockedNotifier) {
