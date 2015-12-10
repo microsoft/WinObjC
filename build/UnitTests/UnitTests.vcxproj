@@ -260,6 +260,7 @@
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSLocale.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSOperation.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSProcessInfo.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSURLCacheTests.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSUserDefaults.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
