@@ -17,7 +17,7 @@
 #ifndef _CTLINE_H_
 #define _CTLINE_H_
 
-#import <StarboardExport.h>
+#import "CoreTextExport.h"
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreGraphics/CGContext.h>
 
@@ -32,16 +32,19 @@ enum {
 };
 typedef uint32_t CTLineTruncationType;
 
-SB_EXPORT CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position);
-SB_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
-SB_EXPORT CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset);
-SB_EXPORT CFRange CTLineGetStringRange(CTLineRef line);
-SB_EXPORT CFArrayRef CTLineGetGlyphRuns(CTLineRef line);
-SB_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string);
-SB_EXPORT CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken);
-SB_EXPORT double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth);
-SB_EXPORT void CTLineDraw(CTLineRef line, CGContextRef context);
-SB_EXPORT CFIndex CTLineGetGlyphCount(CTLineRef line);
+CORETEXT_EXPORT CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position);
+CORETEXT_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
+CORETEXT_EXPORT CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset);
+CORETEXT_EXPORT CFRange CTLineGetStringRange(CTLineRef line);
+CORETEXT_EXPORT CFArrayRef CTLineGetGlyphRuns(CTLineRef line);
+CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string);
+CORETEXT_EXPORT CTLineRef CTLineCreateTruncatedLine(CTLineRef line,
+                                                    double width,
+                                                    CTLineTruncationType truncationType,
+                                                    CTLineRef truncationToken);
+CORETEXT_EXPORT double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth);
+CORETEXT_EXPORT void CTLineDraw(CTLineRef line, CGContextRef context);
+CORETEXT_EXPORT CFIndex CTLineGetGlyphCount(CTLineRef line);
 
 DISABLE_IMPLICIT_BRIDGING
 

@@ -931,7 +931,25 @@ EAGL_EXPORT void EXPORT_glVertexAttribPointer(
 }
 
 EAGL_EXPORT void EXPORT_glResolveMultisampleFramebufferAPPLE(void) {
+    UNIMPLEMENTED();
 }
 
 EAGL_EXPORT void EXPORT_glRenderbufferStorageMultisampleAPPLE(GLenum, GLsizei, GLenum, GLsizei, GLsizei) {
+    UNIMPLEMENTED();
+}
+
+EAGL_EXPORT void EXPORT_glBindVertexArrayOES(GLuint array) {
+    UNIMPLEMENTED();
+}
+
+EAGL_EXPORT void EXPORT_glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays) {
+    UNIMPLEMENTED();
+}
+
+EAGL_EXPORT void EXPORT_glGenVertexArraysOES(GLsizei n, GLuint* arrays) {
+    UNIMPLEMENTED();
+}
+
+EAGL_EXPORT GLboolean EXPORT_glIsVertexArrayOES(GLuint array) {
+    UNIMPLEMENTED();
 }

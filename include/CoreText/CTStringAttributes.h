@@ -37,20 +37,20 @@ enum {
 };
 typedef int32_t CTUnderlineStyleModifiers;
 
-SB_EXPORT const CFStringRef kCTCharacterShapeAttributeName;
-SB_EXPORT const CFStringRef kCTFontAttributeName;
-SB_EXPORT const CFStringRef kCTKernAttributeName;
-SB_EXPORT const CFStringRef kCTLigatureAttributeName;
-SB_EXPORT const CFStringRef kCTForegroundColorAttributeName;
-SB_EXPORT const CFStringRef kCTForegroundColorFromContextAttributeName;
-SB_EXPORT const CFStringRef kCTParagraphStyleAttributeName;
-SB_EXPORT const CFStringRef kCTStrokeWidthAttributeName;
-SB_EXPORT const CFStringRef kCTStrokeColorAttributeName;
-SB_EXPORT const CFStringRef kCTSuperscriptAttributeName;
-SB_EXPORT const CFStringRef kCTUnderlineColorAttributeName;
-SB_EXPORT const CFStringRef kCTUnderlineStyleAttributeName;
-SB_EXPORT const CFStringRef kCTVerticalFormsAttributeName;
-SB_EXPORT const CFStringRef kCTGlyphInfoAttributeName;
-SB_EXPORT const CFStringRef kCTRunDelegateAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTCharacterShapeAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTFontAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTKernAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTLigatureAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTForegroundColorAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTForegroundColorFromContextAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTParagraphStyleAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTStrokeWidthAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTStrokeColorAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTSuperscriptAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTUnderlineColorAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTUnderlineStyleAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTVerticalFormsAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTGlyphInfoAttributeName;
+CORETEXT_EXPORT const CFStringRef kCTRunDelegateAttributeName;
 
 #endif /* _CTSTRINGATTRIBUTES_H_ */

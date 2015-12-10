@@ -16,14 +16,15 @@
 
 typedef int integer_t;
 
+#include "machine.h"
 #include "message.h"
 #include "vm_statistics.h"
 #include "mach_defs.h"
 #include "sys/_types.h"
 
-#define HOST_VM_INFO    1
+#define HOST_VM_INFO 1
 
-typedef void *host_info_t;
+typedef void* host_info_t;
 
 #ifdef __cplusplus
 extern "C" {

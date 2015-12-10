@@ -190,7 +190,6 @@ UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 
 @class UIWindow, UIApplication, UILocalNotification;
-@class UIUserNotificationSettings;
 
 UIKIT_EXPORT_CLASS
 @interface UIApplication : UIResponder

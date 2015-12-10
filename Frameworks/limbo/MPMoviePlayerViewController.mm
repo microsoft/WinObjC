@@ -14,28 +14,10 @@
 //
 //******************************************************************************
 
-#ifndef _UILOCALNOTIFICATION_H_
-#define _UILOCALNOTIFICATION_H_
+#include "Starboard.h"
 
-#import "UIKitExport.h"
-#import <Foundation/NSObject.h>
-#import <Foundation/NSCalendar.h>
+#include "MediaPlayer/MPMoviePlayerViewController.h"
 
-UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
-
-UIKIT_EXPORT_CLASS
-@interface UILocalNotification : NSObject {
-}
-
-@property (nonatomic, copy) NSDate* fireDate;
-@property (nonatomic, copy) NSString* alertBody;
-@property (nonatomic, copy) NSTimeZone* timeZone;
-@property (nonatomic, copy) NSString* soundName;
-@property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic, copy) NSString* alertAction;
-@property (nonatomic) NSCalendarUnit repeatInterval;
-@property (nonatomic, copy) NSDictionary* userInfo;
+@implementation MPMoviePlayerViewController
 
 @end
-
-#endif /* _UILOCALNOTIFICATION_H_ */

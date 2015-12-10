@@ -14,28 +14,20 @@
 //
 //******************************************************************************
 
-#ifndef _UILOCALNOTIFICATION_H_
-#define _UILOCALNOTIFICATION_H_
+#ifndef _MPMOVIEPLAYERVIEWCONTROLLER_H_
+#define _MPMOVIEPLAYERVIEWCONTROLLER_H_
 
-#import "UIKitExport.h"
-#import <Foundation/NSObject.h>
-#import <Foundation/NSCalendar.h>
+#import <UIKit/UIViewController.h>
 
-UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
+@class MPMoviePlayerController;
 
 UIKIT_EXPORT_CLASS
-@interface UILocalNotification : NSObject {
-}
+@interface MPMoviePlayerViewController : UIViewController <NSCoding, NSObject, UIAppearanceContainer>
 
-@property (nonatomic, copy) NSDate* fireDate;
-@property (nonatomic, copy) NSString* alertBody;
-@property (nonatomic, copy) NSTimeZone* timeZone;
-@property (nonatomic, copy) NSString* soundName;
-@property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic, copy) NSString* alertAction;
-@property (nonatomic) NSCalendarUnit repeatInterval;
-@property (nonatomic, copy) NSDictionary* userInfo;
+- (instancetype)initWithContentURL:(NSURL *)contentURL;
+@property(nonatomic, readonly) MPMoviePlayerController *moviePlayer;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
 
 @end
 
-#endif /* _UILOCALNOTIFICATION_H_ */
+#endif /* _MPMOVIEPLAYERVIEWCONTROLLER_H_ */

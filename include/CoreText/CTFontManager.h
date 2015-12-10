@@ -17,7 +17,7 @@
 #ifndef _CTFONTMANAGER_H_
 #define _CTFONTMANAGER_H_
 
-#import <StarboardExport.h>
+#import "UIKit/UIKitExport.h"
 #import <CoreFoundation/CFError.h>
 #import <CoreFoundation/CFURL.h>
 #import <CoreGraphics/CGFont.h>
@@ -30,7 +30,8 @@ enum {
 };
 typedef uint32_t CTFontManagerScope;
 
-SB_EXPORT bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error);
-SB_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error);
+UIKIT_EXPORT bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error);
+UIKIT_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error);
+UIKIT_EXPORT CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix);
 
 #endif /* _CTFONTMANAGER_H_ */

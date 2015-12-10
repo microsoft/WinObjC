@@ -14,28 +14,26 @@
 //
 //******************************************************************************
 
-#ifndef _UILOCALNOTIFICATION_H_
-#define _UILOCALNOTIFICATION_H_
+#include "UIKitExport.h"
 
-#import "UIKitExport.h"
-#import <Foundation/NSObject.h>
-#import <Foundation/NSCalendar.h>
+#ifndef _UIUSERNOTIFICATIONSETTINGS_H_
+#define _UIUSERNOTIFICATIONSETTINGS_H_
 
-UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
+typedef enum UIUserNotificationType : NSUInteger {
+    UIUserNotificationTypeNone = 0,
+    UIUserNotificationTypeBadge = 1 << 0,
+    UIUserNotificationTypeSound = 1 << 1,
+    UIUserNotificationTypeAlert = 1 << 2,
+} UIUserNotificationType;
 
 UIKIT_EXPORT_CLASS
-@interface UILocalNotification : NSObject {
-}
+@interface UIUserNotificationSettings : NSObject <NSObject>
 
-@property (nonatomic, copy) NSDate* fireDate;
-@property (nonatomic, copy) NSString* alertBody;
-@property (nonatomic, copy) NSTimeZone* timeZone;
-@property (nonatomic, copy) NSString* soundName;
-@property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic, copy) NSString* alertAction;
-@property (nonatomic) NSCalendarUnit repeatInterval;
-@property (nonatomic, copy) NSDictionary* userInfo;
+@property (nonatomic, readonly) UIUserNotificationType types;
+@property (nonatomic, copy, readonly) NSSet* categories;
+
++ (instancetype)settingsForTypes:(UIUserNotificationType)allowedUserNotificationTypes categories:(NSSet*)actionSettings;
 
 @end
 
-#endif /* _UILOCALNOTIFICATION_H_ */
+#endif /* _UIUSERNOTIFICATIONSETTINGS_H_ */

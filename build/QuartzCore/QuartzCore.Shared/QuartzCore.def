@@ -3,23 +3,31 @@ LIBRARY QuartzCore
      _OBJC_CLASS_CAGradientLayer DATA
      __objc_class_name_CAGradientLayer CONSTANT   
      _OBJC_CLASS_CALayer	DATA
-	 __objc_class_name_CALayer	CONSTANT
+     __objc_class_name_CALayer	CONSTANT
      _OBJC_CLASS_CABasicAnimation	DATA
-	 __objc_class_name_CABasicAnimation	CONSTANT
+     __objc_class_name_CABasicAnimation	CONSTANT
      _OBJC_CLASS_CATransaction	DATA
-	 __objc_class_name_CATransaction	CONSTANT
+     __objc_class_name_CATransaction	CONSTANT
      _OBJC_CLASS_CADisplayLink	DATA
-	 __objc_class_name_CADisplayLink	CONSTANT
+     __objc_class_name_CADisplayLink	CONSTANT
      _OBJC_CLASS_CATransition	DATA
-	 __objc_class_name_CATransition	CONSTANT
+     __objc_class_name_CATransition	CONSTANT
      _OBJC_CLASS_CATransition	DATA
-	 __objc_class_name_CATransition	CONSTANT
+     __objc_class_name_CATransition	CONSTANT
      _OBJC_CLASS_CATextLayer	DATA
-	 __objc_class_name_CATextLayer	CONSTANT
+     __objc_class_name_CATextLayer	CONSTANT
      _OBJC_CLASS_CAMediaTimingFunction	DATA
-	 __objc_class_name_CAMediaTimingFunction	CONSTANT
+     __objc_class_name_CAMediaTimingFunction	CONSTANT
      _OBJC_CLASS_CAShapeLayer	DATA
-	 __objc_class_name_CAShapeLayer	CONSTANT
+     __objc_class_name_CAShapeLayer	CONSTANT
      _OBJC_CLASS_CAEAGLLayer	DATA
-	 __objc_class_name_CAEAGLLayer	CONSTANT
+     __objc_class_name_CAEAGLLayer	CONSTANT
+     _OBJC_CLASS_CAEmitterCell	DATA
+     __objc_class_name_CAEmitterCell	CONSTANT
+     _OBJC_CLASS_CAEmitterLayer	DATA
+     __objc_class_name_CAEmitterLayer	CONSTANT
+     _OBJC_CLASS_CAKeyframeAnimation	DATA
+     __objc_class_name_CAKeyframeAnimation	CONSTANT
+     _OBJC_CLASS_CAAnimationGroup	DATA
+     __objc_class_name_CAAnimationGroup	CONSTANT
 

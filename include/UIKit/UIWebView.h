@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -50,33 +52,38 @@ typedef NSUInteger UIWebViewNavigationType;
 
 @protocol UIWebViewDelegate <NSObject>
 @optional
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
-- (void)webView:(UIWebView *)aWebView didFailLoadWithError:(NSError *)error;
-- (void)webViewDidFinishLoad:(UIWebView *)webView;
-- (void)webViewDidStartLoad:(UIWebView *)webView;
+- (BOOL)webView:(UIWebView*)webView
+    shouldStartLoadWithRequest:(NSURLRequest*)request
+                navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webView:(UIWebView*)aWebView didFailLoadWithError:(NSError*)error;
+- (void)webViewDidFinishLoad:(UIWebView*)webView;
+- (void)webViewDidStartLoad:(UIWebView*)webView;
 @end
 
 UIKIT_EXPORT_CLASS
 @interface UIWebView : UIView
 
-- (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
-- (void)loadRequest:(NSURLRequest *)request;
+- (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL;
+- (void)loadRequest:(NSURLRequest*)request;
 - (void)stopLoading;
 - (void)reload;
 - (void)goBack;
 - (void)goForward;
 
-- (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
-- (void)loadData:(NSData *)data MIMEType:(NSString *)MIMEType textEncodingName:(NSString *)encodingName baseURL:(NSURL *)baseURL;
+- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script;
+- (void)loadData:(NSData*)data MIMEType:(NSString*)MIMEType textEncodingName:(NSString*)encodingName baseURL:(NSURL*)baseURL;
 
 @property (nonatomic, assign) id<UIWebViewDelegate> delegate;
 @property (nonatomic, readonly, getter=isLoading) BOOL loading;
 @property (nonatomic, readonly, getter=canGoBack) BOOL canGoBack;
 @property (nonatomic, readonly, getter=canGoForward) BOOL canGoForward;
 @property (nonatomic, assign) BOOL scalesPageToFit; // not implemented
-@property (nonatomic, readonly, retain) NSURLRequest *request;
+@property (nonatomic, readonly, retain) NSURLRequest* request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
-@property (nonatomic, readonly, retain) UIScrollView *scrollView;
+@property (nonatomic, readonly, retain) UIScrollView* scrollView;
+@property (nonatomic) BOOL allowsInlineMediaPlayback;
+@property (nonatomic) BOOL mediaPlaybackRequiresUserAction;
+@property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
 
 @end
 

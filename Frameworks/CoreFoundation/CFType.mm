@@ -34,6 +34,13 @@ void CFRelease(CFTypeRef obj) {
 /**
  @Status Interoperable
 */
+void CFAutorelease(CFTypeRef obj) {
+    [obj autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
 CFTypeRef CFRetain(CFTypeRef obj) {
     return objc_retain_ref((id)obj);
 }

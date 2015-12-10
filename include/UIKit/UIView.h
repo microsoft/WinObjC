@@ -86,7 +86,7 @@ typedef enum {
     UIViewAnimationTransitionCurlDown,
 } UIViewAnimationTransition;
 
-enum {
+typedef NS_ENUM(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionLayoutSubviews = 1 << 0,
     UIViewAnimationOptionAllowUserInteraction = 1 << 1,
     UIViewAnimationOptionBeginFromCurrentState = 1 << 2,
@@ -96,10 +96,13 @@ enum {
     UIViewAnimationOptionOverrideInheritedCurve = 1 << 6,
     UIViewAnimationOptionAllowAnimatedContent = 1 << 7,
     UIViewAnimationOptionShowHideTransitionViews = 1 << 8,
+    UIViewAnimationOptionOverrideInheritedOptions = 1 << 9,
+
     UIViewAnimationOptionCurveEaseInOut = 0 << 16,
     UIViewAnimationOptionCurveEaseIn = 1 << 16,
     UIViewAnimationOptionCurveEaseOut = 2 << 16,
     UIViewAnimationOptionCurveLinear = 3 << 16,
+
     UIViewAnimationOptionTransitionNone = 0 << 20,
     UIViewAnimationOptionTransitionFlipFromLeft = 1 << 20,
     UIViewAnimationOptionTransitionFlipFromRight = 2 << 20,
@@ -109,14 +112,29 @@ enum {
     UIViewAnimationOptionTransitionFlipFromTop = 6 << 20,
     UIViewAnimationOptionTransitionFlipFromBottom = 7 << 20,
 };
-typedef NSUInteger UIViewAnimationOptions;
+
+typedef NS_ENUM(int, UIViewKeyframeAnimationOptions) {
+    UIViewKeyframeAnimationOptionLayoutSubviews = UIViewAnimationOptionLayoutSubviews,
+    UIViewKeyframeAnimationOptionAllowUserInteraction = UIViewAnimationOptionAllowUserInteraction,
+    UIViewKeyframeAnimationOptionBeginFromCurrentState = UIViewAnimationOptionBeginFromCurrentState,
+    UIViewKeyframeAnimationOptionRepeat = UIViewAnimationOptionRepeat,
+    UIViewKeyframeAnimationOptionAutoreverse = UIViewAnimationOptionAutoreverse,
+    UIViewKeyframeAnimationOptionOverrideInheritedDuration = UIViewAnimationOptionOverrideInheritedDuration,
+    UIViewKeyframeAnimationOptionOverrideInheritedOptions = UIViewAnimationOptionOverrideInheritedOptions,
+
+    UIViewKeyframeAnimationOptionCalculationModeLinear = 0 << 9,
+    UIViewKeyframeAnimationOptionCalculationModeDiscrete = 1 << 9,
+    UIViewKeyframeAnimationOptionCalculationModePaced = 2 << 9,
+    UIViewKeyframeAnimationOptionCalculationModeCubic = 3 << 9,
+    UIViewKeyframeAnimationOptionCalculationModeCubicPaced = 4 << 9
+};
 
 UIKIT_EXPORT const CGFloat UIViewNoIntrinsicMetric;
 
 @class UIColor, CALayer, UIViewController, UIGestureRecognizer, NSLayoutConstraint, UIMotionEffect, WXFrameworkElement;
 
 UIKIT_EXPORT_CLASS
-@interface UIView : UIResponder<NSCoding, UIAppearance, UIAppearanceContainer, UIAccessibility, UIAccessibilityIdentification> {
+@interface UIView : UIResponder <NSCoding, UIAppearance, UIAppearanceContainer, UIAccessibility, UIAccessibilityIdentification> {
 @public
     id _backButtonDelegate;
     SEL _backButtonSelector;

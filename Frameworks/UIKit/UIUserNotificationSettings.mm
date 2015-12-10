@@ -14,28 +14,18 @@
 //
 //******************************************************************************
 
-#ifndef _UILOCALNOTIFICATION_H_
-#define _UILOCALNOTIFICATION_H_
+#include "Starboard.h"
 
-#import "UIKitExport.h"
-#import <Foundation/NSObject.h>
-#import <Foundation/NSCalendar.h>
+#include "UIKit/UIUserNotificationSettings.h"
 
-UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
+@implementation UIUserNotificationSettings
 
-UIKIT_EXPORT_CLASS
-@interface UILocalNotification : NSObject {
+/**
+@Status Stub
+*/
++ (instancetype)settingsForTypes:(UIUserNotificationType)allowedUserNotificationTypes categories:(NSSet*)actionSettings {
+    UNIMPLEMENTED();
+    return nil;
 }
 
-@property (nonatomic, copy) NSDate* fireDate;
-@property (nonatomic, copy) NSString* alertBody;
-@property (nonatomic, copy) NSTimeZone* timeZone;
-@property (nonatomic, copy) NSString* soundName;
-@property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic, copy) NSString* alertAction;
-@property (nonatomic) NSCalendarUnit repeatInterval;
-@property (nonatomic, copy) NSDictionary* userInfo;
-
 @end
-
-#endif /* _UILOCALNOTIFICATION_H_ */

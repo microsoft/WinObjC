@@ -54,6 +54,7 @@ typedef NSInteger NSStringDrawingOptions;
 
 @interface NSAttributedString (NSExtendedStringDrawing)
 - (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
+- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(NSDictionary*)attributes context:(NSStringDrawingContext*)context;
 - (CGSize)size;
 @end
 

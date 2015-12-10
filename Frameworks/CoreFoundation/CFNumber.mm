@@ -26,7 +26,6 @@
 */
 CFNumberType CFNumberGetType(CFNumberRef self) {
     UNIMPLEMENTED();
-    assert(0);
     return kCFNumberIntType;
 }
 
