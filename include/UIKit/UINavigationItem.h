@@ -36,6 +36,7 @@
 
 @class UIBarButtonItem, UIView, UINavigationBar;
 
+UIKIT_EXPORT_CLASS
 @interface UINavigationItem : NSObject
 
 - (id)initWithTitle:(NSString*)title;
