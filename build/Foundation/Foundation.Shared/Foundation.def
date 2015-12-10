@@ -188,3 +188,5 @@ LIBRARY Foundation
      __objc_class_name_NSAssertionHandler CONSTANT
      _OBJC_CLASS_NSURLCredential DATA
      __objc_class_name_NSURLCredential CONSTANT
+     _OBJC_CLASS_NSURLProtectionSpace DATA
+     __objc_class_name_NSURLProtectionSpace CONSTANT

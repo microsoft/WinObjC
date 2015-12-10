@@ -298,6 +298,7 @@
     <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCachedURLResponse.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLCredential.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSURLProtectionSpace.m" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp140d_app.dll">
