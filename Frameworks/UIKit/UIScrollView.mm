@@ -844,7 +844,7 @@ static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
 
     float t = (float)((EbrGetMediaTime() - _scrollAnimStartTime) * _scrollAnimDecaySpeed);
     CGPoint target = {
-        _scrollAnimDest.x + expf(-t) - dist.x * expf(-t / 2.f), _scrollAnimDest.y + expf(-t) - dist.y * expf(-t / 2.f),
+        _scrollAnimDest.x - dist.x * expf(-t / 2.f), _scrollAnimDest.y - dist.y * expf(-t / 2.f),
     };
 
     if (fabs(dist.x) < 0.1) {
