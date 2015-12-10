@@ -25,8 +25,9 @@ void NSStringForceinclude() {
     [NSString class];
 }
 
-NSString* const UITextAttributeFont = @"UITextAttributeFont";
-NSString* const UITextAttributeTextColor = @"UITextAttributeTextColor";
+// Contingent upon VSO 5795281: All of these names need to be compatible with the reference platform.
+NSString* const UITextAttributeFont = NSFontAttributeName;
+NSString* const UITextAttributeTextColor = NSForegroundColorAttributeName;
 NSString* const UITextAttributeTextShadowColor = @"UITextAttributeTextShadowColor";
 NSString* const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOffset";
 
