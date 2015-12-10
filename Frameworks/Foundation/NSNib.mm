@@ -42,12 +42,19 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
     NSData* data = [NSData dataWithContentsOfFile:name];
     if (data == nil) {
         data = [NSData dataWithContentsOfFile:[name stringByAppendingPathComponent:@"/runtime.nib"]];
-        if ( data == nil ) {
-            return nil;
+        // VSO 5763540: TODO - Change the order in which we resolve bundle paths or paths without .nib
+        if (data == nil) {
+            data = [NSData dataWithContentsOfFile:[name stringByAppendingPathExtension:@"nib"]];
+            if (data == nil) {
+                data = [NSData dataWithContentsOfFile:[bundle pathForResource:name ofType:@"nib"]];
+                if (data == nil) {
+                    return nil;
+                }
+            }
         }
     }
 
-    return [self nibWithData: data bundle: bundle];
+    return [self nibWithData:data bundle:bundle];
 }
 
 /**
