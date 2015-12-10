@@ -221,6 +221,11 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
         [uiApplication setDelegate:uiApplication];
     }
 
+    // VSO 5762132: Temporarily call -application:willFinishLaunchingWithOptions: here (before did(...):)
+    if ([curDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
+        [curDelegate application:uiApplication willFinishLaunchingWithOptions:nil];
+    }
+
     if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
         NSMutableDictionary* options = [NSMutableDictionary dictionary];
 
