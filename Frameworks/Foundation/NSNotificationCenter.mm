@@ -285,8 +285,10 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
  @Status Interoperable
 */
 - (void)removeObserver:(id)observer {
-    for (NSString* curName in [observers allKeys]) {
+    NSArray* copiedAllKeys = [[observers allKeys] copy];
+    for (NSString* curName in copiedAllKeys) {
         [self removeObserver:observer name:curName object:nil];
     }
+    [copiedAllKeys release];
 }
 @end
