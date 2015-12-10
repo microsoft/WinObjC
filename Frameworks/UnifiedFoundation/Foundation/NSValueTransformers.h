@@ -18,10 +18,15 @@
 
 #ifdef __cplusplus
 
+#import "Starboard/SmartTypes.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSValue.h"
+#import "ErrorHandling.h"
 
 namespace woc {
+static const char s_autoIdTypePrefix[] = "{AutoId<";
+static const char s_lifetimeRetainName[] = "LifetimeRetain";
+static const char s_lifetimeUnsafeName[] = "LifetimeUnsafe";
 template <typename T>
 struct ValueTransformer {
     static id get(T) {
@@ -73,6 +78,28 @@ id valueFromDataWithType(void* data, const char* objcType) {
             return ValueTransformer<double>::get(data);
         case 'B':
             return ValueTransformer<bool>::get(data);
+        case '{':
+            if (strncmp(objcType, s_autoIdTypePrefix, _countof(s_autoIdTypePrefix)) == 0) {
+                // A lot of our instance variables are typedefs around AutoId<>, a reference-counting
+                // C++ container for Objective-C instances. When ARC is enabled, it decays to id... but when
+                // ARC is not enabled, it is a fully templated C++ class that handles ownership transitions
+                // and lifetime semantics. Unfortunately, AutoId, being a structure in that case, does
+                // not lend itself to compatibility with valueForKey: and setValue:forKey:.
+                // This is an attempt to fix that problem: since we implemented AutoId, and we
+                // implemented the KVC accessors for instance variables, we are in the unique
+                // position of being able to unbox AutoId<>s and maintain their lifetime semantics.
+                // The code that follows (and its analogue in dataWithTypeFromValue) does so.
+                if (strstr(objcType + _countof(s_autoIdTypePrefix), s_lifetimeRetainName)) {
+                    auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeRetain>*>(data);
+                    return static_cast<id>(*dataAsAutoId);
+                } else if (strstr(objcType + _countof(s_autoIdTypePrefix), s_lifetimeUnsafeName)) {
+                    auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeUnsafe>*>(data);
+                    return static_cast<id>(*dataAsAutoId);
+                } else {
+                    FAIL_FAST_MSG(E_UNEXPECTED, "Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
+                    return nil;
+                }
+            }
     }
     return [NSValue valueWithBytes:data objCType:objcType];
 }
@@ -129,6 +156,21 @@ bool dataWithTypeFromValue(void* data, const char* objcType, id value) {
         case '?':
             // We cannot box/unbox arbitrary pointers or char*.
             return false;
+        case '{':
+            if (strncmp(objcType, s_autoIdTypePrefix, _countof(s_autoIdTypePrefix)) == 0) {
+                // AutoId<> boxed here. See above in valueFromDataWithType.
+                if (strstr(objcType + _countof(s_autoIdTypePrefix), s_lifetimeRetainName)) {
+                    auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeRetain>*>(data);
+                    (*dataAsAutoId) = value;
+                } else if (strstr(objcType + _countof(s_autoIdTypePrefix), s_lifetimeUnsafeName)) {
+                    auto dataAsAutoId = reinterpret_cast<AutoId<NSObject, LifetimeUnsafe>*>(data);
+                    (*dataAsAutoId) = value;
+                } else {
+                    FAIL_FAST_MSG(E_UNEXPECTED, "Unknown lifetime type destrucuring AutoId with type encoding `%s'.", objcType);
+                    return false;
+                }
+                return true;
+            }
         default:
             NSValue* nsv = static_cast<NSValue*>(value);
             if (getArgumentSize(objcType) == getArgumentSize([nsv objCType])) {
