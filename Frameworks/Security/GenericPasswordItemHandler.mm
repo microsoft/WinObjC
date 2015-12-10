@@ -564,8 +564,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         *result = returnArray;
     } else {
         *result = ShapeResultForCredential(validCredentials[0], returnAttributes, returnData, returnPersistentRef);
-
-        return errSecSuccess;
     }
-
+    return errSecSuccess;
+}
 @end
