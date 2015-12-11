@@ -177,6 +177,9 @@
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />

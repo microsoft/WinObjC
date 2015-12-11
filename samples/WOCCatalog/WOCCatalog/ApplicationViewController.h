@@ -14,18 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <UIKit/UIKit.h>
 
-#include "UIKit/UIUserNotificationSettings.h"
-
-@implementation UIUserNotificationSettings
-
-/**
- @Status Stub
-*/
-+ (instancetype)settingsForTypes:(UIUserNotificationType)allowedUserNotificationTypes categories:(NSSet*)actionSettings {
-    UNIMPLEMENTED();
-    return nil;
-}
+@interface ApplicationViewController : UITableViewController
 
 @end

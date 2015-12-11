@@ -108,6 +108,7 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />

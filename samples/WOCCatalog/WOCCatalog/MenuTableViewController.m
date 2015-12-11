@@ -34,6 +34,7 @@
 #import "BezierViewController.h"
 #import "AutoLayoutViewController.h"
 #import "PageViewController.h"
+#import "ApplicationViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -162,11 +163,18 @@ static NSString* viewTitleKeyName = @"ViewName";
     PageViewController* pageViewController = [[PageViewController alloc] init];
     [self.menuItems
         addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Page View", viewTitleKeyName, pageViewController, controllerKeyName, nil]];
+
     // Bezier
     BezierViewController* bezierViewController = [[BezierViewController alloc] init];
     [self.menuItems
         addObject:[NSDictionary
                       dictionaryWithObjectsAndKeys:@"Beizier Paths", viewTitleKeyName, bezierViewController, controllerKeyName, nil]];
+
+    // Application
+    ApplicationViewController* applicationViewController = [[ApplicationViewController alloc] init];
+    [self.menuItems
+        addObject:[NSDictionary
+                      dictionaryWithObjectsAndKeys:@"Application", viewTitleKeyName, applicationViewController, controllerKeyName, nil]];
 }
 
 - (void)didReceiveMemoryWarning {

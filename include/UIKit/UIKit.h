@@ -111,6 +111,7 @@
 #import "UISwipeGestureRecognizer.h"
 #import "UIDatePicker.h"
 #import "UIAppearance.h"
+#import "UIUserNotificationSettings.h"
 #import <UIKit/UIDocument.h>
 #import <UIKit/UIManagedDocument.h>
 #import <UIKit/UIStoryboardSegue.h>
