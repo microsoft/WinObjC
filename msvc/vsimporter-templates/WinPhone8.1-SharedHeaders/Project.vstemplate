@@ -1,7 +1,0 @@
-<VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
-  <TemplateContent>
-    <Project OutputDirectory="$projectname$-WinPhone8.1" File="SharedHeaders.vcxitems" TargetFileName="$projectname$.vcxitems" Shared="true" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxitems.filters">SharedHeaders.vcxitems.filters</ProjectItem>
-    </Project>
-  </TemplateContent>
-</VSTemplate>

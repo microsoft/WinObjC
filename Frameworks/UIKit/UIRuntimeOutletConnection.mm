@@ -37,10 +37,10 @@
 
     /*
     char labelLowerName[255];
-    strcpy(labelLowerName, labelName);
+    strcpy_s(labelLowerName, sizeof(labelLowerName), labelName);
     labelLowerName[0] = toupper(labelLowerName[0]);
     char setName[255];
-    sprintf(setName, "set%s:", labelLowerName);
+    sprintf_s(setName, sizeof(setName), "set%s:", labelLowerName);
 
     if ( !setProperty(source, labelName, dest) ) {
     if ( [source respondsToSelector:setName] ) {

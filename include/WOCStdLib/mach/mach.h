@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-// This header file is not yet implemented
 typedef int integer_t;
 
 #include "message.h"
 #include "vm_statistics.h"
+#include "mach_defs.h"
+#include "sys/_types.h"
 
 #define HOST_VM_INFO    1
 
@@ -28,9 +29,14 @@ typedef void *host_info_t;
 extern "C" {
 #endif
 extern int vm_page_size;
+
+// Always returns 0.
 mach_port_t mach_host_self(void);
-int host_page_size(mach_port_t port, vm_size_t *sizeOut);
-int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t *dataOutSize);
+
+// Parameter port will be ignored
+kern_return_t host_page_size(host_t host, vm_size_t* pageSize);
+
+int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize);
 #ifdef __cplusplus
 }
 #endif

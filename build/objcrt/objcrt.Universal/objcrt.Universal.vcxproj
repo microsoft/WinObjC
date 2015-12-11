@@ -152,7 +152,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <!-- NOTE: The order of dependencies is important.  Specifically kernel32.lib must come before %(AddiontalDependencies).
+                 %(AddiontalDependencies) evaluates to WindowsApp.lib which links to the api sets.  This results in RaiseFailFastException
+                 linking against a win10 api set in stead of kernel32.lib.  This ends up breaking the unit tests on the build server
+                 which is server 2012 R2 (win 8.1).
+      -->
+      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -177,7 +182,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -202,7 +207,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -227,7 +232,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -252,7 +257,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -277,7 +282,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>

@@ -574,7 +574,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return objCType;
 }
 
-- (id)classForArchiver {
+- (id)classForCoder {
     return [NSNumber class];
 }
 
@@ -717,7 +717,7 @@ DWORD NSDecimalRound(NSDecimal* result, NSDecimal* num, int scale, DWORD roundin
 NSString* NSDecimalString(NSDecimal* num, id locale) {
     UNIMPLEMENTED();
     char szVal[128];
-    sprintf(szVal, "%f", num->val);
+    sprintf_s(szVal, sizeof(szVal), "%f", num->val);
     return [NSString stringWithCString:szVal];
 }
 

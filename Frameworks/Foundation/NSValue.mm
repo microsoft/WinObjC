@@ -620,6 +620,10 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return YES;
 }
 
+- (id)classForCoder {
+    return [NSValue class];
+}
+
 - (NSValue*)initWithCoder:(NSKeyedUnarchiver*)coder {
     _valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
     unsigned size;

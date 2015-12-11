@@ -108,9 +108,6 @@
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TextViewViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -175,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
   </ItemGroup>

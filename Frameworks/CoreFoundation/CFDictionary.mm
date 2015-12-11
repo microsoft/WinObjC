@@ -42,23 +42,23 @@ static IWLazyIvarLookup<uint8_t[]> _LazyDictSpaceOffset(_LazyNSDictionary, "_dic
 static IWLazyIvarLookup<__CFDictionary*> _LazyDictOffset(_LazyNSDictionary, "dict");
 
 const void* CFNSCopy(CFAllocatorRef allocator, const void* obj) {
-    return (const void*)[(id)obj copy];
+    return [static_cast<id>(obj) copy];
 }
 
 const void* CFNSRetain(CFAllocatorRef allocator, const void* obj) {
-    return (const void*)[(id)obj retain];
+    return [static_cast<id>(obj) retain];
 }
 
 void CFNSRelease(CFAllocatorRef allocator, const void* obj) {
-    [(id)obj release];
+    [static_cast<id>(obj) release];
 }
 
 Boolean CFNSEqual(const void* obj1, const void* obj2) {
-    return (Boolean)([(id)obj1 isEqual:(id)obj2] != 0);
+    return [static_cast<id>(obj1) isEqual:static_cast<id>(obj2)];
 }
 
 CFHashCode CFNSHash(const void* obj1) {
-    return (CFHashCode)[(id)obj1 hash];
+    return [static_cast<id>(obj1) hash];
 }
 
 int CFNSComparer(id obj1, id obj2, void* context) {

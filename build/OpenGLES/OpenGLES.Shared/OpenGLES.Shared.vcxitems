@@ -42,23 +42,23 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESUtil.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\Attribute.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\MatrixStack.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\OpenGLES20Context.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\OpenGLES20Implementation.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\OpenGLESState.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\Shader.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\ShaderFile.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\ShaderProgram.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\ShaderSource.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLES20\Uniform.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESConfig.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESContext.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESFile.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESImplementation.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESMath.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESString.h" />
-    <ClInclude Include="(MSBuildThisFileDirectory)..\..\..\GLES1122\OpenGLESUtil.h" />  
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\Attribute.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\MatrixStack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\OpenGLES20Context.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\OpenGLES20Implementation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\OpenGLESState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\Shader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\ShaderFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\ShaderProgram.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\ShaderSource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLES20\Uniform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESConfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESContext.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESImplementation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESString.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

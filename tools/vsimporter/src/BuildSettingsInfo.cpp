@@ -191,7 +191,6 @@ static SettingDesc _settings[] = {
   {"USER", "${USERNAME}", StringValue, NULL, UniversalSetting},
 #endif
 // VS Importer variables
-  {"WINOBJC_SDK_ROOT", "$(VSIMPORTER_BINARY_DIR)/..", PathValue, NULL, UniversalSetting},
   {"VSIMPORTER_OUTPUT_DIR", "${PROJECT_FILE_PATH:dir}/${PROJECT_NAME}.vsimporter", PathValue, NULL, UniversalSetting},
   {"VSIMPORTER_TEMPLATES_DIR", "${WINOBJC_SDK_ROOT}/msvc/vsimporter-templates", PathValue, NULL, UniversalSetting},
 // Application variables

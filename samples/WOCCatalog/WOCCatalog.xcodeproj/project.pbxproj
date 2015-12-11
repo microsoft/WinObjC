@@ -20,7 +20,6 @@
 		4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861BE1B5997A500682BDB /* SearchBarViewController.m */; };
 		4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C01B5997A500682BDB /* SegmentsViewController.m */; };
 		4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C21B5997A500682BDB /* TextFieldsViewController.m */; };
-		4EE861D81B5997A500682BDB /* TextViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C41B5997A500682BDB /* TextViewViewController.m */; };
 		4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C61B5997A500682BDB /* ToolbarsViewController.m */; };
 		4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861C81B5997A500682BDB /* TransitionsViewController.m */; };
 		4EE861DB1B5997A500682BDB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861CA1B5997A500682BDB /* ViewController.m */; };
@@ -40,6 +39,7 @@
 		4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E91B5997AD00682BDB /* segment_tools.png */; };
 		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
 		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
+		4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */; };
 		7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */; };
 		7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B363CFD1BF5CBFE001F08DD /* PageViewController.m */; };
 		7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B42BCF41B90ECFE00D45782 /* BezierViewController.m */; };
@@ -91,8 +91,6 @@
 		4EE861C01B5997A500682BDB /* SegmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsViewController.m; sourceTree = "<group>"; };
 		4EE861C11B5997A500682BDB /* TextFieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldsViewController.h; sourceTree = "<group>"; };
 		4EE861C21B5997A500682BDB /* TextFieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldsViewController.m; sourceTree = "<group>"; };
-		4EE861C31B5997A500682BDB /* TextViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewViewController.h; sourceTree = "<group>"; };
-		4EE861C41B5997A500682BDB /* TextViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewViewController.m; sourceTree = "<group>"; };
 		4EE861C51B5997A500682BDB /* ToolbarsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbarsViewController.h; sourceTree = "<group>"; };
 		4EE861C61B5997A500682BDB /* ToolbarsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbarsViewController.m; sourceTree = "<group>"; };
 		4EE861C71B5997A500682BDB /* TransitionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionsViewController.h; sourceTree = "<group>"; };
@@ -118,6 +116,8 @@
 		4EE861EA1B5997AD00682BDB /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = WOCCatalog/Images/whiteButton.png; sourceTree = "<group>"; };
 		4EE861F81B5997E400682BDB /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesViewController.h; sourceTree = "<group>"; };
 		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
+		4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDisplayViewController.h; sourceTree = "<group>"; };
+		4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDisplayViewController.m; sourceTree = "<group>"; };
 		7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoLayoutViewController.h; sourceTree = "<group>"; };
 		7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoLayoutViewController.m; sourceTree = "<group>"; };
 		7B363CFC1BF5CB4C001F08DD /* PageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
@@ -181,6 +181,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */,
+				4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */,
 				E19F61D01BCE9962005077C5 /* GLKitExampleController.h */,
 				E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */,
 				7BCEEE451B70220300C31CF5 /* DisplayModeViewController.h */,
@@ -213,8 +215,6 @@
 				4EE861C01B5997A500682BDB /* SegmentsViewController.m */,
 				4EE861C11B5997A500682BDB /* TextFieldsViewController.h */,
 				4EE861C21B5997A500682BDB /* TextFieldsViewController.m */,
-				4EE861C31B5997A500682BDB /* TextViewViewController.h */,
-				4EE861C41B5997A500682BDB /* TextViewViewController.m */,
 				4EE861C51B5997A500682BDB /* ToolbarsViewController.h */,
 				4EE861C61B5997A500682BDB /* ToolbarsViewController.m */,
 				4EE861C71B5997A500682BDB /* TransitionsViewController.h */,
@@ -408,6 +408,7 @@
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
 				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
 				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
+				4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */,
 				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
 				4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */,
 				4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */,
@@ -418,7 +419,6 @@
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
-				4EE861D81B5997A500682BDB /* TextViewViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

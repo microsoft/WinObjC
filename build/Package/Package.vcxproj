@@ -26,20 +26,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugPackage|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePackage|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
@@ -53,13 +40,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugPackage|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePackage|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -104,21 +85,11 @@
     <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
     <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
     <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
-    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.lib" />
-    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.dll" />
-    <SBLibsWin81 Include="..\Win32\$(Configuration)\Windows 8.1\*.winmd" />
-    <SBLibsWin81 Include="..\..\deps\prebuilt\Windows 8.1\x86\*.lib" />
-    <SBLibsWin81 Include="..\..\deps\prebuilt\Windows 8.1\x86\*.dll" />
     <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.lib" />
     <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
     <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
     <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.lib" />
     <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.dll" />
-    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.lib" />
-    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.dll" />
-    <SBLibsWinPhone81x86 Include="..\Win32\$(Configuration)\Windows Phone 8.1\*.winmd" />
-    <SBLibsWinPhone81x86 Include="..\..\deps\prebuilt\Windows Phone 8.1\x86\*.lib" />
-    <SBLibsWinPhone81x86 Include="..\..\deps\prebuilt\Windows Phone 8.1\x86\*.dll" />
     <SBSamples Include="..\..\samples\**\*" />
     <SBBinaries Include="..\..\bin\*.exe" />
     <SBBinaries Include="..\..\bin\*.dll" />
@@ -151,9 +122,7 @@
     <Message Importance="high" Text="Copying MSBuild files to destination" />
     <Copy SourceFiles="@(MSVCFiles)" DestinationFiles="@(MSVCFiles->'$(SBPackageDir)msvc\%(OutputFileName)%(Extension)')" />
     <Message Importance="high" Text="Copying lib files to destination" />
-    <Copy SourceFiles="@(SBLibsWin81)" DestinationFolder="$(SBPackageDir)lib\Windows 8.1\x86" />
     <Copy SourceFiles="@(SBLibsWin10)" DestinationFolder="$(SBPackageDir)lib\Universal Windows\x86" />
-    <Copy SourceFiles="@(SBLibsWinPhone81x86)" DestinationFolder="$(SBPackageDir)lib\Windows Phone 8.1\x86" />
     <Message Importance="high" Text="Copying includes to destination" />
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />

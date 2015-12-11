@@ -18,6 +18,8 @@
 #import "UIKit/NSLayoutConstraint.h"
 #import "UIViewInternal.h"
 
+extern "C" bool InitializeAutoLayout();
+
 @protocol AutoLayoutConstraint
 - (void)autoLayoutAlloc;
 - (void)autoLayoutDealloc;

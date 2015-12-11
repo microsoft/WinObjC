@@ -85,9 +85,10 @@ GLuint Shader::compile() {
 }
 
 char* convertStringToChar(const std::string& str) {
-    char* retPtr(new char[str.length() + 1]);
+    size_t retPtrSize = str.length() + 1;
+    char* retPtr = (char*)malloc(retPtrSize);
 
-    strcpy(retPtr, str.c_str());
+    strcpy_s(retPtr, retPtrSize, str.c_str());
 
     return retPtr;
 }

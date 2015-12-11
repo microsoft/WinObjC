@@ -63,11 +63,14 @@
 - (instancetype)initWithIndexes:(unsigned*)indexes length:(unsigned)length {
     _length = length;
     _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
+    if (_indexes == nil) {
+		[self release];
+        return nil;
+    }
 
     for (unsigned i = 0; i < length; i++) {
         _indexes[i] = indexes[i];
     }
-
     return self;
 }
 

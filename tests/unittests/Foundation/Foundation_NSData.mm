@@ -18,6 +18,7 @@
 
 #import <Foundation/NSString.h>
 #import <Foundation/NSData.h>
+#import <Foundation/NSURL.h>
 
 TEST(Foundation, NSData_Base64EncodeDecode) {
     NSString* testString = @"SGVsbG8gV29ybGQh";
@@ -28,4 +29,18 @@ TEST(Foundation, NSData_Base64EncodeDecode) {
                     testString,
                     decodedData,
                     encodedString);
+}
+
+TEST(Foundation, NSDataWriteToURL) {
+    // first, write the test string to NSURL which represents as a file
+    // ensure it succeeds
+    const char bytes[] = "Hello world";
+    NSData* expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
+    NSURL* fileURL = [NSURL fileURLWithPath:@"./Library/Helloworld.txt"];
+    ASSERT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:nil], "NSDataWriteToURL should succeed");
+
+    // second, read the file content back, compare with original content
+    // ensure they are equal
+    NSData* actualData = [NSData dataWithContentsOfFile:[fileURL path]];
+    ASSERT_OBJCEQ_MSG(expectedData, actualData, "Data should be equal");
 }

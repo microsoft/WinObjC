@@ -30,7 +30,7 @@ std::string woc::string::format[[gnu::format(printf, 1, 2)]](const char* format,
     size_t size = _vscprintf(format, arguments);
     va_end(arguments);
     std::string ret(size + 1, '\0');
-    _vsnprintf(&ret[0], size, format, arguments2);
+    _vsnprintf_s(&ret[0], size + 1, size, format, arguments2);
     va_end(arguments2);
     return ret;
 }

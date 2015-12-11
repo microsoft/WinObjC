@@ -43,25 +43,43 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return @"HTTP error";
 }
 
-- (id)initWithURL:(id)url statusCode:(DWORD)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength {
-    CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
+- (id)_initCommon:(NSURL*)url
+               statusCode:(NSInteger)statusCode
+             headerFields:(NSDictionary*)headerFields
+    expectedContentLength:(int)expectedContentLength {
+    if (self = [super init]) {
+        if (headerFields != nil) {
+            CFDictionaryKeyCallBacks caseInsensitiveKeyChecker = kCFTypeDictionaryKeyCallBacks;
 
-    caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
-    caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
+            caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
+            caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
 
-    _allHeaderFields =
-        (NSDictionary*)CFDictionaryCreateMutable(NULL, [headers count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
+            _allHeaderFields = (NSDictionary*)
+                CFDictionaryCreateMutable(NULL, [headerFields count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
 
-    //  Case insensitive dictionary
-    for (id key in [headers allKeys]) {
-        id val = [headers objectForKey:key];
-        [_allHeaderFields setObject:val forKey:key];
+            //  Case insensitive dictionary
+            for (id key in [headerFields allKeys]) {
+                id val = [headerFields objectForKey:key];
+                [_allHeaderFields setObject:val forKey:key];
+            }
+        }
+        _url = url;
+        _statusCode = statusCode;
+        _expectedContentLength = expectedContentLength;
     }
 
-    _expectedContentLength = expectedContentLength;
-    _url = url;
-    _statusCode = statusCode;
+    return self;
+}
 
+- (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode HTTPVersion:(NSString*)HTTPVersion headerFields:(NSDictionary*)headerFields {
+    if (self = [self _initCommon:url statusCode:statusCode headerFields:headerFields expectedContentLength:-1]) {
+        _HTTPVersion = HTTPVersion;
+    }
+    return self;
+}
+
+- (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength {
+    self = [self _initCommon:url statusCode:statusCode headerFields:headers expectedContentLength:expectedContentLength];
     return self;
 }
 

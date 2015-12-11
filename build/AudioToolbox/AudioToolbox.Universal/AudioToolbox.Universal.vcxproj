@@ -165,6 +165,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -206,6 +207,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -247,6 +249,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>

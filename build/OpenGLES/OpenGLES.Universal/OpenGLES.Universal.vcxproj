@@ -173,6 +173,7 @@
       <ModuleDefinitionFile>..\OpenGLES.Shared\OpenGLES.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -237,6 +238,7 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
       <ModuleDefinitionFile>..\OpenGLES.Shared\OpenGLES.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -301,6 +303,7 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
       <ModuleDefinitionFile>..\OpenGLES.Shared\OpenGLES.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>

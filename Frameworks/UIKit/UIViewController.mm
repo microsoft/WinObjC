@@ -595,7 +595,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (strlen(ourClass) > strlen("Controller")) {
             if (strcmp(&ourClass[strlen(ourClass) - strlen("Controller")], "Controller") == 0) {
                 //  Try to find the name of just the controller
-                strcpy(tryClass, ourClass);
+                strcpy_s(tryClass, sizeof(tryClass), ourClass);
                 tryClass[strlen(tryClass) - strlen("Controller")] = 0;
                 nibPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:tryClass] ofType:@"nib"];
                 if (nibPath != nil) {
@@ -644,11 +644,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 
     if (strNib) {
-        const char* name = (const char*)[strNib UTF8String];
-        char openname[255];
-
-        sprintf(openname, "%s", name);
-
         priv->nibName = [strNib copy];
     } else {
         priv->nibName = nil;
@@ -714,7 +709,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (strlen(ourClass) > strlen("Controller")) {
             if (strcmp(&ourClass[strlen(ourClass) - strlen("Controller")], "Controller") == 0) {
                 //  Try to find the name of just the controller
-                strcpy(tryClass, ourClass);
+                strcpy_s(tryClass, sizeof(tryClass), ourClass);
                 tryClass[strlen(tryClass) - strlen("Controller")] = 0;
                 nibPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:tryClass] ofType:@"nib"];
             }
