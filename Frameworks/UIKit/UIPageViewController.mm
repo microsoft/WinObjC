@@ -85,7 +85,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         CGPoint targetOffset = CGPointMake(currentFrame.size.width, 0);
 
         self.scrollEnabled = NO;
-        _completion = completion;
+        auto copiedCompletion = Block_copy(completion);
+        _completion = copiedCompletion; // retained
+        Block_release(copiedCompletion);
 
         // Recenter the view. This will cancel any scroll animations.
         [self setContentOffset:targetOffset animated:NO];
