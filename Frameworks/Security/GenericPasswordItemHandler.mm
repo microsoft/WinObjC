@@ -456,7 +456,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
     bool returnData = CFBooleanGetValue(static_cast<CFBooleanRef>([attributes objectForKey:static_cast<NSString*>(kSecReturnData)]));
 
     if (result && (returnAttributes || returnPersistentRef || returnData)) {
-        *result = ShapeResultForCredential(credential, returnAttributes, returnData, returnPersistentRef);
+        *result = [ShapeResultForCredential(credential, returnAttributes, returnData, returnPersistentRef) retain];
     }
 
     [credential release];
@@ -556,14 +556,14 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
 
     // Shape the resulting credential list into an appropriate return type based on requested returns.
     if (findAll) {
-        NSMutableArray* returnArray = [[NSMutableArray new] autorelease];
+        NSMutableArray* returnArray = [NSMutableArray arrayWithCapacity:validCredentials.size()];
         for (const auto& credential : validCredentials) {
             [returnArray addObject:ShapeResultForCredential(credential, returnAttributes, returnData, returnPersistentRef)];
         }
 
-        *result = returnArray;
+        *result = [returnArray retain];
     } else {
-        *result = ShapeResultForCredential(validCredentials[0], returnAttributes, returnData, returnPersistentRef);
+        *result = [ShapeResultForCredential(validCredentials[0], returnAttributes, returnData, returnPersistentRef) retain];
     }
     return errSecSuccess;
 }
