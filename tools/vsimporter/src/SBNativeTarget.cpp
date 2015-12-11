@@ -23,6 +23,7 @@
 #include "SBProject.h"
 #include "SBNativeTarget.h"
 #include "VCProject.h"
+#include "VCProjectItem.h"
 
 SBNativeTarget::~SBNativeTarget() {}
 
@@ -102,7 +103,10 @@ VCProject* SBNativeTarget::constructVCProject(VSTemplateProject* projTemplate)
       configBS->print(varsPrinter);
 
       // Add the variables file to the project
-      addRelativeFilePathToVS("Text", varsFilePath, "Xcode Variable Files", *proj, *configBS);
+      VCProjectItem* xcvarsFile = addRelativeFilePathToVS("Text", varsFilePath, "Xcode Variable Files", *proj, *configBS);
+
+      // Mark the file as non-deployable
+      xcvarsFile->setDefinition("DeploymentContent", "false");
     }
   }
 

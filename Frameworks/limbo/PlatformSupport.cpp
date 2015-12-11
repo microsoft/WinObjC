@@ -872,7 +872,7 @@ bool EbrMkdir(const char* path) {
 }
 
 char* EbrGetcwd(char* buf, size_t len) {
-    strncpy(buf, CPathMapper::currentDir, len);
+    strncpy_s(buf, len, CPathMapper::currentDir, len);
     return buf;
 }
 
@@ -889,7 +889,7 @@ void dbg_printf(const char* fmt, ...) {
 
     va_start(va, fmt);
     char buf[4096];
-    vsnprintf(buf, 4095, fmt, va);
+    vsnprintf_s(buf, sizeof(buf), 4095, fmt, va);
     va_end(va);
     buf[4095] = 0;
     OutputDebugStringA(buf);
@@ -917,7 +917,7 @@ bool EbrRemove(const char* path) {
                         continue;
 
                     char fullPath[4096]; // max path?
-                    sprintf(fullPath, "%s%s%s", path, PATH_SEPARATOR, ent.fileName);
+                    sprintf_s(fullPath, sizeof(fullPath), "%s%s%s", path, PATH_SEPARATOR, ent.fileName);
                     if (!EbrRemove(fullPath)) {
                         EbrCloseDir(dir);
                         return false;

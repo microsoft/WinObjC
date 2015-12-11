@@ -134,6 +134,8 @@ typedef NSInteger NSComparisonResult;
 
 typedef NSComparisonResult (^NSComparator)(id obj1, id obj2);
 
+typedef double NSTimeInterval;
+
 #define NSNotFound NSIntegerMax
 
 #ifndef MIN
@@ -200,8 +202,8 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #define NS_DEPRECATED_IOS(x, y)
 
 #ifdef __cplusplus
-#define NS_OPTIONS(_t, __n) \
-    _t _n;                  \
+#define NS_OPTIONS(_t, _n) \
+    _t _n;                 \
     enum : _t
 #else
 #define NS_OPTIONS(_t, _n) \

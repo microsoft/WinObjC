@@ -287,7 +287,7 @@ static DWORD WINAPI CompositorThread(LPVOID thread) {
                                                (ID3D11DeviceContext**)&existingContext);
     if (FAILED(rc)) {
         char buf[512];
-        sprintf(buf, "HRESULT IS 0x%x\n", rc);
+        sprintf_s(buf, sizeof(buf), "HRESULT IS 0x%x\n", rc);
         OutputDebugStringA(buf);
     }
 
@@ -382,7 +382,7 @@ int UIApplicationMain(int argc, char* argv[], NSString* principalClassName, NSSt
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*)orientation) {
+            for (NSString* curstr in(NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;

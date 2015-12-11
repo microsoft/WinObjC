@@ -79,7 +79,7 @@ void parseCookies(const char* lineptr, id dict) {
 
     do {
         name[0] = what[0] = '\0';
-        if (sscanf(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]", name, what) > 0) {
+        if (sscanf_s(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]", name, what) > 0) {
             const char* endOfName = ptr + strlen(name);
             while (*endOfName && ISBLANK(*endOfName))
                 ++endOfName;

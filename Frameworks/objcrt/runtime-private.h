@@ -200,7 +200,9 @@ static void* objc_sparsearray_get(const struct objc_sparsearray* s, uint32_t idx
         sprintf_s(buf, sizeof(buf), __VA_ARGS__);                           \
         OutputDebugStringA(buf);                                            \
                                                                             \
-        objc_RaiseNotImplementedException(__VA_ARGS__);                     \
+        if (!getenv("OBJC_APP_BRINGUP")) {                                  \
+            objc_RaiseNotImplementedException(__VA_ARGS__);                 \
+        }                                                                   \
     }
 #else
 #define OBJC_ERROR(...) \

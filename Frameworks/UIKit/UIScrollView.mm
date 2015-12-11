@@ -267,7 +267,7 @@ static void positionScrollers(UIScrollView* self) {
         UIEdgeInsets inset = { 0 };
         if ([obj isKindOfClass:[NSString class]]) {
             const char* str = [obj UTF8String];
-            sscanf(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
+            sscanf_s(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
         } else {
             CGRect* pRect = (CGRect*)((char*)[obj bytes]) + 1;
             memcpy(&inset, pRect, sizeof(CGRect));

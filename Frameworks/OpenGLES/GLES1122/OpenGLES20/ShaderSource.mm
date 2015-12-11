@@ -44,14 +44,15 @@ bool ShaderSource::expandSource() {
     file->close();
 
     int additionalSourceLength = additionalSource.size();
-    char* sourceTmp = (char*)malloc(sizeof(char) * n + additionalSourceLength + 1);
+    size_t sourceTmpSize = (sizeof(char) * n) + additionalSourceLength + 1;
+    char* sourceTmp = (char*)malloc(sourceTmpSize);
     if (sourceTmp == NULL) {
         LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Cannot allocate memory.");
         return false;
     }
 
-    strcpy(sourceTmp, additionalSource.c_str());
-    strncpy(sourceTmp + additionalSourceLength, tmp, n + 1);
+    strcpy_s(sourceTmp, sourceTmpSize, additionalSource.c_str());
+    strncpy_s(sourceTmp + additionalSourceLength, sourceTmpSize - additionalSourceLength, tmp, n + 1);
 
     source = sourceTmp;
     sourceExpanded = true;

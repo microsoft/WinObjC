@@ -230,7 +230,7 @@ static void createLabel(UIButton* self) {
         UIEdgeInsets inset = { 0 };
         if ([obj isKindOfClass:[NSString class]]) {
             const char* str = (const char*)[obj UTF8String];
-            sscanf(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
+            sscanf_s(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
         } else {
             CGRect* pRect = (CGRect*)((char*)[obj bytes] + 1);
             memcpy(&inset, pRect, sizeof(CGRect));
@@ -242,7 +242,7 @@ static void createLabel(UIButton* self) {
         UIEdgeInsets inset = { 0 };
         if ([obj isKindOfClass:[NSString class]]) {
             const char* str = (const char*)[obj UTF8String];
-            sscanf(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
+            sscanf_s(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
         } else {
             CGRect* pRect = (CGRect*)((char*)[obj bytes] + 1);
             memcpy(&inset, pRect, sizeof(CGRect));
@@ -254,7 +254,7 @@ static void createLabel(UIButton* self) {
         UIEdgeInsets inset = { 0 };
         if ([obj isKindOfClass:[NSString class]]) {
             const char* str = (const char*)[obj UTF8String];
-            sscanf(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
+            sscanf_s(str, "{%f, %f, %f, %f}", &inset.top, &inset.left, &inset.bottom, &inset.right);
         } else {
             CGRect* pRect = (CGRect*)((char*)[obj bytes] + 1);
             memcpy(&inset, pRect, sizeof(CGRect));
@@ -266,7 +266,7 @@ static void createLabel(UIButton* self) {
         CGSize size = { 0 };
         if ([obj isKindOfClass:[NSString class]]) {
             const char* str = (const char*)[obj UTF8String];
-            sscanf(str, "{%f, %f}", &_shadowOffset.width, &_shadowOffset.height);
+            sscanf_s(str, "{%f, %f}", &_shadowOffset.width, &_shadowOffset.height);
         } else {
             CGSize* pSize = (CGSize*)((char*)[obj bytes] + 1);
             memcpy(&_shadowOffset, pSize, sizeof(CGSize));

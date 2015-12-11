@@ -31,7 +31,6 @@
 
 #include <math.h>
 
-// For LoadPackagedLibrary
 #include <Windows.h>
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
@@ -96,14 +95,7 @@ int viewCount = 0;
     self->priv->constraints.attach([NSMutableArray new]);
     self->priv->associatedConstraints.attach([NSMutableArray new]);
 
-    static BOOL autoLayoutInit;
-    if (!autoLayoutInit) {
-        // Since we don't have any functions linking us to AutoLayout.dll, and simply
-        // linking to AutoLayout.lib isn't good enough (since objc classes are static
-        // initialized, and there's nothing linking the TU) we have to load it manually.
-        LoadPackagedLibrary(L"AutoLayout.dll", 0);
-        autoLayoutInit = true;
-    }
+    static bool isAutoLayoutInitialized = InitializeAutoLayout();
 
     if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
         [self autoLayoutAlloc];
@@ -1762,7 +1754,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setNeedsUpdateConstraints {
-    for (NSLayoutConstraint* constraint in (NSArray*)priv->associatedConstraints) {
+    for (NSLayoutConstraint* constraint in(NSArray*)priv->associatedConstraints) {
         if ([constraint.firstItem isKindOfClass:[UIView class]]) {
             UIView* view = (UIView*)constraint.firstItem;
             view->priv->_constraintsNeedUpdate = true;

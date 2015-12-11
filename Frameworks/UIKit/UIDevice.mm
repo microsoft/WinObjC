@@ -183,7 +183,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
     static id ret;
     if (ret == nil) {
         char combinedName[256];
-        sprintf(combinedName, "%s %s", EbrGetDeviceInfo()->manufacturer, EbrGetDeviceInfo()->model);
+        sprintf_s(combinedName, sizeof(combinedName), "%s %s", EbrGetDeviceInfo()->manufacturer, EbrGetDeviceInfo()->model);
         ret = EbrBuildCFConstantString(combinedName);
     }
     return ret;
@@ -366,7 +366,7 @@ return ret;
 
 - (id) /* use typed version */ _setInitialOrientation {
     UIDeviceOrientation def = UIDeviceOrientationPortrait;
-#if 0   
+#if 0
 def = (UIDeviceOrientation) EbrGetWantedOrientation();
 #endif
 

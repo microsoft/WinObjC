@@ -169,6 +169,7 @@
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo;StarboardPrebuiltDirs;$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
@@ -221,6 +222,7 @@
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
@@ -273,6 +275,7 @@
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardBasePath)\Frameworks\limbo</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;ws2_32.lib;libdispatch.lib;objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\SystemConfiguration.Shared\SystemConfiguration.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\icu\icu\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>

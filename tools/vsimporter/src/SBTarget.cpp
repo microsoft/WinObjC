@@ -37,6 +37,7 @@
 #include "VSSolutionFolderProject.h"
 #include "VCProject.h"
 #include "VCProjectConfiguration.h"
+#include "VSTemplateProject.h"
 
 SBTarget::~SBTarget() {}
 
@@ -263,10 +264,17 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
   // Create the project
   VCProject* proj = new VCProject(projTemplate);
 
-  // Set global properties on the project
+  // Get path to WinObjC SDK
   const BuildSettings& projBS = m_parentProject.getBuildSettings();
+  String useRelativeSdkPath = projBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
   String sdkDir = projBS.getValue("WINOBJC_SDK_ROOT");
-  proj->setGlobalProperty("WINOBJC_SDK_ROOT", sdkDir);
+
+  // Try to create a relative path to the SDK, if requested
+  if (strToUpper(useRelativeSdkPath) == "YES") {
+    String projectDir = sb_dirname(projTemplate->getPath());
+    sdkDir = getRelativePath(projectDir, sdkDir);
+  }
+  proj->setGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir));
 
   // Set configuration properties
   for (auto configBS : m_buildSettings) {

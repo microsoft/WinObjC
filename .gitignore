@@ -3,6 +3,7 @@
 *.suo
 *.user
 *.orig
+*.opendb
 ipch
 Debug
 Release
@@ -21,3 +22,6 @@ dirlistout
 filelist.bat
 filelistout
 files.eld
+*.bitremoved
+Documents/
+Library/

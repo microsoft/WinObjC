@@ -117,8 +117,12 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">HelloGLKit-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">HelloGLKit-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
-    <Text Include="HelloGLKit-Debug-xcvars.txt" />
-    <Text Include="HelloGLKit-Release-xcvars.txt" />
+    <Text Include="HelloGLKit-Debug-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="HelloGLKit-Release-xcvars.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />

@@ -20,14 +20,59 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Security\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj">
-      <Project>{910A1D74-F35C-4145-BAED-80ACBBC2DAD7}</Project>
+      <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoLayout\AutoLayout.Universal\AutoLayout.Universal.vcxproj">
+      <Project>{00d9c3e9-f324-4fd0-a857-61122339e726}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
+      <Project>{2FB40E04-969C-4484-AE3B-CBD6620A8256}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreGraphics\CoreGraphics.Universal\CoreGraphics.Universal.vcxproj">
+      <Project>{35D64778-265E-478C-9B17-687C9C1EAD3B}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Foundation\Foundation.Universal\Foundation.Universal.vcxproj">
+      <Project>{49AA9208-07ED-4F9C-94AC-C6CF9097E809}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
+      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
+      <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
+      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\UIKit\UIKit.Universal\UIKit.Universal.vcxproj">
+      <Project>{43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\GLKit\GLKit.Universal\GLKit.Universal.vcxproj">
+      <Project>{679D3DA0-B218-44EE-9C73-FE6262773772}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreLocation\CoreLocation.Universal\CoreLocation.Universal.vcxproj">
+      <Project>{a03b9e82-d421-4cbc-8c94-24f0aa9ebbce}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UnitTests</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Windows Store</ApplicationType>
+    <AppContainerApplication>false</AppContainerApplication>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <WindowsAppContainer>false</WindowsAppContainer>
+    <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -106,7 +151,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -115,7 +161,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
       <OtherCFlags>
       </OtherCFlags>
-      <IncludePaths>..\..\Frameworks\include</IncludePaths>
+      <IncludePaths>..\..\Frameworks\include;</IncludePaths>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <ClangCompile>
@@ -144,7 +190,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>UIKit.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;GLKit.lib;Starboard.lib;objcrt.lib;Foundation.lib;CoreFoundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\tests\gtest\include;..\..\</UserIncludePaths>
@@ -154,7 +201,7 @@
       <OtherCFlags>
       </OtherCFlags>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <IncludePaths>..\..\Frameworks\include</IncludePaths>
+      <IncludePaths>..\..\Frameworks\include;</IncludePaths>
     </ClangCompile>
     <ClangCompile>
       <UserIncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\tests\gtest\include;</UserIncludePaths>
@@ -205,19 +252,21 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch.m" />
     <ClangCompile Include="..\..\tests\unittests\ErrorHandling.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation.m" />
-    <ClangCompile Include="..\..\tests\unittests\Foundation\NSLocale.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\Foundation_NSData.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSObject_NSKeyValueArrayAdapters.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSBundle.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSCondition.mm" />
-    <ClangCompile Include="..\..\tests\unittests\Foundation\NSOperation.mm" />
-    <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSFileManager.mm" />
-    <ClangCompile Include="..\..\tests\unittests\Foundation_NSAttributedString.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSLocale.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSOperation.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation\NSProcessInfo.mm" />
     <ClangCompile Include="..\..\tests\unittests\Foundation\NSUserDefaults.mm" />
-    <ClangCompile Include="..\..\tests\unittests\Foundation\Foundation_NSData.mm" />
+    <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_CFBridgeBase.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_NSArray.mm" />
+    <ClangCompile Include="..\..\tests\unittests\Foundation_NSAttributedString.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSCountedSet.mm" />
     <ClangCompile Include="..\..\tests\unittests\foundation_NSValue.mm" />
-    <ClangCompile Include="..\..\tests\unittests\foundation_archival.mm" />
     <ClangCompile Include="..\..\tests\unittests\GLKitTest.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCharacterSet.m" />
     <ClangCompile Include="..\..\tests\unittests\NSDateFormatter.m" />
@@ -246,37 +295,51 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
+    <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
+    <ClangCompile Include="..\..\tests\unittests\NSCachedURLResponse.mm" />
   </ItemGroup>
   <ItemGroup>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120d_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp120_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcr120d_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\msvcr120_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120d_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcruntime140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vccorlib120_app.dll">
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcruntime140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\concrt140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\concrt140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcamp140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcamp140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcomp140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\tests\unittests\ContainerCRTDeps\vcomp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>
     </Text>
   </ItemGroup>

@@ -920,6 +920,26 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
+- (BOOL)checkResourceIsReachableAndReturnError:(NSError**)error {
+    if (error) {
+        *error = nil;
+    }
+
+    if (![self isFileURL]) {
+        // checkResourceIsReachableAndReturnError return NO for any non-FileURL according to reference doc
+        if (error) {
+            // TODO: standardize the error domain and error code
+            *error = [NSError errorWithDomain:@"NSURL" code:100 userInfo:nil];
+        }
+        return NO;
+    }
+
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self path]];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSString*)resourceSpecifier {
     char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
     if (uriStr == NULL) {

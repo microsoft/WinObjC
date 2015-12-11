@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup Label="Globals">
-        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-        <HasSharedItems>true</HasSharedItems>
-        <ItemsProjectGuid>{064ea074-9f01-4abe-9e04-69f882f898df}</ItemsProjectGuid>
-        <ItemsRootNamespace>Starboard</ItemsRootNamespace>
-        <ItemsProjectName>Starboard.Shared</ItemsProjectName>
-        <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
-    </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{064ea074-9f01-4abe-9e04-69f882f898df}</ItemsProjectGuid>
+    <ItemsRootNamespace>Starboard</ItemsRootNamespace>
+    <ItemsProjectName>Starboard.Shared</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+  </PropertyGroup>
   <ItemGroup>
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)..\..\..\msvc\sbclang.xml">
       <Context>Project</Context>
@@ -16,25 +16,26 @@
       <Context>Project</Context>
     </PropertyPageSchema>
   </ItemGroup>
-    <ItemDefinitionGroup>
-        <ClCompile>
-            <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
-        </ClCompile>
-    </ItemDefinitionGroup>
-    <ItemGroup>
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\AssetFile.cpp" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\md5.c" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\PlatformSupport.cpp" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\pthread.cpp" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\UTSName.cpp" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\MurmurHash3.mm" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.mm" />
-        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
-    </ItemGroup>
-    <ItemGroup>
-        <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Empty.cpp" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectCapability Include="SourceItemsFromImports" />
-    </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\AssetFile.cpp" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\md5.c" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\PlatformSupport.cpp" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\pthread.cpp" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\UTSName.cpp" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\mach.cpp" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\MurmurHash3.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Empty.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
 </Project>

@@ -970,7 +970,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)setFrame:(CGRect)frame {
     /*
     char szOut[512];
-    sprintf(szOut, "%s: setFrame(%f, %f, %f, %f)\n", object_getClassName(self),
+    sprintf_s(szOut, sizeof(szOut), "%s: setFrame(%f, %f, %f, %f)\n", object_getClassName(self),
     frame.origin.x, frame.origin.y,
     frame.size.width, frame.size.height);
     EbrDebugLog("%s", szOut);
@@ -1435,7 +1435,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     if (key == nil) {
         static int curId = 0;
         char szName[255];
-        sprintf(szName, "Undefined_%d", curId);
+        sprintf_s(szName, sizeof(szName), "Undefined_%d", curId);
         curId++;
         key = [NSString stringWithCString:szName];
     }

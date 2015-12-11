@@ -28,10 +28,22 @@
 #include "Foundation/NSIndexSet.h"
 #include "Foundation/NSNull.h"
 #include "NSArrayInternal.h"
+#include "VAListHelper.h"
 
 __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
+
+/**
+ * Internal helper for the variadic initializers
+ */
+static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs) {
+    for (id obj : flatArgs) {
+        CFArrayAppendValue((CFMutableArrayRef)array, (const void*)obj);
+    }
+
+    return array;
+}
 
 @implementation NSArray
 
@@ -39,25 +51,11 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
  @Status Interoperable
 */
 + (NSArray*)arrayWithObjects:(NSObject*)first, ... {
-    va_list pReader;
-    va_start(pReader, first);
-    NSArray* ret = [self new];
-    if (first == nil) {
-        return [ret autorelease];
-    }
-    CFArrayAppendValue((CFMutableArrayRef)ret, (const void*)first);
-
-    id curVal = va_arg(pReader, id);
-
-    while (curVal != NULL) {
-        CFArrayAppendValue((CFMutableArrayRef)ret, (const void*)curVal);
-
-        curVal = va_arg(pReader, id);
-    }
-
-    va_end(pReader);
-
-    return [ret autorelease];
+    va_list argList;
+    va_start(argList, first);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
+    va_end(argList);
+    return [_initWithObjects([self new], flatArgs) autorelease];
 }
 
 /**
@@ -119,25 +117,11 @@ __declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* bl
  @Status Interoperable
 */
 - (NSArray*)initWithObjects:(NSObject*)first, ... {
-    va_list pReader;
-    va_start(pReader, first);
-    [self init];
-    if (first == nil) {
-        return self;
-    }
-    CFArrayAppendValue((CFMutableArrayRef)self, (const void*)first);
-
-    id curVal = va_arg(pReader, id);
-
-    while (curVal != NULL) {
-        CFArrayAppendValue((CFMutableArrayRef)self, (const void*)curVal);
-
-        curVal = va_arg(pReader, id);
-    }
-
-    va_end(pReader);
-
-    return self;
+    va_list argList;
+    va_start(argList, first);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
+    va_end(argList);
+    return _initWithObjects([self init], flatArgs);
 }
 
 /**

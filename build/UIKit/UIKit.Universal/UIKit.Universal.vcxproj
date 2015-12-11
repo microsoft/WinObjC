@@ -179,6 +179,7 @@
       <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -235,6 +236,7 @@
       <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>
@@ -291,6 +293,7 @@
       <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
       <UserIncludePaths>

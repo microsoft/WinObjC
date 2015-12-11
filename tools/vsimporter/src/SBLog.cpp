@@ -25,7 +25,7 @@ SplitStream SBLog::s_nullStream;
 SBLog::SBLog()
   : m_verbosity(SB_DEBUG),
     m_errStream(std::cerr),
-    m_logStream(std::cerr),
+    m_logStream(std::cout),
     m_logFile(NULL)
 {}
 

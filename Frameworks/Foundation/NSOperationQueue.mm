@@ -499,7 +499,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 - (id)name {
     if (priv->_name == nil) {
         char szName[255];
-        sprintf(szName, "NSOperationQueue %08x", (unsigned int)self);
+        sprintf_s(szName, sizeof(szName), "NSOperationQueue %08x", (unsigned int)self);
         priv->_name = [[NSString stringWithCString:szName] retain];
     }
 

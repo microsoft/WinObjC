@@ -187,6 +187,11 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
             checkClassAgainstExpectedClasses(self, classType, self->_expectedClassesInDecodePass.top());
             checkClassForSecureCodingCompliance(self, classType);
 
+            Class mapped = [classType classForKeyedUnarchiver];
+            if (mapped != nil) {
+                classType = mapped;
+            }
+
             [self->_plistStack addObject:plist];
             if (classType != nil) {
                 result = [classType alloc];

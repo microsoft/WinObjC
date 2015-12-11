@@ -99,7 +99,7 @@ int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
-            for (NSString* curstr in (NSArray*)orientation) {
+            for (NSString* curstr in(NSArray*)orientation) {
                 int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;
@@ -134,7 +134,7 @@ int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char
     applicationProperties.appWidth = defaultWidth;
     applicationProperties.appHeight = defaultHeight;
     applicationProperties.appScale = defaultScale;
-    applicationProperties.appName = strdup(GetAppNameFromPList());
+    applicationProperties.appName = _strdup(GetAppNameFromPList());
     applicationProperties.isTablet = defaultTablet;
 
     [displayMode _updateDisplaySettings];

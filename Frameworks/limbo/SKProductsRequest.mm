@@ -22,7 +22,7 @@
 #import <StoreKit/SKRequest.h>
 #import <StoreKit/SKPayment.h>
 typedef wchar_t WCHAR;
-#import "Platform/Windows 8.1/UWP/WindowsApplicationModelStore.h"
+#import "UWP/WindowsApplicationModelStore.h"
 
 @implementation SKRequest : NSObject
 @end

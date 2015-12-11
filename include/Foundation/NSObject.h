@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -121,13 +122,6 @@ __declspec(dllimport)
 -copy;
 -mutableCopy;
 
--(Class)classForCoder;
--(Class)classForArchiver;
--(Class)classForKeyedArchiver;
-
--replacementObjectForCoder:(NSCoder *)coder;
--awakeAfterUsingCoder:(NSCoder *)coder;
-
 -(IMP)methodForSelector:(SEL)selector;
 
 -(void)doesNotRecognizeSelector:(SEL)selector;
@@ -138,6 +132,12 @@ __declspec(dllimport)
 -(NSString *)className;
 -(id)forwardingTargetForSelector:(SEL)aSelector;
 
+@end
+
+@interface NSObject (NSCoding)
+- (Class)classForCoder;
+- (id)replacementObjectForCoder:(NSCoder*)coder;
+- (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
 
 #if __has_feature(objc_arc)

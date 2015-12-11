@@ -30,6 +30,7 @@ typedef int                 cpu_subtype_t;
 typedef int                 vm_prot_t;
 typedef unsigned int        thread_t;
 typedef unsigned int        mach_port_t;
+typedef mach_port_t         host_t;
 typedef unsigned int        task_t;
 typedef int                 kern_return_t;
 typedef struct semaphore    *semaphore_t;
