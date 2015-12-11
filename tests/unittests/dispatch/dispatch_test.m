@@ -5,24 +5,24 @@
 // Copyright (c) 2008-2009 Apple Inc. All rights reserved.
 //
 // @APPLE_APACHE_LICENSE_HEADER_START@
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // @APPLE_APACHE_LICENSE_HEADER_END@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "dispatch_test.h"
 
 #include <sys/types.h>
@@ -43,68 +43,69 @@ static int _exitcode = 0;
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4127) // conditional expression is constant
-#pragma warning(disable: 4130) // '==' : logical operation on address of string constant
+#pragma warning(disable : 4127) // conditional expression is constant
+#pragma warning(disable : 4130) // '==' : logical operation on address of string constant
 #endif
 
-#define _test_print(_file, _line, _desc, \
-    _expr, _fmt1, _val1, _fmt2, _val2) do { \
-    const char* _exprstr = _expr ? "PASS" : "FAIL"; \
-    char _linestr[BUFSIZ]; \
-    if (!_expr) { \
-        _exitcode = 1; \
-        _snprintf(_linestr, sizeof(_linestr), \
-            " (%s:%ld)", _file, _line); \
-    } else { \
-        _linestr[0] = 0; \
-    } \
-    if (_fmt2 == 0) { \
-        LOG_INFO("\tValue: " _fmt1 "\n"        \
-            "[%s] %s%s\n",            \
-            _val1,                \
-            _exprstr,            \
-            _desc,                \
-            _linestr);             \
-    } else { \
-        LOG_INFO("\tActual: " _fmt1 "\n"       \
-            "\tExpected: " _fmt2 "\n"  \
-            "[%s] %s%s\n",           \
-            _val1,               \
-            _val2,               \
-            _exprstr,           \
-            _desc,               \
-            _linestr);           \
-    } \
-    if (!_expr) { \
-        LOG_INFO("\t%s:%ld", _file, _line); \
-    } \
-    fflush(stdout); \
-} while (0)
+#define _test_print(_file, _line, _desc, _expr, _fmt1, _val1, _fmt2, _val2)   \
+    do {                                                                      \
+        const char* _exprstr = _expr ? "PASS" : "FAIL";                       \
+        char _linestr[BUFSIZ];                                                \
+        if (!_expr) {                                                         \
+            _exitcode = 1;                                                    \
+            _snprintf(_linestr, sizeof(_linestr), " (%s:%ld)", _file, _line); \
+        } else {                                                              \
+            _linestr[0] = 0;                                                  \
+        }                                                                     \
+        if (_fmt2 == 0) {                                                     \
+            LOG_INFO("\tValue: " _fmt1                                        \
+                     "\n"                                                     \
+                     "[%s] %s%s\n",                                           \
+                     _val1,                                                   \
+                     _exprstr,                                                \
+                     _desc,                                                   \
+                     _linestr);                                               \
+        } else {                                                              \
+            LOG_INFO("\tActual: " _fmt1                                       \
+                     "\n"                                                     \
+                     "\tExpected: " _fmt2                                     \
+                     "\n"                                                     \
+                     "[%s] %s%s\n",                                           \
+                     _val1,                                                   \
+                     _val2,                                                   \
+                     _exprstr,                                                \
+                     _desc,                                                   \
+                     _linestr);                                               \
+        }                                                                     \
+        if (!_expr) {                                                         \
+            LOG_INFO("\t%s:%ld", _file, _line);                               \
+        }                                                                     \
+        fflush(stdout);                                                       \
+    } while (0)
 
-void
-test_start(const char* desc) {
+void test_start(const char* desc) {
     LOG_INFO("\n==================================================");
     LOG_INFO("[TEST] %s", desc);
     LOG_INFO("[PID] %d", GetCurrentProcessId());
     LOG_INFO("==================================================\n");
 }
 
-#define test_ptr_null(a,b) _test_ptr_null(__FILE__, __LINE__, a, b)
+#define test_ptr_null(a, b) _test_ptr_null(__FILE__, __LINE__, a, b)
 void _test_ptr_null(const char* file, long line, const char* desc, const void* ptr) {
     _test_print(file, line, desc, (ptr == NULL), "%p", ptr, "%p", (void*)0);
 }
 
-#define test_ptr_notnull(a,b) _test_ptr_notnull(__FILE__, __LINE__, a, b)
+#define test_ptr_notnull(a, b) _test_ptr_notnull(__FILE__, __LINE__, a, b)
 void _test_ptr_notnull(const char* file, long line, const char* desc, const void* ptr) {
     _test_print(file, line, desc, (ptr != NULL), "%p", ptr, "%p", ptr ? ptr : (void*)~(size_t)0);
 }
 
-#define test_ptr(a,b,c) _test_ptr(__FILE__, __LINE__, a, b, c)
+#define test_ptr(a, b, c) _test_ptr(__FILE__, __LINE__, a, b, c)
 void _test_ptr(const char* file, long line, const char* desc, const void* actual, const void* expected) {
     _test_print(file, line, desc, (actual == expected), "%p", actual, "%p", expected);
 }
 
-#define test_long(a,b,c) _test_long(__FILE__, __LINE__, a, b, c)
+#define test_long(a, b, c) _test_long(__FILE__, __LINE__, a, b, c)
 void _test_long(const char* file, long line, const char* desc, long actual, long expected) {
     _test_print(file, line, desc, (actual == expected), "%ld", actual, "%ld", expected);
 }
@@ -129,7 +130,7 @@ void _test_double_less_than_or_equal(const char* file, long line, const char* de
     _test_print(file, line, desc, (val <= max_expected), "%f", val, "<%f", max_expected);
 }
 
-#define test_errno(a,b,c) _test_errno(__FILE__, __LINE__, a, b, c)
+#define test_errno(a, b, c) _test_errno(__FILE__, __LINE__, a, b, c)
 void _test_errno(const char* file, long line, const char* desc, long actual, long expected) {
     char* actual_str = (char*)malloc(256);
     char* expected_str = (char*)malloc(256);
@@ -156,11 +157,13 @@ void test_stop_after_delay(void* delay) {
     }
 
 #if HAVE_LEAKS
-    if (getenv("NOLEAKS")) _exit(EXIT_SUCCESS);
+    if (getenv("NOLEAKS"))
+        _exit(EXIT_SUCCESS);
 
     /* leaks doesn't work against debug variant malloc */
-    if (getenv("DYLD_IMAGE_SUFFIX")) _exit(EXIT_SUCCESS);
-    
+    if (getenv("DYLD_IMAGE_SUFFIX"))
+        _exit(EXIT_SUCCESS);
+
     snprintf(pidstr, sizeof(pidstr), "%d", getpid());
     char* args[] = { "./leaks-wrapper", pidstr, NULL };
     res = posix_spawnp(&pid, args[0], NULL, NULL, args, environ);

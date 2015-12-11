@@ -66,6 +66,10 @@ std::vector<char> Format(const char* message, Args ... args)
 
 }
 
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif
+
 #if defined(__OBJC__) && ! __has_feature(objc_arc)
 namespace GTestLogPrivate
 {

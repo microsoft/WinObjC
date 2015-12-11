@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "CFBridgeBase.h"
 #include <Foundation/NSAutoreleasePool.h>
 
 namespace {
-    const int c_defaultState = 1234;
-    bool g_destructorCalled = false;
+const int c_defaultState = 1234;
+bool g_destructorCalled = false;
 }
 
 struct CFTester : public CFBridgeBase<CFTester> {
@@ -37,7 +37,7 @@ struct CFTester : public CFBridgeBase<CFTester> {
         g_destructorCalled = true;
     }
 };
-typedef CFTester *CFTesterRef;
+typedef CFTester* CFTesterRef;
 
 @interface NSTester : NSObject
 @end

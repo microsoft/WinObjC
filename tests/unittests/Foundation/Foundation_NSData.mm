@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 #import <Foundation/NSString.h>
 #import <Foundation/NSData.h>

@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 // Every character in NSString* testString must exist in the character set passed in.
@@ -22,15 +22,21 @@ void testCharacter(NSCharacterSet* charSet, NSString* testString) {
     unsigned int stringLength = [testString length];
     NSInteger charSetLength = [charSet count];
 
-    ASSERT_TRUE_MSG(stringLength == charSetLength, "FAILED: Character set has different length than expected.\nExpected: %d\nActual: %d", stringLength, charSetLength) ;
+    ASSERT_TRUE_MSG(stringLength == charSetLength,
+                    "FAILED: Character set has different length than expected.\nExpected: %d\nActual: %d",
+                    stringLength,
+                    charSetLength);
 
-    for(int i = 0; i < stringLength; i++) {
+    for (int i = 0; i < stringLength; i++) {
         unichar current = [testString characterAtIndex:i];
-        ASSERT_TRUE_MSG([charSet characterIsMember:current], "FAILED: [CharacterSet characterIsMember:current] has mismatched character between expected and actual.\nCharacter: %c", current);
+        ASSERT_TRUE_MSG(
+            [charSet characterIsMember:current],
+            "FAILED: [CharacterSet characterIsMember:current] has mismatched character between expected and actual.\nCharacter: %c",
+            current);
     }
 }
 
-//This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
+// This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
 TEST(Foundation, NSCharacterSet_SanityTest) {
     LOG_INFO("NSCharacterSet sanity test: ");
 
@@ -62,8 +68,8 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     NSString* whitespaceCharacterSetString = @" \t";
 
     NSCharacterSet* URLFragmentAllowedCharacterSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
-    NSString* URLFragmentAllowedCharacterSetString= @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
-    
+    NSString* URLFragmentAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
+
     NSCharacterSet* URLHostAllowedCharacterSet = [NSCharacterSet URLHostAllowedCharacterSet];
     NSString* URLHostAllowedCharacterSetString = @"!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~";
 
@@ -74,7 +80,7 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     NSString* URLPathAllowedCharacterSetString = @"!$&'()*+,-./0123456789:=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
 
     NSCharacterSet* URLQueryAllowedCharacterSet = [NSCharacterSet URLQueryAllowedCharacterSet];
-    NSString* URLQueryAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";    
+    NSString* URLQueryAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
 
     NSCharacterSet* URLUserAllowedCharacterSet = [NSCharacterSet URLUserAllowedCharacterSet];
     NSString* URLUserAllowedCharacterSetString = @"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";

@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "windows.h"
 #include <string.h>
 #include <Foundation/NSProcessInfo.h>

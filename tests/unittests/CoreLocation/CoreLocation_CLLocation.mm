@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <CoreLocation/CoreLocation.h>
 
 TEST(CoreLocation, CLLocation_SanityTest) {

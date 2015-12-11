@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include <Windows.h>
-#import "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 @interface NSKeyedArchiver (Internal)

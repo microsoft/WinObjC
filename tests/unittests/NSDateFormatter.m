@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 void testSpecificFormat(NSDateFormatterStyle formatterStyle, NSString* formatted) {
-    switch(formatterStyle) {
+    switch (formatterStyle) {
         case NSDateFormatterNoStyle:
 
-            //Currently should not be tested as there's a bug on this format style.
-            //The current output is "19691231 04:00 PM" when it should be "".
-            //When the bug is fixed, this should be updated to make sure time
-            //or date can be printed individually when using this style.
-            //ASSERT_OBJCEQ(@"", formatted);
-                        
+            // Currently should not be tested as there's a bug on this format style.
+            // The current output is "19691231 04:00 PM" when it should be "".
+            // When the bug is fixed, this should be updated to make sure time
+            // or date can be printed individually when using this style.
+            // ASSERT_OBJCEQ(@"", formatted);
+
             break;
         case NSDateFormatterShortStyle:
             ASSERT_OBJCEQ(@"12/31/69 4:00 PM", formatted);
@@ -45,7 +45,7 @@ void testSpecificFormat(NSDateFormatterStyle formatterStyle, NSString* formatted
             break;
 
         default:
-            //We hit some unknown NSDateFormatterStyle. This should never happen.
+            // We hit some unknown NSDateFormatterStyle. This should never happen.
             ASSERT_TRUE_MSG(false, "Test failed, unrecognized NSDateFormatterStyle");
             break;
     }
@@ -54,19 +54,21 @@ void testSpecificFormat(NSDateFormatterStyle formatterStyle, NSString* formatted
 TEST(Foundation, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
 
-    //Do the test if we're in the right locale.
-    if([currentLocale.localeIdentifier isEqualToString:@"en_US"]) {
-        NSDate* someConstantDate = [NSDate dateWithTimeIntervalSince1970:0]; //1970-01-01 00:00:00 +0000, This should never change.
+    // Do the test if we're in the right locale.
+    if ([currentLocale.localeIdentifier isEqualToString:@"en_US"]) {
+        NSDate* someConstantDate = [NSDate dateWithTimeIntervalSince1970:0]; // 1970-01-01 00:00:00 +0000, This should never change.
 
         NSString* formattedDateString;
-        for(int i = 0; i < 5; i ++) {
-            formattedDateString = [NSDateFormatter localizedStringFromDate:someConstantDate dateStyle:((NSDateFormatterStyle)i) timeStyle:((NSDateFormatterStyle)i)];
+        for (int i = 0; i < 5; i++) {
+            formattedDateString = [NSDateFormatter localizedStringFromDate:someConstantDate
+                                                                 dateStyle:((NSDateFormatterStyle)i)
+                                                                 timeStyle:((NSDateFormatterStyle)i)];
 
             testSpecificFormat(((NSDateFormatterStyle)i), formattedDateString);
         }
-        
+
     } else {
-        //Didn't test, not in US locale.
+        // Didn't test, not in US locale.
         LOG_INFO("[NSDateFormatter localizedStringFromDate] not tested. Current locale is not in us_EN.\n");
     }
 }

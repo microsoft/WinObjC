@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 #import <UIKit/UIKit.h>
 #import "Starboard.h"

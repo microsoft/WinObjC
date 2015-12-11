@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{58e2de40-325d-4dc8-b99d-be4c57362621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{493f4615-ad93-4401-998d-58a60b88d784}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\tests\functionaltests\pch.h" />
+    <ClInclude Include="..\..\..\tests\functionaltests\targetver.h" />
+    <ClInclude Include="..\..\..\tests\functionaltests\Logger.h" />
+    <ClInclude Include="..\..\..\tests\functionaltests\functionaltest-api.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\tests\functionaltests\FunctionalTests.cpp" />
+    <ClCompile Include="..\..\..\tests\functionaltests\Logger.cpp" />
+    <ClCompile Include="..\..\..\tests\functionaltests\Framework\Framework.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\SampleTest.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+  </ItemGroup>
+</Project>

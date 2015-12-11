@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "Starboard.h"
 #include <windows.h>
 #include <CoreFoundation\CFAttributedString.h>
