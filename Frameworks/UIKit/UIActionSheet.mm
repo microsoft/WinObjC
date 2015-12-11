@@ -23,6 +23,7 @@
 #include "UIKit/UIColor.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIActionSheet.h"
+#include "UIBarButtonItem+Internals.h"
 
 @implementation UIActionSheet {
     id _delegate;
@@ -52,7 +53,7 @@ static int addButton(UIActionSheet* self, id text) {
     self->_totalHeight += 40.0f;
 
     id ret = [[UIButton alloc] initWithFrame:frame];
-	[ret setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [ret setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [ret setTitle:text forState:0];
     [ret setTitleColor:[UIColor blackColor] forState:0];
     [ret setTag:self->_numButtons];
@@ -259,7 +260,7 @@ static int addButton(UIActionSheet* self, id text) {
  @Status Interoperable
 */
 - (void)showFromBarButtonItem:(id)item animated:(BOOL)animated {
-    [self showInView:[[[item _getView] superview] superview]];
+    [self showInView:[[[item view] superview] superview]];
 }
 
 - (void) /* use typed version */ layoutSubviews {

@@ -95,12 +95,6 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIColor* tintColor;
 @property (nonatomic, copy) NSSet* possibleTitles;
 
-// INTERNAL -------------------------------------------------------------------------------------------------
-
-- (UIView*)getView;
-- (void)_idealSize:(CGSize*)sizeOut;
-- (float)_margin;
-
 // ----------------------------------------------------------------------------------------------------------
 @end
 

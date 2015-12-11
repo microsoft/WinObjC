@@ -31,6 +31,7 @@
 #include "UIKit/UILabel.h"
 #include "UIKit/UINavigationBar.h"
 #include "UIKit/UIBarButtonItem.h"
+#include "UIBarButtonItem+Internals.h"
 
 @implementation UINavigationBar {
     idretaintype(NSMutableArray) _items;
@@ -357,11 +358,11 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_leftButton != nil) {
-            [[_leftButton _getView] setBackButtonDelegate:nil action:NULL withParam:nil];
-            [[_leftButton _getView] removeFromSuperview];
+            [[_leftButton view] setBackButtonDelegate:nil action:NULL withParam:nil];
+            [[_leftButton view] removeFromSuperview];
         }
         if (_rightButton != nil) {
-            [[_rightButton _getView] removeFromSuperview];
+            [[_rightButton view] removeFromSuperview];
         }
         if (_titleView != nil) {
             [_titleView removeFromSuperview];
@@ -402,9 +403,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (backButtonHandler && [_leftButton respondsToSelector:@selector(_sendAction:)]) {
-            [[_leftButton _getView] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
-            [[_leftButton _getView] setBackButtonReturnsSuccess:FALSE];
-            [[_leftButton _getView] setBackButtonPriority:-100];
+            [[_leftButton view] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
+            [[_leftButton view] setBackButtonReturnsSuccess:FALSE];
+            [[_leftButton view] setBackButtonPriority:-100];
         }
 
         CGRect bounds;
@@ -414,10 +415,10 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         float rightMargin = 0;
 
         if (_leftButton != nil) {
-            UIView* leftButtonView = [_leftButton _getView];
+            UIView* leftButtonView = [_leftButton view];
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 
-            [_leftButton _idealSize:&frame.size];
+            frame.size = [_leftButton idealSize];
             leftMargin = frame.size.width + 10.0f;
 
             frame.origin.y = bounds.size.height / 2.0f - frame.size.height / 2.0f;
@@ -429,11 +430,11 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_rightButton != nil) {
-            UIView* rightButtonView = [_rightButton _getView];
+            UIView* rightButtonView = [_rightButton view];
 
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 
-            [_rightButton _idealSize:&frame.size];
+            frame.size = [_rightButton idealSize];
             frame.origin.x = bounds.size.width - frame.size.width - 5.0f;
             frame.origin.y = bounds.size.height / 2.0f - frame.size.height / 2.0f;
             rightMargin = frame.size.width + 10.0f;
