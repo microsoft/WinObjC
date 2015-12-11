@@ -143,7 +143,11 @@ public:
             return nil;
         }
 
-        return found->second->load();
+        if (found->second) {
+            return found->second->load();
+        }
+
+        return nil;
     }
 };
 
