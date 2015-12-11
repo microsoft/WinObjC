@@ -14,13 +14,12 @@
 //
 //******************************************************************************
 
-typedef int integer_t;
-
 #include "machine.h"
 #include "message.h"
-#include "vm_statistics.h"
 #include "mach_defs.h"
+#include "vm_statistics.h"
 #include "sys/_types.h"
+#include "mach_task.h"
 
 #define HOST_VM_INFO 1
 

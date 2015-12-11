@@ -295,6 +295,7 @@
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\tests\unittests\NSURLSessionConfiguration.m" />
+    <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
     <ClangCompile Include="..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSCachedURLResponse.mm" />
     <ClangCompile Include="..\..\tests\unittests\NSURLCredential.mm" />
