@@ -808,7 +808,6 @@ static float doRound(float f) {
 
         pSuper->priv->removeChild(priv);
         priv->superview = nil;
-        [self release];
         [layer removeFromSuperlayer];
 
         priv->_isChangingParent = false;
