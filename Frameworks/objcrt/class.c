@@ -1026,14 +1026,48 @@ OBJCRT_EXPORT void* object_getIndexedIvars(id obj) {
 }
 
 Property class_getProperty(Class cls, const char* name) {
-    OBJC_NOT_IMPLEMENTED_ERROR("class_getProperty is not yet implemented");
-    return Nil;
+    if (cls && name) {
+        objc_initialize_class(cls);
+        for (struct objc_property_list* propList = cls->properties; propList != NULL; propList = propList->next) {
+            for (unsigned i = 0; i < propList->count; ++i) {
+                Property currentProperty = &propList->properties[i];
+                if (strcmp(currentProperty->name, name) == 0) {
+                    return currentProperty;
+                }
+            }
+        }
+    }
+    return NULL;
 }
 
 Property* class_copyPropertyList(Class cls, unsigned int* outCount) {
-    OBJC_NOT_IMPLEMENTED_ERROR("class_copyPropertyList is not yet implemented");
+    unsigned count = 0;
+    if (cls) {
+        for (struct objc_property_list* propList = cls->properties; propList != NULL; propList = propList->next) {
+            count += propList->count;
+        }
+    }
 
-    // TODO: Implement
-    *outCount = 0;
-    return Nil;
+    if (outCount) {
+        *outCount = count;
+    }
+
+    if (count == 0) {
+        return NULL;
+    }
+
+    Property* outProperties = malloc(count * sizeof(Property));
+    if (!outProperties) {
+        OBJC_ERROR("Unable to allocate memory for a property list.");
+    }
+
+    unsigned propertyIndex = 0;
+    for (struct objc_property_list* propList = cls->properties; propList != NULL; propList = propList->next) {
+        for (unsigned i = 0; i < propList->count; ++i) {
+            outProperties[propertyIndex] = &propList->properties[i];
+            propertyIndex++;
+        }
+    }
+
+    return outProperties;
 }

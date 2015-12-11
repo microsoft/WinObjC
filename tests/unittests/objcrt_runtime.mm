@@ -238,3 +238,48 @@ TEST(ObjcrtRunTime, RunTimeTest) {
     ASSERT_FALSE(globalFailure);
 }
 
+@interface ClassWithALotOfProperties : NSObject
+@property (assign) int a;
+@property (assign) int b;
+@property (assign) int c;
+@property (assign) int d;
+@property (assign) int e;
+@property (assign) int f;
+@property (assign) int g;
+@property (assign) int h;
+@property (assign) int i;
+@property (assign) int j;
+@property (assign) int k;
+@property (assign) int l;
+@property (assign) int m;
+@property (assign) int n;
+@property (assign) int o;
+@property (assign) int p;
+@property (assign) int q;
+@end
+@implementation ClassWithALotOfProperties
+@end
+
+TEST(Objcrt, CopyPropertyList) {
+    objc_property_t* properties = nullptr;
+    unsigned count = 0;
+    properties = class_copyPropertyList([ClassWithALotOfProperties class], &count);
+
+    ASSERT_EQ(17, count);
+
+    EXPECT_STREQ("q", property_getName(properties[16]));
+    EXPECT_STREQ("p", property_getName(properties[15]));
+
+    free(properties);
+}
+
+TEST(Objcrt, ClassGetProperty) {
+    objc_property_t a = class_getProperty([ClassWithALotOfProperties class], "a");
+    EXPECT_NE(nullptr, a);
+
+    objc_property_t badLookup1 = class_getProperty([ClassWithALotOfProperties class], NULL);
+    EXPECT_EQ(nullptr, badLookup1);
+
+    objc_property_t badLookup2 = class_getProperty(Nil, "a");
+    EXPECT_EQ(nullptr, badLookup2);
+}

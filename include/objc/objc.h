@@ -154,6 +154,10 @@ void objc_registerClassPair(Class cls);
 IMP class_replaceMethod(Class cls, SEL sel, IMP imp, const char* types);
 BOOL class_addMethod(Class cls, SEL sel, IMP imp, const char* types);
 
+objc_property_t class_getProperty(Class, const char*);
+objc_property_t* class_copyPropertyList(Class, unsigned int*);
+const char* property_getName(objc_property_t);
+
 void objc_setAssociatedObject(id self, void* key, id object, objc_associationPolicy policy);
 id objc_getAssociatedObject(id self, void* key);
 void objc_removeAssociatedObjects(id self);
