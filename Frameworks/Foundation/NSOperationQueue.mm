@@ -33,7 +33,7 @@ typedef void* gpointer;
 
 struct NSAtomicListNode {
     struct NSAtomicListNode* next;
-    void* elt;
+    StrongId<NSObject> elt;
 };
 typedef struct NSAtomicListNode* NSAtomicListRef;
 
@@ -94,7 +94,7 @@ void NSAtomicListReverse(NSAtomicListRef* listPtr) {
     *listPtr = cur;
 }
 
-void* NSAtomicListPop(NSAtomicListRef* listPtr) {
+NSObject* NSAtomicListPop(NSAtomicListRef* listPtr) {
     struct NSAtomicListNode* node = *listPtr;
     if (!node) {
         return NULL;
@@ -102,24 +102,22 @@ void* NSAtomicListPop(NSAtomicListRef* listPtr) {
 
     *listPtr = node->next;
 
-    void* elt = node->elt;
-    EbrFree(node);
+    NSObject* elt = [[node->elt retain] autorelease];
+    delete node;
     return elt;
 }
 
-void* NSAtomicListPeek(NSAtomicListRef* listPtr) {
+NSObject* NSAtomicListPeek(NSAtomicListRef* listPtr) {
     struct NSAtomicListNode* node = *listPtr;
     if (!node) {
         return NULL;
     }
 
-    void* elt = node->elt;
-
-    return elt;
+    return node->elt;
 }
 
-void NSAtomicListInsert(NSAtomicListRef* listPtr, void* elt) {
-    struct NSAtomicListNode* node = (struct NSAtomicListNode*)EbrMalloc(sizeof(*node));
+void NSAtomicListInsert(NSAtomicListRef* listPtr, NSObject* elt) {
+    struct NSAtomicListNode* node = new NSAtomicListNode();
     node->elt = elt;
 
     do {
@@ -130,30 +128,22 @@ void NSAtomicListInsert(NSAtomicListRef* listPtr, void* elt) {
 static id _mainQueue;
 
 @implementation NSOperationQueue : NSObject
-static id PopOperation(NSAtomicListRef* listPtr) {
-    return [(id)(DWORD)NSAtomicListPop(listPtr) autorelease];
-}
-
-static id PeekOperation(NSAtomicListRef* listPtr) {
-    return (id)(NSAtomicListPeek(listPtr));
-}
-
 static void ClearList(NSAtomicListRef* listPtr) {
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-        while (PopOperation(&listPtr[i])) {
+        while (NSAtomicListPop(&listPtr[i])) {
             ;
         }
     }
 }
 
 static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sourceListPtr, id* curOperation) {
-    id op = PopOperation(listPtr);
+    StrongId<NSObject> op = NSAtomicListPop(listPtr);
     if (op == nil) {
         *listPtr = NSAtomicListSteal(sourceListPtr);
         // source lists are in LIFO order, but we want to execute operations in the order they were enqueued
         // so we reverse the list before we do anything with it
         NSAtomicListReverse(listPtr);
-        op = PopOperation(listPtr);
+        op = NSAtomicListPop(listPtr);
     }
 
     if (op != nil) {
@@ -162,7 +152,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             [op start];
             *curOperation = nil;
         } else {
-            NSAtomicListInsert(sourceListPtr, (void*)[op retain]);
+            NSAtomicListInsert(sourceListPtr, op);
             return FALSE;
         }
     }
@@ -273,7 +263,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
         priority = 0;
     }
 
-    NSAtomicListInsert((NSAtomicListRef*)(&priv->queues[priority]), (void*)[op retain]);
+    NSAtomicListInsert((NSAtomicListRef*)(&priv->queues[priority]), op);
     [priv->workAvailable signal];
 
     EbrLockEnter(priv->_threadRunningLock);
