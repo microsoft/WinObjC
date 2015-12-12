@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "AppDelegate.h"
-#import "MenuTableViewController.h"
+#import "MainViewController.h"
 
 #ifdef WINOBJC
 // Tell the WinObjC runtime how large to render the application
@@ -39,7 +39,7 @@
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    MenuTableViewController* mtvc = [[MenuTableViewController alloc] init];
+    MainViewController* mtvc = [[MainViewController alloc] init];
     self.viewController = (UIViewController*)[[UINavigationController alloc] initWithRootViewController:mtvc];
 
     self.window.rootViewController = self.viewController;

@@ -2,34 +2,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{75773EAB-3F71-4F30-8201-B1C2D92427A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{802EC330-1C66-4ECE-ACAC-A22F0058E869}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{1C6ED388-CCFE-4518-A504-8AE94E4176B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{A74AAE3B-53F9-42FE-B857-87153273DA20}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{1C6ED388-CCFE-4518-A504-8AE94E4176B6}*SharedItemsImports = 9
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}*SharedItemsImports = 4
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{A74AAE3B-53F9-42FE-B857-87153273DA20}*SharedItemsImports = 9
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Debug|Win32.Build.0 = Debug|Win32
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Debug|Win32.Deploy.0 = Debug|Win32
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Release|Win32.ActiveCfg = Release|Win32
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Release|Win32.Build.0 = Release|Win32
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}.Release|Win32.Deploy.0 = Release|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Build.0 = Debug|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Deploy.0 = Debug|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.ActiveCfg = Release|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Build.0 = Release|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1C6ED388-CCFE-4518-A504-8AE94E4176B6} = {75773EAB-3F71-4F30-8201-B1C2D92427A9}
-		{4EE86154-1B59-4B1D-BEEF-96BF00682BDB} = {75773EAB-3F71-4F30-8201-B1C2D92427A9}
+		{A74AAE3B-53F9-42FE-B857-87153273DA20} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
 	EndGlobalSection
 EndGlobal

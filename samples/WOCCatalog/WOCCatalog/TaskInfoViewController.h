@@ -16,10 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MenuTableViewController : UITableViewController
-
-@property (nonatomic, retain) NSMutableArray* menuItems;
-
-- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title;
+@interface TaskInfoViewController : UITableViewController
 
 @end

@@ -1,11 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{14BA7FEB-DB1D-47DB-B633-D35D5A164C3F}</UniqueIdentifier>
+      <UniqueIdentifier>{6C513927-611F-4A04-ACA2-893303ABF0CA}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GLKitExampleController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\DisplayModeViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -21,9 +24,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AlertsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AutoLayoutViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AppDelegate.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -37,6 +37,9 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\MenuTableViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PageViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PickersViewController.h">
@@ -66,6 +69,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\XamlViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AutoLayoutViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\SingleImageViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -73,6 +79,15 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\MainViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\FoundationsViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TaskInfoViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
   </ItemGroup>
