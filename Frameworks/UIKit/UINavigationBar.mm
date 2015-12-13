@@ -46,6 +46,7 @@
     idretaintype(UILabel) _titleLabel;
     idretaintype(NSDictionary) _titleTextAttributes;
     idretaintype(UIColor) _tintColor;
+    idretaintype(UIColor) _barTintColor;
     UIBarStyle _style;
 }
 static void setBackground(UINavigationBar* self) {
@@ -289,9 +290,10 @@ static void setBackground(UINavigationBar* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setTranslucent:(BOOL)translucent {
+    UNIMPLEMENTED();
 }
 
 - (void)navigationItemChanged:(UINavigationItem*)item {
@@ -548,6 +550,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     _titleLabel = nil;
     _titleTextAttributes = nil;
     _tintColor = nil;
+    _barTintColor = nil;
 
     [super dealloc];
 }
@@ -572,18 +575,26 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (UIColor*)barTintColor {
+    return _barTintColor;
+}
+
+/**
+ @Status Caveat
+ @Notes Navigation bar translucency and system "blur" effect for content behind the navigation bar is not supported.
 */
 - (void)setBarTintColor:(UIColor*)color {
-    UNIMPLEMENTED();
-    _tintColor = color;
+    // Alpha is ignored for bar tint.
+    _barTintColor = [color colorWithAlphaComponent:1.0];
     CGSize size;
 
     size.width = 2.0f;
     size.height = 10.0f;
     UIGraphicsBeginImageContextWithOptions(size, 1, 2.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, (CGColorRef)color);
+    CGContextSetFillColorWithColor(ctx, (CGColorRef)(UIColor*)_barTintColor);
     CGRect rct = { 0, 0, 0, 0 };
     rct.size = size;
     CGContextFillRect(ctx, rct);
