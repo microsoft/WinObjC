@@ -191,7 +191,7 @@
             ret = (WDJJsonObject*)[WDJJsonValue createNumberValue:[(NSNumber*)object doubleValue]];
         }
     } else if ((!isTop) && [object isKindOfClass:[NSString class]]) {
-        ret = (WDJJsonObject*)[[WDJJsonValue createStringValue:object] autorelease];
+        ret = (WDJJsonObject*)[WDJJsonValue createStringValue:object];
     } else {
         // Top level object must be one of NSDictionary or NSArray
         if (isTop) {
