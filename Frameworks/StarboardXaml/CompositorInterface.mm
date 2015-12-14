@@ -542,7 +542,7 @@ public:
             Start();
         } else if (strcmp(propName, "contents") == 0) {
         } else {
-            assert(0);
+            UNIMPLEMENTED_WITH_MSG("Stubbed function called! Unsupported property name: %hs", propName);
         }
     }
 };

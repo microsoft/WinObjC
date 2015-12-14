@@ -126,7 +126,7 @@ void UIColor::InitFromStory(XIBObject *obj)
             _colorSpaceOut = colorSpaceWhite;
             _white = strtod(getAttrib("white"), NULL);
             _a = strtod(getAttrib("alpha"), NULL);
-        } else if ( strcmp(space, "calibratedRGB") == 0 || strcmp(space, "deviceRGB") == 0 ) {
+        } else if ( strcmp(space, "calibratedRGB") == 0 || strcmp(space, "deviceRGB") == 0 || strcmp(space, "adobeRGB1998") == 0) {
             _colorSpaceOut = colorSpaceRGB;
             _a = strtod(getAttrib("alpha"), NULL);
             _r = strtod(getAttrib("red"), NULL);
