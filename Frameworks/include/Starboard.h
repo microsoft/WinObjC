@@ -268,7 +268,7 @@ public:
 
 #ifdef __OBJC__
 extern "C" BOOL object_isMethodFromClass(id dwObj, SEL pSel, const char* fromClass);
-bool isOSTarget(NSString* versionStr);
+extern "C" BOOL isOSTarget(NSString* versionStr);
 #endif
 
 typedef unsigned __int64 uint64_t;

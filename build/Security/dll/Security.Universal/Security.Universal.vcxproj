@@ -27,6 +27,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
+      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
+      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj">
       <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
     </ProjectReference>

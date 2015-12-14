@@ -16,12 +16,6 @@
 
 #pragma once
 
-FOUNDATION_EXPORT NSString* const SystemFontName;
-FOUNDATION_EXPORT const float c_smallSystemFontSize;
-FOUNDATION_EXPORT const float c_systemFontSize;
-FOUNDATION_EXPORT const float c_labelFontSize;
-FOUNDATION_EXPORT const float c_buttonFontSize;
-
 @interface UIFontDescriptor ()
 + (float)_getSystemSmallFontSize;
 + (float)_getSystemFontSize;

@@ -160,7 +160,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087</AdditionalOptions>
@@ -186,7 +186,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreFoundation.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087</AdditionalOptions>

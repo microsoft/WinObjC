@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -25,20 +25,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
-      <Project>{2FB40E04-969C-4484-AE3B-CBD6620A8256}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Foundation\Foundation.Universal\Foundation.Universal.vcxproj">
-      <Project>{49AA9208-07ED-4F9C-94AC-C6CF9097E809}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
-      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BE591B6E-DC7E-4669-9F41-4898C271C417}</ProjectGuid>

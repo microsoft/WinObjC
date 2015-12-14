@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 
+#include "../CoreFoundation/CFDictionaryInternal.h"
 #include "CoreFoundation/CFArray.h"
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
@@ -23,9 +24,6 @@
 #include "NSArrayInternal.h"
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
-
-__declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
-__declspec(dllimport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, void* block);
 
 @implementation NSMutableArray
 

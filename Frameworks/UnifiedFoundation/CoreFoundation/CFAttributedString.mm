@@ -21,11 +21,8 @@
 #import "CFAttributedStringInternal.h"
 #import "CFUtils.h"
 
-static IWLazyClassLookup _LazyNSAttributedString("NSAttributedString");
-static IWLazyClassLookup _LazyNSMutableAttributedString("NSMutableAttributedString");
-
 CFAttributedStringRef _CFAttributedStringCreateEmpty(void) {
-    return __CFMutableAttributedString::alloc([_LazyNSMutableAttributedString class]);
+    return __CFMutableAttributedString::alloc([NSMutableAttributedString class]);
 }
 
 /**
@@ -33,14 +30,14 @@ CFAttributedStringRef _CFAttributedStringCreateEmpty(void) {
 */
 CFAttributedStringRef CFAttributedStringCreate(CFAllocatorRef alloc, CFStringRef str, CFDictionaryRef attributes) {
     return (__bridge CFAttributedStringRef)
-        [[_LazyNSAttributedString alloc] initWithString:(__bridge NSString*)str attributes:(__bridge NSDictionary*)attributes];
+        [[NSAttributedString alloc] initWithString:(__bridge NSString*)str attributes:(__bridge NSDictionary*)attributes];
 }
 
 /**
  @Status Interoperable
 */
 CFAttributedStringRef CFAttributedStringCreateCopy(CFAllocatorRef alloc, CFAttributedStringRef self) {
-    return (__bridge CFAttributedStringRef)[[_LazyNSAttributedString alloc] initWithAttributedString:(__bridge NSAttributedString*)self];
+    return (__bridge CFAttributedStringRef)[[NSAttributedString alloc] initWithAttributedString:(__bridge NSAttributedString*)self];
 }
 
 /**

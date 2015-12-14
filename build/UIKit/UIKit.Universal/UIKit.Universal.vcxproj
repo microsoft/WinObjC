@@ -30,14 +30,11 @@
     <ProjectReference Include="..\..\AutoLayout\AutoLayout.Universal\AutoLayout.Universal.vcxproj">
       <Project>{00d9c3e9-f324-4fd0-a857-61122339e726}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
-      <Project>{2FB40E04-969C-4484-AE3B-CBD6620A8256}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\CoreGraphics\CoreGraphics.Universal\CoreGraphics.Universal.vcxproj">
       <Project>{35D64778-265E-478C-9B17-687C9C1EAD3B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Foundation\Foundation.Universal\Foundation.Universal.vcxproj">
-      <Project>{49AA9208-07ED-4F9C-94AC-C6CF9097E809}</Project>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>

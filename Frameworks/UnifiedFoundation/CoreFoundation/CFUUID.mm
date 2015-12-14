@@ -20,9 +20,6 @@
 #include "NSUUID-Private.h"
 #include <map>
 
-static IWLazyClassLookup _LazyNSUUID("NSUUID");
-static IWLazyClassLookup _LazyNSConstantUUID("_NSConstantUUID");
-
 bool operator<(const CFUUIDBytes& lhs, const CFUUIDBytes& rhs) {
     return memcmp(&(lhs.byte0), &(rhs.byte0), 16) < 0;
 }
@@ -33,15 +30,15 @@ static std::map<CFUUIDBytes, id> constantUUIDs;
  @Status Interoperable
 */
 CFUUIDRef CFUUIDCreate(CFAllocatorRef allocator) {
-    return (CFUUIDRef)[[_LazyNSUUID alloc] init];
+    return (CFUUIDRef)[[NSUUID alloc] init];
 }
 
 CFUUIDRef CFUUIDCreateFromString(CFAllocatorRef allocator, CFStringRef string) {
-    return (CFUUIDRef)[[_LazyNSUUID alloc] initWithUUIDString:(NSString*)string];
+    return (CFUUIDRef)[[NSUUID alloc] initWithUUIDString:(NSString*)string];
 }
 
 CFUUIDRef CFUUIDCreateFromUUIDBytes(CFAllocatorRef allocator, CFUUIDBytes bytes) {
-    return (CFUUIDRef)[[_LazyNSUUID alloc] initWithUUIDBytes:&bytes];
+    return (CFUUIDRef)[[NSUUID alloc] initWithUUIDBytes:&bytes];
 }
 
 CFUUIDRef CFUUIDCreateWithBytes(CFAllocatorRef allocator,
@@ -87,7 +84,7 @@ CFUUIDRef CFUUIDGetConstantUUIDWithBytes(CFAllocatorRef allocator,
                           byte8, byte9, byte10, byte11, byte12, byte13, byte14, byte15 };
     auto findResult = constantUUIDs.find(bytes);
     if (findResult == constantUUIDs.end()) {
-        id uuid = [[_LazyNSConstantUUID alloc] initWithUUIDBytes:&bytes];
+        id uuid = [[_NSConstantUUID alloc] initWithUUIDBytes:&bytes];
         constantUUIDs[bytes] = uuid;
     }
     return (CFUUIDRef)constantUUIDs[bytes];

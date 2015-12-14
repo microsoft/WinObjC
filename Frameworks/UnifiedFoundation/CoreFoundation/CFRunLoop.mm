@@ -17,15 +17,13 @@
 #include "Starboard.h"
 #import <CoreFoundation/CoreFoundation.h>
 
-static IWLazyClassLookup _LazyNSRunLoop("NSRunLoop"), _LazyNSDate("NSDate");
-
 /**
  @Status Caveat
  @Notes returnAfterSource parameter is not supported
 */
 SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnAfterSource) {
-    id stopDate = [_LazyNSDate dateWithTimeIntervalSinceNow:time];
-    id runLoop = [_LazyNSRunLoop currentRunLoop];
+    id stopDate = [NSDate dateWithTimeIntervalSinceNow:time];
+    id runLoop = [NSRunLoop currentRunLoop];
 
     while ([runLoop runMode:(NSString*)mode beforeDate:stopDate]) {
         if ([stopDate timeIntervalSinceNow] <= 0) {
@@ -40,12 +38,12 @@ SInt32 CFRunLoopRunInMode(CFStringRef mode, CFTimeInterval time, Boolean returnA
  @Status Interoperable
 */
 CFRunLoopRef CFRunLoopGetCurrent() {
-    return (CFRunLoopRef)[_LazyNSRunLoop currentRunLoop];
+    return (CFRunLoopRef)[NSRunLoop currentRunLoop];
 }
 
 /**
  @Status Interoperable
 */
 CFRunLoopRef CFRunLoopGetMain() {
-    return (CFRunLoopRef)[_LazyNSRunLoop mainRunLoop];
+    return (CFRunLoopRef)[NSRunLoop mainRunLoop];
 }

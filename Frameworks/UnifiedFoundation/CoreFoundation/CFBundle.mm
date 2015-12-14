@@ -14,18 +14,8 @@
 //
 //******************************************************************************
 
-#include <Foundation/FoundationExport.h>
+#include "Starboard.h"
 
-#ifndef COREFOUNDATION_EXPORT
-#define COREFOUNDATION_EXPORT FOUNDATION_EXPORT
-#endif
+#import "CoreFoundation/CFBundle.h" "
 
-#ifndef COREFOUNDATION_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define COREFOUNDATION_EXTERNC_BEGIN extern "C" {
-#define COREFOUNDATION_EXTERNC_END }
-#else
-#define COREFOUNDATION_EXTERNC_BEGIN
-#define COREFOUNDATION_EXTERNC_END
-#endif
-#endif
+const CFStringRef kCFBundleVersionKey = (CFStringRef) @"kCFBundleVersionKey";

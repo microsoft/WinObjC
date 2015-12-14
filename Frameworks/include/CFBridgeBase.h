@@ -30,10 +30,6 @@ FOUNDATION_EXPORT_CLASS
 @interface NSCFBridgeBase : NSObject
 @end
 
-// NSCFBridgeBase lives in Foundation. CFBridgeBase is expected to be used from CoreFoundation.
-// To avoid a circular dependency between CoreFoundation and Foundation, do a lazy lookup here.
-static IWLazyClassLookup _LazyNSCFBridgeBase("NSCFBridgeBase");
-
 //
 // CFBridgeBase acts as the base class for bridged classes.
 //
@@ -71,7 +67,7 @@ struct CFBridgeBase : CFBridgeBaseState {
 
         // If we have no tolled bridge class, default to NSCFBridgeBase for retain/release semantics:
         if (!cls) {
-            cls = [_LazyNSCFBridgeBase class];
+            cls = [NSCFBridgeBase class];
         } else if (class_getInstanceSize(cls) != nsObjectSize) {
             // Bridged classes cannot have ivars
             THROW_NS_HR(E_INVALIDARG);

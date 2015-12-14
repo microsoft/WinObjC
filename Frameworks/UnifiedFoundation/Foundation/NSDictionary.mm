@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "../CoreFoundation/CFDictionaryInternal.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSString.h"
@@ -32,8 +33,6 @@ struct SortedKeysHelperCtx {
     SEL sel;
     id comparator;
 };
-
-__declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, id block);
 
 static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     SortedKeysHelperCtx* ctx = (SortedKeysHelperCtx*)context;

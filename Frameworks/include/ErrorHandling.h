@@ -25,7 +25,9 @@
 #import <Foundation/NSNumber.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSError.h>
-namespace wil { struct FailureInfo; }
+namespace wil {
+struct FailureInfo;
+}
 
 // These are internal helper functions for our error-handling facilities. They are only intended to be called
 // internally through WIL.
@@ -39,47 +41,47 @@ static void _catchAndPopulateNSError(NSError** outError);
 
 #pragma push_macro("PCWSTR")
 #undef PCWSTR
-#define PCWSTR const wchar_t*
+#define PCWSTR const wchar_t *
 
 #pragma push_macro("PWSTR")
 #undef PWSTR
-#define PWSTR wchar_t*
+#define PWSTR wchar_t *
 
 #pragma push_macro("PCSTR")
 #undef PCSTR
-#define PCSTR const char*
+#define PCSTR const char *
 
 #pragma push_macro("PSTR")
 #undef PSTR
-#define PSTR char*
+#define PSTR char *
 
 #pragma push_macro("ARRAYSIZE")
 #undef ARRAYSIZE
-#define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
+#define ARRAYSIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 #pragma push_macro("FORMAT_MESSAGE_IGNORE_INSERTS")
 #undef FORMAT_MESSAGE_IGNORE_INSERTS
-#define FORMAT_MESSAGE_IGNORE_INSERTS  0x00000200
+#define FORMAT_MESSAGE_IGNORE_INSERTS 0x00000200
 
 #pragma push_macro("FORMAT_MESSAGE_FROM_STRING")
 #undef FORMAT_MESSAGE_FROM_STRING
-#define FORMAT_MESSAGE_FROM_STRING     0x00000400
+#define FORMAT_MESSAGE_FROM_STRING 0x00000400
 
 #pragma push_macro("FORMAT_MESSAGE_FROM_HMODULE")
 #undef FORMAT_MESSAGE_FROM_HMODULE
-#define FORMAT_MESSAGE_FROM_HMODULE    0x00000800
+#define FORMAT_MESSAGE_FROM_HMODULE 0x00000800
 
 #pragma push_macro("FORMAT_MESSAGE_FROM_SYSTEM")
 #undef FORMAT_MESSAGE_FROM_SYSTEM
-#define FORMAT_MESSAGE_FROM_SYSTEM     0x00001000
+#define FORMAT_MESSAGE_FROM_SYSTEM 0x00001000
 
 #pragma push_macro("FORMAT_MESSAGE_ARGUMENT_ARRAY")
 #undef FORMAT_MESSAGE_ARGUMENT_ARRAY
-#define FORMAT_MESSAGE_ARGUMENT_ARRAY  0x00002000
+#define FORMAT_MESSAGE_ARGUMENT_ARRAY 0x00002000
 
 #pragma push_macro("FORMAT_MESSAGE_MAX_WIDTH_MASK")
 #undef FORMAT_MESSAGE_MAX_WIDTH_MASK
-#define FORMAT_MESSAGE_MAX_WIDTH_MASK  0x000000FF
+#define FORMAT_MESSAGE_MAX_WIDTH_MASK 0x000000FF
 
 #pragma push_macro("LANG_NEUTRAL")
 #undef LANG_NEUTRAL
@@ -87,11 +89,11 @@ static void _catchAndPopulateNSError(NSError** outError);
 
 #pragma push_macro("SUBLANG_DEFAULT")
 #undef SUBLANG_DEFAULT
-#define SUBLANG_DEFAULT 0x01    // user default
+#define SUBLANG_DEFAULT 0x01 // user default
 
 #pragma push_macro("MAKELANGID")
 #undef MAKELANGID
-#define MAKELANGID(p, s) ((((WORD  )(s)) << 10) | (WORD  )(p))
+#define MAKELANGID(p, s) ((((WORD)(s)) << 10) | (WORD)(p))
 
 #pragma push_macro("INVALID_HANDLE_VALUE")
 #undef INVALID_HANDLE_VALUE
@@ -103,7 +105,7 @@ static void _catchAndPopulateNSError(NSError** outError);
 
 #pragma push_macro("STATUS_NO_MEMORY")
 #undef STATUS_NO_MEMORY
-#define STATUS_NO_MEMORY ((unsigned long   )0xC0000017L)
+#define STATUS_NO_MEMORY ((unsigned long)0xC0000017L)
 
 typedef int INT_PTR, *PINT_PTR;
 typedef unsigned int UINT_PTR, *PUINT_PTR;
@@ -114,7 +116,7 @@ typedef long LONG_PTR, *PLONG_PTR;
 typedef unsigned long ULONG_PTR, *PULONG_PTR;
 
 typedef ULONG_PTR SIZE_T, *PSIZE_T;
-typedef void *HANDLE;
+typedef void* HANDLE;
 
 typedef int BOOL;
 typedef unsigned short WORD;
@@ -123,58 +125,68 @@ typedef void* PVOID;
 #ifndef BASETYPES
 #define BASETYPES
 typedef unsigned long ULONG;
-typedef ULONG *PULONG;
+typedef ULONG* PULONG;
 typedef unsigned short USHORT;
-typedef USHORT *PUSHORT;
+typedef USHORT* PUSHORT;
 typedef unsigned char UCHAR;
-typedef UCHAR *PUCHAR;
-typedef char *PSZ;
-#endif  /* !BASETYPES */
+typedef UCHAR* PUCHAR;
+typedef char* PSZ;
+#endif /* !BASETYPES */
 
 // Templates are defined here in order to avoid a dependency on C++ <type_traits> header file,
 // or on compiler-specific contructs.
 extern "C++" {
-    template <size_t S>
-    struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE;
+template <size_t S>
+struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE;
 
-    template <>
-    struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<1>
-    {
-        typedef char type;
-    };
+template <>
+struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<1> {
+    typedef char type;
+};
 
-    template <>
-    struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<2>
-    {
-        typedef short type;
-    };
+template <>
+struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<2> {
+    typedef short type;
+};
 
-    template <>
-    struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<4>
-    {
-        typedef int type;
-    };
+template <>
+struct OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<4> {
+    typedef int type;
+};
 
-    // used as an approximation of std::underlying_type<T>
-    template <class T>
-    struct OBJC_ENUM_FLAG_SIZED_INTEGER
-    {
-        typedef typename OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<sizeof(T)>::type type;
-    };
+// used as an approximation of std::underlying_type<T>
+template <class T>
+struct OBJC_ENUM_FLAG_SIZED_INTEGER {
+    typedef typename OBJC_ENUM_FLAG_INTEGER_FOR_SIZE<sizeof(T)>::type type;
+};
 }
 
 #pragma push_macro("DEFINE_ENUM_FLAG_OPERATORS")
 #undef DEFINE_ENUM_FLAG_OPERATORS
-#define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE) \
-extern "C++" { \
-inline ENUMTYPE operator | (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) | ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator |= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) |= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE operator & (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) & ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator &= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) &= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE operator ~ (ENUMTYPE a) { return ENUMTYPE(~((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a)); } \
-inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) ^= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-}
+#define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE)                                                                                         \
+    extern "C++" {                                                                                                                   \
+    inline ENUMTYPE operator|(ENUMTYPE a, ENUMTYPE b) {                                                                              \
+        return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) | ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b));      \
+    }                                                                                                                                \
+    inline ENUMTYPE& operator|=(ENUMTYPE& a, ENUMTYPE b) {                                                                           \
+        return (ENUMTYPE&)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type&)a) |= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); \
+    }                                                                                                                                \
+    inline ENUMTYPE operator&(ENUMTYPE a, ENUMTYPE b) {                                                                              \
+        return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) & ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b));      \
+    }                                                                                                                                \
+    inline ENUMTYPE& operator&=(ENUMTYPE& a, ENUMTYPE b) {                                                                           \
+        return (ENUMTYPE&)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type&)a) &= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); \
+    }                                                                                                                                \
+    inline ENUMTYPE operator~(ENUMTYPE a) {                                                                                          \
+        return ENUMTYPE(~((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a));                                                         \
+    }                                                                                                                                \
+    inline ENUMTYPE operator^(ENUMTYPE a, ENUMTYPE b) {                                                                              \
+        return ENUMTYPE(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b));      \
+    } inline ENUMTYPE&                                                                                                               \
+    operator^=(ENUMTYPE& a, ENUMTYPE b) {                                                                                            \
+        return (ENUMTYPE&)(((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type&)a) ^= ((OBJC_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); \
+    }                                                                                                                                \
+    }
 
 // Override Win32 function calls
 #pragma push_macro("GetCurrentThreadId")
@@ -248,20 +260,20 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((O
 //*****************************************************************************
 
 // This should be used for functions which have no implementation yet:
-#define UNIMPLEMENTED() \
-    if (failFastOnUnimplemented()) { \
-        FAIL_FAST_HR(E_NOTIMPL); \
-    } else { \
+#define UNIMPLEMENTED()                                    \
+    if (failFastOnUnimplemented()) {                       \
+        FAIL_FAST_HR(E_NOTIMPL);                           \
+    } else {                                               \
         LOG_HR_MSG(E_NOTIMPL, "Stubbed function called!"); \
     }
 
 // This should be used to convey information along with the fact that something isn't implemented. For example, if we have a
 // portion of a function implemented but we've hit something unsupported:
-#define UNIMPLEMENTED_WITH_MSG(msg, ...) \
-    if (failFastOnUnimplemented()) { \
+#define UNIMPLEMENTED_WITH_MSG(msg, ...)               \
+    if (failFastOnUnimplemented()) {                   \
         FAIL_FAST_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
-    } else { \
-        LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__); \
+    } else {                                           \
+        LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__);       \
     }
 
 // None of this should be used directly and is just support code for WIL's Objective-C helpers:
@@ -280,7 +292,7 @@ static NSString* _exceptionName() {
     return s_exceptionName;
 }
 
-static NSString* _hresultDomain () {
+static NSString* _hresultDomain() {
     static NSString* s_hresultDomain = [[_LazyNSString alloc] initWithCString:"HRESULT"];
     return s_hresultDomain;
 }
@@ -294,7 +306,8 @@ static void _rethrowAsNSException() {
     } catch (wil::ResultException re) {
         @throw _exceptionFromFailureInfo(re.GetFailureInfo());
     } catch (...) {
-        @throw [_LazyNSException exceptionWithName:_exceptionName() reason:_stringFromHresult(wil::ResultFromCaughtException()) userInfo:nil];
+        @throw
+            [_LazyNSException exceptionWithName:_exceptionName() reason:_stringFromHresult(wil::ResultFromCaughtException()) userInfo:nil];
     }
 }
 

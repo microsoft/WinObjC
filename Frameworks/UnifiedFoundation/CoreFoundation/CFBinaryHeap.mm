@@ -21,19 +21,9 @@
 #include <vector>
 #include <functional>
 
-// Since CFBinaryHeap had to be moved to Foundation to resolve the dependencie on CFBridgeBase,
-// we can't reference to the CFNS methods in CF*. Copying them over.
-const void* CFNSRetain(CFAllocatorRef allocator, const void* obj) {
-    return (const void*)[(id)obj retain];
-}
-
-void CFNSRelease(CFAllocatorRef allocator, const void* obj) {
-    [(id)obj release];
-}
-
-Boolean CFNSEqual(const void* obj1, const void* obj2) {
-    return (Boolean)([(id)obj1 isEqual:(id)obj2] != 0);
-}
+const void* CFNSRetain(CFAllocatorRef allocator, const void* obj);
+void CFNSRelease(CFAllocatorRef allocator, const void* obj);
+Boolean CFNSEqual(const void* obj1, const void* obj2);
 
 CFComparisonResult defaultCompare(const void* value, const void* other, void* context) {
     if (value == other) {
@@ -102,22 +92,26 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
     }
 
     Boolean CFBinaryHeapContainsValue(const void* value) {
-        auto result = std::find_if(_container.begin(), _container.end(), [this, value](const void* other) {
-            if (_callbacks.compare) {
-                return (kCFCompareEqualTo == _callbacks.compare(value, other, _compareContext.info));
-            }
-            return (value == other);
-        });
+        auto result = std::find_if(_container.begin(),
+                                   _container.end(),
+                                   [this, value](const void* other) {
+                                       if (_callbacks.compare) {
+                                           return (kCFCompareEqualTo == _callbacks.compare(value, other, _compareContext.info));
+                                       }
+                                       return (value == other);
+                                   });
         return (result != _container.end());
     }
 
     CFIndex CFBinaryHeapGetCountOfValue(const void* value) {
-        return (CFIndex)std::count_if(_container.begin(), _container.end(), [this, value](const void* other) {
-            if (_callbacks.compare) {
-                return (kCFCompareEqualTo == _callbacks.compare(value, other, _compareContext.info));
-            }
-            return (value == other);
-        });
+        return (CFIndex)std::count_if(_container.begin(),
+                                      _container.end(),
+                                      [this, value](const void* other) {
+                                          if (_callbacks.compare) {
+                                              return (kCFCompareEqualTo == _callbacks.compare(value, other, _compareContext.info));
+                                          }
+                                          return (value == other);
+                                      });
     }
 
     CFIndex CFBinaryHeapGetCount() {
@@ -138,11 +132,13 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
     }
 
     void CFBinaryHeapRemoveAllValues() {
-        std::for_each(_container.begin(), _container.end(), [this](const void* value) {
-            if (_callbacks.release) {
-                _callbacks.release(_allocator, value);
-            }
-        });
+        std::for_each(_container.begin(),
+                      _container.end(),
+                      [this](const void* value) {
+                          if (_callbacks.release) {
+                              _callbacks.release(_allocator, value);
+                          }
+                      });
         _container.clear();
     }
 
@@ -160,11 +156,13 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
         _container.pop_back();
     }
     ~__CFBinaryHeap() {
-        std::for_each(_container.begin(), _container.end(), [this](const void* value) {
-            if (_callbacks.release) {
-                _callbacks.release(_allocator, value);
-            }
-        });
+        std::for_each(_container.begin(),
+                      _container.end(),
+                      [this](const void* value) {
+                          if (_callbacks.release) {
+                              _callbacks.release(_allocator, value);
+                          }
+                      });
     }
 };
 

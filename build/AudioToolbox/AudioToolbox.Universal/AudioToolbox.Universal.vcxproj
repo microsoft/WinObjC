@@ -27,9 +27,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
-      <Project>{2fb40e04-969c-4484-ae3b-cbd6620a8256}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{c6f2fb00-05db-47c6-b1a0-f73060b89c1b}</Project>
     </ProjectReference>

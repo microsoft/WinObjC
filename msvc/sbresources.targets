@@ -371,7 +371,6 @@
       <IncludeQuartzCore>true</IncludeQuartzCore>
       <IncludeCoreGraphics>true</IncludeCoreGraphics>
       <IncludeFoundation>true</IncludeFoundation>
-      <IncludeCoreFoundation>true</IncludeCoreFoundation>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeSecurity>true</IncludeSecurity>
       <IncludeCoreLocation>true</IncludeCoreLocation>

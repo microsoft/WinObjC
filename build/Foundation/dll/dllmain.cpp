@@ -13,9 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#include "Starboard.h"
-
-#import "CoreFoundation/CFBundle.h""
-
-const CFStringRef kCFBundleVersionKey = (CFStringRef)@"kCFBundleVersionKey";

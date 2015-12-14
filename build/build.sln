@@ -16,13 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StarboardWS", "StarboardWS"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StarboardWS.Shared", "StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems", "{C7C02737-7CBE-42B3-9A2C-C8814A942FA4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreFoundation", "CoreFoundation", "{ACD9F130-54D7-4168-A492-9148769B11C3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreFoundation.Shared", "CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems", "{8FFF6D4A-429F-4926-B60C-727A0D6BB599}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation.Shared", "Foundation\Foundation.Shared\Foundation.Shared.vcxitems", "{77299427-3095-497D-BBBC-1345B4074840}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreGraphics", "CoreGraphics", "{13AFC0AD-FA93-4943-B8D2-8DBD17D74BDB}"
 EndProject
@@ -67,9 +61,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.vcxproj", "{3389E85F-0DB7-43FF-BFA5-496338534224}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B} = {C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256} = {2FB40E04-969C-4484-AE3B-CBD6620A8256}
 		{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90} = {C53CEC05-B3B6-4963-BDBF-3EB670ADEB90}
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809} = {49AA9208-07ED-4F9C-94AC-C6CF9097E809}
 		{B9229809-1232-4FAF-BB1F-1A63D205FFE6} = {B9229809-1232-4FAF-BB1F-1A63D205FFE6}
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76} = {004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}
 		{A4DEBA29-A3BC-49EC-87A4-3A9DD10AED1E} = {A4DEBA29-A3BC-49EC-87A4-3A9DD10AED1E}
@@ -95,11 +87,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AVFoundation.Universal", "A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreAudio.Universal", "CoreAudio\CoreAudio.Universal\CoreAudio.Universal.vcxproj", "{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreFoundation.Universal", "CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj", "{2FB40E04-969C-4484-AE3B-CBD6620A8256}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreGraphics.Universal", "CoreGraphics\CoreGraphics.Universal\CoreGraphics.Universal.vcxproj", "{35D64778-265E-478C-9B17-687C9C1EAD3B}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation.Universal", "Foundation\Foundation.Universal\Foundation.Universal.vcxproj", "{49AA9208-07ED-4F9C-94AC-C6CF9097E809}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "objcrt.Universal", "objcrt\objcrt.Universal\objcrt.Universal.vcxproj", "{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}"
 EndProject
@@ -170,9 +158,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Universal", "C
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{F984E7EA-C36B-4830-BB13-5D148ED063A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AC4C9263-B93A-463B-ADD0-ECC02953611D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Foundation", "Foundation\dll\Foundation.vcxproj", "{86127226-9A6E-439B-A070-420A572AF0C7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FoundationLib", "Foundation\lib\FoundationLib.vcxproj", "{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{49aa9208-07ed-4f9c-94ac-c6cf9097e809}*SharedItemsImports = 4
 		AVFoundation\AVFoundation.Shared\AVFoundation.Shared.vcxitems*{e040b9f4-b89a-480c-9f0d-d3e904769372}*SharedItemsImports = 4
 		AutoLayout\AutoLayout.Shared\AutoLayout.Shared.vcxitems*{00d9c3e9-f324-4fd0-a857-61122339e726}*SharedItemsImports = 4
 		Starboard\Starboard.Shared\Starboard.Shared.vcxitems*{3243fc44-21d3-4255-8fd8-85cbc4bc08bd}*SharedItemsImports = 4
@@ -182,7 +177,6 @@ Global
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{cc20fad2-8a69-4664-a010-ef5ff0253fbd}*SharedItemsImports = 13
 		AudioToolbox\AudioToolbox.Shared\AudioToolbox.Shared.vcxitems*{b9229809-1232-4faf-bb1f-1a63d205ffe6}*SharedItemsImports = 4
 		Security\lib\SecurityLib.Shared\SecurityLib.Shared.vcxitems*{85d6e320-1e94-4cc8-adf3-2d87621b9c24}*SharedItemsImports = 9
-		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{8fff6d4a-429f-4926-b60c-727a0d6bb599}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{bb965052-1af9-4d41-b8ca-65ea7ea62cc5}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{9e4c5bfa-ad28-4907-a597-f5f6487d49c8}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{6053551e-a1fc-4301-b0de-0cb3a7751cdc}*SharedItemsImports = 9
@@ -205,13 +199,11 @@ Global
 		OpenAL\OpenAL.Shared\OpenAL.Shared.vcxitems*{a4deba29-a3bc-49ec-87a4-3a9dd10aed1e}*SharedItemsImports = 4
 		Security\dll\Security.Shared\Security.Shared.vcxitems*{1b60665d-5a2d-4f96-8d52-06b5e886f29f}*SharedItemsImports = 4
 		CoreAudio\CoreAudio.Shared\CoreAudio.Shared.vcxitems*{c53cec05-b3b6-4963-bdbf-3eb670adeb90}*SharedItemsImports = 4
-		Foundation\Foundation.Shared\Foundation.Shared.vcxitems*{77299427-3095-497d-bbbc-1345b4074840}*SharedItemsImports = 9
 		QuartzCore\QuartzCore.Shared\QuartzCore.Shared.vcxitems*{8c190ec0-1493-414a-8320-c6e570a5686a}*SharedItemsImports = 9
 		GLKit\GLKit.Shared\GLKit.Shared.vcxitems*{3b9baa3e-22f1-48af-97f4-7a0c3bf93e1f}*SharedItemsImports = 9
 		SystemConfiguration\SystemConfiguration.Shared\SystemConfiguration.Shared.vcxitems*{537d7738-f86d-471b-a5c0-c257a72069be}*SharedItemsImports = 9
 		Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
 		Security\dll\Security.Shared\Security.Shared.vcxitems*{76c111b1-74f9-46bc-9d92-723f19018f77}*SharedItemsImports = 9
-		CoreFoundation\CoreFoundation.Shared\CoreFoundation.Shared.vcxitems*{2fb40e04-969c-4484-ae3b-cbd6620a8256}*SharedItemsImports = 4
 		StarboardWS\StarboardWS.Shared\StarboardWS.Shared.vcxitems*{c7c02737-7cbe-42b3-9a2c-c8814a942fa4}*SharedItemsImports = 9
 		CoreGraphics\CoreGraphics.Shared\CoreGraphics.Shared.vcxitems*{35d64778-265e-478c-9b17-687c9c1ead3b}*SharedItemsImports = 4
 	EndGlobalSection
@@ -252,14 +244,6 @@ Global
 		{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90}.Release|ARM.Build.0 = Release|ARM
 		{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90}.Release|x86.ActiveCfg = Release|Win32
 		{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90}.Release|x86.Build.0 = Release|Win32
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Debug|ARM.ActiveCfg = Debug|ARM
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Debug|ARM.Build.0 = Debug|ARM
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Debug|x86.ActiveCfg = Debug|Win32
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Debug|x86.Build.0 = Debug|Win32
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Release|ARM.ActiveCfg = Release|ARM
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Release|ARM.Build.0 = Release|ARM
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Release|x86.ActiveCfg = Release|Win32
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256}.Release|x86.Build.0 = Release|Win32
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Debug|ARM.ActiveCfg = Debug|ARM
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Debug|ARM.Build.0 = Debug|ARM
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Debug|x86.ActiveCfg = Debug|Win32
@@ -268,14 +252,6 @@ Global
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Release|ARM.Build.0 = Release|ARM
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Release|x86.ActiveCfg = Release|Win32
 		{35D64778-265E-478C-9B17-687C9C1EAD3B}.Release|x86.Build.0 = Release|Win32
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Debug|ARM.ActiveCfg = Debug|ARM
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Debug|ARM.Build.0 = Debug|ARM
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Debug|x86.ActiveCfg = Debug|Win32
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Debug|x86.Build.0 = Debug|Win32
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Release|ARM.ActiveCfg = Release|ARM
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Release|ARM.Build.0 = Release|ARM
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Release|x86.ActiveCfg = Release|Win32
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809}.Release|x86.Build.0 = Release|Win32
 		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|ARM.ActiveCfg = Debug|ARM
 		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|ARM.Build.0 = Debug|ARM
 		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|x86.ActiveCfg = Debug|Win32
@@ -402,6 +378,22 @@ Global
 		{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}.Release|ARM.ActiveCfg = Release|Win32
 		{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}.Release|x86.ActiveCfg = Release|Win32
 		{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}.Release|x86.Build.0 = Release|Win32
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Debug|ARM.Build.0 = Debug|ARM
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Debug|x86.ActiveCfg = Debug|Win32
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Debug|x86.Build.0 = Debug|Win32
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Release|ARM.ActiveCfg = Release|ARM
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Release|ARM.Build.0 = Release|ARM
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Release|x86.ActiveCfg = Release|Win32
+		{86127226-9A6E-439B-A070-420A572AF0C7}.Release|x86.Build.0 = Release|Win32
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Debug|ARM.Build.0 = Debug|ARM
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Debug|x86.ActiveCfg = Debug|Win32
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Debug|x86.Build.0 = Debug|Win32
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Release|ARM.ActiveCfg = Release|ARM
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Release|ARM.Build.0 = Release|ARM
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Release|x86.ActiveCfg = Release|Win32
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -410,8 +402,6 @@ Global
 		{646A824A-87D9-4A11-AB72-F2CB4B8977BA} = {23A03031-6601-4236-B084-F2D15DC4C375}
 		{064EA074-9F01-4ABE-9E04-69F882F898DF} = {ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}
 		{C7C02737-7CBE-42B3-9A2C-C8814A942FA4} = {64DC96D7-C7A8-416D-8C6F-C8E937970DF0}
-		{8FFF6D4A-429F-4926-B60C-727A0D6BB599} = {ACD9F130-54D7-4168-A492-9148769B11C3}
-		{77299427-3095-497D-BBBC-1345B4074840} = {C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}
 		{A9A7193F-74B9-4944-9DE0-2A0D3CA48808} = {13AFC0AD-FA93-4943-B8D2-8DBD17D74BDB}
 		{8C190EC0-1493-414A-8320-C6E570A5686A} = {591F9841-6D1F-41DB-B614-A563AA09BFEE}
 		{F08E1181-6872-46B4-A239-6B8D71E18E72} = {5D1D0EE8-1D92-49D8-9E50-9A67AAE722C7}
@@ -427,9 +417,7 @@ Global
 		{B9229809-1232-4FAF-BB1F-1A63D205FFE6} = {CA16A61E-955C-4851-BC2D-6D4B1A438AB8}
 		{E040B9F4-B89A-480C-9F0D-D3E904769372} = {03CC2F1C-24DD-4CFE-AD52-669F360AD217}
 		{C53CEC05-B3B6-4963-BDBF-3EB670ADEB90} = {FE458CFB-4987-4F5B-BA8C-4B0F86A0180B}
-		{2FB40E04-969C-4484-AE3B-CBD6620A8256} = {ACD9F130-54D7-4168-A492-9148769B11C3}
 		{35D64778-265E-478C-9B17-687C9C1EAD3B} = {13AFC0AD-FA93-4943-B8D2-8DBD17D74BDB}
-		{49AA9208-07ED-4F9C-94AC-C6CF9097E809} = {C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}
 		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B} = {23A03031-6601-4236-B084-F2D15DC4C375}
 		{A4DEBA29-A3BC-49EC-87A4-3A9DD10AED1E} = {1B49D6D3-CC14-42D8-93F2-1D54D3CEB929}
 		{E0749361-45DB-4346-9D41-9F570B258B0E} = {2815B698-E985-4502-9901-A7B96D0A6E5D}
@@ -454,5 +442,9 @@ Global
 		{85D6E320-1E94-4CC8-ADF3-2D87621B9C24} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
 		{BE591B6E-DC7E-4669-9F41-4898C271C417} = {2E8079EB-DB3B-42D3-863C-14A1F7114F1A}
 		{A03B9E82-D421-4CBC-8C94-24F0AA9EBBCE} = {52E0654B-3B43-4514-B48B-6BAE3E580A6F}
+		{F984E7EA-C36B-4830-BB13-5D148ED063A6} = {C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}
+		{AC4C9263-B93A-463B-ADD0-ECC02953611D} = {C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}
+		{86127226-9A6E-439B-A070-420A572AF0C7} = {F984E7EA-C36B-4830-BB13-5D148ED063A6}
+		{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5} = {AC4C9263-B93A-463B-ADD0-ECC02953611D}
 	EndGlobalSection
 EndGlobal

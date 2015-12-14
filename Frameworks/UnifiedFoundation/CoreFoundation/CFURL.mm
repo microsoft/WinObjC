@@ -81,7 +81,7 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
     } else {
         result[resultLength] = 0;
 
-        NSString* ret = [[_LazyNSString alloc] initWithCString:result];
+        NSString* ret = [[NSString alloc] initWithCString:result];
         EbrFree(result);
     }
 

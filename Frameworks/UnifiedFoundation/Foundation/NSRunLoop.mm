@@ -31,8 +31,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "dispatch/dispatch.h"
 #include <Windows.h>
 
-FOUNDATION_EXPORT NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
-FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
+extern "C" NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
+extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
 static void DispatchMainRunLoopWakeup(void* arg) {
     [[NSRunLoop mainRunLoop] _wakeUp];

@@ -74,3 +74,6 @@ public:
     void getKeysAndValues(const void** keys, const void** values);
     uint32_t getCount();
 };
+
+int CFNSDescriptorCompare(id obj1, id obj2, void* descriptors);
+int CFNSBlockCompare(id obj1, id obj2, void* block);

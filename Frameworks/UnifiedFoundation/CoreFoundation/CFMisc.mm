@@ -33,10 +33,9 @@ using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-extern "C" void* _OBJC_CLASS_CFConstantString = NULL;
 static ABI::Windows::Security::Cryptography::ICryptographicBufferStatics* bufferStatics = nullptr;
 
-COREFOUNDATION_EXPORT extern "C" uint32_t arc4random() {
+extern "C" extern "C" uint32_t arc4random() {
     if (bufferStatics == nullptr) {
         if (!SUCCEEDED(
                 GetActivationFactory(HStringReference(L"Windows.Security.Cryptography.CryptographicBuffer").Get(), &bufferStatics))) {
@@ -51,17 +50,17 @@ COREFOUNDATION_EXPORT extern "C" uint32_t arc4random() {
     return randResult;
 }
 
-COREFOUNDATION_EXPORT extern "C" int usleep(useconds_t secs) {
+extern "C" extern "C" int usleep(useconds_t secs) {
     Sleep(secs * 1000);
     return 0;
 }
 
-COREFOUNDATION_EXPORT extern "C" unsigned int sleep(useconds_t secs) {
+extern "C" extern "C" unsigned int sleep(useconds_t secs) {
     Sleep(secs * 1000);
     return 0;
 }
 
-COREFOUNDATION_EXPORT extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
+extern "C" extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
     if (strcmp(name, "hw.machine") == 0) {
         const int required = 8;
         size_t receivedOutSize = 0;
@@ -100,20 +99,20 @@ static int64_t _mach_get_timebase() {
 
 static int64_t _mach_frequency = _mach_get_timebase();
 
-COREFOUNDATION_EXPORT uint64_t mach_absolute_time() {
+extern "C" uint64_t mach_absolute_time() {
     LARGE_INTEGER current;
     FAIL_FAST_IF(0 == QueryPerformanceCounter(&current));
 
     return static_cast<uint64_t>(current.QuadPart);
 }
 
-COREFOUNDATION_EXPORT kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
+extern "C" kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
     //  mach_absolute_time uses QueryPerformanceCounter which returns
     //  the absolute number of cycles since boot in microseconds.
     //
     // Return a timebase representing the conversion between QPC counts and nanoseconds:
     // 1,000,000,000 nanoseconds per every n counts.
-    *tinfo = {1000000000, _mach_frequency};
+    *tinfo = { 1000000000, _mach_frequency };
 
     return 0;
 }

@@ -37,10 +37,6 @@ SOFTWARE.
 
 class __CFDictionary;
 
-static IWLazyClassLookup _LazyNSDictionary("NSDictionary"), _LazyNSMutableDictionary("NSMutableDictionary");
-static IWLazyIvarLookup<uint8_t[]> _LazyDictSpaceOffset(_LazyNSDictionary, "_dictSpace");
-static IWLazyIvarLookup<__CFDictionary*> _LazyDictOffset(_LazyNSDictionary, "dict");
-
 const void* CFNSCopy(CFAllocatorRef allocator, const void* obj) {
     return [static_cast<id>(obj) copy];
 }
@@ -65,11 +61,12 @@ int CFNSComparer(id obj1, id obj2, void* context) {
     return [obj1 compare:obj2];
 }
 
-__declspec(dllexport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, id descriptors) {
-    int count = [descriptors count];
+int CFNSDescriptorCompare(id obj1, id obj2, void* descriptors) {
+    id idDescriptors = static_cast<id>(descriptors);
+    int count = [idDescriptors count];
 
     for (int i = 0; i < count; i++) {
-        id curDesc = [descriptors objectAtIndex:i];
+        id curDesc = [idDescriptors objectAtIndex:i];
 
         int result = [curDesc compareObject:obj1 toObject:obj2];
         if (result != 0) {
@@ -80,7 +77,7 @@ __declspec(dllexport) extern "C" int CFNSDescriptorCompare(id obj1, id obj2, id 
     return 0;
 }
 
-__declspec(dllexport) extern "C" int CFNSBlockCompare(id obj1, id obj2, id block) {
+int CFNSBlockCompare(id obj1, id obj2, void* block) {
     int (^blockFunc)(id, id) = (int (^)(id, id))block;
     int ret = (int)blockFunc(obj1, obj2);
 
@@ -776,8 +773,8 @@ CFMutableDictionaryRef CFDictionaryCreateMutable(CFAllocatorRef allocator,
                                                  CFIndex max,
                                                  const CFDictionaryKeyCallBacks* keyCallbacks,
                                                  const CFDictionaryValueCallBacks* valueCallbacks) {
-    id ret = [_LazyNSMutableDictionary alloc];
-    _LazyDictOffset.member(ret) = new (_LazyDictSpaceOffset.member(ret)) __CFDictionary(keyCallbacks, valueCallbacks);
+    NSDictionary* ret = [NSMutableDictionary alloc];
+    ret->dict = new (ret->_dictSpace) __CFDictionary(keyCallbacks, valueCallbacks);
 
     return (CFMutableDictionaryRef)ret;
 }
@@ -786,11 +783,11 @@ CFMutableDictionaryRef CFDictionaryCreateMutable(CFAllocatorRef allocator,
  @Status Interoperable
 */
 void CFDictionarySetValue(CFMutableDictionaryRef dict, const void* key, const void* value) {
-    _LazyDictOffset.member(dict)->setObjectKey(key, value, true);
+    ((NSDictionary*)(dict))->dict->setObjectKey(key, value, true);
 }
 
 void CFDictionarySetValueUnretained(CFMutableDictionaryRef dict, const void* key, const void* value) {
-    _LazyDictOffset.member(dict)->setObjectKey(key, value, false);
+    ((NSDictionary*)(dict))->dict->setObjectKey(key, value, false);
 }
 
 void CFDictionarySetValueExport(CFMutableDictionaryRef dict, const void* key, const void* value) {
@@ -806,11 +803,11 @@ CFDictionaryRef CFDictionaryCreate(void* allocator,
                                    CFIndex count,
                                    CFDictionaryKeyCallBacks* keyCallbacks,
                                    CFDictionaryValueCallBacks* valueCallbacks) {
-    id ret = [_LazyNSDictionary alloc];
-    _LazyDictOffset.member(ret) = new (_LazyDictSpaceOffset.member(ret)) __CFDictionary(keyCallbacks, valueCallbacks);
+    NSDictionary* ret = [NSDictionary alloc];
+    ret->dict = new (ret->_dictSpace) __CFDictionary(keyCallbacks, valueCallbacks);
 
     for (unsigned i = 0; i < count; i++) {
-        _LazyDictOffset.member(ret)->setObjectKey(keys[i], values[i]);
+        ((NSDictionary*)(ret))->dict->setObjectKey(keys[i], values[i]);
     }
 
     return (CFDictionaryRef)ret;
@@ -822,8 +819,8 @@ CFDictionaryRef CFDictionaryCreate(void* allocator,
 void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
     const void* ret;
 
-    if (!_LazyDictOffset.member(dict)->objectForKey(key, ret)) {
-        _LazyDictOffset.member(dict)->setObjectKey(key, value);
+    if (!((NSDictionary*)(dict))->dict->objectForKey(key, ret)) {
+        ((NSDictionary*)(dict))->dict->setObjectKey(key, value);
     }
 }
 
@@ -833,31 +830,31 @@ void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
 Boolean CFDictionaryContainsKey(CFDictionaryRef dict, const void* key) {
     const void* ret;
 
-    return _LazyDictOffset.member(dict)->objectForKey(key, ret);
+    return ((NSDictionary*)(dict))->dict->objectForKey(key, ret);
 }
 
 /**
  @Status Interoperable
 */
 void CFDictionaryRemoveValue(CFMutableDictionaryRef dict, const void* key) {
-    _LazyDictOffset.member(dict)->removeKey(key);
+    ((NSDictionary*)(dict))->dict->removeKey(key);
 }
 
 /**
  @Status Interoperable
 */
 CFIndex CFDictionaryGetCount(CFDictionaryRef dict) {
-    return _LazyDictOffset.member(dict)->getCount();
+    return ((NSDictionary*)(dict))->dict->getCount();
 }
 
 /**
  @Status Interoperable
 */
 void CFDictionaryRemoveAllValues(CFMutableDictionaryRef dict) {
-    if (_LazyDictOffset.member(dict) == NULL)
+    if (((NSDictionary*)(dict))->dict == NULL)
         return;
 
-    _LazyDictOffset.member(dict)->removeAllValues();
+    ((NSDictionary*)(dict))->dict->removeAllValues();
 }
 
 /**
@@ -870,7 +867,7 @@ const void* CFDictionaryGetValue(CFDictionaryRef dict, const void* key) {
 
     const void* ret = nil;
 
-    _LazyDictOffset.member(dict)->objectForKey(key, ret);
+    ((NSDictionary*)(dict))->dict->objectForKey(key, ret);
 
     return ret;
 }
@@ -881,7 +878,7 @@ const void* CFDictionaryGetValue(CFDictionaryRef dict, const void* key) {
 Boolean CFDictionaryGetValueIfPresent(CFDictionaryRef dict, const void* key, const void** valRet) {
     const void* ret;
 
-    if (_LazyDictOffset.member(dict)->objectForKey(key, ret)) {
+    if (((NSDictionary*)(dict))->dict->objectForKey(key, ret)) {
         *valRet = ret;
         return 1;
     }
@@ -911,18 +908,18 @@ void CFDictionaryApplyFunction(CFDictionaryRef dict, CFDictionaryApplierFunction
  @Status Interoperable
 */
 void CFDictionaryGetKeysAndValues(CFDictionaryRef dict, const void** pKeys, const void** pValues) {
-    _LazyDictOffset.member(dict)->getKeysAndValues((const void**)pKeys, pValues);
+    ((NSDictionary*)(dict))->dict->getKeysAndValues((const void**)pKeys, pValues);
 }
 
 void CFDictionaryGetKeyEnumerator(CFDictionaryRef dict, void* enumeratorHolder) {
-    _LazyDictOffset.member(dict)->initIterator((dictIterator*)enumeratorHolder);
+    ((NSDictionary*)(dict))->dict->initIterator((dictIterator*)enumeratorHolder);
 }
 
 int CFDictionaryGetNextKey(CFDictionaryRef dict, void* enumeratorHolder, id* ret, int count) {
     int retCount = 0;
 
     while (count--) {
-        if (_LazyDictOffset.member(dict)->getNextKey((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
+        if (((NSDictionary*)(dict))->dict->getNextKey((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
             break;
         retCount++;
     }
@@ -931,14 +928,14 @@ int CFDictionaryGetNextKey(CFDictionaryRef dict, void* enumeratorHolder, id* ret
 }
 
 void CFDictionaryGetValueEnumerator(CFDictionaryRef dict, void* enumeratorHolder) {
-    _LazyDictOffset.member(dict)->initIterator((dictIterator*)enumeratorHolder);
+    ((NSDictionary*)(dict))->dict->initIterator((dictIterator*)enumeratorHolder);
 }
 
 int CFDictionaryGetNextValue(CFDictionaryRef dict, void* enumeratorHolder, id* ret, int count) {
     int retCount = 0;
 
     while (count--) {
-        if (_LazyDictOffset.member(dict)->getNextValue((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
+        if (((NSDictionary*)(dict))->dict->getNextValue((dictIterator*)enumeratorHolder, (const void*&)ret[retCount]) == false)
             break;
         retCount++;
     }
@@ -950,17 +947,16 @@ void _CFDictionaryInitInternal(CFDictionaryRef dict) {
     NSDictionary* pDict = (NSDictionary*)dict;
 
     assert(sizeof(__CFDictionary) <= __CFDICTIONARY_SIZE_BYTES);
-    _LazyDictOffset.member(pDict) =
-        new (_LazyDictSpaceOffset.member(pDict)) __CFDictionary(&kNSTypeDictionaryKeyCallBacks, &kNSTypeDictionaryValueCallBacks);
+    pDict->dict = new (pDict->_dictSpace) __CFDictionary(&kNSTypeDictionaryKeyCallBacks, &kNSTypeDictionaryValueCallBacks);
 }
 
 void _CFDictionaryDestroyInternal(CFDictionaryRef dict) {
-    _LazyDictOffset.member(dict)->~__CFDictionary();
+    ((NSDictionary*)(dict))->dict->~__CFDictionary();
 }
 
 void _CFDictionaryCopyInternal(CFDictionaryRef dict, CFDictionaryRef fromDict) {
     NSDictionary* pDict = (NSDictionary*)dict;
     NSDictionary* pDictFrom = (NSDictionary*)fromDict;
     _CFDictionaryInitInternal(dict);
-    _LazyDictOffset.member(pDict)->copyFrom(_LazyDictOffset.member(pDictFrom));
+    pDict->dict->copyFrom(pDictFrom->dict);
 }

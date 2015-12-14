@@ -237,7 +237,7 @@ bool ScanFilename(BundleFile* dest, char* pDirectory, char* pFilename) {
     return true;
 }
 
-__declspec(dllexport) bool isOSTarget(NSString* versionStr) {
+extern "C" BOOL isOSTarget(NSString* versionStr) {
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString* minOSVersion = [infoDict objectForKey:@"MinimumOSVersion"];
     if (minOSVersion != nil) {
@@ -1209,8 +1209,8 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
         EbrDebugLog("*** NIB not found ***\n");
         return nil;
     } else {
-        NSNib* nib = [NSNib nibWithNibName: nibFile bundle: self];
-        NSArray* topLevelObjects = [nib instantiateWithOwner: owner options: options];
+        NSNib* nib = [NSNib nibWithNibName:nibFile bundle:self];
+        NSArray* topLevelObjects = [nib instantiateWithOwner:owner options:options];
 
         return topLevelObjects;
     }
@@ -1227,11 +1227,11 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Status Interoperable
 */
 - (NSArray*)URLsForResourcesWithExtension:(NSString*)type subdirectory:(NSString*)directory {
-    NSArray *paths = findFilesDirectory(self, _bundlePath, type, directory);
+    NSArray* paths = findFilesDirectory(self, _bundlePath, type, directory);
 
-    NSMutableArray *ret = [NSMutableArray new];
-    for ( NSString *path in paths ) {
-        [ret addObject: [NSURL fileURLWithPath: path]];
+    NSMutableArray* ret = [NSMutableArray new];
+    for (NSString* path in paths) {
+        [ret addObject:[NSURL fileURLWithPath:path]];
     }
 
     return [ret autorelease];

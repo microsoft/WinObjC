@@ -1,0 +1,559 @@
+LIBRARY Foundation
+    EXPORTS
+     _OBJC_CLASS_CFConstantString CONSTANT ; This needs to be CONSTANT because CFConstantString is special for @"" syntax
+     _OBJC_CLASS_CTTelephonyNetworkInfo DATA
+     _OBJC_CLASS_NSArray DATA
+     _OBJC_CLASS_NSAssertionHandler DATA
+     _OBJC_CLASS_NSAttributedString DATA
+     _OBJC_CLASS_NSBlockOperation DATA
+     _OBJC_CLASS_NSBundle DATA
+     _OBJC_CLASS_NSCFBridgeBase DATA
+     _OBJC_CLASS_NSCachedURLResponse DATA
+     _OBJC_CLASS_NSCalendar DATA
+     _OBJC_CLASS_NSCharacterSet DATA
+     _OBJC_CLASS_NSColor DATA
+     _OBJC_CLASS_NSCondition DATA
+     _OBJC_CLASS_NSConditionLock DATA
+     _OBJC_CLASS_NSCountedSet DATA
+     _OBJC_CLASS_NSData DATA
+     _OBJC_CLASS_NSDate DATA
+     _OBJC_CLASS_NSDateComponents DATA
+     _OBJC_CLASS_NSDateFormatter DATA
+     _OBJC_CLASS_NSDecimalNumber DATA
+     _OBJC_CLASS_NSDictionary DATA
+     _OBJC_CLASS_NSEnumerator DATA
+     _OBJC_CLASS_NSError DATA
+     _OBJC_CLASS_NSException DATA
+     _OBJC_CLASS_NSFileHandle DATA
+     _OBJC_CLASS_NSFileManager DATA
+     _OBJC_CLASS_NSFormatter DATA
+     _OBJC_CLASS_NSHTTPCookie DATA
+     _OBJC_CLASS_NSHTTPCookieStorage DATA
+     _OBJC_CLASS_NSHTTPURLResponse DATA
+     _OBJC_CLASS_NSIndexPath DATA
+     _OBJC_CLASS_NSIndexSet DATA
+     _OBJC_CLASS_NSInvocation DATA
+     _OBJC_CLASS_NSInvocationOperation DATA
+     _OBJC_CLASS_NSJSONSerialization DATA
+     _OBJC_CLASS_NSKeyedArchiver DATA
+     _OBJC_CLASS_NSKeyedUnarchiver DATA
+     _OBJC_CLASS_NSLocale DATA
+     _OBJC_CLASS_NSLock DATA
+     _OBJC_CLASS_NSManagedObjectContext DATA
+     _OBJC_CLASS_NSManagedObjectModel DATA
+     _OBJC_CLASS_NSMutableArray DATA
+     _OBJC_CLASS_NSMutableAttributedString DATA
+     _OBJC_CLASS_NSMutableCharacterSet DATA
+     _OBJC_CLASS_NSMutableData DATA
+     _OBJC_CLASS_NSMutableDictionary DATA
+     _OBJC_CLASS_NSMutableIndexSet DATA
+     _OBJC_CLASS_NSMutableOrderedSet DATA
+     _OBJC_CLASS_NSMutableSet DATA
+     _OBJC_CLASS_NSMutableString DATA
+     _OBJC_CLASS_NSMutableURLRequest DATA
+     _OBJC_CLASS_NSNetService DATA
+     _OBJC_CLASS_NSNib DATA
+     _OBJC_CLASS_NSNotification DATA
+     _OBJC_CLASS_NSNotificationCenter DATA
+     _OBJC_CLASS_NSNull DATA
+     _OBJC_CLASS_NSNumber DATA
+     _OBJC_CLASS_NSNumberFormatter DATA
+     _OBJC_CLASS_NSOperation DATA
+     _OBJC_CLASS_NSOperationQueue DATA
+     _OBJC_CLASS_NSOrderedSet DATA
+     _OBJC_CLASS_NSPersistentStoreCoordinator DATA
+     _OBJC_CLASS_NSPredicate DATA
+     _OBJC_CLASS_NSProcessInfo DATA
+     _OBJC_CLASS_NSPropertyListSerialization DATA
+     _OBJC_CLASS_NSRecursiveLock DATA
+     _OBJC_CLASS_NSRegularExpression DATA
+     _OBJC_CLASS_NSRunLoop DATA
+     _OBJC_CLASS_NSRunLoopSource DATA
+     _OBJC_CLASS_NSScanner DATA
+     _OBJC_CLASS_NSSet DATA
+     _OBJC_CLASS_NSSortDescriptor DATA
+     _OBJC_CLASS_NSString DATA
+     _OBJC_CLASS_NSTask DATA
+     _OBJC_CLASS_NSThread DATA
+     _OBJC_CLASS_NSTimeZone DATA
+     _OBJC_CLASS_NSTimer DATA
+     _OBJC_CLASS_NSURL DATA
+     _OBJC_CLASS_NSURLCache DATA
+     _OBJC_CLASS_NSURLConnection DATA
+     _OBJC_CLASS_NSURLCredential DATA
+     _OBJC_CLASS_NSURLCredentialStorage DATA
+     _OBJC_CLASS_NSURLProtectionSpace DATA
+     _OBJC_CLASS_NSURLRequest DATA
+     _OBJC_CLASS_NSURLSession DATA
+     _OBJC_CLASS_NSURLSessionConfiguration DATA
+     _OBJC_CLASS_NSURLSessionDataTask DATA
+     _OBJC_CLASS_NSURLSessionDownloadTask DATA
+     _OBJC_CLASS_NSURLSessionTask DATA
+     _OBJC_CLASS_NSURLSessionUploadTask DATA
+     _OBJC_CLASS_NSUUID DATA
+     _OBJC_CLASS_NSUserDefaults DATA
+     _OBJC_CLASS_NSValue DATA
+     _OBJC_CLASS_NSXMLParser DATA
+     __objc_class_name_CFConstantString CONSTANT
+     __objc_class_name_CTTelephonyNetworkInfo CONSTANT
+     __objc_class_name_NSArray CONSTANT
+     __objc_class_name_NSAssertionHandler CONSTANT
+     __objc_class_name_NSAttributedString CONSTANT
+     __objc_class_name_NSBlockOperation CONSTANT
+     __objc_class_name_NSBundle CONSTANT
+     __objc_class_name_NSCFBridgeBase CONSTANT
+     __objc_class_name_NSCachedURLResponse CONSTANT
+     __objc_class_name_NSCalendar CONSTANT
+     __objc_class_name_NSCharacterSet CONSTANT
+     __objc_class_name_NSColor CONSTANT
+     __objc_class_name_NSCondition CONSTANT
+     __objc_class_name_NSConditionLock CONSTANT
+     __objc_class_name_NSCountedSet CONSTANT
+     __objc_class_name_NSData CONSTANT
+     __objc_class_name_NSDate CONSTANT
+     __objc_class_name_NSDateComponents CONSTANT
+     __objc_class_name_NSDateFormatter CONSTANT
+     __objc_class_name_NSDecimalNumber CONSTANT
+     __objc_class_name_NSDictionary CONSTANT
+     __objc_class_name_NSEnumerator CONSTANT
+     __objc_class_name_NSError CONSTANT
+     __objc_class_name_NSException CONSTANT
+     __objc_class_name_NSFileHandle CONSTANT
+     __objc_class_name_NSFileManager CONSTANT
+     __objc_class_name_NSFormatter CONSTANT
+     __objc_class_name_NSHTTPCookie CONSTANT
+     __objc_class_name_NSHTTPCookieStorage CONSTANT
+     __objc_class_name_NSHTTPURLResponse CONSTANT
+     __objc_class_name_NSIndexPath CONSTANT
+     __objc_class_name_NSIndexSet CONSTANT
+     __objc_class_name_NSInvocation CONSTANT
+     __objc_class_name_NSInvocationOperation CONSTANT
+     __objc_class_name_NSJSONSerialization CONSTANT
+     __objc_class_name_NSKeyedArchiver CONSTANT
+     __objc_class_name_NSKeyedUnarchiver CONSTANT
+     __objc_class_name_NSLocale CONSTANT
+     __objc_class_name_NSLock CONSTANT
+     __objc_class_name_NSManagedObjectContext CONSTANT
+     __objc_class_name_NSManagedObjectModel CONSTANT
+     __objc_class_name_NSMutableArray CONSTANT
+     __objc_class_name_NSMutableAttributedString CONSTANT
+     __objc_class_name_NSMutableCharacterSet CONSTANT
+     __objc_class_name_NSMutableData CONSTANT
+     __objc_class_name_NSMutableDictionary CONSTANT
+     __objc_class_name_NSMutableIndexSet CONSTANT
+     __objc_class_name_NSMutableOrderedSet CONSTANT
+     __objc_class_name_NSMutableSet CONSTANT
+     __objc_class_name_NSMutableString CONSTANT
+     __objc_class_name_NSMutableURLRequest CONSTANT
+     __objc_class_name_NSNetService CONSTANT
+     __objc_class_name_NSNib CONSTANT
+     __objc_class_name_NSNotification CONSTANT
+     __objc_class_name_NSNotificationCenter CONSTANT
+     __objc_class_name_NSNull CONSTANT
+     __objc_class_name_NSNumber CONSTANT
+     __objc_class_name_NSNumberFormatter CONSTANT
+     __objc_class_name_NSOperation CONSTANT
+     __objc_class_name_NSOperationQueue CONSTANT
+     __objc_class_name_NSOrderedSet CONSTANT
+     __objc_class_name_NSPersistentStoreCoordinator CONSTANT
+     __objc_class_name_NSPredicate CONSTANT
+     __objc_class_name_NSProcessInfo CONSTANT
+     __objc_class_name_NSPropertyListSerialization CONSTANT
+     __objc_class_name_NSRecursiveLock CONSTANT
+     __objc_class_name_NSRegularExpression CONSTANT
+     __objc_class_name_NSRunLoop CONSTANT
+     __objc_class_name_NSRunLoopSource CONSTANT
+     __objc_class_name_NSScanner CONSTANT
+     __objc_class_name_NSSet CONSTANT
+     __objc_class_name_NSSortDescriptor CONSTANT
+     __objc_class_name_NSString CONSTANT
+     __objc_class_name_NSTask CONSTANT
+     __objc_class_name_NSThread CONSTANT
+     __objc_class_name_NSTimeZone CONSTANT
+     __objc_class_name_NSTimer CONSTANT
+     __objc_class_name_NSURL CONSTANT
+     __objc_class_name_NSURLCache CONSTANT
+     __objc_class_name_NSURLConnection CONSTANT
+     __objc_class_name_NSURLCredential CONSTANT
+     __objc_class_name_NSURLCredentialStorage CONSTANT
+     __objc_class_name_NSURLProtectionSpace CONSTANT
+     __objc_class_name_NSURLRequest CONSTANT
+     __objc_class_name_NSURLSession CONSTANT
+     __objc_class_name_NSURLSessionConfiguration CONSTANT
+     __objc_class_name_NSURLSessionDataTask CONSTANT
+     __objc_class_name_NSURLSessionDownloadTask CONSTANT
+     __objc_class_name_NSURLSessionTask CONSTANT
+     __objc_class_name_NSURLSessionUploadTask CONSTANT
+     __objc_class_name_NSUUID CONSTANT
+     __objc_class_name_NSUserDefaults CONSTANT
+     __objc_class_name_NSValue CONSTANT
+     __objc_class_name_NSXMLParser CONSTANT
+     isOSTarget
+     CFAbsoluteTimeGetCurrent
+     CFArrayAppendArray
+     CFArrayAppendValue
+     CFArrayContainsValue
+     CFArrayCreate
+     CFArrayCreateCopy
+     CFArrayCreateMutable
+     CFArrayCreateMutableCopy
+     CFArrayGetCount
+     CFArrayGetNextValue
+     CFArrayGetValueAtIndex
+     CFArrayGetValueEnumerator
+     CFArrayInsertValueAtIndex
+     CFArrayMoveValueAtIndexToEnd
+     CFArrayRemoveAllValues
+     CFArrayRemoveValueAtIndex
+     CFArrayReplaceValues
+     CFArraySetValueAtIndex
+     CFAttributedStringBeginEditing
+     CFAttributedStringCreate
+     CFAttributedStringCreateCopy
+     CFAttributedStringCreateMutable
+     CFAttributedStringCreateMutableCopy
+     CFAttributedStringCreateWithSubstring
+     CFAttributedStringEndEditing
+     CFAttributedStringGetAttribute
+     CFAttributedStringGetAttributeAndLongestEffectiveRange
+     CFAttributedStringGetAttributes
+     CFAttributedStringGetAttributesAndLongestEffectiveRange
+     CFAttributedStringGetLength
+     CFAttributedStringGetMutableString
+     CFAttributedStringGetString
+     CFAttributedStringRemoveAttribute
+     CFAttributedStringReplaceAttributedString
+     CFAttributedStringReplaceString
+     CFAttributedStringSetAttribute
+     CFAttributedStringSetAttributes
+     CFAutorelease
+     CFBinaryHeapAddValue
+     CFBinaryHeapContainsValue
+     CFBinaryHeapCreate
+     CFBinaryHeapGetCount
+     CFBinaryHeapGetCountOfValue
+     CFBinaryHeapGetMinimum
+     CFBinaryHeapRemoveAllValues
+     CFBinaryHeapRemoveMinimumValue
+     CFBooleanGetValue
+     CFCopyDescription
+     CFDataGetBytePtr
+     CFDictionaryApplyFunction
+     CFDictionaryContainsKey
+     CFDictionaryCreateMutable
+     CFDictionaryGetCount
+     CFDictionaryGetKeyEnumerator
+     CFDictionaryGetKeysAndValues
+     CFDictionaryGetNextKey
+     CFDictionaryGetNextValue
+     CFDictionaryGetValue
+     CFDictionaryGetValueEnumerator
+     CFDictionaryGetValueIfPresent
+     CFDictionaryRemoveAllValues
+     CFDictionaryRemoveValue
+     CFDictionarySetValue
+     CFDictionarySetValueUnretained
+     CFEqual
+     CFGetRetainCount
+     CFHash
+     CFMakeCollectable
+     CFNumberGetType
+     CFRelease
+     CFRetain
+     CFRunLoopGetCurrent
+     CFRunLoopGetMain
+     CFRunLoopRunInMode
+     CFShow
+     CFStringAppend
+     CFStringAppendCharacters
+     CFStringCompare
+     CFStringConvertEncodingToIANACharSetName
+     CFStringConvertNSStringEncodingToEncoding
+     CFStringGetCStringPtr
+     CFStringGetFastestEncoding
+     CFStringGetLength
+     CFStringReplace
+     CFURLCopyPath
+     CFURLCopyPathExtension
+     CFURLCreateStringByAddingPercentEscapes
+     CFURLCreateStringByReplacingPercentEscapes
+     CFURLCreateStringByReplacingPercentEscapesUsingEncoding
+     CFUUIDCreate
+     CFUUIDCreateFromString
+     CFUUIDCreateFromUUIDBytes
+     CFUUIDCreateString
+     CFUUIDCreateWithBytes
+     CFUUIDGetConstantUUIDWithBytes
+     CFUUIDGetUUIDBytes
+     NSAllocateObject
+     NSDeallocateObject
+     OSHostByteOrder
+     OSReadBigInt16
+     OSReadBigInt32
+     OSSwapBigToHostInt16
+     OSSwapBigToHostInt32
+     OSSwapInt16
+     OSSwapInt32
+     OSSwapLittleToHostInt32
+     arc4random
+     kCFAllocatorDefault DATA
+     kCFBooleanFalse DATA
+     kCFBooleanTrue DATA
+     kCFBundleNameKey DATA
+     kCFBundleVersionKey DATA
+     kCFCoreFoundationVersionNumber DATA
+     kCFRunLoopCommonModes DATA
+     kCFRunLoopDefaultMode DATA
+     kCFStreamPropertySSLSettings DATA
+     kCFTypeArrayCallBacks DATA
+     kCFTypeDictionaryKeyCallBacks DATA
+     kCFTypeDictionaryValueCallBacks DATA
+     mach_absolute_time
+     mach_timebase_info
+     sleep
+     sysctlbyname
+     usleep
+     NSAllocateObject
+     NSClassFromString
+     NSEqualRanges
+     NSHomeDirectory
+     NSIntersectionRange
+     NSLocationInRange
+     NSLog
+     NSLogv
+     NSMakeRange
+     NSMaxRange
+     NSObjForceinclude
+     NSRangeFromString
+     NSSearchPathForDirectoriesInDomains
+     NSSelectorFromString
+     NSSetTemporaryDirectory
+     NSSetUncaughtExceptionHandler
+     NSStringFromClass
+     NSStringFromRange
+     NSStringFromSelector
+     NSSwapHostDoubleToBig
+     NSSwapHostFloatToBig
+     NSSwapHostIntToBig
+     NSSwapHostLongLongToBig
+     NSSwapHostShortToBig
+     NSTemporaryDirectory
+     NSUnionRange
+     NSAMPMDesignation DATA
+     NSAddedPersistentStoresKey DATA
+     NSArgumentDomain DATA
+     NSAssertionHandlerKey DATA
+     NSBinaryStoreType DATA
+     NSCocoaErrorDomain DATA
+     NSCurrentLocaleDidChangeNotification DATA
+     NSDateFormatString DATA
+     NSDefaultRunLoopMode DATA
+     NSDeletedObjectsKey DATA
+     NSDestinationInvalidException DATA
+     NSErrorFailingURLStringKey DATA
+     NSFileAppendOnly DATA
+     NSFileBusy DATA
+     NSFileCreationDate DATA
+     NSFileDeviceIdentifier DATA
+     NSFileExtensionHidden DATA
+     NSFileGroupOwnerAccountID DATA
+     NSFileGroupOwnerAccountName DATA
+     NSFileHFSCreatorCode DATA
+     NSFileHFSTypeCode DATA
+     NSFileImmutable DATA
+     NSFileModificationDate DATA
+     NSFileOwnerAccountID DATA
+     NSFileOwnerAccountName DATA
+     NSFilePosixPermissions DATA
+     NSFileProtectionComplete DATA
+     NSFileProtectionCompleteUnlessOpen DATA
+     NSFileProtectionCompleteUntilFirstUserAuthentication DATA
+     NSFileProtectionKey DATA
+     NSFileProtectionNone DATA
+     NSFileReferenceCount DATA
+     NSFileSize DATA
+     NSFileSystemFileNumber DATA
+     NSFileSystemFreeNodes DATA
+     NSFileSystemFreeSize DATA
+     NSFileSystemNodes DATA
+     NSFileSystemNumber DATA
+     NSFileSystemSize DATA
+     NSFileType DATA
+     NSFileTypeBlockSpecial DATA
+     NSFileTypeCharacterSpecial DATA
+     NSFileTypeDirectory DATA
+     NSFileTypeRegular DATA
+     NSFileTypeSocket DATA
+     NSFileTypeSymbolicLink DATA
+     NSFileTypeUnknown DATA
+     NSGenericException DATA
+     NSGlobalDomain DATA
+     NSGregorianCalendar DATA
+     NSHTTPCookieComment DATA
+     NSHTTPCookieCommentURL DATA
+     NSHTTPCookieDiscard DATA
+     NSHTTPCookieDomain DATA
+     NSHTTPCookieExpires DATA
+     NSHTTPCookieMaximumAge DATA
+     NSHTTPCookieName DATA
+     NSHTTPCookieOriginURL DATA
+     NSHTTPCookiePath DATA
+     NSHTTPCookiePort DATA
+     NSHTTPCookieSecure DATA
+     NSHTTPCookieValue DATA
+     NSHTTPCookieVersion DATA
+     NSIgnorePersistentStoreVersioningOption DATA
+     NSInMemoryStoreType DATA
+     NSInferMappingModelAutomaticallyOption DATA
+     NSInsertedObjectsKey DATA
+     NSInternalInconsistencyException DATA
+     NSInvalidArgumentException DATA
+     NSInvalidUnarchiveOperationException DATA
+     NSInvalidatedAllObjectsKey DATA
+     NSInvalidatedObjectsKey DATA
+     NSKeyValueChangeIndexesKey DATA
+     NSKeyValueChangeKindKey DATA
+     NSKeyValueChangeNewKey DATA
+     NSKeyValueChangeNotificationIsPriorKey DATA
+     NSKeyValueChangeOldKey DATA
+     NSLocaleAlternateQuotationBeginDelimiterKey DATA
+     NSLocaleAlternateQuotationEndDelimiterKey DATA
+     NSLocaleCalendar DATA
+     NSLocaleCollationIdentifier DATA
+     NSLocaleCollatorIdentifier DATA
+     NSLocaleCountryCode DATA
+     NSLocaleCurrencyCode DATA
+     NSLocaleCurrencySymbol DATA
+     NSLocaleDecimalSeparator DATA
+     NSLocaleExemplarCharacterSet DATA
+     NSLocaleGroupingSeparator DATA
+     NSLocaleIdentifier DATA
+     NSLocaleLanguageCode DATA
+     NSLocaleMeasurementSystem DATA
+     NSLocaleQuotationBeginDelimiterKey DATA
+     NSLocaleQuotationEndDelimiterKey DATA
+     NSLocaleScriptCode DATA
+     NSLocaleUsesMetricSystem DATA
+     NSLocaleVariantCode DATA
+     NSLocalizedDescriptionKey DATA
+     NSLocalizedFailureReasonErrorKey DATA
+     NSLocalizedRecoveryOptionsErrorKey DATA
+     NSLocalizedRecoverySuggestionErrorKey DATA
+     NSMachErrorDomain DATA
+     NSManagedObjectContextDidSaveNotification DATA
+     NSManagedObjectContextObjectsDidChangeNotification DATA
+     NSManagedObjectContextWillSaveNotification DATA
+     NSMigratePersistentStoresAutomaticallyOption DATA
+     NSMonthNameArray DATA
+     NSOSStatusErrorDomain DATA
+     NSObjectNotAvailableException DATA
+     NSOverflowException DATA
+     NSPOSIXErrorDomain DATA
+     NSPersistentStoreCoordinatorStoresDidChangeNotification DATA
+     NSPersistentStoreDidImportUbiquitousContentChangesNotification DATA
+     NSPersistentStoreFileProtectionKey DATA
+     NSPersistentStoreTimeoutOption DATA
+     NSPersistentStoreUbiquitousContentNameKey DATA
+     NSPersistentStoreUbiquitousContentURLKey DATA
+     NSRangeException DATA
+     NSReadOnlyPersistentStoreOption DATA
+     NSRecoveryAttempterErrorKey DATA
+     NSRefreshedObjectsKey DATA
+     NSRegistrationDomain DATA
+     NSRemovedPersistentStoresKey DATA
+     NSRunLoopCommonModes DATA
+     NSSQLiteAnalyzeOption DATA
+     NSSQLiteManualVacuumOption DATA
+     NSSQLitePragmasOption DATA
+     NSSQLiteStoreType DATA
+     NSShortMonthNameArray DATA
+     NSShortWeekDayNameArray DATA
+     NSStoreTypeKey DATA
+     NSStoreUUIDKey DATA
+     NSStringEncodingErrorKey DATA
+     NSTimeDateFormatString DATA
+     NSTimeFormatString DATA
+     NSURLAddedToDirectoryDateKey DATA
+     NSURLAttributeModificationDateKey DATA
+     NSURLAuthenticationMethodClientCertificate DATA
+     NSURLAuthenticationMethodDefault DATA
+     NSURLAuthenticationMethodHTMLForm DATA
+     NSURLAuthenticationMethodHTTPBasic DATA
+     NSURLAuthenticationMethodHTTPDigest DATA
+     NSURLAuthenticationMethodNTLM DATA
+     NSURLAuthenticationMethodNegotiate DATA
+     NSURLAuthenticationMethodServerTrust DATA
+     NSURLContentAccessDateKey DATA
+     NSURLContentModificationDateKey DATA
+     NSURLCreationDateKey DATA
+     NSURLCustomIconKey DATA
+     NSURLDocumentIdentifierKey DATA
+     NSURLEffectiveIconKey DATA
+     NSURLErrorDomain DATA
+     NSURLErrorKey DATA
+     NSURLFileAllocatedSizeKey DATA
+     NSURLFileResourceIdentifierKey DATA
+     NSURLFileResourceTypeBlockSpecial DATA
+     NSURLFileResourceTypeCharacterSpecial DATA
+     NSURLFileResourceTypeDirectory DATA
+     NSURLFileResourceTypeKey DATA
+     NSURLFileResourceTypeNamedPipe DATA
+     NSURLFileResourceTypeRegular DATA
+     NSURLFileResourceTypeSocket DATA
+     NSURLFileResourceTypeSymbolicLink DATA
+     NSURLFileResourceTypeUnknown DATA
+     NSURLFileScheme DATA
+     NSURLFileSecurityKey DATA
+     NSURLFileSizeKey DATA
+     NSURLHasHiddenExtensionKey DATA
+     NSURLIsAliasFileKey DATA
+     NSURLIsDirectoryKey DATA
+     NSURLIsExcludedFromBackupKey DATA
+     NSURLIsExecutableKey DATA
+     NSURLIsHiddenKey DATA
+     NSURLIsMountTriggerKey DATA
+     NSURLIsPackageKey DATA
+     NSURLIsReadableKey DATA
+     NSURLIsRegularFileKey DATA
+     NSURLIsSymbolicLinkKey DATA
+     NSURLIsSystemImmutableKey DATA
+     NSURLIsUserImmutableKey DATA
+     NSURLIsVolumeKey DATA
+     NSURLIsWritableKey DATA
+     NSURLLabelColorKey DATA
+     NSURLLabelNumberKey DATA
+     NSURLLinkCountKey DATA
+     NSURLLocalizedLabelKey DATA
+     NSURLLocalizedNameKey DATA
+     NSURLLocalizedTypeDescriptionKey DATA
+     NSURLNameKey DATA
+     NSURLParentDirectoryURLKey DATA
+     NSURLPathKey DATA
+     NSURLPreferredIOBlockSizeKey DATA
+     NSURLProtectionSpaceFTP DATA
+     NSURLProtectionSpaceFTPProxy DATA
+     NSURLProtectionSpaceHTTP DATA
+     NSURLProtectionSpaceHTTPProxy DATA
+     NSURLProtectionSpaceHTTPS DATA
+     NSURLProtectionSpaceHTTPSProxy DATA
+     NSURLProtectionSpaceSOCKSProxy DATA
+     NSURLSessionDownloadTaskResumeData DATA
+     NSURLSessionTaskPriorityDefault DATA
+     NSURLSessionTaskPriorityHigh DATA
+     NSURLSessionTaskPriorityLow DATA
+     NSURLSessionTransferSizeUnknown DATA
+     NSURLTotalFileAllocatedSizeKey DATA
+     NSURLTotalFileSizeKey DATA
+     NSURLTypeIdentifierKey DATA
+     NSURLVolumeIdentifierKey DATA
+     NSURLVolumeURLKey DATA
+     NSUUIDChangedPersistentStoresKey DATA
+     NSUnderlyingErrorKey DATA
+     NSUpdatedObjectsKey DATA
+     NSUserDefaultsDidChangeNotification DATA
+     NSWINSOCKErrorDomain DATA
+     NSWeekDayNameArray DATA
+     NSWin32ErrorDomain DATA
+     NSXMLStoreType DATA
+     UINibExternalObjects DATA
+     _NSDictionaryOfVariableBindings

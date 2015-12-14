@@ -24,8 +24,6 @@
 
 #import "CFAttributedStringInternal.h"
 
-static IWLazyClassLookup _LazyNSMutableString("NSMutableString");
-
 // Attribute functions
 
 bool Attribute::isAfterRange(CFIndex rangeBegin, CFIndex rangeEnd) const {
@@ -192,7 +190,7 @@ void _CFAttrListReplaceRange(cf_attrlist& attrList, CFRange originalRange, CFInd
     }
 }
 
-__CFMutableAttributedString::__CFMutableAttributedString() : _stringData((__bridge CFMutableStringRef)[[_LazyNSMutableString alloc] init]) {
+__CFMutableAttributedString::__CFMutableAttributedString() : _stringData((__bridge CFMutableStringRef)[[NSMutableString alloc] init]) {
 }
 
 __CFMutableAttributedString::~__CFMutableAttributedString() {

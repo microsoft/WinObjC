@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 #include "CFArrayInternal.h"
+#include "../CoreFoundation/CFDictionaryInternal.h"
 #include "NSPropertyListReader.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableData.h"
@@ -29,8 +30,6 @@
 #include "Foundation/NSNull.h"
 #include "NSArrayInternal.h"
 #include "VAListHelper.h"
-
-__declspec(dllimport) extern "C" int CFNSBlockCompare(id obj1, id obj2, void* block);
 
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
 

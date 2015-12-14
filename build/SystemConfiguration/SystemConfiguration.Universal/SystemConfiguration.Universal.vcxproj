@@ -27,11 +27,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\CoreFoundation.Universal\CoreFoundation.Universal.vcxproj">
-      <Project>{2fb40e04-969c-4484-ae3b-cbd6620a8256}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Foundation\Foundation.Universal\Foundation.Universal.vcxproj">
-      <Project>{49aa9208-07ed-4f9c-94ac-c6cf9097e809}</Project>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
