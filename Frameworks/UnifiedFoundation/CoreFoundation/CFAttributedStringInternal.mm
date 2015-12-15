@@ -19,8 +19,6 @@
 #import <CoreFoundation/CFString.h>
 #import <algorithm>
 #import <limits.h>
-#import <map>
-#import <set>
 
 #import "CFAttributedStringInternal.h"
 

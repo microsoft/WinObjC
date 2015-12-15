@@ -37,8 +37,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSData.h>
 #import <Foundation/FoundationExport.h>
 
-enum { NSAttributedStringEnumerationReverse = (1UL << 1), NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20) };
-typedef uint32_t NSAttributedStringEnumerationOptions;
+typedef NS_OPTIONS(NSUInteger, NSAttributedStringEnumerationOptions) {
+    NSAttributedStringEnumerationReverse = (1UL << 1),
+    NSAttributedStringEnumerationLongestEffectiveRangeNotRequired = (1UL << 20)
+};
 
 @class NSDictionary;
 @class NSError;
@@ -58,7 +60,7 @@ FOUNDATION_EXPORT_CLASS
 
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range;
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange;
-- (BOOL)isEqualToAttributedString:(NSAttributedString*)string;
+- (BOOL)isEqualToAttributedString:(NSAttributedString*)otherString;
 
 - (NSAttributedString*)attributedSubstringFromRange:(NSRange)range;
 

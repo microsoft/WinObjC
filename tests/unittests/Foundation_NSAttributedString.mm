@@ -22,6 +22,7 @@
 #include <Foundation\NSDictionary.h>
 #include <Foundation\NSMutableAttributedString.h>
 #include <UIKit\UIKit.h>
+#include <vector>
 
 void assertAttributeAt(
     NSAttributedString* aStr, NSString* attrName, id expectedValue, NSUInteger expectedLocation, NSUInteger expectedLength) {
@@ -449,6 +450,29 @@ TEST(Foundation, AttributedString_InsertAttributedString) {
     ASSERT_OBJCEQ(@"AAAAAOBJA", [aStr string]);
 }
 
+TEST(Foundation, AttributedString_IsEqualToAttributedString) {
+    NSMutableAttributedString* firstStr = SixCharacterTestString();
+    NSMutableAttributedString* secondStr = SixCharacterTestString();
+    ASSERT_EQ(YES, [firstStr isEqualToAttributedString:secondStr]);
+    ASSERT_EQ(YES, [secondStr isEqualToAttributedString:firstStr]);
+
+    [firstStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
+    ASSERT_EQ(NO, [firstStr isEqualToAttributedString:secondStr]);
+    ASSERT_EQ(NO, [secondStr isEqualToAttributedString:firstStr]);
+
+    [secondStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
+    ASSERT_EQ(YES, [firstStr isEqualToAttributedString:secondStr]);
+    ASSERT_EQ(YES, [secondStr isEqualToAttributedString:firstStr]);
+
+    [firstStr addAttribute:@"key1" value:@"value1b" range:NSMakeRange(1, 2)];
+    [secondStr addAttribute:@"key1" value:@"value1b" range:NSMakeRange(1, 2)];
+    [firstStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(0, 3)];
+    [secondStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(0, 3)];
+
+    ASSERT_EQ(YES, [firstStr isEqualToAttributedString:secondStr]);
+    ASSERT_EQ(YES, [secondStr isEqualToAttributedString:firstStr]);
+}
+
 TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
@@ -491,6 +515,182 @@ TEST(Foundation, AttributedString_ThrowsBounds) {
     }
     CATCH_POPULATE_NSERROR(&error);
     ASSERT_EQ(E_BOUNDS, error.code);
+}
+
+TEST(Foundation, AttributedString_AttributedSubstringFromRange) {
+    NSMutableAttributedString* aStr = SixCharacterTestString();
+    [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
+    [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(3, 2)];
+
+    NSAttributedString* testString = [aStr attributedSubstringFromRange:NSMakeRange(1, 3)];
+
+    ASSERT_OBJCEQ(@"AAA", [testString string]);
+    assertAttributeAt(testString, @"key1", @"value1", 1, 2);
+    assertAttributeAt(testString, @"key2", @"value2", 2, 1);
+}
+
+TEST(Foundation, AttributedString_EnumerateAttribute) {
+    NSMutableAttributedString* aStr = SixCharacterTestString();
+
+    // test block to pass to enumerateAttribute:
+    // iterates through expected data and validates that it's the same as the returned data
+    __block size_t index = 0;
+    __block std::vector<std::pair<id, NSRange>> testAttributes;
+    void (^testBlock)(id, NSRange, BOOL*) = ^void(id val, NSRange range, BOOL* stop) {
+        ASSERT_TRUE(index < testAttributes.size());
+        const auto& pair = testAttributes.at(index);
+        ASSERT_OBJCEQ(pair.first, val);
+        ASSERT_TRUE(NSEqualRanges(pair.second, range));
+        index += 1;
+    };
+
+    // 1) basic test
+    testAttributes.insert(testAttributes.end(),
+                          { { @"value1", NSMakeRange(1, 1) },
+                            { @"value2", NSMakeRange(2, 2) },
+                            { @"value3", NSMakeRange(4, 1) },
+                            { @"value4", NSMakeRange(5, 1) } });
+    for (const auto& pair : testAttributes) {
+        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+    }
+
+    [aStr enumerateAttribute:@"key1"
+                     inRange:NSMakeRange(0, 6)
+                     options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                  usingBlock:testBlock];
+    ASSERT_EQ(testAttributes.size(), index);
+
+    // 2) test with holes, limit the range
+    [aStr release];
+    aStr = [[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"]; // 10 characters
+
+    testAttributes.clear();
+    testAttributes.insert(testAttributes.end(),
+                          { { @"value1", NSMakeRange(1, 1) },
+                            { @"value2", NSMakeRange(2, 2) },
+                            { @"value3", NSMakeRange(5, 1) },
+                            { @"value4", NSMakeRange(7, 3) } });
+
+    for (const auto& pair : testAttributes) {
+        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+    }
+
+    // limit range to {2, 7}, excluding the first attribute and clipping part of the last (should still include the whole attribute)
+    index = 1;
+    [aStr enumerateAttribute:@"key1"
+                     inRange:NSMakeRange(2, 7)
+                     options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                  usingBlock:testBlock];
+    ASSERT_EQ(testAttributes.size(), index);
+
+    // 3) iterate in reverse, use longestEffectiveRange
+    [aStr release];
+    aStr = [[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"]; // 10 characters
+
+    testAttributes.clear();
+    testAttributes.insert(testAttributes.end(),
+                          { { @"value4", NSMakeRange(7, 3) },
+                            { @"value3", NSMakeRange(5, 1) },
+                            { @"value2", NSMakeRange(2, 2) },
+                            { @"value1", NSMakeRange(1, 1) } });
+
+    for (const auto& pair : testAttributes) {
+        [aStr addAttribute:@"key1" value:pair.first range:pair.second];
+    }
+
+    // due to longest effective range being used, the expected range is different from the input
+    testAttributes.at(0).second = NSMakeRange(7, 2);
+
+    index = 0;
+    [aStr enumerateAttribute:@"key1" inRange:NSMakeRange(2, 7) options:NSAttributedStringEnumerationReverse usingBlock:testBlock];
+    ASSERT_EQ(testAttributes.size() - 1, index); // last attribute is out of range
+}
+
+TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
+    NSMutableAttributedString* baseStr = [[NSMutableAttributedString alloc] initWithString:@"ABCDEF"];
+    [baseStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(0, 1)];
+    [baseStr addAttribute:@"key1" value:@"value2" range:NSMakeRange(1, 1)];
+    [baseStr addAttribute:@"key1" value:@"value3" range:NSMakeRange(2, 1)];
+    [baseStr addAttribute:@"key1" value:@"value4" range:NSMakeRange(3, 1)];
+    [baseStr addAttribute:@"key1" value:@"value5" range:NSMakeRange(4, 1)];
+    [baseStr addAttribute:@"key1" value:@"value6" range:NSMakeRange(5, 1)];
+
+    // 1) increase length, forward
+    __block NSMutableAttributedString* testString1 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    [testString1 enumerateAttribute:@"key1"
+                            inRange:NSMakeRange(2, 2)
+                            options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                         usingBlock:^void(id val, NSRange range, BOOL* stop) {
+                             [testString1 replaceCharactersInRange:range withString:@"ZZ"];
+                         }];
+    ASSERT_OBJCEQ(@"ABZZZZEF", [testString1 string]);
+
+    // 2) increase length, reverse
+    __block NSMutableAttributedString* testString2 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    [testString2 enumerateAttribute:@"key1"
+                            inRange:NSMakeRange(2, 2)
+                            options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
+                         usingBlock:^void(id val, NSRange range, BOOL* stop) {
+                             [testString2 replaceCharactersInRange:range withString:@"ZZ"];
+                         }];
+    ASSERT_OBJCEQ(@"ABZZZZEF", [testString2 string]);
+
+    // 3) decrease length, forward
+    __block NSMutableAttributedString* testString3 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    [testString3 enumerateAttribute:@"key1"
+                            inRange:NSMakeRange(2, 2)
+                            options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                         usingBlock:^void(id val, NSRange range, BOOL* stop) {
+                             [testString3 deleteCharactersInRange:range];
+                         }];
+    ASSERT_OBJCEQ(@"ABEF", [testString3 string]);
+
+    // 4) decrease length, reverse
+    __block NSMutableAttributedString* testString4 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    [testString4 enumerateAttribute:@"key1"
+                            inRange:NSMakeRange(2, 2)
+                            options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
+                         usingBlock:^void(id val, NSRange range, BOOL* stop) {
+                             [testString4 deleteCharactersInRange:range];
+                         }];
+    ASSERT_OBJCEQ(@"ABEF", [testString4 string]);
+
+    // 5) decrease length, reverse, stop early
+    __block NSMutableAttributedString* testString5 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    [testString5 enumerateAttribute:@"key1"
+                            inRange:NSMakeRange(1, 4)
+                            options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
+                         usingBlock:^void(id val, NSRange range, BOOL* stop) {
+                             [testString5 deleteCharactersInRange:range];
+                             *stop = YES;
+                         }];
+    ASSERT_OBJCEQ(@"ABCDF", [testString5 string]);
+}
+
+TEST(Foundation, AttributedString_EnumerateAttributes) {
+    NSMutableAttributedString* aStr = SixCharacterTestString();
+    [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
+    [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(1, 2)];
+    [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
+    [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(5, 1)];
+
+    // test block to pass to enumerateAttributes:
+    // iterates through expected data and validates that it's the same as the returned data
+    __block size_t index = 0;
+    __block auto expectedAttributes = std::vector<std::pair<NSDictionary*, NSRange>>(
+        { { @{ @"key3" : @"value3" }, NSMakeRange(4, 1) },
+          { @{ @"key1" : @"value1", @"key3" : @"value3" }, NSMakeRange(3, 1) },
+          { @{ @"key1" : @"value1", @"key2" : @"value2", @"key3" : @"value3" }, NSMakeRange(2, 1) } });
+    void (^testBlock)(NSDictionary*, NSRange, BOOL*) = ^void(NSDictionary* val, NSRange range, BOOL* stop) {
+        ASSERT_TRUE(index < expectedAttributes.size());
+        const auto& pair = expectedAttributes.at(index);
+        ASSERT_OBJCEQ(pair.first, val);
+        ASSERT_TRUE(NSEqualRanges(pair.second, range));
+        index += 1;
+    };
+
+    [aStr enumerateAttributesInRange:NSMakeRange(2, 3) options:NSAttributedStringEnumerationReverse usingBlock:testBlock];
+    ASSERT_EQ(expectedAttributes.size(), index);
 }
 
 // UI Kit extensions

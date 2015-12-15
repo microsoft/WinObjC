@@ -17,6 +17,7 @@
 #import <Foundation/NSAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
 
+#import <algorithm>
 #import "Starboard.h"
 
 @implementation NSAttributedString
@@ -51,14 +52,14 @@
 }
 
 /**
- @Status Stub
- @Notes  Bit more difficult than the rest of the constructors, separating this out.
-         TODO: 5505126
+ @Status Interoperable
  */
 - (NSAttributedString*)attributedSubstringFromRange:(NSRange)range {
-    return (__bridge NSAttributedString*)CFAttributedStringCreateWithSubstring(nullptr,
-                                                                               reinterpret_cast<CFAttributedStringRef>(self),
-                                                                               CFRangeMake(range.location, range.length));
+    NSAttributedString* ret =
+        (__bridge NSAttributedString*)CFAttributedStringCreateWithSubstring(nullptr,
+                                                                            reinterpret_cast<CFAttributedStringRef>(self),
+                                                                            CFRangeMake(range.location, range.length));
+    return [ret autorelease];
 }
 
 /**
@@ -142,30 +143,149 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  */
-- (BOOL)isEqualToAttributedString:(NSAttributedString*)string {
-    UNIMPLEMENTED();
-    return NO;
+- (BOOL)isEqualToAttributedString:(NSAttributedString*)otherString {
+    if (![[self string] isEqual:[otherString string]]) {
+        // Compare string content
+        return NO;
+
+    } else {
+        // Compare attributes
+        NSRange selfRange;
+        NSRange otherRange;
+        NSUInteger index = 0;
+        NSUInteger length = [self length];
+
+        while (index < length) {
+            NSDictionary* selfAttributes = [self attributesAtIndex:index effectiveRange:&selfRange];
+            NSDictionary* otherAttributes = [otherString attributesAtIndex:index effectiveRange:&otherRange];
+
+            if (!(NSEqualRanges(selfRange, otherRange) && [selfAttributes isEqual:otherAttributes])) {
+                return NO;
+            }
+
+            index += selfRange.length;
+        }
+    }
+    return YES;
+}
+
+// Traits struct for generically calling either [self attribute:] or [self attributesAtIndex:]
+template <typename TEnumerationUnit>
+struct EnumerationTraits;
+
+template <>
+struct EnumerationTraits<id> {
+    static id getUnitWithLongestEffectiveRange(
+        NSAttributedString* self, NSString* attrName, NSUInteger location, NSRange* range, NSRange inRange) {
+        return [self attribute:attrName atIndex:location longestEffectiveRange:range inRange:inRange];
+    }
+
+    static id getUnitWithoutLongestEffectiveRange(NSAttributedString* self, NSString* attrName, NSUInteger location, NSRange* range) {
+        return [self attribute:attrName atIndex:location effectiveRange:range];
+    }
+};
+
+template <>
+struct EnumerationTraits<NSDictionary*> {
+    static NSDictionary* getUnitWithLongestEffectiveRange(
+        NSAttributedString* self, NSString* attrName, NSUInteger location, NSRange* range, NSRange inRange) {
+        return [self attributesAtIndex:location longestEffectiveRange:range inRange:inRange];
+    }
+
+    static NSDictionary* getUnitWithoutLongestEffectiveRange(NSAttributedString* self,
+                                                             NSString* attrName,
+                                                             NSUInteger location,
+                                                             NSRange* range) {
+        return [self attributesAtIndex:location effectiveRange:range];
+    }
+};
+
+// Internal helper for code reuse between enumerateAttribute: and enumerateAttributesInRange:
+template <typename TEnumerationUnit>
+static void _enumerateInRange(NSAttributedString* self,
+                              NSString* attrName,
+                              NSRange enumerationRange,
+                              NSAttributedStringEnumerationOptions opts,
+                              void (^block)(TEnumerationUnit, NSRange, BOOL*)) {
+    bool reverse = opts & NSAttributedStringEnumerationReverse;
+    bool longestEffectiveRangeNotRequired = opts & NSAttributedStringEnumerationLongestEffectiveRangeNotRequired;
+
+    NSUInteger enumerationBegin = std::max(0u, enumerationRange.location);
+    NSUInteger enumerationEnd = std::min(enumerationRange.location + enumerationRange.length, [self length] - 1);
+
+    if (reverse) {
+        std::swap(enumerationBegin, enumerationEnd);
+
+        // adjust for past-the-end
+        enumerationBegin -= 1;
+        enumerationEnd -= 1;
+    }
+
+    NSUInteger currentIndex = enumerationBegin;
+    NSUInteger prevLength = [self length];
+    NSUInteger lengthDiff = 0;
+    NSRange currentRange;
+    TEnumerationUnit currentUnit;
+    BOOL stop = NO;
+
+    while (NSLocationInRange(currentIndex, enumerationRange)) {
+        lengthDiff = 0;
+
+        if (longestEffectiveRangeNotRequired) {
+            currentUnit =
+                EnumerationTraits<TEnumerationUnit>::getUnitWithoutLongestEffectiveRange(self, attrName, currentIndex, &currentRange);
+        } else {
+            currentUnit = EnumerationTraits<TEnumerationUnit>::getUnitWithLongestEffectiveRange(self,
+                                                                                                attrName,
+                                                                                                currentIndex,
+                                                                                                &currentRange,
+                                                                                                enumerationRange);
+        }
+
+        if (currentUnit && block) {
+            block(currentUnit, currentRange, &stop);
+
+            // handle length changes by block
+            NSUInteger currentLength = [self length];
+            if (prevLength != currentLength) {
+                lengthDiff = currentLength - prevLength;
+                prevLength = currentLength;
+            }
+
+            if (stop) {
+                break;
+            }
+        }
+
+        if (reverse) {
+            currentIndex -= currentRange.length;
+            enumerationRange.length += lengthDiff;
+        } else {
+            currentIndex += (currentRange.length + lengthDiff);
+            enumerationRange.length += lengthDiff;
+        }
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  */
 - (void)enumerateAttribute:(NSString*)attrName
                    inRange:(NSRange)enumerationRange
                    options:(NSAttributedStringEnumerationOptions)opts
                 usingBlock:(void (^)(id value, NSRange range, BOOL* stop))block {
-    UNIMPLEMENTED();
+    _enumerateInRange(self, attrName, enumerationRange, opts, block);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  */
 - (void)enumerateAttributesInRange:(NSRange)enumerationRange
                            options:(NSAttributedStringEnumerationOptions)opts
                         usingBlock:(void (^)(NSDictionary* attrs, NSRange range, BOOL* stop))block {
-    UNIMPLEMENTED();
+    _enumerateInRange(self, nil, enumerationRange, opts, block);
 }
 
 /**

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <CoreFoundation/CFAttributedString.h>
+#import <CoreFoundation/CFString.h>
 #import <Foundation/NSAttributedString.h>
 #import <Foundation/NSMutableAttributedString.h>
 
@@ -41,13 +42,24 @@ CFAttributedStringRef CFAttributedStringCreateCopy(CFAllocatorRef alloc, CFAttri
 }
 
 /**
- @Status Stub
- @Notes  Bit more difficult than the rest of the constructors, separating this out.
-         TODO: 5505126
+ @Status Interoperable
 */
 CFAttributedStringRef CFAttributedStringCreateWithSubstring(CFAllocatorRef alloc, CFAttributedStringRef self, CFRange range) {
-    UNIMPLEMENTED();
-    return nullptr;
+    CFAttributedStringRef ret = CFAttributedStringCreateCopy(alloc, self);
+
+    // Remove the section of the string before the range
+    if (range.location > 0) {
+        CFAttributedStringReplaceString(ret, { 0, range.location }, (__bridge CFStringRef) @"");
+    }
+
+    // The range to keep now must extend from 0 to range.length
+    // Remove the section of the string after the range to keep
+    CFIndex retLength = CFAttributedStringGetLength(ret);
+    if (range.length < retLength) {
+        CFAttributedStringReplaceString(ret, { range.length, retLength - range.length }, (__bridge CFStringRef) @"");
+    }
+
+    return ret;
 }
 
 /**
