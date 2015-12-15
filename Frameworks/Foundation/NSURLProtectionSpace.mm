@@ -29,6 +29,11 @@
 @property (readwrite) SecTrustRef serverTrust;
 @end
 
+@interface NSURLProtectionSpace () {
+    volatile NSUInteger _hashCode;
+}
+@end
+
 NSString* NSURLAuthenticationMethodDefault = @"NSURLAuthenticationMethodDefault";
 NSString* NSURLAuthenticationMethodHTTPBasic = @"NSURLAuthenticationMethodHTTPBasic";
 NSString* NSURLAuthenticationMethodHTTPDigest = @"NSURLAuthenticationMethodHTTPDigest";
@@ -129,6 +134,69 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     [coder encodeObject:_realm forKey:@"realm"];
     [coder encodeObject:_proxyType forKey:@"proxyType"];
     [coder encodeBool:_receivesCredentialSecurely forKey:@"receivesCredentialSecurely"];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)anObject {
+    if (self == anObject) {
+        return YES;
+    }
+    if ((!anObject) || (![anObject isKindOfClass:[self class]])) {
+        return NO;
+    }
+
+    NSURLProtectionSpace* object = (NSURLProtectionSpace*)anObject;
+
+    if (![_authenticationMethod isEqual:object.authenticationMethod]) {
+        return NO;
+    }
+
+    if (![_protocol isEqualToString:object.protocol]) {
+        return NO;
+    }
+
+    if (![_distinguishedNames isEqualToArray:object.distinguishedNames]) {
+        return NO;
+    }
+
+    if (![_realm isEqualToString:object.realm]) {
+        return NO;
+    }
+
+    if (![_proxyType isEqualToString:object.proxyType]) {
+        return NO;
+    }
+
+    if (_serverTrust != object.serverTrust) {
+        return NO;
+    }
+
+    if ((_port != object.port) || (_receivesCredentialSecurely != object.receivesCredentialSecurely)) {
+        return NO;
+    }
+
+    return YES;
+}
+
+- (NSUInteger)hash {
+    NSUInteger result = _hashCode;
+    if (result == 0) {
+        NSUInteger prime = 31;
+        result = prime * result + _port;
+        result = prime * result + [_serverTrust hash];
+        result = prime * result + [_authenticationMethod hash];
+        result = prime * result + [_distinguishedNames hash];
+        result = prime * result + [_host hash];
+        result = prime * result + [_protocol hash];
+
+        result = prime * result + [_realm hash];
+
+        result = prime * result + [_proxyType hash];
+        result = prime * result + _receivesCredentialSecurely;
+    }
+    return result;
 }
 
 /**
