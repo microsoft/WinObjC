@@ -174,7 +174,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
             continue;
         }
 
-        if (observer->block == nil) {
+        if (!observer->block) {
             [observer->object performSelector:observer->selector withObject:notification];
         } else {
             observer->block(notification);
@@ -265,7 +265,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
         }
 
         curObserver->valid = false;
-        if (curObserver->block != nil) {
+        if (curObserver->block) {
             [curObserver->block release];
             [curObserver->object release];
             curObserver->block = nil;

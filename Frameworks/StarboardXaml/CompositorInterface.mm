@@ -808,8 +808,8 @@ public:
             free(_propertyName);
         [_propertyValue release];
 
-        _propertyName = nil;
-        _propertyValue = nil;
+        _propertyName = nullptr;
+        _propertyValue = nullptr;
     }
 
     void Process() {

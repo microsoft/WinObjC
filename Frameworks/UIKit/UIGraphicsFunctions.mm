@@ -44,7 +44,7 @@ void UIGraphicsPopContext() {
         return;
     }
     CGContextRelease(_currentCGContext[_currentCGContextDepth]);
-    _currentCGContext[_currentCGContextDepth] = nil;
+    _currentCGContext[_currentCGContextDepth] = nullptr;
     _currentCGContextDepth--;
 }
 

@@ -56,7 +56,7 @@ static inline id m_assert(const char* file, int line) {
 }
 static inline float m_assert_float() {
     printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return nil;
+    return 0.0;
 }
 #else
 static inline unsigned int m_assert(const char* file, int line) {

@@ -423,7 +423,7 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
     FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
 
     if (face->family_name == NULL)
-        return nil;
+        return nullptr;
 
     return (CFStringRef)[[NSString stringWithCString:face->family_name] retain];
 }
@@ -1261,7 +1261,7 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
 CTFontRef CTFontCreateCopyWithSymbolicTraits(
     CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask) {
     UNIMPLEMENTED();
-    return nil;
+    return nullptr;
 }
 
 /**
@@ -1284,7 +1284,7 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position) {
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
     UNIMPLEMENTED();
-    return nil;
+    return nullptr;
 }
 
 /**

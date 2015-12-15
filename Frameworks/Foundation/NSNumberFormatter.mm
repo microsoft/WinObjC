@@ -35,9 +35,9 @@ id kCFNumberPositiveInfinity;
 id kCFNumberNegativeInfinity;
 #endif
 
-const CFNumberRef kCFNumberNaN = nil; // = (CFNumberRef)&_kCFNumberNaN;
-const CFNumberRef kCFNumberNegativeInfinity = nil; // = (CFNumberRef)&_kCFNumberNegInf;
-const CFNumberRef kCFNumberPositiveInfinity = nil; // = (CFNumberRef)&_kCFNumberPosInf;
+const CFNumberRef kCFNumberNaN = nullptr; // = (CFNumberRef)&_kCFNumberNaN;
+const CFNumberRef kCFNumberNegativeInfinity = nullptr; // = (CFNumberRef)&_kCFNumberNegInf;
+const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNumberPosInf;
 
 enum {
     _C_ID = '@',

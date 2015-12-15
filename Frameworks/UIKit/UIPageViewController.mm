@@ -76,7 +76,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     // In all likelihood if we have a completion handler when this is called we haven't finished the last animation.
     // TODO: Likelihood?
-    if (_completion != nil) {
+    if (_completion) {
         _completion(YES);
         _completion = nil;
     }
@@ -119,7 +119,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         [self setContentOffset:currentOffset animated:NO];
         [self _updateVisible];
 
-        if(completion != nil) { 
+        if(completion) {
             completion(YES);
         }
     }

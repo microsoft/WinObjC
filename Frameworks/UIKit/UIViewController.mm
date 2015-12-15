@@ -961,7 +961,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 */
 - (UITabBarItem*)tabBarItem {
     if (priv->tabBarItem == nil) {
-        priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:nil]);
+        priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:0]);
         EbrDebugLog("New tab: %s\n", object_getClassName(self));
     }
 
@@ -1175,7 +1175,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [self _notifyDidDisappearAnimated:view];
     [self notifyViewDidAppear:TRUE];
 
-    if (priv->_dismissCompletionBlock != nil) {
+    if (priv->_dismissCompletionBlock) {
         priv->_dismissCompletionBlock();
         [priv->_dismissCompletionBlock release];
         priv->_dismissCompletionBlock = nil;
@@ -1267,7 +1267,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [curController notifyViewDidDisappear:FALSE];
         [self notifyViewDidAppear:animated];
         EbrDebugLog("Preparing completion\n");
-        if (completion != nil)
+        if (completion)
             completion();
         EbrDebugLog("Done completion\n");
     }

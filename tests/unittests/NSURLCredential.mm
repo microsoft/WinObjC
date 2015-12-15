@@ -35,7 +35,7 @@ TEST(Foundation, NSURLCredential_credentialWithUser) {
 TEST(Foundation, NSURLCredential_credentialWithIdentity) {
     NSArray* certs = [NSMutableArray array];
     NSURLCredential* credential =
-        [NSURLCredential credentialWithIdentity:nil certificates:(NSArray*)certs persistence:NSURLCredentialPersistencePermanent];
+        [NSURLCredential credentialWithIdentity:nullptr certificates:(NSArray*)certs persistence:NSURLCredentialPersistencePermanent];
 
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");
     ASSERT_EQ_MSG(nil, [credential user], "FAILED: User name is not null");
@@ -47,7 +47,7 @@ TEST(Foundation, NSURLCredential_credentialWithIdentity) {
 }
 
 TEST(Foundation, NSURLCredential_credentialForTrust) {
-    NSURLCredential* credential = [NSURLCredential credentialForTrust:nil];
+    NSURLCredential* credential = [NSURLCredential credentialForTrust:nullptr];
 
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");
     ASSERT_EQ_MSG(nil, [credential user], "FAILED: User name is not null");

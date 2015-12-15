@@ -241,9 +241,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     CGPathRelease(_path);
     _path = nil;
     CGColorRelease(_strokeColor);
-    _strokeColor = nil;
+    _strokeColor = nullptr;
     CGColorRelease(_fillColor);
-    _fillColor = nil;
+    _fillColor = nullptr;
     [_shapeImage release];
     _shapeImage = nil;
 

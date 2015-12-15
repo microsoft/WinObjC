@@ -106,7 +106,7 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
         [_plistStack addObject:[_propertyList objectForKey:@"$top"]];
     }
 
-    _uidToObject.attach((NSMutableDictionary*)CFDictionaryCreateMutable(nil, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
+    _uidToObject.attach((NSMutableDictionary*)CFDictionaryCreateMutable(nullptr, 128, &kCFTypeDictionaryKeyCallBacks, NULL));
 
     _dataObjects.attach([NSMutableArray new]);
 

@@ -97,7 +97,7 @@ TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     NSArray* urlContents = [manager contentsOfDirectoryAtURL:targetURL 
                                   includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey] 
                                                      options:(NSDirectoryEnumerationOptions)0 
-                                                       error:nil];
+                                                       error:nullptr];
 
     // verify only one file exists
     const NSString* c_expectedFileName = @"NSFileManagerUT.txt";

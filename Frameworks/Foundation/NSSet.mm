@@ -35,7 +35,7 @@ id NSSetTableMember(NSSet* set, id object) {
         assert(0);
     }
 
-    NSUInteger count = nil;
+    NSUInteger count = 0;
 
     if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&count)) {
         return object;

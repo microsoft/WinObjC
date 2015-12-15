@@ -42,7 +42,7 @@
     float height = bounds.size.height;
 
     if (width <= 0.0f || height <= 0.0f) {
-        return nil;
+        return nullptr;
     }
 
     // TODO: Take into account x/yStep, to justify the two calls here.

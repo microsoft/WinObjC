@@ -82,7 +82,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
         }
 
         if (filename == nil)
-            return nil;
+            return nullptr;
     }
 
 #if defined(USE_ROBOTO_FONT)
@@ -620,7 +620,7 @@ void loadFont(UIFont* self) {
 */
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     if (error)
-        *error = nil;
+        *error = nullptr;
 
     UIFont* fnt = font;
 

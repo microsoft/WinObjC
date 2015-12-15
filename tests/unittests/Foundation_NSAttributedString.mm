@@ -350,8 +350,8 @@ TEST(Foundation, AttributedString_AttributeAtIndexNoRange) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
     NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
 
-    ASSERT_OBJCEQ(@"value1", [aStr attribute:@"key1" atIndex:1 effectiveRange:nil]);
-    ASSERT_OBJCEQ(@"value2", [aStr attribute:@"key2" atIndex:1 effectiveRange:nil]);
+    ASSERT_OBJCEQ(@"value1", [aStr attribute:@"key1" atIndex:1 effectiveRange:nullptr]);
+    ASSERT_OBJCEQ(@"value2", [aStr attribute:@"key2" atIndex:1 effectiveRange:nullptr]);
 }
 
 TEST(Foundation, AttributedString_AttributeAtIndexInRange) {
@@ -372,7 +372,7 @@ TEST(Foundation, AttributedString_AttributesAtIndex) {
 
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(0, 1)];
 
-    NSDictionary* attrsAt0 = [aStr attributesAtIndex:0 effectiveRange:nil];
+    NSDictionary* attrsAt0 = [aStr attributesAtIndex:0 effectiveRange:nullptr];
     ASSERT_EQ(1, [attrsAt0 count]);
     ASSERT_OBJCEQ(@"value1", [attrsAt0 objectForKey:@"key1"]);
 

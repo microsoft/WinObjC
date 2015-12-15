@@ -37,7 +37,7 @@ TEST(Foundation, NSDataWriteToURL) {
     const char bytes[] = "Hello world";
     NSData* expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
     NSURL* fileURL = [NSURL fileURLWithPath:@"./Library/Helloworld.txt"];
-    ASSERT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:nil], "NSDataWriteToURL should succeed");
+    ASSERT_TRUE_MSG([expectedData writeToURL:fileURL options:0 error:nullptr], "NSDataWriteToURL should succeed");
 
     // second, read the file content back, compare with original content
     // ensure they are equal

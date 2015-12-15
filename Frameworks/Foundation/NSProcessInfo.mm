@@ -136,8 +136,8 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Interoperable
 */
 - (NSString*)globallyUniqueString {
-    CFUUIDRef uuid = CFUUIDCreate(nil);
-    NSString* ret = (NSString*)CFUUIDCreateString(nil, uuid);
+    CFUUIDRef uuid = CFUUIDCreate(nullptr);
+    NSString* ret = (NSString*)CFUUIDCreateString(nullptr, uuid);
 
     CFRelease(uuid);
 

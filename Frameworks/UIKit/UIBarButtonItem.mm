@@ -562,7 +562,7 @@ static void initControls(UIBarButtonItem* self) {
         return;
     }
 
-    EbrDebugLog("sending message %s to %x\n", _targetSel ? _targetSel : "(null)", _target);
+    EbrDebugLog("sending message %s to %x\n", _targetSel ? sel_getName(_targetSel) : "(null)", _target);
     if (_target != nil && _targetSel != NULL) {
         [_target performSelector:_targetSel withObject:self withObject:event];
     } else {

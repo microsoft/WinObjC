@@ -185,7 +185,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     // This may seem unintuitive, but the completion
     // block is intended to be called even if the operation
     // is cancelled.
-    if (newValue == 1 && priv->completionBlock != nil) {
+    if (newValue == 1 && priv->completionBlock) {
         priv->completionBlock();
         [priv->completionBlock release];
         priv->completionBlock = nil;
@@ -230,7 +230,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)dealloc {
-    assert(priv->completionBlock == nil);
+    assert(!priv->completionBlock);
     delete priv;
     [super dealloc];
 }

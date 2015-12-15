@@ -112,7 +112,7 @@ TEST(Foundation, JSONObjectWithDataTests) {
     VerifyJSONObjectWithDataThrows(testString8, 0);
 
     // Ensure nil error argument does not throw
-    ASSERT_NO_THROW([NSJSONSerialization JSONObjectWithData:[testString1 dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil]);
+    ASSERT_NO_THROW([NSJSONSerialization JSONObjectWithData:[testString1 dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nullptr]);
 }
 
 TEST(Foundation, DataWithJSONObjectTests) {
@@ -138,5 +138,5 @@ TEST(Foundation, DataWithJSONObjectTests) {
     VerifyDataWithJSONObjectThrows(testObject1);
 
     // Ensure nil error argument does not throw
-    ASSERT_NO_THROW([NSJSONSerialization dataWithJSONObject:testObject5 options:0 error:nil]);
+    ASSERT_NO_THROW([NSJSONSerialization dataWithJSONObject:testObject5 options:0 error:nullptr]);
 }

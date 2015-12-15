@@ -117,6 +117,6 @@
                                range:(NSRange)range
                         withTemplate:(NSString*)tmplate {
     UNIMPLEMENTED();
-    return nil;
+    return 0;
 }
 @end

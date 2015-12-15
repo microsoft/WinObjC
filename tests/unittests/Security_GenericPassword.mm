@@ -180,9 +180,9 @@ TEST(Security, GenericPasswordHandler_Query) {
         (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
     };
 
-    [handler add:credential1 withResult:nil];
-    [handler add:credential2 withResult:nil];
-    [handler add:credential3 withResult:nil];
+    [handler add:credential1 withResult:nullptr];
+    [handler add:credential2 withResult:nullptr];
+    [handler add:credential3 withResult:nullptr];
 
     // Now that its added go ahead and query. Start with a basic query for the info set.
     NSDictionary* attrQuery1 = @{
@@ -264,7 +264,7 @@ TEST(Security, GenericPasswordHandler_Update) {
         (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
     };
 
-    [handler add:dictionary withResult:nil];
+    [handler add:dictionary withResult:nullptr];
 
     NSDictionary* updateDictionary = @{
         (__bridge id)(kSecAttrService) : @"www.anUpdatedFakeWebService.com",
@@ -335,9 +335,9 @@ TEST(Security, GenericPasswordHandler_Remove) {
         (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
     };
 
-    [handler add:credential1 withResult:nil];
-    [handler add:credential2 withResult:nil];
-    [handler add:credential3 withResult:nil];
+    [handler add:credential1 withResult:nullptr];
+    [handler add:credential2 withResult:nullptr];
+    [handler add:credential3 withResult:nullptr];
 
     NSDictionary* removeQuery = @{
         (__bridge id)(kSecClass) : (__bridge id)(kSecClassGenericPassword),

@@ -60,7 +60,7 @@
     ret->_timingProperties._removedOnCompletion = TRUE;
 
     id completion = [CATransaction completionBlock];
-    if (completion != nil) {
+    if (completion) {
         // TODO(DH) What the heck?
         _BlockAnimationCompletion* completionHandler = [_BlockAnimationCompletion alloc];
         completionHandler->_completionBlock = completion;

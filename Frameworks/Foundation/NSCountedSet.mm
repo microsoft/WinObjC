@@ -23,7 +23,7 @@ NSUInteger NSSetTableGetValue(NSSet* set, id object);
 
 - (NSUInteger)countForObject:(id)object {
     NSUInteger count = NSSetTableGetValue(self, object);
-    return (count == nil) ? 0 : count;
+    return count;
 }
 
 @end
