@@ -58,9 +58,9 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
 
     std::function<bool(const void*, const void*)> _compare = [this](const void* value, const void* other) {
         if (_callbacks.compare) {
-            return (kCFCompareGreaterThan != _callbacks.compare(value, other, _compareContext.info));
+            return (kCFCompareGreaterThan == _callbacks.compare(value, other, _compareContext.info));
         }
-        return (value >= other);
+        return (value > other);
     };
 
     __CFBinaryHeap(CFAllocatorRef allocatorRef, CFIndex cap, const CFBinaryHeapCallBacks* callbcks, const CFBinaryHeapCompareContext* ctx)
@@ -125,6 +125,10 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
     }
 
     const void* CFBinaryHeapGetMinimum() {
+        for (int i = 0; i < _container.size(); i++) {
+            int frontValue = (int)_container[i];
+        }
+
         return _container.empty() ? NULL : _container.front();
     }
 

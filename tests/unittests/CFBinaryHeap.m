@@ -19,7 +19,7 @@
 #include <Foundation/CFBinaryHeap.h>
 #include <string.h>
 
-TEST(CoreFoundation, CFBinaryHeap_BasicCreation) {
+TEST(Foundation, CFBinaryHeap_BasicCreation) {
     const CFIndex heapSize = 5;
     CFBinaryHeapRef heap = CFBinaryHeapCreate(NULL, heapSize, NULL, NULL);
     ASSERT_TRUE_MSG(heap != NULL, "FAILED: [CFBinaryHeapCreate] heap should be non-null!");
@@ -56,13 +56,19 @@ TEST(CoreFoundation, CFBinaryHeap_BasicCreation) {
     CFRelease(heap);
 }
 
-CFComparisonResult compare(const void* value, const void* other, void* unused) {
-    return (CFComparisonResult)((int)value < (int)other);
-}
+CFComparisonResult compare(const void* value, const void* other, void* context) {
+    if ((int)value == (int)other) {
+        return kCFCompareEqualTo;
+    } else if ((int)value < (int)other) {
+        return kCFCompareLessThan;
+    }
+
+    return kCFCompareGreaterThan;
+};
 
 CFBinaryHeapCallBacks defaultCallbacks = { 0, NULL, NULL, NULL, compare };
 
-TEST(CoreFoundation, CFBinaryHeap_CreationWithCustomFunctions) {
+TEST(Foundation, CFBinaryHeap_CreationWithCustomFunctions) {
     const CFIndex heapSize = 10;
     int heapArray[10] = { 3, 5, 8, 10, 3, -4, 13, 44, 1, -3 };
 
