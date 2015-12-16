@@ -76,4 +76,10 @@ TEST(NSString, NSStringTests) {
     testString = [stringWillDie stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
     [stringWillDie release];
     ASSERT_OBJCEQ(urlEncodedString, testString);
+
+    // stringByAppendingFormat test
+    NSString* testString2 = @"Numbers: ";
+    NSString* expectedString = @"Numbers: 1, 2";
+    NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
+    ASSERT_OBJCEQ(expectedString, actualString);
 }

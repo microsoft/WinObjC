@@ -409,23 +409,25 @@ typedef NSUInteger NSStringCompareOptions;
     return [ret autorelease];
 }
 
-#if 0
--(NSString*) stringByAppendingFormat:(NSString*)formatStr {
-Ebr_va_start(pReader, formatStr);
+/**
+ @Status Caveat
+ @Notes Positional formatting is not supported.
+*/
+-(NSString*) stringByAppendingFormat:(NSString*)formatStr, ... {
 
-UnicodeString output = EbrUnicodePrintf(formatStr, pReader);
-UStringHolder s1(self);
+    va_list reader;
+    va_start(reader, formatStr);
+    UnicodeString str = EbrUnicodePrintf(formatStr, reader);
+    va_end(reader);
 
-UnicodeString copy = s1.string();
-copy.append(output);
+    UStringHolder s1(self);
+    UnicodeString copy = s1.string();
+    copy.append(str);
+    NSString* ret = [NSString alloc];
+    setToUnicode(ret, copy);
 
-NSString* ret = [NSString alloc];
-setToUnicode(ret, copy);
-Ebr_va_end(pReader);
-
-return [ret autorelease];
+    return [ret autorelease];
 }
-#endif
 
 /**
  @Status Stub
