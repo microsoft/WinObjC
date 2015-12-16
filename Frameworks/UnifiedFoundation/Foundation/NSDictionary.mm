@@ -228,10 +228,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)objectForKeyedSubscript:(id)key {
-    UNIMPLEMENTED();
     return [self objectForKey:key];
 }
 

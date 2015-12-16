@@ -242,7 +242,7 @@ extern BOOL protocol_conformsToProtocol(Protocol*, Protocol*);
 extern void objc_thread_add(void);
 extern void objc_thread_remove(void);
 extern void objc_exit(void);
-extern IMP (*objc_forward_handler)(id, SEL);
+extern OBJCRT_EXPORT IMP (*objc_forward_handler)(id, SEL);
 extern id objc_constructInstance(Class, void*);
 extern void* objc_destructInstance(id);
 extern id objc_autorelease(id);

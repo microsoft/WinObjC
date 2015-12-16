@@ -25,7 +25,7 @@
 #include "winrt-interop.h"
 #include <windows.h>
 
-IMP (*objc_forward_handler)(id, SEL) = NULL;
+__declspec(dllexport) IMP (*objc_forward_handler)(id, SEL) = NULL;
 
 static id nil_method(id self, SEL _cmd) {
     return nil;
