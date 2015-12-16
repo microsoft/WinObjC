@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-
 #include <windows.h>
 #include <errno.h>
 #include <stdio.h>
@@ -39,13 +38,13 @@ pthread_t pthread_self() {
 
 IWPLATFORM_EXPORT
 void* pthread_getspecific(pthread_key_t key) {
-    void* ret = (void*)/*ThreadEmulation::*/ TlsGetValue((DWORD)key);
+    void* ret = (void*)/*ThreadEmulation::*/ ::FlsGetValue((DWORD)key);
     return ret;
 }
 
 IWPLATFORM_EXPORT
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
-    /*ThreadEmulation::*/ TlsSetValue((DWORD)key, (LPVOID)ptr);
+    /*ThreadEmulation::*/ ::FlsSetValue((DWORD)key, (LPVOID)ptr);
     return 0;
 }
 
@@ -56,7 +55,7 @@ int pthread_key_delete(pthread_key_t key) {
 
 IWPLATFORM_EXPORT
 int pthread_key_create(pthread_key_t* keyPtr, void (*destructor)(void*)) {
-    *((DWORD*)keyPtr) = /*ThreadEmulation::*/ TlsAlloc();
+    *((DWORD*)keyPtr) = /*ThreadEmulation::*/ ::FlsAlloc(nullptr);
     return 0;
 }
 
