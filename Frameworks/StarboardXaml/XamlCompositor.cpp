@@ -575,10 +575,14 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textControl->FontFamily = ref new Windows::UI::Xaml::Media::FontFamily(charToPlatformString(fontName));
     if (_isBold) {
         textControl->FontWeight = Windows::UI::Text::FontWeights::Bold;
+    } else {
+        textControl->FontWeight = Windows::UI::Text::FontWeights::Normal;
     }
 
     if (_isItalic) {
         textControl->FontStyle = Windows::UI::Text::FontStyle::Italic;
+    } else {
+        textControl->FontStyle = Windows::UI::Text::FontStyle::Normal;
     }
 
     switch (_horzAlignment) {
