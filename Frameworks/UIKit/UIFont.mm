@@ -191,6 +191,10 @@ ret->height += ascenderDelta;
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
     UIFont* ret = [self alloc];
 
+    if (size == 0.0f) {
+        size = [self systemFontSize];
+    }
+
     ret->_name = name;
     ret->_size = size;
     ret->_horizontalScale = 1.0f;
