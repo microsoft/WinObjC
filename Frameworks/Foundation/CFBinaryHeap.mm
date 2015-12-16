@@ -125,10 +125,6 @@ struct __CFBinaryHeap : public CFBridgeBase<__CFBinaryHeap> {
     }
 
     const void* CFBinaryHeapGetMinimum() {
-        for (int i = 0; i < _container.size(); i++) {
-            int frontValue = (int)_container[i];
-        }
-
         return _container.empty() ? NULL : _container.front();
     }
 
