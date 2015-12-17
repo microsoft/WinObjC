@@ -159,7 +159,7 @@
  @Status Interoperable
 */
 - (void)setTimeZone:(NSTimeZone*)timeZone {
-    timeZone = [timeZone retain];
+    timeZone = [timeZone copy];
     [_timeZone release];
     _timeZone = timeZone;
     _calendarNeedsRebuilding = TRUE;
@@ -169,7 +169,7 @@
  @Status Interoperable
 */
 - (void)setLocale:(NSLocale*)locale {
-    locale = [locale retain];
+    locale = [locale copy];
     [_locale release];
     _locale = locale;
     _calendarNeedsRebuilding = TRUE;
@@ -264,7 +264,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
     NSInteger check;
 
     UErrorCode status = U_ZERO_ERROR;
-    Calendar* copy = calendarCopyWithTZ(self);
+    Calendar* copy = [self _getICUCalendar]->clone();
     copy->clear();
 
     if ((check = [components year]) != NSUndefinedDateComponent)
@@ -283,6 +283,13 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
         copy->set(UCAL_WEEK_OF_YEAR, check);
     if ((check = [components weekday]) != NSUndefinedDateComponent)
         copy->set(UCAL_DAY_OF_WEEK, check);
+
+    if ([components timeZone] != nil) {
+        icu::TimeZone* tz = [[components timeZone] _createICUTimeZone];
+        copy->setTimeZone(*tz);
+        delete tz;
+    }
+
     id ret = nil;
 
     if (U_SUCCESS(status)) {
