@@ -36,22 +36,21 @@
     <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
       <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
-      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
+    <ProjectReference Include="..\..\CoreGraphics\lib\CoreGraphicsLib.vcxproj">
+      <Project>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</ProjectGuid>
-    <RootNamespace>QuartzCore</RootNamespace>
+    <ProjectGuid>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</ProjectGuid>
+    <RootNamespace>CoreGraphics</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>QuartzCore</OutputName>
+    <OutputName>CoreGraphics</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -61,16 +60,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -97,7 +99,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.props" />
   </ImportGroup>
-  <Import Project="..\QuartzCore.Shared\QuartzCore.Shared.vcxitems" Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -166,14 +167,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -190,13 +191,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -214,14 +215,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -238,13 +239,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -262,14 +263,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\QuartzCore.Shared\QuartzCore.def</ModuleDefinitionFile>
-      <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -286,10 +287,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;cairo.lib;pixman.lib;freetype.lib;libpng.lib;libz.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCA_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>

@@ -27,9 +27,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\CoreGraphics.Universal\CoreGraphics.Universal.vcxproj">
-      <Project>{35d64778-265e-478c-9b17-687c9c1ead3b}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
@@ -50,6 +47,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\XamlCompositorCS\XamlCompositorCS.Universal\XamlCompositorCS.Universal.csproj">
       <Project>{004e2c18-3bd8-436e-b3c2-d2fe64bc3c76}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

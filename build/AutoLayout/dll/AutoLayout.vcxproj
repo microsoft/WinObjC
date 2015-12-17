@@ -42,6 +42,9 @@
     <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
       <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\AutoLayoutLib.vcxproj">
       <Project>{83CD3839-6A91-4D31-9183-BF6573E016E7}</Project>
     </ProjectReference>

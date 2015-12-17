@@ -27,22 +27,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
-      <Project>{c6f2fb00-05db-47c6-b1a0-f73060b89c1b}</Project>
+      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243fc44-21d3-4255-8fd8-85cbc4bc08bd}</Project>
+      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UIKit\UIKit.Universal\UIKit.Universal.vcxproj">
+      <Project>{43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
+      <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenGLES\OpenGLES.Universal\OpenGLES.Universal.vcxproj">
+      <Project>{E0749361-45DB-4346-9D41-9F570B258B0E}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GLKit\lib\GLKitLib.vcxproj">
+      <Project>{69003FC3-4890-430D-8527-B81C99781864}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{679D3DA0-B218-44EE-9C73-FE6262773772}</ProjectGuid>
+    <ProjectGuid>{8B71325C-3153-420E-9D7A-D0D2C753481D}</ProjectGuid>
     <RootNamespace>GLKit</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutputName>GLKit</OutputName>
@@ -55,16 +72,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -91,7 +111,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.props" />
   </ImportGroup>
-  <Import Project="..\GLKit.Shared\GLKit.Shared.vcxitems" Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -160,18 +179,16 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087</AdditionalOptions>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\prebuilt\include\cairo;$(StarboardBasePath)\deps\prebuilt\include\libjpeg;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <PreprocessorDefinitions>__GLKIT_INSIDE_BUILD</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -186,16 +203,15 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;OpenGLES.lib;QuartzCore.lib;CoreGraphics.lib;Foundation.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>..\GLKit.Shared\GLKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087</AdditionalOptions>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\prebuilt\include\cairo;$(StarboardBasePath)\deps\prebuilt\include\libjpeg;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <PreprocessorDefinitions>__GLKIT_INSIDE_BUILD</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -211,9 +227,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -230,8 +251,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -249,9 +275,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -268,8 +299,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <ModuleDefinitionFile>GLKit.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardSdkRoot)\build\Win32\$(Configuration)\$(TargetOsAndVersion);$(StarboardSdkRoot)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>

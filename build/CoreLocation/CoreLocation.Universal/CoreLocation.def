@@ -1,6 +1,0 @@
-LIBRARY CoreLocation
-    EXPORTS
-     _OBJC_CLASS_CLLocationManager DATA
-     __objc_class_name_CLLocationManager CONSTANT
-     _OBJC_CLASS_CLLocation DATA
-     __objc_class_name_CLLocation CONSTANT

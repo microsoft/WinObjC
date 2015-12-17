@@ -1,0 +1,14 @@
+LIBRARY CoreLocation
+    EXPORTS
+        CLLocationCoordinate2DIsValid
+        _OBJC_CLASS_CLLocation DATA
+        _OBJC_CLASS_CLLocationManager DATA
+        __objc_class_name_CLLocation CONSTANT
+        __objc_class_name_CLLocationManager CONSTANT
+        kCLDistanceFilterNone DATA
+        kCLLocationAccuracyBest DATA
+        kCLLocationAccuracyBestForNavigation DATA
+        kCLLocationAccuracyHundredMeters DATA
+        kCLLocationAccuracyKilometer DATA
+        kCLLocationAccuracyNearestTenMeters DATA
+        kCLLocationAccuracyThreeKilometers DATA
