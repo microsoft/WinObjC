@@ -1,0 +1,16 @@
+LIBRARY AudioToolbox
+    EXPORTS
+          AudioFileClose
+          AudioFileGetProperty
+          AudioFileOpenURL
+          AudioFileReadBytes
+          AudioServicesPlaySystemSound
+          AudioSessionGetProperty
+          AudioSessionInitialize
+          AudioSessionSetActive
+          AudioSessionSetProperty
+          ExtAudioFileDispose
+          ExtAudioFileGetProperty
+          ExtAudioFileOpenURL
+          ExtAudioFileRead
+          ExtAudioFileSetProperty

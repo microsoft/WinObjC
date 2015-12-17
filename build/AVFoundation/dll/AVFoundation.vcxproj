@@ -27,37 +27,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\CoreGraphics.Universal\CoreGraphics.Universal.vcxproj">
-      <Project>{35D64778-265E-478C-9B17-687C9C1EAD3B}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
-      <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
       <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\AutoLayout\dll\AutoLayout.vcxproj">
-      <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
+    <ProjectReference Include="..\..\AVFoundation\lib\AVFoundationLib.vcxproj">
+      <Project>{3A523866-D9FD-4778-9BA7-4E1470F49286}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D}</ProjectGuid>
-    <RootNamespace>UIKit</RootNamespace>
+    <ProjectGuid>{E887032C-8055-4E7D-B4B5-5FD6509257CA}</ProjectGuid>
+    <RootNamespace>AVFoundation</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <ConvergedProjectType>CodeSharingDll</ConvergedProjectType>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>UIKit</OutputName>
+    <OutputName>AVFoundation</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -67,16 +60,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -103,7 +99,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sbclang.props" />
   </ImportGroup>
-  <Import Project="..\UIKit.Shared\UIKit.Shared.vcxitems" Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -167,25 +162,17 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
-      <OptimizationLevel>Disabled</OptimizationLevel>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -202,17 +189,11 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -230,19 +211,12 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
-      <OptimizationLevel>Disabled</OptimizationLevel>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -259,17 +233,11 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -287,19 +255,12 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
-      <OptimizationLevel>Disabled</OptimizationLevel>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -316,17 +277,11 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>..\UIKit.Shared\UIKit.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <UserIncludePaths>
-      </UserIncludePaths>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -DUIKIT_IMPEXP=__declspec(dllexport) -DGAMEKIT_IMPEXP=__declspec(dllexport)  -DSOCIAL_IMPEXP=__declspec(dllexport) %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
