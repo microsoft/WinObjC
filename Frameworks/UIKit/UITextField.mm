@@ -323,7 +323,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                     if ([self isFirstResponder]) {
                         CGContextSetStrokeColorWithColor(curContext,
-                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor redColor] CGColor]));
+                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor windowsControlFocusedColor] CGColor]));
                     } else {
                         CGContextSetStrokeColorWithColor(curContext, (CGColorRef)[UIColor blackColor]);
                     }

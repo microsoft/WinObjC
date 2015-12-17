@@ -629,7 +629,7 @@ static void initInternal(UITableView* self) {
     priv->_reusableCellClasses = [NSMutableDictionary new];
     self->_indexPathsForSelectedItems = [NSMutableSet new];
     self->_indexPathsForHighlightedItems = [NSMutableSet new];
-    priv->_separatorStyle = 1;
+    priv->_separatorStyle = 0;
 }
 
 /**

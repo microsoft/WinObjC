@@ -73,7 +73,7 @@ static void setBackground(UINavigationBar* self) {
     }
 
     _font = [UIFont boldSystemFontOfSize:18];
-    _textColor = [UIColor whiteColor];
+    _textColor = [UIColor blackColor];
     _textShadowColor = [UIColor blackColor];
     _textShadowOffset.width = 1;
     _textShadowOffset.height = 1;
@@ -145,7 +145,7 @@ static void setBackground(UINavigationBar* self) {
         [borderView setBackgroundColor:[UIColor blackColor]];
         [self insertSubview:borderView atIndex:0];
     } else {
-        _textColor = [UIColor whiteColor];
+        _textColor = [UIColor blackColor];
         _textShadowColor = [UIColor blackColor];
         _textShadowOffset.width = 1;
         _textShadowOffset.height = 1;

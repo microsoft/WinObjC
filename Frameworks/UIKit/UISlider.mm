@@ -97,7 +97,7 @@ static void initInternal(UISlider* self) {
     progressFrame.origin.x = 0;
     progressFrame.origin.y = 0;
     progressFrame.size.width = 50;
-    progressFrame.size.height = 50;
+    progressFrame.size.height = 100;
     self->_sliderThumbView = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
     [self->_sliderThumbView setContentMode:UIViewContentModeCenter];
     [self->_sliderThumbView setImage:(id)self->_dot];
