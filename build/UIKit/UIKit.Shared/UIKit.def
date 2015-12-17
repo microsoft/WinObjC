@@ -98,6 +98,8 @@ LIBRARY UIKit
      __objc_class_name_UITabBarController CONSTANT
      _OBJC_CLASS_UINavigationController DATA
      __objc_class_name_UINavigationController CONSTANT
+     _OBJC_CLASS_UINavigationItem DATA
+     __objc_class_name_UINavigationItem CONSTANT
      _OBJC_CLASS_UINavigationBar DATA
      __objc_class_name_UINavigationBar CONSTANT
      _OBJC_CLASS_UISearchBar DATA
