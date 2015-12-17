@@ -40,10 +40,10 @@ typedef wchar_t WCHAR;
 + (void)invokeQueryFailure:(NSError*)failure;
 @end
 @implementation MockWSLauncher
-void (^_launchSuccessFunction)(BOOL);
-void (^_launchFailureFunction)(NSError*);
-void (^_querySuccessFunction)(WSLaunchQuerySupportStatus);
-void (^_queryFailureFunction)(NSError*);
+static void (^_launchSuccessFunction)(BOOL) = nil;
+static void (^_launchFailureFunction)(NSError*) = nil;
+static void (^_querySuccessFunction)(WSLaunchQuerySupportStatus) = nil;
+static void (^_queryFailureFunction)(NSError*) = nil;
 NSCondition* _condition;
 NSInteger _count;
 BOOL _launchReady;
@@ -59,13 +59,24 @@ BOOL _launchReady;
 }
 
 + (void)cleanUp {
+    Block_release(_launchSuccessFunction);
+    Block_release(_launchFailureFunction);
+    Block_release(_querySuccessFunction);
+    Block_release(_queryFailureFunction);
+    _launchSuccessFunction = nil;
+    _launchFailureFunction = nil;
+    _querySuccessFunction = nil;
+    _queryFailureFunction = nil;
     [_condition release];
 }
 
 + (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
     [_condition lock];
-    _launchSuccessFunction = success;
-    _launchFailureFunction = failure;
+    if (_launchSuccessFunction == nil) {
+        _launchSuccessFunction = Block_copy(success);
+        _launchFailureFunction = Block_copy(failure);
+    }
+
     _launchReady = YES;
     [_condition signal];
     [_condition unlock];
@@ -78,8 +89,11 @@ BOOL _launchReady;
                      failure:(void (^)(NSError*))failure {
 
     [_condition lock];
-    _querySuccessFunction = success;
-    _queryFailureFunction = failure;
+    if (_querySuccessFunction == nil) {
+        _querySuccessFunction = Block_copy(success);
+        _queryFailureFunction = Block_copy(failure);
+    }
+
     _launchReady = YES;
     [_condition signal];
     [_condition unlock];
