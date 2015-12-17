@@ -514,6 +514,16 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 /**
  @Status Stub
 */
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarPosition:(NSInteger)position barMetrics:(UIBarMetrics)barMetrics;
+{
+    UNIMPLEMENTED();
+    _navGradient = backgroundImage;
+    setBackground(self);
+}
+
+/**
+ @Status Stub
+*/
 - (void)setTitleTextAttributes:(NSDictionary*)attributes {
     UNIMPLEMENTED();
     (_titleTextAttributes).attach([attributes copy]);

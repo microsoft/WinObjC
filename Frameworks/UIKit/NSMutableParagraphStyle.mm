@@ -15,10 +15,95 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#import  <UIKit/NSParagraphStyle.h>
+#import <UIKit/NSParagraphStyle.h>
 
 @implementation NSParagraphStyle
+
+/**
+ @Status Stub
+*/
++ (NSParagraphStyle*)defaultParagraphStyle {
+    UNIMPLEMENTED();
+    return nil;
+}
 @end
 
 @implementation NSMutableParagraphStyle
+
+/**
+ @Status Stub
+*/
+- (void)setAlignment:(NSTextAlignment)alignment {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setLineSpacing:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMaximumLineHeight:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setFirstLineHeadIndent:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setParagraphSpacingBefore:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setParagraphSpacing:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setHeadIndent:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setTailIndent:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setLineBreakMode:(NSLineBreakMode)mode {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setLineHeightMultiple:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMinimumLineHeight:(CGFloat)aFloat {
+    UNIMPLEMENTED();
+}
 @end

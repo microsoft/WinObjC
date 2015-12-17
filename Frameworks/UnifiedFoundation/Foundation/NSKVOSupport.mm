@@ -565,4 +565,19 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
     auto& kvoClass(NSKVOClass::forInstance(self));
     kvoClass.dispatch(self, [key UTF8String], false);
 }
+
+/**
+ @Status Stub
+*/
+- (void)willChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key {
+    UNIMPLEMENTED();
+}
+
 @end

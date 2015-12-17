@@ -70,7 +70,7 @@ static void initInternal(UISearchBar* self) {
         CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
 
         self->_promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
-        [self->_promptLabel setTextAlignment:NSTextAlignmentCenter];
+        [self->_promptLabel setTextAlignment:UITextAlignmentCenter];
         [self->_promptLabel setBackgroundColor:nil];
         [self->_promptLabel setTextColor:[UIColor blackColor]];
         [self addSubview:self->_promptLabel];
@@ -264,9 +264,10 @@ static void initInternal(UISearchBar* self) {
     // display the cancelButton on right side of textField
     if (_showsCancelButton) {
         CGSize cancelButtonSize = [cancelButtonText sizeWithFont:[UIFont systemFontOfSize:c_defaultFontSize]];
-        textFrame.size.width = textFrame.size.width - cancelButtonSize.width - (2 * c_marginLeftAndRight) -10;
-        CGRect cancelButttonFrame = { { self.frame.size.width - (2 * c_marginLeftAndRight) - cancelButtonSize.width -5, textFrame.origin.y +3 },
-                                      { cancelButtonSize.width +5, cancelButtonSize.height } };
+        textFrame.size.width = textFrame.size.width - cancelButtonSize.width - (2 * c_marginLeftAndRight) - 10;
+        CGRect cancelButttonFrame = { { self.frame.size.width - (2 * c_marginLeftAndRight) - cancelButtonSize.width - 5,
+                                        textFrame.origin.y + 3 },
+                                      { cancelButtonSize.width + 5, cancelButtonSize.height } };
         [_cancelButton setFrame:cancelButttonFrame];
     }
 

@@ -19,13 +19,27 @@
 
 #import <Foundation/NSObject.h>
 
-enum {
+typedef NS_ENUM(NSUInteger, NSLineBreakMode) {
+    NSLineBreakByWordWrapping,
+    NSLineBreakByCharWrapping,
+    NSLineBreakByClipping,
+    NSLineBreakByTruncatingHead,
+    NSLineBreakByTruncatingTail,
+    NSLineBreakByTruncatingMiddle
+};
+
+typedef NS_ENUM(NSUInteger, NSTextAlignment) {
     NSTextAlignmentLeft = 0,
     NSTextAlignmentCenter = 1,
     NSTextAlignmentRight = 2,
     NSTextAlignmentJustified = 3,
     NSTextAlignmentNatural = 4,
 };
-typedef int32_t NSTextAlignment;
+
+typedef NS_ENUM(NSUInteger, NSWritingDirection) {
+    NSWritingDirectionNatural = -1,
+    NSWritingDirectionLeftToRight = 0,
+    NSWritingDirectionRightToLeft = 1
+};
 
 #endif /* _NSTEXT_H_ */

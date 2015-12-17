@@ -18,7 +18,7 @@
 #include "UIAppearanceSetter.h"
 #include "UIBarButtonItem+Internals.h"
 
-@implementation UINavigationItem : NSObject {
+@implementation UINavigationItem {
     idretaintype(NSString) _title;
     idretaintype(UIView) _titleView;
     idretaintype(NSString) _prompt;
@@ -200,9 +200,18 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes animation parameter not supported
 */
 - (void)setLeftBarButtonItem:(UIBarButtonItem*)leftBarItem {
+    [self setLeftBarButtonItem:leftBarItem animated:FALSE];
+}
+
+/**
+ @Status Caveat
+ @Notes animation parameter not supported
+*/
+- (void)setLeftBarButtonItem:(UIBarButtonItem*)leftBarItem animated:(BOOL)animated {
     _leftBarButtonItem = leftBarItem;
     if ([_leftBarButtonItems count] > 0) {
         if (leftBarItem != nil) {
@@ -222,7 +231,7 @@
  @Status Caveat
  @Notes animation parameter not supported
 */
-- (void)setLeftBarButtonItem:(NSArray*)leftBarItems animated:(BOOL)animated {
+- (void)setLeftBarButtonItems:(NSArray*)leftBarItems animated:(BOOL)animated {
     _leftBarButtonItems = leftBarItems;
     if ([leftBarItems count] > 0) {
         _leftBarButtonItem = [leftBarItems objectAtIndex:0];

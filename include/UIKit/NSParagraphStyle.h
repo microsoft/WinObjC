@@ -21,51 +21,64 @@
 #import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 
-enum {
-    NSLineBreakByWordWrapping,
-    NSLineBreakByCharWrapping,
-    NSLineBreakByClipping,
-    NSLineBreakByTruncatingHead,
-    NSLineBreakByTruncatingTail,
-    NSLineBreakByTruncatingMiddle
-};
-typedef uint32_t NSLineBreakMode;
+// NSString *const NSTabColumnTerminatorsAttributeName  = @"NSTabColumnTerminatorsAttributeName";
+
+UIKIT_EXPORT_CLASS
+@interface NSTextTab : NSObject
+- (instancetype)initWithTextAlignment:(NSTextAlignment)alignment location:(CGFloat)loc options:(NSDictionary*)options;
++ (NSCharacterSet*)columnTerminatorsForLocale:(NSLocale*)aLocale;
+@property (readonly, nonatomic) NSDictionary* options;
+@property (readonly, nonatomic) CGFloat location;
+@property (readonly, nonatomic) NSTextAlignment alignment;
+@end
 
 UIKIT_EXPORT_CLASS
 @interface NSParagraphStyle : NSObject
 
 + (NSParagraphStyle*)defaultParagraphStyle;
++ (NSWritingDirection)defaultWritingDirectionForLanguage:(NSString*)languageName;
 
-- (NSTextAlignment)alignment;
-- (CGFloat)lineSpacing;
-- (CGFloat)lineHeightMultiple;
-- (CGFloat)firstLineHeadIndent;
-- (CGFloat)paragraphSpacing;
-- (CGFloat)paragraphSpacingBefore;
-- (CGFloat)headIndent;
-- (CGFloat)tailIndent;
-- (CGFloat)minimumLineHeight;
-- (NSLineBreakMode)lineBreakMode;
-
-@property (nonatomic) CGFloat maximumLineHeight;
-@property (nonatomic) NSInteger defaultTabInterval;
+@property (readonly, nonatomic) NSTextAlignment alignment;
+@property (readonly, nonatomic) CGFloat firstLineHeadIndent;
+@property (readonly, nonatomic) CGFloat headIndent;
+@property (readonly, nonatomic) CGFloat tailIndent;
+@property (readonly, nonatomic) CGFloat lineHeightMultiple;
+@property (readonly, nonatomic) CGFloat maximumLineHeight;
+@property (readonly, nonatomic) CGFloat minimumLineHeight;
+@property (readonly, nonatomic) CGFloat lineSpacing;
+@property (readonly, nonatomic) CGFloat paragraphSpacing;
+@property (readonly, nonatomic) CGFloat paragraphSpacingBefore;
+@property (readonly, copy, nonatomic) NSArray* tabStops;
+@property (readonly, nonatomic) CGFloat defaultTabInterval;
+@property (readonly, nonatomic) NSLineBreakMode lineBreakMode;
+@property (readonly, nonatomic) float hyphenationFactor;
+@property (readonly, nonatomic) NSWritingDirection baseWritingDirection;
 
 @end
 
 UIKIT_EXPORT_CLASS
 @interface NSMutableParagraphStyle : NSParagraphStyle
 
-- (void)setAlignment:(NSTextAlignment)alignment;
-- (void)setLineSpacing:(CGFloat)aFloat;
-- (void)setMaximumLineHeight:(CGFloat)aFloat;
-- (void)setFirstLineHeadIndent:(CGFloat)aFloat;
-- (void)setParagraphSpacingBefore:(CGFloat)aFloat;
-- (void)setParagraphSpacing:(CGFloat)aFloat;
-- (void)setHeadIndent:(CGFloat)aFloat;
-- (void)setTailIndent:(CGFloat)aFloat;
-- (void)setLineBreakMode:(NSLineBreakMode)mode;
-- (void)setLineHeightMultiple:(CGFloat)aFloat;
-- (void)setMinimumLineHeight:(CGFloat)aFloat;
+- (void)setParagraphStyle:(NSParagraphStyle*)obj;
+@property (nonatomic) NSTextAlignment alignment;
+@property (nonatomic) CGFloat firstLineHeadIndent;
+@property (nonatomic) CGFloat headIndent;
+@property (nonatomic) CGFloat tailIndent;
+@property (nonatomic) NSLineBreakMode lineBreakMode;
+@property (nonatomic) CGFloat maximumLineHeight;
+@property (nonatomic) CGFloat minimumLineHeight;
+@property (nonatomic) CGFloat lineSpacing;
+@property (nonatomic) CGFloat paragraphSpacing;
+@property (nonatomic) CGFloat paragraphSpacingBefore;
+@property (nonatomic) NSWritingDirection baseWritingDirection;
+@property (nonatomic) CGFloat lineHeightMultiple;
+
+- (void)addTabStop:(NSTextTab*)anObject;
+- (void)removeTabStop:(NSTextTab*)anObject;
+@property (copy, nonatomic) NSArray* tabStops;
+@property (nonatomic) CGFloat defaultTabInterval;
+
+@property (nonatomic) float hyphenationFactor;
 
 @end
 
