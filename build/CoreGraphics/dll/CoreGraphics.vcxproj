@@ -40,6 +40,12 @@
       <Project>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreGraphics.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</ProjectGuid>
     <RootNamespace>CoreGraphics</RootNamespace>

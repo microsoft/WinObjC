@@ -40,6 +40,12 @@
       <Project>{E9AB5709-44BA-4AA0-8B5F-46FE35F143D5}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreAudio.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7DBBF481-D3D4-4CCC-BC3B-B14B8B99FB59}</ProjectGuid>
     <RootNamespace>CoreAudio</RootNamespace>

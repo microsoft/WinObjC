@@ -42,15 +42,18 @@
     <ProjectReference Include="..\..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
       <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\OpenGLES\OpenGLES.Universal\OpenGLES.Universal.vcxproj">
-      <Project>{E0749361-45DB-4346-9D41-9F570B258B0E}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenGLES\dll\OpenGLES.vcxproj">
+      <Project>{D6F6507B-0C26-4D99-889A-83BF4E313D51}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\GLKit\lib\GLKitLib.vcxproj">
       <Project>{69003FC3-4890-430D-8527-B81C99781864}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GLKit.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8B71325C-3153-420E-9D7A-D0D2C753481D}</ProjectGuid>

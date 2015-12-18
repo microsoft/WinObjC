@@ -37,6 +37,12 @@
       <Project>{FBB81B8A-F021-4F71-9A07-E4DC835676FD}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AudioToolbox.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{32EE9FA0-B8A5-4059-BE82-3A60EC6AE59E}</ProjectGuid>
     <RootNamespace>AudioToolbox</RootNamespace>

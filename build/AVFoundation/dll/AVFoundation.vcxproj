@@ -40,6 +40,12 @@
       <Project>{3A523866-D9FD-4778-9BA7-4E1470F49286}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AVFoundation.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E887032C-8055-4E7D-B4B5-5FD6509257CA}</ProjectGuid>
     <RootNamespace>AVFoundation</RootNamespace>

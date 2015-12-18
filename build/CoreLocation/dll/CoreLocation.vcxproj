@@ -40,6 +40,12 @@
       <Project>{96CEAFB4-5BDC-4972-97D7-302840B3CDA0}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreLocation.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{67D1502D-00C8-46B6-AF47-088B7A5199FE}</ProjectGuid>
     <RootNamespace>CoreLocation</RootNamespace>

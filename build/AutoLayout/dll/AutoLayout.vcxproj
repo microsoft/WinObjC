@@ -49,6 +49,9 @@
       <Project>{83CD3839-6A91-4D31-9183-BF6573E016E7}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="AutoLayout.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</ProjectGuid>
     <RootNamespace>AutoLayout</RootNamespace>

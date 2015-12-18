@@ -40,6 +40,12 @@
       <Project>{7A9EDA6A-A2A5-4184-A9A3-209BE0044D3C}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenAL.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B112CFE1-6DE9-4E68-BC09-A8374D756452}</ProjectGuid>
     <RootNamespace>OpenAL</RootNamespace>
