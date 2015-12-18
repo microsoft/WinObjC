@@ -23,7 +23,11 @@
 @implementation NSAttributedString
 
 + (instancetype)allocWithZone:(NSZone*)zone {
-    return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
+    if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class])) {
+        return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
+    }
+
+    return NSAllocateObject((Class)self, 0, zone);
 }
 
 /**
@@ -289,10 +293,40 @@ static void _enumerateInRange(NSAttributedString* self,
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  */
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
+}
+
+/**
+ @Status Interoperable
+ */
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    return reinterpret_cast<id>(CFAttributedStringCreateCopy(nullptr, reinterpret_cast<CFAttributedStringRef>(self)));
+}
+
+/**
+ @Status Stub
+ */
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+ */
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ */
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return NO;
 }
 
 @end
