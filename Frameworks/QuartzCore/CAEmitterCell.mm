@@ -19,4 +19,31 @@
 
 @implementation CAEmitterCell
 
+/**
+ @Status Stub
+*/
++ (instancetype)emitterCell {
+    UNIMPLEMENTED();
+    return [CAEmitterCell new];
+}
+
+- (id)init {
+    return self;
+}
+
+/**
+ @Status Stub
+*/
++ (id)defaultValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldArchiveValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return NO;
+}
 @end

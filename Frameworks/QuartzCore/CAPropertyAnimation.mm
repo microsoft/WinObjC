@@ -52,7 +52,7 @@
 
 /**
  @Status Caveat
- @Notes Only position, bounds, and transform properties spuported
+ @Notes Only position, bounds, and transform properties supported
 */
 + (instancetype)animationWithKeyPath:(NSString*)path {
     CAPropertyAnimation* ret = [self alloc];
