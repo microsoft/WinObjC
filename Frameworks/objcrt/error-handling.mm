@@ -72,7 +72,7 @@ NSException* _exceptionFromFailureInfo(const wil::FailureInfo& fi) {
         msg = [_LazyNSString stringWithCharacters:reinterpret_cast<const unichar*>(fi.pszMessage) length:wcslen(fi.pszMessage)];
     }
 
-    return [_LazyNSException exceptionWithName:_exceptionName() reason:msg userInfo:_createFailureInfoDict(fi)];
+    return [_LazyNSException _exceptionWithHRESULT:fi.hr reason:msg userInfo:_createFailureInfoDict(fi)];
 }
 
 unsigned long objc_getCurrentThreadId() {

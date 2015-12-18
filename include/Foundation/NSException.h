@@ -44,7 +44,7 @@ FOUNDATION_EXPORT_CLASS
 + (void)raise:(NSString*)name format:(NSString*)format, ...;
 + (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)arguments;
 
-- initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
+- (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
 
 + (NSException*)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
 
@@ -55,7 +55,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSDictionary*)userInfo;
 
 - (NSArray*)callStackReturnAddresses;
-
 @end
 
 @interface NSException (WinObjC)

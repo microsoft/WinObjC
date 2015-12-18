@@ -25,6 +25,9 @@ NSString* const NSObjectNotAvailableException = @"NSObjectNotAvailableException"
 NSString* const NSDestinationInvalidException = @"NSDestinationInvalidException";
 NSString* const NSURLErrorDomain = @"NSURLErrorDomain";
 NSString* const NSOverflowException = @"NSOverflowException";
+NSString* const NSObjectInaccessibleException = @"NSObjectInaccessibleException";
+NSString* const NSMallocException = @"NSMallocException";
+NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 
 /**
  @Status Stub
@@ -43,9 +46,11 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
  @Status Interoperable
 */
 - (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
-    _name.attach([name copy]);
-    _reason.attach([reason copy]);
-    _userInfo.attach([userInfo copy]);
+    if (self = [super init]) {
+        _name.attach([name copy]);
+        _reason.attach([reason copy]);
+        _userInfo.attach([userInfo copy]);
+    }
 
     return self;
 }
@@ -74,6 +79,9 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
     [exception raise];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)raiseWithLogging:(NSString*)name format:(NSString*)format, ... {
     va_list reader;
     va_start(reader, format);
@@ -125,5 +133,34 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
 */
 - (NSString*)reason {
     return _reason;
+}
+
+// Returns exception name from HRESULT.
++ (NSString*)_exceptionNameForHRESULT:(int)errorCode {
+        switch (errorCode) {
+        case E_INVALIDARG:
+            return NSInvalidArgumentException;
+        case E_FAIL:
+            return NSGenericException;
+        case E_BOUNDS:
+            return NSRangeException;
+        case E_ACCESSDENIED:
+            return NSObjectInaccessibleException;
+        case E_UNEXPECTED:
+            return NSInternalInconsistencyException;
+        case E_OUTOFMEMORY:
+            return NSMallocException;
+        default:
+            break;
+    }
+
+    return WinObjCException;
+}
+
+// Returns exception with given HRESULT
++ (instancetype)_exceptionWithHRESULT:(int)errorCode reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
+    NSException* ret = [[self alloc] initWithName:[self _exceptionNameForHRESULT:errorCode] reason:reason userInfo:userInfo];
+
+    return [ret autorelease];
 }
 @end

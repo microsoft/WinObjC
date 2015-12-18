@@ -16,6 +16,6 @@
 
 #include "Starboard.h"
 
-#import "CoreFoundation/CFBundle.h" "
+#import "CoreFoundation/CFBundle.h"
 
 const CFStringRef kCFBundleVersionKey = (CFStringRef) @"kCFBundleVersionKey";

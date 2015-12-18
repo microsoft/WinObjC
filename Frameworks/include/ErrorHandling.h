@@ -287,13 +287,13 @@ static IWLazyClassLookup _LazyNSString("NSString");
 static IWLazyClassLookup _LazyNSError("NSError");
 static IWLazyClassLookup _LazyNSException("NSException");
 
-static NSString* _exceptionName() {
-    static NSString* s_exceptionName = [[_LazyNSString alloc] initWithCString:"WinObjC Exception"];
-    return s_exceptionName;
+static NSString* _winobjcDomain() {
+    static NSString* s_winobjcDomain = [[_LazyNSString alloc] initWithCString:"WinObjCErrorDomain"];
+    return s_winobjcDomain;
 }
 
 static NSString* _hresultDomain() {
-    static NSString* s_hresultDomain = [[_LazyNSString alloc] initWithCString:"HRESULT"];
+    static NSString* s_hresultDomain = [[_LazyNSString alloc] initWithCString:"HRESULTErrorDomain"];
     return s_hresultDomain;
 }
 
@@ -306,8 +306,9 @@ static void _rethrowAsNSException() {
     } catch (wil::ResultException re) {
         @throw _exceptionFromFailureInfo(re.GetFailureInfo());
     } catch (...) {
-        @throw
-            [_LazyNSException exceptionWithName:_exceptionName() reason:_stringFromHresult(wil::ResultFromCaughtException()) userInfo:nil];
+        @throw [_LazyNSException _exceptionWithHRESULT:wil::ResultFromCaughtException()
+                                    reason:_stringFromHresult(wil::ResultFromCaughtException())
+                                    userInfo:nil];
     }
 }
 
@@ -325,7 +326,7 @@ static void _catchAndPopulateNSError(NSError** outError) {
             errorCode = [hresultValue unsignedIntValue];
         }
 
-        error = [_LazyNSError errorWithDomain:_exceptionName() code:errorCode userInfo:e.userInfo];
+        error = [_LazyNSError errorWithDomain:_winobjcDomain() code:errorCode userInfo:e.userInfo];
     } catch (wil::ResultException re) {
         error = _errorFromFailureInfo(re.GetFailureInfo());
     } catch (...) {

@@ -59,4 +59,16 @@ TEST(Core, ErrorHandling) {
     }
     CATCH_POPULATE_NSERROR(&error);
     ASSERT_EQ_MSG(error.code, E_NOTIMPL, "Exception renormalization to NSExceptions not working correctly!");
+
+    NSString* actualExceptionName = @"";
+    @try {
+        try {
+            THROW_NS_HR(E_INVALIDARG);
+        }
+        CATCH_THROW_NSEXCEPTION();
+    } @catch (NSException* exception) {
+        actualExceptionName = exception.name;
+    }
+
+    ASSERT_OBJCEQ(actualExceptionName, NSInvalidArgumentException);
 }
