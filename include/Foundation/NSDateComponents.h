@@ -11,54 +11,30 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 
+@class NSTimeZone;
+
 enum {
    NSUndefinedDateComponent = 0x7fffffff
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDateComponents : NSObject {
-    NSInteger _era;
-    NSInteger _year;
-    NSInteger _quarter;
-    NSInteger _month;
-    NSInteger _week;
-    NSInteger _weekday;
-    NSInteger _weekdayOrdinal;
-    NSInteger _day;
-    NSInteger _hour;
-    NSInteger _minute;
-    NSInteger _second;
-}
+@interface NSDateComponents : NSObject
 
-- (NSInteger)era;
-- (NSInteger)year;
-- (NSInteger)quarter;
-- (NSInteger)month;
-- (NSInteger)week;
-- (NSInteger)weekday;
-- (NSInteger)weekdayOrdinal;
-- (NSInteger)day;
-- (NSInteger)hour;
-- (NSInteger)minute;
-- (NSInteger)second;
-- (NSInteger)weekOfMonth;
-- (NSInteger)weekOfYear;
-- (NSInteger)yearForWeekOfYear;
-
-- (void)setEra:(NSInteger)value;
-- (void)setYear:(NSInteger)value;
-- (void)setQuarter:(NSInteger)value;
-- (void)setMonth:(NSInteger)value;
-- (void)setWeek:(NSInteger)value;
-- (void)setWeekday:(NSInteger)value;
-- (void)setWeekdayOrdinal:(NSInteger)value;
-- (void)setDay:(NSInteger)value;
-- (void)setHour:(NSInteger)value;
-- (void)setMinute:(NSInteger)value;
-- (void)setSecond:(NSInteger)value;
-- (void)setWeekOfMonth:(NSInteger)week;
-- (void)setWeekOfYear:(NSInteger)week;
-- (void)setYearForWeekOfYear:(NSInteger)year;
+@property (copy) NSTimeZone* timeZone;
+@property NSInteger era;
+@property NSInteger year;
+@property NSInteger quarter;
+@property NSInteger month;
+@property NSInteger week;
+@property NSInteger weekday;
+@property NSInteger weekdayOrdinal;
+@property NSInteger day;
+@property NSInteger hour;
+@property NSInteger minute;
+@property NSInteger second;
+@property NSInteger weekOfMonth;
+@property NSInteger weekOfYear;
+@property NSInteger yearForWeekOfYear;
 
 @end
 
