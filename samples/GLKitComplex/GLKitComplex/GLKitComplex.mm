@@ -57,7 +57,7 @@
     [_welcomeLabel setBackgroundColor: nil];
     [_welcomeLabel setTextColor: [UIColor whiteColor]];
     [_welcomeLabel setFont: [UIFont boldSystemFontOfSize: 24.0f]];
-    [_welcomeLabel setTextAlignment: NSTextAlignmentCenter];
+    [_welcomeLabel setTextAlignment: UITextAlignmentCenter];
     [_mainWindow addSubview: _welcomeLabel];
 
     [self setLabelText];
