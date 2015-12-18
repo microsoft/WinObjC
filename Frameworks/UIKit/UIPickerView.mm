@@ -43,7 +43,6 @@ struct RowData {
     float _defaultRowHeight;
     RowData* _rowData;
     int _numRows;
-    idretain _left, _right;
     float _width, _rowHeight;
     UITextAlignment _alignment;
     CGRect _curSize;
@@ -55,11 +54,7 @@ struct RowData {
     [super initWithFrame:pos];
     [super setDelegate:(id<UIScrollViewDelegate>)self];
     [self setShowsVerticalScrollIndicator:FALSE];
-
-    [self setBackgroundColor:[UIColor whiteColor]];
-
-    _left = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"/img/picker-left@2x.png"]] autorelease];
-    _right = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"/img/picker-right@2x.png"]] autorelease];
+    [self setBackgroundColor:[UIColor windowsControlDefaultBackgroundColor]];
 
     return self;
 }
@@ -168,7 +163,7 @@ static void showVisibleCells(UIPickerSubView* self) {
                         curRow->_rowCell.attach([[UITableViewCell alloc] initWithFrame:frame]);
                         [curRow->_rowCell setSelectionStyle:UITableViewCellSelectionStyleNone];
                         [curRow->_rowCell setBackgroundColor:nil];
-                        [curRow->_rowCell setFont:[UIFont systemFontOfSize:20]];
+                        [curRow->_rowCell setFont:[UIFont systemFontOfSize:15]];
                         [curRow->_rowCell setTag:j];
                     }
 
@@ -317,10 +312,6 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
         }
         EbrFree(_rowData);
     }
-    [_left removeFromSuperview];
-    _left = nil;
-    [_right removeFromSuperview];
-    _right = nil;
 
     [super dealloc];
 }
@@ -346,7 +337,6 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
 @implementation UIPickerView : UIView {
     id _delegate;
     id _dataSource;
-    idretain _shadow;
     idretain _selectionBar;
     idretain _background;
 
@@ -368,12 +358,10 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
 }
 
 static void setupImages(UIPickerView* self) {
-    [self setBackgroundColor:[UIColor blackColor]];
+    [self setBackgroundColor:[UIColor whiteColor]];
 
     self->_background = [[[UIImageView alloc]
-        initWithImage:[[UIImage imageNamed:@"/img/wheel_bg@2x.png"] stretchableImageWithLeftCapWidth:4 topCapHeight:0]] autorelease];
-    self->_shadow = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"/img/wheel_shadow@2x.png"]] autorelease];
-    [self->_shadow setClipsToBounds:TRUE];
+        initWithImage:[[UIImage imageNamed:@"/img/wheel_bg@2x.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0]] autorelease];
     self->_selectionBar = [[[UIImageView alloc]
         initWithImage:[[UIImage imageNamed:@"/img/picker-selection@2x.png"] stretchableImageWithLeftCapWidth:8 topCapHeight:0]]
         autorelease];
@@ -460,8 +448,6 @@ static void setupImages(UIPickerView* self) {
 static void DestroySections(UIPickerView* self) {
     if (self->_subSections) {
         for (int i = 0; i < self->_numSections; i++) {
-            [self->_subSections[i]->_left removeFromSuperview];
-            [self->_subSections[i]->_right removeFromSuperview];
             self->_subSections[i]->_dataSource = nil;
             self->_subSections[i]->_parent = nil;
             [self->_subSections[i] removeFromSuperview];
@@ -481,9 +467,6 @@ static void layoutSubSections(UIPickerView* self) {
 
     [self->_background setFrame:pos];
 
-    pos.origin.y += 10.0f;
-    pos.size.height -= 10.0f;
-
     float totalWidth = 0;
     for (int i = 0; i < self->_numSections; i++) {
         totalWidth += self->_subSections[i]->_width;
@@ -492,28 +475,23 @@ static void layoutSubSections(UIPickerView* self) {
     curX = (pos.size.width - totalWidth) / 2.0f;
     CGRect selectionPos;
     selectionPos.origin.x = curX;
-    float borderX = 0.0f;
+    float borderX = 2.0f;
 
     for (int i = 0; i < self->_numSections; i++) {
         float width = self->_subSections[i]->_width;
-        CGRect frame = { curX, pos.origin.y + 1, width, pos.size.height - 2 };
+        CGRect frame = { curX, pos.origin.y, width, pos.size.height - 1 };
         curX += width;
         [self->_subSections[i] setFrame:frame];
 
         CGRect pickerPos;
         pickerPos.origin.x = borderX;
         pickerPos.origin.y = 0;
-        pickerPos.size.width = 4;
+        pickerPos.size.width = 0;
         pickerPos.size.height = pos.size.height;
-        [self->_subSections[i]->_left setFrame:pickerPos];
-        [self->_shadow addSubview:self->_subSections[i]->_left];
-
-        pickerPos.origin.x = borderX + frame.size.width - 4;
+        pickerPos.origin.x = borderX + frame.size.width;
         pickerPos.origin.y = 0;
-        pickerPos.size.width = 4;
+        pickerPos.size.width = 0;
         pickerPos.size.height = pos.size.height;
-        [self->_subSections[i]->_right setFrame:pickerPos];
-        [self->_shadow addSubview:self->_subSections[i]->_right];
 
         borderX += width;
     }
@@ -524,11 +502,8 @@ static void layoutSubSections(UIPickerView* self) {
 
     pos.origin.x = selectionPos.origin.x;
     pos.size.width = selectionPos.size.width;
-    [self->_shadow setFrame:pos];
-    [self->_shadow setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
     [self->_selectionBar setFrame:selectionPos];
-    [self addSubview:self->_shadow];
     [self addSubview:self->_selectionBar];
     [self setAutoresizesSubviews:TRUE];
 }
@@ -566,7 +541,7 @@ static void layoutSubSections(UIPickerView* self) {
             if ([_delegate respondsToSelector:@selector(pickerView:widthForComponent:)]) {
                 width = [_delegate pickerView:self widthForComponent:i];
             } else {
-                width = (300.0f / (float)_numSections);
+                width = (318.0f / (float)_numSections);  // Using 318px For 1px border on left & right
             }
 
             _subSections[i] = [UIPickerSubView alloc];
@@ -645,7 +620,6 @@ static void layoutSubSections(UIPickerView* self) {
 - (void)dealloc {
     DestroySections(self);
 
-    _shadow = nil;
     _selectionBar = nil;
     _background = nil;
     [super dealloc];
@@ -668,7 +642,7 @@ static void layoutSubSections(UIPickerView* self) {
     }
 
     if (_subSections != NULL) {
-        ret.width = _subSections[component]->_width - 15.0f; //  -15 for padding
+        ret.width = _subSections[component]->_width - 2.0f; //  -2 for padding
         ret.height = _subSections[component]->_defaultRowHeight;
     }
 

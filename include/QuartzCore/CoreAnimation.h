@@ -18,6 +18,8 @@
 #import <QuartzCore/CAAnimation.h>
 #import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CAEAGLLayer.h>
+#import <QuartzCore/CAEmitterLayer.h>
+#import <QuartzCore/CAEmitterCell.h>
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CAGradientLayer.h>
 #import <QuartzCore/CAMediaTimingFunction.h>

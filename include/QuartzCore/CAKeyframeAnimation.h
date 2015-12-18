@@ -19,10 +19,18 @@
 
 #import <QuartzCore/CAPropertyAnimation.h>
 
+CA_EXPORT_CLASS
 @interface CAKeyframeAnimation : CAPropertyAnimation
 
 @property (copy) NSArray* values;
+@property CGPathRef path;
+@property (copy) NSArray* keyTimes;
+@property (copy) NSArray* timingFunctions;
+@property (copy) NSString* calculationMode;
 @property (copy) NSString* rotationMode;
+@property (copy) NSArray* tensionValues;
+@property (copy) NSArray* continuityValues;
+@property (copy) NSArray* biasValues;
 
 @end
 

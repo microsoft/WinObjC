@@ -11,5 +11,6 @@ enum {
     NSFileReadNoSuchFileError=260,
     
     NSFileWriteUnknownError = 512,
+    NSPropertyListReadCorruptError = 3840,
 };
 

@@ -582,6 +582,18 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [self whiteColor];
 }
 
++ (UIColor*)windowsControlFocusedColor {
+    return [self colorWithRed:0.19f green:0.46f blue:0.73f alpha:1.0f];
+}
+
++ (UIColor*)windowsControlDefaultBackgroundColor {
+    return [self colorWithRed:0.95f green:0.95f blue:0.95f alpha:1.0f];
+}
+
++ (UIColor*)windowsTableViewCellSelectionBackgroundColor {
+    return [self colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0];
+}
+
 /**
  @Status Interoperable
 */

@@ -21,6 +21,8 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSCalendar.h>
 
+UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
+
 UIKIT_EXPORT_CLASS
 @interface UILocalNotification : NSObject {
 }
@@ -35,7 +37,5 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSDictionary* userInfo;
 
 @end
-
-extern NSString* UILocalNotificationDefaultSoundName;
 
 #endif /* _UILOCALNOTIFICATION_H_ */

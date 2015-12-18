@@ -155,7 +155,9 @@ LIBRARY Foundation
      _OBJC_CLASS_NSURLSessionConfiguration DATA
      __objc_class_name_NSURLSessionConfiguration CONSTANT
      _OBJC_CLASS_NSURLSession DATA
-     __objc_class_name_NSURLSession CONSTANT
+     __objc_class_name_NSURLSession CONSTANT     
+     _OBJC_CLASS_NSURLCredentialStorage DATA
+     __objc_class_name_NSURLCredentialStorage CONSTANT
      _OBJC_CLASS_NSURLSessionTask DATA
      __objc_class_name_NSURLSessionTask CONSTANT
      _OBJC_CLASS_NSURLSessionDataTask DATA
@@ -186,3 +188,7 @@ LIBRARY Foundation
      __objc_class_name_NSManagedObjectContext    CONSTANT
      _OBJC_CLASS_NSAssertionHandler DATA
      __objc_class_name_NSAssertionHandler CONSTANT
+     _OBJC_CLASS_NSURLCredential DATA
+     __objc_class_name_NSURLCredential CONSTANT
+     _OBJC_CLASS_NSURLProtectionSpace DATA
+     __objc_class_name_NSURLProtectionSpace CONSTANT

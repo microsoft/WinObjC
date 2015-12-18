@@ -198,5 +198,9 @@ LIBRARY OpenGLES
       glVertexAttrib4f = EXPORT_glVertexAttrib4f
       glVertexAttrib4fv = EXPORT_glVertexAttrib4fv
       glVertexAttribPointer = EXPORT_glVertexAttribPointer
-      glResolveMultisampleFramebufferAPPLE  = EXPORT_glResolveMultisampleFramebufferAPPLE 
-      glRenderbufferStorageMultisampleAPPLE  = EXPORT_glRenderbufferStorageMultisampleAPPLE 
+      glResolveMultisampleFramebufferAPPLE  = EXPORT_glResolveMultisampleFramebufferAPPLE
+      glRenderbufferStorageMultisampleAPPLE  = EXPORT_glRenderbufferStorageMultisampleAPPLE
+      glBindVertexArrayOES = EXPORT_glBindVertexArrayOES
+      glDeleteVertexArraysOES = EXPORT_glDeleteVertexArraysOES
+      glGenVertexArraysOES = EXPORT_glGenVertexArraysOES
+      glIsVertexArrayOES = EXPORT_glIsVertexArrayOES

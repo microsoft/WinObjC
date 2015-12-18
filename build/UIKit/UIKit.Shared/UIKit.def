@@ -6,6 +6,8 @@ LIBRARY UIKit
      __objc_class_name_UIActivityIndicatorView CONSTANT
      _OBJC_CLASS_UIActivityViewController DATA
      __objc_class_name_UIActivityViewController CONSTANT
+     _OBJC_CLASS_UIUserNotificationSettings DATA
+     __objc_class_name_UIUserNotificationSettings CONSTANT
      _OBJC_CLASS_UIApplication DATA
      __objc_class_name_UIApplication CONSTANT
      _OBJC_CLASS_UIButton DATA
@@ -164,6 +166,8 @@ LIBRARY UIKit
      __objc_class_name_CBCentralManager CONSTANT
      _OBJC_CLASS_MPMoviePlayerController DATA
      __objc_class_name_MPMoviePlayerController CONSTANT
+     _OBJC_CLASS_MPMoviePlayerViewController DATA
+     __objc_class_name_MPMoviePlayerViewController CONSTANT
      _OBJC_CLASS_ASIdentifierManager DATA
      __objc_class_name_ASIdentifierManager CONSTANT
      _OBJC_CLASS_UIManagedDocument DATA
@@ -172,6 +176,8 @@ LIBRARY UIKit
      __objc_class_name_UIDocument CONSTANT
      _OBJC_CLASS_UIAccessibilityElement DATA
      __objc_class_name_UIAccessibilityElement	CONSTANT
+     _OBJC_CLASS_UIPasteboard DATA
+     __objc_class_name_UIPasteboard	CONSTANT
 
      UIAccessibilityPostNotification
      UIAccessibilityIsVoiceOverRunning

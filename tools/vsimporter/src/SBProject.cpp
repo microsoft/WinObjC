@@ -338,9 +338,10 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
     sbAssert(projTemplates.size() == 1);
 
     // Create a shared project with all the headers
+    VCItemHint headerHint = { "ClInclude", "" };
     headerProj = new VCSharedProject(projTemplates.front());
     for (auto file : headerFiles) {
-      addFileToVS("ClInclude", file, *headerProj, getBuildSettings());
+      addFileToVS(file, *headerProj, getBuildSettings(), &headerHint);
     }
 
     // Add the project to the solution

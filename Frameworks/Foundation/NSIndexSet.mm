@@ -110,17 +110,6 @@ static void raRemoveItemAtIndex(NSIndexSet* set, NSUInteger idx) {
     set->_length--;
 }
 
-/**
- @Status Interoperable
-*/
-static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
-    if (idx >= r.location && idx < r.location + r.length) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
 @implementation NSIndexSet : NSObject
 
 /**

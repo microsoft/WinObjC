@@ -637,9 +637,8 @@ static void drawString(UIFont* font,
  @Notes Currently UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset will be ignored.
 */
 - (CGSize)sizeWithAttributes:(NSDictionary*)attrs {
-    CGSize ret;
     if (attrs == nil) {
-        return ret;
+        return {0, 0};
     }
 
     UIColor* uiShadowColor = [attrs valueForKey:UITextAttributeTextShadowColor];
@@ -661,8 +660,19 @@ static void drawString(UIFont* font,
 
     UIFont* uiFont = [attrs valueForKey:UITextAttributeFont];
     if (uiFont != nil) {
-        ret = [self sizeWithFont:uiFont];
-        return ret;
+        return [self sizeWithFont:uiFont];
     }
+    
+    // No font was found
+    return {0, 0};
 }
+
+/**
+ @Status Stub
+*/
+- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options attributes:(NSDictionary*)attributes context:(NSStringDrawingContext*)context {
+    UNIMPLEMENTED();
+    return {{0, 0}, 20, 20};
+}
+
 @end

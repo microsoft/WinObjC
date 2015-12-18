@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -109,6 +111,7 @@
 #import "UISwipeGestureRecognizer.h"
 #import "UIDatePicker.h"
 #import "UIAppearance.h"
+#import "UIUserNotificationSettings.h"
 #import <UIKit/UIDocument.h>
 #import <UIKit/UIManagedDocument.h>
 #import <UIKit/UIStoryboardSegue.h>
@@ -151,3 +154,4 @@
 #import <UIKit/UIMotionEffect.h>
 #import <UIKit/UIPrintInfo.h>
 #import <UIKit/UIPrintFormatter.h>
+#import <UIKit/UIUserNotificationSettings.h>

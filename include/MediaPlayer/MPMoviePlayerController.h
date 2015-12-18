@@ -129,7 +129,7 @@ UIKIT_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 @class MPMovieAccessLog;
 @class MPMovieErrorLog;
 
-UIKIT_EXPORT
+UIKIT_EXPORT_CLASS
 @interface MPMoviePlayerController : NSObject <MPMediaPlayback, NSObject>
 
 - (instancetype)initWithContentURL:(NSURL*)url;

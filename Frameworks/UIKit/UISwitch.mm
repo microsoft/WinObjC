@@ -24,7 +24,7 @@
 #include "UIKit/UISwitch.h"
 #include <math.h>
 
-const float minX = 21.0f, maxX = 71.0f;
+const float minX = 0.0f, maxX = 50.0f;
 
 @implementation UISwitch {
     bool _on;
@@ -87,7 +87,7 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
     [self->_offView setFrame:frame];
 
     frame = [self->_selector frame];
-    frame.origin.x = pos - frame.size.width / 2.0f;
+    frame.origin.x = pos + 5.0f;
     [self->_selector setFrame:frame];
 
     if (animated) {
@@ -99,8 +99,8 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)pos {
-    pos.size.width = 94;
-    pos.size.height = 27;
+    pos.size.width = 48;
+    pos.size.height = 20;
     [super initWithFrame:pos];
 
     [self setOpaque:FALSE];

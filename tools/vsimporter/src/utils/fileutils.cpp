@@ -328,11 +328,9 @@ String platformPath(const String& path, PathStyle style)
     return path;
 }
 
-bool comparePaths(String p1, String p2)
+bool comparePaths(const String& p1, const String& p2)
 {
-  strToLower(p1);
-  strToLower(p2);
-  return p1 == p2;
+  return strToLower(p1) == strToLower(p2);
 }
 
 // FIXME: Fails on Windows if one of the paths does not specify a drive letter

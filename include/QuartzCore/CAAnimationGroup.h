@@ -19,6 +19,7 @@
 
 #import <QuartzCore/CAAnimation.h>
 
+CA_EXPORT_CLASS
 @interface CAAnimationGroup : CAAnimation
 
 @property (copy) NSArray* animations;

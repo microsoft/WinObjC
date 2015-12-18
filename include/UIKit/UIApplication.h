@@ -221,6 +221,7 @@ UIKIT_EXPORT_CLASS
 
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types;
 - (void)registerForRemoteNotifications;
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings;
 - (BOOL)isRegisteredForRemoteNotifications;
 
 - (UIRemoteNotificationType)enabledRemoteNotificationTypes;

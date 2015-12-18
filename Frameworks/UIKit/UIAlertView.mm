@@ -284,7 +284,7 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
 
     id ret = [[UIButton alloc] initWithFrame:frame];
     [ret setTitle:text forState:0];
-    [ret setTitleColor:[UIColor whiteColor] forState:0];
+    [ret setTitleColor:[UIColor blackColor] forState:0];
     [ret setBackgroundImage:buttonBackground forState:0];
     [ret setBackgroundImage:buttonPressed forState:1];
     [ret setTag:index];
@@ -396,10 +396,10 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
  @Status Interoperable
 */
 - (void) /* use typed version */ show {
-    float boxWidth = 300.0f;
+    float boxWidth = 320.0f;
     id titleFont = [UIFont titleFont];
     id messageFont = [UIFont messageFont];
-    id whiteColor = [UIColor whiteColor];
+    id blackColor = [UIColor blackColor];
 
     if (GetCACompositor()->isTablet()) {
         CGRect screenRect;
@@ -408,7 +408,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     }
 
     float itemWidth = boxWidth - 20.0f;
-    float curHeight = 10.0f;
+    float curHeight = 18.0f;
 
     //  Measure the title and message sizes
     CGSize titleSize = { 0.0f, 0.0f }, messageSize = { 0.0f, 0.0f };
@@ -419,7 +419,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         CGRect frame;
 
-        frame.origin.x = 10.0f;
+        frame.origin.x = 24.0f;
         frame.origin.y = curHeight;
         frame.size.width = itemWidth;
         frame.size.height = titleSize.height;
@@ -427,8 +427,8 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         alertPriv->_titleLabel.attach([[UILabel alloc] initWithFrame:frame]);
         [alertPriv->_titleLabel setText:(id)alertPriv->_title];
         [alertPriv->_titleLabel setFont:titleFont];
-        [alertPriv->_titleLabel setTextAlignment:UITextAlignmentCenter];
-        [alertPriv->_titleLabel setTextColor:whiteColor];
+        [alertPriv->_titleLabel setTextAlignment:UITextAlignmentLeft];
+        [alertPriv->_titleLabel setTextColor:blackColor];
         [alertPriv->_titleLabel setBackgroundColor:nil];
         [alertPriv->_titleLabel setNumberOfLines:0];
 
@@ -477,7 +477,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         CGRect frame;
 
-        frame.origin.x = 10.0f;
+        frame.origin.x = 24.0f;
         frame.origin.y = curHeight;
         frame.size.width = itemWidth;
         frame.size.height = messageSize.height;
@@ -485,14 +485,14 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         alertPriv->_messageLabel.attach([[UILabel alloc] initWithFrame:frame]);
         [alertPriv->_messageLabel setText:(id)alertPriv->_message];
         [alertPriv->_messageLabel setFont:messageFont];
-        [alertPriv->_messageLabel setTextAlignment:UITextAlignmentCenter];
+        [alertPriv->_messageLabel setTextAlignment:UITextAlignmentLeft];
         [alertPriv->_messageLabel setLineBreakMode:UILineBreakModeWordWrap];
         [alertPriv->_messageLabel setNumberOfLines:0];
-        [alertPriv->_messageLabel setTextColor:whiteColor];
+        [alertPriv->_messageLabel setTextColor:blackColor];
         [alertPriv->_messageLabel setBackgroundColor:nil];
 
         curHeight += messageSize.height;
-        curHeight += 10.0f;
+        curHeight += 48.0f;
     }
 
     if (alertPriv->_cancelText != nil && alertPriv->_numButtons == 1 && alertPriv->_numberOfRows < 2) {
@@ -511,7 +511,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
                                                                    130.0f));
         }
 
-        curHeight += 40.0f;
+        curHeight += 36.0f;
     } else {
         //  Make top-down buttons
         for (int i = 0; i < alertPriv->_numButtons; i++) {
@@ -521,7 +521,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
                                                                    boxWidth / 2.0f - 280.0f / 2.0f,
                                                                    curHeight,
                                                                    280.0f));
-            curHeight += 40.0f;
+            curHeight += 36.0f;
         }
 
         if (alertPriv->_cancelText != nil) {
@@ -530,13 +530,13 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
                 self, alertPriv->_cancelButtonIndex, alertPriv->_cancelText, boxWidth / 2.0f - 280.0f / 2.0f, curHeight, 280.0f));
             [alertPriv->_cancelView sendControlEventsOnBack:UIControlEventTouchUpInside];
 
-            curHeight += 40.0f;
+            curHeight += 36.0f;
         } else if (alertPriv->_numButtons == 1) {
             [alertPriv->_buttons[0]._buttonView sendControlEventsOnBack:UIControlEventTouchUpInside];
         }
     }
 
-    curHeight += 5.0f;
+    curHeight += 24.0f;
 
     CGRect frame;
     frame.origin.x = fullScreen.size.width / 2.0f - boxWidth / 2.0f;
@@ -569,8 +569,8 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
     alertPriv->_darkView = [[UIView alloc] initWithFrame:fullScreen];
     [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    [alertPriv->_darkView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.5f]];
-    [alertPriv->_darkView setAlpha:0.0f];
+    [alertPriv->_darkView setBackgroundColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.6f]];
+    [alertPriv->_darkView setAlpha:0.6f];
     [alertPriv->_darkView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
                               UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin];

@@ -17,11 +17,13 @@
 #include "Starboard.h"
 
 #include "Foundation/NSString.h"
+#include "Foundation/NSUserDefaults.h"
 #include "UIKit/UIDevice.h"
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIViewController.h"
 #include "UIKit/UIView.h"
-#include "Foundation/NSUserDefaults.h"
+using WCHAR = wchar_t;
+#include "UWP/WindowsApplicationModel.h"
 #include "MurmurHash3.h"
 
 static UIDevice* _currentDevice;
@@ -33,6 +35,8 @@ DWORD uuid_unparse(BYTE* uuid, char* out);
 DWORD uuid_generate(BYTE* uuid);
 
 @implementation UIDevice : NSObject
+@synthesize systemVersion = _systemVersion;
+@synthesize identifierForVendor = _identifierForVendor;
 
 /**
  @Status Interoperable
@@ -40,10 +44,27 @@ DWORD uuid_generate(BYTE* uuid);
 + (id) /* use typed version */ currentDevice {
     if (_currentDevice == nil) {
         _currentDevice = [UIDevice new];
+
         _currentDevice->_curOrientation = UIDeviceOrientationPortrait;
     }
 
     return _currentDevice;
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        _systemVersion = @"7.0";
+        _identifierForVendor = [self _newIdentifierForVendor];
+    }
+    return self;
+}
+
+- (NSUUID*)_newIdentifierForVendor {
+    WAPackage* currentPackage = [WAPackage current];
+    WAPackageId* packageid = currentPackage.id;
+    NSString* famName = packageid.familyName;
+    return [[NSUUID alloc] initWithUUIDString:famName];
 }
 
 /**
@@ -208,22 +229,21 @@ if ( [curView isKindOfClass:popoverClass] ) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes We allow this value to be editted so the developer can get the value back that they expect on the Windows Platform.
+ Currently it returns '7.0' by default.
 */
-- (id) /* use typed version */ systemVersion {
-    UNIMPLEMENTED();
-#ifdef REPORT_STARBOARD_METRICS
-    static id ret;
-    if (ret == nil)
-        ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->osVersion);
-    return ret;
-#else
-    if (isOSTarget(@"7.0")) {
-        return @"7.0";
-    } else {
-        return @"5.1";
-    }
-#endif
+- (NSString*)systemVersion {
+    return _systemVersion;
+}
+
+/**
+ @Status Caveat
+ @Notes We allow this value to be editted so the developer can get the value back that they expect on the Windows Platform.
+  Currently it returns '7.0' by default.
+*/
+- (void)setSystemVersion:(NSString*)version {
+    _systemVersion = [version retain];
 }
 
 /**
@@ -277,38 +297,11 @@ return ret;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Returns the FamilyName from the package utilizing a WinRT api.
 */
-- (id) /* use typed version */ identifierForVendor {
-    UNIMPLEMENTED();
-#if 0
-static id ret = nil;
-if ( ret == nil ) {
-id uniqueIdData = [UIDevice sbExt_PublisherHostId];
-if ( [uniqueIdData length] <= 0 ) {
-id uidStr = LocalUIDForName(@"__Starboard_VendorID");
-ret = [[NSUUID alloc] initWithUUIDString:uidStr];
-} else {
-char *bytes = (char *) [uniqueIdData UTF8String];
-int len = (int) [uniqueIdData length];
-
-MD5_CTX ctx;
-
-MD5Init(&ctx);
-MD5Update(&ctx, (unsigned char *) bytes, len);
-MD5Final(&ctx);
-
-char szUUID[64];
-uuid_unparse((BYTE *) ctx.digest, szUUID);
-
-ret = [[NSUUID alloc] initWithUUIDString:[NSString stringWithCString: szUUID]];
-}
-}
-
-return ret;
-#else
-    return nil;
-#endif
+- (NSUUID*)identifierForVendor {
+    return _identifierForVendor;
 }
 
 /**

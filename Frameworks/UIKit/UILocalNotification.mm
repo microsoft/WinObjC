@@ -22,6 +22,8 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSTimeZone.h"
 
+NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefaultSoundName";
+
 @implementation UILocalNotification : NSObject
 idretain _receiver;
 idretain _fireDate;

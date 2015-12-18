@@ -19,10 +19,6 @@
 #include "Foundation/NSURLAuthenticationChallenge.h"
 #include "Foundation/NSURLProtectionSpace.h"
 
-@implementation NSURLProtectionSpace : NSObject
-
-@end
-
 @implementation NSURLAuthenticationChallenge : NSObject
 
 /**

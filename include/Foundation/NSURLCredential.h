@@ -24,21 +24,25 @@ typedef NS_ENUM(NSUInteger, NSURLCredentialPersistence) {
 
 @class NSArray;
 
-@interface NSURLCredential : NSObject <NSCopying>
+FOUNDATION_EXPORT_CLASS
+@interface NSURLCredential : NSObject <NSCoding, NSCopying>
 
 + (NSURLCredential*)credentialWithUser:(NSString*)user password:(NSString*)password persistence:(NSURLCredentialPersistence)persistence;
 + (NSURLCredential*)credentialWithIdentity:(SecIdentityRef)identity
                               certificates:(NSArray*)certArray
                                persistence:(NSURLCredentialPersistence)persistence;
-
-- initWithUser:(NSString*)user password:(NSString*)password persistence:(NSURLCredentialPersistence)persistence;
-
-- (NSString*)user;
-- (NSString*)password;
-- (NSURLCredentialPersistence)persistence;
-
-- (BOOL)hasPassword;
-
 + (NSURLCredential*)credentialForTrust:(SecTrustRef)trust;
+- (BOOL)hasPassword;
+@property (readonly, copy) NSString* user;
+@property (readonly, copy) NSArray* certificates;
+@property (readonly, copy) NSString* password;
+@property (readonly) SecIdentityRef identity;
+@property (readonly) NSURLCredentialPersistence persistence;
 
+- (instancetype)initWithUser:(NSString*)user password:(NSString*)password persistence:(NSURLCredentialPersistence)persistence;
+- (instancetype)initWithIdentity:(SecIdentityRef)identity
+                    certificates:(NSArray*)certArray
+                     persistence:(NSURLCredentialPersistence)persistence;
+- (instancetype)initWithTrust:(SecTrustRef)trust;
+- (BOOL)hasPassword;
 @end

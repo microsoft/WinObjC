@@ -186,10 +186,6 @@ static SettingDesc _settings[] = {
   {"ASSETCATALOG_COMPILER_APPICON_NAME", "", StringValue, NULL, UniversalSetting},
   {"ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME", "", StringValue, NULL, UniversalSetting},
   {"TARGET_SDKVERSION", "5.0", StringValue, NULL, UniversalSetting},
-// Platform-specific
-#if defined(_MSC_VER)
-  {"USER", "${USERNAME}", StringValue, NULL, UniversalSetting},
-#endif
 // VS Importer variables
   {"VSIMPORTER_OUTPUT_DIR", "${PROJECT_FILE_PATH:dir}/${PROJECT_NAME}.vsimporter", PathValue, NULL, UniversalSetting},
   {"VSIMPORTER_TEMPLATES_DIR", "${WINOBJC_SDK_ROOT}/msvc/vsimporter-templates", PathValue, NULL, UniversalSetting},

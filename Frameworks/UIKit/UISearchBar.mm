@@ -26,9 +26,9 @@
 
 static const CGFloat c_marginBottom = 10;
 static const CGFloat c_marginLeftAndRight = 10;
-static const CGFloat c_defaultTextFieldHeight = 24;
+static const CGFloat c_defaultTextFieldHeight = 32;
 static const CGFloat c_marginTopForPrompt = 10;
-static const float c_defaultFontSize = 22;
+static const float c_defaultFontSize = 15;
 static const CGFloat c_scopeButtonMarginTop = 20;
 static NSString* cancelButtonText = @"Cancel";
 
@@ -46,7 +46,7 @@ static void initInternal(UISearchBar* self) {
     CGRect frame = [self frame];
     self->_textField.attach([[UITextField alloc] initWithFrame:frame]);
     [self->_textField setDelegate:(id<UITextFieldDelegate>)self];
-    [self->_textField setBorderStyle:UITextBorderStyleRoundedRect];
+    [self->_textField setBorderStyle:UITextBorderStyleLine];
     [self->_textField addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
     [self->_textField setFont:[UIFont systemFontOfSize:c_defaultFontSize]];
     if (self->_placeholder != nil) {
@@ -264,9 +264,9 @@ static void initInternal(UISearchBar* self) {
     // display the cancelButton on right side of textField
     if (_showsCancelButton) {
         CGSize cancelButtonSize = [cancelButtonText sizeWithFont:[UIFont systemFontOfSize:c_defaultFontSize]];
-        textFrame.size.width = textFrame.size.width - cancelButtonSize.width - (2 * c_marginLeftAndRight);
-        CGRect cancelButttonFrame = { { self.frame.size.width - (2 * c_marginLeftAndRight) - cancelButtonSize.width, textFrame.origin.y },
-                                      { cancelButtonSize.width, cancelButtonSize.height } };
+        textFrame.size.width = textFrame.size.width - cancelButtonSize.width - (2 * c_marginLeftAndRight) -10;
+        CGRect cancelButttonFrame = { { self.frame.size.width - (2 * c_marginLeftAndRight) - cancelButtonSize.width -5, textFrame.origin.y +3 },
+                                      { cancelButtonSize.width +5, cancelButtonSize.height } };
         [_cancelButton setFrame:cancelButttonFrame];
     }
 
@@ -418,5 +418,9 @@ static void initInternal(UISearchBar* self) {
 - (void)setBarTintColor:(UIColor*)color {
     UNIMPLEMENTED();
     [self setTintColor:color];
+}
+
+- (UITextField*)_searchField {
+    return _textField;
 }
 @end

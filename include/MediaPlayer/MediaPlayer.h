@@ -18,5 +18,6 @@
 #define _MEDIAPLAYER_H_
 
 #import <MediaPlayer/MPMoviePlayerController.h>
+#import <MediaPlayer/MPMoviePlayerViewController.h>
 
 #endif /* _MEDIAPLAYER_H_ */

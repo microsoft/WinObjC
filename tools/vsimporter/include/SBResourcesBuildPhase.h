@@ -29,9 +29,12 @@ public:
   virtual void writeVCProjectFiles(VCProject& proj) const;
 
 private:
-  SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, const SBNativeTarget& parentTarget);
+  typedef std::vector<const SBTarget*> SBTargetList;
+
+  SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, SBNativeTarget& parentTarget);
 
   const PBXResourcesBuildPhase* m_phase;
+  SBTargetList m_buildFileTargets;
 };
 
 #endif /* _SBRESOURCESBUILDPHASE_H_ */

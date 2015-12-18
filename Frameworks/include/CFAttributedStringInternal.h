@@ -33,13 +33,13 @@ struct Attribute {
     CFIndex begin;
     CFIndex end;
 
-    Attribute(id initValue, CFIndex initBegin, CFIndex initEnd) : value(idretain(initValue)), begin(initBegin), end(initEnd) {
+    Attribute(id initValue, CFIndex initBegin, CFIndex initEnd) : value(initValue), begin(initBegin), end(initEnd) {
     }
 
     Attribute(id initValue, CFRange initRange) : Attribute(initValue, initRange.location, initRange.location + initRange.length) {
     }
 
-    Attribute(const Attribute& other) : Attribute(other.value._val, other.begin, other.end) {
+    Attribute(const Attribute& other) : Attribute(other.value, other.begin, other.end) {
     }
 
     /**

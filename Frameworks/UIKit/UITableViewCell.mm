@@ -58,7 +58,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 frame.size.height = ourBounds.size.height;
                 self->_textLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_textLabel setTextColor:[UIColor blackColor]];
-                [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_textLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -78,7 +78,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 frame.size.height = ourBounds.size.height - 12.0f;
                 self->_textLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_textLabel setTextColor:[UIColor blackColor]];
-                [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_textLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -100,7 +100,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 frame.size.height = ourBounds.size.height - 12.0f;
                 self->_textLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_textLabel setTextColor:[UIColor blackColor]];
-                [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_textLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:0];
@@ -122,7 +122,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 frame.size.height = ourBounds.size.height - 12.0f;
                 self->_textLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_textLabel setTextColor:[UIColor blackColor]];
-                [self->_textLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_textLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:1];
@@ -177,7 +177,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
 
                 self->_secondaryLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_secondaryLabel setTextColor:[UIColor cornflowerBlueColor]];
-                [self->_secondaryLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setTextAlignment:UITextAlignmentRight];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
@@ -198,7 +198,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 frame.size.height = 12.0f;
                 self->_secondaryLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
-                [self->_secondaryLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -218,7 +218,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 frame.size.height = 12.0f;
                 self->_secondaryLabel.attach([[UILabel alloc] initWithFrame:frame]);
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
-                [self->_secondaryLabel setHighlightedTextColor:[UIColor whiteColor]];
+                [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -471,7 +471,7 @@ static void initInternal(UITableViewCell* self) {
         _cellOldBackgroundColor = _cellBackgroundColor;
         switch (_selectionStyle) {
             case UITableViewCellSelectionStyleBlue:
-                [self setBackgroundColor:[UIColor cornflowerBlueColor]];
+                [self setBackgroundColor:[UIColor windowsTableViewCellSelectionBackgroundColor]];
                 break;
 
             case UITableViewCellSelectionStyleGray:

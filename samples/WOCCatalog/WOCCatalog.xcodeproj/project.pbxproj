@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49FF82CE1C18BFED00798804 /* ApplicationViewController.m */; };
 		4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6401F1B712C0B0092921E /* PhotogridViewController.m */; };
 		4ED640231B717E470092921E /* SingleImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED640221B717E470092921E /* SingleImageViewController.m */; };
 		4EE8615B1B5996BF00682BDB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE8615A1B5996BF00682BDB /* main.m */; };
@@ -50,6 +51,9 @@
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
 		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; };
+		F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22541C1A3B120007FF0B /* MainViewController.m */; };
+		F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22571C1A540E0007FF0B /* FoundationsViewController.m */; };
+		F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +67,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		49FF82CE1C18BFED00798804 /* ApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationViewController.m; sourceTree = "<group>"; };
+		49FF82D01C18BFF700798804 /* ApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationViewController.h; sourceTree = "<group>"; };
 		4ED6401F1B712C0B0092921E /* PhotogridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotogridViewController.m; sourceTree = "<group>"; };
 		4ED640211B712C1D0092921E /* PhotogridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotogridViewController.h; sourceTree = "<group>"; };
 		4ED640221B717E470092921E /* SingleImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleImageViewController.m; sourceTree = "<group>"; };
@@ -135,6 +141,12 @@
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		E19F61D01BCE9962005077C5 /* GLKitExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLKitExampleController.h; sourceTree = "<group>"; };
 		E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLKitExampleController.mm; sourceTree = "<group>"; };
+		F01C22531C1A3B120007FF0B /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		F01C22541C1A3B120007FF0B /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		F01C22561C1A540E0007FF0B /* FoundationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationsViewController.h; sourceTree = "<group>"; };
+		F01C22571C1A540E0007FF0B /* FoundationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoundationsViewController.m; sourceTree = "<group>"; };
+		F01C22591C1A54450007FF0B /* TaskInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskInfoViewController.h; sourceTree = "<group>"; };
+		F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskInfoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +193,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				49FF82D01C18BFF700798804 /* ApplicationViewController.h */,
+				49FF82CE1C18BFED00798804 /* ApplicationViewController.m */,
 				4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */,
 				4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */,
 				E19F61D01BCE9962005077C5 /* GLKitExampleController.h */,
@@ -233,6 +247,12 @@
 				7B42BCF31B90ECFE00D45782 /* BezierViewController.h */,
 				7B42BCF41B90ECFE00D45782 /* BezierViewController.m */,
 				7B42BCF61B90FFD200D45782 /* BezierViewController.xib */,
+				F01C22531C1A3B120007FF0B /* MainViewController.h */,
+				F01C22541C1A3B120007FF0B /* MainViewController.m */,
+				F01C22561C1A540E0007FF0B /* FoundationsViewController.h */,
+				F01C22571C1A540E0007FF0B /* FoundationsViewController.m */,
+				F01C22591C1A54450007FF0B /* TaskInfoViewController.h */,
+				F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */,
 			);
 			path = WOCCatalog;
 			sourceTree = "<group>";
@@ -405,11 +425,14 @@
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
 				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,
 				4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */,
+				F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */,
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
+				49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */,
 				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
+				F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */,
 				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
-				4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */,
 				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
+				4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */,
 				4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */,
 				4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */,
 				4EE861D31B5997A500682BDB /* MenuTableViewController.m in Sources */,
@@ -417,6 +440,7 @@
 				4EE861D01B5997A500682BDB /* AppDelegate.m in Sources */,
 				4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */,
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
+				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,

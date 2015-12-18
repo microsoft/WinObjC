@@ -327,7 +327,7 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
         icu::Locale* icuLocale = [_locale _createICULocale];
 
         if ([_dateFormat length] > 0) {
-            UStringHolder fmtString(_dateFormat);
+            UStringHolder fmtString(static_cast<NSString*>(_dateFormat));
 
             _formatter = new SimpleDateFormat(fmtString.string(), *icuLocale, status);
         } else {

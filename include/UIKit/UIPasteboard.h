@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -32,38 +34,39 @@
 
 #import <Foundation/Foundation.h>
 
-SB_EXPORT NSArray *UIPasteboardTypeListString;
-SB_EXPORT NSArray *UIPasteboardTypeListURL;
-SB_EXPORT NSArray *UIPasteboardTypeListImage;
-SB_EXPORT NSArray *UIPasteboardTypeListColor;
+UIKIT_EXPORT NSArray* UIPasteboardTypeListString;
+UIKIT_EXPORT NSArray* UIPasteboardTypeListURL;
+UIKIT_EXPORT NSArray* UIPasteboardTypeListImage;
+UIKIT_EXPORT NSArray* UIPasteboardTypeListColor;
 
 @class UIImage, UIColor, NSPasteboard;
 
+UIKIT_EXPORT_CLASS
 @interface UIPasteboard : NSObject
 
-+ (UIPasteboard *)generalPasteboard;
-+ (UIPasteboard *)pasteboardWithName:(NSString *)pasteboardName create:(BOOL)create;
-+ (UIPasteboard *)pasteboardWithUniqueName;
-+ (void)removePasteboardWithName:(NSString *)pasteboardName;
++ (UIPasteboard*)generalPasteboard;
++ (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create;
++ (UIPasteboard*)pasteboardWithUniqueName;
++ (void)removePasteboardWithName:(NSString*)pasteboardName;
 
-@property (nonatomic,copy) NSURL *URL;
-@property (nonatomic,copy) NSArray *URLs;
-@property (nonatomic,copy) NSString *string;
-@property (nonatomic,copy) NSArray *strings;
-@property (nonatomic, copy) UIImage *image;
-@property (nonatomic, copy) NSArray *images;
-@property (nonatomic, copy) UIColor *color;
-@property (nonatomic, copy) NSArray *colors;
-@property (nonatomic, copy) NSArray *items;
+@property (nonatomic, copy) NSURL* URL;
+@property (nonatomic, copy) NSArray* URLs;
+@property (nonatomic, copy) NSString* string;
+@property (nonatomic, copy) NSArray* strings;
+@property (nonatomic, copy) UIImage* image;
+@property (nonatomic, copy) NSArray* images;
+@property (nonatomic, copy) UIColor* color;
+@property (nonatomic, copy) NSArray* colors;
+@property (nonatomic, copy) NSArray* items;
 @property (getter=isPersistent, nonatomic) BOOL persistent;
-@property(readonly, nonatomic) NSString *name;
+@property (readonly, nonatomic) NSString* name;
 
-- (void)addItems:(NSArray *)items;
-- (void)setData:(NSData *)data forPasteboardType:(NSString *)pasteboardType;
-- (void)setValue:(id)value forPasteboardType:(NSString *)pasteboardType;
-- (NSData *)dataForPasteboardType:(NSString *)pasteboardType;
-- (id)valueForPasteboardType:(NSString *)pasteboardType;
-- (BOOL)containsPasteboardTypes:(NSArray *)pasteboardTypes;
+- (void)addItems:(NSArray*)items;
+- (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType;
+- (void)setValue:(id)value forPasteboardType:(NSString*)pasteboardType;
+- (NSData*)dataForPasteboardType:(NSString*)pasteboardType;
+- (id)valueForPasteboardType:(NSString*)pasteboardType;
+- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes;
 
 @end
 

@@ -18,10 +18,13 @@
 #include <vector>
 #include <utility>
 
+#import "Starboard.h"
+
 #import "GenericPasswordItemHandler.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Security/SecItem.h>
+#import <ErrorHandling.h>
 
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
@@ -50,6 +53,10 @@ using GenericPasswordPropertyGetter = id (*)(NSString* keyName, WSCPasswordCrede
 using GenericPasswordPropertyComparator = bool (*)(NSString* keyName, id value, WSCPasswordCredential* credential, bool caseInsensitive);
 
 static const NSString* kPersistentRefKey = @"k_PersistentRef";
+
+// special value to represent null / empty strings since the WinRT APIs don't accept nulls/emptys and
+// username, password, and resource *must* be filled out on all creds.
+static NSString* c_sentinelNullString = @" ";
 
 // Handler struct to easily allow property dictionaries
 // to be set, get, and compared against the WinRT equivalent
@@ -95,13 +102,13 @@ id ClassGetter(NSString*, WSCPasswordCredential* credential) {
 };
 
 // Setter for kSecIsNegative Property Key. This key is indicates that the crednetial does not
-// actually store any passwor data. The winRT surface doesn't allow this so store an empty password instead.
+// actually store any password data. The winRT surface doesn't allow this so store an empty password instead.
 void IsNegativeSetter(NSString* keyName, id value, WSCPasswordCredential* credential) {
     // According to documentation, the corresponding value is of type CFBooleanRef
     // and indicates whether there is a valid password associated with this keychain item.
     // This means a true indicates there is a password (normal). I think. Maybe.
     if (!CFBooleanGetValue(static_cast<CFBooleanRef>(value))) {
-        credential.password = @"";
+        credential.password = c_sentinelNullString;
     }
 
     // TODO: Also store it for later so that queries with it are correct.
@@ -109,51 +116,76 @@ void IsNegativeSetter(NSString* keyName, id value, WSCPasswordCredential* creden
 
 // Sets the userName field based on kSecAccountName key
 void AccountSetter(NSString* keyName, id value, WSCPasswordCredential* credential) {
-    credential.userName = static_cast<NSString*>(value);
+    NSString* stringValue = static_cast<NSString*>(value);
+
+    // Note that in WinRT "" is == nullptr for HSTRING. so
+    // add an additional check that we arent using an emprty NSString.
+    if (![stringValue isEqualToString:@""]) {
+        credential.userName = stringValue;
+    }
 };
 
 // Gets the userName field
 id AccountGetter(NSString*, WSCPasswordCredential* credential) {
-    return credential.userName;
+    NSString* stringValue = credential.userName;
+    return [stringValue isEqualToString:c_sentinelNullString] ? nil : stringValue;
 };
 
 // Compares the AccountName to the credential's username.
 bool AccountComparator(NSString* keyName, id value, WSCPasswordCredential* credential, bool caseInsensitive) {
+    NSString* account = AccountGetter(nil, credential);
+
     if (caseInsensitive && [value isKindOfClass:[NSString class]]) {
-        return [credential.userName.lowercaseString isEqualToString:static_cast<NSString*>(value).lowercaseString];
+        return [account.lowercaseString isEqualToString:static_cast<NSString*>(value).lowercaseString];
     } else {
-        return [credential.userName isEqual:value];
+        return [account isEqual:value];
     }
 };
 
 // Sets the password field on the backing WinRT credential
 void PasswordSetter(NSString* keyName, id value, WSCPasswordCredential* credential) {
-    credential.password = [static_cast<NSData*>(value) base64EncodedStringWithOptions:0];
+    NSString* stringValue = [static_cast<NSData*>(value) base64EncodedStringWithOptions:0];
+
+    if ((stringValue != nil) && (![stringValue isEqualToString:@""])) {
+        credential.password = stringValue;
+    }
 };
 
-// Compares the passowrd on the backing WinRT credential. It might seem weird to allow passwords to be
+// Compares the password on the backing WinRT credential. It might seem weird to allow passwords to be
 // compared but note that the CredVault has no secret information. All passwords are freely accessible by the app
 // already so no security concern exists for this.
 bool PasswordComparator(NSString* keyName, id value, WSCPasswordCredential* credential, bool) {
-    return [credential.password isEqual:[static_cast<NSData*>(value) base64EncodedStringWithOptions:0]];
+    NSString* password = credential.password;
+    password = [password isEqualToString:c_sentinelNullString] ? nil : password;
+
+    return [password isEqual:[static_cast<NSData*>(value) base64EncodedStringWithOptions:0]];
 };
 
 // Sets the resource on the backing credential
 void ServiceSetter(NSString* keyName, id value, WSCPasswordCredential* credential) {
-    credential.resource = static_cast<NSString*>(value);
+    NSString* stringValue = static_cast<NSString*>(value);
+
+    // Note that in WinRT "" is == nullptr for HSTRING. so
+    // add an additional check that we arent using an empty NSString.
+    if (![stringValue isEqualToString:@""]) {
+        credential.resource = stringValue;
+    }
 };
 
 // Gets the resource on the backing credential
 id ServiceGetter(NSString*, WSCPasswordCredential* credential) {
-    return credential.resource;
+    NSString* stringValue = credential.resource;
+    return [stringValue isEqualToString:c_sentinelNullString] ? nil : stringValue;
 };
 
 // Compares the Service to the backing WinRT resource
 bool ServiceComparator(NSString* keyName, id value, WSCPasswordCredential* credential, bool caseInsensitive) {
+    NSString* service = ServiceGetter(nil, credential);
+
     if (caseInsensitive && [value isKindOfClass:[NSString class]]) {
-        return [credential.resource.lowercaseString isEqualToString:static_cast<NSString*>(value).lowercaseString];
+        return [service.lowercaseString isEqualToString:static_cast<NSString*>(value).lowercaseString];
     } else {
-        return [credential.resource isEqual:value];
+        return [service isEqual:value];
     }
 };
 
@@ -213,7 +245,7 @@ std::array<std::pair<NSString*, GenericPasswordPropertyHandler>, 31>& GetPropert
 
 // Used to Query the set of backing WinRT credentials to find all (or only the first) that match the passed in QueryDictionary.
 std::vector<WSCPasswordCredential*> FindMatchingCredentials(NSDictionary* queryDictionary, NSArray* credArray, bool defaultFindAll) {
-    // First figure out if the query should match only the first or all credentials. Different operations have diffferent defaults
+    // First figure out if the query should match only the first or all credentials. Different operations have different defaults
     // specified by defaultFindAll but can be overriden using the kSecMatchLimit key.
     bool findAll = defaultFindAll;
 
@@ -289,7 +321,12 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         for (const auto& entry : GetPropertyHandlers()) {
             if (entry.second.getter) {
                 id value = entry.second.getter(entry.first, credential);
-                [attributesDictionary setObject:value forKey:entry.first];
+                if (value != nil) {
+                    // Semantically there is no way to differentiate a non set attribute
+                    // and one explicitly set to nil (we have no place to store an "isSet" bit or similar).
+                    // Err on the side of caution and only return attributes that are explicitly set.
+                    [attributesDictionary setObject:value forKey:entry.first];
+                }
             }
         }
     }
@@ -299,7 +336,10 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
     }
 
     if (returnData) {
-        data = [[[NSData alloc] initWithBase64EncodedString:credential.password options:0] autorelease];
+        NSString* password = credential.password;
+        if ((password != nil) && (![password isEqualToString:c_sentinelNullString])) {
+            data = [[[NSData alloc] initWithBase64EncodedString:password options:0] autorelease];
+        }
     }
 
     if ((returnAttributes && (returnData || returnPersistentRef)) || (returnData && (returnAttributes || returnPersistentRef)) ||
@@ -371,9 +411,41 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         }
     }
 
+    // WinRT is "finicky" and doesn't like Credentials that don't have a username, password, AND resource.
+    // to handle this, go ahead and set them to " " if they aren't already set.
+    // NOTE that only nil is checked for here because the setters above will not set the value if it is "",
+    // nil, or missing from the attribute dictionary all together. This allows us to perform one simple check
+    // to handle all those cases.
+    if (credential.resource == nil) {
+        credential.resource = c_sentinelNullString;
+    }
+
+    if (credential.userName == nil) {
+        credential.userName = c_sentinelNullString;
+    }
+
+    if (credential.password == nil) {
+        credential.password = c_sentinelNullString;
+    }
+
     // TODO: Handle Creation time , Modification time, and persistent refs when WinRT APIs allow for it.
     // Also add error handling once projections support exceptions.
-    [_vault add:credential];
+    try {
+        [_vault add:credential];
+    } catch (NSException* e) {
+        // Assume that projection exceptions will come as NSException with an hr?
+        NSNumber* errorCode = [e.userInfo objectForKey:_hresultErrorDictKey()];
+        if (errorCode) {
+            switch (static_cast<HRESULT>([errorCode unsignedIntValue])) {
+                case E_INVALIDARG:
+                    return errSecParam;
+                default:
+                    return errSecInteractionNotAllowed;
+            };
+        }
+
+        return errSecInteractionNotAllowed;
+    }
 
     bool returnAttributes =
         CFBooleanGetValue(static_cast<CFBooleanRef>([attributes objectForKey:static_cast<NSString*>(kSecReturnAttributes)]));
@@ -478,15 +550,21 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
     // Documentation defaults to a single item.
     std::vector<WSCPasswordCredential*> validCredentials = FindMatchingCredentials(queryDictionary, credArray, false);
 
-    // Shape the resulting credential list into an appropriate return type based on requested returns.
-    NSMutableArray* returnArray = [[NSMutableArray new] autorelease];
-    for (const auto& credential : validCredentials) {
-        [returnArray addObject:ShapeResultForCredential(credential, returnAttributes, returnData, returnPersistentRef)];
+    if (validCredentials.size() == 0) {
+        return errSecItemNotFound;
     }
 
-    *result = returnArray;
+    // Shape the resulting credential list into an appropriate return type based on requested returns.
+    if (findAll) {
+        NSMutableArray* returnArray = [[NSMutableArray new] autorelease];
+        for (const auto& credential : validCredentials) {
+            [returnArray addObject:ShapeResultForCredential(credential, returnAttributes, returnData, returnPersistentRef)];
+        }
 
+        *result = returnArray;
+    } else {
+        *result = ShapeResultForCredential(validCredentials[0], returnAttributes, returnData, returnPersistentRef);
+    }
     return errSecSuccess;
 }
-
 @end

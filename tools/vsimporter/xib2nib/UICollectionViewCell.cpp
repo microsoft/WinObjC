@@ -100,7 +100,6 @@ void UICollectionViewCell::ConvertStaticMappings(NIBWriter *writer, XIBObject *o
     UICollectionReusableView::ConvertStaticMappings(writer, obj);
 
     if (_contentView) {
-        _contentView->_outputClassName = "UICollectionViewCellContentView";
         obj->AddOutputMember(writer, "UIContentView", _contentView);
     }
 }

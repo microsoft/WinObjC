@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 #include "UIAppearanceSetter.h"
+#include "UIBarButtonItem+Internals.h"
 
 @implementation UINavigationItem : NSObject {
     idretaintype(NSString) _title;
@@ -168,8 +169,7 @@
             float topHeight = 0.0f;
             id reverseItems = [NSMutableArray array];
             for (UIBarButtonItem* curItem in [_rightBarButtonItems reverseObjectEnumerator]) {
-                CGSize buttonSize = { 0.0f, 0.0f };
-                [curItem _idealSize:&buttonSize];
+                CGSize buttonSize = [curItem idealSize];
                 totalWidth += buttonSize.width;
                 if (buttonSize.height > topHeight) {
                     topHeight = buttonSize.height;

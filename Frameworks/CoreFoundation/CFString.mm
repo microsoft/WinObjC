@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include "Starboard.h"
 #import <Foundation/Foundation.h>
 
 /**
@@ -98,4 +99,12 @@ CFComparisonResult CFStringCompare(CFStringRef self, CFStringRef other, CFOption
 */
 CFIndex CFStringGetLength(CFStringRef self) {
     return [(NSString*)self length];
+}
+
+/**
+ @Status Stub
+*/
+CFStringEncoding CFStringGetFastestEncoding(CFStringRef self) {
+    UNIMPLEMENTED();
+    return 0;
 }

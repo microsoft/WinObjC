@@ -33,6 +33,9 @@
 
 template <class T, class objectOwnerType>
 class LLTreeNode {
+private:
+    template <typename O>
+    using _hasPrivateT = std::is_same<decltype(std::declval<O*>()->priv), T*>;
 public:
     id self;
     T* parent;
@@ -100,15 +103,18 @@ public:
         self = parentObj;
     }
 
-    void addChildBefore(idtype<objectOwnerType> child, idtype<objectOwnerType> before) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void addChildBefore(O* child, objectOwnerType* before) {
         addChildBefore(child->priv, before != nil ? before->priv : NULL);
     }
 
-    void addChildAfter(idtype<objectOwnerType> child, idtype<objectOwnerType> after) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void addChildAfter(O* child, objectOwnerType* after) {
         addChildAfter(child->priv, after != nil ? after->priv : NULL);
     }
 
-    int indexOfChild(idtype<objectOwnerType> child) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    int indexOfChild(O* child) {
         return indexOfChild(child->priv);
     }
 
@@ -126,7 +132,8 @@ public:
         return 0x7fffffff;
     }
 
-    bool containsChild(idtype<objectOwnerType> child) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    bool containsChild(O* child) {
         if (child == nil)
             return false;
 
@@ -149,7 +156,8 @@ public:
         return cur;
     }
 
-    void replaceChild(idtype<objectOwnerType> child, idtype<objectOwnerType> withChild) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void replaceChild(O* child, O* withChild) {
         replaceChild(child->priv, withChild->priv);
     }
 
@@ -177,7 +185,8 @@ public:
             lastChild = withChild;
     }
 
-    void exchangeChild(idtype<objectOwnerType> child1, idtype<objectOwnerType> child2) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void exchangeChild(O* child1, O* child2) {
         exchangeChild(child1->priv, child2->priv);
     }
 
@@ -286,7 +295,8 @@ public:
         childCount++;
     }
 
-    void removeChild(idtype<objectOwnerType> child) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void removeChild(O* child) {
         removeChild(child->priv);
     }
 
@@ -315,7 +325,8 @@ public:
         childCount--;
     }
 
-    void insertChildAtIndex(idtype<objectOwnerType> child, int idx) {
+    template <typename O, typename = typename std::enable_if<_hasPrivateT<O>::value>>
+    void insertChildAtIndex(O* child, int idx) {
         insertChildAtIndex(child->priv, idx);
     }
 

@@ -34,6 +34,13 @@ void CFRelease(CFTypeRef obj) {
 /**
  @Status Interoperable
 */
+void CFAutorelease(CFTypeRef obj) {
+    [obj autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
 CFTypeRef CFRetain(CFTypeRef obj) {
     return objc_retain_ref((id)obj);
 }
@@ -113,6 +120,7 @@ CFNumberType,
 CFBooleanType,
 CGLayerType,
 CFBundleType,
+CFBinaryHeap,
 } CFTypeIDs;
 
 DWORD CFGetTypeID(id cfobj)
@@ -123,6 +131,9 @@ return CFStringType;
 }
 if ( [objType isKindOfClass:[NSDictionary class]] ) {
 return CFDictionaryType;
+}
+if ( [objType isKindOfClass:[CFBinaryHeap class]] ) {
+return CFBinaryHeap;
 }
 if ( [objType isKindOfClass:[NSArray class]] ) {
 return CFArrayType;
@@ -143,6 +154,11 @@ return CFBundleType;
 assert(0);
 
 return 0;
+}
+
+DWORD CFBinaryHeapGetTypeID()
+{
+return CFBinaryHeap;
 }
 
 DWORD CFDictionaryGetTypeID()

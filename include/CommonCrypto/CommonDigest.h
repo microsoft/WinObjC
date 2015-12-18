@@ -25,6 +25,9 @@ extern "C" {
 #endif
 
 #define CC_MD5_DIGEST_LENGTH 16
+typedef unsigned long CC_LONG;
+
+unsigned char* CC_MD5(const void*, CC_LONG length, unsigned char*);
 
 int CC_MD5_Init(CC_MD5_CTX* ctx);
 int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len);

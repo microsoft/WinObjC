@@ -55,8 +55,8 @@ typedef enum {
     UIBarButtonSystemItemPause,
     UIBarButtonSystemItemRewind,
     UIBarButtonSystemItemFastForward,
-    UIBarButtonSystemItemUndo,        // iPhoneOS 3.0
-    UIBarButtonSystemItemRedo,        // iPhoneOS 3.0
+    UIBarButtonSystemItemUndo, // iPhoneOS 3.0
+    UIBarButtonSystemItemRedo, // iPhoneOS 3.0
 } UIBarButtonSystemItem;
 
 typedef enum {
@@ -79,27 +79,21 @@ UIKIT_EXPORT_CLASS
 @interface UIBarButtonItem : UIBarItem <NSCoding>
 
 - (id)initWithBarButtonSystemItem:(UIBarButtonSystemItem)systemItem target:(id)target action:(SEL)action;
-- (id)initWithCustomView:(UIView *)customView;
-- (id)initWithTitle:(NSString *)title style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action;
-- (id)initWithImage:(UIImage *)image style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action;
-- (void)setBackButtonBackgroundImage:(UIImage *)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
-- (void)setBackgroundImage:(UIImage *)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
-- (UIImage *)backgroundImageForState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
+- (id)initWithCustomView:(UIView*)customView;
+- (id)initWithTitle:(NSString*)title style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action;
+- (id)initWithImage:(UIImage*)image style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action;
+- (void)setBackButtonBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
+- (UIImage*)backgroundImageForState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
 - (void)setBackButtonTitlePositionAdjustment:(UIOffset)adjustment forBarMetrics:(UIBarMetrics)barMetrics;
 
 @property (nonatomic) UIBarButtonItemStyle style;
 @property (nonatomic) CGFloat width;
-@property (nonatomic, retain) UIView *customView;
+@property (nonatomic, retain) UIView* customView;
 @property (nonatomic, assign) id target;
 @property (nonatomic) SEL action;
-@property (nonatomic, retain) UIColor *tintColor;
-@property (nonatomic, copy) NSSet *possibleTitles;
-
-// INTERNAL -------------------------------------------------------------------------------------------------
-
--(UIView*) _getView;
--(void) _idealSize:(CGSize *)sizeOut;
--(float) _margin;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, copy) NSSet* possibleTitles;
 
 // ----------------------------------------------------------------------------------------------------------
 @end
