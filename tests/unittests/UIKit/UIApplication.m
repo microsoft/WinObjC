@@ -72,7 +72,7 @@ BOOL _launchReady;
 
 + (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure {
     [_condition lock];
-    if (_launchSuccessFunction == nil) {
+    if (!_launchSuccessFunction) {
         _launchSuccessFunction = Block_copy(success);
         _launchFailureFunction = Block_copy(failure);
     }
@@ -87,7 +87,7 @@ BOOL _launchReady;
                      success:(void (^)(WSLaunchQuerySupportStatus))success
                      failure:(void (^)(NSError*))failure {
     [_condition lock];
-    if (_querySuccessFunction == nil) {
+    if (!_querySuccessFunction) {
         _querySuccessFunction = Block_copy(success);
         _queryFailureFunction = Block_copy(failure);
     }

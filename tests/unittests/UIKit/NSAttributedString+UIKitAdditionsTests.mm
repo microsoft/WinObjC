@@ -82,7 +82,7 @@ TEST(Foundation, AttributedString_InitWithData_HtmlBasic) {
                                                                     NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType
                                                                 }
                                                      documentAttributes:nil
-                                                                  error:nil];
+                                                                  error:nullptr];
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
 }
@@ -94,7 +94,7 @@ TEST(Foundation, AttributedString_InitWithData_HtmlFontTraitsAndBreak) {
                                              NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType
                                          }
                               documentAttributes:nil
-                                           error:nil];
+                                           error:nullptr];
     ASSERT_OBJCEQ(@"AAABBBC\r\nAAAA", [aStr string]);
 
     assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
@@ -115,9 +115,9 @@ TEST(Foundation, AttributedString_InitWithData_PlainText) {
                                                                     NSDocumentTypeDocumentAttribute : NSPlainTextDocumentType
                                                                 }
                                                      documentAttributes:nil
-                                                                  error:nil];
+                                                                  error:nullptr];
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
-    ASSERT_EQ(0, [[aStr attributesAtIndex:0 effectiveRange:nil] count]);
+    ASSERT_EQ(0, [[aStr attributesAtIndex:0 effectiveRange:nullptr] count]);
 }
 
 TEST(Foundation, AttributedString_InitWithData_BadEncodingOption) {

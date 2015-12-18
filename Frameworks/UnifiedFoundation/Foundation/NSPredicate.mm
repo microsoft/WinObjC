@@ -65,7 +65,7 @@
 */
 - (BOOL)evaluateWithObject:(id)objecc {
     UNIMPLEMENTED();
-    return nil;
+    return NO;
 }
 
 /**
@@ -73,7 +73,7 @@
 */
 - (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables {
     UNIMPLEMENTED();
-    return nil;
+    return NO;
 }
 
 /**

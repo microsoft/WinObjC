@@ -753,7 +753,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (NSString*)description {
     return [[NSString alloc]
-        initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nil]
+        initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nullptr]
             encoding:NSUTF8StringEncoding];
 }
 

@@ -48,7 +48,7 @@
 */
 - (instancetype)initWithKey:(NSString*)key ascending:(BOOL)ascending comparator:(NSComparator)cmptr {
     if (self = [self initWithKey:key ascending:ascending]) {
-        _selector = nil;
+        _selector = nullptr;
         _comparator = cmptr;
     }
 

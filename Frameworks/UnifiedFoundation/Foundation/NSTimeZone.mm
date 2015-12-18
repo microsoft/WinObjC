@@ -343,7 +343,7 @@ const static int c_minutesToMilliseconds = -60000;
 */
 - (NSTimeInterval)daylightSavingTimeOffsetForDate:(NSDate*)date {
     UNIMPLEMENTED();
-    return nil;
+    return 0;
 }
 
 /**
