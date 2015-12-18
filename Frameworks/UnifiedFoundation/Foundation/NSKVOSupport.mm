@@ -67,6 +67,7 @@ NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotif
 *
 *  They are not notified by the change to 'd': the dotted lines show dependencies only.
 *
+*  Reconstruction:
 *  After every successful change notification, a notifier will reconstruct the hierarchy of nodes
 *  that follow it. The notifier on 'b' (2) is dependent on the value of 'a'; therefore, if 'a' changes,
 *  'b' and all subpaths need to be re-evaluated.
@@ -198,10 +199,16 @@ public:
         return _chainedNotifier->matches(observer, keypath, context);
     }
     void updateLinks(id newValue) override {
-        auto nextChainInChain = std::dynamic_pointer_cast<NSKVOForwardingNotifier>(_chainedNotifier);
-        if (nextChainInChain && nextChainInChain->_replacementLink) {
-            nextChainInChain->breakLink();
-            _chainedNotifier = nextChainInChain->_replacementLink(newValue);
+        // updateLinks bears the responsibility of maintaining the notification chain when object values change.
+        // When called with the new value of the key for which this notifier has notified, it will
+        // redirect its next notification to newValue, or [instance valueForKey:@"changedKey"].
+        // This is the effector of the process documented above in "Reconstruction".
+        if (_replacementLink) {
+            auto nextChainInChain = std::dynamic_pointer_cast<NSKVOForwardingNotifier>(_chainedNotifier);
+            if (nextChainInChain) {
+                nextChainInChain->breakLink();
+            }
+            _chainedNotifier = _replacementLink(newValue);
         }
     }
     void breakLink() override {
