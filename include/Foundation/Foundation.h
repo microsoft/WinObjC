@@ -93,6 +93,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSPortCoder.h>
 #import <Foundation/NSPredicate.h>
 #import <Foundation/NSProcessInfo.h>
+#import <Foundation/NSProgress.h>
 #import <Foundation/NSProxy.h>
 #import <Foundation/NSRange.h>
 #import <Foundation/NSRunLoop.h>

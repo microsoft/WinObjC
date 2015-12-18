@@ -64,6 +64,7 @@ LIBRARY Foundation
      _OBJC_CLASS_NSPersistentStoreCoordinator DATA
      _OBJC_CLASS_NSPredicate DATA
      _OBJC_CLASS_NSProcessInfo DATA
+     _OBJC_CLASS_NSProgress DATA
      _OBJC_CLASS_NSPropertyListSerialization DATA
      _OBJC_CLASS_NSRecursiveLock DATA
      _OBJC_CLASS_NSRegularExpression DATA
@@ -158,6 +159,7 @@ LIBRARY Foundation
      __objc_class_name_NSPersistentStoreCoordinator CONSTANT
      __objc_class_name_NSPredicate CONSTANT
      __objc_class_name_NSProcessInfo CONSTANT
+     __objc_class_name_NSProgress CONSTANT
      __objc_class_name_NSPropertyListSerialization CONSTANT
      __objc_class_name_NSRecursiveLock CONSTANT
      __objc_class_name_NSRegularExpression CONSTANT
@@ -464,6 +466,16 @@ LIBRARY Foundation
      NSPersistentStoreTimeoutOption DATA
      NSPersistentStoreUbiquitousContentNameKey DATA
      NSPersistentStoreUbiquitousContentURLKey DATA
+     NSProgressEstimatedTimeRemainingKey DATA
+     NSProgressThroughputKey DATA
+     NSProgressKindFile DATA
+     NSProgressFileOperationKindKey DATA
+     NSProgressFileTotalCountKey DATA
+     NSProgressFileCompletedCountKey DATA
+     NSProgressFileOperationKindDownloading DATA
+     NSProgressFileOperationKindDecompressingAfterDownloading DATA
+     NSProgressFileOperationKindReceiving DATA
+     NSProgressFileOperationKindCopying DATA
      NSRangeException DATA
      NSReadOnlyPersistentStoreOption DATA
      NSRecoveryAttempterErrorKey DATA
