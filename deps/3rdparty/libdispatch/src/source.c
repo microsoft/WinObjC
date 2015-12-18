@@ -24,6 +24,10 @@
 #include "protocolServer.h"
 #endif
 
+static inline size_t max(size_t a, size_t b) {
+    return (a > b) ? a : b;
+}
+
 #ifndef DISPATCH_NO_LEGACY
 struct dispatch_source_attr_vtable_s {
 	DISPATCH_VTABLE_HEADER(dispatch_source_attr_s);
