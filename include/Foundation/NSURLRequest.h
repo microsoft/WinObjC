@@ -14,7 +14,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSDate.h>
-#import <stdint.h> // uint32_t
 
 @class NSURL, NSInputStream, NSMutableDictionary;
 
@@ -37,30 +36,30 @@ typedef NS_ENUM(NSUInteger, NSURLRequestNetworkServiceType) {
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLRequest : NSObject <NSCopying, NSMutableCopying>
+@interface NSURLRequest : NSObject <NSCopying, NSSecureCoding, NSMutableCopying>
 
-- initWithURL:(NSURL*)url;
-- initWithURL:(NSURL*)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeout;
+- (instancetype)initWithURL:(NSURL*)theURL;
+- (instancetype)initWithURL:(NSURL*)theURL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeoutInterval;
 
-+ requestWithURL:(NSURL*)url;
-+ requestWithURL:(NSURL*)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeout;
++ (instancetype)requestWithURL:(NSURL*)theURL;
++ (instancetype)requestWithURL:(NSURL*)theURL
+                   cachePolicy:(NSURLRequestCachePolicy)cachePolicy
+               timeoutInterval:(NSTimeInterval)timeoutInterval;
 
-- (NSURL*)URL;
-- (NSURLRequestCachePolicy)cachePolicy;
-- (NSTimeInterval)timeoutInterval;
+@property (readonly, copy) NSURL* URL;
+@property (readonly) NSURLRequestCachePolicy cachePolicy;
+@property (readonly) NSTimeInterval timeoutInterval;
+@property (readonly, copy) NSURL* mainDocumentURL;
+@property (readonly) NSURLRequestNetworkServiceType networkServiceType;
+@property (readonly) BOOL HTTPShouldUsePipelining;
 
-- (NSString*)HTTPMethod;
-- (NSData*)HTTPBody;
-- (NSInputStream*)HTTPBodyStream;
+@property (readonly, copy) NSString* HTTPMethod;
+@property (readonly, copy) NSData* HTTPBody;
+@property (readonly, retain) NSInputStream* HTTPBodyStream;
+@property (readonly, copy) NSDictionary* allHTTPHeaderFields;
+@property (readonly) BOOL HTTPShouldHandleCookies;
+@property (readonly) BOOL allowsCellularAccess;
 
-- (NSDictionary*)allHTTPHeaderFields;
 - (NSString*)valueForHTTPHeaderField:(NSString*)field;
-
-- (NSURL*)mainDocumentURL;
-
-- (BOOL)HTTPShouldHandleCookies;
-- (BOOL)HTTPShouldUsePipelining;
-
-- (BOOL)allowsInvalidSSLCertificate;
 
 @end

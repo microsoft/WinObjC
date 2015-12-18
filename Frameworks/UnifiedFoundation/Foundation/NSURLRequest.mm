@@ -14,139 +14,176 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSURLRequest.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableURLRequest.h"
-#include "NSURLRequestInternal.h"
+#import <Starboard.h>
+#import <Foundation/NSURLRequest.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <NSURLRequestInternal.h>
+
+@interface NSURLRequest ()
+@property (readwrite, copy) NSURL* URL;
+@property (readwrite) NSURLRequestCachePolicy cachePolicy;
+@property (readwrite) NSTimeInterval timeoutInterval;
+@property (readwrite, copy) NSURL* mainDocumentURL;
+@property (readwrite) NSURLRequestNetworkServiceType networkServiceType;
+@property (readwrite) BOOL HTTPShouldUsePipelining;
+
+@property (readwrite, copy) NSString* HTTPMethod;
+@property (readwrite, copy) NSData* HTTPBody;
+@property (readwrite, retain) NSInputStream* HTTPBodyStream;
+@property (readwrite, copy) NSMutableDictionary* allHTTPHeaderFields;
+@property (readwrite) BOOL HTTPShouldHandleCookies;
+@property (readwrite) BOOL allowsCellularAccess;
+@end
 
 @implementation NSURLRequest
-
 /**
  @Status Caveat
  @Notes cachePolicy and timeoutInterval not supported
 */
-- (id)initWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
-    _url = [url absoluteURL];
-    _timeoutInterval = timeout;
-    _headerFields = [NSMutableDictionary new];
-    _method = @"GET";
-    _shouldHandleCookies = true;
-    _cachePolicy = cachePolicy;
-    return self;
-}
-
-- (id)init {
-    _url = nil;
-    _timeoutInterval = 30.0;
-    _headerFields = [NSMutableDictionary new];
-    _method = @"GET";
-    _shouldHandleCookies = true;
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)initWithURL:(id)url {
-    return [self initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
-}
-
-/**
- @Status Interoperable
-*/
-+ (id)requestWithURL:(id)url {
-    id ret = [[self alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)URL {
-    return _url;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)allHTTPHeaderFields {
-    return _headerFields;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)HTTPBody {
-    return _body;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)HTTPBodyStream {
-    return _bodyStream;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)HTTPMethod {
-    if (_method == nil) {
-        _method = @"GET";
+- (instancetype)initWithURL:(NSURL*)theURL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeout {
+    if (self = [super init]) {
+        _URL = [[theURL absoluteURL] retain];
+        _timeoutInterval = timeout;
+        _allHTTPHeaderFields = [NSMutableDictionary new];
+        _HTTPMethod = @"GET";
+        _HTTPShouldHandleCookies = YES;
+        _cachePolicy = cachePolicy;
     }
+    return self;
+}
 
-    return _method;
+- (instancetype)init {
+    return [self initWithURL:nil];
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)HTTPShouldHandleCookies {
-    return _shouldHandleCookies;
+- (instancetype)initWithURL:(NSURL*)theURL {
+    return [self initWithURL:theURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)requestWithURL:(NSURL*)theURL {
+    return [[[self alloc] initWithURL:theURL] autorelease];
 }
 
 /**
  @Status Caveat
  @Notes cachePolicy and timeoutInterval not supported
 */
-+ (id)requestWithURL:(id)url cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
-    id ret = [[self alloc] initWithURL:url cachePolicy:cachePolicy timeoutInterval:timeout];
-
-    return [ret autorelease];
++ (instancetype)requestWithURL:(NSURL*)theURL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(double)timeout {
+    return [[[self alloc] initWithURL:theURL cachePolicy:cachePolicy timeoutInterval:timeout] autorelease];
 }
 
-- (id)mutableCopy {
-    NSURLRequest* ret =
-        [[NSMutableURLRequest alloc] initWithURL:(id)_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
-    ret->_headerFields = [_headerFields mutableCopy];
-    ret->_method.attach([_method copy]);
-    ret->_body.attach([_body copy]);
-    ret->_shouldHandleCookies = _shouldHandleCookies;
-    ret->_cachePolicy = _cachePolicy;
-    ret->_bodyStream = _bodyStream;
-
+/**
+ @Status Interoperable
+*/
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    NSURLRequest* ret = [[NSMutableURLRequest alloc] initWithURL:_URL cachePolicy:_cachePolicy timeoutInterval:_timeoutInterval];
+    ret.allHTTPHeaderFields = _allHTTPHeaderFields;
+    ret.HTTPMethod = _HTTPMethod;
+    ret.HTTPBody = _HTTPBody;
+    ret.HTTPShouldHandleCookies = _HTTPShouldHandleCookies;
+    ret.HTTPBodyStream = _HTTPBodyStream;
+    ret.mainDocumentURL = _mainDocumentURL;
+    ret.networkServiceType = _networkServiceType;
+    ret.HTTPShouldUsePipelining = _HTTPShouldUsePipelining;
+    ret.allowsCellularAccess = _allowsCellularAccess;
     return ret;
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+/**
+ @Status Interoperable
+*/
+- (void)setAllHTTPHeaderFields:(NSDictionary*)allHTTPHeaderFields {
+    id oldValue = _allHTTPHeaderFields;
+    _allHTTPHeaderFields = [allHTTPHeaderFields mutableCopy];
+    [oldValue release];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSDictionary*)getAllHTTPHeaderFields {
+    return _allHTTPHeaderFields;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)mutableCopy {
+    return [self mutableCopyWithZone:nil];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
 /**
  @Status Interoperable
 */
-- (double)timeoutInterval {
-    return _timeoutInterval;
++ (BOOL)supportsSecureCoding {
+    return YES;
 }
 
 /**
  @Status Interoperable
 */
-- (id)valueForHTTPHeaderField:(id)field {
-    id ret = [_headerFields objectForKey:field];
+- (void)encodeWithCoder:(NSCoder*)coder {
+    [coder encodeObject:_URL forKey:@"URL"];
+    [coder encodeObject:_mainDocumentURL forKey:@"mainDocumentURL"];
+    [coder encodeObject:_HTTPMethod forKey:@"HTTPMethod"];
+    [coder encodeObject:_HTTPBody forKey:@"HTTPBody"];
+    //[coder encodeObject:_HTTPBodyStream forKey:@"HTTPBodyStream"];
+    [coder encodeObject:_allHTTPHeaderFields forKey:@"allHTTPHeaderFields"];
+    [coder encodeInt64:_cachePolicy forKey:@"cachePolicy"];
+    [coder encodeDouble:_timeoutInterval forKey:@"timeoutInterval"];
+    [coder encodeInt64:_networkServiceType forKey:@"networkServiceType"];
+    [coder encodeBool:_HTTPShouldUsePipelining forKey:@"HTTPShouldUsePipelining"];
+    [coder encodeBool:_HTTPShouldHandleCookies forKey:@"HTTPShouldHandleCookies"];
+    [coder encodeBool:_allowsCellularAccess forKey:@"allowsCellularAccess"];
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        _URL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"URL"] retain];
+        _mainDocumentURL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"mainDocumentURL"] retain];
+        _HTTPMethod = [[coder decodeObjectOfClass:[NSString class] forKey:@"HTTPMethod"] retain];
+        _HTTPBody = [[coder decodeObjectOfClass:[NSData class] forKey:@"HTTPBody"] retain];
+        //_HTTPBodyStream = [[coder decodeObjectOfClass:[NSInputStream class] forKey:@"HTTPBodyStream"] retain];
+        _allHTTPHeaderFields = [[coder decodeObjectOfClass:[NSDictionary class] forKey:@"allHTTPHeaderFields"] retain];
+        _cachePolicy = (NSURLRequestCachePolicy)[coder decodeInt64ForKey:@"cachePolicy"];
+        _timeoutInterval = [coder decodeDoubleForKey:@"timeoutInterval"];
+        _networkServiceType = (NSURLRequestNetworkServiceType)[coder decodeInt64ForKey:@"networkServiceType"];
+        _HTTPShouldUsePipelining = [coder decodeBoolForKey:@"HTTPShouldUsePipelining"];
+        _HTTPShouldHandleCookies = [coder decodeBoolForKey:@"HTTPShouldHandleCookies"];
+        _allowsCellularAccess = [coder decodeBoolForKey:@"allowsCellularAccess"];
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)valueForHTTPHeaderField:(NSString*)field {
+    id ret = [_allHTTPHeaderFields objectForKey:field];
     const char* pName = [field UTF8String];
 
     if (strcmp(pName, "Accept-Language") == 0) {
@@ -170,17 +207,13 @@
 /**
  @Status Interoperable
 */
-- (NSURLRequestCachePolicy)cachePolicy {
-    return _cachePolicy;
-}
-
 - (void)dealloc {
-    _bodyStream = nil;
-    _url = nil;
-    _method = nil;
-    _body = nil;
-    [_headerFields release];
-
+    [_HTTPBodyStream release];
+    [_URL release];
+    [_mainDocumentURL release];
+    [_HTTPMethod release];
+    [_HTTPBody release];
+    [_allHTTPHeaderFields release];
     [super dealloc];
 }
 
