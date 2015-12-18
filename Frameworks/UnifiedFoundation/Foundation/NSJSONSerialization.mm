@@ -30,7 +30,7 @@
 + (NSData*)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError**)error {
     NSError *internalError = nil;
     if (obj == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"value parameter is nil" userInfo:nil];
+        THROW_NS_HR(E_INVALIDARG);
         return nil;
     }
 
@@ -53,8 +53,7 @@
 + (id)JSONObjectWithData:(NSData*)data options:(NSJSONReadingOptions)opt error:(NSError**)error {
     NSError *internalError = nil;
     if (data == nil) {
-        // TODO: Use THROW_NS_EXCEPTION macro here and below (VSO 5813976)
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"value parameter is nil" userInfo:nil];
+        THROW_NS_HR(E_INVALIDARG);
         return nil;
     }
 
@@ -195,13 +194,9 @@
     } else {
         // Top level object must be one of NSDictionary or NSArray
         if (isTop) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                reason:[NSString stringWithFormat:@"Invalid top-level type (%@) in JSON write", [object class]]
-                                userInfo:nil];
+           THROW_NS_HR_MSG(E_INVALIDARG, "Invalid top-level type (%@) in JSON write", [object class]);
         } else {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                reason:[NSString stringWithFormat:@"Invalid type (%@) in JSON write", [object class]]
-                                userInfo:nil];
+           THROW_NS_HR_MSG(E_INVALIDARG, "Invalid type (%@) in JSON write", [object class]);
         }
     }
 
