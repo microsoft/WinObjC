@@ -28,6 +28,10 @@
 #include <functional>
 #include <map>
 
+@interface NSDateFormatter ()
+@property (readwrite) NSDateFormatterBehavior formatterBehavior;
+@end
+
 static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
     switch (fmt) {
         case NSDateFormatterShortStyle:
@@ -316,6 +320,22 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
     _formatterNeedsRebuilding = TRUE;
 }
 
+static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehaviorDefault;
+
+/**
+ @Status Stub
+*/
++ (NSDateFormatterBehavior)defaultFormatterBehavior {
+    return s_defaultFormatterBehavior;
+}
+
+/**
+ @Status Stub
+*/
++ (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior {
+    s_defaultFormatterBehavior = behavior;
+}
+
 - (icu::DateFormat*)_getFormatter {
     if (!_formatter || _formatterNeedsRebuilding) {
         _formatterNeedsRebuilding = FALSE;
@@ -331,8 +351,18 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
 
             _formatter = new SimpleDateFormat(fmtString.string(), *icuLocale, status);
         } else {
-            _formatter =
-                icu::DateFormat::createDateTimeInstance(convertFormatterStyle(_dateStyle), convertFormatterStyle(_timeStyle), *icuLocale);
+            // Don't instantiate a date/time formatter if only date or time are expected individually.
+            if (_timeStyle == NSDateFormatterNoStyle && _dateStyle == NSDateFormatterNoStyle) {
+                _formatter = new SimpleDateFormat(NULL, *icuLocale, status);
+            } else if (_timeStyle == NSDateFormatterNoStyle) {
+                _formatter = icu::DateFormat::createDateInstance(convertFormatterStyle(_dateStyle), *icuLocale);
+            } else if (_dateStyle == NSDateFormatterNoStyle) {
+                _formatter = icu::DateFormat::createTimeInstance(convertFormatterStyle(_timeStyle), *icuLocale);
+            } else {
+                _formatter = icu::DateFormat::createDateTimeInstance(convertFormatterStyle(_dateStyle),
+                                                                     convertFormatterStyle(_timeStyle),
+                                                                     *icuLocale);
+            }
         }
 
         delete icuLocale;
@@ -550,13 +580,35 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
  @Status Interoperable
  */
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle {
-    static NSDateFormatter *s_formatterForCurrentLocale = [[NSDateFormatter alloc] init];
-
-    s_formatterForCurrentLocale.dateStyle = dateStyle;
-    s_formatterForCurrentLocale.timeStyle = timeStyle;
-    NSString* formattedDate = [s_formatterForCurrentLocale stringFromDate:date];
+    NSString* formattedDate = [self _formatDateForLocale:date
+                                                  locale:[NSLocale currentLocale]
+                                               dateStyle:dateStyle
+                                               timeStyle:timeStyle
+                                                timeZone:[NSTimeZone systemTimeZone]];
 
     return formattedDate;
+}
+
++ (NSString*)_formatDateForLocale:(NSDate*)date
+                           locale:(NSLocale*)locale
+                        dateStyle:(NSDateFormatterStyle)dateStyle
+                        timeStyle:(NSDateFormatterStyle)timeStyle
+                         timeZone:(NSTimeZone*)timeZone {
+    static NSDateFormatter* s_formatterForLocale = [[NSDateFormatter alloc] init];
+
+    // Set time zone and locale
+    [s_formatterForLocale setLocale:locale];
+    [s_formatterForLocale setTimeZone:timeZone];
+
+    // Update calendar to use proper time zone
+    NSCalendar* calendar = [s_formatterForLocale calendar];
+    [calendar setTimeZone:timeZone];
+    [s_formatterForLocale setCalendar:calendar];
+
+    s_formatterForLocale.dateStyle = dateStyle;
+    s_formatterForLocale.timeStyle = timeStyle;
+
+    return [s_formatterForLocale stringFromDate:date];
 }
 
 /**
