@@ -63,6 +63,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSCachedURLResponse.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\NSURLCredential.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\NSURLProtectionSpace.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
     <ClangCompile Include="..\..\..\tests\unittests\Framework\Framework.cpp">
       <Filter>Framework</Filter>
     </ClangCompile>

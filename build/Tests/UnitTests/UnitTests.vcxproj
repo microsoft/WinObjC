@@ -234,6 +234,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\CFBinaryHeap.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSURLRequest.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSMutableURLRequest.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
