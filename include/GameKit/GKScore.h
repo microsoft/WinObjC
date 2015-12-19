@@ -33,6 +33,7 @@ GAMEKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) NSString* formattedValue;
 @property (nonatomic, assign) uint64_t context;
 @property (nonatomic, retain) NSString* category;
+@property (copy, nonatomic) NSString* leaderboardIdentifier;
 
 - (id)initWithCategory:(NSString*)category;
 - (void)reportScoreWithCompletionHandler:(void (^)(NSError* error))completionHandler;

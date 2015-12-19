@@ -484,8 +484,7 @@ recurse:
 */
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
-        //[NSException raise:NSInvalidArgumentException format:@"-[%@ %s] predicate is nil",isa,_cmd];
-        assert(0);
+        UNIMPLEMENTED();
         return;
     }
 

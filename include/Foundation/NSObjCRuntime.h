@@ -198,6 +198,13 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #define NS_UNAVAILABLE UNAVAILABLE_ATTRIBUTE
 #endif
 
+#define NS_DESIGNATED_INITIALIZER
+
+#if (!__has_feature(objc_arc))
+#define __autoreleasing
+#endif
+
+#define NS_AVAILABLE(x, y)
 #define NS_AVAILABLE_IOS(x)
 #define NS_DEPRECATED_IOS(x, y)
 

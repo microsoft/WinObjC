@@ -39,14 +39,22 @@
 }
 @end
 
-__CGGradient::__CGGradient() {
+__CGGradient::__CGGradient() :
+    _components(NULL), 
+    _locations(NULL) {
     isa = NULL;
     object_setClass((id) this, [CGNSGradient class]);
 }
 
 __CGGradient::~__CGGradient() {
-    free(_components);
-    free(_locations);
+    if (_components) {
+        delete [] _components;
+        _components = NULL;
+    }
+    if (_locations) {
+        delete [] _locations;
+        _locations = NULL;
+    }
 }
 
 void __CGGradient::initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace) {
@@ -72,10 +80,10 @@ void __CGGradient::initWithColorComponents(const float* components, const float*
             break;
     }
 
-    _components = (float*)malloc(sizeof(float) * count * componentCount);
+    _components = new float[count * componentCount];
     memcpy(_components, components, sizeof(float) * count * componentCount);
 
-    _locations = (float*)malloc(sizeof(float) * count);
+    _locations = new float[count];
 
     if (locations) {
         memcpy(_locations, locations, sizeof(float) * count);
@@ -115,17 +123,17 @@ void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locatio
 
     int count = [components count];
 
-    _components = (float*)malloc(sizeof(float) * count * componentCount);
+    _components = new float[count * componentCount];
 
     for (int i = 0; i < count; i++) {
         id curColor = [components objectAtIndex:i];
 
         float color[4];
         [curColor getColors:color];
-        memcpy(&_components[i * componentCount], color, sizeof(float) * count * componentCount);
+        memcpy(&_components[i * componentCount], color, sizeof(float) * componentCount);
     }
 
-    _locations = (float*)malloc(sizeof(float) * count);
+    _locations = new float[count];
 
     if (locations) {
         memcpy(_locations, locations, sizeof(float) * count);

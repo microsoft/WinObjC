@@ -18,6 +18,7 @@
 
 #include "CGContextInternal.h"
 #include "CGFontInternal.h"
+#include "CoreText/CoreText.h"
 
 #include "Etc.h"
 
@@ -34,6 +35,27 @@ extern "C" {
 #include <ftadvanc.h>
 #include <ftsizes.h>
 }
+
+const CFStringRef kCTCharacterShapeAttributeName = static_cast<CFStringRef>(@"kCTCharacterShapeAttributeName");
+const CFStringRef kCTFontAttributeName = static_cast<CFStringRef>(@"NSFontAttributeName");
+const CFStringRef kCTKernAttributeName = static_cast<CFStringRef>(@"kCTKernAttributeName");
+const CFStringRef kCTLigatureAttributeName = static_cast<CFStringRef>(@"kCTLigatureAttributeName");
+const CFStringRef kCTForegroundColorAttributeName = static_cast<CFStringRef>(@"NSForegroundColorAttributeName");
+const CFStringRef kCTForegroundColorFromContextAttributeName = static_cast<CFStringRef>(@"kCTForegroundColorFromContextAttributeName");
+const CFStringRef kCTParagraphStyleAttributeName = static_cast<CFStringRef>(@"kCTParagraphStyleAttributeName");
+const CFStringRef kCTStrokeWidthAttributeName = static_cast<CFStringRef>(@"kCTStrokeWidthAttributeName");
+const CFStringRef kCTStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTStrokeColorAttributeName");
+const CFStringRef kCTSuperscriptAttributeName = static_cast<CFStringRef>(@"kCTSuperscriptAttributeName");
+const CFStringRef kCTUnderlineColorAttributeName = static_cast<CFStringRef>(@"kCTUnderlineColorAttributeName");
+const CFStringRef kCTUnderlineStyleAttributeName = static_cast<CFStringRef>(@"kCTUnderlineStyleAttributeName");
+const CFStringRef kCTVerticalFormsAttributeName = static_cast<CFStringRef>(@"kCTVerticalFormsAttributeName");
+const CFStringRef kCTGlyphInfoAttributeName = static_cast<CFStringRef>(@"kCTGlyphInfoAttributeName");
+const CFStringRef kCTRunDelegateAttributeName = static_cast<CFStringRef>(@"kCTRunDelegateAttributeName");
+const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundStrokeColorAttributeName");
+const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
+const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
+const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
+const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptNameKey");
 
 static float spacing = 1.0f;
 
@@ -1024,12 +1046,6 @@ CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
     return (CFArrayRef)[((_CTLine*)line)->_runs retain];
 }
 
-const CFStringRef kCTBackgroundStrokeColorAttributeName = (const CFStringRef) @"kCTBackgroundStrokeColorAttributeName";
-const CFStringRef kCTBackgroundFillColorAttributeName = (const CFStringRef) @"kCTBackgroundFillColorAttributeName";
-const CFStringRef kCTBackgroundCornerRadiusAttributeName = (const CFStringRef) @"kCTBackgroundCornerRadiusAttributeName";
-const CFStringRef kCTBackgroundLineWidthAttributeName = (const CFStringRef) @"kCTBackgroundLineWidthAttributeName";
-const CFStringRef kCTSuperscriptAttributeName = (const CFStringRef) @"kCTSuperscriptAttributeName";
-
 /**
  @Status Stub
 */
@@ -1238,3 +1254,67 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
     [super dealloc];
 }
 @end
+
+/**
+ @Status Stub
+*/
+CTFontRef CTFontCreateCopyWithSymbolicTraits(
+    CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask) {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+void CTFrameDraw(CTFrameRef frame, CGContextRef context) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+CGFloat CTFontGetUnderlineThickness(CTFontRef self) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+CFRange CTRunGetStringRange(CTRunRef run) {
+    UNIMPLEMENTED();
+    return { 0, 0 };
+}

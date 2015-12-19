@@ -27,6 +27,10 @@ const float textViewRightPadding = 12.5f;
 extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
+NSString* const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
+NSString* const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
+NSString* const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
+
 @interface NSString (CaretMeasurement)
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos;
 @end

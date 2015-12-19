@@ -94,3 +94,30 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
 CFStringRef CFURLCopyPathExtension(CFURLRef self) {
     return (CFStringRef)[[[(NSURL*)self path] pathExtension] retain];
 }
+
+/**
+ @Status Stub
+*/
+CFStringRef CFURLCreateStringByReplacingPercentEscapes(CFAllocatorRef allocator, CFStringRef string, CFStringRef charactersToLeaveEscaped) {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorRef allocator,
+                                                                    CFStringRef string,
+                                                                    CFStringRef charactersToLeaveEscaped,
+                                                                    CFStringEncoding encoding) {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+CFStringRef CFURLCopyPath(CFURLRef self) {
+    UNIMPLEMENTED();
+    return nil;
+}

@@ -234,7 +234,7 @@ ret->height += ascenderDelta;
     static id mFont;
 
     if (mFont == nil) {
-        mFont = [[self systemFontOfSize:20.0f] retain];
+        mFont = [[self systemFontOfSize:15.0f] retain];
     }
 
     return mFont;
@@ -244,7 +244,7 @@ ret->height += ascenderDelta;
     static id tFont;
 
     if (tFont == nil) {
-        tFont = [[self systemFontOfSize:26.0f] retain];
+        tFont = [[self systemFontOfSize:20.0f] retain];
     }
 
     return tFont;
@@ -604,7 +604,7 @@ void loadFont(UIFont* self) {
 @end
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     if (error)
@@ -629,11 +629,19 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
 }
 
 /**
- @Status Caveat
- @Notes matrix parameter not supported
+@Status Caveat
+@Notes matrix parameter not supported
 */
-CGFontRef CTFontCreateWithName(id name, float size, CGAffineTransform* matrix) {
-    id ret = [[UIFont fontWithName:name size:size] retain];
+CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
+    id ret = [[UIFont fontWithName:(NSString*)name size:size] retain];
 
-    return ret;
+    return (CTFontRef)ret;
+}
+
+/**
+@Status Stub
+*/
+bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error) {
+    UNIMPLEMENTED();
+    return false;
 }

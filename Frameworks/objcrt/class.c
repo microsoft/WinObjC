@@ -786,6 +786,10 @@ const char* object_getClassName(id obj) {
     return class_getName(object_getClass(obj));
 }
 
+void object_setIvar(id object, Ivar ivar, id value) {
+    OBJC_NOT_IMPLEMENTED_ERROR("object_setIvar is not yet implemented");
+}
+
 BOOL class_isMetaClass(Class cls_) {
     struct objc_class* cls = (struct objc_class*)cls_;
 
@@ -933,6 +937,20 @@ unsigned int method_getNumberOfArguments(Method m) {
     }
 
     return argCount;
+}
+
+IMP method_getImplementation(Method method) {
+    return method->imp;
+}
+
+IMP method_setImplementation(Method method, IMP imp) {
+    IMP previous = method->imp;
+    method->imp = imp;
+    return previous;
+}
+
+const char* method_getTypeEncoding(Method method) {
+    return method->sel.types;
 }
 
 int objc_getClassList(Class* classesRet, int maxCount) {

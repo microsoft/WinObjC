@@ -114,6 +114,39 @@ TEST(Security, GenericPasswordHandler_Add) {
     [handler release];
 }
 
+TEST(Security, GenericPasswordHandler_AddEmpty) {
+    MockVault* mockVault = [MockVault new];
+    GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
+
+    // First try to add the credential.
+    NSString* mockPassword = @"fak3Passw0rd";
+
+    // Go Crazy and have empty username and service.
+    NSDictionary* dictionary = @{
+        (__bridge id)(kSecClass) : (__bridge id)(kSecClassGenericPassword),
+        (__bridge id)(kSecAttrService) : @"",
+        (__bridge id)(kSecValueData) : [mockPassword dataUsingEncoding:NSUTF8StringEncoding],
+        (__bridge id)(kSecReturnAttributes) : (__bridge id)kCFBooleanTrue,
+    };
+
+    id idOutDictionary;
+    [handler add:dictionary withResult:&idOutDictionary];
+
+    NSDictionary* outDictionary = static_cast<NSDictionary*>(idOutDictionary);
+
+    // Make sure that the returned attributes match what is set. NOTE: normally
+    // extra read only attributes like creation time would have been added. This
+    // is not possible with the current WinRT apis.
+    // Note that its a little weird that @"" doesn't come back but there is no way for us to tell.
+    ASSERT_EQ(1, [outDictionary count]);
+    ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [outDictionary objectForKey:(__bridge id)(kSecClass)]);
+
+    [outDictionary release];
+    [dictionary release];
+    [mockVault release];
+    [handler release];
+}
+
 TEST(Security, GenericPasswordHandler_Query) {
     MockVault* mockVault = [MockVault new];
     GenericPasswordItemHandler* handler = [[GenericPasswordItemHandler alloc] initWithVault:reinterpret_cast<WSCPasswordVault*>(mockVault)];
@@ -159,13 +192,9 @@ TEST(Security, GenericPasswordHandler_Query) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    NSArray* outArray;
-    [handler query:attrQuery1 withResult:&outArray];
-
-    // one only entry in the first query.
-    ASSERT_EQ(1, [outArray count]);
-
-    NSDictionary* attributes = [outArray objectAtIndex:0];
+    // lmiit one specified so just go directly to dictionary.
+    NSDictionary* attributes;
+    [handler query:attrQuery1 withResult:&attributes];
 
     // Make sure that the returned attributes match what is set.
     // Note that this assumes return order is the same as add order which isn't necessarily true
@@ -174,7 +203,7 @@ TEST(Security, GenericPasswordHandler_Query) {
     ASSERT_OBJCEQ(@"fakeAccount@fakeEmail.com", [attributes objectForKey:(__bridge id)(kSecAttrAccount)]);
     ASSERT_OBJCEQ(@"www.fakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
-    [outArray release];
+    [attributes release];
     [attrQuery1 release];
 
     // Now query for password data and match multiple
@@ -185,6 +214,7 @@ TEST(Security, GenericPasswordHandler_Query) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitAll,
     };
 
+    NSArray* outArray;
     [handler query:dataQuery1 withResult:&outArray];
     ASSERT_EQ(2, [outArray count]);
 
@@ -196,6 +226,8 @@ TEST(Security, GenericPasswordHandler_Query) {
     [outArray release];
     [dataQuery1 release];
 
+    outArray = nil;
+
     // Query for something not there.
     NSDictionary* attrQuery2 = @{
         (__bridge id)(kSecClass) : (__bridge id)(kSecClassGenericPassword),
@@ -204,10 +236,10 @@ TEST(Security, GenericPasswordHandler_Query) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    [handler query:attrQuery2 withResult:&outArray];
-    ASSERT_EQ(0, [outArray count]);
+    OSStatus result = [handler query:attrQuery2 withResult:&outArray];
+    ASSERT_EQ(result, errSecItemNotFound);
+    ASSERT_EQ(nil, outArray);
 
-    [outArray release];
     [attrQuery2 release];
 
     [credential1 release];
@@ -255,18 +287,14 @@ TEST(Security, GenericPasswordHandler_Update) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    NSArray* outArray;
-    [handler query:queryDictionary withResult:&outArray];
+    NSDictionary* attributes;
+    [handler query:queryDictionary withResult:&attributes];
 
-    // one only entry in the first query.
-    ASSERT_EQ(1, [outArray count]);
-
-    NSDictionary* attributes = [outArray objectAtIndex:0];
     ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [attributes objectForKey:(__bridge id)(kSecClass)]);
     ASSERT_OBJCEQ(@"fakeAccount@fakeEmail.com", [attributes objectForKey:(__bridge id)(kSecAttrAccount)]);
     ASSERT_OBJCEQ(@"www.anUpdatedFakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
-    [outArray release];
+    [attributes release];
     [queryDictionary release];
     [updateQuery release];
     [updateDictionary release];
@@ -324,13 +352,11 @@ TEST(Security, GenericPasswordHandler_Remove) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitAll,
     };
 
-    NSArray* outArray;
-    [handler query:queryDictionary withResult:&outArray];
+    NSArray* outArray = nil;
+    OSStatus result = [handler query:queryDictionary withResult:&outArray];
+    ASSERT_EQ(result, errSecItemNotFound);
+    ASSERT_EQ(nil, outArray);
 
-    // one only entry in the first query.
-    ASSERT_EQ(0, [outArray count]);
-
-    [outArray release];
     [removeQuery release];
     [queryDictionary release];
     [credential1 release];

@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 #include "UIBarItemInternal.h"
+#include "UIBarButtonItem+Internals.h"
 
 @implementation UIBarButtonItem {
     idretaintype(NSString) _title;
@@ -31,6 +32,7 @@
     bool _pressed;
     UIBarButtonItemStyle _style;
 }
+
 static void initInternal(UIBarButtonItem* self) {
     if (isOSTarget(@"7.0")) {
         self->_font = [UIFont boldSystemFontOfSize:17];
@@ -382,61 +384,6 @@ static void initControls(UIBarButtonItem* self) {
     return _width;
 }
 
-- (float)_margin {
-    if (_systemItem == UIBarButtonSystemItemFlexibleSpace || _systemItem == UIBarButtonSystemItemFixedSpace) {
-        return 0.0f;
-    }
-
-    if (_customView == nil) {
-        return 4.0f;
-    } else {
-        if ([_customView isKindOfClass:[UISegmentedControl class]]) {
-            return 5.0f;
-        } else if ([_customView isKindOfClass:[UIButton class]]) {
-            return 0.0f;
-        } else {
-            return 12.0f;
-        }
-    }
-}
-
-- (void)_idealSize:(CGSize*)sizeOut {
-    sizeOut->height = 34.0f;
-    if (_width > 0.0f) {
-        sizeOut->width = _width;
-        return;
-    } else {
-        if (_customView == nil) {
-            CGSize size = { 0, 0 };
-            if (_title != nil) {
-                size = [_title sizeWithFont:(id)_font];
-                sizeOut->width = size.width + 16.0f;
-                return;
-            } else if (_image != nil) {
-                float padding = _style == UIBarButtonItemStylePlain ? 0.0f : 15.0f;
-                size = [_image size];
-
-                sizeOut->width = size.width + padding;
-
-                if (_style == UIBarButtonItemStylePlain) {
-                    sizeOut->height = size.height;
-                }
-
-                return;
-            } else {
-                sizeOut->width = 0.0f;
-                return;
-            }
-        } else {
-            CGRect bounds;
-
-            bounds = [_customView bounds];
-            *sizeOut = bounds.size;
-            return;
-        }
-    }
-}
-
 - (void)setTitle:(NSString*)title {
     _title.attach([title copy]);
     [_buttonView setTitle:(id)_title forState:0];
@@ -589,7 +536,7 @@ static void initControls(UIBarButtonItem* self) {
     }
 
     if (update) {
-        id view = [self _getView];
+        id view = [self view];
         [[view superview] setNeedsLayout];
         if ([view respondsToSelector:@selector(setEnabled:)]) {
             [view setEnabled:_isDisabled == false];
@@ -639,14 +586,6 @@ static void initControls(UIBarButtonItem* self) {
 - (void)setAccessibilityLabel:(NSString*)label {
 }
 
-- (UIView*)_getView {
-    if (_customView != nil) {
-        return _customView;
-    } else {
-        return _buttonView;
-    }
-}
-
 - (void)setTag:(NSInteger)tag {
     _tag = tag;
 }
@@ -693,6 +632,65 @@ static void initControls(UIBarButtonItem* self) {
     va_end(pReader);
 
     return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+}
+
+@end
+
+@implementation UIBarButtonItem (Internals)
+
+- (UIView*)view {
+    if (_customView != nil) {
+        return _customView;
+    } else {
+        return _buttonView;
+    }
+}
+
+- (float)margin {
+    if (_systemItem == UIBarButtonSystemItemFlexibleSpace || _systemItem == UIBarButtonSystemItemFixedSpace) {
+        return 0.0f;
+    }
+
+    if (_customView == nil) {
+        return 4.0f;
+    } else {
+        if ([_customView isKindOfClass:[UISegmentedControl class]]) {
+            return 5.0f;
+        } else if ([_customView isKindOfClass:[UIButton class]]) {
+            return 0.0f;
+        } else {
+            return 12.0f;
+        }
+    }
+}
+
+- (CGSize)idealSize {
+    CGSize sizeOut{ 0.0f, 34.0f };
+    if (_width > 0.0f) {
+        sizeOut.width = _width;
+    } else {
+        if (_customView == nil) {
+            CGSize size = { 0, 0 };
+            if (_title != nil) {
+                size = [_title sizeWithFont:(id)_font];
+                sizeOut.width = size.width + 16.0f;
+            } else if (_image != nil) {
+                float padding = _style == UIBarButtonItemStylePlain ? 0.0f : 15.0f;
+
+                size = [_image size];
+                sizeOut.width = size.width + padding;
+
+                if (_style == UIBarButtonItemStylePlain) {
+                    sizeOut.height = size.height;
+                }
+            } else {
+                sizeOut.width = 0.0f;
+            }
+        } else {
+            sizeOut = [_customView bounds].size;
+        }
+    }
+    return sizeOut;
 }
 
 @end

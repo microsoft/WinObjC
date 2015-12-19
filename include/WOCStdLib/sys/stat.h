@@ -17,3 +17,5 @@
 #pragma once
 
 #include_next <sys/stat.h>
+
+#define S_ISDIR(x) (((x)&S_IFMT) == _S_IFDIR)

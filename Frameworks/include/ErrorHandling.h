@@ -205,6 +205,8 @@ inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((O
 #pragma clang diagnostic ignored "-Winvalid-noreturn"
 #pragma clang diagnostic ignored "-Wunused-value"
 #endif
+// Always log debug info even on release builds
+#define RESULT_DEBUG_INFO
 #include "wil/result.h"
 #if defined __clang__
 #pragma clang diagnostic pop

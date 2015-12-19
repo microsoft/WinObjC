@@ -53,7 +53,7 @@
  @Status Interoperable
 */
 - (NSArray*)allObjects {
-    NSArray* ret = [NSMutableArray new];
+    NSMutableArray* ret = [NSMutableArray new];
 
     id cur = [self nextObject];
     while (cur != nil) {
@@ -125,7 +125,7 @@
     state->itemsPtr = (id*)stackBuf;
 
     while (maxCount > 0) {
-        id next = [state->extra[0] nextObject];
+        id next = [reinterpret_cast<id>(state->extra[0]) nextObject];
         if (next == nil) {
             break;
         }

@@ -18,8 +18,8 @@
 
 @interface MenuTableViewController : UITableViewController
 
-@property (nonatomic, retain) NSMutableArray *menuItems;
+@property (nonatomic, retain) NSMutableArray* menuItems;
 
+- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title;
 
 @end
-

@@ -23,3 +23,5 @@ CFREGISTER_STRING(kCFRunLoopCommonModes)
 const CFStringRef kCFBundleNameKey = (const CFStringRef) @"CFBundleName";
 
 CFAllocatorRef const kCFAllocatorDefault = 0;
+
+double kCFCoreFoundationVersionNumber = kCFCoreFoundationVersionNumber_iOS_6_0;

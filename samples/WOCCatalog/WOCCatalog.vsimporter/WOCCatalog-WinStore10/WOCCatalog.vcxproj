@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,9 +19,9 @@
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
-    <ProjectGuid>{4EE86154-1B59-4B1D-BEEF-96BF00682BDB}</ProjectGuid>
+    <ProjectGuid>{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}</ProjectGuid>
     <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -33,9 +33,9 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <TargetName>WOCCatalog</TargetName>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <Optimize>true</Optimize>
+    <TargetName>WOCCatalog</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -60,18 +60,17 @@
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
-    </Link>
     <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
-      <AdditionalOptions>-DWINOBJC_WIN10 %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+    </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
@@ -80,18 +79,16 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);OpenGLES.lib;GLKit.lib</AdditionalDependencies>
-    </Link>
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>MinSpace</OptimizationLevel>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+    </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
@@ -100,6 +97,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Xml Include="default.rd.xml" />
     <None Include="WOCCatalog_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
@@ -108,19 +106,24 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\main.m" />
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\MainViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m" />
     <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m" />
@@ -130,9 +133,9 @@
     <ClangCompile Include="..\..\WOCCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\WOCCatalog\SearchBarViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
@@ -161,9 +164,7 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="default.rd.xml" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

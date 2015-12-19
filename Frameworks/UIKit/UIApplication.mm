@@ -46,6 +46,14 @@ typedef wchar_t WCHAR;
 #include "RingBuffer.h"
 #include <math.h>
 
+#include "UWP/WindowsUINotifications.h"
+
+#include <COMIncludes.h>
+#import <WRL/client.h>
+#include <COMIncludes_End.h>
+
+using namespace Microsoft::WRL;
+
 NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
 NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
 
@@ -212,6 +220,9 @@ static idretaintype(NSMutableArray) _curNotifications;
     id _delegate;
     NSUInteger _statusBarStyle;
 }
+
+@synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
+
 + (instancetype)alloc {
     if (sharedApplication != nil) {
         return sharedApplication;
@@ -779,12 +790,53 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
+// TODO: Remove this function once casting is supported in RTObject
+static id UWPObjectCast(Class desiredClass, RTObject* rtObject) {
+    auto internalComPtr = (__bridge IInspectable*)[rtObject internalObject];
+    auto newObject = (RTObject*)NSAllocateObject(desiredClass, 0, nil);
+    [newObject setComObj:internalComPtr];
+    return [newObject autorelease];
+}
+
+/*
+ * Returns the RTObject casted to the desired class - unsafe. Templated implementation.
+ */
+template <typename TDesiredClass>
+static id UWPObjectCast(RTObject* rtObject) {
+    return UWPObjectCast([TDesiredClass class], rtObject);
+}
+
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setApplicationIconBadgeNumber:(int)num {
-    UNIMPLEMENTED();
-    EbrSetApplicationBadgeNumber(num);
+    if (num > 0) {
+        _applicationIconBadgeNumber = num;
+    } else {
+        // 0 or negative input.
+        _applicationIconBadgeNumber = 0;
+    }
+
+    WDXDXmlDocument* doc = [WUNBadgeUpdateManager getTemplateContent:WUNBadgeTemplateTypeBadgeNumber];
+    WDXDXmlNodeList* badges = [doc getElementsByTagName:@"badge"];
+
+    if ([badges count] == 0) {
+        return;
+    }
+
+    id badgeObject = [badges objectAtIndex:0];
+
+    if (badgeObject == nil) {
+        return;
+    }
+
+    WDXDXmlElement* badgeElement = UWPObjectCast<WDXDXmlElement>(badgeObject);
+    [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
+
+    WUNBadgeNotification* notification = [WUNBadgeNotification createBadgeNotification:doc];
+    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
+
+    [updater update:notification];
 }
 
 static void printViews(id curView, int level) {
@@ -1236,6 +1288,13 @@ static void printViews(id curView, int level) {
 }
 
 /**
+ @Status Stub
+*/
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings {
+    UNIMPLEMENTED();
+}
+
+/**
  @Status Interoperable
 */
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent*)forEvent {
@@ -1466,11 +1525,10 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (int)applicationIconBadgeNumber {
-    UNIMPLEMENTED();
-    return 0;
+    return _applicationIconBadgeNumber;
 }
 
 /**

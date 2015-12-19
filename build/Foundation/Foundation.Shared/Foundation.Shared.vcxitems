@@ -22,6 +22,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBinaryHeap.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBridgeBase.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArray.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSAssertionHandler.mm" />
@@ -92,6 +93,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListReader.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListSerialization.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListWriter_binary.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSRange.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSRunLoop.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSRunLoopSource.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSRunLoopState.mm" />
@@ -144,6 +146,8 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLSessionDataTask.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLSessionDownloadTask.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCachedURLResponse.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLCredential.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtectionSpace.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayInternal.h" />
@@ -174,10 +178,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSValue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSValueTransformers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSXMLPropertyList.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\RawBuffer.h"/>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\RawBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\RawBuffer.cpp"/>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\RawBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

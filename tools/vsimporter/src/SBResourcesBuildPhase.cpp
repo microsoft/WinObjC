@@ -15,10 +15,13 @@
 //******************************************************************************
 
 #include "utils.h"
+#include "sbassert.h"
 #include "BuildSettings.h"
 #include "PBXResourcesBuildPhase.h"
+#include "PBXBuildFile.h"
 #include "SBResourcesBuildPhase.h"
 #include "SBNativeTarget.h"
+#include "SBProject.h"
 #include "VCProjectConfiguration.h"
 #include "VCProject.h"
 #include "VCProjectItem.h"
@@ -32,10 +35,17 @@ SBBuildPhase* SBResourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget
 }
 
 // PBXResourcesBuildPhase can be NULL, if it wasn't explicitly specified in the project.
-SBResourcesBuildPhase::SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, const SBNativeTarget& parentTarget)
+SBResourcesBuildPhase::SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, SBNativeTarget& parentTarget)
   : SBBuildPhase(phase, parentTarget),
     m_phase(phase)
-{}
+{
+  // Check if any of the resources are build products (e.g. bundles)
+  if (m_phase) {
+    for (auto buildFile : m_phase->getBuildFileList()) {
+      m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
+    }
+  }
+}
 
 void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
 {
@@ -44,7 +54,27 @@ void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
     return;
   }
 
-  SBBuildPhase::writeVSFileDescriptions(proj, "SBResourceCopy");
+  // Process build files
+  const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+  const BuildFileList& buildFiles = m_phase->getBuildFileList();
+  sbAssert(buildFiles.size() == m_buildFileTargets.size());
+  for (size_t i = 0; i < buildFiles.size(); i++) {
+    // Construct a path for Bundle build products, relative to the SolutionDir,
+    // instead of using the Xcode path
+    String pathOverride;
+    if (m_buildFileTargets[i]) {
+      String productFileName = sb_basename(buildFiles[i]->getFile()->getFullPath());
+      String productFileType = buildFiles[i]->getFile()->getFileType();
+      if (productFileType == "wrapper.cfbundle") {
+        pathOverride = "$(SolutionDir)$(Configuration)\\" + productFileName;
+      } else {
+        SBLog::warning() << "Unexpected build product in ResourceBuildPhase: " << productFileName << std::endl;
+      }
+    }
+
+    VCItemHint itemHint = { "SBResourceCopy" , pathOverride };
+    addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+  }
 
   // Process all Info.plist files
   std::map<std::string, VCProjectItem*> infoPlistMap;

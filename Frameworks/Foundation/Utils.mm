@@ -21,57 +21,6 @@
 /**
  @Status Interoperable
 */
-NSRange NSMakeRange(NSUInteger location, NSUInteger length) {
-    NSRange ret = { location, length };
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-NSRange NSIntersectionRange(NSRange first, NSRange second) {
-    NSUInteger min, loc, max1 = NSMaxRange(first), max2 = NSMaxRange(second);
-    NSRange result;
-
-    min = (max1 < max2) ? max1 : max2;
-    loc = (first.location > second.location) ? first.location : second.location;
-
-    if (min < loc) {
-        result.location = result.length = 0;
-    } else {
-        result.location = loc;
-        result.length = min - loc;
-    }
-
-    return result;
-}
-
-/**
- @Status Interoperable
-*/
-NSUInteger NSMaxRange(NSRange range) {
-    return range.location + range.length;
-}
-
-/**
- @Status Interoperable
-*/
-NSRange NSUnionRange(NSRange range1, NSRange range2) {
-    NSRange ret = { 0, 0 };
-    assert(0);
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-BOOL NSEqualRanges(NSRange range1, NSRange range2) {
-    return ((range1.location == range2.location) && (range1.length == range2.length));
-}
-
-/**
- @Status Interoperable
-*/
 NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde) {
     switch (dir) {
         case NSDocumentDirectory:
@@ -98,6 +47,14 @@ NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearch
     }
 
     return 0;
+}
+
+/**
+ @Status Interoperable
+*/
+NSString* NSHomeDirectory(void) {
+    // We expect this call to only return a single directory
+    return [NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, 0, FALSE) lastObject];
 }
 
 /**
