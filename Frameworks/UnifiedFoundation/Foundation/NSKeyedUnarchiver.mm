@@ -13,24 +13,27 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
+#import "Starboard.h"
 
-#include "CoreFoundation/CFDictionary.h"
+#import "CoreFoundation/CFDictionary.h"
 
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSKeyedUnarchiver.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSValue.h"
-#include "NSPropertyListReader.h"
-#include "NSXMLPropertyList.h"
+#import "Foundation/NSDictionary.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSKeyedUnarchiver.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSValue.h"
+#import "NSPropertyListReader.h"
+#import "NSXMLPropertyList.h"
 
-#include <stack>
-#include <memory>
-#include <functional>
+#import <stack>
+#import <memory>
+#import <functional>
+
+#import "Hash.h"
+typedef HashMap<id, id> o2oHash;
 
 NSString* NSInvalidUnarchiveOperationException = @"NSInvalidUnarchiveOperationException";
 static NSString* _NSUnarchiverEncounteredInvalidClassException = @"_NSUnarchiverEncounteredInvalidClassException";
@@ -39,6 +42,8 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
     @"_NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses";
 
 static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
+
+static o2oHash globalClassMap = o2oHash(); /* Map class names to classes.    */
 
 @implementation NSKeyedUnarchiver {
     idretaintype(NSMutableDictionary) _nameToReplacementClass;
@@ -58,12 +63,20 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     BOOL _requiresSecureCoding;
     std::stack<idretaint<NSSet>> _expectedClassesInDecodePass;
     bool _objectFailedSecureDecoding;
+
+    o2oHash* _clsMap; /* Map class names to classes.    */
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)requiresSecureCoding {
     return _requiresSecureCoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRequiresSecureCoding:(BOOL)requiresSecureCoding {
     if (_requiresSecureCoding && !requiresSecureCoding) {
         [NSException raise:NSInvalidUnarchiveOperationException
@@ -72,6 +85,9 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     _requiresSecureCoding = requiresSecureCoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSSet*)allowedClasses {
     return [[_expectedClassesInDecodePass.top() copy] autorelease];
 }
@@ -111,6 +127,8 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     _dataObjects.attach([NSMutableArray new]);
 
     _expectedClassesInDecodePass.emplace(); // nil first entry
+
+    _clsMap = new o2oHash();
 
     return self;
 }
@@ -204,7 +222,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                     self->_curUid = 0;
 
                     id orig = result;
-                    result = [result instantiateWithCoder:self];
+                    result = [result initWithCoder:self];
                     [orig autorelease];
 
                     self->_curUid = curPos;
@@ -267,6 +285,9 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeRootObject {
     id top = [_propertyList objectForKey:@"$top"];
     id values = [top allValues];
@@ -356,13 +377,19 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key {
     return [self decodeObjectOfClasses:[NSSet setWithObject:expectedClass] forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key {
     _expectedClassesInDecodePass.emplace(expectedClasses);
-    auto deferPop = wil::ScopeExit([&self](){ _expectedClassesInDecodePass.pop(); });
+    auto deferPop = wil::ScopeExit([&self]() { _expectedClassesInDecodePass.pop(); });
 
     return [self decodeObjectForKey:key];
 }
@@ -388,6 +415,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ([[_plistStack lastObject] objectForKey:key] != nil) ? TRUE : FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObject {
     NSString* idNum = [NSString stringWithFormat:@"$%d", _curUid++];
     return [self decodeObjectForKey:idNum];
@@ -413,6 +443,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [self decodeIntForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)decodeIntegerForKey:(NSString*)key {
     return [self decodeIntForKey:key];
 }
@@ -434,11 +467,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
         return 0;
     }
 
-    unsigned __int64 val;
+    unsigned __int64 ret = [number unsignedLongLongValue];
 
-    [number _copyInt64Value:&val];
-
-    return val;
+    return ret;
 }
 
 /**
@@ -471,6 +502,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)decodeCGPointForKey:(NSString*)key {
     CGPoint ret = { 0, 0 };
     id value = _valueForKey(self, key);
@@ -540,18 +574,66 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (void)finishDecoding {
 }
 
+/**
+ @Status Interoperable
+*/
++ (Class)classForClassName:(NSString*)codedName {
+    id* classTmp;
+    if (globalClassMap.get(codedName, classTmp)) {
+        return *classTmp;
+    }
+    return nil;
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)setClass:(Class)aClass forClassName:(NSString*)codedName {
+    globalClassMap.insert(codedName, aClass);
+}
+
+/**
+ @Status Interoperable
+*/
+- (Class)classForClassName:(NSString*)codedName {
+    id* classTmp;
+    if (_clsMap->get(codedName, classTmp)) {
+        return *classTmp;
+    }
+    return nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setClass:(Class)aClass forClassName:(NSString*)codedName {
+    _clsMap->insert(codedName, aClass);
+}
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsKeyedCoding {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)_setBundle:(id)bundle {
     _bundle = bundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSBundle*)_bundle {
     return _bundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _nameToReplacementClass = nil;
     _propertyList = nil;
@@ -560,6 +642,7 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     _uidToObject = nil;
     _dataObjects = nil;
     _bundle = nil;
+    delete _clsMap;
 
     [super dealloc];
 }

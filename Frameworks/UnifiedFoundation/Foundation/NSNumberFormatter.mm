@@ -13,19 +13,19 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "Foundation/NSNumberFormatter.h"
-#include "Foundation/NSMutableString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSAttributedString.h"
-#include "Etc.h"
+#import "Starboard.h"
+#import "Foundation/NSNumberFormatter.h"
+#import "Foundation/NSMutableString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSAttributedString.h"
+#import "Etc.h"
 
-#include <stdarg.h>
-#include <cmath>
+#import <stdarg.h>
+#import <cmath>
 
-#include <unicode/numfmt.h>
-#include <unicode/decimfmt.h>
-#include <unicode/unum.h>
+#import <unicode/numfmt.h>
+#import <unicode/decimfmt.h>
+#import <unicode/unum.h>
 
 static NSNumberFormatterBehavior _defaultFormatterBehavior = NSNumberFormatterBehavior10_4;
 
@@ -696,8 +696,7 @@ enum {
         }
 
         case _C_LNGLNG: {
-            int64_t val;
-            [number _copyInt64Value:&val];
+            int64_t val = [number longLongValue];
             _formatter->format(val, formatted, status);
             break;
         }
@@ -706,8 +705,7 @@ enum {
         // could send it as a double
         // but that would likely be a bad idea.
         case _C_ULNGLNG: {
-            int64_t val;
-            [number _copyInt64Value:&val];
+            int64_t val = [number unsignedLongLongValue];
             _formatter->format(val, formatted, status);
             break;
         }

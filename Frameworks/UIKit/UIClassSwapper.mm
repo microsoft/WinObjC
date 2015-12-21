@@ -14,15 +14,16 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIClassSwapper.h"
+#import "Starboard.h"
+#import "UIClassSwapper.h"
 
-@implementation UIClassSwapper : NSObject
-- (id)instantiateWithCoder:(id)coder {
-    className = [coder decodeObjectForKey:@"UIClassName"];
-    originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
-    const char* identifier = [className UTF8String];
-    const char* identifier2 = [originalClassName UTF8String];
+@implementation UIClassSwapper
+
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    _className = [coder decodeObjectOfClass:[NSString class] forKey:@"UIClassName"];
+    _originalClassName = [coder decodeObjectOfClass:[NSString class] forKey:@"UIOriginalClassName"];
+    const char* identifier = [_className UTF8String];
+    const char* identifier2 = [_originalClassName UTF8String];
 
     EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
     id classNameId = objc_getClass(identifier);
@@ -35,12 +36,19 @@
     }
 }
 
-- (NSString*)originalClassName {
-    return originalClassName;
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    [encoder encodeObject:_className forKey:@"UIClassName"];
+    [encoder encodeObject:_originalClassName forKey:@"UIOriginalClassName"];
 }
 
-- (NSString*)className {
-    return className;
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+- (void)dealloc {
+    [_className release];
+    [_originalClassName release];
+    [super dealloc];
 }
 
 @end

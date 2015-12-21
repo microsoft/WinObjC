@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSString.h"
+#import "Starboard.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSString.h"
 
 #define CACHE_NSNUMBERS_BELOW 16
 static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
@@ -497,11 +497,6 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     } else {
         return (signed __int64)val.f;
     }
-}
-
-- (void)_copyInt64Value:(void*)dest {
-    unsigned __int64 ret = [self unsignedLongLongValue];
-    memcpy(dest, &ret, 8);
 }
 
 - (BOOL)_isBool {

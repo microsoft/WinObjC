@@ -271,3 +271,27 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
         [secureUnarchiver release];
     }
 }
+
+TEST(Foundation, NSKeyedArchiver_NSKeyedUnarchiver_ClassNames) {
+    // global, archiver
+    [NSKeyedArchiver setClassName:@"TestName1" forClass:[NSString class]];
+    EXPECT_OBJCEQ(@"TestName1", [NSKeyedArchiver classNameForClass:[NSString class]]);
+
+    // instance, archiver
+    NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
+    NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [archiver setClassName:@"TestName2" forClass:[NSString class]];
+    EXPECT_OBJCEQ(@"TestName2", [archiver classNameForClass:[NSString class]]);
+    [archiver release];
+
+    // global, unarchiver
+    [NSKeyedUnarchiver setClass:[NSString class] forClassName:@"TestName3"];
+    EXPECT_OBJCEQ([NSString class], [NSKeyedUnarchiver classForClassName:@"TestName3"]);
+
+    // instance, unarchiver
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:createTestArchive()];
+    [unarchiver setClass:[NSString class] forClassName:@"TestName4"];
+    EXPECT_OBJCEQ([NSString class], [unarchiver classForClassName:@"TestName4"]);
+    [unarchiver finishDecoding];
+    [unarchiver release];
+}
