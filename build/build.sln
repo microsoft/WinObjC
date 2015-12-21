@@ -120,8 +120,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecurityLib.Universal", "Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreLocation", "CoreLocation", "{52E0654B-3B43-4514-B48B-6BAE3E580A6F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreLocation.Universal", "CoreLocation\CoreLocation.Universal\CoreLocation.Universal.vcxproj", "{A03B9E82-D421-4CBC-8C94-24F0AA9EBBCE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{58128019-F022-44F1-9D59-811230051CD8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "Tests\UnitTests\UnitTests.vcxproj", "{2AFE3907-6239-49E0-80B3-56BCFCECE9E1}"
