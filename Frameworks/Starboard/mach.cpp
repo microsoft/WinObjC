@@ -21,8 +21,7 @@
 @Status Caveat
 @Notes Parameter port will be ignored.
 */
-IWPLATFORM_EXPORT
-kern_return_t host_page_size(host_t host, vm_size_t* pageSize) {
+extern "C" kern_return_t host_page_size(host_t host, vm_size_t* pageSize) {
     SYSTEM_INFO systemInfo = {};
     ::GetNativeSystemInfo(&systemInfo);
     *pageSize = static_cast<vm_size_t>(systemInfo.dwPageSize);

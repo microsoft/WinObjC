@@ -220,7 +220,7 @@ CGSize CGSizeFromString(NSString* strSize) {
 */
 CGRect CGRectFromString(NSString* strRect) {
     if (!strRect) {
-        return{ { 0, 0 }, 0, 0 };
+        return { { 0, 0 }, 0, 0 };
     }
 
     CGRect ret;
@@ -279,30 +279,6 @@ __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* 
     return NULL;
 }
 
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
-    UNIMPLEMENTED();
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
-    UNIMPLEMENTED();
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
-    UNIMPLEMENTED();
-    return 0;
-}
-
 EbrPlatformInfo* EbrGetDeviceInfo() {
     static EbrPlatformInfo info;
     static bool infoInited = false;
@@ -325,21 +301,6 @@ EbrPlatformInfo* EbrGetDeviceInfo() {
     }
 
     return &info;
-}
-
-extern "C" {
-#include "md5.h"
-
-__declspec(dllexport) unsigned char* CC_MD5(const void* data, unsigned long len, unsigned char* md) {
-    MD5_CTX ctx;
-
-    MD5Init(&ctx);
-    MD5Update(&ctx, (unsigned char*)data, len);
-    MD5Final(&ctx);
-
-    memcpy(md, ctx.digest, 16);
-    return md;
-}
 }
 
 /**

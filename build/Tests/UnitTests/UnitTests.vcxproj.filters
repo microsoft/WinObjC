@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\..\tests\unittests\EntryPoint.cpp" />
+    <ClCompile Include="..\..\..\tests\unittests\Framework\Framework.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\tests\unittests\dispatch\dispatch_test.h" />
@@ -64,9 +65,19 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSURLCredential.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\NSURLProtectionSpace.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
-    <ClangCompile Include="..\..\..\tests\unittests\Framework\Framework.cpp">
-      <Filter>Framework</Filter>
-    </ClangCompile>
+    <ClangCompile Include="..\..\..\tests\unittests\Foundation\NSURLCacheTests.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\LifetimeCounting.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSJSONSerialization.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSTimeZone.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\StarboardAutoIdTests_ARC.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\StarboardAutoIdTests_NoARC.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\UIApplication.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSURLCredentialStorage.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\CFBinaryHeap.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSURLRequest.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSMutableURLRequest.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\CommonCrypto_MD5.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />
@@ -75,5 +86,8 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{dc8db92c-3ca6-4db9-b1d1-f7bbc7cd9502}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\tests\unittests\StarboardAutoIdTests.inl" />
   </ItemGroup>
 </Project>

@@ -277,14 +277,11 @@ else {
 char *bytes = (char *)[uniqueIdData bytes];
 int len = (int)[uniqueIdData length];
 
-MD5_CTX ctx;
-
-MD5Init(&ctx);
-MD5Update(&ctx, (unsigned char *)bytes, len);
-MD5Final(&ctx);
+unsigned char digest[CC_MD5_DIGEST_LENGTH];
+CC_MD5((unsigned char *)bytes, len, digest);
 
 char szUUID[64];
-uuid_unparse((BYTE *)ctx.digest, szUUID);
+uuid_unparse(digest, szUUID);
 
 ret = EbrBuildCFConstantString(szUUID);
 }

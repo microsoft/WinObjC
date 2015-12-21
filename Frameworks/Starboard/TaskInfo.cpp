@@ -144,7 +144,6 @@ static kern_return_t _getTaskThreadTimesInfo(task_thread_times_info_t info, mach
 /*
 @Status interoperable
 */
-IWPLATFORM_EXPORT
 extern "C" mach_port_t mach_task_self() {
     return UINT_MAX; // arbitrary
 }
@@ -154,7 +153,6 @@ extern "C" mach_port_t mach_task_self() {
 @Notes only supports TASK_BASIC_INFO and TASK_THREAD_TIMES_INFO and only for mach_task_self().
 @Notes task_basic_info only supports virtual size and resident size
 */
-IWPLATFORM_EXPORT
 extern "C" kern_return_t task_info(task_t target_task, int flavor, task_info_t task_info, mach_msg_type_number_t* task_info_count) {
     if (target_task != mach_task_self() || !task_info_count) {
         return KERN_INVALID_ARGUMENT;

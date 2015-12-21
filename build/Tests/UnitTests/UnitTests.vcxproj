@@ -167,6 +167,7 @@
     <ClangCompile Include="..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\Accessibility.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\CFUUID.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\CommonCrypto_MD5.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\corefoundation.m" />
     <ClangCompile Include="..\..\..\tests\unittests\CoreLocation\CoreLocation_CLLocation.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\dispatch.m" />
