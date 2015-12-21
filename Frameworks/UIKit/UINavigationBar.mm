@@ -47,6 +47,8 @@
     idretaintype(NSDictionary) _titleTextAttributes;
     idretaintype(UIColor) _tintColor;
     idretaintype(UIColor) _barTintColor;
+    idretaintype(UIImage) _shadowImage;
+    idretaintype(UIImageView) _shadowImageView;
     UIBarStyle _style;
 }
 static void setBackground(UINavigationBar* self) {
@@ -561,6 +563,8 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     _titleTextAttributes = nil;
     _tintColor = nil;
     _barTintColor = nil;
+    _shadowImage = nil;
+    _shadowImageView = nil;
 
     [super dealloc];
 }
@@ -578,10 +582,41 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (UIImage*)shadowImage {
+    return _shadowImage;
+}
+
+/**
+ @Status Interoperable
 */
 - (void)setShadowImage:(UIImage*)image {
-    UNIMPLEMENTED();
+    _shadowImage = image;
+
+    // Remove existing view
+    UIImageView* shadowImageView = (UIImageView*)_shadowImageView;
+    if (shadowImageView != nil && shadowImageView.superview != nil) {
+        [shadowImageView removeFromSuperview];
+        _shadowImageView = nil;
+    }
+
+    // Add new view, only if image isn't nil
+    if (image == nil) {
+        return;
+    }
+
+    CGSize size = image.size;
+    CGRect frame = self.frame;
+
+    shadowImageView = [[UIImageView alloc]
+        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, GetCACompositor()->screenWidth(), size.height)];
+
+    shadowImageView.image = image;
+
+    [shadowImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+    [self addSubview:shadowImageView];
+    _shadowImageView = shadowImageView;
 }
 
 /**
