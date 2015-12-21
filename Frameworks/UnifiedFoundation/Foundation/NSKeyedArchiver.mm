@@ -14,24 +14,26 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSNull.h"
-#include "Foundation/NSValue.h"
-#include "Foundation/NSPropertyList.h"
-#include "Foundation/NSKeyedArchiver.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSAutoreleasePool.h"
-#include "Etc.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSNull.h"
+#import "Foundation/NSValue.h"
+#import "Foundation/NSPropertyList.h"
+#import "Foundation/NSKeyedArchiver.h"
+#import "Foundation/NSDate.h"
+#import "Foundation/NSAutoreleasePool.h"
+#import "Etc.h"
 
-#include "Hash.h"
+#import "Hash.h"
 typedef HashMap<id, unsigned> o2uHash;
 typedef HashMap<id, id> o2oHash;
+
+NSString* const NSInvalidArchiveOperationException = @"NSInvalidArchiveOperationException";
 
 struct NSKeyedArchiverPriv {
     o2oHash clsMap; /* Map classes to names.    */
@@ -40,54 +42,21 @@ struct NSKeyedArchiverPriv {
     o2oHash repMap; /* Mappings for objects.    */
 };
 
-// static o2uHash *globalClassMap;
-
-static id NSStringClass = 0;
-static id NSScannerClass = 0;
-static char* scanFloatSel;
-static char* scanStringSel;
-static char* scannerSel;
-static BOOL (*scanFloatImp)(id, const char*, float*);
-static BOOL (*scanStringImp)(id, const char*, id, id*);
-static id (*scannerImp)(id, const char*, id);
-
-#define RELEASE(object) [object release]
-#define RETAIN(object) [object retain]
-#define DESTROY(object) [object release]
-#define AUTORELEASE(object) [object autorelease]
-#define CREATE_AUTORELEASE_POOL(object) id(pool) = [[NSAutoreleasePool alloc] init]
-
 void printContents(int level, id obj);
 
-static inline void setupCache(void) {
-    if (NSStringClass == 0) {
-        NSStringClass = [NSString class];
+static inline void _checkKey(NSString* aKey, NSMutableDictionary* _enc) {
+    if (![aKey isKindOfClass:[NSString class]]) {
+        NSLog(@"Key is not an NSString\n");
         assert(0);
-        // NSScannerClass = [NSScanner class];
-        scanFloatSel = "scanFloat:";
-        scanStringSel = "scanString:intoString:";
-        scannerSel = "scannerWithString:";
-        /*
-        scanFloatImp = (BOOL (*)(NSScanner*, SEL, float*))
-        [NSScannerClass instanceMethodForSelector: scanFloatSel];
-        scanStringImp = (BOOL (*)(NSScanner*, SEL, NSString*, NSString**))
-        [NSScannerClass instanceMethodForSelector: scanStringSel];
-        scannerImp = (id (*)(Class, SEL, NSString*))
-        [NSScannerClass methodForSelector: scannerSel];
-        */
+    }
+    if ([aKey hasPrefix:@"$"]) {
+        aKey = [@"$" stringByAppendingString:aKey];
+    }
+    if ([_enc objectForKey:aKey] != nil) {
+        NSLog(@"Key not found:%s\n", [aKey UTF8String]);
+        assert(0);
     }
 }
-
-#define CHECKKEY                                       \
-    if ([aKey isKindOfClass:[NSString class]] == NO) { \
-        assert(0);                                     \
-    }                                                  \
-    if ([aKey hasPrefix:@"$"] == YES) {                \
-        aKey = [@"$" stringByAppendingString:aKey];    \
-    }                                                  \
-    if ([_enc objectForKey:aKey] != nil) {             \
-        assert(0);                                     \
-    }
 
 /*
 * Make a dictionary referring to the object at ref in the array of all objects.
@@ -101,27 +70,20 @@ static id makeReference(unsigned ref) {
     return d;
 }
 
-@implementation NSKeyedArchiver : NSCoder {
+@implementation NSKeyedArchiver {
     NSMutableData* _data;
-    NSMutableArray* _plistStack;
-    NSMutableArray* _objects;
-    NSMutableDictionary* _top;
-    id _delegate;
-    NSPropertyListFormat _outputFormat;
-    NSMapTable* _nameToClass;
-    NSUInteger _pass;
-    NSMapTable* _objectToUid;
 
-    NSPropertyListFormat _format;
     unsigned _keyNum;
-    id _enc, _obj, _retainList;
+    NSMutableDictionary* _enc;
+    NSMutableArray* _obj;
+    NSMutableArray* _retainList;
 
     struct NSKeyedArchiverPriv* _priv;
 }
 
 - (void)_encodeArrayOfObjects:(NSArray*)anArray forKey:(NSString*)aKey {
     id o;
-    CHECKKEY
+    _checkKey(aKey, _enc);
 
     if (anArray == nil) {
         o = makeReference(0);
@@ -142,75 +104,72 @@ static id makeReference(unsigned ref) {
  @Status Interoperable
 */
 - (void)encodeInt:(int)anInteger forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeInteger:(int)anInteger forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithInt:anInteger] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeInt32:(int32_t)anInteger forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithLong:anInteger] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithLong:anInteger] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeInt64:(int64_t)anInteger forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithLongLong:anInteger] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithLongLong:anInteger] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeBool:(BOOL)aBool forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithBool:aBool] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithBool:aBool] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeFloat:(float)aFloat forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithFloat:aFloat] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithFloat:aFloat] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeDouble:(double)aDouble forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSNumber numberWithDouble:aDouble] forKey:aKey];
-}
-
-- (void)encodeCGPoint:(CGPoint)pt forKey:(NSString*)aKey {
-    CHECKKEY
-
-        [_enc setObject:[NSValue valueWithCGPoint:pt] forKey:aKey];
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSNumber numberWithDouble:aDouble] forKey:aKey];
 }
 
 /**
  @Status Interoperable
 */
-- (void)encodeBytes:(char*)aPointer length:(int)length forKey:(NSString*)aKey {
-    CHECKKEY
+- (void)encodeCGPoint:(CGPoint)pt forKey:(NSString*)aKey {
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSValue valueWithCGPoint:pt] forKey:aKey];
+}
 
-        [_enc setObject:[NSData dataWithBytes:aPointer length:length] forKey:aKey];
+/**
+ @Status Interoperable
+*/
+- (void)encodeBytes:(const void*)aPointer length:(NSUInteger)length forKey:(NSString*)aKey {
+    _checkKey(aKey, _enc);
+    [_enc setObject:[NSData dataWithBytes:aPointer length:length] forKey:aKey];
 }
 
 /**
@@ -222,16 +181,19 @@ static id makeReference(unsigned ref) {
     [a encodeObject:anObject forKey:@"root"];
     [a finishEncoding];
     NSMutableData* d = [m copy];
-    DESTROY(m);
-    DESTROY(a);
-    return AUTORELEASE(d);
+    [m release];
+    [a release];
+    return [d autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
-    RELEASE(_enc);
-    RELEASE(_obj);
-    RELEASE(_data);
-    RELEASE(_retainList);
+    [_enc release];
+    [_obj release];
+    [_data release];
+    [_retainList release];
     delete _priv;
 
     [super dealloc];
@@ -250,8 +212,8 @@ static id makeReference(unsigned ref) {
     [final setObject:[NSNumber numberWithInt:100000] forKey:@"$version"];
     [final setObject:_enc forKey:@"$top"];
     [final setObject:_obj forKey:@"$objects"];
-    id data = [NSPropertyListSerialization dataFromPropertyList:final format:_format errorDescription:&error];
-    RELEASE(final);
+    id data = [NSPropertyListSerialization dataFromPropertyList:final format:_outputFormat errorDescription:&error];
+    [final release];
     [_data setData:data];
     [_delegate archiverDidFinish:self];
 }
@@ -260,13 +222,13 @@ static id makeReference(unsigned ref) {
  @Status Interoperable
 */
 + (BOOL)archiveRootObject:(id)anObject toFile:(NSString*)aPath {
-    CREATE_AUTORELEASE_POOL(pool);
+    id pool = [NSAutoreleasePool new];
     id d;
     BOOL result;
 
     d = [self archivedDataWithRootObject:anObject];
     result = [d writeToFile:aPath atomically:YES];
-    RELEASE(pool);
+    [pool release];
     return result;
 }
 
@@ -279,14 +241,14 @@ static id makeReference(unsigned ref) {
         _priv = new NSKeyedArchiverPriv;
 
         _keyNum = 0;
-        _data = RETAIN(data);
+        _data = [data retain];
 
         _enc = [NSMutableDictionary new]; // Top level mapping dict
         _obj = [NSMutableArray new]; // Array of objects.
         _retainList = [NSMutableArray new];
         [_obj addObject:@"$null"]; // Placeholder.
 
-        _format = NSPropertyListBinaryFormat_v1_0;
+        _outputFormat = NSPropertyListBinaryFormat_v1_0;
     }
     return self;
 }
@@ -295,16 +257,27 @@ static id makeReference(unsigned ref) {
  @Status Interoperable
 */
 - (void)encodeObject:(id)anObject forKey:(NSString*)aKey {
-    CHECKKEY
+    _checkKey(aKey, _enc);
+    anObject = [self _encodeObject:anObject conditional:NO];
+    [_enc setObject:anObject forKey:aKey];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)encodeObject:(id)anObject {
+    NSString* aKey = [NSString stringWithFormat:@"$%u", _keyNum++];
 
     anObject = [self _encodeObject:anObject conditional:NO];
     [_enc setObject:anObject forKey:aKey];
 }
 
-- (void)encodeObject:(id)anObject {
-    NSString* aKey = [NSString stringWithFormat:@"$%u", _keyNum++];
-
-    anObject = [self _encodeObject:anObject conditional:NO];
+/**
+ @Status Interoperable
+*/
+- (void)encodeConditionalObject:(id)anObject forKey:(NSString*)aKey {
+    _checkKey(aKey, _enc);
+    anObject = [self _encodeObject:anObject conditional:YES];
     [_enc setObject:anObject forKey:aKey];
 }
 
@@ -383,7 +356,7 @@ static id makeReference(unsigned ref) {
                     _priv->uIdMap.insert(anObject, ref);
                     [_obj addObject:objectInfo];
                 }
-                RELEASE(m);
+                [m release];
             }
         }
     }
@@ -465,9 +438,9 @@ static id makeReference(unsigned ref) {
                 c = next;
             }
             [cDict setObject:hierarchy forKey:@"$classes"];
-            RELEASE(hierarchy);
+            [hierarchy release];
             [_obj addObject:cDict];
-            RELEASE(cDict);
+            [cDict release];
         }
 
         /*
@@ -487,31 +460,47 @@ static id makeReference(unsigned ref) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 + (NSString*)classNameForClass:(id)aClass {
-    // return (NSString*)NSMapGet(globalClassMap, (void*)aClass);
+    UNIMPLEMENTED();
     return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (void)setClassName:(NSString*)codedName forClass:(Class)aClass {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSString*)classNameForClass:(id)aClass {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setClassName:(NSString*)codedName forClass:(Class)aClass {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
-- (NSString*)classNameForClass:(id)aClass {
-    id* nameTmp;
-    if (_priv->clsMap.get(aClass, nameTmp))
-        return *nameTmp;
-    return nil;
-}
-
 - (BOOL)allowsKeyedCoding {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeConditionalObject:(id)object {
     [self encodeObject:object];
 }
-
-//
 
 @end

@@ -14,11 +14,10 @@
 //
 //******************************************************************************
 
-@interface UIClassSwapper : NSObject {
-@public
-    id className, originalClassName;
-}
+@interface UIClassSwapper : NSObject
+
 - (id)instantiateWithCoder:(id)coder;
-- (NSString*)originalClassName;
-- (NSString*)className;
+@property (nonatomic, copy) NSString* originalClassName;
+@property (nonatomic, copy) NSString* className;
+
 @end

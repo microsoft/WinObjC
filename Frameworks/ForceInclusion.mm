@@ -21,7 +21,7 @@
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 #include "UIKit/UIRuntimeOutletConnection.h"
-#include "UIKit/UIClassSwapper.h"
+#include "UIClassSwapper.h"
 #include "QuartzCore/CATransaction.h"
 #include "UnifiedFoundation/Foundation/NSColor.h"
 
