@@ -14,19 +14,20 @@
 //
 //******************************************************************************
 
-#include <math.h>
-
-#include "Starboard.h"
-#include "CoreFoundation/CFArray.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSTimer.h"
+#import <math.h>
+#import <Starboard.h>
+#import <CoreFoundation/CFArray.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSTimer.h>
+#import "NSRunLoopState.h"
+#import "NSRunLoop+Internal.h"
 
 @implementation NSTimer {
     BOOL _repeats;
     BOOL _valid;
     BOOL _isDestroying;
-    NSObject* _timerTarget;
+    id _timerTarget;
     BOOL _timerTargetReleased;
     double _interval;
     double _nextFireTime;
@@ -162,7 +163,7 @@
  @Status Interoperable
 */
 + (NSTimer*)scheduledTimerWithTimeInterval:(double)seconds
-                                    target:(NSObject*)target
+                                    target:(id)target
                                   selector:(SEL)selector
                                   userInfo:(NSObject*)userInfo
                                    repeats:(BOOL)repeats {
@@ -187,7 +188,7 @@
  @Status Interoperable
 */
 + (NSTimer*)timerWithTimeInterval:(double)seconds
-                           target:(NSObject*)target
+                           target:(id)target
                          selector:(SEL)selector
                          userInfo:(NSObject*)userInfo
                           repeats:(BOOL)repeats {
@@ -210,7 +211,7 @@
 */
 - (NSTimer*)initWithFireDate:(NSDate*)date
                     interval:(double)seconds
-                      target:(NSObject*)target
+                      target:(id)target
                     selector:(SEL)selector
                     userInfo:(NSObject*)userInfo
                      repeats:(BOOL)repeats {

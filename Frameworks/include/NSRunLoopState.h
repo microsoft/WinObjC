@@ -36,6 +36,7 @@
     bool _builtWakeupSockets;
     int _wakeupSockets[2];
 }
++ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
 - (NSObject*)init;
 - (void)dealloc;
 - (void)wakeUp;

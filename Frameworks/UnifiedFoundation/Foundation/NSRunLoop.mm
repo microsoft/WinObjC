@@ -13,26 +13,29 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "CoreFoundation/CFRunLoop.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSLock.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSThread.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSAutoreleasePool.h"
-#include "NSRunLoopState.h"
-#include "NSOrderedPerform.h"
-#include "Foundation/NSNotificationCenter.h"
-#include "Foundation/NSOperationQueue.h"
-
-#include "dispatch/dispatch.h"
-#include <Windows.h>
+#import <Starboard.h>
+#import <CoreFoundation/CFRunLoop.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSLock.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSThread.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSNotificationCenter.h>
+#import <Foundation/NSOperationQueue.h>
+#import <Windows.h>
+#import "NSRunLoopState.h"
+#import "NSOrderedPerform.h"
+#import "NSRunLoop+Internal.h"
+#import "dispatch/dispatch.h"
 
 extern "C" NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
 extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
+
+@interface NSRunLoop ()
+@property (readwrite, copy) NSString* currentMode;
+@end
 
 static void DispatchMainRunLoopWakeup(void* arg) {
     [[NSRunLoop mainRunLoop] _wakeUp];
@@ -85,7 +88,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [super dealloc];
 }
 
-- (NSRunLoopState*)stateForMode:(NSString*)mode {
+- (NSRunLoopState*)_stateForMode:(NSString*)mode {
     pthread_mutex_lock(&_modeLock);
 
     NSRunLoopState* state = [_modes objectForKey:mode];
@@ -104,10 +107,10 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
     if ([mode isEqualToString:NSRunLoopCommonModes]) {
         for (NSString* common in _commonModes) {
-            [result addObject:[self stateForMode:common]];
+            [result addObject:[self _stateForMode:common]];
         }
     } else {
-        [result addObject:[self stateForMode:mode]];
+        [result addObject:[self _stateForMode:mode]];
     }
 
     return result;
@@ -157,22 +160,15 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return didPerform;
 }
 
-/**
- @Status Interoperable
-*/
-- (NSString*)currentMode {
-    return _currentMode;
-}
-
 - (void)_wakeUp {
-    [[self stateForMode:_currentMode] wakeUp];
+    [[self _stateForMode:_currentMode] wakeUp];
 }
 
 /**
  @Status Interoperable
 */
 - (NSDate*)limitDateForMode:(NSString*)mode {
-    NSRunLoopState* state = [self stateForMode:mode];
+    NSRunLoopState* state = [self _stateForMode:mode];
 
     if (![mode isEqualToString:_currentMode]) {
         [_currentMode release];
@@ -208,7 +204,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
  @Status Interoperable
 */
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date {
-    NSRunLoopState* state = [self stateForMode:mode];
+    NSRunLoopState* state = [self _stateForMode:mode];
 
     if ([[NSNotificationQueue defaultQueue] hasIdleNotificationsInMode:mode]) {
         [[NSNotificationQueue defaultQueue] idleProcessMode:mode];
