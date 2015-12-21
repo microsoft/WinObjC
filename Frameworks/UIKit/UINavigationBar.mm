@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "NSStringInternal.h"
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
@@ -275,7 +276,7 @@ static void setBackground(UINavigationBar* self) {
 - (void)setTintColor:(UIColor*)color {
     UNIMPLEMENTED();
     _tintColor = color;
-    if (((int)[[[UIDevice currentDevice] systemVersion] versionStringCompare:@"7.0"]) >= 0) {
+    if (((int)[[[UIDevice currentDevice] systemVersion] _versionStringCompare:@"7.0"]) >= 0) {
         // If we're in >= ios7, this means that we set the children to this colour
     } else {
         // Otherwise, it means setting the background colour

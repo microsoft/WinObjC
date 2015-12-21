@@ -17,6 +17,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "Starboard.h"
+#include "NSStringInternal.h"
 #include "Foundation/NSBundle.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSPropertyList.h"
@@ -241,14 +242,14 @@ extern "C" BOOL isOSTarget(NSString* versionStr) {
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString* minOSVersion = [infoDict objectForKey:@"MinimumOSVersion"];
     if (minOSVersion != nil) {
-        if (((int)[minOSVersion versionStringCompare:versionStr]) >= 0) {
+        if (((int)[minOSVersion _versionStringCompare:versionStr]) >= 0) {
             return true;
         }
     }
 
     NSString* platformVersion = [infoDict objectForKey:@"DTPlatformVersion"];
     if (platformVersion != nil) {
-        if (((int)[platformVersion versionStringCompare:versionStr]) >= 0) {
+        if (((int)[platformVersion _versionStringCompare:versionStr]) >= 0) {
             return true;
         }
     }
@@ -275,7 +276,6 @@ extern "C" BOOL isOSTarget(NSString* versionStr) {
 }
 
 @interface NSBundle () {
-    NSDictionary* _infoDictionary;
     NSDictionary* _localizedStrings;
     NSMutableArray* _preferredLocalizations;
 
@@ -286,6 +286,7 @@ extern "C" BOOL isOSTarget(NSString* versionStr) {
 
 @property (readwrite, copy) NSURL* bundleURL;
 @property (readwrite, copy) NSString* bundlePath;
+@property (readwrite, copy) NSDictionary* infoDictionary;
 
 @end
 
@@ -422,7 +423,7 @@ static int sortFiles(const void* p1, const void* p2) {
 
 static void scanBundle(NSBundle* self, NSString* path) {
     char* bundlePath = (char*)[path UTF8String];
-    ScanDir(self, "", bundlePath);
+    ScanDir(self, const_cast<char*>(""), bundlePath);
 
     qsort(self->_files, self->_numFiles, sizeof(BundleFile), sortFiles);
     return;
@@ -639,6 +640,14 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
 }
 
 /**
+ @Status Stub
+*/
++ (NSArray*)allFrameworks {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
  @Status Interoperable
 */
 + (NSBundle*)mainBundle {
@@ -675,7 +684,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
 */
 - (instancetype)initWithUrl:(NSURL*)url {
     if ([url isFileURL]) {
-        return [self initwithPath:[url path]];
+        return [self initWithPath:[url path]];
     }
 
     EbrDebugLog("bad URL\n");
@@ -961,10 +970,47 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 */
 - (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension {
     NSString* path = [self pathForResource:name ofType:extension];
+    if (path == nil) {
+        return nil;
+    }
+
+    return [NSURL fileURLWithPath:path];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension subdirectory:(NSString*)subpath {
+    NSString* path = [self pathForResource:name ofType:extension inDirectory:subpath];
     if (path == nil)
         return nil;
 
     return [NSURL fileURLWithPath:path];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLForResource:(NSString*)name
+           withExtension:(NSString*)extension
+            subdirectory:(NSString*)subpath
+            localization:(NSString*)localizationName {
+    NSString* path = [self pathForResource:name ofType:extension inDirectory:subpath forLocalization:localizationName];
+    if (path == nil)
+        return nil;
+
+    return [NSURL fileURLWithPath:path];
+}
+
+/**
+ @Status Stub
+*/
++ (NSURL*)URLForResource:(NSString*)name
+           withExtension:(NSString*)extension
+            subdirectory:(NSString*)subpath
+         inBundleWithURL:(NSURL*)bundleURL {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 /**
@@ -1006,6 +1052,14 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     }
 
     return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)pathsForResourcesOfType:(NSString*)type inDirectory:(NSString*)path forLocalization:(NSString*)localization {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 /**
@@ -1105,6 +1159,14 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
+ @Status Stub
+*/
+- (NSURL*)URLForAuxiliaryExecutable:(NSString*)executableName {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
  @Status Caveat
  @Notes Returns bundlePath
 */
@@ -1121,13 +1183,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
- @Status Interoperable
-*/
-- (NSDictionary*)infoDictionary {
-    return _infoDictionary;
-}
-
-/**
  @Status Stub
 */
 - (NSArray*)preferredLocalizations {
@@ -1140,6 +1195,14 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     }
 
     return _preferredLocalizations;
+}
+
+/**
+ @Status Stub
+*/
+- (NSString*)pathForAuxiliaryExecutable:(NSString*)executable {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 /**
@@ -1224,6 +1287,14 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
+ @Status Stub
+*/
++ (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath inBundleWithURL:(NSURL*)bundleURL {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
  @Status Interoperable
 */
 - (NSArray*)URLsForResourcesWithExtension:(NSString*)type subdirectory:(NSString*)directory {
@@ -1238,11 +1309,66 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
+ @Status Stub
+*/
+- (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath localization:(NSString*)localizationName {
+    UNIMPLEMENTED();
+    return [self URLsForResourcesWithExtension:extension subdirectory:subpath];
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)preflightAndReturnError:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)loadAndReturnError:(NSError**)error {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
  @Status Interoperable
- @Notes Always returns TRUE, NSBundle is loaded @ designated initializer
+ @Notes Always returns YES, NSBundle is loaded @ designated initializer
 */
 - (BOOL)load {
-    return TRUE;
+    return YES;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isLoaded {
+    UNIMPLEMENTED();
+    return YES;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)unload {
+    UNIMPLEMENTED();
+    return NO;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setPreservationPriority:(double)priority forTags:(NSSet*)tags {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (double)preservationPriorityForTag:(NSString*)tag {
+    UNIMPLEMENTED();
+    return 0.0;
 }
 
 @end

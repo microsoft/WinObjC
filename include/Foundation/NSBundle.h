@@ -29,6 +29,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 SB_EXPORT NSString* const NSBundleDidLoadNotification;
 SB_EXPORT NSString* const NSLoadedClasses;
 
+typedef NS_ENUM(NSUInteger, NSBundleExecutableArchitecture) {
+    NSBundleExecutableArchitectureI386 = 0x00000007,
+    NSBundleExecutableArchitecturePPC = 0x00000012,
+    NSBundleExecutableArchitectureX86_64 = 0x01000007,
+    NSBundleExecutableArchitecturePPC64 = 0x01000012
+};
+
 struct BundleFile;
 
 FOUNDATION_EXPORT_CLASS
@@ -36,6 +43,34 @@ FOUNDATION_EXPORT_CLASS
 
 @property (readonly, copy) NSURL* bundleURL;
 @property (readonly, copy) NSString* bundlePath;
+@property (readonly, copy) NSString* resourcePath;
+
+@property (readonly, copy) NSURL* appStoreReceiptURL;
+
+@property (readonly, copy) NSString* bundleIdentifier;
+@property (readonly, copy) NSDictionary* infoDictionary;
+@property (readonly, copy) NSURL* builtInPlugInsURL;
+@property (readonly, copy) NSString* builtInPlugInsPath;
+@property (readonly, copy) NSURL* executableURL;
+@property (readonly, copy) NSString* executablePath;
+@property (readonly, copy) NSURL* privateFrameworksURL;
+@property (readonly, copy) NSString* privateFrameworksPath;
+@property (readonly, copy) NSURL* sharedFrameworksURL;
+@property (readonly, copy) NSString* sharedFrameworksPath;
+@property (readonly, copy) NSURL* sharedSupportURL;
+@property (readonly, copy) NSString* sharedSupportPath;
+@property (readonly, copy) NSURL* resourceURL;
+
+@property (readonly, getter=isLoaded) BOOL loaded;
+
+@property (readonly, copy) NSArray* preferredLocalizations;
+@property (readonly, copy) NSString* developmentLocalization;
+@property (readonly, copy) NSArray* localizations;
+@property (readonly, copy) NSDictionary* localizedInfoDictionary;
+
+@property (readonly, copy) NSArray* executableArchitectures;
+
+@property (readonly) Class principalClass;
 
 + (NSArray*)allBundles;
 + (NSArray*)allFrameworks;
@@ -54,28 +89,16 @@ FOUNDATION_EXPORT_CLASS
 
 - initWithPath:(NSString*)path;
 - initWithUrl:(NSURL*)url;
-- (NSString*)resourcePath;
-- (NSString*)builtInPlugInsPath;
-- (NSDictionary*)infoDictionary;
-- (NSDictionary*)localizedInfoDictionary;
+
 - objectForInfoDictionaryKey:(NSString*)key;
-- (NSString*)bundleIdentifier;
-- (NSString*)developmentLocalization;
-- (NSArray*)executableArchitectures;
-- (NSString*)executablePath;
+- (NSURL*)URLForAuxiliaryExecutable:(NSString*)executableName;
+
 - (NSArray*)localizations;
-- (NSArray*)preferredLocalizations;
-- (NSString*)privateFrameworksPath;
-- (NSString*)sharedFrameworksPath;
-- (NSString*)sharedSupportPath;
-- (NSURL*)appStoreReceiptURL;
 
 - (NSString*)pathForAuxiliaryExecutable:(NSString*)executable;
 
-- (Class)principalClass;
 - (Class)classNamed:(NSString*)className;
 
-- (BOOL)isLoaded;
 - (BOOL)preflightAndReturnError:(NSError**)error;
 - (BOOL)loadAndReturnError:(NSError**)error;
 
@@ -92,7 +115,21 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)table;
 
 - (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension;
+- (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension subdirectory:(NSString*)subpath;
+- (NSURL*)URLForResource:(NSString*)name
+           withExtension:(NSString*)extension
+            subdirectory:(NSString*)subpath
+            localization:(NSString*)localizationName;
++ (NSURL*)URLForResource:(NSString*)name
+           withExtension:(NSString*)extension
+            subdirectory:(NSString*)subpath
+         inBundleWithURL:(NSURL*)bundleURL;
++ (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath inBundleWithURL:(NSURL*)bundleURL;
 - (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath;
+- (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath localization:(NSString*)localizationName;
+
+- (void)setPreservationPriority:(double)priority forTags:(NSSet*)tags;
+- (double)preservationPriorityForTag:(NSString*)tag;
 
 @end
 
