@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSMutableData.h"
+#import "Starboard.h"
+#import <Foundation/NSMutableData.h>
 
-@implementation NSMutableData : NSData
+@implementation NSMutableData
 void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     if (exact) {
         self->_capacity = length;
@@ -103,7 +103,7 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 /**
  @Status Interoperable
 */
-- (void)appendBytes:(const char*)bytes length:(unsigned)length {
+- (void)appendBytes:(const void*)bytes length:(NSUInteger)length {
     setCapacity(self, _length + length);
     memcpy(&_bytes[_length], bytes, length);
     _length += length;
@@ -168,7 +168,13 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 /**
  @Status Interoperable
 */
-- (void)replaceBytesInRange:(NSRange)range withBytes:(void*)bytes {
+- (void)replaceBytesInRange:(NSRange)range withBytes:(const void*)bytes {
+    if (range.location > _length) {
+        [NSException
+             raise:NSRangeException
+            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
+    }
+
     if (range.location + range.length > _length) {
         [self increaseLengthBy:(range.location + range.length) - (_length)];
     }
@@ -180,22 +186,64 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 /**
  @Status Interoperable
 */
-- (void)replaceBytesInRange:(NSRange)aRange withBytes:(void*)bytes length:(unsigned)length {
-    if (aRange.location == 0 && aRange.length == _length && length == 0) {
-        [self setLength:0];
-        return;
+- (void)resetBytesInRange:(NSRange)range {
+
+    if (range.location > _length) {
+        [NSException
+             raise:NSRangeException
+            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
     }
-    assert(!"replaceBytesInRangeLength not implemented!");
+
+    if (range.location + range.length > _length) {
+        [self increaseLengthBy:(range.location + range.length) - (_length)];
+    }
+
+    memset(&_bytes[range.location], 0, range.length);
 }
 
 /**
  @Status Interoperable
 */
-- (uint8_t*)mutableBytes {
-    return _bytes;
+- (void)replaceBytesInRange:(NSRange)range withBytes:(const void*)bytes length:(unsigned)length {
+    // location starts beyond current length, throws
+    if (range.location > _length) {
+        [NSException
+             raise:NSRangeException
+            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
+    }
+
+    // calcuate tailLength - e.g., for "1234567890", if replacement happens with the range of "234" with "xxxx", final result is "1xxxx567890"
+    // we need shift 567890 to the right - 567890 is the tail, its length - taillength is 6 
+    // if, however, we replace range "890" or the tail with anything, there is no need to shift the tail because tail is replaced
+    unsigned tailLength = 0;
+    if (range.location + range.length < _length) {
+        tailLength = _length - (range.location + range.length);
+    }
+
+    // calcuate and set newLength/capacity after replace
+    unsigned newLength = range.location + length + tailLength;
+    setCapacity(self, newLength, true);
+    _length = newLength;
+
+    // shift tail to the new location if necessary, notice use memmove in case memory overlap
+    if (tailLength > 0) {
+        memmove(&_bytes[newLength - tailLength], &_bytes[range.location + range.length], tailLength);
+    }
+
+    // do replacement when necessary
+    if (length > 0) {
+        memcpy(&_bytes[range.location], bytes, length);
+    }
 }
 
-- (id)copyWithZone:(id)zone {
+/**
+ @Status Interoperable
+*/
+- (void*)mutableBytes {
+    return (void*)_bytes;
+}
+
+- (id)copyWithZone:(NSZone*)zone {
     return [[NSMutableData alloc] initWithData:self];
 }
 
