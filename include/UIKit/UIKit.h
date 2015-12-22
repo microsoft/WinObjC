@@ -139,6 +139,7 @@
 #import <UIKit/UIActivityViewController.h>
 #import <UIKit/UIRefreshControl.h>
 #import <UIKit/UITableViewHeaderFooterView.h>
+#import <UIKit/UIPageViewController.h>
 #import <UIKit/UIPrintInteractionController.h>
 #import <UIKit/NSLayoutConstraint.h>
 #import <UIKit/UIPageViewController.h>

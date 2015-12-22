@@ -290,8 +290,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     // TODO: Probably shouldn't hammer the dataSource when it returns nil.
     if (interactive || _keepAdjacent) {
         if ((self.contentOffset.x + currentFrame.size.width) >= ([_controllers count] * currentFrame.size.width)) {
+            // BUG: See https://github.com/Microsoft/WinObjC/issues/291 for the cast
             UIViewController* nextController = 
-                [[_viewController dataSource] pageViewController:_viewController 
+                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController 
                                viewControllerAfterViewController:[_controllers objectAtIndex:([_controllers count] - 1)]];
             if (nextController != nil) {
                 [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionForward targetOffset:targetOffset];
@@ -299,7 +300,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         }
         if (self.contentOffset.x <= 0) {
             UIViewController* nextController = 
-                [[_viewController dataSource] pageViewController:_viewController 
+                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController 
                               viewControllerBeforeViewController:[_controllers objectAtIndex:0]];
             if (nextController != nil) {
                 [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionReverse targetOffset:targetOffset];
