@@ -14,17 +14,17 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#import "Starboard.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableDictionary.h"
-#import "Foundation/NSNumber.h"
-#import "Foundation/NSProcessInfo.h"
-#import "Foundation/NSNotificationCenter.h"
-#import "Foundation/NSData.h"
-#import "Foundation/NSUserDefaults.h"
-#import "Foundation/NSThread.h"
-#import "NSPersistentDomain.h"
+#include "Starboard.h"
+#include "Foundation/NSMutableArray.h"
+#include "Foundation/NSString.h"
+#include "Foundation/NSMutableDictionary.h"
+#include "Foundation/NSNumber.h"
+#include "Foundation/NSProcessInfo.h"
+#include "Foundation/NSNotificationCenter.h"
+#include "Foundation/NSData.h"
+#include "Foundation/NSUserDefaults.h"
+#include "Foundation/NSThread.h"
+#include "NSPersistentDomain.h"
 
 NSString* const NSGlobalDomain = @"NSGlobalDomain";
 NSString* const NSArgumentDomain = @"NSArgumentDomain";
@@ -273,7 +273,7 @@ NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeN
         [number longLongValuePtr:&ret];
     } else {
         if ([number isKindOfClass:[NSNumber class]]) {
-            ret = [number longLongValue];
+            [number _copyInt64Value:&ret];
         }
     }
 
@@ -401,7 +401,7 @@ static id deepCopyValue(id obj) {
     //    with the NSURL
     // 2. for file reference URL, will be treated as non-FileURL, and information which makes this URL
     //    compatible with 10.5 needs to be written as part of the archive as well as its minimal bookmark data
-    // 3. for file path-based URL, getting the path and determine if the path can be treated as relative path
+    // 3. for file path-based URL, getting the path and determine if the path can be treated as relative path 
     //    against to user's home directory, if so, the string is abbreviated by using stringByAbbrevitaingWithTildeInPath.
     if (url == nil) {
         [self removeObjectForKey:defaultName];

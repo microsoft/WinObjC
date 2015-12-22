@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#import <TestFramework.h>
-#import "Starboard.h"
-#import <windows.h>
-#import <CoreFoundation\CFAttributedString.h>
-#import <Foundation\NSAttributedString.h>
-#import <Foundation\NSDictionary.h>
-#import <Foundation\NSMutableAttributedString.h>
-#import <UIKit\UIKit.h>
-#import <vector>
+#include <TestFramework.h>
+#include "Starboard.h"
+#include <windows.h>
+#include <CoreFoundation\CFAttributedString.h>
+#include <Foundation\NSAttributedString.h>
+#include <Foundation\NSDictionary.h>
+#include <Foundation\NSMutableAttributedString.h>
+#include <UIKit\UIKit.h>
+#include <vector>
 
 void assertAttributeAt(
     NSAttributedString* aStr, NSString* attrName, id expectedValue, NSUInteger expectedLocation, NSUInteger expectedLength) {
@@ -506,8 +506,6 @@ TEST(Foundation, AttributedString_SetAttributedString) {
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
 }
 
-// This test is known to fail on Release builds
-// TODO: 5902592 THROW_NS_HR does not throw on Release when called through Foundation from unit tests
 TEST(Foundation, AttributedString_ThrowsBounds) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
 

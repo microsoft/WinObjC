@@ -15,16 +15,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 // Original - Christopher Lloyd <cjwl@objc.net>
 
-#import "Starboard.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableData.h"
-#import "Foundation/NSDictionary.h"
-#import "Foundation/NSNumber.h"
-#import "Foundation/NSDate.h"
-#import "NSPropertyListWriter_binary.h"
-#import "CoreFoundation/CFDictionary.h"
-#import "Foundation/NSMutableArray.h"
-#import <limits>
+#include "Starboard.h"
+#include "Foundation/NSString.h"
+#include "Foundation/NSMutableData.h"
+#include "Foundation/NSDictionary.h"
+#include "Foundation/NSNumber.h"
+#include "Foundation/NSDate.h"
+#include "NSPropertyListWriter_binary.h"
+#include "CoreFoundation/CFDictionary.h"
+#include "Foundation/NSMutableArray.h"
+#include <limits>
 
 #define NSNotFound 0x7fffffff
 
@@ -397,7 +397,9 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         case 'L':
         case 'q':
         case 'Q': {
-            unsigned long long val = [number unsignedLongLongValue];
+            unsigned long long val;
+
+            [number _copyInt64Value:&val];
 
             // FIXME: We need a better way to determine boolean values!
             if ((val == 0) && ((*type == 'c') || (*type == 'C'))) {
@@ -432,7 +434,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
 
                 code = 0x13;
                 appendBytes(self, &code, 1);
-                lval = [number unsignedLongLongValue];
+                [number _copyInt64Value:&lval];
                 lval = NSSwapHostLongLongToBig(lval);
                 appendBytes(self, &lval, 8);
             }

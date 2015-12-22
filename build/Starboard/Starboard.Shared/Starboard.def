@@ -42,3 +42,4 @@ LIBRARY Starboard
     pthread_rwlock_wrlock
     pthread_rwlock_rdlock
     pthread_rwlock_unlock
+    uname

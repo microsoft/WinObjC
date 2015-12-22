@@ -14,9 +14,11 @@
 //
 //******************************************************************************
 
-@interface UIClassSwapper : NSObject <NSSecureCoding>
-
-@property (readonly, nonatomic, copy) NSString* originalClassName;
-@property (readonly, nonatomic, copy) NSString* className;
-
+@interface UIClassSwapper : NSObject {
+@public
+    id className, originalClassName;
+}
+- (id)instantiateWithCoder:(id)coder;
+- (NSString*)originalClassName;
+- (NSString*)className;
 @end
