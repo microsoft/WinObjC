@@ -44,15 +44,16 @@ typedef NS_ENUM(NSUInteger, UILineBreakMode) {
     UILineBreakModeCharacterWrap = NSLineBreakByCharWrapping,
     UILineBreakModeClip = NSLineBreakByClipping,
     UILineBreakModeHeadTruncation = NSLineBreakByTruncatingHead,
-    UILineBreakModeTailTruncation =  NSLineBreakByTruncatingTail,
+    UILineBreakModeTailTruncation = NSLineBreakByTruncatingTail,
     UILineBreakModeMiddleTruncation = NSLineBreakByTruncatingMiddle,
 };
 
-typedef NS_ENUM(NSUInteger, UITextAlignment) {
+enum {
     UITextAlignmentLeft = NSTextAlignmentLeft,
     UITextAlignmentCenter = NSTextAlignmentCenter,
     UITextAlignmentRight = NSTextAlignmentRight,
 };
+typedef NSTextAlignment UITextAlignment;
 
 typedef NS_ENUM(NSUInteger, UIBaselineAdjustment) {
     UIBaselineAdjustmentAlignBaselines,

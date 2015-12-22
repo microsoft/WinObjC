@@ -28,13 +28,16 @@ typedef NS_ENUM(NSUInteger, NSLineBreakMode) {
     NSLineBreakByTruncatingMiddle
 };
 
-typedef NS_ENUM(NSUInteger, NSTextAlignment) {
+// did't uuse NS_ENUM because  UITextAlignment need to 
+// inherit from NSTextAlignment to maintain cmopability
+enum {
     NSTextAlignmentLeft = 0,
     NSTextAlignmentCenter = 1,
     NSTextAlignmentRight = 2,
     NSTextAlignmentJustified = 3,
     NSTextAlignmentNatural = 4,
 };
+typedef NSUInteger NSTextAlignment;
 
 typedef NS_ENUM(NSUInteger, NSWritingDirection) {
     NSWritingDirectionNatural = -1,
