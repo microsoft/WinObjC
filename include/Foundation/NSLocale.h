@@ -34,36 +34,61 @@ FOUNDATION_EXPORT NSString* const NSLocaleQuotationBeginDelimiterKey;
 FOUNDATION_EXPORT NSString* const NSLocaleQuotationEndDelimiterKey;
 FOUNDATION_EXPORT NSString* const NSLocaleAlternateQuotationBeginDelimiterKey;
 FOUNDATION_EXPORT NSString* const NSLocaleAlternateQuotationEndDelimiterKey;
+
+FOUNDATION_EXPORT NSString* const NSGregorianCalendar;
+FOUNDATION_EXPORT NSString* const NSBuddhistCalendar;
+FOUNDATION_EXPORT NSString* const NSChineseCalendar;
+FOUNDATION_EXPORT NSString* const NSHebrewCalendar;
+FOUNDATION_EXPORT NSString* const NSIslamicCalendar;
+FOUNDATION_EXPORT NSString* const NSIslamicCivilCalendar;
+FOUNDATION_EXPORT NSString* const NSJapaneseCalendar;
+FOUNDATION_EXPORT NSString* const NSRepublicOfChinaCalendar;
+FOUNDATION_EXPORT NSString* const NSPersianCalendar;
+FOUNDATION_EXPORT NSString* const NSIndianCalendar;
+FOUNDATION_EXPORT NSString* const NSISO8601Calendar;
+
 FOUNDATION_EXPORT NSString* const NSCurrentLocaleDidChangeNotification;
 
-FOUNDATION_EXPORT_CLASS
-@interface NSLocale : NSObject <NSCoding, NSCopying>
+typedef NS_ENUM(NSUInteger, NSLocaleLanguageDirection) {
+    NSLocaleLanguageDirectionUnknown = kCFLocaleLanguageDirectionUnknown,
+    NSLocaleLanguageDirectionLeftToRight = kCFLocaleLanguageDirectionLeftToRight,
+    NSLocaleLanguageDirectionRightToLeft = kCFLocaleLanguageDirectionRightToLeft,
+    NSLocaleLanguageDirectionTopToBottom = kCFLocaleLanguageDirectionTopToBottom,
+    NSLocaleLanguageDirectionBottomToTop = kCFLocaleLanguageDirectionBottomToTop
+};
 
-+ systemLocale;
-+ currentLocale;
-+ autoupdatingCurrentLocale;
+FOUNDATION_EXPORT_CLASS
+@interface NSLocale : NSObject <NSSecureCoding, NSCopying>
+
+@property (readonly, copy) NSString* localeIdentifier;
+
++ (NSLocale*)systemLocale;
++ (NSLocale*)currentLocale;
++ (NSLocale*)autoupdatingCurrentLocale;
 
 + (NSArray*)availableLocaleIdentifiers;
-
-+ (NSString*)canonicalLocaleIdentifierFromString:(NSString*)string;
-
-+ (NSDictionary*)componentsFromLocaleIdentifier:(NSString*)identifier;
-+ (NSString*)localeIdentifierFromComponents:(NSDictionary*)components;
-
 + (NSArray*)ISOCountryCodes;
 + (NSArray*)ISOLanguageCodes;
 + (NSArray*)ISOCurrencyCodes;
 + (NSArray*)commonISOCurrencyCodes;
 
++ (NSString*)canonicalLocaleIdentifierFromString:(NSString*)string;
++ (NSDictionary*)componentsFromLocaleIdentifier:(NSString*)identifier;
++ (NSString*)localeIdentifierFromComponents:(NSDictionary*)components;
++ (NSString*)canonicalLanguageIdentifierFromString:(NSString*)string;
++ (NSString*)localeIdentifierFromWindowsLocaleCode:(uint32_t)lcid;
++ (uint32_t)windowsLocaleCodeFromLocaleIdentifier:(NSString*)localeIdentifier;
+
 + (NSArray*)preferredLanguages;
+
++ (NSLocaleLanguageDirection)characterDirectionForLanguage:(NSString*)isoLangCode;
++ (NSLocaleLanguageDirection)lineDirectionForLanguage:(NSString*)isoLangCode;
 
 + (instancetype)localeWithLocaleIdentifier:(NSString*)string;
 
-- initWithLocaleIdentifier:(NSString*)identifier;
+- (instancetype)initWithLocaleIdentifier:(NSString*)identifier;
 
-- (NSString*)localeIdentifier;
-
-- objectForKey:key;
+- (id)objectForKey:(id)key;
 
 - (NSString*)displayNameForKey:key value:value;
 

@@ -54,6 +54,18 @@ NSString* const NSLocaleQuotationEndDelimiterKey = @"NSLocaleQuotationEndDelimit
 NSString* const NSLocaleAlternateQuotationBeginDelimiterKey = @"NSLocaleAlternateQuotationBeginDelimiterKey";
 NSString* const NSLocaleAlternateQuotationEndDelimiterKey = @"NSLocaleAlternateQuotationEndDelimiterKey";
 
+NSString* const NSGregorianCalendar = @"NSGregorianCalendar";
+NSString* const NSBuddhistCalendar = @"NSBuddhistCalendar";
+NSString* const NSChineseCalendar = @"NSChineseCalendar";
+NSString* const NSHebrewCalendar = @"NSHebrewCalendar";
+NSString* const NSIslamicCalendar = @"NSIslamicCalendar";
+NSString* const NSIslamicCivilCalendar = @"NSIslamicCivilCalendar";
+NSString* const NSJapaneseCalendar = @"NSJapaneseCalendar";
+NSString* const NSRepublicOfChinaCalendar = @"NSRepublicOfChinaCalendar";
+NSString* const NSPersianCalendar = @"NSPersianCalendar";
+NSString* const NSIndianCalendar = @"NSIndianCalendar";
+NSString* const NSISO8601Calendar = @"NSISO8601Calendar";
+
 NSString* const NSCurrentLocaleDidChangeNotification = @"NSCurrentLocaleDidChangeNotification";
 
 static NSLocale* _currentLocale;
@@ -61,13 +73,33 @@ static NSLocale* _currentLocale;
 @implementation NSLocale {
     // NSArray<NSString*>* _userPreferredLanguages;
     NSArray* _userPreferredLanguages;
-    // NSArray<NSString*>* userPreferredCurrencies;
+    // NSArray<NSString*>* _userPreferredCurrencies;
     NSArray* _userPreferredCurrencies;
     NSString* _userPreferredLanguage;
     // _userPreferredLanguage seperated by "-" and stored as an array of NSStrings.
     // NSArray<NSString*>* _userPreferredLanguagesSeperatedByString;
     NSArray* _userPreferredLanguagesSeperatedByString;
+    // NSArray<NSString*>* _ISOCountryCodes;
+    NSArray* _ISOCountryCodes;
+    // NSArray<NSString*>* _ISOLanguageCodes;
+    NSArray* _ISOLanguageCodes;
     icu::Locale _locale;
+}
+
+- (NSArray*)_getUserPreferredLanguages {
+    return [[_userPreferredLanguages retain] autorelease];
+}
+
+- (NSArray*)_getISOCountryCodes {
+    return [[_ISOCountryCodes retain] autorelease];
+}
+
+- (NSArray*)_getISOLanguageCodes {
+    return [[_ISOLanguageCodes retain] autorelease];
+}
+
+- (NSArray*)_getUserPreferredCurrencies {
+    return [[_userPreferredCurrencies retain] autorelease];
 }
 
 /**
@@ -119,7 +151,6 @@ static NSLocale* _currentLocale;
  * @return {NSString*} the key for the currency code associated with the locale.
  */
 - (NSString*)getNSLocaleCurrencyCode {
-    // NSArray<NSString*>* componentStrings
     if ([_userPreferredCurrencies count] > 0) {
         return [_userPreferredCurrencies objectAtIndex:0];
     } else {
@@ -133,45 +164,10 @@ static NSLocale* _currentLocale;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _userPreferredLanguages = [[NSLocale preferredLanguages] retain];
-
-        if ([_userPreferredLanguages count] > 0) {
-            const char* language = static_cast<const char*>([[_userPreferredLanguages objectAtIndex:0] UTF8String]);
-            _locale = icu::Locale(language);
-            _userPreferredLanguage = [[_userPreferredLanguages objectAtIndex:0] retain];
-            _userPreferredLanguagesSeperatedByString = [[_userPreferredLanguage componentsSeparatedByString:@"-"] retain];
-        } else {
-            _locale = icu::Locale();
-            _userPreferredLanguage = nil;
-            _userPreferredLanguagesSeperatedByString = nil;
-        }
-
-        ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
-        RETURN_NULL_IF_FAILED(
-            GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
-                                 &globalizationPreferences));
-
-        ComPtr<IVectorView<HSTRING>> currencies;
-        RETURN_NULL_IF_FAILED(globalizationPreferences->get_Currencies(currencies.GetAddressOf()));
-
-        unsigned int size = 0;
-        RETURN_NULL_IF_FAILED(currencies->get_Size(&size));
-
-        NSMutableArray* nsCurrencies = [[NSMutableArray new] autorelease];
-        unsigned int rawLength;
-
-        for (unsigned int i = 0; i < size; ++i) {
-            Wrappers::HString wrlString;
-            RETURN_NULL_IF_FAILED(currencies->GetAt(i, wrlString.GetAddressOf()));
-
-            const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
-
-            [nsCurrencies
-                addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
-                              autorelease]];
-        }
-
-        _userPreferredCurrencies = [nsCurrencies retain];
+        // Initialize user preferred languagess
+        [self _initUserPreferredLanguages];
+        // Initialize user preferred currencies
+        [self _initUserPreferredCurrencies];
     }
 
     return self;
@@ -182,8 +178,98 @@ static NSLocale* _currentLocale;
     [_userPreferredLanguage release];
     [_userPreferredLanguages release];
     [_userPreferredCurrencies release];
+    [_ISOCountryCodes release];
 
     [super dealloc];
+}
+
+- (NSArray*)_enumerateUserPreferredLanguages {
+    ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
+                             &globalizationPreferences));
+
+    ComPtr<IVectorView<HSTRING>> languages;
+    RETURN_NULL_IF_FAILED(globalizationPreferences->get_Languages(languages.GetAddressOf()));
+
+    unsigned int size = 0;
+    RETURN_NULL_IF_FAILED(languages->get_Size(&size));
+
+    NSMutableArray* languageArray = [[NSMutableArray new] autorelease];
+    unsigned int rawLength;
+
+    for (unsigned int i = 0; i < size; ++i) {
+        Wrappers::HString wrlString;
+        RETURN_NULL_IF_FAILED(languages->GetAt(i, wrlString.GetAddressOf()));
+
+        const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
+
+        [languageArray
+            addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
+                          autorelease]];
+    }
+
+    return languageArray;
+}
+
+- (void)_initUserPreferredLanguages {
+    _userPreferredLanguages = [[self _enumerateUserPreferredLanguages] retain];
+
+    if ([_userPreferredLanguages count] > 0) {
+        const char* language = const_cast<char*>([[_userPreferredLanguages objectAtIndex:0] UTF8String]);
+        _locale = icu::Locale(language);
+        _userPreferredLanguage = [[_userPreferredLanguages objectAtIndex:0] retain];
+        _userPreferredLanguagesSeperatedByString = [[_userPreferredLanguage componentsSeparatedByString:@"-"] retain];
+
+        NSMutableArray* languageCodes = [[[NSMutableArray alloc] init] autorelease];
+        NSMutableArray* countryCodes = [[[NSMutableArray alloc] init] autorelease];
+        for (NSString* userPreferredLanguage in _userPreferredLanguages) {
+            NSArray* userPreferredLanguageSeperatedByString = [userPreferredLanguage componentsSeparatedByString:@"-"];
+            [languageCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:0]];
+            if ([userPreferredLanguageSeperatedByString count] > 0) {
+                [countryCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:1]];
+            }
+        }
+        _ISOLanguageCodes = [[NSArray arrayWithArray:languageCodes] retain];
+        _ISOCountryCodes = [[NSArray arrayWithArray:countryCodes] retain];
+    } else {
+        _locale = icu::Locale();
+        _userPreferredLanguage = nil;
+        _userPreferredLanguagesSeperatedByString = nil;
+    }
+}
+
+- (NSArray*)_enumerateUserPreferredCurrencies {
+    ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
+                             &globalizationPreferences));
+
+    ComPtr<IVectorView<HSTRING>> currencies;
+    RETURN_NULL_IF_FAILED(globalizationPreferences->get_Currencies(currencies.GetAddressOf()));
+
+    unsigned int size = 0;
+    RETURN_NULL_IF_FAILED(currencies->get_Size(&size));
+
+    NSMutableArray* nsCurrencies = [[NSMutableArray new] autorelease];
+    unsigned int rawLength;
+
+    for (unsigned int i = 0; i < size; ++i) {
+        Wrappers::HString wrlString;
+        RETURN_NULL_IF_FAILED(currencies->GetAt(i, wrlString.GetAddressOf()));
+
+        const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
+
+        [nsCurrencies
+            addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
+                          autorelease]];
+    }
+
+    return nsCurrencies;
+}
+
+- (void)_initUserPreferredCurrencies {
+    _userPreferredCurrencies = [[self _enumerateUserPreferredCurrencies] retain];
 }
 
 /**
@@ -207,6 +293,105 @@ static NSLocale* _currentLocale;
 */
 - (NSString*)localeIdentifier {
     return [NSString stringWithUTF8String:_locale.getName()];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSArray*)availableLocaleIdentifiers {
+    return [NSArray arrayWithObject:[[self systemLocale] localeIdentifier]];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSArray*)ISOCountryCodes {
+    return [[self systemLocale] _getISOCountryCodes];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSArray*)ISOLanguageCodes {
+    return [[self systemLocale] _getISOLanguageCodes];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSArray*)ISOCurrencyCodes {
+    return [[self systemLocale] _getUserPreferredCurrencies];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSArray*)commonISOCurrencyCodes {
+    return [[self systemLocale] _getUserPreferredCurrencies];
+}
+
+/**
+ @Status Stub
+*/
++ (NSString*)canonicalLocaleIdentifierFromString:(NSString*)string {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (NSDictionary*)componentsFromLocaleIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (NSString*)localeIdentifierFromComponents:(NSDictionary*)components {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (NSString*)canonicalLanguageIdentifierFromString:(NSString*)string {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (NSString*)localeIdentifierFromWindowsLocaleCode:(uint32_t)lcid {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (uint32_t)windowsLocaleCodeFromLocaleIdentifier:(NSString*)localeIdentifier {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
++ (NSLocaleLanguageDirection)characterDirectionForLanguage:(NSString*)isoLangCode {
+    UNIMPLEMENTED();
+    return NSLocaleLanguageDirectionUnknown;
+}
+
+/**
+ @Status Stub
+*/
++ (NSLocaleLanguageDirection)lineDirectionForLanguage:(NSString*)isoLangCode {
+    UNIMPLEMENTED();
+    return NSLocaleLanguageDirectionUnknown;
 }
 
 /**
@@ -245,41 +430,74 @@ static NSLocale* _currentLocale;
 /**
  @Status Interoperable
 */
-+ (instancetype)currentLocale {
++ (NSLocale*)currentLocale {
     return [[_currentLocale retain] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
++ (NSLocale*)systemLocale {
+    return [self currentLocale];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSLocale*)autoupdatingCurrentLocale {
+    return [self currentLocale];
+}
+
 + (NSArray*)preferredLanguages {
-    ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
-    RETURN_NULL_IF_FAILED(
-        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
-                             &globalizationPreferences));
-
-    ComPtr<IVectorView<HSTRING>> languages;
-    RETURN_NULL_IF_FAILED(globalizationPreferences->get_Languages(languages.GetAddressOf()));
-
-    unsigned int size = 0;
-    RETURN_NULL_IF_FAILED(languages->get_Size(&size));
-
-    NSMutableArray* toRet = [[NSMutableArray new] autorelease];
-    unsigned int rawLength;
-
-    for (unsigned int i = 0; i < size; ++i) {
-        Wrappers::HString wrlString;
-        RETURN_NULL_IF_FAILED(languages->GetAt(i, wrlString.GetAddressOf()));
-
-        const wchar_t* rawString = WindowsGetStringRawBuffer(wrlString.Get(), &rawLength);
-
-        [toRet addObject:[[[NSString alloc] initWithBytes:rawString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
-                             autorelease]];
-    }
-
-    return toRet;
+    return [[self systemLocale] _getUserPreferredLanguages];
 }
 
 - (id)valueForUndefinedKey:(NSString*)key {
     // We always return nil for valueForKey we do not support.
     return nil;
+}
+
+/**
+ @Interoperable
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
+/**
+ @Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super init]) {
+        // Can't encode/decode _locale. We will have to recreate it.
+        _userPreferredLanguages = [[coder decodeObjectOfClass:[NSArray class] forKey:@"userPreferredLanguages"] retain];
+        _userPreferredCurrencies = [[coder decodeObjectOfClass:[NSArray class] forKey:@"userPreferredCurrencies"] retain];
+        _userPreferredLanguage = [[coder decodeObjectOfClass:[NSString class] forKey:@"userPreferredLanguage"] retain];
+        _userPreferredLanguagesSeperatedByString =
+            [[coder decodeObjectOfClass:[NSArray class] forKey:@"userPreferredLanguagesSeperatedByString"] retain];
+        if ([_userPreferredLanguages count] > 0) {
+            const char* language = const_cast<char*>([[_userPreferredLanguages objectAtIndex:0] UTF8String]);
+            _locale = icu::Locale(language);
+        } else {
+            _locale = icu::Locale();
+        }
+        _ISOCountryCodes = [[coder decodeObjectOfClass:[NSArray class] forKey:@"ISOCountryCodes"] retain];
+        _ISOLanguageCodes = [[coder decodeObjectOfClass:[NSArray class] forKey:@"ISOLanguageCodes"] retain];
+    }
+    return self;
+}
+
+/**
+ @Interoperable
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    // Can't encode/decode _locale. We will have to recreate it.
+    [coder encodeObject:_userPreferredLanguages forKey:@"userPreferredLanguages"];
+    [coder encodeObject:_userPreferredCurrencies forKey:@"userPreferredCurrencies"];
+    [coder encodeObject:_userPreferredLanguage forKey:@"userPreferredLanguage"];
+    [coder encodeObject:_userPreferredLanguagesSeperatedByString forKey:@"userPreferredLanguagesSeperatedByString"];
+    [coder encodeObject:_ISOCountryCodes forKey:@"ISOCountryCodes"];
+    [coder encodeObject:_ISOLanguageCodes forKey:@"ISOLanguageCodes"];
 }
 
 @end

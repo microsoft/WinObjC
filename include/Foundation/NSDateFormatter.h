@@ -50,7 +50,7 @@ FOUNDATION_EXPORT_CLASS
 
 // added because NSDateFormatter is the backend for initWithString:calendarFormat:locale
 // shouldn't this really exist anyway?
-- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSDictionary*)locale;
+- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSLocale*)locale;
 
 - (void)setFormatterBehavior:(NSDateFormatterBehavior)value;
 

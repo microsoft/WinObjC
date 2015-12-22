@@ -344,6 +344,8 @@ LIBRARY Foundation
      NSArgumentDomain DATA
      NSAssertionHandlerKey DATA
      NSBinaryStoreType DATA
+     NSBuddhistCalendar DATA
+     NSChineseCalendar DATA
      NSCocoaErrorDomain DATA
      NSCurrentLocaleDidChangeNotification DATA
      NSDateFormatString DATA
@@ -389,6 +391,7 @@ LIBRARY Foundation
      NSGenericException DATA
      NSGlobalDomain DATA
      NSGregorianCalendar DATA
+     NSHebrewCalendar DATA
      NSHTTPCookieComment DATA
      NSHTTPCookieCommentURL DATA
      NSHTTPCookieDiscard DATA
@@ -404,6 +407,7 @@ LIBRARY Foundation
      NSHTTPCookieVersion DATA
      NSIgnorePersistentStoreVersioningOption DATA
      NSInMemoryStoreType DATA
+     NSIndianCalendar DATA
      NSInferMappingModelAutomaticallyOption DATA
      NSInsertedObjectsKey DATA
      NSInternalInconsistencyException DATA
@@ -411,6 +415,10 @@ LIBRARY Foundation
      NSInvalidUnarchiveOperationException DATA
      NSInvalidatedAllObjectsKey DATA
      NSInvalidatedObjectsKey DATA
+     NSIslamicCalendar DATA
+     NSIslamicCivilCalendar DATA
+     NSISO8601Calendar DATA
+     NSJapaneseCalendar DATA
      NSKeyValueChangeIndexesKey DATA
      NSKeyValueChangeKindKey DATA
      NSKeyValueChangeNewKey DATA
@@ -449,6 +457,7 @@ LIBRARY Foundation
      NSObjectNotAvailableException DATA
      NSOverflowException DATA
      NSPOSIXErrorDomain DATA
+     NSPersianCalendar DATA
      NSPersistentStoreCoordinatorStoresDidChangeNotification DATA
      NSPersistentStoreDidImportUbiquitousContentChangesNotification DATA
      NSPersistentStoreFileProtectionKey DATA
@@ -461,6 +470,7 @@ LIBRARY Foundation
      NSRefreshedObjectsKey DATA
      NSRegistrationDomain DATA
      NSRemovedPersistentStoresKey DATA
+     NSRepublicOfChinaCalendar DATA
      NSRunLoopCommonModes DATA
      NSSQLiteAnalyzeOption DATA
      NSSQLiteManualVacuumOption DATA
