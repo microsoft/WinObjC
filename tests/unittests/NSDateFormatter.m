@@ -37,11 +37,11 @@ void testSpecificFormat(NSDateFormatterStyle formatterStyle, NSString* formatted
             break;
 
         case NSDateFormatterLongStyle:
-            ASSERT_OBJCEQ(@"December 31, 1969 4:00:00 PM GMT-08:00", formatted);
+            ASSERT_OBJCEQ(@"December 31, 1969 4:00:00 PM PST", formatted);
             break;
 
         case NSDateFormatterFullStyle:
-            ASSERT_OBJCEQ(@"Wednesday, December 31, 1969 4:00:00 PM GMT-08:00", formatted);
+            ASSERT_OBJCEQ(@"Wednesday, December 31, 1969 4:00:00 PM Pacific Standard Time", formatted);
             break;
 
         default:
@@ -54,7 +54,7 @@ void testSpecificFormat(NSDateFormatterStyle formatterStyle, NSString* formatted
 TEST(Foundation, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
 
-    // Do the test if we're in the right locale.
+    // Naive test for western us locale
     if ([currentLocale.localeIdentifier isEqualToString:@"en_US"]) {
         NSDate* someConstantDate = [NSDate dateWithTimeIntervalSince1970:0]; // 1970-01-01 00:00:00 +0000, This should never change.
 
@@ -68,7 +68,7 @@ TEST(Foundation, NSDateFormatter) {
         }
 
     } else {
-        // Didn't test, not in US locale.
+        // Did not test, not in US locale.
         LOG_INFO("[NSDateFormatter localizedStringFromDate] not tested. Current locale is not in us_EN.\n");
     }
 }
