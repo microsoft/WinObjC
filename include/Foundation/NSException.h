@@ -1,5 +1,7 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
 
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
 "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
 distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
@@ -15,10 +17,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #ifndef _NSEXCEPTION_H_
 #define _NSEXCEPTION_H_
 
-#import <Foundation/NSObject.h>
+#import "Foundation/NSObject.h"
 #import <setjmp.h>
 
-@class NSDictionary, NSArray;
+@class NSDictionary, NSArray, NSString;
 
 FOUNDATION_EXPORT NSString* const NSGenericException;
 FOUNDATION_EXPORT NSString* const NSRangeException;
@@ -39,22 +41,19 @@ FOUNDATION_EXPORT NSString* const NSOldStyleException;
 FOUNDATION_EXPORT NSString* const NSOverflowException;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSException : NSObject <NSCoding, NSCopying>
+@interface NSException : NSObject <NSSecureCoding, NSCopying>
 
 + (void)raise:(NSString*)name format:(NSString*)format, ...;
 + (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)arguments;
-
 - (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
-
 + (NSException*)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
-
 - (void)raise;
 
-- (NSString*)name;
-- (NSString*)reason;
-- (NSDictionary*)userInfo;
-
-- (NSArray*)callStackReturnAddresses;
+@property (readonly, copy) NSString* name;
+@property (readonly, copy) NSString* reason;
+@property (readonly, copy) NSDictionary* userInfo;
+@property (readonly, copy) NSArray* callStackReturnAddresses;
+@property (readonly, copy) NSArray* callStackSymbols;
 @end
 
 @interface NSException (WinObjC)

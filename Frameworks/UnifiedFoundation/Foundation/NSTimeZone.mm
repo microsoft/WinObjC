@@ -203,7 +203,7 @@ const static int c_minutesToMilliseconds = -60000;
 }
 
 /**
- @Interoperable
+ @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
@@ -220,6 +220,9 @@ const static int c_minutesToMilliseconds = -60000;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     // Can't encode/decode ICU object. Potentially recreate system TZ?
     [coder encodeObject:_description forKey:@"description"];

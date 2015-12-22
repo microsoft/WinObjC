@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Foundation/NSException.h"
+#import "Foundation/NSException.h"
 
 NSString* const NSRangeException = @"NSRangeExcepton";
 NSString* const NSGenericException = @"NSGenericException";
@@ -36,20 +36,18 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
     UNIMPLEMENTED();
 }
 
-@implementation NSException {
-    idretaintype(NSString) _name;
-    idretaintype(NSString) _reason;
-    idretaintype(NSDictionary) _userInfo;
-}
+@implementation NSException
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
     if (self = [super init]) {
-        _name.attach([name copy]);
-        _reason.attach([reason copy]);
-        _userInfo.attach([userInfo copy]);
+        _name = [name copy];
+        _reason = [reason copy];
+        _userInfo = [userInfo copy];
+        _callStackReturnAddresses = [NSThread callStackReturnAddresses];
+        _callStackSymbols = [NSThread callStackSymbols];
     }
 
     return self;
@@ -117,22 +115,50 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
 /**
  @Status Interoperable
 */
-- (NSString*)name {
-    return _name;
+- (NSObject*)copyWithZone:(NSZone*)zone {
+    return [self retain];
 }
 
 /**
  @Status Interoperable
 */
-- (NSDictionary*)userInfo {
-    return _userInfo;
++ (BOOL)supportsSecureCoding {
+    return YES;
 }
 
 /**
  @Status Interoperable
 */
-- (NSString*)reason {
-    return _reason;
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        _name = [[coder decodeObjectOfClass:[NSString class] forKey:@"name"] retain];
+        _reason = [[coder decodeObjectOfClass:[NSString class] forKey:@"reason"] retain];
+        _userInfo = [[coder decodeObjectOfClass:[NSDictionary class] forKey:@"userInfo"] retain];
+        _callStackReturnAddresses = [[coder decodeObjectOfClass:[NSArray class] forKey:@"callStackReturnAddresses"] retain];
+        _callStackSymbols = [[coder decodeObjectOfClass:[NSArray class] forKey:@"callStackSymbols"] retain];
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    [coder encodeObject:_name forKey:@"name"];
+    [coder encodeObject:_reason forKey:@"reason"];
+    [coder encodeObject:_userInfo forKey:@"userInfo"];
+    [coder encodeObject:_callStackReturnAddresses forKey:@"callStackReturnAddresses"];
+    [coder encodeObject:_callStackSymbols forKey:@"callStackSymbols"];
+}
+
+- (void)dealloc {
+    [_name release];
+    [_reason release];
+    [_userInfo release];
+    [_callStackReturnAddresses release];
+    [_callStackSymbols release];
+
+    [super dealloc];
 }
 
 // Returns exception name from HRESULT.
