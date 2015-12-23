@@ -17,6 +17,7 @@
 #ifndef _GKPUBLICONSTANTS_H_
 #define _GKPUBLICONSTANTS_H_
 
+#import <GameKit/GameKitExport.h>
 #include <stdint.h>
 
 enum {
@@ -25,7 +26,7 @@ enum {
 };
 typedef uint32_t GKSendDataMode;
 
-NSString* const GKErrorDomain;
+GAMEKIT_EXPORT NSString* const GKErrorDomain;
 
 typedef NS_ENUM(NSInteger, GKErrorCode) {
     GKErrorUnknown = 1,
