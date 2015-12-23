@@ -141,3 +141,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSExpression.h>
 #import <Foundation/NSComparisonPredicate.h>
 #import <Foundation/NSCompoundPredicate.h>
+#import <Foundation/NSOrthography.h>
+#import <Foundation/NSPointerArray.h>
+#import <Foundation/NSXMLDTD.h>
+#import <Foundation/NSXMLDTDNode.h>
+#import <Foundation/NSXMLDocument.h>
+#import <Foundation/NSXMLElement.h>
+

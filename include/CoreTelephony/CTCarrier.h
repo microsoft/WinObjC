@@ -17,6 +17,8 @@
 #ifndef __CTCARRIER_H
 #define __CTCARRIER_H
 
+#import <Foundation/Foundation.h>
+
 @interface CTCarrier : NSObject
 @property (nonatomic, readonly, assign) BOOL allowsVOIP;
 @property (nonatomic, readonly, retain) NSString* carrierName;

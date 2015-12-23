@@ -1,0 +1,8 @@
+module Foundation [extern_c] {
+    umbrella header "Foundation.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

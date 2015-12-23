@@ -1,0 +1,8 @@
+module SystemConfiguration [extern_c] {
+    umbrella header "SystemConfiguration.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

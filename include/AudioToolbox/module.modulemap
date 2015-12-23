@@ -1,0 +1,8 @@
+module AudioToolbox [extern_c] {
+    umbrella header "AudioToolbox.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

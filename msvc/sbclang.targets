@@ -173,6 +173,7 @@
       Input="@(ClangCompile)"
       LLVMDirectory="$(StarboardLLVMDirectory)"
       ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
+      ObjectiveCModules="%(ClangCompile.ObjectiveCModules)"
       ObjectFileName="%(ClangCompile.ObjectFileName)"
       OptimizationLevel="%(ClangCompile.OptimizationLevel)"
       PrefixHeader="%(ClangCompile.PrefixHeader)"

@@ -1,0 +1,9 @@
+module GLKit [extern_c] {
+    umbrella header "GLKit.h"
+    export *
+    
+    module GLKShader {
+        header "GLKShader.h"
+        export *
+    }
+}

@@ -13,5 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#ifndef ADSUPPORT_IMPEXP
+#define ADSUPPORT_IMPEXP __declspec(dllimport)
+#endif
 
-#import <CoreVideo/CoreVideo.h>
+#ifndef ADSUPPORT_EXPORT
+#ifdef __cplusplus
+#define ADSUPPORT_EXPORT ADSUPPORT_IMPEXP extern "C"
+#define ADSUPPORT_EXPORT_CLASS ADSUPPORT_IMPEXP
+#else
+#define ADSUPPORT_EXPORT ADSUPPORT_IMPEXP extern
+#define ADSUPPORT_EXPORT_CLASS ADSUPPORT_IMPEXP
+#endif
+#endif

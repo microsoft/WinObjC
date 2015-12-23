@@ -18,6 +18,7 @@
 #define _GKPUBLICONSTANTS_H_
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/Foundation.h>
 #include <stdint.h>
 
 enum {

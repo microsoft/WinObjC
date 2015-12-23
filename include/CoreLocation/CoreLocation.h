@@ -22,3 +22,4 @@
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <CoreLocation/CLRegion.h>
 #import <CoreLocation/CLGeocoder.h>
+#import <CoreLocation/CLPlacemark.h>

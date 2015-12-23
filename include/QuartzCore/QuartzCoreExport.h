@@ -13,9 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#ifndef QUARTZCORE_IMPEXP
+#ifdef __QUARTZCORE_INSIDE_BUILD
+#define QUARTZCORE_IMPEXP __declspec(dllexport)
+#else
+#define QUARTZCORE_IMPEXP __declspec(dllimport)
+#endif
+#endif
 
-#import <QuartzCore/CIColor.h>
-#import <QuartzCore/CIImage.h>
-#import <QuartzCore/CIFilter.h>
-#import <QuartzCore/CIVector.h>
-#import <QuartzCore/CIContext.h>
+#ifndef QUARTZCORE_EXPORT
+#ifdef __cplusplus
+#define QUARTZCORE_EXPORT QUARTZCORE_IMPEXP extern "C"
+#define QUARTZCORE_EXPORT_CLASS QUARTZCORE_IMPEXP
+#else
+#define QUARTZCORE_EXPORT QUARTZCORE_IMPEXP extern
+#define QUARTZCORE_EXPORT_CLASS QUARTZCORE_IMPEXP
+#endif
+#endif

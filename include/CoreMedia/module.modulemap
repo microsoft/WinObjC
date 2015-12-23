@@ -1,0 +1,8 @@
+module CoreMedia [extern_c] {
+    umbrella header "CoreMedia.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

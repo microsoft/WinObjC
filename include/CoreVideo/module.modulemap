@@ -1,0 +1,8 @@
+module CoreVideo [extern_c] {
+    umbrella header "CoreVideo.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

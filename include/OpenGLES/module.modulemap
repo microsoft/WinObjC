@@ -1,0 +1,8 @@
+module OpenGLES [extern_c] {
+    umbrella "."
+    export *
+    
+    module * {
+        export *
+    }
+}
