@@ -1,0 +1,83 @@
+LIBRARY QuartzCore
+    EXPORTS
+        CACurrentMediaTime
+        CASignalDisplayLink
+        CATransform3DConcat
+        CATransform3DGetPosition
+        CATransform3DGetScale
+        CATransform3DIdentity DATA
+        CATransform3DIsIdentity
+        CATransform3DMakeOrtho
+        CATransform3DMakeRotation
+        CATransform3DMakeScale
+        CATransform3DMakeTranslation
+        CATransform3DRotate
+        CATransform3DScale
+        CATransform3DTransformPoints
+        CATransform3DTranslate
+        GetCACompositor
+        SetCACompositor
+        _OBJC_CLASS_CAAnimationGroup DATA
+        _OBJC_CLASS_CABasicAnimation DATA
+        _OBJC_CLASS_CADisplayLink DATA
+        _OBJC_CLASS_CAEAGLLayer DATA
+        _OBJC_CLASS_CAEmitterCell DATA
+        _OBJC_CLASS_CAEmitterLayer DATA
+        _OBJC_CLASS_CAGradientLayer DATA
+        _OBJC_CLASS_CAKeyframeAnimation DATA
+        _OBJC_CLASS_CALayer DATA
+        _OBJC_CLASS_CAMediaTimingFunction DATA
+        _OBJC_CLASS_CAShapeLayer DATA
+        _OBJC_CLASS_CATextLayer DATA
+        _OBJC_CLASS_CATransaction DATA
+        _OBJC_CLASS_CATransition DATA
+        __objc_class_name_CAAnimationGroup CONSTANT
+        __objc_class_name_CABasicAnimation CONSTANT
+        __objc_class_name_CADisplayLink CONSTANT
+        __objc_class_name_CAEAGLLayer CONSTANT
+        __objc_class_name_CAEmitterCell CONSTANT
+        __objc_class_name_CAEmitterLayer CONSTANT
+        __objc_class_name_CAGradientLayer CONSTANT
+        __objc_class_name_CAKeyframeAnimation CONSTANT
+        __objc_class_name_CALayer CONSTANT
+        __objc_class_name_CAMediaTimingFunction CONSTANT
+        __objc_class_name_CAShapeLayer CONSTANT
+        __objc_class_name_CATextLayer CONSTANT
+        __objc_class_name_CATransaction CONSTANT
+        __objc_class_name_CATransition CONSTANT
+        kCAEmitterLayerAdditive DATA
+        kCAEmitterLayerBackToFront DATA
+        kCAEmitterLayerCircle DATA
+        kCAEmitterLayerCuboid DATA
+        kCAEmitterLayerLine DATA
+        kCAEmitterLayerOldestFirst DATA
+        kCAEmitterLayerOldestLast DATA
+        kCAEmitterLayerOutline DATA
+        kCAEmitterLayerPoint DATA
+        kCAEmitterLayerPoints DATA
+        kCAEmitterLayerRectangle DATA
+        kCAEmitterLayerSphere DATA
+        kCAEmitterLayerSurface DATA
+        kCAEmitterLayerUnordered DATA
+        kCAEmitterLayerVolume DATA
+        kCAFillModeBackwards DATA
+        kCAFillModeBoth DATA
+        kCAFillModeForwards DATA
+        kCAFillModeFrozen DATA
+        kCAFillModeRemoved DATA
+        kCAGravityBottom DATA
+        kCAGravityBottomLeft DATA
+        kCAGravityBottomRight DATA
+        kCAGravityCenter DATA
+        kCAGravityLeft DATA
+        kCAGravityResize DATA
+        kCAGravityResizeAspect DATA
+        kCAGravityResizeAspectFill DATA
+        kCAGravityRight DATA
+        kCAGravityTop DATA
+        kCAGravityTopLeft DATA
+        kCAGravityTopRight DATA
+        kCAMediaTimingFunctionEaseInEaseOut DATA
+        kCAMediaTimingFunctionLinear DATA
+        kCATransactionAnimationDuration DATA
+        kCATransactionDisableActions DATA

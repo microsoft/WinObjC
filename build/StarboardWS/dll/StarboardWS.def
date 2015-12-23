@@ -1,0 +1,7 @@
+LIBRARY StarboardWS
+    EXPORTS
+        IWAppInit
+        IWRunApplicationMain
+        SetCACompositorClient
+        XamlWaitHandle
+        __WideStringFromNSString

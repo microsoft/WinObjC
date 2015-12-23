@@ -50,7 +50,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Shapes;
 using namespace Windows::ApplicationModel::Core;
 
-__declspec(dllimport) wchar_t* __WideStringFromNSString(void* str);
+__declspec(dllimport) extern "C" wchar_t* __WideStringFromNSString(void* str);
 
 Platform::String ^ principalClassName, ^delegateClassName;
 
