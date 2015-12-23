@@ -17,15 +17,21 @@
 #include "Starboard.h"
 
 #define U_STATIC_IMPLEMENTATION 1
-#include "unicode/unistr.h"
+#include <unicode/unistr.h>
+#import "NSMutableString+Internal.h"
 
 void setToUnicode(NSString* inst, UnicodeString& str);
 
-@implementation NSMutableString : NSString
-- (NSObject*)init {
-    UnicodeString str(16, 0, 0);
-    setToUnicode(self, str);
+@implementation NSMutableString
 
+/**
+ @Status Interoperable
+*/
+- (NSObject*)init {
+    if (self = [super init]) {
+        UnicodeString str(16, 0, 0);
+        setToUnicode(self, str);
+    }
     return self;
 }
 
@@ -40,12 +46,14 @@ void setToUnicode(NSString* inst, UnicodeString& str);
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
-    if (capacity < 16)
-        capacity = 16;
+    if (self = [super init]) {
+        if (capacity < 16) {
+            capacity = 16;
+        }
 
-    UnicodeString str(capacity, 0, 0);
-    setToUnicode(self, str);
-
+        UnicodeString str(capacity, 0, 0);
+        setToUnicode(self, str);
+    }
     return self;
 }
 
@@ -127,7 +135,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     setToUnicode(self, curStr);
 }
 
-- (void)__appendCharacters:(WORD*)characters length:(int)length {
+- (void)__appendCharacters:(const WORD*)characters length:(int)length {
     UStringHolder s1(self);
     UnicodeString& curStr = s1.string();
 
@@ -211,6 +219,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     return n;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     NSString* newStr = [[NSString alloc] initWithString:self];
 

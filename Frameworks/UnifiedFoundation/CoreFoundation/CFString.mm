@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
 #import <Foundation/Foundation.h>
-
+#import "NSMutableString+Internal.h"
 /**
  @Status Interoperable
 */
