@@ -1652,6 +1652,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
         // If we get a touch down, cancel any scrolling we were doing:
         cancelScrolling(self);
     }
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)layoutSubviews {
