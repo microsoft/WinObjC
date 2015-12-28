@@ -62,8 +62,8 @@ FOUNDATION_EXPORT_CLASS
 
 @property (copy) NSString* dateFormat;
 
-@property (readonly) NSDateFormatterStyle timeStyle;
-@property (readonly) NSDateFormatterStyle dateStyle;
+@property NSDateFormatterStyle timeStyle;
+@property NSDateFormatterStyle dateStyle;
 
 @property (copy) NSLocale* locale;
 @property (copy) NSCalendar* calendar;
