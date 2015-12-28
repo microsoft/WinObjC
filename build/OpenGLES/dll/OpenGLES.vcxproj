@@ -47,8 +47,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\packages.config" />
     <None Include="OpenGLES.def" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D6F6507B-0C26-4D99-889A-83BF4E313D51}</ProjectGuid>
