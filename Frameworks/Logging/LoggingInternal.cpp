@@ -14,32 +14,21 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Logging.h"
+#include "LoggingInternal.h"
 
-#include <Foundation/NSString.h>
-#include <Windows.h>
-
-/**
- @Status Interoperable
-*/
-void NSLogv(NSString* fmt, va_list list) {
-    auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
-    INT len = [str length];
-    LPWSTR terminatedBuf = (LPWSTR)calloc(len + 1, sizeof(WCHAR));
-    memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
-    TraceVerbose(L"NSLog", terminatedBuf);
-    free(terminatedBuf);
-    printf("%s\n", [str UTF8String]);
-    [str release];
+void _vdebugPrintf(const wchar_t* format, va_list va) {
+#ifdef _DEBUG
+    wchar_t buf[c_bufferCount];
+    _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, format, va);
+    OutputDebugStringW(buf);
+#endif
 }
 
-/**
- @Status Interoperable
-*/
-void NSLog(NSString* fmt, ...) {
-    va_list list;
-    va_start(list, fmt);
-    NSLogv(fmt, list);
-    va_end(list);
+void _debugPrintf(const wchar_t* format, ...) {
+#ifdef _DEBUG
+    va_list va;
+    va_start(va, format);
+    _vdebugPrintf(format, va);
+    va_end(va);
+#endif
 }

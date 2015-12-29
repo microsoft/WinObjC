@@ -41,10 +41,12 @@
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeObjcrt>true</IncludeObjcrt>
+      <IncludeLogging>true</IncludeLogging>
       <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
+      <SBResourceCopy Condition="'$(IncludeLogging)' == 'true'" Include="$(StarboardLibDirs)\Logging.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
 
