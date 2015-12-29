@@ -74,7 +74,7 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSArray* shortWeekdaySymbols;
 @property (copy) NSArray* shortStandaloneWeekdaySymbols;
 @property (copy) NSArray* standaloneWeekdaySymbols;
-@property (readonly) NSDateFormatterBehavior formatterBehavior;
+@property NSDateFormatterBehavior formatterBehavior;
 
 @property (copy) NSString* AMSymbol;
 @property (copy) NSString* PMSymbol;
