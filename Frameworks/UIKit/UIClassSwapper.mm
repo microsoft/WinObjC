@@ -19,8 +19,8 @@
 
 @implementation UIClassSwapper
 - (id)instantiateWithCoder:(id)coder {
-    _className = [coder decodeObjectForKey:@"UIClassName"];
-    _originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
+    _className = [[coder decodeObjectForKey:@"UIClassName"] copy];
+    _originalClassName = [[coder decodeObjectForKey:@"UIOriginalClassName"] copy];
     const char* identifier = [_className UTF8String];
     const char* identifier2 = [_originalClassName UTF8String];
 
