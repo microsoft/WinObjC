@@ -122,7 +122,10 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+      <Command>
+        xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"
+        rd /S /Q ".\modulecache"
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,7 +155,10 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+      <Command>
+        xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"
+        rd /S /Q ".\modulecache"
+    </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -169,6 +175,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\CFUUID.m" />
     <ClangCompile Include="..\..\..\tests\unittests\ClangModulesTest.mm">
       <ObjectiveCModules>true</ObjectiveCModules>
+      <OtherCPlusPlusFlags>-fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
     </ClangCompile>
     <ClangCompile Include="..\..\..\tests\unittests\CommonCrypto_MD5.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\corefoundation.m" />
