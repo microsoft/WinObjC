@@ -229,6 +229,10 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     int begin = static_cast<int>(floorf(currentOffset.x / currentFrame.size.width));
     int end = static_cast<int>(ceilf(currentOffset.x / currentFrame.size.width)) + 1;
 
+    if ([_pages count] == 0) {
+        return;
+    }
+
     // TODO: Multi page
     for (int i = begin; i < end; i++) {
         if ([[_pages objectAtIndex:i] isHidden]) {
