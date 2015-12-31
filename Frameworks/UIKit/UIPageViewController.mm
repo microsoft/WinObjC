@@ -99,6 +99,8 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         return nil;
     }
 
+    // Returns the page that's centered on screen.
+    // In the event the user scrolled far enough past either end of the scrollview, clamp to the size of our array.
     NSInteger idx = (NSInteger)(self.contentOffset.x / self.frame.size.width + 0.5f);
     if (idx < 0) {
         return [NSArray arrayWithObjects:[_controllers objectAtIndex:0], nil];
@@ -228,9 +230,18 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     CGPoint currentOffset = self.contentOffset;
     int begin = static_cast<int>(floorf(currentOffset.x / currentFrame.size.width));
     int end = static_cast<int>(ceilf(currentOffset.x / currentFrame.size.width)) + 1;
+    int count = [_pages count];
 
-    if ([_pages count] == 0) {
+    if (count == 0) {
         return;
+    }
+
+    if (begin < 0) {
+        begin = 0;
+    }
+
+    if (end >= count) {
+        end = count;
     }
 
     // TODO: Multi page
