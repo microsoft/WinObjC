@@ -174,8 +174,8 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    _previousControllers = [self _currentPages];
     if (self.decelerating) {
-        _previousControllers = [self _currentPages];
         [super touchesBegan:touches withEvent:event];
     } else {
         CGPoint targetOffset = self.contentOffset;
@@ -281,7 +281,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             NSLog(@"Popping controller forward.");
             [[_pages objectAtIndex:([_controllers count] - 1)] removeFromSuperview];
             [_controllers removeObjectAtIndex:([_controllers count] - 1)];
-            [_pages removeObjectAtIndex:([_controllers count] - 1)];
+            [_pages removeObjectAtIndex:([_pages count] - 1)];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             break;
         case UIPageViewControllerNavigationDirectionReverse:
@@ -307,14 +307,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         _completion = nil;
     }
 
-    // We make the assumption that if the previous controllers and current controllers are different, we successfully transited... 
-    // this may not be correct for multipage.
-    if ([[_viewController delegate] respondsToSelector:@selector(pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:)]) {
-        [[_viewController delegate] pageViewController:_viewController
-                                   didFinishAnimating:!self.tracking
-                              previousViewControllers:_previousControllers
-                                  transitionCompleted:![_previousControllers isEqualToArray:[self _currentPages]]];
-    }
+    _previousControllers = nil;
     
     CGPoint targetOffset = self.contentOffset;
     [self _populatePagesWithOffset:&targetOffset interactive:NO];
@@ -326,8 +319,17 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         _completion = nil;
     }
 
-    // TODO: Call pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:
+    // We make the assumption that if the previous controllers and current controllers are different, we successfully transited... 
+    // this may not be correct for multipage.
+    if ([[_viewController delegate] respondsToSelector:@selector(pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:)]) {
+        [[_viewController delegate] pageViewController:_viewController
+                                   didFinishAnimating:!self.tracking
+                              previousViewControllers:_previousControllers
+                                  transitionCompleted:![_previousControllers isEqualToArray:[self _currentPages]]];
+    }
     
+    _previousControllers = nil;
+
     CGPoint targetOffset = self.contentOffset;
     [self _populatePagesWithOffset:&targetOffset interactive:NO];
 }
