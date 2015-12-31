@@ -253,13 +253,11 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     switch (direction) {
         case UIPageViewControllerNavigationDirectionForward:
-            NSLog(@"Pushing controller forward.");
             [_controllers addObject:controller];
             [_pages addObject:newPage];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             break;
         case UIPageViewControllerNavigationDirectionReverse:
-            NSLog(@"Pushing controller reverse.");
             [_controllers insertObject:controller atIndex:0];
             [_pages insertObject:newPage atIndex:0];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
@@ -274,18 +272,14 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (void)_popControllerWithDirection:(UIPageViewControllerNavigationDirection)direction {
-    NSLog(@"Number of pages before pop: %d", [_controllers count]);
-
     switch (direction) {
         case UIPageViewControllerNavigationDirectionForward:
-            NSLog(@"Popping controller forward.");
             [[_pages objectAtIndex:([_controllers count] - 1)] removeFromSuperview];
             [_controllers removeObjectAtIndex:([_controllers count] - 1)];
             [_pages removeObjectAtIndex:([_pages count] - 1)];
             [self setContentSize:CGSizeMake(self.frame.size.width * [_controllers count], 0)];
             break;
         case UIPageViewControllerNavigationDirectionReverse:
-            NSLog(@"Popping controller reverse.");
             [[_pages objectAtIndex:0] removeFromSuperview];
             [_controllers removeObjectAtIndex:0];
             [_pages removeObjectAtIndex:0];
