@@ -32,7 +32,7 @@ NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 /**
  @Status Stub
 */
-void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
+void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) {
     UNIMPLEMENTED();
 }
 
@@ -163,7 +163,7 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
 
 // Returns exception name from HRESULT.
 + (NSString*)_exceptionNameForHRESULT:(int)errorCode {
-        switch (errorCode) {
+    switch (errorCode) {
         case E_INVALIDARG:
             return NSInvalidArgumentException;
         case E_FAIL:
@@ -171,11 +171,14 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*)  {
         case E_BOUNDS:
             return NSRangeException;
         case E_ACCESSDENIED:
+        case RPC_E_WRONG_THREAD:
             return NSObjectInaccessibleException;
         case E_UNEXPECTED:
             return NSInternalInconsistencyException;
         case E_OUTOFMEMORY:
             return NSMallocException;
+        case __HRESULT_FROM_WIN32(ERROR_NOT_READY):
+            return NSObjectNotAvailableException;
         default:
             break;
     }

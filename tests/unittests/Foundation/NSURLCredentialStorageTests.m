@@ -37,10 +37,10 @@ TEST(Foundation, NSURLCredentialStorage_DefaultSharedSession) {
                   "FAILED defaultCredentialForProtectionSpace should be nil");
     [storage setDefaultCredential:credential forProtectionSpace:protectionSpace];
 
-   /* NSURLCredential* defaultCred = [storage defaultCredentialForProtectionSpace:protectionSpace];
-    ASSERT_TRUE_MSG(defaultCred != NULL, "FAILED: defaultCred should be non-null!");
-    ASSERT_OBJCEQ_MSG(@"user", [defaultCred user], "FAILED: Invalid username.");
-	*/
+    /* NSURLCredential* defaultCred = [storage defaultCredentialForProtectionSpace:protectionSpace];
+     ASSERT_TRUE_MSG(defaultCred != NULL, "FAILED: defaultCred should be non-null!");
+     ASSERT_OBJCEQ_MSG(@"user", [defaultCred user], "FAILED: Invalid username.");
+         */
     [protectionSpace release];
 }
 
@@ -70,8 +70,8 @@ TEST(Foundation, NSURLCredentialStorage_NonDefaultSession) {
 
     [storage removeCredential:credential forProtectionSpace:protectionSpace];
     ASSERT_EQ_MSG(nil, [storage credentialsForProtectionSpace:protectionSpace], "FAILED credentialsForProtectionSpace should be nil");
-	*/
+        */
     [protectionSpace release];
     [storage release];
-  //  [creden release];
+    //  [creden release];
 }

@@ -137,7 +137,7 @@ typedef void* id;
 inline IWLazyClassLookup::operator id() {
     if (_clsRef == nil) {
         _clsRef = objc_getClass(_clsName);
-        FAIL_FAST_IF_MSG(E_NOTIMPL, !_clsRef, "Couldn't lazy lookup objc class %hs\n", _clsName);
+        THROW_NS_IF_NULL_MSG(HRESULT_FROM_WIN32(ERROR_NOT_READY), _clsRef, "Couldn't lazy lookup objc class %hs\n", _clsName);
     }
 
     return _clsRef;

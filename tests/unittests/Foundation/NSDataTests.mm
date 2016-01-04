@@ -75,7 +75,7 @@ TEST(Foundation, NSMutableDataBasicTests) {
     [mutableData resetBytesInRange:validRange];
 
     // verify the content should be equal after reset
-    const char resettedBytes[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    const char resettedBytes[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     data = [NSData dataWithBytes:resettedBytes length:std::extent<decltype(resettedBytes)>::value];
     ASSERT_OBJCEQ_MSG(data, [mutableData subdataWithRange:newRange], "Data should be equal");
 
@@ -84,7 +84,6 @@ TEST(Foundation, NSMutableDataBasicTests) {
 }
 
 TEST(Foundation, NSMutableDataReplaceTests) {
-
     const char bytes[] = "Hello obj world";
     NSData* originalData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
 
@@ -93,7 +92,8 @@ TEST(Foundation, NSMutableDataReplaceTests) {
     NSMutableData* mutableData = [NSMutableData dataWithLength:0];
     [mutableData setData:data];
 
-    // 1. replace used as insert, replace with zero range at starting location 0, essentially insert hello at front, thus have "hello\001234567890\0"
+    // 1. replace used as insert, replace with zero range at starting location 0, essentially insert hello at front, thus have
+    // "hello\001234567890\0"
     const char HelloBytes[] = "Hello";
     unsigned len = std::extent<decltype(HelloBytes)>::value;
     [mutableData replaceBytesInRange:NSMakeRange(0, 0) withBytes:HelloBytes length:len];
@@ -101,13 +101,13 @@ TEST(Foundation, NSMutableDataReplaceTests) {
     // 2. replace 0 with " obj",  with range (len-1, 1) thus have the results of "hello obj\0123456789\0", tail shifted
     const char objBytes[] = " obj";
     unsigned len2 = std::extent<decltype(objBytes)>::value;
-    [mutableData replaceBytesInRange:NSMakeRange(len-1, 2) withBytes:objBytes length:len2];
+    [mutableData replaceBytesInRange:NSMakeRange(len - 1, 2) withBytes:objBytes length:len2];
 
     // 3. replace used as delete, replacing "789" with null (or length 0) string, effectively delete 789, thus have "hello obj\0123456"
     [mutableData replaceBytesInRange:NSMakeRange(15, 4) withBytes:NULL length:0];
-    
+
     // 4. replacing ending "123456" with " world", thus have "Hello obj world", notice we used a big range in replacement
-    // to prove it does not have to be the exact range of "123456\0" in order for replacement to succeed, now we should 
+    // to prove it does not have to be the exact range of "123456\0" in order for replacement to succeed, now we should
     // have "hello obj world\0"
     const char worldBytes[] = " world";
     [mutableData replaceBytesInRange:NSMakeRange(len + len2 - 2, 100) withBytes:worldBytes length:std::extent<decltype(worldBytes)>::value];
@@ -119,5 +119,4 @@ TEST(Foundation, NSMutableDataReplaceTests) {
     NSString* expectedHex = @"<48656C6C 6F206F62 6A20776F 726C6400>";
     ASSERT_OBJCEQ_MSG(expectedHex, [originalData description], "Description must be equal");
     ASSERT_OBJCEQ_MSG(expectedHex, [mutableData description], "Description must be equal");
-
 }
