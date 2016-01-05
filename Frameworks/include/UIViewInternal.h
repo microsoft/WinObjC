@@ -112,4 +112,8 @@ public:
 @interface _UILayoutGuide : UIView <UILayoutSupport>
 @end
 
+@interface NSStringDrawingContext ()
+- (void)_setInternalTotalBounds:(CGRect)rect;
+- (CGContextRef)_getContext;
+@end
 #endif /* _UIVIEWPRIVATE_H_ */

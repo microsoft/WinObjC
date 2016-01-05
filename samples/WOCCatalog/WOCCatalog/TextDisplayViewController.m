@@ -26,6 +26,17 @@ int const CharsToDisplayInRing = 26;
 int const DefaultFontSize = 16;
 int const DefaultShadowWidth = 10;
 int const DefaultShadowHeight = 10;
+NSString* const TestParagraph =
+    @"Lorem ipsum dolor sit amet lorem a ut massa quam tempus maecenas. Eu consequat ipsum magnis quisque. Etiam luctus "
+    @"dictum natoque ullamcorper dolor quam quisque metus. Dui imperdiet eget ante tellus. Nullam sem aenean. Pede "
+    @"donec lorem ultricies eleifend imperdiet integer phasellus blandit dictum nulla eget. Nulla fringilla sit "
+    @"pulvinar eu vel semper orci. Vel lorem ante ut. Eleifend vulputate rhoncus. Ultricies dolor venenatis amet sit "
+    @"aenean ante magnis imperdiet rhoncus tellus elementum. Etiam amet ante enim. Tellus adipiscing consequat. Dolor "
+    @"justo adipiscing nisi amet. Adipiscing aliquam eleifend lorem ante fringilla integer elementum quis felis libero "
+    @"pretium justo. Veni tellus id. Etiam quam vitae leo aenean et vivamus rhoncus nec. Nulla adipiscing parturient "
+    @"sit porttitor et nec quam ultricies integer nullam. Lorem dui eu vitae ultricies tellus eget quis felis dolor "
+    @"tincidunt aenean semper. Vitae quis dolor natoque eleifend justo phasellus mollis pulvinar venenatis ac pede sem "
+    @"pellentesque. Eget commodo nam quam sem ipsum vici ligula ante.";
 NSString* const TestString = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 NSMutableArray* rows;
 
@@ -193,6 +204,12 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"UITextView with 18pt Ariel Font Scrollable White Text";
     [rows addObject:[self makeTestCellWithTitle:title WithSubUIView:[self basicUITextView]]];
 
+    title = @"Red Bold System Font Of Size 16";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:10]]];
+
+    title = @"boundingRectWithSize of testParagraph";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:11]]];
+
     return self;
 }
 
@@ -251,19 +268,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     uiTextView.font = [UIFont fontWithName:@"Arial" size:18.0];
     uiTextView.backgroundColor = [UIColor whiteColor];
 
-    NSString* text = @"Lorem ipsum dolor sit amet lorem a ut massa quam tempus maecenas. Eu consequat ipsum magnis quisque. Etiam luctus "
-                     @"dictum natoque ullamcorper dolor quam quisque metus. Dui imperdiet eget ante tellus. Nullam sem aenean. Pede "
-                     @"donec lorem ultricies eleifend imperdiet integer phasellus blandit dictum nulla eget. Nulla fringilla sit "
-                     @"pulvinar eu vel semper orci. Vel lorem ante ut. Eleifend vulputate rhoncus. Ultricies dolor venenatis amet sit "
-                     @"aenean ante magnis imperdiet rhoncus tellus elementum. Etiam amet ante enim. Tellus adipiscing consequat. Dolor "
-                     @"justo adipiscing nisi amet. Adipiscing aliquam eleifend lorem ante fringilla integer elementum quis felis libero "
-                     @"pretium justo. Veni tellus id. Etiam quam vitae leo aenean et vivamus rhoncus nec. Nulla adipiscing parturient "
-                     @"sit porttitor et nec quam ultricies integer nullam. Lorem dui eu vitae ultricies tellus eget quis felis dolor "
-                     @"tincidunt aenean semper. Vitae quis dolor natoque eleifend justo phasellus mollis pulvinar venenatis ac pede sem "
-                     @"pellentesque. Eget commodo nam quam sem ipsum vici ligula ante.";
-
-    uiTextView.attributedText =
-        [TextDrawerController colorizedStringFromString:text withFont:uiTextView.font textColor:uiTextView.textColor];
+    uiTextView.text = TestParagraph;
 
     uiTextView.returnKeyType = UIReturnKeyDefault;
     uiTextView.keyboardType = UIKeyboardTypeDefault;
@@ -348,7 +353,25 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         case 8:
             [self drawAtPointCircleText:rect];
             break;
+        case 10:
+            [self drawInRectWithAttributes:rect];
+            break;
+        case 11:
+            [self boundingRectWithSize:rect];
+            break;
     }
+}
+
+- (void)boundingRectWithSize:(CGRect)rect {
+    UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
+    UIColor* color = [UIColor blackColor];
+    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
+    NSStringDrawingContext* context = nil;
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
+    CGRect rectResult = [TestParagraph boundingRectWithSize:rect.size options:options attributes:attrs context:context];
+    [[NSString stringWithFormat:@"%f, %f, %f, %f", rectResult.origin.x, rectResult.origin.y, rectResult.size.width, rectResult.size.height]
+           drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
+        withAttributes:attrs];
 }
 
 - (void)drawBasicAtPoint:(CGRect)rect {
@@ -368,7 +391,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 // ShadowColor and ShadowOffset is currently Unsupported
 - (void)drawAtPointWithShadowColorWithOffset:(CGRect)rect {
     UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
-    UIColor* color = [UIColor blueColor];
+    UIColor* color = [UIColor blackColor];
     UIColor* shadowColor = [UIColor greenColor];
     CGSize size = CGSizeMake(DefaultShadowWidth, DefaultShadowHeight);
     NSValue* shadowOffset = [NSValue valueWithCGSize:size];
@@ -387,7 +410,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 // ShadowOffset is currently Unsupported
 - (void)drawAtPointWithOffset:(CGRect)rect {
     UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
-    UIColor* color = [UIColor blueColor];
+    UIColor* color = [UIColor blackColor];
     CGSize size = CGSizeMake(DefaultShadowWidth, DefaultShadowHeight);
     NSValue* shadowOffset = [NSValue valueWithCGSize:size];
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font,
@@ -439,6 +462,16 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     CGSize cgSize = [TestString sizeWithAttributes:attrs];
     [[NSString stringWithFormat:@"%f, %f", cgSize.width, cgSize.height] drawAtPoint:CGPointMake(rect.origin.x, rect.size.height / 2)
                                                                      withAttributes:attrs];
+}
+
+// ShadowColor and ShadowOffset is currently Unsupported
+- (void)drawInRectWithAttributes:(CGRect)rect {
+    UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
+    UIColor* color = [UIColor redColor];
+    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
+    NSStringDrawingContext* context = nil;
+    NSStringDrawingOptions options = NSStringDrawingUsesLineFragmentOrigin;
+    [TestString drawInRect:rect withAttributes:attrs];
 }
 
 // ShadowOffset is currently Unsupported

@@ -162,6 +162,8 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextContainer.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
