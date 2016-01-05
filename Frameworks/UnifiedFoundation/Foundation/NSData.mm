@@ -36,6 +36,8 @@ using WCHAR = wchar_t;
 #include <COMIncludes_End.h>
 #include <string>
 
+#include "StringHelpers.h"
+
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::Security::Cryptography;
 using namespace ABI::Windows::Storage::Streams;
@@ -82,18 +84,7 @@ using namespace Windows::Foundation;
         GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
                              &cryptographicBufferStatics));
 
-    const char* rawNSString = [base64String UTF8String];
-    int rawNSLength = ::strlen(rawNSString);
-
-    int length = ::MultiByteToWideChar(CP_UTF8, 0, rawNSString, rawNSLength, nullptr, 0);
-    RETURN_NULL_IF(length <= 0);
-
-    std::wstring base64WString(length, '\0');
-
-    length = ::MultiByteToWideChar(CP_UTF8, 0, rawNSString, rawNSLength, &base64WString[0], length);
-    RETURN_NULL_IF(length <= 0);
-
-    Wrappers::HStringReference wrlBase64String(base64WString.c_str());
+    Wrappers::HString wrlBase64String = Strings::NarrowToWide<HSTRING>(base64String);
 
     ComPtr<IBuffer> wrlBuffer;
     RETURN_NULL_IF_FAILED(cryptographicBufferStatics->DecodeFromBase64String(wrlBase64String.Get(), wrlBuffer.GetAddressOf()));
@@ -548,7 +539,7 @@ using namespace Windows::Foundation;
     for (auto i = 0; i < length;) {
         [ret appendFormat:@"%02X", bytes[i++]];
         if ((i % 4) == 0 && i < length) {
-           [ret appendString:@" "];
+            [ret appendString:@" "];
         }
     }
     [ret appendString:@">"];

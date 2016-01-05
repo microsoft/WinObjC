@@ -184,8 +184,8 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
     PCSTR functionName = nullptr;        \
     PCSTR code = nullptr;                \
     void* returnAddress = _ReturnAddress();
-#define __R_ENABLE_IF_IS_CLASS(ptrType) typename wistd::enable_if_t<wistd::is_class<ptrType>::value, void*> = 0
-#define __R_ENABLE_IF_IS_NOT_CLASS(ptrType) typename wistd::enable_if_t<!wistd::is_class<ptrType>::value, void*> = 0
+#define __R_ENABLE_IF_IS_CLASS(ptrType) typename wistd::enable_if_t<wistd::is_class<ptrType>::value, void*> = nullptr
+#define __R_ENABLE_IF_IS_NOT_CLASS(ptrType) typename wistd::enable_if_t<!wistd::is_class<ptrType>::value, void*> = nullptr
 // NOTE: This BEGINs the common macro handling (__R_ prefix) for non-fail fast handled cases
 //       This entire section will be repeated below for fail fast (__RFF_ prefix).
 #define __R_COMMA ,
@@ -1454,8 +1454,20 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 
 #define THROW_NS_HR(hr) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), nullptr)
 #define THROW_NS_HR_MSG(hr, msg, ...) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), msg, __VA_ARGS__)
-#define THROW_NS_IF_FAILED(hr) __R_FN(ObjC_Throw_IfFailed)(__R_INFO(#hr) wil::verify_hresult(hr))
-#define THROW_NS_IF_FAILED_MSG(hr, fmt, ...) __R_FN(ObjC_Throw_IfFailedMsg)(__R_INFO(#hr) wil::verify_hresult(hr), fmt, __VA_ARGS__)
+#define THROW_NS_IF_FAILED(hr) __R_FN(Objc_Throw_IfFailed)(__R_INFO(#hr) wil::verify_hresult(hr))
+#define THROW_NS_IF_FAILED_MSG(hr, fmt, ...) __R_FN(Objc_Throw_IfFailedMsg)(__R_INFO(#hr) wil::verify_hresult(hr), fmt, __VA_ARGS__)
+
+#define THROW_NS_IF(hr, condition) __R_FN(Objc_Throw_HrIf)(__R_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition))
+#define THROW_NS_IF_FALSE(hr, condition) \
+    __R_FN(Objc_Throw_HrIfFalse)(__R_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition))
+#define THROW_NS_IF_NULL(hr, ptr) __R_FN(Objc_Throw_HrIfNull)(__R_INFO(#ptr) wil::verify_hresult(hr), ptr)
+
+#define THROW_NS_IF_MSG(hr, condition, fmt, ...) \
+    __R_FN(Objc_Throw_HrIfMsg)(__R_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define THROW_NS_IF_FALSE_MSG(hr, condition, fmt, ...) \
+    __R_FN(Objc_Throw_HrIfFalseMsg)(__R_INFO(#condition) wil::verify_hresult(hr), wil::verify_bool(condition), fmt, __VA_ARGS__)
+#define THROW_NS_IF_NULL_MSG(hr, ptr, fmt, ...) \
+    __R_FN(Objc_Throw_HrIfNullMsg)(__R_INFO(#ptr) wil::verify_hresult(hr), ptr, fmt, __VA_ARGS__)
 
 #define CATCH_THROW_NSEXCEPTION() \
     catch (...) {                 \
@@ -4840,11 +4852,10 @@ __R_INTERNAL_NORET_METHOD(_Objc_Throw_Hr)(__R_INTERNAL_FN_PARAMS HRESULT hr) {
     wil::details::ReportFailure_Hr(__R_DIRECT_FN_CALL FailureType::ObjCException, hr);
 }
 
-__R_CONDITIONAL_METHOD(HRESULT, Objc_Throw_IfFailed)(__R_CONDITIONAL_FN_PARAMS HRESULT hr) {
+__R_CONDITIONAL_METHOD(void, Objc_Throw_IfFailed)(__R_CONDITIONAL_FN_PARAMS HRESULT hr) {
     if (FAILED(hr)) {
         __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
-    return hr;
 }
 
 __R_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) {
@@ -4852,14 +4863,86 @@ __R_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS 
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::ObjCException, hr, formatString, argList);
 }
 
-__R_CONDITIONAL_METHOD(HRESULT, Objc_Throw_IfFailedMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) {
+__R_CONDITIONAL_METHOD(void, Objc_Throw_IfFailedMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) {
     if (FAILED(hr)) {
         va_list argList;
         va_start(argList, formatString);
         __R_CALL_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL hr, formatString, argList);
     }
-    return hr;
 }
+
+__R_CONDITIONAL_METHOD(bool, Objc_Throw_HrIf)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition) {
+    if (condition) {
+        __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
+    }
+    return condition;
+}
+
+__R_CONDITIONAL_METHOD(bool, Objc_Throw_HrIfFalse)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition) {
+    if (!condition) {
+        __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
+    }
+    return condition;
+}
+
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
+            {
+    if (condition) {
+        va_list argList;
+        va_start(argList, formatString);
+        __R_CALL_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL hr, formatString, argList);
+    }
+    return condition;
+}
+
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
+            {
+    if (!condition) {
+        va_list argList;
+        va_start(argList, formatString);
+        __R_CALL_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL hr, formatString, argList);
+    }
+    return condition;
+}
+
+template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
+            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer)
+            {
+    if (pointer == nullptr) {
+        __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
+    }
+    return pointer;
+}
+
+template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
+            __R_CONDITIONAL_TEMPLATE_METHOD(void, Objc_Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer)
+            {
+    if (pointer == nullptr) {
+        __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
+    }
+}
+
+template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
+            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...)
+            {
+    if (pointer == nullptr) {
+        va_list argList;
+        va_start(argList, formatString);
+        __R_CALL_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL hr, formatString, argList);
+    }
+    return pointer;
+}
+
+template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
+            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Objc_Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...)
+            {
+    if (pointer == nullptr) {
+        va_list argList;
+        va_start(argList, formatString);
+        __R_CALL_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL hr, formatString, argList);
+    }
+}
+
 #endif // WIL_ENABLE_EXCEPTIONS
 
 } // __R_NS_NAME namespace
