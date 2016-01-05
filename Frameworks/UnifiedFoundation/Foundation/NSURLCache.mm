@@ -22,10 +22,13 @@
 #include <map>
 #include <string>
 
+// FIXME: Libclang crashes on a decltype in an ivar block. Once the bug is fixed, go back to using decltype.
+using cacheType = std::list<std::pair<std::string, StrongId<NSCachedURLResponse>>>;
+
 @interface NSURLCache () {
     std::recursive_mutex _mutex;
-    std::list<std::pair<std::string, StrongId<NSCachedURLResponse>>> _cache;
-    std::map<std::string, decltype(_cache)::iterator> _iterators;
+    cacheType _cache;
+    std::map<std::string, cacheType::iterator> _iterators;
 }
 @end
 
