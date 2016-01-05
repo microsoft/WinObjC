@@ -81,6 +81,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\ClangModulesTest.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\Security_SecRandom.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\ByteUtils.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\Accounts\Accounts_tests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

@@ -378,6 +378,7 @@
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeSecurity>true</IncludeSecurity>
       <IncludeCoreLocation>true</IncludeCoreLocation>
+      <IncludeAccounts>true</IncludeAccounts>
     </PropertyGroup>
   </Target>
 
