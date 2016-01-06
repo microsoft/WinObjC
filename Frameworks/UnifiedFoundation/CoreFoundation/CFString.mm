@@ -62,10 +62,12 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) 
 CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
     switch (encoding) {
         case NSASCIIStringEncoding:
-        case NSUTF8StringEncoding:
         case NSWindowsCP1252StringEncoding:
         case NSISOLatin1StringEncoding:
             return kCFStringEncodingASCII;
+
+        case NSUTF8StringEncoding:
+            return kCFStringEncodingUTF8;
 
         case NSUnicodeStringEncoding: // Also NSUTF16StringEncoding = NSUnicodeStringEncoding
             return kCFStringEncodingUnicode;

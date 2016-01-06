@@ -14,8 +14,10 @@
 //
 //******************************************************************************
 
-#import <CoreFoundation/CoreFoundation.h>
-#include "Starboard.h"
+#import "CoreFoundation/CoreFoundation.h"
+#import "Starboard.h"
+#import <algorithm>
+#import <memory>
 
 // Won't work so great with continuations... FIXME sometime
 
@@ -96,22 +98,120 @@ CFStringRef CFURLCopyPathExtension(CFURLRef self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CFStringRef CFURLCreateStringByReplacingPercentEscapes(CFAllocatorRef allocator, CFStringRef string, CFStringRef charactersToLeaveEscaped) {
-    UNIMPLEMENTED();
-    return nullptr;
+    return CFURLCreateStringByReplacingPercentEscapesUsingEncoding(allocator, string, charactersToLeaveEscaped, kCFStringEncodingUTF8);
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only UTF-8 is supported
 */
 CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorRef allocator,
                                                                     CFStringRef string,
                                                                     CFStringRef charactersToLeaveEscaped,
                                                                     CFStringEncoding encoding) {
-    UNIMPLEMENTED();
-    return nullptr;
+    if (encoding != kCFStringEncodingUTF8) {
+        UNIMPLEMENTED_WITH_MSG("Only UTF-8 is supported.");
+        return nullptr;
+    }
+
+    NSUInteger length = [(NSString*)string length];
+    NSUInteger resultLength = 0;
+
+    const unichar* buffer = [(NSString*)string rawCharacters];
+    std::unique_ptr<unichar[]> result(new unichar[length * 2]);
+    unichar firstCharacter = 0;
+    unichar firstNibble = 0;
+
+    enum {
+        STATE_NORMAL,
+        STATE_PERCENT,
+        STATE_HEX1,
+    } state = STATE_NORMAL;
+
+    // Unescape the charactersToLeaveEscaped
+    // This can only recurse a maximum of once, since nullptr is passed for characters to leave escaped
+    NSString* escapedStringToIgnore =
+        charactersToLeaveEscaped ?
+            (NSString*)CFURLCreateStringByReplacingPercentEscapes(nullptr, (CFStringRef)charactersToLeaveEscaped, nullptr) :
+            nil;
+    // Will be nil if escapedStringToIgnore is nil
+    const unichar* escapedCharsToIgnore = [escapedStringToIgnore rawCharacters];
+    const unichar* escapedCharsToIgnoreEnd = escapedCharsToIgnore ? escapedCharsToIgnore + [escapedStringToIgnore length] : nullptr;
+
+    for (NSUInteger i = 0; i < length; i++) {
+        unichar check = buffer[i];
+
+        switch (state) {
+            case STATE_NORMAL:
+                if (check == '%')
+                    state = STATE_PERCENT;
+                else
+                    result[resultLength++] = check;
+                break;
+
+            case STATE_PERCENT:
+                state = STATE_HEX1;
+                if (check >= '0' && check <= '9') {
+                    firstCharacter = check;
+                    firstNibble = (firstCharacter - '0');
+                } else if (check >= 'a' && check <= 'f') {
+                    firstCharacter = check;
+                    firstNibble = (firstCharacter - 'a') + 10;
+                } else if (check >= 'A' && check <= 'F') {
+                    firstCharacter = check;
+                    firstNibble = (firstCharacter - 'A') + 10;
+                } else {
+                    result[resultLength++] = '%';
+                    result[resultLength++] = check;
+                    state = STATE_NORMAL;
+                }
+                break;
+
+            case STATE_HEX1:
+                // Cache the result to first check if the unencoding needs to occur
+                unichar resultChar;
+                bool resultCharInitialized;
+
+                if (check >= '0' && check <= '9') {
+                    resultChar = firstNibble * 16 + check - '0';
+                    resultCharInitialized = true;
+
+                } else if (check >= 'a' && check <= 'f') {
+                    resultChar = firstNibble * 16 + (check - 'a') + 10;
+                    resultCharInitialized = true;
+
+                } else if (check >= 'A' && check <= 'F') {
+                    resultChar = firstNibble * 16 + (check - 'A') + 10;
+                    resultCharInitialized = true;
+                }
+
+                // If resultCharInitialized
+                //      If no escapedCharsToIgnore OR
+                //      If escapedCharsToIgnore AND resultChar not in escapedCharsToIgnore
+                if (resultCharInitialized &&
+                    (!escapedCharsToIgnore ||
+                     std::find(escapedCharsToIgnore, escapedCharsToIgnoreEnd, resultChar) == escapedCharsToIgnoreEnd)) {
+                    result[resultLength++] = resultChar;
+                } else {
+                    result[resultLength++] = '%';
+                    result[resultLength++] = firstCharacter;
+                    result[resultLength++] = check;
+                }
+                state = STATE_NORMAL;
+                break;
+        }
+    }
+
+    if (resultLength == length) {
+        return string;
+    }
+
+    NSString* ret = [NSString stringWithCharacters:result.get() length:resultLength];
+
+    return (CFStringRef)ret;
 }
 
 /**

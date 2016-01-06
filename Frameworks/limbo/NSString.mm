@@ -2920,77 +2920,13 @@ const int s_oneByte = 16;
 
 /**
  @Status Caveat
- @Notes encoding parameter not supported
+ @Notes Only UTF-8 is supported
 */
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
-    NSUInteger i, length = [self length], resultLength = 0;
-    unichar* buffer = (unichar*)EbrMalloc(length * 2);
-    unichar *result = (unichar *)EbrMalloc(length * 2), firstCharacter = 0, firstNibble = 0;
-    enum {
-        STATE_NORMAL,
-        STATE_PERCENT,
-        STATE_HEX1,
-    } state = STATE_NORMAL;
-
-    [self getCharacters:buffer];
-
-    for (i = 0; i < length; i++) {
-        unichar check = buffer[i];
-
-        switch (state) {
-            case STATE_NORMAL:
-                if (check == '%')
-                    state = STATE_PERCENT;
-                else
-                    result[resultLength++] = check;
-                break;
-
-            case STATE_PERCENT:
-                state = STATE_HEX1;
-                if (check >= '0' && check <= '9') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - '0');
-                } else if (check >= 'a' && check <= 'f') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - 'a') + 10;
-                } else if (check >= 'A' && check <= 'F') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - 'A') + 10;
-                } else {
-                    result[resultLength++] = '%';
-                    result[resultLength++] = check;
-                    state = STATE_NORMAL;
-                }
-                break;
-
-            case STATE_HEX1:
-                if (check >= '0' && check <= '9')
-                    result[resultLength++] = firstNibble * 16 + check - '0';
-                else if (check >= 'a' && check <= 'f')
-                    result[resultLength++] = firstNibble * 16 + (check - 'a') + 10;
-                else if (check >= 'A' && check <= 'F')
-                    result[resultLength++] = firstNibble * 16 + (check - 'A') + 10;
-                else {
-                    result[resultLength++] = '%';
-                    result[resultLength++] = firstCharacter;
-                    result[resultLength++] = check;
-                }
-                state = STATE_NORMAL;
-                break;
-        }
-    }
-
-    if (resultLength == length) {
-        EbrFree(buffer);
-        EbrFree(result);
-        return self;
-    }
-
-    NSString* ret = [NSString stringWithCharacters:result length:resultLength];
-    EbrFree(buffer);
-    EbrFree(result);
-
-    return ret;
+    return (NSString*)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
+                                                                              reinterpret_cast<CFStringRef>(self),
+                                                                              nullptr,
+                                                                              CFStringConvertNSStringEncodingToEncoding(encoding));
 }
 
 /**
