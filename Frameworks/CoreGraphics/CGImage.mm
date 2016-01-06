@@ -22,6 +22,7 @@
 #include "CoreGraphics/CGGeometry.h"
 #include "UIKit/UIImage.h"
 #include "Foundation/NSData.h"
+#include "_CGLifetimeBridgingType.h"
 
 #include <math.h>
 #include <vector>
@@ -30,39 +31,19 @@ extern "C" {
 #include <png.h>
 };
 
-@interface CGNSImage : NSObject {
-@public
-}
+@interface CGNSImage : _CGLifetimeBridgingType
 @end
-
-static IWLazyClassLookup _LazyUIImage("UIImage");
-
-//#define DEBUG_IMG_COUNT
-
-@implementation CGNSImage : NSObject
+@implementation CGNSImage
 - (instancetype)copyWithZone:(NSZone*)zone {
-    CFRetain(self);
-
-    return self;
-}
-
-- (instancetype)retain {
-    CFRetain(self);
-
-    return self;
-}
-
-- (instancetype)release {
-    CFRelease(self);
-
-    return self;
+    return [self retain];
 }
 
 - (void)dealloc {
     delete (__CGImage*)self;
 }
-
 @end
+
+static IWLazyClassLookup _LazyUIImage("UIImage");
 
 int numCGImages = 0;
 

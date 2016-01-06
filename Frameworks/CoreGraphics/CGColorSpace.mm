@@ -18,26 +18,16 @@
 
 #include "CGContextInternal.h"
 #include "CGColorSpaceInternal.h"
+#include "_CGLifetimeBridgingType.h"
 
 static IWLazyClassLookup _LazyUIColor("UIColor");
 
-@interface CGNSColorSpace : NSObject {
-}
+@interface CGNSColorSpace : _CGLifetimeBridgingType
 @end
 
 @implementation CGNSColorSpace
 - (void)dealloc {
     delete (__CGColorSpace*)self;
-}
-
-- (id)retain {
-    CFRetain(self);
-
-    return self;
-}
-
-- (void)release {
-    CFRelease(self);
 }
 @end
 

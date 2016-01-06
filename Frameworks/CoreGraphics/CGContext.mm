@@ -20,6 +20,7 @@
 #include "CoreGraphics/CGContext.h"
 #include "CGContextInternal.h"
 #include "CGColorSpaceInternal.h"
+#include "_CGLifetimeBridgingType.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIFont.h"
 #include "UIKit/UIColor.h"
@@ -37,8 +38,7 @@ static IWLazyClassLookup _LazyUIImage("UIImage"), _LazyUIScreen("UIScreen");
 
 EbrLock _cairoLock = EBRLOCK_INITIALIZE;
 
-@interface CGNSContext : NSObject {
-}
+@interface CGNSContext : _CGLifetimeBridgingType
 @end
 
 @implementation CGNSContext

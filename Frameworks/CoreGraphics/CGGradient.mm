@@ -18,24 +18,14 @@
 #include "CoreGraphics/CGContext.h"
 #include "CGColorSpaceInternal.h"
 #include "CGGradientInternal.h"
+#include "_CGLifetimeBridgingType.h"
 
-@interface CGNSGradient : NSObject {
-}
+@interface CGNSGradient : _CGLifetimeBridgingType
 @end
 
 @implementation CGNSGradient
 - (void)dealloc {
     delete (__CGGradient*)self;
-}
-
-- (id)retain {
-    CGGradientRetain((CGGradientRef)self);
-
-    return self;
-}
-
-- (void)release {
-    CGGradientRelease((CGGradientRef)self);
 }
 @end
 
