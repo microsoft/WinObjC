@@ -23,74 +23,65 @@
 #endif
 
 #ifndef IWEXPORT
- #ifndef OBJCRT_EXPORT
-  #define IWEXPORT __declspec(dllimport)
- #else
-  #define IWEXPORT OBJCRT_EXPORT
- #endif
+#ifndef OBJCRT_EXPORT
+#define IWEXPORT __declspec(dllimport)
+#else
+#define IWEXPORT OBJCRT_EXPORT
+#endif
 #endif
 
 #ifdef __cplusplus_winrt
-IWEXPORT void IWAppInit();
-IWEXPORT void IWRunApplicationMain(Platform::String ^principalClassName, Platform::String ^delegateClassName, float windowWidth, float windowHeight);
-IWEXPORT void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^grid);
-IWEXPORT Windows::UI::Xaml::Controls::SwapChainPanel^ IWSetSwapChainTarget(Windows::UI::Xaml::Controls::SwapChainPanel^ panel);
+IWEXPORT extern "C" void IWAppInit();
+IWEXPORT extern "C" void IWRunApplicationMain(Platform::String ^ principalClassName,
+                                              Platform::String ^ delegateClassName,
+                                              float windowWidth,
+                                              float windowHeight);
+IWEXPORT extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid);
+IWEXPORT extern "C" Windows::UI::Xaml::Controls::SwapChainPanel ^ IWSetSwapChainTarget(Windows::UI::Xaml::Controls::SwapChainPanel ^ panel);
 #endif
-namespace winobjc
-{
-    #ifdef __cplusplus_winrt
-    MIDL_INTERFACE("E7A2DBED-6156-463E-ADDC-017D4DD43726")
-    IIWSendMsg : public IInspectable
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE MsgSend(const char *str, ...) = 0;
-    };
-    #endif
+namespace winobjc {
+#ifdef __cplusplus_winrt
+MIDL_INTERFACE("E7A2DBED-6156-463E-ADDC-017D4DD43726")
+IIWSendMsg : public IInspectable {
+public:
+    virtual HRESULT STDMETHODCALLTYPE MsgSend(const char* str, ...) = 0;
+};
+#endif
 
-    class Id
-    {
-    public:
-        void *_idPtr;
+class Id {
+public:
+    void* _idPtr;
 
-        IWEXPORT void Set(void *idPtr);
-        IWEXPORT Id();
-        IWEXPORT Id(void *idPtr);
-        IWEXPORT Id(Id &&copy);
-        IWEXPORT ~Id();
-        IWEXPORT Id& operator =(const Id &val);
+    IWEXPORT void Set(void* idPtr);
+    IWEXPORT Id();
+    IWEXPORT Id(void* idPtr);
+    IWEXPORT Id(Id&& copy);
+    IWEXPORT ~Id();
+    IWEXPORT Id& operator=(const Id& val);
 
 #ifdef __OBJC__
-        inline operator id()
-        {
-            return (id)_idPtr;
-        }
+    inline operator id() {
+        return (id)_idPtr;
+    }
 #endif
 #ifdef __cplusplus_winrt
-        typedef Platform::Object ^ObjPtr;
-        inline Id(Platform::Object ^obj)
-        {
-            _idPtr = NULL;
-            Set((void *) obj);
-        }
-        inline Id& operator =(Platform::Object ^val)
-        {
-            Set((void *) val);
-            return *this;
-        }
-        inline operator Platform::Object ^ ()
-        {
-            return *((ObjPtr *)&_idPtr);
-        }
-        inline operator IIWSendMsg * ()
-        {
-            return (IIWSendMsg *)*((ObjPtr *)&_idPtr);
-        }
-        inline IIWSendMsg * operator ->()
-        {
-            return (IIWSendMsg *)*((ObjPtr *)&_idPtr);
-        }
+    typedef Platform::Object ^ ObjPtr;
+    inline Id(Platform::Object ^ obj) {
+        _idPtr = NULL;
+        Set((void*)obj);
+    }
+    inline Id& operator=(Platform::Object ^ val) {
+        Set((void*)val);
+        return *this;
+    }
+    inline operator Platform::Object ^() { return *((ObjPtr*)&_idPtr); } inline operator IIWSendMsg*() {
+        return (IIWSendMsg*)*((ObjPtr*)&_idPtr);
+    }
+    inline IIWSendMsg* operator->() {
+        return (IIWSendMsg*)*((ObjPtr*)&_idPtr);
+    }
 #endif
-    };
+};
 
 #if 0
     //  [TODO: Make public WinRT interfaces]

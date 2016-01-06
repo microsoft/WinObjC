@@ -252,7 +252,7 @@ void DisplayAnimation::AddAnimation(DisplayNode* node, const wchar_t* propertyNa
                            toValid ? (Platform::Object ^ )(double)to : nullptr);
 }
 
-unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
+extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
 
 void DisplayAnimation::AddTransitionAnimation(DisplayNode* node, const char* type, const char* subtype) {
     auto xamlNode = GetCALayer(node);
@@ -603,16 +603,17 @@ void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar
     textControl->LineHeight = _lineHeight;
 }
 
-Platform::String ^ charToPlatformString(const char* str) {
-    if (!str) {
-        return nullptr;
+Platform::String ^
+    charToPlatformString(const char* str) {
+        if (!str) {
+            return nullptr;
+        }
+
+        std::wstring widStr(str, str + strlen(str));
+        return ref new Platform::String(widStr.c_str());
     }
 
-    std::wstring widStr(str, str + strlen(str));
-    return ref new Platform::String(widStr.c_str());
-}
-
-void DisplayTextureXamlGlyphs::Measure(float width, float height) {
+    void DisplayTextureXamlGlyphs::Measure(float width, float height) {
     XamlCompositorCS::Controls::CATextLayerXaml ^ textLayer =
         (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock ^ textControl = textLayer->TextBlock;
@@ -649,7 +650,7 @@ void SetScreenParameters(float width, float height, float magnification, float r
 
 void CreateXamlCompositor(winobjc::Id& root);
 
-__declspec(dllexport) void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
+extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
     winobjc::Id gridObj((Platform::Object ^ )grid);
     CreateXamlCompositor(gridObj);
 }

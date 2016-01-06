@@ -32,7 +32,7 @@
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
-__declspec(dllexport) void SetCACompositorClient(CACompositorClientInterface* client) {
+void SetCACompositorClient(CACompositorClientInterface* client) {
     _compositorClient = client;
 }
 

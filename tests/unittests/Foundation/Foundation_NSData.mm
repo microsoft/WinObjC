@@ -114,4 +114,10 @@ TEST(Foundation, NSMutableDataReplaceTests) {
 
     // verify after all replacements, the data should be equal
     ASSERT_OBJCEQ_MSG(originalData, mutableData, "Data should be equal");
+
+    // verify descriptions are equal
+    NSString* expectedHex = @"<48656C6C 6F206F62 6A20776F 726C6400>";
+    ASSERT_OBJCEQ_MSG(expectedHex, [originalData description], "Description must be equal");
+    ASSERT_OBJCEQ_MSG(expectedHex, [mutableData description], "Description must be equal");
+
 }

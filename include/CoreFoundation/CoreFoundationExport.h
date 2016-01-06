@@ -14,10 +14,18 @@
 //
 //******************************************************************************
 
-#include <Foundation/FoundationExport.h>
+#ifndef COREFOUNDATION_IMPEXP
+#define COREFOUNDATION_IMPEXP __declspec(dllimport)
+#endif
 
 #ifndef COREFOUNDATION_EXPORT
-#define COREFOUNDATION_EXPORT FOUNDATION_EXPORT
+#ifdef __cplusplus
+#define COREFOUNDATION_EXPORT COREFOUNDATION_IMPEXP extern "C"
+#define COREFOUNDATION_EXPORT_CLASS COREFOUNDATION_IMPEXP
+#else
+#define COREFOUNDATION_EXPORT COREFOUNDATION_IMPEXP extern
+#define COREFOUNDATION_EXPORT_CLASS COREFOUNDATION_IMPEXP
+#endif
 #endif
 
 #ifndef COREFOUNDATION_EXTERNC_BEGIN
@@ -29,3 +37,5 @@
 #define COREFOUNDATION_EXTERNC_END
 #endif
 #endif
+
+

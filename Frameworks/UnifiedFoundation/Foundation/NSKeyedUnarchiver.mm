@@ -13,24 +13,25 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
+#import "Starboard.h"
 
-#include "CoreFoundation/CFDictionary.h"
+#import "CoreFoundation/CFDictionary.h"
 
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSKeyedUnarchiver.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSValue.h"
-#include "NSPropertyListReader.h"
-#include "NSXMLPropertyList.h"
+#import "Foundation/NSDictionary.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSKeyedUnarchiver.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSValue.h"
+#import "NSPropertyListReader.h"
+#import "NSXMLPropertyList.h"
+#import "UIClassSwapper.h"
 
-#include <stack>
-#include <memory>
-#include <functional>
+#import <stack>
+#import <memory>
+#import <functional>
 
 NSString* NSInvalidUnarchiveOperationException = @"NSInvalidUnarchiveOperationException";
 static NSString* _NSUnarchiverEncounteredInvalidClassException = @"_NSUnarchiverEncounteredInvalidClassException";
@@ -60,10 +61,16 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     bool _objectFailedSecureDecoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)requiresSecureCoding {
     return _requiresSecureCoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRequiresSecureCoding:(BOOL)requiresSecureCoding {
     if (_requiresSecureCoding && !requiresSecureCoding) {
         [NSException raise:NSInvalidUnarchiveOperationException
@@ -72,6 +79,9 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     _requiresSecureCoding = requiresSecureCoding;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSSet*)allowedClasses {
     return [[_expectedClassesInDecodePass.top() copy] autorelease];
 }
@@ -267,6 +277,9 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeRootObject {
     id top = [_propertyList objectForKey:@"$top"];
     id values = [top allValues];
@@ -356,13 +369,19 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key {
     return [self decodeObjectOfClasses:[NSSet setWithObject:expectedClass] forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key {
     _expectedClassesInDecodePass.emplace(expectedClasses);
-    auto deferPop = wil::ScopeExit([&self](){ _expectedClassesInDecodePass.pop(); });
+    auto deferPop = wil::ScopeExit([&self]() { _expectedClassesInDecodePass.pop(); });
 
     return [self decodeObjectForKey:key];
 }
@@ -388,6 +407,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ([[_plistStack lastObject] objectForKey:key] != nil) ? TRUE : FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)decodeObject {
     NSString* idNum = [NSString stringWithFormat:@"$%d", _curUid++];
     return [self decodeObjectForKey:idNum];
@@ -413,6 +435,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return [self decodeIntForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (int)decodeIntegerForKey:(NSString*)key {
     return [self decodeIntForKey:key];
 }
@@ -434,11 +459,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
         return 0;
     }
 
-    unsigned __int64 val;
+    unsigned __int64 ret = [number unsignedLongLongValue];
 
-    [number _copyInt64Value:&val];
-
-    return val;
+    return ret;
 }
 
 /**
@@ -471,6 +494,9 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)decodeCGPointForKey:(NSString*)key {
     CGPoint ret = { 0, 0 };
     id value = _valueForKey(self, key);
@@ -540,18 +566,60 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 - (void)finishDecoding {
 }
 
+/**
+ @Status Stub
+*/
++ (Class)classForClassName:(NSString*)codedName {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (void)setClass:(Class)aClass forClassName:(NSString*)codedName {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (Class)classForClassName:(NSString*)codedName {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setClass:(Class)aClass forClassName:(NSString*)codedName {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)allowsKeyedCoding {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)_setBundle:(id)bundle {
     _bundle = bundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSBundle*)_bundle {
     return _bundle;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _nameToReplacementClass = nil;
     _propertyList = nil;

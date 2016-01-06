@@ -24,8 +24,6 @@
 
 #include <unicode/gregocal.h>
 
-NSString* const NSGregorianCalendar = @"NSGregorianCalendar";
-
 @implementation NSCalendar {
     NSString* _identifier;
     NSTimeZone* _timeZone;

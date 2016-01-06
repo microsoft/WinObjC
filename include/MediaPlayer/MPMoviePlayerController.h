@@ -17,6 +17,10 @@
 #ifndef _MPMOVIEPLAYERCONTROLLER_H_
 #define _MPMOVIEPLAYERCONTROLLER_H_
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIColor.h>
+
 typedef NS_ENUM(NSInteger, MPMovieLoadState) {
     MPMovieLoadStateUnknown = 0,
     MPMovieLoadStatePlayable = 1 << 0,

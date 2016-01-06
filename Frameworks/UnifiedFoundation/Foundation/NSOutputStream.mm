@@ -21,12 +21,19 @@
 #include "Foundation/NSOutputStream.h"
 #include "NSStreamInternal.h"
 
-@implementation NSOutputStream : NSStream
+@interface NSOutputStream () {
+    NSString* _filename;
+    unsigned _append;
+    NSMutableData* _data;
+}
+@end
+
+@implementation NSOutputStream
 
 /**
  @Status Interoperable
 */
-+ (id)outputStreamToFileAtPath:(id)file append:(BOOL)append {
++ (instancetype)outputStreamToFileAtPath:(NSString*)file append:(BOOL)append {
     id ret = [self alloc];
 
     [ret initToFileAtPath:file append:append];
@@ -37,7 +44,7 @@
 /**
  @Status Interoperable
 */
-+ (id)outputStreamToMemory {
++ (instancetype)outputStreamToMemory {
     id ret = [self alloc];
 
     [ret initToMemory];
@@ -46,12 +53,28 @@
 }
 
 /**
+ @Status Stub
+*/
++ (instancetype)outputStreamToBuffer:(uint8_t*)buffer capacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)outputStreamWithURL:(NSURL*)url append:(BOOL)shouldAppend {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
  @Status Interoperable
 */
-- (id)initToFileAtPath:(id)file append:(BOOL)append {
+- (instancetype)initToFileAtPath:(NSString*)file append:(BOOL)append {
     _append = append;
 
-    filename = file;
+    _filename = file;
     EbrDebugLog("NSOutputStream opening %s\n", [file UTF8String]);
 
     return self;
@@ -60,22 +83,38 @@
 /**
  @Status Interoperable
 */
-- (id)initToMemory {
-    data = [NSMutableData new];
+- (instancetype)initToMemory {
+    _data = [NSMutableData new];
 
     return self;
 }
 
 /**
+ @Status Stub
+*/
+- (instancetype)initToBuffer:(uint8_t*)buffer capacity:(NSUInteger)capacity {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithURL:(NSURL*)url append:(BOOL)shouldAppend {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
  @Status Interoperable
 */
-- (NSInteger)write:(char*)buf maxLength:(NSUInteger)maxLength {
-    if (data) {
-        [data appendBytes:buf length:maxLength];
+- (NSInteger)write:(const uint8_t*)buf maxLength:(NSUInteger)maxLength {
+    if (_data) {
+        [_data appendBytes:buf length:maxLength];
 
         return maxLength;
     } else {
-        return EbrFwrite(buf, 1, maxLength, fp);
+        return EbrFwrite(const_cast<uint8_t*>(buf), 1, maxLength, fp);
     }
 }
 
@@ -84,19 +123,19 @@
     return 0;
 }
 
-- (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
-}
-
+/**
+ @Status Interoperable
+*/
 - (id)propertyForKey:(id)key {
     if ([key isEqualToString:@"NSStreamFileCurrentOffsetKey"]) {
-        if (data) {
-            return [NSNumber numberWithInteger:[data length]];
+        if (_data) {
+            return [NSNumber numberWithInteger:[_data length]];
         } else {
             return [NSNumber numberWithInteger:(int)EbrFtell(fp)];
         }
     } else if ([key isEqualToString:@"NSStreamDataWrittenToMemoryStreamKey"]) {
-        if (data) {
-            return data;
+        if (_data) {
+            return _data;
         } else {
             assert(0);
         }
@@ -106,10 +145,13 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)setProperty:(id)prop forKey:(id)key {
     if ([key isEqualToString:@"NSStreamFileCurrentOffsetKey"]) {
-        if (data) {
-            [data setLength:[prop intValue]];
+        if (_data) {
+            [_data setLength:[prop intValue]];
         } else {
             assert(0);
         }
@@ -120,7 +162,7 @@
 }
 
 - (void)dealloc {
-    [data release];
+    [_data release];
     [super dealloc];
 }
 
@@ -132,19 +174,22 @@
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void) /* use typed version */ open {
-    if (data) {
+    if (_data) {
         _status = NSStreamStatusOpen;
     } else {
-        char* mode = "wb";
+        char* mode = const_cast<char*>("wb");
 
         if (_append) {
-            mode = "ab";
+            mode = const_cast<char*>("ab");
         }
-        EbrDebugLog("Opening %s for writing\n", [filename UTF8String]);
-        fp = EbrFopen([filename UTF8String], mode);
+        EbrDebugLog("Opening %s for writing\n", [_filename UTF8String]);
+        fp = EbrFopen([_filename UTF8String], mode);
         if (!fp) {
-            EbrDebugLog("Open of %s failed\n", [filename UTF8String]);
+            EbrDebugLog("Open of %s failed\n", [_filename UTF8String]);
             _status = NSStreamStatusNotOpen;
         } else {
             _status = NSStreamStatusOpen;

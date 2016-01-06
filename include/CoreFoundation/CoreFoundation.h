@@ -76,3 +76,4 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 #import <CoreFoundation/CFUserNotification.h>
 #import <CoreFoundation/CFXMLNode.h>
 #import <CoreFoundation/CFXMLParser.h>
+#import <CoreFoundation/CFType.h>

@@ -652,6 +652,13 @@ namespace ClangCompile
         public bool ObjectiveCARC { get; set; }
 
         [PropertyPage(
+            DisplayName = "Enable C and Objective-C Modules",
+            Description = "Specifies whether to use Clang modules.",
+            Category = "General",
+            Switch = "-fmodules")]
+        public bool ObjectiveCModules { get; set; }
+
+        [PropertyPage(
             Category = "Paths",
             DisplayName = "Hidden Include Paths",
             Description = "Hidden include Paths",
@@ -822,6 +829,12 @@ namespace ClangCompile
             Description = "Language-specific flags",
             Visible = false)]
         public string OtherFlags { get; set; }
+
+        [PropertyPage(
+            Category = "Language",
+            DisplayName = "Use WinObjC standard library",
+            Description = "Uses the WinObjC standard C/C++ library definitions when compiling. This can create some compatibility issues with COM interfaces and Windows-specific source code.")]
+        public Boolean WOCStdLib { get; set; }
 
         [PropertyPage(
             DisplayName = "Command Line",

@@ -18,6 +18,14 @@
 
 #import <Security/SecBase.h>
 #import <Security/SecItem.h>
+#import <Security/CipherSuite.h>
+#import <Security/SecCertificate.h>
+#import <Security/SecIdentity.h>
+#import <Security/SecKey.h>
+#import <Security/SecPolicy.h>
+#import <Security/SecRandom.h>
+#import <Security/SecTrust.h>
+#import <Security/SecureTransport.h>
 
 typedef struct __SecIdentity* SecIdentityRef;
 

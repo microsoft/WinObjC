@@ -45,8 +45,6 @@ enum {
 };
 typedef uint32_t NSCalendarUnit;
 
-FOUNDATION_EXPORT NSString* const NSGregorianCalendar;
-
 FOUNDATION_EXPORT_CLASS
 @interface NSCalendar : NSObject <NSCopying>
 

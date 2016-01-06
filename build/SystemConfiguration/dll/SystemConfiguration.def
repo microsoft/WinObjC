@@ -1,0 +1,11 @@
+LIBRARY SystemConfiguration
+   EXPORTS
+        SCError
+        SCErrorString
+        SCNetworkReachabilityCreateWithAddress
+        SCNetworkReachabilityCreateWithName
+        SCNetworkReachabilityGetFlags
+        SCNetworkReachabilityScheduleWithRunLoop
+        SCNetworkReachabilitySetCallback
+        SCNetworkReachabilitySetDispatchQueue
+        SCNetworkReachabilityUnscheduleFromRunLoop

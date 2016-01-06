@@ -15,6 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "Logging.h"
+
 #include <Foundation/NSString.h>
 #include <Windows.h>
 
@@ -26,8 +28,7 @@ void NSLogv(NSString* fmt, va_list list) {
     INT len = [str length];
     LPWSTR terminatedBuf = (LPWSTR)calloc(len + 1, sizeof(WCHAR));
     memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
-    OutputDebugStringW(terminatedBuf);
-    OutputDebugStringW(L"\n");
+    TraceVerbose(L"NSLog", L"%s", terminatedBuf);
     free(terminatedBuf);
     printf("%s\n", [str UTF8String]);
     [str release];

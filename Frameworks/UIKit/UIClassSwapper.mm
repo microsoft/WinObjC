@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIClassSwapper.h"
+#import "Starboard.h"
+#import "UIClassSwapper.h"
 
-@implementation UIClassSwapper : NSObject
+@implementation UIClassSwapper
 - (id)instantiateWithCoder:(id)coder {
-    className = [coder decodeObjectForKey:@"UIClassName"];
-    originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
-    const char* identifier = [className UTF8String];
-    const char* identifier2 = [originalClassName UTF8String];
+    _className = [[coder decodeObjectForKey:@"UIClassName"] copy];
+    _originalClassName = [[coder decodeObjectForKey:@"UIOriginalClassName"] copy];
+    const char* identifier = [_className UTF8String];
+    const char* identifier2 = [_originalClassName UTF8String];
 
     EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
     id classNameId = objc_getClass(identifier);
@@ -35,12 +35,10 @@
     }
 }
 
-- (NSString*)originalClassName {
-    return originalClassName;
-}
-
-- (NSString*)className {
-    return className;
+- (void)dealloc {
+    [_className release];
+    [_originalClassName release];
+    [super dealloc];
 }
 
 @end

@@ -21,3 +21,4 @@
 #import <AudioToolbox/AudioQueue.h>
 #import <AudioToolbox/AudioFileStream.h>
 #import <AudioToolbox/AudioFormat.h>
+#import <AudioToolbox/AudioConverter.h>

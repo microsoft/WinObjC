@@ -1,0 +1,8 @@
+module Social [exern_c] {
+    umbrella header "Social.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

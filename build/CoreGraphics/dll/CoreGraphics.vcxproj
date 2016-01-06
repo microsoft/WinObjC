@@ -30,15 +30,24 @@
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreGraphics\lib\CoreGraphicsLib.vcxproj">
       <Project>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreGraphics.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</ProjectGuid>
@@ -60,19 +69,16 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>

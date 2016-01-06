@@ -11,23 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Security\lib\SecurityLib.Universal\SecurityLib.Universal.vcxproj">
-      <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
-      <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\UIKit.Universal\UIKit.Universal.vcxproj">
-      <Project>{43ECB8C4-2C55-4EBA-A0A8-5E511789FA6D}</Project>
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreLocation\dll\CoreLocation.vcxproj">
       <Project>{67D1502D-00C8-46B6-AF47-088B7A5199FE}</Project>
@@ -37,6 +28,15 @@
     </ProjectReference>
     <ProjectReference Include="..\..\GLKit\dll\GLKit.vcxproj">
       <Project>{8B71325C-3153-420E-9D7A-D0D2C753481D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
+      <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Security\lib\SecurityLib.vcxproj">
+      <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -122,7 +122,10 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+      <Command>
+        xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"
+        rd /S /Q ".\modulecache"
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,7 +155,10 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
-      <Command>xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+      <Command>
+        xcopy /y "$(ProjectDir)..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"
+        rd /S /Q ".\modulecache"
+    </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,6 +173,10 @@
     <ClangCompile Include="..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\Accessibility.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\CFUUID.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\ClangModulesTest.mm">
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OtherCPlusPlusFlags>-fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
+    </ClangCompile>
     <ClangCompile Include="..\..\..\tests\unittests\CommonCrypto_MD5.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\corefoundation.m" />
     <ClangCompile Include="..\..\..\tests\unittests\CoreLocation\CoreLocation_CLLocation.mm" />

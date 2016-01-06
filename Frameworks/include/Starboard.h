@@ -17,6 +17,8 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
+#include "Logging.h"
+
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
@@ -39,7 +41,7 @@
 #define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 extern "C" void dbg_printf(const char* fmt, ...);
-#define EbrDebugLog(...) dbg_printf(__VA_ARGS__)
+#define EbrDebugLog(...) EbrDebugLogShim(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>

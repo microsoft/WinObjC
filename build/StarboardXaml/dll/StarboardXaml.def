@@ -1,0 +1,4 @@
+LIBRARY StarboardXaml
+    EXPORTS
+        IWSetXamlRoot
+        UIApplicationMain

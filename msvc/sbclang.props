@@ -29,6 +29,7 @@
       <HeaderMap Condition="'%(ClangCompile.HeaderMap)' == ''">Disabled</HeaderMap>
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
+      <ObjectiveCModules Condition="'%(ClangCompile.ObjectiveCModules)' == ''">false</ObjectiveCModules>
       <OptimizationLevel Condition="'%(ClangCompile.OptimizationLevel)' == ''">Disabled</OptimizationLevel>
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>

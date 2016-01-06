@@ -15,6 +15,6 @@
 //******************************************************************************
 
 #import <CoreGraphics/CoreGraphics.h>
-//#import <QuartzCore/CoreVideo.h>
 #import <QuartzCore/CoreAnimation.h>
-//#import <QuartzCore/CoreImage.h>
+#import <QuartzCore/CARenderer.h>
+#import <QuartzCore/CAValueFunction.h>

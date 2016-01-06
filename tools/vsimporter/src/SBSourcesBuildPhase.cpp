@@ -102,6 +102,12 @@ void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
       config->setItemDefinition("ClangCompile", "ObjectiveCARC", "true");
     }
 
+    // Modules
+    String enableModules = bs.second->getValue("CLANG_ENABLE_MODULES");
+    if (enableModules == "YES") {
+        config->setItemDefinition("ClangCompile", "ObjectiveCModules", "true");
+    }
+
     // Header search paths (make them relative)
     StringVec includePaths;
     bs.second->getValue("HEADER_SEARCH_PATHS", includePaths);

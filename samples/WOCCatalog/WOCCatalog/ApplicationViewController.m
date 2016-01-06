@@ -15,22 +15,37 @@
 //******************************************************************************
 
 #import "ApplicationViewController.h"
+#import "UIKit/UIDevice.h"
 
 static const CGFloat c_originX = 5;
 static const CGFloat c_originY = 8;
 static const CGFloat c_width = 160;
 static const CGFloat c_height = 40;
 
-@implementation ApplicationViewController
+@implementation ApplicationViewController {
+    UIDevice* device;
+    NSString* name;
+    NSString* systemVersion;
+    NSString* identifierForVendor;
+    UITextField* currentSystemVersion;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self tableView].allowsSelection = NO;
 }
 
+- (id)init {
+    self = [super init];
+    device = [UIDevice currentDevice];
+    name = [device name];
+    systemVersion = [device systemVersion];
+    identifierForVendor = [[device identifierForVendor] UUIDString];
+    return self;
+}
+
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return 5;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -39,6 +54,14 @@ static const CGFloat c_height = 40;
 
 - (void)onTextFieldChange:(UITextField*)textField {
     [UIApplication sharedApplication].applicationIconBadgeNumber = textField.text.intValue;
+}
+
+- (void)onSystemVersionTextChanged:(UITextField*)textField {
+// setting systemVersion not supported on other platforms
+#ifdef WINOBJC
+    device.systemVersion = textField.text;
+#endif
+    currentSystemVersion.text = [device systemVersion];
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -69,6 +92,54 @@ static const CGFloat c_height = 40;
 
         cell.accessoryView = textField;
         cell.textLabel.text = @"Set badge number";
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    } else if (indexPath.row == 1) {
+        // device name
+        UITextField* textField = [[UITextField alloc] initWithFrame:CGRectMake(c_originX, c_originY, c_width, c_height)];
+        textField.text = name;
+        textField.borderStyle = UITextBorderStyleBezel;
+        textField.font = [UIFont systemFontOfSize:10.0];
+        cell.accessoryView = textField;
+        cell.textLabel.text = @"UIDevice Name";
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    } else if (indexPath.row == 2) {
+        // to set the systemVersion
+        UITextField* textField = [[UITextField alloc] initWithFrame:CGRectMake(c_originX, c_originY, c_width, c_height)];
+
+        textField.borderStyle = UITextBorderStyleBezel;
+        textField.textColor = [UIColor blackColor];
+        textField.font = [UIFont systemFontOfSize:10.0];
+        textField.backgroundColor = [UIColor whiteColor];
+
+        textField.placeholder = @"enter systemVersion";
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.keyboardType = UIKeyboardTypeDefault;
+        textField.returnKeyType = UIReturnKeyDone;
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        [textField addTarget:self action:@selector(onSystemVersionTextChanged:) forControlEvents:UIControlEventEditingChanged];
+
+        cell.accessoryView = textField;
+        cell.textLabel.text = @"system version";
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (indexPath.row == 3) {
+        // Current Set System Version
+        currentSystemVersion = [[UITextField alloc] initWithFrame:CGRectMake(c_originX, c_originY, 50, c_height)];
+        currentSystemVersion.text = systemVersion;
+        currentSystemVersion.borderStyle = UITextBorderStyleBezel;
+
+        cell.accessoryView = currentSystemVersion;
+        cell.textLabel.text = @"current set system version";
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (indexPath.row == 4) {
+        // Identifier For Vendor
+        UITextField* textField = [[UITextField alloc] initWithFrame:CGRectMake(c_originX, c_originY, 300, c_height)];
+        textField.text = identifierForVendor;
+        textField.borderStyle = UITextBorderStyleBezel;
+        textField.font = [UIFont systemFontOfSize:8.0];
+        cell.accessoryView = textField;
+        cell.textLabel.text = @"identifierForVendor";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
 

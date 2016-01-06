@@ -35,7 +35,7 @@ using namespace Microsoft::WRL::Wrappers;
 
 static ABI::Windows::Security::Cryptography::ICryptographicBufferStatics* bufferStatics = nullptr;
 
-extern "C" extern "C" uint32_t arc4random() {
+extern "C" uint32_t arc4random() {
     if (bufferStatics == nullptr) {
         if (!SUCCEEDED(
                 GetActivationFactory(HStringReference(L"Windows.Security.Cryptography.CryptographicBuffer").Get(), &bufferStatics))) {
@@ -50,17 +50,17 @@ extern "C" extern "C" uint32_t arc4random() {
     return randResult;
 }
 
-extern "C" extern "C" int usleep(useconds_t secs) {
+extern "C" int usleep(useconds_t secs) {
     Sleep(secs * 1000);
     return 0;
 }
 
-extern "C" extern "C" unsigned int sleep(useconds_t secs) {
+extern "C" unsigned int sleep(useconds_t secs) {
     Sleep(secs * 1000);
     return 0;
 }
 
-extern "C" extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
+extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
     if (strcmp(name, "hw.machine") == 0) {
         const int required = 8;
         size_t receivedOutSize = 0;

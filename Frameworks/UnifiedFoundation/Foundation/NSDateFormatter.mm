@@ -28,10 +28,6 @@
 #include <functional>
 #include <map>
 
-@interface NSDateFormatter ()
-@property (readwrite) NSDateFormatterBehavior formatterBehavior;
-@end
-
 static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
     switch (fmt) {
         case NSDateFormatterShortStyle:

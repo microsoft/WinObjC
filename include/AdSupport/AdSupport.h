@@ -17,7 +17,10 @@
 #ifndef __ADSUPPORT_H
 #define __ADSUPPORT_H
 
-UIKIT_EXPORT
+#import <Foundation/Foundation.h>
+#import <AdSupport/AdSupportExport.h>
+
+ADSUPPORT_EXPORT
 @interface ASIdentifierManager : NSObject
 
 @property (nonatomic, readonly) NSUUID* advertisingIdentifier;

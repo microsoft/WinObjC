@@ -15,3 +15,8 @@
 //******************************************************************************
 
 // This header file is not yet implemented
+#import <CommonCrypto/CommonCryptor.h>
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonHMAC.h>
+#import <CommonCrypto/CommonKeyDerivation.h>
+#import <CommonCrypto/CommonSymmetricKeywrap.h>

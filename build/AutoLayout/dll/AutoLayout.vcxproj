@@ -36,18 +36,15 @@
     <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
       <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\QuartzCore.Universal\QuartzCore.Universal.vcxproj">
-      <Project>{BB965052-1AF9-4D41-B8CA-65EA7EA62CC5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\Starboard.Universal\Starboard.Universal.vcxproj">
-      <Project>{3243FC44-21D3-4255-8FD8-85CBC4BC08BD}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\lib\AutoLayoutLib.vcxproj">
       <Project>{83CD3839-6A91-4D31-9183-BF6573E016E7}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AutoLayout.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</ProjectGuid>
@@ -69,19 +66,16 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>

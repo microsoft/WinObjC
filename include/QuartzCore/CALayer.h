@@ -23,7 +23,6 @@
 #import <QuartzCore/CATransform3D.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <UIKit/UIColor.h>
 
 @class CAAnimation, CALayerContext;
 
