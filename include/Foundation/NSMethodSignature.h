@@ -19,25 +19,16 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-#define MAX_ARGUMENTS 16
-
 FOUNDATION_EXPORT_CLASS
-@interface NSMethodSignature : NSObject {
-    char* returnType;
-    int returnOffset;
-    char* arguments[MAX_ARGUMENTS];
-    int argumentOffsets[MAX_ARGUMENTS];
-    int numArguments;
-}
-
+@interface NSMethodSignature : NSObject
 + (NSMethodSignature*)signatureWithObjCTypes:(const char*)types;
+
 - (const char*)getArgumentTypeAtIndex:(NSUInteger)index;
+
 @property (readonly) NSUInteger numberOfArguments;
 @property (readonly) NSUInteger frameLength;
 @property (readonly) const char* methodReturnType;
 @property (readonly) NSUInteger methodReturnLength;
+
 - (BOOL)isOneway STUB_METHOD;
 @end
-
-bool getTypeSize(char type, int* size);
-int getArgumentSize(const char* type);

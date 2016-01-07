@@ -63,6 +63,9 @@ typedef struct {
 @end
 
 TEST(NSObject, InstanceMethodSignature) {
+    // -[BaseClass methodWithMixedStructArg:] is a method that returns void and takes
+    // a single public argument. Adding in self and _cmd (the selector) brings the true
+    // argument count to 3.
     NSMethodSignature* base_mixedStructArg = [TEST_IDENT(BaseClass) instanceMethodSignatureForSelector:@selector(methodWithMixedStructArg:)];
     EXPECT_OBJCNE(nil, base_mixedStructArg);
     EXPECT_STREQ(@encode(void), [base_mixedStructArg methodReturnType]);
