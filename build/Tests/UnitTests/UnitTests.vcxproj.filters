@@ -79,6 +79,8 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSMutableURLRequest.m" />
     <ClangCompile Include="..\..\..\tests\unittests\CommonCrypto_MD5.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\ClangModulesTest.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\Security_SecRandom.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\ByteUtils.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

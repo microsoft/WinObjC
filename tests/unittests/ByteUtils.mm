@@ -14,11 +14,28 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "byteutils.h"
+#include "gtest-api.h"
 
-#import <Security/SecBase.h>
+const BYTE lookup[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-typedef const struct __SecRandom* SecRandomRef;
+std::string stringFromBytes(BYTE* buf, size_t len) {
+    std::string ret;
+    ret.reserve(2 * (len + 1) + len / 2);
 
-SECURITY_EXPORT int SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t* bytes);
-SECURITY_EXPORT const SecRandomRef kSecRandomDefault;
+    for (int i = 0, count = 0; i < len; i++, count++) {
+        ret.push_back(lookup[buf[i] & 0xf]);
+        ret.push_back(lookup[buf[i] >> 4]);
+        if (count == 1) {
+            count = -1;
+            ret.push_back(' ');
+        }
+    }
+
+    return ret;
+}
+
+void logBytes(const char* str, BYTE* buf, size_t len) {
+    std::string strBuf = stringFromBytes(buf, len);
+    LOG_INFO("Bytes value for %s is\n%s", str, strBuf.c_str());
+}

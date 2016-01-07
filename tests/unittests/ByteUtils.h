@@ -14,11 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
+#include <windows.h>
+#include <string>
 
-#import <Security/SecBase.h>
+std::string stringFromBytes(BYTE* buf, size_t len);
 
-typedef const struct __SecRandom* SecRandomRef;
+inline bool equalsBytes(BYTE* buf1, BYTE* buf2, size_t len) {
+    return memcmp(buf1, buf2, len) == 0;
+}
 
-SECURITY_EXPORT int SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t* bytes);
-SECURITY_EXPORT const SecRandomRef kSecRandomDefault;
+void logBytes(const char* str, BYTE* buf, size_t len);
