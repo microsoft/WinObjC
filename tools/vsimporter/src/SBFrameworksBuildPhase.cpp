@@ -29,6 +29,8 @@
 #include "VCProject.h"
 #include "VCProjectConfiguration.h"
 
+std::map<String, String, SBFrameworksBuildPhase::CaseInsensitiveComparator> SBFrameworksBuildPhase::s_blockedLibraries;
+
 SBBuildPhase* SBFrameworksBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget)
 {
   const PBXFrameworksBuildPhase* linkPhase = dynamic_cast<const PBXFrameworksBuildPhase*>(phase);
@@ -48,6 +50,66 @@ SBFrameworksBuildPhase::SBFrameworksBuildPhase(const PBXFrameworksBuildPhase* ph
   for (auto buildFile : m_phase->getBuildFileList()) {
     m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
   }
+
+  // Load our blocked libraries and their replacements from file if not already loaded.
+  if (s_blockedLibraries.empty())
+  {
+      loadFrameworkBlockListFromFile("framework-blocklist.txt");
+  }
+}
+
+void SBFrameworksBuildPhase::loadFrameworkBlockListFromFile(const String& fileName)
+{
+    // Get the path to the file which has the block list.
+    const BuildSettings bs(NULL);
+    String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
+    
+    // If we have reached this far the folder is guaranteed to exist as we must have already called checkWinObjCSDK().
+    assert(!sb_realpath(templateDir).empty());
+    
+    String blockListFilePath = joinPaths(templateDir, fileName);
+    ifstream file(blockListFilePath);
+    if (file.is_open())
+    {
+        String line;
+        while (getline(file, line))
+        {
+            StringVec tokens;
+            tokenize(line, tokens, "-> ");
+            if (tokens.size() == 0)
+            {
+                // empty line
+                continue;
+            }
+
+            // We do not expect more than 2 tokens per line.
+            // First is the blocked library name and possibly a second token which is the replacement library name.
+            sbValidate(tokens.size() <= 2, 
+                "Invalid Block List: Only one blocked library and an optional replacement library separated by '->' are allowed per line");
+            
+            String blockedLibrary = tokens[0];
+
+            // We may or may not have the replacement library specified.
+            String replaceWithLibrary = "";
+            if (tokens.size() > 1)
+            {
+                replaceWithLibrary = tokens[1];
+
+                // Check if the library replacements form a cycle.
+                auto it = s_blockedLibraries.find(replaceWithLibrary);
+                while (it != s_blockedLibraries.end())
+                {
+                    replaceWithLibrary = it->second;
+                    sbValidate(blockedLibrary != replaceWithLibrary, 
+                        blockedLibrary + " is trying to cyclically replace itself with another blocked library.");
+                    it = s_blockedLibraries.find(replaceWithLibrary);
+                }
+            }
+
+            s_blockedLibraries.insert(pair<String, String>(blockedLibrary, replaceWithLibrary));
+        }
+        file.close();
+    }
 }
 
 void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
@@ -88,14 +150,29 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
     processLDFlags(bs.second->getValue("OTHER_LDFLAGS"), buildFilePaths);
 
     // Construct a list of libraries to link against
-    StringVec linkedLibs;
-    linkedLibs.push_back("%(AdditionalDependencies)");
+    StringSet linkedLibs;
+    linkedLibs.insert("%(AdditionalDependencies)");
     for (auto filePath : buildFilePaths) {
       if (productType == TargetStaticLib && !strEndsWith(filePath, ".a"))
         continue;
 
       String winLibName = sb_fname(sb_basename(filePath)) + ".lib";
-      linkedLibs.push_back(winLibName);
+
+      // If the library is blocked then add the replacement library to our additional dependencies 
+      auto it = s_blockedLibraries.find(winLibName);
+      while (it != s_blockedLibraries.end())
+      {
+          // get the replacement library.
+          winLibName = it->second;
+
+          // follow any transitive replacement.
+          it = s_blockedLibraries.find(winLibName);
+      }
+
+      if (!winLibName.empty())
+      {
+          linkedLibs.insert(winLibName);
+      }
     }
 
     // AdditionalDependencies
