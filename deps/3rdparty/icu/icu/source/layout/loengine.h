@@ -36,7 +36,7 @@ typedef void le_font;
 
 /**
  * This function returns an le_engine capable of laying out text
- * in the given font, script and langauge. Note that the LayoutEngine
+ * in the given font, script and language. Note that the LayoutEngine
  * returned may be a subclass of LayoutEngine.
  *
  * @param font - the font of the text
