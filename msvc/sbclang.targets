@@ -59,8 +59,8 @@
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
       <SBResourceCopy Condition="'$(IncludeLogging)' == 'true'" Include="$(StarboardLibDirs)\Logging.dll" />
-      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
 
+      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libobjc2.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
 
       <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
@@ -370,6 +370,7 @@
       <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
     </PropertyGroup>
     <ItemGroup>
+      <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
       <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
     </ItemGroup>

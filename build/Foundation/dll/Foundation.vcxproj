@@ -34,9 +34,6 @@
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
-      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>

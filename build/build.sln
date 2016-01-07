@@ -2,10 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "objcrt", "objcrt", "{23A03031-6601-4236-B084-F2D15DC4C375}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "objcrt.Shared", "objcrt\objcrt.Shared\objcrt.Shared.vcxitems", "{646A824A-87D9-4A11-AB72-F2CB4B8977BA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StarboardXaml", "StarboardXaml", "{D5C9AEB3-5D63-480F-AD22-234821C412D9}"
@@ -38,7 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SDK Packager_", "_SDK Pack
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.vcxproj", "{3389E85F-0DB7-43FF-BFA5-496338534224}"
 	ProjectSection(ProjectDependencies) = postProject
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B} = {C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}
 		{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9} = {8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76} = {004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}
 		{86127226-9A6E-439B-A070-420A572AF0C7} = {86127226-9A6E-439B-A070-420A572AF0C7}
@@ -60,8 +55,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Package", "Package\Package.
 		{26DA08DA-D0B9-4579-B168-E7F0A5F20E57} = {26DA08DA-D0B9-4579-B168-E7F0A5F20E57}
 		{B112CFE1-6DE9-4E68-BC09-A8374D756452} = {B112CFE1-6DE9-4E68-BC09-A8374D756452}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "objcrt.Universal", "objcrt\objcrt.Universal\objcrt.Universal.vcxproj", "{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlCompositorCS.Universal", "XamlCompositorCS\XamlCompositorCS.Universal\XamlCompositorCS.Universal.csproj", "{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}"
 EndProject
@@ -290,8 +283,6 @@ Global
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{cc20fad2-8a69-4664-a010-ef5ff0253fbd}*SharedItemsImports = 13
 		XamlCompositorCS\XamlCompositorCS.Shared\XamlCompositorCS.Shared.projitems*{004e2c18-3bd8-436e-b3c2-d2fe64bc3c76}*SharedItemsImports = 4
 		Headers\Headers.Shared\Internal.Shared.vcxitems*{c0db71aa-0f89-41ac-bb7d-c0cb5458f4f9}*SharedItemsImports = 9
-		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{646a824a-87d9-4a11-ab72-f2cb4b8977ba}*SharedItemsImports = 9
-		objcrt\objcrt.Shared\objcrt.Shared.vcxitems*{c6f2fb00-05db-47c6-b1a0-f73060b89c1b}*SharedItemsImports = 4
 		Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
 		Tests\Tests.Shared\Tests.Shared.vcxitems*{ee68a240-536d-4557-ab96-d164e93059a1}*SharedItemsImports = 9
 	EndGlobalSection
@@ -308,13 +299,6 @@ Global
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|ARM.ActiveCfg = Release|Win32
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|x86.ActiveCfg = Release|Win32
 		{3389E85F-0DB7-43FF-BFA5-496338534224}.Release|x86.Build.0 = Release|Win32
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|ARM.Build.0 = Debug|ARM
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|x86.ActiveCfg = Debug|Win32
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Debug|x86.Build.0 = Debug|Win32
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Release|ARM.ActiveCfg = Release|ARM
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Release|x86.ActiveCfg = Release|Win32
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}.Release|x86.Build.0 = Release|Win32
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}.Debug|ARM.ActiveCfg = Debug|ARM
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}.Debug|ARM.Build.0 = Debug|ARM
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76}.Debug|x86.ActiveCfg = Debug|x86
@@ -673,11 +657,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{646A824A-87D9-4A11-AB72-F2CB4B8977BA} = {23A03031-6601-4236-B084-F2D15DC4C375}
 		{D72ADC4D-8414-4CF3-B7D9-4B59C595BBBC} = {13AFC0AD-FA93-4943-B8D2-8DBD17D74BDB}
 		{CC20FAD2-8A69-4664-A010-EF5FF0253FBD} = {D72ADC4D-8414-4CF3-B7D9-4B59C595BBBC}
 		{3389E85F-0DB7-43FF-BFA5-496338534224} = {A3C1947E-37CE-4F4B-A7FE-BE6DF34F43BB}
-		{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B} = {23A03031-6601-4236-B084-F2D15DC4C375}
 		{004E2C18-3BD8-436E-B3C2-D2FE64BC3C76} = {D72ADC4D-8414-4CF3-B7D9-4B59C595BBBC}
 		{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
 		{C0DB71AA-0F89-41AC-BB7D-C0CB5458F4F9} = {6A9F9F79-A657-47B0-B41C-A48B6A06308C}
