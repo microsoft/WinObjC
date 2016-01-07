@@ -21,6 +21,7 @@
 #import "CoreLocation/CLLocation.h"
 
 #include <type_traits>
+#include <objc/encoding.h>
 
 static NSValueType valueTypeFromObjCType(const char* objcType) {
     if (strncmp(objcType, "{CGSize", 7) == 0) {
@@ -438,7 +439,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     if ((self = [super init]) != nil) {
         _valueType = NSValueTypeGeneric;
         _objcType = _strdup(ocType);
-        size_t size = getArgumentSize(ocType);
+        size_t size = objc_sizeof_type(ocType);
         _valPtr = malloc(size);
         memcpy(_valPtr, ptr, size);
     }
@@ -464,7 +465,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (void)getValue:(void*)dest {
-    memcpy(dest, _valPtr, getArgumentSize(_objcType));
+    memcpy(dest, _valPtr, objc_sizeof_type(_objcType));
 }
 
 - (NSString*)description {
@@ -476,7 +477,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (size_t)_rawSize {
-    return getArgumentSize(_objcType);
+    return objc_sizeof_type(_objcType);
 }
 @end
 

@@ -255,7 +255,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSURLConnectionState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSURLProtocol_file.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSURLProtocol_http.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSValueTransformers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSXMLPropertyList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\RawBuffer.h" />
   </ItemGroup>

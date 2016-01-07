@@ -16,6 +16,8 @@
 
 #import "NSKeyValueObserving-Internal.h"
 
+#import <objc/encoding.h>
+
 static Class NSKVO$class(id self, SEL);
 static Class NSKVO$meta$superclass(Class self, SEL);
 static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key);
@@ -49,7 +51,7 @@ struct NSKVOSwizzledMethod {
     NSKVOSwizzledMethod(const std::string& key) : key(key), valueSize(0), origImp(nullptr) {
     }
     NSKVOSwizzledMethod(const std::string& key, const char* objcType, IMP origImp)
-        : key(key), valueSize(getArgumentSize(objcType)), origImp(origImp) {
+        : key(key), valueSize(objc_sizeof_type(objcType)), origImp(origImp) {
     }
     NSKVOSwizzledMethod(IMP origImp) : origImp(origImp) {
     }

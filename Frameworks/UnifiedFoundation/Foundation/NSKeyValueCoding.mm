@@ -292,7 +292,7 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
         NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
         const char* valueType = [sig getArgumentTypeAtIndex:2];
-        std::vector<uint8_t> data(getArgumentSize(valueType));
+        std::vector<uint8_t> data(objc_sizeof_type(valueType));
         if (!woc::dataWithTypeFromValue(data.data(), valueType, value)) {
             return false;
         }

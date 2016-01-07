@@ -23,6 +23,8 @@
 #import "Foundation/NSValue.h"
 #import "ErrorHandling.h"
 
+#import <objc/encoding.h>
+
 namespace woc {
 static const char s_autoIdTypePrefix[] = "{AutoId<";
 static const char s_lifetimeRetainName[] = "LifetimeRetain";
@@ -173,7 +175,7 @@ bool dataWithTypeFromValue(void* data, const char* objcType, id value) {
             }
         default:
             NSValue* nsv = static_cast<NSValue*>(value);
-            if (getArgumentSize(objcType) == getArgumentSize([nsv objCType])) {
+            if (objc_sizeof_type(objcType) == objc_sizeof_type([nsv objCType])) {
                 [nsv getValue:data];
             } else {
                 // If the argument types don't match in size, we just say
