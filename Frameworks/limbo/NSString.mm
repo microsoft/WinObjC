@@ -2484,7 +2484,7 @@ typedef NSUInteger NSStringCompareOptions;
     return [NSString pathWithComponents:components];
 }
 
-- (id)classForCoder {
+- (Class)classForCoder {
     return [NSString class];
 }
 

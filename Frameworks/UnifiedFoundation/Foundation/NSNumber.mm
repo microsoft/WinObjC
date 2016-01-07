@@ -569,7 +569,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return objCType;
 }
 
-- (id)classForCoder {
+- (Class)classForCoder {
     return [NSNumber class];
 }
 

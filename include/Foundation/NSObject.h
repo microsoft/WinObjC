@@ -85,11 +85,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 /* The root implementation of NSObject is contained in objcrt */
 __declspec(dllimport) @interface NSObject<NSObject> {
 @public
-#ifdef IW_NO_WINRT_ISA
     Class isa;
-#else
-    WinRT_isa isa;
-#endif
 }
 
 + (NSInteger)version;

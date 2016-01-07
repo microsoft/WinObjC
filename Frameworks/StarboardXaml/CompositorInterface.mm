@@ -131,7 +131,7 @@ class GenericControlXaml : public DisplayTexture {
 public:
     winobjc::Id _xamlView;
 
-    GenericControlXaml(id view) {
+    GenericControlXaml(const Microsoft::WRL::ComPtr<IUnknown>& view) {
         _xamlView = view;
     }
 
@@ -1259,7 +1259,7 @@ public:
     }
 
     DisplayTexture* CreateDisplayTextureForElement(id xamlElement) {
-        GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement internalObject]);
+        GenericControlXaml* genericControlTexture = new GenericControlXaml((IUnknown*)[(RTObject*)xamlElement internalObject]);
         return genericControlTexture;
     }
 

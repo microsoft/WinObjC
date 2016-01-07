@@ -15,7 +15,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSString;
 
-typedef void *NSZone;
+@class NSZone;
 
 FOUNDATION_EXPORT NSUInteger  NSPageSize(void);
 FOUNDATION_EXPORT NSUInteger  NSLogPageSize(void);

@@ -22,7 +22,6 @@
 #import "NSObjectInternal.h"
 #include "../UnifiedFoundation/Foundation/NSValueTransformers.h"
 #include "NSObject_NSKeyValueArrayAdapter-Internal.h"
-#include "../objcrt/runtime.h"
 
 #include "CoreGraphics/CGAffineTransform.h"
 #include "QuartzCore/CATransform3D.h"
@@ -139,8 +138,8 @@ bool KVCGetViaIvar(id self, struct objc_ivar* ivar, id* ret) {
         return false;
     }
 
-    const char* ivarType = ivar->type;
-    void* data = reinterpret_cast<char*>(self) + ivar->offset;
+    const char* ivarType = ivar_getTypeEncoding(ivar);
+    void* data = reinterpret_cast<char*>(self) + ivar_getOffset(ivar);
 
     // We can't box or unbox char* or arbitrary pointers.
     if (ivarType[0] == '*' || ivarType[0] == '^' || ivarType[0] == '?') {
@@ -298,8 +297,8 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
         return false;
     }
 
-    uint32_t offset = ivar->offset;
-    const char* argType = ivar->type;
+    uint32_t offset = ivar_getOffset(ivar);
+    const char* argType = ivar_getTypeEncoding(ivar);
 
     void* destination = reinterpret_cast<char*>(self) + offset;
     if (!woc::dataWithTypeFromValue(destination, argType, value)) {
@@ -503,14 +502,17 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     id cls = self;
     const char* methodTypes;
     while (cls) {
-        methodTypes = objc_get_type_encoding(cls, selector);
-        if (methodTypes)
+        auto method = class_getInstanceMethod(cls, selector);
+        methodTypes = method_getTypeEncoding(method);
+        if (methodTypes) {
             break;
+        }
 
         // Couldn't find it..
         cls = [cls superclass];
-        if (!cls)
+        if (!cls) {
             return nil;
+        }
     }
 
     if (!methodTypes) {

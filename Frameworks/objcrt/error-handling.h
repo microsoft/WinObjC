@@ -17,7 +17,11 @@
 #include <sys/cdefs.h>
 
 #ifndef OBJCRT_EXPORT
+#if defined(__OBJC_RUNTIME_INTERNAL__)
+#define OBJCRT_EXPORT __declspec(dllexport)
+#else
 #define OBJCRT_EXPORT
+#endif
 #endif
 
 __BEGIN_DECLS

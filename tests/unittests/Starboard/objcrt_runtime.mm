@@ -254,7 +254,7 @@ TEST(ObjcrtRunTime, RunTimeTest) {
     perform("indexed ivars do not damage instance",
             ^bool {
                 Class k = objc_getClass("TESTCASE5");
-                TestCaseBaseIvars* instance = objc_allocateObject(k, sizeof(ClassTrailer));
+                TestCaseBaseIvars* instance = class_createInstance(k, sizeof(ClassTrailer));
                 instance = [instance init];
 
                 ClassTrailer* iiv = (ClassTrailer*)object_getIndexedIvars((id)instance);
@@ -308,7 +308,7 @@ TEST(Objcrt, ClassGetProperty) {
     objc_property_t a = class_getProperty([ClassWithALotOfProperties class], "a");
     EXPECT_NE(nullptr, a);
 
-    objc_property_t badLookup1 = class_getProperty([ClassWithALotOfProperties class], NULL);
+    objc_property_t badLookup1 = class_getProperty([ClassWithALotOfProperties class], "");
     EXPECT_EQ(nullptr, badLookup1);
 
     objc_property_t badLookup2 = class_getProperty(Nil, "a");

@@ -16,10 +16,19 @@
 
 #pragma once
 
+#ifdef __OBJC__
+#include <COMIncludes.h>
+#endif
+
 #ifdef __cplusplus_winrt
 #include <wrl.h>
-#include <wrl/client.h>
 #include <agile.h>
+#endif
+
+#include <wrl/client.h>
+
+#ifdef __OBJC__
+#include <COMIncludes_End.h>
 #endif
 
 #ifndef IWEXPORT
@@ -38,61 +47,63 @@ IWEXPORT extern "C" void IWRunApplicationMain(Platform::String ^ principalClassN
 IWEXPORT extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid);
 IWEXPORT extern "C" Windows::UI::Xaml::Controls::SwapChainPanel ^ IWSetSwapChainTarget(Windows::UI::Xaml::Controls::SwapChainPanel ^ panel);
 #endif
+
 namespace winobjc {
-#ifdef __cplusplus_winrt
-MIDL_INTERFACE("E7A2DBED-6156-463E-ADDC-017D4DD43726")
-IIWSendMsg : public IInspectable {
-public:
-    virtual HRESULT STDMETHODCALLTYPE MsgSend(const char* str, ...) = 0;
-};
-#endif
 
 class Id {
 public:
-    void* _idPtr;
+    Microsoft::WRL::ComPtr<IUnknown> _comPtr;
 
-    IWEXPORT void Set(void* idPtr);
-    IWEXPORT Id();
-    IWEXPORT Id(void* idPtr);
-    IWEXPORT Id(Id&& copy);
-    IWEXPORT ~Id();
-    IWEXPORT Id& operator=(const Id& val);
+    Id() { }
 
-#ifdef __OBJC__
-    inline operator id() {
-        return (id)_idPtr;
-    }
-#endif
-#ifdef __cplusplus_winrt
-    typedef Platform::Object ^ ObjPtr;
-    inline Id(Platform::Object ^ obj) {
-        _idPtr = NULL;
-        Set((void*)obj);
-    }
-    inline Id& operator=(Platform::Object ^ val) {
-        Set((void*)val);
+    Id(IUnknown* ptr) : _comPtr(ptr) { }
+
+    Id(Id&& copy) : _comPtr(copy._comPtr) { }
+
+    Id(const decltype(_comPtr)& other) : _comPtr(other) { }
+
+    Id& operator=(const decltype(_comPtr)& other) {
+        _comPtr = other;
         return *this;
     }
-    inline operator Platform::Object ^() { return *((ObjPtr*)&_idPtr); } inline operator IIWSendMsg*() {
-        return (IIWSendMsg*)*((ObjPtr*)&_idPtr);
-    }
-    inline IIWSendMsg* operator->() {
-        return (IIWSendMsg*)*((ObjPtr*)&_idPtr);
-    }
-#endif
-};
 
-#if 0
-    //  [TODO: Make public WinRT interfaces]
-    public interface class IIWRecvMsgArgs
-    {
-        Platform::Object ^PullObject();
-        IIWSendMsg ^PullId();
-        uint32 PullUInt32();
-    };
-    public interface class IIWRecvMsg
-    {
-        Platform::Object ^MsgReceive(Platform::String ^selName, IIWRecvMsgArgs ^args);
-    };
+    Id& operator=(const Id& val) {
+        _comPtr = val._comPtr;
+        return *this;
+    }
+
+    Id& operator=(IUnknown* ptr) {
+        _comPtr = ptr;
+        return *this;
+    }
+
+    Id& operator=(nullptr_t) {
+        _comPtr = nullptr;
+        return *this;
+    }
+
+#ifdef __OBJC__
+    Id& operator=(id) = delete;
+    Id(id) = delete;
 #endif
+
+#ifdef __cplusplus_winrt
+    typedef Platform::Object^ ObjPtr;
+
+    inline Id(Platform::Object^ obj) : _comPtr(reinterpret_cast<IUnknown*>(obj)) { }
+
+    inline Id& operator=(Platform::Object^ obj) {
+        _comPtr = reinterpret_cast<IUnknown*>(obj);
+        return *this;
+    }
+
+    inline operator Platform::Object^ () {
+        return reinterpret_cast<Platform::Object^>(_comPtr.Get());
+    }
+#endif
+
+    inline operator IUnknown*() {
+        return _comPtr.Get();
+    }
+};
 }

@@ -504,8 +504,8 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
         const char* rawKey = [key UTF8String];
         auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
-        BOOL (*imp)(Class, SEL) = reinterpret_cast<decltype(imp)>(class_getMethodImplementation(object_getClass(self), sel));
-        if (imp != nullptr) {
+        if ([self respondsToSelector:sel]) {
+            BOOL (*imp)(Class, SEL) = reinterpret_cast<decltype(imp)>(class_getMethodImplementation(object_getClass(self), sel));
             return imp(self, sel);
         }
     }

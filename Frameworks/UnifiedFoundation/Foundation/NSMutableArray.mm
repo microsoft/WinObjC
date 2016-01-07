@@ -20,7 +20,6 @@
 #include "CoreFoundation/CFArray.h"
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
-#include "../objcrt/runtime.h"
 #include "NSArrayInternal.h"
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);

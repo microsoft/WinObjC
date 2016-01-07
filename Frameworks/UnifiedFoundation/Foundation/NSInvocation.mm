@@ -30,46 +30,6 @@ static inline size_t ROUND(size_t v, size_t a) {
     }
 }
 
-enum {
-    _C_ID = '@',
-    _C_CHR = 'c',
-    _C_UCHR = 'C',
-    _C_INT = 'i',
-    _C_UINT = 'I',
-    _C_FLT = 'f',
-    _C_DBL = 'd',
-    _C_VOID = 'v',
-    _C_UNDEF = '?',
-    _C_CLASS = '#',
-    _C_SEL = ':',
-    _C_CHARPTR = '*',
-    _C_SHT = 's',
-    _C_USHT = 'S',
-    _C_LNG = 'l',
-    _C_ULNG = 'L',
-    _C_LNGLNG = 'q',
-    _C_LNG_LNG = _C_LNGLNG,
-    _C_ULNGLNG = 'Q',
-    _C_ULNG_LNG = _C_ULNGLNG,
-    _C_BFLD = 'b',
-    _C_ARY_B = '[',
-    _C_STRUCT_B = '{',
-    _C_UNION_B = '(',
-    _C_ARY_E = ']',
-    _C_STRUCT_E = '}',
-    _C_UNION_E = ')',
-    _C_PTR = '^',
-    _C_CONST = 'r',
-    _C_IN = 'n',
-    _C_INOUT = 'N',
-    _C_OUT = 'o',
-    _C_BYCOPY = 'R',
-    _C_ONEWAY = 'V',
-    _C_COMPLEX = 'j',
-};
-
-#define _C_BOOL 'B'
-
 static inline const char* objc_skip_type_qualifier(const char* type) {
     assert(type != NULL);
 

@@ -209,7 +209,7 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 #define InterlockedDecrementRelease objc_interlockedDecrementRelease
 #define InterlockedCompareExchangePointer objc_interlockedCompareExchangePointer
 
-#include "../objcrt/error-handling.h"
+#include <error-handling.h>
 
 // Ignore some warnings in result.h
 #if defined __clang__

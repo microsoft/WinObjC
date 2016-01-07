@@ -555,7 +555,7 @@ DisplayTextureXamlGlyphs::~DisplayTextureXamlGlyphs() {
     XamlCompositorCS::Controls::CATextLayerXaml ^ textControl =
         (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     XamlCompositorCS::Controls::CATextLayerXaml::DestroyTextLayer(textControl);
-    _xamlTextbox.Set(NULL);
+    _xamlTextbox = nullptr;
 }
 
 Platform::String ^ charToPlatformString(const char* str);

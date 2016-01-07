@@ -202,6 +202,15 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 
 #if (!__has_feature(objc_arc))
 #define __autoreleasing
+#ifndef __strong
+#define __strong
+#endif
+#ifndef __weak
+#define __weak
+#endif
+#ifndef __unsafe_unretained
+#define __unsafe_unretained
+#endif
 #endif
 
 #define NS_AVAILABLE(x, y)

@@ -657,7 +657,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 /**
  @Status Interoperable
 */
-- (id)classForCoder {
+- (Class)classForCoder {
     return [NSValue class];
 }
 

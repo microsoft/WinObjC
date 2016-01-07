@@ -31,6 +31,8 @@
 #include "UWP/WindowsNetworkingSockets.h"
 #include "UWP/WindowsNetworking.h"
 
+#include <objc/objc-arc.h>
+
 static __declspec(thread) int SCLastError = 0;
 
 static SCNetworkReachabilityFlags _globalReachableFlags = 0;

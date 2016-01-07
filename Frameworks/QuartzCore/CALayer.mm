@@ -36,6 +36,12 @@
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
 
+// FIXME(DH): Compatibility shim to avoid rewriting parts of CA for libobjc2.
+// VSO 6149838
+static BOOL object_isMethodFromClass(id object, SEL selector, const char* className) {
+    return class_getMethodImplementation(objc_getClass(className), selector) != class_getMethodImplementation(object_getClass(object), selector);
+}
+
 @interface NSValue (CATransform3D)
 // This is defined in Foundation/NSValue.mm
 - (NSValue*)initWithCATransform3D:(CATransform3D)val;
