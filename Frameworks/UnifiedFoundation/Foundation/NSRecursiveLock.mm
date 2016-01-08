@@ -15,13 +15,12 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import "NSLock+Internal.h"
+#import "NSRecursiveLock+Internal.h"
 #import <mutex>
-#import <chrono>
 
-@implementation NSLock {
-    std::timed_mutex _mtx;
-    std::unique_lock<std::timed_mutex> _lock;
+@implementation NSRecursiveLock {
+    std::recursive_timed_mutex _mtx;
+    std::unique_lock<std::recursive_timed_mutex> _lock;
     idretaintype(NSString) _name;
 }
 
@@ -30,9 +29,8 @@
 */
 - (instancetype)init {
     if (self == [super init]) {
-        _lock = std::unique_lock<std::timed_mutex>(_mtx, std::defer_lock);
+        _lock = std::unique_lock<std::recursive_timed_mutex>(_mtx, std::defer_lock);
     }
-
     return self;
 }
 
@@ -60,6 +58,15 @@
 /**
  @Status Interoperable
 */
+- (BOOL)lockBeforeDate:(NSDate*)value {
+    NSDate* now = [NSDate date];
+    long timeInMs = [value timeIntervalSinceDate:now] * 1000;
+    return _lock.try_lock_for(std::chrono::milliseconds(timeInMs));
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setName:(NSString*)name {
     [name retain];
     [_name release];
@@ -71,15 +78,6 @@
 */
 - (NSString*)name {
     return _name;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)lockBeforeDate:(NSDate*)value {
-    NSDate* now = [NSDate date];
-    long timeInMs = [value timeIntervalSinceDate:now] * 1000;
-    return _lock.try_lock_for(std::chrono::milliseconds(timeInMs));
 }
 
 - (BOOL)isLocked {
