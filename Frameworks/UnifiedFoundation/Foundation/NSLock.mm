@@ -14,37 +14,47 @@
 //
 //******************************************************************************
 
-#include <process.h>
-
-#include "Starboard.h"
-#include "Foundation/NSLock.h"
-#include "Foundation/NSRecursiveLock.h"
+#import <Starboard.h>
+#import "NSLock+Internal.h"
+#import <mutex>
+#import <chrono>
 
 @implementation NSLock {
-    uint32_t _lock;
+    std::timed_mutex _mtx;
+    std::unique_lock<std::timed_mutex> _lock;
     idretaintype(NSString) _name;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    EbrLockInit(&_lock);
+    if (self == [super init]) {
+        _lock = std::unique_lock<std::timed_mutex>(_mtx, std::defer_lock);
+    }
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lock {
-    EbrLockEnter(_lock);
+    _lock.lock();
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)tryLock {
-    BOOL ret = EbrLockTryEnter(_lock);
-
-    return ret;
+    return _lock.try_lock();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unlock {
-    EbrLockLeave(_lock);
+    _lock.unlock();
 }
 
 /**
@@ -61,50 +71,21 @@
 */
 - (NSString*)name {
     return _name;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)lockBeforeDate:(NSDate*)value {
+    NSDate* now = [NSDate date];
+    long timeInMs = [value timeIntervalSinceDate:now] * 1000;
+    return _lock.try_lock_for(std::chrono::milliseconds(timeInMs));
+}
+
+- (BOOL)isLocked {
+    return _lock.owns_lock();
 }
 @end
 
-@implementation NSRecursiveLock {
-    uint32_t _lock;
-    idretaintype(NSString) _name;
-}
-
-- (instancetype)init {
-    EbrLockInit(&_lock);
-
-    return self;
-}
-
-- (void)lock {
-    EbrLockEnter(_lock);
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)tryLock {
-    BOOL ret = EbrLockTryEnter(_lock);
-
-    return ret;
-}
-
-- (void)unlock {
-    EbrLockLeave(_lock);
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setName:(NSString*)name {
-    [name retain];
-    [_name release];
-    _name = name;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return _name;
-}
+@implementation NSRecursiveLock
 @end
