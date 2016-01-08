@@ -179,6 +179,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_NSKeyValueArrayAdaptersTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSOperationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProgressTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSTimeZoneTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCacheTests.mm" />

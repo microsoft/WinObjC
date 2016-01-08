@@ -36,24 +36,6 @@ FOUNDATION_EXPORT NSString* const NSProgressFileOperationKindCopying;
 FOUNDATION_EXPORT_CLASS
 @interface NSProgress : NSObject
 
-@property int64_t totalUnitCount;
-@property int64_t completedUnitCount;
-@property (copy) NSString* localizedDescription;
-@property (copy) NSString* localizedAdditionalDescription;
-
-@property (readonly) double fractionCompleted;
-@property (getter=isCancellable) BOOL cancellable;
-@property (readonly, getter=isCancelled) BOOL cancelled;
-@property (copy) void (^cancellationHandler)(void);
-@property (getter=isPausable) BOOL pausable;
-@property (readonly, getter=isPaused) BOOL paused;
-@property (copy) void (^pausingHandler)(void);
-@property (copy) void (^resumingHandler)(void);
-
-@property (readonly, getter=isIndeterminate) BOOL indeterminate;
-@property (copy) NSString* kind;
-@property (readonly, copy) NSDictionary* userInfo;
-
 - (instancetype)initWithParent:(NSProgress*)parentProgressOrNil userInfo:(NSDictionary*)userInfoOrNil;
 + (NSProgress*)discreteProgressWithTotalUnitCount:(int64_t)unitCount;
 + (NSProgress*)progressWithTotalUnitCount:(int64_t)unitCount;
@@ -66,9 +48,30 @@ FOUNDATION_EXPORT_CLASS
 - (void)addChild:(NSProgress*)child withPendingUnitCount:(int64_t)inUnitCount;
 - (void)resignCurrent;
 
+@property int64_t totalUnitCount;
+@property int64_t completedUnitCount;
+@property (copy) NSString* localizedDescription;
+@property (copy) NSString* localizedAdditionalDescription;
+
+@property (readonly) double fractionCompleted;
+
+// Note that NSProgress does not do anything with these values besides report them
+@property (getter=isCancellable) BOOL cancellable;
+@property (getter=isPausable) BOOL pausable;
+
+@property (readonly, getter=isCancelled) BOOL cancelled;
+@property (copy) void (^cancellationHandler)(void);
+@property (readonly, getter=isPaused) BOOL paused;
+@property (copy) void (^pausingHandler)(void);
+@property (copy) void (^resumingHandler)(void);
+
 - (void)cancel;
 - (void)pause;
 - (void)resume;
+
+@property (readonly, getter=isIndeterminate) BOOL indeterminate;
+@property (copy) NSString* kind;
+@property (readonly, copy) NSDictionary* userInfo;
 
 - (void)setUserInfoObject:(id)objectOrNil forKey:(NSString*)key;
 

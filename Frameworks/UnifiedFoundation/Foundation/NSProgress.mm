@@ -14,8 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSProgress.h"
+#import "Starboard.h"
+#import "Foundation/NSProgress.h"
+#import <memory>
+#import <stack>
 
 NSString* const NSProgressEstimatedTimeRemainingKey = @"NSProgressEstimatedTimeRemainingKey";
 NSString* const NSProgressThroughputKey = @"NSProgressThroughputKey";
@@ -28,97 +30,392 @@ NSString* const NSProgressFileOperationKindDecompressingAfterDownloading = @"NSP
 NSString* const NSProgressFileOperationKindReceiving = @"NSProgressFileOperationKindReceiving";
 NSString* const NSProgressFileOperationKindCopying = @"NSProgressFileOperationKindCopying";
 
-@implementation NSProgress
+// Struct that supports the currentProgress-related APIs
+struct CurrentProgress {
+    StrongId<NSProgress> progress;
+
+    // Gets assigned to the _parentPendingUnitCount of child NSProgresses
+    int64_t pendingUnitCountToAssign;
+
+    // See NSProgress class reference:
+    // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+    // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
+    //
+    // On the reference platform, this seems to not extend to children explicitly added in addChild, however
+    bool childCreated;
+};
+
+// Stack of NSProgress objects that have becomeCurrent
+thread_local static std::shared_ptr<std::stack<CurrentProgress>> s_currentProgressStack;
+
+// Returns the stack of NSProgress objects that have becomeCurrent on the current thread, initializing it if necessary
+static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
+    if (!s_currentProgressStack) {
+        s_currentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
+    }
+
+    return s_currentProgressStack;
+}
+
+@implementation NSProgress {
+@private
+    // explicitly declared here for custom set/get
+    int64_t _completedUnitCount;
+    NSString* _localizedDescription;
+    NSString* _localizedAdditionalDescription;
+
+    // Pending unit count must be kept per-child, as different children can have different pending unit counts
+    int64_t _parentPendingUnitCount;
+    StrongId<NSProgress> _parent;
+}
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (id)init {
+    self = [super init];
+
+    if (self) {
+        _cancellable = YES;
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
+    _parent = nil;
+    [_userInfo release];
+    [super dealloc];
+}
+
+/**
+ @Status Interoperable
 */
 - (instancetype)initWithParent:(NSProgress*)parentProgressOrNil userInfo:(NSDictionary*)userInfoOrNil {
-    UNIMPLEMENTED();
-    return nil;
+    if (parentProgressOrNil) {
+        if ([parentProgressOrNil isEqual:[NSProgress currentProgress]]) {
+            // Assign parent
+            _parent = parentProgressOrNil;
+
+            // s_currentProgressStack must not be empty to have reached here
+            CurrentProgress& current = s_currentProgressStack->top();
+
+            // Keep track of the pendingUnitCount to increment in the parent
+            _parentPendingUnitCount = current.pendingUnitCountToAssign;
+
+            // See NSProgress class reference:
+            // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+            // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
+            // Mark that a child was created from currentProgress
+            current.childCreated = true;
+
+        } else {
+            // For some reason, the reference platform seems to only care about this here, and nowhere else
+            [NSException raise:NSInvalidArgumentException format:@"The parent of an NSProgress object must be the currentProgress"];
+        }
+    }
+
+    _userInfo = userInfoOrNil ? [[NSMutableDictionary alloc] initWithDictionary:userInfoOrNil] : [NSMutableDictionary new];
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSProgress*)discreteProgressWithTotalUnitCount:(int64_t)unitCount {
-    UNIMPLEMENTED();
-    return nil;
+    NSProgress* ret = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+    ret->_totalUnitCount = unitCount;
+    return [ret autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSProgress*)progressWithTotalUnitCount:(int64_t)unitCount {
-    UNIMPLEMENTED();
-    return nil;
+    NSProgress* ret = [[NSProgress alloc] initWithParent:[NSProgress currentProgress] userInfo:nil];
+    ret->_totalUnitCount = unitCount;
+    return [ret autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSProgress*)progressWithTotalUnitCount:(int64_t)unitCount
-                                   parent:(NSProgress*)Parent
+                                   parent:(NSProgress*)parent
                          pendingUnitCount:(int64_t)portionOfParentTotalUnitCount {
-    UNIMPLEMENTED();
-    return nil;
+    // This does not seem to cancel the resignCurrent automatic behavior either
+    NSProgress* ret = [NSProgress discreteProgressWithTotalUnitCount:unitCount];
+    [parent addChild:ret withPendingUnitCount:portionOfParentTotalUnitCount];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSProgress*)currentProgress {
-    UNIMPLEMENTED();
-    return nil;
+    auto currentProgressStack = _getProgressStackForCurrentThread();
+    return currentProgressStack->empty() ? nullptr : currentProgressStack->top().progress;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)becomeCurrentWithPendingUnitCount:(int64_t)unitCount {
-    UNIMPLEMENTED();
+    if ([self isEqual:[NSProgress currentProgress]]) {
+        [NSException raise:NSInvalidArgumentException
+                    format:@"NSProgress object is already current on this thread %@", [NSThread currentThread]];
+
+    } else {
+        _getProgressStackForCurrentThread()->push({ self, unitCount });
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)addChild:(NSProgress*)child withPendingUnitCount:(int64_t)inUnitCount {
-    UNIMPLEMENTED();
+    @synchronized(child) {
+        if (child->_parent) {
+            [NSException raise:NSInvalidArgumentException
+                        format:@"NSProgress %x was already the child of another progress %x", child, (id)child->_parent];
+
+        } else {
+            child->_parent = self;
+            child->_parentPendingUnitCount = inUnitCount;
+        }
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)resignCurrent {
-    UNIMPLEMENTED();
+    // If self is the top element on the current progress stack, pop it
+    // Be sure to check if self == nil here, otherwise [nil resignCurrent] may cause a pop on an empty stack
+    if (self && [self isEqual:[NSProgress currentProgress]]) {
+        auto currentProgressStack = _getProgressStackForCurrentThread();
+
+        // See NSProgress class reference:
+        // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+        // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
+        if (!currentProgressStack->top().childCreated) {
+            [self setCompletedUnitCount:_completedUnitCount + currentProgressStack->top().pendingUnitCountToAssign];
+        }
+
+        currentProgressStack->pop();
+
+    } else {
+        [NSException raise:NSInvalidArgumentException
+                    format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (void)setCompletedUnitCount:(int64_t)inUnitCount {
+    // Override synthesized setter so that parent can be updated with pendingUnitCount if necessary
+    @synchronized(self) { // Property is atomic
+        if ((_parent) && (inUnitCount >= _totalUnitCount) && (inUnitCount != _completedUnitCount)) {
+            [_parent setCompletedUnitCount:([_parent completedUnitCount] + _parentPendingUnitCount)];
+        }
+
+        _completedUnitCount = inUnitCount;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (int64_t)completedUnitCount {
+    // Pairing a synthesized getter with a user-defined setter would otherwise generate a warning
+    @synchronized(self) { // Property is atomic
+        return _completedUnitCount;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (double)fractionCompleted {
+    // Override synthesized getter so that this can be calculated dynamically
+    @synchronized(self) { // Property is atomic
+        return (double)_completedUnitCount / _totalUnitCount;
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (void)cancel {
-    UNIMPLEMENTED();
+    decltype(_cancellationHandler) cancellationHandler;
+
+    @synchronized(self) {
+        _cancelled = YES;
+        cancellationHandler = _cancellationHandler;
+    }
+
+    if (cancellationHandler) {
+        cancellationHandler();
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)pause {
-    UNIMPLEMENTED();
+    decltype(_pausingHandler) pausingHandler;
+
+    @synchronized(self) {
+        _paused = YES;
+        pausingHandler = _pausingHandler;
+    }
+
+    if (pausingHandler) {
+        pausingHandler();
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)resume {
-    UNIMPLEMENTED();
+    decltype(_resumingHandler) resumingHandler;
+
+    @synchronized(self) {
+        _paused = NO;
+        resumingHandler = _resumingHandler;
+    }
+
+    if (resumingHandler) {
+        resumingHandler();
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (BOOL)isIndeterminate {
+    return (_totalUnitCount <= 0) || (_completedUnitCount <= 0);
+}
+
+/**
+ @Status Interoperable
 */
 - (void)setUserInfoObject:(id)objectOrNil forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    [reinterpret_cast<NSMutableDictionary*>(_userInfo) setObject:objectOrNil forKey:key];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setLocalizedDescription:(NSString*)newDescription {
+    @synchronized(self) {
+        _localizedDescription = newDescription;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)localizedDescription {
+    @synchronized(self) {
+        // Return user-specified value if set
+        if (_localizedDescription) {
+            return _localizedDescription;
+        }
+
+        // Otherwise, dynamically describe
+        if ([_kind isEqual:NSProgressKindFile]) {
+            NSString* operationKind = [_userInfo objectForKey:NSProgressFileOperationKindKey];
+            NSString* verbString = @"Processing";
+
+            if (operationKind) {
+                if ([operationKind isEqual:NSProgressFileOperationKindDownloading]) {
+                    verbString = @"Downloading";
+
+                } else if ([operationKind isEqual:NSProgressFileOperationKindDecompressingAfterDownloading]) {
+                    verbString = @"Decompressing";
+
+                } else if ([operationKind isEqual:NSProgressFileOperationKindReceiving]) {
+                    verbString = @"Receiving";
+
+                } else if ([operationKind isEqual:NSProgressFileOperationKindCopying]) {
+                    verbString = @"Copying";
+                }
+            }
+
+            NSNumber* totalFiles = [_userInfo objectForKey:NSProgressFileTotalCountKey];
+            if (totalFiles) {
+                return [NSString stringWithFormat:@"%@ %d files...", verbString, [totalFiles intValue]];
+            } else {
+                return [NSString stringWithFormat:@"%@ files...", verbString];
+            }
+
+        } else {
+            return [NSString stringWithFormat:@"%.0f completed", [self fractionCompleted] * 100];
+        }
+
+        return @"";
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setLocalizedAdditionalDescription:(NSString*)newDescription {
+    @synchronized(self) {
+        _localizedAdditionalDescription = newDescription;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)localizedAdditionalDescription {
+    @synchronized(self) {
+        // Return user-specified value if set
+        if (_localizedAdditionalDescription) {
+            return _localizedAdditionalDescription;
+        }
+
+        NSString* ret = @"";
+
+        // Otherwise, dynamically describe
+        if ([_kind isEqual:NSProgressKindFile]) {
+            if ([_userInfo count] == 0) {
+                ret = [ret stringByAppendingFormat:@"%d bytes of %d bytes", _completedUnitCount, _totalUnitCount];
+            } else {
+                NSNumber* completedFiles = [_userInfo objectForKey:NSProgressFileCompletedCountKey];
+                NSNumber* totalFiles = [_userInfo objectForKey:NSProgressFileTotalCountKey];
+                if (completedFiles && totalFiles) {
+                    ret = [ret stringByAppendingFormat:@"%d of %d files", [totalFiles intValue], [completedFiles intValue]];
+                }
+
+                NSNumber* bytesPerSecond = [_userInfo objectForKey:NSProgressThroughputKey];
+                if (bytesPerSecond) {
+                    ret = [ret stringByAppendingFormat:@"(%d bytes/second)", [bytesPerSecond intValue]];
+                }
+            }
+
+        } else {
+            ret = [ret stringByAppendingFormat:@"%d of %d", _completedUnitCount, _totalUnitCount];
+        }
+
+        NSNumber* secondsRemaining = [_userInfo objectForKey:NSProgressEstimatedTimeRemainingKey];
+        if (secondsRemaining) {
+            if ([ret length] > 0) {
+                ret = [ret stringByAppendingString:@" - "];
+            }
+
+            ret = [ret stringByAppendingFormat:@"%d seconds remaining", [secondsRemaining intValue]];
+        }
+
+        return ret;
+    }
 }
 
 @end
