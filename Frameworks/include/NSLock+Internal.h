@@ -14,42 +14,9 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSObject.h>
+#pragma once
+#import <Foundation/NSLock.h>
 
-@class NSDate;
-
-@protocol NSLocking
-
-/**
-@Status Interoperable
-*/
-- (void)lock;
-
-/**
-@Status Interoperable
-*/
-- (void)unlock;
+@interface NSLock (Internal)
+- (long)_lockCount;
 @end
-
-FOUNDATION_EXPORT_CLASS
-@interface NSLock : NSObject <NSLocking>
-@property (copy) NSString* name;
-
-- (BOOL)tryLock;
-- (BOOL)lockBeforeDate:(NSDate*)value;
-
-@end
-
-FOUNDATION_EXPORT_CLASS
-@interface NSCondition : NSObject <NSLocking>
-- (void)broadcast;
-- (void)signal;
-
-- (void)wait;
-- (BOOL)waitUntilDate:(NSDate*)limit;
-
-@property (nonatomic, copy) NSString* name;
-@end
-
-#import <Foundation/NSConditionLock.h>
-#import <Foundation/NSRecursiveLock.h>

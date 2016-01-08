@@ -152,6 +152,8 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\BlockClassTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSRegularExpressionTests.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSSortDescriptorTests.m" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSLockTests.m" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSRecursiveLockTests.m" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />

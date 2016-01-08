@@ -16,13 +16,12 @@
 
 #import <Starboard.h>
 #import <mutex>
-#import <chrono>
-#import "NSLock+Internal.h"
+#import "NSRecursiveLock+Internal.h"
 
-@implementation NSLock {
-    std::timed_mutex _mtx;
+@implementation NSRecursiveLock {
+    std::recursive_timed_mutex _mtx;
     idretaintype(NSString) _name;
-    // internal counter used for test purpose.
+    // internal counter used for tests
     volatile long _count;
 }
 
@@ -42,7 +41,6 @@
     if (status) {
         _InterlockedIncrement(&_count);
     }
-
     return status;
 }
 
@@ -52,20 +50,6 @@
 - (void)unlock {
     _InterlockedDecrement(&_count);
     _mtx.unlock();
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setName:(NSString*)name {
-    _name.attach([name copy]);
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return _name;
 }
 
 /**
@@ -82,7 +66,22 @@
     return status;
 }
 
+/**
+ @Status Interoperable
+*/
+- (void)setName:(NSString*)name {
+    _name.attach([name copy]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)name {
+    return _name;
+}
+
 - (long)_lockCount {
     return _count;
 }
+
 @end
