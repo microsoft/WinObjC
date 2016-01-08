@@ -76,7 +76,4 @@ FOUNDATION_EXPORT_CLASS
 - (void)performSelector:(SEL)selector withObject:object afterDelay:(NSTimeInterval)delay;
 - (void)performSelector:(SEL)selector withObject:object afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
 
-+ (void)cancelPreviousPerformRequestsWithTarget:target selector:(SEL)selector object:object;
-+ (void)cancelPreviousPerformRequestsWithTarget:target;
-
 @end

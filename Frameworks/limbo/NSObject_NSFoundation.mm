@@ -491,6 +491,21 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 /**
  @Status Interoperable
 */
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget {
+    [self cancelPreviousPerformRequestsWithTarget:aTarget selector:NULL object:nil];
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
+    NSDelayedPerform* delayed = [[NSDelayedPerform alloc] initWithObject:aTarget selector:aSelector argument:anArgument];
+    [[NSRunLoop currentRunLoop] invalidateTimerWithDelayedPerform:delayed];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
     return [[self class] instanceMethodSignatureForSelector:selector];
 }
