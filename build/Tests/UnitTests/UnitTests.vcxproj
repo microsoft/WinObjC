@@ -258,6 +258,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSLock.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSRecursiveLock.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSSortDescriptor.m" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
