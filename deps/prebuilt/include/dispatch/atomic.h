@@ -36,7 +36,7 @@ __DISPATCH_BEGIN_DECLS
 #define dispatch_atomic_barrier()	__sync_synchronize()
 #endif
 #elif _MSC_VER
-#if defined(_M_IX86)
+#if defined(_M_IX86) || (defined(WINOBJC) && defined(_M_ARM))
 #pragma intrinsic(_InterlockedExchange)
 #define dispatch_atomic_xchg(p, n)         (intptr_t)_InterlockedExchange       ((volatile long*)(p), (long )(n))
 #define dispatch_atomic_xchg_pointer(p, n) (void*   ) InterlockedExchangePointer((volatile void*)(p), (void*)(n))
@@ -78,6 +78,8 @@ __DISPATCH_BEGIN_DECLS
 #define dispatch_atomic_or(p, v)	_InterlockedOr64((p), (v))
 #pragma intrinsic(_InterlockedAnd)
 #define dispatch_atomic_and(p, v)	_InterlockedAnd64((p), (v))
+#else
+#error Unsupported architecture
 #endif
 
 DISPATCH_INLINE bool dispatch_atomic_cmpxchg(intptr_t* p, intptr_t o, intptr_t n)
