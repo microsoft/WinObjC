@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,18 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "DeviceResources.h"
+#include "winobjc\winobjc.h"
 
-namespace StarboardWinRT {
-class DeviceResourcesCW : public DeviceResources {
-public:
-    void SetWindow(Windows::UI::Core::CoreWindow ^ window);
-    void CreateWindowSizeDependentResources();
-    void SetDpi(float dpi);
-
-private:
-    // Cached reference to the Window.
-    Platform::Agile<Windows::UI::Core::CoreWindow> m_window;
-};
-}
+// Takes an NSString* that's passed to us by the app as a void*, and returns its raw backing buffer.
+// Note; it's unsafe to use the returned buffer beyond the scope of the void* that's passed to you,
+// so be sure to copy it out if necessary.
+extern "C" const wchar_t* _RawBufferFromNSString(void* str);

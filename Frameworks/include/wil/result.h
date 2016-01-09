@@ -3203,7 +3203,7 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
 }
 
 #ifdef __cplusplus_winrt
-inline void __stdcall ThrowPlatformException(FailureInfo const& failure, LPCWSTR debugString) {
+inline void __stdcall ThrowPlatformException(FailureInfo const& failure, const wchar_t* debugString) {
     throw Platform::Exception::CreateException(failure.hr,
                                                ref new Platform::String(reinterpret_cast<_Null_terminated_ const __wchar_t*>(debugString)));
 }

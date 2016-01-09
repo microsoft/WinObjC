@@ -14,9 +14,12 @@
 //
 //******************************************************************************
 
+#include "ApplicationMain.h"
+
+#include <assert.h>
 #include <math.h>
 #include <malloc.h>
-#include <assert.h>
+#include <string>
 
 #include <vector>
 #include <algorithm>
@@ -37,16 +40,17 @@ void SetCACompositorClient(CACompositorClientInterface* client) {
 }
 
 struct ApplicationProperties {
-public:
-    float appWidth, appHeight, appScale;
-    const char* appName;
+    float width;
+    float height;
+    float scale;
+    std::string name;
     bool isTablet;
-    bool bLandscape;
+    bool isLandscape;
 };
 
-ApplicationProperties applicationProperties;
+ApplicationProperties g_applicationProperties;
 
-const char* GetAppNameFromPList() {
+std::string GetAppNameFromPList() {
     NSString* appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     if (appName != nil) {
         return [appName UTF8String];
@@ -55,22 +59,14 @@ const char* GetAppNameFromPList() {
     return "Starboard";
 }
 
-const char* _StringFromNSString(void* str) {
-    return [(NSString*)str UTF8String];
-}
+int ApplicationMainStart(
+    int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight) {
 
-extern "C" void* _WideStringFromNSString(void* str) {
-    NSString* _str = (NSString*)str;
-    wchar_t* ret = (wchar_t*)malloc(([_str length] + 1) * sizeof(wchar_t));
-    memcpy(ret, (void*)[_str rawCharacters], [_str length] * sizeof(wchar_t));
-    ret[[_str length]] = 0;
-
-    return ret;
-}
-
-int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char* dName, float windowWidth, float windowHeight) {
-    NSString* principalClassName = pName ? [[NSString alloc] initWithCString:pName] : nil;
-    NSString* delegateClassName = dName ? [[NSString alloc] initWithCString:dName] : nil;
+    // Note: We must use nil rather than an empty string for these class names
+    NSString* principalClassName = 
+        (principalName && *principalName != '\0') ? [[NSString alloc] initWithCString:principalName] : nil;
+    NSString* delegateClassName = 
+        (delegateName && *delegateName != '\0') ? [[NSString alloc] initWithCString:delegateName] : nil;
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
@@ -131,14 +127,14 @@ int UIApplicationMainStart(int argc, char* argv[], const char* pName, const char
         [UIApplication setStartupDisplayMode:displayMode];
     }
 
-    applicationProperties.appWidth = defaultWidth;
-    applicationProperties.appHeight = defaultHeight;
-    applicationProperties.appScale = defaultScale;
-    applicationProperties.appName = _strdup(GetAppNameFromPList());
-    applicationProperties.isTablet = defaultTablet;
+    g_applicationProperties.width = defaultWidth;
+    g_applicationProperties.height = defaultHeight;
+    g_applicationProperties.scale = defaultScale;
+    g_applicationProperties.name = GetAppNameFromPList();
+    g_applicationProperties.isTablet = defaultTablet;
 
     [displayMode _updateDisplaySettings];
-    GetCACompositor()->setTablet(applicationProperties.isTablet);
+    GetCACompositor()->setTablet(g_applicationProperties.isTablet);
 
     UIApplicationMainInit(argc, argv, principalClassName, delegateClassName, defaultOrientation);
     return UIApplicationMainLoop();

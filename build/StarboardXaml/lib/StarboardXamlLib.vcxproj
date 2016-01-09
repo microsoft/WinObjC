@@ -39,10 +39,12 @@
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CompositorInterface.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StringConversion.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CompositorInterface.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.h" />  
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StringConversion.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FBE5FFE4-A9D3-40E3-B9AB-75841D3F8CDD}</ProjectGuid>

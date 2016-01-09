@@ -31,7 +31,6 @@
 #endif
 
 #ifdef __cplusplus_winrt
-IWEXPORT extern "C" void IWAppInit();
 IWEXPORT extern "C" void IWRunApplicationMain(Platform::String ^ principalClassName,
                                               Platform::String ^ delegateClassName,
                                               float windowWidth,

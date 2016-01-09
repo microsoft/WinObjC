@@ -27,12 +27,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\StarboardWS.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\ApplicationMain.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\WinRTStubs.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\XamlUIWaiter.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\StarboardWSCompositor.cpp"/>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\WinRT\ApplicationCompositor.cpp"/>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{45DF1857-85BA-4F16-9CBB-E369F83A8ABD}</ProjectGuid>
@@ -154,7 +154,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,7 +176,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -199,7 +199,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -221,7 +221,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -244,7 +244,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -266,7 +266,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>      
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>      
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

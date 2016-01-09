@@ -14,104 +14,82 @@
 //
 //******************************************************************************
 
-#include <wrl.h>
-#include <wrl/client.h>
-#include <wincodec.h>
-#include <memory>
-#include <agile.h>
-#include <concrt.h>
-#include <thread>
-
-#include <collection.h>
-#include <ppltasks.h>
-#include <wrl/client.h>
-
 #include "LayerRegistration.h"
+#include "StringConversion.h"
 
-#define IWEXPORT __declspec(dllexport)
 #include "winobjc\winobjc.h"
 
-using namespace Windows::ApplicationModel;
-using namespace Windows::ApplicationModel::Core;
-using namespace Windows::ApplicationModel::Activation;
-using namespace Windows::UI::Core;
-using namespace Windows::UI::Input;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::System;
-using namespace Windows::System::Threading;
-using namespace Windows::Foundation;
-using namespace Windows::Storage;
-using namespace Windows::Graphics::Display;
-using namespace Windows::ApplicationModel::Store;
 using namespace Windows::UI;
-using namespace Windows::UI::Xaml::Media;
-using namespace Windows::UI::Xaml::Shapes;
-using namespace Windows::ApplicationModel::Core;
 
-__declspec(dllimport) extern "C" wchar_t* __WideStringFromNSString(void* str);
+Platform::String^ g_principalClassName;
+Platform::String^ g_delegateClassName;
 
-Platform::String ^ principalClassName, ^delegateClassName;
-
-ref class App : public ::Windows::UI::Xaml::Application, ::Windows::UI::Xaml::Markup::IXamlMetadataProvider {
-    ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
+ref class App : public Xaml::Application, Xaml::Markup::IXamlMetadataProvider {
+    XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
 
 public:
-    virtual ::Windows::UI::Xaml::Markup::IXamlType ^
-        GetXamlType(Windows::UI::Xaml::Interop::TypeName type) {
-            if (_provider == nullptr) {
-                _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
-            }
-            return _provider->GetXamlTypeByType(type);
+    virtual Xaml::Markup::IXamlType^ GetXamlType(Xaml::Interop::TypeName type) {
+        if (!_provider) {
+            _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
         }
 
-        virtual ::Windows::UI::Xaml::Markup::IXamlType
-        ^
-        GetXamlType(::Platform::String ^ fullName) {
-            if (_provider == nullptr) {
-                _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
-            }
-            return _provider->GetXamlTypeByName(fullName);
+        return _provider->GetXamlTypeByType(type);
+    }
+
+    virtual Xaml::Markup::IXamlType^ GetXamlType(Platform::String^ fullName) {
+        if (!_provider) {
+            _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
         }
 
-        virtual ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition> ^
-        GetXmlnsDefinitions() { return ref new ::Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition>(0); }
-
-        void InitializeComponent() {
+        return _provider->GetXamlTypeByName(fullName);
     }
 
-    void Connect(int connectionId, ::Platform::Object ^ target) {
+    virtual Platform::Array<Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions() { 
+        return ref new Platform::Array<Xaml::Markup::XmlnsDefinition>(0); 
     }
 
-    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) override {
+    void InitializeComponent() {
+    }
+
+    void Connect(int connectionId, Platform::Object^ target) {
+    }
+
+    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override {
         if (e->PrelaunchActivated) {
             // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
             return;
         }
 
-        auto uiElem = ref new Grid();
-        auto rootFrame = ref new Frame();
+        auto uiElem = ref new Xaml::Controls::Grid();
+        auto rootFrame = ref new Xaml::Controls::Frame();
         rootFrame->Content = uiElem;
 
         IWSetXamlRoot(uiElem);
 
-        Window::Current->Content = rootFrame;
-        Window::Current->Activate();
+        Xaml::Window::Current->Content = rootFrame;
+        Xaml::Window::Current->Activate();
 
-        auto startupRect = Window::Current->Bounds;
-
-        IWRunApplicationMain(principalClassName, delegateClassName, startupRect.Width, startupRect.Height);
+        auto startupRect = Xaml::Window::Current->Bounds;
+        IWRunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
     }
 };
 
-extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* pName, void* dName) {
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    principalClassName = pName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(pName)) : nullptr;
-    delegateClassName = dName ? ref new Platform::String((wchar_t*)__WideStringFromNSString(dName)) : nullptr;
-    Windows::UI::Xaml::Application::Start(
-        ref new Windows::UI::Xaml::ApplicationInitializationCallback([](Windows::UI::Xaml::ApplicationInitializationCallbackParams ^ p) {
-            (void)p; // Unused parameter
+// This is the actual entry point from the app into our framework.
+// Note: principalClassName and delegateClassName are actually NSString*s.
+extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
+    // Initialize COM on this thread
+    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    // Copy the principal and delegate class names into our globals
+    g_principalClassName = 
+        principalClassName ? ref new Platform::String(_RawBufferFromNSString(principalClassName)) : nullptr;
+    g_delegateClassName = 
+        delegateClassName ? ref new Platform::String(_RawBufferFromNSString(delegateClassName)) : nullptr;
+
+    // Start our application
+    Xaml::Application::Start(
+        ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams ^ p) {
+            // Simply creating the app will kick off the rest of the launch sequence
             auto app = ref new App();
         }));
 
