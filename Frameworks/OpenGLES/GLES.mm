@@ -18,7 +18,6 @@
 #include <math.h>
 #include <vector>
 
-#define GL_GLEXT_PROTOTYPES
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
 
@@ -939,17 +938,17 @@ EAGL_EXPORT void EXPORT_glRenderbufferStorageMultisampleAPPLE(GLenum, GLsizei, G
 }
 
 EAGL_EXPORT void EXPORT_glBindVertexArrayOES(GLuint array) {
-    UNIMPLEMENTED();
+    glBindVertexArrayOES(array);
 }
 
 EAGL_EXPORT void EXPORT_glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays) {
-    UNIMPLEMENTED();
+    glDeleteVertexArraysOES(n, arrays);
 }
 
 EAGL_EXPORT void EXPORT_glGenVertexArraysOES(GLsizei n, GLuint* arrays) {
-    UNIMPLEMENTED();
+    glGenVertexArraysOES(n, arrays);
 }
 
 EAGL_EXPORT GLboolean EXPORT_glIsVertexArrayOES(GLuint array) {
-    UNIMPLEMENTED();
+    return glIsVertexArrayOES(array);
 }
