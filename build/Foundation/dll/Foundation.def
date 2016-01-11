@@ -343,6 +343,7 @@ LIBRARY Foundation
      NSSwapHostShortToBig
      NSTemporaryDirectory
      NSUnionRange
+     WinObjC_SetMissingSelectorFatal
      NSAMPMDesignation DATA
      NSAddedPersistentStoresKey DATA
      NSArgumentDomain DATA

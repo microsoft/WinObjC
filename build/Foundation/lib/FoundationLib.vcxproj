@@ -171,7 +171,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\ErrorHandling.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UnifiedFoundation\Foundation\NSProgress.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UnifiedFoundation\Foundation\NSStringInternal.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSObject.m" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSObject.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSAutoreleasePool.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSBlocks.mm" />
   </ItemGroup>

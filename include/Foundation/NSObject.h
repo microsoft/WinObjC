@@ -160,3 +160,10 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
     return [(id)CFMakeCollectable(X) autorelease];
 }
 #endif
+
+// [WinObjC Extension]
+// WinObjC_SetMissingSelectorFatal allows a developer to turn off the missing selector exception.
+// It's intended to be used to gather an API use depth measurement to determine hotspots in
+// an application. Nonexistent methods called with this disengaged will return nil / 0 / 0L.
+// Defaults to YES: missing selectors will cause an exception to be thrown.
+FOUNDATION_EXPORT void WinObjC_SetMissingSelectorFatal(BOOL);

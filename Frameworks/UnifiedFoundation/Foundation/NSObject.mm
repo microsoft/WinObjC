@@ -26,9 +26,18 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSException.h>
+#import <Foundation/NSString.h>
+
+#import "Starboard/String.h"
+#import "StringHelpers.h"
+
+#import "ErrorHandling.h"
+#import "Logging.h"
 
 @class NSZone;
 @class NSAutoreleasePool;
+
+static BOOL _NSSelectorNotFoundIsNonFatal;
 
 @protocol _NSObjectInformal
 - (id)copyWithZone:(NSZone*)zone;
@@ -276,20 +285,23 @@ static id _NSForwardingDestination(id object, SEL selector) {
     _throwUnrecognizedSelectorException(self, cls, selector);
 }
 
-static void _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
+// NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
+static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
+    std::string reason;
     BOOL isMeta = class_isMetaClass(isa);
     if (isMeta) {
-        [NSException raiseWithLogging:NSInvalidArgumentException
-                               format:@"+[%s %s]: unrecognized selector sent to class.",
-                               class_getName(isa),
-                               sel_getName(sel)];
+        reason = woc::string::format("+[%s %s]: unrecognized selector sent to class.", class_getName(isa), sel_getName(sel));
     } else {
-        [NSException raiseWithLogging:NSInvalidArgumentException
-                               format:@"-[%s %s]: unrecognized selector sent to instance %p.",
-                               class_getName(isa),
-                               sel_getName(sel),
-                               self];
+        reason = woc::string::format("-[%s %s]: unrecognized selector sent to instance %p.", class_getName(isa), sel_getName(sel), self);
     }
+
+    if (_NSSelectorNotFoundIsNonFatal) {
+        TraceWarning(L"Objective-C", L"%ls", Strings::NarrowToWide<std::wstring>(reason).c_str());
+    } else {
+        THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%s", reason.c_str());
+    }
+
+    return 0;
 }
 
 void _forwardThrow(id object, SEL selector) {
@@ -310,5 +322,13 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     __objc_msg_forward2 = _NSIMPForward;
     __objc_msg_forward3 = _NSSlotForward;
     _objc_weak_load = _NSWeakLoad;
+
+#if defined(OBJC_APP_BRINGUP)
+    _NSSelectorNotFoundIsNonFatal = YES;
+#endif
 }
 @end
+
+void WinObjC_SetMissingSelectorFatal(BOOL fatal) {
+    _NSSelectorNotFoundIsNonFatal = !fatal;
+}
