@@ -19,28 +19,27 @@
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSRange.h>
+#import <UIKit/NSStringDrawing.h>
 #import <UIKit/NSParagraphStyle.h>
 
 @class NSArray;
+@class NSLayoutManager;
 
+UIKIT_EXPORT_CLASS
 @interface NSTextContainer : NSObject
 
 @property (copy, nonatomic) NSArray* exclusionPaths;
 @property (nonatomic) NSInteger maximumNumberOfLines;
 @property (nonatomic) CGFloat lineFragmentPadding;
 @property (nonatomic) NSLineBreakMode lineBreakMode;
-@end
+@property (assign, nonatomic) NSLayoutManager* layoutManager;
+@property (nonatomic) CGSize size;
 
-@interface NSLayoutManager : NSObject
-- (NSRange)glyphRangeForCharacterRange:(NSRange)range actualCharacterRange:(NSRange*)ret;
-- (NSUInteger)characterIndexForPoint:(CGPoint)point
-                             inTextContainer:(NSTextContainer*)container
-    fractionOfDistanceBetweenInsertionPoints:(CGFloat*)distance;
-- (CGRect)boundingRectForGlyphRange:(NSRange)range inTextContainer:(NSTextContainer*)container;
-@end
-
-@interface NSTextStorage : NSObject
-- (NSUInteger)length;
+- (instancetype)initWithSize:(CGSize)size;
+- (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
+                                  atIndex:(NSUInteger)idx
+                         writingDirection:(NSWritingDirection)direction
+                            remainingRect:(CGRect*)remainingRect;
 @end
 
 #endif /* _NSTEXTCONTAINER_H_ */

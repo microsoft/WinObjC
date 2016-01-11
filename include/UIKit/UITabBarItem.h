@@ -34,6 +34,7 @@
  */
 
 #import "UIBarItem.h"
+#import <UIKit/UIKitExport.h>
 
 @class UIImage;
 
@@ -53,13 +54,13 @@ enum {
 };
 typedef uint32_t UITabBarSystemItem;
 
-
+UIKIT_EXPORT_CLASS
 @interface UITabBarItem : UIBarItem
 
-- (id)initWithTitle:(NSString *)title image:(UIImage *)image tag:(NSInteger)tag;
+- (id)initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag;
 - (id)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag;
-- (void)setFinishedSelectedImage:(UIImage *)selectedImage withFinishedUnselectedImage:(UIImage *)unselectedImage;
+- (void)setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage;
 
-@property (nonatomic, copy) NSString *badgeValue;
+@property (nonatomic, copy) NSString* badgeValue;
 
 @end

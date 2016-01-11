@@ -222,6 +222,7 @@ LIBRARY CoreGraphics
         CGPathCreateWithRect
         CGPathGetBoundingBox
         CGPathGetPathBoundingBox
+        _CGPathFitRect
         CGPathIsEmpty
         CGPathMoveToPoint
         CGPathRelease
@@ -269,6 +270,11 @@ LIBRARY CoreGraphics
         CTRunGetAttributes
         CTRunGetStringRange
         CTRunGetTypographicBounds
+        CTRunGetPositions
+        CTRunGetAdvances
+        CTTypesetterCreateLineWithOffset
+        CTTypesetterCreateWithAttributedString
+        CTTypesetterSuggestLineBreakWithOffsetAndCallback
         EbrCenterTextInRectVertically
         _CGFontLock
         _CGFontUnlock

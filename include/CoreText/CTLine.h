@@ -17,7 +17,7 @@
 #ifndef _CTLINE_H_
 #define _CTLINE_H_
 
-#import "CoreTextExport.h"
+#import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreGraphics/CGContext.h>
 

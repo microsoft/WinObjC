@@ -16,11 +16,15 @@
 
 #include "Starboard.h"
 
+#include <CoreText/CoreText.h>
 #include "CGContextInternal.h"
 #include "CGFontInternal.h"
 #include "CoreText/CoreText.h"
 
 #include "Etc.h"
+
+#include <vector>
+#include <algorithm>
 
 DWORD CGFontGetFontBBox(CGRect* ret, id font);
 
@@ -37,7 +41,7 @@ extern "C" {
 }
 
 const CFStringRef kCTCharacterShapeAttributeName = static_cast<CFStringRef>(@"kCTCharacterShapeAttributeName");
-const CFStringRef kCTFontAttributeName = static_cast<CFStringRef>(@"NSFontAttributeName");
+const CFStringRef kCTFontAttributeName = static_cast<CFStringRef>(@"NSFont");
 const CFStringRef kCTKernAttributeName = static_cast<CFStringRef>(@"kCTKernAttributeName");
 const CFStringRef kCTLigatureAttributeName = static_cast<CFStringRef>(@"kCTLigatureAttributeName");
 const CFStringRef kCTForegroundColorAttributeName = static_cast<CFStringRef>(@"NSForegroundColorAttributeName");
@@ -432,7 +436,7 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
  @Status Interoperable
 */
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
-    [cgDataProvider retain];
+    CFRetain(cgDataProvider);
     return (CGFontRef)[[_LazyUIFont fontWithData:cgDataProvider] retain];
 }
 
@@ -608,7 +612,7 @@ int CGFontGetCapHeight(CGFontRef font) {
         _CGFontUnlock();
         return ret;
     } else {
-        char* string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const char* string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int length = strlen(string);
         int ret = 0;
         FT_Error error;
@@ -676,18 +680,48 @@ void _CGFontUnlock() {
     EbrLockLeave(_fontLock);
 }
 
+@interface _CTTypesetter : NSObject {
+@public
+    NSAttributedString* _attributedString;
+    NSString* _string;
+    WORD* _characters;
+    CFIndex _charactersLen;
+}
+@end
+
+@implementation _CTTypesetter
+- (instancetype)initWithAttributedString:(NSAttributedString*)str {
+    _attributedString = [str retain];
+    _string = [[str string] retain];
+
+    //  Measure the string
+    _charactersLen = [_string length];
+    _characters = (WORD*)malloc(sizeof(WORD) * _charactersLen);
+    [_string getCharacters:_characters];
+
+    return self;
+}
+
+- (void)dealloc {
+    if (_characters) {
+        free(_characters);
+    }
+    [_string release];
+    [_attributedString release];
+    [super dealloc];
+}
+@end
+
 @interface _CTFrameSetter : NSObject {
 @public
-    idretain _attributedString;
+    idretaintype(_CTTypesetter) _typesetter;
 }
 @end
 
 @implementation _CTFrameSetter : NSObject
 - (void)dealloc {
-    _attributedString = nil;
     [super dealloc];
 }
-
 @end
 
 @interface _CTFrame : NSObject {
@@ -695,7 +729,8 @@ void _CGFontUnlock() {
     _CTFrameSetter* _frameSetter;
     CGRect _frameRect;
     CGSize _totalSize;
-    idretain _lines;
+    idretaintype(NSMutableArray) _lines;
+    std::vector<CGPoint> _lineOrigins;
 }
 @end
 
@@ -709,17 +744,16 @@ void _CGFontUnlock() {
 
 @interface _CTLine : NSObject {
 @public
-    idretain _str;
     NSRange _strRange;
-    CGPoint _origin;
-    idretain _runs;
+    CGFloat _width;
+    CGFloat _ascent, _descent, _leading;
+    idretaintype(NSMutableArray) _runs;
 }
 @end
 
 @implementation _CTLine : NSObject
 - (void)dealloc {
     _runs = nil;
-    _str = nil;
     [super dealloc];
 }
 
@@ -727,17 +761,19 @@ void _CGFontUnlock() {
 
 @interface _CTRun : NSObject {
 @public
-    _CTLine* _line;
+    CFRange _range;
     float _xPos;
-    idretain _font;
-    idretain _textColor;
-    idretain _stringFragment;
+    idretaintype(UIFont) _font;
+    idretaintype(UIColor) _textColor;
+    idretaintype(NSString) _stringFragment;
+    std::vector<CGPoint> _glyphOrigins;
+    std::vector<CGSize> _glyphAdvances;
+    std::vector<WORD> _characters;
 }
 @end
 
 @implementation _CTRun : NSObject
 - (void)dealloc {
-    [_line release];
     _font = nil;
     _stringFragment = nil;
     _textColor = nil;
@@ -746,30 +782,29 @@ void _CGFontUnlock() {
 
 @end
 
-/**
- @Status Interoperable
-*/
+CTTypesetterRef CTTypesetterCreateWithAttributedString(CFAttributedStringRef string) {
+    _CTTypesetter* ret = [[_CTTypesetter alloc] initWithAttributedString:(NSAttributedString*)string];
+    return (CTTypesetterRef)ret;
+
+    /**
+     @Status Interoperable
+    */
+}
+
 CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
     _CTFrameSetter* ret = [_CTFrameSetter alloc];
-    ret->_attributedString = (NSString*)string;
+    ret->_typesetter = (_CTTypesetter*)CTTypesetterCreateWithAttributedString(string);
     return (CTFramesetterRef)ret;
 }
 
-typedef struct {
-    id attributedString;
-    CGSize* sizeOut;
-    bool haveRange;
-    NSRange curRange;
-    FT_Face curFace;
-} attributeWrapState;
-
+#if 0
 static int attributeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
     attributeWrapState* state = (attributeWrapState*)opaque;
 
     if (!state->haveRange || idx < state->curRange.location || idx >= (state->curRange.location + state->curRange.length)) {
         state->haveRange = true;
         id attribs = [state->attributedString attributesAtIndex:idx effectiveRange:&state->curRange];
-        id font = [attribs objectForKey:@"kCTFontAttributeName"];
+        id font = [attribs objectForKey:(id)kCTFontAttributeName];
         state->curFace = (FT_Face)(DWORD)[font _sizingFontHandle];
         CGFontSetFTFontSize(font, state->curFace, [font pointSize]);
     }
@@ -797,18 +832,231 @@ static int attributeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
 
     return ret;
 }
+#endif
 
-bool CGFontWrapWithAttributes(id attributedString, CGFontWrapState* state, float width, CGSize* sizeOut) {
-    _CGFontLock();
+typedef float (*WidthFinderFunc)(void* opaque, CFIndex idx, float offset, float height);
 
-    attributeWrapState wrapState = { 0 };
-    wrapState.sizeOut = sizeOut;
-    wrapState.attributedString = attributedString;
-    sizeOut->height = 0.0f;
+static CFIndex DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthFunc, void* widthParam, double offset, CTLineRef* outLine) {
+    _CTTypesetter* typeSetter = (_CTTypesetter*)ts;
+    _CTLine* line = NULL;
 
-    bool ret = CGFontWrapFunc(state, width, sizeOut, attributeGetCharWidth, &wrapState);
+    if (outLine) {
+        line = [_CTLine new];
+        *outLine = (CTLineRef)line;
+    }
 
-    _CGFontUnlock();
+    if (range.length == -1) {
+        range.length = typeSetter->_charactersLen - range.location;
+    }
+
+    //  Measure the string
+    WORD* chars = typeSetter->_characters;
+    int curIndex = range.location;
+    int count = range.location + range.length;
+    bool hitLinebreak = false;
+
+    CFIndex lineStart = NULL;
+
+    std::vector<CGPoint> glyphOrigins;
+    std::vector<CGSize> glyphAdvances;
+    std::vector<WORD> characters;
+    float lineWidth = 0.0f;
+
+    FT_Pos penX = 0;
+
+    FT_Pos lastPossibleBreakWidth = 0;
+    int lastPossibleBreakPos = -1;
+
+    lineStart = curIndex;
+
+    NSRange curAttributeRange = { 0 };
+    FT_Face curFace;
+    float curFontHeight = 0.0f;
+    float maxWidth = FLT_MAX;
+
+    //  Lookup each glyph
+    while (curIndex < count) {
+        glyphOrigins.push_back(CGPointMake(((float)penX) / 64.0f, 0.0f));
+        glyphAdvances.push_back(CGSizeMake(0, 0));
+
+        int curChar = chars[curIndex];
+
+        if (curChar != 10 && curChar != 13 && curChar != 9) {
+            characters.push_back((WORD)curChar);
+        } else {
+            characters.push_back((WORD)0);
+        }
+
+        auto& glyphOrigin = glyphOrigins.back();
+        auto& glyphAdvance = glyphAdvances.back();
+
+        if (chars[curIndex] == 10 || (curIndex > 0 && chars[curIndex - 1] == 13 && curIndex - 1 >= lineStart)) {
+            if ((curIndex > 0 && chars[curIndex - 1] == 13 && chars[curIndex] != 10)) {
+                curIndex--;
+            }
+
+            //  We have hit a hard linebreak, consume it
+            curIndex++;
+
+            lineWidth = ((float)penX) / 64.0f;
+            break;
+        }
+
+        FT_Vector advance;
+
+        advance.x = 0;
+        advance.y = 0;
+
+        //  Have we reached a new attribute range?
+        if (curIndex < curAttributeRange.location || curIndex >= (curAttributeRange.location + curAttributeRange.length)) {
+            //  Grab and set the new font
+            NSDictionary* attribs = [typeSetter->_attributedString attributesAtIndex:curIndex effectiveRange:&curAttributeRange];
+            UIFont* font = [attribs objectForKey:(NSString*)kCTFontAttributeName];
+            curFace = (FT_Face)[font _sizingFontHandle];
+            CGFontSetFTFontSize(font, curFace, [font pointSize]);
+
+            float fontHeight = ((float)(curFace->size->metrics.ascender - curFace->size->metrics.descender)) * spacing / 64.0f;
+            float curX = ((float)penX) / 64.0f;
+            float width = widthFunc(widthParam, curIndex, curX, fontHeight);
+
+            maxWidth = curX + width;
+        }
+
+        //  Grab the width of the current character
+        FT_Error error;
+
+        if (curChar != 13) {
+            FT_UInt index = FT_Get_Char_Index(curFace, curChar);
+
+            error = FT_Load_Glyph(curFace, index, FT_LOAD_NO_HINTING);
+            FT_GlyphSlot slot = curFace->glyph;
+
+            if (error == 0) {
+                advance.x = slot->advance.x;
+            } else {
+                EbrDebugLog("Glyph %d not found\n", curChar);
+            }
+
+            if (curChar == ' ') {
+                //  Soft linebreak possibility
+                lastPossibleBreakPos = curIndex;
+                lastPossibleBreakWidth = penX;
+            }
+            penX += advance.x;
+
+            glyphAdvance.width = ((float)advance.x) / 64.0f;
+        }
+
+        float curWidth;
+
+        if ((penX / 64.0f) > maxWidth && curChar != ' ') {
+            if (lastPossibleBreakPos != -1) {
+                //  We must now perform a soft break
+                curIndex = lastPossibleBreakPos + 1;
+
+                if (curChar == ' ') {
+                    //  Do a hard line break
+                    hitLinebreak = true;
+                }
+                lineWidth = ((float)lastPossibleBreakWidth) / 64.0f;
+            } else {
+                if (lineStart != curIndex) {
+                    //  Back out the last character
+                    penX -= advance.x;
+                }
+                lineWidth = ((float)penX) / 64.0f;
+                break;
+            }
+            break;
+        }
+
+        curIndex++;
+    }
+
+    if (curIndex >= count) {
+        lineWidth = ((float)penX) / 64.0f;
+    }
+
+    if (line) {
+        NSRange lineRange = NSMakeRange(range.location, range.length);
+        line->_runs.attach([NSMutableArray new]);
+        line->_strRange = lineRange;
+        line->_width = lineWidth;
+
+        unsigned curIdx = lineRange.location;
+        float ascender = 0.0f;
+        float descender = 0.0f;
+        float leading = 0.0f;
+        NSRange curRange;
+        unsigned glyphIdx = 0;
+
+        while (curIdx < lineRange.location + lineRange.length) {
+            id attribs = [typeSetter->_attributedString attributesAtIndex:curIdx effectiveRange:&curRange];
+            int fragmentLen = curRange.location + curRange.length - curIdx;
+
+            NSRange runRange;
+            runRange.location = curIdx;
+            runRange.length = (curRange.location + curRange.length) - curIdx;
+            if (runRange.location + runRange.length > lineRange.location + lineRange.length) {
+                runRange.length = lineRange.location + lineRange.length - runRange.location;
+            }
+            _CTRun* run = [_CTRun new];
+            run->_font = [attribs objectForKey:(id)kCTFontAttributeName];
+            if ([run->_font ascender] > ascender) {
+                ascender = [run->_font ascender];
+            }
+            if ([run->_font descender] < descender) {
+                descender = [run->_font descender];
+            }
+            if ([run->_font leading] > leading) {
+                leading = [run->_font leading];
+            }
+
+            id color = [attribs objectForKey:(id)kCTForegroundColorAttributeName];
+            run->_textColor = color;
+            run->_range.location = runRange.location;
+            run->_range.length = runRange.length;
+            run->_stringFragment = [typeSetter->_string substringWithRange:runRange];
+            run->_glyphOrigins.assign(glyphOrigins.begin() + glyphIdx, glyphOrigins.begin() + glyphIdx + runRange.length);
+            run->_glyphAdvances.assign(glyphAdvances.begin() + glyphIdx, glyphAdvances.begin() + glyphIdx + runRange.length);
+            run->_characters.assign(characters.begin() + glyphIdx, characters.begin() + glyphIdx + runRange.length);
+            run->_characters.erase(std::remove(run->_characters.begin(), run->_characters.end(), 0), run->_characters.end());
+            glyphIdx += runRange.length;
+            [line->_runs addObject:(id)run];
+            CFRelease(run);
+
+            curIdx = curRange.location + curRange.length;
+        }
+
+        line->_ascent = ascender;
+        line->_descent = descender;
+        line->_leading = leading;
+    }
+
+    return curIndex;
+}
+
+static float FixedWidthFinderFunc(void* opaque, CFIndex idx, float offset, float height) {
+    return *((double*)opaque) - offset;
+}
+
+static float UnlimitedWidthFinderFunc(void* opaque, CFIndex idx, float offset, float height) {
+    return FLT_MAX;
+}
+
+CFIndex CTTypesetterSuggestLineBreakWithOffsetAndCallback(
+    CTTypesetterRef ts, CFIndex index, double offset, WidthCalculationCallback callback, void* opaque) {
+    return DoWrap(ts, CFRangeMake(index, -1), callback, opaque, offset, NULL);
+}
+
+CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
+    return CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts, index, offset, FixedWidthFinderFunc, &width);
+}
+
+CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset) {
+    CTLineRef ret = NULL;
+
+    DoWrap(ts, range, UnlimitedWidthFinderFunc, NULL, offset, &ret);
 
     return ret;
 }
@@ -824,81 +1072,50 @@ static id createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* siz
         ret->_lines.attach([NSMutableArray new]);
     }
 
-    id string = [frameSetter->_attributedString string];
-
-    CGFontWrapState state;
-    WORD* str;
-    DWORD strLength;
-
-    memset(&state, 0, sizeof(state));
-    strLength = [string length];
-    str = (WORD*)malloc(sizeof(WORD) * strLength);
-    [string getCharacters:str];
-
-    state.chars = str;
-    state.count = strLength;
-    state.curIndex = 0;
-    float y = frameSize.size.height; //[font ascender];
-
-    CGSize fitSize;
-    float fitWidth = frameSize.size.width;
-
     sizeOut->width = 0;
     sizeOut->height = 0;
 
-    //  Keep drawing lines of text until we're out of characters
-    while (CGFontWrapWithAttributes(frameSetter->_attributedString, &state, fitWidth, &fitSize)) {
+    float y = frameSize.size.height; //[font ascender];
+    CFIndex curIdx = 0;
+    NSString* string = [frameSetter->_typesetter->_attributedString string];
+    CFIndex stringRange = [string length];
+
+    for (;;) {
+        CFIndex pos = CTTypesetterSuggestLineBreakWithOffset((CTTypesetterRef)(_CTTypesetter*)frameSetter->_typesetter,
+                                                             curIdx,
+                                                             frameSize.size.width,
+                                                             0.0f);
+        if (pos == curIdx)
+            break;
+
+        CFRange lineRange;
+        lineRange.location = curIdx;
+        lineRange.length = pos - curIdx;
+
+        CTLineRef line = CTTypesetterCreateLineWithOffset((CTTypesetterRef)(_CTTypesetter*)frameSetter->_typesetter, lineRange, 0.0f);
+
+        float ascent = 0.0f, descent = 0.0f, leading = 0.0f;
+        float width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+        float lineHeight = ascent - descent + leading;
+
         if (ret) {
-            NSRange lineRange;
-            lineRange.location = state.lineStart - state.chars;
-            lineRange.length = state.lineLen;
-
-            _CTLine* line = [_CTLine new];
-            line->_origin.x = 0.0f;
-            line->_str = [string substringWithRange:lineRange];
-            line->_runs.attach([NSMutableArray new]);
-            line->_strRange = lineRange;
-
-            unsigned curIdx = lineRange.location;
-            float ascender = 0.0f;
-            NSRange curRange;
-            while (curIdx < lineRange.location + lineRange.length) {
-                id attribs = [frameSetter->_attributedString attributesAtIndex:curIdx effectiveRange:&curRange];
-                int fragmentLen = curRange.location + curRange.length - curIdx;
-
-                NSRange runRange;
-                runRange.location = curIdx;
-                runRange.length = (curRange.location + curRange.length) - curIdx;
-                if (runRange.location + runRange.length > lineRange.location + lineRange.length) {
-                    runRange.length = lineRange.location + lineRange.length - runRange.location;
-                }
-                _CTRun* run = [_CTRun new];
-                run->_font = [attribs objectForKey:@"kCTFontAttributeName"];
-                if ([run->_font ascender] > ascender) {
-                    ascender = [run->_font ascender];
-                }
-                id color = [attribs objectForKey:@"kCTForegroundColorAttributeName"];
-                run->_textColor = color;
-                run->_line = line;
-                run->_stringFragment = [string substringWithRange:runRange];
-                [line->_runs addObject:(id)run];
-
-                curIdx = curRange.location + curRange.length;
-            }
-
-            line->_origin.y = y - ascender;
+            CGPoint lineOrigin;
+            lineOrigin.x = 0.0f;
+            lineOrigin.y = y - ascent;
             [ret->_lines addObject:(id)line];
-            [line release];
+            ret->_lineOrigins.push_back(lineOrigin);
+        }
+        [line release];
+
+        curIdx = pos;
+        if (width > sizeOut->width) {
+            sizeOut->width = width;
         }
 
-        if (fitSize.width > sizeOut->width)
-            sizeOut->width = fitSize.width;
-        sizeOut->height += fitSize.height;
+        sizeOut->height += lineHeight;
 
-        y -= fitSize.height;
+        y -= lineHeight;
     }
-
-    free(str);
 
     if (ret) {
         ret->_totalSize = *sizeOut;
@@ -924,15 +1141,12 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange string
  @Status Interoperable
 */
 CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
-    id str = [string string];
+    NSString* str = [(NSAttributedString*)string string];
     NSRange lineRange;
     lineRange.location = 0;
     lineRange.length = [str length];
 
     _CTLine* line = [_CTLine new];
-    line->_origin.x = 0.0f;
-    line->_origin.y = 0.0f;
-    line->_str = (NSString*)str;
     line->_strRange = lineRange;
 
     return (CTLineRef)line;
@@ -944,13 +1158,9 @@ CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
 */
 CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
     UNIMPLEMENTED();
-    id str = ((_CTLine*)line)->_str;
     NSRange lineRange = ((_CTLine*)line)->_strRange;
 
     _CTLine* ret = [_CTLine new];
-    ret->_origin.x = 0.0f;
-    ret->_origin.y = 0.0f;
-    ret->_str = (NSString*)str;
     ret->_strRange = lineRange;
 
     return (CTLineRef)ret;
@@ -992,15 +1202,26 @@ void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]) {
     int idx = 0;
 
     for (unsigned i = range.location; i < count && i < range.location + range.length; i++) {
-        _CTLine* curLine = [((_CTFrame*)frame)->_lines objectAtIndex:i];
-        origins[idx] = curLine->_origin;
+        origins[idx] = ((_CTFrame*)frame)->_lineOrigins[i];
         idx++;
     }
 }
 
-/**
- @Status Interoperable
-*/
+void CTFrameDraw(CTFrameRef frame, CGContextRef ctx) {
+    unsigned count = [((_CTFrame*)frame)->_lines count];
+    CGPoint curTextPos;
+
+    curTextPos = CGContextGetTextPosition(ctx);
+
+    for (unsigned i = 0; i < count; i++) {
+        _CTLine* curLine = [((_CTFrame*)frame)->_lines objectAtIndex:i];
+
+        CGPoint newPos = curTextPos + ((_CTFrame*)frame)->_lineOrigins[i];
+        CGContextSetTextPosition(ctx, newPos.x, newPos.y);
+        CTLineDraw((CTLineRef)curLine, ctx);
+    }
+}
+
 CFRange CTLineGetStringRange(CTLineRef line) {
     CFRange ret;
     NSRange range = ((_CTLine*)line)->_strRange;
@@ -1015,19 +1236,20 @@ CFRange CTLineGetStringRange(CTLineRef line) {
  @Notes Values only reflect the typographical maximums for the font - string is only evaulated
         for width
 */
-double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
-    id font = [_LazyUIFont defaultFont];
-    if (ascent)
-        *ascent = [font ascender];
-    if (descent)
-        *descent = [font descender];
-    if (leading)
-        *leading = [font leading];
 
-    CGSize size;
-    size = [((_CTLine*)line)->_str sizeWithFont:font];
+double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
+    _CTLine* line = (_CTLine*)lineRef;
+    if (ascent) {
+        *ascent = line->_ascent;
+    }
+    if (descent) {
+        *descent = line->_descent;
+    }
+    if (leading) {
+        *leading = line->_leading;
+    }
 
-    return size.width;
+    return line->_width;
 }
 
 /**
@@ -1046,6 +1268,11 @@ CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
     return (CFArrayRef)[((_CTLine*)line)->_runs retain];
 }
 
+CFRange CTRunGetStringRange(CTRunRef run) {
+    _CTRun* curRun = (_CTRun*)run;
+
+    return curRun->_range;
+}
 /**
  @Status Stub
 */
@@ -1065,31 +1292,77 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
  @Notes Only font face, size and text color attributes are supported.  Background fill is
         always white.
 */
-void CTLineDraw(CTLineRef line, CGContextRef ctx) {
-    for (_CTRun* curRun in (NSArray*)((_CTLine*)line)->_runs) {
-        id string = curRun->_stringFragment;
-        NSRange range;
+
+void CTRunGetPositions(CTRunRef run, CFRange runRange, CGPoint* outPositions) {
+    _CTRun* curRun = (_CTRun*)run;
+
+    if (runRange.length == 0) {
+        runRange.location = 0;
+        runRange.length = curRun->_range.length;
+    }
+
+    memcpy(outPositions, &curRun->_glyphOrigins[runRange.location], sizeof(CGPoint) * runRange.length);
+}
+
+void CTRunGetAdvances(CTRunRef run, CFRange runRange, CGSize* outAdvances) {
+    _CTRun* curRun = (_CTRun*)run;
+
+    if (runRange.length == 0) {
+        runRange.location = 0;
+        runRange.length = curRun->_range.length;
+    }
+
+    memcpy(outAdvances, &curRun->_glyphAdvances[runRange.location], sizeof(CGSize) * runRange.length);
+}
+
+void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
+    _CTRun* curRun = (_CTRun*)run;
+
+    NSString* string = curRun->_stringFragment;
+
+    NSRange range;
+    range.location = textRange.location;
+    range.length = textRange.length;
+
+    if (range.length == 0) {
         range.location = 0;
         range.length = [string length];
+    }
 
-        WORD* characters = (WORD*)EbrMalloc(sizeof(WORD) * (range.length + 1));
-        WORD* glyphs = (WORD*)EbrMalloc(sizeof(WORD) * (range.length + 1));
-        [string getCharacters:characters range:range];
+    int numGlyphs = curRun->_characters.size();
+    WORD* glyphs = (WORD*)malloc(sizeof(WORD) * numGlyphs);
 
-        id font = curRun->_font;
-        CGFontGetGlyphsForUnichars(font, characters, glyphs, range.length);
-        CGContextSetFont(ctx, font);
-        CGContextSetFontSize(ctx, [font pointSize]);
+    id font = curRun->_font;
+    CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
+    CGContextSetFont(ctx, font);
+    CGContextSetFontSize(ctx, [font pointSize]);
 
-        CGContextSetFillColorWithColor(ctx, (CGColorRef)(id)curRun->_textColor);
-        CGContextSetStrokeColorWithColor(ctx, (CGColorRef)(id)CGColorGetConstantColor((CFStringRef) @"WHITE"));
+    CGContextSetFillColorWithColor(ctx, (CGColorRef)(id)curRun->_textColor);
+    CGContextSetStrokeColorWithColor(ctx, (CGColorRef)(id)CGColorGetConstantColor((CFStringRef) @"WHITE"));
 
-        CGPoint curTextPos;
-        ctx->Backing()->CGContextGetTextPosition(&curTextPos);
+    CGPoint curTextPos;
+    ctx->Backing()->CGContextGetTextPosition(&curTextPos);
 
-        CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, range.length);
-        EbrFree(glyphs);
-        EbrFree(characters);
+    CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
+    free(glyphs);
+}
+
+void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
+    _CTLine* line = (_CTLine*)lineRef;
+
+    CGPoint start;
+    ctx->Backing()->CGContextGetTextPosition(&start);
+
+    for (_CTRun* curRun in(NSArray*)line->_runs) {
+        CFRange range = { 0 };
+
+        CGPoint outputPoint = start;
+        if (curRun->_glyphOrigins.size() > 0) {
+            outputPoint = CGPointMake(start.x + curRun->_glyphOrigins[0].x, start.y + +curRun->_glyphOrigins[0].y);
+        }
+        ctx->Backing()->CGContextSetTextPosition(outputPoint.x, outputPoint.y);
+
+        CTRunDraw((CTRunRef)curRun, ctx, range);
     }
 }
 
@@ -1112,11 +1385,11 @@ CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat
     return (CTFontRef)ret;
 }
 
-/**
- @Status Caveat
- @Notes transform and attributes parameters not supported
-*/
-CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, CGAffineTransform* xform, id attributes) {
+CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGAffineTransform* xform, id attributes) {
+    /**
+     @Status Caveat
+     @Notes transform and attributes parameters not supported
+    */
     if (size == 0.0f)
         size = 12.0f;
     id ret = [[(UIFont*)cgFont fontWithSize:size] retain];
@@ -1127,14 +1400,21 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, CGAffineT
  @Status Caveat
  @Notes orientation parameter not supported
 */
+CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* xform) {
+    if (size == 0.0f)
+        size = 12.0f;
+    UIFont* ret = [[_LazyUIFont fontWithName:(NSString*)name size:size] retain];
+    return (CTFontRef)ret;
+}
+
 double CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph* glyphs, CGSize* advances, size_t count) {
     DWORD i;
     double total = 0.0f;
 
     _CGFontLock();
     //  Get the font
-    FT_Face face = (FT_Face)(DWORD)[font _sizingFontHandle];
-    CGFontSetFTFontSize((CGFontRef)font, face, [font pointSize]);
+    FT_Face face = (FT_Face)[(UIFont*)font _sizingFontHandle];
+    CGFontSetFTFontSize((CGFontRef)font, face, [(UIFont*)font pointSize]);
 
     FT_Error error;
     FT_GlyphSlot slot = face->glyph;
@@ -1163,21 +1443,21 @@ double CTFontGetAdvancesForGlyphs(CTFontRef font, int orientation, const CGGlyph
 */
 float CTFontGetAscent(CTFontRef font) {
     //  Get the font
-    return [font ascender];
+    return [(UIFont*)font ascender];
 }
 
 /**
  @Status Interoperable
 */
 float CTFontGetDescent(CTFontRef font) {
-    return [font descender];
+    return [(UIFont*)font descender];
 }
 
 /**
  @Status Interoperable
 */
 float CTFontGetSize(CTFontRef font) {
-    float ret = [font pointSize];
+    float ret = [(UIFont*)font pointSize];
 
     return ret;
 }
@@ -1191,14 +1471,14 @@ CTFontRef CTFontCopyGraphicsFont(CGFontRef font, CFDictionaryRef attributes) {
  @Notes Always returns font family name
 */
 CFStringRef CTFontCopyPostScriptName(CTFontRef font) {
-    return (CFStringRef)[[font fontName] retain];
+    return (CFStringRef)[[(UIFont*)font fontName] retain];
 }
 
 /**
  @Status Interoperable
 */
 CFStringRef CTFontCopyFamilyName(CTFontRef font) {
-    return (CFStringRef)[[font fontName] retain];
+    return (CFStringRef)[[(UIFont*)font fontName] retain];
 }
 
 /**
@@ -1214,7 +1494,7 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
 
 @implementation UITextRange {
 @public
-    idretain _start, _end;
+    idretaintype(UITextPosition) _start, _end;
     BOOL _empty;
 }
 + (instancetype)textRangeWithPositon:(int)position length:(int)length {
@@ -1267,13 +1547,6 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
 /**
  @Status Stub
 */
-void CTFrameDraw(CTFrameRef frame, CGContextRef context) {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
 CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position) {
     UNIMPLEMENTED();
     return 0;
@@ -1309,12 +1582,4 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat
 double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     UNIMPLEMENTED();
     return 0;
-}
-
-/**
- @Status Stub
-*/
-CFRange CTRunGetStringRange(CTRunRef run) {
-    UNIMPLEMENTED();
-    return { 0, 0 };
 }

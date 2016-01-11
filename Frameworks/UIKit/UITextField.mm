@@ -34,6 +34,10 @@
 
 void EbrSetKeyboardAccessory(id view);
 
+NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
+NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
+NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
+
 extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
@@ -323,7 +327,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                     if ([self isFirstResponder]) {
                         CGContextSetStrokeColorWithColor(curContext,
-                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor windowsControlFocusedColor] CGColor]));
+                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] :
+                                                                                   [[UIColor windowsControlFocusedColor] CGColor]));
                     } else {
                         CGContextSetStrokeColorWithColor(curContext, (CGColorRef)[UIColor blackColor]);
                     }
