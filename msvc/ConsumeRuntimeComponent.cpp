@@ -17,7 +17,12 @@
 #include <stdio.h>
 
 #ifdef _WOC_APP
+#if defined(_M_IX86)
 #pragma comment(linker, "/INCLUDE:___refMTAThread")
+#else
+#pragma comment(linker, "/INCLUDE:__refMTAThread")
+#endif
+
 
 extern "C"
 {
@@ -31,7 +36,6 @@ extern "C"
 }
 
 #ifdef _M_ARM
-#include <client.h>
 int __cdecl main(::Platform::Array<::Platform::String^>^ args)
 {
 	EbrDefaultXamlMain();

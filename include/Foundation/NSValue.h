@@ -13,11 +13,11 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSGeometry.h>
-#import <Foundation/NSRange.h>
+#import "Foundation/NSObject.h"
+#import "Foundation/NSGeometry.h"
+#import "Foundation/NSRange.h"
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, NSValueType) {
     NSValueTypeUnknown,
     NSValueTypeCGPoint,
     NSValueTypeUIOffset,
@@ -29,7 +29,8 @@ typedef enum : NSUInteger {
     NSValueTypeGeneric,
     NSValueTypeNonretainedObject,
     NSValueTypeNSRange,
-} NSValueType;
+    NSValueTypeCLLocationCoordinate2D,
+};
 
 FOUNDATION_EXPORT_CLASS
 @interface NSValue : NSObject <NSCopying, NSSecureCoding> {
@@ -40,14 +41,20 @@ FOUNDATION_EXPORT_CLASS
 - (NSValue*)initWithBytes:(const void*)value objCType:(const char*)type;
 + (NSValue*)valueWithBytes:(const void*)value objCType:(const char*)type;
 + (NSValue*)value:(const void*)value withObjCType:(const char*)type;
+- (void)getValue:(void*)value;
+- (const char*)objCType;
 
-- (BOOL)isEqualToValue:(NSValue*)other;
-
+/* Pointer Values */
++ (NSValue*)valueWithPointer:(const void*)pointer;
 + (NSValue*)valueWithNonretainedObject:(__unsafe_unretained id)object;
+- (void*)pointerValue;
 - (__unsafe_unretained id)nonretainedObjectValue;
 
-+ (NSValue*)valueWithPointer:(const void*)pointer;
-- (const void*)pointerValue;
+/* Range Values */
++ (NSValue*)valueWithRange:(NSRange)range;
+- (NSRange)rangeValue;
+
+- (BOOL)isEqualToValue:(NSValue*)other;
 
 /* Core Graphics Geometry Values */
 + (NSValue*)valueWithCGPoint:(NSPoint)point;
@@ -59,14 +66,6 @@ FOUNDATION_EXPORT_CLASS
 - (CGSize)CGSizeValue;
 - (CGRect)rectValue;
 - (CGRect)CGRectValue;
-
-/* Foundation Type Values */
-+ (NSValue*)valueWithRange:(NSRange)range;
-- (NSRange)rangeValue;
-
-- (void)getValue:(void*)value;
-- (const char*)objCType;
-
 - (NSValue*)initWithCGSize:(CGSize)val;
 - (NSValue*)initWithCGPoint:(CGPoint)val;
 - (NSValue*)initWithCGRect:(CGRect)val;

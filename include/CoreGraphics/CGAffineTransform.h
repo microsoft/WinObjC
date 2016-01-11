@@ -8,6 +8,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <StarboardExport.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <Foundation/NSValue.h>
 
 typedef struct {
     CGFloat a;
@@ -41,3 +42,8 @@ COREGRAPHICS_EXPORT CGAffineTransform CGAffineTransformTranslate(CGAffineTransfo
 COREGRAPHICS_EXPORT bool CGAffineTransformIsIdentity(CGAffineTransform t);
 
 COREGRAPHICS_EXPORT bool CGAffineTransformEqualToTransform(CGAffineTransform t1, CGAffineTransform t2);
+
+@interface NSValue(CGAffineTransformAdditions)
+- (CGAffineTransform)CGAffineTransformValue;
++ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform;
+@end

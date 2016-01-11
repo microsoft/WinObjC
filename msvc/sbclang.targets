@@ -39,10 +39,11 @@
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
       <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
+      <IncludeAccounts Condition="$(LinkAdditionalDependencies.Contains('Accounts.lib'))">true</IncludeAccounts>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeLogging>true</IncludeLogging>
-      <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
+      <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -87,6 +88,7 @@
       <SBResourceCopy Condition="'$(IncludeSecurity)' == 'true'" Include="$(StarboardLibDirs)\Security.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
+      <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
     </ItemGroup>
   </Target>
 

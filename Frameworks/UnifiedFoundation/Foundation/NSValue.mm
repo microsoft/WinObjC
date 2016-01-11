@@ -18,6 +18,7 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSValue.h"
 #include "Foundation/NSMethodSignature.h"
+#import "CoreLocation/CLLocation.h"
 
 #include <type_traits>
 
@@ -36,6 +37,8 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
         return NSValueTypeCGAffineTransform;
     } else if (strncmp(objcType, "{_NSRange", 9) == 0) {
         return NSValueTypeNSRange;
+    } else if (strncmp(objcType, "{CLLocationCoordinate2D", 22) == 0) {
+        return NSValueTypeCLLocationCoordinate2D;
     } else if (strcmp(objcType, "^v") == 0) {
         return NSValueTypePointer;
     } else if (strcmp(objcType, "@") == 0) {
@@ -82,6 +85,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -125,6 +129,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -168,6 +173,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -203,6 +209,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -258,6 +265,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -297,6 +305,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -335,8 +344,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 @end
 
 @interface _NSValue_Pointer : NSValue {
-    const void* _val;
+    void* _val;
 }
+
 - (id)initWithPointer:(const void*)value;
 @end
 
@@ -344,7 +354,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (id)initWithPointer:(const void*)value {
     if ((self = [super init]) != nil) {
         _valueType = NSValueTypePointer;
-        _val = value;
+
+        // Because +valueWithPointer accepts const void*, and the accessor -pointerValue returns void*, we cast away the const here.
+        _val = const_cast<void*>(value);
     }
     return self;
 }
@@ -353,7 +365,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return @encode(void*);
 }
 
-- (const void*)pointerValue {
+- (void*)pointerValue {
     return _val;
 }
 
@@ -364,6 +376,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -399,6 +412,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return &_val;
 }
+
 - (size_t)_rawSize {
     return sizeof(_val);
 }
@@ -437,7 +451,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return _objcType;
 }
 
-- (const void*)pointerValue {
+- (void*)pointerValue {
     return _valPtr;
 }
 
@@ -452,12 +466,16 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (const void*)_rawBytes {
     return _valPtr;
 }
+
 - (size_t)_rawSize {
     return getArgumentSize(_objcType);
 }
 @end
 
 @implementation NSValue
+/**
+ @Status Interoperable
+*/
 + (NSValue*)newWithZone:(NSZone*)zone bytes:(const void*)bytes valueType:(NSValueType)valueType objCType:(const char*)objCType {
     if (valueType == NSValueTypeUnknown) {
         valueType = valueTypeFromObjCType(objCType);
@@ -498,6 +516,11 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
             NSRange value;
             memcpy(&value, bytes, sizeof(value));
             return [[_NSValue_NSRange alloc] initWithNSRange:value];
+        }
+        case NSValueTypeCLLocationCoordinate2D: {
+            CLLocationCoordinate2D value;
+            memcpy(&value, bytes, sizeof(value));
+            return [[NSValue valueWithMKCoordinate:value] retain];
         }
 
         case NSValueTypeNonretainedObject:
@@ -553,6 +576,14 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 */
 + (NSValue*)valueWithCGRect:(CGRect)value {
     return [[[_NSValue_CGRect alloc] initWithCGRect:value] autorelease];
+}
+
+/**
+ @Status Stub
+*/
++ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform {
+    UNIMPLEMENTED();
+    return nil;
 }
 
 /**
@@ -616,14 +647,23 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return [[[_NSValue_NRO alloc] initWithNonretainedObject:object] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)classForCoder {
     return [NSValue class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSValue*)initWithCoder:(NSKeyedUnarchiver*)coder {
     _valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
     unsigned size;
@@ -636,6 +676,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return [NSValue newWithZone:nil bytes:data valueType:_valueType objCType:objcType];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSKeyedArchiver*)coder {
     [coder encodeInt:(int)_valueType forKey:@"NSV.type"];
     [coder encodeObject:[NSString stringWithUTF8String:[self objCType]] forKey:@"NSV.objcType"];
@@ -677,12 +720,34 @@ static unsigned hashBytes(const void* bytes, size_t len) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     return hashBytes([self _rawBytes], [self _rawSize]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     return [NSValue newWithZone:zone bytes:[self _rawBytes] valueType:_valueType objCType:[self objCType]];
+}
+
+/**
+ @Status Stub
+*/
++ (NSValue*)valueWithMKCoordinate:(CLLocationCoordinate2D)coordinate {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (CLLocationCoordinate2D)MKCoordinateValue {
+    UNIMPLEMENTED();
+    return {0,0};
 }
 
 /**
@@ -741,11 +806,17 @@ static unsigned hashBytes(const void* bytes, size_t len) {
     @throw [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CATransform3D." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGAffineTransform)affineTransformValue {
     @throw
         [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGAffineTransform." userInfo:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGAffineTransform)CGAffineTransformValue {
     @throw
         [NSException exceptionWithName:NSDestinationInvalidException reason:@"This value does not store a CGAffineTransform." userInfo:nil];
@@ -770,7 +841,7 @@ static unsigned hashBytes(const void* bytes, size_t len) {
 /**
  @Status Interoperable
 */
-- (const void*)pointerValue {
+- (void*)pointerValue {
     @throw [NSException exceptionWithName:NSDestinationInvalidException
                                    reason:@"This value does not store an unguarded pointer."
                                  userInfo:nil];

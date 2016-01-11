@@ -14,4 +14,11 @@
 //
 //******************************************************************************
 
-// This header file is not yet implemented
+#pragma once
+
+#import <Security/SecBase.h>
+
+typedef const struct __SecRandom* SecRandomRef;
+
+SECURITY_EXPORT int SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t* bytes);
+SECURITY_EXPORT const SecRandomRef kSecRandomDefault;
