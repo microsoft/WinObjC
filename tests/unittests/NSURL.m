@@ -16,6 +16,7 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#include "windows.h"
 
 void testNSURLMethod(SEL selector, NSURL* input, id argument, NSURL* expected) {
     NSURL* actual = [input performSelector:selector withObject:argument];
@@ -187,6 +188,19 @@ TEST(NSFoundation, NSURL_URLByAppendingPathExtension) {
 
 TEST(NSFoundation, NSURL_checkResourceIsReachable) {
     // construct target URL using current directory and relative URL
+    // get test startup full path
+    wchar_t startUpPath[_MAX_PATH];
+    GetModuleFileNameW(nullptr, startUpPath, _MAX_PATH);
+
+    // construct the start up dir
+    wchar_t drive[_MAX_DRIVE];
+    wchar_t dir[_MAX_DIR];
+    ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), nullptr, 0, nullptr, 0) == 0);
+    ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
+
+    // change current dir to app start up path
+    ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
+
     NSFileManager* manager = [NSFileManager defaultManager];
     NSURL *baseURL = [NSURL URLWithString: [manager currentDirectoryPath]];
     NSURL *targetURL = [NSURL URLWithString: @"data/NSFileManagerUT.txt" relativeToURL:baseURL];

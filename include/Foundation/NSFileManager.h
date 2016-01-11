@@ -158,7 +158,7 @@ FOUNDATION_EXPORT_CLASS
                                   options:(NSDirectoryEnumerationOptions)mask
                              errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler;
 - (NSDirectoryEnumerator*)enumeratorAtPath:(NSString*)path;
-- (NSArray**)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options;
+- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options;
 - (NSArray*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError**)error;
 - (NSArray*)subpathsAtPath:(NSString*)path;
 
