@@ -17,6 +17,20 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+// Helper that verifies the result of CFURLCreateStringByAddingPercentEscapes
+static void testAddPercentEscapes(NSString* expected,
+                                  NSString* string,
+                                  NSString* charactersToLeaveUnescaped,
+                                  NSString* legalURLCharactersToBeEscaped,
+                                  CFStringEncoding encoding) {
+    ASSERT_OBJCEQ(expected,
+                  (NSString*)CFURLCreateStringByAddingPercentEscapes(nullptr,
+                                                                     (CFStringRef)string,
+                                                                     (CFStringRef)charactersToLeaveUnescaped,
+                                                                     (CFStringRef)legalURLCharactersToBeEscaped,
+                                                                     encoding));
+}
+
 // Helper that verifies the result of CFURLCreateStringByReplacingPercentEscapesUsingEncoding
 static void testReplacePercentEscapes(NSString* expected, NSString* string, NSString* charactersToLeaveEscaped) {
     ASSERT_OBJCEQ(expected,
@@ -24,6 +38,28 @@ static void testReplacePercentEscapes(NSString* expected, NSString* string, NSSt
                                                                                      (CFStringRef)string,
                                                                                      (CFStringRef)charactersToLeaveEscaped,
                                                                                      kCFStringEncodingUTF8));
+}
+
+TEST(Foundation, CFURLCreateStringByAddingPercentEscapes) {
+    // Basic test
+    testAddPercentEscapes(@"Legal?!+=Illegal\%25\%5C\%5E\%3E", @"Legal?!+=Illegal\%\\^>", nullptr, nullptr, kCFStringEncodingUTF8);
+
+    // Empty strings
+    testAddPercentEscapes(@"Legal?!+=Illegal\%25\%5C\%5E\%3E", @"Legal?!+=Illegal\%\\^>", @"", @"", kCFStringEncodingUTF8);
+    testAddPercentEscapes(@"", @"", @"", @"", kCFStringEncodingUTF8);
+
+    // Change encoding
+    testAddPercentEscapes(@"Legal?!+=Illegal\%25\%5C\%5E\%3E", @"Legal?!+=Illegal\%\\^>", @"", @"", kCFStringEncodingUnicode);
+    testAddPercentEscapes(@"Legal?!+=Illegal\%25\%5C\%5E\%3E", @"Legal?!+=Illegal\%\\^>", @"", @"", kCFStringEncodingASCII);
+
+    // Allow chars to remain unescaped
+    testAddPercentEscapes(@"Legal?!+=Illegal\%\\^\%3E", @"Legal?!+=Illegal\%\\^>", @"\%\\^", @"", kCFStringEncodingUnicode);
+
+    // Force chars to be escaped
+    testAddPercentEscapes(@"Legal\%3F\%21\%2B\%3DIllegal\%25\%5C\%5E\%3E", @"Legal?!+=Illegal\%\\^>", @"", @"?!+=", kCFStringEncodingASCII);
+
+    // Both
+    testAddPercentEscapes(@"Legal\%3F\%21\%2B\%3DIllegal\%\\^\%3E", @"Legal?!+=Illegal\%\\^>", @"\%\\^", @"?!+=", kCFStringEncodingUnicode);
 }
 
 TEST(Foundation, CFURLCreateStringByReplacingPercentEscapes) {

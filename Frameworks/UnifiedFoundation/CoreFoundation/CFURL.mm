@@ -46,14 +46,15 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
                                                     CFStringEncoding encoding) {
     const char* utf8String = [(NSString*)origString UTF8String];
 
-    NSUInteger length = [(NSString *)origString lengthOfBytesUsingEncoding:encoding], resultLength = 0;
+    NSUInteger length = [(NSString*)origString lengthOfBytesUsingEncoding:CFStringConvertEncodingToNSStringEncoding(encoding)];
+    NSUInteger resultLength = 0;
     char* result = (char*)EbrMalloc(length * 3 * 2 + 1);
 
     const char hex[] = "0123456789ABCDEF";
     const char legalURLCharacters[] = {
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno"
         "pqrstuvwxyz0123456789-._~:/"
-        "?#[]@!$&'()*+,;="
+        "?@!$&'()*+,;="
     };
 
     for (size_t i = 0; i < length; ++i) {
@@ -83,7 +84,7 @@ CFStringRef CFURLCreateStringByAddingPercentEscapes(CFAllocatorRef allocator,
     } else {
         result[resultLength] = 0;
 
-        NSString* ret = [[NSString alloc] initWithCString:result];
+        ret = [[NSString alloc] initWithCString:result];
         EbrFree(result);
     }
 

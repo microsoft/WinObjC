@@ -48,11 +48,34 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) 
             return (CFStringRef) @"ANSI_X3.4-1968";
 
         default:
-            assert(0);
-            break;
+            UNIMPLEMENTED_WITH_MSG("%x is not a supported encoding, defaulting to ANSI_X3.4-1968", encoding);
+            return (CFStringRef) @"ANSI_X3.4-1968";
     }
+}
 
-    return 0;
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
+UInt32 CFStringConvertEncodingToNSStringEncoding(CFStringEncoding encoding) {
+    // IMPORTANT: Make sure this matches with the converse function CFStringConvertNSStringEncodingToEncoding below
+    switch (encoding) {
+        case kCFStringEncodingASCII:
+            return NSASCIIStringEncoding;
+
+        case kCFStringEncodingUTF8:
+            return NSUTF8StringEncoding;
+
+        case kCFStringEncodingUnicode:
+            return NSUnicodeStringEncoding;
+
+        case kCFStringEncodingUTF16LE:
+            return NSUTF16LittleEndianStringEncoding;
+
+        default:
+            UNIMPLEMENTED_WITH_MSG("%x is not a supported encoding, defaulting to NSUnicodeStringEncoding", encoding);
+            return NSUnicodeStringEncoding;
+    }
 }
 
 /**
@@ -60,6 +83,7 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) 
  @Notes Limited encodings supported
 */
 CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
+    // IMPORTANT: Make sure this matches with the converse function CFStringConvertEncodingToNSStringEncoding above
     switch (encoding) {
         case NSASCIIStringEncoding:
         case NSWindowsCP1252StringEncoding:
@@ -76,11 +100,9 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
             return kCFStringEncodingUTF16LE;
 
         default:
-            assert(0);
-            break;
+            UNIMPLEMENTED_WITH_MSG("%x is not a supported encoding, defaulting to kCFStringEncodingUnicode", encoding);
+            return kCFStringEncodingUnicode;
     }
-
-    return 0;
 }
 
 /**
