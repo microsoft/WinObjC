@@ -27,7 +27,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSValue.h"
 #import "NSPropertyListReader.h"
 #import "NSXMLPropertyList.h"
-#import "UIClassSwapper.h"
+#import "NSUnarchiverInternal.h"
 
 #import <stack>
 #import <memory>
@@ -39,8 +39,6 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionClassType = @"_NSU
 static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
     @"_NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses";
 
-static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
-
 @implementation NSKeyedUnarchiver {
     idretaintype(NSMutableDictionary) _nameToReplacementClass;
     idretaintype(NSDictionary) _propertyList;
@@ -49,7 +47,7 @@ static IWLazyClassLookup _LazyUIClassSwapper("UIClassSwapper");
     idretaintype(NSMutableDictionary) _uidToObject;
     idretaintype(NSMutableDictionary) _objectToUid;
     idretaintype(NSMutableDictionary) _classVersions;
-
+    idretaintype(NSNumber) _activeUid;
     int _unnamedKeyIndex;
 
     idretaintype(NSMutableArray) _dataObjects;
@@ -206,25 +204,13 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
             if (classType != nil) {
                 result = [classType alloc];
 
-                if ([result isKindOfClass:[_LazyUIClassSwapper class]]) {
-                    [self->_uidToObject setObject:result forKey:uid];
-
-                    int curPos = self->_curUid;
-
-                    self->_curUid = 0;
-
-                    id orig = result;
-                    result = [result instantiateWithCoder:self];
-                    [orig autorelease];
-
-                    self->_curUid = curPos;
-                }
-
                 [self->_uidToObject setObject:result forKey:uid];
 
                 int curPos = self->_curUid;
 
+                self->_activeUid = uid;                
                 self->_curUid = 0;
+
                 if ([result respondsToSelector:@selector(initWithCoder:)]) {
                     result = [result initWithCoder:self];
                 } else {
@@ -236,7 +222,8 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                     }
                 }
 
-                self->_curUid = curPos;
+                self->_curUid = curPos;                
+                self->_activeUid = nil;
 
                 if (result != nil) {
                     [self->_uidToObject setObject:result forKey:uid];
@@ -632,4 +619,17 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
     [super dealloc];
 }
 
+- (void)_swapActiveObject:(id)object {
+    FAIL_FAST_HR_IF_NULL(E_UNEXPECTED, _activeUid);
+
+    if (object != [self->_uidToObject objectForKey:_activeUid]) {
+        if (object != nil) {
+            [self->_uidToObject setObject:object forKey:_activeUid];
+        } else {
+            [self->_uidToObject removeObjectForKey:_activeUid];
+        }
+    }
+}
+
 @end
+

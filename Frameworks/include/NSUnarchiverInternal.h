@@ -14,9 +14,8 @@
 //
 //******************************************************************************
 
-@interface UIClassSwapper : NSObject<NSCoding>
+@interface NSUnarchiver () 
 
-@property (nonatomic, copy) NSString* originalClassName;
-@property (nonatomic, copy) NSString* className;
+- (void)_swapActiveObject:(id)object;
 
 @end
