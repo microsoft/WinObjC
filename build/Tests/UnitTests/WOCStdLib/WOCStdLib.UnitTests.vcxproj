@@ -45,6 +45,7 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
+    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutDir>$(SolutionDir)$(Configuration)\$(RootNamespace)</OutDir>
   </PropertyGroup>
