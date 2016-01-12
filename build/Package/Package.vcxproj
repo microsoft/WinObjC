@@ -90,6 +90,10 @@
     <SBLibsWin10 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
     <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.lib" />
     <SBLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\*.dll" />
+    <SBDebugLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\Debug\*.lib" />
+    <SBDebugLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\Debug\*.dll" />
+    <SBReleaseLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\Release\*.lib" />
+    <SBReleaseLibsWin10 Include="..\..\deps\prebuilt\Universal Windows\x86\Release\*.dll" />
     <SBSamples Include="..\..\samples\**\*" />
     <SBBinaries Include="..\..\bin\*.exe" />
     <SBBinaries Include="..\..\bin\*.dll" />
@@ -123,6 +127,10 @@
     <Copy SourceFiles="@(MSVCFiles)" DestinationFiles="@(MSVCFiles->'$(SBPackageDir)msvc\%(OutputFileName)%(Extension)')" />
     <Message Importance="high" Text="Copying lib files to destination" />
     <Copy SourceFiles="@(SBLibsWin10)" DestinationFolder="$(SBPackageDir)lib\Universal Windows\x86" />
+    <Message Importance="high" Text="Copying Debug lib files to destination" />
+    <Copy SourceFiles="@(SBDebugLibsWin10)" DestinationFolder="$(SBPackageDir)lib\Universal Windows\x86\Debug" />
+    <Message Importance="high" Text="Copying Release lib files to destination" />
+    <Copy SourceFiles="@(SBReleaseLibsWin10)" DestinationFolder="$(SBPackageDir)lib\Universal Windows\x86\Release" />
     <Message Importance="high" Text="Copying includes to destination" />
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
