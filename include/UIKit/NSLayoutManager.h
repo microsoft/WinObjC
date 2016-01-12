@@ -52,6 +52,9 @@ UIKIT_EXPORT_CLASS
                                range:(NSRange)editRange
                       changeInLength:(NSInteger)deltaLen
                     invalidatedRange:(NSRange)invalidRange;
+- (NSUInteger)characterIndexForPoint:(CGPoint)point
+                             inTextContainer:(NSTextContainer*)container
+    fractionOfDistanceBetweenInsertionPoints:(CGFloat*)distance;
 @end
 
 #endif /* _NSLAYOUTMANAGER_H */
