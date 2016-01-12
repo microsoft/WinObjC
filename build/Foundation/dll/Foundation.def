@@ -577,3 +577,9 @@ LIBRARY Foundation
      NSXMLStoreType DATA
      UINibExternalObjects DATA
      _NSDictionaryOfVariableBindings
+
+     ; Error Handling Exports
+     _NSHResultErrorDictKey DATA
+     _NSStringFromHResult
+     _NSErrorFromFailureInfo
+     _NSExceptionFromFailureInfo

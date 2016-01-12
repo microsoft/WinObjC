@@ -434,7 +434,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         [_vault add:credential];
     } catch (NSException* e) {
         // Assume that projection exceptions will come as NSException with an hr?
-        NSNumber* errorCode = [e.userInfo objectForKey:_hresultErrorDictKey()];
+        NSNumber* errorCode = [e.userInfo objectForKey:_NSHResultErrorDictKey];
         if (errorCode) {
             switch (static_cast<HRESULT>([errorCode unsignedIntValue])) {
                 case E_INVALIDARG:

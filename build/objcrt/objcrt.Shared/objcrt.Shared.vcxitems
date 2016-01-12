@@ -24,7 +24,6 @@
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\autoreleasepool.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\block.m" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\error-handling.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\lifetime.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\NSObject.m" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\property.mm" />
@@ -40,7 +39,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\hashtable.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\init.c" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\intrinsic-shims.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\lookup.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\selector.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\objcrt\sparsearray.c" />

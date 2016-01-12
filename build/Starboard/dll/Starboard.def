@@ -40,6 +40,21 @@ LIBRARY Starboard
         pthread_setspecific
         task_info
         uname
+
+        ; Error Handling Internal
+        failFastOnUnimplemented
+        starboardGetCurrentThreadId
+        starboardInterlockedIncrementNoFence
+        starboardGetLastError
+        starboardCopyMemory
+        starboardZeroMemory
+        starboardFormatMessageW
+        starboardOutputDebugStringW
+        starboardInterlockedDecrementRelease
+        starboardInterlockedCompareExchangePointer
+        _ReturnAddress
+        __fastfail
+
         ; REMOVE / CLEANUP C++ EXPORTS
         ??0EbrFile@@QAE@XZ
         ??1EbrFile@@UAE@XZ
