@@ -108,11 +108,11 @@ Write-Host  $testCount
 if ($failureMessageArray.length -ne 0) {
     Write-Host  "FAILING TESTS:" -foregroundcolor "Red"
 
-    foreach ($error in $failureMessageArray) {
-        Write-Host  "  " $error.Item1.Item2 -foregroundcolor "Red" -NoNewLine 
+    foreach ($errorMessage in $failureMessageArray) {
+        Write-Host  "  " $errorMessage.Item1.Item2 -foregroundcolor "Red" -NoNewLine 
         Write-Host  "." -foregroundcolor "Red" -NoNewLine
-        Write-Host  $error.Item1.Item3 -foregroundcolor "Red" -NoNewLine
-        $reproLine = "  ( " + $error.Item1.Item1 + " --gtest_filter=" + $error.Item1.Item2 + "." + $error.Item1.Item3 + " )"
+        Write-Host  $errorMessage.Item1.Item3 -foregroundcolor "Red" -NoNewLine
+        $reproLine = "  ( " + $errorMessage.Item1.Item1 + " --gtest_filter=" + $errorMessage.Item1.Item2 + "." + $errorMessage.Item1.Item3 + " )"
         Write-Host  $reproLine -foregroundcolor "Red"
     }
 }

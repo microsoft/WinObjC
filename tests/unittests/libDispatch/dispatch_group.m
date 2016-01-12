@@ -45,9 +45,9 @@ dispatch_group_t create_group(size_t count, int delay) {
                              queue,
                              ^{
                                  if (delay) {
-                                     fprintf(stderr, "sleeping...\n");
+                                     LOG_INFO("sleeping...\n");
                                      Sleep(delay);
-                                     fprintf(stderr, "done.\n");
+                                     LOG_INFO("done.\n");
                                  }
                              });
 

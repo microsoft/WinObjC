@@ -69,7 +69,7 @@ static void cancel_handler(void* context) {
 
 static void event_handler(void* context) {
     ++i;
-    fprintf(stderr, "%d\n", i);
+    LOG_INFO("%d\n", i);
     if (i >= 7) {
         dispatch_source_cancel(timer);
     } else if (i == 1) {
