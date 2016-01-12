@@ -68,6 +68,9 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
             CGPoint startPoint = CGPointMake(curX, y);
             __block float newX = curX;
 
+            //  Ask the typesetter to fit and characters within a given width; it will call us
+            //  to ask what the maximum width is, once it figures out the height it needs to put
+            //  a single character in
             CFIndex pos =
                 CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
                                                                   curIdx,
@@ -115,7 +118,9 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 curX = startPoint.x + 5.0f;
             }
 
+            //  Did the typesetter determine that we can fit at least one character?
             if (pos != curIdx) {
+                //  Yes, we will record what the (x,y) origin is and create a new CTLine from it
                 CFRange lineRange;
                 lineRange.location = curIdx;
                 lineRange.length = pos - curIdx;
@@ -132,6 +137,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 _lineOrigins.push_back(lineOrigin);
                 CFRelease(line);
 
+                //  Record what the height of the line was; we'll need to adjust all lines that fit within 
                 curIdx = pos;
                 if (lineOrigin.x + width > _totalSize.width) {
                     _totalSize.width = lineOrigin.x + width;
@@ -553,7 +559,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 }
 
 /**
- @Status Interoparable
+ @Status Interoperable
 */
 
 - (CGRect)lineFragmentRectForGlyphAtIndex:(NSUInteger)idx effectiveRange:(NSRange*)outGlyphRange {
@@ -583,7 +589,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 }
 
 /**
- @Status Interoparable
+ @Status Interoperable
 */
 
 - (CGPoint)locationForGlyphAtIndex:(NSUInteger)idx {
@@ -638,7 +644,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 }
 
 /**
- @Status Interoparable
+ @Status Interoperable
 */
 
 - (void)textContainerChangedGeometry:(NSTextContainer*)container {

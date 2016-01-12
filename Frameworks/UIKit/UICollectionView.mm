@@ -623,7 +623,8 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Caveat -- this appears to be an extension.
+   @Status Caveat
+   @Notes This appears to be an extension.
 */
 - (id)dequeueReusableOrCreateDecorationViewOfKind:(NSString*)elementKind forIndexPath:(NSIndexPath*)indexPath {
     NSMutableArray* reusableViews = _decorationViewReuseQueues[elementKind];

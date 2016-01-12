@@ -219,7 +219,7 @@ CGColorRef CGColorCreateGenericRGB(float r, float g, float b, float a) {
 }
 
 /**
- @Status Gap
+ @Status Interoperable
 */
 bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     float components1[4] = { 0.0f };
