@@ -5,6 +5,7 @@ LIBRARY Foundation
      _OBJC_CLASS_NSArray DATA
      _OBJC_CLASS_NSAssertionHandler DATA
      _OBJC_CLASS_NSAttributedString DATA
+     _OBJC_CLASS_NSAutoreleasePool DATA
      _OBJC_CLASS_NSBlockOperation DATA
      _OBJC_CLASS_NSBundle DATA
      _OBJC_CLASS_NSCFBridgeBase DATA
@@ -58,6 +59,7 @@ LIBRARY Foundation
      _OBJC_CLASS_NSNull DATA
      _OBJC_CLASS_NSNumber DATA
      _OBJC_CLASS_NSNumberFormatter DATA
+     _OBJC_CLASS_NSObject DATA
      _OBJC_CLASS_NSOperation DATA
      _OBJC_CLASS_NSOperationQueue DATA
      _OBJC_CLASS_NSOrderedSet DATA
@@ -99,6 +101,7 @@ LIBRARY Foundation
      __objc_class_name_NSArray CONSTANT
      __objc_class_name_NSAssertionHandler CONSTANT
      __objc_class_name_NSAttributedString CONSTANT
+     __objc_class_name_NSAutoreleasePool CONSTANT
      __objc_class_name_NSBlockOperation CONSTANT
      __objc_class_name_NSBundle CONSTANT
      __objc_class_name_NSCFBridgeBase CONSTANT
@@ -152,6 +155,7 @@ LIBRARY Foundation
      __objc_class_name_NSNull CONSTANT
      __objc_class_name_NSNumber CONSTANT
      __objc_class_name_NSNumberFormatter CONSTANT
+     __objc_class_name_NSObject CONSTANT
      __objc_class_name_NSOperation CONSTANT
      __objc_class_name_NSOperationQueue CONSTANT
      __objc_class_name_NSOrderedSet CONSTANT
@@ -583,3 +587,6 @@ LIBRARY Foundation
      _NSStringFromHResult
      _NSErrorFromFailureInfo
      _NSExceptionFromFailureInfo
+
+     ; Private
+     _OBJC_CLASS__NSBlockAdapter DATA ; Ensure that this gets included in the .dll

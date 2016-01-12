@@ -8,11 +8,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 
-__declspec(dllimport)   //  NSAutoreleasePool lives in objcrt
+FOUNDATION_EXPORT_CLASS
 @interface NSAutoreleasePool : NSObject
-+(void)addObject:object;
-
--(void)addObject:object;
-
--(void)drain;
++ (void)addObject:object;
+- (void)addObject:object;
+- (void)drain;
 @end

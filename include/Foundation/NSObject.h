@@ -83,7 +83,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @end
 
 /* The root implementation of NSObject is contained in objcrt */
-__declspec(dllimport) @interface NSObject<NSObject> {
+FOUNDATION_EXPORT_CLASS
+__attribute__((objc_root_class))
+@interface NSObject <NSObject> {
 @public
     Class isa;
 }
@@ -108,8 +110,6 @@ __declspec(dllimport) @interface NSObject<NSObject> {
 + (BOOL)resolveInstanceMethod:(SEL)selector;
 + (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
 + (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
-+ copyWithZone:(NSZone*)zone;
-+ mutableCopyWithZone:(NSZone*)zone;
 
 + (NSString*)description;
 
