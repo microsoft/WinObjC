@@ -14,8 +14,11 @@
 //
 //******************************************************************************
 
+#define GL_GLEXT_PROTOTYPES
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
+
+#include <OpenGLES/EAGL.h>
 
 #import <Starboard.h>
 
@@ -33,6 +36,12 @@
     GLuint _stencilbuffer;
 
     CGSize _curSize;
+    BOOL _drawableFormatsUpdated;
+
+    GLKViewDrawableColorFormat _drawableColorFormat;
+    GLKViewDrawableDepthFormat _drawableDepthFormat;
+    GLKViewDrawableStencilFormat _drawableStencilFormat;
+    GLKViewDrawableMultisample _drawableMultisample;
 }
 
 + (Class)layerClass {
@@ -53,6 +62,78 @@
     return (GLuint)self.frame.size.height;
 }
 
+/**
+   @Status Interoperable
+*/
+-(GLKViewDrawableColorFormat) drawableColorFormat {
+    return _drawableColorFormat;
+}
+
+/**
+   @Status Interoperable
+*/
+-(GLKViewDrawableDepthFormat) drawableDepthFormat {
+    return _drawableDepthFormat;
+}
+
+/**
+   @Status Interoperable
+*/
+-(GLKViewDrawableStencilFormat) drawableStencilFormat {
+    return _drawableStencilFormat;
+}
+
+/**
+   @Status Interoperable
+*/
+-(GLKViewDrawableMultisample)drawableMultisample {
+    return _drawableMultisample;
+}
+
+/**
+   @Status Interoperable
+*/
+-(void)setDrawableColorFormat:(GLKViewDrawableColorFormat)colorFormat {
+    if (_drawableColorFormat != colorFormat) {
+        _drawableColorFormat = colorFormat;
+        _drawableFormatsUpdated = TRUE;
+        [self setNeedsLayout];
+    }
+}
+
+/**
+   @Status Interoperable
+*/
+-(void)setDrawableDepthFormat:(GLKViewDrawableDepthFormat)depthFormat {
+    if (_drawableDepthFormat != depthFormat) {
+        _drawableDepthFormat = depthFormat;
+        _drawableFormatsUpdated = TRUE;
+        [self setNeedsLayout];
+    }
+}
+
+/**
+   @Status Interoperable
+*/
+-(void)setDrawableStencilFormat:(GLKViewDrawableStencilFormat)stencilFormat {
+    if (_drawableStencilFormat != stencilFormat) {
+        _drawableStencilFormat = stencilFormat;
+        _drawableFormatsUpdated = TRUE;
+        [self setNeedsLayout];
+    }
+}
+
+/**
+   @Status Interoperable
+*/
+-(void)setDrawableMultisample:(GLKViewDrawableMultisample)multisample {
+    if (_drawableMultisample != multisample) {
+        _drawableMultisample = multisample;
+        _drawableFormatsUpdated = TRUE;
+        [self setNeedsLayout];
+    }
+}
+
 - (void)commonInit {
     self.contentMode = UIViewContentModeRedraw;
 
@@ -63,9 +144,12 @@
     self.drawableColorFormat = GLKViewDrawableColorFormatWindow;
     self.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
     self.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
+    self.drawableMultisample = GLKViewDrawableMultisampleNone;
 
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
+    _drawableFormatsUpdated = FALSE;
+        
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
 }
@@ -106,11 +190,11 @@
 
 - (BOOL)_renderFrame {
     BOOL res = FALSE;
+
     [EAGLContext setCurrentContext:self.context];
     if ([self.delegate respondsToSelector:@selector(glkView:drawInRect:)]) {
         int width = (int)[self.layer _pixelWidth];
         int height = (int)[self.layer _pixelHeight];
-
         glViewport(0, 0, width, height);
         [self.delegate glkView:self drawInRect:self.frame];
         res = TRUE;
@@ -132,11 +216,12 @@
     [super layoutSubviews];
 
     CGRect rect = [self frame];
-    if (CGSizeEqualToSize(rect.size, _curSize)) {
+    if (CGSizeEqualToSize(rect.size, _curSize) && !_drawableFormatsUpdated) {
         return;
     }
 
     _curSize = rect.size;
+    _drawableFormatsUpdated = FALSE;
 
     self.layer.frame = rect;
     self.layer.bounds = rect;
@@ -175,20 +260,27 @@
     self.layer.contentsScale = [[UIApplication displayMode] currentMagnification] * [[UIApplication displayMode] hostScreenScale];
 #endif
 
-    if (self.drawableColorFormat != GLKViewDrawableColorFormatWindow) {
-        CAEAGLLayer* l = (CAEAGLLayer*)self.layer;
-        NSMutableDictionary* md = [NSMutableDictionary dictionaryWithDictionary:l.drawableProperties];
+    // Assumes 4x from here on out, presumably other configs can be done.
+    bool antialiased = (self.drawableMultisample != GLKViewDrawableMultisampleNone);
 
+    CAEAGLLayer* glLayer = (CAEAGLLayer*)self.layer;
+    NSMutableDictionary* drawProps = [[NSMutableDictionary alloc] init];
+
+    if (self.drawableColorFormat != GLKViewDrawableColorFormatWindow) {        
         if (self.drawableColorFormat == GLKViewDrawableColorFormatRGBA8888) {
-            [md setObject:kEAGLColorFormatRGBA8 forKey:kEAGLDrawablePropertyColorFormat];
+            [drawProps setObject:kEAGLColorFormatRGBA8 forKey:kEAGLDrawablePropertyColorFormat];
         } else if (GLKViewDrawableColorFormatRGB565) {
-            [md setObject:kEAGLColorFormatRGB565 forKey:kEAGLDrawablePropertyColorFormat];
+            [drawProps setObject:kEAGLColorFormatRGB565 forKey:kEAGLDrawablePropertyColorFormat];
         } else if (GLKViewDrawableColorFormatSRGBA8888) {
-            [md setObject:kEAGLColorFormatRGBA8 forKey:kEAGLDrawablePropertyColorFormat];
+            [drawProps setObject:kEAGLColorFormatRGBA8 forKey:kEAGLDrawablePropertyColorFormat];
         }
-
-        l.drawableProperties = md;
     }
+
+    if (antialiased) {
+        [drawProps setObject:kEAGLMultisample4X forKey:kEAGLMultisample4X];
+    }
+
+    glLayer.drawableProperties = drawProps;
 
     [ctx renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.layer];
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderbuffer);
@@ -209,7 +301,11 @@
 
         glGenRenderbuffers(1, &_depthbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, _depthbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
+        if (antialiased) {
+            glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 4, fmt, surfaceWidth, surfaceHeight);
+        } else {
+            glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
+        }
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
     }
 
@@ -222,9 +318,14 @@
 
         glGenRenderbuffers(1, &_stencilbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, _stencilbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
+        if (antialiased) {
+            glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 4, fmt, surfaceWidth, surfaceHeight);
+        } else {
+            glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
+        }
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _stencilbuffer);
     }
+    
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
 }
 

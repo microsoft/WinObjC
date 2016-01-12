@@ -43,4 +43,6 @@ EAGL_EXPORT_CLASS
 
 @end
 
+EAGL_EXPORT NSString* const kEAGLMultisample4X;
+
 #endif /* _EAGL_H_ */

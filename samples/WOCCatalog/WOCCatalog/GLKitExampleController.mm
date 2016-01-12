@@ -19,6 +19,7 @@
 #import <OpenGLES/ES2/glext.h>
 #include <vector>
 #include <algorithm>
+#include <UIKit/UIKit.h>
 
 struct Vertex {
     Vertex() {}
@@ -258,6 +259,9 @@ void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short>& indi
     size_t _archStart;
     GLKBaseEffect* _effect;
     float _rotation;
+
+    UILabel* _switchLabel;
+    UISwitch* _switchControl;
 }
 
 -(void)createGLData
@@ -310,12 +314,38 @@ void buildGeometry(std::vector<Vertex>& verts, std::vector<unsigned short>& indi
     _outputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _outputView.context = _ctx;
     _outputView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+    _outputView.drawableMultisample = GLKViewDrawableMultisample4X;
     _outputView.delegate = self;
     self.view = _outputView;
 
+    CGRect bounds = CGRectMake(55, 40, 300, 30);
+    _switchLabel = [[UILabel alloc] initWithFrame:bounds];
+    [_switchLabel setBackgroundColor:nil];
+    [_switchLabel setTextColor:[UIColor yellowColor]];
+    [_switchLabel setFont:[UIFont boldSystemFontOfSize:24.0f]];
+    [_switchLabel setText: @"Multisampling on"];
+    [_outputView addSubview:_switchLabel];
+
+    bounds = CGRectMake(0, 40, 40, 30);
+    _switchControl = [[UISwitch alloc] initWithFrame: bounds];
+    _switchControl.backgroundColor = [UIColor clearColor];
+    [_switchControl setOn:TRUE animated:FALSE];
+    [_switchControl addTarget:self action:@selector(switchFlip:) forControlEvents:UIControlEventValueChanged];
+    [_outputView addSubview:_switchControl];
+    
     [self createGLData];
 
     _rotation = 0.f;
+}
+
+-(IBAction)switchFlip:(id)sender {
+    if (_outputView.drawableMultisample == GLKViewDrawableMultisampleNone) {
+        [_switchLabel setText: @"Multisampling on"];
+        _outputView.drawableMultisample = GLKViewDrawableMultisample4X;
+    } else {
+        [_switchLabel setText: @"Multisampling off"];
+        _outputView.drawableMultisample = GLKViewDrawableMultisampleNone;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
