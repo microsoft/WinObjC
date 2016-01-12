@@ -14,35 +14,23 @@
 //
 //******************************************************************************
 
-#ifndef _EAGL_H_
-#define _EAGL_H_
+#import "LifetimeCounting.h"
 
-#import <Foundation/Foundation.h>
-#import <OpenGLES/EAGLExport.h>
-
-enum {
-   kEAGLRenderingAPIOpenGLES1 = 1,
-   kEAGLRenderingAPIOpenGLES2 = 2
-};
-typedef uint32_t EAGLRenderingAPI;
-
-@interface EAGLSharegroup : NSObject
+@implementation LifetimeCounting
+- (id)retain {
+    arcSafeRetainCount++;
+    return self;
+}
+- (oneway void)release {
+    arcSafeReleaseCount++;
+}
+- (unsigned)arcSafeRetainCount {
+    return arcSafeRetainCount;
+}
+- (unsigned)arcSafeReleaseCount {
+    return arcSafeReleaseCount;
+}
+- (void)destroy /* ARC escape hatch */ {
+    [self dealloc];
+}
 @end
-
-EAGL_EXPORT_CLASS
-@interface EAGLContext : NSObject
-@property (readonly) EAGLSharegroup *sharegroup;
-
-- (id)initWithAPI:(EAGLRenderingAPI)api;
-- (id)initWithAPI:(EAGLRenderingAPI)api sharegroup:(EAGLSharegroup *)sharegroup;
-- (BOOL) presentRenderbuffer: (int) obj;
-- (BOOL) renderbufferStorage: (int) dest fromDrawable: (id) layer;
-
-+ (BOOL) setCurrentContext: (id) newContext;
-+ (EAGLContext *) currentContext;
-
-@end
-
-EAGL_EXPORT NSString* const kEAGLMultisample4X;
-
-#endif /* _EAGL_H_ */

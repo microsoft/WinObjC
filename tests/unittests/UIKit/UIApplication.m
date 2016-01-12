@@ -80,14 +80,12 @@ BOOL _launchReady;
     _launchReady = YES;
     [_condition signal];
     [_condition unlock];
-
 }
 
 + (void)queryUriSupportAsync:(WFUri*)uri
       launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
                      success:(void (^)(WSLaunchQuerySupportStatus))success
                      failure:(void (^)(NSError*))failure {
-
     [_condition lock];
     if (_querySuccessFunction == nil) {
         _querySuccessFunction = Block_copy(success);
@@ -153,7 +151,9 @@ BOOL _launchReady;
 
 // On a separate thread, delivers launch results
 void invokeLaunchSuccess(BOOL didLaunch) {
-    NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class] selector:@selector(invokeLaunchSuccess:) object:[NSNumber numberWithBool:didLaunch]];
+    NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class]
+                                               selector:@selector(invokeLaunchSuccess:)
+                                                 object:[NSNumber numberWithBool:didLaunch]];
     [thread autorelease];
     [thread start];
 }
@@ -168,7 +168,9 @@ void invokeLaunchFailure() {
 
 // On a separate thread, delivers query results
 void invokeQuerySuccess(unsigned int status) {
-    NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class] selector:@selector(invokeQuerySuccess:) object:[NSNumber numberWithUnsignedInteger:status]];
+    NSThread* thread = [[NSThread alloc] initWithTarget:[MockWSLauncher class]
+                                               selector:@selector(invokeQuerySuccess:)
+                                                 object:[NSNumber numberWithUnsignedInteger:status]];
     [thread autorelease];
     [thread start];
 }
@@ -264,7 +266,6 @@ TEST(UIKit, UIApplicationCanOpenURLDoubleCall) {
     [MockWSLauncher initSingleton];
     UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
     NSURL* testURL = [NSURL URLWithString:@"http://www.bing.com/news"];
-
 
     invokeQuerySuccess(WSLaunchQuerySupportStatusAvailable);
     invokeQuerySuccess(WSLaunchQuerySupportStatusNotSupported);

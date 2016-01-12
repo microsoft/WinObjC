@@ -22,6 +22,11 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEnums.h>
 
+typedef NS_ENUM(NSUInteger, GLKViewDrawableMultisample) {
+    GLKViewDrawableMultisampleNone,
+    GLKViewDrawableMultisample4X
+};
+
 @class GLKView;
 
 @protocol GLKViewDelegate
@@ -46,6 +51,7 @@ GLKIT_EXPORT_CLASS
 @property GLKViewDrawableColorFormat drawableColorFormat;
 @property GLKViewDrawableDepthFormat drawableDepthFormat;
 @property GLKViewDrawableStencilFormat drawableStencilFormat;
+@property GLKViewDrawableMultisample drawableMultisample;
 
 @property BOOL enableSetNeedsDisplay;
 

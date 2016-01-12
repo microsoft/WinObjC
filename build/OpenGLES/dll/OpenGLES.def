@@ -6,6 +6,7 @@ LIBRARY OpenGLES
         kEAGLColorFormatRGBA8 DATA
         kEAGLDrawablePropertyColorFormat DATA
         kEAGLDrawablePropertyRetainedBacking DATA
+        kEAGLMultisample4X DATA
         glFramebufferTexture2D = EXPORT_glFramebufferTexture2D
         glFramebufferTexture2DOES = EXPORT_glFramebufferTexture2DOES
         glDiscardFramebufferEXT = EXPORT_glDiscardFramebufferEXT
@@ -207,3 +208,4 @@ LIBRARY OpenGLES
         glDeleteVertexArraysOES = EXPORT_glDeleteVertexArraysOES
         glGenVertexArraysOES = EXPORT_glGenVertexArraysOES
         glIsVertexArrayOES = EXPORT_glIsVertexArrayOES
+        glRenderbufferStorageMultisampleANGLE = EXPORT_glRenderbufferStorageMultisampleANGLE

@@ -14,20 +14,9 @@
 //
 //******************************************************************************
 
-#pragma once
-
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioFile.h>
 
-// LifetimeCounting is a class that tracks its reference counting behaviour.
-// It is intended to be used in reference counting tests. 
-//
-// Seeing as Clang with ARC on will refuse to emit -retain, -release,
-// -dealloc, and -retainCount, the property accessors have to have rather silly names.
-@interface LifetimeCounting : NSObject {
-    unsigned arcSafeRetainCount;
-    unsigned arcSafeReleaseCount;
+TEST(AudioToolbox, ExampleTest) {
 }
-- (unsigned)arcSafeRetainCount;
-- (unsigned)arcSafeReleaseCount;
-- (void)destroy /* ARC escape hatch */;
-@end

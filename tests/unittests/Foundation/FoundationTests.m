@@ -339,7 +339,7 @@ TEST(Foundation, KeyValueObservation_BasicChangeCaptureOld) { // Basic change no
 }
 
 TEST(Foundation, KeyValueObservation_CascadingNotificationWithEmptyLeaf) { // Cascading change notification testing subscribing to nil AND
-                                                                           // property replacement
+    // property replacement
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
@@ -498,7 +498,7 @@ TEST(Foundation, KeyValueObservation_SetValueForKeyIvarNotification) { // Notifi
 }
 
 TEST(Foundation, KeyValueObservation_SetValueForKeyPropertyNotification) { // Notification through setValue:forKey: to make sure that we do
-                                                                           // not get two notifications for the same change.
+    // not get two notifications for the same change.
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 

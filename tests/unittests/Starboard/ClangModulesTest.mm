@@ -14,24 +14,38 @@
 //
 //******************************************************************************
 
-#import "LifetimeCounting.h"
+#include "gtest-api.h"
 
-@implementation LifetimeCounting
-- (id)retain {
-    arcSafeRetainCount++;
-    return self;
-}
-- (oneway void)release {
-    arcSafeReleaseCount++;
-}
-- (unsigned)arcSafeRetainCount {
-    return arcSafeRetainCount;
-}
-- (unsigned)arcSafeReleaseCount {
-    return arcSafeReleaseCount;
-}
-- (void)destroy /* ARC escape hatch */ {
-    [self dealloc];
-}
-@end
+@import AdSupport;
+@import AudioToolbox;
+@import AVFoundation;
+@import CFNetwork;
+@import CommonCrypto;
+@import CoreAudio;
+@import CoreBluetooth;
+@import CoreData;
+@import CoreFoundation;
+@import CoreGraphics;
+@import CoreImage;
+@import CoreLocation;
+@import CoreMedia;
+@import CoreTelephony;
+@import CoreText;
+@import CoreVideo;
+@import Foundation;
+@import GameKit;
+@import GLKit;
+@import MediaPlayer;
+@import MessageUI;
+@import OpenAL;
+@import OpenGLES;
+@import QuartzCore;
+@import Security;
+@import Social;
+@import StoreKit;
+@import SystemConfiguration;
+@import UIKit;
 
+TEST(ClangModules, BasicSanity) {
+    // If this file compiles successfully the test is considered to have passed.
+}

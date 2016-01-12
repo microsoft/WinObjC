@@ -14,35 +14,20 @@
 //
 //******************************************************************************
 
-#ifndef _EAGL_H_
-#define _EAGL_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
-#import <OpenGLES/EAGLExport.h>
 
-enum {
-   kEAGLRenderingAPIOpenGLES1 = 1,
-   kEAGLRenderingAPIOpenGLES2 = 2
-};
-typedef uint32_t EAGLRenderingAPI;
-
-@interface EAGLSharegroup : NSObject
+// LifetimeCounting is a class that tracks its reference counting behaviour.
+// It is intended to be used in reference counting tests.
+//
+// Seeing as Clang with ARC on will refuse to emit -retain, -release,
+// -dealloc, and -retainCount, the property accessors have to have rather silly names.
+@interface LifetimeCounting : NSObject {
+    unsigned arcSafeRetainCount;
+    unsigned arcSafeReleaseCount;
+}
+- (unsigned)arcSafeRetainCount;
+- (unsigned)arcSafeReleaseCount;
+- (void)destroy /* ARC escape hatch */;
 @end
-
-EAGL_EXPORT_CLASS
-@interface EAGLContext : NSObject
-@property (readonly) EAGLSharegroup *sharegroup;
-
-- (id)initWithAPI:(EAGLRenderingAPI)api;
-- (id)initWithAPI:(EAGLRenderingAPI)api sharegroup:(EAGLSharegroup *)sharegroup;
-- (BOOL) presentRenderbuffer: (int) obj;
-- (BOOL) renderbufferStorage: (int) dest fromDrawable: (id) layer;
-
-+ (BOOL) setCurrentContext: (id) newContext;
-+ (EAGLContext *) currentContext;
-
-@end
-
-EAGL_EXPORT NSString* const kEAGLMultisample4X;
-
-#endif /* _EAGL_H_ */

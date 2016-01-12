@@ -42,6 +42,7 @@ __declspec(thread) EAGLContext* tlsCurContext;
 static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
 @implementation EAGLContext {
+    BOOL _useMultisampling;
 }
 + (void)initialize {
     if (self == [EAGLContext class]) {
@@ -169,6 +170,8 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Only OpenGL ES 1.x and OpenGL ES 2.0 are supported (api=0x%x)", api];
     }
 
+    _useMultisampling = FALSE;
+
     _eglSurface = EGL_NO_SURFACE;
     _eglContext = EGL_NO_CONTEXT;
 
@@ -271,6 +274,14 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
  @Status Interoperable
 */
 - (BOOL)renderbufferStorage:(int)target fromDrawable:(CAEAGLLayer*)surface {
+
+    auto props = surface.drawableProperties;
+    if([props objectForKey:kEAGLMultisample4X] != nil) {
+        _useMultisampling = TRUE;
+    } else {
+        _useMultisampling = FALSE;
+    }
+    
     //  Delete any existing surface
     if (_eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay, _eglSurface);
@@ -304,7 +315,11 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         return FALSE;
     }
 
-    glRenderbufferStorage(target, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+    if (_useMultisampling) {
+        glRenderbufferStorageMultisampleANGLE(target, 4, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+    } else {
+        glRenderbufferStorage(target, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+    }
 
     surface.swapChainPanel.width = _rbWidth;
     surface.swapChainPanel.height = _rbHeight;
@@ -340,3 +355,4 @@ NSString* const kEAGLColorFormatRGBA8 = (NSString * const) @"kEAGLColorFormatRGB
 NSString* const kEAGLColorFormatRGB565 = (NSString * const) @"kEAGLColorFormatRGB565";
 NSString* const kEAGLDrawablePropertyColorFormat = (NSString * const) @"kEAGLDrawablePropertyColorFormat";
 NSString* const kEAGLDrawablePropertyRetainedBacking = (NSString * const) @"kEAGLDrawablePropertyRetainedBacking";
+NSString* const kEAGLMultisample4X = (NSString * const) @"kEAGLMultisample4X";

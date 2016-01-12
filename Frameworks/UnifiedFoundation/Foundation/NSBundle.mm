@@ -26,6 +26,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSFileManager.h"
 #include "Foundation/NSNib.h"
+#include "Foundation/NSException.h"
 
 #include <sys/stat.h>
 
@@ -39,7 +40,15 @@ static const int c_maxPath = 4096;
 static IWLazyClassLookup _LazyCALayer("UIDevice");
 
 bool isTabletDevice() {
-    return [[_LazyCALayer currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    @try {
+        return [[_LazyCALayer currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    } @catch (NSException* exception) {
+        if (![[exception name] isEqualToString:NSObjectNotAvailableException]) {
+            @throw exception;
+        }
+
+        return false;
+    }
 }
 
 class StringPool {

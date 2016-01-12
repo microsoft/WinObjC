@@ -202,10 +202,12 @@ TEST(NSFoundation, NSURL_checkResourceIsReachable) {
     ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
 
     NSFileManager* manager = [NSFileManager defaultManager];
-    NSURL *baseURL = [NSURL URLWithString: [manager currentDirectoryPath]];
-    NSURL *targetURL = [NSURL URLWithString: @"data/NSFileManagerUT.txt" relativeToURL:baseURL];
+    NSURL* baseURL = [NSURL URLWithString:[manager currentDirectoryPath]];
+    NSURL* targetURL = [NSURL URLWithString:@"data/NSFileManagerUT.txt" relativeToURL:baseURL];
     ASSERT_TRUE_MSG([targetURL checkResourceIsReachableAndReturnError:nullptr], "The target URL %@ exists", targetURL);
 
-    NSURL *targetURLNonExist = [NSURL URLWithString: @"data/foo.txt" relativeToURL:baseURL];
-    ASSERT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr], "The target %@URL does not exist", targetURLNonExist);
+    NSURL* targetURLNonExist = [NSURL URLWithString:@"data/foo.txt" relativeToURL:baseURL];
+    ASSERT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr],
+                     "The target %@URL does not exist",
+                     targetURLNonExist);
 }

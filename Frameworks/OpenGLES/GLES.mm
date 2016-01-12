@@ -952,3 +952,9 @@ EAGL_EXPORT void EXPORT_glGenVertexArraysOES(GLsizei n, GLuint* arrays) {
 EAGL_EXPORT GLboolean EXPORT_glIsVertexArrayOES(GLuint array) {
     return glIsVertexArrayOES(array);
 }
+
+EAGL_EXPORT void EXPORT_glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    glRenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
+}
+

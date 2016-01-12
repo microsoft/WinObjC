@@ -93,9 +93,9 @@ TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     NSURL* targetURL = [NSURL URLWithString:@"data/" relativeToURL:baseURL];
 
     // enumerate target URL
-    NSArray* urlContents = [manager contentsOfDirectoryAtURL:targetURL 
-                                  includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey] 
-                                                     options:(NSDirectoryEnumerationOptions)0 
+    NSArray* urlContents = [manager contentsOfDirectoryAtURL:targetURL
+                                  includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey]
+                                                     options:(NSDirectoryEnumerationOptions)0
                                                        error:nullptr];
 
     // verify only one file exists
