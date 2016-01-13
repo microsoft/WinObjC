@@ -33,7 +33,7 @@
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
     <SBResourceCompileAfterTargets Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">BuildLink</SBResourceCompileAfterTargets>
-    <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies</SBResourceComputeTargets>
+    <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions</SBResourceComputeTargets>
   </PropertyGroup>
 
   <Target
