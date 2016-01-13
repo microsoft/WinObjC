@@ -275,7 +275,8 @@ CFTypeRef __CFMutableAttributedString::getAttribute(CFIndex loc, cf_attrmap::ite
 CFDictionaryRef __CFMutableAttributedString::getAttributes(CFIndex loc, CFRange* outEffectiveRange) {
     _throwIfOutOfBounds(loc);
 
-    CFMutableDictionaryRef returnValue = CFDictionaryCreateMutable(nullptr, 0, nullptr, nullptr);
+    CFMutableDictionaryRef returnValue =
+        CFDictionaryCreateMutable(nullptr, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     CFRange effectiveRangeForAttribute;
 
     // Because the contract for the API stipulates that it returns a range where the attributes are exactly the same,

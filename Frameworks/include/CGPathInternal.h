@@ -80,4 +80,5 @@ typedef struct {
 }
 @end
 
+COREGRAPHICS_EXPORT CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding);
 #endif

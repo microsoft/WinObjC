@@ -102,7 +102,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSSortDescriptor.h>
 #import <Foundation/NSStream.h>
 #import <Foundation/NSString.h>
-#import <Foundation/NSTask.h>
 #import <Foundation/NSThread.h>
 #import <Foundation/NSTimer.h>
 #import <Foundation/NSTimeZone.h>

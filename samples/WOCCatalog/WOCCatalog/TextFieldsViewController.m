@@ -102,7 +102,7 @@ static const CGFloat c_height = 40;
         CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
         UITextField* textField = [[UITextField alloc] initWithFrame:frame];
 
-        textField.background = [UIImage imageNamed:@"photo5.jpg"];
+        textField.background = [UIImage imageNamed:@"tf_bgimage.jpg"];
         textField.textColor = [UIColor blackColor];
         textField.font = [UIFont systemFontOfSize:17.0];
         textField.placeholder = @"placeholder text";

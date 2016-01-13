@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#define GL_GLEXT_PROTOTYPES
 #include "GLES2/gl2.h"
 #include "OpenGLES20Context.h"
 #include "ShaderProgram.h"
@@ -1654,6 +1653,42 @@ GLboolean OpenGLES20Context::glUnmapBufferOES(GLenum target) {
     assert(0);
     // return ::glUnmapBufferOES(target);
     return 0;
+#else
+    LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
+    return 0;
+#endif
+}
+
+void OpenGLES20Context::glBindVertexArrayOES(GLuint array) {
+#if GL_OES_vertex_array_object
+    ::glBindVertexArrayOES(array);
+    CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
+#else
+    LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
+#endif
+}
+
+void OpenGLES20Context::glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays) {
+#if GL_OES_vertex_array_object
+    ::glDeleteVertexArraysOES(n, arrays);
+    CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
+#else
+    LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
+#endif
+}
+
+void OpenGLES20Context::glGenVertexArraysOES(GLsizei n, GLuint* arrays) {
+#if GL_OES_vertex_array_object
+    ::glGenVertexArraysOES(n, arrays);
+    CHECK_GL_ERROR(glGetError(), __FILE__, __LINE__);
+#else
+    LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
+#endif
+}
+
+GLboolean OpenGLES20Context::glIsVertexArrayOES(GLuint array) {
+#if GL_OES_vertex_array_object
+    return ::glIsVertexArrayOES(array);
 #else
     LOG_DEBUG_MESSAGE(__FILE__, __LINE__, "WARNING: Not supported");
     return 0;

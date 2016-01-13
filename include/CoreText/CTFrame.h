@@ -7,11 +7,13 @@
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef struct __CTFrame *CTFrameRef;
+typedef struct __CTFrame* CTFrameRef;
 
 CORETEXT_EXPORT CFArrayRef CTFrameGetLines(CTFrameRef frame);
 CORETEXT_EXPORT void CTFrameGetLineOrigins(CTFrameRef frame, CFRange range, CGPoint origins[]);
 CORETEXT_EXPORT void CTFrameDraw(CTFrameRef frame, CGContextRef context);
+
+CORETEXT_EXPORT CGSize CTFrameGetExtents(CTFrameRef frame);
 
 DISABLE_IMPLICIT_BRIDGING
 

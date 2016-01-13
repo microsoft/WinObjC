@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Foundation/NSValue.h>
 #import <CoreLocation/CoreLocationExport.h>
 #import <stdint.h> // uint32_t
 
@@ -83,4 +84,9 @@ CORELOCATION_EXPORT_CLASS
                    speed:(CLLocationSpeed)speed
                timestamp:(NSDate*)timestamp;
 
+@end
+
+@interface NSValue(CLLocationCoordinate2DAdditions)
++ (NSValue*)valueWithMKCoordinate:(CLLocationCoordinate2D)coordinate;
+- (CLLocationCoordinate2D)MKCoordinateValue;
 @end

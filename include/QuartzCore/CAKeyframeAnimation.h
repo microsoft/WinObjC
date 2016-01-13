@@ -19,6 +19,14 @@
 
 #import <QuartzCore/CAPropertyAnimation.h>
 
+CA_EXPORT NSString* const kCAAnimationLinear;
+CA_EXPORT NSString* const kCAAnimationDiscrete;
+CA_EXPORT NSString* const kCAAnimationPaced;
+CA_EXPORT NSString* const kCAAnimationCubic;
+CA_EXPORT NSString* const kCAAnimationCubicPaced;
+CA_EXPORT NSString* const kCAAnimationRotateAuto;
+CA_EXPORT NSString* const kCAAnimationRotateAutoReverse;
+
 CA_EXPORT_CLASS
 @interface CAKeyframeAnimation : CAPropertyAnimation
 

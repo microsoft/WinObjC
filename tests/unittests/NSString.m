@@ -86,3 +86,17 @@ TEST(NSString, NSStringTests) {
     NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
     ASSERT_OBJCEQ(expectedString, actualString);
 }
+
+TEST(NSString, NSString_FastestEncoding) {
+    NSString* asciiStr = @"ObjectiveC";
+    NSString* extendedAsciiStr = @"ObjectiveC éééé";
+    NSString* chineseStr = @"中文";
+
+    ASSERT_EQ(NSASCIIStringEncoding, [asciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [extendedAsciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [chineseStr fastestEncoding]);
+
+    ASSERT_EQ(kCFStringEncodingASCII, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(asciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(extendedAsciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(chineseStr)));
+}

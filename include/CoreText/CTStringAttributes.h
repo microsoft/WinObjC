@@ -17,7 +17,7 @@
 #ifndef _CTSTRINGATTRIBUTES_H_
 #define _CTSTRINGATTRIBUTES_H_
 
-#import <StarboardExport.h>
+#import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CFString.h>
 
 enum {

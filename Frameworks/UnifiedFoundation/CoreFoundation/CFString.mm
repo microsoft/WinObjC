@@ -67,6 +67,9 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
         case NSISOLatin1StringEncoding:
             return kCFStringEncodingASCII;
 
+        case NSUnicodeStringEncoding: // Also NSUTF16StringEncoding = NSUnicodeStringEncoding
+            return kCFStringEncodingUnicode;
+
         case NSUTF16LittleEndianStringEncoding:
             return kCFStringEncodingUTF16LE;
 
@@ -102,9 +105,8 @@ CFIndex CFStringGetLength(CFStringRef self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CFStringEncoding CFStringGetFastestEncoding(CFStringRef self) {
-    UNIMPLEMENTED();
-    return 0;
+    return CFStringConvertNSStringEncodingToEncoding([(NSString*)self fastestEncoding]);
 }

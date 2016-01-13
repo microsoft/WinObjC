@@ -19,6 +19,10 @@
 #elif defined(_M_X64)
 #define __x86_64__
 #define __LLP64__
+#elif defined(WINOBJC) && defined(_M_ARM)
+#ifndef __arm__
+ #define __arm__
+#endif
 #else
 #error Unsupported architecture
 #endif

@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSTask.h"
+#pragma once
+#import <Foundation/NSLock.h>
 
-@implementation NSTask
-
+@interface NSLock (Internal)
+- (BOOL)isLocked;
 @end

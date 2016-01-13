@@ -24,6 +24,7 @@
 #include "Foundation/NSData.h"
 #include "Foundation/NSNull.h"
 #include "NSNibUnarchiver.h"
+#include "NSUnarchiverInternal.h"
 
 #define NIBOBJ_INT8 0x00
 #define NIBOBJ_INT16 0x01
@@ -205,14 +206,6 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
 
         // EbrDebugLog("Instantiating %s\n", pObj->className);
         pObj->cachedId = [classId alloc];
-
-        if ([pObj->cachedId respondsToSelector:@selector(instantiateWithCoder:)]) {
-            pushObject(self, pObj);
-            id orig = pObj->cachedId;
-            pObj->cachedId = [pObj->cachedId instantiateWithCoder:(id)self];
-            [orig autorelease];
-            popObject(self);
-        }
 
         pushObject(self, pObj);
         if ([pObj->cachedId respondsToSelector:@selector(initWithCoder:)]) {
@@ -699,6 +692,10 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
     _bundle = nil;
 
     [super dealloc];
+}
+
+- (void)_swapActiveObject:(id)object {
+    curObject(self)->cachedId = object;
 }
 
 @end

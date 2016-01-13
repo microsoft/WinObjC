@@ -16,9 +16,11 @@
 
 #import "Starboard.h"
 #import "UIClassSwapper.h"
+#import "NSUnarchiverInternal.h"
 
 @implementation UIClassSwapper
-- (id)instantiateWithCoder:(id)coder {
+
+- (id)initWithCoder:(id)coder {
     _className = [[coder decodeObjectForKey:@"UIClassName"] copy];
     _originalClassName = [[coder decodeObjectForKey:@"UIOriginalClassName"] copy];
     const char* identifier = [_className UTF8String];
@@ -27,12 +29,20 @@
     EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
     id classNameId = objc_getClass(identifier);
 
+    [self autorelease];
+
     if (classNameId != nil) {
-        return [classNameId alloc];
+        id ret = [classNameId alloc];
+        [coder _swapActiveObject:ret];
+        return [ret initWithCoder:coder];
     } else {
         EbrDebugLog("Class %s not found!\n", identifier);
         return nil;
     }
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 - (void)dealloc {

@@ -18,9 +18,10 @@
 #import <Foundation/Foundation.h>
 
 void VerifyJSONObjectWithDataSucceeds(NSString* dataString, NSJSONWritingOptions opts, id expectedResult) {
-    NSData *jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err = nil;
+    NSData* jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError* err = nil;
     id actualResult = [NSJSONSerialization JSONObjectWithData:jsonData options:opts error:&err];
+
     ASSERT_EQ_MSG(nil, err, "FAILED: err != nil");
     ASSERT_OBJCEQ_MSG(expectedResult, actualResult, "FAILED: expected (%@) != actual (%@)", expectedResult, actualResult);
 }
@@ -29,9 +30,10 @@ void VerifyJSONObjectWithDataFails(NSString* dataString,
                                    NSJSONWritingOptions opts,
                                    NSInteger expectedErrorCode,
                                    NSString* expectedErrorDescription) {
-    NSData *jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err = nil;
+    NSData* jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError* err = nil;
     id actualResult = [NSJSONSerialization JSONObjectWithData:jsonData options:opts error:&err];
+
     ASSERT_EQ_MSG(nil, actualResult, "FAILED: actualResult != nil");
     ASSERT_OBJCNE_MSG(nil, err, "FAILED: err == nil");
     ASSERT_OBJCEQ_MSG(@"NSCocoaErrorDomain", [err domain], "FAILED: expected error with domain NSCocoaErrorDomain");
@@ -45,8 +47,8 @@ void VerifyJSONObjectWithDataFails(NSString* dataString,
 }
 
 void VerifyJSONObjectWithDataThrows(NSString* dataString, NSJSONWritingOptions opts) {
-    NSError *err = nil;
-    NSData *jsonData = nil;
+    NSError* err = nil;
+    NSData* jsonData = nil;
     if (dataString != nil) {
         jsonData = [dataString dataUsingEncoding:NSUTF8StringEncoding];
     }
@@ -55,15 +57,16 @@ void VerifyJSONObjectWithDataThrows(NSString* dataString, NSJSONWritingOptions o
 }
 
 void VerifyDataWithJSONObjectSucceeds(id testObject, NSString* expectedResult) {
-    NSError *err = nil;
+    NSError* err = nil;
     NSData* result = [NSJSONSerialization dataWithJSONObject:testObject options:0 error:&err];
     NSString* actualResult = [[[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding] autorelease];
+
     ASSERT_EQ_MSG(nil, err, "FAILED: err != nil");
     ASSERT_OBJCEQ_MSG(expectedResult, actualResult, "FAILED: expected (%@) != actual (%@)", expectedResult, actualResult);
 }
 
 void VerifyDataWithJSONObjectFails(id testObject, NSInteger expectedErrorCode, NSString* expectedErrorDescription) {
-    NSError *err = nil;
+    NSError* err = nil;
     NSData* result = [NSJSONSerialization dataWithJSONObject:testObject options:0 error:&err];
     NSString* actualResult = [[[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_EQ_MSG(nil, actualResult, "FAILED: actualResult != nil");
@@ -79,7 +82,7 @@ void VerifyDataWithJSONObjectFails(id testObject, NSInteger expectedErrorCode, N
 }
 
 void VerifyDataWithJSONObjectThrows(id testObject) {
-    NSError *err = nil;
+    NSError* err = nil;
     ASSERT_ANY_THROW([NSJSONSerialization dataWithJSONObject:testObject options:0 error:&err]);
 }
 
@@ -94,13 +97,13 @@ TEST(Foundation, JSONObjectWithDataTests) {
     NSString* testString8 = nil;
 
     // success cases
-    VerifyJSONObjectWithDataSucceeds(testString1, 4, (id) [NSNumber numberWithInteger:1]);
-    VerifyJSONObjectWithDataSucceeds(testString2, 4, (id) [NSNumber numberWithBool:NO]);
+    VerifyJSONObjectWithDataSucceeds(testString1, 4, (id)[NSNumber numberWithInteger:1]);
+    VerifyJSONObjectWithDataSucceeds(testString2, 4, (id)[NSNumber numberWithBool:NO]);
     VerifyJSONObjectWithDataSucceeds(testString4, 4, (id) @"foo");
-    VerifyJSONObjectWithDataSucceeds(testString5, 0, (id) @[@1,@2,@3,@4,@5]);
-    VerifyJSONObjectWithDataSucceeds(testString6, 0, (id) @{@"foo":@"1",@"bar":@"2"});
-    VerifyJSONObjectWithDataSucceeds(testString5, 1, (id) @[@1,@2,@3,@4,@5]);
-    VerifyJSONObjectWithDataSucceeds(testString6, 1, (id) @{@"foo":@"1",@"bar":@"2"});
+    VerifyJSONObjectWithDataSucceeds(testString5, 0, (id) @[ @1, @2, @3, @4, @5 ]);
+    VerifyJSONObjectWithDataSucceeds(testString6, 0, (id) @{ @"foo" : @"1", @"bar" : @"2" });
+    VerifyJSONObjectWithDataSucceeds(testString5, 1, (id) @[ @1, @2, @3, @4, @5 ]);
+    VerifyJSONObjectWithDataSucceeds(testString6, 1, (id) @{ @"foo" : @"1", @"bar" : @"2" });
 
     // error cases
     NSString* fragmentDescription = @"JSON text did not start with array or object and option to allow fragments not set.";
@@ -117,14 +120,14 @@ TEST(Foundation, JSONObjectWithDataTests) {
 
 TEST(Foundation, DataWithJSONObjectTests) {
     id testObject1 = nil;
-    id testObject2 = (id) [NSNumber numberWithBool:NO];
-    id testObject3 = (id) [NSNumber numberWithInteger:1];
+    id testObject2 = (id)[NSNumber numberWithBool:NO];
+    id testObject3 = (id)[NSNumber numberWithInteger:1];
     id testObject4 = (id) @"foo";
-    id testObject5 = (id) @[@1, @2, @3, @4, @5];
-    id testObject6 = (id) @{@"foo":@"1",@"bar":@"2"};
-    id testObject7 = (id) @{@"foo":@{@"bar":@"1"},@"foo2":@{@"bar2":@"2"}};
-    id testObject8 = (id) [NSUUID UUID];
-    
+    id testObject5 = (id) @[ @1, @2, @3, @4, @5 ];
+    id testObject6 = (id) @{ @"foo" : @"1", @"bar" : @"2" };
+    id testObject7 = (id) @{ @"foo" : @{ @"bar" : @"1" }, @"foo2" : @{ @"bar2" : @"2" } };
+    id testObject8 = (id)[NSUUID UUID];
+
     // success cases
     VerifyDataWithJSONObjectSucceeds(testObject5, @"[1,2,3,4,5]");
     VerifyDataWithJSONObjectSucceeds(testObject6, @"{\"foo\":\"1\",\"bar\":\"2\"}");

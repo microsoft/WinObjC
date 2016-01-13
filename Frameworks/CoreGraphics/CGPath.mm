@@ -19,6 +19,9 @@
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGGeometry.h"
 
+#include <vector>
+#include <algorithm>
+
 class BBox {
 public:
     float x, y, x1, y1;
@@ -615,4 +618,178 @@ CGRect CGPathGetPathBoundingBox(CGPathRef self) {
 
     CGRect ret;
     return ret;
+}
+
+class ScanlineCalculator {
+    typedef std::vector<int> interceptList;
+    interceptList _left, _right;
+
+    int _originY, _height, _width, _padding;
+
+public:
+    void SetExtents(int y, int width, int height, int padding) {
+        _originY = y;
+        _width = width;
+        _height = height;
+        _padding = padding;
+        _left.resize(_height);
+        std::fill(_left.begin(), _left.end(), _width);
+        _right.resize(_height);
+        std::fill(_right.begin(), _right.end(), 0);
+    }
+
+    void AddLine(CGPoint start, CGPoint end) {
+        AddLine(start.x, start.y, end.x, end.y);
+    }
+
+    void AddLine(float xstart, float ystart, float xend, float yend) {
+        xstart = std::min(xstart, 65536.0f);
+        ystart = std::min(ystart, 65536.0f);
+        xend = std::min(xend, 65536.0f);
+        yend = std::min(yend, 65536.0f);
+        xstart = std::max(xstart, -65536.0f);
+        ystart = std::max(ystart, -65536.0f);
+        xend = std::max(xend, -65536.0f);
+        yend = std::max(yend, -65536.0f);
+
+        if (ystart < _originY && yend < _originY)
+            return;
+        if (ystart > _originY + _height - 1 && yend > _originY + _height - 1)
+            return;
+
+        int x = (int)floorf(xstart);
+        int y = (int)floorf(ystart);
+        int x2 = (int)ceilf(xend);
+        int y2 = (int)ceilf(yend);
+
+        int dx = x2 - x;
+        int dy = y2 - y;
+
+        if (dy == 0) {
+            //  Straight line - simply add start and end points
+            AddPoint(x, y);
+            AddPoint(x2, y2);
+            return;
+        }
+
+        int yStart = y;
+        int yEnd = y2;
+        if (yStart > yEnd) {
+            std::swap(yStart, yEnd);
+        }
+        if (yStart < _originY) {
+            yStart = _originY;
+        }
+        if (yEnd > _originY + _height) {
+            yEnd = _originY + _height;
+        }
+
+        for (int curY = yStart; curY < yEnd; curY++) {
+            int b = curY - y2;
+            int xPos = x2 + b * dx / dy;
+            AddPoint(xPos, curY);
+        }
+    }
+
+    void AddPoint(int x, int y) {
+        if (y >= _originY && y < _originY + _height) {
+            if (_left[y - _originY] > x) {
+                _left[y - _originY] = x;
+            }
+            if (_right[y - _originY] < x) {
+                _right[y - _originY] = x;
+            }
+        }
+    }
+
+    bool FindLargestRect(CGPoint point, float rectHeight, CGRect& ret) {
+        float xPos = point.x;
+        int yPos = floorf(point.y);
+        int yHeight = ceilf(rectHeight);
+
+        //  Find the leftmost indexes of the scanlines that can fit the rectangle
+        for (int y = yPos; y < yPos + yHeight; y++) {
+            int yIdx = y - _originY;
+            if (yIdx < 0 || yIdx >= _left.size())
+                continue;
+
+            int excludeStart = _left[yIdx] - _padding;
+            int excludeEnd = _right[yIdx] + _padding;
+
+            if (xPos >= excludeStart && xPos < excludeEnd) {
+                xPos = excludeEnd;
+            }
+        }
+
+        //  Find the maximum width of the overlap rectangle
+        float x2Pos = _width - _padding;
+
+        for (int y = yPos; y < yPos + yHeight; y++) {
+            int yIdx = y - _originY;
+            if (yIdx < 0 || yIdx >= _left.size())
+                continue;
+
+            //  If the end position intersections with an exclusion zone, bump it backward
+            int excludeStart = _left[yIdx] - _padding;
+
+            if (excludeStart > xPos && x2Pos >= excludeStart) {
+                x2Pos = excludeStart;
+            }
+        }
+
+        if (x2Pos <= xPos) {
+            return false;
+        } else {
+            ret.origin.x = xPos;
+            ret.origin.y = point.y;
+            ret.size.width = x2Pos - xPos;
+            ret.size.height = rectHeight;
+        }
+
+        return true;
+    }
+};
+
+CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding) {
+    CGPath* path = pathref;
+
+    ScanlineCalculator s;
+    s.SetExtents(rect.origin.y, maxSize.width, rect.size.height, padding);
+
+    CGPoint curPoint = { 0, 0 };
+    CGPoint startPoint = { 0, 0 };
+    bool startPointSet = false;
+
+    for (unsigned i = 0; i < path->_count; i++) {
+        switch (path->_components[i].type) {
+            case pathComponentMove:
+                if (!startPointSet) {
+                    startPoint = path->_components[i].point;
+                    startPointSet = true;
+                }
+                curPoint = path->_components[i].point;
+                break;
+
+            case pathComponentLineTo:
+                if (!startPointSet) {
+                    startPoint = path->_components[i].point;
+                    startPointSet = true;
+                }
+                s.AddLine(curPoint, path->_components[i].point);
+                curPoint = path->_components[i].point;
+                break;
+
+            case pathComponentClose:
+                if (startPointSet) {
+                    s.AddLine(curPoint, startPoint);
+                }
+                break;
+        }
+    }
+
+    if (s.FindLargestRect(rect.origin, rect.size.height, rect)) {
+        return rect;
+    } else {
+        return CGRectMake(0, 0, 0, 0);
+    }
 }

@@ -15,58 +15,61 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTH
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSString.h>
+#import <Foundation/NSObject.h>
 
 @class NSData;
+@class NSString;
 
 #ifdef __cplusplus
 namespace icu_48 {
-    class UnicodeSet;
+class UnicodeSet;
 }
 typedef icu_48::UnicodeSet CharacterSet;
 #else
 typedef void* CharacterSet;
 #endif
 
+enum { NSOpenStepUnicodeReservedBase = 0xF400 };
+
 FOUNDATION_EXPORT_CLASS
-@interface NSCharacterSet : NSObject <NSCopying, NSMutableCopying, NSCoding>{
-    @public
+@interface NSCharacterSet : NSObject <NSSecureCoding, NSCopying, NSMutableCopying, NSObject> {
+@public
     CharacterSet* _icuSet;
 }
 
-+characterSetWithBitmapRepresentation : (NSData*)data;
-+characterSetWithCharactersInString:(NSString*)string;
-+characterSetWithContentsOfFile:(NSString*)path;
-+characterSetWithRange:(NSRange)range;
++ characterSetWithBitmapRepresentation:(NSData*)data;
++ characterSetWithCharactersInString:(NSString*)string;
++ characterSetWithContentsOfFile:(NSString*)path;
++ characterSetWithRange:(NSRange)range;
 
-+(instancetype)alphanumericCharacterSet;
-+(instancetype)controlCharacterSet;
-+(instancetype)decimalDigitCharacterSet;
-+(instancetype)decomposableCharacterSet;
-+(instancetype)illegalCharacterSet;
-+(instancetype)letterCharacterSet;
-+(instancetype)lowercaseLetterCharacterSet;
-+(instancetype)newlineCharacterSet;
-+(instancetype)nonBaseCharacterSet;
-+(instancetype)punctuationCharacterSet;
-+(instancetype)uppercaseLetterCharacterSet;
-+(instancetype)whitespaceAndNewlineCharacterSet;
-+(instancetype)whitespaceCharacterSet;
++ (instancetype)alphanumericCharacterSet;
++ (instancetype)controlCharacterSet;
++ (instancetype)decimalDigitCharacterSet;
++ (instancetype)decomposableCharacterSet;
++ (instancetype)illegalCharacterSet;
++ (instancetype)letterCharacterSet;
++ (instancetype)lowercaseLetterCharacterSet;
++ (instancetype)newlineCharacterSet;
++ (instancetype)nonBaseCharacterSet;
++ (instancetype)punctuationCharacterSet;
++ (instancetype)uppercaseLetterCharacterSet;
++ (instancetype)whitespaceAndNewlineCharacterSet;
++ (instancetype)whitespaceCharacterSet;
 
-+(instancetype)URLFragmentAllowedCharacterSet;
-+(instancetype)URLHostAllowedCharacterSet;
-+(instancetype)URLPasswordAllowedCharacterSet;
-+(instancetype)URLPathAllowedCharacterSet;
-+(instancetype)URLQueryAllowedCharacterSet;
-+(instancetype)URLUserAllowedCharacterSet;
++ (instancetype)URLFragmentAllowedCharacterSet;
++ (instancetype)URLHostAllowedCharacterSet;
++ (instancetype)URLPasswordAllowedCharacterSet;
++ (instancetype)URLPathAllowedCharacterSet;
++ (instancetype)URLQueryAllowedCharacterSet;
++ (instancetype)URLUserAllowedCharacterSet;
 
--(BOOL)characterIsMember:(unichar)character;
--(NSCharacterSet*)invertedSet;
+- (BOOL)characterIsMember:(unichar)character;
+- (BOOL)isSupersetOfSet:(NSCharacterSet*)other;
+- (NSUInteger)count;
+- (unichar)characterAtIndex:(NSUInteger)idx;
 
--(NSData*)bitmapRepresentation;
-
--(BOOL)isSupersetOfSet:(NSCharacterSet*)other;
--(NSUInteger)count;
--(unichar)characterAtIndex:(NSUInteger)idx;
+@property (readonly, copy) NSCharacterSet* invertedSet;
+@property (readonly, copy) NSData* bitmapRepresentation;
 
 @end
 

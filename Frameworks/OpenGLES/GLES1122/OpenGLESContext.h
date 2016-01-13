@@ -1029,6 +1029,10 @@ public:
     virtual void glGetBufferPointervOES(GLenum target, GLenum pname, GLvoid** params) = 0;
     virtual GLvoid* glMapBufferOES(GLenum target, GLenum access) = 0;
     virtual GLboolean glUnmapBufferOES(GLenum target) = 0;
+    virtual void glBindVertexArrayOES(GLuint array) = 0;
+    virtual void glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays) = 0;
+    virtual void glGenVertexArraysOES(GLsizei n, GLuint* arrays) = 0;
+    virtual GLboolean glIsVertexArrayOES(GLuint array) = 0;
 
 protected:
     OpenGLESImplementation* implementation;
