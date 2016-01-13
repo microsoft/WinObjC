@@ -70,7 +70,7 @@
       <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
       <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
-      <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
+      <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libdispatch.dll" />
       <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
       <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
 
