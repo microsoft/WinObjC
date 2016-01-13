@@ -25,3 +25,6 @@
 [submodule "deps/3rdparty/cairo"]
 	path = deps/3rdparty/cairo
 	url = git://anongit.freedesktop.org/git/cairo
+[submodule "deps/3rdparty/libobjc2"]
+	path = deps/3rdparty/libobjc2
+	url = https://github.com/Microsoft/libobjc2
