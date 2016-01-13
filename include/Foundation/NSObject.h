@@ -20,19 +20,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 @protocol NSObject
 
-/**
- @Status Stub
- @Notes NSZone is not supported
-*/
 - (NSZone*)zone;
 
 - (id)self;
-- (Class) class;
+- (Class)class;
 - (Class)superclass;
 
-- autorelease;
+- (id)retain;
+- (id)autorelease;
 - (oneway void)release;
-- retain;
 - (NSUInteger)retainCount;
 
 - (NSUInteger)hash;
@@ -43,27 +39,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (BOOL)conformsToProtocol:(Protocol*)protocol;
 
 - (BOOL)respondsToSelector:(SEL)selector;
-- performSelector:(SEL)selector;
-- performSelector:(SEL)selector withObject:object0;
-- performSelector:(SEL)selector withObject:object0 withObject:object1;
+- (id)performSelector:(SEL)selector;
+- (id)performSelector:(SEL)selector withObject:(id)object0;
+- (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
 
 - (BOOL)isProxy;
 
 - (NSString*)description;
 - (NSString*)debugDescription;
-
 @end
 
 @protocol NSCopying
-- copyWithZone:(NSZone*)zone;
+- (id)copyWithZone:(NSZone*)zone;
 @end
 
 @protocol NSMutableCopying
-
-/**
- @Status Interoperable
-*/
-- mutableCopyWithZone:(NSZone*)zone;
+- (id)mutableCopyWithZone:(NSZone*)zone;
 @end
 
 @protocol NSCoding
@@ -82,7 +73,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (void)discardContentIfPossible;
 @end
 
-/* The root implementation of NSObject is contained in objcrt */
 FOUNDATION_EXPORT_CLASS
 __attribute__((objc_root_class))
 @interface NSObject <NSObject> {
@@ -90,57 +80,69 @@ __attribute__((objc_root_class))
     Class isa;
 }
 
-+ (NSInteger)version;
-+ (void)setVersion:(NSInteger)version;
-
+/* Class Initialization */
 + (void)load;
-
 + (void)initialize;
 
-+ (Class)superclass;
-+ (Class) class;
-+ (BOOL)isSubclassOfClass:(Class)cls;
+/* Creation and Destruction */
++ (id)new;
++ (id)alloc;
++ (id)allocWithZone:(NSZone*)zone;
 
-+ (BOOL)instancesRespondToSelector:(SEL)selector;
-+ (BOOL)conformsToProtocol:(Protocol*)protocol;
-
-+ (IMP)instanceMethodForSelector:(SEL)selector;
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
-+ (BOOL)resolveClassMethod:(SEL)selector;
-+ (BOOL)resolveInstanceMethod:(SEL)selector;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
-
-+ (NSString*)description;
-
-+ alloc;
-+ allocWithZone:(NSZone*)zone;
-
-- init;
-+ new;
+- (id)init;
 - (void)dealloc;
 - (void)finalize;
 
-- copy;
-- mutableCopy;
++ (NSInteger)version;
++ (void)setVersion:(NSInteger)version;
 
++ (id)self;
+- (id)self;
+
+/* Inheritance Introspection */
++ (Class)class;
+- (Class)class;
++ (Class)superclass;
++ (BOOL)isSubclassOfClass:(Class)cls;
+- (BOOL)isKindOfClass:(Class)aClass;
+- (BOOL)isMemberOfClass:(Class)aClass;
++ (BOOL)conformsToProtocol:(Protocol*)protocol;
+- (BOOL)conformsToProtocol:(Protocol*)protocol;
+
+/* Dynamic Invocation */
+- (id)performSelector:(SEL)selector;
+- (id)performSelector:(SEL)selector withObject:(id)object0;
+- (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
+
+/* Method Introspection */
++ (BOOL)instancesRespondToSelector:(SEL)selector;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
 - (IMP)methodForSelector:(SEL)selector;
-
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
++ (IMP)instanceMethodForSelector:(SEL)selector;
 - (void)doesNotRecognizeSelector:(SEL)selector;
 
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
+/* Forwarding */
++ (BOOL)resolveClassMethod:(SEL)selector;
++ (BOOL)resolveInstanceMethod:(SEL)selector;
+- (id)forwardingTargetForSelector:(SEL)aSelector;
 - (void)forwardInvocation:(NSInvocation*)invocation;
 
-- (NSString*)className;
-- (id)forwardingTargetForSelector:(SEL)aSelector;
++ (NSString*)description;
+- (NSString*)description;
 
+- (id)copy;
+- (id)mutableCopy;
 @end
 
-    @interface NSObject(NSCoding) -
-    (Class)classForCoder;
+@interface NSObject (NSCoding)
+- (Class)classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
+
 #if __has_feature(objc_arc)
     NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
     return (__bridge_retained CFTypeRef)X;
@@ -151,8 +153,8 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
-    CFBridgingRetain(id X) {
+NS_INLINE NS_RETURNS_RETAINED CFTypeRef
+CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 

@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #import "Foundation/Foundation.h"
 #include <Starboard/String.h>
-#import "NSObjectInternal.h"
 #include "../UnifiedFoundation/Foundation/NSValueTransformers.h"
 #include "NSObject_NSKeyValueArrayAdapter-Internal.h"
 
@@ -521,26 +520,6 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     }
 
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSString*)description {
-    return NSStringFromClass([self class]);
-}
-
-- (NSString*)description {
-    return [NSString stringWithFormat:@"<%@: %p>", NSStringFromClass([self class]), self];
-}
-
-+ (void)_raiseSelectorNotFoundError:(SEL)selector format:(const char*)format, ... {
-    va_list va;
-    va_start(va, format);
-    NSString* err = [[[NSString alloc] initWithFormat:[NSString stringWithCString:format] arguments:va] autorelease];
-    va_end(va);
-
-    [NSException raiseWithLogging:@"SelectorNotFound" format:@"%@", err];
 }
 @end
 
