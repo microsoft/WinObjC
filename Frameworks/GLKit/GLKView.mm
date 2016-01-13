@@ -33,7 +33,6 @@
     GLuint _framebuffer;
     GLuint _renderbuffer;
     GLuint _depthbuffer;
-    GLuint _stencilbuffer;
 
     CGSize _curSize;
     BOOL _drawableFormatsUpdated;
@@ -240,11 +239,6 @@
         _depthbuffer = 0;
     }
 
-    if (_stencilbuffer != 0) {
-        glDeleteRenderbuffers(1, &_stencilbuffer);
-        _stencilbuffer = 0;
-    }
-
     if (_framebuffer != 0) {
         glDeleteFramebuffers(1, &_framebuffer);
         _framebuffer = 0;
@@ -291,11 +285,13 @@
     if (self.drawableDepthFormat != GLKViewDrawableDepthFormatNone) {
         GLuint fmt = 0;
         if (self.drawableDepthFormat == GLKViewDrawableDepthFormat16) {
-            fmt = GL_DEPTH_COMPONENT16;
+            if (self.drawableStencilFormat != GLKViewDrawableStencilFormatNone) {
+                fmt = GL_DEPTH24_STENCIL8_OES;
+            } else {
+                fmt = GL_DEPTH_COMPONENT16;
+            }
         } else if (self.drawableDepthFormat == GLKViewDrawableDepthFormat24) {
-            // TODO: fix me.
-            // fmt = GL_DEPTH_COMPONENT24_OES;
-            fmt = GL_DEPTH_COMPONENT16;
+            fmt = GL_DEPTH24_STENCIL8_OES;
         }
         assert(fmt);
 
@@ -309,21 +305,9 @@
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
     }
 
+    // Format for stencils will always be D24_S8 here.
     if (self.drawableStencilFormat != GLKViewDrawableStencilFormatNone) {
-        GLuint fmt = 0;
-        if (self.drawableStencilFormat == GLKViewDrawableStencilFormat8) {
-            fmt = GL_STENCIL_INDEX8;
-        }
-        assert(fmt);
-
-        glGenRenderbuffers(1, &_stencilbuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, _stencilbuffer);
-        if (antialiased) {
-            glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 4, fmt, surfaceWidth, surfaceHeight);
-        } else {
-            glRenderbufferStorage(GL_RENDERBUFFER, fmt, surfaceWidth, surfaceHeight);
-        }
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _stencilbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
     }
     
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
