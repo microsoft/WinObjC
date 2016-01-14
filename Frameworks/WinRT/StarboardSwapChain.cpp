@@ -71,6 +71,11 @@ public:
     }
 
     void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) override {
+        if (e->PrelaunchActivated) {
+            // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
+            return;
+        }
+
         auto uiElem = ref new Grid();
         auto rootFrame = ref new Frame();
         rootFrame->Content = uiElem;

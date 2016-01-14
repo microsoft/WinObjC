@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "NSStringInternal.h"
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
@@ -31,6 +32,7 @@
 #include "UIKit/UILabel.h"
 #include "UIKit/UINavigationBar.h"
 #include "UIKit/UIBarButtonItem.h"
+#include "UIBarButtonItem+Internals.h"
 
 @implementation UINavigationBar {
     idretaintype(NSMutableArray) _items;
@@ -45,6 +47,9 @@
     idretaintype(UILabel) _titleLabel;
     idretaintype(NSDictionary) _titleTextAttributes;
     idretaintype(UIColor) _tintColor;
+    idretaintype(UIColor) _barTintColor;
+    idretaintype(UIImage) _shadowImage;
+    idretaintype(UIImageView) _shadowImageView;
     UIBarStyle _style;
 }
 static void setBackground(UINavigationBar* self) {
@@ -271,7 +276,7 @@ static void setBackground(UINavigationBar* self) {
 - (void)setTintColor:(UIColor*)color {
     UNIMPLEMENTED();
     _tintColor = color;
-    if (((int)[[[UIDevice currentDevice] systemVersion] versionStringCompare:@"7.0"]) >= 0) {
+    if (((int)[[[UIDevice currentDevice] systemVersion] _versionStringCompare:@"7.0"]) >= 0) {
         // If we're in >= ios7, this means that we set the children to this colour
     } else {
         // Otherwise, it means setting the background colour
@@ -288,9 +293,10 @@ static void setBackground(UINavigationBar* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setTranslucent:(BOOL)translucent {
+    UNIMPLEMENTED();
 }
 
 - (void)navigationItemChanged:(UINavigationItem*)item {
@@ -357,11 +363,11 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_leftButton != nil) {
-            [[_leftButton _getView] setBackButtonDelegate:nil action:NULL withParam:nil];
-            [[_leftButton _getView] removeFromSuperview];
+            [[_leftButton view] setBackButtonDelegate:nil action:NULL withParam:nil];
+            [[_leftButton view] removeFromSuperview];
         }
         if (_rightButton != nil) {
-            [[_rightButton _getView] removeFromSuperview];
+            [[_rightButton view] removeFromSuperview];
         }
         if (_titleView != nil) {
             [_titleView removeFromSuperview];
@@ -402,9 +408,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (backButtonHandler && [_leftButton respondsToSelector:@selector(_sendAction:)]) {
-            [[_leftButton _getView] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
-            [[_leftButton _getView] setBackButtonReturnsSuccess:FALSE];
-            [[_leftButton _getView] setBackButtonPriority:-100];
+            [[_leftButton view] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
+            [[_leftButton view] setBackButtonReturnsSuccess:FALSE];
+            [[_leftButton view] setBackButtonPriority:-100];
         }
 
         CGRect bounds;
@@ -414,10 +420,10 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         float rightMargin = 0;
 
         if (_leftButton != nil) {
-            UIView* leftButtonView = [_leftButton _getView];
+            UIView* leftButtonView = [_leftButton view];
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 
-            [_leftButton _idealSize:&frame.size];
+            frame.size = [_leftButton idealSize];
             leftMargin = frame.size.width + 10.0f;
 
             frame.origin.y = bounds.size.height / 2.0f - frame.size.height / 2.0f;
@@ -429,11 +435,11 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_rightButton != nil) {
-            UIView* rightButtonView = [_rightButton _getView];
+            UIView* rightButtonView = [_rightButton view];
 
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 
-            [_rightButton _idealSize:&frame.size];
+            frame.size = [_rightButton idealSize];
             frame.origin.x = bounds.size.width - frame.size.width - 5.0f;
             frame.origin.y = bounds.size.height / 2.0f - frame.size.height / 2.0f;
             rightMargin = frame.size.width + 10.0f;
@@ -511,6 +517,16 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 /**
  @Status Stub
 */
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarPosition:(NSInteger)position barMetrics:(UIBarMetrics)barMetrics;
+{
+    UNIMPLEMENTED();
+    _navGradient = backgroundImage;
+    setBackground(self);
+}
+
+/**
+ @Status Stub
+*/
 - (void)setTitleTextAttributes:(NSDictionary*)attributes {
     UNIMPLEMENTED();
     (_titleTextAttributes).attach([attributes copy]);
@@ -547,6 +563,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     _titleLabel = nil;
     _titleTextAttributes = nil;
     _tintColor = nil;
+    _barTintColor = nil;
+    _shadowImage = nil;
+    _shadowImageView = nil;
 
     [super dealloc];
 }
@@ -564,25 +583,64 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setShadowImage:(UIImage*)image {
-    UNIMPLEMENTED();
+- (UIImage*)shadowImage {
+    return _shadowImage;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (void)setShadowImage:(UIImage*)image {
+    _shadowImage = image;
+
+    // Remove existing view
+    UIImageView* shadowImageView = (UIImageView*)_shadowImageView;
+    if (shadowImageView != nil && shadowImageView.superview != nil) {
+        [shadowImageView removeFromSuperview];
+        _shadowImageView = nil;
+    }
+
+    // Add new view, only if image isn't nil
+    if (image == nil) {
+        return;
+    }
+
+    CGSize size = image.size;
+    CGRect frame = self.frame;
+
+    shadowImageView = [[UIImageView alloc]
+        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, GetCACompositor()->screenWidth(), size.height)];
+
+    shadowImageView.image = image;
+
+    [shadowImageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+    [self addSubview:shadowImageView];
+    _shadowImageView = shadowImageView;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIColor*)barTintColor {
+    return _barTintColor;
+}
+
+/**
+ @Status Caveat
+ @Notes Navigation bar translucency and system "blur" effect for content behind the navigation bar is not supported.
 */
 - (void)setBarTintColor:(UIColor*)color {
-    UNIMPLEMENTED();
-    _tintColor = color;
+    // Alpha is ignored for bar tint.
+    _barTintColor = [color colorWithAlphaComponent:1.0];
     CGSize size;
 
     size.width = 2.0f;
     size.height = 10.0f;
     UIGraphicsBeginImageContextWithOptions(size, 1, 2.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, (CGColorRef)color);
+    CGContextSetFillColorWithColor(ctx, (CGColorRef)(UIColor*)_barTintColor);
     CGRect rct = { 0, 0, 0, 0 };
     rct.size = size;
     CGContextFillRect(ctx, rct);

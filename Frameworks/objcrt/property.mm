@@ -138,6 +138,5 @@ const char* property_getAttributes(Property property) {
 }
 
 const char* property_getName(Property property) {
-    OBJC_NOT_IMPLEMENTED_ERROR("property_getName is not yet implemented");
-    return NULL;
+    return property->name;
 }

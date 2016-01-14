@@ -32,3 +32,5 @@
 #import <CoreData/CoreDataDefines.h>
 #import <CoreData/NSMappingModel.h>
 #import <CoreData/NSMigrationManager.h>
+#import <CoreData/NSAtomicStore.h>
+#import <CoreData/NSAtomicStoreCacheNode.h>

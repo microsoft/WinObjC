@@ -1,16 +1,22 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
    Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSZone.h>
 
-@class NSCoder,NSInvocation,NSMethodSignature,NSString;
+@class NSCoder, NSInvocation, NSMethodSignature, NSString;
 
 @protocol NSObject
 
@@ -18,38 +24,38 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  @Status Stub
  @Notes NSZone is not supported
 */
--(NSZone *)zone;
+- (NSZone*)zone;
 
--(id)self;
--(Class)class;
--(Class)superclass;
+- (id)self;
+- (Class) class;
+- (Class)superclass;
 
--autorelease;
--(oneway void)release;
--retain;
--(NSUInteger)retainCount;
+- autorelease;
+- (oneway void)release;
+- retain;
+- (NSUInteger)retainCount;
 
--(NSUInteger)hash;
--(BOOL)isEqual:object;
+- (NSUInteger)hash;
+- (BOOL)isEqual:object;
 
--(BOOL)isKindOfClass:(Class)aClass;
--(BOOL)isMemberOfClass:(Class)aClass;
--(BOOL)conformsToProtocol:(Protocol *)protocol;
+- (BOOL)isKindOfClass:(Class)aClass;
+- (BOOL)isMemberOfClass:(Class)aClass;
+- (BOOL)conformsToProtocol:(Protocol*)protocol;
 
--(BOOL)respondsToSelector:(SEL)selector;
--performSelector:(SEL)selector;
--performSelector:(SEL)selector withObject:object0;
--performSelector:(SEL)selector withObject:object0 withObject:object1;
+- (BOOL)respondsToSelector:(SEL)selector;
+- performSelector:(SEL)selector;
+- performSelector:(SEL)selector withObject:object0;
+- performSelector:(SEL)selector withObject:object0 withObject:object1;
 
--(BOOL)isProxy;
+- (BOOL)isProxy;
 
--(NSString *)description;
-- (NSString *)debugDescription;
+- (NSString*)description;
+- (NSString*)debugDescription;
 
 @end
 
 @protocol NSCopying
--copyWithZone:(NSZone *)zone;
+- copyWithZone:(NSZone*)zone;
 @end
 
 @protocol NSMutableCopying
@@ -57,12 +63,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /**
  @Status Interoperable
 */
--mutableCopyWithZone:(NSZone *)zone;
+- mutableCopyWithZone:(NSZone*)zone;
 @end
 
 @protocol NSCoding
-- (id)initWithCoder:(NSCoder *)coder;
-- (void)encodeWithCoder:(NSCoder *)coder;
+- (id)initWithCoder:(NSCoder*)coder;
+- (void)encodeWithCoder:(NSCoder*)coder;
 @end
 
 @protocol NSSecureCoding <NSCoding>
@@ -77,8 +83,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @end
 
 /* The root implementation of NSObject is contained in objcrt */
-__declspec(dllimport)
-@interface NSObject <NSObject> {
+__declspec(dllimport) @interface NSObject<NSObject> {
 @public
 #ifdef IW_NO_WINRT_ISA
     Class isa;
@@ -87,61 +92,61 @@ __declspec(dllimport)
 #endif
 }
 
-+(NSInteger)version;
-+(void)setVersion:(NSInteger)version;
++ (NSInteger)version;
++ (void)setVersion:(NSInteger)version;
 
-+(void)load;
++ (void)load;
 
-+(void)initialize;
++ (void)initialize;
 
-+(Class)superclass;
-+(Class)class;
-+(BOOL)isSubclassOfClass:(Class)cls;
++ (Class)superclass;
++ (Class) class;
++ (BOOL)isSubclassOfClass:(Class)cls;
 
-+(BOOL)instancesRespondToSelector:(SEL)selector;
-+(BOOL)conformsToProtocol:(Protocol *)protocol;
++ (BOOL)instancesRespondToSelector:(SEL)selector;
++ (BOOL)conformsToProtocol:(Protocol*)protocol;
 
-+(IMP)instanceMethodForSelector:(SEL)selector;
-+(NSMethodSignature *)instanceMethodSignatureForSelector:(SEL)selector;
-+(BOOL)resolveClassMethod:(SEL)selector;
-+(BOOL)resolveInstanceMethod:(SEL)selector;
++ (IMP)instanceMethodForSelector:(SEL)selector;
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
++ (BOOL)resolveClassMethod:(SEL)selector;
++ (BOOL)resolveInstanceMethod:(SEL)selector;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
++ copyWithZone:(NSZone*)zone;
++ mutableCopyWithZone:(NSZone*)zone;
 
-+copyWithZone:(NSZone *)zone;
-+mutableCopyWithZone:(NSZone *)zone;
++ (NSString*)description;
 
-+(NSString *)description;
++ alloc;
++ allocWithZone:(NSZone*)zone;
 
-+alloc;
-+allocWithZone:(NSZone *)zone;
+- init;
++ new;
+- (void)dealloc;
+- (void)finalize;
 
--init;
-+new;
--(void)dealloc;
--(void)finalize;
+- copy;
+- mutableCopy;
 
--copy;
--mutableCopy;
+- (IMP)methodForSelector:(SEL)selector;
 
--(IMP)methodForSelector:(SEL)selector;
+- (void)doesNotRecognizeSelector:(SEL)selector;
 
--(void)doesNotRecognizeSelector:(SEL)selector;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
+- (void)forwardInvocation:(NSInvocation*)invocation;
 
--(NSMethodSignature *)methodSignatureForSelector:(SEL)selector;
--(void)forwardInvocation:(NSInvocation *)invocation;
-
--(NSString *)className;
--(id)forwardingTargetForSelector:(SEL)aSelector;
+- (NSString*)className;
+- (id)forwardingTargetForSelector:(SEL)aSelector;
 
 @end
 
-@interface NSObject (NSCoding)
-- (Class)classForCoder;
+    @interface NSObject(NSCoding) -
+    (Class)classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
-
 #if __has_feature(objc_arc)
-NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
+    NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
     return (__bridge_retained CFTypeRef)X;
 }
 
@@ -150,7 +155,8 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
+    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
+    CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 
@@ -158,4 +164,3 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
     return [(id)CFMakeCollectable(X) autorelease];
 }
 #endif
-

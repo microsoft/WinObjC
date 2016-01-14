@@ -19,10 +19,10 @@
 #import <UIKit/UIView.h>
 
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
+const CGFloat UINavigationBarHeight = 45.0f;
 
 extern float statusBarHeight;
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);
-bool isOSTarget(NSString* versionStr);
 
 class AnimationNotificationParams {
 public:
@@ -144,7 +144,8 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         navBarClass = [UINavigationBar class];
     }
 
-    _navigationBar.attach([[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+    _navigationBar.attach(
+        [[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
     [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     [_navigationBar setDelegate:self];
     _viewControllers.attach([NSMutableArray new]);
@@ -165,7 +166,8 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 
     if (_navigationBar == nil) {
-        _navigationBar.attach([[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+        _navigationBar.attach(
+            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
 
@@ -189,7 +191,8 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         [_toolBar setHidden:TRUE];
     }
     if (_navigationBar == nil) {
-        _navigationBar.attach([[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), 48.0f)]);
+        _navigationBar.attach(
+            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
     [_navigationBar setDelegate:self];
@@ -701,7 +704,7 @@ static void rotateViewController(UINavigationController* self) {
 
             size.origin.y = bounds.origin.y;
             size.size.width = bounds.size.width;
-            size.size.height = 45.0f;
+            size.size.height = UINavigationBarHeight;
 
             _navRect = size;
 
@@ -723,8 +726,8 @@ static void rotateViewController(UINavigationController* self) {
             }
 
             if (!_navBarHidden && clipToNavBar) {
-                containerRect.origin.y += 45.0f;
-                containerRect.size.height -= 45.0f;
+                containerRect.origin.y += UINavigationBarHeight;
+                containerRect.size.height -= UINavigationBarHeight;
             }
 
             [_navigationBar setHidden:_navBarHidden];
@@ -738,12 +741,12 @@ static void rotateViewController(UINavigationController* self) {
             CGRect size;
 
             size.origin.x = 0;
-            size.origin.y = bounds.origin.y + bounds.size.height - 45.0f;
+            size.origin.y = bounds.origin.y + bounds.size.height - UINavigationBarHeight;
             size.size.width = bounds.size.width;
-            size.size.height = 45.0f;
+            size.size.height = UINavigationBarHeight;
 
             if (!_toolBarHidden)
-                containerRect.size.height -= 45.0f;
+                containerRect.size.height -= UINavigationBarHeight;
 
             [_toolBar setFrame:size];
             [_mainView addSubview:_toolBar];
@@ -866,7 +869,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_navBarHidden) {
             CGRect navFrame;
             navFrame = [_navigationBar frame];
-            navFrame.origin.y -= 45.0f;
+            navFrame.origin.y -= UINavigationBarHeight;
             [_navigationBar setFrame:navFrame];
             if (_setNavBarHiddenAnimated) {
                 [UIView setAnimationDidStopSelector:@selector(_navHideDone)];
@@ -874,22 +877,22 @@ static void rotateViewController(UINavigationController* self) {
                 [_navigationBar setHidden:1];
             }
 
-            newContainerFrame.origin.y -= 45.0f;
-            newContainerFrame.size.height += 45.0f;
+            newContainerFrame.origin.y -= UINavigationBarHeight;
+            newContainerFrame.size.height += UINavigationBarHeight;
             _didSlideNavBar = TRUE;
         } else {
             CGRect navFrame;
             navFrame = [_navigationBar frame];
 
             if (_didSlideNavBar) {
-                navFrame.origin.y += 45.0f;
+                navFrame.origin.y += UINavigationBarHeight;
             }
             _didSlideNavBar = FALSE;
             [_navigationBar setFrame:navFrame];
             [_navigationBar setHidden:FALSE];
 
-            newContainerFrame.origin.y += 45.0f;
-            newContainerFrame.size.height -= 45.0f;
+            newContainerFrame.origin.y += UINavigationBarHeight;
+            newContainerFrame.size.height -= UINavigationBarHeight;
         }
 
         if (_setNavBarHiddenAnimated) {
@@ -909,7 +912,7 @@ static void rotateViewController(UINavigationController* self) {
         if (_toolBarHidden) {
             CGRect toolFrame;
             toolFrame = [_toolBar frame];
-            toolFrame.origin.y += 45.0f;
+            toolFrame.origin.y += UINavigationBarHeight;
             [_toolBar setFrame:toolFrame];
             if (_setToolBarHiddenAnimated) {
                 [UIView setAnimationDidStopSelector:@selector(_toolHideDone)];
@@ -917,20 +920,20 @@ static void rotateViewController(UINavigationController* self) {
                 [_toolBar setHidden:TRUE];
             }
 
-            newContainerFrame.size.height += 45.0f;
+            newContainerFrame.size.height += UINavigationBarHeight;
             _didSlideToolBar = TRUE;
         } else {
             CGRect toolFrame;
             toolFrame = [_toolBar frame];
 
             if (_didSlideToolBar) {
-                toolFrame.origin.y -= 45.0f;
+                toolFrame.origin.y -= UINavigationBarHeight;
             }
             _didSlideToolBar = FALSE;
             [_toolBar setFrame:toolFrame];
             [_toolBar setHidden:FALSE];
 
-            newContainerFrame.size.height -= 45.0f;
+            newContainerFrame.size.height -= UINavigationBarHeight;
         }
 
         if (_setToolBarHiddenAnimated) {
@@ -961,10 +964,10 @@ static void rotateViewController(UINavigationController* self) {
         CGSize ret = { 0 };
         ret = [controller contentSizeForViewInPopover];
         if (!_navBarHidden) {
-            ret.height += 45.0f;
+            ret.height += UINavigationBarHeight;
         }
         if (![_toolBar isHidden]) {
-            ret.height += 45.0f;
+            ret.height += UINavigationBarHeight;
         }
         return ret;
     }

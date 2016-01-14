@@ -19,6 +19,17 @@
 
 #import <Foundation/NSObject.h>
 
+typedef NS_ENUM(NSUInteger, NSLineBreakMode) {
+    NSLineBreakByWordWrapping,
+    NSLineBreakByCharWrapping,
+    NSLineBreakByClipping,
+    NSLineBreakByTruncatingHead,
+    NSLineBreakByTruncatingTail,
+    NSLineBreakByTruncatingMiddle
+};
+
+// did't uuse NS_ENUM because  UITextAlignment need to 
+// inherit from NSTextAlignment to maintain cmopability
 enum {
     NSTextAlignmentLeft = 0,
     NSTextAlignmentCenter = 1,
@@ -26,6 +37,12 @@ enum {
     NSTextAlignmentJustified = 3,
     NSTextAlignmentNatural = 4,
 };
-typedef int32_t NSTextAlignment;
+typedef NSUInteger NSTextAlignment;
+
+typedef NS_ENUM(NSUInteger, NSWritingDirection) {
+    NSWritingDirectionNatural = -1,
+    NSWritingDirectionLeftToRight = 0,
+    NSWritingDirectionRightToLeft = 1
+};
 
 #endif /* _NSTEXT_H_ */

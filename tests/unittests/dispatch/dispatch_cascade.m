@@ -5,24 +5,24 @@
 // Copyright (c) 2008-2009 Apple Inc. All rights reserved.
 //
 // @APPLE_APACHE_LICENSE_HEADER_START@
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // @APPLE_APACHE_LICENSE_HEADER_END@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <UIKit/UIKit.h>
 #include <dispatch/dispatch.h>
 #include "dispatch_test.h"
@@ -43,7 +43,7 @@ size_t iterations = QUEUES * BLOCKS * 0.25;
 void histogram(void) {
     size_t counts[QUEUES] = {};
     size_t maxcount = 0;
-    
+
     size_t q;
     for (q = 0; q < QUEUES; ++q) {
         size_t i;
@@ -53,16 +53,16 @@ void histogram(void) {
             }
         }
     }
-    
+
     for (q = 0; q < QUEUES; ++q) {
         if (counts[q] > maxcount) {
             maxcount = counts[q];
         }
     }
-    
+
     LOG_INFO("maxcount = %ud\n", maxcount);
-    
-    size_t x,y;
+
+    size_t x, y;
     for (y = 20; y > 0; --y) {
         for (x = 0; x < QUEUES; ++x) {
             double fraction = (double)counts[x] / (double)maxcount;
@@ -75,10 +75,11 @@ void histogram(void) {
 
 void cascade(void* context) {
     size_t idx;
-    int *idxptr = (int*)context;
+    int* idxptr = (int*)context;
 
-    if (done) return;
-    
+    if (done)
+        return;
+
     idx = *idxptr + 1;
 
     if (idx < QUEUES) {
@@ -97,7 +98,7 @@ TEST(Dispatch, DispatchCascade) {
     int i;
 
     test_start("Dispatch Cascade");
-    
+
     for (i = 0; i < QUEUES; ++i) {
         queues[i] = dispatch_queue_create(NULL, NULL);
     }

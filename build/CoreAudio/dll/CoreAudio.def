@@ -1,0 +1,3 @@
+LIBRARY CoreAudio
+    EXPORTS
+        __COREAUDIO_EMPTY

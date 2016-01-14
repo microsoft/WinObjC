@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 // Every character in NSString* testString must exist in the character set passed in.
@@ -22,15 +22,21 @@ void testCharacter(NSCharacterSet* charSet, NSString* testString) {
     unsigned int stringLength = [testString length];
     NSInteger charSetLength = [charSet count];
 
-    ASSERT_TRUE_MSG(stringLength == charSetLength, "FAILED: Character set has different length than expected.\nExpected: %d\nActual: %d", stringLength, charSetLength) ;
+    ASSERT_TRUE_MSG(stringLength == charSetLength,
+                    "FAILED: Character set has different length than expected.\nExpected: %d\nActual: %d",
+                    stringLength,
+                    charSetLength);
 
-    for(int i = 0; i < stringLength; i++) {
+    for (int i = 0; i < stringLength; i++) {
         unichar current = [testString characterAtIndex:i];
-        ASSERT_TRUE_MSG([charSet characterIsMember:current], "FAILED: [CharacterSet characterIsMember:current] has mismatched character between expected and actual.\nCharacter: %c", current);
+        ASSERT_TRUE_MSG(
+            [charSet characterIsMember:current],
+            "FAILED: [CharacterSet characterIsMember:current] has mismatched character between expected and actual.\nCharacter: %c",
+            current);
     }
 }
 
-//This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
+// This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
 TEST(Foundation, NSCharacterSet_SanityTest) {
     LOG_INFO("NSCharacterSet sanity test: ");
 
@@ -62,8 +68,8 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     NSString* whitespaceCharacterSetString = @" \t";
 
     NSCharacterSet* URLFragmentAllowedCharacterSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
-    NSString* URLFragmentAllowedCharacterSetString= @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
-    
+    NSString* URLFragmentAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
+
     NSCharacterSet* URLHostAllowedCharacterSet = [NSCharacterSet URLHostAllowedCharacterSet];
     NSString* URLHostAllowedCharacterSetString = @"!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~";
 
@@ -74,7 +80,7 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     NSString* URLPathAllowedCharacterSetString = @"!$&'()*+,-./0123456789:=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
 
     NSCharacterSet* URLQueryAllowedCharacterSet = [NSCharacterSet URLQueryAllowedCharacterSet];
-    NSString* URLQueryAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";    
+    NSString* URLQueryAllowedCharacterSetString = @"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
 
     NSCharacterSet* URLUserAllowedCharacterSet = [NSCharacterSet URLUserAllowedCharacterSet];
     NSString* URLUserAllowedCharacterSetString = @"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~";
@@ -95,4 +101,56 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     testCharacter(URLPathAllowedCharacterSet, URLPathAllowedCharacterSetString);
     testCharacter(URLQueryAllowedCharacterSet, URLQueryAllowedCharacterSetString);
     testCharacter(URLUserAllowedCharacterSet, URLUserAllowedCharacterSetString);
+
+    NSRange lowerCaseEnglishRange;
+    NSCharacterSet* lowerCaseEnglishLetters;
+
+    lowerCaseEnglishRange.location = (unsigned int)'a';
+    lowerCaseEnglishRange.length = 26;
+    lowerCaseEnglishLetters = [NSCharacterSet characterSetWithRange:lowerCaseEnglishRange];
+    NSString* lowerCaseEnglishLettersString = @"abcdefghijklmnopqrstuvwxyz";
+    testCharacter(lowerCaseEnglishLetters, lowerCaseEnglishLettersString);
+}
+
+TEST(Foundation, NSCharacterSet_MutableCopy) {
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet* mutableSet = [alphaNumeric mutableCopy];
+    [mutableSet addCharactersInString:@"!"];
+
+    NSString* bangOnlyString = @"!";
+
+    NSRange foundAlphaRange = [bangOnlyString rangeOfCharacterFromSet:alphaNumeric];
+    ASSERT_EQ_MSG(NSNotFound, foundAlphaRange.location, "mutable copy should not have mutated the original!");
+    NSRange foundBangRange = [bangOnlyString rangeOfCharacterFromSet:mutableSet];
+    ASSERT_NE(NSNotFound, foundBangRange.location);
+
+    EXPECT_NO_THROW([mutableSet release]);
+}
+
+TEST(Foundation, NSCharacterSet_InvertTest) {
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+    NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSCharacterSet* invertedSet = [alphaNumeric invertedSet];
+
+    NSRange foundNonAlphaRange = [alphaNumericString rangeOfCharacterFromSet:invertedSet];
+
+    ASSERT_EQ(NSNotFound, foundNonAlphaRange.location);
+}
+
+TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
+    LOG_INFO("NSCharacterSet archiving and unarchiving test: ");
+
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:alphaNumeric];
+
+    NSCharacterSet* characterSetUnarchived = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+    // Simple test that NSCharacterSet is working
+    ASSERT_TRUE([characterSetUnarchived characterIsMember:'a']);
+
+    NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    // Expect that unarchived character set behaves as expected.
+    testCharacter(characterSetUnarchived, alphaNumericString);
 }

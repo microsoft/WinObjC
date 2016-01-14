@@ -220,6 +220,9 @@ extern OBJCRT_EXPORT SEL method_getName(Method m);
 extern OBJCRT_EXPORT char* method_copyReturnType(Method m);
 extern OBJCRT_EXPORT unsigned int method_getNumberOfArguments(Method m);
 extern OBJCRT_EXPORT void method_exchangeImplementations(Method m1, Method m2);
+extern OBJCRT_EXPORT IMP method_getImplementation(Method method);
+extern OBJCRT_EXPORT IMP method_setImplementation(Method method, IMP imp);
+extern OBJCRT_EXPORT const char* method_getTypeEncoding(Method method);
 
 extern OBJCRT_EXPORT ptrdiff_t ivar_getOffset(Ivar ivar);
 extern OBJCRT_EXPORT const char* ivar_getName(Ivar ivar);
@@ -239,7 +242,7 @@ extern BOOL protocol_conformsToProtocol(Protocol*, Protocol*);
 extern void objc_thread_add(void);
 extern void objc_thread_remove(void);
 extern void objc_exit(void);
-extern IMP (*objc_forward_handler)(id, SEL);
+extern OBJCRT_EXPORT IMP (*objc_forward_handler)(id, SEL);
 extern id objc_constructInstance(Class, void*);
 extern void* objc_destructInstance(id);
 extern id objc_autorelease(id);
@@ -265,7 +268,7 @@ extern OBJCRT_EXPORT void objc_removeAssociatedObjects(id self);
 OBJCRT_EXPORT Class object_getClass(id obj_);
 OBJCRT_EXPORT Class object_setClass(id obj_, Class cls);
 void _object_setClass(id obj_, Class cls);
-
+OBJCRT_EXPORT void object_setIvar(id object, Ivar ivar, id value);
 OBJCRT_EXPORT const char* object_getClassName(id obj);
 
 OBJCRT_EXPORT BOOL class_isMetaClass(Class cls_);

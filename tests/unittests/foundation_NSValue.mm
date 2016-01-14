@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #include <objc/runtime.h>
@@ -38,20 +38,20 @@ static void perform(const char* what, bool (^block)(), bool flipbit = false) {
     char msgStr[BUFSIZ];
     try {
         b = block();
-    } catch(const std::exception &e) {
+    } catch (const std::exception& e) {
         xcp = _strdup(e.what());
         b = false;
-    } catch(...) {
+    } catch (...) {
         xcp = "unknown?";
         b = false;
     }
     snprintf(msgStr, sizeof(msgStr), "%s", " - ");
-    if(flipbit != b) {
+    if (flipbit != b) {
         snprintf(msgStr, sizeof(msgStr), "%s%s", msgStr, (SGR_GREEN "PASSED" SGR_RESET));
     } else {
         globalFailure = true;
         snprintf(msgStr, sizeof(msgStr), "%s%s", msgStr, (SGR_RED "FAILED"));
-        if(xcp) {
+        if (xcp) {
             snprintf(msgStr, sizeof(msgStr), "%s (" SGR_RESET "%s" SGR_RED ") ", msgStr, xcp);
         }
     }

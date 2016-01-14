@@ -129,7 +129,8 @@ const float c_buttonFontSize = 14.0f;
   @Status        Stub
 */
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes {
-    // Just to unblock the build.
+    UNIMPLEMENTED();
+    return nil;
 }
 
 - (NSString*)_getFontName {

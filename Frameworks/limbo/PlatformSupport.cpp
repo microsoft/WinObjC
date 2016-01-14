@@ -35,9 +35,6 @@
 void EbrBlockIfBackground() {
 }
 
-void EbrThreadDissociate() {
-}
-
 void EbrEventInit(EbrEvent* pEvent) {
     *pEvent = (void*)neosmart::NeoCreateEvent(false, false);
 }
@@ -882,8 +879,7 @@ int EbrChdir(const char* path) {
     return 0;
 }
 
-IWPLATFORM_EXPORT
-void dbg_printf(const char* fmt, ...) {
+extern "C" void dbg_printf(const char* fmt, ...) {
 #ifdef _DEBUG
     va_list va;
 

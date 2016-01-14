@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include <windows.h>
 
 #import <CoreFoundation/CoreFoundation.h>

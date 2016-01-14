@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -33,12 +35,27 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVExport.h>
 
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategoryAmbient;
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategorySoloAmbient;
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategoryPlayback;
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategoryRecord;
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategoryPlayAndRecord;
-AVFOUNDATION_EXPORT NSString *const AVAudioSessionCategoryAudioProcessing;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategoryAmbient;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategorySoloAmbient;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategoryPlayback;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategoryRecord;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategoryPlayAndRecord;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionCategoryAudioProcessing;
+
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionInterruptionTypeKey;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionInterruptionOptionKey;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionRouteChangeReasonKey;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionRouteChangePreviousRouteKey;
+AVFOUNDATION_EXPORT NSString* const AVAudioSessionSilenceSecondaryAudioHintTypeKey;
+
+typedef NS_ENUM(NSUInteger, AVAudioSessionInterruptionOptions) { 
+    AVAudioSessionInterruptionOptionShouldResume = 1,
+};
+
+typedef NS_ENUM(NSUInteger, AVAudioSessionInterruptionType) {
+    AVAudioSessionInterruptionTypeBegan = 1,
+    AVAudioSessionInterruptionTypeEnded = 0,
+};
 
 @protocol AVAudioSessionDelegate <NSObject>
 @end
@@ -52,7 +69,7 @@ AVFOUNDATION_EXPORT_CLASS
 - (BOOL)setActive:(BOOL)beActive error:(NSError**)outError;
 - (BOOL)setCategory:(NSString*)theCategory error:(NSError**)outError;
 
-@property(assign) id<AVAudioSessionDelegate> delegate;
+@property (assign) id<AVAudioSessionDelegate> delegate;
 
 @end
 

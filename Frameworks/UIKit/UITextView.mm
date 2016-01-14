@@ -18,11 +18,16 @@
 #include "QuartzCore/CATextLayer.h"
 #include "UIKit/UITextInputTraits.h"
 #include "CGContextInternal.h"
+#include "NSTextStorageInternal.h"
 
 const float textViewLeftPadding = 12.5f;
 const float textViewRightPadding = 12.5f;
 
-#define USE_TEXT_LAYER 1
+//#define USE_TEXT_LAYER 1
+
+NSString* const UITextViewTextDidBeginEditingNotification = @"UITextViewTextDidBeginEditingNotification";
+NSString* const UITextViewTextDidChangeNotification = @"UITextViewTextDidChangeNotification";
+NSString* const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
 
 extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
@@ -31,9 +36,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos;
 @end
 
+@interface UITextView ()
+@property (nonatomic) NSString* _text;
+@end
+
 @implementation UITextView {
     float _marginSize;
-    idretaintype(NSString) _text;
     idretaintype(UIFont) _font;
     idretaintype(UIColor) _textColor;
     idretain _inputAccessoryView, _inputView;
@@ -48,11 +56,41 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     bool _isResigning;
     UIKeyboardType _keyboardType;
     CGSize _curSize;
+    NSTextContainer* _textContainer;
 }
+
+- (void)_setText:(NSString*)text {
+    NSMutableDictionary* attributes = [NSMutableDictionary dictionary];
+    attributes[NSFontAttributeName] = [self font];
+    if (_textColor != nil) {
+        attributes[NSForegroundColorAttributeName] = _textColor;
+    }
+
+    NSAttributedString* newString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    [_layoutManager.textStorage beginEditing];
+    [_layoutManager.textStorage setAttributedString:newString];
+    [_layoutManager.textStorage endEditing];
+}
+
+- (NSString*)_text {
+    NSString* ret = [_layoutManager.textStorage string];
+
+    if ([ret length] == 0)
+        return @"";
+
+    return ret;
+}
+
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
-    _text = [coder decodeObjectForKey:@"UIText"];
+    _textContainer = [[NSTextContainer alloc] initWithSize:CGSizeMake(self.frame.size.width, FLT_MAX)];
+    _layoutManager = [NSLayoutManager new];
+    [_layoutManager addTextContainer:_textContainer];
+    _layoutManager.delegate = self;
+    _layoutManager.textStorage = [NSTextStorage new];
+
+    [self _setText:[coder decodeObjectForKey:@"UIText"]];
     _textColor = [coder decodeObjectForKey:@"UITextColor"];
     if (_textColor == nil) {
         _textColor = [UIColor blackColor];
@@ -75,7 +113,20 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     _marginSize = 10.0f;
 
-    adjustTextLayerSize(self);
+    [self _adjustTextLayerSize:FALSE];
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)container {
+    self = [self initWithFrame:frame];
+    _textContainer = [container retain];
+    _layoutManager = [container.layoutManager retain];
+    _layoutManager.delegate = self;
+    [self _adjustTextLayerSize:FALSE];
 
     return self;
 }
@@ -84,6 +135,13 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [super initWithFrame:frame];
 
     [self setOpaque:FALSE];
+
+    _textContainer = [[NSTextContainer alloc] initWithSize:CGSizeMake(self.frame.size.width, FLT_MAX)];
+    _layoutManager = [NSLayoutManager new];
+    [_layoutManager addTextContainer:_textContainer];
+    _layoutManager.delegate = self;
+    _layoutManager.textStorage = [NSTextStorage new];
+
     _alignment = UITextAlignmentLeft;
     _font = [UIFont defaultFont];
     _textColor = [UIColor blackColor];
@@ -100,75 +158,19 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [self addSubview:(id)_cursorBlink];
     _marginSize = 5.0f;
 
-    adjustTextLayerSize(self);
+    [self _adjustTextLayerSize:FALSE];
 
     return self;
 }
 
-#if USE_TEXT_LAYER
-+ (Class)layerClass {
-    return [CATextLayer class];
-}
-#endif
-
-static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
-#if USE_TEXT_LAYER
-    id layer = [self layer];
-    [layer _setDisplayParams:(id)self->
-                          _font:(id)self->
-                          _text:(id)self->
-                     _textColor:self->
-                     _alignment:
-        UILineBreakModeWordWrap:
-                            nil:CGPointMake(0.0f, 0.0f):0];
-
-    UIEdgeInsets insets;
-    insets.left = textViewLeftPadding;
-    insets.top = self->_marginSize;
-    insets.right = textViewRightPadding;
-    insets.bottom = self->_marginSize;
-    [layer _setEdgeInsets:insets];
-    [layer _setCenterVertically:false];
-#endif
+- (void)_adjustTextLayerSize:(BOOL)setContentPos {
     CGSize size;
-    CGRect rect;
+    CGRect allText = [_layoutManager usedRectForTextContainer:_textContainer];
 
-    rect = [self bounds];
-    CGRect ourRect = rect;
+    [self setNeedsDisplay];
 
-    rect.origin.y = self->_marginSize;
-    rect.origin.x = textViewLeftPadding;
-    rect.size.width -= textViewLeftPadding + textViewRightPadding;
-    rect.size.height -= self->_marginSize * 2.0f;
-
-    CGSize fontExtent;
-    CGPoint cursorPos = { 0, 0 };
-
-    CGSize fontHeight = { 0 };
-    fontHeight = [@" " sizeWithFont:(id)self->_font];
-    fontExtent = [self->_text sizeWithFont:(UIFont*)self->_font
-                                  forWidth:rect.size.width
-                             lineBreakMode:UILineBreakModeWordWrap
-                               lastCharPos:&cursorPos];
-
-    CGRect centerRect;
-    centerRect.origin.x = 0;
-    centerRect.origin.y = 0;
-    centerRect.size = fontExtent;
-    EbrCenterTextInRectVertically(&centerRect, &fontExtent, (UIFont*)self->_font);
-    rect.origin.y += centerRect.origin.y;
-
-    cursorPos.x += rect.origin.x;
-    cursorPos.y += rect.origin.y;
-
-    rect.origin = cursorPos;
-    rect.size.width = 2;
-    rect.size.height = fontHeight.height;
-    self->_cursorRect = rect;
-    [self->_cursorBlink setFrame:rect];
-
-    size.width = ourRect.size.width;
-    size.height = fontExtent.height + self->_marginSize * 2.0f;
+    size.width = self.bounds.size.width;
+    size.height = allText.size.height + self->_marginSize * 2.0f;
 
     CGSize curSize;
     curSize = [self contentSize];
@@ -176,7 +178,10 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         [self setContentSize:size];
     }
 
-    [self setNeedsDisplay];
+    if ([_layoutManager.textStorage length] > 0) {
+        self->_cursorRect = _layoutManager.extraLineFragmentRect;
+        [self->_cursorBlink setFrame:self->_cursorRect];
+    }
 
     CGRect curBounds;
     curBounds = [self bounds];
@@ -185,12 +190,13 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         CGPoint curOffset;
         curOffset = [self contentOffset];
 
+        CGPoint cursorPos;
         cursorPos.x = 0;
-        cursorPos.y += fontHeight.height;
+        cursorPos.y = self->_cursorRect.origin.y + self->_cursorRect.size.height;
         cursorPos.y += 10.0f;
         cursorPos.y -= curBounds.size.height;
-        if (cursorPos.y > size.height - curBounds.size.height) {
-            cursorPos.y = size.height - curBounds.size.height;
+        if (cursorPos.y > curSize.height - curBounds.size.height) {
+            cursorPos.y = curSize.height - curBounds.size.height;
         }
         if (cursorPos.y < 0.0f) {
             cursorPos.y = 0.0f;
@@ -202,10 +208,16 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)caretRectForPosition:(CGPoint)position {
     return _cursorRect;
 }
 
+/**
+ @Status Stub
+*/
 - (id<UITextInputTraits>)textInputTraits {
     return (id<UITextInputTraits>)self;
 }
@@ -220,7 +232,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 
 - (void)scrollViewDidScroll:(UIScrollView*)scroller {
 #if !USE_TEXT_LAYER
-    adjustTextLayerSize(self);
+    [self _adjustTextLayerSize:FALSE];
 #endif
 }
 
@@ -229,7 +241,8 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 */
 - (void)setTextColor:(UIColor*)color {
     _textColor = color;
-    adjustTextLayerSize(self);
+    [self.textStorage setDefaultAttribute:color forKey:NSForegroundColorAttributeName];
+    [self _adjustTextLayerSize:FALSE];
 }
 
 /**
@@ -244,7 +257,8 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 */
 - (void)setFont:(UIFont*)font {
     _font = font;
-    adjustTextLayerSize(self);
+    [self.textStorage setDefaultAttribute:font forKey:NSFontAttributeName];
+    [self _adjustTextLayerSize:FALSE];
 }
 
 /**
@@ -257,40 +271,38 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 /**
  @Status Interoperable
 */
-- (void)setText:(id)text {
-    _text.attach([text copy]);
-    adjustTextLayerSize(self);
+- (void)setText:(NSString*)text {
+    [self _setText:text];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setAttributedText:(NSAttributedString*)text {
-    UNIMPLEMENTED();
-    id attributes = [text attributesAtIndex:0 effectiveRange:NULL];
-    id font = [attributes objectForKey:@"kCTFontAttributeName"];
-    if (font) {
-        [self setFont:font];
-    }
+    [_layoutManager.textStorage beginEditing];
+    [_layoutManager.textStorage setAttributedString:text];
+    [_layoutManager.textStorage endEditing];
+}
 
-    [self setText:[text string]];
+- (NSAttributedString*)attributedText {
+    return _layoutManager.textStorage;
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)text {
-    if (_text == nil) {
-        _text = @"";
+    if ([self _text] == nil) {
+        return @"";
     }
-    return _text;
+    return [self _text];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)hasText {
-    return [_text length] > 0;
+    return [[self _text] length] > 0;
 }
 
 /**
@@ -298,7 +310,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 */
 - (void)setTextAlignment:(UITextAlignment)alignment {
     _alignment = alignment;
-    adjustTextLayerSize(self);
+    [self _adjustTextLayerSize:FALSE];
 }
 
 /**
@@ -330,53 +342,64 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSpellCheckingType:(UITextSpellCheckingType)spellType {
 }
 
 - (void)drawRect:(CGRect)rect {
-    id text = _text;
-
-    if (text == nil) {
-        text = @"";
-    }
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
 
-    rect = [self bounds];
-
-    CGRect wholeRect = rect;
-    rect.origin.x = textViewLeftPadding;
-    rect.origin.y = 10.0f;
-    rect.size.width -= textViewLeftPadding + textViewRightPadding;
-    rect.size.height -= 20.0f;
-
-    CGSize fontExtent;
-    fontExtent = [text sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap];
-
-    CGRect centerRect;
-    centerRect.origin.x = 0;
-    centerRect.origin.y = 0;
-    centerRect.size = fontExtent;
-    EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
-    rect.origin.y += centerRect.origin.y;
-    rect.size.height = fontExtent.height;
-
-    fontExtent = [text drawInRect:rect withFont:(id)_font lineBreakMode:UILineBreakModeWordWrap];
+    NSRange range;
+    range.location = 0;
+    range.length = INT_MAX;
+    [_layoutManager drawBackgroundForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
+    [_layoutManager drawGlyphsForGlyphRange:range atPoint:CGPointMake(_textContainerInset.top, _textContainerInset.left)];
 }
 
+/**
+ @Status Interoperable
+*/
+
+- (NSTextStorage*)textStorage {
+    return _layoutManager.textStorage;
+}
+
+- (void)layoutManagerDidInvalidateLayout:(NSLayoutManager*)sender {
+    [self _adjustTextLayerSize:FALSE];
+    [self setNeedsDisplay];
+}
+
+/**
+ @Status Stub
+*/
 - (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setKeyboardType:(UIKeyboardType)type {
     _keyboardType = type;
 }
 
+/**
+ @Status Stub
+*/
 - (UIKeyboardType)keyboardType {
     return _keyboardType;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setKeyboardAppearance:(UIKeyboardAppearance)appearance {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setEnablesReturnKeyAutomatically:(BOOL)type {
 }
 
@@ -387,12 +410,21 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setClearsOnBeginEditing:(BOOL)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSecureTextEntry:(BOOL)secure {
 }
 
@@ -409,6 +441,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setReturnKeyType:(UIReturnKeyType)type {
 }
 
@@ -434,29 +469,20 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
         key = 10;
     }
 
-    id newChar = [NSString stringWithCharacters:(unichar*)&key length:1];
-
-    if (_text == nil) {
-        _text.attach([NSMutableString new]);
-    }
-
-    NSString* oldString = [_text copy];
-    NSString* newString = [NSMutableString new];
-    [newString setString:(id)_text];
+    bool insertCharacters = true;
+    NSString* character = [NSString stringWithCharacters:(unichar*)&key length:1];
 
     if (key == 8) {
-        range.location = [newString length];
+        range.location = [[self attributedText] length];
         if (range.location > 0) {
             range.length = 1;
             range.location--;
-            [newString deleteCharactersInRange:range];
-            newChar = @"";
+            character = @"";
             proceed = true;
+            insertCharacters = false;
         }
     } else {
-        [newString appendString:newChar];
-
-        range.location = [newString length] - 1;
+        range.location = [[self attributedText] length];
         range.length = 1;
         proceed = true;
     }
@@ -464,72 +490,31 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     if (proceed) {
         bool setText = true;
         if ([_delegate respondsToSelector:@selector(textView:shouldChangeCharactersInRange:replacementText:)]) {
-            setText = [_delegate textView:self shouldChangeCharactersInRange:range replacementText:newChar] != 0;
+            setText = [_delegate textView:self shouldChangeCharactersInRange:range replacementText:character] != 0;
         }
         if (setText) {
             if ([_delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
-                setText = [_delegate textView:self shouldChangeTextInRange:range replacementText:newChar] != 0;
+                setText = [_delegate textView:self shouldChangeTextInRange:range replacementText:character] != 0;
             }
         }
 
         if (setText) {
-            _text = newString;
-            adjustTextLayerSize(self, false);
+            [_layoutManager.textStorage beginEditing];
+            if (insertCharacters) {
+                NSDictionary* attrs = [_layoutManager.textStorage attributesAtIndex:range.location - 1 effectiveRange:NULL];
+                NSAttributedString* newString = [[[NSAttributedString alloc] initWithString:character attributes:attrs] autorelease];
+                [_layoutManager.textStorage insertAttributedString:newString atIndex:range.location];
+            } else {
+                [_layoutManager.textStorage deleteCharactersInRange:range];
+            }
+
+            [_layoutManager.textStorage endEditing];
+            [self _adjustTextLayerSize:TRUE];
 
             if ([_delegate respondsToSelector:@selector(textViewDidChange:)]) {
                 [_delegate textViewDidChange:self];
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification" object:self];
-
-            adjustTextLayerSize(self, true);
-        }
-    }
-}
-
-- (void)_deleteRange:(NSNumber*)num {
-    NSRange range;
-    int numToDelete = [num intValue];
-    bool proceed = false;
-
-    if (_text == nil) {
-        _text.attach([NSMutableString new]);
-    }
-
-    NSString* oldString = [_text copy];
-    NSString* newString = [NSMutableString new];
-    [newString setString:(id)_text];
-    NSString* newChar;
-
-    range.location = [newString length];
-    if (range.location > 0) {
-        range.length = numToDelete;
-        range.location -= numToDelete;
-        [newString deleteCharactersInRange:range];
-        newChar = @"";
-        proceed = true;
-    }
-
-    if (proceed) {
-        bool setText = true;
-        if ([_delegate respondsToSelector:@selector(textView:shouldChangeCharactersInRange:replacementText:)]) {
-            setText = [_delegate textView:self shouldChangeCharactersInRange:range replacementText:newChar] != 0;
-        }
-        if (setText) {
-            if ([_delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
-                setText = [_delegate textView:self shouldChangeTextInRange:range replacementText:newChar] != 0;
-            }
-        }
-
-        if (setText) {
-            _text = newString;
-            adjustTextLayerSize(self, false);
-
-            if ([_delegate respondsToSelector:@selector(textViewDidChange:)]) {
-                [_delegate textViewDidChange:self];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextViewTextDidChangeNotification" object:self];
-
-            adjustTextLayerSize(self, true);
         }
     }
 }
@@ -575,7 +560,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     [_cursorBlink setHidden:TRUE];
 
     if (_isEditing) {
-        adjustTextLayerSize(self);
+        [self _adjustTextLayerSize:FALSE];
 
         EbrHideKeyboard();
         _isEditing = FALSE;
@@ -589,6 +574,9 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     return TRUE;
 }
 
+/**
+ @Status Stub
+*/
 - (NSUndoManager*)undoManager {
     return _undoManager;
 }
@@ -630,7 +618,6 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 
 - (void)dealloc {
     [_cursorTimer invalidate];
-    _text = nil;
     _font = nil;
     _textColor = nil;
     _inputTraits = nil;
@@ -638,6 +625,8 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     _cursorBlink = nil;
     _inputAccessoryView = nil;
     _inputView = nil;
+    [_textContainer release];
+    [_layoutManager release];
 
     [super dealloc];
 }
@@ -645,13 +634,26 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 /**
  @Status Interoperable
 */
+
+- (NSTextContainer*)textContainer {
+    return _textContainer;
+}
+
+/**
+ @Status Interoperable
+*/
+
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
 - (void)layoutSubviews {
+    if (self.bounds.size.width != _curSize.width) {
+        _curSize = self.bounds.size;
+        _textContainer.size = CGSizeMake(self.bounds.size.width, FLT_MAX);
+    }
 #if !USE_TEXT_LAYER
-    adjustTextLayerSize(self);
+    [self _adjustTextLayerSize:FALSE];
 #endif
     [super layoutSubviews];
 }
@@ -682,7 +684,8 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
     CGSize fontExtent = { 0, 0 };
     CGPoint cursorPos = { 0, 0 };
 
-    fontExtent = [_text sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap lastCharPos:&cursorPos];
+    fontExtent =
+        [[self _text] sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap lastCharPos:&cursorPos];
 
     CGRect centerRect;
     centerRect.origin.x = 0;
@@ -698,7 +701,7 @@ static void adjustTextLayerSize(UITextView* self, bool setContentPos = false) {
 }
 
 - (UITextRange*)selectedTextRange {
-    return [UITextRange textRangeWithPositon:[_text length] length:0];
+    return [UITextRange textRangeWithPositon:[[self _text] length] length:0];
 }
 
 @end

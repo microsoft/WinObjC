@@ -42,7 +42,6 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreFoundation/CFBag.h>
-#import <CoreFoundation/CFBinaryHeap.h>
 #import <CoreFoundation/CFBitVector.h>
 #import <CoreFoundation/CFBundle.h>
 #import <CoreFoundation/CFByteOrder.h>
@@ -77,3 +76,4 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 #import <CoreFoundation/CFUserNotification.h>
 #import <CoreFoundation/CFXMLNode.h>
 #import <CoreFoundation/CFXMLParser.h>
+#import <CoreFoundation/CFType.h>

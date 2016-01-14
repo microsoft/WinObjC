@@ -121,7 +121,7 @@ void UILabel::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
         obj->AddOutputMember(writer, "UITextColor", color->CreateObject(writer));
     }
     if ( _highlightedColor ) {
-        obj->AddOutputMember(writer, "UIHighlightedColor", _textColor);
+        obj->AddOutputMember(writer, "UIHighlightedColor", _highlightedColor);
     }
     AddOutputMember(writer, "UIMinimumScaleFactor", new XIBObjectFloat(1.0f));
     if ( _textAlignment != 0 ) AddInt(writer, "UITextAlignment", _textAlignment);

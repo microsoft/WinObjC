@@ -21,9 +21,9 @@
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 #include "UIKit/UIRuntimeOutletConnection.h"
-#include "UIKit/UIClassSwapper.h"
+#include "UIClassSwapper.h"
 #include "QuartzCore/CATransaction.h"
-#include "Foundation/NSColor.h"
+#include "UnifiedFoundation/Foundation/NSColor.h"
 
 @class UIImageNibPlaceholder;
 @class UIButtonContent;
@@ -31,7 +31,7 @@
 @class UIActionSheet;
 @class UIProxyObject;
 
-void NSObjForceinclude();
+extern "C" void NSObjForceinclude();
 void NSStringForceinclude();
 void NSValueForceinclude();
 

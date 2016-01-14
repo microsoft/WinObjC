@@ -237,7 +237,7 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, bool bPresentationLayer) {
         backgroundColor.g = 0.0f;
         backgroundColor.b = 0.0f;
         backgroundColor.a = 0.0f;
-        _backgroundColor = nil;
+        _backgroundColor = nullptr;
         contentColor.r = 1.0f;
         contentColor.g = 1.0f;
         contentColor.b = 1.0f;

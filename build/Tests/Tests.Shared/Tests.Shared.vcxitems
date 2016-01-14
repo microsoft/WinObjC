@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{EE68A240-536D-4557-AB96-D164E93059A1}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\msvcp140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\msvcp140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vccorlib140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vccorlib140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcruntime140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcruntime140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\concrt140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\concrt140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcamp140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcamp140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcomp140d_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcomp140_app.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+  </ItemGroup>
+</Project>

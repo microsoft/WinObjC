@@ -21,6 +21,8 @@
 #include "QuartzCore/CABasicAnimation.h"
 #include "CALayerInternal.h"
 
+NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
+
 __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 
 @implementation CATransaction {

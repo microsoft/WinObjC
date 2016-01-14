@@ -20,7 +20,7 @@
 #import "Foundation/Foundation.h"
 #include <Starboard/String.h>
 #import "NSObjectInternal.h"
-#include "../Foundation/NSValueTransformers.h"
+#include "../UnifiedFoundation/Foundation/NSValueTransformers.h"
 #include "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #include "../objcrt/runtime.h"
 
@@ -163,8 +163,7 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     // If it doesn't respond to countOfX, or it doesn't respond to either
     // objectIn or objectsAt, bail.
     if (![self respondsToSelector:countSelector] ||
-        !([self respondsToSelector:objectInAtSelector] ||
-          [self respondsToSelector:objectsAtSelector])) {
+        !([self respondsToSelector:objectInAtSelector] || [self respondsToSelector:objectsAtSelector])) {
         return false;
     }
 
@@ -237,7 +236,7 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     const char* rawKey = [key UTF8String];
 
     auto accessor = KVCGetterForPropertyName(self, rawKey);
-    struct objc_ivar *ivar = KVCIvarForPropertyName(self, rawKey);
+    struct objc_ivar* ivar = KVCIvarForPropertyName(self, rawKey);
 
     return [_NSMutableKeyProxyArray proxyArrayForObject:self key:key ivar:ivar];
 }
@@ -541,8 +540,8 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 
     [NSException raiseWithLogging:@"SelectorNotFound" format:@"%@", err];
 }
- @end
+@end
 
 /** Included to force TU to be linked - remove once exported as DLL **/
-__declspec(dllexport) void NSObjForceinclude() {
+extern "C" void NSObjForceinclude() {
 }

@@ -16,12 +16,9 @@
 
 #include <windows.h>
 
-// Pull in GoogleTest
-#include "include/gtest-api.h"
-#include "src/gtest-all.cc"
+#include <TestFramework.h>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
     // Initialize COM for all of the tests
     ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
@@ -36,4 +33,3 @@ int main(int argc, char **argv)
 
     return result;
 }
-

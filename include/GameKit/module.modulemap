@@ -1,0 +1,8 @@
+module GameKit [extern_c] {
+    umbrella header "GameKit.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

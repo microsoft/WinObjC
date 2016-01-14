@@ -82,7 +82,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
         }
 
         if (filename == nil)
-            return nil;
+            return nullptr;
     }
 
 #if defined(USE_ROBOTO_FONT)
@@ -191,6 +191,10 @@ ret->height += ascenderDelta;
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
     UIFont* ret = [self alloc];
 
+    if (size == 0.0f) {
+        size = [self systemFontSize];
+    }
+
     ret->_name = name;
     ret->_size = size;
     ret->_horizontalScale = 1.0f;
@@ -274,7 +278,9 @@ ret->height += ascenderDelta;
  @Status Interoperable
 */
 + (UIFont*)systemFontOfSize:(float)size {
-    UIFont* ret = [self fontWithName:@"Helvetica" size:size];
+    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
+    // Clean this up a bit once fontDescriptor gets better support
+    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:12.0] size:0];
 
     return ret;
 }
@@ -294,13 +300,21 @@ ret->height += ascenderDelta;
  @Status Interoperable
 */
 + (UIFont*)boldSystemFontOfSize:(float)size {
-    UIFont* ret = [self fontWithName:@"Helvetica Bold" size:size];
+    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
+    // Clean this up a bit once fontDescriptor gets better support
+    UIFontDescriptor* fontDes =
+        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:12.0] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
 
     return ret;
 }
 
 + (UIFont*)italicSystemFontOfSize:(float)size {
-    UIFont* ret = [self fontWithName:@"Helvetica Oblique" size:size];
+    // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
+    // Clean this up a bit once fontDescriptor gets better support
+    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:12.0]
+        fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
 
     return ret;
 }
@@ -574,6 +588,8 @@ void loadFont(UIFont* self) {
         return FALSE;
     if (![_name isEqual:(id)other->_name])
         return FALSE;
+    if (![_descriptor isEqual:(id)other->_descriptor])
+        return FALSE;
 
     return TRUE;
 }
@@ -604,11 +620,11 @@ void loadFont(UIFont* self) {
 @end
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     if (error)
-        *error = nil;
+        *error = nullptr;
 
     UIFont* fnt = font;
 
@@ -629,11 +645,19 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
 }
 
 /**
- @Status Caveat
- @Notes matrix parameter not supported
+@Status Caveat
+@Notes matrix parameter not supported
 */
-CGFontRef CTFontCreateWithName(id name, float size, CGAffineTransform* matrix) {
-    id ret = [[UIFont fontWithName:name size:size] retain];
+CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
+    id ret = [[UIFont fontWithName:(NSString*)name size:size] retain];
 
-    return ret;
+    return (CTFontRef)ret;
+}
+
+/**
+@Status Stub
+*/
+bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error) {
+    UNIMPLEMENTED();
+    return false;
 }

@@ -76,7 +76,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     // In all likelihood if we have a completion handler when this is called we haven't finished the last animation.
     // TODO: Likelihood?
-    if (_completion != nil) {
+    if (_completion) {
         _completion(YES);
         _completion = nil;
     }
@@ -85,7 +85,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         CGPoint targetOffset = CGPointMake(currentFrame.size.width, 0);
 
         self.scrollEnabled = NO;
-        _completion = completion;
+        auto copiedCompletion = Block_copy(completion);
+        _completion = copiedCompletion; // retained
+        Block_release(copiedCompletion);
 
         // Recenter the view. This will cancel any scroll animations.
         [self setContentOffset:targetOffset animated:NO];
@@ -117,7 +119,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         [self setContentOffset:currentOffset animated:NO];
         [self _updateVisible];
 
-        if(completion != nil) { 
+        if(completion) {
             completion(YES);
         }
     }

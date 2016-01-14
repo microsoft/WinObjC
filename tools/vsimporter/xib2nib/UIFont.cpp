@@ -52,7 +52,11 @@ void UIFont::InitFromStory(XIBObject *obj)
 {
     ObjectConverter::InitFromStory(obj);
 
-    _fontSize = strtod(getAttrib("pointSize"), NULL);
+    _fontSize = 12.0;
+    auto attribute = getAttrib("pointSize");
+    if (attribute) {
+        _fontSize = strtod(attribute, NULL);
+    }
 
     const char *fontType = getAttrib("type");
 

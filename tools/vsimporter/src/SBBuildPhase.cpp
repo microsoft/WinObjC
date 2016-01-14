@@ -69,7 +69,8 @@ void SBBuildPhase::writeVSFileDescriptions(VCProject& proj, const String& defaul
     return;
 
   const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+  VCItemHint itemHint = { defaultGroup, "" };
   for (auto buildFile : m_phase->getBuildFileList()) {
-    addBuildFileToVS(defaultGroup, buildFile, proj, projBS);
+    addBuildFileToVS(buildFile, proj, projBS, &itemHint);
   }
 }

@@ -18,20 +18,18 @@ FOUNDATION_EXPORT_CLASS
 @interface NSMutableURLRequest : NSURLRequest
 
 @property (copy) NSURL* mainDocumentURL;
+@property (copy) NSURL* URL;
+@property (copy) NSData* HTTPBody;
+@property (copy) NSDictionary* allHTTPHeaderFields;
+@property (copy) NSString* HTTPMethod;
+@property (retain) NSInputStream* HTTPBodyStream;
+@property NSURLRequestCachePolicy cachePolicy;
+@property NSURLRequestNetworkServiceType networkServiceType;
+@property NSTimeInterval timeoutInterval;
+@property BOOL HTTPShouldHandleCookies;
+@property BOOL HTTPShouldUsePipelining;
+@property BOOL allowsCellularAccess;
 
-- (void)setURL:(NSURL*)value;
-- (void)setCachePolicy:(NSURLRequestCachePolicy)value;
-- (void)setTimeoutInterval:(NSTimeInterval)value;
-
-- (void)setHTTPMethod:(NSString*)value;
-
-- (void)setHTTPBody:(NSData*)value;
-- (void)setHTTPBodyStream:(NSInputStream*)value;
-
-- (void)setAllHTTPHeaderFields:(NSDictionary*)allValues;
 - (void)setValue:(NSString*)value forHTTPHeaderField:(NSString*)field;
 - (void)addValue:(NSString*)value forHTTPHeaderField:(NSString*)field;
-
-- (void)setHTTPShouldHandleCookies:(BOOL)value;
-- (void)setHTTPShouldUsePipelining:(BOOL)shouldUsePipelining;
 @end

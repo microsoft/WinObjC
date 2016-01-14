@@ -16,7 +16,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -28,7 +28,7 @@
 #include "windows.h"
 
 TEST(Foundation, NSFileManagerGetAttributes) {
-    // get test startup full path 
+    // get test startup full path
     wchar_t fullPath[_MAX_PATH];
     GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
 
@@ -40,7 +40,7 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\NSFileManagerUT.txt
     ASSERT_TRUE(wcscat_s(dir, _countof(dir), L"\\data\\") == 0);
     ASSERT_TRUE(::_wmakepath_s(fullPath, _countof(fullPath), drive, dir, L"NSFileManagerUT", L".txt") == 0);
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar *)fullPath length:_MAX_PATH];
+    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -50,12 +50,12 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     ASSERT_TRUE_MSG(attributes != nil, "failed to get file attributes for %@", testFileFullPath);
 
     // get file attributes from windows side
-    struct _stat fileStatus = {0};
+    struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(fullPath, &fileStatus) == 0);
 
-    // check file creation date 
+    // check file creation date
     NSDate* expectedCreationDate = [NSDate dateWithTimeIntervalSince1970:(double)fileStatus.st_ctime];
-    NSDate* creationDate  = [attributes fileCreationDate];
+    NSDate* creationDate = [attributes fileCreationDate];
     ASSERT_TRUE_MSG(creationDate != nil, "failed to get creation date for %@", testFileFullPath);
     ASSERT_OBJCEQ_MSG(expectedCreationDate, creationDate, "failed to check creation date for %@", testFileFullPath);
 
@@ -68,7 +68,6 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     // now check file size
     ASSERT_TRUE_MSG(fileStatus.st_size == [attributes fileSize], "failed to check file size for %@", testFileFullPath);
 }
-
 
 TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     // get test startup full path
@@ -86,18 +85,18 @@ TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     wchar_t currentDir[_MAX_PATH];
     DWORD ret = GetCurrentDirectoryW(_MAX_PATH, currentDir);
     ASSERT_TRUE(ret > 0 && ret < _MAX_PATH);
-    LOG_INFO("Change current dir to:%@", [NSString stringWithCharacters:(const unichar *)currentDir length:_MAX_PATH]);
+    LOG_INFO("Change current dir to:%@", [NSString stringWithCharacters:(const unichar*)currentDir length:_MAX_PATH]);
 
     // construct target URL using current directory and relative URL
     NSFileManager* manager = [NSFileManager defaultManager];
-    NSURL *baseURL = [NSURL URLWithString: [manager currentDirectoryPath]];
-    NSURL *targetURL = [NSURL URLWithString: @"data/" relativeToURL:baseURL];
-    
+    NSURL* baseURL = [NSURL URLWithString:[manager currentDirectoryPath]];
+    NSURL* targetURL = [NSURL URLWithString:@"data/" relativeToURL:baseURL];
+
     // enumerate target URL
     NSArray* urlContents = [manager contentsOfDirectoryAtURL:targetURL 
                                   includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey] 
                                                      options:(NSDirectoryEnumerationOptions)0 
-                                                       error:nil];
+                                                       error:nullptr];
 
     // verify only one file exists
     const NSString* c_expectedFileName = @"NSFileManagerUT.txt";
@@ -112,7 +111,7 @@ TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     wchar_t targetFileFullPath[_MAX_PATH];
     ASSERT_TRUE(wcscpy_s(targetFileFullPath, _countof(targetFileFullPath), currentDir) == 0);
     ASSERT_TRUE(wcscat_s(targetFileFullPath, _countof(targetFileFullPath), L"\\data\\NSFileManagerUT.txt") == 0);
-    struct _stat fileStatus = {0};
+    struct _stat fileStatus = { 0 };
     ASSERT_TRUE(::_wstat(targetFileFullPath, &fileStatus) == 0);
 
     // check NSURL property of NSURLContentModificationDateKey is the same as file modification date
@@ -121,4 +120,3 @@ TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
     ASSERT_TRUE_MSG(actualModificationDate != nil, "failed to get ModificationDate from %@", targetFileURL);
     ASSERT_OBJCEQ_MSG(expectedModificationDate, actualModificationDate, "failed to check modification date for %@", targetFileURL);
 }
-

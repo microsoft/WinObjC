@@ -35,23 +35,24 @@
       <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
-      <IncludeCoreFoundation Condition="$(LinkAdditionalDependencies.Contains('CoreFoundation.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeCoreFoundation>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
       <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
+      <IncludeAccounts Condition="$(LinkAdditionalDependencies.Contains('Accounts.lib'))">true</IncludeAccounts>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeObjcrt>true</IncludeObjcrt>
-      <IncludeUWP Condition="($(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true') and '$(Platform)' != 'ARM'">true</IncludeUWP>
+      <IncludeLogging>true</IncludeLogging>
+      <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
+      <SBResourceCopy Condition="'$(IncludeLogging)' == 'true'" Include="$(StarboardLibDirs)\Logging.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
 
       <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
       <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
-      <SBResourceCopy Condition="'$(IncludeCoreFoundation)' == 'true'" Include="$(StarboardLibDirs)\CoreFoundation.dll" />
       <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
       <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
       <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
@@ -87,6 +88,7 @@
       <SBResourceCopy Condition="'$(IncludeSecurity)' == 'true'" Include="$(StarboardLibDirs)\Security.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
+      <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
     </ItemGroup>
   </Target>
 
@@ -175,6 +177,7 @@
       Input="@(ClangCompile)"
       LLVMDirectory="$(StarboardLLVMDirectory)"
       ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
+      ObjectiveCModules="%(ClangCompile.ObjectiveCModules)"
       ObjectFileName="%(ClangCompile.ObjectFileName)"
       OptimizationLevel="%(ClangCompile.OptimizationLevel)"
       PrefixHeader="%(ClangCompile.PrefixHeader)"

@@ -20,8 +20,7 @@
 /**
  @Status Stub
 */
-IWPLATFORM_EXPORT
-int uname(struct utsname* uname) {
+extern "C" int uname(struct utsname* uname) {
     UNIMPLEMENTED();
     return 0;
 }

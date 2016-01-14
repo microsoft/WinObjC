@@ -246,9 +246,6 @@ void setToUnicode(NSString* inst, UnicodeString& str) {
     }
 }
 
-@implementation NSRegularExpression
-@end
-
 int formatPrintfU(WORD* out, int maxLen, const WORD* fmt, va_list pReader);
 
 UnicodeString EbrUnicodePrintf(NSString* format, va_list list) {
@@ -412,23 +409,24 @@ typedef NSUInteger NSStringCompareOptions;
     return [ret autorelease];
 }
 
-#if 0
--(NSString*) stringByAppendingFormat:(NSString*)formatStr {
-Ebr_va_start(pReader, formatStr);
+/**
+ @Status Caveat
+ @Notes Positional formatting is not supported.
+*/
+- (NSString*)stringByAppendingFormat:(NSString*)formatStr, ... {
+    va_list reader;
+    va_start(reader, formatStr);
+    UnicodeString str = EbrUnicodePrintf(formatStr, reader);
+    va_end(reader);
 
-UnicodeString output = EbrUnicodePrintf(formatStr, pReader);
-UStringHolder s1(self);
+    UStringHolder s1(self);
+    UnicodeString copy = s1.string();
+    copy.append(str);
+    NSString* ret = [NSString alloc];
+    setToUnicode(ret, copy);
 
-UnicodeString copy = s1.string();
-copy.append(output);
-
-NSString* ret = [NSString alloc];
-setToUnicode(ret, copy);
-Ebr_va_end(pReader);
-
-return [ret autorelease];
+    return [ret autorelease];
 }
-#endif
 
 /**
  @Status Stub
@@ -1106,10 +1104,20 @@ return [ret autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSStringEncoding)fastestEncoding {
-    UNIMPLEMENTED();
+    // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
+    UStringHolder s1(self);
+    icu_48::UnicodeString unicodeString = s1.string();
+    int32_t length = unicodeString.length();
+
+    for (int32_t i = 0; i < length; i++) {
+        if (unicodeString[i] > 0x7F) {
+            return NSUnicodeStringEncoding;
+        }
+    }
+
     return NSASCIIStringEncoding;
 }
 
@@ -1960,7 +1968,7 @@ return [ret autorelease];
     }
     if (pos == range.length) {
         ret.length = 0;
-        ret.location = 0x7fffffff;
+        ret.location = NSNotFound;
     } else {
         ret.location = pos + range.location;
         ret.length = 1;
@@ -2142,7 +2150,7 @@ return [ret autorelease];
         NSRange subrange;
 
         subrange = [self rangeOfString:target options:options range:range];
-        if (subrange.location == 0x7fffffff) {
+        if (subrange.location == NSNotFound) {
             //  Nothing to replace
             if (object_getClass(self) == [CFConstantString class]) {
                 return self;
@@ -2250,8 +2258,6 @@ return [ret autorelease];
 
         NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:subStr options:regOptions error:NULL];
 
-        ret.location = 0;
-        ret.length = 0x7fffffff;
         ret = [regExp rangeOfFirstMatchInString:self options:searchOptions range:range];
         [regExp release];
 
@@ -2268,7 +2274,7 @@ return [ret autorelease];
             ret.location = range.location + loc;
             ret.length = str2.length();
         } else {
-            ret.location = 0x7fffffff;
+            ret.location = NSNotFound;
             ret.length = 0;
             return ret;
         }
@@ -2300,19 +2306,19 @@ return [ret autorelease];
         ret.location = range.location + matchPos;
         ret.length = matchLen;
     } else {
-        ret.location = 0x7fffffff;
+        ret.location = NSNotFound;
         ret.length = 0;
     }
 
     if (options & NSAnchoredSearch) {
         if (options & NSBackwardsSearch) {
             if (ret.location + ret.length != range.location + range.length) {
-                ret.location = 0x7fffffff;
+                ret.location = NSNotFound;
                 ret.length = 0;
             }
         } else {
             if (ret.location != 0) {
-                ret.location = 0x7fffffff;
+                ret.location = NSNotFound;
                 ret.length = 0;
             }
         }

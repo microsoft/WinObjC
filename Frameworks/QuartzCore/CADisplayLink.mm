@@ -14,16 +14,16 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSTimer.h"
-#include "Foundation/NSRunLoop.h"
-#include "../Foundation/NSRunLoopState.h"
-#include "NSRunLoopSource.h"
-#include "Quartzcore/CADisplayLink.h"
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSTimer.h>
+#import <Foundation/NSRunLoop.h>
+#import <Quartzcore/CADisplayLink.h>
+#import "NSRunLoopState.h"
+#import "NSRunLoopSource.h"
 
 EbrLock _displaySyncSocketLock = EBRLOCK_INITIALIZE;
 EbrEvent _displaySyncEvents[32];

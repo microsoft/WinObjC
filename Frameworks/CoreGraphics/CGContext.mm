@@ -1050,7 +1050,7 @@ void* CGBitmapContextGetData(CGContextRef ctx) {
 CGImageRef CGBitmapContextCreateImage(CGContextRef ctx) {
     if (!ctx) {
         EbrDebugLog("CGBitmapContextCreateImage: NULL context provided!\n");
-        return nil;
+        return nullptr;
     }
 
 #if 0 //  [blamb] Note: To be used when CopyOnWrite() actually copies on write]
@@ -1071,7 +1071,7 @@ CGImageRef CGBitmapContextGetImage(CGContextRef ctx) {
 }
 
 CGContextRef CGBitmapContextCreate32(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
-    CGImageRef newImage = nil;
+    CGImageRef newImage = nullptr;
     if (texture) {
         newImage = new CGGraphicBufferImage(width, height, _ColorARGB, texture, locking);
     } else {

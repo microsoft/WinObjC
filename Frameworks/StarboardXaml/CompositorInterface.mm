@@ -542,7 +542,7 @@ public:
             Start();
         } else if (strcmp(propName, "contents") == 0) {
         } else {
-            assert(0);
+            UNIMPLEMENTED_WITH_MSG("Stubbed function called! Unsupported property name: %hs", propName);
         }
     }
 };
@@ -808,8 +808,8 @@ public:
             free(_propertyName);
         [_propertyValue release];
 
-        _propertyName = nil;
-        _propertyValue = nil;
+        _propertyName = nullptr;
+        _propertyValue = nullptr;
     }
 
     void Process() {

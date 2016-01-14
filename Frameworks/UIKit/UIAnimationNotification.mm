@@ -100,11 +100,11 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
     if (_numStopped == _numAnimations) {
         sendDidStop(_animDelegate, _animationDidStopSelector, _animName, finished, _context);
     }
-    if (_completionBlock != nil && _numStopped == _numAnimations) {
+    if (_completionBlock && _numStopped == _numAnimations) {
         ((completionBlockFunc)_completionBlock)(TRUE);
         [_completionBlock release];
     }
-    if (_animDelegate != nil && _numStopped == _numAnimations) {
+    if (_animDelegate && _numStopped == _numAnimations) {
         [_animDelegate release];
         [_animName release];
     }

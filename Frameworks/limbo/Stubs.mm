@@ -52,9 +52,6 @@ void EbrPlatformHideKeyboard(void) {
 void EbrSetApplicationBadgeNumber(int) {
 }
 
-void EbrOpenURL(const char* url) {
-}
-
 void EbrPauseSound(void) {
 }
 
@@ -192,6 +189,10 @@ NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
  @Status Interoperable
 */
 CGPoint CGPointFromString(NSString* strPt) {
+    if (!strPt) {
+        return { 0, 0 };
+    }
+
     CGPoint ret;
 
     char* str = (char*)[strPt UTF8String];
@@ -203,6 +204,10 @@ CGPoint CGPointFromString(NSString* strPt) {
  @Status Interoperable
 */
 CGSize CGSizeFromString(NSString* strSize) {
+    if (!strSize) {
+        return { 0, 0 };
+    }
+
     CGSize ret;
 
     char* str = (char*)[strSize UTF8String];
@@ -214,6 +219,10 @@ CGSize CGSizeFromString(NSString* strSize) {
  @Status Interoperable
 */
 CGRect CGRectFromString(NSString* strRect) {
+    if (!strRect) {
+        return { { 0, 0 }, 0, 0 };
+    }
+
     CGRect ret;
 
     char* str = (char*)[strRect UTF8String];
@@ -270,33 +279,6 @@ __declspec(dllexport) extern "C" const char* strnstr(const char* a, const char* 
     return NULL;
 }
 
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Init(CC_MD5_CTX* ctx) {
-    UNIMPLEMENTED();
-    assert(0);
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, unsigned int len) {
-    UNIMPLEMENTED();
-    assert(0);
-    return 0;
-}
-
-/**
- @Status Stub
-*/
-__declspec(dllexport) int CC_MD5_Final(unsigned char* out, CC_MD5_CTX* ctx) {
-    UNIMPLEMENTED();
-    assert(0);
-    return 0;
-}
-
 EbrPlatformInfo* EbrGetDeviceInfo() {
     static EbrPlatformInfo info;
     static bool infoInited = false;
@@ -319,21 +301,6 @@ EbrPlatformInfo* EbrGetDeviceInfo() {
     }
 
     return &info;
-}
-
-extern "C" {
-#include "md5.h"
-
-__declspec(dllexport) unsigned char* CC_MD5(const void* data, long len, unsigned char* md) {
-    MD5_CTX ctx;
-
-    MD5Init(&ctx);
-    MD5Update(&ctx, (unsigned char*)data, len);
-    MD5Final(&ctx);
-
-    memcpy(md, ctx.digest, 16);
-    return md;
-}
 }
 
 /**

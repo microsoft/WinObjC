@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 @class NSData, NSDate, NSError, NSFileManager;
 
-
 @protocol NSFileManagerDelegate
 @optional
 
@@ -159,7 +158,7 @@ FOUNDATION_EXPORT_CLASS
                                   options:(NSDirectoryEnumerationOptions)mask
                              errorHandler:(BOOL (^)(NSURL* url, NSError* error))handler;
 - (NSDirectoryEnumerator*)enumeratorAtPath:(NSString*)path;
-- (NSArray**)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options;
+- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options;
 - (NSArray*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError**)error;
 - (NSArray*)subpathsAtPath:(NSString*)path;
 
@@ -242,11 +241,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)stringWithFileSystemRepresentation:(const char*)string length:(NSUInteger)length;
 
 // Managing the Delegate
-// TODO: using property syntax introudce compiling error
-// use existing version for now, will look into this later
-// @property (assign) id<NSFileManagerDelegate> delegate;
-- delegate;
-- (void)setDelegate:delegate;
+@property (assign) id delegate;
 
 // Managing the Current Directory
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path;

@@ -32,7 +32,6 @@
 #include <ppltasks.h>
 #include <wrl/client.h>
 
-#define IWEXPORT __declspec(dllexport)
 #include "winobjc\winobjc.h"
 
 using namespace concurrency;
@@ -250,7 +249,7 @@ int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, Socke
     }
 }
 
-__declspec(dllexport) unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout) {
+extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout) {
     int retval = 0;
     bool retValValid = false;
     auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
@@ -295,7 +294,7 @@ void SetXamlUIWaiter();
 
 extern "C" void* _WideStringFromNSString(void* str);
 
-__declspec(dllexport) wchar_t* __WideStringFromNSString(void* str) {
+extern "C" wchar_t* __WideStringFromNSString(void* str) {
     return (wchar_t*)_WideStringFromNSString(str);
 }
 
@@ -316,7 +315,7 @@ static const char* __const_char_From_String(Platform::String ^ str) {
     return _strdup(sstr.data());
 }
 
-__declspec(dllexport) void IWAppInit() {
+extern "C" void IWAppInit() {
     static bool initialized = false;
     if (initialized)
         return;
@@ -335,10 +334,10 @@ __declspec(dllexport) void IWAppInit() {
     SetXamlUIWaiter();
 }
 
-__declspec(dllexport) void IWRunApplicationMain(Platform::String ^ principalClassName,
-                                                Platform::String ^ delegateClassName,
-                                                float windowWidth,
-                                                float windowHeight) {
+extern "C" void IWRunApplicationMain(Platform::String ^ principalClassName,
+                                     Platform::String ^ delegateClassName,
+                                     float windowWidth,
+                                     float windowHeight) {
     IWAppInit();
 
     _startparams.argc = 0;

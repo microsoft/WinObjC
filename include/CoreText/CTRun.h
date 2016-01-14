@@ -17,21 +17,24 @@
 #ifndef _CTRUN_H_
 #define _CTRUN_H_
 
-#import <StarboardExport.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreGraphics/CGFont.h>
+#import <CoreText/CoreTextExport.h>
 
 ENABLE_IMPLICIT_BRIDGING
 
 typedef const struct __CTRun* CTRunRef;
 
-SB_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
-SB_EXPORT CFRange CTRunGetStringRange(CTRunRef run);
-SB_EXPORT CFDictionaryRef CTRunGetAttributes(CTRunRef run);
-SB_EXPORT CFIndex CTRunGetGlyphCount(CTRunRef run);
-SB_EXPORT void CTRunGetGlyphs(CTRunRef run, CFRange range, CGGlyph buffer[]);
-SB_EXPORT void CTRunGetPositions(CTRunRef run, CFRange range, CGPoint buffer[]);
+CORETEXT_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
+CORETEXT_EXPORT CFRange CTRunGetStringRange(CTRunRef run);
+CORETEXT_EXPORT CFDictionaryRef CTRunGetAttributes(CTRunRef run);
+CORETEXT_EXPORT CFIndex CTRunGetGlyphCount(CTRunRef run);
+CORETEXT_EXPORT void CTRunGetGlyphs(CTRunRef run, CFRange range, CGGlyph buffer[]);
+CORETEXT_EXPORT void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange range);
+CORETEXT_EXPORT void CTRunGetPositions(CTRunRef run, CFRange textRange, CGPoint* outPositions);
+CORETEXT_EXPORT void CTRunGetAdvances(CTRunRef run, CFRange range, CGSize buffer[]);
 
 DISABLE_IMPLICIT_BRIDGING
 

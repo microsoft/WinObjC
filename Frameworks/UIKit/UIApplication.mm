@@ -37,6 +37,7 @@
 #include "UIApplicationInternal.h"
 typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
+#include "UrlLauncher.h"
 
 #include "UIEmptyController.h"
 
@@ -45,6 +46,8 @@ typedef wchar_t WCHAR;
 
 #include "RingBuffer.h"
 #include <math.h>
+
+#include "UWP/WindowsUINotifications.h"
 
 NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
 NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
@@ -142,6 +145,9 @@ bool _drawingAllowed = true;
 
 NSMutableDictionary* curGesturesDict;
 
+// Used to query for Url scheme handlers or launch an app with a Url
+UrlLauncher* _launcher;
+
 typedef struct {
     float x, y;
     double timeStamp;
@@ -212,6 +218,9 @@ static idretaintype(NSMutableArray) _curNotifications;
     id _delegate;
     NSUInteger _statusBarStyle;
 }
+
+@synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
+
 + (instancetype)alloc {
     if (sharedApplication != nil) {
         return sharedApplication;
@@ -779,12 +788,53 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
+// TODO: Remove this function once casting is supported in RTObject
+static id UWPObjectCast(Class desiredClass, RTObject* rtObject) {
+    auto internalComPtr = (__bridge IInspectable*)[rtObject internalObject];
+    auto newObject = (RTObject*)NSAllocateObject(desiredClass, 0, nil);
+    [newObject setComObj:internalComPtr];
+    return [newObject autorelease];
+}
+
+/*
+ * Returns the RTObject casted to the desired class - unsafe. Templated implementation.
+ */
+template <typename TDesiredClass>
+static id UWPObjectCast(RTObject* rtObject) {
+    return UWPObjectCast([TDesiredClass class], rtObject);
+}
+
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setApplicationIconBadgeNumber:(int)num {
-    UNIMPLEMENTED();
-    EbrSetApplicationBadgeNumber(num);
+    if (num > 0) {
+        _applicationIconBadgeNumber = num;
+    } else {
+        // 0 or negative input.
+        _applicationIconBadgeNumber = 0;
+    }
+
+    WDXDXmlDocument* doc = [WUNBadgeUpdateManager getTemplateContent:WUNBadgeTemplateTypeBadgeNumber];
+    WDXDXmlNodeList* badges = [doc getElementsByTagName:@"badge"];
+
+    if ([badges count] == 0) {
+        return;
+    }
+
+    id badgeObject = [badges objectAtIndex:0];
+
+    if (badgeObject == nil) {
+        return;
+    }
+
+    WDXDXmlElement* badgeElement = UWPObjectCast<WDXDXmlElement>(badgeObject);
+    [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
+
+    WUNBadgeNotification* notification = [WUNBadgeNotification createBadgeNotification:doc];
+    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
+
+    [updater update:notification];
 }
 
 static void printViews(id curView, int level) {
@@ -1166,41 +1216,17 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)openURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    NSString* scheme = [url scheme];
-    if ([scheme isEqualToString:@"fbauth"]) {
-        return FALSE;
-    }
-    if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"] || [scheme isEqualToString:@"mailto"]) {
-        EbrOpenURL((char*)[[url absoluteString] UTF8String]);
-        return TRUE;
-    } else {
-        id delegate = [self delegate];
-
-        if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
-            EbrDebugLog("Sending URL %x to %x\n", url, delegate);
-            return [delegate application:self handleOpenURL:url];
-        }
-    }
-
-    return FALSE;
+    return [_launcher _openURL:url];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)canOpenURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    EbrDebugLog("UIApplication: Can open URL %s?\n", [[url absoluteString] UTF8String]);
-    NSString* scheme = [url scheme];
-    if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
-        return TRUE;
-    }
-
-    return FALSE;
+    return [_launcher _canOpenURL:url];
 }
 
 /**
@@ -1233,6 +1259,13 @@ static void printViews(id curView, int level) {
 #ifdef SUPPORT_REMOTE_NOTIFICATIONS
     EbrRegisterForRemoteNotifications(identifier);
 #endif
+}
+
+/**
+ @Status Stub
+*/
+- (void)registerUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1343,7 +1376,14 @@ static void printViews(id curView, int level) {
     }
 
     _curNotifications = [NSMutableArray new];
+    _launcher = [[UrlLauncher alloc] initWithLauncher:[WSLauncher class]];
 
+    return self;
+}
+
+// Allow us to init parts of UIApplication for unit tests, without the need for an actual UI
+- (instancetype)_initForTestingWithLauncher:(Class)launcher {
+    _launcher = [[UrlLauncher alloc] initWithLauncher:launcher];
     return self;
 }
 
@@ -1466,11 +1506,10 @@ static void printViews(id curView, int level) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (int)applicationIconBadgeNumber {
-    UNIMPLEMENTED();
-    return 0;
+    return _applicationIconBadgeNumber;
 }
 
 /**

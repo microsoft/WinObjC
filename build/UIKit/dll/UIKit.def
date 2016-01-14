@@ -1,0 +1,400 @@
+LIBRARY UIKit
+    EXPORTS
+        CGPointFromString
+        CGRectFromString
+        CGSizeFromString
+        CTFontCreateWithName
+        CTFontManagerRegisterFontsForURL
+        CTFontManagerRegisterGraphicsFont
+        DNSServiceBrowse
+        DNSServiceGetAddrInfo
+        DNSServiceRefDeallocate
+        DNSServiceRegister
+        DNSServiceResolve
+        DNSServiceSetDispatchQueue
+        MPMoviePlayerDidEnterFullscreenNotification DATA
+        MPMoviePlayerDidExitFullscreenNotification DATA
+        MPMoviePlayerFullscreenAnimationCurveUserInfoKey DATA
+        MPMoviePlayerFullscreenAnimationDurationUserInfoKey DATA
+        MPMoviePlayerLoadStateDidChangeNotification DATA
+        MPMoviePlayerPlaybackDidFinishNotification DATA
+        MPMoviePlayerPlaybackDidFinishReasonUserInfoKey DATA
+        MPMoviePlayerThumbnailErrorKey DATA
+        MPMoviePlayerThumbnailImageKey DATA
+        MPMoviePlayerThumbnailTimeKey DATA
+        MPMoviePlayerWillEnterFullscreenNotification DATA
+        MPMoviePlayerWillExitFullscreenNotification DATA
+        NSAttachmentAttributeName DATA
+        NSBackgroundColorAttributeName DATA
+        NSBackgroundColorDocumentAttribute DATA
+        NSBaselineOffsetAttributeName DATA
+        NSCharacterEncodingDocumentAttribute DATA
+        NSDefaultAttributesDocumentAttribute DATA
+        NSDefaultTabIntervalDocumentAttribute DATA
+        NSDocumentTypeDocumentAttribute DATA
+        NSExpansionAttributeName DATA
+        NSFontAttributeName DATA
+        NSForegroundColorAttributeName DATA
+        NSHTMLTextDocumentType DATA
+        NSHyphenationFactorDocumentAttribute DATA
+        NSKernAttributeName DATA
+        NSLigatureAttributeName DATA
+        NSLinkAttributeName DATA
+        NSLocalizedDescriptionKey DATA
+        NSObliquenessAttributeName DATA
+        NSPaperMarginDocumentAttribute DATA
+        NSPaperSizeDocumentAttribute DATA
+        NSParagraphStyleAttributeName DATA
+        NSPlainTextDocumentType DATA
+        NSRTFDTextDocumentType DATA
+        NSRTFTextDocumentType DATA
+        NSReadOnlyDocumentAttribute DATA
+        NSShadowAttributeName DATA
+        NSStrikethroughColorAttributeName DATA
+        NSStrikethroughStyleAttributeName DATA
+        NSStringFromCGPoint
+        NSStringFromCGRect
+        NSStringFromCGSize
+        NSStrokeColorAttributeName DATA
+        NSStrokeWidthAttributeName DATA
+        NSTextEffectAttributeName DATA
+        NSTextEffectLetterpressStyle DATA
+        NSTextLayoutSectionOrientation DATA
+        NSTextLayoutSectionRange DATA
+        NSTextLayoutSectionsAttribute DATA
+        NSUnderlineColorAttributeName DATA
+        NSUnderlineStyleAttributeName DATA
+        NSUnderlyingErrorKey DATA
+        NSVerticalGlyphFormAttributeName DATA
+        NSViewModeDocumentAttribute DATA
+        NSViewSizeDocumentAttribute DATA
+        NSViewZoomDocumentAttribute DATA
+        NSWritingDirectionAttributeName DATA
+        SLServiceTypeFacebook DATA
+        SLServiceTypeTwitter DATA
+        UIAccessibilityAnnouncementNotification DATA
+        UIAccessibilityIsVoiceOverRunning
+        UIAccessibilityLayoutChangedNotification DATA
+        UIAccessibilityPageScrolledNotification DATA
+        UIAccessibilityPostNotification
+        UIAccessibilityScreenChangedNotification DATA
+        UIAccessibilityTraitAdjustable DATA
+        UIAccessibilityTraitAllowsDirectInteraction DATA
+        UIAccessibilityTraitButton DATA
+        UIAccessibilityTraitCausesPageTurn DATA
+        UIAccessibilityTraitHeader DATA
+        UIAccessibilityTraitImage DATA
+        UIAccessibilityTraitKeyboardKey DATA
+        UIAccessibilityTraitLink DATA
+        UIAccessibilityTraitNone DATA
+        UIAccessibilityTraitNotEnabled DATA
+        UIAccessibilityTraitPlaysSound DATA
+        UIAccessibilityTraitSearchField DATA
+        UIAccessibilityTraitSelected DATA
+        UIAccessibilityTraitStartsMediaSession DATA
+        UIAccessibilityTraitStaticText DATA
+        UIAccessibilityTraitSummaryElement DATA
+        UIAccessibilityTraitUpdatesFrequently DATA
+        UIActivityTypeAirDrop DATA
+        UIActivityTypeAssignToContact DATA
+        UIActivityTypeCopyToPasteboard DATA
+        UIActivityTypeMail DATA
+        UIActivityTypeMessage DATA
+        UIActivityTypePostToFacebook DATA
+        UIActivityTypePostToTwitter DATA
+        UIActivityTypePostToWeibo DATA
+        UIActivityTypePrint DATA
+        UIActivityTypeSaveToCameraRoll DATA
+        UIApplicationDidBecomeActiveNotification DATA
+        UIApplicationDidChangeDisplayModeNofication DATA
+        UIApplicationDidChangeStatusBarFrameNotification DATA
+        UIApplicationDidChangeStatusBarOrientationNotification DATA
+        UIApplicationDidEnterBackgroundNotification DATA
+        UIApplicationDidFinishLaunchingNotification DATA
+        UIApplicationDidReceiveMemoryWarningNotification DATA
+        UIApplicationLaunchOptionsAnnotationKey DATA
+        UIApplicationLaunchOptionsLocalNotificationKey DATA
+        UIApplicationLaunchOptionsLocationKey DATA
+        UIApplicationLaunchOptionsRemoteNotificationKey DATA
+        UIApplicationLaunchOptionsSourceApplicationKey DATA
+        UIApplicationLaunchOptionsURLKey DATA
+        UIApplicationMainInit
+        UIApplicationMainLoop
+        UIApplicationSignificantTimeChangeNotification DATA
+        UIApplicationStatusBarFrameUserInfoKey DATA
+        UIApplicationStatusBarOrientationUserInfoKey DATA
+        UIApplicationWillChangeDisplayModeNofication DATA
+        UIApplicationWillChangeStatusBarFrameNotification DATA
+        UIApplicationWillChangeStatusBarOrientationNotification DATA
+        UIApplicationWillEnterForegroundNotification DATA
+        UIApplicationWillResignActiveNotification DATA
+        UIApplicationWillTerminateNotification DATA
+        UIBecomeInactive
+        UICollectionElementKindCell DATA
+        UICollectionElementKindDecorationView DATA
+        UICollectionElementKindSectionFooter DATA
+        UICollectionElementKindSectionHeader DATA
+        UIContentSizeCategoryAccessibilityExtraExtraExtraLarge DATA
+        UIContentSizeCategoryAccessibilityExtraExtraLarge DATA
+        UIContentSizeCategoryAccessibilityExtraLarge DATA
+        UIContentSizeCategoryAccessibilityLarge DATA
+        UIContentSizeCategoryAccessibilityMedium DATA
+        UIContentSizeCategoryExtraExtraExtraLarge DATA
+        UIContentSizeCategoryExtraExtraLarge DATA
+        UIContentSizeCategoryExtraLarge DATA
+        UIContentSizeCategoryExtraSmall DATA
+        UIContentSizeCategoryLarge DATA
+        UIContentSizeCategoryMedium DATA
+        UIContentSizeCategorySmall DATA
+        UIDeviceOrientationDidChangeNotification DATA
+        UIEdgeInsetsZero DATA
+        UIFlowLayoutCommonRowHorizontalAlignmentKey DATA
+        UIFlowLayoutLastRowHorizontalAlignmentKey DATA
+        UIFlowLayoutRowVerticalAlignmentKey DATA
+        UIFontDescriptorFamilyAttribute DATA
+        UIFontDescriptorTraitsAttribute DATA
+        UIFontSymbolicTrait DATA
+        UIFontTextStyleBody DATA
+        UIFontTextStyleCallout DATA
+        UIFontTextStyleCaption1 DATA
+        UIFontTextStyleCaption2 DATA
+        UIFontTextStyleFootnote DATA
+        UIFontTextStyleHeadline DATA
+        UIFontTextStyleSubheadline DATA
+        UIFontTextStyleTitle1 DATA
+        UIFontTextStyleTitle2 DATA
+        UIFontTextStyleTitle3 DATA
+        UIGraphicsBeginImageContext
+        UIGraphicsBeginImageContextWithOptions
+        UIGraphicsEndImageContext
+        UIGraphicsGetCurrentContext
+        UIGraphicsGetImageFromCurrentImageContext
+        UIGraphicsPopContext
+        UIGraphicsPushContext
+        UIImageJPEGRepresentation
+        UIImagePNGRepresentation
+        UIImageWriteToSavedPhotosAlbum
+        UIKeyboardAnimationCurveUserInfoKey DATA
+        UIKeyboardAnimationDurationUserInfoKey DATA
+        UIKeyboardDidHideNotification DATA
+        UIKeyboardDidShowNotification DATA
+        UIKeyboardFrameBeginUserInfoKey DATA
+        UIKeyboardFrameEndUserInfoKey DATA
+        UIKeyboardWillHideNotification DATA
+        UIKeyboardWillShowNotification DATA
+        UILocalNotificationDefaultSoundName DATA
+        UINavigationControllerHideShowBarDuration DATA
+        UIOffsetZero DATA
+        UIOrientationFromString
+        UIPageViewControllerOptionInterPageSpacingKey DATA
+        UIPageViewControllerOptionSpineLocationKey DATA
+        UIQueueKeyInput
+        UIQueueTouchInput
+        UIRectClip
+        UIRectFill
+        UIRectFillUsingBlendMode
+        UIRectFrame
+        UIRequestTransactionProcessing
+        UIScrollViewDecelerationRateFast DATA
+        UIShutdown
+        UITextAttributeFont DATA
+        UITextAttributeTextColor DATA
+        UITextAttributeTextShadowColor DATA
+        UITextAttributeTextShadowOffset DATA
+        UITextViewTextDidBeginEditingNotification DATA
+        UITextViewTextDidChangeNotification DATA
+        UITextViewTextDidEndEditingNotification DATA
+        UITrackingRunLoopMode DATA
+        UITransitionContextFromViewControllerKey DATA
+        UITransitionContextToViewControllerKey DATA
+        UIViewNoIntrinsicMetric DATA
+        _OBJC_CLASS_ASIdentifierManager DATA
+        _OBJC_CLASS_CBCentralManager DATA
+        _OBJC_CLASS_GKAchievement DATA
+        _OBJC_CLASS_GKAchievementViewController DATA
+        _OBJC_CLASS_GKLeaderboardViewController DATA
+        _OBJC_CLASS_GKLocalPlayer DATA
+        _OBJC_CLASS_GKScore DATA
+        _OBJC_CLASS_MPMoviePlayerController DATA
+        _OBJC_CLASS_MPMoviePlayerViewController DATA
+        _OBJC_CLASS_NSLayoutConstraint DATA
+        _OBJC_CLASS_NSLayoutManager DATA
+        _OBJC_CLASS_NSMutableParagraphStyle DATA
+        _OBJC_CLASS_NSParagraphStyle DATA
+        _OBJC_CLASS_NSTextContainer DATA
+        _OBJC_CLASS_NSTextStorage DATA
+        _OBJC_CLASS_SKPayment DATA
+        _OBJC_CLASS_SKPaymentQueue DATA
+        _OBJC_CLASS_SKProductsRequest DATA
+        _OBJC_CLASS_SLComposeViewController DATA
+        _OBJC_CLASS_UIAccelerometer DATA
+        _OBJC_CLASS_UIAccessibilityElement DATA
+        _OBJC_CLASS_UIActionSheet DATA
+        _OBJC_CLASS_UIActivity DATA
+        _OBJC_CLASS_UIActivityIndicatorView DATA
+        _OBJC_CLASS_UIActivityViewController DATA
+        _OBJC_CLASS_UIAlertView DATA
+        _OBJC_CLASS_UIApplication DATA
+        _OBJC_CLASS_UIBarButtonItem DATA
+        _OBJC_CLASS_UIBezierPath DATA
+        _OBJC_CLASS_UIButton DATA
+        _OBJC_CLASS_UICollectionReusableView DATA
+        _OBJC_CLASS_UICollectionView DATA
+        _OBJC_CLASS_UICollectionViewCell DATA
+        _OBJC_CLASS_UICollectionViewController DATA
+        _OBJC_CLASS_UICollectionViewFlowLayout DATA
+        _OBJC_CLASS_UICollectionViewLayout DATA
+        _OBJC_CLASS_UICollectionViewLayoutAttributes DATA
+        _OBJC_CLASS_UIColor DATA
+        _OBJC_CLASS_UIControl DATA
+        _OBJC_CLASS_UIDatePicker DATA
+        _OBJC_CLASS_UIDevice DATA
+        _OBJC_CLASS_UIDocument DATA
+        _OBJC_CLASS_UIFont DATA
+        _OBJC_CLASS_UIFontDescriptor DATA
+        _OBJC_CLASS_UIGestureRecognizer DATA
+        _OBJC_CLASS_UIImage DATA
+        _OBJC_CLASS_UIImageView DATA
+        _OBJC_CLASS_UIInterpolatingMotionEffect DATA
+        _OBJC_CLASS_UILabel DATA
+        _OBJC_CLASS_UILocalNotification DATA
+        _OBJC_CLASS_UIManagedDocument DATA
+        _OBJC_CLASS_UIMotionEffect DATA
+        _OBJC_CLASS_UIMotionEffectGroup DATA
+        _OBJC_CLASS_UINavigationBar DATA
+        _OBJC_CLASS_UINavigationController DATA
+        _OBJC_CLASS_UINib DATA
+        _OBJC_CLASS_UIPageControl DATA
+        _OBJC_CLASS_UIPageViewController DATA
+        _OBJC_CLASS_UIPanGestureRecognizer DATA
+        _OBJC_CLASS_UIPasteboard DATA
+        _OBJC_CLASS_UIPickerView DATA
+        _OBJC_CLASS_UIPinchGestureRecognizer DATA
+        _OBJC_CLASS_UIProgressView DATA
+        _OBJC_CLASS_UIResponder DATA
+        _OBJC_CLASS_UIScreen DATA
+        _OBJC_CLASS_UIScrollView DATA
+        _OBJC_CLASS_UISearchBar DATA
+        _OBJC_CLASS_UISegmentedControl DATA
+        _OBJC_CLASS_UISlider DATA
+        _OBJC_CLASS_UIStepper DATA
+        _OBJC_CLASS_UIStoryboard DATA
+        _OBJC_CLASS_UIStoryboardSegue DATA
+        _OBJC_CLASS_UISwipeGestureRecognizer DATA
+        _OBJC_CLASS_UISwitch DATA
+        _OBJC_CLASS_UITabBar DATA
+        _OBJC_CLASS_UITabBarController DATA
+        _OBJC_CLASS_UITableView DATA
+        _OBJC_CLASS_UITableViewCell DATA
+        _OBJC_CLASS_UITableViewCellContentView DATA
+        _OBJC_CLASS_UITableViewController DATA
+        _OBJC_CLASS_UITableViewHeaderFooterView DATA
+        _OBJC_CLASS_UITapGestureRecognizer DATA
+        _OBJC_CLASS_UITextField DATA
+        _OBJC_CLASS_UITextView DATA
+        _OBJC_CLASS_UIToolbar DATA
+        _OBJC_CLASS_UIUserNotificationSettings DATA
+        _OBJC_CLASS_UIView DATA
+        _OBJC_CLASS_UIViewController DATA
+        _OBJC_CLASS_UIWebView DATA
+        _OBJC_CLASS_UIWindow DATA
+        _OBJC_CLASS__UILayoutGuide DATA
+        __inet_ntoa
+        __objc_class_name_ASIdentifierManager CONSTANT
+        __objc_class_name_CBCentralManager CONSTANT
+        __objc_class_name_GKAchievement CONSTANT
+        __objc_class_name_GKAchievementViewController CONSTANT
+        __objc_class_name_GKLeaderboardViewController CONSTANT
+        __objc_class_name_GKLocalPlayer CONSTANT
+        __objc_class_name_GKScore CONSTANT
+        __objc_class_name_MPMoviePlayerController CONSTANT
+        __objc_class_name_MPMoviePlayerViewController CONSTANT
+        __objc_class_name_NSLayoutConstraint CONSTANT
+        __objc_class_name_NSLayoutManager CONSTANT
+        __objc_class_name_NSMutableParagraphStyle CONSTANT
+        __objc_class_name_NSParagraphStyle CONSTANT
+        __objc_class_name_NSTextContainer CONSTANT
+        __objc_class_name_NSTextStorage CONSTANT
+        __objc_class_name_SKPayment CONSTANT
+        __objc_class_name_SKPaymentQueue CONSTANT
+        __objc_class_name_SKProductsRequest CONSTANT
+        __objc_class_name_SLComposeViewController CONSTANT
+        __objc_class_name_UIAccelerometer CONSTANT
+        __objc_class_name_UIAccessibilityElement CONSTANT
+        __objc_class_name_UIActionSheet CONSTANT
+        __objc_class_name_UIActivity CONSTANT
+        __objc_class_name_UIActivityIndicatorView CONSTANT
+        __objc_class_name_UIActivityViewController CONSTANT
+        __objc_class_name_UIAlertView CONSTANT
+        __objc_class_name_UIApplication CONSTANT
+        __objc_class_name_UIBarButtonItem CONSTANT
+        __objc_class_name_UIBezierPath CONSTANT
+        __objc_class_name_UIButton CONSTANT
+        __objc_class_name_UICollectionReusableView CONSTANT
+        __objc_class_name_UICollectionView CONSTANT
+        __objc_class_name_UICollectionViewCell CONSTANT
+        __objc_class_name_UICollectionViewController CONSTANT
+        __objc_class_name_UICollectionViewFlowLayout CONSTANT
+        __objc_class_name_UICollectionViewLayout CONSTANT
+        __objc_class_name_UICollectionViewLayoutAttributes CONSTANT
+        __objc_class_name_UIColor CONSTANT
+        __objc_class_name_UIControl CONSTANT
+        __objc_class_name_UIDatePicker CONSTANT
+        __objc_class_name_UIDevice CONSTANT
+        __objc_class_name_UIDocument CONSTANT
+        __objc_class_name_UIFont CONSTANT
+        __objc_class_name_UIFontDescriptor CONSTANT
+        __objc_class_name_UIGestureRecognizer CONSTANT
+        __objc_class_name_UIImage CONSTANT
+        __objc_class_name_UIImageView CONSTANT
+        __objc_class_name_UIInterpolatingMotionEffect CONSTANT
+        __objc_class_name_UILabel CONSTANT
+        __objc_class_name_UILocalNotification CONSTANT
+        __objc_class_name_UIManagedDocument CONSTANT
+        __objc_class_name_UIMotionEffect CONSTANT
+        __objc_class_name_UIMotionEffectGroup CONSTANT
+        __objc_class_name_UINavigationBar CONSTANT
+        __objc_class_name_UINavigationController CONSTANT
+        __objc_class_name_UINib CONSTANT
+        __objc_class_name_UIPageControl CONSTANT
+        __objc_class_name_UIPageViewController CONSTANT
+        __objc_class_name_UIPanGestureRecognizer CONSTANT
+        __objc_class_name_UIPasteboard CONSTANT
+        __objc_class_name_UIPickerView CONSTANT
+        __objc_class_name_UIPinchGestureRecognizer CONSTANT
+        __objc_class_name_UIProgressView CONSTANT
+        __objc_class_name_UIResponder CONSTANT
+        __objc_class_name_UIScreen CONSTANT
+        __objc_class_name_UIScrollView CONSTANT
+        __objc_class_name_UISearchBar CONSTANT
+        __objc_class_name_UISegmentedControl CONSTANT
+        __objc_class_name_UISlider CONSTANT
+        __objc_class_name_UIStepper CONSTANT
+        __objc_class_name_UIStoryboard CONSTANT
+        __objc_class_name_UIStoryboardSegue CONSTANT
+        __objc_class_name_UISwipeGestureRecognizer CONSTANT
+        __objc_class_name_UISwitch CONSTANT
+        __objc_class_name_UITabBar CONSTANT
+        __objc_class_name_UITabBarController CONSTANT
+        __objc_class_name_UITableView CONSTANT
+        __objc_class_name_UITableViewCell CONSTANT
+        __objc_class_name_UITableViewCellContentView CONSTANT
+        __objc_class_name_UITableViewController CONSTANT
+        __objc_class_name_UITableViewHeaderFooterView CONSTANT
+        __objc_class_name_UITapGestureRecognizer CONSTANT
+        __objc_class_name_UITextField CONSTANT
+        __objc_class_name_UITextView CONSTANT
+        __objc_class_name_UIToolbar CONSTANT
+        __objc_class_name_UIUserNotificationSettings CONSTANT
+        __objc_class_name_UIView CONSTANT
+        __objc_class_name_UIViewController CONSTANT
+        __objc_class_name_UIWebView CONSTANT
+        __objc_class_name_UIWindow CONSTANT
+        __objc_class_name__UILayoutGuide CONSTANT
+        gettimeofday
+        host_statistics
+        if_indextoname
+        mach_host_self
+        random
+        srandom
+        strnstr

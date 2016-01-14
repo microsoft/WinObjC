@@ -50,7 +50,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Shapes;
 using namespace Windows::ApplicationModel::Core;
 
-__declspec(dllimport) wchar_t* __WideStringFromNSString(void* str);
+__declspec(dllimport) extern "C" wchar_t* __WideStringFromNSString(void* str);
 
 Platform::String ^ principalClassName, ^delegateClassName;
 
@@ -85,6 +85,11 @@ public:
     }
 
     void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) override {
+        if (e->PrelaunchActivated) {
+            // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
+            return;
+        }
+
         auto uiElem = ref new Grid();
         auto rootFrame = ref new Frame();
         rootFrame->Content = uiElem;

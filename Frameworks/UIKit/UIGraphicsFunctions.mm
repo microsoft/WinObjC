@@ -18,7 +18,7 @@
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
 
-#define MAX_CONTEXT_DEPTH 16
+#define MAX_CONTEXT_DEPTH 128
 __declspec(thread) CGContextRef _currentCGContext[MAX_CONTEXT_DEPTH];
 __declspec(thread) int _currentCGContextDepth;
 
@@ -44,7 +44,7 @@ void UIGraphicsPopContext() {
         return;
     }
     CGContextRelease(_currentCGContext[_currentCGContextDepth]);
-    _currentCGContext[_currentCGContextDepth] = nil;
+    _currentCGContext[_currentCGContextDepth] = nullptr;
     _currentCGContextDepth--;
 }
 

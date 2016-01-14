@@ -157,6 +157,22 @@
     return ret;
 }
 
+/**
+ @Status Stub
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget {
+    // TODO: implement
+    printf("cancelPreviousPerformRequestsWithTarget has not been implemented\n");
+}
+
+/**
+ @Status Stub
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
+    // TODO: implement
+    printf("cancelPreviousPerformRequestsWithTarget:selector:object has not been implemented\n");
+}
+
 - (instancetype)self {
     return self;
 }

@@ -5,24 +5,24 @@
 // Copyright (c) 2008-2009 Apple Inc. All rights reserved.
 //
 // @APPLE_APACHE_LICENSE_HEADER_START@
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // @APPLE_APACHE_LICENSE_HEADER_END@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <mach/mach_time.h>
 #import <UIKit/UIKit.h>
@@ -31,11 +31,11 @@
 #include "dispatch_test.h"
 #include <crtdbg.h>
 
-static const unsigned __int64 intervals_per_second      = 10000000ULL;
-static const unsigned __int64 microseconds_per_second   = 1000000ULL;
+static const unsigned __int64 intervals_per_second = 10000000ULL;
+static const unsigned __int64 microseconds_per_second = 1000000ULL;
 static const unsigned __int64 intervals_per_microsecond = 10ULL;
-static const unsigned __int64 intervals_since_epoch     = 116444736000000000ULL;
-static const unsigned __int64 microseconds_since_epoch  = 11644473600000000ULL;
+static const unsigned __int64 intervals_since_epoch = 116444736000000000ULL;
+static const unsigned __int64 microseconds_since_epoch = 11644473600000000ULL;
 
 int gettimeofday(struct timeval* tp, void* tzp) {
     FILETIME file_time;
@@ -46,8 +46,8 @@ int gettimeofday(struct timeval* tp, void* tzp) {
     ularge.HighPart = file_time.dwHighDateTime;
     ularge.QuadPart -= intervals_since_epoch;
     ularge.QuadPart /= intervals_per_microsecond;
-    tp->tv_sec = (long) (ularge.QuadPart / microseconds_per_second);
-    tp->tv_usec = (long) (ularge.QuadPart % microseconds_per_second);
+    tp->tv_sec = (long)(ularge.QuadPart / microseconds_per_second);
+    tp->tv_usec = (long)(ularge.QuadPart % microseconds_per_second);
 
     return 0;
 }
@@ -90,6 +90,6 @@ TEST(Dispatch, DispatchSettime) {
 
     gettimeofday(&start_time, NULL);
     dispatch_resume(as_do(timer));
-        
+
     UIApplicationMainLoop();
 }

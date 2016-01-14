@@ -52,7 +52,7 @@
 
 /**
  @Status Caveat
- @Notes Only position, bounds, and transform properties spuported
+ @Notes Only position, bounds, and transform properties supported
 */
 + (instancetype)animationWithKeyPath:(NSString*)path {
     CAPropertyAnimation* ret = [self alloc];
@@ -60,7 +60,7 @@
     ret->_timingProperties._removedOnCompletion = TRUE;
 
     id completion = [CATransaction completionBlock];
-    if (completion != nil) {
+    if (completion) {
         // TODO(DH) What the heck?
         _BlockAnimationCompletion* completionHandler = [_BlockAnimationCompletion alloc];
         completionHandler->_completionBlock = completion;

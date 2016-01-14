@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 #import <UIKit/UIKit.h>
 #import "Starboard.h"
@@ -55,7 +55,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguage) {
 
     NSArray* layoutConstraints =
         [NSLayoutConstraint constraintsWithVisualFormat:@"|-(>=10@metric1)-[leftView(rightView@1000)][rightView(metric2)]|"
-                                                options:nil
+                                                options:0
                                                 metrics:metrics
                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -99,7 +99,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Dangling view to (nonexistant) superview
     NSArray* layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[danglingView]-|"
-                                                                         options:nil
+                                                                         options:0
                                                                          metrics:nil
                                                                            views:NSDictionaryOfVariableBindings(danglingView)];
 
@@ -108,7 +108,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Missing item in views
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[noView(20)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:nil
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -117,7 +117,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Missing item in views, but in metrics
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[metric(20)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -127,7 +127,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Missing item in metrics, but in views
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@rightView)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -137,7 +137,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Dangling constraint
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]-"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -146,7 +146,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Extra parens
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView((20))]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -154,7 +154,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
                                     << ::testing::PrintToString(layoutConstraints);
 
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView()(20)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -162,7 +162,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
                                     << ::testing::PrintToString(layoutConstraints);
 
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]()"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -171,7 +171,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Missing parens
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -180,7 +180,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
 
     // Priority out of bounds
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@1001)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -188,7 +188,7 @@ TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
                                     << ::testing::PrintToString(layoutConstraints);
 
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@-1)]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:metrics
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -208,7 +208,7 @@ TEST(NSLayoutConstraint, AddConstraints) {
     [topLevelView addSubview:rightView];
 
     NSArray* layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|[leftView(rightView@1000)]-[rightView(10)]|"
-                                                                         options:nil
+                                                                         options:0
                                                                          metrics:nil
                                                                            views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
@@ -222,7 +222,7 @@ TEST(NSLayoutConstraint, AddConstraints) {
                                                                                             << ::testing::PrintToString(layoutConstraints);
 
     layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[rightView][danglingView]"
-                                                                options:nil
+                                                                options:0
                                                                 metrics:nil
                                                                   views:NSDictionaryOfVariableBindings(leftView, rightView, danglingView)];
 

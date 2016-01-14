@@ -38,18 +38,20 @@
 STOREKIT_EXPORT_CLASS
 @interface SKPayment : NSObject
 
-+ (id)paymentWithProductIdentifier:(NSString *)identifier;
-+ (id)paymentWithProduct:(SKProduct *)product;
++ (id)paymentWithProductIdentifier:(NSString*)identifier;
++ (id)paymentWithProduct:(SKProduct*)product;
 
-@property (nonatomic, readonly) NSString *productIdentifier;
-@property (nonatomic, copy, readonly) NSString *applicationUsername;
+@property (nonatomic, copy, readonly) NSString* productIdentifier;
+@property (nonatomic, readonly) NSInteger quantity;
+@property (nonatomic, copy, readonly) NSData* requestData;
+@property (nonatomic, copy, readonly) NSString* applicationUsername;
 
 @end
 
 STOREKIT_EXPORT_CLASS
 @interface SKMutablePayment : SKPayment
 
-@property (nonatomic, copy, readwrite) NSString *applicationUsername;
+@property (nonatomic, copy, readwrite) NSString* applicationUsername;
 
 @end
 

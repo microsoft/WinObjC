@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 void testUrlCharacterSetEncoding(NSString* decodedString, NSString* encodedString, NSCharacterSet* allowedCharacterSet) {
@@ -25,12 +25,15 @@ void testUrlCharacterSetEncoding(NSString* decodedString, NSString* encodedStrin
 
 TEST(NSString, NSStringTests) {
     // NSString* PercentEncoding methods.
-    NSString* decodedString = @"Space DoubleQuotes\"Hash#Percent%LessThan<GreaterThan>OpeningBracket[Backslash\\ClosingBracket]Caret^GraveAccent`OpeningBrace{VerticalBar|ClosingBrace}";
-    NSString* encodedString = @"Space%20DoubleQuotes%22Hash%23Percent%25LessThan%3CGreaterThan%3EOpeningBracket%5BBackslash%5CClosingBracket%5DCaret%5EGraveAccent%60OpeningBrace%7BVerticalBar%7CClosingBrace%7D";
-    
+    NSString* decodedString = @"Space "
+                              @"DoubleQuotes\"Hash#Percent%LessThan<GreaterThan>OpeningBracket[Backslash\\ClosingBracket]Caret^"
+                              @"GraveAccent`OpeningBrace{VerticalBar|ClosingBrace}";
+    NSString* encodedString = @"Space%20DoubleQuotes%22Hash%23Percent%25LessThan%3CGreaterThan%3EOpeningBracket%5BBackslash%"
+                              @"5CClosingBracket%5DCaret%5EGraveAccent%60OpeningBrace%7BVerticalBar%7CClosingBrace%7D";
+
     NSString* testString = [decodedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     ASSERT_OBJCEQ(encodedString, testString);
-        
+
     testString = [encodedString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     ASSERT_OBJCEQ(decodedString, testString);
 
@@ -40,16 +43,16 @@ TEST(NSString, NSStringTests) {
     NSString* urlDecodedString = @"https://www.microsoft.com/en-us/!@#$%^&*()_";
     NSString* urlEncodedString = @"https://www.microsoft.com/en-us/!@%23$%25%5E&*()_";
     NSCharacterSet* allowedCharacterSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
-    
+
     testUrlCharacterSetEncoding(urlDecodedString, urlEncodedString, allowedCharacterSet);
-    
+
     urlDecodedString = @"Only alphabetic characters should be allowed and not encoded. !@#$%^&*()_+-=";
     urlEncodedString =
         @"Only%20alphabetic%20characters%20should%20be%20allowed%20and%20not%20encoded%2E%20%21%40%23%24%25%5E%26%2A%28%29%5F%2B%2D%3D";
     allowedCharacterSet = [NSCharacterSet alphanumericCharacterSet];
 
     testUrlCharacterSetEncoding(urlDecodedString, urlEncodedString, allowedCharacterSet);
-    
+
     urlDecodedString = @"All alphabetic characters should be encoded. Symbols should not be: !@#$%^&*()_+-=";
     urlEncodedString = @"%41%6C%6C %61%6C%70%68%61%62%65%74%69%63 %63%68%61%72%61%63%74%65%72%73 %73%68%6F%75%6C%64 %62%65 "
                        @"%65%6E%63%6F%64%65%64. %53%79%6D%62%6F%6C%73 %73%68%6F%75%6C%64 %6E%6F%74 %62%65: !@#$%^&*()_+-=";
@@ -62,7 +65,7 @@ TEST(NSString, NSStringTests) {
     allowedCharacterSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
 
     testUrlCharacterSetEncoding(urlDecodedString, urlEncodedString, allowedCharacterSet);
-    
+
     urlDecodedString = @"\1";
     urlEncodedString = @"%01";
     allowedCharacterSet = [NSCharacterSet alphanumericCharacterSet];
@@ -76,4 +79,24 @@ TEST(NSString, NSStringTests) {
     testString = [stringWillDie stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
     [stringWillDie release];
     ASSERT_OBJCEQ(urlEncodedString, testString);
+
+    // stringByAppendingFormat test
+    NSString* testString2 = @"Numbers: ";
+    NSString* expectedString = @"Numbers: 1, 2";
+    NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
+    ASSERT_OBJCEQ(expectedString, actualString);
+}
+
+TEST(NSString, NSString_FastestEncoding) {
+    NSString* asciiStr = @"ObjectiveC";
+    NSString* extendedAsciiStr = @"ObjectiveC éééé";
+    NSString* chineseStr = @"中文";
+
+    ASSERT_EQ(NSASCIIStringEncoding, [asciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [extendedAsciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [chineseStr fastestEncoding]);
+
+    ASSERT_EQ(kCFStringEncodingASCII, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(asciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(extendedAsciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(chineseStr)));
 }

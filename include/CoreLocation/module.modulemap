@@ -1,0 +1,8 @@
+module CoreLocation [extern_c] {
+    umbrella header "CoreLocation.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

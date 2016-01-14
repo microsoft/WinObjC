@@ -152,12 +152,17 @@
 */
 - (id)initWithCoder:(NSCoder*)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
-        if (self.subviews.count > 0) {
-            _contentView = self.subviews[0];
-        } else {
-            _contentView = [[UIView alloc] initWithFrame:self.bounds];
-            _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _contentView = [aDecoder decodeObjectForKey:@"UIContentView"];
+        if (_contentView) {
             [self addSubview:_contentView];
+        } else {
+            if (self.subviews.count > 0) {
+                _contentView = self.subviews[0];
+            } else {
+                _contentView = [[UIView alloc] initWithFrame:self.bounds];
+                _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+                [self addSubview:_contentView];
+            }
         }
 
         _backgroundView = [[UIView alloc] initWithFrame:self.bounds];

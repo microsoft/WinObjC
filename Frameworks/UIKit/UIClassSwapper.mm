@@ -14,33 +14,41 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIClassSwapper.h"
+#import "Starboard.h"
+#import "UIClassSwapper.h"
+#import "NSUnarchiverInternal.h"
 
-@implementation UIClassSwapper : NSObject
-- (id)instantiateWithCoder:(id)coder {
-    className = [coder decodeObjectForKey:@"UIClassName"];
-    originalClassName = [coder decodeObjectForKey:@"UIOriginalClassName"];
-    const char* identifier = [className UTF8String];
-    const char* identifier2 = [originalClassName UTF8String];
+@implementation UIClassSwapper
+
+- (id)initWithCoder:(id)coder {
+    _className = [[coder decodeObjectForKey:@"UIClassName"] copy];
+    _originalClassName = [[coder decodeObjectForKey:@"UIOriginalClassName"] copy];
+    const char* identifier = [_className UTF8String];
+    const char* identifier2 = [_originalClassName UTF8String];
 
     EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
     id classNameId = objc_getClass(identifier);
 
+    [self autorelease];
+
     if (classNameId != nil) {
-        return [classNameId alloc];
+        id ret = [classNameId alloc];
+        [coder _swapActiveObject:ret];
+        return [ret initWithCoder:coder];
     } else {
         EbrDebugLog("Class %s not found!\n", identifier);
         return nil;
     }
 }
 
-- (NSString*)originalClassName {
-    return originalClassName;
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
-- (NSString*)className {
-    return className;
+- (void)dealloc {
+    [_className release];
+    [_originalClassName release];
+    [super dealloc];
 }
 
 @end

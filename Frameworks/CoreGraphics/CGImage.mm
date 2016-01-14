@@ -210,7 +210,7 @@ CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
 */
 CGImageRef CGImageCreateCopy(CGImageRef ref) {
     if (!ref)
-        return nil;
+        return nullptr;
 
     CGImageRef newImage = new CGBitmapImage(ref->Backing()->Width(), ref->Backing()->Height(), ref->Backing()->SurfaceFormat());
 

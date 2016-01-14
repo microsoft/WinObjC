@@ -19,7 +19,6 @@
 
 #import <QuartzCore/CABase.h>
 #import <QuartzCore/CALayer.h>
-#include "UIKit/UIGeometry.h"
 
 CA_EXPORT_CLASS
 @interface CATextLayer : CALayer

@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 @interface TestArrayAdapterObject : NSObject {
@@ -64,7 +64,7 @@
 @end
 
 TEST(Foundation, NSObject_KeyPathLookup) {
-    NSDictionary* testDictionary = @{@"key": @{@"subkey": @{@"subkey2": @(1)}}};
+    NSDictionary* testDictionary = @{ @"key" : @{ @"subkey" : @{ @"subkey2" : @(1) } } };
 
     EXPECT_OBJCEQ(@(1), [testDictionary valueForKeyPath:@"key.subkey.subkey2"]);
 }
@@ -97,7 +97,7 @@ TEST(Foundation, NSObject_KVCArrayMutableAdapters) {
     EXPECT_TRUE([mutableObject isKindOfClass:[NSMutableArray class]]);
     EXPECT_ANY_THROW([mutableObject addObject:@"Whatever"]);
 
-    NSDictionary* testDictionary = @{@"key": @{@"subkey": @{@"subkey2": @[@"hello"]}}};
+    NSDictionary* testDictionary = @{ @"key" : @{ @"subkey" : @{ @"subkey2" : @[ @"hello" ] } } };
     NSMutableArray* mutableSubArray = [testDictionary mutableArrayValueForKeyPath:@"key.subkey.subkey2"];
     EXPECT_TRUE([mutableSubArray isKindOfClass:[NSMutableArray class]]);
     EXPECT_ANY_THROW([mutableSubArray addObject:@"Invalid"]);
@@ -108,7 +108,7 @@ TEST(Foundation, NSObject_KVCArrayMutableAdapters) {
 }
 
 TEST(Foundation, NSUserDefaults_KVCArray) {
-    [[NSUserDefaults standardUserDefaults] setObject:@[@"User Preference 1"] forKey:@"userPref1"];
+    [[NSUserDefaults standardUserDefaults] setObject:@[ @"User Preference 1" ] forKey:@"userPref1"];
     NSMutableArray* mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"userPref1"];
     EXPECT_OBJCNE(nil, mutableSetting);
     EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
@@ -125,13 +125,13 @@ TEST(Foundation, NSUserDefaults_KVCArray) {
 
 TEST(Foundation, NSObject_KVCArrayChangePropagation) {
     NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:@[@"1"] forKey:@"array"];
+    [dictionary setObject:@[ @"1" ] forKey:@"array"];
 
     NSMutableArray* mutableVersionOfDictionaryArray = [dictionary mutableArrayValueForKeyPath:@"array"];
 
     EXPECT_OBJCEQ(@"1", [mutableVersionOfDictionaryArray objectAtIndex:0]);
 
-    [dictionary setObject:@[@"2"] forKey:@"array"];
+    [dictionary setObject:@[ @"2" ] forKey:@"array"];
 
     // The value in index 0 should be updated even though we only requested mutableArray* once.
     EXPECT_OBJCEQ(@"2", [mutableVersionOfDictionaryArray objectAtIndex:0]);

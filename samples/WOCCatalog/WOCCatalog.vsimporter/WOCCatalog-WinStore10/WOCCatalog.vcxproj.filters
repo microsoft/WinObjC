@@ -1,23 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{e59f6774-e985-462f-abb3-7ae7be9437ec}</UniqueIdentifier>
+      <UniqueIdentifier>{1872bc2a-34a4-4c18-985e-08698eb76a1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{3b652010-f114-40ef-837f-8208d8d2d0c0}</UniqueIdentifier>
+      <UniqueIdentifier>{55369852-fa74-4fd0-823c-388d429288f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{BC204C0B-5313-4501-8B96-20ED90E6443F}</UniqueIdentifier>
+      <UniqueIdentifier>{82FAEF38-368D-41D3-A499-6503680C36FF}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{3CA7860E-8B4B-477A-88E5-C253ACF3D08E}</UniqueIdentifier>
+      <UniqueIdentifier>{7BC6BF3D-07D9-43F9-94BF-237C32EDD4BA}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{A22472A5-AC72-4126-B74E-B2FCCA84F534}</UniqueIdentifier>
+      <UniqueIdentifier>{E63D155B-A987-4761-97E9-15786054F904}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{4CA3B384-36E4-45B0-82DC-A1426669EB74}</UniqueIdentifier>
+      <UniqueIdentifier>{A2B40BA5-E2DE-4CB5-9F6F-52F8F5AAD9C8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +51,13 @@
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
@@ -69,10 +75,16 @@
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\MainViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m">
@@ -102,16 +114,19 @@
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m">
+    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg">
@@ -175,6 +190,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
   </ItemGroup>

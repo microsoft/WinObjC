@@ -30,7 +30,8 @@
     idretain _text;
     idretain _color, _shadowColor;
     CGSize _shadowOffset;
-    unsigned _alignment, _lineBreakMode;
+    UITextAlignment _alignment;
+    UILineBreakMode _lineBreakMode;
     int _numLines;
     UIEdgeInsets _edgeInsets;
     BOOL _centerVertically;
@@ -85,8 +86,8 @@
 - (void)_setDisplayParams:(UIFont*)
                      font:(NSString*)
                      text:(UIColor*)
-                    color:(unsigned)
-                alignment:(unsigned)
+                    color:(UITextAlignment)
+                alignment:(UILineBreakMode)
                 lineBreak:(UIColor*)
               shadowColor:(CGSize)
              shadowOffset:(int)numLines {

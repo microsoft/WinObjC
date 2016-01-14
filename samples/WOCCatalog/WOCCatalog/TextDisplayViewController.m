@@ -29,6 +29,132 @@ int const DefaultShadowHeight = 10;
 NSString* const TestString = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 NSMutableArray* rows;
 
+typedef enum { shapeRectangle, shapeTriangle } ShapeType;
+
+@interface MovableShape : UIView <UIGestureRecognizerDelegate> {
+    CGPoint _origin;
+    CGSize _shapeSize;
+    ShapeType _shapeType;
+
+    UIPanGestureRecognizer* _panGesture;
+}
+@property (nonatomic, retain) UIBezierPath* path;
+@property (nonatomic, retain) NSTextContainer* textContainer;
+@property (nonatomic) CGPoint offset;
+@end
+
+@implementation MovableShape
+- (UIBezierPath*)bezierPathWithOffset:(CGPoint)offset {
+    switch (_shapeType) {
+        case shapeRectangle: {
+            CGRect rect;
+            rect.origin = offset;
+            rect.size = _shapeSize;
+
+            return [UIBezierPath bezierPathWithRect:rect];
+        } break;
+
+        case shapeTriangle: {
+            CGMutablePathRef path = CGPathCreateMutable();
+            CGPathMoveToPoint(path, NULL, _shapeSize.width / 2.0f + offset.x, offset.y);
+            CGPathAddLineToPoint(path, NULL, _shapeSize.width + offset.x, _shapeSize.height + offset.y);
+            CGPathAddLineToPoint(path, NULL, offset.x, _shapeSize.height + offset.y);
+            CGPathAddLineToPoint(path, NULL, _shapeSize.width / 2.0f + offset.x, offset.y);
+
+            UIBezierPath* ret = [UIBezierPath bezierPathWithCGPath:path];
+            CGPathRelease(path);
+
+            return ret;
+        } break;
+    }
+
+    return nil;
+}
+
+- (void)setOffset:(CGPoint)offset {
+    CGPoint newPosition = self.layer.position;
+    newPosition.x += offset.x;
+    newPosition.y += offset.y;
+    self.layer.position = newPosition;
+
+    _origin = offset;
+    [self _updateTextContainer];
+}
+
+- (void)_updateTextContainer {
+    NSMutableArray* arr = [self.textContainer.exclusionPaths mutableCopy];
+    if (arr == nil)
+        arr = [NSMutableArray new];
+
+    if (self.path)
+        [arr removeObject:self.path];
+
+    self.path = [self bezierPathWithOffset:_origin];
+    [arr addObject:self.path];
+
+    self.textContainer.exclusionPaths = arr;
+
+    CAShapeLayer* layer = (CAShapeLayer*)self.layer;
+    if (layer.path == nil) {
+        layer.path = [self bezierPathWithOffset:CGPointMake(0, 0)].CGPath;
+        layer.fillColor = [UIColor cyanColor].CGColor;
+        layer.strokeColor = [UIColor blueColor].CGColor;
+        layer.lineWidth = 1.0f;
+    }
+}
+
+- (instancetype)initWithRectangle:(CGSize)size textContainer:(NSTextContainer*)tc {
+    self = [super initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    self.textContainer = tc;
+    _shapeSize = size;
+    _shapeType = shapeRectangle;
+    [self _updateTextContainer];
+
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_didPan:)];
+    [_panGesture setDelegate:self];
+    [self addGestureRecognizer:_panGesture];
+
+    return self;
+}
+
+- (instancetype)initWithTriangle:(CGSize)size textContainer:(NSTextContainer*)tc {
+    self = [super initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    self.textContainer = tc;
+    _shapeSize = size;
+    _shapeType = shapeTriangle;
+    [self _updateTextContainer];
+
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_didPan:)];
+    [_panGesture setDelegate:self];
+    [self addGestureRecognizer:_panGesture];
+
+    return self;
+}
+
+- (void)_didPan:(UIGestureRecognizer*)gesture {
+    UIGestureRecognizerState state = [gesture state];
+
+    CGPoint amt;
+    amt = [_panGesture translationInView:self];
+    [_panGesture setTranslation:CGPointMake(0, 0) inView:self];
+
+    if (state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged) {
+        _origin.x += amt.x;
+        _origin.y += amt.y;
+
+        CGPoint newPosition = self.layer.position;
+        newPosition.x += amt.x;
+        newPosition.y += amt.y;
+        self.layer.position = newPosition;
+        [self _updateTextContainer];
+    }
+}
+
++ (Class)layerClass {
+    return [CAShapeLayer class];
+}
+@end
+
 @implementation TextDrawerController {
 }
 
@@ -102,27 +228,56 @@ NSMutableArray* rows;
     return cell;
 }
 
++ (NSAttributedString*)colorizedStringFromString:(NSString*)text withFont:(UIFont*)font textColor:(UIColor*)textColor {
+    NSCharacterSet* upperCaseSet = [NSCharacterSet uppercaseLetterCharacterSet];
+    NSMutableAttributedString* ret =
+        [[NSMutableAttributedString alloc] initWithString:text
+                                               attributes:@{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor }];
+    UIFont* uppercaseFont = [font fontWithSize:font.pointSize * 1.10f];
+
+    for (int i = 0; i < [text length]; i++) {
+        if ([upperCaseSet characterIsMember:[text characterAtIndex:i]]) {
+            [ret addAttribute:NSFontAttributeName value:uppercaseFont range:NSMakeRange(i, 1)];
+            [ret addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(i, 1)];
+        }
+    }
+
+    return ret;
+}
+
 - (UITextView*)basicUITextView {
     UITextView* uiTextView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, DefaultWidthOfDrawArea, 300)];
     uiTextView.textColor = [UIColor blackColor];
     uiTextView.font = [UIFont fontWithName:@"Arial" size:18.0];
     uiTextView.backgroundColor = [UIColor whiteColor];
 
-    uiTextView.text = @"Lorem ipsum dolor sit amet lorem a ut massa quam tempus maecenas. Eu consequat ipsum magnis quisque. Etiam luctus "
-                      @"dictum natoque ullamcorper dolor quam quisque metus. Dui imperdiet eget ante tellus. Nullam sem aenean. Pede "
-                      @"donec lorem ultricies eleifend imperdiet integer phasellus blandit dictum nulla eget. Nulla fringilla sit "
-                      @"pulvinar eu vel semper orci. Vel lorem ante ut. Eleifend vulputate rhoncus. Ultricies dolor venenatis amet sit "
-                      @"aenean ante magnis imperdiet rhoncus tellus elementum. Etiam amet ante enim. Tellus adipiscing consequat. Dolor "
-                      @"justo adipiscing nisi amet. Adipiscing aliquam eleifend lorem ante fringilla integer elementum quis felis libero "
-                      @"pretium justo. Veni tellus id. Etiam quam vitae leo aenean et vivamus rhoncus nec. Nulla adipiscing parturient "
-                      @"sit porttitor et nec quam ultricies integer nullam. Lorem dui eu vitae ultricies tellus eget quis felis dolor "
-                      @"tincidunt aenean semper. Vitae quis dolor natoque eleifend justo phasellus mollis pulvinar venenatis ac pede sem "
-                      @"pellentesque. Eget commodo nam quam sem ipsum vici ligula ante.";
+    NSString* text = @"Lorem ipsum dolor sit amet lorem a ut massa quam tempus maecenas. Eu consequat ipsum magnis quisque. Etiam luctus "
+                     @"dictum natoque ullamcorper dolor quam quisque metus. Dui imperdiet eget ante tellus. Nullam sem aenean. Pede "
+                     @"donec lorem ultricies eleifend imperdiet integer phasellus blandit dictum nulla eget. Nulla fringilla sit "
+                     @"pulvinar eu vel semper orci. Vel lorem ante ut. Eleifend vulputate rhoncus. Ultricies dolor venenatis amet sit "
+                     @"aenean ante magnis imperdiet rhoncus tellus elementum. Etiam amet ante enim. Tellus adipiscing consequat. Dolor "
+                     @"justo adipiscing nisi amet. Adipiscing aliquam eleifend lorem ante fringilla integer elementum quis felis libero "
+                     @"pretium justo. Veni tellus id. Etiam quam vitae leo aenean et vivamus rhoncus nec. Nulla adipiscing parturient "
+                     @"sit porttitor et nec quam ultricies integer nullam. Lorem dui eu vitae ultricies tellus eget quis felis dolor "
+                     @"tincidunt aenean semper. Vitae quis dolor natoque eleifend justo phasellus mollis pulvinar venenatis ac pede sem "
+                     @"pellentesque. Eget commodo nam quam sem ipsum vici ligula ante.";
+
+    uiTextView.attributedText =
+        [TextDrawerController colorizedStringFromString:text withFont:uiTextView.font textColor:uiTextView.textColor];
 
     uiTextView.returnKeyType = UIReturnKeyDefault;
     uiTextView.keyboardType = UIKeyboardTypeDefault;
     uiTextView.scrollEnabled = YES;
+    uiTextView.editable = YES;
     uiTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+    MovableShape* triangleShape = [[MovableShape alloc] initWithTriangle:CGSizeMake(70, 70) textContainer:uiTextView.textContainer];
+    MovableShape* rectangleShape = [[MovableShape alloc] initWithRectangle:CGSizeMake(70, 70) textContainer:uiTextView.textContainer];
+    triangleShape.offset = CGPointMake(150, 0);
+    rectangleShape.offset = CGPointMake(50, 140);
+    [uiTextView addSubview:triangleShape];
+    [uiTextView addSubview:rectangleShape];
+
     return uiTextView;
 }
 

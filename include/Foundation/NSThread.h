@@ -1,85 +1,77 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#ifndef _NSTHREAD_H_
-#define _NSTHREAD_H_
+#pragma once
 
 #import <Foundation/NSException.h>
 #import <Foundation/NSDate.h>
 
 @class NSDictionary, NSMutableDictionary, NSAutoreleasePool, NSLock, NSRunLoop;
 
-FOUNDATION_EXPORT NSString * const NSDidBecomeSingleThreadedNotification;
-FOUNDATION_EXPORT NSString * const NSWillBecomeMultiThreadedNotification;
-FOUNDATION_EXPORT NSString * const NSThreadWillExitNotification;
+FOUNDATION_EXPORT NSString* const NSDidBecomeSingleThreadedNotification;
+FOUNDATION_EXPORT NSString* const NSWillBecomeMultiThreadedNotification;
+FOUNDATION_EXPORT NSString* const NSThreadWillExitNotification;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSThread : NSObject{
-@public
-    BOOL           _isFinished;
-}
+@interface NSThread : NSObject
 
-+(BOOL)isMultiThreaded;
-+(BOOL)isMainThread;
++ (BOOL)isMultiThreaded;
++ (BOOL)isMainThread;
 
-+(NSThread *)mainThread;
++ (NSThread*)mainThread;
 
-+(void)detachNewThreadSelector:(SEL)selector toTarget:target
-   withObject:argument;
++ (void)detachNewThreadSelector:(SEL)selector toTarget:target withObject:argument;
 
-+(NSThread *)currentThread;
-+(NSArray *)callStackReturnAddresses;
-+(double)threadPriority;
-+(void)setThreadPriority:(double)value;
++ (NSThread*)currentThread;
++ (NSArray*)callStackReturnAddresses;
++ (NSArray*)callStackSymbols;
 
-+(void)sleepUntilDate:(NSDate *)date;
-+(void)sleepForTimeInterval:(NSTimeInterval)value;
++ (double)threadPriority;
++ (void)setThreadPriority:(double)value;
 
-+(void)exit;
++ (void)sleepUntilDate:(NSDate*)date;
++ (void)sleepForTimeInterval:(NSTimeInterval)value;
 
--init;
--initWithTarget:target selector:(SEL)selector object:argument;
+- (instancetype)init;
+- (instancetype)initWithTarget:(id)target selector:(SEL)selector object:(id)argument;
 
--(BOOL)isMainThread;
--(BOOL)isCancelled;
--(BOOL)isExecuting;
--(BOOL)isFinished;
+- (void)start;
+- (void)cancel;
+- (void)main;
++ (void)exit;
 
--(void)start;
--(void)cancel;
--(void)main;
+@property (copy) NSString* name;
+@property (assign) NSUInteger stackSize;
+@property (assign) double threadPriority;
 
--(NSString *)name;
--(NSUInteger)stackSize;
+@property (readonly) BOOL isMainThread;
+@property (atomic, readonly, getter=isExecuting) BOOL executing;
+@property (atomic, readonly, getter=isCancelled) BOOL cancelled;
+@property (atomic, readonly, getter=isFinished) BOOL finished;
 
--(NSMutableDictionary *)threadDictionary;
-
--(void)setName:(NSString *)value;
--(void)setStackSize:(NSUInteger)value;
-+(NSArray *)callStackSymbols;
-
-// private
--(NSMutableDictionary *)sharedDictionary;
--(void)setSharedObject:object forClassName:(NSString *)className;
-
+@property (readonly, retain) NSMutableDictionary* threadDictionary;
 @end
 
 @interface NSObject (NSThreadPerformAdditions)
--(void)performSelector:(SEL)selector onThread:(NSThread *)thread withObject:(id)object waitUntilDone:(BOOL)waitUntilDone modes:(NSArray *)modes;
--(void)performSelector:(SEL)selector onThread:(NSThread *)thread withObject:(id)object waitUntilDone:(BOOL)waitUntilDone;
--(void)performSelectorOnMainThread:(SEL)selector withObject:object waitUntilDone:(BOOL)waitUntilDone modes:(NSArray *)modes;
--(void)performSelectorOnMainThread:(SEL)selector withObject:object waitUntilDone:(BOOL)waitUntilDone;
--(void)performSelectorInBackground:(SEL)selector withObject:object;
+- (void)performSelector:(SEL)selector
+               onThread:(NSThread*)thread
+             withObject:(id)object
+          waitUntilDone:(BOOL)waitUntilDone
+                  modes:(NSArray*)modes;
+- (void)performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)object waitUntilDone:(BOOL)waitUntilDone;
+- (void)performSelectorOnMainThread:(SEL)selector withObject:object waitUntilDone:(BOOL)waitUntilDone modes:(NSArray*)modes;
+- (void)performSelectorOnMainThread:(SEL)selector withObject:object waitUntilDone:(BOOL)waitUntilDone;
+- (void)performSelectorInBackground:(SEL)selector withObject:object;
 @end
-
-// PRIVATE
-FOUNDATION_EXPORT NSThread *NSCurrentThread(void);
-FOUNDATION_EXPORT id NSThreadSharedInstance(NSString *className);
-FOUNDATION_EXPORT id NSThreadSharedInstanceDoNotCreate(NSString *className);
-
-#endif /* _NSTHREAD_H_ */

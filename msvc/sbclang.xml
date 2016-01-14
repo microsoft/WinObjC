@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
   <Rule
     Name="Clang"
@@ -167,6 +167,12 @@
       Description="Specifies whether to use Automatic Reference Counting."
       Switch="-fobjc-arc"
       Name="ObjectiveCARC" />
+    <BoolProperty
+      Category="General"
+      DisplayName="Enable C and Objective-C Modules"
+      Description="Specifies whether to use Clang modules."
+      Switch="-fmodules"
+      Name="ObjectiveCModules" />
     <StringListProperty
       Visible="False"
       Category="Paths"
@@ -270,7 +276,7 @@
     <BoolProperty
       Category="Language"
       DisplayName="Use WinObjC standard library"
-      Description="Uses the WinObjC standard C/C++ library definitions when compiling.  This can create some compatibility issues with COM interfaces and Windows-specific source code."
+      Description="Uses the WinObjC standard C/C++ library definitions when compiling. This can create some compatibility issues with COM interfaces and Windows-specific source code."
       Name="WOCStdLib" />
     <StringProperty
       Visible="False"
@@ -314,16 +320,7 @@
     Name="ClangCompile"
     DisplayName="Clang source" />
   <FileExtension
-    Name="*.mm"
-    ContentType="ClangObjCpp" />
-  <FileExtension
-    Name="*.m"
-    ContentType="ClangObjCpp" />
-  <FileExtension
     Name="*.c"
-    ContentType="ClangCpp" />
-  <FileExtension
-    Name="*.cxx"
     ContentType="ClangCpp" />
   <FileExtension
     Name="*.cpp"
@@ -331,6 +328,15 @@
   <FileExtension
     Name="*.cc"
     ContentType="ClangCpp" />
+  <FileExtension
+    Name="*.cxx"
+    ContentType="ClangCpp" />
+  <FileExtension
+    Name="*.m"
+    ContentType="ClangObjCpp" />
+  <FileExtension
+    Name="*.mm"
+    ContentType="ClangObjCpp" />
   <ContentType
     Name="ClangCpp"
     DisplayName="Clang C/C++"

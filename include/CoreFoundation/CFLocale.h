@@ -1,13 +1,18 @@
 /* Copyright (c) 2008-2009 Christopher J. W. Lloyd
 
-Permission is hereby granted,free of charge,to any person obtaining a copy of this software and associated documentation files (the "Software"),to deal in the Software without restriction,including without limitation the rights to use,copy,modify,merge,publish,distribute,sublicense,and/or sell copies of the Software,and to permit persons to whom the Software is furnished to do so,subject to the following conditions:
+Permission is hereby granted,free of charge,to any person obtaining a copy of this software and associated documentation files (the
+"Software"),to deal in the Software without restriction,including without limitation the rights to
+use,copy,modify,merge,publish,distribute,sublicense,and/or sell copies of the Software,and to permit persons to whom the Software is
+furnished to do so,subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED,INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT,TORT OR OTHERWISE,ARISING FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED,INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY,FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM,DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT,TORT OR OTHERWISE,ARISING FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-
-typedef struct __NSLocale *CFLocaleRef;
+typedef struct __NSLocale* CFLocaleRef;
 
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFArray.h>
@@ -31,7 +36,7 @@ COREFOUNDATION_EXPORT const CFStringRef kCFLocaleDecimalSeparator;
 COREFOUNDATION_EXPORT const CFStringRef kCFLocaleGroupingSeparator;
 COREFOUNDATION_EXPORT const CFStringRef kCFLocaleCurrencySymbol;
 COREFOUNDATION_EXPORT const CFStringRef kCFLocaleCurrencyCode;
-   
+
 COREFOUNDATION_EXPORT const CFStringRef kCFGregorianCalendar;
 COREFOUNDATION_EXPORT const CFStringRef kCFBuddhistCalendar;
 COREFOUNDATION_EXPORT const CFStringRef kCFChineseCalendar;
@@ -42,27 +47,34 @@ COREFOUNDATION_EXPORT const CFStringRef kCFJapaneseCalendar;
 
 COREFOUNDATION_EXPORT const CFStringRef kCFLocaleCurrentLocaleDidChangeNotification;
 
+typedef enum {
+    kCFLocaleLanguageDirectionUnknown = 0,
+    kCFLocaleLanguageDirectionLeftToRight = 1,
+    kCFLocaleLanguageDirectionRightToLeft = 2,
+    kCFLocaleLanguageDirectionTopToBottom = 3,
+    kCFLocaleLanguageDirectionBottomToTop = 4,
+} CFNumberFormatter;
 
-COREFOUNDATION_EXPORT CFTypeID        CFLocaleGetTypeID(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyAvailableLocaleIdentifiers(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyCommonISOCurrencyCodes(void);
-COREFOUNDATION_EXPORT CFLocaleRef     CFLocaleCopyCurrent(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyISOCountryCodes(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyISOCurrencyCodes(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyISOLanguageCodes(void);
-COREFOUNDATION_EXPORT CFArrayRef      CFLocaleCopyPreferredLanguages(void);
-COREFOUNDATION_EXPORT CFLocaleRef     CFLocaleGetSystem(void);
+COREFOUNDATION_EXPORT CFTypeID CFLocaleGetTypeID(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyAvailableLocaleIdentifiers(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyCommonISOCurrencyCodes(void);
+COREFOUNDATION_EXPORT CFLocaleRef CFLocaleCopyCurrent(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyISOCountryCodes(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyISOCurrencyCodes(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyISOLanguageCodes(void);
+COREFOUNDATION_EXPORT CFArrayRef CFLocaleCopyPreferredLanguages(void);
+COREFOUNDATION_EXPORT CFLocaleRef CFLocaleGetSystem(void);
 
-COREFOUNDATION_EXPORT CFLocaleRef     CFLocaleCreate(CFAllocatorRef allocator,CFStringRef identifier);
-COREFOUNDATION_EXPORT CFStringRef     CFLocaleCreateCanonicalLanguageIdentifierFromString(CFAllocatorRef allocator,CFStringRef identifier);
-COREFOUNDATION_EXPORT CFStringRef     CFLocaleCreateCanonicalLocaleIdentifierFromString(CFAllocatorRef allocator,CFStringRef identifier);
-COREFOUNDATION_EXPORT CFDictionaryRef CFLocaleCreateComponentsFromLocaleIdentifier(CFAllocatorRef allocator,CFStringRef identifier);
+COREFOUNDATION_EXPORT CFLocaleRef CFLocaleCreate(CFAllocatorRef allocator, CFStringRef identifier);
+COREFOUNDATION_EXPORT CFStringRef CFLocaleCreateCanonicalLanguageIdentifierFromString(CFAllocatorRef allocator, CFStringRef identifier);
+COREFOUNDATION_EXPORT CFStringRef CFLocaleCreateCanonicalLocaleIdentifierFromString(CFAllocatorRef allocator, CFStringRef identifier);
+COREFOUNDATION_EXPORT CFDictionaryRef CFLocaleCreateComponentsFromLocaleIdentifier(CFAllocatorRef allocator, CFStringRef identifier);
 
-COREFOUNDATION_EXPORT CFLocaleRef     CFLocaleCreateCopy(CFAllocatorRef allocator,CFLocaleRef self);
+COREFOUNDATION_EXPORT CFLocaleRef CFLocaleCreateCopy(CFAllocatorRef allocator, CFLocaleRef self);
 
-COREFOUNDATION_EXPORT CFStringRef     CFLocaleCopyDisplayNameForPropertyValue(CFLocaleRef self,CFStringRef key,CFStringRef value);
-COREFOUNDATION_EXPORT CFStringRef     CFLocaleCreateLocaleIdentifierFromComponents(CFAllocatorRef allocator,CFDictionaryRef dictionary);
-COREFOUNDATION_EXPORT CFStringRef     CFLocaleGetIdentifier(CFLocaleRef self);
-COREFOUNDATION_EXPORT CFTypeRef       CFLocaleGetValue(CFLocaleRef self,CFStringRef key);
+COREFOUNDATION_EXPORT CFStringRef CFLocaleCopyDisplayNameForPropertyValue(CFLocaleRef self, CFStringRef key, CFStringRef value);
+COREFOUNDATION_EXPORT CFStringRef CFLocaleCreateLocaleIdentifierFromComponents(CFAllocatorRef allocator, CFDictionaryRef dictionary);
+COREFOUNDATION_EXPORT CFStringRef CFLocaleGetIdentifier(CFLocaleRef self);
+COREFOUNDATION_EXPORT CFTypeRef CFLocaleGetValue(CFLocaleRef self, CFStringRef key);
 
 COREFOUNDATION_EXTERNC_END

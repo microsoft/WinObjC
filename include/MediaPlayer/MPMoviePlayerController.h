@@ -17,6 +17,10 @@
 #ifndef _MPMOVIEPLAYERCONTROLLER_H_
 #define _MPMOVIEPLAYERCONTROLLER_H_
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIColor.h>
+
 typedef NS_ENUM(NSInteger, MPMovieLoadState) {
     MPMovieLoadStateUnknown = 0,
     MPMovieLoadStatePlayable = 1 << 0,
@@ -129,7 +133,7 @@ UIKIT_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 @class MPMovieAccessLog;
 @class MPMovieErrorLog;
 
-UIKIT_EXPORT
+UIKIT_EXPORT_CLASS
 @interface MPMoviePlayerController : NSObject <MPMediaPlayback, NSObject>
 
 - (instancetype)initWithContentURL:(NSURL*)url;

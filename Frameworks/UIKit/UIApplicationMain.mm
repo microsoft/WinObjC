@@ -106,7 +106,7 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
     void ForceInclusion();
     ForceInclusion();
 
-    [[NSThread currentThread] associateWithCurrentThread];
+    [[NSThread currentThread] _associateWithMainThread];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
     outerPool = [NSAutoreleasePoolWarn new];
@@ -221,6 +221,11 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
         [uiApplication setDelegate:uiApplication];
     }
 
+    // VSO 5762132: Temporarily call -application:willFinishLaunchingWithOptions: here (before did(...):)
+    if ([curDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
+        [curDelegate application:uiApplication willFinishLaunchingWithOptions:nil];
+    }
+
     if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
         NSMutableDictionary* options = [NSMutableDictionary dictionary];
 
@@ -271,7 +276,7 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
 }
 
 int UIApplicationMainLoop() {
-    [[NSThread currentThread] associateWithCurrentThread];
+    [[NSThread currentThread] _associateWithMainThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
     for (;;) {

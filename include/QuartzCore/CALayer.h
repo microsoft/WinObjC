@@ -23,7 +23,6 @@
 #import <QuartzCore/CATransform3D.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <UIKit/UIColor.h>
 
 @class CAAnimation, CALayerContext;
 
@@ -87,6 +86,7 @@ CA_EXPORT_CLASS
 @property float opacity;
 @property BOOL opaque;
 @property (retain) id contents;
+@property CGRect contentsRect;
 @property CATransform3D transform;
 @property CATransform3D sublayerTransform;
 @property CGRect contentsCenter;
@@ -161,11 +161,11 @@ CA_EXPORT_CLASS
 
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
 
-- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
+- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
 
-- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
+- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
 
-- (void)updateAccessibilityInfo: (IWAccessibilityInfo*)info;
+- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
 
 @end
 

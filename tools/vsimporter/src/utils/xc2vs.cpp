@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include "sbassert.h"
 #include "utils.h"
 #include "xc2vs.h"
 #include "clangoptparser.h"
@@ -57,14 +58,14 @@ static String getVSCompileAsType(const String& xcodeType)
     return "";
 }
 
-static VCProjectItem* addFileToVSInternal(const String& itemHint, const PBXFile* file, VCProject& proj, const BuildSettings& bs, bool isVariant)
+static VCProjectItem* addFileToVSInternal(const PBXFile* file, VCProject& proj, const BuildSettings& bs, bool isVariant, const VCItemHint* itemHint)
 {
   // Add all children of any PBXVariantGroup
   const PBXVariantGroup* variantGroup = dynamic_cast<const PBXVariantGroup*>(file);
   if (variantGroup) {
     const ConstFileList& children = variantGroup->getChildren();
     for (auto child : children) {
-      addFileToVSInternal(itemHint, child, proj, bs, true);
+      addFileToVSInternal(child, proj, bs, true, itemHint);
     }
     return NULL;
   }
@@ -85,10 +86,20 @@ static VCProjectItem* addFileToVSInternal(const String& itemHint, const PBXFile*
   // Compute the VS ItemType for the file
   String fileType = file->getFileType();
   String vsType = getVSItemType(fileType);
-  if (vsType == "Unknown")
-    vsType = itemHint;
+  if (vsType == "Unknown") {
+    if (itemHint && !itemHint->defaultType.empty()) {
+      vsType = itemHint->defaultType;
+    }
+  }
 
-  VCProjectItem* item = addRelativeFilePathToVS(vsType, realPath, sb_dirname(virtualPath), proj, bs);
+  // Add the item to the project, taking into account path overrides
+  VCProjectItem* item = NULL;
+  if (itemHint && !itemHint->pathOverride.empty()) {
+    sbAssert(!isVariant, "Unexpected path override for variant file: " + realPath);
+    item = proj.addItem(vsType, itemHint->pathOverride, sb_dirname(virtualPath));
+  } else {
+    item = addRelativeFilePathToVS(vsType, realPath, sb_dirname(virtualPath), proj, bs);
+  }
 
   // Handle Variant files
   if (isVariant) {
@@ -99,9 +110,9 @@ static VCProjectItem* addFileToVSInternal(const String& itemHint, const PBXFile*
   return item;
 }
 
-void addFileToVS(const String& itemHint, const PBXFile* file, VCProject& proj, const BuildSettings& bs)
+void addFileToVS(const PBXFile* file, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint)
 {
-  addFileToVSInternal(itemHint, file, proj, bs, false);
+  addFileToVSInternal(file, proj, bs, false, itemHint);
 }
 
 VCProjectItem* addRelativeFilePathToVS(const String& itemName, const String& filePath, const String& filterPath, VCProject& proj, const BuildSettings& bs)
@@ -115,7 +126,7 @@ VCProjectItem* addRelativeFilePathToVS(const String& itemName, const String& fil
   return proj.addItem(itemName, relPath, filterPath);
 }
 
-void addBuildFileToVS(const String& itemHint, const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs)
+void addBuildFileToVS(const PBXBuildFile* buildFile, VCProject& proj, const BuildSettings& bs, const VCItemHint* itemHint)
 {
   const String& compilerFlags = buildFile->getCompilerFlags();
   int attribs = buildFile->getAttributes();
@@ -123,7 +134,7 @@ void addBuildFileToVS(const String& itemHint, const PBXBuildFile* buildFile, VCP
   if (!file)
     return;
 
-  VCProjectItem* item = addFileToVSInternal(itemHint, file, proj, bs, false);
+  VCProjectItem* item = addFileToVSInternal(file, proj, bs, false, itemHint);
 
   // If the filetype doesn't match the file extension, specify the actual type
   String filePath = file->getFullPath();

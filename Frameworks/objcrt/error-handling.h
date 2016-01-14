@@ -45,6 +45,11 @@ OBJCRT_EXPORT NSException* _exceptionFromFailureInfo(const wil::FailureInfo& fi)
 OBJCRT_EXPORT NSString* _stringFromHresult(HRESULT hr);
 OBJCRT_EXPORT NSError* _errorFromFailureInfo(const wil::FailureInfo& fi);
 
+@interface NSException(errorHandlingInternal)
++ (NSString*)_exceptionNameForHRESULT:(int)errorCode;
++ (instancetype)_exceptionWithHRESULT:(int)errorCode reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
+@end
+
 #endif // __OBJC__
 
 __END_DECLS

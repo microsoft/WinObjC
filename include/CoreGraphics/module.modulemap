@@ -1,0 +1,8 @@
+module CoreGraphics [extern_c] {
+    umbrella header "CoreGraphics.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

@@ -36,7 +36,7 @@ UIKIT_EXPORT NSString* const UIFontSymbolicTrait;
 UIKIT_EXPORT NSString* const UIFontDescriptorTraitsAttribute;
 UIKIT_EXPORT NSString* const UIFontDescriptorFamilyAttribute;
 
-typedef NS_ENUM (uint32_t, UIFontDescriptorSymbolicTraits) {
+typedef NS_OPTIONS(uint32_t, UIFontDescriptorSymbolicTraits) {
     /* Typeface info (lower 16 bits of UIFontDescriptorSymbolicTraits ) */
     UIFontDescriptorTraitItalic = 1u << 0,
     UIFontDescriptorTraitBold = 1u << 1,

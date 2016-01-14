@@ -1,0 +1,8 @@
+module QuartzCore [extern_c] {
+    umbrella header "QuartzCore.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

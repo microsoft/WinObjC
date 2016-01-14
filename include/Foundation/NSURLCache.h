@@ -16,38 +16,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSCachedURLResponse, NSURLRequest, NSMutableDictionary, NSMutableArray;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLCache : NSObject {
-    NSString* _path;
-    NSUInteger _memoryCapacity;
-    NSUInteger _diskCapacity;
+@interface NSURLCache : NSObject
 
-    NSUInteger _currentMemoryUsage;
-    NSMutableDictionary* _memoryCache;
-    NSMutableArray* _memoryAccess;
+@property (nonatomic, assign) NSUInteger diskCapacity;
+@property (nonatomic, readonly) NSUInteger currentDiskUsage;
 
-    NSUInteger _currentDiskUsage;
-    NSMutableDictionary* _diskCache;
-}
+@property (nonatomic, assign) NSUInteger memoryCapacity;
+@property (nonatomic, readonly) NSUInteger currentMemoryUsage;
 
-+ (NSURLCache*)sharedURLCache;
++ (instancetype)sharedURLCache;
 + (void)setSharedURLCache:(NSURLCache*)cache;
 
-- initWithMemoryCapacity:(NSUInteger)memoryCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(NSString*)diskPath;
-
-- (NSUInteger)memoryCapacity;
-- (NSUInteger)diskCapacity;
-
-- (NSUInteger)currentDiskUsage;
-- (NSUInteger)currentMemoryUsage;
+- (instancetype)initWithMemoryCapacity:(NSUInteger)memoryCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(NSString*)diskPath;
 
 - (NSCachedURLResponse*)cachedResponseForRequest:(NSURLRequest*)request;
-
-- (void)setMemoryCapacity:(NSUInteger)memoryCapacity;
-- (void)setDiskCapacity:(NSUInteger)diskCapacity;
-
 - (void)storeCachedResponse:(NSCachedURLResponse*)response forRequest:(NSURLRequest*)request;
-
-- (void)removeAllCachedResponses;
 - (void)removeCachedResponseForRequest:(NSURLRequest*)request;
+- (void)removeAllCachedResponses;
 
 @end

@@ -5,24 +5,24 @@
 // Copyright (c) 2008-2009 Apple Inc. All rights reserved.
 //
 // @APPLE_APACHE_LICENSE_HEADER_START@
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // @APPLE_APACHE_LICENSE_HEADER_END@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <UIKit/UIKit.h>
 #include <windows.h>
 #include <dispatch/dispatch.h>
@@ -33,11 +33,11 @@
 #endif
 
 #if TARGET_OS_EMBEDDED
-#define COUNT    300ul
-#define LAPS    10ul
+#define COUNT 300ul
+#define LAPS 10ul
 #else
-#define COUNT    1000ul
-#define LAPS    10ul
+#define COUNT 1000ul
+#define LAPS 10ul
 #endif
 
 static dispatch_queue_t queues[COUNT];
@@ -74,7 +74,7 @@ static void collect(void* context __attribute__((unused))) {
 
     // our malloc could be a lot better,
     // this result is really a malloc torture test
-    test_long_less_than("Latency" , (unsigned long)math, 1000);
+    test_long_less_than("Latency", (unsigned long)math, 1000);
 
     if (--lap_count_down) {
         return do_test();
@@ -95,7 +95,7 @@ static void pong(void* context) {
 
     dispatch_set_context(this_q, reinterpret_cast<void*>(--replies));
     if (!replies) {
-        //printf("collect from: %s\n", dispatch_queue_get_label(dispatch_get_current_queue()));
+        // printf("collect from: %s\n", dispatch_queue_get_label(dispatch_get_current_queue()));
         dispatch_async_f(dispatch_get_main_queue(), NULL, collect);
     }
 }

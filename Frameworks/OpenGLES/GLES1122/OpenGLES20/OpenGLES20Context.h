@@ -311,6 +311,10 @@ public:
     void glGetBufferPointervOES(GLenum target, GLenum pname, GLvoid** params);
     GLvoid* glMapBufferOES(GLenum target, GLenum access);
     GLboolean glUnmapBufferOES(GLenum target);
+    void glBindVertexArrayOES(GLuint array);
+    void glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays);
+    void glGenVertexArraysOES(GLsizei n, GLuint* arrays);
+    GLboolean glIsVertexArrayOES(GLuint array);
 
     // Non-API
     int getCachedShaderAmount();

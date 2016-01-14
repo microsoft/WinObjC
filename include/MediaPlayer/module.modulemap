@@ -1,0 +1,8 @@
+module MediaPlayer [extern_c] {
+    umbrella header "MediaPlayer.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

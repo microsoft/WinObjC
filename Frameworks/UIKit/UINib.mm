@@ -15,7 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#import  <UIKit/UINib.h>
+#import <UIKit/UINib.h>
+#import <Foundation/NSNib.h>
 
 @implementation UINib
+// VSO 5762882: Redirect this to NSNib until we've completed replacing UINib with NSNib.
++ (id)nibWithNibName:(id)name bundle:(id)bundle {
+    return [NSNib nibWithNibName:name bundle:bundle];
+}
 @end

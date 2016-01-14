@@ -20,12 +20,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 FOUNDATION_EXPORT NSString* const NSURLCredentialStorageChangedNotification;
 
+FOUNDATION_EXPORT_CLASS
 @interface NSURLCredentialStorage : NSObject {
 }
 
 + (NSURLCredentialStorage*)sharedCredentialStorage;
-
-- (NSDictionary*)allCredentials;
 - (NSDictionary*)credentialsForProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
 - (NSURLCredential*)defaultCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
 
@@ -33,6 +32,8 @@ FOUNDATION_EXPORT NSString* const NSURLCredentialStorageChangedNotification;
 - (void)setDefaultCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
 
 - (void)removeCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
+
+@property (readonly, copy) NSDictionary* allCredentials;
 
 @end
 

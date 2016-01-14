@@ -45,13 +45,14 @@ FOUNDATION_EXPORT_CLASS
 
 - initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag; // shouldn't this be "allows" ?
 
++ (NSDateFormatterBehavior)defaultFormatterBehavior;
++ (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior;
+
 // added because NSDateFormatter is the backend for initWithString:calendarFormat:locale
 // shouldn't this really exist anyway?
-- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSDictionary*)locale;
+- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSLocale*)locale;
 
-+ (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior;
 - (void)setFormatterBehavior:(NSDateFormatterBehavior)value;
-- (NSDateFormatterBehavior)formatterBehavior;
 
 - (NSString*)stringFromDate:(NSDate*)date;
 - (NSDate*)dateFromString:(NSString*)string;
@@ -73,6 +74,7 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSArray* shortWeekdaySymbols;
 @property (copy) NSArray* shortStandaloneWeekdaySymbols;
 @property (copy) NSArray* standaloneWeekdaySymbols;
+@property NSDateFormatterBehavior formatterBehavior;
 
 @property (copy) NSString* AMSymbol;
 @property (copy) NSString* PMSymbol;

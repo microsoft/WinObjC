@@ -14,18 +14,19 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 #include <windows.h>
 #include "Starboard.h"
 
 namespace {
-    HRESULT catchReturnHrTest() {
-        try {
-            THROW_NS_HR(E_NOTIMPL);
-        } CATCH_RETURN();
-        return S_OK;
+HRESULT catchReturnHrTest() {
+    try {
+        THROW_NS_HR(E_NOTIMPL);
     }
+    CATCH_RETURN();
+    return S_OK;
+}
 }
 
 TEST(Core, ErrorHandling) {
@@ -33,15 +34,18 @@ TEST(Core, ErrorHandling) {
 
     try {
         THROW_NS_HR(E_NOTIMPL);
-    } CATCH_POPULATE_NSERROR(&error);
+    }
+    CATCH_POPULATE_NSERROR(&error);
 
     ASSERT_EQ_MSG(error.code, E_NOTIMPL, "NSError code did not percolate through from exception");
 
     @try {
         try {
             THROW_NS_HR(E_ABORT);
-        } CATCH_THROW_NSEXCEPTION();
-    } @CATCH_POPULATE_NSERROR(&error);
+        }
+        CATCH_THROW_NSEXCEPTION();
+    } @
+    CATCH_POPULATE_NSERROR(&error);
 
     ASSERT_EQ_MSG(error.code, E_ABORT, "NSException did not correctly sift through CATCH_THROW_NSEXCEPTION");
 
@@ -50,7 +54,21 @@ TEST(Core, ErrorHandling) {
     try {
         try {
             THROW_HR(E_NOTIMPL);
-        } CATCH_THROW_NSEXCEPTION();
-    } CATCH_POPULATE_NSERROR(&error);
+        }
+        CATCH_THROW_NSEXCEPTION();
+    }
+    CATCH_POPULATE_NSERROR(&error);
     ASSERT_EQ_MSG(error.code, E_NOTIMPL, "Exception renormalization to NSExceptions not working correctly!");
+
+    NSString* actualExceptionName = @"";
+    @try {
+        try {
+            THROW_NS_HR(E_INVALIDARG);
+        }
+        CATCH_THROW_NSEXCEPTION();
+    } @catch (NSException* exception) {
+        actualExceptionName = exception.name;
+    }
+
+    ASSERT_OBJCEQ(actualExceptionName, NSInvalidArgumentException);
 }

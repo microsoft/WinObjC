@@ -38,7 +38,7 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutputName>objcrt</OutputName>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
@@ -157,7 +157,7 @@
                  linking against a win10 api set in stead of kernel32.lib.  This ends up breaking the unit tests on the build server
                  which is server 2012 R2 (win 8.1).
       -->
-      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -182,7 +182,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -207,7 +207,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -232,7 +232,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -257,7 +257,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlibd.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlibd.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
@@ -282,7 +282,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vccorlib.lib;kernel32.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
+      <AdditionalDependencies>vccorlib.lib;%(AdditionalDependencies);RuntimeObject.lib</AdditionalDependencies>
       <ModuleDefinitionFile>..\objcrt.Shared\objcrt.def</ModuleDefinitionFile>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>

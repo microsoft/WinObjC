@@ -17,6 +17,8 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
+#include "Logging.h"
+
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
@@ -39,7 +41,7 @@
 #define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 extern "C" void dbg_printf(const char* fmt, ...);
-#define EbrDebugLog(...) dbg_printf(__VA_ARGS__)
+#define EbrDebugLog(...) EbrDebugLogShim(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
@@ -56,7 +58,7 @@ static inline id m_assert(const char* file, int line) {
 }
 static inline float m_assert_float() {
     printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return nil;
+    return 0.0;
 }
 #else
 static inline unsigned int m_assert(const char* file, int line) {
@@ -268,7 +270,7 @@ public:
 
 #ifdef __OBJC__
 extern "C" BOOL object_isMethodFromClass(id dwObj, SEL pSel, const char* fromClass);
-bool isOSTarget(NSString* versionStr);
+extern "C" BOOL isOSTarget(NSString* versionStr);
 #endif
 
 typedef unsigned __int64 uint64_t;
@@ -325,204 +327,6 @@ inline CAPoint3D operator*(float f, const CAPoint3D& v) {
     return CAPoint3D(v.x * f, v.y * f, v.z * f);
 }
 
-// These should eventually go:
-// Being private for now is ok but not a great solution...
-
-#ifdef __cplusplus
-template <typename objtype>
-class idretaint {
-public:
-    objtype* _val;
-
-    idretaint() {
-        _val = nil;
-    }
-
-    idretaint(id val) {
-        _val = [val retain];
-    }
-
-    idretaint(const idretaint<objtype>& other) {
-        _val = [other._val retain];
-    }
-
-    idretaint(idretaint<objtype>&& other) {
-        _val = other._val;
-        other._val = nil;
-    }
-
-    ~idretaint() {
-        [_val release];
-        _val = nil;
-    }
-
-    operator objtype*() {
-        return _val;
-    }
-
-    operator const objtype*() const {
-        return _val;
-    }
-
-    explicit operator bool() const {
-        return _val != nil;
-    }
-
-    // attach assumes ownership of an already-owned object.
-    void attach(id val) {
-        id newVal = val;
-        [_val release];
-        _val = newVal;
-    }
-
-    idretaint<objtype>& operator=(id val) {
-        if (_val == val)
-            return *this;
-
-        attach([val retain]);
-        return *this;
-    }
-
-    idretaint<objtype>& operator=(const idretaint<objtype>& val) {
-        return (*this = val._val);
-    }
-
-    idretaint<objtype>& operator=(idretaint<objtype>&& other) {
-        attach(other._val);
-        other._val = nil;
-        return *this;
-    }
-
-    template <typename K>
-    bool operator!=(const K& other) const {
-        return ((id)other) != (id)_val;
-    }
-
-    template <typename K>
-    bool operator==(const K& other) const {
-        return ((id)other) == (id)_val;
-    }
-
-    objtype* operator->() {
-        return _val;
-    }
-};
-
-template <typename objtype>
-class idretainp {
-public:
-    objtype _val;
-
-    idretainp() {
-        _val = nil;
-    }
-
-    idretainp(id val) {
-        _val = [val retain];
-    }
-
-    idretainp(const idretainp<objtype>&) = delete;
-
-    idretainp(idretainp<objtype>&& other) {
-        _val = other._val;
-        other._val = nil;
-    }
-
-    ~idretainp() {
-        [_val release];
-        _val = nil;
-    }
-
-    operator objtype() {
-        return _val;
-    }
-
-    operator const objtype() const {
-        return _val;
-    }
-
-    void attach(id val) {
-        id newVal = val;
-        [_val release];
-        _val = newVal;
-    }
-
-    idretainp<objtype>& operator=(id val) {
-        if (_val == static_cast<__unsafe_unretained objtype>(val))
-            return *this;
-
-        id newVal = [val retain];
-        [_val release];
-        _val = newVal;
-
-        return *this;
-    }
-
-    template <typename K>
-    bool operator!=(const K& other) {
-        return ((id)other) != (id)_val;
-    }
-
-    template <typename K>
-    bool operator==(const K& other) {
-        return ((id)other) == (id)_val;
-    }
-
-    template <typename... Args>
-    auto operator()(Args... args) -> decltype(_val(args...)) {
-        return _val(std::forward<Args>(args)...);
-    }
-};
-
-template <typename K, typename T>
-bool operator==(const K other, idretaint<T>& val) {
-    return other == (id)val._val;
-}
-
-#ifdef __OBJC__
-typedef idretaint<NSObject> idretain;
-#endif
-
-template <typename objtype>
-class idtype {
-public:
-    objtype* _val;
-
-    idtype() : _val(0) {
-    }
-
-    idtype(id val) {
-        _val = val;
-    }
-
-    ~idtype() {
-        _val = nil;
-    }
-
-    operator objtype*() {
-        return _val;
-    }
-
-    idtype<objtype>& operator=(id val) {
-        if (_val == val)
-            return *this;
-
-        _val = val;
-
-        return *this;
-    }
-
-    objtype* operator->() {
-        return _val;
-    }
-};
-
-#define idretaintype(type) idretaint<type>
-#define idretainproto(type) idretainp<id<type>>
-#else
-#define idretain __unsafe_unretained id
-#define idretaintype(type) __unsafe_unretained id
-#define idretainproto(type) id<type>
-#endif
+#include "Starboard/SmartTypes.h"
 
 #endif // __STARBOARD_H

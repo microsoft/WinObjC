@@ -14,25 +14,29 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
 
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
+#import "CoreGraphics/CGContext.h"
+#import "CGContextInternal.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "Foundation/NSTimer.h"
-#include "UIKit/UIViewController.h"
-#include "Foundation/NSMutableString.h"
-#include "Foundation/NSNotificationCenter.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UITextField.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIImageView.h"
-#include "UIKit/UITableViewCell.h"
+#import <UIKit/UIView.h>
+#import <UIKit/UIControl.h>
+#import <Foundation/NSTimer.h>
+#import <UIKit/UIViewController.h>
+#import <Foundation/NSNotificationCenter.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UITableViewCell.h>
+#import "NSMutableString+Internal.h"
 
 void EbrSetKeyboardAccessory(id view);
+
+NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
+NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
+NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
 
 extern float keyboardBaseHeight;
 static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
@@ -323,7 +327,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
                     if ([self isFirstResponder]) {
                         CGContextSetStrokeColorWithColor(curContext,
-                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] : [[UIColor windowsControlFocusedColor] CGColor]));
+                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] :
+                                                                                   [[UIColor windowsControlFocusedColor] CGColor]));
                     } else {
                         CGContextSetStrokeColorWithColor(curContext, (CGColorRef)[UIColor blackColor]);
                     }

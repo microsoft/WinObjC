@@ -1,37 +1,39 @@
 /*-
- * Copyright (c) 1989, 1993
- *  The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Mike Karels at Berkeley Software Design, Inc.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *  @(#)sysctl.h    8.1 (Berkeley) 6/2/93
- * $FreeBSD$
- */
+* Copyright (c) 1989, 1993
+*  The Regents of the University of California.  All rights reserved.
+*
+* Copyright (c) 2015 Microsoft Corporation.  All rights reserved.
+*
+* This code is derived from software contributed to Berkeley by
+* Mike Karels at Berkeley Software Design, Inc.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+* 4. Neither the name of the University nor the names of its contributors
+*    may be used to endorse or promote products derived from this software
+*    without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*
+*  @(#)sysctl.h    8.1 (Berkeley) 6/2/93
+* $FreeBSD$
+*/
 
 #ifndef _SYS_SYSCTL_H_
 #define _SYS_SYSCTL_H_
@@ -43,23 +45,23 @@
 
 struct thread;
 /*
- * Definitions for sysctl call.  The sysctl call uses a hierarchical name
- * for objects that can be examined or modified.  The name is expressed as
- * a sequence of integers.  Like a file path name, the meaning of each
- * component depends on its place in the hierarchy.  The top-level and kern
- * identifiers are defined here, and other identifiers are defined in the
- * respective subsystem header files.
- */
+* Definitions for sysctl call.  The sysctl call uses a hierarchical name
+* for objects that can be examined or modified.  The name is expressed as
+* a sequence of integers.  Like a file path name, the meaning of each
+* component depends on its place in the hierarchy.  The top-level and kern
+* identifiers are defined here, and other identifiers are defined in the
+* respective subsystem header files.
+*/
 
 #define CTL_MAXNAME 24  /* largest number of components supported */
 
 /*
- * Each subsystem defined by sysctl defines a list of variables
- * for that subsystem. Each name is either a node with further
- * levels defined below it, or it is a leaf of some particular
- * type given below. Each sysctl level defines a set of name/type
- * pairs to be used by sysctl(8) in manipulating the subsystem.
- */
+* Each subsystem defined by sysctl defines a list of variables
+* for that subsystem. Each name is either a node with further
+* levels defined below it, or it is a leaf of some particular
+* type given below. Each sysctl level defines a set of name/type
+* pairs to be used by sysctl(8) in manipulating the subsystem.
+*/
 struct ctlname {
     char    *ctl_name;  /* subsystem name */
     int  ctl_type;  /* type of name */
@@ -99,28 +101,28 @@ struct ctlname {
 #define CTLFLAG_CAPRW   (CTLFLAG_CAPRD|CTLFLAG_CAPWR)
 
 /*
- * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.
- *
- * Secure when the securelevel is raised to at least N.
- */
+* Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.
+*
+* Secure when the securelevel is raised to at least N.
+*/
 #define CTLSHIFT_SECURE 20
 #define CTLFLAG_SECURE1 (CTLFLAG_SECURE | (0 << CTLSHIFT_SECURE))
 #define CTLFLAG_SECURE2 (CTLFLAG_SECURE | (1 << CTLSHIFT_SECURE))
 #define CTLFLAG_SECURE3 (CTLFLAG_SECURE | (2 << CTLSHIFT_SECURE))
 
 /*
- * USE THIS instead of a hardwired number from the categories below
- * to get dynamically assigned sysctl entries using the linker-set
- * technology. This is the way nearly all new sysctl variables should
- * be implemented.
- * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW, &variable, 0, "");
- */
+* USE THIS instead of a hardwired number from the categories below
+* to get dynamically assigned sysctl entries using the linker-set
+* technology. This is the way nearly all new sysctl variables should
+* be implemented.
+* e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW, &variable, 0, "");
+*/
 #define OID_AUTO    (-1)
 
 /*
- * The starting number for dynamically-assigned entries.  WARNING!
- * ALL static sysctl entries should have numbers LESS than this!
- */
+* The starting number for dynamically-assigned entries.  WARNING!
+* ALL static sysctl entries should have numbers LESS than this!
+*/
 #define CTL_AUTO_START  0x100
 
 #ifdef _KERNEL
@@ -140,20 +142,20 @@ struct ctlname {
 #endif
 
 /*
- * This describes the access space for a sysctl request.  This is needed
- * so that we can use the interface from the kernel or from user-space.
- */
+* This describes the access space for a sysctl request.  This is needed
+* so that we can use the interface from the kernel or from user-space.
+*/
 struct sysctl_req {
     struct thread   *td;        /* used for access checking */
     int      lock;      /* wiring state */
     void        *oldptr;
     size_t       oldlen;
     size_t       oldidx;
-    int     (*oldfunc)(struct sysctl_req *, const void *, size_t);
+    int(*oldfunc)(struct sysctl_req *, const void *, size_t);
     void        *newptr;
     size_t       newlen;
     size_t       newidx;
-    int     (*newfunc)(struct sysctl_req *, void *, size_t);
+    int(*newfunc)(struct sysctl_req *, void *, size_t);
     size_t       validlen;
     int      flags;
 };
@@ -161,9 +163,9 @@ struct sysctl_req {
 SLIST_HEAD(sysctl_oid_list, sysctl_oid);
 
 /*
- * This describes one "oid" in the MIB tree.  Potentially more nodes can
- * be hidden behind it, expanded by the handler.
- */
+* This describes one "oid" in the MIB tree.  Potentially more nodes can
+* be hidden behind it, expanded by the handler.
+*/
 struct sysctl_oid {
     struct sysctl_oid_list oid_children;
     struct sysctl_oid_list *oid_parent;
@@ -173,7 +175,7 @@ struct sysctl_oid {
     void        *oid_arg1;
     intptr_t     oid_arg2;
     const char  *oid_name;
-    int     (*oid_handler)(SYSCTL_HANDLER_ARGS);
+    int(*oid_handler)(SYSCTL_HANDLER_ARGS);
     const char  *oid_fmt;
     int      oid_refcnt;
     u_int        oid_running;
@@ -199,8 +201,8 @@ int sysctl_dpcpu_long(SYSCTL_HANDLER_ARGS);
 int sysctl_dpcpu_quad(SYSCTL_HANDLER_ARGS);
 
 /*
- * These functions are used to add/remove an oid from the mib.
- */
+* These functions are used to add/remove an oid from the mib.
+*/
 void sysctl_register_oid(struct sysctl_oid *oidp);
 void sysctl_unregister_oid(struct sysctl_oid *oidp);
 
@@ -230,13 +232,13 @@ TAILQ_HEAD(sysctl_ctx_list, sysctl_ctx_entry);
     sysctl__##parent##_##name.oid_children
 
 /*
- * These macros provide type safety for sysctls.  SYSCTL_ALLOWED_TYPES()
- * defines a transparent union of the allowed types.  SYSCTL_ASSERT_TYPE()
- * and SYSCTL_ADD_ASSERT_TYPE() use the transparent union to assert that
- * the pointer matches the allowed types.
- *
- * The allow_0 member allows a literal 0 to be passed for ptr.
- */
+* These macros provide type safety for sysctls.  SYSCTL_ALLOWED_TYPES()
+* defines a transparent union of the allowed types.  SYSCTL_ASSERT_TYPE()
+* and SYSCTL_ADD_ASSERT_TYPE() use the transparent union to assert that
+* the pointer matches the allowed types.
+*
+* The allow_0 member allows a literal 0 to be passed for ptr.
+*/
 #define SYSCTL_ALLOWED_TYPES(type, decls)           \
     union sysctl_##type {                   \
         long allow_0;                   \
@@ -485,9 +487,9 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
         sysctl_handle_uma_zone_cur, "I", __DESCR(descr))
 
 /*
- * A macro to generate a read-only sysctl to indicate the presense of optional
- * kernel features.
- */
+* A macro to generate a read-only sysctl to indicate the presense of optional
+* kernel features.
+*/
 #define FEATURE(name, desc)                     \
     SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \
         NULL, 1, desc)
@@ -495,8 +497,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #endif /* _KERNEL */
 
 /*
- * Top-level identifiers
- */
+* Top-level identifiers
+*/
 #define CTL_UNSPEC  0       /* unused */
 #define CTL_KERN    1       /* "high kernel": proc, limits */
 #define CTL_VM      2       /* virtual memory */
@@ -509,8 +511,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define CTL_P1003_1B    9       /* POSIX 1003.1B */
 
 /*
- * CTL_KERN identifiers
- */
+* CTL_KERN identifiers
+*/
 #define KERN_OSTYPE      1  /* string: system version */
 #define KERN_OSRELEASE       2  /* string: system release */
 #define KERN_OSREV       3  /* int: system revision */
@@ -549,8 +551,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define KERN_HOSTUUID       36  /* string: host UUID identifier */
 #define KERN_ARND       37  /* int: from arc4rand() */
 /*
- * KERN_PROC subtypes
- */
+* KERN_PROC subtypes
+*/
 #define KERN_PROC_ALL       0   /* everything */
 #define KERN_PROC_PID       1   /* by process id */
 #define KERN_PROC_PGRP      2   /* by process group id */
@@ -568,10 +570,10 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define KERN_PROC_OFILEDESC 14  /* Old file descriptors for process */
 #define KERN_PROC_KSTACK    15  /* Kernel stacks for process */
 #define KERN_PROC_INC_THREAD    0x10    /*
-                     * modifier for pid, pgrp, tty,
-                     * uid, ruid, gid, rgid and proc
-                     * This effectively uses 16-31
-                     */
+* modifier for pid, pgrp, tty,
+* uid, ruid, gid, rgid and proc
+* This effectively uses 16-31
+*/
 #define KERN_PROC_VMMAP     32  /* VM map entries for process */
 #define KERN_PROC_FILEDESC  33  /* File descriptors for process */
 #define KERN_PROC_GROUPS    34  /* process groups */
@@ -584,8 +586,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define KERN_PROC_SIGTRAMP  41  /* signal trampoline location */
 
 /*
- * KERN_IPC identifiers
- */
+* KERN_IPC identifiers
+*/
 #define KIPC_MAXSOCKBUF     1   /* int: max size of a socket buffer */
 #define KIPC_SOCKBUF_WASTE  2   /* int: wastage factor in sockbuf */
 #define KIPC_SOMAXCONN      3   /* int: max length of connection q */
@@ -595,8 +597,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define KIPC_MAX_DATALEN    7   /* int: max length of data? */
 
 /*
- * CTL_HW identifiers
- */
+* CTL_HW identifiers
+*/
 #define HW_MACHINE   1      /* string: machine class */
 #define HW_MODEL     2      /* string: specific machine model */
 #define HW_NCPU      3      /* int: number of cpus */
@@ -609,10 +611,12 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define HW_FLOATINGPT   10      /* int: has HW floating point? */
 #define HW_MACHINE_ARCH 11      /* string: machine architecture */
 #define HW_REALMEM  12      /* int: 'real' memory */
+#define HW_BUS_FREQ 14
+#define HW_CPU_FREQ 15
 
 /*
- * CTL_USER definitions
- */
+* CTL_USER definitions
+*/
 #define USER_CS_PATH         1  /* string: _CS_PATH */
 #define USER_BC_BASE_MAX     2  /* int: BC_BASE_MAX */
 #define USER_BC_DIM_MAX      3  /* int: BC_DIM_MAX */
@@ -665,8 +669,8 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #ifdef _KERNEL
 
 /*
- * Declare some common oids.
- */
+* Declare some common oids.
+*/
 extern struct sysctl_oid_list sysctl__children;
 SYSCTL_DECL(_kern);
 SYSCTL_DECL(_kern_features);
@@ -701,42 +705,42 @@ extern char kern_ident[];
 
 /* Dynamic oid handling */
 struct sysctl_oid *sysctl_add_oid(struct sysctl_ctx_list *clist,
-        struct sysctl_oid_list *parent, int nbr, const char *name, int kind,
-        void *arg1, intptr_t arg2, int (*handler)(SYSCTL_HANDLER_ARGS),
-        const char *fmt, const char *descr);
+struct sysctl_oid_list *parent, int nbr, const char *name, int kind,
+    void *arg1, intptr_t arg2, int(*handler)(SYSCTL_HANDLER_ARGS),
+    const char *fmt, const char *descr);
 int sysctl_remove_name(struct sysctl_oid *parent, const char *name, int del,
-        int recurse);
+    int recurse);
 void    sysctl_rename_oid(struct sysctl_oid *oidp, const char *name);
 int sysctl_move_oid(struct sysctl_oid *oidp,
-        struct sysctl_oid_list *parent);
+struct sysctl_oid_list *parent);
 int sysctl_remove_oid(struct sysctl_oid *oidp, int del, int recurse);
 int sysctl_ctx_init(struct sysctl_ctx_list *clist);
 int sysctl_ctx_free(struct sysctl_ctx_list *clist);
 struct  sysctl_ctx_entry *sysctl_ctx_entry_add(struct sysctl_ctx_list *clist,
-        struct sysctl_oid *oidp);
+struct sysctl_oid *oidp);
 struct  sysctl_ctx_entry *sysctl_ctx_entry_find(struct sysctl_ctx_list *clist,
-        struct sysctl_oid *oidp);
+struct sysctl_oid *oidp);
 int sysctl_ctx_entry_del(struct sysctl_ctx_list *clist,
-        struct sysctl_oid *oidp);
+struct sysctl_oid *oidp);
 
 int kernel_sysctl(struct thread *td, int *name, u_int namelen, void *old,
-        size_t *oldlenp, void *new, size_t newlen, size_t *retval,
-        int flags);
+    size_t *oldlenp, void *new, size_t newlen, size_t *retval,
+    int flags);
 int kernel_sysctlbyname(struct thread *td, char *name, void *old,
-        size_t *oldlenp, void *new, size_t newlen, size_t *retval,
-        int flags);
+    size_t *oldlenp, void *new, size_t newlen, size_t *retval,
+    int flags);
 int userland_sysctl(struct thread *td, int *name, u_int namelen, void *old,
-        size_t *oldlenp, int inkernel, void *new, size_t newlen,
-        size_t *retval, int flags);
+    size_t *oldlenp, int inkernel, void *new, size_t newlen,
+    size_t *retval, int flags);
 int sysctl_find_oid(int *name, u_int namelen, struct sysctl_oid **noid,
-        int *nindx, struct sysctl_req *req);
+    int *nindx, struct sysctl_req *req);
 void    sysctl_lock(void);
 void    sysctl_unlock(void);
 int sysctl_wire_old_buffer(struct sysctl_req *req, size_t len);
 
 struct sbuf;
 struct sbuf *sbuf_new_for_sysctl(struct sbuf *, char *, int,
-        struct sysctl_req *);
+struct sysctl_req *);
 #else   /* !_KERNEL */
 #include <sys/cdefs.h>
 

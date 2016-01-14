@@ -18,6 +18,7 @@
 
 #include <UIKit/UIKit.h>
 #include <vector>
+#include "UIBarButtonItem+Internals.h"
 
 @class UIAppearanceSetter;
 
@@ -221,7 +222,7 @@ struct BarViewContainer {
 };
 
 void layoutItems(UIToolbar* self) {
-    for (UIView* curView in (NSArray*)self->_curAddedViews) {
+    for (UIView* curView in(NSArray*)self->_curAddedViews) {
         [curView removeFromSuperview];
     }
     [self->_curAddedViews removeAllObjects];
@@ -268,12 +269,11 @@ void layoutItems(UIToolbar* self) {
                 lastContainer->flexibilitiesAfter = curFlexibilities;
             }
         } else {
-            CGSize size;
-            [curButton _idealSize:&size];
-            float margin = [curButton _margin];
+            CGSize size = [curButton idealSize];
+            float margin = curButton.margin;
             float controlWidth = size.width + margin * 2.0f;
 
-            UIView* itemView = [curButton _getView];
+            UIView* itemView = [curButton view];
             if (itemView) {
                 bool isCustom = false;
 
@@ -427,10 +427,8 @@ void layoutItems(UIToolbar* self) {
         UIBarButtonItem* curButton = [_items objectAtIndex:i];
 
         if (![curButton isFlexibleWidth]) {
-            CGSize idealSize;
-
-            [curButton _idealSize:&idealSize];
-            totalWidth += idealSize.width + [curButton _margin] * 2.0f;
+            CGSize idealSize = [curButton idealSize];
+            totalWidth += idealSize.width + curButton.margin * 2.0f;
         }
     }
 

@@ -961,7 +961,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 */
 - (UITabBarItem*)tabBarItem {
     if (priv->tabBarItem == nil) {
-        priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:nil]);
+        priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:0]);
         EbrDebugLog("New tab: %s\n", object_getClassName(self));
     }
 
@@ -1175,7 +1175,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [self _notifyDidDisappearAnimated:view];
     [self notifyViewDidAppear:TRUE];
 
-    if (priv->_dismissCompletionBlock != nil) {
+    if (priv->_dismissCompletionBlock) {
         priv->_dismissCompletionBlock();
         [priv->_dismissCompletionBlock release];
         priv->_dismissCompletionBlock = nil;
@@ -1267,7 +1267,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [curController notifyViewDidDisappear:FALSE];
         [self notifyViewDidAppear:animated];
         EbrDebugLog("Preparing completion\n");
-        if (completion != nil)
+        if (completion)
             completion();
         EbrDebugLog("Done completion\n");
     }
@@ -1333,7 +1333,25 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (parentWindow != nil) {
             [parentWindow addSubview:view];
         } else {
-            [[[[UIApplication sharedApplication] windows] objectAtIndex:1] addSubview:view];
+            /*
+                This is a workaround for VSO 5794762.
+                Right now, every application has a popup window at level 100000. If we
+                naively try to present into it, we'll bifurcate the application UI across
+                two different stacked windows and break touch event handling.
+
+                Mitigate that by avoiding the application's popup window when looking for the
+                topmost window.
+            */
+            UIWindow* applicationPopupWindow = [[UIApplication sharedApplication] _popupWindow];
+            NSArray* windows = [[UIApplication sharedApplication] windows];
+            NSUInteger index = [windows count] - 1;
+            UIWindow *window = nil;
+            do {
+                window = [windows objectAtIndex:index];
+                index--;
+            } while(window == applicationPopupWindow);
+
+            [window addSubview:view];
         }
 
         if (animated) {

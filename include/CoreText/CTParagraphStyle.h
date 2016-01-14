@@ -17,7 +17,7 @@
 #ifndef _CTPARAGRAPHSTYLE_H_
 #define _CTPARAGRAPHSTYLE_H_
 
-#import <StarboardExport.h>
+#import "CoreTextExport.h"
 #import <CoreFoundation/CFBase.h>
 
 typedef struct __CTParagraphStyle* CTParagraphStyleRef;
@@ -76,10 +76,10 @@ enum {
 };
 typedef int8_t CTWritingDirection;
 
-SB_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount);
-SB_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
-                                                    CTParagraphStyleSpecifier spec,
-                                                    size_t valueBufferSize,
-                                                    void* valueBuffer);
+CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount);
+CORETEXT_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
+                                                          CTParagraphStyleSpecifier spec,
+                                                          size_t valueBufferSize,
+                                                          void* valueBuffer);
 
 #endif /* _CTPARAGRAPHSTYLE_H_ */

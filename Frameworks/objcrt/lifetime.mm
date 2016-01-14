@@ -58,9 +58,6 @@ public:
 static LifetimeMutex _objLifetimeMutex;
 ObjCrtMutex& _objLifetimeLock = _objLifetimeMutex;
 
-extern "C" int EbrIncrement(int volatile* var);
-extern "C" int EbrDecrement(int volatile* var);
-
 HashMap<id, uint32_t> _refCountTable;
 
 #define NSOBJECT_MAGIC 0x234BC09A

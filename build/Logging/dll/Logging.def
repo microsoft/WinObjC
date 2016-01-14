@@ -1,0 +1,10 @@
+LIBRARY Logging
+    EXPORTS
+     TraceVerbose
+     TraceInfo
+     TraceWarning
+     TraceError
+     TraceCritical
+     TraceRegister
+     TraceUnregister
+     EbrDebugLogShim

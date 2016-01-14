@@ -1,0 +1,15 @@
+LIBRARY AVFoundation
+    EXPORTS
+    AVAudioSessionCategoryAmbient DATA
+    AVAudioSessionCategoryPlayAndRecord DATA
+    AVAudioSessionCategoryPlayback DATA
+    AVAudioSessionCategorySoloAmbient DATA
+    AVAudioSessionInterruptionOptionKey DATA
+    AVAudioSessionInterruptionTypeKey DATA
+    AVAudioSessionRouteChangePreviousRouteKey DATA
+    AVAudioSessionRouteChangeReasonKey DATA
+    AVAudioSessionSilenceSecondaryAudioHintTypeKey DATA
+    _OBJC_CLASS_AVAudioPlayer DATA
+    _OBJC_CLASS_AVAudioSession DATA
+    __objc_class_name_AVAudioPlayer CONSTANT
+    __objc_class_name_AVAudioSession CONSTANT

@@ -808,7 +808,6 @@ static float doRound(float f) {
 
         pSuper->priv->removeChild(priv);
         priv->superview = nil;
-        [self release];
         [layer removeFromSuperlayer];
 
         priv->_isChangingParent = false;
@@ -2067,7 +2066,7 @@ static float doRound(float f) {
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
     UNIMPLEMENTED();
-    EbrDebugLog("%s not supported\n", __func__);
+    completion(YES);
 }
 
 /**
@@ -2289,7 +2288,7 @@ static float doRound(float f) {
                     _animationProperties[stackLevel]._animationID,
                     TRUE,
                     _animationProperties[stackLevel]._context);
-        if (_animationProperties[stackLevel]._completionBlock != nil) {
+        if (_animationProperties[stackLevel]._completionBlock) {
             // EbrDebugLog("Calling completion block %x\n", E2H(_animationProperties[stackLevel]._completionBlock)[3]);
             CALLCOMPLETIONBLOCK(_animationProperties[stackLevel]._completionBlock, TRUE);
             [_animationProperties[stackLevel]._completionBlock release];
