@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#import <TestFramework.h>
-#import <Foundation/Foundation.h>
+#import "Starboard.h"
+#import "TestFramework.h"
+#import "Foundation/Foundation.h"
 
 // Helper that verifies the result of CFURLCreateStringByAddingPercentEscapes
 static void testAddPercentEscapes(NSString* expected,
@@ -38,6 +39,12 @@ static void testReplacePercentEscapes(NSString* expected, NSString* string, NSSt
                                                                                      (CFStringRef)string,
                                                                                      (CFStringRef)charactersToLeaveEscaped,
                                                                                      kCFStringEncodingUTF8));
+}
+
+// Asserts string equality, then releases the latter string
+static void compareAndRelease(NSString* expected, NSString* actual) {
+    ASSERT_OBJCEQ(expected, actual);
+    [actual release];
 }
 
 TEST(Foundation, CFURLCreateStringByAddingPercentEscapes) {
@@ -85,4 +92,23 @@ TEST(Foundation, CFURLCreateStringByReplacingPercentEscapes) {
                               @"\%21\%3b\%3f\%3d\%26");
 
     // NS Version
+}
+
+TEST(Foundation, CFURLCopyPath_CopyPathExtension) {
+    StrongId<NSURL> pathUrl = [NSURL URLWithString:@"http://www.example.com/index.html"];
+    compareAndRelease(@"/index.html", (NSString*)CFURLCopyPath(pathUrl));
+    compareAndRelease(@"/index.html", (NSString*)CFURLCopyPath(static_cast<CFURLRef>(pathUrl)));
+
+    StrongId<NSURL> pathExtensionUrl = [NSURL URLWithString:@"file:///path/to/file.txt"];
+    compareAndRelease(@"txt", (NSString*)CFURLCopyPathExtension(pathExtensionUrl));
+    compareAndRelease(@"txt", (NSString*)CFURLCopyPathExtension(static_cast<CFURLRef>(pathExtensionUrl)));
+
+    StrongId<NSURL> emptyUrl = [NSURL URLWithString:@""];
+    compareAndRelease(nil, (NSString*)CFURLCopyPath(emptyUrl));
+    compareAndRelease(nil, (NSString*)CFURLCopyPath(static_cast<CFURLRef>(emptyUrl)));
+    compareAndRelease(nil, (NSString*)CFURLCopyPathExtension(emptyUrl));
+    compareAndRelease(nil, (NSString*)CFURLCopyPathExtension(static_cast<CFURLRef>(emptyUrl)));
+
+    compareAndRelease(nil, (NSString*)CFURLCopyPath(nil));
+    compareAndRelease(nil, (NSString*)CFURLCopyPathExtension(nil));
 }
