@@ -257,7 +257,6 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSMutableURLRequest.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSLock.m" />
-    <ClangCompile Include="..\..\..\tests\unittests\NSRecursiveLock.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSSortDescriptor.m" />
   </ItemGroup>
   <ItemGroup>

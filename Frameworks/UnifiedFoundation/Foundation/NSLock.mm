@@ -86,3 +86,6 @@
     return _lock.owns_lock();
 }
 @end
+
+@implementation NSRecursiveLock
+@end
