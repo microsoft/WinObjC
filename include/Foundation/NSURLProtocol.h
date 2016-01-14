@@ -8,8 +8,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSURLCache.h>
+#import <Foundation/NSCachedURLResponse.h>
 
-@class NSURLProtocol, NSURLRequest, NSURLResponse, NSURLAuthenticationChallenge, NSCachedURLResponse, NSData, NSError, NSMutableURLRequest;
+@class NSURLProtocol;
+@class NSURLRequest;
+@class NSURLResponse;
+@class NSURLAuthenticationChallenge;
+@class NSData;
+@class NSError;
+@class NSMutableURLRequest;
 
 @protocol NSURLProtocolClient
 -(void)URLProtocol:(NSURLProtocol *)urlProtocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirect;

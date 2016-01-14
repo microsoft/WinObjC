@@ -18,6 +18,7 @@
 #import <Foundation/NSObject.h>
 
 @class NSString;
+@class NSDictionary;
 
 FOUNDATION_EXPORT NSString* const NSProgressEstimatedTimeRemainingKey;
 FOUNDATION_EXPORT NSString* const NSProgressThroughputKey;

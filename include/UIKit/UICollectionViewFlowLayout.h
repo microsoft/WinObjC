@@ -23,6 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UICollectionViewLayout.h>
 
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionHeader;
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionFooter;

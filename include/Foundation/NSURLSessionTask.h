@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSURLSession.h>
 
 typedef NS_ENUM(NSInteger, NSURLSessionTaskState) {
     NSURLSessionTaskStateRunning = 0,
@@ -36,6 +37,7 @@ FOUNDATION_EXPORT const float NSURLSessionTaskPriorityHigh;
 @class NSURLSession;
 @class NSURLCredential;
 @class NSURLAuthenticationChallenge;
+@class NSHTTPURLResponse;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionTask : NSObject <NSCopying, NSObject>

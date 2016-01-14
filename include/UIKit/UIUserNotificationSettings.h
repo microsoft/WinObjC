@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
 #include "UIKitExport.h"
 
 #ifndef _UIUSERNOTIFICATIONSETTINGS_H_
@@ -25,6 +26,8 @@ typedef enum UIUserNotificationType : NSUInteger {
     UIUserNotificationTypeSound = 1 << 1,
     UIUserNotificationTypeAlert = 1 << 2,
 } UIUserNotificationType;
+
+@class NSSet;
 
 UIKIT_EXPORT_CLASS
 @interface UIUserNotificationSettings : NSObject <NSObject>

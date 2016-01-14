@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Security/SecBase.h>
+#import <stdint.h>
 
 typedef const struct __SecRandom* SecRandomRef;
 

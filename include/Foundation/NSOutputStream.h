@@ -16,6 +16,8 @@
 
 #import <Foundation/NSStream.h>
 
+@class NSURL;
+
 @interface NSOutputStream : NSStream
 
 @property (readonly) BOOL hasSpaceAvailable;

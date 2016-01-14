@@ -15,6 +15,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSObject.h>
 #import <Security/Security.h>
 
+@class NSArray;
+
 FOUNDATION_EXPORT NSString* NSURLAuthenticationMethodDefault;
 FOUNDATION_EXPORT NSString* NSURLAuthenticationMethodHTTPBasic;
 FOUNDATION_EXPORT NSString* NSURLAuthenticationMethodHTTPDigest;

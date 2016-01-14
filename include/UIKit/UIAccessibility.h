@@ -29,6 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSString.h>
 

@@ -18,6 +18,8 @@
 
 #import <Foundation/NSURLSessionTask.h>
 
+@class NSCachedURLResponse;
+
 FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionDataTask : NSURLSessionTask
 @end

@@ -19,6 +19,7 @@
 
 #import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CFAttributedString.h>
+#import <CoreText/CTLine.h>
 
 ENABLE_IMPLICIT_BRIDGING
 

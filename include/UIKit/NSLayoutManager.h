@@ -21,6 +21,8 @@
 #import <UIKit/NSTextStorage.h>
 
 @class NSTextStorage;
+@class NSLayoutManager;
+@class NSTextContainer;
 
 @protocol NSLayoutManagerDelegate
 - (void)layoutManagerDidInvalidateLayout:(NSLayoutManager*)sender;

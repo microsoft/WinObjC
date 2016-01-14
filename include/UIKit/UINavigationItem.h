@@ -32,6 +32,7 @@
 #ifndef _UINAVIGATIONITEM_H_
 #define _UINAVIGATIONITEM_H_
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 @class UIBarButtonItem, UIView, UINavigationBar;

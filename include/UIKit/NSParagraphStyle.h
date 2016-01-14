@@ -21,6 +21,11 @@
 #import <UIKit/UIKitExport.h>
 #import <UIKit/NSText.h>
 
+@class NSDictionary;
+@class NSCharacterSet;
+@class NSLocale;
+@class NSArray;
+
 // NSString *const NSTabColumnTerminatorsAttributeName  = @"NSTabColumnTerminatorsAttributeName";
 
 UIKIT_EXPORT_CLASS

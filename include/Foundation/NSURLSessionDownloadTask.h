@@ -18,6 +18,8 @@
 
 #import <Foundation/NSURLSessionTask.h>
 
+@class NSData;
+
 FOUNDATION_EXPORT_CLASS
 @interface NSURLSessionDownloadTask : NSURLSessionTask
 - (void)cancelByProducingResumeData:(void(^)(NSData* resumeData))completionHandler;

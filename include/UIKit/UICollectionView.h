@@ -27,6 +27,10 @@
 @class UICollectionViewLayout;
 @class UICollectionViewLayoutAttributes;
 @class UICollectionViewController;
+@class UICollectionViewCell;
+
+@protocol UICollectionViewDelegate;
+@protocol UICollectionViewDataSource;
 
 enum _UICollectionViewScrollPosition {
     UICollectionViewScrollPositionNone = 0,

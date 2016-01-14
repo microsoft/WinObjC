@@ -21,7 +21,6 @@
 
 #pragma once
 
-#import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
 
 #import <CoreGraphics/CoreGraphics.h>
@@ -38,6 +37,8 @@ typedef NSInteger UICollectionViewItemType;
 // Defining a custom layout is an advanced operation intended for applications with complex needs.
 @class UICollectionViewLayoutAttributes;
 @class UICollectionView;
+@class UICollectionReusableView;
+@class UINib;
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewLayoutAttributes : NSObject <NSCopying>

@@ -32,6 +32,7 @@
 #ifndef _UIPASTEBOARD_H_
 #define _UIPASTEBOARD_H_
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 UIKIT_EXPORT NSArray* UIPasteboardTypeListString;

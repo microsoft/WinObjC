@@ -17,12 +17,31 @@
 #ifndef _UICOLLECTIONREUSABLEVIEW_H_
 #define _UICOLLECTIONREUSABLEVIEW_H_
 
-#include "UICollectionViewLayout.h"
 #include <UIKit/UIView.h>
+
+@class UICollectionViewLayout;
+@class UICollectionView;
+@class UICollectionViewLayoutAttributes;
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionReusableView : UIView
-- (void)prepareForReuse;
+
+@property (nonatomic, readonly, copy) NSString* reuseIdentifier;
+
+// Override in subclasses. Called before instance is returned to the reuse queue.
+-(void)prepareForReuse;
+
+// Apply layout attributes on cell.
+-(void)applyLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes;
+-(void)willTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout : (UICollectionViewLayout*)newLayout;
+-(void)didTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout : (UICollectionViewLayout*)newLayout;
+
+@end
+
+@interface UICollectionReusableView(Internal)
+@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
+@property (nonatomic, copy) NSString* reuseIdentifier;
+@property (nonatomic, strong, readonly) UICollectionViewLayoutAttributes* layoutAttributes;
 @end
 
 #endif /* _UICOLLECTIONREUSABLEVIEW_H_ */

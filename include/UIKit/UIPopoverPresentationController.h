@@ -34,6 +34,7 @@
 
 #include <UIKit/UIPresentationController.h>
 #include <UIKit/UIPopoverPresentationControllerDelegate.h>
+#import <UIKit/UIPopoverController.h>
 
 @interface UIPopoverPresentationController : UIPresentationController
 

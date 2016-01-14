@@ -21,6 +21,8 @@ FOUNDATION_EXPORT NSString * const UINibExternalObjects;
 
 @class NSArray;
 @class NSDictionary;
+@class NSBundle;
+@class NSData;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSNib : NSObject

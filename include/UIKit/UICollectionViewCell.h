@@ -23,29 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
-
-@class UICollectionViewLayout, UICollectionView, UICollectionViewLayoutAttributes;
-
-UIKIT_EXPORT_CLASS
-@interface UICollectionReusableView : UIView
-
-@property (nonatomic, readonly, copy) NSString* reuseIdentifier;
-
-// Override in subclasses. Called before instance is returned to the reuse queue.
-- (void)prepareForReuse;
-
-// Apply layout attributes on cell.
-- (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes;
-- (void)willTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout:(UICollectionViewLayout*)newLayout;
-- (void)didTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout:(UICollectionViewLayout*)newLayout;
-
-@end
-
-@interface UICollectionReusableView (Internal)
-@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
-@property (nonatomic, copy) NSString* reuseIdentifier;
-@property (nonatomic, strong, readonly) UICollectionViewLayoutAttributes* layoutAttributes;
-@end
+#import <UIKit/UICollectionReusableView.h>
 
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewCell : UICollectionReusableView

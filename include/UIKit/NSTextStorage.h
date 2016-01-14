@@ -20,6 +20,8 @@
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSMutableAttributedString.h>
 
+@class NSLayoutManager;
+
 typedef enum { NSTextStorageEditedAttributes = 0x01, NSTextStorageEditedCharacters = 0x02 } _NSTextStorageEditActions;
 typedef int32_t NSTextStorageEditActions;
 

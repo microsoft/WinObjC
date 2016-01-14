@@ -25,6 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSError;
 @class NSMutableDictionary;
 @class NSURL;
+@class NSSet;
 
 SB_EXPORT NSString* const NSBundleDidLoadNotification;
 SB_EXPORT NSString* const NSLoadedClasses;

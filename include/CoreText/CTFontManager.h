@@ -21,6 +21,8 @@
 #import <CoreFoundation/CFError.h>
 #import <CoreFoundation/CFURL.h>
 #import <CoreGraphics/CGFont.h>
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreText/CTFont.h>
 
 enum {
     kCTFontManagerScopeNone = 0,

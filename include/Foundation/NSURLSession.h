@@ -43,6 +43,10 @@ typedef NS_ENUM(NSUInteger, NSURLErrorBackgroundTaskCancelledReason) {
 @class NSURLSessionDataTask;
 @class NSURLSessionDownloadTask;
 @class NSURLSessionUploadTask;
+@class NSURLSessionConfiguration;
+@class NSURLResponse;
+@class NSError;
+@class NSOperationQueue;
 
 typedef NS_ENUM(NSInteger, NSURLSessionAuthChallengeDisposition) {
     NSURLSessionAuthChallengeUseCredential = 0,
