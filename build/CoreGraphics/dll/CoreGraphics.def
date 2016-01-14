@@ -266,9 +266,11 @@ LIBRARY CoreGraphics
         CTLineGetStringIndexForPosition
         CTLineGetStringRange
         CTLineGetTypographicBounds
+        CTLineGetGlyphCount
         CTParagraphStyleCreate
         CTRunGetAttributes
         CTRunGetStringRange
+        CTRunGetGlyphCount
         CTRunGetTypographicBounds
         CTRunGetPositions
         CTRunGetAdvances

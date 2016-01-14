@@ -1545,11 +1545,62 @@ CTFontRef CTFontCreateCopyWithSymbolicTraits(
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position) {
-    UNIMPLEMENTED();
-    return 0;
+CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
+    if (CTLineGetGlyphCount(lineRef) == 0 || lineRef == nil) {
+        return kCFNotFound;
+    }
+
+    CFRange lineRange = CTLineGetStringRange(lineRef);
+    CFIndex ret = lineRange.location - 1;
+    CGFloat currPos = 0;
+    CFArrayRef glyphRuns = CTLineGetGlyphRuns(lineRef);
+    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
+
+    for (int i = 0; i < numberOfRuns; i++) {
+        CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(glyphRuns, i);
+        CFIndex glyphsCount = CTRunGetGlyphCount(run);
+
+        for (int i = 0; i < glyphsCount; i++) {
+            ret++;
+            currPos += ((_CTRun*)run)->_glyphAdvances[i].width;
+            if (currPos >= position.x) {
+                return ret;
+            }
+        }
+    }
+
+    // if the given input position is beyond the length of line, return last string index plus one
+    if (currPos < position.x) {
+        return CTLineGetGlyphCount(lineRef) + lineRange.location;
+    }
+
+    return kCFNotFound;
+}
+
+/**
+ @Status Interoperable
+*/
+CFIndex CTRunGetGlyphCount(CTRunRef run) {
+    if (run == nil) {
+        return 0;
+    }
+
+    _CTRun* ctRun = (_CTRun*)run;
+    return ctRun->_characters.size();
+}
+
+/**
+ @Status Interoperable
+*/
+CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
+    if (lineRef == nil) {
+        return 0;
+    }
+
+    _CTLine* line = (_CTLine*)lineRef;
+    return (line->_strRange).length;
 }
 
 /**
