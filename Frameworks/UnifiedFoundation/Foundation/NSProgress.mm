@@ -61,8 +61,8 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 @private
     // explicitly declared here for custom set/get
     int64_t _completedUnitCount;
-    NSString* _localizedDescription;
-    NSString* _localizedAdditionalDescription;
+    StrongId<NSString> _localizedDescription;
+    StrongId<NSString> _localizedAdditionalDescription;
 
     // Pending unit count must be kept per-child, as different children can have different pending unit counts
     int64_t _parentPendingUnitCount;
@@ -73,9 +73,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (id)init {
-    self = [super init];
-
-    if (self) {
+    if (self = [super init]) {
         _cancellable = YES;
     }
 
@@ -86,8 +84,12 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (void)dealloc {
-    _parent = nil;
     [_userInfo release];
+    [_kind release];
+    [_cancellationHandler release];
+    [_pausingHandler release];
+    [_resumingHandler release];
+
     [super dealloc];
 }
 
@@ -95,30 +97,33 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (instancetype)initWithParent:(NSProgress*)parentProgressOrNil userInfo:(NSDictionary*)userInfoOrNil {
-    if (parentProgressOrNil) {
-        if ([parentProgressOrNil isEqual:[NSProgress currentProgress]]) {
-            // Assign parent
-            _parent = parentProgressOrNil;
+    if (self = [super init]) {
+        if (parentProgressOrNil) {
+            if ([parentProgressOrNil isEqual:[NSProgress currentProgress]]) {
+                // Assign parent
+                _parent = parentProgressOrNil;
 
-            // s_currentProgressStack must not be empty to have reached here
-            CurrentProgress& current = s_currentProgressStack->top();
+                // s_currentProgressStack must not be empty to have reached here
+                CurrentProgress& current = s_currentProgressStack->top();
 
-            // Keep track of the pendingUnitCount to increment in the parent
-            _parentPendingUnitCount = current.pendingUnitCountToAssign;
+                // Keep track of the pendingUnitCount to increment in the parent
+                _parentPendingUnitCount = current.pendingUnitCountToAssign;
 
-            // See NSProgress class reference:
-            // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
-            // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
-            // Mark that a child was created from currentProgress
-            current.childCreated = true;
+                // See NSProgress class reference:
+                // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+                // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
+                // Mark that a child was created from currentProgress
+                current.childCreated = true;
 
-        } else {
-            // For some reason, the reference platform seems to only care about this here, and nowhere else
-            [NSException raise:NSInvalidArgumentException format:@"The parent of an NSProgress object must be the currentProgress"];
+            } else {
+                // For some reason, the reference platform seems to only care about this here, and nowhere else
+                [NSException raise:NSInvalidArgumentException format:@"The parent of an NSProgress object must be the currentProgress"];
+            }
         }
+
+        _userInfo = userInfoOrNil ? [[NSMutableDictionary alloc] initWithDictionary:userInfoOrNil] : [NSMutableDictionary new];
     }
 
-    _userInfo = userInfoOrNil ? [[NSMutableDictionary alloc] initWithDictionary:userInfoOrNil] : [NSMutableDictionary new];
     return self;
 }
 
@@ -314,7 +319,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 */
 - (void)setLocalizedDescription:(NSString*)newDescription {
     @synchronized(self) {
-        _localizedDescription = newDescription;
+        _localizedDescription.attach([newDescription copy]);
     }
 }
 
@@ -325,7 +330,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     @synchronized(self) {
         // Return user-specified value if set
         if (_localizedDescription) {
-            return _localizedDescription;
+            return [[_localizedDescription copy] autorelease];
         }
 
         // Otherwise, dynamically describe
@@ -368,7 +373,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 */
 - (void)setLocalizedAdditionalDescription:(NSString*)newDescription {
     @synchronized(self) {
-        _localizedAdditionalDescription = newDescription;
+        _localizedAdditionalDescription.attach([newDescription copy]);
     }
 }
 
@@ -379,7 +384,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     @synchronized(self) {
         // Return user-specified value if set
         if (_localizedAdditionalDescription) {
-            return _localizedAdditionalDescription;
+            return [[_localizedAdditionalDescription copy] autorelease];
         }
 
         NSString* ret = @"";
