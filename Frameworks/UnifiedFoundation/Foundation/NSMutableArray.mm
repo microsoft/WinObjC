@@ -481,7 +481,6 @@ recurse:
 */
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
-        UNIMPLEMENTED();
         return;
     }
 
