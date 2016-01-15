@@ -1,1 +1,1 @@
-Microsoft/libobjc2 e2bb721f84cbbd716e3d2edbd835776b8af35511
+Microsoft/libobjc2 5ea75ed55185bdb300a6c51320a4695e3f6ff31e

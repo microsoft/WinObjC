@@ -202,13 +202,17 @@ typedef struct
 #ifdef __GNUC
 #	define _OBJC_NULL_PTR __null
 #elif defined(__cplusplus)
-#	define _OBJC_NULL_PTR 0
+#	if __has_feature(cxx_nullptr)
+#		define _OBJC_NULL_PTR nullptr
+#	else
+#		define _OBJC_NULL_PTR 0
+#	endif
 #else
 #	define _OBJC_NULL_PTR ((void*)0)
 #endif
 
 #ifndef nil
-#	define nil ((id)_OBJC_NULL_PTR)
+#	define nil _OBJC_NULL_PTR
 #endif
 
 #ifndef Nil
