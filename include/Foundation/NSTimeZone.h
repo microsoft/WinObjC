@@ -27,6 +27,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSTimeZone*)localTimeZone;
 + (NSTimeZone*)systemTimeZone;
 + (NSTimeZone*)defaultTimeZone;
++ (NSString*)timeZoneDataVersion;
 
 + (void)resetSystemTimeZone;
 

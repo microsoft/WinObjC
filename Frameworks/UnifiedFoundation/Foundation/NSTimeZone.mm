@@ -159,6 +159,16 @@ const static int c_minutesToMilliseconds = -60000;
 /**
  @Status Interoperable
 */
++ (NSString*)timeZoneDataVersion {
+    UErrorCode errorCode = U_ZERO_ERROR;
+    const char* tzDataVersion = icu::TimeZone::getTZDataVersion(errorCode);
+    NSString* ret = [NSString stringWithUTF8String:tzDataVersion];
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds {
     NSTimeZone* ret = [self alloc];
     ret->_icuTZ = icu_48::TimeZone::createTimeZone(icu_48::UnicodeString("GMT"));
