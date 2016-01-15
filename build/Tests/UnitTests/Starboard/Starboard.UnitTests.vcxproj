@@ -100,9 +100,9 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>    
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
       <Command>
@@ -131,9 +131,9 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>    
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
     <PostBuildEvent>
       <Command>
@@ -148,7 +148,9 @@
   <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\ClangModulesTest.mm">
       <ObjectiveCModules>true</ObjectiveCModules>
-      <OtherCPlusPlusFlags>-fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>    
+      <OtherCPlusPlusFlags>-fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
     </ClangCompile>
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_ARC.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_NoARC.mm" />

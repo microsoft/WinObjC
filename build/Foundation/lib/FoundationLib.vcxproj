@@ -347,6 +347,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -358,6 +359,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -DOBJC_HOOK="extern __declspec(dllimport)" %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -390,6 +392,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -401,6 +404,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -DOBJC_HOOK="extern __declspec(dllimport)" %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -433,6 +437,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -444,6 +449,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " -DOBJC_HOOK="extern __declspec(dllimport)" %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

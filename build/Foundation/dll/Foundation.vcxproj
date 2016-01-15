@@ -196,12 +196,14 @@
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -244,12 +246,14 @@
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -292,12 +296,14 @@
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

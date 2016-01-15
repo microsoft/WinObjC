@@ -52,7 +52,6 @@ LIBRARY Starboard
         starboardOutputDebugStringW
         starboardInterlockedDecrementRelease
         starboardInterlockedCompareExchangePointer
-        _ReturnAddress
         __fastfail
 
         ; REMOVE / CLEANUP C++ EXPORTS

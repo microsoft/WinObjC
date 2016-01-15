@@ -350,6 +350,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -397,6 +398,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -444,6 +446,7 @@
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " "-DCORETEXT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

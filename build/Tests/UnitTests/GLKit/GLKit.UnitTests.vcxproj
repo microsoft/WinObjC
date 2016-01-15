@@ -116,7 +116,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -D__GLKIT_INSIDE_BUILD %(AdditionalOptions)</AdditionalOptions>
@@ -143,10 +143,10 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 -D__GLKIT_INSIDE_BUILD %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
