@@ -468,6 +468,18 @@ public:
 
             AddAnimation(node, L"transform.rotation", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
+        } else if (strcmp(propName, "transform.translation.x") == 0) {
+            float fromValue = [(NSNumber*)_fromValue floatValue];
+            float toValue = [(NSNumber*)_toValue floatValue];
+            
+            AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
+            Start();
+        } else if (strcmp(propName, "transform.translation.y") == 0) {
+            float fromValue = [(NSNumber*)_fromValue floatValue];
+            float toValue = [(NSNumber*)_toValue floatValue];
+            
+            AddAnimation(node, L"transform.translation.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
+            Start();
         } else if (strcmp(propName, "position") == 0) {
             CGPoint fromValue = [(NSValue*)_fromValue CGPointValue];
             CGPoint toValue = [(NSValue*)_toValue CGPointValue];
