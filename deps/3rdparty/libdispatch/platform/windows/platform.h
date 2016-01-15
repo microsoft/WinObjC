@@ -89,8 +89,8 @@
 #define __private_extern__
 
 #ifdef __BLOCKS__
-#include <Block_private.h>
-#include <Block.h>
+#include <objc/blocks_private.h>
+#include <objc/blocks_runtime.h>
 #endif /* __BLOCKS__ */
 
 #ifdef _MSC_VER
