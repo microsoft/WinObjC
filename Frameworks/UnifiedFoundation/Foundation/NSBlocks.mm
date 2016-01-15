@@ -32,6 +32,12 @@
     Block_release(self);
 }
 
+// VSO 6196093: We are using this internally, but we should move away from it.
+- (void)invoke {
+    void (^selfAsBlock)(void) = reinterpret_cast<void(^)(void)>(static_cast<void*>(self));
+    selfAsBlock();
+}
+
 + (void)load {
     objc_create_block_classes_as_subclasses_of(self);
 }
