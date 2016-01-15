@@ -17,7 +17,11 @@ param(
     [string]$TestFilter = $null,
 
     [Parameter(HelpMessage="Location to place output xml files. If not set, no result files will be saved.")]
-    [string]$XMLOutputDirectory = $null
+    [string]$XMLOutputDirectory = $null,
+
+    [Parameter(HelpMessage="Output Verbosity")]
+    [string][ValidateSet("Minimal", "Verbose")]
+    $Verbosity = "Verbose"
 )
 
 if ($TestDirectory -eq "") 
@@ -41,6 +45,7 @@ if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDir
 }
 
 $xmlOutputArray = @()
+$crashingTestArray = @()
 foreach ($test in $Tests) {
     $outputName = $null;
     if ($XMLOutputDirectory -eq [string]$null) {
@@ -49,18 +54,30 @@ foreach ($test in $Tests) {
         $outputName = Join-Path -Path $XMLOutputDirectory -ChildPath ($test.Name + ".xml")
     }
 
-    if($TestFilter -ne [string]$null) {
-        & $test.FullName --gtest_output="xml:$outputName" --gtest_filter="$TestFilter"
-    } else {
-        & $test.FullName --gtest_output="xml:$outputName"
-    }
-    
+    Try {
+        $argList = @("--gtest_output=xml:$outputName")
 
-    [xml]$xml = Get-Content $outputName
-    $xmlOutputArray += [tuple]::Create($test.FullName, $xml)
+        if($TestFilter -ne [string]$null) {
+            $argList += "--gtest_filter=$TestFilter"
+        }
 
-    if ($XMLOutputDirectory -eq [string]$null) {
-        Remove-Item $outputName -Force
+        if($Verbosity -eq "Minimal") {
+            & $test.FullName $argList --quiet --no-verbose >$null
+        } else {
+            & $test.FullName $argList
+        }
+
+        
+
+        [xml]$xml = Get-Content $outputName
+        $xmlOutputArray += [tuple]::Create($test.FullName, $xml)
+
+        if ($XMLOutputDirectory -eq [string]$null) {
+            Remove-Item $outputName -Force
+        }
+    } Catch {
+
+        $crashingTestArray += ($test.FullName)
     }
     
 }
@@ -72,24 +89,24 @@ $disabledCount = 0;
 $failureMessageArray = @()
 
 foreach ($xmlTuple in $xmlOutputArray) {
-    foreach($testsuite in $xmlTuple.Item2.testsuites.testsuite){
+    foreach($testsuite in $xmlTuple.Item2.testsuites.testsuite) {
 
-    $testCount += $testsuite.tests
-    $failureCount += $testsuite.failures
-    $disabledCount += $testsuite.disabled
+        $testCount += $testsuite.tests
+        $failureCount += $testsuite.failures
+        $disabledCount += $testsuite.disabled
 
-    if ($testsuite.failures -ne 0) {
-        foreach ($testcase in $testsuite.testcase) {
-            $testFailureArray = @()
-            foreach ($failure in $testcase.failure) {
-                $testFailureArray += $failure.message
-            }
+        if ($testsuite.failures -ne 0) {
+            foreach ($testcase in $testsuite.testcase) {
+                $testFailureArray = @()
+                foreach ($failure in $testcase.failure) {
+                    $testFailureArray += $failure.message
+                }
 
-            if ($testFailureArray.length -ne 0) {
-                $failureMessageArray += [tuple]::Create([tuple]::Create($xmlTuple.Item1, $testsuite.name, $testcase.Name), $testFailureArray)
+                if ($testFailureArray.length -ne 0) {
+                    $failureMessageArray += [tuple]::Create([tuple]::Create($xmlTuple.Item1, $testsuite.name, $testcase.Name), $testFailureArray)
+                }
             }
         }
-    }
 
     }
 }
@@ -104,6 +121,17 @@ Write-Host  " Disabled: " -NoNewLine
 Write-Host ($disabledCount) -foregroundcolor "Yellow" -NoNewLine
 Write-Host  " Total: " -NoNewLine 
 Write-Host  $testCount
+Write-Host  ""
+
+if ($crashingTestArray.length -ne 0) {
+    Write-Host  "PROBLEMS RUNNING MODULES:" -foregroundcolor "Red"
+
+    foreach ($crash in $crashingTestArray) {
+        Write-Host  "  " $crash -foregroundcolor "Red"
+    }
+
+    Write-Host  ""
+}
 
 if ($failureMessageArray.length -ne 0) {
     Write-Host  "FAILING TESTS:" -foregroundcolor "Red"
@@ -117,4 +145,4 @@ if ($failureMessageArray.length -ne 0) {
     }
 }
 
-exit $failureCount
+exit $failureCount + $crashingTestArray.length
