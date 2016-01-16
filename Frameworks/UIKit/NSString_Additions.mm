@@ -715,7 +715,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
 /**
  @Status Caveat
- @Notes Currently UITextAttributeTextShadowColor, UITextAttributeTextShadowOffset and NSStringDrawingOptions will be ignored.
+ @Notes Currently NSStringDrawingOptions will be ignored.
  Further only NSStringDrawingUsesLineFragmentOrigin is the only fully supported option. NSStringDrawingTruncatesLastVisibleLine maps to
  UILineBreakModeTailTruncation which may not fully map.
 */
@@ -727,26 +727,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
         return [self boundingRectWithSize:size options:options context:context];
     }
 
-    UIColor* uiShadowColor = [attributes valueForKey:UITextAttributeTextShadowColor];
-    NSValue* textShadowOffset = [attributes valueForKey:UITextAttributeTextShadowOffset];
-    CGContextRef localRefContext;
     if (context == nil) {
         context = [[NSStringDrawingContext new] autorelease];
-    }
-    localRefContext = [context _getContext];
-
-    // TODO enable UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset
-    if (uiShadowColor != nil && textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadowWithColor(localRefContext, offset, 0, [uiShadowColor CGColor]);
-    } else if (textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadow(localRefContext, offset, 0);
-    }
-
-    UIColor* uiTextColor = [attributes valueForKey:UITextAttributeTextColor];
-    if (uiTextColor != nil) {
-        CGContextSetFillColorWithColor(localRefContext, [uiTextColor CGColor]);
     }
 
     UIFont* uiFont = [attributes valueForKey:UITextAttributeFont];
@@ -767,16 +749,14 @@ static NSDictionary* _getDefaultUITextAttributes() {
 // if provided size < mySize provide larger rect else provide the size rect.
 /**
  @Status Caveat
- @Notes Currently UITextAttributeTextShadowColor, UITextAttributeTextShadowOffset and NSStringDrawingOptions will be ignored.
+ @Notes Currently NSStringDrawingOptions will be ignored.
  Further only NSStringDrawingUsesLineFragmentOrigin is the only fully supported option. NSStringDrawingTruncatesLastVisibleLine maps to
  UILineBreakModeTailTruncation which may not fully map.
 */
 - (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
-    CGContextRef localRefContext;
     if (context == nil) {
         context = [[NSStringDrawingContext new] autorelease];
     }
-    localRefContext = [context _getContext];
 
     UILineBreakMode lineBreakMode = UILineBreakModeWordWrap;
     if ((options & NSStringDrawingTruncatesLastVisibleLine) > 0) {
@@ -829,9 +809,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 /**
  @Status Stub
 */
-- (CGRect)drawInRect:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
+- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
     UNIMPLEMENTED();
-    return { { 0, 0 }, 20, 20 };
 }
 
 /**

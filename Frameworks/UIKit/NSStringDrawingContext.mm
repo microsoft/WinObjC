@@ -20,19 +20,13 @@
 #include <CoreGraphics/CGContext.h>
 
 @implementation NSStringDrawingContext {
-    CGContextRef _context;
 }
 
 - (instancetype)init {
     if (self = [super init]) {
-        _context = UIGraphicsGetCurrentContext();
         _actualScaleFactor = 1.0f;
     }
     return self;
-}
-
-- (CGContextRef)_getContext {
-    return _context;
 }
 
 - (void)_setInternalTotalBounds:(CGRect)rect {
