@@ -85,6 +85,13 @@ TEST(NSString, NSStringTests) {
     NSString* expectedString = @"Numbers: 1, 2";
     NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
     ASSERT_OBJCEQ(expectedString, actualString);
+
+    // NSSString* dataUsingEncoding method
+    const char bytes[] = "Test for dataUsingEncoding";
+    NSData* expectedData = [NSData dataWithBytes:bytes length:std::extent<decltype(bytes)>::value];
+    NSString* testString3 = @"Test for dataUsingEncoding";
+    NSData* actualData = [testString3 dataUsingEncoding:NSUTF8StringEncoding];
+    ASSERT_OBJCEQ(actualData, expectedData);
 }
 
 TEST(NSString, NSString_FastestEncoding) {
