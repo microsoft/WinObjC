@@ -38,6 +38,9 @@
     <ProjectReference Include="..\..\Security\lib\SecurityLib.vcxproj">
       <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Accounts\dll\Accounts.vcxproj">
+      <Project>{9E8B1145-A308-4091-A1C5-D1FF01367893}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
@@ -105,13 +108,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>"-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);</AdditionalLibraryDirectories>
       <AdditionalIncludeDirectories>..\..\..\tests\frameworks\include;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -119,6 +123,7 @@
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
+      <AdditionalOptions>"-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
@@ -136,6 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>"-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);</AdditionalLibraryDirectories>
       <AdditionalIncludeDirectories>..\..\..\tests\frameworks\include;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -144,7 +150,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;objcuwp.lib;libdispatch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -152,6 +158,7 @@
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <AdditionalOptions>"-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
@@ -172,6 +179,8 @@
     <ClangCompile Include="..\..\..\Frameworks\GLKit\ShaderGen.mm" />
     <ClangCompile Include="..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\Accessibility.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\Accounts\Accounts_tests.mm" />
+    <ClangCompile Include="..\..\..\tests\unittests\ByteUtils.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\CFUUID.m" />
     <ClangCompile Include="..\..\..\tests\unittests\ClangModulesTest.mm">
       <ObjectiveCModules>true</ObjectiveCModules>
@@ -230,6 +239,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\dispatch\dispatch_timer_set_time.m" />
     <ClangCompile Include="..\..\..\tests\unittests\dispatch\dispatch_test.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSURLSessionConfiguration.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\Security_SecRandom.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
     <ClangCompile Include="..\..\..\tests\unittests\StarboardAutoIdTests_ARC.mm">
       <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ObjectiveCARC>
@@ -246,6 +256,7 @@
     <ClangCompile Include="..\..\..\tests\unittests\NSURLRequest.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSMutableURLRequest.m" />
     <ClangCompile Include="..\..\..\tests\unittests\NSDateComponents.m" />
+    <ClangCompile Include="..\..\..\tests\unittests\NSSortDescriptor.m" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

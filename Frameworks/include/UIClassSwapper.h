@@ -14,9 +14,8 @@
 //
 //******************************************************************************
 
-@interface UIClassSwapper : NSObject
+@interface UIClassSwapper : NSObject<NSCoding>
 
-- (id)instantiateWithCoder:(id)coder;
 @property (nonatomic, copy) NSString* originalClassName;
 @property (nonatomic, copy) NSString* className;
 

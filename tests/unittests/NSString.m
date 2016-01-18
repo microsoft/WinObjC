@@ -93,3 +93,17 @@ TEST(NSString, NSStringTests) {
     NSData* actualData = [testString3 dataUsingEncoding:NSUTF8StringEncoding];
     ASSERT_OBJCEQ(actualData, expectedData);
 }
+
+TEST(NSString, NSString_FastestEncoding) {
+    NSString* asciiStr = @"ObjectiveC";
+    NSString* extendedAsciiStr = @"ObjectiveC éééé";
+    NSString* chineseStr = @"中文";
+
+    ASSERT_EQ(NSASCIIStringEncoding, [asciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [extendedAsciiStr fastestEncoding]);
+    ASSERT_EQ(NSUnicodeStringEncoding, [chineseStr fastestEncoding]);
+
+    ASSERT_EQ(kCFStringEncodingASCII, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(asciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(extendedAsciiStr)));
+    ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(chineseStr)));
+}

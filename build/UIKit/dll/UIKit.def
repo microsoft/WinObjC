@@ -218,8 +218,11 @@ LIBRARY UIKit
         _OBJC_CLASS_MPMoviePlayerController DATA
         _OBJC_CLASS_MPMoviePlayerViewController DATA
         _OBJC_CLASS_NSLayoutConstraint DATA
+        _OBJC_CLASS_NSLayoutManager DATA
         _OBJC_CLASS_NSMutableParagraphStyle DATA
         _OBJC_CLASS_NSParagraphStyle DATA
+        _OBJC_CLASS_NSTextContainer DATA
+        _OBJC_CLASS_NSTextStorage DATA
         _OBJC_CLASS_SKPayment DATA
         _OBJC_CLASS_SKPaymentQueue DATA
         _OBJC_CLASS_SKProductsRequest DATA
@@ -307,8 +310,11 @@ LIBRARY UIKit
         __objc_class_name_MPMoviePlayerController CONSTANT
         __objc_class_name_MPMoviePlayerViewController CONSTANT
         __objc_class_name_NSLayoutConstraint CONSTANT
+        __objc_class_name_NSLayoutManager CONSTANT
         __objc_class_name_NSMutableParagraphStyle CONSTANT
         __objc_class_name_NSParagraphStyle CONSTANT
+        __objc_class_name_NSTextContainer CONSTANT
+        __objc_class_name_NSTextStorage CONSTANT
         __objc_class_name_SKPayment CONSTANT
         __objc_class_name_SKPaymentQueue CONSTANT
         __objc_class_name_SKProductsRequest CONSTANT

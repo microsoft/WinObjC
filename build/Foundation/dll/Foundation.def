@@ -74,7 +74,6 @@ LIBRARY Foundation
      _OBJC_CLASS_NSSet DATA
      _OBJC_CLASS_NSSortDescriptor DATA
      _OBJC_CLASS_NSString DATA
-     _OBJC_CLASS_NSTask DATA
      _OBJC_CLASS_NSThread DATA
      _OBJC_CLASS_NSTimeZone DATA
      _OBJC_CLASS_NSTimer DATA
@@ -169,7 +168,6 @@ LIBRARY Foundation
      __objc_class_name_NSSet CONSTANT
      __objc_class_name_NSSortDescriptor CONSTANT
      __objc_class_name_NSString CONSTANT
-     __objc_class_name_NSTask CONSTANT
      __objc_class_name_NSThread CONSTANT
      __objc_class_name_NSTimeZone CONSTANT
      __objc_class_name_NSTimer CONSTANT

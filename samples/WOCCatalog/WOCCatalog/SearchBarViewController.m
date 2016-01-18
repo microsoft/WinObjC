@@ -55,7 +55,7 @@
     } else if (indexPath.row == 2) {
         UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
         [searchBar setPrompt:@"UISearchBar with bg image"];
-        [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"photo5.jpg"] forState:UIControlStateNormal];
+        [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"tf_bgimage.jpg"] forState:UIControlStateNormal];
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [cell addSubview:searchBar];
     } else if (indexPath.row == 3) {

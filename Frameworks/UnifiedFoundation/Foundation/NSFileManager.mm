@@ -515,7 +515,7 @@ static NSDictionary* fileAttributesForFilePath(const char* path) {
 /**
  @Status Stub
 */
-- (NSArray**)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options {
+- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options {
     UNIMPLEMENTED();
     return nil;
 }

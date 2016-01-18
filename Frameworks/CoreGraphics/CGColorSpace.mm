@@ -247,6 +247,8 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
     char* pName = (char*)[name UTF8String];
     if (strcmp(pName, "BLACK") == 0) {
         ret = [_LazyUIColor blackColor];
+    } else if (strcmp(pName, "WHITE") == 0) {
+        ret = [_LazyUIColor whiteColor];
     } else {
         assert(0);
     }

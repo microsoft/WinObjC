@@ -171,7 +171,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -195,7 +195,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -219,7 +219,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -243,7 +243,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -267,7 +267,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -291,7 +291,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

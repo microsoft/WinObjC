@@ -158,3 +158,5 @@
 #import <UIKit/UIPrintFormatter.h>
 
 #import <UIKit/UIUserNotificationSettings.h>
+#import <UIKit/NSLayoutManager.h>
+#import <UIKit/NSTextStorage.h>

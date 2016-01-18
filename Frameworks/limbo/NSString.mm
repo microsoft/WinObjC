@@ -413,8 +413,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Positional formatting is not supported.
 */
--(NSString*) stringByAppendingFormat:(NSString*)formatStr, ... {
-
+- (NSString*)stringByAppendingFormat:(NSString*)formatStr, ... {
     va_list reader;
     va_start(reader, formatStr);
     UnicodeString str = EbrUnicodePrintf(formatStr, reader);
@@ -1105,10 +1104,20 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSStringEncoding)fastestEncoding {
-    UNIMPLEMENTED();
+    // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
+    UStringHolder s1(self);
+    icu_48::UnicodeString unicodeString = s1.string();
+    int32_t length = unicodeString.length();
+
+    for (int32_t i = 0; i < length; i++) {
+        if (unicodeString[i] > 0x7F) {
+            return NSUnicodeStringEncoding;
+        }
+    }
+
     return NSASCIIStringEncoding;
 }
 

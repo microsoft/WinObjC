@@ -121,6 +121,10 @@
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
       SourceFiles="@(SBResourceCopy)"
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
+    
+    <!-- Ensure out of date resources causes a rebuild in VS -->
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).read.res.tlog" Lines="^$(ProjectPath);@(SBResourceCopy)" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>
+    
   </Target>
 
   <Target
@@ -374,6 +378,7 @@
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeSecurity>true</IncludeSecurity>
       <IncludeCoreLocation>true</IncludeCoreLocation>
+      <IncludeAccounts>true</IncludeAccounts>
     </PropertyGroup>
   </Target>
 

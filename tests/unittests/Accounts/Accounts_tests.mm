@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,9 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSTask.h"
+#include <TestFramework.h>
+#import <Accounts/Accounts.h>
 
-@implementation NSTask
-
-@end
+TEST(Accounts, AccountsSanity) {
+    NSString* const expectedACErrorDomain = @"com.apple.accounts";
+    ASSERT_OBJCEQ(expectedACErrorDomain, ACErrorDomain);
+    [ACAccount alloc];
+}

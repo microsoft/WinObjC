@@ -98,6 +98,7 @@ TEST(Foundation, NSTimeZone) {
     ASSERT_TRUE_MSG([knownTimeZoneNames count] == 168,
                     "FAILED - [NSTimeZone knownTimeZoneNames] != 168. There should be exactly 168 time zones in ICU. Was ICU updated?");
 
+    // [NSTimeZone timeZoneDataVersion]
     NSString* timeZoneDataVersion = [NSTimeZone timeZoneDataVersion];
     ASSERT_TRUE_MSG([timeZoneDataVersion isEqualToString:@"2011k"],
                     "FAILED - [NSTimeZone timeZoneDataVersion] != 2011k. The version should be 2011k. Was ICU updated?");

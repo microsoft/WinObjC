@@ -147,7 +147,7 @@ String joinStrings(const T& elements, const String& separator)
   case 0:
     return "";
   case 1:
-    return elements.front();
+    return *elements.begin();
   default:
     std::ostringstream os; 
     std::copy(elements.begin(), --elements.end(), std::ostream_iterator<String>(os, separator.c_str()));
@@ -158,6 +158,7 @@ String joinStrings(const T& elements, const String& separator)
 
 template String joinStrings<StringList>(const StringList& elements, const String& separator);
 template String joinStrings<StringVec>(const StringVec& elements, const String& separator);
+template String joinStrings<StringSet>(const StringSet& elements, const String& separator);
 
 String sb_replace(const String& str, const String& pattern, const String& dstPattern, int count)
 {

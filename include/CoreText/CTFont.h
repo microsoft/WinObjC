@@ -18,12 +18,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
-#import "CoreTextExport.h"
+#import <StarboardExport.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGFont.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreText/CTFontDescriptor.h>
 #import <CoreText/CTFontTraits.h>
+#import <CoreText/CoreTextExport.h>
 
 ENABLE_IMPLICIT_BRIDGING
 
@@ -98,6 +99,7 @@ CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef self);
 CORETEXT_EXPORT CGFloat CTFontGetCapHeight(CTFontRef self);
 CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef self, CGGlyph glyph, CGAffineTransform* xform);
 
+CORETEXT_EXPORT CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix);
 CORETEXT_EXPORT CTFontRef CTFontCreateWithFontDescriptor(CTFontDescriptorRef descriptor, CGFloat size, const CGAffineTransform* matrix);
 CORETEXT_EXPORT CTFontSymbolicTraits CTFontGetSymbolicTraits(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyPostScriptName(CTFontRef font);

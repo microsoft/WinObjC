@@ -164,6 +164,9 @@ void NTAPI pthread_tls_init(void* dll, DWORD reason, void* reserved)
 #ifdef _M_X64
 #pragma const_seg(".CRT$XLF")
 EXTERN_C const
+#elif defined( WINOBJC ) && !defined( _M_IX86 )
+#pragma const_seg(".CRT$XLF")
+EXTERN_C const
 #else
 #pragma data_seg(".CRT$XLF")
 EXTERN_C
@@ -172,6 +175,8 @@ EXTERN_C
 PIMAGE_TLS_CALLBACK pthread_tls_callback = pthread_tls_init;
 
 #ifdef _M_X64
+#pragma const_seg()
+#elif defined( WINOBJC ) && !defined( _M_IX86 )
 #pragma const_seg()
 #else
 #pragma data_seg()

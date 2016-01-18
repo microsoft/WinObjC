@@ -101,6 +101,15 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     testCharacter(URLPathAllowedCharacterSet, URLPathAllowedCharacterSetString);
     testCharacter(URLQueryAllowedCharacterSet, URLQueryAllowedCharacterSetString);
     testCharacter(URLUserAllowedCharacterSet, URLUserAllowedCharacterSetString);
+
+    NSRange lowerCaseEnglishRange;
+    NSCharacterSet* lowerCaseEnglishLetters;
+
+    lowerCaseEnglishRange.location = (unsigned int)'a';
+    lowerCaseEnglishRange.length = 26;
+    lowerCaseEnglishLetters = [NSCharacterSet characterSetWithRange:lowerCaseEnglishRange];
+    NSString* lowerCaseEnglishLettersString = @"abcdefghijklmnopqrstuvwxyz";
+    testCharacter(lowerCaseEnglishLetters, lowerCaseEnglishLettersString);
 }
 
 TEST(Foundation, NSCharacterSet_MutableCopy) {
@@ -126,4 +135,22 @@ TEST(Foundation, NSCharacterSet_InvertTest) {
     NSRange foundNonAlphaRange = [alphaNumericString rangeOfCharacterFromSet:invertedSet];
 
     ASSERT_EQ(NSNotFound, foundNonAlphaRange.location);
+}
+
+TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
+    LOG_INFO("NSCharacterSet archiving and unarchiving test: ");
+
+    NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:alphaNumeric];
+
+    NSCharacterSet* characterSetUnarchived = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+    // Simple test that NSCharacterSet is working
+    ASSERT_TRUE([characterSetUnarchived characterIsMember:'a']);
+
+    NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    // Expect that unarchived character set behaves as expected.
+    testCharacter(characterSetUnarchived, alphaNumericString);
 }

@@ -39,12 +39,13 @@
 #import "UITextInputTraits.h"
 #import "NSTextContainer.h"
 #import <UIKit/UITextInput.h>
+#import <UIKit/NSLayoutManager.h>
 
 UIKIT_EXPORT NSString* const UITextViewTextDidBeginEditingNotification;
 UIKIT_EXPORT NSString* const UITextViewTextDidChangeNotification;
 UIKIT_EXPORT NSString* const UITextViewTextDidEndEditingNotification;
 
-@class UIColor, UIFont, UITextLayer, UITextView;
+@class UIColor, UIFont, UITextLayer, UITextView, NSLayoutManager;
 
 @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
@@ -58,8 +59,9 @@ UIKIT_EXPORT NSString* const UITextViewTextDidEndEditingNotification;
 @end
 
 UIKIT_EXPORT_CLASS
-@interface UITextView : UIScrollView <UITextInputTraits, UITextInput>
+@interface UITextView : UIScrollView <UITextInputTraits, UITextInput, NSLayoutManagerDelegate>
 
+- (instancetype)initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)container;
 - (void)scrollRangeToVisible:(NSRange)range;
 
 @property (nonatomic) UITextAlignment textAlignment; // stub, not yet implemented!

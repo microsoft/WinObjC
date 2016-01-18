@@ -17,6 +17,20 @@
 #include "Starboard.h"
 #include "QuartzCore/CAKeyframeAnimation.h"
 
-@implementation CAKeyframeAnimation
+NSString* const kCAAnimationLinear = @"kCAAnimationLinear";
+NSString* const kCAAnimationDiscrete = @"kCAAnimationDiscrete";
+NSString* const kCAAnimationPaced = @"kCAAnimationPaced";
+NSString* const kCAAnimationCubic = @"kCAAnimationCubic";
+NSString* const kCAAnimationCubicPaced = @"kCAAnimationCubicPaced";
+NSString* const kCAAnimationRotateAuto = @"kCAAnimationRotateAuto";
+NSString* const kCAAnimationRotateAutoReverse = @"kCAAnimationRotateAutoReverse";
 
+@implementation CAKeyframeAnimation
+/**
+ @Status Caveat
+ @Notes Only position, bounds, and transform properties supported
+*/
++ (instancetype)animationWithKeyPath:(NSString*)path {
+    return [super animationWithKeyPath:path];
+}
 @end

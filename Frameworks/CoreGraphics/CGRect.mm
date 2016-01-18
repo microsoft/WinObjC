@@ -188,6 +188,13 @@ CGRect CGRectIntegral(CGRect r) {
  @Status Interoperable
 */
 CGRect CGRectUnion(CGRect r1, CGRect r2) {
+    if (CGRectIsInfinite(r1)) {
+        return r2;
+    }
+    if (CGRectIsInfinite(r2)) {
+        return r1;
+    }
+
     r1 = CGRectStandardize(r1);
     r2 = CGRectStandardize(r2);
 
