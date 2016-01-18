@@ -35,7 +35,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 @class NSArray, NSDate, NSData, NSDictionary, NSLocale, NSString, NSMutableArray;
 
-typedef NSInteger NSTimeZoneNameStyle;
+typedef NS_ENUM(NSInteger, NSTimeZoneNameStyle) {
+    NSTimeZoneNameStyleStandard,
+    NSTimeZoneNameStyleShortStandard,
+    NSTimeZoneNameStyleDaylightSaving,
+    NSTimeZoneNameStyleShortDaylightSaving,
+    NSTimeZoneNameStyleGeneric,
+    NSTimeZoneNameStyleShortGeneric
+};
 
 FOUNDATION_EXPORT NSString* const NSSystemTimeZoneDidChangeNotification;
 
