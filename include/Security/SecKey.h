@@ -17,6 +17,7 @@
 
 #import <CoreFoundation/CFDate.h>
 #import <CoreFoundation/CFDictionary.h>
+#import <Security/SecBase.h>
 
 // This header file is not yet fully implemented
 

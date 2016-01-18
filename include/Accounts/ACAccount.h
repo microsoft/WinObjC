@@ -16,6 +16,12 @@
 
 #pragma once
 
+#import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
+
+@class ACAccountType;
+@class ACAccountCredential;
+
 ACCOUNTS_EXPORT NSString* const ACErrorDomain;
 
 typedef NS_ENUM(NSUInteger, ACErrorCode) {

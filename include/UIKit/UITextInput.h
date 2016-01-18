@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UITextInputTraits.h>
 
 typedef enum {
