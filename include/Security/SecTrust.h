@@ -24,7 +24,8 @@
 
 typedef struct __SecTrust* SecTrustRef;
 
-typedef NS_ENUM(uint32_t, SecTrustResultType) {
+typedef uint32_t SecTrustResultType;
+enum {
     kSecTrustResultInvalid = 0,
     kSecTrustResultProceed,
     kSecTrustResultConfirm,
