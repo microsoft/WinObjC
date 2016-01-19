@@ -40,12 +40,21 @@ extern float statusBarHeight;
 @end
 
 static UIScreen* mainScreen;
-static UIScreenMode* curMode;
+static UIScreenMode* _curMode;
+static NSArray* _availableModes;
+static UIScreenMode* _preferredMode;
 
 @implementation UIScreen : NSObject
 + (void)initialize {
-    mainScreen = [self alloc];
-    curMode = [UIScreenMode alloc];
+    if (self == [UIScreen self]) {
+        mainScreen = [self alloc];
+        _curMode = [[UIScreenMode alloc] init];
+        _preferredMode = [[UIScreenMode alloc] init];
+
+        UIScreenMode* arrayArgs[1];
+        arrayArgs[0] = [[UIScreenMode alloc] init];
+        _availableModes = [[NSArray alloc] initWithObjects:arrayArgs count:1];
+    }
 }
 
 /**
@@ -60,7 +69,23 @@ static UIScreenMode* curMode;
 */
 - (UIScreenMode*)currentMode {
     UNIMPLEMENTED();
-    return curMode;
+    return _curMode;
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)availableModes {
+    UNIMPLEMENTED()
+    return _availableModes;
+}
+
+/**
+ @Status Stub
+*/
+- (UIScreenMode*)preferredMode {
+    UNIMPLEMENTED();
+    return _preferredMode;
 }
 
 /**
