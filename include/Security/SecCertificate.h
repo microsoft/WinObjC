@@ -13,5 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecCertificate* SecCertificateRef;
+
+SECURITY_EXPORT SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data);
+SECURITY_EXPORT CFDataRef SecCertificateCopyData(SecCertificateRef certificate);

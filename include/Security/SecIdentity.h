@@ -13,5 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecIdentity* SecIdentityRef;

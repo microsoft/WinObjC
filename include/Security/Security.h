@@ -26,9 +26,3 @@
 #import <Security/SecRandom.h>
 #import <Security/SecTrust.h>
 #import <Security/SecureTransport.h>
-
-typedef struct __SecIdentity* SecIdentityRef;
-
-typedef struct __SecTrust* SecTrustRef;
-
-typedef const struct __SecRandom* SecRandomRef;

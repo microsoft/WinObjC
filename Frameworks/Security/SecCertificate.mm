@@ -13,8 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-// This header file is not yet fully implemented
+#import <Starboard.h>
+#import <Security/SecCertificate.h>
 
-typedef struct __SecKey* SecKeyRef;
+/**
+@Status Stub
+*/
+
+SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+/**
+@Status Stub
+*/
+CFDataRef SecCertificateCopyData(SecCertificateRef certificate) {
+    UNIMPLEMENTED();
+    return nullptr;
+}

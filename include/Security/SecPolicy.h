@@ -13,5 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct OpaqueSecPolicyRef* SecPolicyRef;
+
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void);
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname);

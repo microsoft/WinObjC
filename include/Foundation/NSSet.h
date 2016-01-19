@@ -1,10 +1,16 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #ifndef _NSSET_H_
 #define _NSSET_H_
@@ -21,49 +27,50 @@ struct NSSetTable {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSSet : NSObject <NSCoding, NSCopying, NSMutableCopying, NSFastEnumeration> {
-    @public
+@public
     struct NSSetTable _table;
 }
 
-- initWithObjects:(id *)objects count:(NSUInteger)count;
-- initWithArray:(NSArray *)array;
-- initWithSet:(NSSet *)set;
-- initWithSet:(NSSet *)set copyItems:(BOOL)copyItems;
-- initWithObjects:first,...;
+- initWithObjects:(id*)objects count:(NSUInteger)count;
+- initWithArray:(NSArray*)array;
+- initWithSet:(NSSet*)set;
+- initWithSet:(NSSet*)set copyItems:(BOOL)copyItems;
+- initWithObjects:first, ...;
 
 + set;
-+ setWithArray:(NSArray *)array;
-+ setWithSet:(NSSet *)set;
++ setWithArray:(NSArray*)array;
++ setWithSet:(NSSet*)set;
 + setWithObject:object;
-+ setWithObjects:first,...;
-+ setWithObjects:(id *)objects count:(NSUInteger)count;
++ setWithObjects:first, ...;
++ setWithObjects:(id*)objects count:(NSUInteger)count;
 
-- (NSSet *)setByAddingObject:object;
-- (NSSet *)setByAddingObjectsFromSet:(NSSet *)other;
-- (NSSet *)setByAddingObjectsFromArray:(NSArray *)array;
+- (NSSet*)setByAddingObject:object;
+- (NSSet*)setByAddingObjectsFromSet:(NSSet*)other;
+- (NSSet*)setByAddingObjectsFromArray:(NSArray*)array;
 
+- (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors;
 - member:object;
 - (NSUInteger)count;
-- (NSEnumerator *)objectEnumerator;
+- (NSEnumerator*)objectEnumerator;
 
-- (BOOL)isEqualToSet:(NSSet *)set;
+- (BOOL)isEqualToSet:(NSSet*)set;
 
-- (NSArray *)allObjects;
+- (NSArray*)allObjects;
 
 - (BOOL)containsObject:(id)object;
-- (BOOL)isSubsetOfSet:(NSSet *)set;
+- (BOOL)isSubsetOfSet:(NSSet*)set;
 
-- (BOOL)intersectsSet:(NSSet *)set;
+- (BOOL)intersectsSet:(NSSet*)set;
 
 - (void)makeObjectsPerformSelector:(SEL)selector;
 - (void)makeObjectsPerformSelector:(SEL)selector withObject:argument;
 
 - anyObject;
 
-- (NSString *)descriptionWithLocale:(NSDictionary *)locale;
-- (NSSet *)objectsPassingTest:(BOOL (^)(id obj, BOOL *stop))predicate;
-- (void)enumerateObjectsUsingBlock:(void (^)(id obj, BOOL *stop))block;
-- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id obj, BOOL *stop))block;
+- (NSString*)descriptionWithLocale:(NSDictionary*)locale;
+- (NSSet*)objectsPassingTest:(BOOL (^)(id obj, BOOL* stop))predicate;
+- (void)enumerateObjectsUsingBlock:(void (^)(id obj, BOOL* stop))block;
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id obj, BOOL* stop))block;
 
 @end
 

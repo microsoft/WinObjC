@@ -13,5 +13,32 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <Security/SecBase.h>
+#import <Security/SecKey.h>
+#import <Security/SecCertificate.h>
+#import <stdint.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecTrust* SecTrustRef;
+
+typedef NS_ENUM(uint32_t, SecTrustResultType) {
+    kSecTrustResultInvalid = 0,
+    kSecTrustResultProceed,
+    kSecTrustResultConfirm,
+    kSecTrustResultDeny,
+    kSecTrustResultUnspecified,
+    kSecTrustResultRecoverableTrustFailure,
+    kSecTrustResultFatalTrustFailure,
+    kSecTrustResultOtherError
+};
+
+SECURITY_EXPORT SecKeyRef SecTrustCopyPublicKey(SecTrustRef trust);
+SECURITY_EXPORT OSStatus SecTrustCreateWithCertificates(CFTypeRef certificates, CFTypeRef policies, SecTrustRef* trust);
+SECURITY_EXPORT OSStatus SecTrustEvaluate(SecTrustRef trust, SecTrustResultType* result);
+SECURITY_EXPORT CFIndex SecTrustGetCertificateCount(SecTrustRef trust);
+SECURITY_EXPORT SecCertificateRef SecTrustGetCertificateAtIndex(SecTrustRef trust, CFIndex ix);
+SECURITY_EXPORT OSStatus SecTrustSetPolicies(SecTrustRef trust, CFTypeRef policies);
+SECURITY_EXPORT OSStatus SecTrustSetAnchorCertificatesOnly(SecTrustRef trust, Boolean anchorCertificatesOnly);

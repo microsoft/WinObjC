@@ -30,6 +30,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\GenericPasswordItemHandler.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\SecItem.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\SecRandom.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\SecPolicy.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\SecTrust.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Security\SecCertificate.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BE591B6E-DC7E-4669-9F41-4898C271C417}</ProjectGuid>

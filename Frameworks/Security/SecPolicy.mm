@@ -13,8 +13,22 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-// This header file is not yet fully implemented
+#import <Starboard.h>
+#import <Security/SecPolicy.h>
 
-typedef struct __SecKey* SecKeyRef;
+/**
+@Status Stub
+*/
+SecPolicyRef SecPolicyCreateBasicX509(void) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+/**
+@Status Stub
+*/
+SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
