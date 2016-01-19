@@ -26,6 +26,7 @@
 #include <assert.h>
 
 #include <windows.ui.xaml.automation.peers.h>
+#include <windows.ui.xaml.media.h>
 
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
@@ -335,6 +336,19 @@ void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
     assert(xamlNode != nullptr);
     assert(peer != nullptr);
     */
+}
+
+void DisplayNode::SetShouldRasterize(bool rasterize)
+{
+    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    if (rasterize) {
+        xamlNode->CacheMode = ref new Windows::UI::Xaml::Media::BitmapCache();
+    } else {
+        if (xamlNode->CacheMode) {
+            delete xamlNode->CacheMode;
+            xamlNode->CacheMode = nullptr;
+        }
+    }
 }
 
 void UpdateRootNode() {

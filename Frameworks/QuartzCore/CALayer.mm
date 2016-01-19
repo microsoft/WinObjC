@@ -1777,10 +1777,18 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (BOOL)shouldRasterize {
+    return priv->_shouldRasterize;
+}
+
+/**
+   @Status Interoperable
 */
 - (void)setShouldRasterize:(BOOL)shouldRasterize {
-    UNIMPLEMENTED();
+    priv->_shouldRasterize = shouldRasterize;
+    GetCACompositor()->SetShouldRasterize(priv->_presentationNode, shouldRasterize);
 }
 
 /**

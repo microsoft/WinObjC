@@ -176,4 +176,7 @@ public:
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
     }
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
+    }
 };

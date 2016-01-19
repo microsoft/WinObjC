@@ -1278,6 +1278,10 @@ public:
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
         node->SetAccessibilityInfo(info);
     }
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
+        node->SetShouldRasterize(rasterize);
+    }
 };
 
 void SetUIHandlers();

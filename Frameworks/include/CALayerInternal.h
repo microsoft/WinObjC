@@ -70,6 +70,8 @@ public:
 
     BOOL _isPresentationLayer;
 
+    BOOL _shouldRasterize;
+    
     DisplayNode* _presentationNode;
     idretain _undefinedKeys;
     idretain _actions;

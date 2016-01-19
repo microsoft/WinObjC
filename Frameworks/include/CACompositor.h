@@ -121,6 +121,8 @@ public:
     virtual void DecrementCounter(const char* name) = 0;
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) = 0;
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;
