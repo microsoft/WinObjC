@@ -17,7 +17,11 @@
 #include "Starboard.h"
 #include "StringConversion.h"
 
-const wchar_t* _RawBufferFromNSString(void* str) {
-    return reinterpret_cast<const wchar_t*>([static_cast<NSString*>(str) rawCharacters]);
+const wchar_t* _RawBufferFromNSString(void* str, uint32_t* len) {
+    const wchar_t* chars = reinterpret_cast<const wchar_t*>([static_cast<NSString*>(str) rawCharacters]);
+    if (len) {
+        *len = [static_cast<NSString*>(str) length];
+    }
+    return chars;
 }
 

@@ -1430,10 +1430,7 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (const unichar*)rawCharacters {
     UStringHolder s1(self);
-    DWORD len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
-
-    return (const unichar*)chars;
+    return (const unichar*)s1.string().getBuffer();
 }
 
 /**

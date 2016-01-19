@@ -21,8 +21,8 @@
 
 using namespace Windows::UI;
 
-Platform::String^ g_principalClassName;
-Platform::String^ g_delegateClassName;
+static Platform::String^ g_principalClassName;
+static Platform::String^ g_delegateClassName;
 
 ref class App : public Xaml::Application, Xaml::Markup::IXamlMetadataProvider {
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
@@ -81,10 +81,17 @@ extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], v
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     // Copy the principal and delegate class names into our globals
-    g_principalClassName = 
-        principalClassName ? ref new Platform::String(_RawBufferFromNSString(principalClassName)) : nullptr;
-    g_delegateClassName = 
-        delegateClassName ? ref new Platform::String(_RawBufferFromNSString(delegateClassName)) : nullptr;
+    if (principalClassName) {
+        uint32_t len = 0;
+        auto rawString = _RawBufferFromNSString(principalClassName, &len);
+        g_principalClassName = ref new Platform::String(rawString, len);
+    }
+
+    if (delegateClassName) {
+        uint32_t len = 0;
+        auto rawString = _RawBufferFromNSString(delegateClassName, &len);
+        g_delegateClassName = ref new Platform::String(rawString, len);
+    }
 
     // Start our application
     Xaml::Application::Start(
