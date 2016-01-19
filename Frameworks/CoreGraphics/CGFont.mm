@@ -1489,52 +1489,6 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
     return (CTParagraphStyleRef)[NSObject new];
 }
 
-@implementation UITextPosition
-@end
-
-@implementation UITextRange {
-@public
-    idretaintype(UITextPosition) _start, _end;
-    BOOL _empty;
-}
-+ (instancetype)textRangeWithPositon:(int)position length:(int)length {
-    UITextRange* ret = [self alloc];
-
-    ret->_start.attach([UITextPosition new]);
-    ret->_end.attach([UITextPosition new]);
-    ret->_empty = length == 0;
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isEmpty {
-    return _empty;
-}
-
-/**
- @Status Interoperable
-*/
-- (UITextPosition*)start {
-    return _start;
-}
-
-/**
- @Status Interoperable
-*/
-- (UITextPosition*)end {
-    return _end;
-}
-
-- (void)dealloc {
-    _start = nil;
-    _end = nil;
-    [super dealloc];
-}
-@end
-
 /**
  @Status Stub
 */

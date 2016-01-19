@@ -158,11 +158,12 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UrlLauncher.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextContainer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutManager.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextContainer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextRange.mm" />
 
   </ItemGroup>
   <ItemGroup>

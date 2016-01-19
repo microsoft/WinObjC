@@ -120,9 +120,6 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 }
 @end
 
-@implementation UITextRange
-@end
-
 @implementation GKAchievementViewController
 + (id)alloc {
     return nil;
@@ -435,6 +432,3 @@ UIKIT_EXPORT extern "C" DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sd
     assert(!"DNSServiceRegister");
     return 0;
 }
-
-@implementation NSPredicate
-@end

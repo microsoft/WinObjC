@@ -16,6 +16,7 @@
 
 #import <Foundation/NSObject.h>
 
+UIKIT_EXPORT_CLASS
 @interface UITextPosition : NSObject
 
 @end

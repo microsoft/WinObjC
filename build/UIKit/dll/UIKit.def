@@ -291,6 +291,8 @@ LIBRARY UIKit
         _OBJC_CLASS_UITableViewHeaderFooterView DATA
         _OBJC_CLASS_UITapGestureRecognizer DATA
         _OBJC_CLASS_UITextField DATA
+        _OBJC_CLASS_UITextPosition DATA
+        _OBJC_CLASS_UITextRange DATA
         _OBJC_CLASS_UITextView DATA
         _OBJC_CLASS_UIToolbar DATA
         _OBJC_CLASS_UIUserNotificationSettings DATA
@@ -383,6 +385,8 @@ LIBRARY UIKit
         __objc_class_name_UITableViewHeaderFooterView CONSTANT
         __objc_class_name_UITapGestureRecognizer CONSTANT
         __objc_class_name_UITextField CONSTANT
+        __objc_class_name_UITextPosition CONSTANT
+        __objc_class_name_UITextRange CONSTANT
         __objc_class_name_UITextView CONSTANT
         __objc_class_name_UIToolbar CONSTANT
         __objc_class_name_UIUserNotificationSettings CONSTANT

@@ -68,6 +68,7 @@ typedef enum {
 
 @end
 
+UIKIT_EXPORT_CLASS
 @interface UITextRange : NSObject
 
 @property (nonatomic, readonly, getter=isEmpty) BOOL empty;
