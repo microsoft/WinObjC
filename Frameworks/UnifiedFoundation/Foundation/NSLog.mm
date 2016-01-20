@@ -28,7 +28,17 @@ void NSLogv(NSString* fmt, va_list list) {
     INT len = [str length];
     LPWSTR terminatedBuf = (LPWSTR)calloc(len + 1, sizeof(WCHAR));
     memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
+
+    // This traces to ETW in debug and release modes.
+    // This prints to OutputDebugString only in debug mode.
     TraceVerbose(L"NSLog", L"%s", terminatedBuf);
+
+// This prints to OutputDebugString only in release mode.
+#ifndef _DEBUG
+    OutputDebugStringW(terminatedBuf);
+    OutputDebugStringW(L"\n");
+#endif
+
     free(terminatedBuf);
     printf("%s\n", [str UTF8String]);
     [str release];
