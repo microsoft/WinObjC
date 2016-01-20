@@ -24,6 +24,7 @@
 #include "Etc.h"
 
 #include <vector>
+#include <map>
 #include <algorithm>
 
 DWORD CGFontGetFontBBox(CGRect* ret, id font);
@@ -38,6 +39,8 @@ extern "C" {
 #include <tttables.h>
 #include <ftadvanc.h>
 #include <ftsizes.h>
+#include <ftsnames.h>
+#include <ttnameid.h>
 }
 
 const CFStringRef kCTCharacterShapeAttributeName = static_cast<CFStringRef>(@"kCTCharacterShapeAttributeName");
@@ -59,7 +62,53 @@ const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRe
 const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
 const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
 const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
+
+const CFStringRef kCTFontCopyrightNameKey = static_cast<CFStringRef>(@"kCTFontCopyrightNameKey");
+const CFStringRef kCTFontFamilyNameKey = static_cast<CFStringRef>(@"kCTFontFamilyNameKey");
+const CFStringRef kCTFontSubFamilyNameKey = static_cast<CFStringRef>(@"kCTFontSubFamilyNameKey");
+const CFStringRef kCTFontStyleNameKey = static_cast<CFStringRef>(@"kCTFontStyleNameKey");
+const CFStringRef kCTFontUniqueNameKey = static_cast<CFStringRef>(@"kCTFontUniqueNameKey");
+const CFStringRef kCTFontFullNameKey = static_cast<CFStringRef>(@"kCTFontFullNameKey");
+const CFStringRef kCTFontVersionNameKey = static_cast<CFStringRef>(@"kCTFontVersionNameKey");
 const CFStringRef kCTFontPostScriptNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptNameKey");
+const CFStringRef kCTFontTrademarkNameKey = static_cast<CFStringRef>(@"kCTFontTrademarkNameKey");
+const CFStringRef kCTFontManufacturerNameKey = static_cast<CFStringRef>(@"kCTFontManufacturerNameKey");
+const CFStringRef kCTFontDesignerNameKey = static_cast<CFStringRef>(@"kCTFontDesignerNameKey");
+const CFStringRef kCTFontDescriptionNameKey = static_cast<CFStringRef>(@"kCTFontDescriptionNameKey");
+const CFStringRef kCTFontVendorURLNameKey = static_cast<CFStringRef>(@"kCTFontVendorURLNameKey");
+const CFStringRef kCTFontDesignerURLNameKey = static_cast<CFStringRef>(@"kCTFontDesignerURLNameKey");
+const CFStringRef kCTFontLicenseNameKey = static_cast<CFStringRef>(@"kCTFontLicenseNameKey");
+const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"kCTFontLicenseURLNameKey");
+const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"kCTFontSampleTextNameKey");
+const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptCIDNameKey");
+
+static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
+    {kCTFontCopyrightNameKey, 0},
+    {kCTFontFamilyNameKey, 1},
+    {kCTFontSubFamilyNameKey, 2},
+    {kCTFontUniqueNameKey, 3},
+    {kCTFontFullNameKey, 4},
+    {kCTFontVersionNameKey, 5},
+    {kCTFontPostScriptNameKey, 6},
+    {kCTFontTrademarkNameKey, 7},
+    {kCTFontManufacturerNameKey, 8},
+    {kCTFontDesignerNameKey, 9},
+    {kCTFontDescriptionNameKey, 10},
+    {kCTFontVendorURLNameKey, 11},
+    {kCTFontDesignerURLNameKey, 12},
+    {kCTFontLicenseNameKey, 13},
+    {kCTFontLicenseURLNameKey, 14},
+
+    // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
+    // Name index 15 is reserved.
+    // Name index 16 is not a CTFont name specifier constant.
+    // Name index 17 is not a CTFont name specifier constant.
+    // Name index 18 is not a CTFont name specifier constant.
+
+    {kCTFontSampleTextNameKey, 19},
+
+    // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
+    {kCTFontPostScriptCIDNameKey, 20}};
 
 static float spacing = 1.0f;
 
@@ -1558,11 +1607,98 @@ CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Supports only English language and limited encodings.
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    UNIMPLEMENTED();
+    if (nameKey == nullptr || font == nullptr) {
+        return nullptr;
+    }
+
+    //  Get the font
+    FT_Face face = static_cast<FT_Face>([(UIFont*)font _sizingFontHandle]);
+
+    // Style name is not present in the name table associated with the font.
+    // It is stored in FT_Face.
+    if (nameKey == kCTFontStyleNameKey) {
+        return static_cast<CFStringRef>([[NSString stringWithCString:face->style_name] retain]);
+    }
+
+    auto it = g_nameIdMap.find(nameKey);
+    if (it == g_nameIdMap.end()) {
+        // Specified nameKey is not a CTFont name specifier constant.
+        return nullptr;
+    }
+
+    FT_UInt nameId = it->second;
+    FT_CharMap charMap = face->charmap;
+
+    // For now only Microsoft platform is supported.
+    if (charMap->platform_id != TT_PLATFORM_MICROSOFT) {
+        EbrDebugLog("Unsupported platform %u\n", charMap->platform_id);
+        return nullptr;
+    }
+
+    FT_ULong languageId = FT_Get_CMap_Language_ID(charMap);
+    if (languageId == TT_MAC_LANGID_ENGLISH) {
+        // In case of error FT_Get_CMap_Language_ID returns a value of 0 which defaults to English on Mac.
+        // For Microsoft platform switch this default value as per the language Ids defined for Microsoft.
+        languageId = TT_MS_LANGID_ENGLISH_UNITED_STATES;
+    }
+
+    // For now only English language is supported.
+    const FT_ULong languageIdSuffixMask = 0xFF;
+    const FT_ULong englishLanguageIdSuffix = 0x09;
+    if ((languageId & languageIdSuffixMask) != englishLanguageIdSuffix) {
+        EbrDebugLog("Unsupported language %u\n", languageId);
+        return nullptr;
+    }
+
+    FT_SfntName fontNameInfo = {};
+    NSStringEncoding stringEncoding = NSUTF16BigEndianStringEncoding;
+    FT_UInt nameCount = FT_Get_Sfnt_Name_Count(face);
+    for (FT_UInt i = 0; i < nameCount; i++) {
+        // Get entry at index i from name table.
+        FT_Error error = FT_Get_Sfnt_Name(face, i, &fontNameInfo);
+        if (error) {
+            continue;
+        }
+
+        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && 
+            charMap->encoding_id == fontNameInfo.encoding_id &&
+            nameId == fontNameInfo.name_id &&
+            languageId == fontNameInfo.language_id) {
+            // FreeType thinks we are running on Mac and returns the bytes in big endian format even when 
+            // we are on Microsoft platform so we adjust the encoding id accordingly.
+            switch (charMap->encoding_id) {
+                case TT_MS_ID_UNICODE_CS: // Unicode BMP
+                    stringEncoding = NSUTF16BigEndianStringEncoding;
+                    break;
+
+                case TT_MS_ID_UCS_4: // Unicode UCS-4
+                    stringEncoding = NSUTF32BigEndianStringEncoding;
+                    break;
+
+                default:
+                    EbrDebugLog("Unsupported encoding %u\n", charMap->encoding_id);
+                    return nullptr;
+            }
+            
+            // The string array returned in the FT_SfntName structure is not null-terminated. The
+            // application should deallocate it if it is no longer in use, dataWithBytesNoCopy helps to do that.
+            NSData* data = [NSData dataWithBytesNoCopy:fontNameInfo.string length:fontNameInfo.string_len];
+            return static_cast<CFStringRef>([[[NSString alloc] initWithData:data encoding:stringEncoding] retain]);
+        }
+    }
     return nullptr;
+}
+
+/**
+ @Status Caveat
+ @Notes Calls CTFontCopyName which supports limited encodings.
+*/
+CFStringRef CTFontCopyFullName(CTFontRef font) {
+    return CTFontCopyName(font, kCTFontFullNameKey);
 }
 
 /**

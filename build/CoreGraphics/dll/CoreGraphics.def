@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 LIBRARY CoreGraphics
     EXPORTS
         CGAffineTransformConcat
@@ -241,6 +242,7 @@ LIBRARY CoreGraphics
         CGRectZero DATA
         CGSizeZero DATA
         CTFontCopyFamilyName
+        CTFontCopyFullName
         CTFontCopyName
         CTFontCopyPostScriptName
         CTFontCreateCopyWithSymbolicTraits
@@ -282,7 +284,24 @@ LIBRARY CoreGraphics
         _CGFontUnlock
         kCTCharacterShapeAttributeName DATA
         kCTFontAttributeName DATA
+        kCTFontCopyrightNameKey DATA
+        kCTFontFamilyNameKey DATA
+        kCTFontSubFamilyNameKey DATA
+        kCTFontStyleNameKey DATA
+        kCTFontUniqueNameKey DATA
+        kCTFontFullNameKey DATA
+        kCTFontVersionNameKey DATA
         kCTFontPostScriptNameKey DATA
+        kCTFontTrademarkNameKey DATA
+        kCTFontManufacturerNameKey DATA
+        kCTFontDesignerNameKey DATA
+        kCTFontDescriptionNameKey DATA
+        kCTFontVendorURLNameKey DATA
+        kCTFontDesignerURLNameKey DATA
+        kCTFontLicenseNameKey DATA
+        kCTFontLicenseURLNameKey DATA
+        kCTFontSampleTextNameKey DATA
+        kCTFontPostScriptCIDNameKey DATA
         kCTForegroundColorAttributeName DATA
         kCTForegroundColorFromContextAttributeName DATA
         kCTGlyphInfoAttributeName DATA
