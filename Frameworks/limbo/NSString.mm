@@ -2920,10 +2920,10 @@ const int s_oneByte = 16;
  @Notes Only UTF-8 is supported
 */
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
-    return (NSString*)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
+    return (NSString*)[CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
                                                                               reinterpret_cast<CFStringRef>(self),
                                                                               nullptr,
-                                                                              CFStringConvertNSStringEncodingToEncoding(encoding));
+                                                                              CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
 }
 
 /**
