@@ -1217,6 +1217,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
+
+-(CGRect) contentsCenter {
+    return priv->contentsCenter;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setContentsCenter:(CGRect)rect {
     memcpy(&priv->contentsCenter, &rect, sizeof(CGRect));
 
@@ -1347,7 +1355,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
-- (void)setContentsOrientation:(UIInterfaceOrientation)orientation {
+-(UIImageOrientation)contentsOrientation {
+    return priv->contentsOrientation;
+}
+
+- (void)setContentsOrientation:(UIImageOrientation)orientation {
     priv->contentsOrientation = orientation;
     NSNumber* newOrientation = [[NSNumber alloc] initWithInt:priv->contentsOrientation];
     [CATransaction _setPropertyForLayer:self name:@"contentsOrientation" value:newOrientation];
@@ -2038,10 +2050,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 - (instancetype)retain {
     return [super retain];
-}
-
-- (void)release {
-    [super release];
 }
 
 - (id)valueForUndefinedKey:(NSString*)keyPath {

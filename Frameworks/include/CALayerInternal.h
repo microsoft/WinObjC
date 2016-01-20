@@ -19,6 +19,7 @@
 
 #import <LinkedList.h>
 #import <AccessibilityInternal.h>
+#import <UIKit/UIImage.h>
 
 @class CAAnimation, CALayerContext;
 
@@ -99,6 +100,8 @@ public:
 
 - (void)setOrigin:(CGPoint)origin;
 - (void)_setShouldLayout;
+- (void)setContentsOrientation:(UIImageOrientation)orientation;
+- (UIImageOrientation)contentsOrientation;
 
 - (void)_releaseContents:(BOOL)immediately;
 

@@ -26,6 +26,7 @@
 
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
+#include "CALayerInternal.h"
 
 #include "Windows.h"
 #include "COMIncludes.h"
@@ -48,14 +49,16 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
 
     if (cgImage != curImage) {
         [layer setContents:(id)cgImage];
+    }
+    if ( [layer contentsScale] != [image scale] ) {
         [layer setContentsScale:[image scale]];
+    }
+    if ( [layer contentsOrientation] != [image imageOrientation] ) {
         [layer setContentsOrientation:[image imageOrientation]];
-
-        CGRect stretch;
-        stretch = [image _imageStretch];
-        if (stretch.origin.x != 0.0f || stretch.size.width != 1.0f || stretch.origin.y != 0.0f || stretch.size.height != 1.0f) {
-            [layer setContentsCenter:stretch];
-        }
+    }
+    CGRect stretch = [image _imageStretch];
+    if ( !CGRectEqualToRect([layer contentsCenter], stretch ) ) {
+        [layer setContentsCenter:stretch];
     }
 }
 
