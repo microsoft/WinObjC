@@ -198,7 +198,39 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #define NS_UNAVAILABLE UNAVAILABLE_ATTRIBUTE
 #endif
 
+#ifndef NS_DESIGNATED_INITIALIZER
+#if __has_attribute(objc_designated_initializer)
+#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))
+#else
 #define NS_DESIGNATED_INITIALIZER
+#endif
+#endif
+
+#ifndef NS_SWIFT_NOTHROW
+#define NS_SWIFT_NOTHROW
+#endif
+
+#ifndef NS_REFINED_FOR_SWIFT
+#define NS_REFINED_FOR_SWIFT
+#endif
+
+#ifndef NS_SWIFT_NAME
+#define NS_SWIFT_NAME
+#endif
+
+#ifdef NS_SWIFT_UNAVAILABLE
+#define NS_SWIFT_UNAVAILABLE
+#endif
+
+#ifndef NS_ASSUME_NONNULL_BEGIN
+#if __has_feature(assume_nonnull)
+#define NS_ASSUME_NONNULL_BEGIN _Pragma("clang assume_nonnull begin")
+#define NS_ASSUME_NONNULL_END _Pragma("clang assume_nonnull end")
+#else
+#define NS_ASSUME_NONNULL_BEGIN
+#define NS_ASSUME_NONNULL_END
+#endif
+#endif
 
 #if (!__has_feature(objc_arc))
 #define __autoreleasing
