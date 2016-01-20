@@ -447,7 +447,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
         if (setText) {
             _text = newString;
-            [self sendEvent:self mask:UIControlEventEditingChanged];
+            [self sendActionsForControlEvents:UIControlEventEditingChanged];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidChangeNotification" object:self];
             [self setNeedsDisplay];
         }
@@ -495,7 +495,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
         if (setText) {
             _text = newString;
-            [self sendEvent:self mask:UIControlEventEditingChanged];
+            [self sendActionsForControlEvents:UIControlEventEditingChanged];
             [self setNeedsDisplay];
         }
         _showLastCharLen = 1;
@@ -514,7 +514,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
             if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
                 [_delegate textFieldDidEndEditing:self];
             }
-            [self sendEvent:self mask:UIControlEventEditingDidEndOnExit];
+            [self sendActionsForControlEvents:UIControlEventEditingDidEndOnExit];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification" object:self];
 
             [self resignFirstResponder];
@@ -684,8 +684,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         }
     }
 
-    if (_inputView && [_inputView respondsToSelector:@selector(sendEvent:mask:)]) {
-        [_inputView sendEvent:(id)_inputView mask:UIControlEventValueChanged];
+    if (_inputView && [_inputView respondsToSelector:@selector(sendActionsForControlEvents:)]) {
+        [_inputView sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
     [[UIApplication sharedApplication] _keyboardChanged];
@@ -696,7 +696,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     EbrShowKeyboard();
     _isEditing = TRUE;
 
-    [self sendEvent:self mask:UIControlEventEditingDidBegin];
+    [self sendActionsForControlEvents:UIControlEventEditingDidBegin];
     if ([_delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
         [_delegate textFieldDidBeginEditing:self];
     }
@@ -730,7 +730,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         EbrHideKeyboard();
 
         _isEditing = FALSE;
-        [self sendEvent:self mask:UIControlEventEditingDidEnd];
+        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
         if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
             [_delegate textFieldDidEndEditing:self];
         }

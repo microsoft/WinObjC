@@ -355,7 +355,7 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     }
     [self->_pickerView invalidateAllComponents];
 
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 
     if (isInvalid) {
         if (!self->_didSnapTime) {
@@ -402,7 +402,7 @@ void didSelectTime(UIDatePicker* self, int row, int component) {
     }
     [self->_pickerView invalidateAllComponents];
 
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 static void didSelectTimer(UIDatePicker* self, int row, int component) {
@@ -417,7 +417,7 @@ static void didSelectTimer(UIDatePicker* self, int row, int component) {
     [components setSecond:0];
 
     self->_date = [calendar dateFromComponents:components];
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 static void didSelectDateAndTime(UIDatePicker* self, int row, int component) {
@@ -446,7 +446,7 @@ static void didSelectDateAndTime(UIDatePicker* self, int row, int component) {
     [components setMinute:minute];
 
     self->_date = [calendar dateFromComponents:components];
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 - (void)pickerView:(UIPickerView*)picker didSelectRow:(int)row inComponent:(int)component {
