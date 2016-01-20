@@ -45,6 +45,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
 @implementation EAGLContext {
     BOOL _useMultisampling;
+    BOOL _multiThreaded;
 }
 + (void)initialize {
     if (self == [EAGLContext class]) {
@@ -173,6 +174,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     }
 
     _useMultisampling = FALSE;
+    _multiThreaded = FALSE;
 
     _eglSurface = EGL_NO_SURFACE;
     _eglContext = EGL_NO_CONTEXT;
@@ -409,6 +411,22 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 - (void)dealloc {
     [super dealloc];
 }
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isMultiThreaded {
+    return _multiThreaded;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMultiThreaded:(BOOL)multiThreaded {
+    UNIMPLEMENTED();
+    _multiThreaded = multiThreaded;
+}
+
 @end
 
 NSString* const kEAGLColorFormatRGBA8 = (NSString * const) @"kEAGLColorFormatRGBA8";
