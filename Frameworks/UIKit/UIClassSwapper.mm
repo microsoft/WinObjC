@@ -34,7 +34,11 @@
     if (classNameId != nil) {
         id ret = [classNameId alloc];
         [coder _swapActiveObject:ret];
-        return [ret initWithCoder:coder];
+        if ( [ret respondsToSelector: @selector(initWithCoder:)] ) {
+            return [ret initWithCoder:coder];
+        } else {
+            return [ret init];
+        }
     } else {
         EbrDebugLog("Class %s not found!\n", identifier);
         return nil;
