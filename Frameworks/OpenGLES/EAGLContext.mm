@@ -38,6 +38,8 @@
 
 #include "GLES1122/OpenGLES20/OpenGLES20Context.h"
 
+#include "Logging.h"
+
 __declspec(thread) EAGLContext* tlsCurContext;
 static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
@@ -175,29 +177,58 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     _eglSurface = EGL_NO_SURFACE;
     _eglContext = EGL_NO_CONTEXT;
 
+    // These basically control the minimum acceptable configuration.
     const EGLint configAttributes[] = { EGL_RENDERABLE_TYPE,
                                         EGL_OPENGL_ES2_BIT,
                                         EGL_SURFACE_TYPE,
-                                        EGL_PBUFFER_BIT,
+                                        EGL_PBUFFER_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT,
                                         EGL_BLUE_SIZE,
-                                        8,
+                                        5,
                                         EGL_GREEN_SIZE,
-                                        8,
+                                        6,
                                         EGL_RED_SIZE,
-                                        8,
+                                        5,
                                         EGL_ALPHA_SIZE,
-                                        8,
+                                        0,
                                         EGL_DEPTH_SIZE,
-                                        24,
-                                        EGL_STENCIL_SIZE,
-                                        8,
+                                        16,
                                         EGL_NONE };
 
     EGLint configCount;
-    if (!eglChooseConfig(eglDisplay, configAttributes, &_mConfig, 1, &configCount) || (configCount != 1)) {
+    EGLConfig configList[64];
+
+    _rgb565Supported = false;
+    _rgba8888Supported = false;
+
+    if (!eglChooseConfig(eglDisplay, configAttributes, configList, 64, &configCount) || (configCount == 0)) {
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Unable to find a valid EGL configuration"];
     }
 
+    for (int i = 0; i < configCount; i ++) {
+        int redBits, greenBits, blueBits, alphaBits;
+        
+        eglGetConfigAttrib(eglDisplay, configList[i], EGL_RED_SIZE, &redBits);
+        eglGetConfigAttrib(eglDisplay, configList[i], EGL_GREEN_SIZE, &greenBits);
+        eglGetConfigAttrib(eglDisplay, configList[i], EGL_BLUE_SIZE, &blueBits);
+        eglGetConfigAttrib(eglDisplay, configList[i], EGL_ALPHA_SIZE, &alphaBits);
+
+        if ((redBits == 5) && (greenBits == 6) && (blueBits == 5) && (alphaBits == 0)) {
+            _rgb565Supported = true;
+        } else if ((redBits == 8) && (greenBits == 8) && (blueBits == 8) && (alphaBits == 8)) {
+            _rgba8888Supported = true;
+        }
+
+        if (_rgb565Supported && _rgba8888Supported) {
+            break;
+        }
+    }
+
+    if (!_rgb565Supported && !_rgba8888Supported) {
+        [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Unable to find a valid EGL configuration"];
+    }
+    
+    _mConfig = configList[0];
+    
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (sharegroup != nil) {
         shareContext = sharegroup->_eglContext;
@@ -297,7 +328,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         _rbWidth = 320;
         _rbHeight = 480;
     }
-
+    
     //  Create a temporary surface so that we can make the context current
     EGLint surface_attribute_list[] =
         { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
@@ -315,10 +346,39 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         return FALSE;
     }
 
+    // Set up swap behavior.
+    EGLint swapBehavior = EGL_BUFFER_DESTROYED;
+    NSNumber* backingOption = (NSNumber*)[props objectForKey:kEAGLDrawablePropertyRetainedBacking];
+    if ((backingOption != nil) && ([backingOption boolValue] == TRUE)) {
+        swapBehavior = EGL_BUFFER_PRESERVED;
+    }
+    if (!eglSurfaceAttrib(eglDisplay, _eglSurface, EGL_SWAP_BEHAVIOR, swapBehavior)) {
+        TraceWarning(L"EAGL", L"Unable to set up backbuffer swap behavior, app may experience graphical glitches!");
+    }
+
+    // Pick desired format.
+    GLenum renderBufferFormat = GL_BGRA8_EXT;
+    NSString* formatString = [props objectForKey:kEAGLDrawablePropertyColorFormat];
+    if (formatString != nil) {
+        if ([formatString isEqualToString:kEAGLColorFormatRGBA8]) {
+            renderBufferFormat = GL_BGRA8_EXT;
+        } else if ([formatString isEqualToString:kEAGLColorFormatRGB565]) {
+            renderBufferFormat = GL_RGB565_OES;
+        }
+    }
+
+    // Test against reality.  NOTE: One of the two supported bools must be true to even get here.
+    if (renderBufferFormat == GL_RGB565_OES && !_rgb565Supported) {
+        renderBufferFormat = GL_BGRA8_EXT;
+    }
+    if (renderBufferFormat == GL_BGRA8_EXT && !_rgba8888Supported) {
+        renderBufferFormat = GL_RGB565_OES;
+    }
+    
     if (_useMultisampling) {
-        glRenderbufferStorageMultisampleANGLE(target, 4, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+        glRenderbufferStorageMultisampleANGLE(target, 4, renderBufferFormat, _rbWidth, _rbHeight);
     } else {
-        glRenderbufferStorage(target, GL_BGRA8_EXT, _rbWidth, _rbHeight);
+        glRenderbufferStorage(target, renderBufferFormat, _rbWidth, _rbHeight);
     }
 
     surface.swapChainPanel.width = _rbWidth;

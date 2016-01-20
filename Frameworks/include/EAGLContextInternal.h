@@ -37,6 +37,9 @@ class OpenGLESContext;
 
     int _rbWidth, _rbHeight;
 
+    bool _rgb565Supported;
+    bool _rgba8888Supported;
+    
     CALayer* _targetLayer;
 @public
     OpenGLES::OpenGLESContext* _gl11Ctx;
