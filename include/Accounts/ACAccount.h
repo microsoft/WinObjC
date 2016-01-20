@@ -51,6 +51,7 @@ ACCOUNTS_EXPORT_CLASS
 @property (strong, nonatomic) ACAccountCredential* credential;
 @property (readonly, weak, nonatomic) NSString* identifier;
 @property (copy, nonatomic) NSString* username;
+@property (copy, nonatomic) NSString* userFullName;
 
 - (instancetype)initWithAccountType:(ACAccountType*)type;
 @end
