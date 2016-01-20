@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountCredential : NSObject

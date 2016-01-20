@@ -17,6 +17,7 @@
 
 #import <Security/SecBase.h>
 #import <Security/SecKey.h>
+#import <Security/SecCertificate.h>
 
 // This header file is not yet fully implemented
 

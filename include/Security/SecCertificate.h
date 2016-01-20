@@ -15,6 +15,8 @@
 //******************************************************************************
 #pragma once
 
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFData.h>
 #import <Security/SecBase.h>
 
 // This header file is not yet fully implemented

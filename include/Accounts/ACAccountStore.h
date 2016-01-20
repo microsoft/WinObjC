@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT NSString* const ACFacebookAppIdKey;
 ACCOUNTS_EXPORT NSString* const ACFacebookPermissionsKey;
@@ -38,6 +39,9 @@ typedef void(^ACAccountStoreSaveCompletionHandler)(BOOL success, NSError* error)
 typedef void(^ACAccountStoreRemoveCompletionHandler)(BOOL success, NSError* error);
 typedef void(^ACAccountStoreRequestAccessCompletionHandler)(BOOL granted, NSError* error);
 typedef void(^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewResult renewResult, NSError* error);
+
+@class ACAccount;
+@class ACAccountType;
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountStore : NSObject
