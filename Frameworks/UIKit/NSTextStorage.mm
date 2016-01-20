@@ -39,7 +39,6 @@
 /**
  @Status Interoperable
 */
-
 - (instancetype)initWithAttributedString:(NSAttributedString*)str {
     _composed = [str mutableCopy];
     [self _initStorage];
@@ -49,7 +48,6 @@
 /**
  @Status Interoperable
 */
-
 - (instancetype)initWithString:(NSString*)string {
     _composed = [[NSMutableAttributedString alloc] initWithString:string];
     [self _initStorage];
@@ -59,7 +57,6 @@
 /**
  @Status Interoperable
 */
-
 - (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
     _composed = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
     [self _initStorage];
@@ -69,7 +66,6 @@
 /**
  @Status Interoperable
 */
-
 - (void)addLayoutManager:(NSLayoutManager*)manager {
     if (![_layoutManagers containsObject:manager]) {
         [_layoutManagers addObject:manager];
@@ -106,7 +102,6 @@
 /**
  @Status Interoperable
 */
-
 - (NSDictionary*)attributesAtIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
     NSDictionary* ret = [_composed attributesAtIndex:location effectiveRange:range];
 
@@ -116,7 +111,6 @@
 /**
  @Status Interoperable
 */
-
 - (NSDictionary*)attributesAtIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange {
     NSDictionary* ret = [_composed attributesAtIndex:location longestEffectiveRange:range inRange:inRange];
 
@@ -223,7 +217,6 @@
 /**
  @Status Interoperable
 */
-
 - (void)beginEditing {
     [_composed beginEditing];
     _editCount++;
@@ -232,7 +225,6 @@
 /**
  @Status Interoperable
 */
-
 - (void)processEditing {
     NSRange range = NSMakeRange(0, [self length]);
     for (NSLayoutManager* curManager in _layoutManagers) {
@@ -247,7 +239,6 @@
 /**
  @Status Interoperable
 */
-
 - (void)endEditing {
     [_composed endEditing];
 

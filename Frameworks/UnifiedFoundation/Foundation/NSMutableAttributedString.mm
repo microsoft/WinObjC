@@ -89,9 +89,25 @@
  @Status Interoperable
 */
 - (void)replaceCharactersInRange:(NSRange)range withAttributedString:(NSAttributedString*)attributedString {
-    CFAttributedStringReplaceAttributedString(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                              CFRangeMake(range.location, range.length),
-                                              (__bridge CFAttributedStringRef)attributedString);
+    if (([attributedString class] != [NSAttributedString class]) && ([attributedString class] != [NSMutableAttributedString class])) {
+        // Can't guarantee that the underlying storage of a derived class is the same as the parent classes
+        // Convert the attributed string to the NSMutableAttributedString base class, for which the storage is known to CF
+        __block NSMutableAttributedString* attrStringToUse = [[NSMutableAttributedString alloc] initWithString:[attributedString string]];
+        [attributedString enumerateAttributesInRange:{ 0, [attributedString length] }
+                                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+                                          usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
+                                              [attrStringToUse addAttributes:val range:range];
+                                          }];
+        CFAttributedStringReplaceAttributedString(reinterpret_cast<CFMutableAttributedStringRef>(self),
+                                                  CFRangeMake(range.location, range.length),
+                                                  (__bridge CFAttributedStringRef)attrStringToUse);
+        [attrStringToUse release];
+
+    } else {
+        CFAttributedStringReplaceAttributedString(reinterpret_cast<CFMutableAttributedStringRef>(self),
+                                                  CFRangeMake(range.location, range.length),
+                                                  (__bridge CFAttributedStringRef)attributedString);
+    }
 }
 
 /**

@@ -15,13 +15,13 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import "Starboard.h"
-#import <windows.h>
+#import <Starboard.h>
 #import <CoreFoundation\CFAttributedString.h>
 #import <Foundation\NSAttributedString.h>
 #import <Foundation\NSDictionary.h>
 #import <Foundation\NSMutableAttributedString.h>
-#import <UIKit\UIKit.h>
+
+#import <windows.h>
 #import <vector>
 
 static NSString* c_defaultAttributeName = @"defaultAttributeName";
