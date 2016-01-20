@@ -13,8 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-// This header file is not yet fully implemented
+#import <Starboard.h>
+#import <Security/SecIdentity.h>
 
-typedef struct __SecKey* SecKeyRef;
+/**
+ @Status Stub
+*/
+CFTypeID SecIdentityGetTypeID() {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+OSStatus SecIdentityCopyCertificate(SecIdentityRef identityRef, SecCertificateRef* certificateRef) {
+    UNIMPLEMENTED();
+    return errSecUnimplemented;
+}
+
+/**
+ @Status Stub
+*/
+OSStatus SecIdentityCopyPrivateKey(SecIdentityRef identityRef, SecKeyRef* privateKeyRef) {
+    UNIMPLEMENTED();
+    return errSecUnimplemented;
+}

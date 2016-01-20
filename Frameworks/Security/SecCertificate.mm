@@ -18,9 +18,16 @@
 #import <Security/SecCertificate.h>
 
 /**
+ @Status Stub
+*/
+CFTypeID SecCertificateGetTypeID() {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
 @Status Stub
 */
-
 SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data) {
     UNIMPLEMENTED();
     return nullptr;
@@ -30,6 +37,14 @@ SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataR
 @Status Stub
 */
 CFDataRef SecCertificateCopyData(SecCertificateRef certificate) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+/**
+ @Status Stub
+*/
+CFStringRef SecCertificateCopySubjectSummary(SecCertificateRef certificate) {
     UNIMPLEMENTED();
     return nullptr;
 }

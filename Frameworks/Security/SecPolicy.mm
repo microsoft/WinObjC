@@ -18,15 +18,31 @@
 #import <Security/SecPolicy.h>
 
 /**
-@Status Stub
+ @Status Stub
 */
-SecPolicyRef SecPolicyCreateBasicX509(void) {
+CFTypeID SecPolicyGetTypeID() {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+/**
+ @Status Stub
+*/
+CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef) {
     UNIMPLEMENTED();
     return nullptr;
 }
 
 /**
-@Status Stub
+ @Status Stub
+*/
+SecPolicyRef SecPolicyCreateBasicX509() {
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
+/**
+ @Status Stub
 */
 SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname) {
     UNIMPLEMENTED();
