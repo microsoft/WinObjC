@@ -206,13 +206,15 @@ CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorR
         }
     }
 
+    [escapedStringToIgnore release];
+
     if (resultLength == length) {
         return string;
     }
 
     NSString* ret = [NSString stringWithCharacters:result.get() length:resultLength];
 
-    return (CFStringRef)ret;
+    return (CFStringRef)[ret retain];
 }
 
 /**
