@@ -438,6 +438,9 @@ public:
         repeatDuration = timingProperties->_repeatDuration;
         speed = timingProperties->_speed;
         timeOffset = timingProperties->_timeOffset;
+
+        if ( repeatCount > 0xFFFFFF ) repeatCount = 0xFFFFFF;
+        if ( repeatDuration > 0xFFFFFF ) repeatDuration = 0xFFFFFF;
     }
 
     ~DisplayAnimationBasic() {
