@@ -414,10 +414,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setUsesGroupingSeparator:(BOOL)value {
-    UNIMPLEMENTED();
     _formatter->setGroupingUsed(value);
     _usesGroupingSeparator = value;
 }
