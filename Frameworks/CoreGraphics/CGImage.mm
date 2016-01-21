@@ -56,8 +56,7 @@ __CGImage::__CGImage() {
     EbrDebugLog("Number of CGImages: %d created=%x\n", numCGImages, this);
 #endif
 
-    isa = NULL;
-    object_setClass((id) this, [CGNSImage class]);
+    object_setClass((id)this, [CGNSImage class]);
 }
 
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;

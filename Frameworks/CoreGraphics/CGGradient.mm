@@ -32,8 +32,7 @@
 __CGGradient::__CGGradient() :
     _components(NULL), 
     _locations(NULL) {
-    isa = NULL;
-    object_setClass((id) this, [CGNSGradient class]);
+    object_setClass((id)this, [CGNSGradient class]);
 }
 
 __CGGradient::~__CGGradient() {

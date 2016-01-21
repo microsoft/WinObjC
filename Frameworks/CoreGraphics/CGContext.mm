@@ -53,8 +53,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     EbrDebugLog("contextCount: %d\n", contextCount);
 #endif
-    isa = NULL;
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }

@@ -32,8 +32,7 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
 @end
 
 __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
-    isa = NULL;
-    object_setClass((id) this, [CGNSColorSpace class]);
+    object_setClass((id)this, [CGNSColorSpace class]);
 
     colorSpace = fmt;
     palette = NULL;
