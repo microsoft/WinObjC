@@ -25,6 +25,7 @@ LIBRARY Foundation
      _OBJC_CLASS_NSEnumerator DATA
      _OBJC_CLASS_NSError DATA
      _OBJC_CLASS_NSException DATA
+     _OBJC_CLASS_NSExpression DATA
      _OBJC_CLASS_NSFileHandle DATA
      _OBJC_CLASS_NSFileManager DATA
      _OBJC_CLASS_NSFormatter DATA
@@ -65,6 +66,8 @@ LIBRARY Foundation
      _OBJC_CLASS_NSOrderedSet DATA
      _OBJC_CLASS_NSPersistentStoreCoordinator DATA
      _OBJC_CLASS_NSPredicate DATA
+     _OBJC_CLASS_NSComparisonPredicate DATA
+     _OBJC_CLASS_NSCompoundPredicate DATA
      _OBJC_CLASS_NSProcessInfo DATA
      _OBJC_CLASS_NSProgress DATA
      _OBJC_CLASS_NSPropertyListSerialization DATA
@@ -121,6 +124,7 @@ LIBRARY Foundation
      __objc_class_name_NSEnumerator CONSTANT
      __objc_class_name_NSError CONSTANT
      __objc_class_name_NSException CONSTANT
+     __objc_class_name_NSExpression CONSTANT
      __objc_class_name_NSFileHandle CONSTANT
      __objc_class_name_NSFileManager CONSTANT
      __objc_class_name_NSFormatter CONSTANT
@@ -161,6 +165,8 @@ LIBRARY Foundation
      __objc_class_name_NSOrderedSet CONSTANT
      __objc_class_name_NSPersistentStoreCoordinator CONSTANT
      __objc_class_name_NSPredicate CONSTANT
+     __objc_class_name_NSComparisonPredicate CONSTANT
+     __objc_class_name_NSCompoundPredicate CONSTANT
      __objc_class_name_NSProcessInfo CONSTANT
      __objc_class_name_NSProgress CONSTANT
      __objc_class_name_NSPropertyListSerialization CONSTANT

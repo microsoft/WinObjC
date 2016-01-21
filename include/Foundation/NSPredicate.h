@@ -23,26 +23,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSArray, NSDictionary;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSPredicate : NSObject <NSCoding, NSCopying>
+@interface NSPredicate : NSObject <NSSecureCoding, NSCopying>
 
 + (NSPredicate*)predicateWithFormat:(NSString*)format, ...;
-+ (NSPredicate*)predicateWithFormat:(NSString*)format argumentArray:(NSArray*)arguments;
-+ (NSPredicate*)predicateWithFormat:(NSString*)format arguments:(va_list)arguments;
++ (NSPredicate*)predicateWithFormat:(NSString*)predicateFormat argumentArray:(NSArray*)arguments;
++ (NSPredicate*)predicateWithFormat:(NSString*)format arguments:(va_list)argList;
 + (NSPredicate*)predicateWithValue:(BOOL)value;
 + (NSPredicate*)predicateWithBlock:(BOOL (^)(id evaluatedObject, NSDictionary* bindings))block;
 
 - (BOOL)evaluateWithObject:(id)object;
 - (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables;
 - (instancetype)predicateWithSubstitutionVariables:(NSDictionary*)variables;
-- (NSString*)predicateFormat;
 - (void)allowEvaluation;
 
 @property (readonly, copy) NSString* predicateFormat;
 
-@end
-
-@interface NSSet (NSPredicateSupport)
-- (NSSet*)filteredSetUsingPredicate:(NSPredicate*)predicate;
 @end
 
 #endif /* _NSPREDICATE_H_ */

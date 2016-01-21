@@ -1,10 +1,18 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
 #ifndef _NSCOMPARISONPREDICATE_H_
 #define _NSCOMPARISONPREDICATE_H_
@@ -13,48 +21,61 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @class NSExpression;
 
-typedef enum {
-   NSDirectPredicateModifier,
-   NSAllPredicateModifier,
-   NSAnyPredicateModifier
-} NSComparisonPredicateModifier;
-
-typedef enum {
-   NSLessThanPredicateOperatorType,
-   NSLessThanOrEqualToPredicateOperatorType,
-   NSGreaterThanPredicateOperatorType,
-   NSGreaterThanOrEqualToPredicateOperatorType,
-   NSEqualToPredicateOperatorType,
-   NSNotEqualToPredicateOperatorType,
-   NSMatchesPredicateOperatorType,
-   NSLikePredicateOperatorType,
-   NSBeginsWithPredicateOperatorType,
-   NSEndsWithPredicateOperatorType,
-   NSInPredicateOperatorType,
-   NSCustomSelectorPredicateOperatorType
-} NSPredicateOperatorType;
-
-enum {
-   NSCaseInsensitivePredicateOption=0x01,
-   NSDiacriticInsensitivePredicateOption=0x02
+typedef NS_ENUM(NSInteger, NSPredicateOperatorType) {
+    NSLessThanPredicateOperatorType = 0,
+    NSLessThanOrEqualToPredicateOperatorType,
+    NSGreaterThanPredicateOperatorType,
+    NSGreaterThanOrEqualToPredicateOperatorType,
+    NSEqualToPredicateOperatorType,
+    NSNotEqualToPredicateOperatorType,
+    NSMatchesPredicateOperatorType,
+    NSLikePredicateOperatorType,
+    NSBeginsWithPredicateOperatorType,
+    NSEndsWithPredicateOperatorType,
+    NSInPredicateOperatorType,
+    NSCustomSelectorPredicateOperatorType,
+    NSContainsPredicateOperatorType,
+    NSBetweenPredicateOperatorType
 };
 
-@interface NSComparisonPredicate : NSPredicate <NSCoding, NSCopying>
+typedef NS_ENUM(NSInteger, NSComparisonPredicateOptions) {
+    NSCaseInsensitivePredicateOption = 0x01,
+    NSDiacriticInsensitivePredicateOption = 0x02,
+    NSNormalizedPredicateOption = 0x04,
+    NSLocaleSensitivePredicateOption = 0x08
+};
 
--initWithLeftExpression:(NSExpression *)left rightExpression:(NSExpression *)right modifier:(NSComparisonPredicateModifier)modifier type:(NSPredicateOperatorType)type options:(NSUInteger)options;
--initWithLeftExpression:(NSExpression *)left rightExpression:(NSExpression *)right customSelector:(SEL)selector;
+typedef NS_ENUM(NSInteger, NSComparisonPredicateModifier) {
+    NSDirectPredicateModifier = 0,
+    NSAllPredicateModifier,
+    NSAnyPredicateModifier,
+};
 
-+(NSPredicate *)predicateWithLeftExpression:(NSExpression *)left rightExpression:(NSExpression *)right modifier:(NSComparisonPredicateModifier)modifier type:(NSPredicateOperatorType)type options:(NSUInteger)options;
-+(NSPredicate *)predicateWithLeftExpression:(NSExpression *)left rightExpression:(NSExpression *)right customSelector:(SEL)selector;
+FOUNDATION_EXPORT_CLASS
+@interface NSComparisonPredicate : NSPredicate <NSSecureCoding, NSCopying>
 
--(NSExpression *)leftExpression;
--(NSExpression *)rightExpression;
--(NSPredicateOperatorType)predicateOperatorType;
++ (NSComparisonPredicate*)predicateWithLeftExpression:(NSExpression*)lhs rightExpression:(NSExpression*)rhs customSelector:(SEL)selector;
 
--(NSComparisonPredicateModifier)comparisonPredicateModifier;
--(NSUInteger)options;
++ (NSComparisonPredicate*)predicateWithLeftExpression:(NSExpression*)lhs
+                                      rightExpression:(NSExpression*)rhs
+                                             modifier:(NSComparisonPredicateModifier)modifier
+                                                 type:(NSPredicateOperatorType)type
+                                              options:(NSComparisonPredicateOptions)options;
 
--(SEL)customSelector;
+- (instancetype)initWithLeftExpression:(NSExpression*)lhs
+                       rightExpression:(NSExpression*)rhs
+                              modifier:(NSComparisonPredicateModifier)modifier
+                                  type:(NSPredicateOperatorType)type
+                               options:(NSComparisonPredicateOptions)options;
+
+- (instancetype)initWithLeftExpression:(NSExpression*)lhs rightExpression:(NSExpression*)rhs customSelector:(SEL)selector;
+
+@property (readonly, retain) NSExpression* leftExpression;
+@property (readonly, retain) NSExpression* rightExpression;
+@property (readonly) NSPredicateOperatorType predicateOperatorType;
+@property (readonly) NSComparisonPredicateModifier comparisonPredicateModifier;
+@property (readonly) NSComparisonPredicateOptions options;
+@property (readonly) SEL customSelector;
 
 @end
 
