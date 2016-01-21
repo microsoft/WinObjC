@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CTFontTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CTRunTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

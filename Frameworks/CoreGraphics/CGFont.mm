@@ -1753,9 +1753,56 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
-    UNIMPLEMENTED();
-    return 0;
+    if (run == nullptr) {
+        return 0;
+    }
+
+    if (range.length < 0) {
+        THROW_NS_HR(E_INVALIDARG);
+    }
+
+    _CTRun* curRun = static_cast<_CTRun*>(run);
+    
+    if (range.length == 0) {
+        range = curRun->_range;
+    }
+
+    if (range.location < 0) {
+        range.length += range.location;
+        range.location = 0;
+    }
+
+    if ((range.location + range.length) > (curRun->_range.location + curRun->_range.length)) {
+        return 0;
+    }
+
+    if (ascent != nullptr) {
+        *ascent = [curRun->_font ascender];
+    }
+
+    if (descent != nullptr) {
+        *descent = [curRun->_font descender];
+    }
+
+    if (leading != nullptr) {
+        *leading = [curRun->_font leading];
+    }
+
+    if (range.length < 0) {
+        return 0;
+    }
+    
+    // Calculate the typographic width for the specified range
+    double typographicWidth = 0;
+    auto it = curRun->_glyphAdvances.begin() + range.location;
+    auto rangeEnd = it + range.length;
+    while (it != rangeEnd) {
+        typographicWidth += it->width;
+        it++;
+    }
+
+    return typographicWidth;
 }
