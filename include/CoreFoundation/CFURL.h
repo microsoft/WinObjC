@@ -20,13 +20,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import "CoreFoundation/CFBase.h"
 #import "CoreFoundation/CFData.h"
 #import "CoreFoundation/CFString.h"
-#import "Foundation/NSURL.h"
 
 COREFOUNDATION_EXTERNC_BEGIN
 
+@class NSURL;
 typedef NSURL* CFURLRef;
 
-typedef NS_ENUM(UInt32, CFURLComponentType) {
+typedef enum {
     kCFURLComponentScheme = 1,
     kCFURLComponentNetLocation = 2,
     kCFURLComponentPath = 3,
@@ -39,29 +39,30 @@ typedef NS_ENUM(UInt32, CFURLComponentType) {
     kCFURLComponentParameterString = 10,
     kCFURLComponentQuery = 11,
     kCFURLComponentFragment = 12,
-};
+} CFURLComponentType;
 
-typedef NS_ENUM(UInt32, CFURLPathStyle) {
+typedef enum {
     kCFURLPOSIXPathStyle = 0,
     kCFURLHFSPathStyle = 1,
     kCFURLWindowsPathStyle = 2,
-};
+} CFURLPathStyle;
 
-typedef NS_OPTIONS(CFOptionFlags, CFURLBookmarkCreationOptions) {
+enum {
     kCFURLBookmarkCreationPreferFileIDResolutionMask = (1UL << 8),
     kCFURLBookmarkCreationMinimalBookmarkMask = (1UL << 9),
     kCFURLBookmarkCreationSuitableForBookmarkFile = (1UL << 10),
     kCFURLBookmarkCreationWithSecurityScope = (1UL << 11),
     kCFURLBookmarkCreationSecurityScopeAllowOnlyReadAccess = (1UL << 12)
 };
+typedef CFOptionFlags CFURLBookmarkCreationOptions;
 
-typedef NS_OPTIONS(CFOptionFlags, CFURLBookmarkResolutionOptions) {
+enum {
     kCFBookmarkResolutionWithoutUIMask = (1UL << 8),
     kCFBookmarkResolutionWithoutMountingMask = (1UL << 9),
     kCFURLBookmarkResolutionWithSecurityScope = (1UL << 10)
 };
-
-typedef CFURLBookmarkResolutionOptions CFURLBookmarkFileCreationOptions;
+typedef CFOptionFlags CFURLBookmarkResolutionOptions;
+typedef CFOptionFlags CFURLBookmarkFileCreationOptions;
 
 COREFOUNDATION_EXPORT CFTypeID CFURLGetTypeID(void);
 
