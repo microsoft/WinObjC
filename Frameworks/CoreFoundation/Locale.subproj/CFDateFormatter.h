@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -33,7 +35,7 @@ CFStringRef CFDateFormatterCreateDateFormatFromTemplate(CFAllocatorRef allocator
 CF_EXPORT
 CFTypeID CFDateFormatterGetTypeID(void);
 
-typedef CF_ENUM(CFIndex, CFDateFormatterStyle) {	// date and time format styles
+typedef CF_ENUM(CFIndex,  CFDateFormatterStyle) {	// date and time format styles
 	kCFDateFormatterNoStyle = 0,
 	kCFDateFormatterShortStyle = 1,
 	kCFDateFormatterMediumStyle = 2,
@@ -159,3 +161,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFDATEFORMATTER__ */
 
+// clang-format on

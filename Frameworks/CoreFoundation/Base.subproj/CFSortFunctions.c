@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -330,4 +332,4 @@ void CFMergeSortArray(void *list, CFIndex count, CFIndex elementSize, CFComparat
     if (locali != indexes) free(indexes);
 }
 
-
+// clang-format on

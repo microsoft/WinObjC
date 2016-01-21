@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -28,9 +30,9 @@
 #endif /* USE_DYLD_PRIV */
 #endif /* BINARY_SUPPORT_DYLD */
 
-#include <unistd.h>
+#include <sys/unistd.h>
 #include <fcntl.h>
-#include <sys/mman.h>
+// #include <sys/mman.h>
 
 #if defined(BINARY_SUPPORT_DLFCN)
 #include <dlfcn.h>
@@ -41,7 +43,9 @@
 
 #if DEPLOYMENT_TARGET_WINDOWS
 #define statinfo _stat
-#define stat(x,y) _NS_stat(x,y)
+
+// HACKHACK: replaced with _stat64i32 because it was giving me troubles. Not sure on ramifications.
+#define stat(x,y) _stat64i32(x,y)
 #define open _NS_open
 #define MAP_FAILED 0
 
@@ -1000,3 +1004,4 @@ CF_PRIVATE __CFPBinaryType _CFBundleGrokBinaryType(CFURLRef executableURL) {
 
 #endif /* BINARY_SUPPORT_DYLD */
 
+// clang-format on

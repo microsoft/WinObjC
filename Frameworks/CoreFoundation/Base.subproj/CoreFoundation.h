@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CoreFoundation.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CoreFoundation.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_COREFOUNDATION__)
@@ -44,6 +46,12 @@
 #endif
 
 #endif
+
+// HACKHACK: add in things from WinObjC that we apparently still need but weren't there.
+#ifndef MAXFLOAT
+#define MAXFLOAT ((float)3.40282346638528860e+38)
+#endif
+#include <StarboardAdditionalDefines.h>
 
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFArray.h>
@@ -96,3 +104,4 @@
 
 #endif /* ! __COREFOUNDATION_COREFOUNDATION__ */
 
+// clang-format on

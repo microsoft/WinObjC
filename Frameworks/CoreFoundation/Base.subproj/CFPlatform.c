@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,13 +10,13 @@
 //
 
 
-/*	CFPlatform.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Tony Parker
+/*  CFPlatform.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Tony Parker
 */
 
 #include "CFInternal.h"
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
     #include <stdlib.h>
     #include <sys/stat.h>
@@ -30,15 +32,15 @@
 #include <shellapi.h>
 #include <shlobj.h>
 #include <WinIoCtl.h>
-
+#include <direct.h>
 #define getcwd _NS_getcwd
 
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_WINDOWS
-#define kCFPlatformInterfaceStringEncoding	kCFStringEncodingUTF8
+#define kCFPlatformInterfaceStringEncoding  kCFStringEncodingUTF8
 #else
-#define kCFPlatformInterfaceStringEncoding	CFStringGetSystemEncoding()
+#define kCFPlatformInterfaceStringEncoding  CFStringGetSystemEncoding()
 #endif
 
 extern void __CFGetUGIDs(uid_t *euid, gid_t *egid);
@@ -58,6 +60,8 @@ CF_PRIVATE Boolean _CFGetCurrentDirectory(char *path, int maxlen) {
 // Returns the path to the CF DLL, which we can then use to find resources like char sets
 bool bDllPathCached = false;
 CF_PRIVATE const wchar_t *_CFDLLPath(void) {
+    // HACKHACK: Can't lookup dll paths in an app container.
+ /*
     static wchar_t cachedPath[MAX_PATH+1];
 
     if (!bDllPathCached) {
@@ -86,6 +90,8 @@ CF_PRIVATE const wchar_t *_CFDLLPath(void) {
         bDllPathCached = true;
     }
     return cachedPath;
+    */
+    return nullptr;
 }
 #endif
 
@@ -94,13 +100,13 @@ static const char *__CFprogname = NULL;
 
 const char **_CFGetProgname(void) {
     if (!__CFprogname)
-        _CFProcessPath();		// sets up __CFprogname as a side-effect
+        _CFProcessPath();       // sets up __CFprogname as a side-effect
     return &__CFprogname;
 }
 
 const char **_CFGetProcessPath(void) {
     if (!__CFProcessPath)
-        _CFProcessPath();		// sets up __CFProcessPath as a side-effect
+        _CFProcessPath();       // sets up __CFProcessPath as a side-effect
     return &__CFProcessPath;
 }
 
@@ -110,16 +116,16 @@ const char *_CFProcessPath(void) {
     wchar_t buf[CFMaxPathSize] = {0};
     DWORD rlen = GetModuleFileNameW(NULL, buf, sizeof(buf) / sizeof(buf[0]));
     if (0 < rlen) {
-	char asciiBuf[CFMaxPathSize] = {0};
-	int res = WideCharToMultiByte(CP_UTF8, 0, buf, rlen, asciiBuf, sizeof(asciiBuf) / sizeof(asciiBuf[0]), NULL, NULL);
-	if (0 < res) {
-	    __CFProcessPath = strdup(asciiBuf);
-	    __CFprogname = strrchr(__CFProcessPath, PATH_SEP);
-	    __CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
-	}
+    char asciiBuf[CFMaxPathSize] = {0};
+    int res = WideCharToMultiByte(CP_UTF8, 0, buf, rlen, asciiBuf, sizeof(asciiBuf) / sizeof(asciiBuf[0]), NULL, NULL);
+    if (0 < res) {
+        __CFProcessPath = strdup(asciiBuf);
+        __CFprogname = strrchr(__CFProcessPath, PATH_SEP);
+        __CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
+    }
     }
     if (!__CFProcessPath) {
-	__CFProcessPath = "";
+    __CFProcessPath = "";
         __CFprogname = __CFProcessPath;
     }
     return __CFProcessPath;
@@ -131,24 +137,24 @@ const char *_CFProcessPath(void) {
     if (__CFProcessPath) return __CFProcessPath;
 #if DEPLOYMENT_TARGET_MACOSX
     if (!__CFProcessIsRestricted()) {
-	const char *path = (char *)__CFgetenv("CFProcessPath");
-	if (path) {
-	    __CFProcessPath = strdup(path);
-	    __CFprogname = strrchr(__CFProcessPath, PATH_SEP);
-	    __CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
-	    return __CFProcessPath;
-	}
+    const char *path = (char *)__CFgetenv("CFProcessPath");
+    if (path) {
+        __CFProcessPath = strdup(path);
+        __CFprogname = strrchr(__CFProcessPath, PATH_SEP);
+        __CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
+        return __CFProcessPath;
+    }
     }
 #endif
     uint32_t size = CFMaxPathSize;
     char buffer[size];
     if (0 == _NSGetExecutablePath(buffer, &size)) {
-	__CFProcessPath = strdup(buffer);
-	__CFprogname = strrchr(__CFProcessPath, PATH_SEP);
-	__CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
+    __CFProcessPath = strdup(buffer);
+    __CFprogname = strrchr(__CFProcessPath, PATH_SEP);
+    __CFprogname = (__CFprogname ? __CFprogname + 1 : __CFProcessPath);
     }
     if (!__CFProcessPath) {
-	__CFProcessPath = "";
+    __CFProcessPath = "";
         __CFprogname = __CFProcessPath;
     }
     return __CFProcessPath;
@@ -215,8 +221,8 @@ static CFURLRef _CFCopyHomeDirURLForUser(struct passwd *upwd, bool fallBackToHom
 #endif
 
 
-#define CFMaxHostNameLength	256
-#define CFMaxHostNameSize	(CFMaxHostNameLength+1)
+#define CFMaxHostNameLength 256
+#define CFMaxHostNameSize   (CFMaxHostNameLength+1)
 
 CF_PRIVATE CFStringRef _CFStringCreateHostName(void) {
     char myName[CFMaxHostNameSize];
@@ -248,18 +254,18 @@ CF_EXPORT CFStringRef CFCopyUserName(void) {
         }
     }
 #elif DEPLOYMENT_TARGET_WINDOWS
-	wchar_t username[1040];
-	DWORD size = 1040;
-	username[0] = 0;
-	if (GetUserNameW(username, &size)) {
-	    // discount the extra NULL by decrementing the size
-	    result = CFStringCreateWithCharacters(kCFAllocatorSystemDefault, (const UniChar *)username, size - 1);
-	} else {
-	    const char *cname = __CFgetenv("USERNAME");
-	    if (cname) {
+    wchar_t username[1040];
+    DWORD size = 1040;
+    username[0] = 0;
+    if (false) { // HACKHACK: Can't get username in appcontainer. // if (GetUserNameW(username, &size)) {
+        // discount the extra NULL by decrementing the size
+        result = CFStringCreateWithCharacters(kCFAllocatorSystemDefault, (const UniChar *)username, size - 1);
+    } else {
+        const char *cname = __CFgetenv("USERNAME");
+        if (cname) {
                 result = CFStringCreateWithCString(kCFAllocatorSystemDefault, cname, kCFPlatformInterfaceStringEncoding);
             }
-	}
+    }
 #else
 #error Dont know how to compute user name on this platform
 #endif
@@ -280,7 +286,7 @@ CFURLRef CFCopyHomeDirectoryURL(void) {
     CFStringRef str = NULL;
    
     UniChar pathChars[MAX_PATH];
-    if (S_OK == SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, (wchar_t *)pathChars)) {
+    if (false) {// HACKHACK: Shell apis not useable from app container. // if (S_OK == SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, (wchar_t *)pathChars)) {
         len = (CFIndex)wcslen((wchar_t *)pathChars);
         str = CFStringCreateWithCharacters(kCFAllocatorSystemDefault, pathChars, len);
         retVal = CFURLCreateWithFileSystemPath(kCFAllocatorSystemDefault, str, kCFURLWindowsPathStyle, true);
@@ -334,9 +340,9 @@ CF_EXPORT CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName) {
         static dispatch_once_t once = 0;
         
         dispatch_once(&once, ^{
-            const char *env = getenv("CFFIXED_USER_HOME");
+            const char *env = nullptr; // HACKHACK: can't get env variables in appcontainer. // getenv("CFFIXED_USER_HOME");
             if (!env) {
-                env = getenv("HOME");
+                env = nullptr; // HACKHACK: can't get env variables in appcontainer. // getenv("HOME");
             }
             if (env) {
                 CFStringRef str = CFStringCreateWithFileSystemRepresentation(kCFAllocatorSystemDefault, env);
@@ -348,7 +354,7 @@ CF_EXPORT CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName) {
         });
         
         if (home) {
-            return CFRetain(home);
+            return static_cast<CFURLRef>(CFRetain(home));
         }
     }
 #endif
@@ -398,10 +404,10 @@ CF_EXPORT CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName) {
 
 #if DEPLOYMENT_TARGET_WINDOWS
 CF_INLINE CFIndex strlen_UniChar(const UniChar* p) {
-	CFIndex result = 0;
-	while ((*p++) != 0)
-		++result;
-	return result;
+    CFIndex result = 0;
+    while ((*p++) != 0)
+        ++result;
+    return result;
 }
 
 //#include <shfolder.h>
@@ -423,42 +429,42 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
     UniChar szPath[MAX_PATH];
     
     // get the current path to the data repository: CSIDL_APPDATA (roaming) or CSIDL_LOCAL_APPDATA (nonroaming)
-    if (S_OK == SHGetFolderPathW(NULL, nFolder, NULL, 0, (wchar_t *) szPath)) {
-	CFStringRef directoryPath;
-	
-	// make it a CFString
-	directoryPath = CFStringCreateWithCharacters(alloc, szPath, strlen_UniChar(szPath));
-	if (directoryPath) {
-	    CFBundleRef bundle;
-	    CFStringRef bundleName;
-	    CFStringRef completePath;
-	    
-	    // attempt to get the bundle name
-	    bundle = CFBundleGetMainBundle();
-	    if (bundle) {
-		bundleName = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleNameKey);
-	    }
-	    else {
-		bundleName = NULL;
-	    }
-	    
-	    if (bundleName) {
-		// the path will be "<directoryPath>\Apple Computer\<bundleName>\" if there is a bundle name
-		completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\%@\\"), directoryPath, bundleName);
-	    }
-	    else {
-		// or "<directoryPath>\Apple Computer\" if there is no bundle name.
-		completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\"), directoryPath);
-	    }
+    if (false) { // HACKHACK: no shell apis. // if (S_OK == SHGetFolderPathW(NULL, nFolder, NULL, 0, (wchar_t *) szPath)) {
+    CFStringRef directoryPath;
+    
+    // make it a CFString
+    directoryPath = CFStringCreateWithCharacters(alloc, szPath, strlen_UniChar(szPath));
+    if (directoryPath) {
+        CFBundleRef bundle;
+        CFStringRef bundleName;
+        CFStringRef completePath;
+        
+        // attempt to get the bundle name
+        bundle = CFBundleGetMainBundle();
+        if (bundle) {
+        bundleName = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleNameKey);
+        }
+        else {
+        bundleName = NULL;
+        }
+        
+        if (bundleName) {
+        // the path will be "<directoryPath>\Apple Computer\<bundleName>\" if there is a bundle name
+        completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\%@\\"), directoryPath, bundleName);
+        }
+        else {
+        // or "<directoryPath>\Apple Computer\" if there is no bundle name.
+        completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\"), directoryPath);
+        }
 
-	    CFRelease(directoryPath);
+        CFRelease(directoryPath);
 
-	    // make a mutable copy to return
-	    if (completePath) {
-		result = CFStringCreateMutableCopy(alloc, 0, completePath);
-		CFRelease(completePath);
-	    }
-	}
+        // make a mutable copy to return
+        if (completePath) {
+        result = CFStringCreateMutableCopy(alloc, 0, completePath);
+        CFRelease(completePath);
+        }
+    }
     }
 
     return ( result );
@@ -500,14 +506,10 @@ CF_EXPORT void _NS_pthread_setname_np(const char *name) {
     }
 }
 
-static pthread_t __initialPthread = { NULL, 0 };
-
 CF_EXPORT int _NS_pthread_main_np() {
+    static pthread_t __initialPthread = pthread_self();
     pthread_t me = pthread_self();
-    if (NULL == __initialPthread.p) {
-        __initialPthread.p = me.p;
-        __initialPthread.x = me.x;
-    }
+
     return (pthread_equal(__initialPthread, me));
 }
 
@@ -571,7 +573,7 @@ CF_PRIVATE void __CFTSDInitialize() {
 #if DEPLOYMENT_TARGET_LINUX
     (void)pthread_key_create(&__CFTSDIndexKey, __CFTSDFinalize);
 #else
-    (void)pthread_key_create(&__CFTSDIndexKey, __CFTSDFinalize);
+    (void)pthread_key_create((pthread_key_t*)(&__CFTSDIndexKey), __CFTSDFinalize);
 #endif
 }
 
@@ -777,8 +779,8 @@ CF_EXPORT int _NS_unlink(const char *name) {
 // Warning: this doesn't support dstbuf as null even though 'getcwd' does
 CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size) {
     if (!dstbuf) {
-	CFLog(kCFLogLevelWarning, CFSTR("CFPlatform: getcwd called with null buffer"));
-	return 0;
+    CFLog(kCFLogLevelWarning, CFSTR("CFPlatform: getcwd called with null buffer"));
+    return 0;
     }
     
     wchar_t *buf = _wgetcwd(NULL, 0);
@@ -795,7 +797,8 @@ CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size) {
 CF_EXPORT char *_NS_getenv(const char *name) {
     // todo: wide getenv
     // We have to be careful what happens here, because getenv is called during cf initialization, and things like cfstring may not be working yet
-    return getenv(name);
+    // HACKHACK: can't get env variables in an appcontainer. // return getenv(name);
+    return nullptr;
 }
 
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName) {
@@ -806,7 +809,7 @@ CF_EXPORT int _NS_rename(const char *oldName, const char *newName) {
     BOOL winRes = MoveFileExW(oldWide, newWide, MOVEFILE_REPLACE_EXISTING);
     DWORD error = GetLastError();
     if (!winRes) {
-	    switch (error) {
+        switch (error) {
             case ERROR_SUCCESS:
                 errno = 0;
                 break;
@@ -863,8 +866,8 @@ CF_EXPORT int _NS_mkstemp(char *name, int bufSize) {
     // Look for the last '\' in the path
     wchar_t *lastSlash = wcsrchr(wide, '\\');
     if (!lastSlash) {
-	free(wide);
-	return -1;
+    free(wide);
+    return -1;
     }
     
     // Set the last slash to NULL temporarily and use it for _wstat
@@ -872,11 +875,11 @@ CF_EXPORT int _NS_mkstemp(char *name, int bufSize) {
     struct _stat dirInfo;
     int res = _wstat(wide, &dirInfo);
     if (res < 0) {
-	if (errno == ENOENT) {
-	    errno = ENOTDIR;
-	}
-	free(wide);
-	return -1;
+    if (errno == ENOENT) {
+        errno = ENOTDIR;
+    }
+    free(wide);
+    return -1;
     }
     // Restore the last slash
     *lastSlash = '\\';
@@ -901,6 +904,7 @@ CF_EXPORT int _NS_mkstemp(char *name, int bufSize) {
 
 Boolean _isAFloppy(char driveLetter)
 {
+/*
     HANDLE h;
     TCHAR tsz[8];
     Boolean retval = false;
@@ -918,8 +922,8 @@ Boolean _isAFloppy(char driveLetter)
     iDrive = driveLetter - 'A' + 1;
     
     // On Windows NT, use the technique described in the Knowledge Base article Q115828 and in the "FLOPPY" SDK sample.
-    wsprintf(tsz, TEXT("\\\\.\\%c:"), TEXT('@') + iDrive);
-    h = CreateFile(tsz, 0, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+    wprintf_s(tsz, TEXT("\\\\.\\%c:"), TEXT('@') + iDrive);
+    h = CreateFile2(tsz, 0, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
     if (h != INVALID_HANDLE_VALUE)
     {
         DISK_GEOMETRY Geom[20];
@@ -948,18 +952,21 @@ Boolean _isAFloppy(char driveLetter)
         
         CloseHandle(h);
     }
-
-    return retval;
+    */
+    // HACKHACK: Was trying to use desktop only apis. Just assume no one uses / has a floppy drive anymore.
+    return false;
 }
 
 
 extern CFStringRef CFCreateWindowsDrivePathFromVolumeName(CFStringRef volNameStr) {
+    // HACKHACK: can't use a lot of these desktop APIS. return nullptr for now.
+    /*
     if (!volNameStr) return NULL;
     
     // This code is designed to match as closely as possible code from QuickTime's library
     CFIndex strLen = CFStringGetLength(volNameStr);
     if (strLen == 0) {
-	return NULL;
+    return NULL;
     }
     
     // Get drive names
@@ -1002,7 +1009,7 @@ extern CFStringRef CFCreateWindowsDrivePathFromVolumeName(CFStringRef volNameStr
             UniChar             thisVolumeName[MAX_PATH];
             
             // Convert this drive string into a volume name
-            oldErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
+            oldErrorMode = SetErrorMode(0x0001); // SEM_FAILCRITICALERRORS
             getVolInfoSucceeded = GetVolumeInformationW(drivePtr, (LPWSTR)thisVolumeName, sizeof(thisVolumeName), NULL, &whoCares1, &whoCares2, NULL, 0);
             SetErrorMode(oldErrorMode);
             
@@ -1021,16 +1028,18 @@ extern CFStringRef CFCreateWindowsDrivePathFromVolumeName(CFStringRef volNameStr
         
         drivePtr += wcslen(drivePtr) + 1;
     }
-    
+
     
     free(driveNames);
     free(theVolumeName);
     return drivePathResult;
+    */
+    return nullptr;
 }
 
 struct timezone {
-    int	tz_minuteswest;	/* minutes west of Greenwich */
-    int	tz_dsttime;	/* type of dst correction */
+    int tz_minuteswest; /* minutes west of Greenwich */
+    int tz_dsttime; /* type of dst correction */
 };
 
 CF_PRIVATE int _NS_gettimeofday(struct timeval *tv, struct timezone *tz) {
@@ -1055,6 +1064,59 @@ CF_PRIVATE int _NS_gettimeofday(struct timeval *tv, struct timezone *tz) {
     
     // We don't support tz
     return 0;
+}
+
+bool OSAtomicCompareAndSwapPtr(void *oldp, void *newp, void *volatile *dst) 
+{
+    return (::InterlockedCompareExchangePointer(dst, newp, oldp) == oldp);
+}
+
+bool OSAtomicCompareAndSwapLong(long oldl, long newl, long volatile *dst) 
+{ 
+    return (::InterlockedCompareExchange(dst, newl, oldl) == oldl);
+}
+
+bool OSAtomicCompareAndSwapPtrBarrier(void *oldp, void *newp, void *volatile *dst) 
+{ 
+    return (::InterlockedCompareExchangePointer(dst, newp, oldp) == oldp);
+}
+
+int32_t OSAtomicAdd32Barrier( int32_t theAmount, volatile int32_t *theValue ) {
+    return ::InterlockedAdd(reinterpret_cast<volatile long*>(theValue), theAmount);
+}
+
+bool OSAtomicCompareAndSwap32Barrier(int32_t oldValue, int32_t newValue, volatile int32_t *theValue) {
+    return (::InterlockedCompareExchange(reinterpret_cast<volatile long*>(theValue), newValue, oldValue) == oldValue);
+}
+
+bool OSAtomicCompareAndSwap64Barrier(int64_t oldValue, int64_t newValue, volatile int64_t *theValue) {
+    return (::InterlockedCompareExchange64(theValue, newValue, oldValue) == oldValue);
+}
+
+int32_t OSAtomicDecrement32Barrier(volatile int32_t *dst)
+{
+    return OSAtomicAdd32Barrier(-1, dst);
+}
+
+int32_t OSAtomicIncrement32Barrier(volatile int32_t *dst)
+{
+    return OSAtomicAdd32Barrier(1, dst);
+}
+
+int32_t OSAtomicAdd32( int32_t theAmount, volatile int32_t *theValue ) {
+    return OSAtomicAdd32Barrier(theAmount, theValue);
+}
+
+int32_t OSAtomicIncrement32(volatile int32_t *theValue) {
+    return OSAtomicIncrement32Barrier(theValue);
+}
+
+int32_t OSAtomicDecrement32(volatile int32_t *theValue) {
+    return OSAtomicDecrement32Barrier(theValue);
+}
+
+void OSMemoryBarrier() {
+    MemoryBarrier();
 }
 
 #endif // DEPLOYMENT_TARGET_WINDOWS
@@ -1263,7 +1325,7 @@ CF_EXPORT int32_t _CF_SOCK_STREAM() { return SOCK_STREAM; }
 #endif
 
 #if DEPLOYMENT_RUNTIME_SWIFT
-#import <fcntl.h>
+#include <fcntl.h>
 int _CFOpenFileWithMode(const char *path, int opts, mode_t mode) {
     return open(path, opts, mode);
 }
@@ -1295,3 +1357,5 @@ void *_CFReallocf(void *ptr, size_t size) {
     return reallocf(ptr, size);
 #endif
 }
+
+// clang-format on

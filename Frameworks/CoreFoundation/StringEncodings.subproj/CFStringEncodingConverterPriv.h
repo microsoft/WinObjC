@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -34,3 +36,4 @@ extern  CFIndex __CFStringEncodingPlatformByteLengthForCharacters(uint32_t encod
 
 #endif /* ! __COREFOUNDATION_CFSTRINGENCODINGCONVERTERPRIV__ */
 
+// clang-format on

@@ -18,15 +18,7 @@
 #include "StubReturn.h"
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSMutableArray.h"
-
-void NSSetTableInit(NSSet* set, NSUInteger capacity);
-void NSSetTableInitWithObjects(NSSet* set, id* objects, int count);
-void NSSetTableAddObject(NSSet* set, id object);
-void NSSetTableFree(NSSet* set);
-id NSSetTableMember(NSSet* set, id object);
-void NSSetTableRemoveObject(NSSet* set, id object);
-void NSSetTableRemoveAllObjects(NSSet* set);
-NSUInteger NSSetTableCount(NSSet* set);
+#include "NSRaise.h"
 
 @implementation NSMutableSet
 
@@ -81,7 +73,9 @@ NSUInteger NSSetTableCount(NSSet* set);
  @Status Interoperable
 */
 - (void)removeAllObjects {
-    NSSetTableRemoveAllObjects(self);
+    for (id object in self) {
+        [self removeObject:object];
+    }
 }
 
 /**
@@ -120,7 +114,7 @@ NSUInteger NSSetTableCount(NSSet* set);
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    NSSetTableInit(self, capacity);
+    // HACKHACK: this is isn't quite correct but for now just ignore the capacity. It will grow appropriately.
     return self;
 }
 
@@ -128,14 +122,16 @@ NSUInteger NSSetTableCount(NSSet* set);
  @Status Interoperable
 */
 - (void)addObject:(id)object {
-    NSSetTableAddObject(self, object);
+    // NSSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeObject:(id)object {
-    NSSetTableRemoveObject(self, object);
+    // NSSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**

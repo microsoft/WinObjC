@@ -23,7 +23,7 @@
 #import <chrono>
 
 // This tests NSCondition against std::mutex and std::condition_variable.
-TEST(Foundation, NSCondition) {
+TEST(NSCondition, NSCondition) {
     NSCondition* condition = [[NSCondition alloc] init];
 
     std::mutex consumerStartMutex;

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -16,7 +18,7 @@
 #define __COREFOUNDATION_CFUNICHARPRIV__ 1
 
 #include <CoreFoundation/CFBase.h>
-#include <CoreFoundation/CFUniChar.h>
+#include "CFUniChar.h"
 
 #define kCFUniCharRecursiveDecompositionFlag	(1UL << 30)
 #define kCFUniCharNonBmpFlag			(1UL << 31)
@@ -33,3 +35,4 @@ CF_EXPORT const void *CFUniCharGetMappingData(uint32_t type);
 
 #endif /* ! __COREFOUNDATION_CFUNICHARPRIV__ */
 
+// clang-format on

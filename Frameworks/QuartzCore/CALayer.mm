@@ -18,7 +18,6 @@
 #include <math.h>
 #include "CoreGraphics/CGContext.h"
 #include "CGContextInternal.h"
-#include "CoreFoundation/CFType.h"
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"

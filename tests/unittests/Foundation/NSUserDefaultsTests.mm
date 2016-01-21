@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSUserDefaultsBasic) {
+TEST(NSUserDefaults, NSUserDefaultsBasic) {
     // WARNING: NSUserDefaults assumes that it can run code on the main thread.
     // Fun Fact, there is no main thread in test land and UIKit typically sets it up
     // (which is probably not the right design). This will use the test thread as the main thread

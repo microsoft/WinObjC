@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -424,7 +426,7 @@ CF_EXPORT CFArrayRef CFBundleCopyBundleLocalizations(CFBundleRef bundle) {
             // <rdar://problem/14255685> Some people put bad things inside this array =(
             CFMutableArrayRef realPredefinedLocalizations = CFArrayCreateMutable(CFGetAllocator(bundle), CFArrayGetCount(predefinedLocalizations), &kCFTypeArrayCallBacks);
             for (CFIndex i = 0; i < CFArrayGetCount(predefinedLocalizations); i++) {
-                CFStringRef oneEntry = CFArrayGetValueAtIndex(predefinedLocalizations, i);
+                CFStringRef oneEntry = static_cast<CFStringRef>(CFArrayGetValueAtIndex(predefinedLocalizations, i));
                 if (CFGetTypeID(oneEntry) == CFStringGetTypeID() && CFStringGetLength(oneEntry) > 0) {
                     CFArrayAppendValue(realPredefinedLocalizations, oneEntry);
                 }
@@ -612,13 +614,13 @@ static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localiza
     
     // Does the array straight-up contain this language?
     if (CFArrayContainsValue(localizations, localizationsRange, language)) {
-        return CFRetain(language);
+        return static_cast<CFStringRef>(CFRetain(language));
     }
     
     // Does the array contain the alternate form of this language? (en -> English, or vice versa)
     CFStringRef altLangStr = _CFBundleGetAlternateNameForLanguage(language);
     if (altLangStr && CFArrayContainsValue(localizations, localizationsRange, altLangStr)) {
-        return CFRetain(altLangStr);
+        return static_cast<CFStringRef>(CFRetain(altLangStr));
     }
     
     // Does the array contain a modified form of this language? (en-US -> en_US, or vice versa)
@@ -648,7 +650,7 @@ static CFStringRef _CFBundleCopyLanguageFoundInLocalizations(CFArrayRef localiza
                     CFRelease(canonicalOneLanguage);
                     CFRelease(canonicalLanguage);
                     
-                    return CFRetain(oneLanguage);
+                    return static_cast<CFStringRef>(CFRetain(oneLanguage));
                 }
                 CFRelease(canonicalOneLanguage);
             }
@@ -704,11 +706,11 @@ static CFMutableArrayRef _CFBundleCreateMutableArrayOfFallbackLanguages(CFArrayR
     
     
     CFIndex availableCount = CFArrayGetCount(availableLocalizations);
-    char **availableCStrings = malloc(sizeof(char *) * availableCount);
+    char **availableCStrings = static_cast<char**>(malloc(sizeof(char *) * availableCount));
     char *availableStringsBuffer = makeBuffer(availableLocalizations, availableCStrings);
 
     CFIndex preferredCount = CFArrayGetCount(preferredLocalizations);
-    char **preferredCStrings = malloc(sizeof(char *) * preferredCount);
+    char **preferredCStrings = static_cast<char**>(malloc(sizeof(char *) * preferredCount));
     char *preferredStringsBuffer = makeBuffer(preferredLocalizations, preferredCStrings);
     
     CFMutableArrayRef result = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
@@ -885,7 +887,7 @@ CF_EXPORT void _CFBundleSetDefaultLocalization(CFStringRef localizationName) {
 CF_PRIVATE CFArrayRef _CFBundleCopyLanguageSearchListInBundle(CFBundleRef bundle) {
     if (!bundle->_searchLanguages) {
 #if DEPLOYMENT_TARGET_WINDOWS
-        if (_defaultLocalization) CFArrayAppendValue(langs, _defaultLocalization);
+        // HACKHACK: langs not defined. Not sure on original logic. // if (_defaultLocalization) CFArrayAppendValue(langs, _defaultLocalization);
 #endif
         // includes predefined localizations
         CFArrayRef localizationsForBundle = CFBundleCopyBundleLocalizations(bundle);
@@ -992,3 +994,4 @@ CF_PRIVATE CFArrayRef _CFBundleCopyLanguageSearchListInDirectory(CFURLRef url, u
     return result;
 }
 
+// clang-format on

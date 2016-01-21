@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -21,10 +23,10 @@
 #include "CFInternal.h"
 #include <CoreFoundation/CFMachPort.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <sys/unistd.h>
 #include <stdio.h>
 #include <mach/mach.h>
-#include <mach/error.h>
+// #include <mach/error.h> HACKHACK: Don't have this.
 #include <limits.h>
 #include <errno.h>
 #include <pthread.h>
@@ -450,3 +452,4 @@ CF_EXPORT SInt32 CFUserNotificationDisplayAlert(CFTimeInterval timeout, CFOption
 #undef MAX_PORT_NAME_LENGTH
 #undef NOTIFICATION_PORT_NAME_SUFFIX
 
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -22,7 +24,7 @@
 #include <CoreFoundation/CFPreferences.h>
 #include <string.h>
 #include "CFInternal.h"
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -1216,8 +1218,8 @@ CF_EXPORT CFTypeRef _CFBundleCopyFindResources(CFBundleRef bundle, CFURLRef bund
                 CFTypeRef *keys;
                 CFTypeRef *values;
                 CFIndex count = CFDictionaryGetCount(bundle->_additionalResourceBundles);
-                keys = malloc(count * sizeof(CFTypeRef));
-                values = malloc(count * sizeof(CFTypeRef));
+                keys = static_cast<CFTypeRef*>(malloc(count * sizeof(CFTypeRef)));
+                values = static_cast<CFTypeRef*>(malloc(count * sizeof(CFTypeRef)));
                 CFDictionaryGetKeysAndValues(bundle->_additionalResourceBundles, keys, values);
                 CFMutableArrayRef combinedResultFromOtherBundles = NULL;
                 
@@ -1228,10 +1230,10 @@ CF_EXPORT CFTypeRef _CFBundleCopyFindResources(CFBundleRef bundle, CFURLRef bund
                             // Append to our existing array. We'll replace the result after we're done looping.
                             if (!combinedResultFromOtherBundles) {
                                 // Create the new result by copying returnValue
-                                combinedResultFromOtherBundles = CFArrayCreateMutableCopy(kCFAllocatorSystemDefault, 0, returnValue);
+                                combinedResultFromOtherBundles = CFArrayCreateMutableCopy(kCFAllocatorSystemDefault, 0, static_cast<CFArrayRef>(returnValue));
                             }
                             
-                            CFArrayAppendArray(combinedResultFromOtherBundles, returnValueFromOtherBundle, CFRangeMake(0, CFArrayGetCount(returnValueFromOtherBundle)));
+                            CFArrayAppendArray(combinedResultFromOtherBundles, static_cast<CFArrayRef>(returnValueFromOtherBundle), CFRangeMake(0, CFArrayGetCount(static_cast<CFArrayRef>(returnValueFromOtherBundle))));
                             CFRelease(returnValueFromOtherBundle);
                         } else {
                             // Set our return value and break out of loop - we only need one result. combinedResultFromOtherBundles should not be touched at this point.
@@ -1298,3 +1300,5 @@ CF_EXPORT Boolean _CFBundleRemoveResourceURL(CFBundleRef bundle, CFURLRef url) {
     __CFUnlock(&bundle->_additionalResourceLock);
     return result;
 }
+
+// clang-format on

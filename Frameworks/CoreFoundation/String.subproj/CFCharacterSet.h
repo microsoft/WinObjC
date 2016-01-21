@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,12 +10,12 @@
 //
 
 
-/*	CFCharacterSet.h
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+/*  CFCharacterSet.h
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
 */
 
 /*!
-	@header CFCharacterSet
+    @header CFCharacterSet
         CFCharacterSet represents a set, or a bag, of Unicode characters.
         The API consists of 3 groups:
         1) creation/manipulation of CFCharacterSet instances,
@@ -48,19 +50,19 @@ CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
 
 /*!
-	@typedef CFCharacterSetRef
-	This is the type of a reference to immutable CFCharacterSets.
+    @typedef CFCharacterSetRef
+    This is the type of a reference to immutable CFCharacterSets.
 */
 typedef const struct CF_BRIDGED_TYPE(NSCharacterSet) __CFCharacterSet * CFCharacterSetRef;
 
 /*!
-	@typedef CFMutableCharacterSetRef
-	This is the type of a reference to mutable CFMutableCharacterSets.
+    @typedef CFMutableCharacterSetRef
+    This is the type of a reference to mutable CFMutableCharacterSets.
 */
 typedef struct CF_BRIDGED_MUTABLE_TYPE(NSMutableCharacterSet) __CFCharacterSet * CFMutableCharacterSetRef;
 
 /*!
-	@typedef CFCharacterSetPredefinedSet
+    @typedef CFCharacterSetPredefinedSet
         Type of the predefined CFCharacterSet selector values.
 */
    
@@ -83,53 +85,53 @@ typedef CF_ENUM(CFIndex, CFCharacterSetPredefinedSet) {
 };
 
 /*!
-	@function CFCharacterSetGetTypeID
-	Returns the type identifier of all CFCharacterSet instances.
+    @function CFCharacterSetGetTypeID
+    Returns the type identifier of all CFCharacterSet instances.
 */
 CF_EXPORT
 CFTypeID CFCharacterSetGetTypeID(void);
 
 /*!
-	@function CFCharacterSetGetPredefined
-	Returns a predefined CFCharacterSet instance.
-	@param theSetIdentifier The CFCharacterSetPredefinedSet selector
+    @function CFCharacterSetGetPredefined
+    Returns a predefined CFCharacterSet instance.
+    @param theSetIdentifier The CFCharacterSetPredefinedSet selector
                 which specifies the predefined character set.  If the
                 value is not in CFCharacterSetPredefinedSet, the behavior
                 is undefined.
-	@result A reference to the predefined immutable CFCharacterSet.
+    @result A reference to the predefined immutable CFCharacterSet.
                 This instance is owned by CF.
 */
 CF_EXPORT
 CFCharacterSetRef CFCharacterSetGetPredefined(CFCharacterSetPredefinedSet theSetIdentifier);
 
 /*!
-	@function CFCharacterSetCreateWithCharactersInRange
-	Creates a new immutable character set with the values from the given range.
-	@param alloc The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theRange The CFRange which should be used to specify the
+    @function CFCharacterSetCreateWithCharactersInRange
+    Creates a new immutable character set with the values from the given range.
+    @param alloc The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theRange The CFRange which should be used to specify the
                 Unicode range the character set is filled with.  It
                 accepts the range in 32-bit in the UTF-32 format.  The
                 valid character point range is from 0x00000 to 0x10FFFF.
                 If the range is outside of the valid Unicode character
                 point, the behavior is undefined.
-	@result A reference to the new immutable CFCharacterSet.
+    @result A reference to the new immutable CFCharacterSet.
 */
 CF_EXPORT
 CFCharacterSetRef CFCharacterSetCreateWithCharactersInRange(CFAllocatorRef alloc, CFRange theRange);
 
 /*!
-	@function CFCharacterSetCreateWithCharactersInString
-	Creates a new immutable character set with the values in the given string.
-	@param alloc The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theString The CFString which should be used to specify
+    @function CFCharacterSetCreateWithCharactersInString
+    Creates a new immutable character set with the values in the given string.
+    @param alloc The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theString The CFString which should be used to specify
                 the Unicode characters the character set is filled with.
                 If this parameter is not a valid CFString, the behavior
                 is undefined.
@@ -139,14 +141,14 @@ CF_EXPORT
 CFCharacterSetRef CFCharacterSetCreateWithCharactersInString(CFAllocatorRef alloc, CFStringRef theString);
 
 /*!
-	@function CFCharacterSetCreateWithBitmapRepresentation
-	Creates a new immutable character set with the bitmap representtion in the given data.
-	@param alloc The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theData The CFData which should be used to specify the
+    @function CFCharacterSetCreateWithBitmapRepresentation
+    Creates a new immutable character set with the bitmap representtion in the given data.
+    @param alloc The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theData The CFData which should be used to specify the
                 bitmap representation of the Unicode character points
                 the character set is filled with.  The bitmap
                 representation could contain all the Unicode character
@@ -167,92 +169,92 @@ CF_EXPORT
 CFCharacterSetRef CFCharacterSetCreateWithBitmapRepresentation(CFAllocatorRef alloc, CFDataRef theData);
 
 /*!
-	@function CFCharacterSetCreateInvertedSet
-	Creates a new immutable character set that is the invert of the specified character set.
-	@param alloc The CFAllocator which should be used to allocate
-			memory for the array and its storage for values. This
-			parameter may be NULL in which case the current default
-			CFAllocator is used. If this reference is not a valid
-			CFAllocator, the behavior is undefined.
-	@param theSet The CFCharacterSet which is to be inverted.  If this
-                		parameter is not a valid CFCharacterSet, the behavior is
-              		undefined.
-	@result A reference to the new immutable CFCharacterSet.
+    @function CFCharacterSetCreateInvertedSet
+    Creates a new immutable character set that is the invert of the specified character set.
+    @param alloc The CFAllocator which should be used to allocate
+            memory for the array and its storage for values. This
+            parameter may be NULL in which case the current default
+            CFAllocator is used. If this reference is not a valid
+            CFAllocator, the behavior is undefined.
+    @param theSet The CFCharacterSet which is to be inverted.  If this
+                        parameter is not a valid CFCharacterSet, the behavior is
+                    undefined.
+    @result A reference to the new immutable CFCharacterSet.
 */
 CF_EXPORT CFCharacterSetRef CFCharacterSetCreateInvertedSet(CFAllocatorRef alloc, CFCharacterSetRef theSet);
 
 /*!
-	@function CFCharacterSetIsSupersetOfSet
-	Reports whether or not the character set is a superset of the character set specified as the second parameter.
-	@param theSet  The character set to be checked for the membership of theOtherSet.
-		If this parameter is not a valid CFCharacterSet, the behavior is undefined.
-	@param theOtherset  The character set to be checked whether or not it is a subset of theSet.
-		If this parameter is not a valid CFCharacterSet, the behavior is undefined.
+    @function CFCharacterSetIsSupersetOfSet
+    Reports whether or not the character set is a superset of the character set specified as the second parameter.
+    @param theSet  The character set to be checked for the membership of theOtherSet.
+        If this parameter is not a valid CFCharacterSet, the behavior is undefined.
+    @param theOtherset  The character set to be checked whether or not it is a subset of theSet.
+        If this parameter is not a valid CFCharacterSet, the behavior is undefined.
 */
 CF_EXPORT Boolean CFCharacterSetIsSupersetOfSet(CFCharacterSetRef theSet, CFCharacterSetRef theOtherset);
 
 /*!
-	@function CFCharacterSetHasMemberInPlane
-	Reports whether or not the character set contains at least one member character in the specified plane.
-	@param theSet  The character set to be checked for the membership.  If this
-		parameter is not a valid CFCharacterSet, the behavior is undefined.
-	@param thePlane  The plane number to be checked for the membership.
-		The valid value range is from 0 to 16.  If the value is outside of the valid
-		plane number range, the behavior is undefined.
+    @function CFCharacterSetHasMemberInPlane
+    Reports whether or not the character set contains at least one member character in the specified plane.
+    @param theSet  The character set to be checked for the membership.  If this
+        parameter is not a valid CFCharacterSet, the behavior is undefined.
+    @param thePlane  The plane number to be checked for the membership.
+        The valid value range is from 0 to 16.  If the value is outside of the valid
+        plane number range, the behavior is undefined.
 */
 CF_EXPORT Boolean CFCharacterSetHasMemberInPlane(CFCharacterSetRef theSet, CFIndex thePlane);
 
 /*!
-	@function CFCharacterSetCreateMutable
-	Creates a new empty mutable character set.
-	@param allocator The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@result A reference to the new mutable CFCharacterSet.
+    @function CFCharacterSetCreateMutable
+    Creates a new empty mutable character set.
+    @param allocator The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @result A reference to the new mutable CFCharacterSet.
 */
 CF_EXPORT
 CFMutableCharacterSetRef CFCharacterSetCreateMutable(CFAllocatorRef alloc);
 
 /*!
-	@function CFCharacterSetCreateCopy
-	Creates a new character set with the values from the given character set.  This function tries to compact the backing store where applicable.
-	@param allocator The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theSet The CFCharacterSet which is to be copied.  If this
+    @function CFCharacterSetCreateCopy
+    Creates a new character set with the values from the given character set.  This function tries to compact the backing store where applicable.
+    @param allocator The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theSet The CFCharacterSet which is to be copied.  If this
                 parameter is not a valid CFCharacterSet, the behavior is
                 undefined.
-	@result A reference to the new CFCharacterSet.
+    @result A reference to the new CFCharacterSet.
 */
 CF_EXPORT
 CFCharacterSetRef CFCharacterSetCreateCopy(CFAllocatorRef alloc, CFCharacterSetRef theSet);
 
 /*!
-	@function CFCharacterSetCreateMutableCopy
-	Creates a new mutable character set with the values from the given character set.
-	@param allocator The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theSet The CFCharacterSet which is to be copied.  If this
+    @function CFCharacterSetCreateMutableCopy
+    Creates a new mutable character set with the values from the given character set.
+    @param allocator The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theSet The CFCharacterSet which is to be copied.  If this
                 parameter is not a valid CFCharacterSet, the behavior is
                 undefined.
-	@result A reference to the new mutable CFCharacterSet.
+    @result A reference to the new mutable CFCharacterSet.
 */
 CF_EXPORT
 CFMutableCharacterSetRef CFCharacterSetCreateMutableCopy(CFAllocatorRef alloc, CFCharacterSetRef theSet);
 
 /*!
-	@function CFCharacterSetIsCharacterMember
-	Reports whether or not the Unicode character is in the character set.
-	@param theSet The character set to be searched. If this parameter
+    @function CFCharacterSetIsCharacterMember
+    Reports whether or not the Unicode character is in the character set.
+    @param theSet The character set to be searched. If this parameter
                 is not a valid CFCharacterSet, the behavior is undefined.
-	@param theChar The Unicode character for which to test against the
+    @param theChar The Unicode character for which to test against the
                 character set.  Note that this function takes 16-bit Unicode
                 character value; hence, it does not support access to the
                 non-BMP planes.  
@@ -262,39 +264,39 @@ CF_EXPORT
 Boolean CFCharacterSetIsCharacterMember(CFCharacterSetRef theSet, UniChar theChar);
 
 /*!
-	@function CFCharacterSetIsLongCharacterMember
-	Reports whether or not the UTF-32 character is in the character set.
-	@param theSet The character set to be searched. If this parameter
-               		 is not a valid CFCharacterSet, the behavior is undefined.
-	@param theChar The UTF-32 character for which to test against the
-			character set.
+    @function CFCharacterSetIsLongCharacterMember
+    Reports whether or not the UTF-32 character is in the character set.
+    @param theSet The character set to be searched. If this parameter
+                     is not a valid CFCharacterSet, the behavior is undefined.
+    @param theChar The UTF-32 character for which to test against the
+            character set.
         @result true, if the value is in the character set, otherwise false.
 */
 CF_EXPORT Boolean CFCharacterSetIsLongCharacterMember(CFCharacterSetRef theSet, UTF32Char theChar);
 
 /*!
-	@function CFCharacterSetCreateBitmapRepresentation
-	Creates a new immutable data with the bitmap representation from the given character set.
-	@param allocator The CFAllocator which should be used to allocate
-		memory for the array and its storage for values. This
-		parameter may be NULL in which case the current default
-		CFAllocator is used. If this reference is not a valid
-		CFAllocator, the behavior is undefined.
-	@param theSet The CFCharacterSet which is to be used create the
+    @function CFCharacterSetCreateBitmapRepresentation
+    Creates a new immutable data with the bitmap representation from the given character set.
+    @param allocator The CFAllocator which should be used to allocate
+        memory for the array and its storage for values. This
+        parameter may be NULL in which case the current default
+        CFAllocator is used. If this reference is not a valid
+        CFAllocator, the behavior is undefined.
+    @param theSet The CFCharacterSet which is to be used create the
                 bitmap representation from.  Refer to the comments for
                 CFCharacterSetCreateWithBitmapRepresentation for the
                 detailed discussion of the bitmap representation format.
                 If this parameter is not a valid CFCharacterSet, the
                 behavior is undefined.
-	@result A reference to the new immutable CFData.
+    @result A reference to the new immutable CFData.
 */
 CF_EXPORT
 CFDataRef CFCharacterSetCreateBitmapRepresentation(CFAllocatorRef alloc, CFCharacterSetRef theSet);
 
 /*!
-	@function CFCharacterSetAddCharactersInRange
-	Adds the given range to the charaacter set.
-	@param theSet The character set to which the range is to be added.
+    @function CFCharacterSetAddCharactersInRange
+    Adds the given range to the charaacter set.
+    @param theSet The character set to which the range is to be added.
                 If this parameter is not a valid mutable CFCharacterSet,
                 the behavior is undefined.
         @param theRange The range to add to the character set.  It accepts
@@ -307,9 +309,9 @@ CF_EXPORT
 void CFCharacterSetAddCharactersInRange(CFMutableCharacterSetRef theSet, CFRange theRange);
 
 /*!
-	@function CFCharacterSetRemoveCharactersInRange
-	Removes the given range from the charaacter set.
-	@param theSet The character set from which the range is to be
+    @function CFCharacterSetRemoveCharactersInRange
+    Removes the given range from the charaacter set.
+    @param theSet The character set from which the range is to be
                 removed.  If this parameter is not a valid mutable
                 CFCharacterSet, the behavior is undefined.
         @param theRange The range to remove from the character set.
@@ -322,9 +324,9 @@ CF_EXPORT
 void CFCharacterSetRemoveCharactersInRange(CFMutableCharacterSetRef theSet, CFRange theRange);
 
 /*!
-	@function CFCharacterSetAddCharactersInString
-	Adds the characters in the given string to the charaacter set.
-	@param theSet The character set to which the characters in the
+    @function CFCharacterSetAddCharactersInString
+    Adds the characters in the given string to the charaacter set.
+    @param theSet The character set to which the characters in the
                 string are to be added.  If this parameter is not a
                 valid mutable CFCharacterSet, the behavior is undefined.
         @param theString The string to add to the character set.
@@ -335,9 +337,9 @@ CF_EXPORT
 void CFCharacterSetAddCharactersInString(CFMutableCharacterSetRef theSet,  CFStringRef theString);
 
 /*!
-	@function CFCharacterSetRemoveCharactersInString
-	Removes the characters in the given string from the charaacter set.
-	@param theSet The character set from which the characters in the
+    @function CFCharacterSetRemoveCharactersInString
+    Removes the characters in the given string from the charaacter set.
+    @param theSet The character set from which the characters in the
                 string are to be remove.  If this parameter is not a
                 valid mutable CFCharacterSet, the behavior is undefined.
         @param theString The string to remove from the character set.
@@ -348,13 +350,13 @@ CF_EXPORT
 void CFCharacterSetRemoveCharactersInString(CFMutableCharacterSetRef theSet, CFStringRef theString);
 
 /*!
-	@function CFCharacterSetUnion
-	Forms the union with the given character set.
-	@param theSet The destination character set into which the
+    @function CFCharacterSetUnion
+    Forms the union with the given character set.
+    @param theSet The destination character set into which the
                 union of the two character sets is stored.  If this
                 parameter is not a valid mutable CFCharacterSet, the
                 behavior is undefined.
-	@param theOtherSet The character set with which the union is
+    @param theOtherSet The character set with which the union is
                 formed.  If this parameter is not a valid CFCharacterSet,
                 the behavior is undefined.
 */
@@ -362,13 +364,13 @@ CF_EXPORT
 void CFCharacterSetUnion(CFMutableCharacterSetRef theSet, CFCharacterSetRef theOtherSet);
 
 /*!
-	@function CFCharacterSetIntersect
-	Forms the intersection with the given character set.
-	@param theSet The destination character set into which the
+    @function CFCharacterSetIntersect
+    Forms the intersection with the given character set.
+    @param theSet The destination character set into which the
                 intersection of the two character sets is stored.
                 If this parameter is not a valid mutable CFCharacterSet,
                 the behavior is undefined.
-	@param theOtherSet The character set with which the intersection
+    @param theOtherSet The character set with which the intersection
                 is formed.  If this parameter is not a valid CFCharacterSet,
                 the behavior is undefined.
 */
@@ -376,9 +378,9 @@ CF_EXPORT
 void CFCharacterSetIntersect(CFMutableCharacterSetRef theSet, CFCharacterSetRef theOtherSet);
 
 /*!
-	@function CFCharacterSetInvert
-	Inverts the content of the given character set.
-	@param theSet The character set to be inverted.
+    @function CFCharacterSetInvert
+    Inverts the content of the given character set.
+    @param theSet The character set to be inverted.
                 If this parameter is not a valid mutable CFCharacterSet,
                 the behavior is undefined.
 */
@@ -390,3 +392,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFCHARACTERSET__ */
 
+// clang-format on

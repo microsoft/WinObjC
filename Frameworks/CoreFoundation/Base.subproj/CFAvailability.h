@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFAvailability.h
-	Copyright (c) 2013 - 2015 Apple Inc. and the Swift project authors
+/*  CFAvailability.h
+    Copyright (c) 2013 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFAVAILABILITY__)
@@ -153,3 +155,5 @@ CF_ENUM(CFIndex) {
 #endif
 
 #endif // __COREFOUNDATION_CFAVAILABILITY__
+
+// clang-format on

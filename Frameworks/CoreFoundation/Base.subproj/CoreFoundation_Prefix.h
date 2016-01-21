@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CoreFoundation_Prefix.h
-	Copyright (c) 2005 - 2015 Apple Inc. and the Swift project authors
+/*  CoreFoundation_Prefix.h
+    Copyright (c) 2005 - 2015 Apple Inc. and the Swift project authors
 */
 
 #ifndef __COREFOUNDATION_PREFIX_H__
@@ -41,13 +43,13 @@ extern "C" {
 #include <pthread/qos.h>
 #endif
 
-#define SystemIntegrityCheck(A, B)	do {} while (0)
+#define SystemIntegrityCheck(A, B)  do {} while (0)
 
     
 #if INCLUDE_OBJC
 #include <objc/objc.h>
 #else
-typedef signed char	BOOL; 
+typedef signed char BOOL; 
 typedef char * id;
 typedef char * Class;
 #ifndef YES
@@ -73,8 +75,8 @@ typedef char * Class;
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-#import <libkern/OSAtomic.h>
-#import <pthread.h>
+#include <libkern/OSAtomic.h>
+#include <pthread.h>
 #endif
 
 /* This macro creates some helper functions which are useful in dealing with libdispatch:
@@ -86,18 +88,18 @@ typedef char * Class;
 
 #if __HAS_DISPATCH__
 
-#define DISPATCH_HELPER_FUNCTIONS(PREFIX, QNAME)			\
-static dispatch_queue_t __ ## PREFIX ## Queue(void) {			\
-    static volatile dispatch_queue_t __ ## PREFIX ## dq = NULL;		\
-    if (!__ ## PREFIX ## dq) {						\
+#define DISPATCH_HELPER_FUNCTIONS(PREFIX, QNAME)            \
+static dispatch_queue_t __ ## PREFIX ## Queue(void) {           \
+    static volatile dispatch_queue_t __ ## PREFIX ## dq = NULL;     \
+    if (!__ ## PREFIX ## dq) {                      \
         dispatch_queue_t dq = dispatch_queue_create("com.apple." # QNAME, NULL); \
-        void * volatile *loc = (void * volatile *)&__ ## PREFIX ## dq;	\
-        if (!OSAtomicCompareAndSwapPtrBarrier(NULL, dq, loc)) {		\
-            dispatch_release(dq);					\
-        }								\
-    }									\
-    return __ ## PREFIX ## dq;						\
-}									\
+        void * volatile *loc = (void * volatile *)&__ ## PREFIX ## dq;  \
+        if (!OSAtomicCompareAndSwapPtrBarrier(NULL, dq, loc)) {     \
+            dispatch_release(dq);                   \
+        }                               \
+    }                                   \
+    return __ ## PREFIX ## dq;                      \
+}                                   \
 
 #else
     
@@ -105,7 +107,7 @@ static dispatch_queue_t __ ## PREFIX ## Queue(void) {			\
 
 #endif
 
-#define LIBAUTO_STUB	1
+#define LIBAUTO_STUB    1
 #define LIBAUTO_STUB_BASICS 1
 
     
@@ -151,9 +153,9 @@ static dispatch_queue_t __ ## PREFIX ## Queue(void) {			\
 #if DEPLOYMENT_TARGET_WINDOWS
 // Compatibility with boolean.h
 #if defined(__x86_64__)
-typedef unsigned int	boolean_t;
+typedef unsigned int    boolean_t;
 #else
-typedef int		boolean_t;
+typedef int     boolean_t;
 #endif
 #endif
 
@@ -265,15 +267,15 @@ void OSMemoryBarrier();
 
 #if DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX    
 #if !defined(MIN)
-#define MIN(A,B)	((A) < (B) ? (A) : (B))
+#define MIN(A,B)    ((A) < (B) ? (A) : (B))
 #endif
     
 #if !defined(MAX)
-#define MAX(A,B)	((A) > (B) ? (A) : (B))
+#define MAX(A,B)    ((A) > (B) ? (A) : (B))
 #endif
     
 #if !defined(ABS)
-#define ABS(A)	((A) < 0 ? (-(A)) : (A))
+#define ABS(A)  ((A) < 0 ? (-(A)) : (A))
 #endif    
 #endif
 
@@ -294,7 +296,7 @@ void OSMemoryBarrier();
 #define __builtin_expect(P1,P2) P1
     
 // These are replacements for POSIX calls on Windows, ensuring that the UTF8 parameters are converted to UTF16 before being passed to Windows
-CF_EXPORT int _NS_stat(const char *name, struct _stat *st);
+CF_EXPORT int _NS_stat(const char *name, struct _stat64i32 *st);
 CF_EXPORT int _NS_mkdir(const char *name);
 CF_EXPORT int _NS_rmdir(const char *name);
 CF_EXPORT int _NS_chmod(const char *name, int mode);
@@ -312,11 +314,11 @@ CF_EXPORT int _NS_access(const char *name, int amode);
 #define WIN32_LEAN_AND_MEAN
 
 #ifndef WINVER
-#define WINVER  0x0501
+#define WINVER  0x0603
 #endif
     
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
+#define _WIN32_WINNT 0x0603
 #endif
 
 // The order of these includes is important
@@ -350,7 +352,7 @@ typedef int gid_t;
 #define getuid() 0
 #define getegid() 0
 
-#define scalbn(A, B) _scalb(A, B)
+// #define scalbn(A, B) _scalb(A, B)
 
 #define fsync(a) _commit(a)
 #define malloc_create_zone(a,b) 123
@@ -613,3 +615,5 @@ CF_INLINE void objc_collect(unsigned long options) { }
 #endif
 
 #endif
+
+// clang-format on

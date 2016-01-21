@@ -69,11 +69,8 @@ NSDictionary* NSPropertyListReaderA::ExtractUID(const uint8_t* ptr, unsigned len
         return 0;
     }
 
-    NSNumber* num = [[NSNumber alloc] initWithLongLong:value];
-    NSDictionary* ret = [[NSDictionary alloc] initWithObject:num forKey:@"CF$UID"];
-    [num release];
-
-    return ret;
+    // retain to offset the autorelease
+    return [[NSDictionary dictionaryWithObject:[NSNumber numberWithLongLong:value] forKey:@"CF$UID"] retain];
 }
 
 double NSPropertyListReaderA::_readFloatOfSize(size_t size, uint64_t* offsetPtr) {
@@ -182,43 +179,42 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
         }
 
         if (topNibble == 0xA) {
-            NSArray* result;
-            id* objs = (id*)IwMalloc(length * sizeof(id));
-            uint64_t i;
-            for (i = 0; i < length; i++) {
-                objs[i] = _readInlineObjectAtOffset(offset);
+            StrongId<NSMutableArray> objs;
+            objs.attach([NSMutableArray new]);
+
+            for (unsigned int i = 0; i < length; i++) {
+                [objs addObject:[_readInlineObjectAtOffset(offset) autorelease]];
             }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
-                result = [[NSMutableArray alloc] initWithObjectsTakeOwnership:objs count:length];
+                return [[NSMutableArray alloc] initWithArray:objs];
             } else {
-                result = [[NSArray alloc] initWithObjectsTakeOwnership:objs count:length];
+                return [[NSArray alloc] initWithArray:objs];
             }
-
-            IwFree(objs);
-            return result;
         }
 
         if (topNibble == 0xD) {
             id result;
-            id* keys = (id*)IwMalloc(length * sizeof(id));
-            id* objs = (id*)IwMalloc(length * sizeof(id));
+
+            StrongId<NSMutableArray> keys;
+            keys.attach([NSMutableArray new]);
+            StrongId<NSMutableArray> objs;
+            objs.attach([NSMutableArray new]);
+
             uint64_t i;
             for (i = 0; i < length; i++) {
-                keys[i] = _readInlineObjectAtOffset(offset);
+                [keys addObject:[_readInlineObjectAtOffset(offset) autorelease]];
             }
             for (i = 0; i < length; i++) {
-                objs[i] = _readInlineObjectAtOffset(offset);
+                [objs addObject:[_readInlineObjectAtOffset(offset) autorelease]];
             }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
-                result = [[NSMutableDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
+                result = [[NSMutableDictionary alloc] initWithObjects:objs forKeys:keys];
             } else {
-                result = [[NSDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
+                result = [[NSDictionary alloc] initWithObjects:objs forKeys:keys];
             }
 
-            IwFree(keys);
-            IwFree(objs);
             return result;
         }
     }

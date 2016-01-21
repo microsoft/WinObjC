@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -96,7 +98,7 @@ CF_EXPORT
 uint32_t CFLocaleGetWindowsLocaleCodeFromLocaleIdentifier(CFStringRef localeIdentifier) CF_AVAILABLE(10_6, 4_0);
 	// Map a locale identifier to a Windows LCID.
 
-typedef CF_ENUM(CFIndex, CFLocaleLanguageDirection) {
+typedef CF_ENUM(CFIndex,  CFLocaleLanguageDirection) {
     kCFLocaleLanguageDirectionUnknown = 0,
     kCFLocaleLanguageDirectionLeftToRight = 1,
     kCFLocaleLanguageDirectionRightToLeft = 2,
@@ -201,3 +203,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFLOCALE__ */
 
+// clang-format on

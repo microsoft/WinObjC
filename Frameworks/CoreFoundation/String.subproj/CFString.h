@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFString.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFString.h
+  Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFSTRING__)
@@ -106,7 +108,7 @@ typedef UInt32 CFStringEncoding;
    Call CFStringGetSystemEncoding() to get the default system encoding.
 */
 #define kCFStringEncodingInvalidId (0xffffffffU)
-typedef CF_ENUM(CFStringEncoding, CFStringBuiltInEncodings) {
+typedef CF_ENUM(CFStringEncoding,  CFStringBuiltInEncodings) {
     kCFStringEncodingMacRoman = 0,
     kCFStringEncodingWindowsLatin1 = 0x0500, /* ANSI codepage 1252 */
     kCFStringEncodingISOLatin1 = 0x0201, /* ISO 8859-1 */
@@ -269,6 +271,7 @@ CFStringRef CFStringCreateWithFormatAndArguments(CFAllocatorRef alloc, CFDiction
 CF_EXPORT
 CFMutableStringRef CFStringCreateMutable(CFAllocatorRef alloc, CFIndex maxLength);
 
+
 CF_EXPORT
 CFMutableStringRef CFStringCreateMutableCopy(CFAllocatorRef alloc, CFIndex maxLength, CFStringRef theString);
 
@@ -322,13 +325,13 @@ this can't always be counted on. Please see note at the top of the file for more
 details.
 */
 CF_EXPORT
-ConstStringPtr CFStringGetPascalStringPtr(CFStringRef theString, CFStringEncoding encoding);	/* May return NULL at any time; be prepared for NULL */
+ConstStringPtr CFStringGetPascalStringPtr(CFStringRef theString, CFStringEncoding encoding);  /* May return NULL at any time; be prepared for NULL */
 
 CF_EXPORT
-const char *CFStringGetCStringPtr(CFStringRef theString, CFStringEncoding encoding);		/* May return NULL at any time; be prepared for NULL */
+const char *CFStringGetCStringPtr(CFStringRef theString, CFStringEncoding encoding);    /* May return NULL at any time; be prepared for NULL */
 
 CF_EXPORT
-const UniChar *CFStringGetCharactersPtr(CFStringRef theString);					/* May return NULL at any time; be prepared for NULL */
+const UniChar *CFStringGetCharactersPtr(CFStringRef theString);         /* May return NULL at any time; be prepared for NULL */
 
 /* The primitive conversion routine; allows you to convert a string piece at a time
        into a fixed size buffer. Returns number of characters converted. 
@@ -356,26 +359,26 @@ CFIndex CFStringGetBytes(CFStringRef theString, CFRange range, CFStringEncoding 
    include a BOM character if appropriate. See CFStringGetBytes() for more on this and lossByte.
 */
 CF_EXPORT
-CFStringRef CFStringCreateFromExternalRepresentation(CFAllocatorRef alloc, CFDataRef data, CFStringEncoding encoding);	/* May return NULL on conversion error */
+CFStringRef CFStringCreateFromExternalRepresentation(CFAllocatorRef alloc, CFDataRef data, CFStringEncoding encoding);  /* May return NULL on conversion error */
 
 CF_EXPORT
-CFDataRef CFStringCreateExternalRepresentation(CFAllocatorRef alloc, CFStringRef theString, CFStringEncoding encoding, UInt8 lossByte);	/* May return NULL on conversion error */	
+CFDataRef CFStringCreateExternalRepresentation(CFAllocatorRef alloc, CFStringRef theString, CFStringEncoding encoding, UInt8 lossByte); /* May return NULL on conversion error */ 
 
 /* Hints about the contents of a string
 */
 CF_EXPORT
-CFStringEncoding CFStringGetSmallestEncoding(CFStringRef theString);	/* Result in O(n) time max */
+CFStringEncoding CFStringGetSmallestEncoding(CFStringRef theString);  /* Result in O(n) time max */
 
 CF_EXPORT
-CFStringEncoding CFStringGetFastestEncoding(CFStringRef theString);	/* Result in O(1) time max */
+CFStringEncoding CFStringGetFastestEncoding(CFStringRef theString); /* Result in O(1) time max */
 
 /* General encoding info
 */
 CF_EXPORT
-CFStringEncoding CFStringGetSystemEncoding(void);		/* The default encoding for the system; untagged 8-bit characters are usually in this encoding */
+CFStringEncoding CFStringGetSystemEncoding(void);   /* The default encoding for the system; untagged 8-bit characters are usually in this encoding */
 
 CF_EXPORT
-CFIndex CFStringGetMaximumSizeForEncoding(CFIndex length, CFStringEncoding encoding);	/* Max bytes a string of specified length (in UniChars) will take up if encoded */
+CFIndex CFStringGetMaximumSizeForEncoding(CFIndex length, CFStringEncoding encoding); /* Max bytes a string of specified length (in UniChars) will take up if encoded */
 
 
 /*** FileSystem path conversion functions ***/
@@ -401,12 +404,12 @@ CFStringRef CFStringCreateWithFileSystemRepresentation(CFAllocatorRef alloc, con
 /* Find and compare flags; these are OR'ed together and provided as CFStringCompareFlags in the various functions. 
 */
 typedef CF_OPTIONS(CFOptionFlags, CFStringCompareFlags) {
-    kCFCompareCaseInsensitive = 1,	
-    kCFCompareBackwards = 4,		/* Starting from the end of the string */
-    kCFCompareAnchored = 8,		/* Only at the specified starting point */
-    kCFCompareNonliteral = 16,		/* If specified, loose equivalence is performed (o-umlaut == o, umlaut) */
-    kCFCompareLocalized = 32,		/* User's default locale is used for the comparisons */
-    kCFCompareNumerically = 64,		/* Numeric comparison is used; that is, Foo2.txt < Foo7.txt < Foo25.txt */
+    kCFCompareCaseInsensitive = 1,  
+    kCFCompareBackwards = 4,    /* Starting from the end of the string */
+    kCFCompareAnchored = 8,   /* Only at the specified starting point */
+    kCFCompareNonliteral = 16,    /* If specified, loose equivalence is performed (o-umlaut == o, umlaut) */
+    kCFCompareLocalized = 32,   /* User's default locale is used for the comparisons */
+    kCFCompareNumerically = 64,   /* Numeric comparison is used; that is, Foo2.txt < Foo7.txt < Foo25.txt */
     kCFCompareDiacriticInsensitive CF_ENUM_AVAILABLE(10_5, 2_0) = 128, /* If specified, ignores diacritics (o-umlaut == o) */
     kCFCompareWidthInsensitive CF_ENUM_AVAILABLE(10_5, 2_0) = 256, /* If specified, ignores width differences ('a' == UFF41) */
     kCFCompareForcedOrdering CF_ENUM_AVAILABLE(10_5, 2_0) = 512 /* If specified, comparisons are forced to return either kCFCompareLessThan or kCFCompareGreaterThan if the strings are equivalent but not strictly equal, for stability when sorting (e.g. "aaa" > "AAA" with kCFCompareCaseInsensitive specified) */
@@ -471,48 +474,48 @@ CF_EXPORT
 Boolean CFStringHasSuffix(CFStringRef theString, CFStringRef suffix);
 
 /*!
-	@function CFStringGetRangeOfComposedCharactersAtIndex
-	Returns the range of the composed character sequence at the specified index.
-	@param theString The CFString which is to be searched.  If this
-                		parameter is not a valid CFString, the behavior is
-              		undefined.
-	@param theIndex The index of the character contained in the
-			composed character sequence.  If the index is
-			outside the index space of the string (0 to N-1 inclusive,
-			where N is the length of the string), the behavior is
-			undefined.
-	@result The range of the composed character sequence.
+  @function CFStringGetRangeOfComposedCharactersAtIndex
+  Returns the range of the composed character sequence at the specified index.
+  @param theString The CFString which is to be searched.  If this
+                    parameter is not a valid CFString, the behavior is
+                  undefined.
+  @param theIndex The index of the character contained in the
+      composed character sequence.  If the index is
+      outside the index space of the string (0 to N-1 inclusive,
+      where N is the length of the string), the behavior is
+      undefined.
+  @result The range of the composed character sequence.
 */
 CF_EXPORT CFRange CFStringGetRangeOfComposedCharactersAtIndex(CFStringRef theString, CFIndex theIndex);
 
 /*!
-	@function CFStringFindCharacterFromSet
-	Query the range of the first character contained in the specified character set.
-	@param theString The CFString which is to be searched.  If this
-                		parameter is not a valid CFString, the behavior is
-              		undefined.
-	@param theSet The CFCharacterSet against which the membership
-			of characters is checked.  If this parameter is not a valid
-			CFCharacterSet, the behavior is undefined.
-	@param range The range of characters within the string to search. If
-			the range location or end point (defined by the location
-			plus length minus 1) are outside the index space of the
-			string (0 to N-1 inclusive, where N is the length of the
-			string), the behavior is undefined. If the range length is
-			negative, the behavior is undefined. The range may be empty
-			(length 0), in which case no search is performed.
-	@param searchOptions The bitwise-or'ed option flags to control
-			the search behavior.  The supported options are
-			kCFCompareBackwards andkCFCompareAnchored.
-			If other option flags are specified, the behavior
+  @function CFStringFindCharacterFromSet
+  Query the range of the first character contained in the specified character set.
+  @param theString The CFString which is to be searched.  If this
+                    parameter is not a valid CFString, the behavior is
+                  undefined.
+  @param theSet The CFCharacterSet against which the membership
+      of characters is checked.  If this parameter is not a valid
+      CFCharacterSet, the behavior is undefined.
+  @param range The range of characters within the string to search. If
+      the range location or end point (defined by the location
+      plus length minus 1) are outside the index space of the
+      string (0 to N-1 inclusive, where N is the length of the
+      string), the behavior is undefined. If the range length is
+      negative, the behavior is undefined. The range may be empty
+      (length 0), in which case no search is performed.
+  @param searchOptions The bitwise-or'ed option flags to control
+      the search behavior.  The supported options are
+      kCFCompareBackwards andkCFCompareAnchored.
+      If other option flags are specified, the behavior
                         is undefined.
-	@param result The pointer to a CFRange supplied by the caller in
-			which the search result is stored.  Note that the length
-			of this range can be more than 1, if for instance the 
-			result is a composed character. If a pointer to an invalid
-			memory is specified, the behavior is undefined.
-	@result true, if at least a character which is a member of the character
-			set is found and result is filled, otherwise, false.
+  @param result The pointer to a CFRange supplied by the caller in
+      which the search result is stored.  Note that the length
+      of this range can be more than 1, if for instance the 
+      result is a composed character. If a pointer to an invalid
+      memory is specified, the behavior is undefined.
+  @result true, if at least a character which is a member of the character
+      set is found and result is filled, otherwise, false.
 */
 CF_EXPORT Boolean CFStringFindCharacterFromSet(CFStringRef theString, CFCharacterSetRef theSet, CFRange rangeToSearch, CFStringCompareFlags searchOptions, CFRange *result);
 
@@ -534,29 +537,29 @@ CF_EXPORT
 void CFStringGetParagraphBounds(CFStringRef string, CFRange range, CFIndex *parBeginIndex, CFIndex *parEndIndex, CFIndex *contentsEndIndex) CF_AVAILABLE(10_5, 2_0);
 
 /*!
-	@function CFStringGetHyphenationLocationBeforeIndex
-	Retrieve the first potential hyphenation location found before the specified location.
-	@param string The CFString which is to be hyphenated.  If this
-                		parameter is not a valid CFString, the behavior is
-              		undefined.
-	@param location An index in the string.  If a valid hyphen index is returned, it 
-	                will be before this index.
-	@param limitRange The range of characters within the string to search. If
-			the range location or end point (defined by the location
-			plus length minus 1) are outside the index space of the
-			string (0 to N-1 inclusive, where N is the length of the
-			string), the behavior is undefined. If the range length is
-			negative, the behavior is undefined. The range may be empty
-			(length 0), in which case no hyphen location is generated.
-	@param options Reserved for future use.
-	@param locale Specifies which language's hyphenation conventions to use.
-			This must be a valid locale.  Hyphenation data is not available
-			for all locales.  You can use CFStringIsHyphenationAvailableForLocale
-			to test for availability of hyphenation data.
-	@param character The suggested hyphen character to insert.  Pass NULL if you
-			do not need this information.
-	@result an index in the string where it is appropriate to insert a hyphen, if
-			one exists; else kCFNotFound
+  @function CFStringGetHyphenationLocationBeforeIndex
+  Retrieve the first potential hyphenation location found before the specified location.
+  @param string The CFString which is to be hyphenated.  If this
+                    parameter is not a valid CFString, the behavior is
+                  undefined.
+  @param location An index in the string.  If a valid hyphen index is returned, it 
+                  will be before this index.
+  @param limitRange The range of characters within the string to search. If
+      the range location or end point (defined by the location
+      plus length minus 1) are outside the index space of the
+      string (0 to N-1 inclusive, where N is the length of the
+      string), the behavior is undefined. If the range length is
+      negative, the behavior is undefined. The range may be empty
+      (length 0), in which case no hyphen location is generated.
+  @param options Reserved for future use.
+  @param locale Specifies which language's hyphenation conventions to use.
+      This must be a valid locale.  Hyphenation data is not available
+      for all locales.  You can use CFStringIsHyphenationAvailableForLocale
+      to test for availability of hyphenation data.
+  @param character The suggested hyphen character to insert.  Pass NULL if you
+      do not need this information.
+  @result an index in the string where it is appropriate to insert a hyphen, if
+      one exists; else kCFNotFound
 */
 CF_EXPORT
 CFIndex CFStringGetHyphenationLocationBeforeIndex(CFStringRef string, CFIndex location, CFRange limitRange, CFOptionFlags options, CFLocaleRef locale, UTF32Char *character) CF_AVAILABLE(10_7, 4_2);
@@ -567,19 +570,19 @@ Boolean CFStringIsHyphenationAvailableForLocale(CFLocaleRef locale) CF_AVAILABLE
 /*** Exploding and joining strings with a separator string ***/
 
 CF_EXPORT
-CFStringRef CFStringCreateByCombiningStrings(CFAllocatorRef alloc, CFArrayRef theArray, CFStringRef separatorString);	/* Empty array returns empty string; one element array returns the element */
+CFStringRef CFStringCreateByCombiningStrings(CFAllocatorRef alloc, CFArrayRef theArray, CFStringRef separatorString); /* Empty array returns empty string; one element array returns the element */
 
 CF_EXPORT
-CFArrayRef CFStringCreateArrayBySeparatingStrings(CFAllocatorRef alloc, CFStringRef theString, CFStringRef separatorString);	/* No separators in the string returns array with that string; string == sep returns two empty strings */
+CFArrayRef CFStringCreateArrayBySeparatingStrings(CFAllocatorRef alloc, CFStringRef theString, CFStringRef separatorString);  /* No separators in the string returns array with that string; string == sep returns two empty strings */
 
 
 /*** Parsing non-localized numbers from strings ***/
 
 CF_EXPORT
-SInt32 CFStringGetIntValue(CFStringRef str);		/* Skips whitespace; returns 0 on error, MAX or -MAX on overflow */
+SInt32 CFStringGetIntValue(CFStringRef str);    /* Skips whitespace; returns 0 on error, MAX or -MAX on overflow */
 
 CF_EXPORT
-double CFStringGetDoubleValue(CFStringRef str);	/* Skips whitespace; returns 0.0 on error */
+double CFStringGetDoubleValue(CFStringRef str); /* Skips whitespace; returns 0.0 on error */
 
 
 /*** MutableString functions ***/
@@ -617,7 +620,7 @@ CF_EXPORT
 void CFStringReplace(CFMutableStringRef theString, CFRange range, CFStringRef replacement);
 
 CF_EXPORT
-void CFStringReplaceAll(CFMutableStringRef theString, CFStringRef replacement);	/* Replaces whole string */
+void CFStringReplaceAll(CFMutableStringRef theString, CFStringRef replacement); /* Replaces whole string */
 
 /* Replace all occurrences of target in rangeToSearch of theString with replacement.
    Pays attention to kCFCompareCaseInsensitive, kCFCompareBackwards, kCFCompareNonliteral, and kCFCompareAnchored.
@@ -639,7 +642,7 @@ CFIndex CFStringFindAndReplace(CFMutableStringRef theString, CFStringRef stringT
    See comments at the top of this file for more info.
 */
 CF_EXPORT
-void CFStringSetExternalCharactersNoCopy(CFMutableStringRef theString, UniChar *chars, CFIndex length, CFIndex capacity);	/* Works only on specially created mutable strings! */
+void CFStringSetExternalCharactersNoCopy(CFMutableStringRef theString, UniChar *chars, CFIndex length, CFIndex capacity); /* Works only on specially created mutable strings! */
 
 /* CFStringPad() will pad or cut down a string to the specified size.
    The pad string is used as the fill string; indexIntoPad specifies which character to start with.
@@ -671,54 +674,54 @@ CF_EXPORT
 void CFStringCapitalize(CFMutableStringRef theString, CFLocaleRef locale);
 
 /*!
-	@typedef CFStringNormalizationForm
-	This is the type of Unicode normalization forms as described in
-	Unicode Technical Report #15. To normalize for use with file
-	system calls, use CFStringGetFileSystemRepresentation().
+  @typedef CFStringNormalizationForm
+  This is the type of Unicode normalization forms as described in
+  Unicode Technical Report #15. To normalize for use with file
+  system calls, use CFStringGetFileSystemRepresentation().
 */
-typedef CF_ENUM(CFIndex, CFStringNormalizationForm) {
-	kCFStringNormalizationFormD = 0, // Canonical Decomposition
-	kCFStringNormalizationFormKD, // Compatibility Decomposition
-	kCFStringNormalizationFormC, // Canonical Decomposition followed by Canonical Composition
-	kCFStringNormalizationFormKC // Compatibility Decomposition followed by Canonical Composition
+typedef CF_ENUM(CFIndex,  CFStringNormalizationForm) {
+  kCFStringNormalizationFormD = 0, // Canonical Decomposition
+  kCFStringNormalizationFormKD, // Compatibility Decomposition
+  kCFStringNormalizationFormC, // Canonical Decomposition followed by Canonical Composition
+  kCFStringNormalizationFormKC // Compatibility Decomposition followed by Canonical Composition
 };
 
 /*!
-	@function CFStringNormalize
-	Normalizes the string into the specified form as described in
-	Unicode Technical Report #15.
-	@param theString  The string which is to be normalized.  If this
-		parameter is not a valid mutable CFString, the behavior is
-		undefined.
-	@param theForm  The form into which the string is to be normalized.
-		If this parameter is not a valid CFStringNormalizationForm value,
-		the behavior is undefined.
+  @function CFStringNormalize
+  Normalizes the string into the specified form as described in
+  Unicode Technical Report #15.
+  @param theString  The string which is to be normalized.  If this
+    parameter is not a valid mutable CFString, the behavior is
+    undefined.
+  @param theForm  The form into which the string is to be normalized.
+    If this parameter is not a valid CFStringNormalizationForm value,
+    the behavior is undefined.
 */
 CF_EXPORT void CFStringNormalize(CFMutableStringRef theString, CFStringNormalizationForm theForm);
 
 
 /*!
-	@function CFStringFold
-	Folds the string into the form specified by the flags.
-		Character foldings are operations that convert any of a set of characters
-		sharing similar semantics into a single representative from that set.
-		This function can be used to preprocess strings that are to be compared,
-		searched, or indexed.
-		Note that folding does not include normalization, so it is necessary
-		to use CFStringNormalize in addition to CFStringFold in order to obtain
-		the effect of kCFCompareNonliteral.
-	@param theString  The string which is to be folded.  If this parameter is not
-		a valid mutable CFString, the behavior is undefined.
-	@param theFlag  The equivalency flags which describes the character folding form.
-		Only those flags containing the word "insensitive" are recognized here; other flags are ignored.		
-		Folding with kCFCompareCaseInsensitive removes case distinctions in accordance with the mapping
-		specified by ftp://ftp.unicode.org/Public/UNIDATA/CaseFolding.txt.  Folding with
-		kCFCompareDiacriticInsensitive removes distinctions of accents and other diacritics.  Folding
-		with kCFCompareWidthInsensitive removes character width distinctions by mapping characters in
-		the range U+FF00-U+FFEF to their ordinary equivalents.
-	@param theLocale The locale tailoring the character folding behavior. If NULL,
-		it's considered to be the system locale returned from CFLocaleGetSystem().
-		If non-NULL and not a valid CFLocale object, the behavior is undefined.
+  @function CFStringFold
+  Folds the string into the form specified by the flags.
+    Character foldings are operations that convert any of a set of characters
+    sharing similar semantics into a single representative from that set.
+    This function can be used to preprocess strings that are to be compared,
+    searched, or indexed.
+    Note that folding does not include normalization, so it is necessary
+    to use CFStringNormalize in addition to CFStringFold in order to obtain
+    the effect of kCFCompareNonliteral.
+  @param theString  The string which is to be folded.  If this parameter is not
+    a valid mutable CFString, the behavior is undefined.
+  @param theFlag  The equivalency flags which describes the character folding form.
+    Only those flags containing the word "insensitive" are recognized here; other flags are ignored.    
+    Folding with kCFCompareCaseInsensitive removes case distinctions in accordance with the mapping
+    specified by ftp://ftp.unicode.org/Public/UNIDATA/CaseFolding.txt.  Folding with
+    kCFCompareDiacriticInsensitive removes distinctions of accents and other diacritics.  Folding
+    with kCFCompareWidthInsensitive removes character width distinctions by mapping characters in
+    the range U+FF00-U+FFEF to their ordinary equivalents.
+  @param theLocale The locale tailoring the character folding behavior. If NULL,
+    it's considered to be the system locale returned from CFLocaleGetSystem().
+    If non-NULL and not a valid CFLocale object, the behavior is undefined.
 */
 
 CF_EXPORT
@@ -794,8 +797,8 @@ CFStringRef  CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding)
 
 /* Returns the most compatible MacOS script value for the input encoding */
 /* i.e. kCFStringEncodingMacRoman -> kCFStringEncodingMacRoman */
-/*	kCFStringEncodingWindowsLatin1 -> kCFStringEncodingMacRoman */
-/*	kCFStringEncodingISO_2022_JP -> kCFStringEncodingMacJapanese */
+/*  kCFStringEncodingWindowsLatin1 -> kCFStringEncodingMacRoman */
+/*  kCFStringEncodingISO_2022_JP -> kCFStringEncodingMacJapanese */
 CF_EXPORT
 CFStringEncoding CFStringGetMostCompatibleMacStringEncoding(CFStringEncoding encoding);
 
@@ -816,9 +819,9 @@ typedef struct {
     CFStringRef theString;
     const UniChar *directUniCharBuffer;
     const char *directCStringBuffer;
-    CFRange rangeToBuffer;		/* Range in string to buffer */
-    CFIndex bufferedRangeStart;		/* Start of range currently buffered (relative to rangeToBuffer.location) */
-    CFIndex bufferedRangeEnd;		/* bufferedRangeStart + number of chars actually buffered */
+    CFRange rangeToBuffer;    /* Range in string to buffer */
+    CFIndex bufferedRangeStart;   /* Start of range currently buffered (relative to rangeToBuffer.location) */
+    CFIndex bufferedRangeEnd;   /* bufferedRangeStart + number of chars actually buffered */
 } CFStringInlineBuffer;
 
 #if defined(CF_INLINE)
@@ -834,10 +837,10 @@ CF_INLINE UniChar CFStringGetCharacterFromInlineBuffer(CFStringInlineBuffer *buf
     if (buf->directUniCharBuffer) return buf->directUniCharBuffer[idx + buf->rangeToBuffer.location];
     if (buf->directCStringBuffer) return (UniChar)(buf->directCStringBuffer[idx + buf->rangeToBuffer.location]);
     if (idx >= buf->bufferedRangeEnd || idx < buf->bufferedRangeStart) {
-	if ((buf->bufferedRangeStart = idx - 4) < 0) buf->bufferedRangeStart = 0;
-	buf->bufferedRangeEnd = buf->bufferedRangeStart + __kCFStringInlineBufferLength;
-	if (buf->bufferedRangeEnd > buf->rangeToBuffer.length) buf->bufferedRangeEnd = buf->rangeToBuffer.length;
-	CFStringGetCharacters(buf->theString, CFRangeMake(buf->rangeToBuffer.location + buf->bufferedRangeStart, buf->bufferedRangeEnd - buf->bufferedRangeStart), buf->buffer);
+  if ((buf->bufferedRangeStart = idx - 4) < 0) buf->bufferedRangeStart = 0;
+  buf->bufferedRangeEnd = buf->bufferedRangeStart + __kCFStringInlineBufferLength;
+  if (buf->bufferedRangeEnd > buf->rangeToBuffer.length) buf->bufferedRangeEnd = buf->rangeToBuffer.length;
+  CFStringGetCharacters(buf->theString, CFRangeMake(buf->rangeToBuffer.location + buf->bufferedRangeStart, buf->bufferedRangeEnd - buf->bufferedRangeStart), buf->buffer);
     }
     return buf->buffer[idx - buf->bufferedRangeStart];
 }
@@ -898,9 +901,11 @@ void CFShowStr(CFStringRef str);
 
 /* This function is private and should not be used directly */
 CF_EXPORT
-CFStringRef  __CFStringMakeConstantString(const char *cStr) CF_FORMAT_ARGUMENT(1);	/* Private; do not use */
+CFStringRef  __CFStringMakeConstantString(const char *cStr) CF_FORMAT_ARGUMENT(1);  /* Private; do not use */
 
 CF_EXTERN_C_END
 CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFSTRING__ */
+
+// clang-format on

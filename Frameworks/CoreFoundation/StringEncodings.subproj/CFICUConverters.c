@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -16,8 +18,8 @@
 #include "CFStringEncodingDatabase.h"
 #include "CFStringEncodingConverterPriv.h"
 #include "CFICUConverters.h"
-#include <CoreFoundation/CFStringEncodingExt.h>
-#include <CoreFoundation/CFUniChar.h>
+#include "CFStringEncodingExt.h"
+#include "CFUniChar.h"
 #include <unicode/ucnv.h>
 #include <unicode/uversion.h>
 #include "CFInternal.h"
@@ -445,3 +447,5 @@ CF_PRIVATE CFStringEncoding *__CFStringEncodingCreateICUEncodings(CFAllocatorRef
 
     return encodings;
 }
+
+// clang-format on

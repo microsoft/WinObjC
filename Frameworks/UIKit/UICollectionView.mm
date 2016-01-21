@@ -29,6 +29,7 @@
 #import "UICollectionViewItemKey.h"
 #import "NSLogging.h"
 #import "AssertARCEnabled.h"
+#import <MacTypes.h>
 
 static const wchar_t* TAG = L"UICollectionView";
 static CGFloat UIAnimationDragCoefficient = 1.f;

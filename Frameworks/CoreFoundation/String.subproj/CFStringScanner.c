@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -246,4 +248,4 @@ CF_PRIVATE Boolean __CFStringScanDouble(CFStringInlineBuffer *buf, CFTypeRef loc
 #undef STACK_BUFFER_SIZE
 #undef ALLOC_CHUNK_SIZE
 
-
+// clang-format on

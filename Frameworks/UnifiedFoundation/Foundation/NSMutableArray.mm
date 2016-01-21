@@ -17,19 +17,16 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 
-#include "../CoreFoundation/CFDictionaryInternal.h"
+#include "CFHelpers.h"
 #include "CoreFoundation/CFArray.h"
-#include "CoreFoundation/CFType.h"
+
 #include "Foundation/NSMutableArray.h"
-#include "NSArrayInternal.h"
 #include "LoggingNative.h"
+#include "NSRaise.h"
 
 static const wchar_t* TAG = L"NSMutableArray";
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
-
-@interface NSMutableArrayConcrete : NSMutableArray
-@end
 
 @implementation NSMutableArray
 
@@ -55,14 +52,17 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeAllObjects {
-    CFArrayRemoveAllValues((CFMutableArrayRef)self);
+    while ([self count] > 0) {
+        [self removeLastObject];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)addObject:(NSObject*)objAddr {
-    CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -72,7 +72,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     NSEnumerator* enumerator = [fromArray objectEnumerator];
 
     for (NSObject* curVal in enumerator) {
-        CFArrayAppendValue((CFMutableArrayRef)self, (const void*)curVal);
+        [self addObject:curVal];
     }
 }
 
@@ -101,7 +101,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
-    CFArrayInsertValueAtIndex((CFMutableArrayRef)self, index, (const void*)objAddr);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -121,18 +122,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)obj {
-    if (object_getClass(self) == [NSMutableArrayConcrete class]) {
-        //  Fastpath
-        CFRange range;
-        range.location = index;
-        range.length = 1;
-        CFArrayReplaceValues((CFMutableArrayRef)self, range, (const void**)&obj, 1);
-    } else {
-        [obj retain];
-        [self removeObjectAtIndex:index];
-        [self insertObject:obj atIndex:index];
-        [obj release];
-    }
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -213,7 +204,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeObjectAtIndex:(NSUInteger)index {
-    CFArrayRemoveValueAtIndex((CFMutableArrayRef)self, index);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -227,9 +219,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeLastObject {
-    NSUInteger count = [self count];
-
-    CFArrayRemoveValueAtIndex((CFMutableArrayRef)self, count - 1);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 static void swap(NSMutableArray* self, uint32_t a, uint32_t b) {
@@ -483,13 +474,6 @@ recurse:
 /**
  @Status Interoperable
 */
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSMutableArray class])
-        return NSAllocateObject((Class)[NSMutableArrayConcrete class], 0, zone);
-
-    return NSAllocateObject((Class)self, 0, zone);
-}
-
 /**
  @Status Interoperable
 */

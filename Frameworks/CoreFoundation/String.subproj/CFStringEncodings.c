@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,19 +10,19 @@
 //
 
 
-/*	CFStringEncodings.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFStringEncodings.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include "CFInternal.h"
 #include <CoreFoundation/CFString.h>
 #include <CoreFoundation/CFByteOrder.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include <string.h>
-#include <CoreFoundation/CFStringEncodingConverterExt.h>
-#include <CoreFoundation/CFUniChar.h>
-#include <CoreFoundation/CFUnicodeDecomposition.h>
+#include "CFStringEncodingConverterExt.h"
+#include "CFUniChar.h"
+#include "CFUnicodeDecomposition.h"
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
 #include <stdlib.h>
 #include <fcntl.h>
@@ -72,7 +74,7 @@ CF_PRIVATE void __CFSetCharToUniCharFunc(Boolean (*func)(UInt32 flags, UInt8 ch,
                 UniChar uch;
                 __CFCharToUniCharTable[ch] = (__CFCharToUniCharFunc(0, ch, &uch) ? uch : 0xFFFD);
             }
-        } else {	// If we have no __CFCharToUniCharFunc, assume 128..255 return the value as-is
+        } else {    // If we have no __CFCharToUniCharFunc, assume 128..255 return the value as-is
             for (ch = 128; ch < 256; ch++) __CFCharToUniCharTable[ch] = ch;
         }
     }
@@ -89,8 +91,8 @@ CF_PRIVATE void __CFStrConvertBytesToUnicode(const uint8_t *bytes, UniChar *buff
 #define kCFCharConversionBufferLength 512
 
 
-#define MAX_LOCAL_CHARS		(sizeof(buffer->localBuffer) / sizeof(uint8_t))
-#define MAX_LOCAL_UNICHARS	(sizeof(buffer->localBuffer) / sizeof(UniChar))
+#define MAX_LOCAL_CHARS     (sizeof(buffer->localBuffer) / sizeof(uint8_t))
+#define MAX_LOCAL_UNICHARS  (sizeof(buffer->localBuffer) / sizeof(UniChar))
 
 /* Convert a byte stream to ASCII (7-bit!) or Unicode, with a CFVarWidthCharBuffer struct on the stack. false return indicates an error occured during the conversion. The caller needs to free the returned buffer in either ascii or unicode (indicated by isASCII), if shouldFreeChars is true. 
 9/18/98 __CFStringDecodeByteStream now avoids to allocate buffer if buffer->chars is not NULL
@@ -157,7 +159,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             buffer->chars.unicode = (UniChar *)src;
             buffer->isASCII = false;
         } else {
-            if (buffer->isASCII) {	// Let's see if we can reduce the Unicode down to ASCII...
+            if (buffer->isASCII) {  // Let's see if we can reduce the Unicode down to ASCII...
                 const UTF16Char *characters = src;
                 UTF16Char mask = (swap ? 0x80FF : 0xFF80);
     
@@ -174,7 +176,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
                 if (NULL == buffer->chars.ascii) { // we never reallocate when buffer is supplied
                     if (buffer->numChars > MAX_LOCAL_CHARS) {
                         buffer->chars.ascii = (UInt8 *)CFAllocatorAllocate(buffer->allocator, (buffer->numChars * sizeof(uint8_t)), 0);
-			if (!buffer->chars.ascii) goto memoryErrorExit;
+            if (!buffer->chars.ascii) goto memoryErrorExit;
                         buffer->shouldFreeChars = true;
                     } else {
                         buffer->chars.ascii = (uint8_t *)buffer->localBuffer;
@@ -193,7 +195,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
                 if (NULL == buffer->chars.unicode) { // we never reallocate when buffer is supplied
                     if (buffer->numChars > MAX_LOCAL_UNICHARS) {
                         buffer->chars.unicode = (UniChar *)CFAllocatorAllocate(buffer->allocator, (buffer->numChars * sizeof(UTF16Char)), 0);
-			if (!buffer->chars.unicode) goto memoryErrorExit;
+            if (!buffer->chars.unicode) goto memoryErrorExit;
                         buffer->shouldFreeChars = true;
                     } else {
                         buffer->chars.unicode = (UTF16Char *)buffer->localBuffer;
@@ -257,7 +259,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             if (NULL == buffer->chars.ascii) { // we never reallocate when buffer is supplied
                 if (buffer->numChars > MAX_LOCAL_CHARS) {
                     buffer->chars.ascii = (UInt8 *)CFAllocatorAllocate(buffer->allocator, (buffer->numChars * sizeof(uint8_t)), 0);
-		    if (!buffer->chars.ascii) goto memoryErrorExit;
+            if (!buffer->chars.ascii) goto memoryErrorExit;
                     buffer->shouldFreeChars = true;
                 } else {
                     buffer->chars.ascii = (uint8_t *)buffer->localBuffer;
@@ -274,7 +276,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             if (NULL == buffer->chars.unicode) { // we never reallocate when buffer is supplied
                 if (buffer->numChars > MAX_LOCAL_UNICHARS) {
                     buffer->chars.unicode = (UniChar *)CFAllocatorAllocate(buffer->allocator, (buffer->numChars * sizeof(UTF16Char)), 0);
-		    if (!buffer->chars.unicode) goto memoryErrorExit;
+            if (!buffer->chars.unicode) goto memoryErrorExit;
                     buffer->shouldFreeChars = true;
                 } else {
                     buffer->chars.unicode = (UTF16Char *)buffer->localBuffer;
@@ -283,7 +285,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             result = (CFUniCharFromUTF32(src, limit - src, buffer->chars.unicode, (strictUTF32 ? false : true), __CF_BIG_ENDIAN__ ? !swap : swap) ? TRUE : FALSE);
         }
     } else if (kCFStringEncodingUTF8 == encoding) {    
-        if ((len >= 3) && (chars[0] == 0xef) && (chars[1] == 0xbb) && (chars[2] == 0xbf)) {	// If UTF8 BOM, skip
+        if ((len >= 3) && (chars[0] == 0xef) && (chars[1] == 0xbb) && (chars[2] == 0xbf)) { // If UTF8 BOM, skip
             chars += 3;
             len -= 3;
             if (0 == len) return true;
@@ -300,7 +302,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             buffer->numChars = len;
             buffer->shouldFreeChars = !buffer->chars.ascii && (len <= MAX_LOCAL_CHARS) ? false : true;
             buffer->chars.ascii = (buffer->chars.ascii ? buffer->chars.ascii : (len <= MAX_LOCAL_CHARS) ? (uint8_t *)buffer->localBuffer : (UInt8 *)CFAllocatorAllocate(buffer->allocator, len * sizeof(uint8_t), 0));
-	    if (!buffer->chars.ascii) goto memoryErrorExit;
+        if (!buffer->chars.ascii) goto memoryErrorExit;
             memmove(buffer->chars.ascii, chars, len * sizeof(uint8_t));
         } else {
             CFIndex numDone;
@@ -313,7 +315,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
             
             buffer->shouldFreeChars = !buffer->chars.unicode && (len <= MAX_LOCAL_UNICHARS) ? false : true;
             buffer->chars.unicode = (buffer->chars.unicode ? buffer->chars.unicode : (len <= MAX_LOCAL_UNICHARS) ? (UniChar *)buffer->localBuffer : (UniChar *)CFAllocatorAllocate(buffer->allocator, len * sizeof(UniChar), 0));
-	    if (!buffer->chars.unicode) goto memoryErrorExit;
+        if (!buffer->chars.unicode) goto memoryErrorExit;
             buffer->numChars = 0;
             while (chars < end) {
                 numDone = 0;
@@ -334,7 +336,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
         buffer->isASCII = false;
         buffer->shouldFreeChars = !buffer->chars.unicode && (len <= MAX_LOCAL_UNICHARS) ? false : true;
         buffer->chars.unicode = (buffer->chars.unicode ? buffer->chars.unicode : (len <= MAX_LOCAL_UNICHARS) ? (UniChar *)buffer->localBuffer : (UniChar *)CFAllocatorAllocate(buffer->allocator, len * sizeof(UniChar), 0));
-	if (!buffer->chars.unicode) goto memoryErrorExit;
+    if (!buffer->chars.unicode) goto memoryErrorExit;
         buffer->numChars = 0;
         
         while (chars < end) {
@@ -421,12 +423,12 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
                 buffer->numChars = len;
                 buffer->shouldFreeChars = !buffer->chars.ascii && (len <= MAX_LOCAL_CHARS) ? false : true;
                 buffer->chars.ascii = (buffer->chars.ascii ? buffer->chars.ascii : (len <= MAX_LOCAL_CHARS) ? (uint8_t *)buffer->localBuffer : (UInt8 *)CFAllocatorAllocate(buffer->allocator, len * sizeof(uint8_t), 0));
-		if (!buffer->chars.ascii) goto memoryErrorExit;
+        if (!buffer->chars.ascii) goto memoryErrorExit;
                 memmove(buffer->chars.ascii, chars, len * sizeof(uint8_t));
             } else {
                 buffer->shouldFreeChars = !buffer->chars.unicode && (len <= MAX_LOCAL_UNICHARS) ? false : true;
                 buffer->chars.unicode = (buffer->chars.unicode ? buffer->chars.unicode : (len <= MAX_LOCAL_UNICHARS) ? (UniChar *)buffer->localBuffer : (UniChar *)CFAllocatorAllocate(buffer->allocator, len * sizeof(UniChar), 0));
-		if (!buffer->chars.unicode) goto memoryErrorExit;
+        if (!buffer->chars.unicode) goto memoryErrorExit;
                 buffer->numChars = len;
                 if (kCFStringEncodingASCII == encoding || kCFStringEncodingISOLatin1 == encoding) {
                     for (idx = 0; idx < len; idx++) buffer->chars.unicode[idx] = (UniChar)chars[idx];
@@ -446,7 +448,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
                 buffer->numChars = len;
                 buffer->shouldFreeChars = !buffer->chars.ascii && (len <= MAX_LOCAL_CHARS) ? false : true;
                 buffer->chars.ascii = (buffer->chars.ascii ? buffer->chars.ascii : (len <= MAX_LOCAL_CHARS) ? (uint8_t *)buffer->localBuffer : (UInt8 *)CFAllocatorAllocate(buffer->allocator, len * sizeof(uint8_t), 0));
-		if (!buffer->chars.ascii) goto memoryErrorExit;
+        if (!buffer->chars.ascii) goto memoryErrorExit;
                 memmove(buffer->chars.ascii, chars, len * sizeof(uint8_t));
             } else {
                 CFIndex guessedLength = CFStringEncodingCharLengthForBytes(encoding, 0, bytes, len);
@@ -454,7 +456,7 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
                 
                 buffer->shouldFreeChars = !buffer->chars.unicode && (guessedLength <= MAX_LOCAL_UNICHARS) ? false : true;
                 buffer->chars.unicode = (buffer->chars.unicode ? buffer->chars.unicode : (guessedLength <= MAX_LOCAL_UNICHARS) ? (UniChar *)buffer->localBuffer : (UniChar *)CFAllocatorAllocate(buffer->allocator, guessedLength * sizeof(UniChar), 0));
-		if (!buffer->chars.unicode) goto memoryErrorExit;
+        if (!buffer->chars.unicode) goto memoryErrorExit;
                 
                 if (lossyFlag == (UInt32)-1) lossyFlag = 0;
                 
@@ -464,8 +466,8 @@ Boolean __CFStringDecodeByteStream3(const uint8_t *bytes, CFIndex len, CFStringE
     }
 
     if (FALSE == result) {
-memoryErrorExit:	// Added for <rdar://problem/6581621>, but it's not clear whether an exception would be a better option
-	result = FALSE;	// In case we come here from a goto
+memoryErrorExit:    // Added for <rdar://problem/6581621>, but it's not clear whether an exception would be a better option
+    result = FALSE; // In case we come here from a goto
         if (buffer->shouldFreeChars && buffer->chars.unicode) CFAllocatorDeallocate(buffer->allocator, buffer->chars.unicode);
         buffer->isASCII = !alwaysUnicode;
         buffer->shouldFreeChars = false;
@@ -489,8 +491,8 @@ memoryErrorExit:	// Added for <rdar://problem/6581621>, but it's not clear wheth
    with NSStrings as well as CFStrings.
 */
 CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex rangeLen, Boolean generatingExternalFile, CFStringEncoding encoding, uint8_t lossByte, uint8_t *buffer, CFIndex max, CFIndex *usedBufLen) {
-    CFIndex totalBytesWritten = 0;	/* Number of written bytes */
-    CFIndex numCharsProcessed = 0;	/* Number of processed chars */
+    CFIndex totalBytesWritten = 0;  /* Number of written bytes */
+    CFIndex numCharsProcessed = 0;  /* Number of processed chars */
     const UniChar *unichars;
 
     if (encoding == kCFStringEncodingUTF8 && (unichars = CFStringGetCharactersPtr(string))) {
@@ -503,37 +505,37 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
         numCharsProcessed = __CFToUTF8((generatingExternalFile ? kCFStringEncodingPrependBOM : 0), unichars + rangeLoc, rangeLen, buffer, (buffer ? max : 0), &totalBytesWritten);
 
     } else if (encoding == kCFStringEncodingNonLossyASCII) {
-	const char *hex = "0123456789abcdef";
-	UniChar ch;
-	CFStringInlineBuffer buf;
-	CFStringInitInlineBuffer(string, &buf, CFRangeMake(rangeLoc, rangeLen));
-	while (numCharsProcessed < rangeLen) {
-	    CFIndex reqLength; /* Required number of chars to encode this UniChar */
-	    CFIndex cnt;
-	    char tmp[6];
-	    ch = CFStringGetCharacterFromInlineBuffer(&buf, numCharsProcessed);
-	    if ((ch >= ' ' && ch <= '~' && ch != '\\') || (ch == '\n' || ch == '\r' || ch == '\t')) {
-		reqLength = 1;
-		tmp[0] = (char)ch;
-	    } else {
-		if (ch == '\\') {
-		    tmp[1] = '\\';
-		    reqLength = 2;
-		} else if (ch < 256) {	/* \nnn; note that this is not NEXTSTEP encoding but a (small) UniChar */
-		    tmp[1] = '0' + (ch >> 6);
-		    tmp[2] = '0' + ((ch >> 3) & 7);
-		    tmp[3] = '0' + (ch & 7);
-		    reqLength = 4;
-		} else {	/* \Unnnn */
-		    tmp[1] = 'u'; // Changed to small+u in order to be aligned with Java
-		    tmp[2] = hex[(ch >> 12) & 0x0f];
-		    tmp[3] = hex[(ch >> 8) & 0x0f];
-		    tmp[4] = hex[(ch >> 4) & 0x0f];
-		    tmp[5] = hex[ch & 0x0f];
-		    reqLength = 6;
-		}
-		tmp[0] = '\\';
-	    }
+    const char *hex = "0123456789abcdef";
+    UniChar ch;
+    CFStringInlineBuffer buf;
+    CFStringInitInlineBuffer(string, &buf, CFRangeMake(rangeLoc, rangeLen));
+    while (numCharsProcessed < rangeLen) {
+        CFIndex reqLength; /* Required number of chars to encode this UniChar */
+        CFIndex cnt;
+        char tmp[6];
+        ch = CFStringGetCharacterFromInlineBuffer(&buf, numCharsProcessed);
+        if ((ch >= ' ' && ch <= '~' && ch != '\\') || (ch == '\n' || ch == '\r' || ch == '\t')) {
+        reqLength = 1;
+        tmp[0] = (char)ch;
+        } else {
+        if (ch == '\\') {
+            tmp[1] = '\\';
+            reqLength = 2;
+        } else if (ch < 256) {  /* \nnn; note that this is not NEXTSTEP encoding but a (small) UniChar */
+            tmp[1] = '0' + (ch >> 6);
+            tmp[2] = '0' + ((ch >> 3) & 7);
+            tmp[3] = '0' + (ch & 7);
+            reqLength = 4;
+        } else {    /* \Unnnn */
+            tmp[1] = 'u'; // Changed to small+u in order to be aligned with Java
+            tmp[2] = hex[(ch >> 12) & 0x0f];
+            tmp[3] = hex[(ch >> 8) & 0x0f];
+            tmp[4] = hex[(ch >> 4) & 0x0f];
+            tmp[5] = hex[ch & 0x0f];
+            reqLength = 6;
+        }
+        tmp[0] = '\\';
+        }
             if (buffer) {
                 if (totalBytesWritten + reqLength > max) break; /* Doesn't fit..
 .*/
@@ -541,25 +543,25 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
                     buffer[totalBytesWritten + cnt] = tmp[cnt];
                 }
             }
-	    totalBytesWritten += reqLength;
-	    numCharsProcessed++;
-	}
+        totalBytesWritten += reqLength;
+        numCharsProcessed++;
+    }
     } else if ((encoding == kCFStringEncodingUTF16) || (encoding == kCFStringEncodingUTF16BE) || (encoding == kCFStringEncodingUTF16LE)) {
-   	CFIndex extraForBOM = (generatingExternalFile && (encoding == kCFStringEncodingUTF16) ? sizeof(UniChar) : 0);
+    CFIndex extraForBOM = (generatingExternalFile && (encoding == kCFStringEncodingUTF16) ? sizeof(UniChar) : 0);
         numCharsProcessed = rangeLen;
         if (buffer && (numCharsProcessed * (CFIndex)sizeof(UniChar) + extraForBOM > max)) {
             numCharsProcessed = (max > extraForBOM) ? ((max - extraForBOM) / sizeof(UniChar)) : 0;
         }
         totalBytesWritten = (numCharsProcessed * sizeof(UniChar)) + extraForBOM;
-	if (buffer) {
-	    if (extraForBOM) {	/* Generate BOM */
+    if (buffer) {
+        if (extraForBOM) {  /* Generate BOM */
 #if __CF_BIG_ENDIAN__
-		*buffer++ = 0xfe; *buffer++ = 0xff;
+        *buffer++ = 0xfe; *buffer++ = 0xff;
 #else
-		*buffer++ = 0xff; *buffer++ = 0xfe;
+        *buffer++ = 0xff; *buffer++ = 0xfe;
 #endif
-	    }
-	    CFStringGetCharacters(string, CFRangeMake(rangeLoc, numCharsProcessed), (UniChar *)buffer);
+        }
+        CFStringGetCharacters(string, CFRangeMake(rangeLoc, numCharsProcessed), (UniChar *)buffer);
             if ((__CF_BIG_ENDIAN__ ?  kCFStringEncodingUTF16LE : kCFStringEncodingUTF16BE) == encoding) { // Need to swap
                 UTF16Char *characters = (UTF16Char *)buffer;
                 const UTF16Char *limit = characters + numCharsProcessed;
@@ -569,7 +571,7 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
                     ++characters;
                 }
             }
-	}
+    }
     } else if ((encoding == kCFStringEncodingUTF32) || (encoding == kCFStringEncodingUTF32BE) || (encoding == kCFStringEncodingUTF32LE)) {
         UTF32Char character;
         CFStringInlineBuffer buf;
@@ -639,7 +641,7 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
                     if (usedBufLen) *usedBufLen = numCharsProcessed;
                     return numCharsProcessed;
                 }
-		
+        
                 CFIndex uninterestingTailLen = buffer ? (rangeLen - MIN(max, rangeLen)) : 0;
                 while (*ptr < 0x80 && rangeLen > uninterestingTailLen) {
                     ++ptr;
@@ -650,7 +652,7 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
                     numCharsProcessed = (numCharsProcessed < max ? numCharsProcessed : max);
                     memmove(buffer, cString, numCharsProcessed);
                     buffer += numCharsProcessed;
-		    max -= numCharsProcessed;
+            max -= numCharsProcessed;
                 }
                 if (!rangeLen || (buffer && (max == 0))) {
                     if (usedBufLen) *usedBufLen = numCharsProcessed;
@@ -676,7 +678,7 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
                     numCharsProcessed = (numCharsProcessed < max ? numCharsProcessed : max);
                     memmove(buffer, cString, numCharsProcessed);
                     buffer += numCharsProcessed;
-		    max -= numCharsProcessed;
+            max -= numCharsProcessed;
                 }
                 if (!rangeLen || (buffer && (max == 0))) {
                     if (usedBufLen) *usedBufLen = numCharsProcessed;
@@ -802,19 +804,19 @@ CFIndex CFStringGetMaximumSizeOfFileSystemRepresentation(CFStringRef string) {
     CFIndex len = CFStringGetLength(string);
     CFStringEncoding enc = CFStringGetFastestEncoding(string);
     switch (enc) {
-	case kCFStringEncodingASCII:
-	case kCFStringEncodingMacRoman:
+    case kCFStringEncodingASCII:
+    case kCFStringEncodingMacRoman:
             if (len > (LONG_MAX - 1L) / 3L) return kCFNotFound;     // Avoid wrap-around
-	    return len * 3L + 1L;
-	default:
+        return len * 3L + 1L;
+    default:
             if (len > (LONG_MAX - 1L) / 9L) return kCFNotFound;     // Avoid wrap-around
-	    return len * 9L + 1L;
+        return len * 9L + 1L;
     }
 } 
 
 Boolean CFStringGetFileSystemRepresentation(CFStringRef string, char *buffer, CFIndex maxBufLen) {
 #if (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_LINUX)
-#define MAX_STACK_BUFFER_LEN	(255)
+#define MAX_STACK_BUFFER_LEN    (255)
     const UTF16Char *characters = CFStringGetCharactersPtr(string);
     const char *origBuffer = buffer;
     const char *bufferLimit = buffer + maxBufLen;
@@ -855,11 +857,11 @@ Boolean CFStringGetFileSystemRepresentation(CFStringRef string, char *buffer, CF
 
     if (buffer < bufferLimit) { // Since the filename has its own limit, this is ok for now
         *buffer = '\0';
-	if (_CFExecutableLinkedOnOrAfter(CFSystemVersionLion)) {
-	    while (origBuffer < buffer) if (*origBuffer++ == 0) {	// There's a zero in there. Now see if the rest are all zeroes.
-		while (origBuffer < buffer) if (*origBuffer++ != 0) return false;	// Embedded NULLs should cause failure: <rdar://problem/5863219>
+    if (_CFExecutableLinkedOnOrAfter(CFSystemVersionLion)) {
+        while (origBuffer < buffer) if (*origBuffer++ == 0) {   // There's a zero in there. Now see if the rest are all zeroes.
+        while (origBuffer < buffer) if (*origBuffer++ != 0) return false;   // Embedded NULLs should cause failure: <rdar://problem/5863219>
             }
-	}
+    }
         return true;
     } else {
         return false;
@@ -908,18 +910,18 @@ void _CFStringGetUserDefaultEncoding(UInt32 *oScriptValue, UInt32 *oRegionValue)
         if (passwdp) {
             char filename[MAXPATHLEN + 1];
 
-	    const char *path = NULL;
-	    if (!issetugid()) {
-		path = __CFgetenv("CFFIXED_USER_HOME");
-	    }
-	    if (!path) {
-		path = passwdp->pw_dir;
-	    }
+        const char *path = NULL;
+        if (!issetugid()) {
+        path = __CFgetenv("CFFIXED_USER_HOME");
+        }
+        if (!path) {
+        path = passwdp->pw_dir;
+        }
 
             strlcpy(filename, path, sizeof(filename));
             strlcat(filename, __kCFUserEncodingFileName, sizeof(filename));
 
-	    int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
+        int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
             int fd = open(filename, O_RDONLY, 0);
             if (fd == -1) {
                 // Cannot open the file. Let's fallback to smRoman/verUS
@@ -936,7 +938,7 @@ void _CFStringGetUserDefaultEncoding(UInt32 *oScriptValue, UInt32 *oRegionValue)
                 snprintf(filename, sizeof(filename), "0x%X:%s", uid, buffer);
                 setenv(__kCFUserEncodingEnvVariableName, filename, 1);
             }
-	    if (-1 != no_hang_fd) close(no_hang_fd);
+        if (-1 != no_hang_fd) close(no_hang_fd);
         }
     }
 
@@ -964,21 +966,21 @@ void _CFStringGetInstallationEncodingAndRegion(uint32_t *encoding, uint32_t *reg
 
     struct passwd *passwdp = getpwuid((uid_t)0);
     if (passwdp) {
-	const char *path = passwdp->pw_dir;
+    const char *path = passwdp->pw_dir;
 
         char filename[MAXPATHLEN + 1];
         strlcpy(filename, path, sizeof(filename));
         strlcat(filename, __kCFUserEncodingFileName, sizeof(filename));
         
-	int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
-	int fd = open(filename, O_RDONLY, 0);
-	if (0 <= fd) {
+    int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
+    int fd = open(filename, O_RDONLY, 0);
+    if (0 <= fd) {
             ssize_t size = read(fd, buffer, __kCFMaxDefaultEncodingFileLength - 1);
             buffer[(size < 0 ? 0 : size)] = '\0';
             close(fd);
             stringValue = buffer;
         }
-	if (-1 != no_hang_fd) close(no_hang_fd);
+    if (-1 != no_hang_fd) close(no_hang_fd);
     }
     
     if (stringValue) {
@@ -993,38 +995,39 @@ Boolean _CFStringSaveUserDefaultEncoding(UInt32 iScriptValue, UInt32 iRegionValu
     Boolean success = false;
     struct passwd *passwdp = getpwuid(getuid());
     if (passwdp) {
-	const char *path = passwdp->pw_dir;
-	if (!issetugid()) {
-	    const char *value = __CFgetenv("CFFIXED_USER_HOME");
-	    if (value) path = value; // override
-	}
+    const char *path = passwdp->pw_dir;
+    if (!issetugid()) {
+        const char *value = __CFgetenv("CFFIXED_USER_HOME");
+        if (value) path = value; // override
+    }
 
         char filename[MAXPATHLEN + 1];
         strlcpy(filename, path, sizeof(filename));
         strlcat(filename, __kCFUserEncodingFileName, sizeof(filename));
 
-	int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
+    int no_hang_fd = __CFProphylacticAutofsAccess ? open("/dev/autofs_nowait", 0) : -1;
         (void)unlink(filename);
-	int fd = open(filename, O_WRONLY|O_CREAT, 0400);
-	if (0 <= fd) {
+    int fd = open(filename, O_WRONLY|O_CREAT, 0400);
+    if (0 <= fd) {
             char buffer[__kCFMaxDefaultEncodingFileLength];
             // We force using MacRoman for Arabic/Hebrew users <rdar://problem/17633551> When changing language to Arabic and Hebrew, set the default user encoding to MacRoman, not MacArabic/MacHebrew
             if ((iScriptValue == kCFStringEncodingMacArabic) || (iScriptValue == kCFStringEncodingMacHebrew)) iScriptValue = kCFStringEncodingMacRoman;
             size_t size = snprintf(buffer, __kCFMaxDefaultEncodingFileLength, "0x%X:0x%X", (unsigned int)iScriptValue, (unsigned int)iRegionValue);
-	    if (size <= __kCFMaxDefaultEncodingFileLength) {
+        if (size <= __kCFMaxDefaultEncodingFileLength) {
                 int ret = write(fd, buffer, size);
-	        if (size <= ret) success = true;
-	    }
-	    int save_err = errno;
-            close(fd);
-	    errno = save_err;
+            if (size <= ret) success = true;
         }
-	int save_err = errno;
-	if (-1 != no_hang_fd) close(no_hang_fd);
-	errno = save_err;
+        int save_err = errno;
+            close(fd);
+        errno = save_err;
+        }
+    int save_err = errno;
+    if (-1 != no_hang_fd) close(no_hang_fd);
+    errno = save_err;
     }
     return success;
 }
 
 #endif
 
+// clang-format on

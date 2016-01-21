@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFBase.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFBase.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFBASE__)
@@ -25,6 +27,7 @@
 #if (defined(__CYGWIN32__) || defined(_WIN32)) && !defined(__WIN32__)
 #define __WIN32__ 1
 #endif
+#include <StubIncludes.h>
 
 #if defined(_WIN64) && !defined(__WIN64__)
 #define __WIN64__ 1
@@ -85,7 +88,7 @@
 #endif
 
   #if ((TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) && !DEPLOYMENT_RUNTIME_SWIFT
-    #include <libkern/OSTypes.h>
+    // HACKHACK: don't have this. // #include <libkern/OSTypes.h>
   #endif
 
 #if !defined(__MACTYPES__)
@@ -101,8 +104,8 @@
     typedef signed short            SInt16;
     typedef unsigned int            UInt32;
     typedef signed int              SInt32;
-    typedef uint64_t		    UInt64;
-    typedef int64_t		    SInt64;
+    typedef uint64_t            UInt64;
+    typedef int64_t         SInt64;
     typedef SInt32                  OSStatus;
 #endif
     typedef float                   Float32;
@@ -170,11 +173,11 @@ CF_EXTERN_C_BEGIN
 #endif
 
 #if !defined(TRUE)
-    #define TRUE	1
+    #define TRUE    1
 #endif
 
 #if !defined(FALSE)
-    #define FALSE	0
+    #define FALSE   0
 #endif
 
 #if !defined(CF_INLINE)
@@ -183,11 +186,11 @@ CF_EXTERN_C_BEGIN
     #elif defined(__GNUC__)
         #define CF_INLINE static __inline__
     #elif defined(__cplusplus)
-	#define CF_INLINE static inline
+    #define CF_INLINE static inline
     #elif defined(_MSC_VER)
         #define CF_INLINE static __inline
     #elif TARGET_OS_WIN32
-	#define CF_INLINE static __inline__
+    #define CF_INLINE static __inline__
     #endif
 #endif
 
@@ -272,9 +275,9 @@ CF_EXTERN_C_BEGIN
 @class NSURL;
 #endif
 
-#define CF_BRIDGED_TYPE(T)		__attribute__((objc_bridge(T)))
-#define CF_BRIDGED_MUTABLE_TYPE(T)	__attribute__((objc_bridge_mutable(T)))
-#define CF_RELATED_TYPE(T,C,I)		__attribute__((objc_bridge_related(T,C,I)))
+#define CF_BRIDGED_TYPE(T)      __attribute__((objc_bridge(T)))
+#define CF_BRIDGED_MUTABLE_TYPE(T)  __attribute__((objc_bridge_mutable(T)))
+#define CF_RELATED_TYPE(T,C,I)      __attribute__((objc_bridge_related(T,C,I)))
 #else
 #define CF_BRIDGED_TYPE(T)
 #define CF_BRIDGED_MUTABLE_TYPE(T)
@@ -331,66 +334,66 @@ CF_EXTERN_C_BEGIN
 CF_EXPORT double kCFCoreFoundationVersionNumber;
 
 #if TARGET_OS_MAC
-#define kCFCoreFoundationVersionNumber10_0	196.40
-#define kCFCoreFoundationVersionNumber10_0_3	196.50
-#define kCFCoreFoundationVersionNumber10_1	226.00
-#define kCFCoreFoundationVersionNumber10_1_1	226.00
+#define kCFCoreFoundationVersionNumber10_0  196.40
+#define kCFCoreFoundationVersionNumber10_0_3    196.50
+#define kCFCoreFoundationVersionNumber10_1  226.00
+#define kCFCoreFoundationVersionNumber10_1_1    226.00
 /* Note the next three do not follow the usual numbering policy from the base release */
-#define kCFCoreFoundationVersionNumber10_1_2	227.20
-#define kCFCoreFoundationVersionNumber10_1_3	227.20
-#define kCFCoreFoundationVersionNumber10_1_4	227.30
-#define kCFCoreFoundationVersionNumber10_2	263.00
-#define kCFCoreFoundationVersionNumber10_2_1	263.10
-#define kCFCoreFoundationVersionNumber10_2_2	263.10
-#define kCFCoreFoundationVersionNumber10_2_3	263.30
-#define kCFCoreFoundationVersionNumber10_2_4	263.30
-#define kCFCoreFoundationVersionNumber10_2_5	263.50
-#define kCFCoreFoundationVersionNumber10_2_6	263.50
-#define kCFCoreFoundationVersionNumber10_2_7	263.50
-#define kCFCoreFoundationVersionNumber10_2_8	263.50
-#define kCFCoreFoundationVersionNumber10_3	299.00
-#define kCFCoreFoundationVersionNumber10_3_1	299.00
-#define kCFCoreFoundationVersionNumber10_3_2	299.00
-#define kCFCoreFoundationVersionNumber10_3_3	299.30
-#define kCFCoreFoundationVersionNumber10_3_4	299.31
-#define kCFCoreFoundationVersionNumber10_3_5	299.31
-#define kCFCoreFoundationVersionNumber10_3_6	299.32
-#define kCFCoreFoundationVersionNumber10_3_7	299.33
-#define kCFCoreFoundationVersionNumber10_3_8	299.33
-#define kCFCoreFoundationVersionNumber10_3_9	299.35
-#define kCFCoreFoundationVersionNumber10_4	368.00
-#define kCFCoreFoundationVersionNumber10_4_1	368.10
-#define kCFCoreFoundationVersionNumber10_4_2	368.11
-#define kCFCoreFoundationVersionNumber10_4_3	368.18
-#define kCFCoreFoundationVersionNumber10_4_4_Intel	368.26
-#define kCFCoreFoundationVersionNumber10_4_4_PowerPC	368.25
-#define kCFCoreFoundationVersionNumber10_4_5_Intel	368.26
-#define kCFCoreFoundationVersionNumber10_4_5_PowerPC	368.25
-#define kCFCoreFoundationVersionNumber10_4_6_Intel	368.26
-#define kCFCoreFoundationVersionNumber10_4_6_PowerPC	368.25
-#define kCFCoreFoundationVersionNumber10_4_7	368.27
-#define kCFCoreFoundationVersionNumber10_4_8	368.27
-#define kCFCoreFoundationVersionNumber10_4_9	368.28
-#define kCFCoreFoundationVersionNumber10_4_10	368.28
-#define kCFCoreFoundationVersionNumber10_4_11	368.31
-#define kCFCoreFoundationVersionNumber10_5	476.00
-#define kCFCoreFoundationVersionNumber10_5_1	476.00
-#define kCFCoreFoundationVersionNumber10_5_2	476.10
-#define kCFCoreFoundationVersionNumber10_5_3	476.13
-#define kCFCoreFoundationVersionNumber10_5_4	476.14
-#define kCFCoreFoundationVersionNumber10_5_5	476.15
-#define kCFCoreFoundationVersionNumber10_5_6	476.17
-#define kCFCoreFoundationVersionNumber10_5_7	476.18
-#define kCFCoreFoundationVersionNumber10_5_8	476.19
-#define kCFCoreFoundationVersionNumber10_6	550.00
-#define kCFCoreFoundationVersionNumber10_6_1	550.00
-#define kCFCoreFoundationVersionNumber10_6_2	550.13
-#define kCFCoreFoundationVersionNumber10_6_3	550.19
-#define kCFCoreFoundationVersionNumber10_6_4	550.29
-#define kCFCoreFoundationVersionNumber10_6_5	550.42
-#define kCFCoreFoundationVersionNumber10_6_6	550.42
-#define kCFCoreFoundationVersionNumber10_6_7	550.42
-#define kCFCoreFoundationVersionNumber10_6_8	550.43
+#define kCFCoreFoundationVersionNumber10_1_2    227.20
+#define kCFCoreFoundationVersionNumber10_1_3    227.20
+#define kCFCoreFoundationVersionNumber10_1_4    227.30
+#define kCFCoreFoundationVersionNumber10_2  263.00
+#define kCFCoreFoundationVersionNumber10_2_1    263.10
+#define kCFCoreFoundationVersionNumber10_2_2    263.10
+#define kCFCoreFoundationVersionNumber10_2_3    263.30
+#define kCFCoreFoundationVersionNumber10_2_4    263.30
+#define kCFCoreFoundationVersionNumber10_2_5    263.50
+#define kCFCoreFoundationVersionNumber10_2_6    263.50
+#define kCFCoreFoundationVersionNumber10_2_7    263.50
+#define kCFCoreFoundationVersionNumber10_2_8    263.50
+#define kCFCoreFoundationVersionNumber10_3  299.00
+#define kCFCoreFoundationVersionNumber10_3_1    299.00
+#define kCFCoreFoundationVersionNumber10_3_2    299.00
+#define kCFCoreFoundationVersionNumber10_3_3    299.30
+#define kCFCoreFoundationVersionNumber10_3_4    299.31
+#define kCFCoreFoundationVersionNumber10_3_5    299.31
+#define kCFCoreFoundationVersionNumber10_3_6    299.32
+#define kCFCoreFoundationVersionNumber10_3_7    299.33
+#define kCFCoreFoundationVersionNumber10_3_8    299.33
+#define kCFCoreFoundationVersionNumber10_3_9    299.35
+#define kCFCoreFoundationVersionNumber10_4  368.00
+#define kCFCoreFoundationVersionNumber10_4_1    368.10
+#define kCFCoreFoundationVersionNumber10_4_2    368.11
+#define kCFCoreFoundationVersionNumber10_4_3    368.18
+#define kCFCoreFoundationVersionNumber10_4_4_Intel  368.26
+#define kCFCoreFoundationVersionNumber10_4_4_PowerPC    368.25
+#define kCFCoreFoundationVersionNumber10_4_5_Intel  368.26
+#define kCFCoreFoundationVersionNumber10_4_5_PowerPC    368.25
+#define kCFCoreFoundationVersionNumber10_4_6_Intel  368.26
+#define kCFCoreFoundationVersionNumber10_4_6_PowerPC    368.25
+#define kCFCoreFoundationVersionNumber10_4_7    368.27
+#define kCFCoreFoundationVersionNumber10_4_8    368.27
+#define kCFCoreFoundationVersionNumber10_4_9    368.28
+#define kCFCoreFoundationVersionNumber10_4_10   368.28
+#define kCFCoreFoundationVersionNumber10_4_11   368.31
+#define kCFCoreFoundationVersionNumber10_5  476.00
+#define kCFCoreFoundationVersionNumber10_5_1    476.00
+#define kCFCoreFoundationVersionNumber10_5_2    476.10
+#define kCFCoreFoundationVersionNumber10_5_3    476.13
+#define kCFCoreFoundationVersionNumber10_5_4    476.14
+#define kCFCoreFoundationVersionNumber10_5_5    476.15
+#define kCFCoreFoundationVersionNumber10_5_6    476.17
+#define kCFCoreFoundationVersionNumber10_5_7    476.18
+#define kCFCoreFoundationVersionNumber10_5_8    476.19
+#define kCFCoreFoundationVersionNumber10_6  550.00
+#define kCFCoreFoundationVersionNumber10_6_1    550.00
+#define kCFCoreFoundationVersionNumber10_6_2    550.13
+#define kCFCoreFoundationVersionNumber10_6_3    550.19
+#define kCFCoreFoundationVersionNumber10_6_4    550.29
+#define kCFCoreFoundationVersionNumber10_6_5    550.42
+#define kCFCoreFoundationVersionNumber10_6_6    550.42
+#define kCFCoreFoundationVersionNumber10_6_7    550.42
+#define kCFCoreFoundationVersionNumber10_6_8    550.43
 #define kCFCoreFoundationVersionNumber10_7      635.00
 #define kCFCoreFoundationVersionNumber10_7_1    635.00
 #define kCFCoreFoundationVersionNumber10_7_2    635.15
@@ -411,7 +414,7 @@ CF_EXPORT double kCFCoreFoundationVersionNumber;
 #define kCFCoreFoundationVersionNumber10_10_3   1153.18
 #endif
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || TARGET_OS_WIN32
 #define kCFCoreFoundationVersionNumber_iPhoneOS_2_0 478.23
 #define kCFCoreFoundationVersionNumber_iPhoneOS_2_1 478.26
 #define kCFCoreFoundationVersionNumber_iPhoneOS_2_2 478.29
@@ -504,7 +507,7 @@ CF_EXPORT
 CFTypeID CFNullGetTypeID(void);
 
 CF_EXPORT
-const CFNullRef kCFNull;	// the singleton null instance
+const CFNullRef kCFNull;    // the singleton null instance
 
 
 /* Allocator API
@@ -554,50 +557,50 @@ const CFAllocatorRef kCFAllocatorNull;
 CF_EXPORT
 const CFAllocatorRef kCFAllocatorUseContext;
 
-typedef const void *	(*CFAllocatorRetainCallBack)(const void *info);
-typedef void		(*CFAllocatorReleaseCallBack)(const void *info);
-typedef CFStringRef	(*CFAllocatorCopyDescriptionCallBack)(const void *info);
-typedef void *		(*CFAllocatorAllocateCallBack)(CFIndex allocSize, CFOptionFlags hint, void *info);
-typedef void *		(*CFAllocatorReallocateCallBack)(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info);
-typedef void		(*CFAllocatorDeallocateCallBack)(void *ptr, void *info);
-typedef CFIndex		(*CFAllocatorPreferredSizeCallBack)(CFIndex size, CFOptionFlags hint, void *info);
+typedef const void *    (*CFAllocatorRetainCallBack)(const void *info);
+typedef void        (*CFAllocatorReleaseCallBack)(const void *info);
+typedef CFStringRef (*CFAllocatorCopyDescriptionCallBack)(const void *info);
+typedef void *      (*CFAllocatorAllocateCallBack)(CFIndex allocSize, CFOptionFlags hint, void *info);
+typedef void *      (*CFAllocatorReallocateCallBack)(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info);
+typedef void        (*CFAllocatorDeallocateCallBack)(void *ptr, void *info);
+typedef CFIndex     (*CFAllocatorPreferredSizeCallBack)(CFIndex size, CFOptionFlags hint, void *info);
 typedef struct {
-    CFIndex				version;
-    void *				info;
-    CFAllocatorRetainCallBack		retain;
-    CFAllocatorReleaseCallBack		release;        
-    CFAllocatorCopyDescriptionCallBack	copyDescription;
-    CFAllocatorAllocateCallBack		allocate;
-    CFAllocatorReallocateCallBack	reallocate;
-    CFAllocatorDeallocateCallBack	deallocate;
-    CFAllocatorPreferredSizeCallBack	preferredSize;
+    CFIndex             version;
+    void *              info;
+    CFAllocatorRetainCallBack       retain;
+    CFAllocatorReleaseCallBack      release;        
+    CFAllocatorCopyDescriptionCallBack  copyDescription;
+    CFAllocatorAllocateCallBack     allocate;
+    CFAllocatorReallocateCallBack   reallocate;
+    CFAllocatorDeallocateCallBack   deallocate;
+    CFAllocatorPreferredSizeCallBack    preferredSize;
 } CFAllocatorContext;
 
 CF_EXPORT
-CFTypeID	CFAllocatorGetTypeID(void);
+CFTypeID    CFAllocatorGetTypeID(void);
 
 /*
-	CFAllocatorSetDefault() sets the allocator that is used in the current
-	thread whenever NULL is specified as an allocator argument. This means
-	that most, if not all allocations will go through this allocator. It
-	also means that any allocator set as the default needs to be ready to
-	deal with arbitrary memory allocation requests; in addition, the size
-	and number of requests will change between releases.
+    CFAllocatorSetDefault() sets the allocator that is used in the current
+    thread whenever NULL is specified as an allocator argument. This means
+    that most, if not all allocations will go through this allocator. It
+    also means that any allocator set as the default needs to be ready to
+    deal with arbitrary memory allocation requests; in addition, the size
+    and number of requests will change between releases.
 
-	An allocator set as the default will never be released, even if later
-	another allocator replaces it as the default. Not only is it impractical
-	for it to be released (as there might be caches created under the covers
-	that refer to the allocator), in general it's also safer and more
-	efficient to keep it around.
+    An allocator set as the default will never be released, even if later
+    another allocator replaces it as the default. Not only is it impractical
+    for it to be released (as there might be caches created under the covers
+    that refer to the allocator), in general it's also safer and more
+    efficient to keep it around.
 
-	If you wish to use a custom allocator in a context, it's best to provide
-	it as the argument to the various creation functions rather than setting
-	it as the default. Setting the default allocator is not encouraged.
+    If you wish to use a custom allocator in a context, it's best to provide
+    it as the argument to the various creation functions rather than setting
+    it as the default. Setting the default allocator is not encouraged.
 
-	If you do set an allocator as the default, either do it for all time in
-	your app, or do it in a nested fashion (by restoring the previous allocator
-	when you exit your context). The latter might be appropriate for plug-ins
-	or libraries that wish to set the default allocator.
+    If you do set an allocator as the default, either do it for all time in
+    your app, or do it in a nested fashion (by restoring the previous allocator
+    when you exit your context). The latter might be appropriate for plug-ins
+    or libraries that wish to set the default allocator.
 */
 CF_EXPORT
 void CFAllocatorSetDefault(CFAllocatorRef allocator);
@@ -674,7 +677,160 @@ CFTypeRef CFMakeCollectable(CFTypeRef cf) CF_AUTOMATED_REFCOUNT_UNAVAILABLE;
 
 #endif
 
+
+//HACKHACK: Start. Adding in CGPoint/CGRect definitions. Shouldn't really be defined here but the Foundation headers expect this.
+#import <math.h>
+#ifdef __LP64__
+typedef double CGFloat;
+#define CGFLOAT_MIN DBL_MIN
+#define CGFLOAT_MAX DBL_MAX
+#else
+typedef float CGFloat;
+#define CGFLOAT_MIN FLT_MIN
+#define CGFLOAT_MAX FLT_MAX
+#endif
+
+#ifdef __cplusplus
+struct CGPoint {
+    CGFloat x, y;
+
+    CGPoint operator+(const CGPoint& v) const {
+        CGPoint ret = { x + v.x, y + v.y };
+        return ret;
+    }
+
+    CGPoint operator-() const {
+        CGPoint ret = { -x, -y };
+        return ret;
+    }
+
+    CGPoint operator-(const CGPoint& v) const {
+        CGPoint ret = { x - v.x, y - v.y };
+        return ret;
+    }
+
+    CGPoint operator-=(const CGPoint& v) {
+        x -= v.x;
+        y -= v.y;
+        return *this;
+    }
+
+    CGPoint operator+=(const CGPoint& v) {
+        x += v.x;
+        y += v.y;
+        return *this;
+    }
+
+    bool operator==(const CGPoint& v) {
+        return x == v.x && y == v.y;
+    }
+
+    bool operator!=(const CGPoint& v) {
+        return x != v.x || y != v.y;
+    }
+
+    CGPoint operator*(float scalar) const {
+        CGPoint ret = { x * scalar, y * scalar };
+        return ret;
+    }
+
+    CGPoint operator*=(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        return *this;
+    }
+
+    CGPoint operator/(float scalar) const {
+        CGPoint ret = { x / scalar, y / scalar };
+        return ret;
+    }
+
+    CGPoint operator/=(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        return *this;
+    }
+
+    CGFloat distSq(const CGPoint& v) const {
+        CGPoint delta = *this - v;
+        return delta.dot(delta);
+    }
+
+    CGFloat dist(const CGPoint& v) const {
+        return sqrt(distSq(v));
+    }
+
+    bool distGr(const CGPoint& v, CGFloat dist) const {
+        return distSq(v) > dist * dist;
+    }
+
+    CGFloat lenSq() const {
+        return dot(*this);
+    }
+
+    CGFloat len() const {
+        return sqrt(lenSq());
+    }
+
+    bool lenGe(float len) {
+        return lenSq() >= len * len;
+    }
+
+    bool lenLe(float len) {
+        return lenSq() < len * len;
+    }
+
+    CGFloat dot(const CGPoint& v) const {
+        return v.x * x + v.y * y;
+    }
+
+    CGPoint normalized() const {
+        float l = len();
+
+        if (l != 0) {
+            CGPoint ret = { x / l, y / l };
+            return ret;
+        } else {
+            CGPoint ret = { 0, 0 };
+            return ret;
+        }
+    }
+
+    static inline CGPoint point(float x, float y) {
+        CGPoint ret;
+
+        ret.x = x;
+        ret.y = y;
+
+        return ret;
+    }
+};
+#else
+typedef struct CGPoint {
+    CGFloat x;
+    CGFloat y;
+} CGPoint;
+#endif
+
+typedef struct CGSize {
+    CGFloat width;
+    CGFloat height;
+} CGSize;
+
+typedef struct CGRect {
+    CGPoint origin;
+    CGSize size;
+} CGRect;
+
+// HACKHACK: End. Adding in CGPoint/CGRect definitions. Shouldn't really be defined here but the Foundation headers expect this.
+
+// HACKHACK: include old WinObjC things for people that need it.
+#import <CoreFoundation/CoreFoundationExport.h>
+#import <MacTypes.h>
+#import <Block.h>
+
 CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFBASE__ */
 
+// clang-format on

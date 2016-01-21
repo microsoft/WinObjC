@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -457,7 +459,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyScheme(CFURLComponentsRef components) 
         components->_schemeComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetSchemeRange(&components->_parseInfo, false));
         components->_schemeComponentValid = true;
     }
-    result = components->_schemeComponent ? CFRetain(components->_schemeComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_schemeComponent ? CFRetain(components->_schemeComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -524,7 +526,7 @@ CF_EXPORT CFNumberRef _CFURLComponentsCopyPort(CFURLComponentsRef components) {
                 HALT;
             }
 #else
-            if (sscanf_l(buf, NULL, "%lld", &value) != 1) {
+            if (_sscanf_s_l(buf, "%lld", NULL, &value) != 1) {
                 HALT;
             }
 #endif
@@ -536,7 +538,7 @@ CF_EXPORT CFNumberRef _CFURLComponentsCopyPort(CFURLComponentsRef components) {
         }
         components->_portComponentValid = true;
     }
-    result = components->_portComponent ? CFRetain(components->_portComponent) : NULL;
+    result = static_cast<CFNumberRef>(components->_portComponent ? CFRetain(components->_portComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -695,7 +697,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedUser(CFURLComponentsRef 
         components->_userComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetUserinfoNameRange(&components->_parseInfo, false));
         components->_userComponentValid = true;
     }
-    result = components->_userComponent ? CFRetain(components->_userComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_userComponent ? CFRetain(components->_userComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -709,7 +711,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedPassword(CFURLComponents
         components->_passwordComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetUserinfoPasswordRange(&components->_parseInfo, false));
         components->_passwordComponentValid = true;
     }
-    result = components->_passwordComponent ? CFRetain(components->_passwordComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_passwordComponent ? CFRetain(components->_passwordComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -723,7 +725,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedHost(CFURLComponentsRef 
         components->_hostComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetHostRange(&components->_parseInfo, false));
         components->_hostComponentValid = true;
     }
-    result = components->_hostComponent ? CFRetain(components->_hostComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_hostComponent ? CFRetain(components->_hostComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -737,7 +739,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedPath(CFURLComponentsRef 
         components->_pathComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetPathRange(&components->_parseInfo, false, false));
         components->_pathComponentValid = true;
     }
-    result = components->_pathComponent ? CFRetain(components->_pathComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_pathComponent ? CFRetain(components->_pathComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     if (!result) result = CFSTR("");
@@ -753,7 +755,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedQuery(CFURLComponentsRef
         components->_queryComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetQueryRange(&components->_parseInfo, false));
         components->_queryComponentValid = true;
     }
-    result = components->_queryComponent ? CFRetain(components->_queryComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_queryComponent ? CFRetain(components->_queryComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -767,7 +769,7 @@ CF_EXPORT CFStringRef _CFURLComponentsCopyPercentEncodedFragment(CFURLComponents
         components->_fragmentComponent = CreateComponentWithURLStringRange(components->_urlString, _CFURIParserGetFragmentRange(&components->_parseInfo, false));
         components->_fragmentComponentValid = true;
     }
-    result = components->_fragmentComponent ? CFRetain(components->_fragmentComponent) : NULL;
+    result = static_cast<CFStringRef>(components->_fragmentComponent ? CFRetain(components->_fragmentComponent) : NULL);
     __CFUnlock(&components->_lock);
     
     return ( result );
@@ -1198,15 +1200,15 @@ CF_EXPORT void _CFURLComponentsSetQueryItems(CFURLComponentsRef components, CFAr
                 CFTypeRef name = CFArrayGetValueAtIndex(names, i);
                 CFTypeRef value = CFArrayGetValueAtIndex(values, i);
                 if ( name && name != kCFNull ) {
-                    CFStringRef stringWithPercentEncoding = _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorSystemDefault, name, queryNameValueAllowed);
+                    CFStringRef stringWithPercentEncoding = _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorSystemDefault, static_cast<CFStringRef>(name), queryNameValueAllowed);
                     CFStringAppendStringToAppendBuffer(&buf, stringWithPercentEncoding);
                     CFRelease(stringWithPercentEncoding);
                 }
                 if ( value && value != kCFNull ) {
                     chars[0] = '=';
                     CFStringAppendCharactersToAppendBuffer(&buf, chars, 1);
-                    CFStringRef stringWithPercentEncoding = _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorSystemDefault, value, queryNameValueAllowed);
-                    CFStringAppendStringToAppendBuffer(&buf, value);
+                    CFStringRef stringWithPercentEncoding = _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorSystemDefault, static_cast<CFStringRef>(value), queryNameValueAllowed);
+                    CFStringAppendStringToAppendBuffer(&buf, static_cast<CFStringRef>(value));
                     CFRelease(stringWithPercentEncoding);
                 }
                 // else the query item string will be simply "name"
@@ -1225,3 +1227,5 @@ CF_EXPORT void _CFURLComponentsSetQueryItems(CFURLComponentsRef components, CFAr
         _CFURLComponentsSetPercentEncodedQuery(components, NULL);
     }
 }
+
+// clang-format on

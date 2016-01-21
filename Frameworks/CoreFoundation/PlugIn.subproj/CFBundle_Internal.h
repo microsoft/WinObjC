@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFBundle_Internal.h
-	Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
+/*  CFBundle_Internal.h
+    Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
 */
 
 #if !defined(__COREFOUNDATION_CFBUNDLE_INTERNAL__)
@@ -26,8 +28,8 @@
 
 CF_EXTERN_C_BEGIN
 
-#define __kCFLogBundle       3
-#define __kCFLogPlugIn       3
+#define __kCFLogBundle       kCFLogLevelError
+#define __kCFLogPlugIn       kCFLogLevelError
 
 #if DEPLOYMENT_TARGET_WINDOWS
 #define PLATFORM_PATH_STYLE kCFURLWindowsPathStyle
@@ -71,8 +73,11 @@ struct __CFBundle {
     CFURLRef _url;
     CFDateRef _modDate;
     
-    __strong CFDictionaryRef _infoDict;
-    __strong CFDictionaryRef _localInfoDict;
+    // HACKHACK: NO __strong support without ARC turned on. remove for now since its an internal header anyway.
+    // __strong CFDictionaryRef _infoDict;
+    // __strong CFDictionaryRef _localInfoDict;
+    CFDictionaryRef _infoDict;
+    CFDictionaryRef _localInfoDict;
     CFArrayRef _searchLanguages;
     
     __CFPBinaryType _binaryType;
@@ -365,3 +370,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFBUNDLE_INTERNAL__ */
 
+// clang-format on

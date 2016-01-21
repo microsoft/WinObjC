@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -42,7 +44,7 @@ static CFStringRef _copyStringFromTable(CFBundleRef bundle, CFStringRef tableNam
     if (!localizationName && bundle->_stringTable) {
         CFDictionaryRef stringTable = (CFDictionaryRef)CFDictionaryGetValue(bundle->_stringTable, tableName);
         if (stringTable) {
-            CFStringRef result = CFDictionaryGetValue(stringTable, key);
+            CFStringRef result = static_cast<CFStringRef>(CFDictionaryGetValue(stringTable, key));
             if (result) {
                 CFRetain(result);
             }
@@ -146,7 +148,7 @@ static CFStringRef _copyStringFromTable(CFBundleRef bundle, CFStringRef tableNam
     }
     
     // Finally, fetch the result from the table
-    CFStringRef result = CFDictionaryGetValue(stringsTable, key);
+    CFStringRef result = static_cast<CFStringRef>(CFDictionaryGetValue(stringsTable, key));
     if (result) {
         CFRetain(result);
     }
@@ -188,3 +190,4 @@ CF_EXPORT CFStringRef CFBundleCopyLocalizedStringForLocalization(CFBundleRef bun
     return result;
 }
 
+// clang-format on

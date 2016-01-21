@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,17 +10,17 @@
 //
 
 
-/*	CFStringEncodingConverter.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFStringEncodingConverter.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include "CFInternal.h"
 #include <CoreFoundation/CFArray.h>
 #include <CoreFoundation/CFDictionary.h>
 #include "CFICUConverters.h"
-#include <CoreFoundation/CFUniChar.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFUniChar.h"
+#include "CFPriv.h"
 #include "CFUnicodeDecomposition.h"
 #include "CFStringEncodingConverterExt.h"
 #include "CFStringEncodingConverterPriv.h"
@@ -588,19 +590,19 @@ static const _CFEncodingConverter *__CFGetConverter(uint32_t encoding) {
     static OSSpinLock lock = OS_SPINLOCK_INIT;
 
     switch (encoding) {
-	case kCFStringEncodingUTF8: commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[0]); break;
+    case kCFStringEncodingUTF8: commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[0]); break;
 
-	    /* the swith here should avoid possible bootstrap issues in the default: case below when invoked from CFStringGetSystemEncoding() */
+        /* the swith here should avoid possible bootstrap issues in the default: case below when invoked from CFStringGetSystemEncoding() */
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
-	case kCFStringEncodingMacRoman: commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[1]); break;
+    case kCFStringEncodingMacRoman: commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[1]); break;
 #elif DEPLOYMENT_TARGET_WINDOWS
-	case kCFStringEncodingWindowsLatin1: commonConverterSlot = (const _CFEncodingConverter **)(&(commonConverters[1])); break;
+    case kCFStringEncodingWindowsLatin1: commonConverterSlot = (const _CFEncodingConverter **)(&(commonConverters[1])); break;
 #else
 #warning This case must match __defaultEncoding value defined in CFString.c
-	case kCFStringEncodingISOLatin1: commonConverterSlot = (const _CFEncodingConverter **)(&(commonConverters[1])); break;
+    case kCFStringEncodingISOLatin1: commonConverterSlot = (const _CFEncodingConverter **)(&(commonConverters[1])); break;
 #endif
 
-	default: if (CFStringGetSystemEncoding() == encoding) commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[2]); break;
+    default: if (CFStringGetSystemEncoding() == encoding) commonConverterSlot = (const _CFEncodingConverter **)&(commonConverters[2]); break;
     }
 
     OSSpinLockLock(&lock);
@@ -617,13 +619,13 @@ static const _CFEncodingConverter *__CFGetConverter(uint32_t encoding) {
             if (NULL == converter) {
                 converter = __CFEncodingConverterFromDefinition(definition, encoding);
 
-		if (NULL == commonConverterSlot) {
-		    if (NULL == mappingTable) mappingTable = CFDictionaryCreateMutable(NULL, 0, NULL, NULL);
+        if (NULL == commonConverterSlot) {
+            if (NULL == mappingTable) mappingTable = CFDictionaryCreateMutable(NULL, 0, NULL, NULL);
 
-		    CFDictionarySetValue(mappingTable, (const void *)(uintptr_t)encoding, converter);
-		} else {
-		    *commonConverterSlot = converter;
-		}
+            CFDictionarySetValue(mappingTable, (const void *)(uintptr_t)encoding, converter);
+        } else {
+            *commonConverterSlot = converter;
+        }
             }
             OSSpinLockUnlock(&lock);
         }
@@ -961,10 +963,10 @@ static const CFStringEncoding __CFBuiltinEncodings[] = {
 };
 
 static CFComparisonResult __CFStringEncodingComparator(const void *v1, const void *v2, void *context) {
-    CFComparisonResult val1 = (*(const CFStringEncoding *)v1) & 0xFFFF;
-    CFComparisonResult val2 = (*(const CFStringEncoding *)v2) & 0xFFFF;
+    CFComparisonResult val1 = static_cast<CFComparisonResult>((*(const CFStringEncoding *)v1) & 0xFFFF);
+    CFComparisonResult val2 = static_cast<CFComparisonResult>((*(const CFStringEncoding *)v2) & 0xFFFF);
 
-    return ((val1 == val2) ? ((CFComparisonResult)(*(const CFStringEncoding *)v1) - (CFComparisonResult)(*(const CFStringEncoding *)v2)) : val1 - val2);
+    return static_cast<CFComparisonResult>(((val1 == val2) ? ((CFComparisonResult)(*(const CFStringEncoding *)v1) - (CFComparisonResult)(*(const CFStringEncoding *)v2)) : val1 - val2));
 }
 
 static void __CFStringEncodingFliterDupes(CFStringEncoding *encodings, CFIndex numSlots) {
@@ -1032,3 +1034,4 @@ CF_PRIVATE const CFStringEncoding *CFStringEncodingListOfAvailableEncodings(void
 #undef EXTRA_BASE
 #undef NUM_OF_ENTRIES_CYCLE
 
+// clang-format on

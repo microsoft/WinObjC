@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSURLSessionConfiguration.h>
 
-TEST(Foundation, NSURLSessionConfiguration_initValues) {
+TEST(NSURLSessionConfiguration, initValues) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
 
@@ -42,7 +42,7 @@ TEST(Foundation, NSURLSessionConfiguration_initValues) {
     ASSERT_TRUE_MSG(sessionConfiguration.HTTPCookieStorage != NULL, "FAILED: HTTPCookieStorage should be non-null");
 }
 
-TEST(Foundation, NSURLSessionConfiguration_defaultSessionConfiguration) {
+TEST(NSURLSessionConfiguration, defaultSessionConfiguration) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
 
@@ -57,7 +57,7 @@ TEST(Foundation, NSURLSessionConfiguration_defaultSessionConfiguration) {
                   kSSLProtocol3);
 }
 
-TEST(Foundation, NSURLSessionConfiguration_ephemeralSessionConfiguration) {
+TEST(NSURLSessionConfiguration, ephemeralSessionConfiguration) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
     ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");
 
@@ -72,7 +72,7 @@ TEST(Foundation, NSURLSessionConfiguration_ephemeralSessionConfiguration) {
     ASSERT_TRUE_MSG(sessionConfiguration.URLCache != NULL, "FAILED: URLCache should be non-null");
 }
 
-TEST(Foundation, NSURLSessionConfiguration_backgroundSessionConfigurationWithIdentifier) {
+TEST(NSURLSessionConfiguration, backgroundSessionConfigurationWithIdentifier) {
     NSString* identifier = @"Microsoft";
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     ASSERT_TRUE_MSG(sessionConfiguration != NULL, "FAILED: sessionConfiguration should be non-null!");

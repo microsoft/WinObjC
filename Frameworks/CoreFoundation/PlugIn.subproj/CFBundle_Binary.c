@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -706,7 +708,7 @@ CF_PRIVATE Boolean _CFBundleDLLLoad(CFBundleRef bundle, CFErrorRef *error) {
         wchar_t buff[CFMaxPathSize];
 
         if (executableURL && _CFURLGetWideFileSystemRepresentation(executableURL, true, (wchar_t *)buff, CFMaxPathSize)) {
-            bundle->_hModule = LoadLibraryW(buff);
+            bundle->_hModule = nullptr; // LoadLibraryW(buff); // HACKAHCK: Can't use LoadLibrary in an app container. 
             if (bundle->_hModule) {
                 bundle->_isLoaded = true;
             } else {
@@ -876,3 +878,4 @@ void CFBundleGetDataPointersForNames(CFBundleRef bundle, CFArrayRef symbolNames,
     for (i = 0; i < c; i++) stbl[i] = CFBundleGetDataPointerForName(bundle, (CFStringRef)CFArrayGetValueAtIndex(symbolNames, i));
 }
 
+// clang-format on

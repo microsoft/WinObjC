@@ -19,6 +19,7 @@
 #include "Foundation/NSDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "CoreFoundation/CFDictionary.h"
+#include "NSRaise.h"
 
 @implementation NSMutableDictionary
 /**
@@ -71,14 +72,21 @@
  @Status Interoperable
 */
 - (void)removeObjectForKey:(id)key {
-    CFDictionaryRemoveValue((CFMutableDictionaryRef)self, (void*)key);
+    // NSDictionary is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeAllObjects {
-    CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
+    NSEnumerator* enumerator = [self keyEnumerator];
+
+    id curKey = [enumerator nextObject];
+    while (curKey != nil) {
+        [self removeObjectForKey:curKey];
+        curKey = [enumerator nextObject];
+    }
 }
 
 /**
@@ -100,9 +108,8 @@
  @Status Interoperable
 */
 - (void)setObject:(id)object forKey:(id)key {
-    key = [key copy];
-    CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
-    [key release];
+    // NSDictionary is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**

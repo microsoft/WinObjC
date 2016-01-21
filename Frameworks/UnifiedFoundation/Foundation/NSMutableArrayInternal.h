@@ -14,8 +14,6 @@
 //
 //******************************************************************************
 
-#include "NSArrayInternal.h"
-
 @interface NSMutableArray (Internal)
 - (void)sortUsingFunction:(NSInteger (*)(id, id, void*))compare context:(void*)context range:(NSRange)range;
 @end

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,14 +10,14 @@
 //
 
 
-/*	CFUniChar.c
-	Copyright (c) 2001 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFUniChar.c
+    Copyright (c) 2001 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include <CoreFoundation/CFByteOrder.h>
 #include "CFInternal.h"
-#include "CFUniChar.h" 
+#include "CFUniChar.h"
 #include "CFStringEncodingConverterExt.h"
 #include "CFUnicodeDecomposition.h"
 #include "CFUniCharPriv.h"
@@ -33,7 +35,11 @@
 #endif
 
 #if DEPLOYMENT_TARGET_WINDOWS
-extern void _CFGetFrameworkPath(wchar_t *path, int maxLength);
+// extern void _CFGetFrameworkPath(wchar_t *path, int maxLength);
+// HACKHACK: not sure where this is supposed to come from / what its supposed to do.
+void _CFGetFrameworkPath(wchar_t *path, int maxLength) {
+    return;
+}
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
@@ -169,8 +175,8 @@ void __AddBitmapStateForName(const wchar_t *bitmapName) {
         InitializeCriticalSection(&__bitmapStateLock);
     EnterCriticalSection(&__bitmapStateLock);
     __nNumStateEntries++;
-    mappedBitmapState[__nNumStateEntries] = (wchar_t *)malloc((lstrlenW(bitmapName)+1) * sizeof(wchar_t));
-    lstrcpyW(mappedBitmapState[__nNumStateEntries], bitmapName);
+    mappedBitmapState[__nNumStateEntries] = (wchar_t *)malloc((wcslen(bitmapName)+1) * sizeof(wchar_t));
+    wcscpy(mappedBitmapState[__nNumStateEntries], bitmapName);
     LeaveCriticalSection(&__bitmapStateLock);
 }
 #endif
@@ -183,6 +189,7 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
 #error Unknown or unspecified DEPLOYMENT_TARGET
 #endif
 #if DEPLOYMENT_TARGET_WINDOWS
+/*
     HANDLE bitmapFileHandle = NULL;
     HANDLE mappingHandle = NULL;
     
@@ -208,24 +215,28 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
     *bytes = MapViewOfFileEx(mappingHandle, FILE_MAP_READ, 0, 0, 0, 0);
 
     if (NULL != fileSize) {
-	MEMORY_BASIC_INFORMATION memoryInfo;
+    MEMORY_BASIC_INFORMATION memoryInfo;
 
-	if (0 == VirtualQueryEx(mappingHandle, *bytes, &memoryInfo, sizeof(memoryInfo))) {
-	    *fileSize = 0; // This indicates no checking. Is it right ?
-	} else {
-	    *fileSize = memoryInfo.RegionSize;
-	}
+    if (0 == VirtualQueryEx(mappingHandle, *bytes, &memoryInfo, sizeof(memoryInfo))) {
+        *fileSize = 0; // This indicates no checking. Is it right ?
+    } else {
+        *fileSize = memoryInfo.RegionSize;
+    }
     }
 
     CloseHandle(mappingHandle);
 
     return (*bytes ? true : false);
+    */
+    // HACKHACK: Trying to memory map a file which maybe can be done from an app container but needs more investigation.
+    // for now return false.
+    return false;
 #else
     struct stat statBuf;
     int fd = -1;
 
     if ((fd = open(fileName, O_RDONLY, 0)) < 0) {
-	return false;
+    return false;
     }
     if (fstat(fd, &statBuf) < 0 || (*bytes = mmap(0, statBuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == (void *)-1) {
         close(fd);
@@ -237,6 +248,7 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
 
     return true;
 #endif
+
 }
 
 #endif // USE_MACHO_SEGMENT
@@ -313,7 +325,7 @@ static bool __CFUniCharLoadFile(const wchar_t *bitmapName, const void **bytes, i
 #error Unknown or unspecified DEPLOYMENT_TARGET
 #endif
 #if USE_MACHO_SEGMENT
-	*bytes = __CFGetSectDataPtr("__UNICODE", bitmapName, NULL);
+    *bytes = __CFGetSectDataPtr("__UNICODE", bitmapName, NULL);
 
     if (NULL != fileSize) *fileSize = 0;
 
@@ -384,19 +396,19 @@ static bool __CFSimpleFileSizeVerification(const void *bytes, int64_t fileSize) 
     bool result = true;
 
     if (fileSize > 0) {
-	if ((sizeof(uint32_t) * 2) > fileSize) {
-	    result = false;
-	} else {
-	    uint32_t headerSize = CFSwapInt32BigToHost(*((uint32_t *)((char *)bytes + 4)));
+    if ((sizeof(uint32_t) * 2) > fileSize) {
+        result = false;
+    } else {
+        uint32_t headerSize = CFSwapInt32BigToHost(*((uint32_t *)((char *)bytes + 4)));
 
-	    if ((headerSize < (sizeof(uint32_t) * 4)) || (headerSize > fileSize)) {
-		result = false;
-	    } else {
-		const uint32_t *lastElement = (uint32_t *)(((uint8_t *)bytes) + headerSize) - 2;
+        if ((headerSize < (sizeof(uint32_t) * 4)) || (headerSize > fileSize)) {
+        result = false;
+        } else {
+        const uint32_t *lastElement = (uint32_t *)(((uint8_t *)bytes) + headerSize) - 2;
 
-		if ((headerSize + CFSwapInt32BigToHost(lastElement[0]) + CFSwapInt32BigToHost(lastElement[1])) > headerSize) result = false;
-	    }
-	}
+        if ((headerSize + CFSwapInt32BigToHost(lastElement[0]) + CFSwapInt32BigToHost(lastElement[1])) > headerSize) result = false;
+        }
+    }
     }
 
     if (!result) CFLog(kCFLogLevelCritical, CFSTR("File size verification for Unicode database file failed."));
@@ -466,10 +478,10 @@ static bool __CFUniCharLoadBitmapData(void) {
             if (bitmapIndex == currentPlane) {
                 array[idx]._planes[bitmapIndex] = (const uint8_t *)bitmap;
                 bitmap = (uint8_t *)bitmap + (8 * 1024);
-#if defined (__cplusplus)				
-				currentPlane = *(((const uint8_t*&)bitmap)++);
+#if defined (__cplusplus)               
+                currentPlane = *(((const uint8_t*&)bitmap)++);
 #else
-				currentPlane = *((const uint8_t *)bitmap++);
+                currentPlane = *((const uint8_t *)bitmap++);
 #endif
 
             } else {
@@ -562,15 +574,15 @@ CF_PRIVATE uint8_t CFUniCharGetBitmapForPlane(uint32_t charset, uint32_t plane, 
     if (src) {
         if (isInverted) {
 #if defined (__cplusplus)
-			while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = ~(*(src++));
+            while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = ~(*(src++));
 #else
-			while (numBytes-- > 0) *((uint8_t *)bitmap++) = ~(*(src++));
+            while (numBytes-- > 0) *((uint8_t *)bitmap++) = ~(*(src++));
 #endif
         } else {
 #if defined (__cplusplus)
             while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = *(src++);
 #else
-			while (numBytes-- > 0) *((uint8_t *)bitmap++) = *(src++);
+            while (numBytes-- > 0) *((uint8_t *)bitmap++) = *(src++);
 #endif
         }
         return kCFUniCharBitmapFilled;
@@ -580,15 +592,15 @@ CF_PRIVATE uint8_t CFUniCharGetBitmapForPlane(uint32_t charset, uint32_t plane, 
         if (plane < data->_numPlanes && (src = data->_planes[plane])) {
             if (isInverted) {
 #if defined (__cplusplus)                
-				while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = *(src++);
+                while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = *(src++);
 #else
-				while (numBytes-- > 0) *((uint8_t *)bitmap++) = *(src++);
+                while (numBytes-- > 0) *((uint8_t *)bitmap++) = *(src++);
 #endif
             } else {
 #if defined (__cplusplus)                
                 while (numBytes-- > 0) *(((uint8_t *&)bitmap)++) = ~(*(src++));
 #else
-				while (numBytes-- > 0) *((uint8_t *)bitmap++) = ~(*(src++));
+                while (numBytes-- > 0) *((uint8_t *)bitmap++) = ~(*(src++));
 #endif
             }
             return kCFUniCharBitmapFilled;
@@ -598,15 +610,15 @@ CF_PRIVATE uint8_t CFUniCharGetBitmapForPlane(uint32_t charset, uint32_t plane, 
             uint8_t otherRange = (isInverted ? (uint8_t)0 : (uint8_t)0xFF);
 
 #if defined (__cplusplus)
-			*(((uint8_t *&)bitmap)++) = 0x02; // UE0001 LANGUAGE TAG
+            *(((uint8_t *&)bitmap)++) = 0x02; // UE0001 LANGUAGE TAG
 #else
-			*((uint8_t *)bitmap++) = 0x02; // UE0001 LANGUAGE TAG
+            *((uint8_t *)bitmap++) = 0x02; // UE0001 LANGUAGE TAG
 #endif
             for (idx = 1;idx < numBytes;idx++) {
 #if defined (__cplusplus)                
-				*(((uint8_t *&)bitmap)++) = ((idx >= (0x20 / 8) && (idx < (0x80 / 8))) ? asciiRange : otherRange);
+                *(((uint8_t *&)bitmap)++) = ((idx >= (0x20 / 8) && (idx < (0x80 / 8))) ? asciiRange : otherRange);
 #else
-				*((uint8_t *)bitmap++) = ((idx >= (0x20 / 8) && (idx < (0x80 / 8))) ? asciiRange : otherRange);
+                *((uint8_t *)bitmap++) = ((idx >= (0x20 / 8) && (idx < (0x80 / 8))) ? asciiRange : otherRange);
 #endif
             }
             return kCFUniCharBitmapFilled;
@@ -617,9 +629,9 @@ CF_PRIVATE uint8_t CFUniCharGetBitmapForPlane(uint32_t charset, uint32_t plane, 
             while (numBytes-- > 0) {
                 *((uint32_t *)bitmap) = value;
 #if defined (__cplusplus)                
-				bitmap = (uint8_t *)bitmap + sizeof(uint32_t);				
+                bitmap = (uint8_t *)bitmap + sizeof(uint32_t);              
 #else
-				bitmap += sizeof(uint32_t);
+                bitmap += sizeof(uint32_t);
 #endif
             }
             *(((uint8_t *)bitmap) - 5) = (isInverted ? 0x3F : 0xC0); // 0xFFFE & 0xFFFF
@@ -715,7 +727,7 @@ CF_PRIVATE const void *CFUniCharGetMappingData(uint32_t type) {
         const void *bodyBase;
         int headerSize;
         int idx, count;
-	int64_t fileSize;
+    int64_t fileSize;
 
         if (!__CFUniCharLoadFile(MAPPING_TABLE_FILE, &bytes, &fileSize) || !__CFSimpleFileSizeVerification(bytes, fileSize)) {
             __CFUnlock(&__CFUniCharMappingTableLock);
@@ -723,11 +735,11 @@ CF_PRIVATE const void *CFUniCharGetMappingData(uint32_t type) {
         }
 
 #if defined (__cplusplus)
-		bytes = (uint8_t *)bytes + 4; // Skip Unicode version
-		headerSize = *((uint8_t *)bytes); bytes = (uint8_t *)bytes + sizeof(uint32_t);
+        bytes = (uint8_t *)bytes + 4; // Skip Unicode version
+        headerSize = *((uint8_t *)bytes); bytes = (uint8_t *)bytes + sizeof(uint32_t);
 #else
-		bytes += 4; // Skip Unicode version
-		headerSize = *((uint32_t *)bytes); bytes += sizeof(uint32_t);
+        bytes += 4; // Skip Unicode version
+        headerSize = *((uint32_t *)bytes); bytes += sizeof(uint32_t);
 #endif    
         headerSize -= (sizeof(uint32_t) * 2);
         bodyBase = (char *)bytes + headerSize;
@@ -738,9 +750,9 @@ CF_PRIVATE const void *CFUniCharGetMappingData(uint32_t type) {
 
         for (idx = 0;idx < count;idx++) {
 #if defined (__cplusplus)            
-			__CFUniCharMappingTables[idx] = (char *)bodyBase + *((uint32_t *)bytes); bytes = (uint8_t *)bytes + sizeof(uint32_t);
+            __CFUniCharMappingTables[idx] = (char *)bodyBase + *((uint32_t *)bytes); bytes = (uint8_t *)bytes + sizeof(uint32_t);
 #else
-			__CFUniCharMappingTables[idx] = (char *)bodyBase + *((uint32_t *)bytes); bytes += sizeof(uint32_t);
+            __CFUniCharMappingTables[idx] = (char *)bodyBase + *((uint32_t *)bytes); bytes += sizeof(uint32_t);
 #endif
         }
     }
@@ -772,7 +784,7 @@ static uint32_t __CFUniCharGetMappedCase(const __CFUniCharCaseMappings *theTable
     p = theTable;
     q = p + (numElem-1);
     while (p <= q) {
-        divider = p + ((q - p) >> 1);	/* divide by 2 */
+        divider = p + ((q - p) >> 1);   /* divide by 2 */
         if (character < divider->_key) { q = divider - 1; }
         else if (character > divider->_key) { p = divider + 1; }
         else { return divider->_value; }
@@ -813,17 +825,17 @@ static bool __CFUniCharLoadCaseMappingTable(void) {
 }
 
 #if __CF_BIG_ENDIAN__
-#define TURKISH_LANG_CODE	(0x7472) // tr
-#define LITHUANIAN_LANG_CODE	(0x6C74) // lt
-#define AZERI_LANG_CODE		(0x617A) // az
-#define DUTCH_LANG_CODE		(0x6E6C) // nl
-#define GREEK_LANG_CODE		(0x656C) // el
+#define TURKISH_LANG_CODE   (0x7472) // tr
+#define LITHUANIAN_LANG_CODE    (0x6C74) // lt
+#define AZERI_LANG_CODE     (0x617A) // az
+#define DUTCH_LANG_CODE     (0x6E6C) // nl
+#define GREEK_LANG_CODE     (0x656C) // el
 #else
-#define TURKISH_LANG_CODE	(0x7274) // tr
-#define LITHUANIAN_LANG_CODE	(0x746C) // lt
-#define AZERI_LANG_CODE		(0x7A61) // az
-#define DUTCH_LANG_CODE		(0x6C6E) // nl
-#define GREEK_LANG_CODE		(0x6C65) // el
+#define TURKISH_LANG_CODE   (0x7274) // tr
+#define LITHUANIAN_LANG_CODE    (0x746C) // lt
+#define AZERI_LANG_CODE     (0x7A61) // az
+#define DUTCH_LANG_CODE     (0x6C6E) // nl
+#define GREEK_LANG_CODE     (0x6C65) // el
 #endif
 
 CFIndex CFUniCharMapCaseTo(UTF32Char theChar, UTF16Char *convertedChar, CFIndex maxLength, uint32_t ctype, uint32_t flags, const uint8_t *langCode) {
@@ -956,12 +968,12 @@ caseFoldRetry:
                 }
                 break;
 
-	    case DUTCH_LANG_CODE:
-		if ((theChar == 0x004A) || (theChar == 0x006A)) {
+        case DUTCH_LANG_CODE:
+        if ((theChar == 0x004A) || (theChar == 0x006A)) {
                     *convertedChar = (((ctype == kCFUniCharToUppercase) || (ctype == kCFUniCharToTitlecase) || (kCFUniCharCaseMapDutchDigraph & flags)) ? 0x004A  : 0x006A);
                     return 1;
-		}
-		break;
+        }
+        break;
 
             default: break;
         }
@@ -1176,14 +1188,14 @@ CF_PRIVATE uint32_t CFUniCharGetConditionalCaseMappingFlags(UTF32Char theChar, U
                 }
             }
         } else if (*((const uint16_t *)langCode) == DUTCH_LANG_CODE) {
-	    if (kCFUniCharCaseMapDutchDigraph & lastFlags) {
-		return (((theChar == 0x006A) || (theChar == 0x004A)) ? kCFUniCharCaseMapDutchDigraph : 0);
-	    } else {
-		if ((type == kCFUniCharToTitlecase) && ((theChar == 0x0069) || (theChar == 0x0049))) {
-		    return (((++currentIndex < length) && ((buffer[currentIndex] == 0x006A) || (buffer[currentIndex] == 0x004A))) ? kCFUniCharCaseMapDutchDigraph : 0);
-		}
-	    }
-	}
+        if (kCFUniCharCaseMapDutchDigraph & lastFlags) {
+        return (((theChar == 0x006A) || (theChar == 0x004A)) ? kCFUniCharCaseMapDutchDigraph : 0);
+        } else {
+        if ((type == kCFUniCharToTitlecase) && ((theChar == 0x0069) || (theChar == 0x0049))) {
+            return (((++currentIndex < length) && ((buffer[currentIndex] == 0x006A) || (buffer[currentIndex] == 0x004A))) ? kCFUniCharCaseMapDutchDigraph : 0);
+        }
+        }
+    }
 
         if (kCFUniCharCaseMapGreekTonos & lastFlags) { // still searching for tonos
             if (CFUniCharIsMemberOf(theChar, kCFUniCharNonBaseCharacterSet)) {
@@ -1368,11 +1380,11 @@ bool CFUniCharFillDestinationBuffer(const UTF32Char *src, CFIndex srcLength, voi
                 if (usedLength > dstLength) return false;
 
                 dstBuffer += bytesToWrite;
-                switch (bytesToWrite) {	/* note: everything falls through. */
-                    case 4:	*--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
-                    case 3:	*--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
-                    case 2:	*--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
-                    case 1:	*--dstBuffer =  currentChar | firstByteMark[bytesToWrite];
+                switch (bytesToWrite) { /* note: everything falls through. */
+                    case 4: *--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
+                    case 3: *--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
+                    case 2: *--dstBuffer = (currentChar | byteMark) & byteMask; currentChar >>= 6;
+                    case 1: *--dstBuffer =  currentChar | firstByteMark[bytesToWrite];
                 }
                 dstBuffer += bytesToWrite;
             }
@@ -1402,3 +1414,4 @@ bool CFUniCharFillDestinationBuffer(const UTF32Char *src, CFIndex srcLength, voi
 
 #undef USE_MACHO_SEGMENT
 
+// clang-format on

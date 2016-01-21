@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFSystemDirectories.c
-	Copyright (c) 1997 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Kevin Perry
+/*  CFSystemDirectories.c
+    Copyright (c) 1997 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Kevin Perry
 */
 
 /*
@@ -20,7 +22,7 @@
         On Windows, it calls the enumeration functions defined here.
 */
 
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include "CFInternal.h"
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
@@ -64,28 +66,28 @@ CFArrayRef CFCopySearchPathForDirectoriesInDomains(CFSearchPathDirectory directo
     array = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
     state = __CFStartSearchPathEnumeration(directory, domainMask);
     while ((state = __CFGetNextSearchPathEnumeration(state, (uint8_t *)cPath, sizeof(cPath)))) {
-	CFURLRef url = NULL;
-	if (expandTilde && (cPath[0] == '~')) {
-	    if (homeLen < 0) {
-		CFURLRef homeURL = CFCopyHomeDirectoryURLForUser(NULL);
-		if (homeURL) {
-		    CFURLGetFileSystemRepresentation(homeURL, true, (uint8_t *)home, CFMaxPathSize);
-		    homeLen = strlen(home);
-		    CFRelease(homeURL);
-		}
-	    }
+    CFURLRef url = NULL;
+    if (expandTilde && (cPath[0] == '~')) {
+        if (homeLen < 0) {
+        CFURLRef homeURL = CFCopyHomeDirectoryURLForUser(NULL);
+        if (homeURL) {
+            CFURLGetFileSystemRepresentation(homeURL, true, (uint8_t *)home, CFMaxPathSize);
+            homeLen = strlen(home);
+            CFRelease(homeURL);
+        }
+        }
             if (homeLen + strlen(cPath) < CFMaxPathSize) {
-		home[homeLen] = '\0';
-		strlcat(home, &cPath[1], sizeof(home));
-		url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorSystemDefault, (uint8_t *)home, strlen(home), true);
-	    }
-	} else {
-	    url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorSystemDefault, (uint8_t *)cPath, strlen(cPath), true);
-	}
-	if (url) {
-	    CFArrayAppendValue(array, url);
-	    CFRelease(url);
-	}
+        home[homeLen] = '\0';
+        strlcat(home, &cPath[1], sizeof(home));
+        url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorSystemDefault, (uint8_t *)home, strlen(home), true);
+        }
+    } else {
+        url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorSystemDefault, (uint8_t *)cPath, strlen(cPath), true);
+    }
+    if (url) {
+        CFArrayAppendValue(array, url);
+        CFRelease(url);
+    }
     }
     return array;
 }
@@ -100,3 +102,4 @@ CFArrayRef CFCopySearchPathForDirectoriesInDomains(CFSearchPathDirectory directo
 #undef invalidDomains
 #undef invalidDomains
 
+// clang-format on

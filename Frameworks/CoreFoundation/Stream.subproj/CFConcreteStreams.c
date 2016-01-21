@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,14 +10,14 @@
 //
 
 
-/*	CFConcreteStreams.c
-	Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: John Iarocci
+/*  CFConcreteStreams.c
+    Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: John Iarocci
 */
 
 #include "CFStreamInternal.h"
 #include "CFInternal.h"
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include <CoreFoundation/CFNumber.h>
 #include <sys/types.h>
 #include <stdlib.h>
@@ -42,11 +44,11 @@ typedef struct {
     int fd;
 #ifdef REAL_FILE_SCHEDULING
     union {
-        CFFileDescriptorRef cffd;	// ref created once we open and have an fd
-        CFMutableArrayRef rlArray;	// scheduling information prior to open
+        CFFileDescriptorRef cffd;   // ref created once we open and have an fd
+        CFMutableArrayRef rlArray;  // scheduling information prior to open
     } rlInfo; // If fd > 0, cffd exists.  Otherwise, rlArray.
 #else
-    uint16_t scheduled;	// ref count of how many times we've been scheduled
+    uint16_t scheduled; // ref count of how many times we've been scheduled
 #endif
     CFOptionFlags flags;    
     off_t offset;
@@ -105,7 +107,7 @@ static Boolean constructFD(_CFFileStreamContext *fileStream, CFStreamError *erro
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
         fileStream->fd = open((const char *)path, flags, 0666);
 #elif DEPLOYMENT_TARGET_WINDOWS
-	fileStream->fd = _wopen(path, flags, 0666);
+    fileStream->fd = _wopen(path, flags, 0666);
 #endif
         if (fileStream->fd < 0)
             break;
@@ -382,8 +384,8 @@ static void fileUnschedule(struct _CFStream *stream, CFRunLoopRef runLoop, CFStr
             }
         }
     } else if (fileStream->rlInfo.cffd) {
-		if (__CFBitIsSet(fileStream->flags, USE_RUNLOOP_ARRAY)) {
-			// we know that fileStream->rlInfo.rlArray is non-NULL because it is in a union with fileStream->rlInfo.cffd
+        if (__CFBitIsSet(fileStream->flags, USE_RUNLOOP_ARRAY)) {
+            // we know that fileStream->rlInfo.rlArray is non-NULL because it is in a union with fileStream->rlInfo.cffd
             CFMutableArrayRef runloops = fileStream->rlInfo.rlArray;
             CFIndex i, c;
             for (i = 0, c = CFArrayGetCount(runloops); i+1 < c; i += 2) {
@@ -394,10 +396,10 @@ static void fileUnschedule(struct _CFStream *stream, CFRunLoopRef runLoop, CFStr
                 }
             }
         } else {
-			CFRunLoopSourceRef rlSrc = CFFileDescriptorCreateRunLoopSource(CFGetAllocator(stream), fileStream->rlInfo.cffd, 0);
-			CFRunLoopRemoveSource(runLoop, rlSrc, runLoopMode);
-			CFRelease(rlSrc);
-		}
+            CFRunLoopSourceRef rlSrc = CFFileDescriptorCreateRunLoopSource(CFGetAllocator(stream), fileStream->rlInfo.cffd, 0);
+            CFRunLoopRemoveSource(runLoop, rlSrc, runLoopMode);
+            CFRelease(rlSrc);
+        }
     }
 #else
     if (fileStream->scheduled > 0)
@@ -424,12 +426,12 @@ static CFTypeRef fileCopyProperty(struct _CFStream *stream, CFStringRef property
         }
 #if DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX
     } else if (CFEqual(propertyName, _kCFStreamPropertyFileNativeHandle)) {
-		int fd = fileStream->fd;
-		if (fd != -1) {
-			result = CFDataCreate(CFGetAllocator((CFTypeRef) stream), (const uint8_t *)&fd, sizeof(fd));
-		}
+        int fd = fileStream->fd;
+        if (fd != -1) {
+            result = CFDataCreate(CFGetAllocator((CFTypeRef) stream), (const uint8_t *)&fd, sizeof(fd));
+        }
 #endif
-	}
+    }
 
     return result;
 }
@@ -444,7 +446,7 @@ static Boolean fileSetProperty(struct _CFStream *stream, CFStringRef prop, CFTyp
     {
         if (val == kCFBooleanTrue) {
             __CFBitSet(fileStream->flags, APPEND);
-            fileStream->offset = -1;				// Can't offset and append on the stream
+            fileStream->offset = -1;                // Can't offset and append on the stream
         } else {
             __CFBitClear(fileStream->flags, APPEND);
         }
@@ -485,7 +487,7 @@ static void *fileCreate(struct _CFStream *stream, void *info) {
     return newCtxt;
 }
 
-static void	fileFinalize(struct _CFStream *stream, void *info) {
+static void fileFinalize(struct _CFStream *stream, void *info) {
     _CFFileStreamContext *ctxt = (_CFFileStreamContext *)info;
     if (ctxt->fd > 0) {
 #ifdef REAL_FILE_SCHEDULING
@@ -557,8 +559,8 @@ static void readDataSchedule(struct _CFStream *stream, CFRunLoopRef rl, CFString
     _CFReadDataStreamContext *dataStream = (_CFReadDataStreamContext *)info;
     if (dataStream->scheduled == FALSE) {
         dataStream->scheduled = TRUE;
-		if (CFReadStreamGetStatus((CFReadStreamRef)stream) != kCFStreamStatusOpen)
-			return;
+        if (CFReadStreamGetStatus((CFReadStreamRef)stream) != kCFStreamStatusOpen)
+            return;
         if (CFDataGetBytePtr(dataStream->data) + CFDataGetLength(dataStream->data) > dataStream->loc) {
             CFReadStreamSignalEvent((CFReadStreamRef)stream, kCFStreamEventHasBytesAvailable, NULL);
         } else {
@@ -634,8 +636,8 @@ static void writeDataSchedule(struct _CFStream *stream, CFRunLoopRef rl, CFStrin
     _CFWriteDataStreamContext *dataStream = (_CFWriteDataStreamContext *)info;
     if (dataStream->scheduled == FALSE) {
         dataStream->scheduled = TRUE;
-		if (CFWriteStreamGetStatus((CFWriteStreamRef)stream) != kCFStreamStatusOpen)
-			return;
+        if (CFWriteStreamGetStatus((CFWriteStreamRef)stream) != kCFStreamStatusOpen)
+            return;
         if (dataStream->bufferAllocator != kCFAllocatorNull || dataStream->currentBuf->capacity > dataStream->currentBuf->length) {
             CFWriteStreamSignalEvent((CFWriteStreamRef)stream, kCFStreamEventCanAcceptBytes, NULL);
         } else {
@@ -871,3 +873,4 @@ CF_EXPORT CFWriteStreamRef CFWriteStreamCreateWithAllocatedBuffers(CFAllocatorRe
 
 #undef BUF_SIZE
 
+// clang-format on

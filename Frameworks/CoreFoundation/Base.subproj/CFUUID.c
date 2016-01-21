@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,14 +10,14 @@
 //
 
 
-/*	CFUUID.c
-	Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
-	Responsibility: David Smith
+/*  CFUUID.c
+    Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
+    Responsibility: David Smith
 */
 
 #include <CoreFoundation/CFUUID.h>
 #include "CFInternal.h"
-#include "uuid/uuid.h"
+// #include "uuid/uuid.h"
 
 #if __HAS_DISPATCH__
 #include <dispatch/dispatch.h>
@@ -25,7 +27,8 @@ CF_INLINE void LOCKED(dispatch_block_t work) {
     static dispatch_once_t guard;
     static dispatch_queue_t CFUUIDGlobalDataLock;
     dispatch_once(&guard, ^{
-        dispatch_queue_attr_t dqattr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qos_class_main(), 0);
+        // dispatch_queue_attr_t dqattr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, qos_class_main(), 0); HACKHACK: can't support this in our libdispatch
+        dispatch_queue_attr_t dqattr = nullptr;
         CFUUIDGlobalDataLock = dispatch_queue_create("com.apple.CFUUID", dqattr);
     });
     dispatch_sync(CFUUIDGlobalDataLock, work);
@@ -214,11 +217,11 @@ static CFTypeID __kCFUUIDTypeID = _kCFRuntimeNotATypeID;
 static const CFRuntimeClass __CFUUIDClass = {
     0,
     "CFUUID",
-    NULL,	// init
-    NULL,	// copy
+    NULL,   // init
+    NULL,   // copy
     __CFUUIDDeallocate,
-    NULL,	// equal
-    NULL,	// hash
+    NULL,   // equal
+    NULL,   // hash
     __CFUUIDCopyFormattingDescription,
     __CFUUIDCopyDescription
 };
@@ -252,6 +255,7 @@ static CFUUIDRef __CFUUIDCreateWithBytesPrimitive(CFAllocatorRef allocator, CFUU
 
 #if DEPLOYMENT_TARGET_WINDOWS
 #include <Rpc.h>
+#include <Objbase.h>
 #elif DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
 #if DEPLOYMENT_RUNTIME_SWIFT
 #include "uuid/uuid.h"
@@ -268,8 +272,8 @@ CFUUIDRef CFUUIDCreate(CFAllocatorRef alloc) {
     LOCKED(^{
 #if DEPLOYMENT_TARGET_WINDOWS
         UUID u;
-        long rStatus = UuidCreate(&u);
-        if (RPC_S_OK != rStatus && RPC_S_UUID_LOCAL_ONLY != rStatus) retval = 1;
+        long status = ::CoCreateGuid(&u);
+        if (S_OK != status && RPC_S_UUID_LOCAL_ONLY != status) retval = 1;
         memmove(&bytes, &u, sizeof(bytes));
 #elif DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_LINUX
         static Boolean useV1UUIDs = false, checked = false;
@@ -501,3 +505,4 @@ void _cf_uuid_unparse_upper(const _cf_uuid_t uu, _cf_uuid_string_t out) { uuid_u
 
 #endif
 
+// clang-format on

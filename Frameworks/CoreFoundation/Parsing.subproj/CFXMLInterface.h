@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -7,8 +9,8 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
-/*	CFXMLInterface.h
-	Copyright (c) 2015 Apple Inc. and the Swift project authors
+/*  CFXMLInterface.h
+    Copyright (c) 2015 Apple Inc. and the Swift project authors
  */
 
 #if !defined(__COREFOUNDATION_CFXMLINTERFACE__)
@@ -136,7 +138,7 @@ typedef void* _CFXMLEntityPtr;
 typedef void* _CFXMLDTDPtr;
 typedef void* _CFXMLDTDNodePtr;
 
-_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr namespace, const char* name);
+_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr xmlNamespace, const char* name);
 _CFXMLNodePtr _CFXMLCopyNode(_CFXMLNodePtr node, bool recursive);
 
 _CFXMLDocPtr _CFXMLNewDoc(const unsigned char* version);
@@ -242,3 +244,5 @@ CF_ASSUME_NONNULL_END
 CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* __COREFOUNDATION_CFXMLINTERFACE__ */
+
+// clang-format on

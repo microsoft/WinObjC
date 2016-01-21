@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -21,6 +23,9 @@
 #include <CoreFoundation/CFNumber.h>
 #include "CFInternal.h"
 #include <math.h>
+#include <chrono>
+
+#include <Foundation/NSDate.h>
 
 #if __HAS_DISPATCH__
 #include <dispatch/dispatch.h>
@@ -86,10 +91,10 @@ CF_PRIVATE dispatch_time_t __CFTSRToDispatchTime(uint64_t tsr) {
 
 CFAbsoluteTime CFAbsoluteTimeGetCurrent(void) {
     CFAbsoluteTime ret;
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    ret = (CFTimeInterval)tv.tv_sec - kCFAbsoluteTimeIntervalSince1970;
-    ret += (1.0E-6 * (CFTimeInterval)tv.tv_usec);
+
+    auto timeSinceEpoch = std::chrono::system_clock::now().time_since_epoch();
+    auto timeSinceEpochSec = std::chrono::duration_cast<std::chrono::seconds>(timeSinceEpoch).count();
+    ret = timeSinceEpochSec;
     return ret;
 }
 
@@ -540,4 +545,4 @@ SInt32 CFAbsoluteTimeGetWeekOfYear(CFAbsoluteTime at, CFTimeZoneRef tz) {
     return (__CFDaysBeforeMonth(month, year, isleap(year)) + day + (dow0101 - 11) % 7 + 2) / 7 + 1;
 }
 
-
+// clang-format on

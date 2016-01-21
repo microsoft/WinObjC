@@ -70,7 +70,7 @@ struct ArbitrarilyComplexStruct {
     _Complex double c;
 };
 
-TEST(Foundation, NSValue) {
+TEST(NSValue, NSValue) {
     perform("can store a pointer",
             ^bool {
                 id val = [NSValue valueWithPointer:(void*)0x10101];

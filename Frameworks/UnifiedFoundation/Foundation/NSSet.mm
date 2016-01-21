@@ -22,135 +22,9 @@
 #include "Foundation/NSEnumerator.h"
 #include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
-
-void NSSetTableInit(NSSet* set, NSUInteger capacity) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-    set->_table.dict = CFDictionaryCreateMutable(NULL, capacity, &kCFTypeDictionaryKeyCallBacks, NULL);
-}
-
-id NSSetTableMember(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-
-    NSUInteger count = 0;
-
-    if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&count)) {
-        return object;
-    }
-
-    return nil;
-}
-
-NSUInteger NSSetTableGetValue(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-
-    NSUInteger count = 0;
-
-    if (CFDictionaryGetValueIfPresent(set->_table.dict, (void*)object, (const void**)&count)) {
-        return count;
-    }
-
-    return 0;
-}
-
-void NSSetTableAddObject(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-
-    if (object == nil) {
-        return;
-    }
-
-    NSUInteger currentCount = NSSetTableGetValue(set, object);
-    if (currentCount == 0) {
-        CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(NSUInteger)1);
-    } else {
-        if (object_getClass(set) == [NSCountedSet class]) {
-            // Increment the object count. If the count exceeds NSUIntegerMax, throw an exception.
-            if (currentCount < NSUIntegerMax) {
-                CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(currentCount + 1));
-            } else {
-                [NSException raise:NSOverflowException format:@"Object count exceeds NSUIntegerMax for object 0x%p!", (void*)object];
-            }
-        }
-    }
-}
-
-void NSSetTableInitWithObjects(NSSet* set, id* objects, int count) {
-    NSSetTableInit(set, count);
-    while (count--) {
-        NSSetTableAddObject(set, *objects);
-        objects++;
-    }
-}
-
-void NSSetTableFree(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-
-    if (set->_table.dict != NULL) {
-        CFDictionaryRemoveAllValues(set->_table.dict);
-        _CFDictionaryDestroyInternal(set->_table.dict);
-    }
-}
-
-void NSSetTableRemoveObject(NSSet* set, id object) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-
-    if (object_getClass(set) != [NSCountedSet class]) {
-        CFDictionaryRemoveValue(set->_table.dict, (void*)object);
-    } else {
-        NSUInteger currentCount = NSSetTableGetValue(set, object);
-        if (currentCount != 0) {
-            // Remove the object if its count is 1 else just decrement its count and keep the object in the the
-            // dictionary.
-            if (currentCount == 1) {
-                CFDictionaryRemoveValue(set->_table.dict, (void*)object);
-            } else {
-                CFDictionarySetValue(set->_table.dict, (const void*)object, (void*)(currentCount - 1));
-            }
-        }
-    }
-}
-
-void NSSetTableRemoveAllObjects(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-    CFDictionaryRemoveAllValues(set->_table.dict);
-}
-
-NSUInteger NSSetTableCount(NSSet* set) {
-    if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
-        object_getClass(set) != [NSCountedSet class]) {
-        assert(0);
-    }
-    return CFDictionaryGetCount(set->_table.dict);
-}
-
-void NSSetGetEnumerator(NSSet* set, void* enumeratorHolder) {
-    CFDictionaryGetKeyEnumerator(set->_table.dict, enumeratorHolder);
-}
-
-int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, int count) {
-    return CFDictionaryGetNextKey(set->_table.dict, enumeratorHolder, ret, count);
-}
+#include "NSSetConcrete.h"
+#include "VAListHelper.h"
+#include "NSRaise.h"
 
 @implementation NSSet
 
@@ -165,39 +39,12 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 + (instancetype)setWithObjects:(NSObject*)first, ... {
-    va_list pReader;
-    va_start(pReader, first);
+    va_list argList;
+    va_start(argList, first);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
+    va_end(argList);
 
-    int max = 0;
-    int count = 0;
-    id* objs = NULL;
-
-    if (count >= max) {
-        max += 64;
-        objs = (id*)IwRealloc(objs, max * sizeof(id));
-    }
-
-    objs[count++] = first;
-
-    id curVal = va_arg(pReader, id);
-
-    while (curVal != NULL) {
-        if (count >= max) {
-            max += 64;
-            objs = (id*)IwRealloc(objs, max * sizeof(id));
-        }
-
-        objs[count++] = curVal;
-
-        curVal = va_arg(pReader, id);
-    }
-
-    va_end(pReader);
-
-    NSSet* ret = [[self alloc] initWithObjects:objs count:count];
-    IwFree(objs);
-
-    return [ret autorelease];
+    return [[[self alloc] initWithObjects:flatArgs.data() count:flatArgs.size()] autorelease];
 }
 
 /**
@@ -247,7 +94,6 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (instancetype)init {
-    NSSetTableInit(self, 0);
     return self;
 }
 
@@ -255,7 +101,6 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
-    NSSetTableInitWithObjects(self, objects, count);
     return self;
 }
 
@@ -416,16 +261,32 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 /**
  @Status Interoperable
 */
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
+- (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
+    // HACKHACK: this is inefficient. There may be private functions from CF that we can use to do better.
+
     if (state->state == 0) {
+        state->mutationsPtr = (unsigned long*)&state->extra[1];
+        state->extra[0] = (unsigned long)[self objectEnumerator];
         state->state = 1;
-        state->mutationsPtr = &state->state;
-        NSSetGetEnumerator(self, state->extra);
     }
     assert(maxCount > 0);
 
+    NSUInteger numRet = 0;
     state->itemsPtr = stackBuf;
-    return NSSetEnumeratorGetNextObject(self, state->extra, stackBuf, maxCount);
+
+    while (maxCount > 0) {
+        id next = [(id)state->extra[0] nextObject];
+        if (next == nil) {
+            break;
+        }
+
+        *stackBuf = next;
+        stackBuf++;
+        numRet++;
+        maxCount--;
+    }
+
+    return numRet;
 }
 
 /**
@@ -525,31 +386,39 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (id)member:(id)obj {
-    return NSSetTableMember(self, obj);
+    // NSSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned)count {
-    return NSSetTableCount(self);
+    // NSSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    NSSetTableFree(self);
     [super dealloc];
+}
+
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [NSMutableSet class] || self == [NSSet class]) {
+        return [NSSetConcrete allocWithZone:zone];
+    }
+
+    return [super allocWithZone:zone];
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)NSSetGetEnumerator
-                                      forObject:self
-                                   nextFunction:(nextValueFunc)NSSetEnumeratorGetNextObject];
+    // NSSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

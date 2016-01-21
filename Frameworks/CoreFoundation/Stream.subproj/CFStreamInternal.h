@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -11,10 +13,10 @@
 #if !defined(__COREFOUNDATION_CFSTREAMINTERNAL__)
 #define __COREFOUNDATION_CFSTREAMINTERNAL__ 1
 
-#include <CoreFoundation/CFStreamAbstract.h>
-#include <CoreFoundation/CFStreamPriv.h>
+#include "CFStreamAbstract.h"
+#include "CFStreamPriv.h"
 #include <CoreFoundation/CFBase.h>
-#include <CoreFoundation/CFRuntime.h>
+#include "CFRuntime.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -58,4 +60,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFSTREAMINTERNAL__ */
 
-
+// clang-format on

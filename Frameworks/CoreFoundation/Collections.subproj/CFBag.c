@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,10 +10,10 @@
 //
 
 
-/*	CFBag.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Michael LeHew
-	Machine generated from Notes/HashingCode.template
+/*  CFBag.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Michael LeHew
+    Machine generated from Notes/HashingCode.template
 */
 
 
@@ -129,47 +131,47 @@ static CFBasicHashRef __CFBagCreateGeneric(CFAllocatorRef allocator, const CFHas
         const_any_pointer_t (*value_retain)(CFAllocatorRef, const_any_pointer_t) = NULL;
         void (*value_release)(CFAllocatorRef, const_any_pointer_t) = NULL;
 
-	if ((NULL == keyCallBacks || 0 == keyCallBacks->version) && (!useValueCB || NULL == valueCallBacks || 0 == valueCallBacks->version)) {
-	    Boolean keyRetainNull = NULL == keyCallBacks || NULL == keyCallBacks->retain;
-	    Boolean keyReleaseNull = NULL == keyCallBacks || NULL == keyCallBacks->release;
-	    Boolean keyEquateNull = NULL == keyCallBacks || NULL == keyCallBacks->equal;
-	    Boolean keyHashNull = NULL == keyCallBacks || NULL == keyCallBacks->hash;
-	    Boolean keyDescribeNull = NULL == keyCallBacks || NULL == keyCallBacks->copyDescription;
+    if ((NULL == keyCallBacks || 0 == keyCallBacks->version) && (!useValueCB || NULL == valueCallBacks || 0 == valueCallBacks->version)) {
+        Boolean keyRetainNull = NULL == keyCallBacks || NULL == keyCallBacks->retain;
+        Boolean keyReleaseNull = NULL == keyCallBacks || NULL == keyCallBacks->release;
+        Boolean keyEquateNull = NULL == keyCallBacks || NULL == keyCallBacks->equal;
+        Boolean keyHashNull = NULL == keyCallBacks || NULL == keyCallBacks->hash;
+        Boolean keyDescribeNull = NULL == keyCallBacks || NULL == keyCallBacks->copyDescription;
 
-	    Boolean valueRetainNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->retain)) || (!useValueCB && keyRetainNull);
-	    Boolean valueReleaseNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->release)) || (!useValueCB && keyReleaseNull);
-	    Boolean valueEquateNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->equal)) || (!useValueCB && keyEquateNull);
-	    Boolean valueDescribeNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeNull);
+        Boolean valueRetainNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->retain)) || (!useValueCB && keyRetainNull);
+        Boolean valueReleaseNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->release)) || (!useValueCB && keyReleaseNull);
+        Boolean valueEquateNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->equal)) || (!useValueCB && keyEquateNull);
+        Boolean valueDescribeNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeNull);
 
-	    Boolean keyRetainStd = keyRetainNull || __CFTypeCollectionRetain == keyCallBacks->retain;
-	    Boolean keyReleaseStd = keyReleaseNull || __CFTypeCollectionRelease == keyCallBacks->release;
-	    Boolean keyEquateStd = keyEquateNull || CFEqual == keyCallBacks->equal;
-	    Boolean keyHashStd = keyHashNull || CFHash == keyCallBacks->hash;
-	    Boolean keyDescribeStd = keyDescribeNull || CFCopyDescription == keyCallBacks->copyDescription;
+        Boolean keyRetainStd = keyRetainNull || __CFTypeCollectionRetain == keyCallBacks->retain;
+        Boolean keyReleaseStd = keyReleaseNull || __CFTypeCollectionRelease == keyCallBacks->release;
+        Boolean keyEquateStd = keyEquateNull || CFEqual == keyCallBacks->equal;
+        Boolean keyHashStd = keyHashNull || CFHash == keyCallBacks->hash;
+        Boolean keyDescribeStd = keyDescribeNull || CFCopyDescription == keyCallBacks->copyDescription;
 
-	    Boolean valueRetainStd = (useValueCB && (valueRetainNull || __CFTypeCollectionRetain == valueCallBacks->retain)) || (!useValueCB && keyRetainStd);
-	    Boolean valueReleaseStd = (useValueCB && (valueReleaseNull || __CFTypeCollectionRelease == valueCallBacks->release)) || (!useValueCB && keyReleaseStd);
-	    Boolean valueEquateStd = (useValueCB && (valueEquateNull || CFEqual == valueCallBacks->equal)) || (!useValueCB && keyEquateStd);
-	    Boolean valueDescribeStd = (useValueCB && (valueDescribeNull || CFCopyDescription == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeStd);
+        Boolean valueRetainStd = (useValueCB && (valueRetainNull || __CFTypeCollectionRetain == valueCallBacks->retain)) || (!useValueCB && keyRetainStd);
+        Boolean valueReleaseStd = (useValueCB && (valueReleaseNull || __CFTypeCollectionRelease == valueCallBacks->release)) || (!useValueCB && keyReleaseStd);
+        Boolean valueEquateStd = (useValueCB && (valueEquateNull || CFEqual == valueCallBacks->equal)) || (!useValueCB && keyEquateStd);
+        Boolean valueDescribeStd = (useValueCB && (valueDescribeNull || CFCopyDescription == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeStd);
 
-	    if (keyRetainStd && keyReleaseStd && keyEquateStd && keyHashStd && keyDescribeStd && valueRetainStd && valueReleaseStd && valueEquateStd && valueDescribeStd) {
-		set_cb = true;
-		if (!(keyRetainNull || keyReleaseNull || keyEquateNull || keyHashNull || keyDescribeNull || valueRetainNull || valueReleaseNull || valueEquateNull || valueDescribeNull)) {
-		    std_cb = true;
-		} else {
-		    // just set these to tickle the GC Strong logic below in a way that mimics past practice
-		    key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
-		    key_release = keyCallBacks ? keyCallBacks->release : NULL;
-		    if (useValueCB) {
-			value_retain = valueCallBacks ? valueCallBacks->retain : NULL;
-			value_release = valueCallBacks ? valueCallBacks->release : NULL;
-		    } else {
-			value_retain = key_retain;
-			value_release = key_release;
-		    }
-		}
-	    }
-	}
+        if (keyRetainStd && keyReleaseStd && keyEquateStd && keyHashStd && keyDescribeStd && valueRetainStd && valueReleaseStd && valueEquateStd && valueDescribeStd) {
+        set_cb = true;
+        if (!(keyRetainNull || keyReleaseNull || keyEquateNull || keyHashNull || keyDescribeNull || valueRetainNull || valueReleaseNull || valueEquateNull || valueDescribeNull)) {
+            std_cb = true;
+        } else {
+            // just set these to tickle the GC Strong logic below in a way that mimics past practice
+            key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
+            key_release = keyCallBacks ? keyCallBacks->release : NULL;
+            if (useValueCB) {
+            value_retain = valueCallBacks ? valueCallBacks->retain : NULL;
+            value_release = valueCallBacks ? valueCallBacks->release : NULL;
+            } else {
+            value_retain = key_retain;
+            value_release = key_release;
+            }
+        }
+        }
+    }
 
         if (!set_cb) {
             key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
@@ -606,7 +608,7 @@ void CFBagAddValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFBagGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashAddValue((CFBasicHashRef)hc, (uintptr_t)key, (uintptr_t)value);
@@ -629,7 +631,7 @@ void CFBagReplaceValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFBagGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashReplaceValue((CFBasicHashRef)hc, (uintptr_t)key, (uintptr_t)value);
@@ -652,7 +654,7 @@ void CFBagSetValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFBagGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
 //#warning this for a dictionary used to not replace the key
@@ -670,7 +672,7 @@ void CFBagRemoveValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFBagGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashRemoveValue((CFBasicHashRef)hc, (uintptr_t)key);
@@ -687,7 +689,7 @@ void CFBagRemoveAllValues(CFMutableHashRef hc) {
     __CFGenericValidateType(hc, CFBagGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGEALL(hc);
     CFBasicHashRemoveAllValues((CFBasicHashRef)hc);
@@ -699,3 +701,4 @@ void CFBagRemoveAllValues(CFMutableHashRef hc) {
 #undef CF_OBJC_KVO_WILLCHANGEALL
 #undef CF_OBJC_KVO_DIDCHANGEALL
 
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFMachPort.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFMachPort.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
 #include <CoreFoundation/CFMachPort.h>
@@ -21,7 +23,7 @@
 #include <dispatch/private.h>
 #endif
 #include <mach/mach.h>
-#include <dlfcn.h>
+// #include <dlfcn.h> // HACKAHCK: commented out since we don't have this.
 #include <stdio.h>
 #include "CFInternal.h"
 
@@ -31,7 +33,9 @@ static dispatch_queue_t _CFMachPortQueue() {
     static volatile dispatch_queue_t __CFMachPortQueue = NULL;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dispatch_queue_attr_t dqattr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
+        // HACKHACK: our libdispatch doesn't have this. Instead create and set priority manually (not the same but close?) // dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
+        dispatch_queue_attr_t dqattr = dispatch_queue_attr_create();
+        dispatch_queue_attr_set_priority(dqattr, DISPATCH_QUEUE_PRIORITY_BACKGROUND);
         __CFMachPortQueue = dispatch_queue_create("com.apple.CFMachPort", dqattr);
     });
     return __CFMachPortQueue;
@@ -120,9 +124,9 @@ static CFStringRef __CFMachPortCopyDescription(CFTypeRef cf) {
     if (NULL == contextDesc) {
         contextDesc = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CFMachPort context %p>"), mp->_context.info);
     }
-    Dl_info info;
+    // Dl_info info;
     void *addr = mp->_callout;
-    const char *name = (dladdr(addr, &info) && info.dli_saddr == addr && info.dli_sname) ? info.dli_sname : "???";
+    const char *name = "???"; // (dladdr(addr, &info) && info.dli_saddr == addr && info.dli_sname) ? info.dli_sname : "???"; // HACKHACK: no dlfcn
     CFStringRef result = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CFMachPort %p [%p]>{valid = %s, port = %x, source = %p, callout = %s (%p), context = %@}"), cf, CFGetAllocator(mp), (__CFMachPortIsValid(mp) ? "Yes" : "No"), mp->_port, mp->_source, name, addr, contextDesc);
     if (NULL != contextDesc) {
         CFRelease(contextDesc);
@@ -153,7 +157,7 @@ CF_INLINE void __CFMachPortInvalidateLocked(CFRunLoopSourceRef source, CFMachPor
         __CFLock(&mp->_lock);
     }
     mp->_state = kCFMachPortStateInvalid;
-    OSMemoryBarrier();
+    MemoryBarrier();
 }
 
 static void __CFMachPortDeallocate(CFTypeRef cf) {
@@ -166,7 +170,7 @@ static void __CFMachPortDeallocate(CFTypeRef cf) {
     Boolean wasReady = (mp->_state == kCFMachPortStateReady);
     if (wasReady) {
         mp->_state = kCFMachPortStateInvalidating;
-        OSMemoryBarrier();
+        MemoryBarrier();
 #if __HAS_DISPATCH__
         if (mp->_dsrc) {
             dispatch_source_cancel(mp->_dsrc);
@@ -200,14 +204,16 @@ static void __CFMachPortDeallocate(CFTypeRef cf) {
             // MUST deallocate the send right FIRST if necessary,
             // then the receive right if necessary.  Don't ask me why;
             // if it's done in the other order the port will leak.
+
+            // HACKHACK: don't have mach_port_mod_refs.
             if (doSend2) {
-                mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_SEND, -1);
+                // mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_SEND, -1);
             }
             if (doSend) {
-                mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_SEND, -1);
+                // mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_SEND, -1);
             }
             if (doReceive) {
-                mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_RECEIVE, -1);
+                // mach_port_mod_refs(mach_task_self(), port, MACH_PORT_RIGHT_RECEIVE, -1);
             }
         });
 #endif
@@ -244,7 +250,7 @@ static void __CFMachPortChecker(Boolean fromTimer) {
                 }
                 else {
                     mp->_state = kCFMachPortStateInvalidating;
-                    OSMemoryBarrier();
+                    MemoryBarrier();
 #if __HAS_DISPATCH__
                     if (mp->_dsrc) {
                         dispatch_source_cancel(mp->_dsrc);
@@ -363,7 +369,7 @@ CFMachPortRef _CFMachPortCreateWithPort2(CFAllocatorRef allocator, mach_port_t p
             memory->_context.info = context->retain ? (void *)context->retain(context->info) : context->info;
             memory->retain = context->retain;
             memory->release = context->release;
-	    memory->_context.retain = (void *)0xAAAAAAAAAACCCAAA;
+        memory->_context.retain = (void *)0xAAAAAAAAAACCCAAA;
             memory->_context.release = (void *)0xAAAAAAAAAABBBAAA;
         }
         memory->_state = kCFMachPortStateReady;
@@ -377,7 +383,7 @@ CFMachPortRef _CFMachPortCreateWithPort2(CFAllocatorRef allocator, mach_port_t p
 #if __HAS_DISPATCH__
         if (type & MACH_PORT_TYPE_SEND_RIGHTS) {
             dispatch_source_t theSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_MACH_SEND, port, DISPATCH_MACH_SEND_DEAD, _CFMachPortQueue());
-	    if (theSource) {
+        if (theSource) {
                 dispatch_semaphore_t sem = dispatch_semaphore_create(0);
                 dispatch_retain(sem);
                 dispatch_source_set_cancel_handler(theSource, ^{ dispatch_semaphore_signal(sem); dispatch_release(sem); dispatch_release(theSource); });
@@ -385,7 +391,7 @@ CFMachPortRef _CFMachPortCreateWithPort2(CFAllocatorRef allocator, mach_port_t p
                 memory->_dsrc_sem = sem;
                 memory->_dsrc = theSource;
                 dispatch_resume(theSource);
-	    }
+        }
         }
 #endif
     }
@@ -435,7 +441,7 @@ void CFMachPortInvalidate(CFMachPortRef mp) {
     wasReady = (mp->_state == kCFMachPortStateReady);
     if (wasReady) {
         mp->_state = kCFMachPortStateInvalidating;
-        OSMemoryBarrier();
+        MemoryBarrier();
         for (CFIndex idx = 0, cnt = __CFAllMachPorts ? CFArrayGetCount(__CFAllMachPorts) : 0; idx < cnt; idx++) {
             CFMachPortRef p = (CFMachPortRef)CFArrayGetValueAtIndex(__CFAllMachPorts, idx);
             if (p == mp) {
@@ -482,7 +488,7 @@ Boolean CFMachPortIsValid(CFMachPortRef mp) {
     mach_port_type_t type = 0;
     kern_return_t ret = mach_port_type(mach_task_self(), mp->_port, &type);
     if (KERN_SUCCESS != ret || (type & ~(MACH_PORT_TYPE_SEND|MACH_PORT_TYPE_SEND_ONCE|MACH_PORT_TYPE_RECEIVE|MACH_PORT_TYPE_DNREQUEST))) {
-	return false;
+    return false;
     }
     return true;
 }
@@ -501,11 +507,11 @@ void CFMachPortSetInvalidationCallBack(CFMachPortRef mp, CFMachPortInvalidationC
     CHECK_FOR_FORK_RET();
     __CFGenericValidateType(mp, CFMachPortGetTypeID());
     if (callout) {
-	mach_port_type_t type = 0;
-	kern_return_t ret = mach_port_type(mach_task_self(), mp->_port, &type);
-	if (KERN_SUCCESS != ret || 0 == (type & MACH_PORT_TYPE_SEND_RIGHTS)) {
-	    CFLog(kCFLogLevelError, CFSTR("*** WARNING: CFMachPortSetInvalidationCallBack() called on a CFMachPort with a Mach port (0x%x) which does not have any send rights.  This is not going to work.  Callback function: %p"), mp->_port, callout);
-	}
+    mach_port_type_t type = 0;
+    kern_return_t ret = mach_port_type(mach_task_self(), mp->_port, &type);
+    if (KERN_SUCCESS != ret || 0 == (type & MACH_PORT_TYPE_SEND_RIGHTS)) {
+        CFLog(kCFLogLevelError, CFSTR("*** WARNING: CFMachPortSetInvalidationCallBack() called on a CFMachPort with a Mach port (0x%x) which does not have any send rights.  This is not going to work.  Callback function: %p"), mp->_port, callout);
+    }
     }
     __CFLock(&mp->_lock);
     if (__CFMachPortIsValid(mp) || !callout) {
@@ -595,3 +601,4 @@ CFRunLoopSourceRef CFMachPortCreateRunLoopSource(CFAllocatorRef allocator, CFMac
     return result;
 }
 
+// clang-format on

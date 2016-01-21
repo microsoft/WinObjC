@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -15,7 +17,7 @@
 
 #include <CoreFoundation/CFPreferences.h>
 #include "CFInternal.h"
-#include <CoreFoundation/CFUniChar.h>
+#include "CFUniChar.h"
 #include <CoreFoundation/CFNumber.h>
 #include <CoreFoundation/CFString.h>
 #include <CoreFoundation/CFLocale.h>
@@ -658,3 +660,5 @@ void _CFApplicationPreferencesRemoveDomain(_CFApplicationPreferences *self, CFPr
     updateDictRep(self);
     __CFUnlock(&__CFApplicationPreferencesLock);
 }
+
+// clang-format on

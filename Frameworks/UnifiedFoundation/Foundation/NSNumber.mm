@@ -18,6 +18,7 @@
 #import "Starboard.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
+#import "NSNumberInternal.h"
 
 static const size_t c_cacheIntsBelow = 16;
 static StrongId<NSNumber> s_cachedInts[c_cacheIntsBelow];
@@ -775,6 +776,11 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
             assert(0);
             break;
     }
+}
+
+- (CFNumberType)_cfNumberType {
+    // HACKHACK: this needs to be actually filled out based objCType or something.
+    return kCFNumberIntType;
 }
 
 @end

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -22,6 +24,9 @@
 #include "CFInternal.h"
 #include "CFBasicHash.h"
 #include <CoreFoundation/CFString.h>
+#include <Foundation/NSMutableDictionary.h>
+
+#define CF_IS_SWIFT(type,obj) false
 
 
 #define CFDictionary 0
@@ -380,7 +385,7 @@ CFMutableHashRef CFDictionaryCreateMutableCopy(CFAllocatorRef allocator, CFIndex
 
 CFIndex CFDictionaryGetCount(CFHashRef hc) {
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.count);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.count);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (NSDictionary *)hc, count);
 #endif
 #if CFSet
@@ -397,7 +402,7 @@ CFIndex CFDictionaryGetCountOfKey(CFHashRef hc, const_any_pointer_t key) {
 CFIndex CFDictionaryGetCountOfValue(CFHashRef hc, const_any_pointer_t key) {
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.countForKey, key);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.countForKey, key);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (NSDictionary *)hc, countForKey:(id)key);
 #endif
 #if CFSet
@@ -414,7 +419,7 @@ Boolean CFDictionaryContainsKey(CFHashRef hc, const_any_pointer_t key) {
 Boolean CFDictionaryContainsValue(CFHashRef hc, const_any_pointer_t key) {
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (CFSwiftRef)hc, NSDictionary.containsKey, key);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (CFSwiftRef)hc, NSDictionary.containsKey, key);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (NSDictionary *)hc, containsKey:(id)key);
 #endif
 #if CFSet
@@ -426,7 +431,7 @@ Boolean CFDictionaryContainsValue(CFHashRef hc, const_any_pointer_t key) {
 
 const_any_pointer_t CFDictionaryGetValue(CFHashRef hc, const_any_pointer_t key) {
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), const_any_pointer_t, (CFSwiftRef)hc, NSDictionary.objectForKey, key);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), const_any_pointer_t, (CFSwiftRef)hc, NSDictionary.objectForKey, key);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), const_any_pointer_t, (NSDictionary *)hc, objectForKey:(id)key);
 #endif
 #if CFSet
@@ -439,7 +444,7 @@ const_any_pointer_t CFDictionaryGetValue(CFHashRef hc, const_any_pointer_t key) 
     
 Boolean CFDictionaryGetValueIfPresent(CFHashRef hc, const_any_pointer_t key, const_any_pointer_t *value) {
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), Boolean, (CFSwiftRef)hc, NSDictionary.__getValue, value, key);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), Boolean, (CFSwiftRef)hc, NSDictionary.__getValue, value, key);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), Boolean, (NSDictionary *)hc, __getValue:(id *)value forKey:(id)key);
 #endif
 #if CFSet
@@ -462,14 +467,14 @@ Boolean CFDictionaryGetValueIfPresent(CFHashRef hc, const_any_pointer_t key, con
     
 #if CFDictionary
 CFIndex CFDictionaryGetCountOfValue(CFHashRef hc, const_any_pointer_t value) {
-    CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.countForObject, value);
+    // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (CFSwiftRef)hc, NSDictionary.countForObject, value);
     CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), CFIndex, (NSDictionary *)hc, countForObject:(id)value);
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     return CFBasicHashGetCountOfValue((CFBasicHashRef)hc, (uintptr_t)value);
 }
     
 Boolean CFDictionaryContainsValue(CFHashRef hc, const_any_pointer_t value) {
-    CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (CFSwiftRef)hc, NSDictionary.containsObject, value);
+    // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (CFSwiftRef)hc, NSDictionary.containsObject, value);
     CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (NSDictionary *)hc, containsObject:(id)value);
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     return (0 < CFBasicHashGetCountOfValue((CFBasicHashRef)hc, (uintptr_t)value));
@@ -500,7 +505,7 @@ void CFDictionaryGetValues(CFHashRef hc, const_any_pointer_t *keybuf) {
     const_any_pointer_t *valuebuf = 0;
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSDictionary.getObjects, valuebuf, keybuf);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSDictionary.getObjects, valuebuf, keybuf);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSDictionary *)hc, getObjects:(id *)valuebuf andKeys:(id *)keybuf);
 #endif
 #if CFSet
@@ -528,7 +533,7 @@ void CFDictionaryGetValues(CFHashRef hc, const_any_pointer_t *keybuf) {
 void CFDictionaryApplyFunction(CFHashRef hc, CFDictionaryApplierFunction applier, any_pointer_t context) {
     FAULT_CALLBACK((void **)&(applier));
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSDictionary.__apply, applier, context);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSDictionary.__apply, applier, context);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSDictionary *)hc, __apply:(void (*)(const void *, const void *, void *))applier context:(void *)context);
 #endif
 #if CFSet
@@ -611,7 +616,7 @@ void CFDictionaryAddValue(CFMutableHashRef hc, const_any_pointer_t key) {
     const_any_pointer_t value = key;
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.__addObject, key, value);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.__addObject, key, value);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSMutableDictionary *)hc, __addObject:(id)value forKey:(id)key);
 #endif
 #if CFSet
@@ -620,7 +625,7 @@ void CFDictionaryAddValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashAddValue((CFBasicHashRef)hc, (uintptr_t)key, (uintptr_t)value);
@@ -635,7 +640,7 @@ void CFDictionaryReplaceValue(CFMutableHashRef hc, const_any_pointer_t key) {
     const_any_pointer_t value = key;
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.replaceObject, key, value);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.replaceObject, key, value);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSMutableDictionary *)hc, replaceObject:(id)value forKey:(id)key);
 #endif
 #if CFSet
@@ -644,7 +649,7 @@ void CFDictionaryReplaceValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashReplaceValue((CFBasicHashRef)hc, (uintptr_t)key, (uintptr_t)value);
@@ -659,7 +664,7 @@ void CFDictionarySetValue(CFMutableHashRef hc, const_any_pointer_t key) {
     const_any_pointer_t value = key;
 #endif
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.__setObject, key, value);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.__setObject, key, value);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSMutableDictionary *)hc, __setObject:(id)value forKey:(id)key);
 #endif
 #if CFSet
@@ -668,7 +673,7 @@ void CFDictionarySetValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
 //#warning this for a dictionary used to not replace the key
@@ -678,7 +683,7 @@ void CFDictionarySetValue(CFMutableHashRef hc, const_any_pointer_t key) {
     
 void CFDictionaryRemoveValue(CFMutableHashRef hc, const_any_pointer_t key) {
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.removeObjectForKey, key);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.removeObjectForKey, key);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSMutableDictionary *)hc, removeObjectForKey:(id)key);
 #endif
 #if CFSet
@@ -687,7 +692,7 @@ void CFDictionaryRemoveValue(CFMutableHashRef hc, const_any_pointer_t key) {
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGE(hc, key);
     CFBasicHashRemoveValue((CFBasicHashRef)hc, (uintptr_t)key);
@@ -696,7 +701,7 @@ void CFDictionaryRemoveValue(CFMutableHashRef hc, const_any_pointer_t key) {
 
 void CFDictionaryRemoveAllValues(CFMutableHashRef hc) {
 #if CFDictionary
-    if (CFDictionary) CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.removeAllObjects);
+    if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (CFSwiftRef)hc, NSMutableDictionary.removeAllObjects);
     if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), void, (NSMutableDictionary *)hc, removeAllObjects);
 #endif
 #if CFSet
@@ -705,7 +710,7 @@ void CFDictionaryRemoveAllValues(CFMutableHashRef hc) {
     __CFGenericValidateType(hc, CFDictionaryGetTypeID());
     CFAssert2(CFBasicHashIsMutable((CFBasicHashRef)hc), __kCFLogAssertion, "%s(): immutable collection %p passed to mutating operation", __PRETTY_FUNCTION__, hc);
     if (!CFBasicHashIsMutable((CFBasicHashRef)hc)) {
-        CFLog(3, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
+        CFLog(kCFLogLevelError, CFSTR("%s(): immutable collection %p given to mutating function"), __PRETTY_FUNCTION__, hc);
     }
     CF_OBJC_KVO_WILLCHANGEALL(hc);
     CFBasicHashRemoveAllValues((CFBasicHashRef)hc);
@@ -717,3 +722,4 @@ void CFDictionaryRemoveAllValues(CFMutableHashRef hc) {
 #undef CF_OBJC_KVO_WILLCHANGEALL
 #undef CF_OBJC_KVO_DIDCHANGEALL
 
+// clang-format on

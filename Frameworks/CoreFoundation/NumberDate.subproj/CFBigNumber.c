@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -14,7 +16,7 @@
 	Original author: Zhi Feng Huang
 */
 
-#include <CoreFoundation/CFBigNumber.h>
+#include "CFBigNumber.h"
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -563,3 +565,4 @@ char *_CFBigNumCopyDescription(const _CFBigNum *num) {
     return result;
 }
 
+// clang-format on

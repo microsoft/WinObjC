@@ -20,7 +20,6 @@
 #import <Foundation/NSFastEnumeration.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSKeyValueObserving.h>
-#import <CoreFoundation/CFArray.h>
 
 @class NSString;
 @class NSURL;
@@ -36,13 +35,8 @@ enum {
     NSBinarySearchingInsertionIndex = (1 << 10),
 };
 
-#define __CFARRAY_SIZE_BYTES (0x30)
-
 FOUNDATION_EXPORT_CLASS
 @interface NSArray : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
-@public
-    CFArrayRef arr;
-    uint32_t _arraySpace[((__CFARRAY_SIZE_BYTES + 3) & ~3) / 4];
 }
 
 + (instancetype)array;
@@ -124,7 +118,4 @@ FOUNDATION_EXPORT_CLASS
 - (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath STUB_METHOD;
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (id)valueForKey:(NSString*)key;
-@end
-
-@interface NSArrayConcrete : NSArray
 @end

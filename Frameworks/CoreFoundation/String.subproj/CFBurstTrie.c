@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -35,7 +37,7 @@
 #if DEPLOYMENT_TARGET_WINDOWS
 #define open _NS_open
 #define statinfo _stat
-#define stat(x,y) _NS_stat(x,y)
+#define stat(x,y) _stat64i32(x,y)
 #define __builtin_memcmp(x, y, z) memcmp(x, y, z)
 #define __builtin_popcountll(x) popcountll(x)
 #define bzero(dst, size)    ZeroMemory(dst, size)
@@ -2061,3 +2063,4 @@ static CFIndex burstTrieConvertCharactersToUTF8(UniChar *chars, CFIndex numChars
     return j;
 }
 
+// clang-format on

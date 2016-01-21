@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,16 +10,16 @@
 //
 
 
-/*	CFXMLTree.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: David Smith
+/*  CFXMLTree.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: David Smith
 */
 
 #include "CFInternal.h"
 #include <CoreFoundation/CFXMLParser.h>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 /*************/
 /* CFXMLTree */
@@ -246,4 +248,6 @@ static void _CFAppendXMLEpilog(CFMutableStringRef str, CFXMLTreeRef tree) {
     }
 }
 
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
+
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -25,7 +27,7 @@
 #include <unicode/udat.h>
 #include <unicode/unum.h>
 #include <unicode/ucurr.h>
-#include <unicode/ustring.h>
+// #include <unicode/ustring.h>
 
 // ucal
 
@@ -103,3 +105,5 @@
 #define __cficu_unum_getContext unum_getContext
 
 #endif
+
+// clang-format on

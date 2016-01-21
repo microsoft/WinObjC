@@ -19,7 +19,7 @@
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 
-ENABLE_IMPLICIT_BRIDGING
+CF_IMPLICIT_BRIDGING_ENABLED
 
 typedef size_t (*CGDataProviderGetBytesCallback)(void* info, void* buffer, size_t count);
 typedef void (*CGDataProviderReleaseInfoCallback)(void* info);
@@ -75,4 +75,4 @@ COREGRAPHICS_EXPORT CFTypeID CGDataProviderGetTypeID() STUB_METHOD;
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateSequential(void* info,
                                                                      const CGDataProviderSequentialCallbacks* callbacks);
 
-DISABLE_IMPLICIT_BRIDGING
+CF_IMPLICIT_BRIDGING_DISABLED

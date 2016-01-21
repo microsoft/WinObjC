@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFBase.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFBase.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
 #include <CoreFoundation/CFBase.h>
@@ -33,24 +35,24 @@ struct __CFAllocator {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
     // CFAllocator structure must match struct _malloc_zone_t!
     // The first two reserved fields in struct _malloc_zone_t are for us with CFRuntimeBase
-    size_t 	(*size)(struct _malloc_zone_t *zone, const void *ptr); /* returns the size of a block or 0 if not in this zone; must be fast, especially for negative answers */
-    void 	*(*malloc)(struct _malloc_zone_t *zone, size_t size);
-    void 	*(*calloc)(struct _malloc_zone_t *zone, size_t num_items, size_t size); /* same as malloc, but block returned is set to zero */
-    void 	*(*valloc)(struct _malloc_zone_t *zone, size_t size); /* same as malloc, but block returned is set to zero and is guaranteed to be page aligned */
-    void 	(*free)(struct _malloc_zone_t *zone, void *ptr);
-    void 	*(*realloc)(struct _malloc_zone_t *zone, void *ptr, size_t size);
-    void 	(*destroy)(struct _malloc_zone_t *zone); /* zone is destroyed and all memory reclaimed */
-    const char	*zone_name;
+    size_t  (*size)(struct _malloc_zone_t *zone, const void *ptr); /* returns the size of a block or 0 if not in this zone; must be fast, especially for negative answers */
+    void    *(*malloc)(struct _malloc_zone_t *zone, size_t size);
+    void    *(*calloc)(struct _malloc_zone_t *zone, size_t num_items, size_t size); /* same as malloc, but block returned is set to zero */
+    void    *(*valloc)(struct _malloc_zone_t *zone, size_t size); /* same as malloc, but block returned is set to zero and is guaranteed to be page aligned */
+    void    (*free)(struct _malloc_zone_t *zone, void *ptr);
+    void    *(*realloc)(struct _malloc_zone_t *zone, void *ptr, size_t size);
+    void    (*destroy)(struct _malloc_zone_t *zone); /* zone is destroyed and all memory reclaimed */
+    const char  *zone_name;
 
     /* Optional batch callbacks; these may be NULL */
-    unsigned	(*batch_malloc)(struct _malloc_zone_t *zone, size_t size, void **results, unsigned num_requested); /* given a size, returns pointers capable of holding that size; returns the number of pointers allocated (maybe 0 or less than num_requested) */
-    void	(*batch_free)(struct _malloc_zone_t *zone, void **to_be_freed, unsigned num_to_be_freed); /* frees all the pointers in to_be_freed; note that to_be_freed may be overwritten during the process */
+    unsigned    (*batch_malloc)(struct _malloc_zone_t *zone, size_t size, void **results, unsigned num_requested); /* given a size, returns pointers capable of holding that size; returns the number of pointers allocated (maybe 0 or less than num_requested) */
+    void    (*batch_free)(struct _malloc_zone_t *zone, void **to_be_freed, unsigned num_to_be_freed); /* frees all the pointers in to_be_freed; note that to_be_freed may be overwritten during the process */
 
-    struct malloc_introspection_t	*introspect;
-    unsigned	version;
+    struct malloc_introspection_t   *introspect;
+    unsigned    version;
     
     /* aligned memory allocation. The callback may be NULL. */
-	void *(*memalign)(struct _malloc_zone_t *zone, size_t alignment, size_t size);
+    void *(*memalign)(struct _malloc_zone_t *zone, size_t alignment, size_t size);
     
     /* free a pointer known to be in zone and known to have the given size. The callback may be NULL. */
     void (*free_definite_size)(struct _malloc_zone_t *zone, void *ptr, size_t size);
@@ -61,43 +63,43 @@ struct __CFAllocator {
 
 CF_INLINE CFAllocatorRetainCallBack __CFAllocatorGetRetainFunction(const CFAllocatorContext *context) {
     CFAllocatorRetainCallBack retval = NULL;
-	retval = context->retain;
+    retval = context->retain;
     return retval;
 }
 
 CF_INLINE CFAllocatorReleaseCallBack __CFAllocatorGetReleaseFunction(const CFAllocatorContext *context) {
     CFAllocatorReleaseCallBack retval = NULL;
-	retval = context->release;
+    retval = context->release;
     return retval;
 }
 
 CF_INLINE CFAllocatorCopyDescriptionCallBack __CFAllocatorGetCopyDescriptionFunction(const CFAllocatorContext *context) {
     CFAllocatorCopyDescriptionCallBack retval = NULL;
-	retval = context->copyDescription;
+    retval = context->copyDescription;
     return retval;
 }
 
 CF_INLINE CFAllocatorAllocateCallBack __CFAllocatorGetAllocateFunction(const CFAllocatorContext *context) {
     CFAllocatorAllocateCallBack retval = NULL;
-	retval = context->allocate;
+    retval = context->allocate;
     return retval;
 }
 
 CF_INLINE CFAllocatorReallocateCallBack __CFAllocatorGetReallocateFunction(const CFAllocatorContext *context) {
     CFAllocatorReallocateCallBack retval = NULL;
-	retval = context->reallocate;
+    retval = context->reallocate;
     return retval;
 }
 
 CF_INLINE CFAllocatorDeallocateCallBack __CFAllocatorGetDeallocateFunction(const CFAllocatorContext *context) {
     CFAllocatorDeallocateCallBack retval = NULL;
-	retval = context->deallocate;
+    retval = context->deallocate;
     return retval;
 }
 
 CF_INLINE CFAllocatorPreferredSizeCallBack __CFAllocatorGetPreferredSizeFunction(const CFAllocatorContext *context) {
     CFAllocatorPreferredSizeCallBack retval = NULL;
-	retval = context->preferredSize;
+    retval = context->preferredSize;
     return retval;
 }
 
@@ -264,15 +266,15 @@ static void *__CFAllocatorNullReallocate(void *ptr, CFIndex newsize, CFOptionFla
 #if defined (__cplusplus)
 static void * __CFAllocatorCPPMalloc(CFIndex allocSize, CFOptionFlags hint, void *info)
 {
-	return malloc(allocSize);	
+    return malloc(allocSize);   
 }
 static void * __CFAllocatorCPPReAlloc(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info)
 {
-	return realloc(ptr, newsize);
+    return realloc(ptr, newsize);
 }
 static void __CFAllocatorCPPFree(void *ptr, void *info)
 {
-	free(ptr);
+    free(ptr);
 }
 #endif // C++
 
@@ -295,14 +297,14 @@ static struct __CFAllocator __kCFAllocatorMalloc = {
     NULL,
     NULL,
 #endif
-    NULL,	// _allocator
+    NULL,   // _allocator
     // Using the malloc functions directly is a total cheat, but works (in C)
     // because the function signatures match in their common prefix of arguments.
     // This saves us one hop through an adaptor function.
 #if !defined (__cplusplus)
-	{0, NULL, NULL, NULL, NULL, (void *)malloc, (void *)realloc, (void *)free, NULL}
+    {0, NULL, NULL, NULL, NULL, (void *)malloc, (void *)realloc, (void *)free, NULL}
 #else
-	{0, NULL, NULL, NULL, NULL, __CFAllocatorCPPMalloc,__CFAllocatorCPPReAlloc, __CFAllocatorCPPFree, NULL}
+    {0, NULL, NULL, NULL, NULL, __CFAllocatorCPPMalloc,__CFAllocatorCPPReAlloc, __CFAllocatorCPPFree, NULL}
 #endif // __cplusplus
 };
 
@@ -324,7 +326,7 @@ static struct __CFAllocator __kCFAllocatorMallocZone = {
     NULL,
     NULL,
 #endif
-    NULL,	// _allocator
+    NULL,   // _allocator
     {0, NULL, NULL, NULL, NULL, __CFAllocatorSystemAllocate, __CFAllocatorSystemReallocate, __CFAllocatorSystemDeallocate, NULL}
 };
 
@@ -346,7 +348,7 @@ static struct __CFAllocator __kCFAllocatorSystemDefault = {
     NULL,
     NULL,
 #endif
-    NULL,	// _allocator
+    NULL,   // _allocator
     {0, NULL, NULL, NULL, NULL, __CFAllocatorSystemAllocate, __CFAllocatorSystemReallocate, __CFAllocatorSystemDeallocate, NULL}
 };
 
@@ -368,7 +370,7 @@ static struct __CFAllocator __kCFAllocatorNull = {
     NULL,
     NULL,
 #endif
-    NULL,	// _allocator
+    NULL,   // _allocator
     {0, NULL, NULL, NULL, NULL, __CFAllocatorNullAllocate, __CFAllocatorNullReallocate, NULL, NULL}
 };
 
@@ -401,20 +403,20 @@ CF_PRIVATE void __CFAllocatorDeallocate(CFTypeRef cf) {
     CFAllocatorRef allocator = self->_allocator;
     CFAllocatorReleaseCallBack releaseFunc = __CFAllocatorGetReleaseFunction(&self->_context);
     if (kCFAllocatorUseContext == allocator) {
-	/* Rather a chicken and egg problem here, so we do things
-	   in the reverse order from what was done at create time. */
-	CFAllocatorDeallocateCallBack deallocateFunc = __CFAllocatorGetDeallocateFunction(&self->_context);
-	void *info = self->_context.info;
-	if (NULL != deallocateFunc) {
-	    INVOKE_CALLBACK2(deallocateFunc, (void *)self, info);
-	}
-	if (NULL != releaseFunc) {
-	    INVOKE_CALLBACK1(releaseFunc, info);
-	}
+    /* Rather a chicken and egg problem here, so we do things
+       in the reverse order from what was done at create time. */
+    CFAllocatorDeallocateCallBack deallocateFunc = __CFAllocatorGetDeallocateFunction(&self->_context);
+    void *info = self->_context.info;
+    if (NULL != deallocateFunc) {
+        INVOKE_CALLBACK2(deallocateFunc, (void *)self, info);
+    }
+    if (NULL != releaseFunc) {
+        INVOKE_CALLBACK1(releaseFunc, info);
+    }
     } else {
-	if (NULL != releaseFunc) {
-	    INVOKE_CALLBACK1(releaseFunc, self->_context.info);
-	}
+    if (NULL != releaseFunc) {
+        INVOKE_CALLBACK1(releaseFunc, self->_context.info);
+    }
         if (!CF_IS_COLLECTABLE_ALLOCATOR(allocator)) CFAllocatorDeallocate(allocator, (void *)self);
     }
 }
@@ -424,12 +426,12 @@ static CFTypeID __kCFAllocatorTypeID = _kCFRuntimeNotATypeID;
 static const CFRuntimeClass __CFAllocatorClass = {
     0,
     "CFAllocator",
-    NULL,	// init
-    NULL,	// copy
+    NULL,   // init
+    NULL,   // copy
     NULL,
-    NULL,	// equal
-    NULL,	// hash
-    NULL,	// 
+    NULL,   // equal
+    NULL,   // hash
+    NULL,   // 
     __CFAllocatorCopyDescription
 };
 
@@ -475,20 +477,20 @@ void CFAllocatorSetDefault(CFAllocatorRef allocator) {
     CFAllocatorRef current = __CFGetDefaultAllocator();
 #if defined(DEBUG) 
     if (NULL != allocator) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #endif
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator && allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return;		// require allocator to this function to be an allocator
+    if (allocator && allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {   // malloc_zone_t *
+    return;     // require allocator to this function to be an allocator
     }
 #endif
     if (NULL != allocator && allocator != current) {
-	if (current) CFRelease(current);
-	CFRetain(allocator);
-	// We retain an extra time so that anything set as the default
-	// allocator never goes away.
-	CFRetain(allocator);
+    if (current) CFRelease(current);
+    CFRetain(allocator);
+    // We retain an extra time so that anything set as the default
+    // allocator never goes away.
+    CFRetain(allocator);
         _CFSetTSD(__CFTSDKeyAllocator, (void *)allocator, NULL);
     }
 }
@@ -505,8 +507,8 @@ static CFAllocatorRef __CFAllocatorCreate(CFAllocatorRef allocator, CFAllocatorC
     CFAllocatorAllocateCallBack allocateFunc;
     void *retainedInfo;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator && kCFAllocatorUseContext != allocator && allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return NULL;	// require allocator to this function to be an allocator
+    if (allocator && kCFAllocatorUseContext != allocator && allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+    return NULL;    // require allocator to this function to be an allocator
     }
 #endif
     retainFunc = context->retain;
@@ -514,26 +516,26 @@ static CFAllocatorRef __CFAllocatorCreate(CFAllocatorRef allocator, CFAllocatorC
     allocateFunc = context->allocate;
     FAULT_CALLBACK((void **)&allocateFunc);
     if (NULL != retainFunc) {
-	retainedInfo = (void *)INVOKE_CALLBACK1(retainFunc, context->info);
+    retainedInfo = (void *)INVOKE_CALLBACK1(retainFunc, context->info);
     } else {
-	retainedInfo = context->info;
+    retainedInfo = context->info;
     }
     // We don't use _CFRuntimeCreateInstance()
     if (kCFAllocatorUseContext == allocator) {
-	memory = NULL;
-	if (allocateFunc) {
-		memory = (struct __CFAllocator *)INVOKE_CALLBACK3(allocateFunc, sizeof(struct __CFAllocator), 0, retainedInfo);
-	}
-	if (NULL == memory) {
-	    return NULL;
-	}
+    memory = NULL;
+    if (allocateFunc) {
+        memory = (struct __CFAllocator *)INVOKE_CALLBACK3(allocateFunc, sizeof(struct __CFAllocator), 0, retainedInfo);
+    }
+    if (NULL == memory) {
+        return NULL;
+    }
     } else {
-	allocator = (NULL == allocator) ? __CFGetDefaultAllocator() : allocator;
-	memory = (struct __CFAllocator *)CFAllocatorAllocate(allocator, sizeof(struct __CFAllocator), __kCFAllocatorGCObjectMemory);
-	if (NULL == memory) {
-	    return NULL;
-	}
-	if (__CFOASafe) __CFSetLastAllocationEventName(memory, "CFAllocator");
+    allocator = (NULL == allocator) ? __CFGetDefaultAllocator() : allocator;
+    memory = (struct __CFAllocator *)CFAllocatorAllocate(allocator, sizeof(struct __CFAllocator), __kCFAllocatorGCObjectMemory);
+    if (NULL == memory) {
+        return NULL;
+    }
+    if (__CFOASafe) __CFSetLastAllocationEventName(memory, "CFAllocator");
     }
     memset(memory, 0, sizeof(CFRuntimeBase));
 #if __LP64__
@@ -589,30 +591,30 @@ void *CFAllocatorAllocate(CFAllocatorRef allocator, CFIndex size, CFOptionFlags 
 
     Boolean initialRefcountOne = true;
     if (NULL == allocator) {
-	allocator = __CFGetDefaultAllocator();
+    allocator = __CFGetDefaultAllocator();
     }
 
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI)
     if (allocator->_base._cfisa == __CFISAForTypeID(__kCFAllocatorTypeID)) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #else
     __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
 #endif
     if (0 == size) return NULL;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return malloc_zone_malloc((malloc_zone_t *)allocator, size);
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+    return malloc_zone_malloc((malloc_zone_t *)allocator, size);
     }
 #endif
     if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) {
-	newptr = auto_zone_allocate_object((auto_zone_t*)allocator->_context.info, size, CF_GET_GC_MEMORY_TYPE(hint), initialRefcountOne, false);
+    newptr = auto_zone_allocate_object((auto_zone_t*)allocator->_context.info, size, CF_GET_GC_MEMORY_TYPE(hint), initialRefcountOne, false);
     } else {
-	newptr = NULL;
-	allocateFunc = __CFAllocatorGetAllocateFunction(&allocator->_context);
-	if (allocateFunc) {
-		newptr = (void *)INVOKE_CALLBACK3(allocateFunc, size, hint, allocator->_context.info);
-	}
+    newptr = NULL;
+    allocateFunc = __CFAllocatorGetAllocateFunction(&allocator->_context);
+    if (allocateFunc) {
+        newptr = (void *)INVOKE_CALLBACK3(allocateFunc, size, hint, allocator->_context.info);
+    }
     }
     return newptr;
 }
@@ -626,52 +628,52 @@ void *CFAllocatorReallocate(CFAllocatorRef allocator, void *ptr, CFIndex newsize
     if (0) {
         allocator = kCFAllocatorSystemDefault;
     } else if (0) {
-	allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
+    allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
     } else if (NULL == allocator) {
         allocator = __CFGetDefaultAllocator();
     }
 
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI)
     if (allocator->_base._cfisa == __CFISAForTypeID(__kCFAllocatorTypeID)) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #else
     __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
 #endif
     if (NULL == ptr && 0 < newsize) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-	if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	    return malloc_zone_malloc((malloc_zone_t *)allocator, newsize);
-	}
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+        return malloc_zone_malloc((malloc_zone_t *)allocator, newsize);
+    }
 #endif
-	newptr = NULL;
-	allocateFunc = __CFAllocatorGetAllocateFunction(&allocator->_context);
-	if (allocateFunc) {
-		newptr = (void *)INVOKE_CALLBACK3(allocateFunc, newsize, hint, allocator->_context.info);
-	}
-	return newptr;
+    newptr = NULL;
+    allocateFunc = __CFAllocatorGetAllocateFunction(&allocator->_context);
+    if (allocateFunc) {
+        newptr = (void *)INVOKE_CALLBACK3(allocateFunc, newsize, hint, allocator->_context.info);
+    }
+    return newptr;
     }
     if (NULL != ptr && 0 == newsize) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-	if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
 #if defined(DEBUG)
-	    size_t size = malloc_size(ptr);
-	    if (size) memset(ptr, 0xCC, size);
+        size_t size = malloc_size(ptr);
+        if (size) memset(ptr, 0xCC, size);
 #endif
-	    malloc_zone_free((malloc_zone_t *)allocator, ptr);
-	    return NULL;
-	}
+        malloc_zone_free((malloc_zone_t *)allocator, ptr);
+        return NULL;
+    }
 #endif
-	deallocateFunc = __CFAllocatorGetDeallocateFunction(&allocator->_context);
-	if (NULL != deallocateFunc) {
-	    INVOKE_CALLBACK2(deallocateFunc, ptr, allocator->_context.info);
-	}
-	return NULL;
+    deallocateFunc = __CFAllocatorGetDeallocateFunction(&allocator->_context);
+    if (NULL != deallocateFunc) {
+        INVOKE_CALLBACK2(deallocateFunc, ptr, allocator->_context.info);
+    }
+    return NULL;
     }
     if (NULL == ptr && 0 == newsize) return NULL;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return malloc_zone_realloc((malloc_zone_t *)allocator, ptr, newsize);
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+    return malloc_zone_realloc((malloc_zone_t *)allocator, ptr, newsize);
     }
 #endif
     reallocateFunc = __CFAllocatorGetReallocateFunction(&allocator->_context);
@@ -686,31 +688,31 @@ void CFAllocatorDeallocate(CFAllocatorRef allocator, void *ptr) {
     if (0) {
         allocator = kCFAllocatorSystemDefault;
     } else if (0) {
-	allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
-	if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) return;
+    allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
+    if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) return;
     } else if (NULL == allocator) {
         allocator = __CFGetDefaultAllocator();
     }
 
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI)
     if (allocator->_base._cfisa == __CFISAForTypeID(__kCFAllocatorTypeID)) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #else
     __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
 #endif
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
 #if defined(DEBUG)
-	size_t size = malloc_size(ptr);
-	if (size) memset(ptr, 0xCC, size);
+    size_t size = malloc_size(ptr);
+    if (size) memset(ptr, 0xCC, size);
 #endif
-	return malloc_zone_free((malloc_zone_t *)allocator, ptr);
+    return malloc_zone_free((malloc_zone_t *)allocator, ptr);
     }
 #endif
     deallocateFunc = __CFAllocatorGetDeallocateFunction(&allocator->_context);
     if (NULL != ptr && NULL != deallocateFunc) {
-	INVOKE_CALLBACK2(deallocateFunc, ptr, allocator->_context.info);
+    INVOKE_CALLBACK2(deallocateFunc, ptr, allocator->_context.info);
     }
 }
 
@@ -721,26 +723,26 @@ CFIndex CFAllocatorGetPreferredSizeForSize(CFAllocatorRef allocator, CFIndex siz
     if (0) {
         allocator = kCFAllocatorSystemDefault;
     } else if (0) {
-	allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
+    allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
     } else if (NULL == allocator) {
         allocator = __CFGetDefaultAllocator();
     }
 
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI)
     if (allocator->_base._cfisa == __CFISAForTypeID(__kCFAllocatorTypeID)) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #else
     __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
 #endif
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return malloc_good_size(size);
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+    return malloc_good_size(size);
     }
 #endif
     prefFunc = __CFAllocatorGetPreferredSizeFunction(&allocator->_context);
     if (0 < size && NULL != prefFunc) {
-	newsize = (CFIndex)(INVOKE_CALLBACK3(prefFunc, size, hint, allocator->_context.info));
+    newsize = (CFIndex)(INVOKE_CALLBACK3(prefFunc, size, hint, allocator->_context.info));
     }
     if (newsize < size) newsize = size;
     return newsize;
@@ -750,22 +752,22 @@ void CFAllocatorGetContext(CFAllocatorRef allocator, CFAllocatorContext *context
     if (0) {
         allocator = kCFAllocatorSystemDefault;
     } else if (0) {
-	allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
+    allocator = kCFUseCollectableAllocator ? kCFAllocatorSystemDefault : __CFGetDefaultAllocator();
     } else if (NULL == allocator) {
         allocator = __CFGetDefaultAllocator();
     }
 
 #if defined(DEBUG) && (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI)
     if (allocator->_base._cfisa == __CFISAForTypeID(__kCFAllocatorTypeID)) {
-	__CFGenericValidateType(allocator, __kCFAllocatorTypeID);
+    __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
     }
 #else
     __CFGenericValidateType(allocator, __kCFAllocatorTypeID);
 #endif
     CFAssert1(0 == context->version, __kCFLogAssertion, "%s(): context version not initialized to 0", __PRETTY_FUNCTION__);
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {	// malloc_zone_t *
-	return;
+    if (allocator->_base._cfisa != __CFISAForTypeID(__kCFAllocatorTypeID)) {    // malloc_zone_t *
+    return;
     }
 #endif
     context->version = 0;
@@ -790,12 +792,12 @@ CF_PRIVATE void *_CFAllocatorAllocateGC(CFAllocatorRef allocator, CFIndex size, 
 CF_PRIVATE void *_CFAllocatorReallocateGC(CFAllocatorRef allocator, void *ptr, CFIndex newsize, CFOptionFlags hint)
 {
     if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) {
-	if (ptr && (newsize == 0)) {
-	    return NULL; // equivalent to _CFAllocatorDeallocateGC.
-	}
-	if (ptr == NULL) {
-	    return auto_zone_allocate_object((auto_zone_t*)kCFAllocatorSystemDefault->_context.info, newsize, CF_GET_GC_MEMORY_TYPE(hint), false, false); // eq. to _CFAllocator
-	}
+    if (ptr && (newsize == 0)) {
+        return NULL; // equivalent to _CFAllocatorDeallocateGC.
+    }
+    if (ptr == NULL) {
+        return auto_zone_allocate_object((auto_zone_t*)kCFAllocatorSystemDefault->_context.info, newsize, CF_GET_GC_MEMORY_TYPE(hint), false, false); // eq. to _CFAllocator
+    }
     }
     // otherwise, auto_realloc() now preserves layout type and refCount.
     return CFAllocatorReallocate(allocator, ptr, newsize, hint);
@@ -879,3 +881,7 @@ extern void __HALT() {
 }
 
 
+// HACKHACK: claim to be iOS6.0
+CF_EXPORT double kCFCoreFoundationVersionNumber = kCFCoreFoundationVersionNumber_iOS_6_0;
+
+// clang-format on

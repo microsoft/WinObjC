@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -184,3 +186,5 @@ void CFBurstTrieCursorRelease(CFBurstTrieCursorRef cursor) CF_AVAILABLE(10_8, 6_
 CF_EXTERN_C_END
 
 #endif /* __COREFOUNDATION_CFBURSTTRIE__ */
+
+// clang-format on

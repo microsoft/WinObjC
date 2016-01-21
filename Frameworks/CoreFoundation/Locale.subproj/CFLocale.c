@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -483,7 +485,7 @@ static CFLocaleRef _CFLocaleCreateCopyGuts(CFAllocatorRef allocator, CFLocaleRef
     loc->_identifier = localeIdentifier;
     loc->_cache = CFDictionaryCreateMutable(allocator, 0, NULL, &kCFTypeDictionaryValueCallBacks);
     CFDictionaryRef prefs = __CFLocaleGetPrefs(locale);
-    loc->_prefs = prefs ? CFRetain(prefs) : NULL;
+    loc->_prefs = static_cast<CFDictionaryRef>(prefs ? CFRetain(prefs) : NULL);
     loc->_lock = CFLockInit;
     loc->_nullLocale = locale->_nullLocale;
     return (CFLocaleRef)loc;
@@ -1433,3 +1435,4 @@ static bool __CFLocaleNoName(const char *locale, const char *value, CFStringRef 
 
 #undef kMaxICUNameSize
 
+// clang-format on

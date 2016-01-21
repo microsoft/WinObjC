@@ -17,11 +17,10 @@
 #import <Foundation/NSAttributedString.h>
 #import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
-#import <NSRaise.h>
+#import "NSRaise.h"
+#import "NSMutableAttributedStringConcrete.h"
 
 #import <algorithm>
-
-@class NSMutableAttributedStringConcrete;
 
 @implementation NSAttributedString
 
@@ -46,15 +45,16 @@
     return NSInvalidAbstractInvocationReturn();
 }
 
-// Override allocWithZone to create the concrete subclass if not subclassed
-+ (instancetype)allocWithZone:(NSZone*)zone {
-    if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class]) || (self == [NSMutableAttributedStringConcrete class])) {
-        return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
+/**
+ @Status Interoperable
+*/
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [NSAttributedString class] || self == [NSMutableAttributedString class]) {
+        return [NSMutableAttributedStringConcrete allocWithZone:zone];
     }
 
-    return NSAllocateObject((Class)self, 0, zone);
+    return [super allocWithZone:zone];
 }
-
 /**
  @Status Interoperable
 */

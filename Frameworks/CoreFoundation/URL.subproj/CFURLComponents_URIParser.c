@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFURLComponents_URIParser.c
-	Copyright (c) 2015, Apple Inc. All rights reserved.
-	Responsibility: Jim Luther/Chris Linn
+/*  CFURLComponents_URIParser.c
+    Copyright (c) 2015, Apple Inc. All rights reserved.
+    Responsibility: Jim Luther/Chris Linn
 */
 
 #include <CoreFoundation/CFBase.h>
@@ -18,7 +20,7 @@
 #include "CFURLComponents_Internal.h"
 #include "CFInternal.h"
 
-typedef CF_ENUM(CFIndex, URLPredefinedCharacterSet) {
+typedef CF_ENUM(CFIndex,  URLPredefinedCharacterSet) {
     kURLUserAllowedCharacterSet     = 0,
     kURLPasswordAllowedCharacterSet = 1,
     kURLHostAllowedCharacterSet     = 2,
@@ -209,13 +211,13 @@ static CFCharacterSetRef GetURLAllowedCharacterSet(URLPredefinedCharacterSet all
  */
 static URLPredefinedCharacterSet GetURLPredefinedCharacterSet(CFCharacterSetRef characterSet)
 {
-    URLPredefinedCharacterSet result;
+    int result;
     
     // make sure sURLAllowedCharacterSets is initialized
     InitializeURLAllowedCharacterSets();
     // see if characterSet is one of the URLPredefinedCharacterSets
     if ( characterSet ) {
-        for ( result = 0; result < kURLAllowedCharacterSetIllegal; ++result ) {
+        for ( result = 0; result < static_cast<int>(kURLAllowedCharacterSetIllegal); ++result ) {
             // yes, I really want a pointer comparison because some of the sURLAllowedCharacterSets have the same bitmaps
             if ( characterSet == sURLAllowedCharacterSets[result] ) {
                 break;
@@ -223,10 +225,10 @@ static URLPredefinedCharacterSet GetURLPredefinedCharacterSet(CFCharacterSetRef 
         }
     }
     else {
-        result = kURLAllowedCharacterSetIllegal;
+        result = static_cast<int>(kURLAllowedCharacterSetIllegal);
     }
     
-    return ( result );
+    return static_cast<URLPredefinedCharacterSet>(result);
 }
 
 
@@ -564,9 +566,9 @@ CF_EXPORT CFStringRef _CFStringCreateByRemovingPercentEncoding(CFAllocatorRef al
 #endif
 
 /*
- *	Called by ParseURIReference to parse the authority component to find the
- *	userInfo, host and port. The results of the parse are returned in the fields
- *	of parseInfo.
+ *  Called by ParseURIReference to parse the authority component to find the
+ *  userInfo, host and port. The results of the parse are returned in the fields
+ *  of parseInfo.
  */
 static inline void _ParseAuthority(CFStringInlineBuffer *buf, unsigned long authorityLocation, unsigned long authorityLength, struct _URIParseInfo *parseInfo)
 {
@@ -689,9 +691,9 @@ static inline void _ParseAuthority(CFStringInlineBuffer *buf, unsigned long auth
 
 
 /*
- *	Parse the uriReference find the scheme, authority, path, query and fragment
- *	components and their subcomponents. The results of the parse are returned in
- *	the fields of parseInfo.
+ *  Parse the uriReference find the scheme, authority, path, query and fragment
+ *  components and their subcomponents. The results of the parse are returned in
+ *  the fields of parseInfo.
  */
 CF_PRIVATE Boolean _CFURIParserParseURIReference(CFStringRef urlString, struct _URIParseInfo *parseInfo)
 {
@@ -703,7 +705,7 @@ CF_PRIVATE Boolean _CFURIParserParseURIReference(CFStringRef urlString, struct _
     UniChar currentUniChar;
     
     // clear the parseInfo
-    bzero(parseInfo, sizeof(*parseInfo));
+    ZeroMemory(parseInfo, sizeof(*parseInfo));
     
     // Make sure the URL string isn't too long. We're limiting it to 2GB for backwards compatibility with 32-bit excutables using NS/CFURL
     if ( (urlStringLength > 0) && (urlStringLength <= INT_MAX) )
@@ -904,10 +906,10 @@ CF_PRIVATE Boolean _CFURIParserParseURIReference(CFStringRef urlString, struct _
 
 
 /*
- *	Returns the range of the scheme component.
+ *  Returns the range of the scheme component.
  *
- *	If includeSeparators is true, the characters that separate the scheme
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the scheme
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetSchemeRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -951,10 +953,10 @@ CF_PRIVATE CFRange _CFURIParserGetSchemeRange(const struct _URIParseInfo *parseI
 #if 0 // unused but might be needed in the future
 
 /*
- *	Returns the range of the authority component.
+ *  Returns the range of the authority component.
  *
- *	If includeSeparators is true, the characters that separate the authority
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the authority
+ *  from other components/subcomponents are included.
  */
 static CFRange _CFURIParserGetAuthorityRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -987,11 +989,11 @@ static CFRange _CFURIParserGetAuthorityRange(const struct _URIParseInfo *parseIn
 
 
 /*
- *	Returns the range of the userinfoName part of the userinfo sub-component of
- *	the authority component.
+ *  Returns the range of the userinfoName part of the userinfo sub-component of
+ *  the authority component.
  *
- *	If includeSeparators is true, the characters that separate the userinfoName
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the userinfoName
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetUserinfoNameRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1028,11 +1030,11 @@ CF_PRIVATE CFRange _CFURIParserGetUserinfoNameRange(const struct _URIParseInfo *
 
 
 /*
- *	Returns the range of the userinfoPassword part of the userinfo sub-component
- *	of the authority component.
+ *  Returns the range of the userinfoPassword part of the userinfo sub-component
+ *  of the authority component.
  *
- *	If includeSeparators is true, the characters that separate the userinfoPassword
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the userinfoPassword
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetUserinfoPasswordRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1065,10 +1067,10 @@ CF_PRIVATE CFRange _CFURIParserGetUserinfoPasswordRange(const struct _URIParseIn
 
 
 /*
- *	Returns the range of the host sub-component of the authority component.
+ *  Returns the range of the host sub-component of the authority component.
  *
- *	If includeSeparators is true, the characters that separate the host
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the host
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetHostRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1106,10 +1108,10 @@ CF_PRIVATE CFRange _CFURIParserGetHostRange(const struct _URIParseInfo *parseInf
 
 
 /*
- *	Returns the range of the port sub-component of the authority component.
+ *  Returns the range of the port sub-component of the authority component.
  *
- *	If includeSeparators is true, the characters that separate the port
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the port
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetPortRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1131,14 +1133,14 @@ CF_PRIVATE CFRange _CFURIParserGetPortRange(const struct _URIParseInfo *parseInf
 
 
 /*
- *	Returns the range of the path component.
+ *  Returns the range of the path component.
  *
- *	If includeSeparators is true, the characters that separate the path
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the path
+ *  from other components/subcomponents are included.
  *
- *	If minusParam is false, the path component is the rfc3986 path. If minusParam
- *	is true, the path component ends at the first ';' character and the rest of
- *	the rfc3986 path after ';' is considered the obsolete rfc1808 param component.
+ *  If minusParam is false, the path component is the rfc3986 path. If minusParam
+ *  is true, the path component ends at the first ';' character and the rest of
+ *  the rfc3986 path after ';' is considered the obsolete rfc1808 param component.
  */
 CF_PRIVATE CFRange _CFURIParserGetPathRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators, Boolean minusParam)
 {
@@ -1167,10 +1169,10 @@ CF_PRIVATE CFRange _CFURIParserGetPathRange(const struct _URIParseInfo *parseInf
 #if 0 // unused but might be needed in the future
 
 /*
- *	Returns the range of the obsolete rfc1808 param component.
+ *  Returns the range of the obsolete rfc1808 param component.
  *
- *	If includeSeparators is true, the characters that separate the param
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the param
+ *  from other components/subcomponents are included.
  */
 static CFRange _CFURIParserGetParamRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1203,10 +1205,10 @@ static CFRange _CFURIParserGetParamRange(const struct _URIParseInfo *parseInfo, 
 
 
 /*
- *	Returns the range of the obsolete resource specifier component.
+ *  Returns the range of the obsolete resource specifier component.
  *
- *	If includeSeparators is true, the characters that separate the resource specifier
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the resource specifier
+ *  from other components/subcomponents are included.
  */
 static CFRange _CFURIParserGetResourceSpecifierRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1243,10 +1245,10 @@ static CFRange _CFURIParserGetResourceSpecifierRange(const struct _URIParseInfo 
 
 
 /*
- *	Returns the range of the query component.
+ *  Returns the range of the query component.
  *
- *	If includeSeparators is true, the characters that separate the query
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the query
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetQueryRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1275,10 +1277,10 @@ CF_PRIVATE CFRange _CFURIParserGetQueryRange(const struct _URIParseInfo *parseIn
 
 
 /*
- *	Returns the range of the fragment component.
+ *  Returns the range of the fragment component.
  *
- *	If includeSeparators is true, the characters that separate the fragment
- *	from other components/subcomponents are included.
+ *  If includeSeparators is true, the characters that separate the fragment
+ *  from other components/subcomponents are included.
  */
 CF_PRIVATE CFRange _CFURIParserGetFragmentRange(const struct _URIParseInfo *parseInfo, Boolean includeSeparators)
 {
@@ -1398,3 +1400,5 @@ CF_PRIVATE Boolean _CFURIParserURLStringIsValid(CFStringRef urlString, struct _U
 invalidComponent:
     return ( result );
 }
+
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFStream.h
-	Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
+/*  CFStream.h
+  Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFSTREAM__)
@@ -29,7 +31,7 @@
 CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
 
-typedef CF_ENUM(CFIndex, CFStreamStatus) {
+typedef CF_ENUM(CFIndex,  CFStreamStatus) {
     kCFStreamStatusNotOpen = 0,
     kCFStreamStatusOpening,  /* open is in-progress */
     kCFStreamStatusOpen,
@@ -279,7 +281,7 @@ dispatch_queue_t CFWriteStreamCopyDispatchQueue(CFWriteStreamRef stream) CF_AVAI
 #endif
 
 /* The following API is deprecated starting in 10.5; please use CFRead/WriteStreamCopyError(), above, instead */
-typedef CF_ENUM(CFIndex, CFStreamErrorDomain) {
+typedef CF_ENUM(CFIndex,  CFStreamErrorDomain) {
     kCFStreamErrorDomainCustom = -1L,      /* custom to the kind of stream in question */
     kCFStreamErrorDomainPOSIX = 1,        /* POSIX errno; interpret using <sys/errno.h> */
     kCFStreamErrorDomainMacOSStatus      /* OSStatus type from Carbon APIs; interpret using <MacTypes.h> */
@@ -299,3 +301,5 @@ CF_EXTERN_C_END
 CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFSTREAM__ */
+
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFURLPriv.h
-	Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
+/*  CFURLPriv.h
+    Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
         Responsibility: Jim Luther/Chris Linn
  */
 
@@ -34,24 +36,24 @@ CF_EXTERN_C_BEGIN
 // The kCFURLxxxxError enums are error codes in the Cocoa error domain and they mirror the exact same codes in <Foundation/FoundationErrors.h> (i.e. kCFURLReadNoPermissionError = NSFileReadNoPermissionError = 257). They were added to CFURLPriv.h so that CarbonCore and later CoreServicesInternal could return these error codes in the Cocoa error domain. If your code links with Foundation, you should use the codes in <Foundation/FoundationErrors.h>, not these codes.
 enum {
     // Resource I/O related errors, with kCFErrorURLKey containing URL
-    kCFURLNoSuchResourceError = 4,			   // Attempt to do a file system operation on a non-existent file
-    kCFURLResourceLockingError = 255,			   // Couldn't get a lock on file
+    kCFURLNoSuchResourceError = 4,             // Attempt to do a file system operation on a non-existent file
+    kCFURLResourceLockingError = 255,              // Couldn't get a lock on file
     kCFURLReadUnknownError = 256,                          // Read error (reason unknown)
     kCFURLReadNoPermissionError = 257,                     // Read error (permission problem)
     kCFURLReadInvalidResourceNameError = 258,              // Read error (invalid file name)
     kCFURLReadCorruptResourceError = 259,                  // Read error (file corrupt, bad format, etc)
     kCFURLReadNoSuchResourceError = 260,                   // Read error (no such file)
     kCFURLReadInapplicableStringEncodingError = 261,       // Read error (string encoding not applicable) also kCFStringEncodingErrorKey
-    kCFURLReadUnsupportedSchemeError = 262,		   // Read error (unsupported URL scheme)
-    kCFURLReadTooLargeError = 263,			   // Read error (file too large)
-    kCFURLReadUnknownStringEncodingError = 264,		   // Read error (string encoding of file contents could not be determined)
-    kCFURLWriteUnknownError = 512,			   // Write error (reason unknown)
+    kCFURLReadUnsupportedSchemeError = 262,        // Read error (unsupported URL scheme)
+    kCFURLReadTooLargeError = 263,             // Read error (file too large)
+    kCFURLReadUnknownStringEncodingError = 264,        // Read error (string encoding of file contents could not be determined)
+    kCFURLWriteUnknownError = 512,             // Write error (reason unknown)
     kCFURLWriteNoPermissionError = 513,                    // Write error (permission problem)
     kCFURLWriteInvalidResourceNameError = 514,             // Write error (invalid file name)
     kCFURLWriteInapplicableStringEncodingError = 517,      // Write error (string encoding not applicable) also kCFStringEncodingErrorKey
-    kCFURLWriteUnsupportedSchemeError = 518,		   // Write error (unsupported URL scheme)
+    kCFURLWriteUnsupportedSchemeError = 518,           // Write error (unsupported URL scheme)
     kCFURLWriteOutOfSpaceError = 640,                      // Write error (out of storage space)
-    kCFURLWriteVolumeReadOnlyError = 642,		   // Write error (readonly volume)
+    kCFURLWriteVolumeReadOnlyError = 642,          // Write error (readonly volume)
 } CF_ENUM_AVAILABLE(10_5, 2_0);
 
 
@@ -303,7 +305,7 @@ CF_EXPORT const CFStringRef _kCFURLResolvedFromBookmarkDataKey CF_DEPRECATED(10_
     /* Deprecated and scheduled for removal later in 10.9/7.0 since it is unused (*/
 
 CF_EXPORT const CFStringRef _kCFURLVolumeMountPointStringKey CF_AVAILABLE(10_6, 4_0);
-    /*	the volume mountpoint string (Read-only, value type CFString) */
+    /*  the volume mountpoint string (Read-only, value type CFString) */
 
 CF_EXPORT const CFStringRef _kCFURLVolumeDeviceIDKey CF_AVAILABLE(10_11, 9_0);
     /* the volume's dev_t (Read-only, value type CFNumber) */
@@ -380,11 +382,11 @@ enum {
     kCFURLResourceIsSystemCompressed CF_ENUM_DEPRECATED(10_6, 10_9, 4_0, 7_0)
                                         = 0x00000400,  /* Deprecated and scheduled for removal in 10.10/8.0 - Use kCFURLResourceIsCompressed */
     kCFURLCanSetHiddenExtension         = 0x00000800,
-    kCFURLResourceIsReadable		= 0x00001000,
-    kCFURLResourceIsWriteable		= 0x00002000,
-    kCFURLResourceIsExecutable		= 0x00004000,   /* execute files or search directories */
+    kCFURLResourceIsReadable        = 0x00001000,
+    kCFURLResourceIsWriteable       = 0x00002000,
+    kCFURLResourceIsExecutable      = 0x00004000,   /* execute files or search directories */
     kCFURLIsAliasFile                   = 0x00008000,
-    kCFURLIsMountTrigger		= 0x00010000,
+    kCFURLIsMountTrigger        = 0x00010000,
 };
 typedef unsigned long long CFURLResourcePropertyFlags;
 
@@ -404,37 +406,37 @@ Boolean _CFURLGetResourcePropertyFlags(CFURLRef url, CFURLResourcePropertyFlags 
     File resource properties which can be obtained with _CFURLCopyFilePropertyValuesAndFlags().
  */
 typedef CF_OPTIONS(unsigned long long, CFURLFilePropertyBitmap) {
-    kCFURLName				    = 0x0000000000000001,
-    kCFURLLinkCount			    = 0x0000000000000002,
-    kCFURLVolumeIdentifier		    = 0x0000000000000004,
-    kCFURLObjectIdentifier		    = 0x0000000000000008,
-    kCFURLCreationDate			    = 0x0000000000000010,
-    kCFURLContentModificationDate	    = 0x0000000000000020,
-    kCFURLAttributeModificationDate	    = 0x0000000000000040,
-    kCFURLFileSize			    = 0x0000000000000080,
-    kCFURLFileAllocatedSize		    = 0x0000000000000100,
-    kCFURLFileSizeOfResourceFork	    = 0x0000000000000200,
+    kCFURLName                  = 0x0000000000000001,
+    kCFURLLinkCount             = 0x0000000000000002,
+    kCFURLVolumeIdentifier          = 0x0000000000000004,
+    kCFURLObjectIdentifier          = 0x0000000000000008,
+    kCFURLCreationDate              = 0x0000000000000010,
+    kCFURLContentModificationDate       = 0x0000000000000020,
+    kCFURLAttributeModificationDate     = 0x0000000000000040,
+    kCFURLFileSize              = 0x0000000000000080,
+    kCFURLFileAllocatedSize         = 0x0000000000000100,
+    kCFURLFileSizeOfResourceFork        = 0x0000000000000200,
     kCFURLFileAllocatedSizeOfResourceFork   = 0x0000000000000400,
-    kCFURLFinderInfo			    = 0x0000000000000800,
-    kCFURLFileSecurity			    = 0x0000000000001000,
+    kCFURLFinderInfo                = 0x0000000000000800,
+    kCFURLFileSecurity              = 0x0000000000001000,
 };
 
 /*
     The structure where _CFURLCopyFilePropertyValuesAndFlags() returns file resource properties.
  */
 struct _CFURLFilePropertyValues {
-    CFStringRef		name;		/* you are responsible for releasing this if you ask for it and get it */
-    uint32_t		linkCount;
-    uint64_t		volumeIdentifier;
-    uint64_t		objectIdentifier;
-    CFAbsoluteTime	creationDate;
-    CFAbsoluteTime	contentModificationDate;
-    CFAbsoluteTime	attributeModificationDate;
-    uint64_t		fileSize;
-    uint64_t		fileAllocatedSize;
-    uint64_t		fileSizeOfResourceFork;
-    uint64_t		fileAllocatedSizeOfResourceFork;
-    uint8_t		finderInfo[32];
+    CFStringRef     name;       /* you are responsible for releasing this if you ask for it and get it */
+    uint32_t        linkCount;
+    uint64_t        volumeIdentifier;
+    uint64_t        objectIdentifier;
+    CFAbsoluteTime  creationDate;
+    CFAbsoluteTime  contentModificationDate;
+    CFAbsoluteTime  attributeModificationDate;
+    uint64_t        fileSize;
+    uint64_t        fileAllocatedSize;
+    uint64_t        fileSizeOfResourceFork;
+    uint64_t        fileAllocatedSizeOfResourceFork;
+    uint8_t     finderInfo[32];
 };
 typedef struct _CFURLFilePropertyValues _CFURLFilePropertyValues;
 
@@ -454,76 +456,76 @@ Boolean _CFURLCopyResourcePropertyValuesAndFlags( CFURLRef url, CFURLFilePropert
     Volume property flags
  */
 typedef CF_OPTIONS(unsigned long long, CFURLVolumePropertyFlags) {
-	kCFURLVolumeIsLocal				=                0x1LL,	// Local device (vs. network device)
-	kCFURLVolumeIsAutomount				=                0x2LL,	// Mounted by the automounter
-	kCFURLVolumeDontBrowse				=                0x4LL,	// Hidden from user browsing
-	kCFURLVolumeIsReadOnly				=                0x8LL,	// Mounted read-only
-	kCFURLVolumeIsQuarantined		        =               0x10LL,	// Mounted with quarantine bit
-	kCFURLVolumeIsEjectable				=               0x20LL,
-	kCFURLVolumeIsRemovable				=               0x40LL,
-	kCFURLVolumeIsInternal				=               0x80LL,
-	kCFURLVolumeIsExternal				=              0x100LL,
-	kCFURLVolumeIsDiskImage				=              0x200LL,
-	kCFURLVolumeIsFileVault				=              0x400LL,
-	kCFURLVolumeIsLocaliDiskMirror CF_ENUM_DEPRECATED(10_6, 10_9, 4_0, 7_0)
+    kCFURLVolumeIsLocal             =                0x1LL, // Local device (vs. network device)
+    kCFURLVolumeIsAutomount             =                0x2LL, // Mounted by the automounter
+    kCFURLVolumeDontBrowse              =                0x4LL, // Hidden from user browsing
+    kCFURLVolumeIsReadOnly              =                0x8LL, // Mounted read-only
+    kCFURLVolumeIsQuarantined               =               0x10LL, // Mounted with quarantine bit
+    kCFURLVolumeIsEjectable             =               0x20LL,
+    kCFURLVolumeIsRemovable             =               0x40LL,
+    kCFURLVolumeIsInternal              =               0x80LL,
+    kCFURLVolumeIsExternal              =              0x100LL,
+    kCFURLVolumeIsDiskImage             =              0x200LL,
+    kCFURLVolumeIsFileVault             =              0x400LL,
+    kCFURLVolumeIsLocaliDiskMirror CF_ENUM_DEPRECATED(10_6, 10_9, 4_0, 7_0)
                                                         =              0x800LL, // Deprecated and scheduled for removal in 10.10/8.0 - there are no more iDisks
-	kCFURLVolumeIsiPod				=             0x1000LL,
-	kCFURLVolumeIsiDisk CF_ENUM_DEPRECATED(10_6, 10_9, 4_0, 7_0)
+    kCFURLVolumeIsiPod              =             0x1000LL,
+    kCFURLVolumeIsiDisk CF_ENUM_DEPRECATED(10_6, 10_9, 4_0, 7_0)
                                                         =             0x2000LL, // Deprecated and scheduled for removal in 10.10/8.0 - there are no more iDisks
-	kCFURLVolumeIsCD				=             0x4000LL,
-	kCFURLVolumeIsDVD				=             0x8000LL,
-	kCFURLVolumeIsDeviceFileSystem			=	     0x10000LL,
+    kCFURLVolumeIsCD                =             0x4000LL,
+    kCFURLVolumeIsDVD               =             0x8000LL,
+    kCFURLVolumeIsDeviceFileSystem          =        0x10000LL,
         kCFURLVolumeIsTimeMachine CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	     0x20000LL,
+                                                        =        0x20000LL,
         kCFURLVolumeIsAirport CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	     0x40000LL,
+                                                        =        0x40000LL,
         kCFURLVolumeIsVideoDisk CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	     0x80000LL,
+                                                        =        0x80000LL,
         kCFURLVolumeIsDVDVideo CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	    0x100000LL,
+                                                        =       0x100000LL,
         kCFURLVolumeIsBDVideo CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	    0x200000LL,
+                                                        =       0x200000LL,
         kCFURLVolumeIsMobileTimeMachine CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	    0x400000LL,
+                                                        =       0x400000LL,
         kCFURLVolumeIsNetworkOptical CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	    0x800000LL,
+                                                        =       0x800000LL,
         kCFURLVolumeIsBeingRepaired CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	   0x1000000LL,
+                                                        =      0x1000000LL,
         kCFURLVolumeIsBeingUnmounted CF_ENUM_AVAILABLE_MAC(10_9)
-                                                        =	   0x2000000LL,
+                                                        =      0x2000000LL,
     
 // IMPORTANT: The values of the following flags must stay in sync with the
 // VolumeCapabilities flags in CarbonCore (FileIDTreeStorage.h)
-	kCFURLVolumeSupportsPersistentIDs		=        0x100000000LL,
-	kCFURLVolumeSupportsSearchFS			=        0x200000000LL,
-	kCFURLVolumeSupportsExchange			=        0x400000000LL,
-	// reserved						 0x800000000LL,
-	kCFURLVolumeSupportsSymbolicLinks		=       0x1000000000LL,
-	kCFURLVolumeSupportsDenyModes			=       0x2000000000LL,
-	kCFURLVolumeSupportsCopyFile			=       0x4000000000LL,
-	kCFURLVolumeSupportsReadDirAttr			=       0x8000000000LL,
-	kCFURLVolumeSupportsJournaling			=      0x10000000000LL,
-	kCFURLVolumeSupportsRename			=      0x20000000000LL,
-	kCFURLVolumeSupportsFastStatFS			=      0x40000000000LL,
-	kCFURLVolumeSupportsCaseSensitiveNames		=      0x80000000000LL,
-	kCFURLVolumeSupportsCasePreservedNames		=     0x100000000000LL,
-	kCFURLVolumeSupportsFLock			=     0x200000000000LL,
-	kCFURLVolumeHasNoRootDirectoryTimes		=     0x400000000000LL,
-	kCFURLVolumeSupportsExtendedSecurity		=     0x800000000000LL,
-	kCFURLVolumeSupports2TBFileSize			=    0x1000000000000LL,
-	kCFURLVolumeSupportsHardLinks			=    0x2000000000000LL,
-	kCFURLVolumeSupportsMandatoryByteRangeLocks	=    0x4000000000000LL,
-	kCFURLVolumeSupportsPathFromID			=    0x8000000000000LL,
-	// reserved					    0x10000000000000LL,
-	kCFURLVolumeIsJournaling			=   0x20000000000000LL,
-	kCFURLVolumeSupportsSparseFiles			=   0x40000000000000LL,
-	kCFURLVolumeSupportsZeroRuns			=   0x80000000000000LL,
-	kCFURLVolumeSupportsVolumeSizes			=  0x100000000000000LL,
-	kCFURLVolumeSupportsRemoteEvents		=  0x200000000000000LL,
-	kCFURLVolumeSupportsHiddenFiles			=  0x400000000000000LL,
-	kCFURLVolumeSupportsDecmpFSCompression		=  0x800000000000000LL,
-	kCFURLVolumeHas64BitObjectIDs			= 0x1000000000000000LL,
-	kCFURLVolumePropertyFlagsAll			= 0xffffffffffffffffLL
+    kCFURLVolumeSupportsPersistentIDs       =        0x100000000LL,
+    kCFURLVolumeSupportsSearchFS            =        0x200000000LL,
+    kCFURLVolumeSupportsExchange            =        0x400000000LL,
+    // reserved                      0x800000000LL,
+    kCFURLVolumeSupportsSymbolicLinks       =       0x1000000000LL,
+    kCFURLVolumeSupportsDenyModes           =       0x2000000000LL,
+    kCFURLVolumeSupportsCopyFile            =       0x4000000000LL,
+    kCFURLVolumeSupportsReadDirAttr         =       0x8000000000LL,
+    kCFURLVolumeSupportsJournaling          =      0x10000000000LL,
+    kCFURLVolumeSupportsRename          =      0x20000000000LL,
+    kCFURLVolumeSupportsFastStatFS          =      0x40000000000LL,
+    kCFURLVolumeSupportsCaseSensitiveNames      =      0x80000000000LL,
+    kCFURLVolumeSupportsCasePreservedNames      =     0x100000000000LL,
+    kCFURLVolumeSupportsFLock           =     0x200000000000LL,
+    kCFURLVolumeHasNoRootDirectoryTimes     =     0x400000000000LL,
+    kCFURLVolumeSupportsExtendedSecurity        =     0x800000000000LL,
+    kCFURLVolumeSupports2TBFileSize         =    0x1000000000000LL,
+    kCFURLVolumeSupportsHardLinks           =    0x2000000000000LL,
+    kCFURLVolumeSupportsMandatoryByteRangeLocks =    0x4000000000000LL,
+    kCFURLVolumeSupportsPathFromID          =    0x8000000000000LL,
+    // reserved                     0x10000000000000LL,
+    kCFURLVolumeIsJournaling            =   0x20000000000000LL,
+    kCFURLVolumeSupportsSparseFiles         =   0x40000000000000LL,
+    kCFURLVolumeSupportsZeroRuns            =   0x80000000000000LL,
+    kCFURLVolumeSupportsVolumeSizes         =  0x100000000000000LL,
+    kCFURLVolumeSupportsRemoteEvents        =  0x200000000000000LL,
+    kCFURLVolumeSupportsHiddenFiles         =  0x400000000000000LL,
+    kCFURLVolumeSupportsDecmpFSCompression      =  0x800000000000000LL,
+    kCFURLVolumeHas64BitObjectIDs           = 0x1000000000000000LL,
+    kCFURLVolumePropertyFlagsAll            = 0xffffffffffffffffLL
 };
 
 
@@ -587,32 +589,32 @@ Boolean _CFURLCacheResourcePropertiesForKeys(CFURLRef url, CFArrayRef keys, CFEr
     _CFURLCreateDisplayPathComponentsArray()
 
     Summary:
-	_FileURLCreateDisplayPathComponentsArray creates a CFArray of
-	CFURLs for each component in the path leading up to the target
-	URL. This routine is suitable for clients who wish to show the
-	path leading up to a file system item. NOTE: This routine can be
-	I/O intensive, so use it sparingly, and cache the results if
-	possible.
+    _FileURLCreateDisplayPathComponentsArray creates a CFArray of
+    CFURLs for each component in the path leading up to the target
+    URL. This routine is suitable for clients who wish to show the
+    path leading up to a file system item. NOTE: This routine can be
+    I/O intensive, so use it sparingly, and cache the results if
+    possible.
 
     Discussion:
-	The CFURLs in the result CFArray are ordered from the target URL
-	to the root of the display path. For example, if the target URL
-	is file://localhost/System/Library/ the CFURLs in the array will
-	be ordered: file://localhost/System/Library/,
-	file://localhost/System/, and then file://localhost/
+    The CFURLs in the result CFArray are ordered from the target URL
+    to the root of the display path. For example, if the target URL
+    is file://localhost/System/Library/ the CFURLs in the array will
+    be ordered: file://localhost/System/Library/,
+    file://localhost/System/, and then file://localhost/
 
     Parameters:
       
-	targetURL:
-	    The target URL.
+    targetURL:
+        The target URL.
 
-	error:
-	    A pointer to a CFErrorRef, or NULL. If error is non-NULL and
-	    the function result is NULL, this will be filled in with a
-	    CFErrorRef representing the error that occurred.
+    error:
+        A pointer to a CFErrorRef, or NULL. If error is non-NULL and
+        the function result is NULL, this will be filled in with a
+        CFErrorRef representing the error that occurred.
 
     Result:
-	A CFArray or NULL if an error occurred.
+    A CFArray or NULL if an error occurred.
  */
 CF_EXPORT
 CFArrayRef _CFURLCreateDisplayPathComponentsArray(CFURLRef url, CFErrorRef *error) CF_AVAILABLE(10_7, 4_0);
@@ -699,7 +701,7 @@ enum {
     kCFBookmarkResolutionPerformRelativeResolutionFirstMask CF_ENUM_AVAILABLE(10_8, 6_0) = ( 1UL << 11 ), // perform relative resolution before absolute resolution. If this bit is set, for this to be useful a relative URL must also have been passed in and the bookmark when created must have been created relative to another url.
 };
 
-typedef CF_ENUM(CFIndex, CFURLBookmarkMatchResult) {
+typedef CF_ENUM(CFIndex,  CFURLBookmarkMatchResult) {
     kCFURLBookmarkComparisonUnableToCompare = 0x00000000,   /* the two bookmarks could not be compared for some reason */
     kCFURLBookmarkComparisonNoMatch         = 0x00001000,   /* Bookmarks do not refer to the same item */
     kCFURLBookmarkComparisonUnlikelyToMatch = 0x00002000,   /* it is unlikely that the two items refer to the same filesystem item */
@@ -735,3 +737,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFURLPRIV__ */
 
+// clang-format on

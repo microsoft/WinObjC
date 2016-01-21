@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,27 +10,27 @@
 //
 
 
-/*	CFTree.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFTree.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
 #include <CoreFoundation/CFTree.h>
 #include "CFInternal.h"
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 
 struct __CFTreeCallBacks {
-    CFTreeRetainCallBack		retain;
-    CFTreeReleaseCallBack		release;	
-    CFTreeCopyDescriptionCallBack	copyDescription;
+    CFTreeRetainCallBack        retain;
+    CFTreeReleaseCallBack       release;    
+    CFTreeCopyDescriptionCallBack   copyDescription;
 };
 
 struct __CFTree {
     CFRuntimeBase _base;
-    CFTreeRef _parent;	/* Not retained */
-    CFTreeRef _sibling;	/* Not retained */
-    CFTreeRef _child;	/* All children get a retain from the parent */
-    CFTreeRef _rightmostChild;	/* Not retained */
+    CFTreeRef _parent;  /* Not retained */
+    CFTreeRef _sibling; /* Not retained */
+    CFTreeRef _child;   /* All children get a retain from the parent */
+    CFTreeRef _rightmostChild;  /* Not retained */
     /* This is the context, exploded.
      * Currently the only valid version is 0, so we do not store that.
      * _callbacks initialized if not a special form. */
@@ -52,11 +54,11 @@ CF_INLINE uint32_t __CFTreeGetCallBacksType(CFTreeRef tree) {
 CF_INLINE const struct __CFTreeCallBacks *__CFTreeGetCallBacks(CFTreeRef tree) {
     switch (__CFTreeGetCallBacksType(tree)) {
     case __kCFTreeHasNullCallBacks:
-	return &__kCFNullTreeCallBacks;
+    return &__kCFNullTreeCallBacks;
     case __kCFTreeHasCFTypeCallBacks:
-	return &__kCFTypeTreeCallBacks;
+    return &__kCFTypeTreeCallBacks;
     case __kCFTreeHasCustomCallBacks:
-	break;
+    break;
     }
     return tree->_callbacks;
 }
@@ -79,10 +81,10 @@ static CFStringRef __CFTreeCopyDescription(CFTypeRef cf) {
     result = CFStringCreateMutable(allocator, 0);
     cb = __CFTreeGetCallBacks(tree);
     if (NULL != cb->copyDescription) {
-	contextDesc = (CFStringRef)INVOKE_CALLBACK1(cb->copyDescription, tree->_info);
+    contextDesc = (CFStringRef)INVOKE_CALLBACK1(cb->copyDescription, tree->_info);
     }
     if (NULL == contextDesc) {
-	contextDesc = CFStringCreateWithFormat(allocator, NULL, CFSTR("<CFTree context %p>"), tree->_info);
+    contextDesc = CFStringCreateWithFormat(allocator, NULL, CFSTR("<CFTree context %p>"), tree->_info);
     }
     CFStringAppendFormat(result, NULL, CFSTR("<CFTree %p [%p]>{children = %lu, context = %@}"), cf, allocator, (unsigned long)CFTreeGetChildCount(tree), contextDesc);
     if (contextDesc) CFRelease(contextDesc);
@@ -114,12 +116,12 @@ static CFTypeID __kCFTreeTypeID = _kCFRuntimeNotATypeID;
 static const CFRuntimeClass __CFTreeClass = {
     _kCFRuntimeScannedObject,
     "CFTree",
-    NULL,	// init
-    NULL,	// copy
+    NULL,   // init
+    NULL,   // copy
     __CFTreeDeallocate,
-    NULL,	// equal
-    NULL,	// hash
-    NULL,	// 
+    NULL,   // equal
+    NULL,   // hash
+    NULL,   // 
     __CFTreeCopyDescription
 };
 
@@ -138,7 +140,7 @@ CFTreeRef CFTreeCreate(CFAllocatorRef allocator, const CFTreeContext *context) {
     size = sizeof(struct __CFTree) - sizeof(CFRuntimeBase);
     memory = (CFTreeRef)_CFRuntimeCreateInstance(allocator, CFTreeGetTypeID(), size, NULL);
     if (NULL == memory) {
-	return NULL;
+    return NULL;
     }
     memory->_parent = NULL;
     memory->_sibling = NULL;
@@ -156,8 +158,8 @@ CFIndex CFTreeGetChildCount(CFTreeRef tree) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     tree = tree->_child;
     while (NULL != tree) {
-	cnt++;
-	tree = tree->_sibling;
+    cnt++;
+    tree = tree->_sibling;
     }
     return cnt;
 }
@@ -180,7 +182,7 @@ CFTreeRef CFTreeGetFirstChild(CFTreeRef tree) {
 CFTreeRef CFTreeFindRoot(CFTreeRef tree) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     while (NULL != tree->_parent) {
-	tree = tree->_parent;
+    tree = tree->_parent;
     }
     return tree;
 }
@@ -242,10 +244,10 @@ CFTreeRef CFTreeFindNextSibling(CFTreeRef tree, const void *info) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     tree = tree->_sibling;
     while (NULL != tree) {
-	if (info == tree->_context.info || (tree->_context.equal && tree->_context.equal(info, tree->_context.info))) {
-	    return tree;
-	}
-	tree = tree->_sibling;
+    if (info == tree->_context.info || (tree->_context.equal && tree->_context.equal(info, tree->_context.info))) {
+        return tree;
+    }
+    tree = tree->_sibling;
     }
     return NULL;
 }
@@ -254,10 +256,10 @@ CFTreeRef CFTreeFindFirstChild(CFTreeRef tree, const void *info) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     tree = tree->_child;
     while (NULL != tree) {
-	if (info == tree->_context.info || (tree->_context.equal && tree->_context.equal(info, tree->_context.info))) {
-	    return tree;
-	}
-	tree = tree->_sibling;
+    if (info == tree->_context.info || (tree->_context.equal && tree->_context.equal(info, tree->_context.info))) {
+        return tree;
+    }
+    tree = tree->_sibling;
     }
     return NULL;
 }
@@ -265,15 +267,15 @@ CFTreeRef CFTreeFindFirstChild(CFTreeRef tree, const void *info) {
 CFTreeRef CFTreeFind(CFTreeRef tree, const void *info) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     if (info == tree->_context.info || (tree->_context.equal && tree->_context.equal(info, tree->info))) {
-	return tree;
+    return tree;
     }
     tree = tree->_child;
     while (NULL != tree) {
-	CFTreeRef found = CFTreeFind(tree, info);
-	if (NULL != found) {
-	    return found;
-	}
-	tree = tree->_sibling;
+    CFTreeRef found = CFTreeFind(tree, info);
+    if (NULL != found) {
+        return found;
+    }
+    tree = tree->_sibling;
     }
     return NULL;
 }
@@ -283,9 +285,9 @@ CFTreeRef CFTreeGetChildAtIndex(CFTreeRef tree, CFIndex idx) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     tree = tree->_child;
     while (NULL != tree) {
-	if (0 == idx) return tree;
-	idx--;
-	tree = tree->_sibling;
+    if (0 == idx) return tree;
+    idx--;
+    tree = tree->_sibling;
     }
     return NULL;
 }
@@ -294,8 +296,8 @@ void CFTreeGetChildren(CFTreeRef tree, CFTreeRef *children) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     tree = tree->_child;
     while (NULL != tree) {
-	*children++ = tree;
-	tree = tree->_sibling;
+    *children++ = tree;
+    tree = tree->_sibling;
     }
 }
 
@@ -304,8 +306,8 @@ void CFTreeApplyFunctionToChildren(CFTreeRef tree, CFTreeApplierFunction applier
     CFAssert1(NULL != applier, __kCFLogAssertion, "%s(): pointer to applier function may not be NULL", __PRETTY_FUNCTION__);
     tree = tree->_child;
     while (NULL != tree) {
-	applier(tree, context);
-	tree = tree->_sibling;
+    applier(tree, context);
+    tree = tree->_sibling;
     }
 }
 
@@ -366,25 +368,25 @@ void CFTreeInsertSibling(CFTreeRef tree, CFTreeRef newSibling) {
 void CFTreeRemove(CFTreeRef tree) {
     __CFGenericValidateType(tree, CFTreeGetTypeID());
     if (NULL != tree->_parent) {
-	if (tree == tree->_parent->_child) {
+    if (tree == tree->_parent->_child) {
             __CFAssignWithWriteBarrier((void **)&tree->_parent->_child, tree->_sibling);
             if (tree->_sibling == NULL) {
                 tree->_parent->_rightmostChild = NULL;
             }
-	} else {
-	    CFTreeRef prevSibling = NULL;
-	    for (prevSibling = tree->_parent->_child; prevSibling; prevSibling = prevSibling->_sibling) {
-		if (prevSibling->_sibling == tree) {
+    } else {
+        CFTreeRef prevSibling = NULL;
+        for (prevSibling = tree->_parent->_child; prevSibling; prevSibling = prevSibling->_sibling) {
+        if (prevSibling->_sibling == tree) {
                     __CFAssignWithWriteBarrier((void **)&prevSibling->_sibling, tree->_sibling);
                     if (tree->_parent->_rightmostChild == tree) {
                         __CFAssignWithWriteBarrier((void **)&tree->_parent->_rightmostChild, prevSibling);
                     }
-		    break;
-		}
-	    }
-	}
-	tree->_parent = NULL;
-	tree->_sibling = NULL;
+            break;
+        }
+        }
+    }
+    tree->_parent = NULL;
+    tree->_sibling = NULL;
         if (!kCFUseCollectableAllocator) CFRelease(tree);
     }
 }
@@ -396,11 +398,11 @@ void CFTreeRemoveAllChildren(CFTreeRef tree) {
     tree->_child = NULL;
     tree->_rightmostChild = NULL;
     while (NULL != nextChild) {
-	CFTreeRef nextSibling = nextChild->_sibling;
-	nextChild->_parent = NULL;
-	nextChild->_sibling = NULL;
+    CFTreeRef nextSibling = nextChild->_sibling;
+    nextChild->_parent = NULL;
+    nextChild->_sibling = NULL;
         if (!kCFUseCollectableAllocator) CFRelease(nextChild);
-	nextChild = nextSibling;
+    nextChild = nextSibling;
     }
 }
 
@@ -427,7 +429,7 @@ void CFTreeSortChildren(CFTreeRef tree, CFComparatorFunction comparator, void *c
         CFTreeRef *list, buffer[128];
 
         list = (children < 128) ? buffer : (CFTreeRef *)CFAllocatorAllocate(kCFAllocatorSystemDefault, children * sizeof(CFTreeRef), 0); // XXX_PCB GC OK
-	if (__CFOASafe && list != buffer) __CFSetLastAllocationEventName(tree->_callbacks, "CFTree (temp)");
+    if (__CFOASafe && list != buffer) __CFSetLastAllocationEventName(tree->_callbacks, "CFTree (temp)");
         nextChild = tree->_child;
         for (idx = 0; NULL != nextChild; idx++) {
             list[idx] = nextChild;
@@ -448,3 +450,4 @@ void CFTreeSortChildren(CFTreeRef tree, CFComparatorFunction comparator, void *c
     }
 }
 
+// clang-format on

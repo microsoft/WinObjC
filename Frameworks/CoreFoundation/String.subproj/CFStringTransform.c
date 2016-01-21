@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -15,8 +17,8 @@
 
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFString.h>
-#include <CoreFoundation/CFUniChar.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFUniChar.h"
+#include "CFPriv.h"
 #include "CFInternal.h"
 #include <unicode/utrans.h>
 
@@ -81,30 +83,30 @@ __CFStringTransformCreate(CFStringRef identifier, bool reverse) {
 
     const char *known = __CFStringTransformGetICUIdentifier(identifier);
     if (known) {
-	UniChar buff[kCFStringTransformStackBufferSize];
-	CFIndex len = strlen(known);
-	CFIndex idx;
-	for (idx = 0; idx < len; idx++) {
-	    buff[idx] = known[idx];
-	}
-	made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
+    UniChar buff[kCFStringTransformStackBufferSize];
+    CFIndex len = strlen(known);
+    CFIndex idx;
+    for (idx = 0; idx < len; idx++) {
+        buff[idx] = known[idx];
+    }
+    made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
     } else {
-	CFIndex len = CFStringGetLength(identifier);
-	const UniChar *ucp = CFStringGetCharactersPtr(identifier);
-	if (ucp != NULL) {
-	    made = utrans_openU((const UChar *)ucp, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
-	} else if (len <= kCFStringTransformStackBufferSize) {
-	    UniChar buff[kCFStringTransformStackBufferSize];
-	    CFStringGetCharacters(identifier, CFRangeMake(0, len), buff);
-	    made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
-	} else {
-	    UniChar *buff = (UniChar *) CFAllocatorAllocate(kCFAllocatorSystemDefault, len * sizeof(UniChar), 0);
-	    if (buff == NULL)
-		return NULL;
-	    CFStringGetCharacters(identifier, CFRangeMake(0, len), buff);
-	    made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
-	    CFAllocatorDeallocate(kCFAllocatorSystemDefault, buff);
-	}
+    CFIndex len = CFStringGetLength(identifier);
+    const UniChar *ucp = CFStringGetCharactersPtr(identifier);
+    if (ucp != NULL) {
+        made = utrans_openU((const UChar *)ucp, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
+    } else if (len <= kCFStringTransformStackBufferSize) {
+        UniChar buff[kCFStringTransformStackBufferSize];
+        CFStringGetCharacters(identifier, CFRangeMake(0, len), buff);
+        made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
+    } else {
+        UniChar *buff = (UniChar *) CFAllocatorAllocate(kCFAllocatorSystemDefault, len * sizeof(UniChar), 0);
+        if (buff == NULL)
+        return NULL;
+        CFStringGetCharacters(identifier, CFRangeMake(0, len), buff);
+        made = utrans_openU((const UChar *)buff, len, reverse?UTRANS_REVERSE:UTRANS_FORWARD, NULL, 0, NULL, &icuStatus);
+        CFAllocatorDeallocate(kCFAllocatorSystemDefault, buff);
+    }
     }
 
     if (U_FAILURE(icuStatus)) {
@@ -147,7 +149,7 @@ __CFStringTransformAcquire(CFStringRef identifier, bool reverse) {
         CFRelease(__CFStringTransformCacheID);
         __CFStringTransformCacheID = NULL;
         UTransliterator *cached = __CFStringTransformCacheTL;
-	__CFStringTransformCacheTL = NULL;
+    __CFStringTransformCacheTL = NULL;
         __CFStringTransformUnlockGlobal();
         return cached;
     }
@@ -289,8 +291,8 @@ static void __CFStringTransformRelease(CFStringRef identifier, bool reverse,
 #if DISABLE_CACHE
 
         utrans_close(element->_transliterator);
-	CFAllocatorDeallocate(kCFAllocatorSystemDefault, element);
-	return;
+    CFAllocatorDeallocate(kCFAllocatorSystemDefault, element);
+    return;
 #endif
 
 #if LITE_CACHE
@@ -471,12 +473,12 @@ static const char *__CFStringTransformGetICUIdentifier(CFStringRef identifier) {
         CFIndex slot;
         for (slot = 0; __CFStringTransformNameMap[slot].from != NULL; ++slot) {
             if (*__CFStringTransformNameMap[slot].from == identifier) {
-		return __CFStringTransformNameMap[slot].to;
+        return __CFStringTransformNameMap[slot].to;
             }
         }
         for (slot = 0; __CFStringTransformNameMap[slot].from != NULL; ++slot) {
             if (CFEqual(*__CFStringTransformNameMap[slot].from, identifier)) {
-		return __CFStringTransformNameMap[slot].to;
+        return __CFStringTransformNameMap[slot].to;
             }
         }
     }
@@ -540,4 +542,4 @@ Boolean CFStringTransform(CFMutableStringRef string, CFRange *range, CFStringRef
     return result;
 }
 
-
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,17 +10,17 @@
 //
 
 
-/*	CFURLAccess.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Jim Luther/Chris Linn
+/*  CFURLAccess.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Jim Luther/Chris Linn
 */
 
 /*------
 CFData read/write routines
 -------*/
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wdeprecated"
 
 #include "CFInternal.h"
 #include <CoreFoundation/CFBase.h>
@@ -60,7 +62,7 @@ DEFINE_WEAK_CFNETWORK_FUNC_FAIL(Boolean, _CFURLDestroyResource, (CFURLRef A, SIn
 
 #endif
 
-typedef struct __NSString__ *NSString;
+//typedef struct __NSString__ *NSString;
 
 /*
     Pre-10.6 property keys
@@ -139,13 +141,13 @@ static CFDictionaryRef _CFFileURLCreatePropertiesFromResource(CFAllocatorRef all
     }
 
     if (_CFGetFileProperties(alloc, url, &exists, &posixMode, &size, modTimePtr, &ownerID, contentsPtr) != 0) {
-	
-	//  If all they've asked for is whether this file exists, then any error will just make
-	//  this return kCFURLFileExists = kCFBooleanFalse, which handles the case where the filename is invalid or too long or something.
-	if ( arrayRange.length == 1 && CFArrayContainsValue( desiredProperties, arrayRange, kCFURLFileExists ) ) {
-	    CFDictionarySetValue(propertyDict, kCFURLFileExists, kCFBooleanFalse);
-	}
-	else if (errorCode) {
+    
+    //  If all they've asked for is whether this file exists, then any error will just make
+    //  this return kCFURLFileExists = kCFBooleanFalse, which handles the case where the filename is invalid or too long or something.
+    if ( arrayRange.length == 1 && CFArrayContainsValue( desiredProperties, arrayRange, kCFURLFileExists ) ) {
+        CFDictionarySetValue(propertyDict, kCFURLFileExists, kCFBooleanFalse);
+    }
+    else if (errorCode) {
             *errorCode = kCFURLUnknownError;
         }
         return propertyDict;
@@ -272,7 +274,7 @@ static Boolean _CFFileURLCreateDataAndPropertiesFromResource(CFAllocatorRef allo
         
         if (alloc == NULL) {
             // We need a real allocator to pass to _CFReadBytesFromFile so that the CFDataRef we create with
-			//	CFDataCreateWithBytesNoCopy() can free up the object _CFReadBytesFromFile() returns.
+            //  CFDataCreateWithBytesNoCopy() can free up the object _CFReadBytesFromFile() returns.
             alloc = (CFAllocatorRef)CFRetain(__CFGetDefaultAllocator());
             releaseAlloc = true;
         }
@@ -292,12 +294,12 @@ static Boolean _CFFileURLCreateDataAndPropertiesFromResource(CFAllocatorRef allo
     if (fetchedProperties) {
         *fetchedProperties = _CFFileURLCreatePropertiesFromResource(alloc, url, desiredProperties, errorCode);
         if (!*fetchedProperties)
-	    success = false;
+        success = false;
     }
 
     if ( ! success && fetchedData && *fetchedData ) {
-	CFRelease( *fetchedData );
-	*fetchedData = NULL;
+    CFRelease( *fetchedData );
+    *fetchedData = NULL;
     }
     
     return success;
@@ -332,28 +334,28 @@ static CFStringRef mimeTypeFromContentTypeComponent(CFStringRef component) {
     CFStringInitInlineBuffer(component, &buf, CFRangeMake(0, compLen));
     
     for (idx = 0; idx < compLen; idx ++) {
-		UniChar ch = CFStringGetCharacterFromInlineBuffer(&buf, idx);
-		if (ch == ';') {
-			// Delimits the charset
-			break;
-		} else if (firstChar == -1) {
-			if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
-				firstChar = idx;
-			}
-		} else if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
-			lastChar = idx;
-		}
+        UniChar ch = CFStringGetCharacterFromInlineBuffer(&buf, idx);
+        if (ch == ';') {
+            // Delimits the charset
+            break;
+        } else if (firstChar == -1) {
+            if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
+                firstChar = idx;
+            }
+        } else if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
+            lastChar = idx;
+        }
     }
     if (firstChar != -1 && lastChar != -1) {
-		CFMutableStringRef newContentType = CFStringCreateMutableCopy(CFGetAllocator(component), compLen, component);
-		if (lastChar != compLen - 1) {
-			CFStringDelete(newContentType, CFRangeMake(lastChar + 1, compLen - lastChar - 1));
-		}
-		if (firstChar > 0) {
-			CFStringDelete(newContentType, CFRangeMake(0, firstChar));
-		}
-		CFStringLowercase(newContentType, NULL);
-		return newContentType;
+        CFMutableStringRef newContentType = CFStringCreateMutableCopy(CFGetAllocator(component), compLen, component);
+        if (lastChar != compLen - 1) {
+            CFStringDelete(newContentType, CFRangeMake(lastChar + 1, compLen - lastChar - 1));
+        }
+        if (firstChar > 0) {
+            CFStringDelete(newContentType, CFRangeMake(0, firstChar));
+        }
+        CFStringLowercase(newContentType, NULL);
+        return newContentType;
     }
     return NULL;
 }
@@ -367,31 +369,31 @@ static CFStringRef charsetFromContentTypeHeader(CFStringRef contentType) {
     CFCharacterSetRef whitespaceSet;
     CFMutableStringRef result;
     
-	CFStringRef kCFURLResponseCharsetPrefix = CFSTR("charset=");
-	
+    CFStringRef kCFURLResponseCharsetPrefix = CFSTR("charset=");
+    
     if (!CFStringFindWithOptions(contentType, kCFURLResponseCharsetPrefix, CFRangeMake(0, compLen), kCFCompareCaseInsensitive, &range) || range.length == 0) return NULL;
-	
+    
     whitespaceSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespace);
     start = -1; 
     end = -1;
     for (idx = range.location + range.length; idx < compLen; idx ++) {
-		UniChar ch = CFStringGetCharacterAtIndex(contentType, idx);
-		if (ch == ';' || ch == ',') break;
-		if (start == -1) {
-			if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
-				start = idx;
-				end = idx;
-			} 
-		} else if (!CFCharacterSetIsCharacterMember(whitespaceSet,ch)) {
-			end = idx;
-		}
+        UniChar ch = CFStringGetCharacterAtIndex(contentType, idx);
+        if (ch == ';' || ch == ',') break;
+        if (start == -1) {
+            if (!CFCharacterSetIsCharacterMember(whitespaceSet, ch)) {
+                start = idx;
+                end = idx;
+            } 
+        } else if (!CFCharacterSetIsCharacterMember(whitespaceSet,ch)) {
+            end = idx;
+        }
     }
-	
+    
     if (start == -1) return NULL;
-	
+    
     result = CFStringCreateMutableCopy(CFGetAllocator(contentType), compLen,contentType);
     if (end != compLen) {
-		CFStringDelete(result, CFRangeMake(end+1, compLen-end-1));
+        CFStringDelete(result, CFRangeMake(end+1, compLen-end-1));
     }
     CFStringDelete(result, CFRangeMake(0, start));
     CFStringLowercase(result, NULL);
@@ -424,38 +426,38 @@ static CFDataRef percentEscapeDecodeBuffer(CFAllocatorRef alloc, const UInt8* sr
 {
     UInt8* dstBuffer;
     UInt8 staticDstBuffer[STATIC_BUFFER_SIZE];
-	
+    
     if (range.length > STATIC_BUFFER_SIZE) {
-		dstBuffer = (UInt8*) malloc(range.length);
+        dstBuffer = (UInt8*) malloc(range.length);
     } else {
-		dstBuffer = staticDstBuffer;
+        dstBuffer = staticDstBuffer;
     }
-	
+    
     CFIndex end = range.location + range.length;
-	
+    
     CFIndex i;
     CFIndex j;
     for (i = range.location, j = 0; i < end; ++i) {
-		char value;
-		
-		if (srcBuffer[i] == '%' && end > i + 2 && isHexDigit(srcBuffer[i+1]) && isHexDigit(srcBuffer[i+2])) {
-			value = hexDigitValue(srcBuffer[i+1]) * 16 + hexDigitValue(srcBuffer[i+2]);
-			i += 2;
-		} else {
-			value = srcBuffer[i];
-		}
-		
-		if (!stripWhitespace || !isspace(value)) {
-			dstBuffer[j++] = value;
-		}
+        char value;
+        
+        if (srcBuffer[i] == '%' && end > i + 2 && isHexDigit(srcBuffer[i+1]) && isHexDigit(srcBuffer[i+2])) {
+            value = hexDigitValue(srcBuffer[i+1]) * 16 + hexDigitValue(srcBuffer[i+2]);
+            i += 2;
+        } else {
+            value = srcBuffer[i];
+        }
+        
+        if (!stripWhitespace || !isspace(value)) {
+            dstBuffer[j++] = value;
+        }
     }
-	
+    
     CFDataRef result = CFDataCreate(alloc, dstBuffer, j);
-	
+    
     if (dstBuffer != staticDstBuffer) {
-		free(dstBuffer);
+        free(dstBuffer);
     }
-	
+    
     return result;
 }
 
@@ -475,17 +477,17 @@ static BOOL isBase64DigitOrEqualSign(char c)
 static UInt8 base64DigitValue(char c)
 {
     if (c >= 'A' && c <= 'Z') {
-		return c - 'A';
+        return c - 'A';
     } else if (c >= 'a' && c <= 'z') {
-		return 26 + c - 'a';
+        return 26 + c - 'a';
     } else if (c >= '0' && c <= '9') {
-		return 52 + c - '0';
+        return 52 + c - '0';
     } else if (c == '+') {
-		return 62;
+        return 62;
     } else if (c == '/') {
-		return 63;
+        return 63;
     } else {
-		return 0;
+        return 0;
     }
 }
 
@@ -495,48 +497,48 @@ static CFDataRef base64DecodeData(CFAllocatorRef alloc, CFDataRef data)
     CFIndex length = CFDataGetLength(data);
     UInt8 *dstBuffer = NULL;
     UInt8 staticDstBuffer[STATIC_BUFFER_SIZE];
-	CFDataRef result = NULL;
-	
+    CFDataRef result = NULL;
+    
     // base64 encoded data length must be multiple of 4
     if (length % 4 != 0) {
-		goto done;
+        goto done;
     }
-	
+    
     if (length > STATIC_BUFFER_SIZE) {
-		dstBuffer = (UInt8*) malloc(length);
+        dstBuffer = (UInt8*) malloc(length);
     } else {
-		dstBuffer = staticDstBuffer;
+        dstBuffer = staticDstBuffer;
     }
-	
+    
     CFIndex i;
     CFIndex j;
     for (i = 0, j = 0; i < length; i+=4) {
-		if (!(isBase64Digit(srcBuffer[i]) &&
-			  isBase64Digit(srcBuffer[i+1]) &&
-			  isBase64DigitOrEqualSign(srcBuffer[i+2]) &&
-			  isBase64DigitOrEqualSign(srcBuffer[i+3]))) {
-			if (dstBuffer != staticDstBuffer) {
-				free(dstBuffer);
-			}
-			return NULL;
-		}
-		
-		dstBuffer[j++] = (base64DigitValue(srcBuffer[i]) << 2) + (base64DigitValue(srcBuffer[i+1]) >> 4);
-		if (srcBuffer[i+2] != '=') {
-			dstBuffer[j++] = ((base64DigitValue(srcBuffer[i+1]) & 0xf) << 4) + (base64DigitValue(srcBuffer[i+2]) >> 2);
-		}
-		if (srcBuffer[i+3] != '=') {
-			dstBuffer[j++] = ((base64DigitValue(srcBuffer[i+2]) & 0x3) << 6) + (base64DigitValue(srcBuffer[i+3]));
-		}
+        if (!(isBase64Digit(srcBuffer[i]) &&
+              isBase64Digit(srcBuffer[i+1]) &&
+              isBase64DigitOrEqualSign(srcBuffer[i+2]) &&
+              isBase64DigitOrEqualSign(srcBuffer[i+3]))) {
+            if (dstBuffer != staticDstBuffer) {
+                free(dstBuffer);
+            }
+            return NULL;
+        }
+        
+        dstBuffer[j++] = (base64DigitValue(srcBuffer[i]) << 2) + (base64DigitValue(srcBuffer[i+1]) >> 4);
+        if (srcBuffer[i+2] != '=') {
+            dstBuffer[j++] = ((base64DigitValue(srcBuffer[i+1]) & 0xf) << 4) + (base64DigitValue(srcBuffer[i+2]) >> 2);
+        }
+        if (srcBuffer[i+3] != '=') {
+            dstBuffer[j++] = ((base64DigitValue(srcBuffer[i+2]) & 0x3) << 6) + (base64DigitValue(srcBuffer[i+3]));
+        }
     }
     
     result = CFDataCreate(alloc, dstBuffer, j);
-	
+    
 done:
     if (dstBuffer != staticDstBuffer) {
-		free(dstBuffer);
+        free(dstBuffer);
     }
-	
+    
     return result;
 }
 
@@ -547,10 +549,10 @@ static inline CFStringRef percentExpandAndTrimContentType(CFAllocatorRef alloc, 
     CFStringRef contentTypeExpanded = CFURLCreateStringByReplacingPercentEscapes(alloc, contentTypeUnexpanded, CFSTR(""));
     
     if (NULL == contentTypeExpanded) {
-	contentTypeHeader = CFStringCreateMutableCopy(alloc, 0, contentTypeUnexpanded);
+    contentTypeHeader = CFStringCreateMutableCopy(alloc, 0, contentTypeUnexpanded);
     } else {
-	contentTypeHeader = CFStringCreateMutableCopy(alloc, 0, contentTypeExpanded);
-	CFRelease(contentTypeExpanded);
+    contentTypeHeader = CFStringCreateMutableCopy(alloc, 0, contentTypeExpanded);
+    CFRelease(contentTypeExpanded);
     }
     CFRelease(contentTypeUnexpanded);
     CFStringTrimWhitespace(contentTypeHeader);
@@ -564,58 +566,58 @@ static Boolean parseDataRequestURL(CFURLRef url, CFDataRef* outData, CFStringRef
     CFAllocatorRef alloc = CFGetAllocator(url);
     CFStringRef str = CFURLCopyResourceSpecifier(url);
     if (str != NULL) {
-		CFRange commaRange = CFStringFind(str, CFSTR(","), 0);
-		
-		if (commaRange.location != kCFNotFound) {
-			CFStringRef contentTypeHeader = percentExpandAndTrimContentType(alloc, str, CFRangeMake(0, commaRange.location));
-			CFStringRef mimeType = mimeTypeFromContentTypeComponent(contentTypeHeader);
-			CFStringRef textEncodingName = charsetFromContentTypeHeader(contentTypeHeader);
+        CFRange commaRange = CFStringFind(str, CFSTR(","), 0);
+        
+        if (commaRange.location != kCFNotFound) {
+            CFStringRef contentTypeHeader = percentExpandAndTrimContentType(alloc, str, CFRangeMake(0, commaRange.location));
+            CFStringRef mimeType = mimeTypeFromContentTypeComponent(contentTypeHeader);
+            CFStringRef textEncodingName = charsetFromContentTypeHeader(contentTypeHeader);
 
-			Boolean base64 = CFStringFind(contentTypeHeader, CFSTR(";base64"), kCFCompareCaseInsensitive).location != kCFNotFound;
+            Boolean base64 = CFStringFind(contentTypeHeader, CFSTR(";base64"), kCFCompareCaseInsensitive).location != kCFNotFound;
 
-			if (mimeType == NULL) {
-				mimeType = (CFStringRef) CFRetain(CFSTR("text/plain"));
-			}
-			
-			CFIndex bufferSize = CFURLGetBytes(url, NULL, 0);
-			UInt8* srcBuffer = (UInt8*) malloc(bufferSize);
-			CFURLGetBytes(url, srcBuffer, bufferSize);
-			
-			CFRange dataRange = CFURLGetByteRangeForComponent(url, kCFURLComponentResourceSpecifier, NULL);
-			while (srcBuffer[dataRange.location] != ',') {
-				dataRange.location++;
-				dataRange.length--;
-			}
-			dataRange.location++;
-			dataRange.length--;
-			
-			CFDataRef dataRef = NULL;
-			
-			if (! base64) {
-				dataRef = percentEscapeDecodeBuffer(alloc, srcBuffer, dataRange, false);
-			} else {
-				CFDataRef unescapedAndStripped = percentEscapeDecodeBuffer(alloc, srcBuffer, dataRange, true);
-				if (unescapedAndStripped) {
-					dataRef = base64DecodeData(alloc, unescapedAndStripped);
-					CFRelease(unescapedAndStripped);
-				}
-			}
-			
-			if (dataRef != NULL)  {
-				*outData = dataRef;
-				*outMimeType = (CFStringRef) mimeType == NULL? NULL : CFStringCreateCopy(alloc, mimeType);
-				*outTextEncodingName = (CFStringRef) textEncodingName == NULL? NULL : CFStringCreateCopy(alloc, textEncodingName);
-				result = true;
-			}
+            if (mimeType == NULL) {
+                mimeType = (CFStringRef) CFRetain(CFSTR("text/plain"));
+            }
+            
+            CFIndex bufferSize = CFURLGetBytes(url, NULL, 0);
+            UInt8* srcBuffer = (UInt8*) malloc(bufferSize);
+            CFURLGetBytes(url, srcBuffer, bufferSize);
+            
+            CFRange dataRange = CFURLGetByteRangeForComponent(url, kCFURLComponentResourceSpecifier, NULL);
+            while (srcBuffer[dataRange.location] != ',') {
+                dataRange.location++;
+                dataRange.length--;
+            }
+            dataRange.location++;
+            dataRange.length--;
+            
+            CFDataRef dataRef = NULL;
+            
+            if (! base64) {
+                dataRef = percentEscapeDecodeBuffer(alloc, srcBuffer, dataRange, false);
+            } else {
+                CFDataRef unescapedAndStripped = percentEscapeDecodeBuffer(alloc, srcBuffer, dataRange, true);
+                if (unescapedAndStripped) {
+                    dataRef = base64DecodeData(alloc, unescapedAndStripped);
+                    CFRelease(unescapedAndStripped);
+                }
+            }
+            
+            if (dataRef != NULL)  {
+                *outData = dataRef;
+                *outMimeType = (CFStringRef) mimeType == NULL? NULL : CFStringCreateCopy(alloc, mimeType);
+                *outTextEncodingName = (CFStringRef) textEncodingName == NULL? NULL : CFStringCreateCopy(alloc, textEncodingName);
+                result = true;
+            }
 
-			free(srcBuffer);
-			
-			if (contentTypeHeader) CFRelease(contentTypeHeader);
-			if (mimeType) CFRelease(mimeType);
-			if (textEncodingName) CFRelease(textEncodingName);
-		}
-		
-		CFRelease(str);
+            free(srcBuffer);
+            
+            if (contentTypeHeader) CFRelease(contentTypeHeader);
+            if (mimeType) CFRelease(mimeType);
+            if (textEncodingName) CFRelease(textEncodingName);
+        }
+        
+        CFRelease(str);
     }
     
     return result;
@@ -623,78 +625,78 @@ static Boolean parseDataRequestURL(CFURLRef url, CFDataRef* outData, CFStringRef
 
 static Boolean _CFDataURLCreateDataAndPropertiesFromResource(CFAllocatorRef alloc, CFURLRef url, CFDataRef *fetchedData, CFArrayRef desiredProperties, CFDictionaryRef *fetchedProperties, SInt32 *errorCode) {
     Boolean success = true;
-	
+    
     if (errorCode) *errorCode = 0;
-	
-	// We always need to fetch the data...
-	CFDataRef data = NULL;
-	CFStringRef mimeType = NULL;
-	CFStringRef textEncodingName = NULL;
+    
+    // We always need to fetch the data...
+    CFDataRef data = NULL;
+    CFStringRef mimeType = NULL;
+    CFStringRef textEncodingName = NULL;
 
-	if (! parseDataRequestURL(url, &data, &mimeType, &textEncodingName)) {
-		if (errorCode)
-			*errorCode = kCFURLUnknownError;
-		*fetchedData = NULL;
-		success = false;
-	} else {
-		if (fetchedData) {
-			*fetchedData = CFDataCreateCopy(alloc, data);
-		}
-		
-		if (fetchedProperties) {
-			const void* propKeys[] = {
-				kCFDataURLDataLength,
-				kCFDataURLMimeType,
-				kCFDataURLTextEncodingName,
-			};
-			const CFIndex propKeysCount = sizeof(propKeys) / sizeof(propKeys[0]);
-			
-			if (desiredProperties == NULL) {
-				static CFArrayRef sAllProps = NULL;
-				if (sAllProps == NULL) {
-					sAllProps = CFArrayCreate(kCFAllocatorSystemDefault, propKeys, propKeysCount, &kCFTypeArrayCallBacks);
-				}
-				desiredProperties = sAllProps;
-			}
-				
-			const void* vals[propKeysCount];
-			const void* keys[propKeysCount];
-			int ixVal = 0;
-			
-			CFIndex count = CFArrayGetCount(desiredProperties);
-			for (CFIndex i = 0;  i < count;  i++) {
-				CFStringRef key = (CFStringRef) CFArrayGetValueAtIndex(desiredProperties, i);
-				
-				if (CFEqual(key, kCFDataURLDataLength)) {
-					CFIndex len = CFDataGetLength(data);
-					keys[ixVal] = key;
-					vals[ixVal++] = CFNumberCreate(alloc, kCFNumberCFIndexType, &len);
-				} else if (CFEqual(key, kCFDataURLMimeType)) {
-					if (mimeType != NULL) {
-						keys[ixVal] = key;
-						vals[ixVal++] = CFStringCreateCopy(alloc, mimeType);
-					}
-				} else if (CFEqual(key, kCFDataURLTextEncodingName)) {
-					if (textEncodingName != NULL) {
-						keys[ixVal] = key;
-						vals[ixVal++] = CFStringCreateCopy(alloc, textEncodingName);
-					}
-				}
-			}
-			
-			*fetchedProperties = CFDictionaryCreate(alloc, keys, vals, ixVal, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-			for (CFIndex i = 0;  i < ixVal; i++) 
-				CFRelease(vals[i]);
-			if (*fetchedProperties == NULL)
-				success = false;
-		}
-		
-		if (data) CFRelease(data);
-		if (mimeType) CFRelease(mimeType);
-		if (textEncodingName) CFRelease(textEncodingName);
+    if (! parseDataRequestURL(url, &data, &mimeType, &textEncodingName)) {
+        if (errorCode)
+            *errorCode = kCFURLUnknownError;
+        *fetchedData = NULL;
+        success = false;
+    } else {
+        if (fetchedData) {
+            *fetchedData = CFDataCreateCopy(alloc, data);
+        }
+        
+        if (fetchedProperties) {
+            const void* propKeys[] = {
+                kCFDataURLDataLength,
+                kCFDataURLMimeType,
+                kCFDataURLTextEncodingName,
+            };
+            const CFIndex propKeysCount = sizeof(propKeys) / sizeof(propKeys[0]);
+            
+            if (desiredProperties == NULL) {
+                static CFArrayRef sAllProps = NULL;
+                if (sAllProps == NULL) {
+                    sAllProps = CFArrayCreate(kCFAllocatorSystemDefault, propKeys, propKeysCount, &kCFTypeArrayCallBacks);
+                }
+                desiredProperties = sAllProps;
+            }
+                
+            const void* vals[propKeysCount];
+            const void* keys[propKeysCount];
+            int ixVal = 0;
+            
+            CFIndex count = CFArrayGetCount(desiredProperties);
+            for (CFIndex i = 0;  i < count;  i++) {
+                CFStringRef key = (CFStringRef) CFArrayGetValueAtIndex(desiredProperties, i);
+                
+                if (CFEqual(key, kCFDataURLDataLength)) {
+                    CFIndex len = CFDataGetLength(data);
+                    keys[ixVal] = key;
+                    vals[ixVal++] = CFNumberCreate(alloc, kCFNumberCFIndexType, &len);
+                } else if (CFEqual(key, kCFDataURLMimeType)) {
+                    if (mimeType != NULL) {
+                        keys[ixVal] = key;
+                        vals[ixVal++] = CFStringCreateCopy(alloc, mimeType);
+                    }
+                } else if (CFEqual(key, kCFDataURLTextEncodingName)) {
+                    if (textEncodingName != NULL) {
+                        keys[ixVal] = key;
+                        vals[ixVal++] = CFStringCreateCopy(alloc, textEncodingName);
+                    }
+                }
+            }
+            
+            *fetchedProperties = CFDictionaryCreate(alloc, keys, vals, ixVal, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+            for (CFIndex i = 0;  i < ixVal; i++) 
+                CFRelease(vals[i]);
+            if (*fetchedProperties == NULL)
+                success = false;
+        }
+        
+        if (data) CFRelease(data);
+        if (mimeType) CFRelease(mimeType);
+        if (textEncodingName) CFRelease(textEncodingName);
     }
-	
-	
+    
+    
     return success;
 }
 
@@ -715,8 +717,8 @@ Boolean CFURLCreateDataAndPropertiesFromResource(CFAllocatorRef alloc, CFURLRef 
         if (CFStringCompare(scheme, CFSTR("file"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
             result = _CFFileURLCreateDataAndPropertiesFromResource(alloc, url, fetchedData, desiredProperties, fetchedProperties, errorCode);
         } else if (CFStringCompare(scheme, CFSTR("data"), kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
-	    result = _CFDataURLCreateDataAndPropertiesFromResource(alloc, url, fetchedData, desiredProperties, fetchedProperties, errorCode);
-	} else {
+        result = _CFDataURLCreateDataAndPropertiesFromResource(alloc, url, fetchedData, desiredProperties, fetchedProperties, errorCode);
+    } else {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
             result = __CFNetwork__CFURLCreateDataAndPropertiesFromResource(alloc, url, fetchedData, fetchedProperties, desiredProperties, errorCode);
 #else
@@ -786,10 +788,10 @@ Boolean CFURLWriteDataAndPropertiesToResource(CFURLRef url, CFDataRef data, CFDi
         CFRelease(scheme);
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
         Boolean result = __CFNetwork__CFURLWriteDataAndPropertiesToResource(url, data, propertyDict, errorCode);
-	if (!result) {
-	    if (errorCode) *errorCode = kCFURLUnknownSchemeError;
-	}
-	return result;
+    if (!result) {
+        if (errorCode) *errorCode = kCFURLUnknownSchemeError;
+    }
+    return result;
 #else
         if (errorCode) *errorCode = kCFURLUnknownSchemeError;
         return false;
@@ -832,16 +834,16 @@ Boolean CFURLDestroyResource(CFURLRef url, SInt32 *errorCode) {
         CFRelease(scheme);
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
         Boolean result = __CFNetwork__CFURLDestroyResource(url, errorCode);
-	if (!result) {
-	    if (errorCode) *errorCode = kCFURLUnknownSchemeError;
-	}
-	return result;
+    if (!result) {
+        if (errorCode) *errorCode = kCFURLUnknownSchemeError;
+    }
+    return result;
 #else
         if (errorCode) *errorCode = kCFURLUnknownSchemeError;
         return false;
 #endif
     }
 }
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
 
-
+// clang-format on

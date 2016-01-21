@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFCharacterSetPriv.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFCharacterSetPriv.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFCHARACTERSETPRIV__)
@@ -20,33 +22,33 @@
 CF_EXTERN_C_BEGIN
 
 /*!
-	@function CFCharacterSetIsSurrogateHighCharacter
-	Reports whether or not the character is a high surrogate.
-	@param character  The character to be checked.
-	@result true, if character is a high surrogate, otherwise false.
+    @function CFCharacterSetIsSurrogateHighCharacter
+    Reports whether or not the character is a high surrogate.
+    @param character  The character to be checked.
+    @result true, if character is a high surrogate, otherwise false.
 */
 CF_INLINE Boolean CFCharacterSetIsSurrogateHighCharacter(UniChar character) {
     return ((character >= 0xD800UL) && (character <= 0xDBFFUL) ? true : false);
 }
 
 /*!
-	@function CFCharacterSetIsSurrogateLowCharacter
-	Reports whether or not the character is a low surrogate.
-	@param character  The character to be checked.
-	@result true, if character is a low surrogate, otherwise false.
+    @function CFCharacterSetIsSurrogateLowCharacter
+    Reports whether or not the character is a low surrogate.
+    @param character  The character to be checked.
+    @result true, if character is a low surrogate, otherwise false.
 */
 CF_INLINE Boolean CFCharacterSetIsSurrogateLowCharacter(UniChar character) {
     return ((character >= 0xDC00UL) && (character <= 0xDFFFUL) ? true : false);
 }
 
 /*!
-	@function CFCharacterSetGetLongCharacterForSurrogatePair
-	Returns the UTF-32 value corresponding to the surrogate pair passed in.
-	@param surrogateHigh  The high surrogate character.  If this parameter
-			is not a valid high surrogate character, the behavior is undefined.
-	@param surrogateLow  The low surrogate character.  If this parameter
-			is not a valid low surrogate character, the behavior is undefined.
-	@result The UTF-32 value for the surrogate pair.
+    @function CFCharacterSetGetLongCharacterForSurrogatePair
+    Returns the UTF-32 value corresponding to the surrogate pair passed in.
+    @param surrogateHigh  The high surrogate character.  If this parameter
+            is not a valid high surrogate character, the behavior is undefined.
+    @param surrogateLow  The low surrogate character.  If this parameter
+            is not a valid low surrogate character, the behavior is undefined.
+    @result The UTF-32 value for the surrogate pair.
 */
 CF_INLINE UTF32Char CFCharacterSetGetLongCharacterForSurrogatePair(UniChar surrogateHigh, UniChar surrogateLow) {
     return (UTF32Char)(((surrogateHigh - 0xD800UL) << 10) + (surrogateLow - 0xDC00UL) + 0x0010000UL);
@@ -76,3 +78,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFCHARACTERSETPRIV__ */
 
+// clang-format on

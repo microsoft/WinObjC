@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFURLAccess.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFURLAccess.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 
         CFURLAccess is deprecated as of Mac OS X 10.9 and iOS 7.0. The suggested replacement for URLs with network schemes (http, https, ftp, data) are the NSURLSession or NSURLConnection classes. The suggested replacement for URLs with the file scheme are the foundation classes NSFileManager, NSFileHandle and NSURL, or the CoreFoundation classes CFStream and CFURL.
 */
@@ -84,7 +86,7 @@ CFTypeRef CFURLCreatePropertyFromResource(CFAllocatorRef alloc, CFURLRef url, CF
 
 
 /* Common error codes (returned only by the older APIs that predate CFError) */
-typedef CF_ENUM(CFIndex, CFURLError) {
+typedef CF_ENUM(CFIndex,  CFURLError) {
     kCFURLUnknownError = -10L,
     kCFURLUnknownSchemeError = -11L,
     kCFURLResourceNotFoundError = -12L,
@@ -131,3 +133,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFURLACCESS__ */
 
+// clang-format on

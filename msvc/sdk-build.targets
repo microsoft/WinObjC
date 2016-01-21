@@ -4,4 +4,11 @@
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard.targets" />
   </ImportGroup>
+  <Target Name="CopyCoreFoundationPublicHeadersToIncludes" BeforeTargets="Build">
+    <Copy
+        SourceFiles="@(CoreFoundationPublicHeader)" 
+        DestinationFolder="$(MSBuildThisFileDirectory)..\Include\CoreFoundation\" 
+        ContinueOnError="true" 
+        SkipUnchangedFiles="true"/>
+  </Target>
 </Project>

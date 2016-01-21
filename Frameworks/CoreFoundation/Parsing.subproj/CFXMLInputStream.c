@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,16 +10,17 @@
 //
 
 
-/*	CFXMLInputStream.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: David Smith
+/*  CFXMLInputStream.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: David Smith
 */
 
 #include "CFXMLInputStream.h"
 #include <CoreFoundation/CFCharacterSet.h>
 #include <string.h>
-#include "CFStringEncodingConverter.h"
-#include "CFUniChar.h"
+#include "CFStringEncodingConverter.h""
+#include "CFUniChar.h""
+
 
 /* Utility functions used in parsing */
 static Boolean determineEncoding(_CFXMLInputStream *stream) {
@@ -717,4 +720,4 @@ CF_PRIVATE Boolean _inputStreamScanXMLName(_CFXMLInputStream *stream, Boolean is
     return success;
 }
 
-
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -11,7 +13,7 @@
 	Copyright (c) 2015 Apple Inc. and the Swift project authors
  */
 
-#include <CoreFoundation/CFRegularExpression.h>
+#include "CFRegularExpression.h""
 #include "CFInternal.h"
 #define U_SHOW_DRAFT_API 1
 #define U_SHOW_INTERNAL_API 1
@@ -87,7 +89,7 @@ CFStringRef _CFRegularExpressionCreateEscapedPattern(CFStringRef pattern) {
         }
         return mutableString;
     }
-    return CFRetain(pattern);
+    return static_cast<CFStringRef>(CFRetain(pattern));
 }
 
 _CFRegularExpressionRef _CFRegularExpressionCreate(CFAllocatorRef allocator, CFStringRef pattern, _CFRegularExpressionOptions options, CFErrorRef *errorPtr) {
@@ -277,7 +279,7 @@ CF_INLINE URegularExpression *prepareRegularExpression(void *internal, int32_t *
     if (regex) {
         uregex_setRegion64(regex, regionStart, regionLimit, &errorCode);
         if (reportProgress) uregex_setMatchCallback(regex, regexMatchCallback, context, &errorCode);
-        if (reportProgress || anchored) uregex_setFindProgressCallback(regex, (void *)regexFindProgressCallback, context, &errorCode);
+        if (reportProgress || anchored) uregex_setFindProgressCallback(regex, regexFindProgressCallback, context, &errorCode);
         if (transparentBounds) uregex_useTransparentBounds(regex, 1, &errorCode);
         if (nonAnchoringBounds) uregex_useAnchoringBounds(regex, 0, &errorCode);
         
@@ -315,7 +317,7 @@ CF_INLINE void returnRegularExpression(URegularExpression *regex, int32_t *check
             if (reportProgress || anchored) uregex_setFindProgressCallback(regex, NULL, NULL, &errorCode);
             if (transparentBounds) uregex_useTransparentBounds(regex, 0, &errorCode);
             if (nonAnchoringBounds) uregex_useAnchoringBounds(regex, 1, &errorCode);
-            OSMemoryBarrier();
+            MemoryBarrier();
             *checkout = 0;
         } else {
             uregex_close(regex);
@@ -413,3 +415,5 @@ CFStringRef _CFRegularExpressionGetPattern(_CFRegularExpressionRef regex) {
 _CFRegularExpressionOptions _CFRegularExpressionGetOptions(_CFRegularExpressionRef regex) {
     return regex->options;
 }
+
+// clang-format on

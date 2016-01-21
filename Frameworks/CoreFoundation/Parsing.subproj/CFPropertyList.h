@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFPropertyList.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFPropertyList.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFPROPERTYLIST__)
@@ -33,12 +35,12 @@ typedef CF_OPTIONS(CFOptionFlags, CFPropertyListMutabilityOptions) {
 CF_IMPLICIT_BRIDGING_DISABLED
 
 /*
-	Creates a property list object from its XML description; xmlData should
-	be the raw bytes of that description, possibly the contents of an XML
-	file. Returns NULL if the data cannot be parsed; if the parse fails
-	and errorString is non-NULL, a human-readable description of the failure
-	is returned in errorString. It is the caller's responsibility to release
-	either the returned object or the error string, whichever is applicable.
+    Creates a property list object from its XML description; xmlData should
+    be the raw bytes of that description, possibly the contents of an XML
+    file. Returns NULL if the data cannot be parsed; if the parse fails
+    and errorString is non-NULL, a human-readable description of the failure
+    is returned in errorString. It is the caller's responsibility to release
+    either the returned object or the error string, whichever is applicable.
  
         This function is deprecated. See CFPropertyListCreateWithData() for a replacement.
 */
@@ -46,14 +48,14 @@ CF_EXPORT
 CFPropertyListRef CFPropertyListCreateFromXMLData(CFAllocatorRef allocator, CFDataRef xmlData, CFOptionFlags mutabilityOption, CFStringRef *errorString) CF_DEPRECATED(10_0, 10_10, 2_0, 8_0, "Use CFPropertyListCreateWithData instead.");
 
 /*
-	Returns the XML description of the given object; propertyList must
-	be one of the supported property list types, and (for composite types
-	like CFArray and CFDictionary) must not contain any elements that
-	are not themselves of a property list type. If a non-property list
-	type is encountered, NULL is returned. The returned data is
-	appropriate for writing out to an XML file. Note that a data, not a
-	string, is returned because the bytes contain in them a description
-	of the string encoding used.
+    Returns the XML description of the given object; propertyList must
+    be one of the supported property list types, and (for composite types
+    like CFArray and CFDictionary) must not contain any elements that
+    are not themselves of a property list type. If a non-property list
+    type is encountered, NULL is returned. The returned data is
+    appropriate for writing out to an XML file. Note that a data, not a
+    string, is returned because the bytes contain in them a description
+    of the string encoding used.
  
         This function is deprecated. See CFPropertyListCreateData() for a replacement.
 */
@@ -63,15 +65,15 @@ CFDataRef CFPropertyListCreateXMLData(CFAllocatorRef allocator, CFPropertyListRe
 CF_IMPLICIT_BRIDGING_ENABLED
 
 /*
-	Recursively creates a copy of the given property list (so nested arrays
-	and dictionaries are copied as well as the top-most container). The
-	resulting property list has the mutability characteristics determined
-	by mutabilityOption.
+    Recursively creates a copy of the given property list (so nested arrays
+    and dictionaries are copied as well as the top-most container). The
+    resulting property list has the mutability characteristics determined
+    by mutabilityOption.
 */
 CF_EXPORT
 CFPropertyListRef CFPropertyListCreateDeepCopy(CFAllocatorRef allocator, CFPropertyListRef propertyList, CFOptionFlags mutabilityOption);
 
-typedef CF_ENUM(CFIndex, CFPropertyListFormat) {
+typedef CF_ENUM(CFIndex,  CFPropertyListFormat) {
     kCFPropertyListOpenStepFormat = 1,
     kCFPropertyListXMLFormat_v1_0 = 100,
     kCFPropertyListBinaryFormat_v1_0 = 200
@@ -150,3 +152,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFPROPERTYLIST__ */
 
+// clang-format on

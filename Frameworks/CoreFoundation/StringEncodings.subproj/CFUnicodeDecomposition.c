@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -16,8 +18,8 @@
 #include <string.h>
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFCharacterSet.h>
-#include <CoreFoundation/CFUniChar.h>
-#include <CoreFoundation/CFUnicodeDecomposition.h>
+#include "CFUniChar.h"
+#include "CFUnicodeDecomposition.h"
 #include "CFInternal.h"
 #include "CFUniCharPriv.h"
 
@@ -390,3 +392,4 @@ CF_EXPORT void CFUniCharPrioritySort(UTF32Char *characters, CFIndex length) {
 #undef HANGUL_TCOUNT
 #undef HANGUL_NCOUNT
 
+// clang-format on

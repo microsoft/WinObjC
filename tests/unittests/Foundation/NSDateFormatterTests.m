@@ -61,7 +61,7 @@ bool isSupportedLocaleAndTimeZone(NSLocale* locale, NSTimeZone* timezone) {
     return supportedTestCase;
 }
 
-TEST(Foundation, NSDateFormatter) {
+TEST(NSDateFormatter, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
     NSTimeZone* systemTimeZone = [NSTimeZone systemTimeZone];
 

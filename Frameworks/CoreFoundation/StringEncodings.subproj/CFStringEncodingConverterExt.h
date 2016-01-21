@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -15,7 +17,7 @@
 #if !defined(__COREFOUNDATION_CFSTRINGENCODINGCONVERETEREXT__)
 #define __COREFOUNDATION_CFSTRINGENCODINGCONVERETEREXT__ 1
 
-#include <CoreFoundation/CFStringEncodingConverter.h>
+#include "CFStringEncodingConverter.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -115,3 +117,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFSTRINGENCODINGCONVERETEREXT__ */
 
+// clang-format on

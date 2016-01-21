@@ -26,7 +26,14 @@ typedef struct _NSRange {
 
 typedef NSRange* NSRangePointer;
 
-FOUNDATION_EXPORT NSRange NSMakeRange(NSUInteger loc, NSUInteger len);
+/**
+@Status Interoperable
+*/
+FOUNDATION_INLINE NSRange NSMakeRange(NSUInteger location, NSUInteger length) {
+    NSRange ret = { location, length };
+    return ret;
+}
+
 FOUNDATION_EXPORT NSUInteger NSMaxRange(NSRange range);
 FOUNDATION_EXPORT BOOL NSEqualRanges(NSRange range, NSRange otherRange);
 FOUNDATION_EXPORT BOOL NSLocationInRange(NSUInteger location, NSRange range);

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -89,7 +91,7 @@ CF_EXPORT CFRange _CFURLComponentsGetRangeOfQuery(CFURLComponentsRef components)
 CF_EXPORT CFRange _CFURLComponentsGetRangeOfFragment(CFURLComponentsRef components);
 
 CF_EXPORT CFStringRef _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(CFAllocatorRef alloc, CFStringRef string, CFCharacterSetRef allowedCharacters);
-CF_EXPORT CFStringRef _Nullable _CFStringCreateByRemovingPercentEncoding(CFAllocatorRef alloc, CFStringRef string);
+CF_EXPORT CFStringRef _CFStringCreateByRemovingPercentEncoding(CFAllocatorRef alloc, CFStringRef string);
 
 // These return singletons
 CF_EXPORT CFCharacterSetRef _CFURLComponentsGetURLUserAllowedCharacterSet();
@@ -107,3 +109,5 @@ CF_EXTERN_C_END
 CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif // __COREFOUNDATION_CFURLCOMPONENTS__
+
+// clang-format on

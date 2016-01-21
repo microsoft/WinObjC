@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 //******************************************************************************
 //
@@ -16,13 +16,14 @@
 //
 //******************************************************************************
 
-#ifndef __TIMEVAL_REDEFINED
- #define __TIMEVAL_REDEFINED
- #define timeval __ws2_timeval
- #include_next <Winsock2.h>
+//#ifndef __TIMEVAL_REDEFINED
+#if 0
+#define __TIMEVAL_REDEFINED
+#define timeval __ws2_timeval
+#include_next <Winsock2.h>
 
- #undef timeval
- #undef __TIMEVAL_REDEFINED
+#undef timeval
+#undef __TIMEVAL_REDEFINED
 #else
- #include_next <Winsock2.h>
+#include_next <Winsock2.h>
 #endif

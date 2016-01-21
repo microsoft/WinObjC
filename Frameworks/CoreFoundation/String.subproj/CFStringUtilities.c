@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,15 +10,15 @@
 //
 
 
-/*	CFStringUtilities.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFStringUtilities.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include "CFInternal.h"
-#include <CoreFoundation/CFStringEncodingConverterExt.h>
-#include <CoreFoundation/CFUniChar.h>
-#include <CoreFoundation/CFStringEncodingExt.h>
+#include "CFStringEncodingConverterExt.h"
+#include "CFUniChar.h"
+#include "CFStringEncodingExt.h""
 #include "CFStringEncodingDatabase.h"
 #include "CFICUConverters.h"
 #include <limits.h>
@@ -158,7 +160,7 @@ CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) 
 }
 
 enum {
-    NSASCIIStringEncoding = 1,		/* 0..127 only */
+    NSASCIIStringEncoding = 1,      /* 0..127 only */
     NSNEXTSTEPStringEncoding = 2,
     NSJapaneseEUCStringEncoding = 3,
     NSUTF8StringEncoding = 4,
@@ -265,112 +267,112 @@ CFStringEncoding CFStringGetMostCompatibleMacStringEncoding(CFStringEncoding enc
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
 
 // -------------------------------------------------------------------------------------------------
-//	CompareSpecials - ignore case & diacritic differences
+//  CompareSpecials - ignore case & diacritic differences
 //
-//	Decomposed have 2nd-4th chars of type Mn or Mc, or in range 1160-11FF (jamo)
-//	Fullwidth & halfwidth are in range FF00-FFEF
-//	Parenthesized & circled are in range 3200-32FF
+//  Decomposed have 2nd-4th chars of type Mn or Mc, or in range 1160-11FF (jamo)
+//  Fullwidth & halfwidth are in range FF00-FFEF
+//  Parenthesized & circled are in range 3200-32FF
 // -------------------------------------------------------------------------------------------------
 
 enum {
-	kUpperCaseWeightMin	= 0x80 | 0x0F,
-	kUpperCaseWeightMax	= 0x80 | 0x17,
-	kUpperToLowerDelta	= 0x80 | 0x0A,	// 0x0A = 0x0F - 0x05
-	kMaskPrimarySecondary	= 0xFFFFFF00,
-	kMaskPrimaryOnly	= 0xFFFF0000,
-	kMaskSecondaryOnly	= 0x0000FF00,
-	kMaskCaseTertiary	= 0x000000FF	// 2 hi bits case, 6 lo bits tertiary
+    kUpperCaseWeightMin = 0x80 | 0x0F,
+    kUpperCaseWeightMax = 0x80 | 0x17,
+    kUpperToLowerDelta  = 0x80 | 0x0A,  // 0x0A = 0x0F - 0x05
+    kMaskPrimarySecondary   = 0xFFFFFF00,
+    kMaskPrimaryOnly    = 0xFFFF0000,
+    kMaskSecondaryOnly  = 0x0000FF00,
+    kMaskCaseTertiary   = 0x000000FF    // 2 hi bits case, 6 lo bits tertiary
 };
 
 static SInt32 __CompareSpecials(const UCollator *collator, CFOptionFlags options, const UniChar *text1Ptr, UniCharCount text1Length, const UniChar *text2Ptr, UniCharCount text2Length) {
-	UErrorCode icuStatus = U_ZERO_ERROR;
-	SInt32	orderWidth = 0;
-	SInt32	orderCompos = 0;
+    UErrorCode icuStatus = U_ZERO_ERROR;
+    SInt32  orderWidth = 0;
+    SInt32  orderCompos = 0;
 
-	UCollationElements * collElems1 = ucol_openElements(collator, (const UChar *)text1Ptr, text1Length, &icuStatus);
-	UCollationElements * collElems2 = ucol_openElements(collator, (const UChar *)text2Ptr, text2Length, &icuStatus);
-	if (U_SUCCESS(icuStatus)) {
-		int32_t	startOffset1 = 0;
-		int32_t	startOffset2 = 0;
-		
-		while (true) {
-			int32_t	elemOrder1, elemOrder2;
-			int32_t	offset1, offset2;
-			
-			elemOrder1 = ucol_next(collElems1, &icuStatus);
-			elemOrder2 = ucol_next(collElems2, &icuStatus);
-			if ( U_FAILURE(icuStatus) || elemOrder1 == (int32_t)UCOL_NULLORDER || elemOrder2 == (int32_t)UCOL_NULLORDER ) {
-				break;
-			}
+    UCollationElements * collElems1 = ucol_openElements(collator, (const UChar *)text1Ptr, text1Length, &icuStatus);
+    UCollationElements * collElems2 = ucol_openElements(collator, (const UChar *)text2Ptr, text2Length, &icuStatus);
+    if (U_SUCCESS(icuStatus)) {
+        int32_t startOffset1 = 0;
+        int32_t startOffset2 = 0;
+        
+        while (true) {
+            int32_t elemOrder1, elemOrder2;
+            int32_t offset1, offset2;
+            
+            elemOrder1 = ucol_next(collElems1, &icuStatus);
+            elemOrder2 = ucol_next(collElems2, &icuStatus);
+            if ( U_FAILURE(icuStatus) || elemOrder1 == (int32_t)UCOL_NULLORDER || elemOrder2 == (int32_t)UCOL_NULLORDER ) {
+                break;
+            }
 
-			offset1 = ucol_getOffset(collElems1);
-			offset2 = ucol_getOffset(collElems2);
-			if ( (elemOrder1 & kMaskPrimarySecondary) == (elemOrder2 & kMaskPrimarySecondary) ) {
-				if ( (elemOrder1 & kMaskPrimaryOnly) != 0 ) {
-					// keys may differ in case, width, circling, etc.
+            offset1 = ucol_getOffset(collElems1);
+            offset2 = ucol_getOffset(collElems2);
+            if ( (elemOrder1 & kMaskPrimarySecondary) == (elemOrder2 & kMaskPrimarySecondary) ) {
+                if ( (elemOrder1 & kMaskPrimaryOnly) != 0 ) {
+                    // keys may differ in case, width, circling, etc.
 
-					int32_t	tertiary1 = (elemOrder1 & kMaskCaseTertiary);
-					int32_t tertiary2 = (elemOrder2 & kMaskCaseTertiary);
-					// fold upper to lower case
-					if (tertiary1 >= kUpperCaseWeightMin && tertiary1 <= kUpperCaseWeightMax) {
-						tertiary1 -= kUpperToLowerDelta;
-					}
-					if (tertiary2 >= kUpperCaseWeightMin && tertiary2 <= kUpperCaseWeightMax) {
-						tertiary2 -= kUpperToLowerDelta;
-					}
-					// now compare
-					if (tertiary1 != tertiary2) {
-						orderWidth = (tertiary1 < tertiary2)? -1: 1;
-						break;
-					}
+                    int32_t tertiary1 = (elemOrder1 & kMaskCaseTertiary);
+                    int32_t tertiary2 = (elemOrder2 & kMaskCaseTertiary);
+                    // fold upper to lower case
+                    if (tertiary1 >= kUpperCaseWeightMin && tertiary1 <= kUpperCaseWeightMax) {
+                        tertiary1 -= kUpperToLowerDelta;
+                    }
+                    if (tertiary2 >= kUpperCaseWeightMin && tertiary2 <= kUpperCaseWeightMax) {
+                        tertiary2 -= kUpperToLowerDelta;
+                    }
+                    // now compare
+                    if (tertiary1 != tertiary2) {
+                        orderWidth = (tertiary1 < tertiary2)? -1: 1;
+                        break;
+                    }
 
-				} else if ( (elemOrder1 & kMaskSecondaryOnly) != 0 ) {
-					// primary weights are both zero, but secondaries are not.
-					if ( orderCompos == 0 && (options & kCFCompareNonliteral) == 0 ) {
-						// We have a code element which is a diacritic.
-						// It may have come from a composed char or a combining char.
-						// If it came from a combining char (longer element length) it sorts first.
-						// This is only an approximation to what the Mac OS 9 code did, but this is an
-						// unusual case anyway.
-						int32_t	elem1Length = offset1 - startOffset1;
-						int32_t	elem2Length = offset2 - startOffset2;
-						if (elem1Length != elem2Length) {
-							orderCompos = (elem1Length > elem2Length)? -1: 1;
-						}
-					}
-				}
-			}
-			
-			startOffset1 = offset1;
-			startOffset2 = offset2;
-		}
-		ucol_closeElements(collElems1);
-		ucol_closeElements(collElems2);
-	}
-	
-	return (orderWidth != 0)? orderWidth: orderCompos;
+                } else if ( (elemOrder1 & kMaskSecondaryOnly) != 0 ) {
+                    // primary weights are both zero, but secondaries are not.
+                    if ( orderCompos == 0 && (options & kCFCompareNonliteral) == 0 ) {
+                        // We have a code element which is a diacritic.
+                        // It may have come from a composed char or a combining char.
+                        // If it came from a combining char (longer element length) it sorts first.
+                        // This is only an approximation to what the Mac OS 9 code did, but this is an
+                        // unusual case anyway.
+                        int32_t elem1Length = offset1 - startOffset1;
+                        int32_t elem2Length = offset2 - startOffset2;
+                        if (elem1Length != elem2Length) {
+                            orderCompos = (elem1Length > elem2Length)? -1: 1;
+                        }
+                    }
+                }
+            }
+            
+            startOffset1 = offset1;
+            startOffset2 = offset2;
+        }
+        ucol_closeElements(collElems1);
+        ucol_closeElements(collElems2);
+    }
+    
+    return (orderWidth != 0)? orderWidth: orderCompos;
 }
 
 static SInt32 __CompareCodePoints(const UniChar *text1Ptr, UniCharCount text1Length, const UniChar *text2Ptr, UniCharCount text2Length ) {
-	const UniChar *	text1P = text1Ptr;
-	const UniChar *	text2P = text2Ptr;
-	UInt32		textLimit = (text1Length <= text2Length)? text1Length: text2Length;
-	UInt32		textCounter;
-	SInt32		orderResult = 0;
+    const UniChar * text1P = text1Ptr;
+    const UniChar * text2P = text2Ptr;
+    UInt32      textLimit = (text1Length <= text2Length)? text1Length: text2Length;
+    UInt32      textCounter;
+    SInt32      orderResult = 0;
 
-	// Loop through either string...the first difference differentiates this.
-	for (textCounter = 0; textCounter < textLimit && *text1P == *text2P; textCounter++) {
-		text1P++;
-		text2P++;
-	}
-	if (textCounter < textLimit) {
-		// code point difference
-		orderResult = (*text1P < *text2P) ? -1 : 1;
-	} else if (text1Length != text2Length) {
-		// one string has extra stuff at end
-		orderResult = (text1Length < text2Length) ? -1 : 1;
-	}
-	return orderResult;
+    // Loop through either string...the first difference differentiates this.
+    for (textCounter = 0; textCounter < textLimit && *text1P == *text2P; textCounter++) {
+        text1P++;
+        text2P++;
+    }
+    if (textCounter < textLimit) {
+        // code point difference
+        orderResult = (*text1P < *text2P) ? -1 : 1;
+    } else if (text1Length != text2Length) {
+        // one string has extra stuff at end
+        orderResult = (text1Length < text2Length) ? -1 : 1;
+    }
+    return orderResult;
 }
 
 
@@ -403,9 +405,9 @@ static UCollator *__CFStringCopyDefaultCollator(CFLocaleRef compareLocale) {
     if (compareLocale != __CFDefaultCollatorLocale) {
         currentLocale = CFLocaleCopyCurrent();
         if (compareLocale != currentLocale) {
-	    CFRelease(currentLocale);
-	    return NULL;
-	}
+        CFRelease(currentLocale);
+        return NULL;
+    }
     }
 
     __CFLock(&__CFDefaultCollatorLock);
@@ -418,7 +420,7 @@ static UCollator *__CFStringCopyDefaultCollator(CFLocaleRef compareLocale) {
     __CFUnlock(&__CFDefaultCollatorLock);
 
     if (NULL == collator) {
-	collator = __CFStringCreateCollator(compareLocale);
+    collator = __CFStringCreateCollator(compareLocale);
     }
 
     if (NULL != currentLocale) CFRelease(currentLocale);
@@ -450,86 +452,86 @@ static void __collatorFinalize(UCollator *collator) {
 // -------------------------------------------------------------------------------------------------
 static OSStatus __CompareTextDefault(UCollator *collator, CFOptionFlags options, const UniChar *text1Ptr, UniCharCount text1Length, const UniChar *text2Ptr, UniCharCount text2Length, Boolean *equivalentP, SInt32 *orderP) {
 
-	// collator must have default settings restored on exit from this function
+    // collator must have default settings restored on exit from this function
 
-	*equivalentP = true;
-	*orderP = 0;	
+    *equivalentP = true;
+    *orderP = 0;    
 
-	if (options & kCFCompareNumerically) {
-	    UErrorCode icuStatus = U_ZERO_ERROR;	
-	    ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_ON, &icuStatus);
-	}
+    if (options & kCFCompareNumerically) {
+        UErrorCode icuStatus = U_ZERO_ERROR;    
+        ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_ON, &icuStatus);
+    }
 
-	// Most string differences are Primary. Do a primary check first, then if there
-	// are no differences do a comparison with the options in the collator.
-	UCollationResult icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
-	if (icuResult != UCOL_EQUAL) {
-		*orderP = (icuResult == UCOL_LESS) ? -2 : 2;
-	}
-	if (*orderP == 0) {
-		UErrorCode icuStatus = U_ZERO_ERROR;	
+    // Most string differences are Primary. Do a primary check first, then if there
+    // are no differences do a comparison with the options in the collator.
+    UCollationResult icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
+    if (icuResult != UCOL_EQUAL) {
+        *orderP = (icuResult == UCOL_LESS) ? -2 : 2;
+    }
+    if (*orderP == 0) {
+        UErrorCode icuStatus = U_ZERO_ERROR;    
                 ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_ON, &icuStatus);
                 ucol_setAttribute(collator, UCOL_STRENGTH, (options & kCFCompareDiacriticInsensitive) ? UCOL_PRIMARY : UCOL_SECONDARY, &icuStatus);
                 ucol_setAttribute(collator, UCOL_CASE_LEVEL, (options & kCFCompareCaseInsensitive) ? UCOL_OFF : UCOL_ON, &icuStatus);
-		if (!U_SUCCESS(icuStatus)) {
-		    icuStatus = U_ZERO_ERROR;
-		    ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
-		    return 666;
-		}
+        if (!U_SUCCESS(icuStatus)) {
+            icuStatus = U_ZERO_ERROR;
+            ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
+            ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
+            ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
+            ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
+            return 666;
+        }
 
-		// We don't have a primary difference. Recompare with standard collator.
-		icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
-		if (icuResult != UCOL_EQUAL) {
-			*orderP = (icuResult == UCOL_LESS) ? -1 : 1;
-		}
-		icuStatus = U_ZERO_ERROR;
+        // We don't have a primary difference. Recompare with standard collator.
+        icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
+        if (icuResult != UCOL_EQUAL) {
+            *orderP = (icuResult == UCOL_LESS) ? -1 : 1;
+        }
+        icuStatus = U_ZERO_ERROR;
                 ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
-		ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
-		ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
-	}
-	if (*orderP == 0 && (options & kCFCompareNonliteral) == 0) {
-		*orderP = __CompareSpecials(collator, options, text1Ptr, text1Length, text2Ptr, text2Length);
-	}
+        ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
+        ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
+    }
+    if (*orderP == 0 && (options & kCFCompareNonliteral) == 0) {
+        *orderP = __CompareSpecials(collator, options, text1Ptr, text1Length, text2Ptr, text2Length);
+    }
 
-	*equivalentP = (*orderP == 0);
+    *equivalentP = (*orderP == 0);
 
-	// If strings are equivalent but we care about order and have not yet checked
-	// to the level of code point order, then do some more checks for order
-	if (*orderP == 0) {
-		UErrorCode icuStatus = U_ZERO_ERROR;	
-		// First try to see if ICU can find any differences above code point level
+    // If strings are equivalent but we care about order and have not yet checked
+    // to the level of code point order, then do some more checks for order
+    if (*orderP == 0) {
+        UErrorCode icuStatus = U_ZERO_ERROR;    
+        // First try to see if ICU can find any differences above code point level
                 ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_ON, &icuStatus);
-		ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_TERTIARY, &icuStatus);
-		ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_ON, &icuStatus);
-		if (!U_SUCCESS(icuStatus)) {
-		    icuStatus = U_ZERO_ERROR;
-		    ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
-		    ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
-		    return 666;
-		}
-		icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
-		if (icuResult != UCOL_EQUAL) {
-			*orderP = (icuResult == UCOL_LESS) ? -1 : 1;
-		} else {
-			// no ICU differences above code point level, compare code points
-			*orderP = __CompareCodePoints( text1Ptr, text1Length, text2Ptr, text2Length );
-		}
-		icuStatus = U_ZERO_ERROR;
+        ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_TERTIARY, &icuStatus);
+        ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_ON, &icuStatus);
+        if (!U_SUCCESS(icuStatus)) {
+            icuStatus = U_ZERO_ERROR;
+            ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
+            ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
+            ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
+            ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
+            return 666;
+        }
+        icuResult = ucol_strcoll(collator, (const UChar *)text1Ptr, text1Length, (const UChar *)text2Ptr, text2Length);
+        if (icuResult != UCOL_EQUAL) {
+            *orderP = (icuResult == UCOL_LESS) ? -1 : 1;
+        } else {
+            // no ICU differences above code point level, compare code points
+            *orderP = __CompareCodePoints( text1Ptr, text1Length, text2Ptr, text2Length );
+        }
+        icuStatus = U_ZERO_ERROR;
                 ucol_setAttribute(collator, UCOL_NORMALIZATION_MODE, UCOL_OFF, &icuStatus);
-		ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
-		ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
-	}
+        ucol_setAttribute(collator, UCOL_STRENGTH, UCOL_PRIMARY, &icuStatus);
+        ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_OFF, &icuStatus);
+    }
 
-	if (options & kCFCompareNumerically) {
-	    UErrorCode icuStatus = U_ZERO_ERROR;	
-	    ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
-	}
-	return 0; // noErr
+    if (options & kCFCompareNumerically) {
+        UErrorCode icuStatus = U_ZERO_ERROR;    
+        ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_OFF, &icuStatus);
+    }
+    return 0; // noErr
 }
 
 #endif // DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
@@ -589,10 +591,10 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     static const uint8_t *controlBMP = NULL;
     
     if (NULL == alnumBMP) {
-	alnumBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharAlphaNumericCharacterSet, 0);
-	nonBaseBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharNonBaseCharacterSet, 0);
-	punctBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharPunctuationCharacterSet, 0);
-	controlBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharControlAndFormatterCharacterSet, 0);
+    alnumBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharAlphaNumericCharacterSet, 0);
+    nonBaseBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharNonBaseCharacterSet, 0);
+    punctBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharPunctuationCharacterSet, 0);
+    controlBMP = CFUniCharGetBitmapPtrForPlane(kCFUniCharControlAndFormatterCharacterSet, 0);
     }
     
     // Determine the range of characters surrodiing the current index significant for localized comparison. The range is extended backward and forward as long as they are contextual. Contextual characters include all letters and punctuations. Since most control/format characters are ignorable in localized comparison, we also include them extending forward.
@@ -603,11 +605,11 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     // go backward
     // The characters upto the current index are already determined to be equal by the CFString's standard character folding algorithm. Extend as long as truly contextual (all letters and punctuations).
     if (range1.location > 0) {
-	range1.location = __extendLocationBackward(range1.location - 1, str1, nonBaseBMP, punctBMP);
+    range1.location = __extendLocationBackward(range1.location - 1, str1, nonBaseBMP, punctBMP);
     }
     
     if (range2.location > 0) {
-	range2.location = __extendLocationBackward(range2.location - 1, str2, nonBaseBMP, punctBMP);
+    range2.location = __extendLocationBackward(range2.location - 1, str2, nonBaseBMP, punctBMP);
     }
     
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
@@ -617,15 +619,15 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     UCollator *threadCollator = _CFGetTSD(__CFTSDKeyCollatorUCollator);
     CFLocaleRef threadLocale = _CFGetTSD(__CFTSDKeyCollatorLocale);
     if (compareLocale == threadLocale) {
-	collator = threadCollator;
+    collator = threadCollator;
     } else {
 #endif
-	collator = __CFStringCopyDefaultCollator((CFLocaleRef)compareLocale);
-	defaultCollator = true;
-	if (NULL == collator) {
-	    collator = __CFStringCreateCollator((CFLocaleRef)compareLocale);
-	    defaultCollator = false;
-	}
+    collator = __CFStringCopyDefaultCollator((CFLocaleRef)compareLocale);
+    defaultCollator = true;
+    if (NULL == collator) {
+        collator = __CFStringCreateCollator((CFLocaleRef)compareLocale);
+        defaultCollator = false;
+    }
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
     }
 #endif
@@ -635,8 +637,8 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     characters2 = CFStringGetCharactersPtrFromInlineBuffer(str2, range2);
 
     if ((NULL != characters1) && (NULL != characters2)) { // do fast
-	range1.length = (str1Range.location + str1Range.length) - range1.location;
-	range2.length = (str2Range.location + str2Range.length) - range2.location;
+    range1.length = (str1Range.location + str1Range.length) - range1.location;
+    range2.length = (str2Range.location + str2Range.length) - range2.location;
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
         if ((NULL != collator) && (__CompareTextDefault(collator, options, characters1, range1.length, characters2, range2.length, &isEqual, &order) == 0 /* noErr */)) {
@@ -659,7 +661,7 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
         // Extend forward and compare until the result is deterministic. The result is indeterministic if the differences are weak and can be resolved by character folding. For example, comparision between "abc" and "ABC" is considered to be indeterministic.
         do {
             if (str1Range.location < str1Max) {
-		str1Range.location = __extendLocationForward(str1Range.location, str1, alnumBMP, punctBMP, controlBMP, str1Max);
+        str1Range.location = __extendLocationForward(str1Range.location, str1, alnumBMP, punctBMP, controlBMP, str1Max);
                 range1.length = (str1Range.location - range1.location);
                 characters1 = CFStringGetCharactersPtrFromInlineBuffer(str1, range1);
 
@@ -684,7 +686,7 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
             }
 
             if (str2Range.location < str2Max) {
-		str2Range.location = __extendLocationForward(str2Range.location, str2, alnumBMP, punctBMP, controlBMP, str2Max);                
+        str2Range.location = __extendLocationForward(str2Range.location, str2, alnumBMP, punctBMP, controlBMP, str2Max);                
                 range2.length = (str2Range.location - range2.location);
                 characters2 = CFStringGetCharactersPtrFromInlineBuffer(str2, range2);
                 
@@ -747,15 +749,16 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
     if (collator == threadCollator) {
-	// do nothing, already cached
+    // do nothing, already cached
     } else {
-	if (threadLocale) __collatorFinalize((UCollator *)_CFGetTSD(__CFTSDKeyCollatorUCollator)); // need to dealloc collators
+    if (threadLocale) __collatorFinalize((UCollator *)_CFGetTSD(__CFTSDKeyCollatorUCollator)); // need to dealloc collators
 
-	_CFSetTSD(__CFTSDKeyCollatorUCollator, collator, (void *)__collatorFinalize);
-	_CFSetTSD(__CFTSDKeyCollatorLocale, (void *)CFRetain(compareLocale), NULL);
+    _CFSetTSD(__CFTSDKeyCollatorUCollator, collator, (void *)__collatorFinalize);
+    _CFSetTSD(__CFTSDKeyCollatorLocale, (void *)CFRetain(compareLocale), NULL);
     }
 #endif
     
     return compResult;
 }
 
+// clang-format on

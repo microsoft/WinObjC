@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,19 +10,19 @@
 //
 
 
-/*	CFXMLParser.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: David Smith
+/*  CFXMLParser.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: David Smith
 */
 
 #include <CoreFoundation/CFXMLParser.h>
 #include <CoreFoundation/CFNumber.h>
 #include "CFXMLInputStream.h"
-#include "CFUniChar.h" 
+#include "CFUniChar.h"
 #include "CFInternal.h"
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct __CFXMLParser {
     CFRuntimeBase _cfBase;
@@ -86,14 +88,14 @@ void CFXMLParserGetContext(CFXMLParserRef parser, CFXMLParserContext *context) {
     CFAssert1(parser != NULL, __kCFLogAssertion, "%s(): NULL parser not permitted", __PRETTY_FUNCTION__);
     __CFGenericValidateType(parser, CFXMLParserGetTypeID());
     if (context) {
-	context->version = parser->context.version;
-	context->info = parser->context.info;
-	context->retain = parser->context.retain;
-	context->release = parser->context.release;
-	context->copyDescription = parser->context.copyDescription;
-	UNFAULT_CALLBACK(context->retain);
-	UNFAULT_CALLBACK(context->release);
-	UNFAULT_CALLBACK(context->copyDescription);
+    context->version = parser->context.version;
+    context->info = parser->context.info;
+    context->retain = parser->context.retain;
+    context->release = parser->context.release;
+    context->copyDescription = parser->context.copyDescription;
+    UNFAULT_CALLBACK(context->retain);
+    UNFAULT_CALLBACK(context->release);
+    UNFAULT_CALLBACK(context->copyDescription);
     }
 }
 
@@ -106,11 +108,11 @@ void CFXMLParserGetCallBacks(CFXMLParserRef parser, CFXMLParserCallBacks *callBa
         callBacks->endXMLStructure = parser->callBacks.endXMLStructure;
         callBacks->resolveExternalEntity = parser->callBacks.resolveExternalEntity;
         callBacks->handleError = parser->callBacks.handleError;
-	UNFAULT_CALLBACK(callBacks->createXMLStructure);
-	UNFAULT_CALLBACK(callBacks->addChild);
-	UNFAULT_CALLBACK(callBacks->endXMLStructure);
-	UNFAULT_CALLBACK(callBacks->resolveExternalEntity);
-	UNFAULT_CALLBACK(callBacks->handleError);
+    UNFAULT_CALLBACK(callBacks->createXMLStructure);
+    UNFAULT_CALLBACK(callBacks->addChild);
+    UNFAULT_CALLBACK(callBacks->endXMLStructure);
+    UNFAULT_CALLBACK(callBacks->resolveExternalEntity);
+    UNFAULT_CALLBACK(callBacks->handleError);
     }
 }
 
@@ -1506,14 +1508,14 @@ static Boolean parseTag(CFXMLParserRef parser) {
 
     if (*parser->top || parser->top == parser->stack) {
         CFStringRef oldStr = parser->node->dataString;
-	parser->node->dataTypeID = kCFXMLNodeTypeElement;
+    parser->node->dataTypeID = kCFXMLNodeTypeElement;
         parser->node->dataString = tagName;
-	parser->node->additionalData = &data;
+    parser->node->additionalData = &data;
         tag = (void *)INVOKE_CALLBACK3(parser->callBacks.createXMLStructure, parser, parser->node, parser->context.info);
         if (tag && parser->status == kCFXMLStatusParseInProgress) {
             INVOKE_CALLBACK4(parser->callBacks.addChild, parser, *parser->top, tag, parser->context.info);
         }
-	parser->node->additionalData = NULL;
+    parser->node->additionalData = NULL;
         parser->node->dataString = oldStr;
         if (parser->status != kCFXMLStatusParseInProgress) {
             // callback called CFXMLParserAbort()
@@ -1839,7 +1841,7 @@ CFXMLTreeRef CFXMLTreeCreateFromDataWithError(CFAllocatorRef allocator, CFDataRe
     if (CFXMLParserParse(parser)) {
         result = (CFXMLTreeRef)CFXMLParserGetDocument(parser);
     } else {
-        if (errorDict) {	// collect the error dictionary
+        if (errorDict) {    // collect the error dictionary
             *errorDict = CFDictionaryCreateMutable(allocator, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
             if (*errorDict) {
                 CFIndex rawnum;
@@ -1961,11 +1963,11 @@ CFStringRef CFXMLCreateStringByUnescapingEntities(CFAllocatorRef allocator, CFSt
     lastChunkStart = 0;
     // Scan through the string in its entirety
     for(i = 0; i < length; ) {
-        uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;	// grab the next character and move i.
+        uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;  // grab the next character and move i.
 
         if(uc == '&') {
             entityStart = i - 1;
-            entity = 0xFFFF;	// set this to a not-Unicode character as sentinel
+            entity = 0xFFFF;    // set this to a not-Unicode character as sentinel
                              // we've hit the beginning of an entity. Copy everything from lastChunkStart to this point.
             if(lastChunkStart < i - 1) {
                 sub = CFStringCreateWithSubstring(allocator, string, CFRangeMake(lastChunkStart, (i - 1) - lastChunkStart));
@@ -1973,14 +1975,14 @@ CFStringRef CFXMLCreateStringByUnescapingEntities(CFAllocatorRef allocator, CFSt
                 CFRelease(sub);
             }
 
-            uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;	// grab the next character and move i.
+            uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;  // grab the next character and move i.
                                                                            // Now we can process the entity reference itself
-            if(uc == '#') {	// this is a numeric entity.
+            if(uc == '#') { // this is a numeric entity.
                 base = 10;
                 entity = 0;
                 uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;
 
-                if(uc == 'x') {	// only lowercase x allowed. Translating numeric entity as hexadecimal.
+                if(uc == 'x') { // only lowercase x allowed. Translating numeric entity as hexadecimal.
                     base = 16;
                     uc = CFStringGetCharacterFromInlineBuffer(&inlineBuf, i); i++;
                 }
@@ -2017,7 +2019,7 @@ CFStringRef CFXMLCreateStringByUnescapingEntities(CFAllocatorRef allocator, CFSt
                     UniChar character = entity;
                     CFStringAppendCharacters(newString, &character, 1);
                 }
-            } else {	// it wasn't numeric.
+            } else {    // it wasn't numeric.
                 sub = CFStringCreateWithSubstring(allocator, string, CFRangeMake(entityStart + 1, (i - entityStart - 2))); // This trims off the & and ; from the string, so we can use it against the dictionary itself.
                 CFStringRef replacementString = (CFStringRef)CFDictionaryGetValue(fullReplDict, sub);
                 if(replacementString) {
@@ -2045,4 +2047,6 @@ CFStringRef CFXMLCreateStringByUnescapingEntities(CFAllocatorRef allocator, CFSt
     return newString;
 }
 
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
+
+// clang-format on

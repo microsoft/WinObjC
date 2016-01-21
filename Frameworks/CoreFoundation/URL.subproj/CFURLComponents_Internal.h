@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFURLComponents_Internal.h
-	Copyright (c) 2015, Apple Inc. All rights reserved.
+/*  CFURLComponents_Internal.h
+    Copyright (c) 2015, Apple Inc. All rights reserved.
 */
 
 #ifndef CFURLComponents_Internal_h
@@ -21,40 +23,40 @@
 // present and the offset of where they start in the uriReference.
 struct _URIParseInfo {
     // schemeOffset is not needed because if there is a scheme, it is always at offset 0.
-    unsigned long	userinfoNameOffset;
-    unsigned long	userinfoPasswordOffset;
-    unsigned long	hostOffset;
-    unsigned long	portOffset;
-    unsigned long	pathOffset;
-    unsigned long	paramOffset;			// param is obsolete, but old API needs it.
-    unsigned long	queryOffset;
-    unsigned long	fragmentOffset;
-    unsigned long	endOffset;
+    unsigned long   userinfoNameOffset;
+    unsigned long   userinfoPasswordOffset;
+    unsigned long   hostOffset;
+    unsigned long   portOffset;
+    unsigned long   pathOffset;
+    unsigned long   paramOffset;            // param is obsolete, but old API needs it.
+    unsigned long   queryOffset;
+    unsigned long   fragmentOffset;
+    unsigned long   endOffset;
     
     // set if the URI component/subcomponent exists
-    unsigned long	schemeExists            : 1;
-    unsigned long	authorityExists         : 1;    // this tells us if the hier-part of relative-part was in the form: "//" authority path-abempty
-    unsigned long	userinfoNameExists      : 1;
-    unsigned long	userinfoPasswordExists	: 1;
-    unsigned long	hostExists              : 1;
-    unsigned long	portExists              : 1;
+    unsigned long   schemeExists            : 1;
+    unsigned long   authorityExists         : 1;    // this tells us if the hier-part of relative-part was in the form: "//" authority path-abempty
+    unsigned long   userinfoNameExists      : 1;
+    unsigned long   userinfoPasswordExists  : 1;
+    unsigned long   hostExists              : 1;
+    unsigned long   portExists              : 1;
     // pathExists is not needed because there's always a path... it just might be zero length.
-    unsigned long	paramExists             : 1;    // param is obsolete, but old API needs it.
-    unsigned long	queryExists             : 1;
-    unsigned long	fragmentExists          : 1;
+    unsigned long   paramExists             : 1;    // param is obsolete, but old API needs it.
+    unsigned long   queryExists             : 1;
+    unsigned long   fragmentExists          : 1;
 };
 
-typedef CF_ENUM(unsigned short, _CFURIParserURLAllowedCharacter) {
-    kURLSchemeAllowed	= 0x0001,
-    kURLUserAllowed	= 0x0002,
-    kURLPasswordAllowed	= 0x0004,
-    kURLHostAllowed	= 0x0008,
-    kURLPortAllowed	= 0x0010,
-    kURLPathAllowed	= 0x0020,
-    kURLQueryAllowed	= 0x0040,
-    kURLFragmentAllowed	= 0x0080,
-    kURLHexDigAllowed	= 0x0100,
-    kURLAlphaAllowed	= 0x0200,
+typedef CF_ENUM(unsigned short,  _CFURIParserURLAllowedCharacter) {
+    kURLSchemeAllowed   = 0x0001,
+    kURLUserAllowed = 0x0002,
+    kURLPasswordAllowed = 0x0004,
+    kURLHostAllowed = 0x0008,
+    kURLPortAllowed = 0x0010,
+    kURLPathAllowed = 0x0020,
+    kURLQueryAllowed    = 0x0040,
+    kURLFragmentAllowed = 0x0080,
+    kURLHexDigAllowed   = 0x0100,
+    kURLAlphaAllowed    = 0x0200,
 };
 
 CF_PRIVATE Boolean _CFURIParserParseURIReference(CFStringRef urlString, struct _URIParseInfo *parseInfo);
@@ -71,3 +73,5 @@ CF_PRIVATE Boolean _CFURIParserValidateComponent(CFStringRef urlString, CFRange 
 CF_PRIVATE Boolean _CFURIParserURLStringIsValid(CFStringRef urlString, struct _URIParseInfo *parseInfo);
 
 #endif /* CFURLComponents_Internal_h */
+
+// clang-format on

@@ -77,7 +77,7 @@ int CFTesterGetState(CFTesterRef tester) {
 }
 @end
 
-TEST(Foundation, CFBridgeBase_Test) {
+TEST(CFBridge, CFBridgeBase_Test) {
     CFTesterRef tester = CFTesterCreate();
     ASSERT_EQ_MSG(tester->_state, c_defaultState, "Default-constructed state incorrect");
     ASSERT_EQ_MSG(CFTesterGetState(tester), [reinterpret_cast<NSTester*>(tester) state], "Toll-free state access inconsistent");
@@ -87,7 +87,7 @@ TEST(Foundation, CFBridgeBase_Test) {
     ASSERT_EQ_MSG(g_destructorCalled, true, "Destructor must be called after releasing");
 }
 
-TEST(Foundation, NSBridgeBase_Test) {
+TEST(CFBridge, NSBridgeBase_Test) {
     id pool = [NSAutoreleasePool new];
 
     const int c_stateInitVal = 4321;
@@ -110,11 +110,11 @@ TEST(Foundation, NSBridgeBase_Test) {
 }
 @end
 
-TEST(Foundation, NSBridgeBase_WithIvars) {
+TEST(CFBridge, NSBridgeBase_WithIvars) {
     ASSERT_ANY_THROW(CFTester::alloc([NSBadBridgeTester class]));
 }
 
-TEST(Foundation, NSBridgeBase_NoNSClass) {
+TEST(CFBridge, NSBridgeBase_NoNSClass) {
     auto tester = CFTester::alloc(nil);
     g_destructorCalled = false;
     CFRelease(tester);

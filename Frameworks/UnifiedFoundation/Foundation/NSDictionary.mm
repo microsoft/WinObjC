@@ -16,16 +16,19 @@
 
 #include "Starboard.h"
 #include "StubReturn.h"
-#include "../CoreFoundation/CFDictionaryInternal.h"
+#include "CFHelpers.h"
 #include "NSEnumeratorInternal.h"
-#include "CoreFoundation/CFDictionary.h"
+#include "Foundation/NSDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSKeyedArchiver.h"
+#include "VAListHelper.h"
+#include "NSDictionaryConcrete.h"
 #include "LoggingNative.h"
+#include "NSRaise.h"
 
 static const wchar_t* TAG = L"NSDictionary";
 
@@ -54,6 +57,58 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+@interface NSDictionaryValueEnumerator : NSEnumerator
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary;
+@property (readonly, copy) NSArray* allObjects;
+- (id)nextObject;
+@end
+
+@implementation NSDictionaryValueEnumerator {
+@public
+    StrongId<NSEnumerator> _keyEnumerator;
+    StrongId<NSDictionary> _dictionary;
+}
+
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary {
+    if (self = [super init]) {
+        _keyEnumerator = [dictionary keyEnumerator];
+        _dictionary = dictionary;
+    }
+    return self;
+}
+
+- (id)nextObject {
+    if (_keyEnumerator == nil) {
+        return nil;
+    }
+
+    id key = [_keyEnumerator nextObject];
+
+    if (key == nil) {
+        _keyEnumerator = nil;
+        _dictionary = nil;
+    }
+
+    return [_dictionary objectForKey:key];
+}
+
+- (NSArray*)allObjects {
+    if (_keyEnumerator == nil) {
+        return nil;
+    }
+
+    StrongId<NSArray> keyArray = [_keyEnumerator allObjects];
+    StrongId<NSMutableArray> toRet = [NSMutableArray new];
+
+    for (id key in static_cast<NSArray*>(keyArray)) {
+        [toRet addObject:[_dictionary objectForKey:key]];
+    }
+
+    return toRet.detach();
+}
+
+@end
+
 @implementation NSDictionary
 
 /**
@@ -68,77 +123,48 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObj, ... {
-    va_list pReader;
-    va_start(pReader, firstObj);
-    NSDictionary* ret = [self new];
+    va_list argList;
+    va_start(argList, firstObj);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)firstObj, argList);
+    va_end(argList);
 
-    void* curVal = (void*)firstObj;
+    // Need to split the arg list into keys and values.
+    std::vector<id> values(flatArgs.size() / 2);
+    std::vector<id> keys(flatArgs.size() / 2);
 
-    while (curVal != NULL) {
-        id curKey = va_arg(pReader, id);
-
-        curKey = [curKey copy];
-        CFDictionarySetValue((CFMutableDictionaryRef)ret, (const void*)curKey, curVal);
-        [curKey release];
-
-        curVal = (void*)va_arg(pReader, id);
+    for (unsigned int i = 0; i < flatArgs.size(); i++) {
+        if (i % 2 == 0) {
+            values[(i / 2)] = flatArgs[i];
+        } else {
+            keys[(i / 2)] = flatArgs[i];
+        }
     }
 
-    va_end(pReader);
-
-    return [ret autorelease];
+    return [[[self alloc] initWithObjects:values.data() forKeys:keys.data() count:values.size()] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)dictionaryWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    NSDictionary* ret = [[self alloc] initWithObjects:vals forKeys:keys count:count];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithObjects:vals forKeys:keys count:count] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    [self init];
-
-    for (unsigned i = 0; i < count; i++) {
-        id key = [keys[i] copy];
-        CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)vals[i]);
-        [key release];
-    }
-
     return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithObjectsTakeOwnership:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    [self init];
-
-    for (unsigned i = 0; i < count; i++) {
-        id key = [keys[i] copy];
-        CFDictionarySetValueUnretained((CFMutableDictionaryRef)self, (const void*)key, (void*)vals[i]);
-        [key release];
-    }
-
-    return self;
+    /**
+     @Status Interoperable
+    */
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)dictionaryWithObject:(id)val forKey:(id)key {
-    NSDictionary* ret = [self new];
-
-    key = [key copy];
-    CFDictionarySetValue((CFMutableDictionaryRef)ret, (const void*)key, (void*)val);
-    [key release];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithObjects:&val forKeys:&key count:1] autorelease];
 }
 
 /**
@@ -162,25 +188,24 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (instancetype)initWithObjectsAndKeys:(id)firstObj, ... {
-    va_list pReader;
-    va_start(pReader, firstObj);
-    [self init];
+    va_list argList;
+    va_start(argList, firstObj);
+    std::vector<id> flatArgs = ConvertVAListToVector((id)firstObj, argList);
+    va_end(argList);
 
-    id curVal = firstObj;
+    // Need to split the arg list into keys and values.
+    std::vector<id> values(flatArgs.size() / 2);
+    std::vector<id> keys(flatArgs.size() / 2);
 
-    while (curVal != NULL) {
-        id curKey = va_arg(pReader, id);
-
-        id key = [curKey copy];
-        CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)curVal);
-        [key release];
-
-        curVal = va_arg(pReader, id);
+    for (unsigned int i = 0; i < flatArgs.size(); i++) {
+        if (i % 2 == 0) {
+            values[(i / 2)] = flatArgs[i];
+        } else {
+            keys[(i / 2)] = flatArgs[i];
+        }
     }
 
-    va_end(pReader);
-
-    return self;
+    return [self initWithObjects:values.data() forKeys:keys.data() count:values.size()];
 }
 
 /**
@@ -191,16 +216,15 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     int count = [vals count];
 
-    for (int i = 0; i < count; i++) {
-        id val = [vals objectAtIndex:i];
-        id key = [keys objectAtIndex:i];
+    std::vector<id> flatValues(count);
+    std::vector<id> flatKeys(count);
 
-        key = [key copy];
-        CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)val);
-        [key release];
+    for (int i = 0; i < count; i++) {
+        flatValues[i] = [vals objectAtIndex:i];
+        flatKeys[i] = [keys objectAtIndex:i];
     }
 
-    return self;
+    return [self initWithObjects:flatValues.data() forKeys:flatKeys.data() count:flatValues.size()];
 }
 
 /**
@@ -239,12 +263,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (id)objectForKey:(id)key {
-    if (key == nil) {
-        TraceWarning(TAG, L"Warning: objectForKey called with nil");
-        return nil;
-    }
-
-    return (id)CFDictionaryGetValue((CFDictionaryRef)self, (const void*)key);
+    // NSDictionary is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -273,28 +293,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
-    if (dictionary != nil) {
-        if ((object_getClass(dictionary) == [NSDictionary class] || object_getClass(dictionary) == [NSMutableDictionary class]) &&
-            (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class])) {
-            _CFDictionaryCopyInternal((CFDictionaryRef)self, (CFDictionaryRef)dictionary);
-        } else {
-            unsigned numPairs = [dictionary count];
-
-            id* keys = (id*)IwCalloc(numPairs, sizeof(id));
-            id* vals = (id*)IwCalloc(numPairs, sizeof(id));
-
-            CFDictionaryGetKeysAndValues((CFDictionaryRef)dictionary, (const void**)keys, (const void**)vals);
-
-            [self initWithObjects:vals forKeys:keys count:numPairs];
-
-            IwFree(keys);
-            IwFree(vals);
-        }
-    } else {
-        self = [self init];
-    }
-
-    return self;
+    return [self initWithDictionary:dictionary copyItems:false];
 }
 
 /**
@@ -303,13 +302,13 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (NSDictionary*)initWithDictionary:(NSDictionary*)dict copyItems:(BOOL)copyItems {
     unsigned count = [dict count];
 
-    id* keys = (id*)IwCalloc(count, sizeof(id));
-    id* vals = (id*)IwCalloc(count, sizeof(id));
-    unsigned numPairs = 0;
+    std::vector<id> keys(count);
+    std::vector<id> values(count);
 
     NSEnumerator* enumerator = [dict keyEnumerator];
     id curKey = [enumerator nextObject];
 
+    unsigned int numPairs = 0;
     while (curKey != nil) {
         id curObj = [dict objectForKey:curKey];
 
@@ -317,10 +316,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         keys[numPairs] = curKey;
 
         if (copyItems) {
-            vals[numPairs] = [curObj copyWithZone:nil];
+            values[numPairs] = [[curObj copyWithZone:nil] autorelease];
         } else {
-            vals[numPairs] = [curObj retain];
+            values[numPairs] = curObj;
         }
+
         numPairs++;
 
         curKey = [enumerator nextObject];
@@ -328,16 +328,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     assert(numPairs == count);
 
-    [self initWithObjects:vals forKeys:keys count:numPairs];
-
-    for (unsigned i = 0; i < numPairs; i++) {
-        [vals[i] release];
-    }
-
-    IwFree(keys);
-    IwFree(vals);
-
-    return self;
+    return [self initWithObjects:values.data() forKeys:keys.data() count:keys.size()];
 }
 
 /**
@@ -434,8 +425,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSDictionary*)init {
-    _CFDictionaryInitInternal((CFDictionaryRef)self);
-
     return self;
 }
 
@@ -443,87 +432,47 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSArray*)allValues {
-    if (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class]) {
-        int count = CFDictionaryGetCount((CFDictionaryRef)self);
+    unsigned count = [self count];
 
-        if (count == 0) {
-            return [NSArray array];
-        }
-
-        id* values = (id*)IwCalloc(count, sizeof(id));
-        CFDictionaryGetKeysAndValues((CFDictionaryRef)self, NULL, (const void**)values);
-
-        NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        IwFree(values);
-
-        return ret;
-    } else {
-        unsigned count = [self count];
-
-        if (count == 0) {
-            return [NSArray array];
-        }
-
-        id* values = (id*)IwCalloc(count, sizeof(id));
-        id state = [self keyEnumerator];
-        id key;
-        unsigned i;
-        for (i = 0; (key = [state nextObject]) != nil; i++) {
-            assert(i < count);
-            id value = [self objectForKey:key];
-
-            values[i] = value;
-        }
-        assert(i == count);
-
-        NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        IwFree(values);
-
-        return ret;
+    if (count == 0) {
+        return [NSArray array];
     }
+
+    std::vector<id> values(count);
+    id state = [self keyEnumerator];
+    id key;
+    unsigned i;
+    for (i = 0; (key = [state nextObject]) != nil; i++) {
+        assert(i < count);
+        values[i] = [self objectForKey:key];
+    }
+    assert(i == count);
+
+    return [NSArray arrayWithObjects:values.data() count:values.size()];
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)allKeys {
-    if (object_getClass(self) == [NSDictionary class] || object_getClass(self) == [NSMutableDictionary class]) {
-        unsigned count = CFDictionaryGetCount((CFDictionaryRef)self);
+    unsigned count = [self count];
 
-        if (count == 0) {
-            return [NSArray array];
-        }
-
-        id* keys = (id*)IwCalloc(count, sizeof(id));
-        CFDictionaryGetKeysAndValues((CFDictionaryRef)self, (const void**)keys, NULL);
-
-        NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        IwFree(keys);
-
-        return ret;
-    } else {
-        unsigned count = [self count];
-
-        if (count == 0) {
-            return [NSArray array];
-        }
-
-        id* keys = (id*)IwCalloc(count, sizeof(id));
-        id state = [self keyEnumerator];
-        id key;
-        int i;
-
-        for (i = 0; (key = [state nextObject]) != nil; i++) {
-            assert(i < count);
-            keys[i] = key;
-        }
-        assert(i == count);
-
-        NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        IwFree(keys);
-
-        return ret;
+    if (count == 0) {
+        return [NSArray array];
     }
+
+    std::vector<id> keys(count);
+    id state = [self keyEnumerator];
+    id key;
+    int i;
+
+    for (i = 0; (key = [state nextObject]) != nil; i++) {
+        assert(i < count);
+        keys[i] = key;
+    }
+    assert(i == count);
+
+    return [NSArray arrayWithObjects:keys.data() count:keys.size()];
 }
 
 /**
@@ -561,26 +510,15 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (unsigned)count {
-    return CFDictionaryGetCount((CFDictionaryRef)self);
+    // NSDictionary is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
-    Class ours = [self class];
-
-    if (ours == [NSDictionary class] || ours == [NSMutableDictionary class]) {
-        if (state->state == 0) {
-            state->state = 1;
-            state->mutationsPtr = &state->state;
-            CFDictionaryGetKeyEnumerator((CFDictionaryRef)self, state->extra);
-        }
-        assert(maxCount > 0);
-
-        state->itemsPtr = stackBuf;
-        return CFDictionaryGetNextKey((CFDictionaryRef)self, state->extra, stackBuf, maxCount);
-    }
+    // HACKHACK: this is inefficient. There may be private functions from CF that we can use to do better.
 
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
@@ -623,18 +561,15 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetValueEnumerator
-                                      forObject:self
-                                   nextFunction:(nextValueFunc)CFDictionaryGetNextValue];
+    return [[NSDictionaryValueEnumerator alloc] initWithDictionary:self];
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)keyEnumerator {
-    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetKeyEnumerator
-                                      forObject:self
-                                   nextFunction:(nextValueFunc)CFDictionaryGetNextKey];
+    // NSDictionary is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /* NSFileManager category helpers */
@@ -706,12 +641,18 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (dict != NULL) {
-        CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
-        _CFDictionaryDestroyInternal((CFDictionaryRef)self);
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [NSDictionary class] || self == [NSMutableDictionary class]) {
+        return [NSDictionaryConcrete allocWithZone:zone];
     }
 
+    return [super allocWithZone:zone];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
     [super dealloc];
 }
 

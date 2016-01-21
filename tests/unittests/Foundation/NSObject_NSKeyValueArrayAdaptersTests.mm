@@ -63,20 +63,20 @@
 }
 @end
 
-TEST(Foundation, NSObject_KeyPathLookup) {
+TEST(NSObject, KeyPathLookup) {
     NSDictionary* testDictionary = @{ @"key" : @{ @"subkey" : @{ @"subkey2" : @(1) } } };
 
     EXPECT_OBJCEQ(@(1), [testDictionary valueForKeyPath:@"key.subkey.subkey2"]);
 }
 
-TEST(Foundation, NSObject_KVCArrayAdapters) {
+TEST(NSObject, KVCArrayAdapters) {
     TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
 
     NSArray* fakeCollection = [testObject valueForKey:@"fakeCollection"];
     EXPECT_OBJCEQ(@(3), [fakeCollection objectAtIndex:3]);
 }
 
-TEST(Foundation, NSObject_KVCArrayMutableAdapters) {
+TEST(NSObject, KVCArrayMutableAdapters) {
     TestArrayAdapterObject* testObject = [[[TestArrayAdapterObject alloc] init] autorelease];
     NSMutableArray* fakeMutableCollection = [testObject mutableArrayValueForKey:@"fakeMutableCollection"];
     EXPECT_NO_THROW([fakeMutableCollection addObject:@(10)]);
@@ -107,7 +107,7 @@ TEST(Foundation, NSObject_KVCArrayMutableAdapters) {
     EXPECT_OBJCEQ(@"Hello", [[testObject valueForKey:@"backedByIvar"] firstObject]);
 }
 
-TEST(Foundation, NSUserDefaults_KVCArray) {
+TEST(NSUserDefaults, NSUserDefaults_KVCArray) {
     [[NSUserDefaults standardUserDefaults] setObject:@[ @"User Preference 1" ] forKey:@"userPref1"];
     NSMutableArray* mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"userPref1"];
     EXPECT_OBJCNE(nil, mutableSetting);
@@ -123,7 +123,7 @@ TEST(Foundation, NSUserDefaults_KVCArray) {
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-TEST(Foundation, NSObject_KVCArrayChangePropagation) {
+TEST(NSObject, KVCArrayChangePropagation) {
     NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:@[ @"1" ] forKey:@"array"];
 
@@ -137,7 +137,7 @@ TEST(Foundation, NSObject_KVCArrayChangePropagation) {
     EXPECT_OBJCEQ(@"2", [mutableVersionOfDictionaryArray objectAtIndex:0]);
 }
 
-TEST(Foundation, NSObject_KVCArrayAutovivification) {
+TEST(NSObject, KVCArrayAutovivification) {
     NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
     NSMutableArray* nonexistentMutableArray = [dictionary mutableArrayValueForKey:@"new"];
     EXPECT_NO_THROW([nonexistentMutableArray addObject:@"Hello"]);

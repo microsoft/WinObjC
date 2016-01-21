@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -16,12 +18,11 @@
 #include "CFInternal.h"
 #include <CoreFoundation/CFString.h>
 #include "CFStringEncodingConverterExt.h"
-#include <CoreFoundation/CFStringEncodingExt.h>
+#include "CFStringEncodingExt.h"
 #include "CFUniChar.h"
 #include "CFUnicodeDecomposition.h"
 #include "CFStringEncodingConverterPriv.h"
 #include "CFICUConverters.h"
-
 
 CF_INLINE bool __CFIsPlatformConverterAvailable(int encoding) {
 
@@ -78,7 +79,7 @@ static uint32_t __CFWin32EncodingIndex = 0;
 static CFStringEncoding *__CFWin32EncodingList = NULL;
 
 static char CALLBACK __CFWin32EnumCodePageProc(LPTSTR string) {
-    uint32_t encoding = CFStringConvertWindowsCodepageToEncoding(_tcstoul(string, NULL, 10));
+    uint32_t encoding = CFStringConvertWindowsCodepageToEncoding(wcstoul(string, NULL, 10));
     CFIndex idx;
     
     if (encoding != kCFStringEncodingInvalidId) { // We list only encodings we know
@@ -219,3 +220,4 @@ CF_PRIVATE CFIndex __CFStringEncodingPlatformByteLengthForCharacters(uint32_t en
 
 #undef __CFCarbonCore_GetTextEncodingBase0
 
+// clang-format on

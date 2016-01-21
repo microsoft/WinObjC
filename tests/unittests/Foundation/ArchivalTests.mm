@@ -97,7 +97,7 @@ static NSData* createTestArchive() {
     return data;
 }
 
-TEST(Foundation, NSKeyedUnarchiver) {
+TEST(Archival, NSKeyedUnarchiver) {
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
 
@@ -131,7 +131,7 @@ TEST(Foundation, NSKeyedUnarchiver) {
     [insecureUnarchiver release];
 }
 
-TEST(Foundation, NSKeyedUnarchiver_Secure) {
+TEST(Archival, NSKeyedUnarchiver_Secure) {
     NSData* archive = createTestArchive();
     [TestCreationSignallingClass resetCreationCount];
 
@@ -272,7 +272,7 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
     }
 }
 
-@interface NSKAInstanceOriginalClass: NSObject <NSCoding>
+@interface NSKAInstanceOriginalClass : NSObject <NSCoding>
 @end
 @implementation NSKAInstanceOriginalClass
 - (id)initWithCoder:(NSCoder*)coder {
@@ -284,7 +284,7 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
 }
 @end
 
-@interface NSKADifferentClass: NSObject <NSCoding>
+@interface NSKADifferentClass : NSObject <NSCoding>
 @end
 @implementation NSKADifferentClass
 - (id)initWithCoder:(NSCoder*)coder {
@@ -296,7 +296,7 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
 }
 @end
 
-@interface NSKAClassOriginalClass: NSObject <NSCoding>
+@interface NSKAClassOriginalClass : NSObject <NSCoding>
 @end
 @implementation NSKAClassOriginalClass
 - (id)initWithCoder:(NSCoder*)coder {
@@ -308,7 +308,7 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
 }
 @end
 
-TEST(Foundation, NSKeyedArchiver_Instance_ClassName) {
+TEST(Archival, NSKeyedArchiver_Instance_ClassName) {
     // Instance-specific classname override test.
     // NSKAInstanceOriginalClass will become NSKADifferentClass on write.
     NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
@@ -330,7 +330,7 @@ TEST(Foundation, NSKeyedArchiver_Instance_ClassName) {
     [unarchiver release];
 }
 
-TEST(Foundation, NSKeyedArchiver_Static_ClassName) {
+TEST(Archival, NSKeyedArchiver_Static_ClassName) {
     // Global classname override test.
     // NSKAClassOriginalClass will become NSKADifferentClass on write.
     [NSKeyedArchiver setClassName:@"NSKADifferentClass" forClass:[NSKAClassOriginalClass class]];
@@ -339,7 +339,9 @@ TEST(Foundation, NSKeyedArchiver_Static_ClassName) {
     NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
     NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
 
-    EXPECT_OBJCEQ_MSG(nil, [archiver classNameForClass:[NSKAClassOriginalClass class]], "NSKeyedArchiver instances should not inherit the global class list.");
+    EXPECT_OBJCEQ_MSG(nil,
+                      [archiver classNameForClass:[NSKAClassOriginalClass class]],
+                      "NSKeyedArchiver instances should not inherit the global class list.");
 
     [archiver encodeObject:[[[NSKAClassOriginalClass alloc] init] autorelease] forKey:@"unexpected"];
 
@@ -355,7 +357,7 @@ TEST(Foundation, NSKeyedArchiver_Static_ClassName) {
     [NSKeyedArchiver setClassName:nil forClass:[NSKAClassOriginalClass class]];
 }
 
-TEST(Foundation, NSKeyedArchiver_Static_ClassName_Inheritance) {
+TEST(Archival, NSKeyedArchiver_Static_ClassName_Inheritance) {
     // Instance specific classname override should override global one.
     // NSKAClassOriginalClass will become NSKADifferentClass on write.
     [NSKeyedArchiver setClassName:@"NSKADifferentClass" forClass:[NSKAClassOriginalClass class]];

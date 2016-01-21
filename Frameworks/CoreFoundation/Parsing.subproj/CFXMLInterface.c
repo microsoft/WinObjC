@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -7,11 +9,16 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
-/*	CFXMLInterface.c
-	Copyright (c) 2015 Apple Inc. and the Swift project authors
+/*  CFXMLInterface.c
+    Copyright (c) 2015 Apple Inc. and the Swift project authors
  */
 
-#include <CoreFoundation/CFRuntime.h>
+#include "CFRuntime.h"
+
+// HACKHACK: looks like this file thinks libxml should have this support.
+#define LIBXML_VALID_ENABLED
+#define LIBXML_REGEXP_ENABLED
+
 #include <libxml/globals.h>
 #include <libxml/xmlerror.h>
 #include <libxml/parser.h>
@@ -21,7 +28,9 @@
 #include <libxml/xmlsave.h>
 #include <libxml/xpath.h>
 #include <libxml/dict.h>
+#include <libxml/xmlregexp.h>
 #include "CFInternal.h"
+#include "CFXMLInterface.h"
 
 /*
  libxml2 does not have nullability annotations and does not import well into swift when given potentially differing versions of the library that might be installed on the host operating system. This is a simple C wrapper to simplify some of that interface layer to libxml2.
@@ -49,7 +58,7 @@ CFIndex _kCFXMLInterfaceNoBasefix = XML_PARSE_NOBASEFIX;
 CFIndex _kCFXMLInterfaceHuge = XML_PARSE_HUGE;
 CFIndex _kCFXMLInterfaceOldsax = XML_PARSE_OLDSAX;
 CFIndex _kCFXMLInterfaceIgnoreEnc = XML_PARSE_IGNORE_ENC;
-CFIndex _kCFXMLInterfaceBigLines = XML_PARSE_BIG_LINES;
+CFIndex _kCFXMLInterfaceBigLines = 1 << 22; // HACKHACK // XML_PARSE_BIG_LINES;
 
 CFIndex _kCFXMLTypeInvalid = 0;
 CFIndex _kCFXMLTypeDocument = XML_DOCUMENT_NODE;
@@ -111,10 +120,13 @@ typedef struct {
 static xmlExternalEntityLoader __originalLoader = NULL;
 
 static xmlParserInputPtr _xmlExternalEntityLoader(const char *urlStr, const char * ID, xmlParserCtxtPtr context) {
+    /*
     _CFXMLInterface parser = __CFSwiftBridge.NSXMLParser.currentParser();
     if (parser != NULL) {
         return __CFSwiftBridge.NSXMLParser._xmlExternalEntityWithURL(parser, urlStr, ID, context, __originalLoader);
     }
+    */
+    // HACKHACK: no swift
     return __originalLoader(urlStr, ID, context);
 }
 
@@ -133,7 +145,8 @@ _CFXMLInterfaceParserInput _CFXMLInterfaceNoNetExternalEntityLoader(const char *
 }
 
 static void _errorCallback(void *ctx, const char *msg, ...) {
-    xmlParserCtxtPtr context = __CFSwiftBridge.NSXMLParser.getContext((_CFXMLInterface)ctx);
+    xmlParserCtxtPtr context = nullptr; // __CFSwiftBridge.NSXMLParser.getContext((_CFXMLInterface)ctx);
+    // HACKAHCK: no swift
     xmlErrorPtr error = xmlCtxtGetLastError(context);
 // TODO: reporting
 //    _reportError(error, (_CFXMLInterface)ctx);
@@ -141,6 +154,7 @@ static void _errorCallback(void *ctx, const char *msg, ...) {
 
 _CFXMLInterfaceSAXHandler _CFXMLInterfaceCreateSAXHandler() {
     _CFXMLInterfaceSAXHandler saxHandler = (_CFXMLInterfaceSAXHandler)calloc(1, sizeof(struct _xmlSAXHandler));
+    /*
     saxHandler->internalSubset = (internalSubsetSAXFunc)__CFSwiftBridge.NSXMLParser.internalSubset;
     saxHandler->isStandalone = (isStandaloneSAXFunc)__CFSwiftBridge.NSXMLParser.isStandalone;
     
@@ -164,8 +178,10 @@ _CFXMLInterfaceSAXHandler _CFXMLInterfaceCreateSAXHandler() {
     saxHandler->comment = (commentSAXFunc)__CFSwiftBridge.NSXMLParser.comment;
     
     saxHandler->externalSubset = (externalSubsetSAXFunc)__CFSwiftBridge.NSXMLParser.externalSubset;
-    
+    */
+    // HACKAHCK: no swift
     saxHandler->initialized = XML_SAX2_MAGIC; // make sure start/endElementNS are used
+    saxHandler->error = _errorCallback;
     return saxHandler;
 }
 
@@ -255,11 +271,11 @@ _CFXMLDTDNodePtr _Nullable _CFXMLDTDNewElementDesc(_CFXMLDTDPtr dtd, const unsig
         name = (const xmlChar*)"";
     }
 
-    xmlElementPtr result = xmlAddElementDecl(NULL, dtd, name, XML_ELEMENT_TYPE_ANY, NULL);
+    xmlElementPtr result = xmlAddElementDecl(NULL, static_cast<xmlDtdPtr>(dtd), name, XML_ELEMENT_TYPE_ANY, NULL);
 
     if (freeDTD) {
         _CFXMLUnlinkNode(result);
-        xmlFreeDtd(dtd);
+        xmlFreeDtd(static_cast<xmlDtdPtr>(dtd));
     }
 
     return result;
@@ -277,11 +293,11 @@ _CFXMLDTDNodePtr _Nullable _CFXMLDTDNewAttributeDesc(_CFXMLDTDPtr dtd, const uns
         name = (const xmlChar*)"";
     }
 
-    xmlAttributePtr result = xmlAddAttributeDecl(NULL, dtd, NULL, name, NULL, XML_ATTRIBUTE_ID, XML_ATTRIBUTE_NONE, NULL, NULL);
+    xmlAttributePtr result = xmlAddAttributeDecl(NULL, static_cast<xmlDtdPtr>(dtd), NULL, name, NULL, XML_ATTRIBUTE_ID, XML_ATTRIBUTE_NONE, NULL, NULL);
 
     if (freeDTD) {
         _CFXMLUnlinkNode(result);
-        xmlFreeDtd(dtd);
+        xmlFreeDtd(static_cast<xmlDtdPtr>(dtd));
     }
 
     return result;
@@ -322,21 +338,21 @@ CFErrorRef _CFErrorCreateFromXMLInterface(_CFXMLInterfaceError err) {
     return CFErrorCreate(kCFAllocatorSystemDefault, CFSTR("NSXMLParserErrorDomain"), err->code, nil);
 }
 
-_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr namespace, const char* name) {
-    return xmlNewNode(namespace, (const xmlChar*)name);
+_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr xmlnamespace, const char* name) {
+    return xmlNewNode(static_cast<xmlNsPtr>(xmlnamespace), (const xmlChar*)name);
 }
 
 _CFXMLNodePtr _CFXMLCopyNode(_CFXMLNodePtr node, bool recursive) {
     int recurse = recursive ? 1 : 0;
     switch (((xmlNodePtr)node)->type) {
         case XML_DOCUMENT_NODE:
-            return xmlCopyDoc(node, recurse);
+            return xmlCopyDoc(static_cast<xmlDocPtr>(node), recurse);
 
         case XML_DTD_NODE:
-            return xmlCopyDtd(node);
+            return xmlCopyDtd(static_cast<xmlDtdPtr>(node));
 
         default:
-            return xmlCopyNode(node, recurse);
+            return xmlCopyNode(static_cast<const xmlNodePtr>(node), recursive ? 1 : 0);
     }
 }
 
@@ -357,11 +373,11 @@ _CFXMLNodePtr _CFXMLNewComment(const unsigned char* value) {
 }
 
 _CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr node, const unsigned char* name, const unsigned char* value) {
-    return xmlNewProp(node, name, value);
+    return xmlNewProp(static_cast<xmlNodePtr>(node), name, value);
 }
 
 _CFXMLNamespacePtr _CFXMLNewNamespace(_CFXMLNodePtr node, const unsigned char* uri, const unsigned char* prefix) {
-    return xmlNewNs(node, uri, prefix);
+    return xmlNewNs(static_cast<xmlNodePtr>(node), uri, prefix);
 }
 
 CF_RETURNS_RETAINED CFStringRef _CFXMLNodeURI(_CFXMLNodePtr node) {
@@ -387,7 +403,7 @@ void _CFXMLNodeSetURI(_CFXMLNodePtr node, const unsigned char* URI) {
     switch (nodePtr->type) {
         case XML_ATTRIBUTE_NODE:
         case XML_ELEMENT_NODE:
-
+        {
             if (!URI) {
                 if (nodePtr->ns) {
                     xmlFree(nodePtr->ns);
@@ -407,8 +423,8 @@ void _CFXMLNodeSetURI(_CFXMLNodePtr node, const unsigned char* URI) {
             }
 
             xmlSetNs(nodePtr, ns);
-            break;
-
+            return;
+        }
         case XML_DOCUMENT_NODE:
         {
             xmlDocPtr doc = (xmlDocPtr)node;
@@ -417,7 +433,7 @@ void _CFXMLNodeSetURI(_CFXMLNodePtr node, const unsigned char* URI) {
             }
             doc->URL = URI;
         }
-            break;
+            return;
 
         default:
             return;
@@ -452,14 +468,14 @@ const char* _CFXMLNodeGetName(_CFXMLNodePtr node) {
 }
 
 void _CFXMLNodeSetName(_CFXMLNodePtr node, const char* name) {
-    xmlNodeSetName(node, (const xmlChar*)name);
+    xmlNodeSetName(static_cast<xmlNodePtr>(node), (const xmlChar*)name);
 }
 
 CFStringRef _CFXMLNodeGetContent(_CFXMLNodePtr node) {
     switch (((xmlNodePtr)node)->type) {
         case XML_ELEMENT_DECL:
         {
-            char* buffer = calloc(2048, 1);
+            char* buffer = (char*)calloc(2048, 1);
             xmlSnprintfElementContent(buffer, 2047, ((xmlElementPtr)node)->content, 1);
             CFStringRef result = CFStringCreateWithCString(NULL, buffer, kCFStringEncodingUTF8);
             free(buffer);
@@ -468,7 +484,7 @@ CFStringRef _CFXMLNodeGetContent(_CFXMLNodePtr node) {
 
         default:
         {
-            xmlChar* content = xmlNodeGetContent(node);
+            xmlChar* content = xmlNodeGetContent(static_cast<xmlNodePtr>(node));
             if (content == NULL) {
                 return NULL;
             }
@@ -503,9 +519,9 @@ void _CFXMLNodeSetContent(_CFXMLNodePtr node, const unsigned char* _Nullable  co
             CFStringAppend(xmlString, CFSTR(">"));
 
             size_t bufferSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(xmlString), kCFStringEncodingUTF8) + 1;
-            char* buffer = calloc(bufferSize, 1);
+            char* buffer = (char*)calloc(bufferSize, 1);
             CFStringGetCString(xmlString, buffer, bufferSize, kCFStringEncodingUTF8);
-            xmlElementPtr resultNode = _CFXMLParseDTDNode((const xmlChar*)buffer);
+            xmlElementPtr resultNode = static_cast<xmlElementPtr>(_CFXMLParseDTDNode((const xmlChar*)buffer));
 
             if (resultNode) {
                 xmlFreeDocElementContent(element->doc, element->content);
@@ -529,11 +545,11 @@ void _CFXMLNodeSetContent(_CFXMLNodePtr node, const unsigned char* _Nullable  co
 
         default:
             if (content == NULL) {
-                xmlNodeSetContent(node, nil);
+                xmlNodeSetContent(static_cast<xmlNodePtr>(node), nil);
                 return;
             }
 
-            xmlNodeSetContent(node, content);
+            xmlNodeSetContent(static_cast<xmlNodePtr>(node), content);
     }
 }
 
@@ -546,7 +562,7 @@ CFStringRef _CFXMLEncodeEntities(_CFXMLDocPtr doc, const unsigned char* string) 
         return NULL;
     }
     
-    const xmlChar* stringResult = xmlEncodeEntitiesReentrant(doc, string);
+    const xmlChar* stringResult = xmlEncodeEntitiesReentrant(static_cast<xmlDocPtr>(doc), string);
     
     CFStringRef result = CFStringCreateWithCString(NULL, (const char*)stringResult, kCFStringEncodingUTF8);
 
@@ -574,7 +590,7 @@ void _CFXMLUnlinkNode(_CFXMLNodePtr node) {
         {
             xmlElementPtr elemDecl = (xmlElementPtr)node;
             xmlDtdPtr dtd = elemDecl->parent;
-            _removeHashEntry(dtd->elements, elemDecl->name, node);
+            _removeHashEntry(static_cast<xmlHashTablePtr>(dtd->elements), elemDecl->name, static_cast<xmlNodePtr>(node));
         }
             break;
 
@@ -582,8 +598,8 @@ void _CFXMLUnlinkNode(_CFXMLNodePtr node) {
         {
             xmlEntityPtr entityDecl = (xmlEntityPtr)node;
             xmlDtdPtr dtd = entityDecl->parent;
-            _removeHashEntry(dtd->entities, entityDecl->name, node);
-            _removeHashEntry(dtd->pentities, entityDecl->name, node);
+            _removeHashEntry(static_cast<xmlHashTablePtr>(dtd->entities), entityDecl->name, static_cast<xmlNodePtr>(node));
+            _removeHashEntry(static_cast<xmlHashTablePtr>(dtd->pentities), entityDecl->name, static_cast<xmlNodePtr>(node));
         }
             break;
 
@@ -591,8 +607,8 @@ void _CFXMLUnlinkNode(_CFXMLNodePtr node) {
         {
             xmlAttributePtr attrDecl = (xmlAttributePtr)node;
             xmlDtdPtr dtd = attrDecl->parent;
-            if (xmlHashLookup3(dtd->attributes, attrDecl->name, NULL, attrDecl->elem) == node) {
-                xmlHashRemoveEntry3(dtd->attributes, attrDecl->name, NULL, attrDecl->elem, NULL);
+            if (xmlHashLookup3(static_cast<xmlHashTablePtr>(dtd->attributes), attrDecl->name, NULL, attrDecl->elem) == node) {
+                xmlHashRemoveEntry3(static_cast<xmlHashTablePtr>(dtd->attributes), attrDecl->name, NULL, attrDecl->elem, NULL);
             }
         }
             break;
@@ -602,14 +618,14 @@ void _CFXMLUnlinkNode(_CFXMLNodePtr node) {
             // Since we're handling notation nodes instead of libxml2, we need to do some extra work here
             xmlNotationPtr notation = ((_cfxmlNotation*)node)->notation;
             xmlDtdPtr dtd = (xmlDtdPtr)((_cfxmlNotation*)node)->parent;
-            _removeHashEntry(dtd->notations, notation->name, (xmlNodePtr)notation);
+            _removeHashEntry(static_cast<xmlHashTablePtr>(dtd->notations), notation->name, (xmlNodePtr)notation);
             return;
         }
 
         default:
             break;
     }
-    xmlUnlinkNode(node);
+    xmlUnlinkNode(static_cast<xmlNodePtr>(node));
 }
 
 _CFXMLNodePtr _CFXMLNodeGetFirstChild(_CFXMLNodePtr node) {
@@ -640,11 +656,11 @@ void _CFXMLDocSetStandalone(_CFXMLDocPtr doc, bool standalone) {
 }
 
 _CFXMLNodePtr _CFXMLDocRootElement(_CFXMLDocPtr doc) {
-    return xmlDocGetRootElement(doc);
+    return xmlDocGetRootElement(static_cast<xmlDocPtr>(doc));
 }
 
 void _CFXMLDocSetRootElement(_CFXMLDocPtr doc, _CFXMLNodePtr node) {
-    xmlDocSetRootElement(doc, node);
+    xmlDocSetRootElement(static_cast<xmlDocPtr>(doc), static_cast<xmlNodePtr>(node));
 }
 
 CF_RETURNS_RETAINED CFStringRef _CFXMLDocCharacterEncoding(_CFXMLDocPtr doc) {
@@ -684,7 +700,7 @@ void _CFXMLDocSetProperties(_CFXMLDocPtr doc, int newProperties) {
 }
 
 _CFXMLDTDPtr _Nullable _CFXMLDocDTD(_CFXMLDocPtr doc) {
-    return xmlGetIntSubset(doc);
+    return xmlGetIntSubset(static_cast<xmlDocPtr>(doc));
 }
 
 void _CFXMLDocSetDTD(_CFXMLDocPtr doc, _CFXMLDTDPtr _Nullable dtd) {
@@ -697,14 +713,14 @@ void _CFXMLDocSetDTD(_CFXMLDocPtr doc, _CFXMLDTDPtr _Nullable dtd) {
     xmlDtdPtr dtdPtr = (xmlDtdPtr)dtd;
     docPtr->intSubset = dtdPtr;
     if (docPtr->children == NULL) {
-        xmlAddChild(doc, dtd);
+        xmlAddChild(static_cast<xmlNodePtr>(doc), static_cast<xmlNodePtr>(dtd));
     } else {
-        xmlAddPrevSibling(docPtr->children, dtd);
+        xmlAddPrevSibling(static_cast<xmlNodePtr>(docPtr->children), static_cast<xmlNodePtr>(dtd));
     }
 }
 
 CFIndex _CFXMLNodeGetElementChildCount(_CFXMLNodePtr node) {
-    return xmlChildElementCount(node);
+    return xmlChildElementCount(static_cast<xmlNodePtr>(node));
 }
 
 void _CFXMLNodeAddChild(_CFXMLNodePtr node, _CFXMLNodePtr child) {
@@ -717,35 +733,35 @@ void _CFXMLNodeAddChild(_CFXMLNodePtr node, _CFXMLNodePtr child) {
                 xmlDictPtr dict = dtd->doc ? dtd->doc->dict : NULL;
                 dtd->notations = xmlHashCreateDict(0, dict);
             }
-            xmlHashAddEntry(dtd->notations, notation->name, notation);
+            xmlHashAddEntry(static_cast<xmlHashTablePtr>(dtd->notations), notation->name, notation);
         }
         return;
     }
-    xmlAddChild(node, child);
+    xmlAddChild(static_cast<xmlNodePtr>(node), static_cast<xmlNodePtr>(child));
 }
 
 void _CFXMLNodeAddPrevSibling(_CFXMLNodePtr node, _CFXMLNodePtr prevSibling) {
-    xmlAddPrevSibling(node, prevSibling);
+    xmlAddPrevSibling(static_cast<xmlNodePtr>(node), static_cast<xmlNodePtr>(prevSibling));
 }
 
 void _CFXMLNodeAddNextSibling(_CFXMLNodePtr node, _CFXMLNodePtr nextSibling) {
-    xmlAddNextSibling(node, nextSibling);
+    xmlAddNextSibling(static_cast<xmlNodePtr>(node), static_cast<xmlNodePtr>(nextSibling));
 }
 
 void _CFXMLNodeReplaceNode(_CFXMLNodePtr node, _CFXMLNodePtr replacement) {
-    xmlReplaceNode(node, replacement);
+    xmlReplaceNode(static_cast<xmlNodePtr>(node), static_cast<xmlNodePtr>(replacement));
 }
 
 _CFXMLEntityPtr _CFXMLGetDocEntity(_CFXMLDocPtr doc, const char* entity) {
-    return xmlGetDocEntity(doc, (const xmlChar*)entity);
+    return xmlGetDocEntity(static_cast<xmlDocPtr>(doc), (const xmlChar*)entity);
 }
 
 _CFXMLEntityPtr _CFXMLGetDTDEntity(_CFXMLDocPtr doc, const char* entity) {
-    return xmlGetDtdEntity(doc, (const xmlChar*)entity);
+    return xmlGetDtdEntity(static_cast<xmlDocPtr>(doc), (const xmlChar*)entity);
 }
 
 _CFXMLEntityPtr _CFXMLGetParameterEntity(_CFXMLDocPtr doc, const char* entity) {
-    return xmlGetParameterEntity(doc, (const xmlChar*)entity);
+    return xmlGetParameterEntity(static_cast<xmlDocPtr>(doc), (const xmlChar*)entity);
 }
 
 CFStringRef _CFXMLGetEntityContent(_CFXMLEntityPtr entity) {
@@ -816,7 +832,7 @@ CFStringRef _CFXMLStringWithOptions(_CFXMLNodePtr node, uint32_t options) {
     }
 
     xmlSaveCtxtPtr ctx = xmlSaveToBuffer(buffer, "utf-8", xmlOptions);
-    xmlSaveTree(ctx, node);
+    xmlSaveTree(ctx, static_cast<xmlNodePtr>(node));
     int error = xmlSaveClose(ctx);
 
     if (error == -1) {
@@ -833,7 +849,7 @@ CFStringRef _CFXMLStringWithOptions(_CFXMLNodePtr node, uint32_t options) {
 }
 
 CF_RETURNS_RETAINED CFArrayRef _CFXMLNodesForXPath(_CFXMLNodePtr node, const unsigned char* xpath) {
-
+/*
     if (((xmlNodePtr)node)->doc == NULL) {
         return NULL;
     }
@@ -854,10 +870,13 @@ CF_RETURNS_RETAINED CFArrayRef _CFXMLNodesForXPath(_CFXMLNodePtr node, const uns
     xmlFree(evalResult);
 
     return results;
+*/
+    // HACKHACK: return nullptr for now. Our version of libxml doesn't have xmlXPathNodeEval
+    return nullptr;
 }
 
 _CFXMLNodePtr _CFXMLNodeHasProp(_CFXMLNodePtr node, const unsigned char* propertyName) {
-    return xmlHasProp(node, propertyName);
+    return xmlHasProp(static_cast<xmlNodePtr>(node), propertyName);
 }
 
 _CFXMLDocPtr _CFXMLDocPtrFromDataWithOptions(CFDataRef data, int options) {
@@ -899,7 +918,7 @@ CF_RETURNS_RETAINED CFStringRef _CFXMLNodePrefix(_CFXMLNodePtr node) {
 
 void _CFXMLValidityErrorHandler(void* ctxt, const char* msg, ...);
 void _CFXMLValidityErrorHandler(void* ctxt, const char* msg, ...) {
-    char* formattedMessage = calloc(1, 1024);
+    char* formattedMessage = (char*)calloc(1, 1024);
 
     va_list args;
     va_start(args, msg);
@@ -907,7 +926,7 @@ void _CFXMLValidityErrorHandler(void* ctxt, const char* msg, ...) {
     va_end(args);
 
     CFStringRef message = CFStringCreateWithCString(NULL, formattedMessage, kCFStringEncodingUTF8);
-    CFStringAppend(ctxt, message);
+    CFStringAppend(static_cast<CFMutableStringRef>(ctxt), message);
     CFRelease(message);
     free(formattedMessage);
 }
@@ -919,7 +938,7 @@ bool _CFXMLDocValidate(_CFXMLDocPtr doc, CFErrorRef _Nullable * error) {
     ctxt->error = &_CFXMLValidityErrorHandler;
     ctxt->userData = errorMessage;
 
-    int result = xmlValidateDocument(ctxt, doc);
+    int result = xmlValidateDocument(ctxt, static_cast<xmlDocPtr>(doc));
     
     xmlFreeValidCtxt(ctxt);
 
@@ -938,12 +957,12 @@ bool _CFXMLDocValidate(_CFXMLDocPtr doc, CFErrorRef _Nullable * error) {
 }
 
 _CFXMLDTDPtr _CFXMLNewDTD(_CFXMLDocPtr doc, const unsigned char* name, const unsigned char* publicID, const unsigned char* systemID) {
-    return xmlNewDtd(doc, name, publicID, systemID);
+    return xmlNewDtd(static_cast<xmlDocPtr>(doc), name, publicID, systemID);
 }
 
 _CFXMLDTDNodePtr _CFXMLParseDTDNode(const unsigned char* xmlString) {
     CFDataRef data = CFDataCreateWithBytesNoCopy(NULL, xmlString, xmlStrlen(xmlString), kCFAllocatorNull);
-    xmlDtdPtr dtd = _CFXMLParseDTDFromData(data, NULL);
+    xmlDtdPtr dtd = static_cast<xmlDtdPtr>(_CFXMLParseDTDFromData(data, NULL));
     CFRelease(data);
 
     if (dtd == NULL) {
@@ -1035,19 +1054,19 @@ void _CFXMLDTDSetSystemID(_CFXMLDTDPtr dtd, const unsigned char* systemID) {
 }
 
 _CFXMLDTDNodePtr _Nullable _CFXMLDTDGetElementDesc(_CFXMLDTDPtr dtd, const unsigned char* name) {
-    return xmlGetDtdElementDesc(dtd, name);
+    return xmlGetDtdElementDesc(static_cast<xmlDtdPtr>(dtd), name);
 }
 
 _CFXMLDTDNodePtr _Nullable _CFXMLDTDGetAttributeDesc(_CFXMLDTDPtr dtd, const unsigned char* elementName, const unsigned char* name) {
-    return xmlGetDtdAttrDesc(dtd, elementName, name);
+    return xmlGetDtdAttrDesc(static_cast<xmlDtdPtr>(dtd), elementName, name);
 }
 
 _CFXMLDTDNodePtr _Nullable _CFXMLDTDGetNotationDesc(_CFXMLDTDPtr dtd, const unsigned char* name) {
-    xmlNotationPtr notation = xmlGetDtdNotationDesc(dtd, name);
-    _cfxmlNotation *notationPtr = calloc(sizeof(_cfxmlNotation), 1);
+    xmlNotationPtr notation = xmlGetDtdNotationDesc(static_cast<xmlDtdPtr>(dtd), name);
+    _cfxmlNotation *notationPtr = (_cfxmlNotation*)calloc(sizeof(_cfxmlNotation), 1);
     notationPtr->type = XML_NOTATION_NODE;
     notationPtr->notation = notation;
-    notationPtr->parent = dtd;
+    notationPtr->parent = static_cast<xmlNodePtr>(dtd);
     notationPtr->doc = ((xmlDtdPtr)dtd)->doc;
     notationPtr->name = notation->name;
     
@@ -1059,7 +1078,7 @@ _CFXMLDTDNodePtr _Nullable _CFXMLDTDGetEntityDesc(_CFXMLDTDPtr dtd, const unsign
     bool createdDoc = false;
     if (doc == NULL) {
         doc = xmlNewDoc((const xmlChar*)"1.0");
-        doc->extSubset = dtd;
+        doc->extSubset = static_cast<xmlDtdPtr>(dtd);
         ((xmlDtdPtr)dtd)->doc = doc;
         createdDoc = true;
     }
@@ -1203,7 +1222,7 @@ void _CFXMLFreeNode(_CFXMLNodePtr node) {
             // behaving as it expected us to.
             xmlAttributePtr attribute = (xmlAttributePtr)node;
             xmlDictPtr dict = attribute->doc ? attribute->doc->dict : NULL;
-            xmlUnlinkNode(node);
+            xmlUnlinkNode(static_cast<xmlNodePtr>(node));
             if (attribute->tree != NULL) {
                 xmlFreeEnumeration(attribute->tree);
             }
@@ -1231,18 +1250,20 @@ void _CFXMLFreeNode(_CFXMLNodePtr node) {
         }
 
         default:
-            xmlFreeNode(node);
+            xmlFreeNode(static_cast<xmlNodePtr>(node));
     }
 }
 
 void _CFXMLFreeDocument(_CFXMLDocPtr doc) {
-    xmlFreeDoc(doc);
+    xmlFreeDoc(static_cast<xmlDocPtr>(doc));
 }
 
 void _CFXMLFreeDTD(_CFXMLDTDPtr dtd) {
-    xmlFreeDtd(dtd);
+    xmlFreeDtd(static_cast<xmlDtdPtr>(dtd));
 }
 
 void _CFXMLFreeProperty(_CFXMLNodePtr prop) {
-    xmlFreeProp(prop);
+    xmlFreeProp(static_cast<xmlAttrPtr>(prop));
 }
+
+// clang-format on

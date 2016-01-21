@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFTimeZone.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFTimeZone.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFTIMEZONE__)
@@ -79,13 +81,13 @@ CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(CFTimeZoneRef tz, CFAbsolut
 CF_EXPORT
 CFAbsoluteTime CFTimeZoneGetNextDaylightSavingTimeTransition(CFTimeZoneRef tz, CFAbsoluteTime at) CF_AVAILABLE(10_5, 2_0);
 
-typedef CF_ENUM(CFIndex, CFTimeZoneNameStyle) {
-	kCFTimeZoneNameStyleStandard,
-	kCFTimeZoneNameStyleShortStandard,
-	kCFTimeZoneNameStyleDaylightSaving,
-	kCFTimeZoneNameStyleShortDaylightSaving,
-	kCFTimeZoneNameStyleGeneric,
-	kCFTimeZoneNameStyleShortGeneric
+typedef CF_ENUM(CFIndex,  CFTimeZoneNameStyle) {
+    kCFTimeZoneNameStyleStandard,
+    kCFTimeZoneNameStyleShortStandard,
+    kCFTimeZoneNameStyleDaylightSaving,
+    kCFTimeZoneNameStyleShortDaylightSaving,
+    kCFTimeZoneNameStyleGeneric,
+    kCFTimeZoneNameStyleShortGeneric
 } CF_ENUM_AVAILABLE(10_5, 2_0);
 
 CF_EXPORT
@@ -99,3 +101,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFTIMEZONE__ */
 
+// clang-format on

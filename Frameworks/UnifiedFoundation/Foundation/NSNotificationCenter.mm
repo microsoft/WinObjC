@@ -218,7 +218,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
         }
 
         // Remove the object *after* freeing its block and object
-        CFArrayRemoveValueAtIndex((CFArrayRef)arr, i);
+        CFArrayRemoveValueAtIndex((CFMutableArrayRef)arr, i);
     }
 
     if (CFArrayGetCount((CFArrayRef)arr) == 0) {

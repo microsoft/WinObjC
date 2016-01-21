@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,26 +10,27 @@
 //
 
 
-/*	CFData.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Kevin Perry
+/*  CFData.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Kevin Perry
 */
 
 #include <CoreFoundation/CFData.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include "CFInternal.h"
 #include <string.h>
+#include <Foundation/NSMutableData.h>
 
 
 
 #if __LP64__
-#define CFDATA_MAX_SIZE	    ((1ULL << 42) - 1)
+#define CFDATA_MAX_SIZE     ((1ULL << 42) - 1)
 #else
-#define CFDATA_MAX_SIZE	    ((1ULL << 31) - 1)
+#define CFDATA_MAX_SIZE     ((1ULL << 31) - 1)
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
-#import <mach/mach.h>
+#include <mach/mach.h>
 CF_INLINE unsigned long __CFPageSize() { return vm_page_size; }
 #elif DEPLOYMENT_TARGET_WINDOWS
 CF_INLINE unsigned long __CFPageSize() {
@@ -46,13 +49,13 @@ CF_INLINE unsigned long __CFPageSize() {
 
 struct __CFData {
     CFRuntimeBase _base;
-    CFIndex _length;	/* number of bytes */
-    CFIndex _capacity;	/* maximum number of bytes */
-    CFAllocatorRef _bytesDeallocator;	/* used only for immutable; if NULL, no deallocation */
+    CFIndex _length;    /* number of bytes */
+    CFIndex _capacity;  /* maximum number of bytes */
+    CFAllocatorRef _bytesDeallocator;   /* used only for immutable; if NULL, no deallocation */
 #if DEPLOYMENT_RUNTIME_SWIFT
     void *_deallocHandler; // for swift
 #endif
-    uint8_t *_bytes;	/* compaction: direct access to _bytes is only valid when data is not inline */
+    uint8_t *_bytes;    /* compaction: direct access to _bytes is only valid when data is not inline */
 };
 
 /*  
@@ -79,9 +82,9 @@ enum {
 };
 
 enum {
-    kCFImmutable = 0x0,		/* unchangable and fixed capacity; default */
-    kCFFixedMutable = 0x1,	/* changeable and fixed capacity */
-    kCFMutable = 0x3		/* changeable and variable capacity */
+    kCFImmutable = 0x0,     /* unchangable and fixed capacity; default */
+    kCFFixedMutable = 0x1,  /* changeable and fixed capacity */
+    kCFMutable = 0x3        /* changeable and variable capacity */
 };
 
 CF_INLINE void __CFDataSetInfoBits(CFDataRef data, UInt32 v) {__CFBitfieldSetValue(((CFRuntimeBase *)data)->_cfinfo[CF_INFO_BITS], 5, 0, v);}
@@ -159,18 +162,18 @@ CF_INLINE void __CFDataSetNumBytes(CFMutableDataRef data, CFIndex v) {
 
 CF_INLINE CFIndex __CFDataRoundUpCapacity(CFIndex capacity) {
     if (capacity < 16) {
-	return 16;
+    return 16;
     } else if (capacity < LOW_THRESHOLD) {
-	/* Up to 4x */
-	long idx = flsl(capacity);
-	return (1L << (long)(idx + ((idx % 2 == 0) ? 0 : 1)));
+    /* Up to 4x */
+    long idx = flsl(capacity);
+    return (1L << (long)(idx + ((idx % 2 == 0) ? 0 : 1)));
     } else if (capacity < HIGH_THRESHOLD) {
-	/* Up to 2x */
-	return (1L << (long)flsl(capacity));
+    /* Up to 2x */
+    return (1L << (long)flsl(capacity));
     } else {
-	/* Round up to next multiple of CHUNK_SIZE */
-	unsigned long newCapacity = CHUNK_SIZE * (1+(capacity >> ((long)flsl(CHUNK_SIZE)-1)));
-	return __CFMin(newCapacity, CFDATA_MAX_SIZE);
+    /* Round up to next multiple of CHUNK_SIZE */
+    unsigned long newCapacity = CHUNK_SIZE * (1+(capacity >> ((long)flsl(CHUNK_SIZE)-1)));
+    return __CFMin(newCapacity, CFDATA_MAX_SIZE);
     }
 }
 
@@ -181,9 +184,9 @@ CF_INLINE CFIndex __CFDataNumBytesForCapacity(CFIndex capacity) {
 static void __CFDataHandleOutOfMemory(CFTypeRef obj, CFIndex numBytes) {
     CFStringRef msg;
     if(0 < numBytes && numBytes <= CFDATA_MAX_SIZE) {
-	msg = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("Attempt to allocate %ld bytes for NS/CFData failed"), numBytes);
+    msg = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("Attempt to allocate %ld bytes for NS/CFData failed"), numBytes);
     } else {
-	msg = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("Attempt to allocate %ld bytes for NS/CFData failed. Maximum size: %lld"), numBytes, CFDATA_MAX_SIZE);
+    msg = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("Attempt to allocate %ld bytes for NS/CFData failed. Maximum size: %lld"), numBytes, CFDATA_MAX_SIZE);
     }
     {
         CFLog(kCFLogLevelCritical, CFSTR("%@"), msg);
@@ -230,39 +233,39 @@ static CFStringRef __CFDataCopyDescription(CFTypeRef cf) {
     CFStringAppendFormat(result, NULL, CFSTR("<CFData %p [%p]>{length = %lu, capacity = %lu, bytes = 0x"), cf, CFGetAllocator(data), (unsigned long)len, (unsigned long)__CFDataCapacity(data));
     if (24 < len) {
         for (idx = 0; idx < 16; idx += 4) {
-	    CFStringAppendFormat(result, NULL, CFSTR("%02x%02x%02x%02x"), bytes[idx], bytes[idx + 1], bytes[idx + 2], bytes[idx + 3]);
-	}
+        CFStringAppendFormat(result, NULL, CFSTR("%02x%02x%02x%02x"), bytes[idx], bytes[idx + 1], bytes[idx + 2], bytes[idx + 3]);
+    }
         CFStringAppend(result, CFSTR(" ... "));
         for (idx = len - 8; idx < len; idx += 4) {
-	    CFStringAppendFormat(result, NULL, CFSTR("%02x%02x%02x%02x"), bytes[idx], bytes[idx + 1], bytes[idx + 2], bytes[idx + 3]);
-	}
+        CFStringAppendFormat(result, NULL, CFSTR("%02x%02x%02x%02x"), bytes[idx], bytes[idx + 1], bytes[idx + 2], bytes[idx + 3]);
+    }
     } else {
         for (idx = 0; idx < len; idx++) {
-	    CFStringAppendFormat(result, NULL, CFSTR("%02x"), bytes[idx]);
-	}
+        CFStringAppendFormat(result, NULL, CFSTR("%02x"), bytes[idx]);
+    }
     }
     CFStringAppend(result, CFSTR("}"));
     return result;
 }
 
 static void *__CFDataInlineBytesPtr(CFDataRef data) {
-    return (void *)((uintptr_t)((int8_t *)data + sizeof(struct __CFData) + 15) & ~0xF);	// 16-byte align
+    return (void *)((uintptr_t)((int8_t *)data + sizeof(struct __CFData) + 15) & ~0xF); // 16-byte align
 }
     
 static Boolean __CFDataShouldAllocateCleared(CFDataRef data, CFIndex size) {
     Boolean result;
     if (__CFDataUseAllocator(data)) {
-	result = false;
+    result = false;
     } else {
-	if (__CFDataAllocatesCollectable(data)) {
+    if (__CFDataAllocatesCollectable(data)) {
 #if __LP64__
-	    result = false;
+        result = false;
 #else
-	    result = (size > (64 * 1024));
+        result = (size > (64 * 1024));
 #endif
-	} else {
-	    result = (size > (128 * 1024));
-	}
+    } else {
+        result = (size > (128 * 1024));
+    }
     }
     return result;
 }
@@ -272,19 +275,19 @@ static Boolean __CFDataShouldAllocateCleared(CFDataRef data, CFIndex size) {
 static void *__CFDataAllocate(CFDataRef data, CFIndex size, Boolean clear) {
     void *bytes = NULL;
     if (__CFDataUseAllocator(data)) {
-	CFAllocatorRef allocator = __CFGetAllocator(data);
-	bytes = CFAllocatorAllocate(allocator, size, 0);
-	if (clear) memset((uint8_t *)bytes, 0, size);
+    CFAllocatorRef allocator = __CFGetAllocator(data);
+    bytes = CFAllocatorAllocate(allocator, size, 0);
+    if (clear) memset((uint8_t *)bytes, 0, size);
     } else {
-	if (__CFDataAllocatesCollectable(data)) {
-	    bytes = auto_zone_allocate_object(objc_collectableZone(), size, AUTO_MEMORY_UNSCANNED, 0, clear);
-	} else {
-	    if (clear) {
-		bytes = calloc(1, size);
-	    } else {
-		bytes = malloc(size);
-	    }
-	}
+    if (__CFDataAllocatesCollectable(data)) {
+        bytes = auto_zone_allocate_object(objc_collectableZone(), size, AUTO_MEMORY_UNSCANNED, 0, clear);
+    } else {
+        if (clear) {
+        bytes = calloc(1, size);
+        } else {
+        bytes = malloc(size);
+        }
+    }
     }
     return bytes;
 }
@@ -313,12 +316,12 @@ static CFTypeID __kCFDataTypeID = _kCFRuntimeNotATypeID;
 static const CFRuntimeClass __CFDataClass = {
     _kCFRuntimeScannedObject,
     "CFData",
-    NULL,	// init
-    NULL,	// copy
+    NULL,   // init
+    NULL,   // copy
     __CFDataDeallocate,
     __CFDataEqual,
     __CFDataHash,
-    NULL,	// 
+    NULL,   // 
     __CFDataCopyDescription
 };
 
@@ -385,11 +388,11 @@ static CFMutableDataRef __CFDataInit(CFAllocatorRef allocator, CFOptionFlags fla
     
     CFIndex size = sizeof(struct __CFData) - sizeof(CFRuntimeBase);
     if (allocateInline) {
-	size += sizeof(uint8_t) * __CFDataNumBytesForCapacity(capacity) + sizeof(uint8_t) * 15;	// for 16-byte alignment fixup
+    size += sizeof(uint8_t) * __CFDataNumBytesForCapacity(capacity) + sizeof(uint8_t) * 15; // for 16-byte alignment fixup
     }
     memory = (CFMutableDataRef)_CFRuntimeCreateInstance(allocator, CFDataGetTypeID(), size, NULL);
     if (NULL == memory) {
-	return NULL;
+    return NULL;
     }
 #if DEPLOYMENT_RUNTIME_SWIFT
     memory->_deallocHandler = NULL;
@@ -397,81 +400,81 @@ static CFMutableDataRef __CFDataInit(CFAllocatorRef allocator, CFOptionFlags fla
     __CFDataSetNumBytesUsed(memory, 0);
     __CFDataSetLength(memory, 0);
     __CFDataSetInfoBits(memory,
-			(allocateInline ? __kCFBytesInline : 0) | 
-			(useAllocator ? __kCFUseAllocator : 0) |
-			(collectableMemory ? __kCFAllocatesCollectable : 0));
+            (allocateInline ? __kCFBytesInline : 0) | 
+            (useAllocator ? __kCFUseAllocator : 0) |
+            (collectableMemory ? __kCFAllocatesCollectable : 0));
     
     BOOL finalize = YES;
     BOOL scan = YES;
     if (collectableMemory) {
-	if (allocateInline) {
-	    // We have no pointer to anything that needs to be reclaimed, so don't scan or finalize.
-	    scan = NO;
-	    finalize = NO;
-	} else if (noCopy) {
-	    if (CF_IS_COLLECTABLE_ALLOCATOR(bytesDeallocator)) {
-		// We're taking responsibility for externally GC-allocated memory, so scan us, but we don't need to finalize.
-		finalize = NO;
-	    } else if (bytesDeallocator == kCFAllocatorNull) {
-		// We don't have responsibility for these bytes, so there's no need to be scanned and we don't need to finalize.
-		scan = NO;
-		finalize = NO;
-	    } else {
-		// We have a pointer to non-GC-allocated memory, so don't scan, but do finalize.
-		scan = NO;
-	    }
-	}
-	if (!scan) auto_zone_set_unscanned(objc_collectableZone(), memory);
-	if (!finalize) auto_zone_set_nofinalize(objc_collectableZone(), memory);
+    if (allocateInline) {
+        // We have no pointer to anything that needs to be reclaimed, so don't scan or finalize.
+        scan = NO;
+        finalize = NO;
+    } else if (noCopy) {
+        if (CF_IS_COLLECTABLE_ALLOCATOR(bytesDeallocator)) {
+        // We're taking responsibility for externally GC-allocated memory, so scan us, but we don't need to finalize.
+        finalize = NO;
+        } else if (bytesDeallocator == kCFAllocatorNull) {
+        // We don't have responsibility for these bytes, so there's no need to be scanned and we don't need to finalize.
+        scan = NO;
+        finalize = NO;
+        } else {
+        // We have a pointer to non-GC-allocated memory, so don't scan, but do finalize.
+        scan = NO;
+        }
+    }
+    if (!scan) auto_zone_set_unscanned(objc_collectableZone(), memory);
+    if (!finalize) auto_zone_set_nofinalize(objc_collectableZone(), memory);
     }
     if (isMutable && isGrowable) {
-	__CFDataSetCapacity(memory, __CFDataRoundUpCapacity(1));
-	__CFDataSetNumBytes(memory, __CFDataNumBytesForCapacity(__CFDataRoundUpCapacity(1)));
-	__CFSetMutableVariety(memory, kCFMutable);
+    __CFDataSetCapacity(memory, __CFDataRoundUpCapacity(1));
+    __CFDataSetNumBytes(memory, __CFDataNumBytesForCapacity(__CFDataRoundUpCapacity(1)));
+    __CFSetMutableVariety(memory, kCFMutable);
     } else {
-	/* Don't round up capacity */
-	__CFDataSetCapacity(memory, capacity);
-	__CFDataSetNumBytes(memory, __CFDataNumBytesForCapacity(capacity));
-	__CFSetMutableVariety(memory, kCFFixedMutable);
+    /* Don't round up capacity */
+    __CFDataSetCapacity(memory, capacity);
+    __CFDataSetNumBytes(memory, __CFDataNumBytesForCapacity(capacity));
+    __CFSetMutableVariety(memory, kCFFixedMutable);
     }
     if (noCopy) {
-	__CFAssignWithWriteBarrier((void **)&memory->_bytes, (uint8_t *)bytes);
-	if (finalize) {
+    __CFAssignWithWriteBarrier((void **)&memory->_bytes, (uint8_t *)bytes);
+    if (finalize) {
             if ((0)) {
-	        memory->_bytesDeallocator = bytesDeallocator;
+            memory->_bytesDeallocator = bytesDeallocator;
             } else {
-	        memory->_bytesDeallocator = (CFAllocatorRef)CFRetain(bytesDeallocator);
+            memory->_bytesDeallocator = (CFAllocatorRef)CFRetain(bytesDeallocator);
             }
-	}
-	if (CF_IS_COLLECTABLE_ALLOCATOR(bytesDeallocator) && !(0)) {
-	    // we assume that the no-copy memory is GC-allocated with a retain count of (at least) 1 and we should release it now instead of waiting until __CFDataDeallocate.
-	    auto_zone_release(objc_collectableZone(), memory->_bytes);
-	}
-	__CFDataSetNumBytesUsed(memory, length);
-	__CFDataSetLength(memory, length);
-	// Mutable no-copy datas are not allowed, so don't bother setting needsToZero flag.
+    }
+    if (CF_IS_COLLECTABLE_ALLOCATOR(bytesDeallocator) && !(0)) {
+        // we assume that the no-copy memory is GC-allocated with a retain count of (at least) 1 and we should release it now instead of waiting until __CFDataDeallocate.
+        auto_zone_release(objc_collectableZone(), memory->_bytes);
+    }
+    __CFDataSetNumBytesUsed(memory, length);
+    __CFDataSetLength(memory, length);
+    // Mutable no-copy datas are not allowed, so don't bother setting needsToZero flag.
     } else {
-	Boolean cleared = (isMutable && !isGrowable && !_CFExecutableLinkedOnOrAfter(CFSystemVersionSnowLeopard));
-	if (!allocateInline) {
-	    // assume that allocators give 16-byte aligned memory back -- it is their responsibility
-	    __CFAssignWithWriteBarrier((void **)&memory->_bytes, __CFDataAllocate(memory, __CFDataNumBytes(memory) * sizeof(uint8_t), cleared));
-	    if (__CFOASafe) __CFSetLastAllocationEventName(memory->_bytes, "CFData (store)");
-	    if (NULL == memory->_bytes) {
-		CFRelease(memory);
-		return NULL;
-	    }
-	} else {
-	    if (length == 0 && !isMutable) {
+    Boolean cleared = (isMutable && !isGrowable && !_CFExecutableLinkedOnOrAfter(CFSystemVersionSnowLeopard));
+    if (!allocateInline) {
+        // assume that allocators give 16-byte aligned memory back -- it is their responsibility
+        __CFAssignWithWriteBarrier((void **)&memory->_bytes, __CFDataAllocate(memory, __CFDataNumBytes(memory) * sizeof(uint8_t), cleared));
+        if (__CFOASafe) __CFSetLastAllocationEventName(memory->_bytes, "CFData (store)");
+        if (NULL == memory->_bytes) {
+        CFRelease(memory);
+        return NULL;
+        }
+    } else {
+        if (length == 0 && !isMutable) {
                 // NSData sets its bytes pointer to NULL when its length is zero. Starting in 10.7 we do the same for CFData.
                 memory->_bytes = NULL;
                 // It is important to set this data as not inlined, so we do not recalculate a bytes pointer from null.
                 __CFDataSetInline(memory, false);
-	    }
-	    cleared = true;
-	}
-	__CFDataSetNeedsToZero(memory, !cleared);
-	memory->_bytesDeallocator = NULL;
-	CFDataReplaceBytes(memory, CFRangeMake(0, 0), bytes, length);
+        }
+        cleared = true;
+    }
+    __CFDataSetNeedsToZero(memory, !cleared);
+    memory->_bytesDeallocator = NULL;
+    CFDataReplaceBytes(memory, CFRangeMake(0, 0), bytes, length);
     }
     __CFSetMutableVariety(memory, __CFMutableVarietyFromFlags(flags));
     return memory;
@@ -537,7 +540,7 @@ uint8_t *CFDataGetMutableBytePtr(CFMutableDataRef data) {
 }
 
 void CFDataGetBytes(CFDataRef data, CFRange range, uint8_t *buffer) {
-    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSData *)data, getBytes:(void *)buffer range:NSMakeRange(range.location, range.length));
+    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSData *)data, getBytes:(void *)buffer range:NSRange{range.location, range.length});
     __CFDataValidateRange(data, range, __PRETTY_FUNCTION__);
     memmove(buffer, CFDataGetBytePtr(data) + range.location, range.length);
 }
@@ -554,18 +557,18 @@ static void __CFDataGrow(CFMutableDataRef data, CFIndex numNewValues, Boolean cl
     void *oldBytes = data->_bytes;
     Boolean allocateCleared = clear && __CFDataShouldAllocateCleared(data, numBytes);
     if (allocateCleared && !__CFDataUseAllocator(data) && (oldLength == 0 || (newLength / oldLength) > 4)) {
-	// If the length that needs to be zeroed is significantly greater than the length of the data, then calloc/memmove is probably more efficient than realloc/memset.
-	bytes = __CFDataAllocate(data, numBytes * sizeof(uint8_t), true);
-	if (NULL != bytes) {
-	    memmove(bytes, oldBytes, oldLength);
-	    __CFDataDeallocate(data);
-	}
+    // If the length that needs to be zeroed is significantly greater than the length of the data, then calloc/memmove is probably more efficient than realloc/memset.
+    bytes = __CFDataAllocate(data, numBytes * sizeof(uint8_t), true);
+    if (NULL != bytes) {
+        memmove(bytes, oldBytes, oldLength);
+        __CFDataDeallocate(data);
+    }
     }
     if (bytes == NULL) {
         // If the calloc/memmove approach either failed or was never attempted, then realloc.
         allocateCleared = false;
         if (__CFDataUseAllocator(data)) {
-	       bytes = CFAllocatorReallocate(allocator, oldBytes, numBytes * sizeof(uint8_t), 0);
+           bytes = CFAllocatorReallocate(allocator, oldBytes, numBytes * sizeof(uint8_t), 0);
 #if DEPLOYMENT_TARGET_MACOSX
         } else if (__CFDataAllocatesCollectable(data)) {
             bytes = malloc_zone_realloc(objc_collectableZone(), oldBytes, numBytes * sizeof(uint8_t));
@@ -592,23 +595,23 @@ void CFDataSetLength(CFMutableDataRef data, CFIndex newLength) {
     capacity = __CFDataCapacity(data);
     isGrowable = __CFDataIsGrowable(data);
     if (__CFDataIsMutable(data)) {
-	if (newLength < 0) {
-	    if (isGrowable) {
-		__CFDataHandleOutOfMemory(data, newLength);
-	    } else {
-		HALT;
-	    }
-	} else if (capacity < newLength) {
-	    if (isGrowable) {
-		__CFDataGrow(data, newLength - oldLength, true);
-	    } else {
-		CFAssert1(newLength <= __CFDataCapacity(data), __kCFLogAssertion, "%s(): fixed-capacity data is full", __PRETTY_FUNCTION__);
-	    }
-	} else if (oldLength < newLength && __CFDataNeedsToZero(data)) {
-	    memset(CFDataGetMutableBytePtr(data) + oldLength, 0, newLength - oldLength);
-	} else if (newLength < oldLength) {
-	    __CFDataSetNeedsToZero(data, true);
-	}
+    if (newLength < 0) {
+        if (isGrowable) {
+        __CFDataHandleOutOfMemory(data, newLength);
+        } else {
+        HALT;
+        }
+    } else if (capacity < newLength) {
+        if (isGrowable) {
+        __CFDataGrow(data, newLength - oldLength, true);
+        } else {
+        CFAssert1(newLength <= __CFDataCapacity(data), __kCFLogAssertion, "%s(): fixed-capacity data is full", __PRETTY_FUNCTION__);
+        }
+    } else if (oldLength < newLength && __CFDataNeedsToZero(data)) {
+        memset(CFDataGetMutableBytePtr(data) + oldLength, 0, newLength - oldLength);
+    } else if (newLength < oldLength) {
+        __CFDataSetNeedsToZero(data, true);
+    }
     }
     __CFDataSetLength(data, newLength);
     __CFDataSetNumBytesUsed(data, newLength);
@@ -628,13 +631,13 @@ void CFDataAppendBytes(CFMutableDataRef data, const uint8_t *bytes, CFIndex leng
 }
 
 void CFDataDeleteBytes(CFMutableDataRef data, CFRange range) {
-    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSMutableData *)data, replaceBytesInRange:NSMakeRange(range.location, range.length) withBytes:NULL length:0);
+    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSMutableData *)data, replaceBytesInRange:NSRange{range.location, range.length} withBytes:NULL length:0);
     CFAssert1(__CFDataIsMutable(data), __kCFLogAssertion, "%s(): data is immutable", __PRETTY_FUNCTION__);
     CFDataReplaceBytes(data, range, NULL, 0); 
 }
 
 void CFDataReplaceBytes(CFMutableDataRef data, CFRange range, const uint8_t *newBytes, CFIndex newLength) {
-    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSMutableData *)data, replaceBytesInRange:NSMakeRange(range.location, range.length) withBytes:(const void *)newBytes length:(NSUInteger)newLength);
+    CF_OBJC_FUNCDISPATCHV(CFDataGetTypeID(), void, (NSMutableData *)data, replaceBytesInRange:NSRange{range.location, range.length} withBytes:(const void *)newBytes length:(NSUInteger)newLength);
     __CFGenericValidateType(data, CFDataGetTypeID());
     __CFDataValidateRange(data, range, __PRETTY_FUNCTION__);
     CFAssert1(__CFDataIsMutable(data), __kCFLogAssertion, "%s(): data is immutable", __PRETTY_FUNCTION__);
@@ -649,20 +652,20 @@ void CFDataReplaceBytes(CFMutableDataRef data, CFRange range, const uint8_t *new
     uint8_t *srcBuf = (uint8_t *)newBytes;
     switch (__CFMutableVariety(data)) {
     case kCFMutable:
-	if (__CFDataNumBytes(data) < newCount) {
+    if (__CFDataNumBytes(data) < newCount) {
             if (bytePtr && newBytes && newBytes < bytePtr + __CFDataCapacity(data) && bytePtr < newBytes + newLength) {
                 srcBuf = (uint8_t *)malloc(newLength * sizeof(uint8_t));
                 memmove(srcBuf, newBytes, newLength * sizeof(uint8_t));
             }
-	    __CFDataGrow(data, newLength - range.length, false);
+        __CFDataGrow(data, newLength - range.length, false);
             bytePtr = (uint8_t *)CFDataGetMutableBytePtr(data);
-	}
-	break;
+    }
+    break;
     case kCFFixedMutable:
-	CFAssert1(newCount <= __CFDataCapacity(data), __kCFLogAssertion, "%s(): fixed-capacity data is full", __PRETTY_FUNCTION__);
-	// Continuing after this could cause buffer overruns.
-	if (newCount > __CFDataCapacity(data)) HALT;
-	break;
+    CFAssert1(newCount <= __CFDataCapacity(data), __kCFLogAssertion, "%s(): fixed-capacity data is full", __PRETTY_FUNCTION__);
+    // Continuing after this could cause buffer overruns.
+    if (newCount > __CFDataCapacity(data)) HALT;
+    break;
     }
     if (newLength != range.length && range.location + range.length < len) {
         memmove(bytePtr + range.location + newLength, bytePtr + range.location + range.length, (len - range.location - range.length) * sizeof(uint8_t));
@@ -678,9 +681,9 @@ void CFDataReplaceBytes(CFMutableDataRef data, CFRange range, const uint8_t *new
 #define REVERSE_BUFFER(type, buf, len) { \
     type tmp; \
     for(int i = 0; i < (len)/2; i++) { \
-	tmp = (buf)[i]; \
-	(buf)[i] = (buf)[(len) - i - 1]; \
-	(buf)[(len) - i - 1] = tmp; \
+    tmp = (buf)[i]; \
+    (buf)[i] = (buf)[(len) - i - 1]; \
+    (buf)[(len) - i - 1] = tmp; \
     } \
 }
 
@@ -719,7 +722,7 @@ static void _computeGoodSubstringShift(const uint8_t *needle, int needleLength, 
         shift[needleLength - 1 - suff[i]] = needleLength - 1 - i;
     // Since the Boyer-Moore algorithm moves the pointer back while scanning substrings, add the distance to the end of the potential substring.
     for (i = 0; i < needleLength - 1; ++i) {
-	shift[i] += (needleLength - 1 - i);
+    shift[i] += (needleLength - 1 - i);
     }
 }
 
@@ -728,71 +731,71 @@ static const uint8_t * __CFDataSearchBoyerMoore(const CFDataRef data, const uint
     unsigned long *goodSubstringShift = (unsigned long *)malloc(needleLength * sizeof(unsigned long));
     unsigned long *suffixLengths = (unsigned long *)malloc(needleLength * sizeof(unsigned long));
     if (!goodSubstringShift || !suffixLengths) {
-	__CFDataHandleOutOfMemory(data, needleLength * sizeof(unsigned long));
+    __CFDataHandleOutOfMemory(data, needleLength * sizeof(unsigned long));
     }
     
     if(backwards) {
-	for (int i = 0; i < sizeof(badCharacterShift) / sizeof(*badCharacterShift); i++)
-	    badCharacterShift[i] = needleLength;
-	
-	for (int i = needleLength - 1; i >= 0; i--)
-	    badCharacterShift[needle[i]] = i;
-	
-	// To get the correct shift table for backwards search reverse the needle, compute the forwards shift table, and then reverse the result.
-	uint8_t *needleCopy = (uint8_t *)malloc(needleLength * sizeof(uint8_t));
-	if (!needleCopy) {
-	    __CFDataHandleOutOfMemory(data, needleLength * sizeof(uint8_t));
-	}
-	memmove(needleCopy, needle, needleLength);
-	REVERSE_BUFFER(uint8_t, needleCopy, needleLength);
-	_computeGoodSubstringShift(needleCopy, needleLength, goodSubstringShift, suffixLengths);
-	REVERSE_BUFFER(unsigned long, goodSubstringShift, needleLength);
-	free(needleCopy);
+    for (int i = 0; i < sizeof(badCharacterShift) / sizeof(*badCharacterShift); i++)
+        badCharacterShift[i] = needleLength;
+    
+    for (int i = needleLength - 1; i >= 0; i--)
+        badCharacterShift[needle[i]] = i;
+    
+    // To get the correct shift table for backwards search reverse the needle, compute the forwards shift table, and then reverse the result.
+    uint8_t *needleCopy = (uint8_t *)malloc(needleLength * sizeof(uint8_t));
+    if (!needleCopy) {
+        __CFDataHandleOutOfMemory(data, needleLength * sizeof(uint8_t));
+    }
+    memmove(needleCopy, needle, needleLength);
+    REVERSE_BUFFER(uint8_t, needleCopy, needleLength);
+    _computeGoodSubstringShift(needleCopy, needleLength, goodSubstringShift, suffixLengths);
+    REVERSE_BUFFER(unsigned long, goodSubstringShift, needleLength);
+    free(needleCopy);
     } else {
-	for (int i = 0; i < sizeof(badCharacterShift) / sizeof(*badCharacterShift); i++)
-	    badCharacterShift[i] = needleLength;
-	
-	for (int i = 0; i < needleLength; i++)
-	    badCharacterShift[needle[i]] = needleLength - i- 1;
-	
-	_computeGoodSubstringShift(needle, needleLength, goodSubstringShift, suffixLengths);
+    for (int i = 0; i < sizeof(badCharacterShift) / sizeof(*badCharacterShift); i++)
+        badCharacterShift[i] = needleLength;
+    
+    for (int i = 0; i < needleLength; i++)
+        badCharacterShift[needle[i]] = needleLength - i- 1;
+    
+    _computeGoodSubstringShift(needle, needleLength, goodSubstringShift, suffixLengths);
     }
     
     const uint8_t *scan_needle;
     const uint8_t *scan_haystack;
     const uint8_t *result = NULL;
     if(backwards) {
-	const uint8_t *const end_needle = needle + needleLength;
-	scan_needle = needle;
-	scan_haystack = haystack + haystackLength - needleLength;
-	while (scan_haystack >= haystack && scan_needle < end_needle) {
-	    if (*scan_haystack == *scan_needle) {
-		scan_haystack++;
-		scan_needle++;
-	    } else {
-		scan_haystack -= __CFMax(badCharacterShift[*scan_haystack], goodSubstringShift[scan_needle - needle]);
-		scan_needle = needle;
-	    }
-	}
-	if (scan_needle == end_needle) {
-	    result = (scan_haystack - needleLength);
-	}
+    const uint8_t *const end_needle = needle + needleLength;
+    scan_needle = needle;
+    scan_haystack = haystack + haystackLength - needleLength;
+    while (scan_haystack >= haystack && scan_needle < end_needle) {
+        if (*scan_haystack == *scan_needle) {
+        scan_haystack++;
+        scan_needle++;
+        } else {
+        scan_haystack -= __CFMax(badCharacterShift[*scan_haystack], goodSubstringShift[scan_needle - needle]);
+        scan_needle = needle;
+        }
+    }
+    if (scan_needle == end_needle) {
+        result = (scan_haystack - needleLength);
+    }
     } else {
-	const uint8_t *const end_haystack = haystack + haystackLength;
-	scan_needle = needle + needleLength - 1;
-	scan_haystack = haystack + needleLength - 1;
-	while (scan_haystack < end_haystack && scan_needle >= needle) {
-	    if (*scan_haystack == *scan_needle) {
-		scan_haystack--;
-		scan_needle--;
-	    } else {
-		scan_haystack += __CFMax(badCharacterShift[*scan_haystack], goodSubstringShift[scan_needle - needle]);
-		scan_needle = needle + needleLength - 1;
-	    }
-	}
-	if (scan_needle < needle) {
-	    result = (scan_haystack + 1);
-	}
+    const uint8_t *const end_haystack = haystack + haystackLength;
+    scan_needle = needle + needleLength - 1;
+    scan_haystack = haystack + needleLength - 1;
+    while (scan_haystack < end_haystack && scan_needle >= needle) {
+        if (*scan_haystack == *scan_needle) {
+        scan_haystack--;
+        scan_needle--;
+        } else {
+        scan_haystack += __CFMax(badCharacterShift[*scan_haystack], goodSubstringShift[scan_needle - needle]);
+        scan_needle = needle + needleLength - 1;
+        }
+    }
+    if (scan_needle < needle) {
+        result = (scan_haystack + 1);
+    }
     }
     
     free(goodSubstringShift);
@@ -808,21 +811,21 @@ CFRange _CFDataFindBytes(CFDataRef data, CFDataRef dataToFind, CFRange searchRan
     unsigned long needleLength = CFDataGetLength(dataToFind);
     
     if(compareOptions & kCFDataSearchAnchored) {
-	if(searchRange.length > needleLength) {
-	    if(compareOptions & kCFDataSearchBackwards) {
-		searchRange.location += (searchRange.length - needleLength);
-	    }
-	    searchRange.length = needleLength;
-	}
+    if(searchRange.length > needleLength) {
+        if(compareOptions & kCFDataSearchBackwards) {
+        searchRange.location += (searchRange.length - needleLength);
+        }
+        searchRange.length = needleLength;
+    }
     }
     if(searchRange.length > fullHaystackLength - searchRange.location) {
-	searchRange.length = fullHaystackLength - searchRange.location;
+    searchRange.length = fullHaystackLength - searchRange.location;
     }
     
     if(searchRange.length < needleLength || fullHaystackLength == 0 || needleLength == 0) {
-	return CFRangeMake(kCFNotFound, 0);
+    return CFRangeMake(kCFNotFound, 0);
     }
-	
+    
     const uint8_t *haystack = fullHaystack + searchRange.location;
     const uint8_t *searchResult = __CFDataSearchBoyerMoore(data, haystack, searchRange.length, needle, needleLength, (compareOptions & kCFDataSearchBackwards) != 0);
     CFIndex resultLocation = (searchResult == NULL) ? kCFNotFound : searchRange.location + (searchResult - haystack);
@@ -844,3 +847,5 @@ CFRange CFDataFind(CFDataRef data, CFDataRef dataToFind, CFRange searchRange, CF
 #undef INLINE_BYTES_THRESHOLD
 #undef CFDATA_MAX_SIZE
 #undef REVERSE_BUFFER
+
+// clang-format on

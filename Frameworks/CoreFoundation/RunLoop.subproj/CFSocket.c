@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFSocket.c
-	Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
-	Responsibility: Christopher Kane
+/*  CFSocket.c
+    Copyright (c) 1999-2015, Apple Inc.  All rights reserved.
+    Responsibility: Christopher Kane
 */
 
 #define NEW_SOCKET 0
@@ -677,8 +679,8 @@
  struct stat statbuf;
  int ret = sock->_shared ? fstat(sock->_shared->_socket, &statbuf) : -1;
  if (ret < 0) {
-	CFSocketInvalidate(sock);
-	return false;
+    CFSocketInvalidate(sock);
+    return false;
  }
  return true;
  }
@@ -938,6 +940,34 @@
 #else /* not NEW_SOCKET */
 
 
+#ifdef WIN32
+#include <io.h>
+#include <fcntl.h>
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+
+typedef int socklen_t;
+#elif defined(WINPHONE) || defined(__OBJC__)
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+
+typedef int socklen_t;
+#undef WIN32
+#define WINPHONE
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <netinet/tcp.h>
+#include <errno.h>
+#include <sys/ioctl.h>
+#include <sys/time.h>
+#include <netdb.h>
+#include <process.h>
+#define closesocket close
+#define ioctlsocket ioctl
+#endif
+
 #include <CoreFoundation/CFSocket.h>
 #include <sys/types.h>
 #include <math.h>
@@ -948,9 +978,9 @@
 #include <libc.h>
 #include <dlfcn.h>
 #endif
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
+// #include <arpa/inet.h>
+// #include <sys/ioctl.h> // HACKHACK: don't have this.
+// #include <unistd.h>
 #include <fcntl.h>
 #include <CoreFoundation/CFArray.h>
 #include <CoreFoundation/CFData.h>
@@ -972,7 +1002,7 @@
 #undef EBADF
 #define EBADF WSAENOTSOCK
 
-#define NFDBITS	(sizeof(int32_t) * NBBY)
+#define NFDBITS (sizeof(int32_t) * NBBY)
 
 typedef int32_t fd_mask;
 typedef int socklen_t;
@@ -981,14 +1011,14 @@ typedef int socklen_t;
 CF_PRIVATE int _NS_gettimeofday(struct timeval *tv, struct timezone *tz);
 
 // although this is only used for debug info, we define it for compatibility
-#define	timersub(tvp, uvp, vvp) \
+#define timersub(tvp, uvp, vvp) \
 do { \
-(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\
-(vvp)->tv_usec = (tvp)->tv_usec - (uvp)->tv_usec;	\
-if ((vvp)->tv_usec < 0) {				\
-(vvp)->tv_sec--;				\
-(vvp)->tv_usec += 1000000;			\
-}							\
+(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;      \
+(vvp)->tv_usec = (tvp)->tv_usec - (uvp)->tv_usec;   \
+if ((vvp)->tv_usec < 0) {               \
+(vvp)->tv_sec--;                \
+(vvp)->tv_usec += 1000000;          \
+}                           \
 } while (0)
 
 
@@ -1069,33 +1099,33 @@ static void __CFSocketDoCallback(CFSocketRef s, CFDataRef data, CFDataRef addres
 struct __CFSocket {
     CFRuntimeBase _base;
     struct {
-        unsigned client:8;	// flags set by client (reenable, CloseOnInvalidate)
-        unsigned disabled:8;	// flags marking disabled callbacks
-        unsigned connected:1;	// Are we connected yet?  (also true for connectionless sockets)
+        unsigned client:8;  // flags set by client (reenable, CloseOnInvalidate)
+        unsigned disabled:8;    // flags marking disabled callbacks
+        unsigned connected:1;   // Are we connected yet?  (also true for connectionless sockets)
         unsigned writableHint:1;  // Did the polling the socket show it to be writable?
         unsigned closeSignaled:1;  // Have we seen FD_CLOSE? (only used on Win32)
         unsigned unused:13;
     } _f;
     CFLock_t _lock;
     CFLock_t _writeLock;
-    CFSocketNativeHandle _socket;	/* immutable */
+    CFSocketNativeHandle _socket;   /* immutable */
     SInt32 _socketType;
     SInt32 _errorCode;
     CFDataRef _address;
     CFDataRef _peerAddress;
     SInt32 _socketSetCount;
-    CFRunLoopSourceRef _source0;	// v0 RLS, messaged from SocketMgr
+    CFRunLoopSourceRef _source0;    // v0 RLS, messaged from SocketMgr
     CFMutableArrayRef _runLoops;
-    CFSocketCallBack _callout;		/* immutable */
-    CFSocketContext _context;		/* immutable */
-    CFMutableArrayRef _dataQueue;	// queues to pass data from SocketMgr thread
+    CFSocketCallBack _callout;      /* immutable */
+    CFSocketContext _context;       /* immutable */
+    CFMutableArrayRef _dataQueue;   // queues to pass data from SocketMgr thread
     CFMutableArrayRef _addressQueue;
     
     struct timeval _readBufferTimeout;
     CFMutableDataRef _readBuffer;
-    CFIndex _bytesToBuffer;			/* is length of _readBuffer */
-    CFIndex _bytesToBufferPos;		/* where the next _CFSocketRead starts from */
-    CFIndex _bytesToBufferReadPos;	/* Where the buffer will next be read into (always after _bytesToBufferPos, but less than _bytesToBuffer) */
+    CFIndex _bytesToBuffer;         /* is length of _readBuffer */
+    CFIndex _bytesToBufferPos;      /* where the next _CFSocketRead starts from */
+    CFIndex _bytesToBufferReadPos;  /* Where the buffer will next be read into (always after _bytesToBufferPos, but less than _bytesToBuffer) */
     Boolean _atEOF;
     int _bufferedReadError;
     
@@ -1380,7 +1410,7 @@ static CFRunLoopRef __CFSocketCopyRunLoopToWakeUp(CFRunLoopSourceRef src, CFMuta
             CFRunLoopRef value = (CFRunLoopRef)CFArrayGetValueAtIndex(runLoops, idx);
             if (value != rl) rl = NULL;
         }
-        if (NULL == rl) {	/* more than one different rl, so we must pick one */
+        if (NULL == rl) {   /* more than one different rl, so we must pick one */
             /* ideally, this would be a run loop which isn't also in a
              * signaled state for this or another source, but that's tricky;
              * we pick one that is running in an appropriate mode for this
@@ -1479,10 +1509,10 @@ static CFStringRef someAddrToString(CFAllocatorRef alloc, int (*fun) (int, struc
 {
     CFStringRef resultString = NULL;
     union {
-        struct sockaddr		sa;
+        struct sockaddr     sa;
         struct sockaddr_in  sa4b;
         struct sockaddr_in6 sa6b;
-        UInt8			static_buffer[SOCK_MAXADDRLEN];
+        UInt8           static_buffer[SOCK_MAXADDRLEN];
     } u;
     socklen_t addrlen = sizeof(u.static_buffer);
     
@@ -1700,7 +1730,7 @@ static void __CFSocketHandleRead(CFSocketRef s, Boolean causedByTimeout)
                             // Update the timeout notification time
                             struct timeval timeNow = { 0 };
                             gettimeofday(&timeNow, NULL);
-                            timeradd(&timeNow, &s->_readBufferTimeout, &s->_readBufferTimeoutNotificationTime);
+                            // timeradd(&timeNow, &s->_readBufferTimeout, &s->_readBufferTimeoutNotificationTime); // HACKHACK: appears to be a linux syscall.
 #if defined(LOG_CFSOCKET)
                             fprintf(stdout, "READ %ld - need %ld MORE - GOING BACK FOR MORE\n", ctRead, s->_bytesToBuffer - s->_bytesToBufferPos);
 #endif
@@ -2392,7 +2422,7 @@ static unsigned __stdcall __CFWinThreadFunc(void *arg) {
     ((void (*)(void *))args->func)(args->arg);
     CloseHandle(args->handle);
     CFAllocatorDeallocate(kCFAllocatorSystemDefault, arg);
-    _endthreadex(0);
+    // _endthreadex(0); // HACKHACK: UCRT for store apps doesn't make this available.
     return 0;
 }
 #endif
@@ -2439,7 +2469,7 @@ static CFSocketRef _CFSocketCreateWithNative(CFAllocatorRef allocator, CFSocketN
     memory->_lock = CFLockInit;
     memory->_writeLock = CFLockInit;
     memory->_socket = sock;
-    if (INVALID_SOCKET == sock || 0 != getsockopt(sock, SOL_SOCKET, SO_TYPE, (char *)&(memory->_socketType), (socklen_t *)&typeSize)) memory->_socketType = 0;		// cast for WinSock bad API
+    if (INVALID_SOCKET == sock || 0 != getsockopt(sock, SOL_SOCKET, SO_TYPE, (char *)&(memory->_socketType), (socklen_t *)&typeSize)) memory->_socketType = 0;      // cast for WinSock bad API
     memory->_errorCode = 0;
     memory->_address = NULL;
     memory->_peerAddress = NULL;
@@ -2491,7 +2521,7 @@ static CFSocketRef _CFSocketCreateWithNative(CFAllocatorRef allocator, CFSocketN
         args->func = __CFSocketManager;
         args->arg = 0;
         /* The thread is created suspended, because otherwise there would be a race between the assignment below of the handle field, and it's possible use in the thread func above. */
-        args->handle = (HANDLE)_beginthreadex(NULL, 0, __CFWinThreadFunc, args, CREATE_SUSPENDED, &tid);
+        args->handle = NULL; // (HANDLE)_beginthreadex(NULL, 0, __CFWinThreadFunc, args, CREATE_SUSPENDED, &tid); // HACKHACK: UCRT for store apps doesn't make this available.
         handle = args->handle;
         ResumeThread(handle);
         __CFSocketManagerThread = handle;
@@ -2963,7 +2993,7 @@ static void __CFSocketPerformV0(void *info) {
         s->_context.retain(contextInfo);
     }
     
-    __CFSocketDoCallback(s, data, address, sock);	// does __CFSocketUnlock(s)
+    __CFSocketDoCallback(s, data, address, sock);   // does __CFSocketUnlock(s)
     
     if (NULL != contextRelease) {
         contextRelease(contextInfo);
@@ -3117,7 +3147,7 @@ CFSocketError CFSocketSendData(CFSocketRef s, CFDataRef address, CFDataRef data,
         __CFSocketWriteLock(s);
         tv.tv_sec = (timeout <= 0.0 || (CFTimeInterval)INT_MAX <= timeout) ? INT_MAX : (int)floor(timeout);
         tv.tv_usec = (int)floor(1.0e+6 * (timeout - floor(timeout)));
-        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(tv));	// cast for WinSock bad API
+        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(tv)); // cast for WinSock bad API
         if (NULL != addrptr && 0 < addrlen) {
             size = sendto(sock, (char *)dataptr, datalen, 0, (struct sockaddr *)addrptr, addrlen);
         } else {
@@ -3179,7 +3209,7 @@ CFSocketError CFSocketSetAddress(CFSocketRef s, CFDataRef address) {
     }
     
     //??? should return errno; historically this never looked at the listenResult
-    return (CFIndex)bindResult;
+    return static_cast<CFSocketError>(bindResult);
 }
 
 CFSocketError CFSocketConnectToAddress(CFSocketRef s, CFDataRef address, CFTimeInterval timeout) {
@@ -3252,7 +3282,7 @@ CFSocketError CFSocketConnectToAddress(CFSocketRef s, CFDataRef address, CFTimeI
         }
     }
     //??? should return errno
-    return result;
+    return static_cast<CFSocketError>(result);
 }
 
 CFSocketRef CFSocketCreate(CFAllocatorRef allocator, SInt32 protocolFamily, SInt32 socketType, SInt32 protocol, CFOptionFlags callBackTypes, CFSocketCallBack callout, const CFSocketContext *context) {
@@ -3495,3 +3525,4 @@ CF_EXPORT uint16_t CFSocketGetDefaultNameRegistryPortNumber(void) {
     return __CFSocketDefaultNameRegistryPortNumber;
 }
 
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -17,7 +19,7 @@
 
 #include <CoreFoundation/CFStream.h>
 #include <CoreFoundation/CFRunLoop.h>
-#include <CoreFoundation/CFRuntime.h>
+#include "CFRuntime.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -183,3 +185,4 @@ CF_EXPORT const CFStringRef _kCFStreamPropertyFileNativeHandle CF_AVAILABLE_IOS(
 
 #endif /* ! __COREFOUNDATION_CFSTREAMPRIV__ */
 
+// clang-format on

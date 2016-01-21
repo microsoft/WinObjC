@@ -32,7 +32,7 @@
 #include <sys/_types.h>
 
 #ifndef _SUSECONDS_T_DECLARED
-typedef __suseconds_t   suseconds_t;
+typedef __suseconds_t suseconds_t;
 #define _SUSECONDS_T_DECLARED
 #endif
 
@@ -46,9 +46,25 @@ typedef __time_t    time_t;
 /*
  * Structure returned by gettimeofday(2) system call, and used in other calls.
  */
-struct timeval {
-        long    tv_sec;         /* seconds */
-        long    tv_usec;        /* and microseconds */
-};
-    
+#ifndef _WINSOCK2API_ // HACKAHCK: symbol also in winsock2.h so guard against it a bit.
+
+#ifndef WIN32
+#define __SHOULD_UNDEF_WIN32
+#endif
+
+#include <Winsock2.h>
+#undef far
+#undef near
+#undef FAR
+#undef NEAR
+#define FAR
+#define NEAR
+
+#ifdef __SHOULD_UNDEF_WIN32
+#undef __SHOULD_UNDEF_WIN32
+#undef WIN32
+#endif
+
+#endif
+
 #endif /* !_SYS__TIMEVAL_H_ */

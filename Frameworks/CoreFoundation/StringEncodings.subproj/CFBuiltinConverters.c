@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -1182,3 +1184,5 @@ CF_PRIVATE const CFStringEncodingConverter __CFConverterUTF8 = {
     __CFToUTF8, __CFFromUTF8, 3, 2, kCFStringEncodingConverterStandard,
     __CFToUTF8Len, __CFFromUTF8Len, NULL, NULL, NULL, NULL,
 };
+
+// clang-format on

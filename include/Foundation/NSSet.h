@@ -27,14 +27,9 @@
 @class NSEnumerator;
 @class NSString;
 
-struct NSSetTable {
-    CFMutableDictionaryRef dict;
-};
-
 FOUNDATION_EXPORT_CLASS
 @interface NSSet : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
-    struct NSSetTable _table;
 }
 
 + (instancetype)set;

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -13,8 +15,9 @@
 	Responsibility: Christopher Kane
 */
 
+#include <CoreFoundation/CoreFoundation.h>
 #include <CoreFoundation/CFBinaryHeap.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include "CFInternal.h"
 
 const CFBinaryHeapCallBacks kCFStringBinaryHeapCallBacks = {0, __CFTypeCollectionRetain, __CFTypeCollectionRelease, CFCopyDescription, (CFComparisonResult (*)(const void *, const void *, void *))CFStringCompare};
@@ -150,10 +153,10 @@ static CFStringRef __CFBinaryHeapCopyDescription(CFTypeRef cf) {
 	    desc = heap->_callbacks.copyDescription(item);
 	}
 	if (NULL != desc) {
-	    CFStringAppendFormat(result, NULL, CFSTR("\t%lu : %@\n"), (unsigned long)idx, desc);
+	    CFStringAppendFormat(result, NULL, CFSTR("    %lu : %@\n"), (unsigned long)idx, desc);
 	    CFRelease(desc);
 	} else {
-	    CFStringAppendFormat(result, NULL, CFSTR("\t%lu : <%p>\n"), (unsigned long)idx, item);
+	    CFStringAppendFormat(result, NULL, CFSTR("    %lu : <%p>\n"), (unsigned long)idx, item);
 	}
     }
     CFStringAppend(result, CFSTR(")}"));
@@ -428,3 +431,4 @@ void CFBinaryHeapRemoveAllValues(CFBinaryHeapRef heap) {
     __CFBinaryHeapSetCount(heap, 0);
 }
 
+// clang-format on

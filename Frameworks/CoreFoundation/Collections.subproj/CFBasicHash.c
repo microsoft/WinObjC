@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,18 +10,18 @@
 //
 
 
-/*	CFBasicHash.m
-	Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFBasicHash.m
+    Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
-#import "CFBasicHash.h"
-#import <CoreFoundation/CFRuntime.h>
-#import <CoreFoundation/CFSet.h>
-#import <math.h>
+#include "CFBasicHash.h"
+#include "CFRuntime.h"
+#include <CoreFoundation/CFSet.h>
+#include <math.h>
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
 #if __HAS_DISPATCH__
-#import <dispatch/dispatch.h>
+#include <dispatch/dispatch.h>
 #endif
 #endif
 
@@ -75,90 +77,90 @@ do { \
         __dtrace_probe$Cocoa_HashTable$rehash_end$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1), (unsigned long)(arg2)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_REHASH_END_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$rehash_end$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_REHASH_END_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$rehash_end$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_REHASH_START(arg0, arg1, arg2) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$rehash_start$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1), (unsigned long)(arg2)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_REHASH_START_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$rehash_start$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_REHASH_START_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$rehash_start$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_HASH_KEY(arg0, arg1, arg2) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$hash_key$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1), (unsigned long)(arg2)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_HASH_KEY_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$hash_key$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_HASH_KEY_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$hash_key$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_PROBE_DELETED(arg0, arg1) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$probe_deleted$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_PROBE_DELETED_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_deleted$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_PROBE_DELETED_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_deleted$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_PROBE_EMPTY(arg0, arg1) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$probe_empty$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_PROBE_EMPTY_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_empty$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_PROBE_EMPTY_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_empty$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_PROBE_VALID(arg0, arg1) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$probe_valid$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_PROBE_VALID_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_valid$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_PROBE_VALID_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$probe_valid$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_PROBING_END(arg0, arg1) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$probing_end$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_PROBING_END_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$probing_end$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_PROBING_END_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$probing_end$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_PROBING_START(arg0, arg1) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$probing_start$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_PROBING_START_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$probing_start$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_PROBING_START_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$probing_start$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 #define COCOA_HASHTABLE_TEST_EQUAL(arg0, arg1, arg2) \
 do { \
         __asm__ volatile(".reference " COCOA_HASHTABLE_TYPEDEFS); \
         __dtrace_probe$Cocoa_HashTable$test_equal$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67((unsigned long)(arg0), (unsigned long)(arg1), (unsigned long)(arg2)); \
         __asm__ volatile(".reference " COCOA_HASHTABLE_STABILITY); \
 } while (0)
-#define	COCOA_HASHTABLE_TEST_EQUAL_ENABLED() \
-	({ int _r = __dtrace_isenabled$Cocoa_HashTable$test_equal$v1(); \
-		__asm__ volatile(""); \
-		_r; })
+#define COCOA_HASHTABLE_TEST_EQUAL_ENABLED() \
+    ({ int _r = __dtrace_isenabled$Cocoa_HashTable$test_equal$v1(); \
+        __asm__ volatile(""); \
+        _r; })
 
 extern void __dtrace_probe$Cocoa_HashTable$hash_key$v1$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67$756e7369676e6564206c6f6e67(unsigned long, unsigned long, unsigned long);
 extern int __dtrace_isenabled$Cocoa_HashTable$hash_key$v1(void);
@@ -772,76 +774,76 @@ static uintptr_t __CFBasicHashFold(uintptr_t dividend, uint8_t idx) {
 #endif
 
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Linear
-#define FIND_BUCKET_HASH_STYLE		1
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Linear
+#define FIND_BUCKET_HASH_STYLE      1
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Linear_NoCollision
-#define FIND_BUCKET_HASH_STYLE		1
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Linear_NoCollision
+#define FIND_BUCKET_HASH_STYLE      1
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Linear_Indirect
-#define FIND_BUCKET_HASH_STYLE		1
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Linear_Indirect
+#define FIND_BUCKET_HASH_STYLE      1
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Linear_Indirect_NoCollision
-#define FIND_BUCKET_HASH_STYLE		1
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Linear_Indirect_NoCollision
+#define FIND_BUCKET_HASH_STYLE      1
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Double
-#define FIND_BUCKET_HASH_STYLE		2
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Double
+#define FIND_BUCKET_HASH_STYLE      2
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Double_NoCollision
-#define FIND_BUCKET_HASH_STYLE		2
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Double_NoCollision
+#define FIND_BUCKET_HASH_STYLE      2
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Double_Indirect
-#define FIND_BUCKET_HASH_STYLE		2
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Double_Indirect
+#define FIND_BUCKET_HASH_STYLE      2
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Double_Indirect_NoCollision
-#define FIND_BUCKET_HASH_STYLE		2
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Double_Indirect_NoCollision
+#define FIND_BUCKET_HASH_STYLE      2
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Exponential
-#define FIND_BUCKET_HASH_STYLE		3
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Exponential
+#define FIND_BUCKET_HASH_STYLE      3
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Exponential_NoCollision
-#define FIND_BUCKET_HASH_STYLE		3
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	0
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Exponential_NoCollision
+#define FIND_BUCKET_HASH_STYLE      3
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    0
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Exponential_Indirect
-#define FIND_BUCKET_HASH_STYLE		3
-#define FIND_BUCKET_FOR_REHASH		0
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Exponential_Indirect
+#define FIND_BUCKET_HASH_STYLE      3
+#define FIND_BUCKET_FOR_REHASH      0
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
-#define FIND_BUCKET_NAME		___CFBasicHashFindBucket_Exponential_Indirect_NoCollision
-#define FIND_BUCKET_HASH_STYLE		3
-#define FIND_BUCKET_FOR_REHASH		1
-#define FIND_BUCKET_FOR_INDIRECT_KEY	1
+#define FIND_BUCKET_NAME        ___CFBasicHashFindBucket_Exponential_Indirect_NoCollision
+#define FIND_BUCKET_HASH_STYLE      3
+#define FIND_BUCKET_FOR_REHASH      1
+#define FIND_BUCKET_FOR_INDIRECT_KEY    1
 #include "CFBasicHashFindBucket.m"
 
 
@@ -1512,7 +1514,7 @@ CF_PRIVATE CFStringRef CFBasicHashCopyDescription(CFConstBasicHashRef ht, Boolea
 }
 
 CF_PRIVATE void CFBasicHashShow(CFConstBasicHashRef ht) {
-    CFStringRef str = CFBasicHashCopyDescription(ht, true, CFSTR(""), CFSTR("\t"), false);
+    CFStringRef str = CFBasicHashCopyDescription(ht, true, CFSTR(""), CFSTR("    "), false);
     CFShow(str);
     CFRelease(str);
 }
@@ -1531,7 +1533,7 @@ CF_PRIVATE CFHashCode __CFBasicHashHash(CFTypeRef cf) {
 
 CF_PRIVATE CFStringRef __CFBasicHashCopyDescription(CFTypeRef cf) {
     CFBasicHashRef ht = (CFBasicHashRef)cf;
-    CFStringRef desc = CFBasicHashCopyDescription(ht, false, CFSTR(""), CFSTR("\t"), true);
+    CFStringRef desc = CFBasicHashCopyDescription(ht, false, CFSTR(""), CFSTR("    "), true);
     CFStringRef result = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("<CFBasicHash %p [%p]>%@"), cf, CFGetAllocator(cf), desc);
     CFRelease(desc);
     return result;
@@ -1755,4 +1757,4 @@ CF_PRIVATE CFBasicHashRef CFBasicHashCreateCopy(CFAllocatorRef allocator, CFCons
     return ht;
 }
 
-
+// clang-format on

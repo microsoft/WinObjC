@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFURL.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFURL.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFURL__)
@@ -23,7 +25,7 @@
 CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
 
-typedef CF_ENUM(CFIndex, CFURLPathStyle) {
+typedef CF_ENUM(CFIndex,  CFURLPathStyle) {
     kCFURLPOSIXPathStyle = 0,
     kCFURLHFSPathStyle CF_ENUM_DEPRECATED(10_0, 10_9, 2_0, 7_0), /* The use of kCFURLHFSPathStyle is deprecated. The Carbon File Manager, which uses HFS style paths, is deprecated. HFS style paths are unreliable because they can arbitrarily refer to multiple volumes if those volumes have identical volume names. You should instead use kCFURLPOSIXPathStyle wherever possible. */
     kCFURLWindowsPathStyle
@@ -293,7 +295,7 @@ CFURLRef CFURLCreateCopyDeletingPathExtension(CFAllocatorRef allocator, CFURLRef
 CF_EXPORT
 CFIndex CFURLGetBytes(CFURLRef url, UInt8 *buffer, CFIndex bufferLength);
 
-typedef CF_ENUM(CFIndex, CFURLComponentType) {
+typedef CF_ENUM(CFIndex,  CFURLComponentType) {
     kCFURLComponentScheme = 1,
     kCFURLComponentNetLocation = 2,
     kCFURLComponentPath = 3,
@@ -1167,3 +1169,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFURL__ */
 
+// clang-format on

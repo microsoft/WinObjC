@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -20,7 +22,7 @@
 #include <CoreFoundation/CFURLAccess.h>
 #include <CoreFoundation/CFError.h>
 #include <string.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include "CFInternal.h"
 #include <CoreFoundation/CFByteOrder.h>
 #include "CFBundle_BinaryTypes.h"
@@ -991,7 +993,7 @@ static CFBundleRef _CFBundleCreate(CFAllocatorRef allocator, CFURLRef bundleURL,
     int32_t mret = pthread_mutex_init(&(bundle->_bundleLoadingLock), &mattr);
     pthread_mutexattr_destroy(&mattr);
     if (0 != mret) {
-        CFLog(4, CFSTR("%s: failed to initialize bundle loading lock for bundle %@."), __PRETTY_FUNCTION__, bundle);
+        CFLog(kCFLogLevelWarning, CFSTR("%s: failed to initialize bundle loading lock for bundle %@."), __PRETTY_FUNCTION__, bundle);
     }
     
     bundle->_lock = CFLockInit;
@@ -1012,7 +1014,8 @@ static CFBundleRef _CFBundleCreate(CFAllocatorRef allocator, CFURLRef bundleURL,
     CFBundleGetInfoDictionary(bundle);
     
     // Do this so that we can use the dispatch_once on the ivar of this bundle safely
-    OSMemoryBarrier();
+    //OSMemoryBarrier();
+    MemoryBarrier();
     
     _CFBundleAddToTables(bundle, alreadyLocked);
 
@@ -1322,10 +1325,10 @@ static Boolean _binaryLoadable(CFURLRef url) {
     Boolean loadable = _urlExists(url);
 #if DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
     if (!loadable) {
-	uint8_t path[PATH_MAX];
-	if (url && CFURLGetFileSystemRepresentation(url, true, path, sizeof(path))) {
-	    loadable = dlopen_preflight((char *)path);
-	}
+    uint8_t path[PATH_MAX];
+    if (url && CFURLGetFileSystemRepresentation(url, true, path, sizeof(path))) {
+        loadable = dlopen_preflight((char *)path);
+    }
     }
 #endif
     return loadable;
@@ -2408,3 +2411,33 @@ CF_EXPORT CFURLRef CFBundleCopyBuiltInPlugInsURL(CFBundleRef bundle) {
     return result;
 }
 
+/**
+ @Status Stub
+*/
+CF_EXPORT void CFBundleCloseBundleResourceMap(CFBundleRef, CFBundleRefNum) {
+    // HACKHACK: Ref plat doesn't implement this guy?
+    // UNIMPLEMENTED();
+    return;
+}
+
+/**
+ @Status Stub
+*/
+CF_EXPORT CFBundleRefNum CFBundleOpenBundleResourceMap(CFBundleRef) {
+    // HACKHACK: Ref plat doesn't implement this guy?
+    // UNIMPLEMENTED();
+    return 0;
+
+}
+
+/**
+ @Status Stub
+*/
+CF_EXPORT SInt32 CFBundleOpenBundleResourceFiles(CFBundleRef, CFBundleRefNum *, CFBundleRefNum *) {
+    // HACKHACK: Ref plat doesn't implement this guy?
+    // UNIMPLEMENTED();
+    return 0;
+
+}
+
+// clang-format on

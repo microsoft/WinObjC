@@ -36,8 +36,7 @@ using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics()
-{
+ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics() {
     ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics;
     RETURN_NULL_IF_FAILED(
         GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),

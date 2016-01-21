@@ -38,6 +38,7 @@ LIBRARY Starboard
         pthread_attr_destroy
         pthread_attr_init
         pthread_attr_setstacksize
+        pthread_attr_setdetachstate
         pthread_cancel
         pthread_cond_broadcast
         pthread_cond_destroy

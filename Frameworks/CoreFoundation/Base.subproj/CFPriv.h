@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFPriv.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFPriv.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 /*
@@ -39,7 +41,7 @@
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE) || TARGET_OS_WIN32 || TARGET_OS_LINUX
 #include <CoreFoundation/CFRunLoop.h>
 #include <CoreFoundation/CFSocket.h>
-#include <CoreFoundation/CFBundlePriv.h>
+#include "CFBundlePriv.h"
 #endif
 
 CF_EXTERN_C_BEGIN
@@ -58,6 +60,8 @@ CF_EXPORT void _CFRunLoopSetCurrent(CFRunLoopRef rl);
 #endif
 
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE || TARGET_OS_LINUX)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
+// HACKHACK: no private runloop support 
+/*
 CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 CF_EXPORT SInt32 CFRunLoopRunSpecific(CFRunLoopRef rl, CFStringRef modeName, CFTimeInterval seconds, Boolean returnAfterSourceHandled);
 
@@ -67,6 +71,7 @@ CF_EXPORT void _CFRunLoopStopMode(CFRunLoopRef rl, CFStringRef modeName);
 CF_EXPORT CFIndex CFMachPortGetQueuedMessageCount(CFMachPortRef mp);
 
 CF_EXPORT CFPropertyListRef _CFURLCopyPropertyListRepresentation(CFURLRef url);
+*/
 #endif
 CF_EXPORT CFPropertyListRef _CFURLCopyPropertyListRepresentation(CFURLRef url);
 CF_EXPORT CFURLRef _CFURLCreateFromPropertyListRepresentation(CFAllocatorRef alloc, CFPropertyListRef pListRepresentation);
@@ -90,42 +95,42 @@ CFURLRef _CFCreateURLFromFSSpec(CFAllocatorRef alloc, const struct FSSpec *voids
 #endif
 #endif
 
-typedef CF_ENUM(CFIndex, CFURLComponentDecomposition) {
-	kCFURLComponentDecompositionNonHierarchical,
-	kCFURLComponentDecompositionRFC1808, /* use this for RFC 1738 decompositions as well */
-	kCFURLComponentDecompositionRFC2396
+typedef CF_ENUM(CFIndex,  CFURLComponentDecomposition) {
+    kCFURLComponentDecompositionNonHierarchical,
+    kCFURLComponentDecompositionRFC1808, /* use this for RFC 1738 decompositions as well */
+    kCFURLComponentDecompositionRFC2396
 };
 
 typedef struct {
-	CFStringRef scheme;
-	CFStringRef schemeSpecific;
+    CFStringRef scheme;
+    CFStringRef schemeSpecific;
 } CFURLComponentsNonHierarchical;
 
 typedef struct {
-	CFStringRef scheme;
-	CFStringRef user;
-	CFStringRef password;
-	CFStringRef host;
-	CFIndex port; /* kCFNotFound means ignore/omit */
-	CFArrayRef pathComponents;
-	CFStringRef parameterString;
-	CFStringRef query;
-	CFStringRef fragment;
-	CFURLRef baseURL;
+    CFStringRef scheme;
+    CFStringRef user;
+    CFStringRef password;
+    CFStringRef host;
+    CFIndex port; /* kCFNotFound means ignore/omit */
+    CFArrayRef pathComponents;
+    CFStringRef parameterString;
+    CFStringRef query;
+    CFStringRef fragment;
+    CFURLRef baseURL;
 } CFURLComponentsRFC1808;
 
 typedef struct {
-	CFStringRef scheme;
+    CFStringRef scheme;
 
-	/* if the registered name form of the net location is used, userinfo is NULL, port is kCFNotFound, and host is the entire registered name. */
-	CFStringRef userinfo;
-	CFStringRef host;
-	CFIndex port;
+    /* if the registered name form of the net location is used, userinfo is NULL, port is kCFNotFound, and host is the entire registered name. */
+    CFStringRef userinfo;
+    CFStringRef host;
+    CFIndex port;
 
-	CFArrayRef pathComponents;
-	CFStringRef query;
-	CFStringRef fragment;
-	CFURLRef baseURL;
+    CFArrayRef pathComponents;
+    CFStringRef query;
+    CFStringRef fragment;
+    CFURLRef baseURL;
 } CFURLComponentsRFC2396;
 
 /* Fills components and returns TRUE if the URL can be decomposed according to decompositionType; FALSE (leaving components unchanged) otherwise.  components should be a pointer to the CFURLComponents struct defined above that matches decompositionStyle */
@@ -155,33 +160,33 @@ CF_EXPORT
 CFStringRef CFCopyUserName(void);
 
 CF_EXPORT
-CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName);	/* Pass NULL for the current user's home directory */
+CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName);  /* Pass NULL for the current user's home directory */
 
 
 /*
-	CFCopySearchPathForDirectoriesInDomains returns the various
-	standard system directories where apps, resources, etc get
-	installed. Because queries can return multiple directories,
-	you get back a CFArray (which you should free when done) of
-	CFURLs. The directories are returned in search path order;
-	that is, the first place to look is returned first. This API
-	may return directories that do not exist yet. If NSUserDomain
-	is included in a query, then the results will contain "~" to
-	refer to the user's directory. Specify expandTilde to expand
-	this to the current user's home. Some calls might return no
-	directories!
-	??? On MacOS 8 this function currently returns an empty array.
+    CFCopySearchPathForDirectoriesInDomains returns the various
+    standard system directories where apps, resources, etc get
+    installed. Because queries can return multiple directories,
+    you get back a CFArray (which you should free when done) of
+    CFURLs. The directories are returned in search path order;
+    that is, the first place to look is returned first. This API
+    may return directories that do not exist yet. If NSUserDomain
+    is included in a query, then the results will contain "~" to
+    refer to the user's directory. Specify expandTilde to expand
+    this to the current user's home. Some calls might return no
+    directories!
+    ??? On MacOS 8 this function currently returns an empty array.
 */
-typedef CF_ENUM(CFIndex, CFSearchPathDirectory) {
-    kCFApplicationDirectory = 1,	/* supported applications (Applications) */
-    kCFDemoApplicationDirectory,	/* unsupported applications, demonstration versions (Demos) */
-    kCFDeveloperApplicationDirectory,	/* developer applications (Developer/Applications) */
-    kCFAdminApplicationDirectory,	/* system and network administration applications (Administration) */
-    kCFLibraryDirectory, 		/* various user-visible documentation, support, and configuration files, resources (Library) */
-    kCFDeveloperDirectory,		/* developer resources (Developer) */
-    kCFUserDirectory,			/* user home directories (Users) */
-    kCFDocumentationDirectory,		/* documentation (Documentation) */
-    kCFDocumentDirectory,		/* documents (Library/Documents) */
+typedef CF_ENUM(CFIndex,  CFSearchPathDirectory) {
+    kCFApplicationDirectory = 1,    /* supported applications (Applications) */
+    kCFDemoApplicationDirectory,    /* unsupported applications, demonstration versions (Demos) */
+    kCFDeveloperApplicationDirectory,   /* developer applications (Developer/Applications) */
+    kCFAdminApplicationDirectory,   /* system and network administration applications (Administration) */
+    kCFLibraryDirectory,        /* various user-visible documentation, support, and configuration files, resources (Library) */
+    kCFDeveloperDirectory,      /* developer resources (Developer) */
+    kCFUserDirectory,           /* user home directories (Users) */
+    kCFDocumentationDirectory,      /* documentation (Documentation) */
+    kCFDocumentDirectory,       /* documents (Library/Documents) */
 
     kCFCoreServiceDirectory = 10,            // location of CoreServices directory (System/Library/CoreServices)
     kCFAutosavedInformationDirectory = 11,   // location of autosaved documents (Documents/Autosaved)
@@ -197,16 +202,16 @@ typedef CF_ENUM(CFIndex, CFSearchPathDirectory) {
     kCFSharedPublicDirectory = 21,           // location of user's Public sharing directory (~/Public)
     kCFPreferencePanesDirectory = 22,        // location of the PreferencePanes directory for use with System Preferences (Library/PreferencePanes)
 
-    kCFAllApplicationsDirectory = 100,	/* all directories where applications can occur (ie Applications, Demos, Administration, Developer/Applications) */
-    kCFAllLibrariesDirectory = 101	/* all directories where resources can occur (Library, Developer) */
+    kCFAllApplicationsDirectory = 100,  /* all directories where applications can occur (ie Applications, Demos, Administration, Developer/Applications) */
+    kCFAllLibrariesDirectory = 101  /* all directories where resources can occur (Library, Developer) */
 };
 
 typedef CF_OPTIONS(CFOptionFlags, CFSearchPathDomainMask) {
-    kCFUserDomainMask = 1,	/* user's home directory --- place to install user's personal items (~) */
-    kCFLocalDomainMask = 2,	/* local to the current machine --- place to install items available to everyone on this machine (/Local) */
-    kCFNetworkDomainMask = 4, 	/* publically available location in the local area network --- place to install items available on the network (/Network) */
-    kCFSystemDomainMask = 8,	/* provided by Apple, unmodifiable (/System) */
-    kCFAllDomainsMask = 0x0ffff	/* all domains: all of the above and more, future items */
+    kCFUserDomainMask = 1,  /* user's home directory --- place to install user's personal items (~) */
+    kCFLocalDomainMask = 2, /* local to the current machine --- place to install items available to everyone on this machine (/Local) */
+    kCFNetworkDomainMask = 4,   /* publically available location in the local area network --- place to install items available on the network (/Network) */
+    kCFSystemDomainMask = 8,    /* provided by Apple, unmodifiable (/System) */
+    kCFAllDomainsMask = 0x0ffff /* all domains: all of the above and more, future items */
 };
 
 CF_EXPORT
@@ -224,17 +229,17 @@ CF_EXPORT const CFStringRef kCFHTTPURLStatusLine;
 
 
 /* System Version file access */
-CF_EXPORT CFStringRef CFCopySystemVersionString(void);			// Human-readable string containing both marketing and build version
+CF_EXPORT CFStringRef CFCopySystemVersionString(void);          // Human-readable string containing both marketing and build version
 CF_EXPORT CFDictionaryRef _CFCopySystemVersionDictionary(void);
 CF_EXPORT CFDictionaryRef _CFCopyServerVersionDictionary(void);
 CF_EXPORT const CFStringRef _kCFSystemVersionProductNameKey;
 CF_EXPORT const CFStringRef _kCFSystemVersionProductCopyrightKey;
 CF_EXPORT const CFStringRef _kCFSystemVersionProductVersionKey;
 CF_EXPORT const CFStringRef _kCFSystemVersionProductVersionExtraKey;
-CF_EXPORT const CFStringRef _kCFSystemVersionProductUserVisibleVersionKey;	// For loginwindow; see 2987512
-CF_EXPORT const CFStringRef _kCFSystemVersionBuildVersionKey;		
-CF_EXPORT const CFStringRef _kCFSystemVersionProductVersionStringKey;	// Localized string for the string "Version"
-CF_EXPORT const CFStringRef _kCFSystemVersionBuildStringKey;		// Localized string for the string "Build"
+CF_EXPORT const CFStringRef _kCFSystemVersionProductUserVisibleVersionKey;  // For loginwindow; see 2987512
+CF_EXPORT const CFStringRef _kCFSystemVersionBuildVersionKey;       
+CF_EXPORT const CFStringRef _kCFSystemVersionProductVersionStringKey;   // Localized string for the string "Version"
+CF_EXPORT const CFStringRef _kCFSystemVersionBuildStringKey;        // Localized string for the string "Build"
 
 
 CF_EXPORT void CFMergeSortArray(void *list, CFIndex count, CFIndex elementSize, CFComparatorFunction comparator, void *context);
@@ -245,15 +250,15 @@ CF_EXPORT void CFQSortArray(void *list, CFIndex count, CFIndex elementSize, CFCo
 
   Note that for non-MACH this function always returns true.
 */
-typedef CF_ENUM(CFIndex, CFSystemVersion) {
+typedef CF_ENUM(CFIndex,  CFSystemVersion) {
     CFSystemVersionCheetah = 0,         /* 10.0 */
     CFSystemVersionPuma = 1,            /* 10.1 */
     CFSystemVersionJaguar = 2,          /* 10.2 */
     CFSystemVersionPanther = 3,         /* 10.3 */
     CFSystemVersionTiger = 4,           /* 10.4 */
     CFSystemVersionLeopard = 5,         /* 10.5 */
-    CFSystemVersionSnowLeopard = 6,	/* 10.6 */
-    CFSystemVersionLion = 7,		/* 10.7 */
+    CFSystemVersionSnowLeopard = 6, /* 10.6 */
+    CFSystemVersionLion = 7,        /* 10.7 */
     CFSystemVersionMountainLion = 8,    /* 10.8 */
     CFSystemVersionMax,                 /* This should bump up when new entries are added */
 
@@ -262,7 +267,7 @@ typedef CF_ENUM(CFIndex, CFSystemVersion) {
 CF_EXPORT Boolean _CFExecutableLinkedOnOrAfter(CFSystemVersion version);
 
 
-typedef CF_ENUM(CFIndex, CFStringCharacterClusterType) {
+typedef CF_ENUM(CFIndex,  CFStringCharacterClusterType) {
     kCFStringGraphemeCluster = 1, /* Unicode Grapheme Cluster */
     kCFStringComposedCharacterCluster = 2, /* Compose all non-base (including spacing marks) */
     kCFStringCursorMovementCluster = 3, /* Cluster suitable for cursor movements */
@@ -478,8 +483,8 @@ void CFCharacterSetInitInlineBuffer(CFCharacterSetRef cset, CFCharacterSetInline
 /*!
 @function CFCharacterSetInlineBufferIsLongCharacterMember
  Reports whether or not the UTF-32 character is in the character set.
-	@param buffer The reference to the inline buffer to be searched.
-	@param character The UTF-32 character for which to test against the
+    @param buffer The reference to the inline buffer to be searched.
+    @param character The UTF-32 character for which to test against the
  character set.
  @result true, if the value is in the character set, otherwise false.
  */
@@ -546,7 +551,7 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
 #include <CoreFoundation/CFMessagePort.h>
 
 #define CF_MESSAGE_PORT_CLONE_MESSAGE_ID -1209
-CF_EXPORT CFMessagePortRef	CFMessagePortCreateUber(CFAllocatorRef allocator, CFStringRef name, CFMessagePortCallBack callout, CFMessagePortContext *context, Boolean *shouldFreeInfo, Boolean isRemote);
+CF_EXPORT CFMessagePortRef  CFMessagePortCreateUber(CFAllocatorRef allocator, CFStringRef name, CFMessagePortCallBack callout, CFMessagePortContext *context, Boolean *shouldFreeInfo, Boolean isRemote);
 CF_EXPORT void CFMessagePortSetCloneCallout(CFMessagePortRef ms, CFMessagePortCallBack cloneCallout);
 #endif
 
@@ -612,14 +617,14 @@ CF_EXPORT CFPropertyListRef _CFBundleCreateFilteredLocalizedInfoPlist(CFBundleRe
 #endif
 
 #if TARGET_OS_WIN32
-#include <CoreFoundation/CFNotificationCenter.h>
+// HACKHACK: no notifiation center support // #include <CoreFoundation/CFNotificationCenter.h>
 
 CF_EXPORT CFStringRef _CFGetWindowsAppleAppDataDirectory(void);
 CF_EXPORT CFArrayRef _CFGetWindowsBinaryDirectories(void);
 CF_EXPORT CFStringRef _CFGetWindowsAppleSystemLibraryDirectory(void);
 
 // If your Windows application does not use a CFRunLoop on the main thread (perhaps because it is reserved for handling UI events via Windows API), then call this function to make distributed notifications arrive using a different run loop.
-CF_EXPORT void _CFNotificationCenterSetRunLoop(CFNotificationCenterRef nc, CFRunLoopRef rl);
+// HACKHACK: no notifiation center support // CF_EXPORT void _CFNotificationCenterSetRunLoop(CFNotificationCenterRef nc, CFRunLoopRef rl);
 
 CF_EXPORT uint32_t /*DWORD*/ _CFRunLoopGetWindowsMessageQueueMask(CFRunLoopRef rl, CFStringRef modeName);
 CF_EXPORT void _CFRunLoopSetWindowsMessageQueueMask(CFRunLoopRef rl, uint32_t /*DWORD*/ mask, CFStringRef modeName);
@@ -642,8 +647,8 @@ CF_EXPORT CFArrayRef CFDateFormatterCreateDateFormatsFromTemplates(CFAllocatorRe
 CF_EXPORT CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 #endif
 
-CF_EXPORT const CFStringRef kCFNumberFormatterUsesCharacterDirection CF_AVAILABLE(10_9, 6_0);	// CFBoolean
-CF_EXPORT const CFStringRef kCFDateFormatterUsesCharacterDirection CF_AVAILABLE(10_9, 6_0);	// CFBoolean
+CF_EXPORT const CFStringRef kCFNumberFormatterUsesCharacterDirection CF_AVAILABLE(10_9, 6_0);   // CFBoolean
+CF_EXPORT const CFStringRef kCFDateFormatterUsesCharacterDirection CF_AVAILABLE(10_9, 6_0); // CFBoolean
 
 
 CF_EXPORT void _CFGetPathExtensionRangesFromPathComponent(CFStringRef inName, CFRange *outPrimaryExtRange, CFRange *outSecondaryExtRange) CF_AVAILABLE(10_11, 9_0);
@@ -652,3 +657,4 @@ CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFPRIV__ */
 
+// clang-format on

@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -294,3 +296,4 @@ bool CFUniCharPrecompose(const UTF16Char *characters, CFIndex length, CFIndex *c
 #undef HANGUL_TCOUNT
 #undef HANGUL_NCOUNT
 
+// clang-format on

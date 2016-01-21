@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFPreferences.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: David Smith
+/*  CFPreferences.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: David Smith
 */
 
 #include <CoreFoundation/CFPreferences.h>
@@ -23,7 +25,7 @@
 #include <CoreFoundation/CFBundle.h>
 #endif
 #include <CoreFoundation/CFNumber.h>
-#include <CoreFoundation/CFPriv.h>
+#include "CFPriv.h"
 #include "CFInternal.h"
 #include <sys/stat.h>
 #if DEPLOYMENT_TARGET_MACOSX
@@ -161,31 +163,33 @@ CF_PRIVATE CFStringRef _CFPreferencesGetByHostIdentifierString(void) {
 static unsigned long __CFSafeLaunchLevel = 0;
 
 #if DEPLOYMENT_TARGET_WINDOWS
-#include <shfolder.h>
+//#include <shfolder.h>
 
 #endif
 
 static CFURLRef _preferencesDirectoryForUserHostSafetyLevel(CFStringRef userName, CFStringRef hostName, unsigned long safeLevel) {
     CFAllocatorRef alloc = __CFPreferencesAllocator();
 #if DEPLOYMENT_TARGET_WINDOWS
+// HACKHACK: Using desktop filesystem apis. just return null for now and hope for the best
+/*
+    CFURLRef url = NULL;
 
-	CFURLRef url = NULL;
-
-	CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
- 	if (completePath) {
-	    // append "Preferences\" and make the CFURL
-	    CFStringAppend(completePath, CFSTR("Preferences\\"));
-		url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
-		CFRelease(completePath);
-	}
+    CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
+    if (completePath) {
+        // append "Preferences\" and make the CFURL
+        CFStringAppend(completePath, CFSTR("Preferences\\"));
+        url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
+        CFRelease(completePath);
+    }
 
 
-	// Can't find a better place?  Home directory then?
-	if (url == NULL)
-		url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
+    // Can't find a better place?  Home directory then?
+    if (url == NULL)
+        url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
 
-	return url;
- 
+    return url;
+ */
+ return nullptr;
 #else
     CFURLRef  home = NULL;
     CFURLRef  url;
@@ -365,18 +369,18 @@ CFArrayRef  CFPreferencesCopyKeyList(CFStringRef  appName, CFStringRef  user, CF
     } else {
         CFArrayRef  result;
 
-	CFAllocatorRef alloc = __CFPreferencesAllocator();
-	CFDictionaryRef d = _CFPreferencesDomainDeepCopyDictionary(domain);
-	CFIndex count = d ? CFDictionaryGetCount(d) : 0;
-	CFTypeRef *keys = (CFTypeRef *)CFAllocatorAllocate(alloc, count * sizeof(CFTypeRef), 0);
-	if (d) CFDictionaryGetKeysAndValues(d, keys, NULL);
+    CFAllocatorRef alloc = __CFPreferencesAllocator();
+    CFDictionaryRef d = _CFPreferencesDomainDeepCopyDictionary(domain);
+    CFIndex count = d ? CFDictionaryGetCount(d) : 0;
+    CFTypeRef *keys = (CFTypeRef *)CFAllocatorAllocate(alloc, count * sizeof(CFTypeRef), 0);
+    if (d) CFDictionaryGetKeysAndValues(d, keys, NULL);
         if (count == 0) {
             result = NULL;
         } else {
             result = CFArrayCreate(alloc, keys, count, &kCFTypeArrayCallBacks);
         }
-	CFAllocatorDeallocate(alloc, keys);
-	if (d) CFRelease(d);
+    CFAllocatorDeallocate(alloc, keys);
+    if (d) CFRelease(d);
         return result;
     }
 }
@@ -481,13 +485,13 @@ static CFURLRef _CFPreferencesURLForStandardDomainWithSafetyLevel(CFStringRef do
         fileName = CFStringCreateWithFormat(prefAlloc, NULL, CFSTR("%@.plist"), appName);
     }
     if (mustFreeAppName) {
-	CFRelease(appName);
+    CFRelease(appName);
     }
     if (fileName) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
         theURL = CFURLCreateWithFileSystemPathRelativeToBase(prefAlloc, fileName, kCFURLPOSIXPathStyle, false, prefDir);
 #elif DEPLOYMENT_TARGET_WINDOWS
-		theURL = CFURLCreateWithFileSystemPathRelativeToBase(prefAlloc, fileName, kCFURLWindowsPathStyle, false, prefDir);
+        theURL = CFURLCreateWithFileSystemPathRelativeToBase(prefAlloc, fileName, kCFURLWindowsPathStyle, false, prefDir);
 #endif
         if (prefDir) CFRelease(prefDir);
         CFRelease(fileName);
@@ -520,16 +524,16 @@ CFPreferencesDomainRef _CFPreferencesStandardDomain(CFStringRef  domainName, CFS
     __CFUnlock(&domainCacheLock);
     if (!domain) {
         // Domain's not in the cache; load from permanent storage
-		CFURLRef  theURL = _CFPreferencesURLForStandardDomain(domainName, userName, hostName);
+        CFURLRef  theURL = _CFPreferencesURLForStandardDomain(domainName, userName, hostName);
         if (theURL) {
-			domain = _CFPreferencesDomainCreate(theURL, &__kCFXMLPropertyListDomainCallBacks);
+            domain = _CFPreferencesDomainCreate(theURL, &__kCFXMLPropertyListDomainCallBacks);
 
             if (userName == kCFPreferencesAnyUser) {
                 _CFPreferencesDomainSetIsWorldReadable(domain, true);
             }
             CFRelease(theURL);
         }
-	__CFLock(&domainCacheLock);
+    __CFLock(&domainCacheLock);
         if (domain && domainCache) {
             // We've just synthesized a domain & we're about to throw it in the domain cache. The problem is that someone else might have gotten in here behind our backs, so we can't just blindly set the domain (3021920). We'll need to check to see if this happened, and compensate.
             CFPreferencesDomainRef checkDomain = (CFPreferencesDomainRef)CFDictionaryGetValue(domainCache, domainKey);
@@ -537,15 +541,15 @@ CFPreferencesDomainRef _CFPreferencesStandardDomain(CFStringRef  domainName, CFS
                 // Someone got in here ahead of us, so we shouldn't smash the domain we're given. checkDomain is the current version, we should use that.
                 // checkDomain was retrieved with a Get, so we don't want to over-release.
                 shouldReleaseDomain = false;
-                CFRelease(domain);	// release the domain we synthesized earlier.
-                domain = checkDomain;	// repoint it at the domain picked up out of the cache.
+                CFRelease(domain);  // release the domain we synthesized earlier.
+                domain = checkDomain;   // repoint it at the domain picked up out of the cache.
             } else {
                 // We must not have found the domain in the cache, so it's ok for us to put this in.
                 CFDictionarySetValue(domainCache, domainKey, domain);                
             }
             if(shouldReleaseDomain) CFRelease(domain);
         }
-	__CFUnlock(&domainCacheLock);
+    __CFUnlock(&domainCacheLock);
     }
     CFRelease(domainKey);
     return domain;
@@ -754,9 +758,9 @@ Boolean _CFPreferencesDomainExists(CFStringRef domainName, CFStringRef userName,
     CFPreferencesDomainRef domain;
     domain = _CFPreferencesStandardDomain(domainName, userName, hostName);
     if (domain) {
-		CFDictionaryRef d = _CFPreferencesDomainDeepCopyDictionary(domain);
-		if (d) CFRelease(d);
-		return d != NULL;
+        CFDictionaryRef d = _CFPreferencesDomainDeepCopyDictionary(domain);
+        if (d) CFRelease(d);
+        return d != NULL;
     } else {
         return false;
     }
@@ -820,3 +824,5 @@ static CFDictionaryRef copyVolatileDomainDictionary(CFTypeRef context, void *vol
 }
 
 const _CFPreferencesDomainCallBacks __kCFVolatileDomainCallBacks = {createVolatileDomain, freeVolatileDomain, fetchVolatileValue, writeVolatileValue, synchronizeVolatileDomain, getVolatileKeysAndValues, copyVolatileDomainDictionary, NULL};
+
+// clang-format on

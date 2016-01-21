@@ -1,3 +1,4 @@
+// clang-format off
 /*
  * Copyright (c) 2015 Apple Inc. All rights reserved.
  *
@@ -21,9 +22,9 @@
  * @APPLE_LICENSE_HEADER_END@
  */
 
-/*	CFBasicHashFindBucket.m
-	Copyright (c) 2009-2015, Apple Inc. All rights reserved.
-	Responsibility: Christopher Kane
+/*  CFBasicHashFindBucket.m
+    Copyright (c) 2009-2015, Apple Inc. All rights reserved.
+    Responsibility: Christopher Kane
 */
 
 
@@ -54,7 +55,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
     CFHashCode hash_code = __CFBasicHashHashKey(ht, stack_key);
 #endif
 
-#if FIND_BUCKET_HASH_STYLE == 1	// __kCFBasicHashLinearHashingValue
+#if FIND_BUCKET_HASH_STYLE == 1 // __kCFBasicHashLinearHashingValue
     // Linear probing, with c = 1
     // probe[0] = h1(k)
     // probe[i] = (h1(k) + i * c) mod num_buckets, i = 1 .. num_buckets - 1
@@ -64,7 +65,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #else
     uintptr_t h1 = hash_code % num_buckets;
 #endif
-#elif FIND_BUCKET_HASH_STYLE == 2	// __kCFBasicHashDoubleHashingValue
+#elif FIND_BUCKET_HASH_STYLE == 2   // __kCFBasicHashDoubleHashingValue
     // Double hashing
     // probe[0] = h1(k)
     // probe[i] = (h1(k) + i * h2(k)) mod num_buckets, i = 1 .. num_buckets - 1
@@ -78,7 +79,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
     uintptr_t h2 = (hash_code / num_buckets) % num_buckets;
 #endif
     if (0 == h2) h2 = num_buckets - 1;
-#elif FIND_BUCKET_HASH_STYLE == 3	// __kCFBasicHashExponentialHashingValue
+#elif FIND_BUCKET_HASH_STYLE == 3   // __kCFBasicHashExponentialHashingValue
     // Improved exponential hashing
     // probe[0] = h1(k)
     // probe[i] = (h1(k) + pr(k)^i * h2(k)) mod num_buckets, i = 1 .. num_buckets - 1
@@ -104,7 +105,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #endif
     CFIndex deleted_idx = kCFNotFound;
     uintptr_t probe = h1;
-#if FIND_BUCKET_HASH_STYLE == 3	// __kCFBasicHashExponentialHashingValue
+#if FIND_BUCKET_HASH_STYLE == 3 // __kCFBasicHashExponentialHashingValue
     uintptr_t acc = pr;
 #endif
     for (CFIndex idx = 0; idx < num_buckets; idx++) {
@@ -150,17 +151,17 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #endif
         }
 
-#if FIND_BUCKET_HASH_STYLE == 1	// __kCFBasicHashLinearHashingValue
+#if FIND_BUCKET_HASH_STYLE == 1 // __kCFBasicHashLinearHashingValue
         probe += 1;
         if (num_buckets <= probe) {
             probe -= num_buckets;
         }
-#elif FIND_BUCKET_HASH_STYLE == 2	// __kCFBasicHashDoubleHashingValue
+#elif FIND_BUCKET_HASH_STYLE == 2   // __kCFBasicHashDoubleHashingValue
         probe += h2;
         if (num_buckets <= probe) {
             probe -= num_buckets;
         }
-#elif FIND_BUCKET_HASH_STYLE == 3	// __kCFBasicHashExponentialHashingValue
+#elif FIND_BUCKET_HASH_STYLE == 3   // __kCFBasicHashExponentialHashingValue
         probe = h1 + h2 * acc;
         if (num_buckets <= probe) {
 #if defined(__arm__)
@@ -196,3 +197,4 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #undef FIND_BUCKET_FOR_REHASH
 #undef FIND_BUCKET_FOR_INDIRECT_KEY
 
+// clang-format on

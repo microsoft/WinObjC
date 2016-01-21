@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -162,7 +164,7 @@ static CFStringRef __CFBitVectorCopyDescription(CFTypeRef cf) {
     CFStringAppendFormat(result, NULL, CFSTR("<CFBitVector %p [%p]>{count = %lu, capacity = %lu, objects = (\n"), cf, CFGetAllocator(bv), (unsigned long)cnt, __CFBitVectorCapacity(bv));
     for (idx = 0; idx < (cnt / 64); idx++) {	/* Print groups of 64 */
 	CFIndex idx2;
-	CFStringAppendFormat(result, NULL, CFSTR("\t%lu : "), (unsigned long)(idx * 64));
+	CFStringAppendFormat(result, NULL, CFSTR("    %lu : "), (unsigned long)(idx * 64));
 	for (idx2 = 0; idx2 < 64; idx2 += 4) {
 	    CFIndex bucketIdx = (idx << 6) + idx2;
 	    CFStringAppendFormat(result, NULL, CFSTR("%u%u%u%u"),
@@ -174,7 +176,7 @@ static CFStringRef __CFBitVectorCopyDescription(CFTypeRef cf) {
 	CFStringAppend(result, CFSTR("\n"));
     }
     if (idx * 64 < cnt) {
-	CFStringAppendFormat(result, NULL, CFSTR("\t%lu : "), (unsigned long)(idx * 64));
+	CFStringAppendFormat(result, NULL, CFSTR("    %lu : "), (unsigned long)(idx * 64));
 	for (idx = (idx * 64); idx < cnt; idx++) {	/* Print remainder */
 	    CFStringAppendFormat(result, NULL, CFSTR("%u"), (unsigned int)__CFBitVectorBit(buckets, idx));
 	}
@@ -516,3 +518,4 @@ void CFBitVectorSetAllBits(CFMutableBitVectorRef bv, CFBit value) {
 
 #undef __CFBitVectorValidateRange
 
+// clang-format on

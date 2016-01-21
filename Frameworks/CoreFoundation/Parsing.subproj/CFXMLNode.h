@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFXMLNode.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFXMLNode.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 /*  CFXMLParser (and thus CFXMLNode) are deprecated as of Mac OS X 10.8 and iOS 6.0. The suggested replacements are the Foundation classes NSXMLParser and NSXMLDocument, or the libxml2 library. */
@@ -27,7 +29,7 @@ CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
 
 CF_ENUM(CFIndex) {
-	kCFXMLNodeCurrentVersion = 1
+    kCFXMLNodeCurrentVersion = 1
 };
 
 typedef const struct __CFXMLNode * CFXMLNodeRef;
@@ -54,7 +56,7 @@ typedef CFTreeRef CFXMLTreeRef;
     */
 
 /* Type codes for the different possible XML nodes; this list may grow.*/
-typedef CF_ENUM(CFIndex, CFXMLNodeTypeCode) {
+typedef CF_ENUM(CFIndex,  CFXMLNodeTypeCode) {
     kCFXMLNodeTypeDocument = 1,
     kCFXMLNodeTypeElement = 2,
     kCFXMLNodeTypeAttribute = 3,
@@ -118,7 +120,7 @@ typedef struct {
     CFXMLAttributeDeclarationInfo *attributes;
 } CFXMLAttributeListDeclarationInfo;
 
-typedef CF_ENUM(CFIndex, CFXMLEntityTypeCode) {
+typedef CF_ENUM(CFIndex,  CFXMLEntityTypeCode) {
     kCFXMLEntityTypeParameter,       /* Implies parsed, internal */
     kCFXMLEntityTypeParsedInternal,
     kCFXMLEntityTypeParsedExternal,
@@ -195,3 +197,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFXMLNODE__ */
 
+// clang-format on

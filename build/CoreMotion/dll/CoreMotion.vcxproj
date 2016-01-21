@@ -25,9 +25,6 @@
     <None Include="CoreMotion.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\CoreMotionLib.vcxproj">
       <Project>{af9dad32-9b21-41da-9b36-a6b53d008523}</Project>
     </ProjectReference>

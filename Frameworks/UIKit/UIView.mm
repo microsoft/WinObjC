@@ -29,6 +29,7 @@
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
 #import "AutoLayout.h"
+#import <objc/blocks_runtime.h>
 
 @class UIAppearanceSetter;
 

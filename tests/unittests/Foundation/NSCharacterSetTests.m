@@ -37,7 +37,7 @@ void testCharacter(NSCharacterSet* charSet, NSString* testString) {
 }
 
 // This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
-TEST(Foundation, NSCharacterSet_SanityTest) {
+TEST(NSCharacterSet, SanityTest) {
     LOG_INFO("NSCharacterSet sanity test: ");
 
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
@@ -112,7 +112,7 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     testCharacter(lowerCaseEnglishLetters, lowerCaseEnglishLettersString);
 }
 
-TEST(Foundation, NSCharacterSet_MutableCopy) {
+TEST(NSCharacterSet, MutableCopy) {
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
     NSMutableCharacterSet* mutableSet = [alphaNumeric mutableCopy];
     [mutableSet addCharactersInString:@"!"];
@@ -127,7 +127,7 @@ TEST(Foundation, NSCharacterSet_MutableCopy) {
     EXPECT_NO_THROW([mutableSet release]);
 }
 
-TEST(Foundation, NSCharacterSet_InvertTest) {
+TEST(NSCharacterSet, InvertTest) {
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
     NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     NSCharacterSet* invertedSet = [alphaNumeric invertedSet];
@@ -137,7 +137,7 @@ TEST(Foundation, NSCharacterSet_InvertTest) {
     ASSERT_EQ(NSNotFound, foundNonAlphaRange.location);
 }
 
-TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
+TEST(NSCharacterSet, ArchivingUnarchiving) {
     LOG_INFO("NSCharacterSet archiving and unarchiving test: ");
 
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
@@ -155,7 +155,7 @@ TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
     testCharacter(characterSetUnarchived, alphaNumericString);
 }
 
-TEST(Foundation, NSCharacterSet_Polymorphic_Creators) {
+TEST(NSCharacterSet, Polymorphic_Creators) {
     // Make sure we get a mutable instance from each of these creators
 
     NSMutableCharacterSet* set = [NSMutableCharacterSet alphanumericCharacterSet];

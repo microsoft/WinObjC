@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,16 +10,16 @@
 //
 
 
-/*	CFOldStylePList.c
-	Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Tony Parker
+/*  CFOldStylePList.c
+    Copyright (c) 1999 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Tony Parker
 */
 
 #include <CoreFoundation/CFPropertyList.h>
 #include <CoreFoundation/CFDate.h>
 #include <CoreFoundation/CFNumber.h>
 #include <CoreFoundation/CFError.h>
-#include <CoreFoundation/CFStringEncodingConverter.h>
+#include "CFStringEncodingConverter.h"
 #include "CFInternal.h"
 #include <CoreFoundation/CFCalendar.h>
 #include <CoreFoundation/CFSet.h>
@@ -65,28 +67,28 @@ static CFTypeRef parsePlistObject(_CFStringsFileParseInfo *pInfo, bool requireOb
 static Boolean advanceToNonSpace(_CFStringsFileParseInfo *pInfo) {
     UniChar ch2;
     while (pInfo->curr < pInfo->end) {
-	ch2 = *(pInfo->curr);
+    ch2 = *(pInfo->curr);
         pInfo->curr ++;
-        if (ch2 >= 9 && ch2 <= 0x0d) continue;	// tab, newline, vt, form feed, carriage return
-        if (ch2 == ' ' || ch2 == 0x2028 || ch2 == 0x2029) continue;	// space and Unicode line sep, para sep
-	if (ch2 == '/') {
+        if (ch2 >= 9 && ch2 <= 0x0d) continue;  // tab, newline, vt, form feed, carriage return
+        if (ch2 == ' ' || ch2 == 0x2028 || ch2 == 0x2029) continue; // space and Unicode line sep, para sep
+    if (ch2 == '/') {
             if (pInfo->curr >= pInfo->end) {
                 // whoops; back up and return
                 pInfo->curr --;
                 return true;
             } else if (*(pInfo->curr) == '/') {
                 pInfo->curr ++;
-                while (pInfo->curr < pInfo->end) {	// go to end of comment line
+                while (pInfo->curr < pInfo->end) {  // go to end of comment line
                     UniChar ch3 = *(pInfo->curr);
                     if (ch3 == '\n' || ch3 == '\r' || ch3 == 0x2028 || ch3 == 0x2029) break;
                     pInfo->curr ++;
-		}
-	    } else if (*(pInfo->curr) == '*') {		// handle /* ... */
+        }
+        } else if (*(pInfo->curr) == '*') {     // handle /* ... */
                 pInfo->curr ++;
-		while (pInfo->curr < pInfo->end) {
-		    ch2 = *(pInfo->curr);
+        while (pInfo->curr < pInfo->end) {
+            ch2 = *(pInfo->curr);
                     pInfo->curr ++;
-		    if (ch2 == '*' && pInfo->curr < pInfo->end && *(pInfo->curr) == '/') {
+            if (ch2 == '*' && pInfo->curr < pInfo->end && *(pInfo->curr) == '/') {
                         pInfo->curr ++; // advance past the '/'
                         break;
                     }
@@ -94,7 +96,7 @@ static Boolean advanceToNonSpace(_CFStringsFileParseInfo *pInfo) {
             } else {
                 pInfo->curr --;
                 return true;
-	    }
+        }
         } else {
             pInfo->curr --;
             return true;
@@ -107,48 +109,48 @@ static UniChar getSlashedChar(_CFStringsFileParseInfo *pInfo) {
     UniChar ch = *(pInfo->curr);
     pInfo->curr ++;
     switch (ch) {
-	case '0':
-	case '1':	
-	case '2':	
-	case '3':	
-	case '4':	
-	case '5':	
-	case '6':	
-	case '7':  {
+    case '0':
+    case '1':   
+    case '2':   
+    case '3':   
+    case '4':   
+    case '5':   
+    case '6':   
+    case '7':  {
             uint8_t num = ch - '0';
             UniChar result;
             CFIndex usedCharLen;
-	    /* three digits maximum to avoid reading \000 followed by 5 as \5 ! */
-	    if ((ch = *(pInfo->curr)) >= '0' && ch <= '7') { // we use in this test the fact that the buffer is zero-terminated
+        /* three digits maximum to avoid reading \000 followed by 5 as \5 ! */
+        if ((ch = *(pInfo->curr)) >= '0' && ch <= '7') { // we use in this test the fact that the buffer is zero-terminated
                 pInfo->curr ++;
-		num = (num << 3) + ch - '0';
-		if ((pInfo->curr < pInfo->end) && (ch = *(pInfo->curr)) >= '0' && ch <= '7') {
+        num = (num << 3) + ch - '0';
+        if ((pInfo->curr < pInfo->end) && (ch = *(pInfo->curr)) >= '0' && ch <= '7') {
                     pInfo->curr ++;
-		    num = (num << 3) + ch - '0';
-		}
-	    }
+            num = (num << 3) + ch - '0';
+        }
+        }
             CFStringEncodingBytesToUnicode(kCFStringEncodingNextStepLatin, 0, &num, sizeof(uint8_t), NULL,  &result, 1, &usedCharLen);
             return (usedCharLen == 1) ? result : 0;
-	}
-	case 'U': {
-	    unsigned num = 0, numDigits = 4;	/* Parse four digits */
-	    while (pInfo->curr < pInfo->end && numDigits--) {
+    }
+    case 'U': {
+        unsigned num = 0, numDigits = 4;    /* Parse four digits */
+        while (pInfo->curr < pInfo->end && numDigits--) {
                 if (((ch = *(pInfo->curr)) < 128) && isxdigit(ch)) { 
                     pInfo->curr ++;
-		    num = (num << 4) + ((ch <= '9') ? (ch - '0') : ((ch <= 'F') ? (ch - 'A' + 10) : (ch - 'a' + 10)));
-		}
-	    }
-	    return num;
-	}
-	case 'a':	return '\a';	// Note: the meaning of '\a' varies with -traditional to gcc
-	case 'b':	return '\b';
-	case 'f':	return '\f';
-	case 'n':	return '\n';
-	case 'r':	return '\r';
-	case 't':	return '\t';
-	case 'v':	return '\v';
-	case '"':	return '\"';
-	case '\n':	return '\n';
+            num = (num << 4) + ((ch <= '9') ? (ch - '0') : ((ch <= 'F') ? (ch - 'A' + 10) : (ch - 'a' + 10)));
+        }
+        }
+        return num;
+    }
+    case 'a':   return '\a';    // Note: the meaning of '\a' varies with -traditional to gcc
+    case 'b':   return '\b';
+    case 'f':   return '\f';
+    case 'n':   return '\n';
+    case 'r':   return '\r';
+    case 't':   return '\t';
+    case 'v':   return '\v';
+    case '"':   return '\"';
+    case '\n':  return '\n';
     }
     return ch;
 }
@@ -163,12 +165,12 @@ static CFStringRef _uniqueStringForCharacters(_CFStringsFileParseInfo *pInfo, co
     uint8_t *ascii = use_stack ? buffer : (uint8_t *)CFAllocatorAllocate(kCFAllocatorSystemDefault, length + 1, 0);
     for (CFIndex idx = 0; idx < length; idx++) {
         UniChar ch = base[idx];
-	if (ch < 0x80) {
-	    ascii[idx] = (uint8_t)ch;
+    if (ch < 0x80) {
+        ascii[idx] = (uint8_t)ch;
         } else {
-	    stringToUnique = CFStringCreateWithCharacters(pInfo->allocator, base, length);
-	    break;
-	}
+        stringToUnique = CFStringCreateWithCharacters(pInfo->allocator, base, length);
+        break;
+    }
     }
     if (!stringToUnique) {
         ascii[length] = '\0';
@@ -178,7 +180,7 @@ static CFStringRef _uniqueStringForCharacters(_CFStringsFileParseInfo *pInfo, co
     CFStringRef uniqued = (CFStringRef)CFSetGetValue(pInfo->stringSet, stringToUnique);
     if (!uniqued) {
         CFSetAddValue(pInfo->stringSet, stringToUnique);
-	uniqued = stringToUnique;
+    uniqued = stringToUnique;
     }
     if (stringToUnique) CFRelease(stringToUnique);
     if (uniqued && !(0)) CFRetain(uniqued);
@@ -201,7 +203,7 @@ static CFStringRef parseQuotedPlistString(_CFStringsFileParseInfo *pInfo, UniCha
     const UniChar *startMark = pInfo->curr;
     const UniChar *mark = pInfo->curr;
     while (pInfo->curr < pInfo->end) {
-	UniChar ch = *(pInfo->curr);
+    UniChar ch = *(pInfo->curr);
         if (ch == quote) break;
         if (ch == '\\') {
             if (!str) str = CFStringCreateMutable(pInfo->allocator, 0);
@@ -210,7 +212,7 @@ static CFStringRef parseQuotedPlistString(_CFStringsFileParseInfo *pInfo, UniCha
             ch = getSlashedChar(pInfo);
             CFStringAppendCharacters(str, &ch, 1);
             mark = pInfo->curr;
-	} else {
+    } else {
             // Note that the original NSParser code was much more complex at this point, but it had to deal with 8-bit characters in a non-UniChar stream.  We always have UniChar (we translated the data by the system encoding at the very beginning, hopefully), so this is safe.
             pInfo->curr ++;
         }
@@ -286,7 +288,7 @@ static CFStringRef parsePlistString(_CFStringsFileParseInfo *pInfo, bool require
     } else {
         if (requireObject) {
             pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Invalid string character at line %d"), lineNumberStrings(pInfo));
-	}
+    }
         return NULL;
     }
 }
@@ -299,11 +301,11 @@ static CFTypeRef parsePlistArray(_CFStringsFileParseInfo *pInfo) CF_RETURNS_RETA
         CFArrayAppendValue(array, tmp);
         if (tmp) CFRelease(tmp);
         foundChar = advanceToNonSpace(pInfo);
-	if (!foundChar) {
+    if (!foundChar) {
             if (array) CFRelease(array);
-	    pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Expected ',' for array at line %d"), lineNumberStrings(pInfo));
-	    return NULL;
-	}
+        pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Expected ',' for array at line %d"), lineNumberStrings(pInfo));
+        return NULL;
+    }
         if (*pInfo->curr != ',') {
             tmp = NULL;
         } else {
@@ -348,38 +350,38 @@ static CFDictionaryRef parsePlistDictContent(_CFStringsFileParseInfo *pInfo) CF_
             pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Missing ';' on line %d"), line);
             break;
         }
-	
-	if (*pInfo->curr == ';') {
-	    /* This is a strings file using the shortcut format */
-	    /* although this check here really applies to all plists. */
-	    value = CFRetain(key);
-	} else if (*pInfo->curr == '=') {
-	    pInfo->curr ++;
-	    value = parsePlistObject(pInfo, true);
-	    if (!value) {
-		failedParse = true;
-		break;
-	    }
-	} else {
+    
+    if (*pInfo->curr == ';') {
+        /* This is a strings file using the shortcut format */
+        /* although this check here really applies to all plists. */
+        value = CFRetain(key);
+    } else if (*pInfo->curr == '=') {
+        pInfo->curr ++;
+        value = parsePlistObject(pInfo, true);
+        if (!value) {
+        failedParse = true;
+        break;
+        }
+    } else {
             pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Unexpected ';' or '=' after key at line %d"), lineNumberStrings(pInfo));
-	    failedParse = true;
-	    break;
-	}
-	CFDictionarySetValue(dict, key, value);
+        failedParse = true;
+        break;
+    }
+    CFDictionarySetValue(dict, key, value);
         if (key) CFRelease(key);
-	key = NULL;
+    key = NULL;
         if (value) CFRelease(value);
-	value = NULL;
-	foundChar = advanceToNonSpace(pInfo);
-	if (foundChar && *pInfo->curr == ';') {
-	    pInfo->curr ++;
-	    key = parsePlistString(pInfo, false);
-	} else if (true || !foundChar) {
+    value = NULL;
+    foundChar = advanceToNonSpace(pInfo);
+    if (foundChar && *pInfo->curr == ';') {
+        pInfo->curr ++;
+        key = parsePlistString(pInfo, false);
+    } else if (true || !foundChar) {
             UInt32 line = lineNumberStrings(pInfo);
             _CFPropertyListMissingSemicolon(line);
-	    failedParse = true;
-	    pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Missing ';' on line %d"), line);
-	}
+        failedParse = true;
+        pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Missing ';' on line %d"), line);
+    }
     }
     
     if (failedParse) {
@@ -420,23 +422,23 @@ CF_INLINE unsigned char fromHexDigit(unsigned char ch) {
 static int getDataBytes(_CFStringsFileParseInfo *pInfo, unsigned char *bytes, int bytesSize) {
     int numBytesRead = 0;
     while ((pInfo->curr < pInfo->end) && (numBytesRead < bytesSize)) {
-	int first, second;
-	UniChar ch1 = *pInfo->curr;
-	if (ch1 == '>') return numBytesRead;  // Meaning we're done
-	first = fromHexDigit((unsigned char)ch1);
-	if (first != 0xff) {	// If the first char is a hex, then try to read a second hex
-	    pInfo->curr++;
-	    if (pInfo->curr >= pInfo->end) return -2;   // Error: uneven number of hex digits
-	    UniChar ch2 = *pInfo->curr;
-	    second = fromHexDigit((unsigned char)ch2);
-	    if (second == 0xff) return -2;  // Error: uneven number of hex digits
-	    bytes[numBytesRead++] = (first << 4) + second;
-	    pInfo->curr++;
-	} else if (ch1 == ' ' || ch1 == '\n' || ch1 == '\t' || ch1 == '\r' || ch1 == 0x2028 || ch1 == 0x2029) {
-	    pInfo->curr++;
-	} else {
-	    return -1;  // Error: unexpected character
-	}
+    int first, second;
+    UniChar ch1 = *pInfo->curr;
+    if (ch1 == '>') return numBytesRead;  // Meaning we're done
+    first = fromHexDigit((unsigned char)ch1);
+    if (first != 0xff) {    // If the first char is a hex, then try to read a second hex
+        pInfo->curr++;
+        if (pInfo->curr >= pInfo->end) return -2;   // Error: uneven number of hex digits
+        UniChar ch2 = *pInfo->curr;
+        second = fromHexDigit((unsigned char)ch2);
+        if (second == 0xff) return -2;  // Error: uneven number of hex digits
+        bytes[numBytesRead++] = (first << 4) + second;
+        pInfo->curr++;
+    } else if (ch1 == ' ' || ch1 == '\n' || ch1 == '\t' || ch1 == '\r' || ch1 == 0x2028 || ch1 == 0x2029) {
+        pInfo->curr++;
+    } else {
+        return -1;  // Error: unexpected character
+    }
     }
     return numBytesRead;    // This does likely mean we didn't encounter a '>', but we'll let the caller deal with that
 }
@@ -447,9 +449,9 @@ static CFTypeRef parsePlistData(_CFStringsFileParseInfo *pInfo) CF_RETURNS_RETAI
     
     // Read hex bytes and append them to result
     while (1) {
-	unsigned char bytes[numBytes];
-	int numBytesRead = getDataBytes(pInfo, bytes, numBytes);
-	if (numBytesRead < 0) {
+    unsigned char bytes[numBytes];
+    int numBytesRead = getDataBytes(pInfo, bytes, numBytes);
+    if (numBytesRead < 0) {
             if (result) CFRelease(result);
             switch (numBytesRead) {
                 case -2: 
@@ -459,10 +461,10 @@ static CFTypeRef parsePlistData(_CFStringsFileParseInfo *pInfo) CF_RETURNS_RETAI
                     pInfo->error = __CFPropertyListCreateError(kCFPropertyListReadCorruptError, CFSTR("Malformed data byte group at line %d; invalid hex"), lineNumberStrings(pInfo));
                     break;
             }
-	    return NULL;
-	}
-	if (numBytesRead == 0) break;
-	CFDataAppendBytes(result, bytes, numBytesRead);
+        return NULL;
+    }
+    if (numBytesRead == 0) break;
+    CFDataAppendBytes(result, bytes, numBytesRead);
     }
     
     if (pInfo->error) {
@@ -612,3 +614,5 @@ CF_PRIVATE CFTypeRef __CFCreateOldStylePropertyListOrStringsFile(CFAllocatorRef 
 }
 
 #undef isValidUnquotedStringCharacter
+
+// clang-format on

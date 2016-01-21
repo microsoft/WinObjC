@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,8 +10,8 @@
 //
 
 
-/*	CFRunLoop.h
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+/*  CFRunLoop.h
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
 */
 
 #if !defined(__COREFOUNDATION_CFRUNLOOP__)
@@ -20,7 +22,7 @@
 #include <CoreFoundation/CFDate.h>
 #include <CoreFoundation/CFString.h>
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
-#include <mach/port.h>
+// #include <mach/port.h> // HACKHACK: don't have.
 #endif
 
 CF_IMPLICIT_BRIDGING_ENABLED
@@ -35,7 +37,7 @@ typedef struct CF_BRIDGED_MUTABLE_TYPE(id) __CFRunLoopObserver * CFRunLoopObserv
 typedef struct CF_BRIDGED_MUTABLE_TYPE(NSTimer) __CFRunLoopTimer * CFRunLoopTimerRef;
 
 /* Reasons for CFRunLoopRunInMode() to Return */
-typedef CF_ENUM(SInt32, CFRunLoopRunResult) {
+typedef CF_ENUM(SInt32,  CFRunLoopRunResult) {
     kCFRunLoopRunFinished = 1,
     kCFRunLoopRunStopped = 2,
     kCFRunLoopRunTimedOut = 3,
@@ -92,32 +94,33 @@ CF_EXPORT void CFRunLoopAddTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStr
 CF_EXPORT void CFRunLoopRemoveTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);
 
 typedef struct {
-    CFIndex	version;
-    void *	info;
+    CFIndex version;
+    void *  info;
     const void *(*retain)(const void *info);
-    void	(*release)(const void *info);
-    CFStringRef	(*copyDescription)(const void *info);
-    Boolean	(*equal)(const void *info1, const void *info2);
-    CFHashCode	(*hash)(const void *info);
-    void	(*schedule)(void *info, CFRunLoopRef rl, CFStringRef mode);
-    void	(*cancel)(void *info, CFRunLoopRef rl, CFStringRef mode);
-    void	(*perform)(void *info);
+    void    (*release)(const void *info);
+    CFStringRef (*copyDescription)(const void *info);
+    Boolean (*equal)(const void *info1, const void *info2);
+    CFHashCode  (*hash)(const void *info);
+    void    (*schedule)(void *info, CFRunLoopRef rl, CFStringRef mode);
+    void    (*cancel)(void *info, CFRunLoopRef rl, CFStringRef mode);
+    void    (*perform)(void *info);
 } CFRunLoopSourceContext;
 
 typedef struct {
-    CFIndex	version;
-    void *	info;
+    CFIndex version;
+    void *  info;
     const void *(*retain)(const void *info);
-    void	(*release)(const void *info);
-    CFStringRef	(*copyDescription)(const void *info);
-    Boolean	(*equal)(const void *info1, const void *info2);
-    CFHashCode	(*hash)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef (*copyDescription)(const void *info);
+    Boolean (*equal)(const void *info1, const void *info2);
+    CFHashCode  (*hash)(const void *info);
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
-    mach_port_t	(*getPort)(void *info);
-    void *	(*perform)(void *msg, CFIndex size, CFAllocatorRef allocator, void *info);
+// HACKHACK: don't have mach ports.
+//    mach_port_t (*getPort)(void *info);
+//    void *  (*perform)(void *msg, CFIndex size, CFAllocatorRef allocator, void *info);
 #else
-    void *	(*getPort)(void *info);
-    void	(*perform)(void *info);
+    void *  (*getPort)(void *info);
+    void    (*perform)(void *info);
 #endif
 } CFRunLoopSourceContext1;
 
@@ -132,11 +135,11 @@ CF_EXPORT void CFRunLoopSourceGetContext(CFRunLoopSourceRef source, CFRunLoopSou
 CF_EXPORT void CFRunLoopSourceSignal(CFRunLoopSourceRef source);
 
 typedef struct {
-    CFIndex	version;
-    void *	info;
+    CFIndex version;
+    void *  info;
     const void *(*retain)(const void *info);
-    void	(*release)(const void *info);
-    CFStringRef	(*copyDescription)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef (*copyDescription)(const void *info);
 } CFRunLoopObserverContext;
 
 typedef void (*CFRunLoopObserverCallBack)(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info);
@@ -156,11 +159,11 @@ CF_EXPORT Boolean CFRunLoopObserverIsValid(CFRunLoopObserverRef observer);
 CF_EXPORT void CFRunLoopObserverGetContext(CFRunLoopObserverRef observer, CFRunLoopObserverContext *context);
 
 typedef struct {
-    CFIndex	version;
-    void *	info;
+    CFIndex version;
+    void *  info;
     const void *(*retain)(const void *info);
-    void	(*release)(const void *info);
-    CFStringRef	(*copyDescription)(const void *info);
+    void    (*release)(const void *info);
+    CFStringRef (*copyDescription)(const void *info);
 } CFRunLoopTimerContext;
 
 typedef void (*CFRunLoopTimerCallBack)(CFRunLoopTimerRef timer, void *info);
@@ -191,3 +194,4 @@ CF_IMPLICIT_BRIDGING_DISABLED
 
 #endif /* ! __COREFOUNDATION_CFRUNLOOP__ */
 
+// clang-format on

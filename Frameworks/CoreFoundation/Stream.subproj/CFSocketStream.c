@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,11 +10,11 @@
 //
 
 
-/*	CFSocketStream.c
-	Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Jeremy Wyld
+/*  CFSocketStream.c
+    Copyright (c) 2000 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Jeremy Wyld
 */
-//	Original Author: Becky Willrich
+//  Original Author: Becky Willrich
 #include <CoreFoundation/CFStream.h>
 #include <CoreFoundation/CFNumber.h>
 #include "CFInternal.h"
@@ -90,9 +92,9 @@ enum {
 
 static struct {
     CFLock_t lock;
-    UInt32	flags;
+    UInt32  flags;
 #if DEPLOYMENT_TARGET_WINDOWS
-    HMODULE	image;
+    HMODULE image;
 #endif
     void (*_CFSocketStreamCreatePair)(CFAllocatorRef, CFStringRef, UInt32, CFSocketNativeHandle, const CFSocketSignature*, CFReadStreamRef*, CFWriteStreamRef*);
     CFErrorRef (*_CFErrorCreateWithStreamError)(CFAllocatorRef, CFStreamError*);
@@ -108,7 +110,7 @@ static struct {
     NULL
 };
 
-#define CFNETWORK_CALL(sym, args)		((CFNetworkSupport.sym)args)
+#define CFNETWORK_CALL(sym, args)       ((CFNetworkSupport.sym)args)
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
 #define CFNETWORK_LOAD_SYM(sym)   __CFLookupCFNetworkFunction(#sym)
@@ -126,13 +128,14 @@ static void initializeCFNetworkSupport(void) {
 #elif DEPLOYMENT_TARGET_WINDOWS
     if (!CFNetworkSupport.image) {
 #if _DEBUG
-        CFNetworkSupport.image = GetModuleHandleW(L"CFNetwork_debug.dll");
+        CFNetworkSupport.image = nullptr; // HACKHACK: can't do in app container // GetModuleHandleW(L"CFNetwork_debug.dll");
 #else
-        CFNetworkSupport.image = GetModuleHandleW(L"CFNetwork.dll");
+        CFNetworkSupport.image = nullptr; // HACKHACK: can't do in app container // GetModuleHandleW(L"CFNetwork.dll");
 #endif
     }
 
     if (!CFNetworkSupport.image) {
+    /*
         // not loaded yet, try to load from the filesystem
         char path[MAX_PATH+1];
         if (!CFNetworkSupport.image) {
@@ -144,6 +147,9 @@ static void initializeCFNetworkSupport(void) {
 #endif
             CFNetworkSupport.image = LoadLibraryA(path);
         }
+        */
+        // HACKHACK: Can't LoadLib in an appcontainer. If we need to do this maybe use LoadPackagedLibrary?
+        // Right now we don't have CFNetworking anyway so don't worry about it?
     }
             
     if (!CFNetworkSupport.image) {
@@ -245,3 +251,5 @@ CF_PRIVATE CFErrorRef _CFErrorFromStreamError(CFAllocatorRef alloc, CFStreamErro
     }
     return result;
 }
+
+// clang-format on

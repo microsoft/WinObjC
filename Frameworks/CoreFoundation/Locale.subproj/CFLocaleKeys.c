@@ -1,3 +1,5 @@
+// clang-format off
+
 // This source file is part of the Swift.org open source project
 //
 // Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
@@ -8,9 +10,9 @@
 //
 
 
-/*	CFLocaleKeys.c
-	Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFLocaleKeys.c
+    Copyright (c) 2008 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
 #include "CFInternal.h"
@@ -236,3 +238,5 @@ CF_EXPORT CFStringRef const kCFDateFormatterUsesCharacterDirection __attribute__
 CF_EXPORT CFStringRef const kCFDateFormatterCalendarName __attribute__((alias ("kCFDateFormatterCalendarIdentifierKey")));
 
 #endif
+
+// clang-format on
