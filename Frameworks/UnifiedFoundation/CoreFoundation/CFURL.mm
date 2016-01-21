@@ -607,7 +607,7 @@ CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorR
     [escapedStringToIgnore release];
 
     if (resultLength == length) {
-        return string;
+        return (CFStringRef)CFRetain(string);
     }
 
     NSString* ret = [NSString stringWithCharacters:result.get() length:resultLength];
