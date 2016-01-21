@@ -17,6 +17,19 @@
 #import <Starboard.h>
 #import <Security/SecPolicy.h>
 
+const CFTypeRef kSecPolicyOid = static_cast<CFStringRef>(@"kSecPolicyOid");
+const CFTypeRef kSecPolicyName = static_cast<CFStringRef>(@"kSecPolicyName");
+const CFTypeRef kSecPolicyClient = static_cast<CFStringRef>(@"kSecPolicyClient");
+const CFTypeRef kSecPolicyAppleX509Basic = static_cast<CFStringRef>(@"kSecPolicyAppleX509Basic");
+const CFTypeRef kSecPolicyAppleSSL = static_cast<CFStringRef>(@"kSecPolicyAppleSSL");
+const CFTypeRef kSecPolicyAppleSMIME = static_cast<CFStringRef>(@"kSecPolicyAppleSMIME");
+const CFTypeRef kSecPolicyAppleEAP = static_cast<CFStringRef>(@"kSecPolicyAppleEAP");
+const CFTypeRef kSecPolicyAppleIPsec = static_cast<CFStringRef>(@"kSecPolicyAppleIPsec");
+const CFTypeRef kSecPolicyAppleCodeSigning = static_cast<CFStringRef>(@"kSecPolicyAppleCodeSigning");
+const CFTypeRef kSecPolicyMacAppStoreReceipt = static_cast<CFStringRef>(@"kSecPolicyMacAppStoreReceipt");
+const CFTypeRef kSecPolicyAppleIDValidation = static_cast<CFStringRef>(@"kSecPolicyAppleIDValidation");
+const CFTypeRef kSecPolicyAppleTimeStamping = static_cast<CFStringRef>(@"kSecPolicyAppleTimeStamping");
+
 /**
  @Status Stub
 */

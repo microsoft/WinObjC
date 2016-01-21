@@ -23,7 +23,7 @@
 
 typedef struct __SecCertificate* SecCertificateRef;
 
-SECURITY_EXPORT CFTypeID SecCertificateGetTypeID(void);
-SECURITY_EXPORT SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data);
-SECURITY_EXPORT CFDataRef SecCertificateCopyData(SecCertificateRef certificate);
-SECURITY_EXPORT CFStringRef SecCertificateCopySubjectSummary(SecCertificateRef certificate);
+SECURITY_EXPORT CFTypeID SecCertificateGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data) STUB_METHOD;
+SECURITY_EXPORT CFDataRef SecCertificateCopyData(SecCertificateRef certificate) STUB_METHOD;
+SECURITY_EXPORT CFStringRef SecCertificateCopySubjectSummary(SecCertificateRef certificate) STUB_METHOD;

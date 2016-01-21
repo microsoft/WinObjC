@@ -1,17 +1,73 @@
 LIBRARY Security
     EXPORTS
-        SecItemUpdate
-        SecItemAdd
-        SecItemDelete
-        SecItemCopyMatching
+        ; Certificate, Key, and Trust Services
+        kSecPrivateKeyAttrs DATA
+        kSecPublicKeyAttrs DATA
+        kSecImportItemLabel DATA
+        kSecImportItemKeyID DATA
+        kSecImportItemTrust DATA
+        kSecImportItemCertChain DATA
+        kSecImportItemIdentity DATA
+        kSecPropertyTypeTitle DATA
+        kSecPropertyTypeError DATA
+        kSecPolicyOid DATA
+        kSecPolicyName DATA
+        kSecPolicyClient DATA
+        kSecPolicyAppleX509Basic DATA
+        kSecPolicyAppleSSL DATA
+        kSecPolicyAppleSMIME DATA
+        kSecPolicyAppleEAP DATA
+        kSecPolicyAppleIPsec DATA
+        kSecPolicyAppleCodeSigning DATA
+        kSecPolicyMacAppStoreReceipt DATA
+        kSecPolicyAppleIDValidation DATA
+        kSecPolicyAppleTimeStamping DATA
+        SecCertificateGetTypeID
+        SecIdentityGetTypeID
+        SecKeyGetTypeID
+        SecPolicyGetTypeID
+        SecTrustGetTypeID
+        SecCertificateCreateWithData
+        SecCertificateCopyData
+        SecCertificateCopySubjectSummary
+        SecIdentityCopyCertificate
+        SecIdentityCopyPrivateKey
+        SecPKCS12Import
+        SecKeyGeneratePair
+        SecKeyEncrypt
+        SecKeyDecrypt
+        SecKeyRawSign
+        SecKeyRawVerify
+        SecKeyGetBlockSize
+        SecPolicyCopyProperties
+        SecPolicyCreateBasicX509
+        SecPolicyCreateSSL
+        SecTrustCopyCustomAnchorCertificates
+        SecTrustCopyExceptions
+        SecTrustCopyProperties
+        SecTrustCopyPolicies
+        SecTrustCopyPublicKey
+        SecTrustCreateWithCertificates
+        SecTrustEvaluate
+        SecTrustEvaluateAsync
+        SecTrustGetCertificateCount
+        SecTrustGetCertificateAtIndex
+        SecTrustGetTrustResult
+        SecTrustGetVerifyTime
+        SecTrustSetAnchorCertificates
+        SecTrustSetAnchorCertificatesOnly
+        SecTrustSetExceptions
+        SecTrustSetPolicies
+        SecTrustSetVerifyDate
 
+        ; Keychain Services
+        kSecImportExportPassphrase DATA
         kSecClass DATA
         kSecClassGenericPassword DATA
         kSecClassInternetPassword DATA
         kSecClassCertificate DATA
         kSecClassKey DATA
         kSecClassIdentity DATA
-
         kSecAttrAccessible DATA
         kSecAttrAccessibleAfterFirstUnlock DATA
         kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly DATA
@@ -20,7 +76,6 @@ LIBRARY Security
         kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly DATA
         kSecAttrAccessibleWhenUnlocked DATA
         kSecAttrAccessibleWhenUnlockedThisDeviceOnly DATA
-
         kSecAttrAccessGroup DATA
         kSecAttrCreationDate DATA
         kSecAttrModificationDate DATA
@@ -34,18 +89,92 @@ LIBRARY Security
         kSecAttrAccount DATA
         kSecAttrService DATA
         kSecAttrGeneric DATA
-
         kSecValueData DATA
         kSecValueRef DATA
         kSecValuePersistentRef DATA
-
         kSecReturnData DATA
         kSecReturnAttributes DATA
         kSecReturnRef DATA
         kSecReturnPersistentRef DATA
-
         kSecUseItemList DATA
-
+        kSecAttrSecurityDomain DATA
+        kSecAttrServer DATA
+        kSecAttrProtocol DATA
+        kSecAttrAuthenticationType DATA
+        kSecAttrPort DATA
+        kSecAttrPath DATA
+        kSecAttrSubject DATA
+        kSecAttrIssuer DATA
+        kSecAttrSerialNumber DATA
+        kSecAttrSubjectKeyID DATA
+        kSecAttrPublicKeyHash DATA
+        kSecAttrCertificateType DATA
+        kSecAttrCertificateEncoding DATA
+        kSecAttrKeyClass DATA
+        kSecAttrApplicationLabel DATA
+        kSecAttrIsPermanent DATA
+        kSecAttrApplicationTag DATA
+        kSecAttrKeyType DATA
+        kSecAttrKeySizeInBits DATA
+        kSecAttrEffectiveKeySize DATA
+        kSecAttrCanEncrypt DATA
+        kSecAttrCanDecrypt DATA
+        kSecAttrCanDerive DATA
+        kSecAttrCanSign DATA
+        kSecAttrCanVerify DATA
+        kSecAttrCanWrap DATA
+        kSecAttrCanUnwrap DATA
+        kSecAttrAccessGroup DATA
+        kSecAttrProtocolFTP DATA
+        kSecAttrProtocolFTPAccount DATA
+        kSecAttrProtocolHTTP DATA
+        kSecAttrProtocolIRC DATA
+        kSecAttrProtocolNNTP DATA
+        kSecAttrProtocolPOP3 DATA
+        kSecAttrProtocolSMTP DATA
+        kSecAttrProtocolSOCKS DATA
+        kSecAttrProtocolIMAP DATA
+        kSecAttrProtocolLDAP DATA
+        kSecAttrProtocolAppleTalk DATA
+        kSecAttrProtocolAFP DATA
+        kSecAttrProtocolTelnet DATA
+        kSecAttrProtocolSSH DATA
+        kSecAttrProtocolFTPS DATA
+        kSecAttrProtocolHTTPS DATA
+        kSecAttrProtocolHTTPProxy DATA
+        kSecAttrProtocolHTTPSProxy DATA
+        kSecAttrProtocolFTPProxy DATA
+        kSecAttrProtocolSMB DATA
+        kSecAttrProtocolRTSP DATA
+        kSecAttrProtocolRTSPProxy DATA
+        kSecAttrProtocolDAAP DATA
+        kSecAttrProtocolEPPC DATA
+        kSecAttrProtocolIPP DATA
+        kSecAttrProtocolNNTPS DATA
+        kSecAttrProtocolLDAPS DATA
+        kSecAttrProtocolTelnetS DATA
+        kSecAttrProtocolIMAPS DATA
+        kSecAttrProtocolIRCS DATA
+        kSecAttrProtocolPOP3S DATA
+        kSecAttrAuthenticationTypeNTLM DATA
+        kSecAttrAuthenticationTypeMSN DATA
+        kSecAttrAuthenticationTypeDPA DATA
+        kSecAttrAuthenticationTypeRPA DATA
+        kSecAttrAuthenticationTypeHTTPBasic DATA
+        kSecAttrAuthenticationTypeHTTPDigest DATA
+        kSecAttrAuthenticationTypeHTMLForm DATA
+        kSecAttrAuthenticationTypeDefault DATA
+        kSecAttrKeyClassPublic DATA
+        kSecAttrKeyClassPrivate DATA
+        kSecAttrKeyClassSymmetric DATA
+        kSecAttrKeyTypeRSA DATA
+        kSecAttrAccessibleWhenUnlocked DATA
+        kSecAttrAccessibleAfterFirstUnlock DATA
+        kSecAttrAccessibleAlways DATA
+        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly DATA
+        kSecAttrAccessibleWhenUnlockedThisDeviceOnly DATA
+        kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly DATA
+        kSecAttrAccessibleAlwaysThisDeviceOnly DATA
         kSecMatchPolicy DATA
         kSecMatchItemList DATA
         kSecMatchSearchList DATA
@@ -58,6 +187,61 @@ LIBRARY Security
         kSecMatchLimit DATA
         kSecMatchLimitOne DATA
         kSecMatchLimitAll DATA
+        kSecUseItemList DATA
+        kSecReturnData DATA
+        kSecReturnAttributes DATA
+        kSecReturnRef DATA
+        kSecReturnPersistentRef DATA
+        kSecValueData DATA
+        kSecValueRef DATA
+        kSecValuePersistentRef DATA
+        SecItemCopyMatching
+        SecItemAdd
+        SecItemUpdate
+        SecItemDelete
 
+        ; Randomization Services
         kSecRandomDefault DATA
         SecRandomCopyBytes
+
+        ; Secure Transport
+        SSLSetConnection
+        SSLGetConnection
+        SSLSetSessionOption
+        SSLGetSessionOption
+        SSLSetIOFuncs
+        SSLSetClientSideAuthenticate
+        SSLHandshake
+        SSLGetSessionState
+        SSLGetNegotiatedProtocolVersion
+        SSLSetPeerID
+        SSLGetPeerID
+        SSLGetBufferedReadSize
+        SSLRead
+        SSLWrite
+        SSLClose
+        SSLGetNumberSupportedCiphers
+        SSLGetSupportedCiphers
+        SSLSetEnabledCiphers
+        SSLGetNumberEnabledCiphers
+        SSLGetEnabledCiphers
+        SSLGetNegotiatedCipher
+        SSLAddDistinguishedName
+        SSLCopyDistinguishedNames
+        SSLSetCertificate
+        SSLGetClientCertificateState
+        SSLSetEncryptionCertificate
+        SSLCopyPeerTrust
+        SSLSetPeerDomainName
+        SSLGetPeerDomainNameLength
+        SSLGetPeerDomainName
+        SSLContextGetTypeID
+        SSLCreateContext
+        SSLGetDatagramWriteSize
+        SSLGetMaxDatagramRecordSize
+        SSLGetProtocolVersionMax
+        SSLGetProtocolVersionMin
+        SSLSetDatagramHelloCookie
+        SSLSetMaxDatagramRecordSize
+        SSLSetProtocolVersionMax
+        SSLSetProtocolVersionMin

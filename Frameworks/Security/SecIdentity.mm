@@ -40,3 +40,11 @@ OSStatus SecIdentityCopyPrivateKey(SecIdentityRef identityRef, SecKeyRef* privat
     UNIMPLEMENTED();
     return errSecUnimplemented;
 }
+
+/**
+ @Status Stub
+*/
+OSStatus SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef _Nullable* items) {
+    UNIMPLEMENTED();
+    return errSecUnimplemented;
+}

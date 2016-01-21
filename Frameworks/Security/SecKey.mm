@@ -17,6 +17,9 @@
 #import <Starboard.h>
 #import <Security/SecKey.h>
 
+const CFTypeRef kSecPrivateKeyAttrs = static_cast<CFStringRef>(@"kSecPrivateKeyAttrs");
+const CFTypeRef kSecPublicKeyAttrs = static_cast<CFStringRef>(@"kSecPublicKeyAttrs");
+
 /**
  @Status Stub
 */

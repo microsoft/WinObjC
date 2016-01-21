@@ -23,20 +23,20 @@
 
 typedef struct OpaqueSecPolicyRef* SecPolicyRef;
 
-SECURITY_EXPORT CFTypeRef kSecPolicyOid;
-SECURITY_EXPORT CFTypeRef kSecPolicyName;
-SECURITY_EXPORT CFTypeRef kSecPolicyClient;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleX509Basic;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleSSL;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleSMIME;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleEAP;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleIPsec;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleCodeSigning;
-SECURITY_EXPORT CFTypeRef kSecPolicyMacAppStoreReceipt;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleIDValidation;
-SECURITY_EXPORT CFTypeRef kSecPolicyAppleTimeStamping;
+SECURITY_EXPORT const CFTypeRef kSecPolicyOid;
+SECURITY_EXPORT const CFTypeRef kSecPolicyName;
+SECURITY_EXPORT const CFTypeRef kSecPolicyClient;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleX509Basic;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleSSL;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleSMIME;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleEAP;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleIPsec;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleCodeSigning;
+SECURITY_EXPORT const CFTypeRef kSecPolicyMacAppStoreReceipt;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleIDValidation;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleTimeStamping;
 
-SECURITY_EXPORT CFTypeID SecPolicyGetTypeID(void);
-SECURITY_EXPORT CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef);
-SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void);
-SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname);
+SECURITY_EXPORT CFTypeID SecPolicyGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef) STUB_METHOD;
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void) STUB_METHOD;
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname) STUB_METHOD;
