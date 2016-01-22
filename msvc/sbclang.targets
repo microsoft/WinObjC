@@ -334,6 +334,13 @@
         <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem "$(StarboardSdkRoot)\include\WOCStdLib" -include WOCStdlib.h</WOCStdlibOptions>
       </ClangCompile>
     </ItemGroup>
+
+    <!-- Include the stub prefix header -->
+    <ItemGroup>
+      <ClangCompile>
+        <AdditionalOptions>%(ClangCompile.AdditionalOptions) -include StubIncludes.h</AdditionalOptions>
+      </ClangCompile>
+    </ItemGroup>
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
