@@ -82,33 +82,33 @@ const CFStringRef kCTFontLicenseURLNameKey = static_cast<CFStringRef>(@"kCTFontL
 const CFStringRef kCTFontSampleTextNameKey = static_cast<CFStringRef>(@"kCTFontSampleTextNameKey");
 const CFStringRef kCTFontPostScriptCIDNameKey = static_cast<CFStringRef>(@"kCTFontPostScriptCIDNameKey");
 
-static const std::map<const CFStringRef, FT_UInt> g_nameIdMap = {
-    {kCTFontCopyrightNameKey, 0},
-    {kCTFontFamilyNameKey, 1},
-    {kCTFontSubFamilyNameKey, 2},
-    {kCTFontUniqueNameKey, 3},
-    {kCTFontFullNameKey, 4},
-    {kCTFontVersionNameKey, 5},
-    {kCTFontPostScriptNameKey, 6},
-    {kCTFontTrademarkNameKey, 7},
-    {kCTFontManufacturerNameKey, 8},
-    {kCTFontDesignerNameKey, 9},
-    {kCTFontDescriptionNameKey, 10},
-    {kCTFontVendorURLNameKey, 11},
-    {kCTFontDesignerURLNameKey, 12},
-    {kCTFontLicenseNameKey, 13},
-    {kCTFontLicenseURLNameKey, 14},
+static const std::map<const CFStringRef, FT_UInt> g_nameIdMap =
+    { { kCTFontCopyrightNameKey, 0 },
+      { kCTFontFamilyNameKey, 1 },
+      { kCTFontSubFamilyNameKey, 2 },
+      { kCTFontUniqueNameKey, 3 },
+      { kCTFontFullNameKey, 4 },
+      { kCTFontVersionNameKey, 5 },
+      { kCTFontPostScriptNameKey, 6 },
+      { kCTFontTrademarkNameKey, 7 },
+      { kCTFontManufacturerNameKey, 8 },
+      { kCTFontDesignerNameKey, 9 },
+      { kCTFontDescriptionNameKey, 10 },
+      { kCTFontVendorURLNameKey, 11 },
+      { kCTFontDesignerURLNameKey, 12 },
+      { kCTFontLicenseNameKey, 13 },
+      { kCTFontLicenseURLNameKey, 14 },
 
-    // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
-    // Name index 15 is reserved.
-    // Name index 16 is not a CTFont name specifier constant.
-    // Name index 17 is not a CTFont name specifier constant.
-    // Name index 18 is not a CTFont name specifier constant.
+      // https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
+      // Name index 15 is reserved.
+      // Name index 16 is not a CTFont name specifier constant.
+      // Name index 17 is not a CTFont name specifier constant.
+      // Name index 18 is not a CTFont name specifier constant.
 
-    {kCTFontSampleTextNameKey, 19},
+      { kCTFontSampleTextNameKey, 19 },
 
-    // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
-    {kCTFontPostScriptCIDNameKey, 20}};
+      // http://scripts.sil.org/cms/scripts/page.php?item_id=IWS-Chapter08
+      { kCTFontPostScriptCIDNameKey, 20 } };
 
 static float spacing = 1.0f;
 
@@ -1664,11 +1664,9 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
             continue;
         }
 
-        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && 
-            charMap->encoding_id == fontNameInfo.encoding_id &&
-            nameId == fontNameInfo.name_id &&
-            languageId == fontNameInfo.language_id) {
-            // FreeType thinks we are running on Mac and returns the bytes in big endian format even when 
+        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && charMap->encoding_id == fontNameInfo.encoding_id &&
+            nameId == fontNameInfo.name_id && languageId == fontNameInfo.language_id) {
+            // FreeType thinks we are running on Mac and returns the bytes in big endian format even when
             // we are on Microsoft platform so we adjust the encoding id accordingly.
             switch (charMap->encoding_id) {
                 case TT_MS_ID_UNICODE_CS: // Unicode BMP
@@ -1683,7 +1681,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
                     EbrDebugLog("Unsupported encoding %u\n", charMap->encoding_id);
                     return nullptr;
             }
-            
+
             // The string array returned in the FT_SfntName structure is not null-terminated. The
             // application should deallocate it if it is no longer in use, dataWithBytesNoCopy helps to do that.
             NSData* data = [NSData dataWithBytesNoCopy:fontNameInfo.string length:fontNameInfo.string_len];
@@ -1710,11 +1708,48 @@ CGFloat CTFontGetUnderlineThickness(CTFontRef self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset) {
-    UNIMPLEMENTED();
-    return 0;
+CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFloat* secondaryOffset) {
+    CGFloat ret = 0.0;
+    if (secondaryOffset) {
+        *secondaryOffset = 0.0;
+    }
+
+    if (lineRef == nil || charIndex < 0) {
+        return ret;
+    }
+
+    // if charIndex is greater than the last string index, return line's width as offset
+    if (charIndex > (CTLineGetGlyphCount(lineRef) - 1)) {
+        ret = (static_cast<_CTLine*>(lineRef))->_width;
+        if (secondaryOffset) {
+            *secondaryOffset = ret;
+        }
+
+        return ret;
+    }
+
+    CFArrayRef glyphRuns = CTLineGetGlyphRuns(lineRef);
+    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
+    CFIndex currentIndex = -1;
+
+    for (int i = 0; i < numberOfRuns; i++) {
+        CTRunRef currRun = (CTRunRef)CFArrayGetValueAtIndex(glyphRuns, i);
+        CFIndex glyphCount = CTRunGetGlyphCount(currRun);
+
+        if (currentIndex + glyphCount >= charIndex) {
+            ret = (static_cast<_CTRun*>(currRun))->_glyphOrigins[charIndex - currentIndex - 1].x;
+            if (secondaryOffset) {
+                *secondaryOffset = ret;
+            }
+            return ret;
+        }
+
+        currentIndex += glyphCount;
+    }
+
+    return ret;
 }
 
 /**
