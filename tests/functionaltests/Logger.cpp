@@ -25,7 +25,7 @@ namespace FunctionalTestLogPrivate {
 wchar_t* charToWChar(const char* text) {
     size_t size = strlen(text) + 1;
     wchar_t* wideText = new wchar_t[size];
-    mbstowcs(wideText, text, size);
+    mbstowcs_s(nullptr, wideText, size, text, size);
     return wideText;
 }
 
