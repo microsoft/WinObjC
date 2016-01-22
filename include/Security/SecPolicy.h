@@ -36,7 +36,7 @@ SECURITY_EXPORT const CFTypeRef kSecPolicyMacAppStoreReceipt;
 SECURITY_EXPORT const CFTypeRef kSecPolicyAppleIDValidation;
 SECURITY_EXPORT const CFTypeRef kSecPolicyAppleTimeStamping;
 
-SECURITY_EXPORT CFTypeID SecPolicyGetTypeID(void) STUB_METHOD;
-SECURITY_EXPORT CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef) STUB_METHOD;
-SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void) STUB_METHOD;
-SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname) STUB_METHOD;
+SECURITY_EXPORT CFTypeID SecPolicyGetTypeID(void);
+SECURITY_EXPORT CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef);
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void);
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname);
