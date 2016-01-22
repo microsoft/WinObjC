@@ -4,6 +4,9 @@
 *.user
 *.orig
 *.opendb
+*.pcm
+*.idx
+*.timestamp
 ipch
 Debug
 Release

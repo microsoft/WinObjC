@@ -40,6 +40,7 @@
 @import ImageIO;
 @import MediaPlayer;
 @import MessageUI;
+@import MobileCoreServices;
 @import OpenAL;
 @import OpenGLES;
 @import QuartzCore;
