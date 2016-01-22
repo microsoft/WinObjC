@@ -330,7 +330,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return @encode(NSRange);
 }
 
-- (NSRange)NSRangeValue {
+- (NSRange)rangeValue {
     return _val;
 }
 
@@ -340,6 +340,14 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 
 - (void)getValue:(void*)dest {
     memcpy(dest, (char*)&_val, sizeof(NSRange));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+
+- (size_t)_rawSize {
+    return sizeof(_val);
 }
 @end
 
@@ -747,7 +755,7 @@ static unsigned hashBytes(const void* bytes, size_t len) {
 */
 - (CLLocationCoordinate2D)MKCoordinateValue {
     UNIMPLEMENTED();
-    return {0,0};
+    return { 0, 0 };
 }
 
 /**

@@ -21,19 +21,21 @@
 #import <Foundation/NSRange.h>
 #import <Foundation/NSDate.h>
 
-@class NSDictionary, NSURL, NSOrthography;
+@class NSDictionary, NSURL, NSOrthography, NSRegularExpression;
 
-SB_EXPORT NSString* const NSTextCheckingNameKey;
-SB_EXPORT NSString* const NSTextCheckingJobTitleKey;
-SB_EXPORT NSString* const NSTextCheckingOrganizationKey;
-SB_EXPORT NSString* const NSTextCheckingStreetKey;
-SB_EXPORT NSString* const NSTextCheckingCityKey;
-SB_EXPORT NSString* const NSTextCheckingStateKey;
-SB_EXPORT NSString* const NSTextCheckingZIPKey;
-SB_EXPORT NSString* const NSTextCheckingCountryKey;
-SB_EXPORT NSString* const NSTextCheckingPhoneKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingAirlineKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingFlightKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingNameKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingJobTitleKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingOrganizationKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingStreetKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingCityKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingStateKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingZIPKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingCountryKey;
+FOUNDATION_EXPORT NSString* const NSTextCheckingPhoneKey;
 
-enum {
+typedef NS_ENUM(NSUInteger, NSTextCheckingType) {
     NSTextCheckingTypeOrthography = 1ULL << 0,
     NSTextCheckingTypeSpelling = 1ULL << 1,
     NSTextCheckingTypeGrammar = 1ULL << 2,
@@ -48,16 +50,15 @@ enum {
     NSTextCheckingTypePhoneNumber = 1ULL << 11,
     NSTextCheckingTypeTransitInformation = 1ULL << 12
 };
-typedef uint32_t NSTextCheckingType;
 
-enum : uint64_t {
+typedef NS_ENUM(NSUInteger, NSTextCheckingTypes) {
     NSTextCheckingAllSystemTypes = 0xffffffffULL,
     NSTextCheckingAllCustomTypes = 0xffffffffULL << 32,
     NSTextCheckingAllTypes = (NSTextCheckingAllSystemTypes | NSTextCheckingAllCustomTypes),
 };
-typedef uint64_t NSTextCheckingTypes;
 
-@interface NSTextCheckingResult : NSObject
+FOUNDATION_EXPORT_CLASS
+@interface NSTextCheckingResult : NSObject <NSSecureCoding, NSCopying, NSObject>
 
 + (NSTextCheckingResult*)addressCheckingResultWithRange:(NSRange)range components:(NSDictionary*)components;
 + (NSTextCheckingResult*)correctionCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
@@ -74,21 +75,28 @@ typedef uint64_t NSTextCheckingTypes;
 + (NSTextCheckingResult*)replacementCheckingResultWithRange:(NSRange)range replacementString:(NSString*)replacement;
 + (NSTextCheckingResult*)spellCheckingResultWithRange:(NSRange)range;
 + (NSTextCheckingResult*)phoneNumberCheckingResultWithRange:(NSRange)range phoneNumber:(NSString*)phoneNumber;
++ (NSTextCheckingResult*)regularExpressionCheckingResultWithRanges:(NSRangePointer)ranges
+                                                             count:(NSUInteger)count
+                                                 regularExpression:(NSRegularExpression*)regularExpression;
++ (NSTextCheckingResult*)transitInformationCheckingResultWithRange:(NSRange)range components:(NSDictionary*)components;
 
 - (NSRange)rangeAtIndex:(NSUInteger)idx;
+- (NSTextCheckingResult*)resultByAdjustingRangesWithOffset:(NSInteger)offset;
 
-@property (readonly) NSDictionary* addressComponents;
-@property (readonly) NSDate* date;
-@property (readonly) NSTimeInterval duration;
-@property (readonly) NSArray* grammarDetails;
-@property (readonly) NSOrthography* orthography;
 @property (readonly) NSRange range;
-@property (readonly) NSString* replacementString;
 @property (readonly) NSTextCheckingType resultType;
-@property (readonly) NSTimeZone* timeZone;
-@property (readonly) NSURL* URL;
-@property (readonly) NSString* phoneNumber;
 @property (readonly) NSUInteger numberOfRanges;
+@property (readonly) NSTimeInterval duration;
+@property (readonly, copy) NSString* replacementString;
+@property (readonly, copy) NSRegularExpression* regularExpression;
+@property (readonly, copy) NSDictionary* components;
+@property (readonly, copy) NSURL* URL;
+@property (readonly, copy) NSDictionary* addressComponents;
+@property (readonly, copy) NSString* phoneNumber;
+@property (readonly, copy) NSDate* date;
+@property (readonly, copy) NSTimeZone* timeZone;
+@property (readonly, copy) NSOrthography* orthography;
+@property (readonly, copy) NSArray* grammarDetails;
 
 @end
 
