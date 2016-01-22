@@ -1732,10 +1732,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGRect)rectForRowAtIndexPath:(NSIndexPath*)path {
-    UNIMPLEMENTED();
     int section = [path section];
     int row = [path row];
 
