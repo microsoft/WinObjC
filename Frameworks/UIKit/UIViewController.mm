@@ -269,11 +269,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 @implementation UIViewController : UIResponder
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    UNIMPLEMENTED();
-    return TRUE;
+    return [[UIApplication sharedApplication] statusBarOrientation];
 }
 
 /**
