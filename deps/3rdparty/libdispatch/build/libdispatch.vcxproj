@@ -151,7 +151,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>objcrt.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
@@ -209,7 +209,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>objcrt.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libobjc2.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>"$(WINOBJC_SDK_ROOT)\build\$(Platform)\$(Configuration)\Universal Windows"</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>

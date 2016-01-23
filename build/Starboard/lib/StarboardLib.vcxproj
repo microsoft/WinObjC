@@ -177,9 +177,10 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -198,10 +199,11 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -221,9 +223,10 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -242,10 +245,11 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -265,9 +269,10 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -286,10 +291,11 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\curl\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 "-DIWPLATFORM_EXPORT= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
+      <PreprocessorDefinitions>IWPLATFORM_EXPORT=_declspec(dllexport)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

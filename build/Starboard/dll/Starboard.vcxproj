@@ -165,6 +165,7 @@
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -187,6 +188,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -211,6 +213,7 @@
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -233,6 +236,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -257,6 +261,7 @@
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -279,6 +284,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

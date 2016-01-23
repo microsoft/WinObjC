@@ -28,49 +28,47 @@ struct EbrTimeval {
 };
 
 #ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT
+#define IWPLATFORM_EXPORT __declspec(dllimport)
 #endif
 
 enum EbrFileType { EbrFileTypeUnknown, EbrFileTypeIO, EbrFileTypeSocket, EbrFileTypeVirtual, EbrFileTypeZipAsset };
 
-//  Note: IWPLATFORM_EXPORT should not be required on member functions but clang does not yet support exporting
-//  full classes
-class EbrFile {
+class IWPLATFORM_EXPORT EbrFile {
 public:
     int idx;
     EbrFileType type;
 
-    IWPLATFORM_EXPORT EbrFile();
-    IWPLATFORM_EXPORT virtual ~EbrFile();
+    EbrFile();
+    virtual ~EbrFile();
 
-    IWPLATFORM_EXPORT virtual int Close();
-    IWPLATFORM_EXPORT virtual size_t Read(void* dest, size_t elem, size_t count);
-    IWPLATFORM_EXPORT virtual size_t Write(void* dest, size_t elem, size_t count);
-    IWPLATFORM_EXPORT virtual int Seek(long offset, int origin);
-    IWPLATFORM_EXPORT virtual size_t Tell();
-    IWPLATFORM_EXPORT virtual int Eof();
-    IWPLATFORM_EXPORT virtual int Putc(int c);
-    IWPLATFORM_EXPORT virtual int Rewind();
-    IWPLATFORM_EXPORT virtual int Error();
-    IWPLATFORM_EXPORT virtual int Getc();
-    IWPLATFORM_EXPORT virtual int Ungetc(int val);
-    IWPLATFORM_EXPORT virtual char* Gets(char* dest, size_t size);
-    IWPLATFORM_EXPORT virtual int Puts(const char* str);
-    IWPLATFORM_EXPORT virtual void Clearerr();
-    IWPLATFORM_EXPORT virtual int Flush();
-    IWPLATFORM_EXPORT virtual int Setpos(__int64* pos);
-    IWPLATFORM_EXPORT virtual int Getpos(__int64* pos);
+    virtual int Close();
+    virtual size_t Read(void* dest, size_t elem, size_t count);
+    virtual size_t Write(void* dest, size_t elem, size_t count);
+    virtual int Seek(long offset, int origin);
+    virtual size_t Tell();
+    virtual int Eof();
+    virtual int Putc(int c);
+    virtual int Rewind();
+    virtual int Error();
+    virtual int Getc();
+    virtual int Ungetc(int val);
+    virtual char* Gets(char* dest, size_t size);
+    virtual int Puts(const char* str);
+    virtual void Clearerr();
+    virtual int Flush();
+    virtual int Setpos(__int64* pos);
+    virtual int Getpos(__int64* pos);
 
-    IWPLATFORM_EXPORT virtual int HostFd();
-    IWPLATFORM_EXPORT virtual int Stat(struct stat* ret);
-    IWPLATFORM_EXPORT virtual int Read(void* dest, size_t count);
-    IWPLATFORM_EXPORT virtual int Write(const void* src, size_t count);
-    IWPLATFORM_EXPORT virtual int Lseek(off_t pos, int whence);
-    IWPLATFORM_EXPORT virtual int Truncate(off_t size);
-    IWPLATFORM_EXPORT virtual int Dup();
+    virtual int HostFd();
+    virtual int Stat(struct stat* ret);
+    virtual int Read(void* dest, size_t count);
+    virtual int Write(const void* src, size_t count);
+    virtual int Lseek(off_t pos, int whence);
+    virtual int Truncate(off_t size);
+    virtual int Dup();
 
-    IWPLATFORM_EXPORT virtual void* Mmap(void* addr, size_t size, uint32_t prot, uint32_t flags, uint32_t offset);
-    IWPLATFORM_EXPORT virtual int Munmap(void* addr, size_t size);
+    virtual void* Mmap(void* addr, size_t size, uint32_t prot, uint32_t flags, uint32_t offset);
+    virtual int Munmap(void* addr, size_t size);
 };
 
 IWPLATFORM_EXPORT EbrFile* EbrAllocFile(EbrFile* ioInterface);
