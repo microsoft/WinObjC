@@ -13,7 +13,9 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSZone.h>
 
 @class NSCoder, NSInvocation, NSMethodSignature, NSString;
@@ -23,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (NSZone*)zone;
 
 - (id)self;
-- (Class)class;
+- (Class) class;
 - (Class)superclass;
 
 - (id)retain;
@@ -49,21 +51,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (NSString*)debugDescription;
 @end
 
-@protocol NSCopying
-- (id)copyWithZone:(NSZone*)zone;
-@end
-
 @protocol NSMutableCopying
 - (id)mutableCopyWithZone:(NSZone*)zone;
-@end
-
-@protocol NSCoding
-- (id)initWithCoder:(NSCoder*)coder;
-- (void)encodeWithCoder:(NSCoder*)coder;
-@end
-
-@protocol NSSecureCoding <NSCoding>
-+ (BOOL)supportsSecureCoding;
 @end
 
 @protocol NSDiscardableContent
@@ -74,8 +63,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @end
 
 FOUNDATION_EXPORT_CLASS
-__attribute__((objc_root_class))
-@interface NSObject <NSObject> {
+__attribute__((objc_root_class)) @interface NSObject<NSObject> {
 @public
     Class isa;
 }
@@ -85,7 +73,7 @@ __attribute__((objc_root_class))
 + (void)initialize;
 
 /* Creation and Destruction */
-+ (id)new;
++ (id) new;
 + (id)alloc;
 + (id)allocWithZone:(NSZone*)zone;
 
@@ -100,8 +88,8 @@ __attribute__((objc_root_class))
 - (id)self;
 
 /* Inheritance Introspection */
-+ (Class)class;
-- (Class)class;
++ (Class) class;
+- (Class) class;
 + (Class)superclass;
 + (BOOL)isSubclassOfClass:(Class)cls;
 - (BOOL)isKindOfClass:(Class)aClass;
@@ -137,14 +125,14 @@ __attribute__((objc_root_class))
 - (id)mutableCopy;
 @end
 
-@interface NSObject (NSCoding)
-- (Class)classForCoder;
+    @interface NSObject(NSCoding) -
+    (Class)classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
-
 #if __has_feature(objc_arc)
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
+    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
+    CFBridgingRetain(id X) {
     return (__bridge_retained CFTypeRef)X;
 }
 
@@ -153,8 +141,8 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-NS_INLINE NS_RETURNS_RETAINED CFTypeRef
-CFBridgingRetain(id X) {
+    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
+    CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 

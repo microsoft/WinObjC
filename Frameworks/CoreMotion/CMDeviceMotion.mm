@@ -13,27 +13,39 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMDeviceMotion.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMDeviceMotion
+/**
+@Status Stub
+*/
+-(id)copyWithZone:(NSZone *)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+/**
+@Status Stub
+*/
++(BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+/**
+@Status Stub
+*/
+-(instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+*/
+-(void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+@end

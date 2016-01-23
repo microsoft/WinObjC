@@ -13,27 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMSensorDataList.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMSensorDataList
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id _Nonnull[])stackbuf count:(NSUInteger)len {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+@end

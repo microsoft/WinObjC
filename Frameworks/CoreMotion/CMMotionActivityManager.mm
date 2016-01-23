@@ -13,27 +13,45 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMMotionActivityManager.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMMotionActivityManager
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isActivityAvailable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)startActivityUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMotionActivityHandler)handler {
+    UNIMPLEMENTED();
+}
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopActivityUpdates {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)queryActivityStartingFromDate:(NSDate*)start
+                               toDate:(NSDate*)end
+                              toQueue:(NSOperationQueue*)queue
+                          withHandler:(CMMotionActivityQueryHandler)handler {
+    UNIMPLEMENTED();
+}
+
+@end

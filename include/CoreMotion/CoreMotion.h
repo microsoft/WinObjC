@@ -15,25 +15,21 @@
 //******************************************************************************
 #pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
-
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
-
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+#import <StubIncludes.h>
+#import <CoreMotion/CMAccelerometerData.h>
+#import <CoreMotion/CMAltimeter.h>
+#import <CoreMotion/CMAltitudeData.h>
+#import <CoreMotion/CMAttitude.h>
+#import <CoreMotion/CMDeviceMotion.h>
+#import <CoreMotion/CMGyroData.h>
+#import <CoreMotion/CMLogItem.h>
+#import <CoreMotion/CMMagnetometerData.h>
+#import <CoreMotion/CMMotionActivity.h>
+#import <CoreMotion/CMMotionActivityManager.h>
+#import <CoreMotion/CMMotionManager.h>
+#import <CoreMotion/CMPedometer.h>
+#import <CoreMotion/CMPedometerData.h>
+#import <CoreMotion/CMRecordedAccelerometerData.h>
+#import <CoreMotion/CMSensorDataList.h>
+#import <CoreMotion/CMSensorRecorder.h>
+#import <CoreMotion/CMStepCounter.h>

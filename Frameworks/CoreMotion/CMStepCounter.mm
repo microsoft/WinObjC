@@ -13,27 +13,42 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMStepCounter.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMStepCounter
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isStepCountingAvailable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)startStepCountingUpdatesToQueue:(NSOperationQueue*)queue updateOn:(NSInteger)stepCounts withHandler:(CMStepUpdateHandler)handler {
+    UNIMPLEMENTED();
+}
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopStepCountingUpdates {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)queryStepCountStartingFrom:(NSDate*)start to:(NSDate*)end toQueue:(NSOperationQueue*)queue withHandler:(CMStepQueryHandler)handler {
+    UNIMPLEMENTED();
+}
+
+@end

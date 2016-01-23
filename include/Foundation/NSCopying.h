@@ -13,27 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+#import <Foundation/FoundationExport.h>
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+@class NSZone;
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
-
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+@protocol NSCopying
+@required
+- (id)copyWithZone:(NSZone*)zone;
+@end

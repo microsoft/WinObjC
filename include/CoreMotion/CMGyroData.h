@@ -13,27 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+#import <CoreMotion/CoreMotionExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
+#import <Foundation/NSObject.h>
+#import <CoreMotion/CMLogItem.h>
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+typedef struct {
+    double x;
+    double y;
+    double z;
+} CMRotationRate;
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
-
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+COREMOTION_EXPORT_CLASS
+@interface CMGyroData : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@property (readonly, nonatomic) CMRotationRate rotationRate STUB_PROPERTY;
+@end

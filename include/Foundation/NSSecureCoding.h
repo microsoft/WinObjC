@@ -13,27 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <Foundation/NSCoding.h>
+#import <objc/runtime.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
-
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+@protocol NSSecureCoding <NSCoding>
+@required
++ (BOOL)supportsSecureCoding;
+@end

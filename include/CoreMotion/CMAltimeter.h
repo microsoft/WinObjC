@@ -13,27 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+#import <CoreMotion/CoreMotionExport.h>
+#import <Foundation/NSObject.h>
+#import <objc\runtime.h>
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+@class CMAltitudeData;
+@class NSError;
+@class NSOperationQueue;
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+typedef void (^CMAltitudeHandler)(CMAltitudeData* altitudeData, NSError* error);
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
-
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+COREMOTION_EXPORT_CLASS
+@interface CMAltimeter : NSObject <NSObject>
++ (BOOL)isRelativeAltitudeAvailable STUB_METHOD;
+- (void)startRelativeAltitudeUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAltitudeHandler)handler STUB_METHOD;
+- (void)stopRelativeAltitudeUpdates STUB_METHOD;
+@end

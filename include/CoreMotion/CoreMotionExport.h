@@ -13,27 +13,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
-
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
+#ifndef COREMOTION_IMPEXP
+#define COREMOTION_IMPEXP __declspec(dllimport)
 #endif
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+#ifndef COREMOTION_EXPORT
+#ifdef __cplusplus
+#define COREMOTION_EXPORT COREMOTION_IMPEXP extern "C"
+#define COREMOTION_EXPORT_CLASS COREMOTION_IMPEXP
+#else
+#define COREMOTION_EXPORT COREMOTION_IMPEXP extern
+#define COREMOTION_EXPORT_CLASS COREMOTION_IMPEXP
+#endif
+#endif
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+#ifndef COREMOTION_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define COREMOTION_EXTERNC_BEGIN extern "C" {
+#define COREMOTION_EXTERNC_END }
+#else
+#define COREMOTION_EXTERNC_BEGIN
+#define COREMOTION_EXTERNC_END
+#endif
+#endif

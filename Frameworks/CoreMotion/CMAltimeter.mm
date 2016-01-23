@@ -13,27 +13,34 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMAltimeter.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMAltimeter
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isRelativeAltitudeAvailable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)startRelativeAltitudeUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAltitudeHandler)handler {
+    UNIMPLEMENTED();
+}
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopRelativeAltitudeUpdates {
+    UNIMPLEMENTED();
+}
+
+@end

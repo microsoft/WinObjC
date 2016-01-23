@@ -13,27 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "ErrorHandling.h" // For the UNIMPLEMENTED macro
+#import <CoreMotion/CMSensorRecorder.h>
+#import <StubReturn.h>
 
-#ifndef __cplusplus
-#error This file is designed for C++ consumers only
-#endif
+@implementation CMSensorRecorder
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isAccelerometerRecordingAvailable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubReturn {
-    template <typename T>
-    operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isAuthorizedForRecording {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-struct StubConstant {
-    template <typename T>
-    operator T() {
-        T ret = { 0 };
-        return ret;
-    }
-};
+/**
+ @Status Stub
+ @Notes
+*/
+- (CMSensorDataList*)accelerometerDataSince:(uint64_t)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+@end
