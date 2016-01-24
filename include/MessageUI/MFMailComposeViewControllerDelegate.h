@@ -15,24 +15,20 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import <MessageUI/MessageUIExport.h>
-#import <MessageUI/MFMailComposeViewControllerDelegate.h>
+#import <MessageUI/MFMailComposeViewController.h>
 
-MESSAGEUI_EXPORT NSString* const MFMailComposeErrorDomain;
+@class MFMailComposeViewController;
+@class NSError;
 
-MESSAGEUI_EXPORT_CLASS
-@interface MFMailComposeViewController
+typedef NS_ENUM(NSUInteger, MFMailComposeErrorCode) { MFMailComposeErrorCodeSaveFailed, MFMailComposeErrorCodeSendFailed };
+typedef NS_ENUM(NSUInteger, MFMailComposeResult) { MFMailComposeResultCancelled, MFMailComposeResultSaved, MFMailComposeResultSent, MFMailComposeResultFailed };
 
-+ (BOOL)canSendMail;
+@protocol MFMailComposeViewControllerDelegate
 
-@property (nonatomic, assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
-
-- (void)setSubject:(NSString*)subject;
-- (void)setToRecipients:(NSArray*)toRecipients;
-- (void)setMessageBody:(NSString*)body isHTML:(BOOL)isHTML;
-- (void)setCcRecipients:(NSArray*)ccRecipients;
-- (void)setBccRecipients:(NSArray*)bccRecipients;
-- (void)addAttachmentData:(NSData*)attachment mimeType:(NSString*)mimeType fileName:(NSString*)filename;
+@optional
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError*)error;
 
 @end

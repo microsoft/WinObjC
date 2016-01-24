@@ -15,24 +15,26 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/Foundation.h>
-#import <MessageUI/MessageUIExport.h>
-#import <MessageUI/MFMailComposeViewControllerDelegate.h>
+#ifndef MESSAGEUI_IMPEXP
+#define MESSAGEUI_IMPEXP __declspec(dllimport)
+#endif
 
-MESSAGEUI_EXPORT NSString* const MFMailComposeErrorDomain;
+#ifndef MESSAGEUI_EXPORT
+#ifdef __cplusplus
+#define MESSAGEUI_EXPORT MESSAGEUI_IMPEXP extern "C"
+#define MESSAGEUI_EXPORT_CLASS MESSAGEUI_IMPEXP
+#else
+#define MESSAGEUI_EXPORT MESSAGEUI_IMPEXP extern
+#define MESSAGEUI_EXPORT_CLASS MESSAGEUI_IMPEXP
+#endif
+#endif
 
-MESSAGEUI_EXPORT_CLASS
-@interface MFMailComposeViewController
-
-+ (BOOL)canSendMail;
-
-@property (nonatomic, assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
-
-- (void)setSubject:(NSString*)subject;
-- (void)setToRecipients:(NSArray*)toRecipients;
-- (void)setMessageBody:(NSString*)body isHTML:(BOOL)isHTML;
-- (void)setCcRecipients:(NSArray*)ccRecipients;
-- (void)setBccRecipients:(NSArray*)bccRecipients;
-- (void)addAttachmentData:(NSData*)attachment mimeType:(NSString*)mimeType fileName:(NSString*)filename;
-
-@end
+#ifndef MESSAGEUI_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define MESSAGEUI_EXTERNC_BEGIN extern "C" {
+#define MESSAGEUI_EXTERNC_END }
+#else
+#define MESSAGEUI_EXTERNC_BEGIN
+#define MESSAGEUI_EXTERNC_END
+#endif
+#endif
