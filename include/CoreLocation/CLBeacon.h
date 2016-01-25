@@ -20,17 +20,17 @@
 #import <Foundation/NSObject.h>
 #import <CoreLocation/CoreLocationDataTypes.h>
 
-typedef NS_ENUM(NSUInteger, CLRegionState) { CLRegionStateUnknown, CLRegionStateInside, CLRegionStateOutside };
+@class NSUUID;
+@class NSNumber;
+
+typedef NS_ENUM(NSUInteger, CLProximity) { CLProximityUnknown, CLProximityImmediate, CLProximityNear, CLProximityFar };
 
 CORELOCATION_EXPORT_CLASS
-@interface CLRegion : NSObject <NSCopying, NSObject, NSSecureCoding>
-- (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
-                                      radius:(CLLocationDistance)radius
-                                  identifier:(NSString*)identifier STUB_METHOD;
-@property (readonly, copy, nonatomic) NSString* identifier STUB_PROPERTY;
-@property (readonly, nonatomic) CLLocationCoordinate2D center STUB_PROPERTY;
-@property (readonly, nonatomic) CLLocationDistance radius STUB_PROPERTY;
-@property (assign, nonatomic) BOOL notifyOnEntry STUB_PROPERTY;
-@property (assign, nonatomic) BOOL notifyOnExit STUB_PROPERTY;
-- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
+@interface CLBeacon : NSObject <NSCopying, NSObject, NSSecureCoding>
+@property (readonly, nonatomic, strong) NSUUID* proximityUUID STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSNumber* major STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSNumber* minor STUB_PROPERTY;
+@property (readonly, nonatomic) CLProximity proximity STUB_PROPERTY;
+@property (readonly, nonatomic) CLLocationAccuracy accuracy STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger rssi STUB_PROPERTY;
 @end

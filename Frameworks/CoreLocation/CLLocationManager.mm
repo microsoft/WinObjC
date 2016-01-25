@@ -14,8 +14,10 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #import <Starboard.h>
 #import <NSDateInternal.h>
+#import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
 typedef wchar_t WCHAR;
@@ -36,7 +38,7 @@ typedef wchar_t WCHAR;
     BOOL _periodicLocationUpdateRequested;
 }
 
-@property (readwrite, nonatomic, retain) CLLocation* location;
+@property (readwrite, copy, nonatomic) CLLocation* location;
 @end
 
 /**
@@ -80,10 +82,17 @@ static const int64_t c_timeoutInSeconds = 15LL;
 }
 
 /**
- * Getter method for locationServicesEnabled property.
+ * Getter method for (deprecated) locationServicesEnabled property.
  * @return {BOOL} indicates whether location services are enabled on the device.
  */
 - (BOOL)locationServicesEnabled {
+    return (g_authorizationStatus == kCLAuthorizationStatusAuthorized) ? YES : NO;
+}
+
+/**
+ * @return {BOOL} indicates whether location services are enabled on the device.
+ */
++ (BOOL)locationServicesEnabled {
     return (g_authorizationStatus == kCLAuthorizationStatusAuthorized) ? YES : NO;
 }
 
@@ -506,6 +515,114 @@ static const int64_t c_timeoutInSeconds = 15LL;
                                       self.distanceFilter,
                                       self.activityType,
                                       self.location];
+}
+
+/**
+ @Status Stub
+*/
+- (void)startMonitoringSignificantLocationChanges {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)stopMonitoringSignificantLocationChanges {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)startUpdatingHeading {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)stopUpdatingHeading {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)dismissHeadingCalibrationDisplay {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)startMonitoringForRegion:(CLRegion*)region {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)startMonitoringForRegion:(CLRegion*)region desiredAccuracy:(CLLocationAccuracy)accuracy {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)stopMonitoringForRegion:(CLRegion*)region {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)startRangingBeaconsInRegion:(CLBeaconRegion*)region {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)stopRangingBeaconsInRegion:(CLBeaconRegion*)region {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)requestStateForRegion:(CLRegion*)region {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)startMonitoringVisits {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)stopMonitoringVisits {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)regionMonitoringAvailable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)regionMonitoringEnabled {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

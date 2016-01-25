@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,20 +16,17 @@
 
 #pragma once
 
-#import <stubincludes.h>
-#import <CoreLocation/CLBeacon.h>
-#import <CoreLocation/CLBeaconRegion.h>
-#import <CoreLocation/CLCircularRegion.h>
-#import <CoreLocation/CLFloor.h>
-#import <CoreLocation/CLGeocoder.h>
-#import <CoreLocation/CLHeading.h>
-#import <CoreLocation/CLLocation.h>
-#import <CoreLocation/CLLocationManager.h>
-#import <CoreLocation/CLLocationManagerDelegate.h>
-#import <CoreLocation/CLPlacemark.h>
-#import <CoreLocation/CLRegion.h>
-#import <CoreLocation/CLVisit.h>
-#import <CoreLocation/CoreLocationConstants.h>
-#import <CoreLocation/CoreLocationDataTypes.h>
 #import <CoreLocation/CoreLocationExport.h>
-#import <CoreLocation/CoreLocationFunctions.h>
+#import <Foundation/NSObject.h>
+#import <CoreLocation/CLRegion.h>
+#import <CoreLocation/CoreLocationDataTypes.h>
+
+CORELOCATION_EXPORT_CLASS
+@interface CLCircularRegion : CLRegion <NSCopying, NSObject, NSSecureCoding>
+- (instancetype)initWithCenter:(CLLocationCoordinate2D)center
+                        radius:(CLLocationDistance)radius
+                    identifier:(NSString*)identifier STUB_METHOD;
+@property (readonly, nonatomic) CLLocationCoordinate2D center STUB_PROPERTY;
+@property (readonly, nonatomic) CLLocationDistance radius STUB_PROPERTY;
+- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
+@end

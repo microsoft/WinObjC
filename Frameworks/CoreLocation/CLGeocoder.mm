@@ -14,24 +14,45 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreLocation/CLGeocoder.h>
 
-#import <CoreLocation/CoreLocationExport.h>
+@implementation CLGeocoder
+/**
+ @Status Stub
+*/
+- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
+}
 
-@class CLLocation;
-@class CLRegion;
+/**
+ @Status Stub
+*/
+- (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary completionHandler:(CLGeocodeCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
+}
 
-typedef void (^CLGeocodeCompletionHandler)(NSArray* placemark, NSError* error);
+/**
+ @Status Stub
+*/
+- (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
+}
 
-CORELOCATION_EXPORT_CLASS
-@interface CLGeocoder : NSObject <NSObject>
-- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
-- (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary
-               completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
-- (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
+/**
+ @Status Stub
+*/
 - (void)geocodeAddressString:(NSString*)addressString
                     inRegion:(CLRegion*)region
-           completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
-- (void)cancelGeocode STUB_METHOD;
-@property (readonly, getter=isGeocoding, nonatomic) BOOL geocoding STUB_PROPERTY;
+           completionHandler:(CLGeocodeCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)cancelGeocode {
+    UNIMPLEMENTED();
+}
+
 @end

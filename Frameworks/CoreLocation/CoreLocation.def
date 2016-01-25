@@ -62,3 +62,4 @@ LIBRARY CoreLocation
         ; Core Location Functions Reference.mm
         CLLocationCoordinate2DIsValid
         CLLocationCoordinate2DMake
+
