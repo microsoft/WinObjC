@@ -173,8 +173,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
