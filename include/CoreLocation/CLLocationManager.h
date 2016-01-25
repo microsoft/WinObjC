@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,13 +16,15 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocationExport.h>
-#import <CoreLocation/CLLocation.h>
-#import <stdint.h> // uint32_t
+#import <CoreLocation/CoreLocationDataTypes.h>
+#import <CoreLocation/CoreLocationConstants.h>
 
-@class CLRegion;
 @protocol CLLocationManagerDelegate;
+@class CLRegion;
+@class CLBeaconRegion;
+@class CLLocation;
+@class CLHeading;
 
 typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
     kCLAuthorizationStatusNotDetermined = 0,
@@ -33,42 +35,60 @@ typedef NS_ENUM(uint32_t, CLAuthorizationStatus) {
     kCLAuthorizationStatusAuthorizedWhenInUse
 };
 
-enum _CLActivityType {
+typedef NSInteger CLActivityType;
+enum {
     CLActivityTypeOther = 1,
     CLActivityTypeAutomotiveNavigation,
     CLActivityTypeFitness,
     CLActivityTypeOtherNavigation,
 };
-typedef uint32_t CLActivityType;
 
+CORELOCATION_EXPORT const CLLocationDistance CLLocationDistanceMax;
+CORELOCATION_EXPORT const NSTimeInterval CLTimeIntervalMax;
 CORELOCATION_EXPORT_CLASS
-@interface CLLocationManager : NSObject
-
-@property (copy, nonatomic) NSString* purpose;
-@property (assign, nonatomic) id<CLLocationManagerDelegate> delegate;
-@property (assign, nonatomic) BOOL pausesLocationUpdatesAutomatically;
-@property (assign, nonatomic) CLLocationAccuracy desiredAccuracy;
-@property (readonly, nonatomic) BOOL locationServicesEnabled;
-@property (assign, nonatomic) CLActivityType activityType;
-@property (assign, nonatomic) CLLocationDistance distanceFilter;
-@property (readonly, nonatomic) CLLocation* location;
-
-- (void)requestAlwaysAuthorization;
+@interface CLLocationManager : NSObject <NSObject>
 - (void)requestWhenInUseAuthorization;
+- (void)requestAlwaysAuthorization;
 + (CLAuthorizationStatus)authorizationStatus;
-+ (BOOL)deferredLocationUpdatesAvailable;
 + (BOOL)locationServicesEnabled;
++ (BOOL)deferredLocationUpdatesAvailable;
 + (BOOL)significantLocationChangeMonitoringAvailable;
 + (BOOL)headingAvailable;
 + (BOOL)isMonitoringAvailableForClass:(Class)regionClass;
 + (BOOL)isRangingAvailable;
+@property (assign, nonatomic) id<CLLocationManagerDelegate> delegate;
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
 - (void)requestLocation;
-- (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance timeout:(NSTimeInterval)timeout;
-- (void)disallowDeferredLocationUpdates;
-
-// TODO::
-// todo-nithishm-11022015 - Need to support other methods in future.
-
+@property (assign, nonatomic) BOOL pausesLocationUpdatesAutomatically STUB_PROPERTY;
+@property (assign, nonatomic) BOOL allowsBackgroundLocationUpdates STUB_PROPERTY;
+@property (assign, nonatomic) CLLocationDistance distanceFilter;
+@property (assign, nonatomic) CLLocationAccuracy desiredAccuracy;
+@property (assign, nonatomic) CLActivityType activityType STUB_PROPERTY;
+- (void)startMonitoringSignificantLocationChanges STUB_METHOD;
+- (void)stopMonitoringSignificantLocationChanges STUB_METHOD;
+- (void)startUpdatingHeading STUB_METHOD;
+- (void)stopUpdatingHeading STUB_METHOD;
+- (void)dismissHeadingCalibrationDisplay STUB_METHOD;
+@property (assign, nonatomic) CLLocationDegrees headingFilter STUB_PROPERTY;
+@property (assign, nonatomic) CLDeviceOrientation headingOrientation STUB_PROPERTY;
+- (void)startMonitoringForRegion:(CLRegion*)region STUB_METHOD;
+- (void)stopMonitoringForRegion:(CLRegion*)region STUB_METHOD;
+@property (readonly, copy, nonatomic) NSSet* monitoredRegions STUB_PROPERTY;
+@property (readonly, nonatomic) CLLocationDistance maximumRegionMonitoringDistance STUB_PROPERTY;
+- (void)startRangingBeaconsInRegion:(CLBeaconRegion*)region STUB_METHOD;
+- (void)stopRangingBeaconsInRegion:(CLBeaconRegion*)region STUB_METHOD;
+- (void)requestStateForRegion:(CLRegion*)region STUB_METHOD;
+@property (readonly, copy, nonatomic) NSSet* rangedRegions STUB_PROPERTY;
+- (void)startMonitoringVisits STUB_METHOD;
+- (void)stopMonitoringVisits STUB_METHOD;
+- (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance timeout:(NSTimeInterval)timeout STUB_METHOD;
+- (void)disallowDeferredLocationUpdates STUB_METHOD;
+@property (readonly, copy, nonatomic) CLLocation* location;
+@property (readonly, copy, nonatomic) CLHeading* heading STUB_PROPERTY;
++ (BOOL)regionMonitoringAvailable STUB_METHOD;
++ (BOOL)regionMonitoringEnabled STUB_METHOD;
+- (void)startMonitoringForRegion:(CLRegion*)region desiredAccuracy:(CLLocationAccuracy)accuracy STUB_METHOD;
+@property (assign, nonatomic) BOOL locationServicesEnabled;
+@property (copy, nonatomic) NSString* purpose;
 @end

@@ -14,23 +14,58 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreLocation/CLRegion.h>
 
-#import <CoreLocation/CoreLocationExport.h>
-#import <Foundation/NSObject.h>
-#import <CoreLocation/CoreLocationDataTypes.h>
+@implementation CLRegion
 
-typedef NS_ENUM(NSUInteger, CLRegionState) { CLRegionStateUnknown, CLRegionStateInside, CLRegionStateOutside };
-
-CORELOCATION_EXPORT_CLASS
-@interface CLRegion : NSObject <NSCopying, NSObject, NSSecureCoding>
+/**
+ @Status Stub
+*/
 - (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
                                       radius:(CLLocationDistance)radius
-                                  identifier:(NSString*)identifier STUB_METHOD;
-@property (readonly, copy, nonatomic) NSString* identifier STUB_PROPERTY;
-@property (readonly, nonatomic) CLLocationCoordinate2D center STUB_PROPERTY;
-@property (readonly, nonatomic) CLLocationDistance radius STUB_PROPERTY;
-@property (assign, nonatomic) BOOL notifyOnEntry STUB_PROPERTY;
-@property (assign, nonatomic) BOOL notifyOnExit STUB_PROPERTY;
-- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
+                                  identifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
 @end

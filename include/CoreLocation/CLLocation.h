@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,77 +16,35 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
-#import <Foundation/NSValue.h>
 #import <CoreLocation/CoreLocationExport.h>
-#import <stdint.h> // uint32_t
+#import <CoreLocation/CoreLocationDataTypes.h>
 
-enum _CLError {
-    kCLErrorLocationUnknown = 0,
-    kCLErrorDenied = 1,
-    kCLErrorNetwork = 2,
-};
-typedef uint32_t CLError;
-
-typedef double CLLocationAccuracy;
-typedef double CLLocationDegrees;
-typedef double CLLocationDistance;
-typedef double CLLocationSpeed;
-typedef double CLLocationDirection;
-
-typedef struct {
-    CLLocationDegrees latitude;
-    CLLocationDegrees longitude;
-} CLLocationCoordinate2D;
-
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyHundredMeters;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyKilometer;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyNearestTenMeters;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyThreeKilometers;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyBestForNavigation;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyBest;
-CORELOCATION_EXPORT const CLLocationDistance kCLDistanceFilterNone;
-
-CORELOCATION_EXPORT const CLLocationCoordinate2D kCLLocationCoordinate2DInvalid;
-CORELOCATION_EXPORT const CLLocationAccuracy kCLLocationAccuracyNearestTenMeters;
-
-CORELOCATION_EXPORT CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocationDegrees latitude, CLLocationDegrees longitude);
-CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coordinate);
+@class CLFloor;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLLocation : NSObject <NSCopying>
-
+@interface CLLocation : NSObject <NSCopying, NSObject, NSSecureCoding>
+- (instancetype)initWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude;
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate
+                          altitude:(CLLocationDistance)altitude
+                horizontalAccuracy:(CLLocationAccuracy)hAccuracy
+                  verticalAccuracy:(CLLocationAccuracy)vAccuracy
+                         timestamp:(NSDate*)timestamp;
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate
+                          altitude:(CLLocationDistance)altitude
+                horizontalAccuracy:(CLLocationAccuracy)hAccuracy
+                  verticalAccuracy:(CLLocationAccuracy)vAccuracy
+                            course:(CLLocationDirection)course
+                             speed:(CLLocationSpeed)speed
+                         timestamp:(NSDate*)timestamp;
 @property (readonly, nonatomic) CLLocationCoordinate2D coordinate;
 @property (readonly, nonatomic) CLLocationDistance altitude;
-// TODO::
-// todo-nithishm-11022015 - Need to implement CLFloor.
-// @property(readonly, nonatomic, copy) CLFloor* floor;
+@property (readonly, copy, nonatomic) CLFloor* floor STUB_PROPERTY;
 @property (readonly, nonatomic) CLLocationAccuracy horizontalAccuracy;
 @property (readonly, nonatomic) CLLocationAccuracy verticalAccuracy;
-@property (readonly, nonatomic, copy) NSDate* timestamp;
-@property (nonatomic, readonly, copy) NSString* description;
+@property (readonly, copy, nonatomic) NSDate* timestamp;
+@property (readonly, copy, nonatomic) NSString* description;
+- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location STUB_METHOD;
+- (CLLocationDistance)getDistanceFrom:(const CLLocation*)location STUB_METHOD;
 @property (readonly, nonatomic) CLLocationSpeed speed;
 @property (readonly, nonatomic) CLLocationDirection course;
-
-- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location;
-- (CLLocationDistance)getDistanceFrom:(const CLLocation*)location;
-- (id)initWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude;
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate
-                altitude:(CLLocationDistance)altitude
-      horizontalAccuracy:(CLLocationAccuracy)hAccuracy
-        verticalAccuracy:(CLLocationAccuracy)vAccuracy
-               timestamp:(NSDate*)timestamp;
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate
-                altitude:(CLLocationDistance)altitude
-      horizontalAccuracy:(CLLocationAccuracy)hAccuracy
-        verticalAccuracy:(CLLocationAccuracy)vAccuracy
-                  course:(CLLocationDirection)course
-                   speed:(CLLocationSpeed)speed
-               timestamp:(NSDate*)timestamp;
-
-@end
-
-@interface NSValue(CLLocationCoordinate2DAdditions)
-+ (NSValue*)valueWithMKCoordinate:(CLLocationCoordinate2D)coordinate;
-- (CLLocationCoordinate2D)MKCoordinateValue;
 @end

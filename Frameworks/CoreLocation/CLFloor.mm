@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,40 @@
 //
 //******************************************************************************
 
-#pragma once
-
-#import <stubincludes.h>
-#import <CoreLocation/CLBeacon.h>
-#import <CoreLocation/CLBeaconRegion.h>
-#import <CoreLocation/CLCircularRegion.h>
+#import <StubReturn.h>
 #import <CoreLocation/CLFloor.h>
-#import <CoreLocation/CLGeocoder.h>
-#import <CoreLocation/CLHeading.h>
-#import <CoreLocation/CLLocation.h>
-#import <CoreLocation/CLLocationManager.h>
-#import <CoreLocation/CLLocationManagerDelegate.h>
-#import <CoreLocation/CLPlacemark.h>
-#import <CoreLocation/CLRegion.h>
-#import <CoreLocation/CLVisit.h>
-#import <CoreLocation/CoreLocationConstants.h>
-#import <CoreLocation/CoreLocationDataTypes.h>
-#import <CoreLocation/CoreLocationExport.h>
-#import <CoreLocation/CoreLocationFunctions.h>
+
+@implementation CLFloor
+
+/**
+ @Status Stub
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+@end

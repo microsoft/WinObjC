@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,19 +16,24 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocationExport.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSError.h>
 
 @class CLLocation;
+@class CLRegion;
 
 typedef void (^CLGeocodeCompletionHandler)(NSArray* placemark, NSError* error);
 
 CORELOCATION_EXPORT_CLASS
-@interface CLGeocoder : NSObject
-
-// TODO::
-// todo-nithishm-11022015 - Incomplete file.
-
-- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler;
-
+@interface CLGeocoder : NSObject <NSObject>
+- (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
+- (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary
+               completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
+- (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
+- (void)geocodeAddressString:(NSString*)addressString
+                    inRegion:(CLRegion*)region
+           completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
+- (void)cancelGeocode STUB_METHOD;
+@property (readonly, getter=isGeocoding, nonatomic) BOOL geocoding STUB_PROPERTY;
 @end

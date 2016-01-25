@@ -14,28 +14,23 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreLocation/CoreLocationFunctions.h>
 
-#ifndef CORELOCATION_IMPEXP
-#define CORELOCATION_IMPEXP __declspec(dllimport)
-#endif
+/**
+ @Status Stub
+ @Notes
+*/
+/*BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D coord) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}*/
 
-#ifndef CORELOCATION_EXPORT
-#ifdef __cplusplus
-#define CORELOCATION_EXPORT CORELOCATION_IMPEXP extern "C"
-#define CORELOCATION_EXPORT_CLASS CORELOCATION_IMPEXP
-#else
-#define CORELOCATION_EXPORT CORELOCATION_IMPEXP extern
-#define CORELOCATION_EXPORT_CLASS CORELOCATION_IMPEXP
-#endif
-#endif
-
-#ifndef CORELOCATION_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define CORELOCATION_EXTERNC_BEGIN extern "C" {
-#define CORELOCATION_EXTERNC_END }
-#else
-#define CORELOCATION_EXTERNC_BEGIN
-#define CORELOCATION_EXTERNC_END
-#endif
-#endif
+/**
+ @Status Stub
+ @Notes
+*/
+CLLocationCoordinate2D CLLocationCoordinate2DMake(CLLocationDegrees latitude, CLLocationDegrees longitude) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
