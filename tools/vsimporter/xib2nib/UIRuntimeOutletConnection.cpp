@@ -43,7 +43,7 @@ void UIRuntimeOutletConnection::InitFromStory(XIBObject* obj) {
 
     ObjectConverter* destObj = (ObjectConverter*)findReference(destId);
     _destination = destObj;
-
+    // TODO: destobj could be null and this crashes it
     //  Check if the destination property is part of our heirarchy
     XIBObject* curObj = this;
     while (curObj) {

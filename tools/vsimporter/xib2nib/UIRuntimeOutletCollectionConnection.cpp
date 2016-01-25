@@ -40,6 +40,9 @@ void UIRuntimeOutletCollectionConnection::InitFromStory(XIBObject* obj) {
 
     _outputClassName = "UIRuntimeOutletCollectionConnection";
 
+    _collectionClassName = "NSArray";
+    _addsToExisting = true;
+
     //  Find the destination we're to plug into
     const char* destId = getAttrAndHandle("destination");
     _label = getAttrAndHandle("property");

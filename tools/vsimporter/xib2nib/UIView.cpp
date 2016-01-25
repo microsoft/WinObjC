@@ -19,6 +19,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "UIRuntimeOutletCollectionConnection.h"
 
 static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
     XIBObjectBool* value = (XIBObjectBool*)propObj;
@@ -132,6 +133,7 @@ void UIView::InitFromStory(XIBObject* obj) {
 
     if (getAttrib("opaque")) {
         const char* pVal = getAttrAndHandle("opaque");
+
         if (strcmp(pVal, "NO") == 0)
             _opaque = false;
     }
@@ -153,6 +155,7 @@ void UIView::InitFromStory(XIBObject* obj) {
     }
     if (getAttrib("contentMode")) {
         const char* mode = getAttrib("contentMode");
+
         bool isHandled = true;
 
         if (strcmp(mode, "left") == 0) {
@@ -190,6 +193,7 @@ void UIView::InitFromStory(XIBObject* obj) {
             _hidden = true;
     }
     XIBObject* frameRect = FindMemberAndHandle("frame");
+
     if (frameRect) {
         _bounds.x = 0;
         _bounds.y = 0;
@@ -231,6 +235,22 @@ void UIView::InitFromStory(XIBObject* obj) {
 void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     if (!_ignoreUIObject)
         writer->_allUIObjects->AddMember(NULL, this);
+
+    if (_connections) {
+        for (int i = 0; i < _connections->count(); i++) {
+            XIBObject* curObj = _connections->objectAtIndex(i);
+            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletCollectionConnection") == 0) {
+                UIRuntimeOutletCollectionConnection* cur = (UIRuntimeOutletCollectionConnection*)curObj;
+
+                UIRuntimeOutletCollectionConnection* newOutlet = new UIRuntimeOutletCollectionConnection();
+                newOutlet->_label = cur->_label;
+                newOutlet->_source = cur->_source;
+                newOutlet->_destination = cur->_destination;
+                writer->_connections->AddMember(NULL, newOutlet);
+                writer->AddOutputObject(newOutlet);
+            }
+        }
+    }
 
     if (_subviews->count() > 0) {
         int count = _subviews->count();

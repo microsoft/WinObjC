@@ -27,8 +27,48 @@
 extern NSMutableDictionary* curGesturesDict;
 
 @implementation UIGestureRecognizer : NSObject
+
+static void commonInit(UIGestureRecognizer* self) {
+    self->_disabled = NO;
+    self->_cancelsTouchesInView = YES;
+    self->_delaysTouchesBegan = NO;
+    self->_delaysTouchesEnded = YES;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        commonInit(self);
+    }
+
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder*)coder {
-    EbrDebugLog("UIGestureRecognizer: Should init with coder\n");
+    if (self = [super init]) {
+        commonInit(self);
+
+        NSString* disabledKey = @"UIGestureRecognizer.disabled";
+        NSString* cancelsTouchesInViewKey = @"UIGestureRecognizer.cancelsTouchesInView";
+        NSString* delaysTouchesBeganKey = @"UIGestureRecognizer.delaysTouchesBegan";
+        NSString* delaysTouchesEndedKey = @"UIGestureRecognizer.delaysTouchesEnded";
+
+        if ([coder containsValueForKey:disabledKey]) {
+            _disabled = [coder decodeBoolForKey:disabledKey];
+        }
+
+        if ([coder containsValueForKey:cancelsTouchesInViewKey]) {
+            _cancelsTouchesInView = [coder decodeBoolForKey:cancelsTouchesInViewKey];
+        }
+
+        if ([coder containsValueForKey:delaysTouchesBeganKey]) {
+            _delaysTouchesBegan = [coder decodeBoolForKey:delaysTouchesBeganKey];
+        }
+
+        if ([coder containsValueForKey:delaysTouchesEndedKey]) {
+            _delaysTouchesEnded = [coder decodeBoolForKey:delaysTouchesEndedKey];
+        }
+    }
+
     return self;
 }
 
@@ -90,6 +130,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setCancelsTouchesInView:(BOOL)cancels {
     UNIMPLEMENTED();
+
+    _cancelsTouchesInView = cancels;
 }
 
 /**
@@ -97,6 +139,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setDelaysTouchesBegan:(BOOL)delays {
     UNIMPLEMENTED();
+
+    _delaysTouchesBegan = delays;
 }
 
 /**
@@ -104,6 +148,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setDelaysTouchesEnded:(BOOL)delays {
     UNIMPLEMENTED();
+
+    _delaysTouchesEnded = delays;
 }
 
 /**

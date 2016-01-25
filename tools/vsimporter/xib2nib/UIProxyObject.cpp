@@ -42,29 +42,27 @@ void UIProxyObject::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     //  Add outlets
     if (_connectedObjects) {
         for (int i = 0; i < _connectedObjects->count(); i++) {
-            XIBObject *curObj = (UIRuntimeOutletConnection *)_connectedObjects->objectAtIndex(i);
+            XIBObject* curObj = (UIRuntimeOutletConnection*)_connectedObjects->objectAtIndex(i);
             if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
-                UIRuntimeOutletConnection *cur = (UIRuntimeOutletConnection *)curObj;
+                UIRuntimeOutletConnection* cur = (UIRuntimeOutletConnection*)curObj;
 
-                UIRuntimeOutletConnection *newOutlet = new UIRuntimeOutletConnection();
+                UIRuntimeOutletConnection* newOutlet = new UIRuntimeOutletConnection();
                 newOutlet->_label = cur->_label;
                 newOutlet->_source = cur->_source;
                 newOutlet->_destination = cur->_destination;
                 writer->_connections->AddMember(NULL, newOutlet);
                 writer->AddOutputObject(newOutlet);
-            }
-            else if (strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0) {
-                UIRuntimeEventConnection *cur = (UIRuntimeEventConnection *)curObj;
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0) {
+                UIRuntimeEventConnection* cur = (UIRuntimeEventConnection*)curObj;
 
-                UIRuntimeEventConnection *newOutlet = new UIRuntimeEventConnection();
+                UIRuntimeEventConnection* newOutlet = new UIRuntimeEventConnection();
                 newOutlet->_label = cur->_label;
                 newOutlet->_source = cur->_source;
                 newOutlet->_destination = cur->_destination;
                 newOutlet->_eventMask = cur->_eventMask;
                 writer->_connections->AddMember(NULL, newOutlet);
                 writer->AddOutputObject(newOutlet);
-            }
-            else {
+            } else {
                 assert(0);
             }
         }

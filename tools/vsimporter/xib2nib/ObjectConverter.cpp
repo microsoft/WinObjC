@@ -61,6 +61,8 @@
 #include "UICollectionView.h"
 #include "UIStepper.h"
 #include "_UILayoutGuide.h"
+#include "UIPanGestureRecognizer.h"
+#include "UISwipeGestureRecognizer.h"
 #include <assert.h>
 
 #define IS_CONVERTER(newinst, classnamevar, name, type) \
@@ -148,6 +150,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "color", UIColor)
     IS_CONVERTER(ret, className, "barButtonItem", UIBarButtonItem)
     IS_CONVERTER(ret, className, "outlet", UIRuntimeOutletConnection)
+    IS_CONVERTER(ret, className, "outletCollection", UIRuntimeOutletCollectionConnection)
     IS_CONVERTER(ret, className, "segue", UIStoryboardSegue)
     IS_CONVERTER(ret, className, "fontDescription", UIFont)
     IS_CONVERTER(ret, className, "tableViewController", UITableViewController)
@@ -175,6 +178,8 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "pickerView", UIPickerView)
     IS_CONVERTER(ret, className, "segmentedControl", UISegmentedControl)
     IS_CONVERTER(ret, className, "stepper", UIStepper)
+    IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
+    IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
 
     if (ret == NULL) {
 #ifdef _DEBUG
@@ -286,6 +291,15 @@ void ObjectConverterSwapper::ConvertStaticMappings(NIBWriter* writer, XIBObject*
                 newOutlet->_source = cur->_source;
                 newOutlet->_destination = cur->_destination;
                 newOutlet->_eventMask = cur->_eventMask;
+                writer->_connections->AddMember(NULL, newOutlet);
+                writer->AddOutputObject(newOutlet);
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeOutletCollectionConnection") == 0) {
+                UIRuntimeOutletCollectionConnection* cur = (UIRuntimeOutletCollectionConnection*)curObj;
+
+                UIRuntimeOutletCollectionConnection* newOutlet = new UIRuntimeOutletCollectionConnection();
+                newOutlet->_label = cur->_label;
+                newOutlet->_source = cur->_source;
+                newOutlet->_destination = cur->_destination;
                 writer->_connections->AddMember(NULL, newOutlet);
                 writer->AddOutputObject(newOutlet);
             } else {

@@ -21,6 +21,7 @@
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 #include "UIKit/UIRuntimeOutletConnection.h"
+#include "UIKit/UIRuntimeOutletCollectionConnection.h"
 #include "UIClassSwapper.h"
 #include "QuartzCore/CATransaction.h"
 #include "UnifiedFoundation/Foundation/NSColor.h"
@@ -39,6 +40,7 @@ void NSValueForceinclude();
 void ForceInclusion() {
     [UIRuntimeEventConnection class];
     [UIRuntimeOutletConnection class];
+    [UIRuntimeOutletCollectionConnection class];
     [UIClassSwapper class];
     [UIImageNibPlaceholder class];
     [UIButtonContent class];
