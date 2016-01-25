@@ -13,8 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSObject.h>
+
 #import <objc/runtime.h>
 
 @class CMPedometerData;
@@ -22,6 +26,7 @@
 @class NSDate;
 
 typedef void (^CMPedometerHandler)(CMPedometerData* pedometerData, NSError* error);
+
 COREMOTION_EXPORT_CLASS
 @interface CMPedometer : NSObject <NSObject>
 + (BOOL)isStepCountingAvailable STUB_METHOD;

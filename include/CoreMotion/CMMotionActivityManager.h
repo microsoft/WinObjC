@@ -13,9 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
+
 #import <objc/runtime.h>
 
 @class CMMotionActivity;

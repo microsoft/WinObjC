@@ -13,11 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
-#import <Foundation/NSObject.h>
 
 COREMOTION_EXPORT_CLASS
 @interface CMLogItem : NSObject <NSCopying, NSObject, NSSecureCoding>

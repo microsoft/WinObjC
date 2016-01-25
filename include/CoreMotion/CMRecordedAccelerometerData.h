@@ -13,11 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <CoreMotion/CMAccelerometerData.h>
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
-#import <CoreMotion/CMAccelerometerData.h>
+
 #import <objc/runtime.h>
 
 @class NSDate;

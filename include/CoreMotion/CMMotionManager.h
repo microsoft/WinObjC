@@ -13,9 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CMAttitude.h>
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSObject.h>
+
 #import <objc/runtime.h>
 
 @class CMAccelerometerData;
@@ -30,6 +34,7 @@ typedef void (^CMAccelerometerHandler)(CMAccelerometerData* accelerometerData, N
 typedef void (^CMGyroHandler)(CMGyroData* gyroData, NSError* error);
 typedef void (^CMMagnetometerHandler)(CMMagnetometerData* magnetometerData, NSError* error);
 typedef void (^CMDeviceMotionHandler)(CMDeviceMotion* motion, NSError* error);
+
 typedef enum {
     CMErrorNULL = 100,
     CMErrorDeviceRequiresMovement,

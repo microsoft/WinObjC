@@ -13,7 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
@@ -23,7 +26,9 @@ typedef struct {
     double m21, m22, m23;
     double m31, m32, m33;
 } CMRotationMatrix;
+
 typedef struct { double x, y, z, w; } CMQuaternion;
+
 typedef enum {
     CMAttitudeReferenceFrameXArbitraryZVertical = 1 << 0,
     CMAttitudeReferenceFrameXArbitraryCorrectedZVertical = 1 << 1,

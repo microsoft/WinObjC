@@ -13,7 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
 #import <CoreMotion/CoreMotionExport.h>
+
 #import <Foundation/NSEnumerator.h>
 #import <Foundation/NSObject.h>
 
