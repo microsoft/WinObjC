@@ -208,7 +208,6 @@ LIBRARY UIKit
         UITransitionContextFromViewControllerKey DATA
         UITransitionContextToViewControllerKey DATA
         UIViewNoIntrinsicMetric DATA
-        _OBJC_CLASS_ASIdentifierManager DATA
         _OBJC_CLASS_CBCentralManager DATA
         _OBJC_CLASS_GKAchievement DATA
         _OBJC_CLASS_GKAchievementViewController DATA
@@ -302,7 +301,6 @@ LIBRARY UIKit
         _OBJC_CLASS_UIWindow DATA
         _OBJC_CLASS__UILayoutGuide DATA
         __inet_ntoa
-        __objc_class_name_ASIdentifierManager CONSTANT
         __objc_class_name_CBCentralManager CONSTANT
         __objc_class_name_GKAchievement CONSTANT
         __objc_class_name_GKAchievementViewController CONSTANT

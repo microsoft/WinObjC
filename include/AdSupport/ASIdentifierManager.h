@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#import <AdSupport/AdSupportExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSUUID.h>
 
-#ifndef __ADSUPPORT_H
-#define __ADSUPPORT_H
+@class NSUUID;
 
-#import <StubIncludes.h>
-#import <AdSupport/ASIdentifierManager.h>
-
-#endif
+ADSUPPORT_EXPORT_CLASS
+@interface ASIdentifierManager : NSObject <NSObject>
+@property (readonly, nonatomic) NSUUID* advertisingIdentifier STUB_PROPERTY;
+@property (readonly, getter=isAdvertisingTrackingEnabled, nonatomic) BOOL advertisingTrackingEnabled STUB_PROPERTY;
++ (ASIdentifierManager*)sharedManager STUB_METHOD;
+@end

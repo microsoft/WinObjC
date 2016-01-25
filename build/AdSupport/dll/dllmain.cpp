@@ -13,11 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#include "Starboard.h"
-
-#include "AdSupport/AdSupport.h"
-
-@implementation ASIdentifierManager
-
-@end

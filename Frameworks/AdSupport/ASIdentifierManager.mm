@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,17 @@
 //
 //******************************************************************************
 
-#ifndef __ADSUPPORT_H
-#define __ADSUPPORT_H
+#import "AdSupport/AdSupport.h"
+#include "StubReturn.h"
 
-#import <StubIncludes.h>
-#import <AdSupport/ASIdentifierManager.h>
+@implementation ASIdentifierManager
+/**
+ @Status Stub
+ @Notes
+*/
++ (ASIdentifierManager*)sharedManager {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-#endif
+@end
