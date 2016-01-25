@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,33 +14,18 @@
 //
 //******************************************************************************
 
-#pragma once
+#ifndef _CLPLACEMARK_H_
+#define _CLPLACEMARK_H_
 
-#import <CoreLocation/CoreLocationExport.h>
-#import <Foundation/NSObject.h>
+#import <Foundation/Foundation.h>
 
-@class CLLocation;
-@class CLRegion;
-@class NSTimeZone;
+@interface CLPlacemark : NSObject
 
-CORELOCATION_EXPORT_CLASS
-@interface CLPlacemark : NSObject <NSCopying, NSObject, NSSecureCoding>
-- (instancetype)initWithPlacemark:(CLPlacemark*)placemark STUB_METHOD;
-@property (readonly, copy, nonatomic) CLLocation* location STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* name STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSDictionary* addressDictionary STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* ISOcountryCode STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* country STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* postalCode STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* administrativeArea STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subAdministrativeArea STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* locality STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subLocality STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* thoroughfare STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* subThoroughfare STUB_PROPERTY;
-@property (readonly, copy, nonatomic) CLRegion* region STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSTimeZone* timeZone STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* inlandWater STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* ocean STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSArray* areasOfInterest STUB_PROPERTY;
+// TODO::
+// todo-nithishm-11022015 - Incomplete file.
+
+@property (nonatomic, readonly) NSDictionary* addressDictionary;
+
 @end
+
+#endif /* _CLPLACEMARK_H_ */

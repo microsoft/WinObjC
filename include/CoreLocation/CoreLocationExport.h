@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,15 +27,5 @@
 #else
 #define CORELOCATION_EXPORT CORELOCATION_IMPEXP extern
 #define CORELOCATION_EXPORT_CLASS CORELOCATION_IMPEXP
-#endif
-#endif
-
-#ifndef CORELOCATION_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define CORELOCATION_EXTERNC_BEGIN extern "C" {
-#define CORELOCATION_EXTERNC_END }
-#else
-#define CORELOCATION_EXTERNC_BEGIN
-#define CORELOCATION_EXTERNC_END
 #endif
 #endif
