@@ -19,28 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltimeter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltitudeData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAttitude.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMDeviceMotion.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMGyroData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMLogItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMagnetometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivity.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivityManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMRecordedAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorDataList.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorRecorder.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMStepCounter.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageDestination.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageProperties.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageSource.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AF9DAD32-9B21-41DA-9B36-A6B53D008523}</ProjectGuid>
-    <ProjectName>CoreMotionLib</ProjectName>
-    <RootNamespace>CoreMotion</RootNamespace>
+    <ProjectGuid>{BA535474-97E6-4FCF-8711-0F0374487FA9}</ProjectGuid>
+    <ProjectName>ImageIOLib</ProjectName>
+    <RootNamespace>ImageIO</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -49,7 +35,7 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>CoreMotionLib</OutputName>
+    <OutputName>ImageIOLib</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -136,7 +122,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -156,7 +142,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
@@ -178,7 +164,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -198,7 +184,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
