@@ -17,7 +17,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <CoreFoundation/CFRunLoop.h>
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSMutableArray.h>
-#import <Foundation/NSLock.h>
+#import <Foundation/NSRecursiveLock.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSThread.h>
 #import <Foundation/NSDate.h>
@@ -67,7 +67,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     _currentMode = [NSDefaultRunLoopMode retain];
     _continue = [NSMutableArray new];
     _orderedPerforms = [NSMutableArray new];
-    _orderedLock = [NSLock new];
+    _orderedLock = [NSRecursiveLock new];
     pthread_mutex_init(&_modeLock, 0);
 
     NSRunLoopState* state = [NSRunLoopState new];

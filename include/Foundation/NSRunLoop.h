@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @class NSDelayedPerform;
 @class NSInputSource;
 @class NSMutableDictionary;
-@class NSLock;
+@class NSRecursiveLock;
 
 FOUNDATION_EXPORT NSString* const NSDefaultRunLoopMode;
 FOUNDATION_EXPORT NSString* const NSRunLoopCommonModes;
@@ -39,7 +39,7 @@ FOUNDATION_EXPORT_CLASS
     NSString* _currentMode;
     NSMutableArray* _continue;
     NSMutableArray* _orderedPerforms;
-    NSLock* _orderedLock;
+	NSRecursiveLock* _orderedLock;
     bool _stop;
     pthread_mutex_t _modeLock;
 }
