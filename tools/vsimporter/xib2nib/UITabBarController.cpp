@@ -18,26 +18,24 @@
 #include "UITabBar.h"
 #include "UITabBarItem.h"
 
-UITabBarController::UITabBarController()
-{
+UITabBarController::UITabBarController() {
     _customizableViewControllers = NULL;
     _tabBar = NULL;
     _navigationItem = NULL;
 }
 
-void UITabBarController::InitFromXIB(XIBObject *obj)
-{
+void UITabBarController::InitFromXIB(XIBObject* obj) {
     UIViewController::InitFromXIB(obj);
 
-    _tabBar = (UITabBar *) obj->FindMember("IBUITabBar");
-    if ( _tabBar ) {
+    _tabBar = (UITabBar*)obj->FindMember("IBUITabBar");
+    if (_tabBar) {
         _tabBar->_delegate = this;
     }
-    if ( _childViewControllers ) {
-        for ( int curIdx = 0; curIdx < _childViewControllers->count(); curIdx ++ ) {
-            XIBObject *curChild = _childViewControllers->objectAtIndex(curIdx);
+    if (_childViewControllers) {
+        for (int curIdx = 0; curIdx < _childViewControllers->count(); curIdx++) {
+            XIBObject* curChild = _childViewControllers->objectAtIndex(curIdx);
 
-            if ( _customizableViewControllers == NULL ) {
+            if (_customizableViewControllers == NULL) {
                 _customizableViewControllers = new XIBArray();
                 _customizableViewControllers->_className = "NSMutableArray";
             }
@@ -48,20 +46,19 @@ void UITabBarController::InitFromXIB(XIBObject *obj)
     _outputClassName = "UITabBarController";
 }
 
-void UITabBarController::InitFromStory(XIBObject *obj)
-{
+void UITabBarController::InitFromStory(XIBObject* obj) {
     UIViewController::InitFromStory(obj);
 
-    _tabBar = (UITabBar *) obj->FindMember("tabBar");
-    if ( _tabBar ) {
+    _tabBar = (UITabBar*)obj->FindMemberAndHandle("tabBar");
+    if (_tabBar) {
         _tabBar->_delegate = this;
     }
 
-    if ( _childViewControllers ) {
-        for ( int curIdx = 0; curIdx < _childViewControllers->count(); curIdx ++ ) {
-            XIBObject *curChild = _childViewControllers->objectAtIndex(curIdx);
+    if (_childViewControllers) {
+        for (int curIdx = 0; curIdx < _childViewControllers->count(); curIdx++) {
+            XIBObject* curChild = _childViewControllers->objectAtIndex(curIdx);
 
-            if ( _customizableViewControllers == NULL ) {
+            if (_customizableViewControllers == NULL) {
                 _customizableViewControllers = new XIBArray();
                 _customizableViewControllers->_className = "NSMutableArray";
             }
@@ -72,13 +69,12 @@ void UITabBarController::InitFromStory(XIBObject *obj)
     _outputClassName = "UITabBarController";
 }
 
-void UITabBarController::Awaken()
-{
+void UITabBarController::Awaken() {
     UIViewController::Awaken();
 
     float tabHeight = 0.0f;
 
-    if ( _tabBar ) {
+    if (_tabBar) {
         UIRect curFrame = _tabBar->getFrame();
         curFrame.y = screenHeight - curFrame.height;
         curFrame.width = screenWidth;
@@ -86,11 +82,11 @@ void UITabBarController::Awaken()
         tabHeight = _tabBar->getFrame().height;
     }
 
-    if ( _childViewControllers ) {
-        for ( int curIdx = 0; curIdx < _childViewControllers->count(); curIdx ++ ) {
-            UIViewController *curChild = (UIViewController *) _childViewControllers->objectAtIndex(curIdx);
+    if (_childViewControllers) {
+        for (int curIdx = 0; curIdx < _childViewControllers->count(); curIdx++) {
+            UIViewController* curChild = (UIViewController*)_childViewControllers->objectAtIndex(curIdx);
 
-            if ( curChild->_view ) {
+            if (curChild->_view) {
                 UIRect curRect = curChild->_view->getFrame();
 
                 curRect.y = 0;
@@ -98,8 +94,8 @@ void UITabBarController::Awaken()
                 curChild->_view->setFrame(curRect);
             }
 
-            if ( curChild->_tabBarItem ) {
-                if ( !_tabBar->_items ) {
+            if (curChild->_tabBarItem) {
+                if (!_tabBar->_items) {
                     _tabBar->_items = new XIBArray();
                 }
                 _tabBar->_items->AddMember(NULL, curChild->_tabBarItem);
@@ -108,11 +104,11 @@ void UITabBarController::Awaken()
     }
 }
 
-void UITabBarController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITabBarController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIViewController::ConvertStaticMappings(writer, obj);
-    if ( _tabBar ) AddOutputMember(writer, "UITabBar", _tabBar);
-    if ( _customizableViewControllers ) {
+    if (_tabBar)
+        AddOutputMember(writer, "UITabBar", _tabBar);
+    if (_customizableViewControllers) {
         AddOutputMember(writer, "UICustomizableViewControllers", _customizableViewControllers);
     }
 }

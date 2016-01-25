@@ -17,16 +17,14 @@
 #include "UIRuntimeOutletCollectionConnection.h"
 #include <assert.h>
 
-UIRuntimeOutletCollectionConnection::UIRuntimeOutletCollectionConnection()
-{
+UIRuntimeOutletCollectionConnection::UIRuntimeOutletCollectionConnection() {
     _outputClassName = "UIRuntimeOutletCollectionConnection";
     _className = "UIRuntimeOutletCollectionConnection";
     _collectionClassName = NULL;
-    _addsToExisting = false;    
+    _addsToExisting = false;
 }
 
-void UIRuntimeOutletCollectionConnection::InitFromXIB(XIBObject *obj)
-{
+void UIRuntimeOutletCollectionConnection::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
 
     _outputClassName = "UIRuntimeOutletCollectionConnection";
@@ -37,36 +35,35 @@ void UIRuntimeOutletCollectionConnection::InitFromXIB(XIBObject *obj)
     _addsToExisting = obj->GetBool("addsContentToExistingCollection", false);
 }
 
-void UIRuntimeOutletCollectionConnection::InitFromStory(XIBObject *obj)
-{
+void UIRuntimeOutletCollectionConnection::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
 
     _outputClassName = "UIRuntimeOutletCollectionConnection";
 
     //  Find the destination we're to plug into
-    const char *destId = getAttrib("destination");
-    _label = getAttrib("property");
+    const char* destId = getAttrAndHandle("destination");
+    _label = getAttrAndHandle("property");
     _source = _parent->_parent;
 
-    ObjectConverter *destObj = (ObjectConverter *) findReference(destId);
+    ObjectConverter* destObj = (ObjectConverter*)findReference(destId);
     _destination = destObj;
 
     //  Check if the destination property is part of our heirarchy
-    XIBObject *curObj = this;
-    while ( curObj ) {
-        if ( curObj == destObj ) {
-            destObj = (ObjectConverter *) _source;
+    XIBObject* curObj = this;
+    while (curObj) {
+        if (curObj == destObj) {
+            destObj = (ObjectConverter*)_source;
             break;
         }
         curObj = curObj->_parent;
     }
-    if ( !destObj->_connectedObjects ) destObj->_connectedObjects = new XIBArray();
+    if (!destObj->_connectedObjects)
+        destObj->_connectedObjects = new XIBArray();
 
     destObj->_connectedObjects->AddMember(NULL, this);
 }
 
-void UIRuntimeOutletCollectionConnection::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIRuntimeOutletCollectionConnection::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
     AddString(writer, "UILabel", _label);
     AddOutputMember(writer, "UISource", _source);

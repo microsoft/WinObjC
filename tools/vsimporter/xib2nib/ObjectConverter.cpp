@@ -64,12 +64,11 @@
 #include <assert.h>
 
 #define IS_CONVERTER(newinst, classnamevar, name, type) \
-    if ( strcmp(classnamevar, name) == 0 ) { \
-        newinst = new type(); \
+    if (strcmp(classnamevar, name) == 0) {              \
+        newinst = new type();                           \
     }
-XIBObject *ObjectConverter::ConverterForObject(const char *className, pugi::xml_node node)
-{
-    XIBObject *ret = NULL;
+XIBObject* ObjectConverter::ConverterForObject(const char* className, pugi::xml_node node) {
+    XIBObject* ret = NULL;
 
     IS_CONVERTER(ret, className, "IBCocoaTouchEventConnection", UIRuntimeEventConnection)
     IS_CONVERTER(ret, className, "IBCocoaTouchOutletConnection", UIRuntimeOutletConnection)
@@ -115,7 +114,7 @@ XIBObject *ObjectConverter::ConverterForObject(const char *className, pugi::xml_
     IS_CONVERTER(ret, className, "IBUISlider", UISlider)
     IS_CONVERTER(ret, className, "IBNSLayoutConstraint", NSLayoutConstraint)
 
-    if ( ret == NULL ) {
+    if (ret == NULL) {
         ret = new XIBObject();
     }
 
@@ -124,9 +123,8 @@ XIBObject *ObjectConverter::ConverterForObject(const char *className, pugi::xml_
     return ret;
 }
 
-XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi::xml_node node)
-{
-    XIBObject *ret = NULL;
+XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi::xml_node node) {
+    XIBObject* ret = NULL;
 
     IS_CONVERTER(ret, className, "objects", XIBArray)
     IS_CONVERTER(ret, className, "subviews", XIBArray)
@@ -178,9 +176,9 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     IS_CONVERTER(ret, className, "segmentedControl", UISegmentedControl)
     IS_CONVERTER(ret, className, "stepper", UIStepper)
 
-    if ( ret == NULL ) {
+    if (ret == NULL) {
 #ifdef _DEBUG
-        printf("Unrecognized tag <%s>\n", className);
+// printf("Unrecognized tag <%s>\n", className);
 #endif
         ret = new XIBObject();
     }
@@ -190,55 +188,49 @@ XIBObject *ObjectConverter::ConverterForStoryObject(const char *className, pugi:
     return ret;
 }
 
-void ConvertOffset(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *propObj, XIBObject *obj)
-{
-    struct 
-    {
+void ConvertOffset(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
+    struct {
         float x, y;
     } UIOffset;
 
     char szName[255];
 
     sprintf(szName, "IBUI%sOffset", prop->nibName);
-    const char *pStr = obj->FindMember(szName)->stringValue();
+    const char* pStr = obj->FindMember(szName)->stringValue();
 
     UIOffset.x = 0;
     UIOffset.y = 0;
 
     sscanf(pStr, "{%f, %f}", &UIOffset.x, &UIOffset.y);
 
-    char *dataOut = (char *) malloc(sizeof(UIOffset) + 1);
+    char* dataOut = (char*)malloc(sizeof(UIOffset) + 1);
     dataOut[0] = 6;
     memcpy(&dataOut[1], &UIOffset, sizeof(UIOffset));
     sprintf(szName, "UI%sOffset", prop->nibName);
     obj->AddOutputMember(writer, strdup(szName), new XIBObjectDataWriter(dataOut, sizeof(UIOffset) + 1));
 }
 
-void ObjectConverter::InitFromXIB(XIBObject *obj)
-{
+void ObjectConverter::InitFromXIB(XIBObject* obj) {
     _connections = NULL;
     _connectedObjects = NULL;
 }
-void ObjectConverter::InitFromStory(XIBObject *obj)
-{
-    _connections = (XIBArray *) FindMemberClass("connections");
+void ObjectConverter::InitFromStory(XIBObject* obj) {
+    setSelfHandled();
+    _connections = (XIBArray*)FindMemberClass("connections");
 }
-void ObjectConverter::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void ObjectConverter::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
 }
-ObjectConverter *ObjectConverter::Clone()
-{
+ObjectConverter* ObjectConverter::Clone() {
     return this;
 }
 
-void ObjectConverter::Map(NIBWriter *writer, XIBObject *obj, PropertyMapper *properties, int numProperties)
-{
-    for ( size_t i = 0; i < obj->_members.size(); i ++ ) {
-        XIBMember *cur = obj->_members[i];
+void ObjectConverter::Map(NIBWriter* writer, XIBObject* obj, PropertyMapper* properties, int numProperties) {
+    for (size_t i = 0; i < obj->_members.size(); i++) {
+        XIBMember* cur = obj->_members[i];
 
-        for ( int j = 0; j < numProperties; j ++ ) {
-            if ( cur->_name && strcmp(cur->_name, properties[j].xibName) == 0 ) {
-                if ( properties[j].ConvertProperty == NULL ) {
+        for (int j = 0; j < numProperties; j++) {
+            if (cur->_name && strcmp(cur->_name, properties[j].xibName) == 0) {
+                if (properties[j].ConvertProperty == NULL) {
                     obj->AddOutputMember(writer, properties[j].nibName, cur->_obj);
                 } else {
                     properties[j].ConvertProperty(&properties[j], writer, cur->_obj, obj);
@@ -246,53 +238,50 @@ void ObjectConverter::Map(NIBWriter *writer, XIBObject *obj, PropertyMapper *pro
             }
         }
     }
-
 }
 
-void ObjectConverterSwapper::InitFromXIB(XIBObject *obj)
-{
+void ObjectConverterSwapper::InitFromXIB(XIBObject* obj) {
     _outputClassName = "UICustomObject";
     ObjectConverter::InitFromXIB(obj);
 }
 
-void ObjectConverterSwapper::InitFromStory(XIBObject *obj)
-{
+void ObjectConverterSwapper::InitFromStory(XIBObject* obj) {
     _outputClassName = "UICustomObject";
     ObjectConverter::InitFromStory(obj);
 
-    if ( getAttrib("customClass") ) {
-        _swappedClassName = getAttrib("customClass");
+    if (getAttrib("customClass")) {
+        _swappedClassName = getAttrAndHandle("customClass");
     }
 }
 
-void ObjectConverterSwapper::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
-    if ( !_ignoreUIObject ) writer->_allUIObjects->AddMember(NULL, this);
+void ObjectConverterSwapper::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
+    if (!_ignoreUIObject)
+        writer->_allUIObjects->AddMember(NULL, this);
     ObjectConverter::ConvertStaticMappings(writer, obj);
 
-    if ( obj->_swappedClassName ) {
+    if (obj->_swappedClassName) {
         obj->AddOutputMember(writer, "UIOriginalClassName", new XIBObjectString(obj->_outputClassName));
         obj->AddOutputMember(writer, "UIClassName", new XIBObjectString(obj->_swappedClassName));
         obj->_outputClassName = "UIClassSwapper";
     }
 
     //  Add outlets
-    if ( _connectedObjects ) {
-        for ( int i = 0; i < _connectedObjects->count(); i ++ ) {
-            XIBObject *curObj = (UIRuntimeOutletConnection *) _connectedObjects->objectAtIndex(i);
-            if ( strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0 ) {
-                UIRuntimeOutletConnection *cur = (UIRuntimeOutletConnection *) curObj;
+    if (_connectedObjects) {
+        for (int i = 0; i < _connectedObjects->count(); i++) {
+            XIBObject* curObj = (UIRuntimeOutletConnection*)_connectedObjects->objectAtIndex(i);
+            if (strcmp(curObj->_outputClassName, "UIRuntimeOutletConnection") == 0) {
+                UIRuntimeOutletConnection* cur = (UIRuntimeOutletConnection*)curObj;
 
-                UIRuntimeOutletConnection *newOutlet = new UIRuntimeOutletConnection();
+                UIRuntimeOutletConnection* newOutlet = new UIRuntimeOutletConnection();
                 newOutlet->_label = cur->_label;
                 newOutlet->_source = cur->_source;
                 newOutlet->_destination = cur->_destination;
                 writer->_connections->AddMember(NULL, newOutlet);
                 writer->AddOutputObject(newOutlet);
-            } else if ( strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0 ) {
-                UIRuntimeEventConnection *cur = (UIRuntimeEventConnection *) curObj;
+            } else if (strcmp(curObj->_outputClassName, "UIRuntimeEventConnection") == 0) {
+                UIRuntimeEventConnection* cur = (UIRuntimeEventConnection*)curObj;
 
-                UIRuntimeEventConnection *newOutlet = new UIRuntimeEventConnection();
+                UIRuntimeEventConnection* newOutlet = new UIRuntimeEventConnection();
                 newOutlet->_label = cur->_label;
                 newOutlet->_source = cur->_source;
                 newOutlet->_destination = cur->_destination;

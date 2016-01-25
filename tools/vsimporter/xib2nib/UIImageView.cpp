@@ -22,36 +22,33 @@ static PropertyMapper propertyMappings[] = {
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 
-UIImageView::UIImageView()
-{
-	_image = NULL;
+UIImageView::UIImageView() {
+    _image = NULL;
 }
 
-void UIImageView::InitFromXIB(XIBObject *obj)
-{
+void UIImageView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
-	obj->_outputClassName = "UIImageView";
+    obj->_outputClassName = "UIImageView";
 }
 
-void UIImageView::InitFromStory(XIBObject *obj)
-{
+void UIImageView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
-	_image = NULL;
-	const char *imageName = getAttrib("image");
-	if (imageName) {
-		UICustomResource *image = new UICustomResource();
-		image->_imageName = imageName;
-		_image = image;
-	}
+    _image = NULL;
+    const char* imageName = getAttrAndHandle("image");
+    if (imageName) {
+        UICustomResource* image = new UICustomResource();
+        image->_imageName = imageName;
+        _image = image;
+    }
 
-	obj->_outputClassName = "UIImageView";
+    obj->_outputClassName = "UIImageView";
 }
 
-void UIImageView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIImageView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     Map(writer, obj, propertyMappings, numPropertyMappings);
-	UIView::ConvertStaticMappings(writer, obj);
-	if (_image) AddOutputMember(writer, "UIImage", _image);
+    UIView::ConvertStaticMappings(writer, obj);
+    if (_image)
+        AddOutputMember(writer, "UIImage", _image);
 }

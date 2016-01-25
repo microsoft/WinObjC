@@ -19,44 +19,40 @@
 #include "UINavigationItem.h"
 #include "UIToolbar.h"
 
-UINavigationController::UINavigationController()
-{
+UINavigationController::UINavigationController() {
     _navigationBar = NULL;
     _toolBar = NULL;
 }
 
-void UINavigationController::InitFromXIB(XIBObject *obj)
-{
+void UINavigationController::InitFromXIB(XIBObject* obj) {
     UIViewController::InitFromXIB(obj);
-    _navigationBar = (UINavigationBar *) FindMember("IBUINavigationBar");
-    _toolBar = (UIToolbar *) FindMember("IBUIToolbar");
+    _navigationBar = (UINavigationBar*)FindMember("IBUINavigationBar");
+    _toolBar = (UIToolbar*)FindMember("IBUIToolbar");
 
     _outputClassName = "UINavigationController";
 }
 
-void UINavigationController::InitFromStory(XIBObject *obj)
-{
+void UINavigationController::InitFromStory(XIBObject* obj) {
     UIViewController::InitFromStory(obj);
 
-    _navigationBar = (UINavigationBar *) FindMember("navigationBar");
+    _navigationBar = (UINavigationBar*)FindMemberAndHandle("navigationBar");
     _outputClassName = "UINavigationController";
 }
 
-void UINavigationController::Awaken()
-{
+void UINavigationController::Awaken() {
     UIViewController::Awaken();
-    if ( _navigationBar ) {
+    if (_navigationBar) {
         _navigationBar->_delegate = this;
         _navigationBar->_autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
-    if ( _toolBar ) {
+    if (_toolBar) {
         _toolBar->_autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     }
-    for ( int i = 0; i < _childViewControllers->count(); i ++ ) {
-        UIViewController *curController = (UIViewController *) _childViewControllers->objectAtIndex(i);
+    for (int i = 0; i < _childViewControllers->count(); i++) {
+        UIViewController* curController = (UIViewController*)_childViewControllers->objectAtIndex(i);
 
-        if ( curController->_navigationItem ) {
-            if ( !_navigationBar->_items ) {
+        if (curController->_navigationItem) {
+            if (!_navigationBar->_items) {
                 _navigationBar->_items = new XIBArray();
             }
             curController->_navigationItem->_navigationBar = _navigationBar;
@@ -65,9 +61,10 @@ void UINavigationController::Awaken()
     }
 }
 
-void UINavigationController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UINavigationController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIViewController::ConvertStaticMappings(writer, obj);
-    if ( _navigationBar ) AddOutputMember(writer, "UINavigationBar", _navigationBar);
-    if ( _toolBar ) AddOutputMember(writer, "UIToolbar", _toolBar);
+    if (_navigationBar)
+        AddOutputMember(writer, "UINavigationBar", _navigationBar);
+    if (_toolBar)
+        AddOutputMember(writer, "UIToolbar", _toolBar);
 }

@@ -17,8 +17,7 @@
 #include "UIColor.h"
 #include <assert.h>
 
-UIColor::UIColor()
-{
+UIColor::UIColor() {
     _colorSpace = 0;
     _componentCount = 0;
     _r = 0;
@@ -29,8 +28,7 @@ UIColor::UIColor()
     _colorSpaceOut = colorSpaceFull;
 }
 
-UIColor::UIColor(int colorSpace, int componentCount, float r, float g, float b, float a, char *systemName)
-{
+UIColor::UIColor(int colorSpace, int componentCount, float r, float g, float b, float a, char* systemName) {
     _colorSpace = colorSpace;
     _componentCount = componentCount;
     _r = r;
@@ -41,14 +39,12 @@ UIColor::UIColor(int colorSpace, int componentCount, float r, float g, float b, 
     _colorSpaceOut = colorSpaceFull;
 }
 
-UIColor::UIColor(char *systemName)
-{
+UIColor::UIColor(char* systemName) {
     _systemName = systemName;
     _colorSpaceOut = colorSpaceName;
 }
 
-void UIColor::InitFromXIB(XIBObject *obj)
-{
+void UIColor::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
 
     _outputClassName = "UIColor";
@@ -58,9 +54,9 @@ void UIColor::InitFromXIB(XIBObject *obj)
     _b = 0.0f;
     _a = 1.0f;
 
-    if ( obj->FindMember("NSWhite") != NULL || obj->FindMember("NSRGB") != NULL ) {
-        if ( obj->FindMember("NSWhite") != NULL ) {
-            XIBObjectData *colorData = (XIBObjectData *) obj->FindMember("NSWhite");
+    if (obj->FindMember("NSWhite") != NULL || obj->FindMember("NSRGB") != NULL) {
+        if (obj->FindMember("NSWhite") != NULL) {
+            XIBObjectData* colorData = (XIBObjectData*)obj->FindMember("NSWhite");
 
             char szColorString[255];
             int len = colorData->base64Decode(szColorString, sizeof(szColorString) - 1);
@@ -70,7 +66,7 @@ void UIColor::InitFromXIB(XIBObject *obj)
             _g = _r;
             _b = _r;
         } else {
-            XIBObjectData *colorData = (XIBObjectData *) obj->FindMember("NSRGB");
+            XIBObjectData* colorData = (XIBObjectData*)obj->FindMember("NSRGB");
 
             char szColorString[255];
             int len = colorData->base64Decode(szColorString, sizeof(szColorString) - 1);
@@ -87,19 +83,19 @@ void UIColor::InitFromXIB(XIBObject *obj)
     _systemName = obj->GetString("IBUIColorCocoaTouchKeyPath", NULL);
 }
 
-void UIColor::InitFromStory(XIBObject *obj)
-{
+void UIColor::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
-    
-    if ( getAttrib("cocoaTouchSystemColor") ) {
-        const char *sysColor = getAttrib("cocoaTouchSystemColor");
 
-        if ( strcmp(sysColor, "lightTextColor") == 0 ) {
+    if (getAttrib("cocoaTouchSystemColor")) {
+        const char* sysColor = getAttrib("cocoaTouchSystemColor");
+        bool isHandled = true;
+
+        if (strcmp(sysColor, "lightTextColor") == 0) {
             _colorSpaceOut = colorSpaceWhite;
             _systemName = sysColor;
             _white = 1.0f;
             _a = 0.6f;
-        } else if ( strcmp(sysColor, "darkTextColor") == 0 ) {
+        } else if (strcmp(sysColor, "darkTextColor") == 0) {
             _colorSpaceOut = colorSpaceWhite;
             _systemName = sysColor;
             _white = 0.6f;
@@ -115,41 +111,52 @@ void UIColor::InitFromStory(XIBObject *obj)
             _white = 1.0f;
             _a = 0.6f;
         } else {
-            assert(0);
+            isHandled = false;
         }
-    } else if ( getAttrib("colorSpace") ) {
-        const char *space = getAttrib("colorSpace");
-        if ( strcmp(space, "custom") == 0 ) {
-            space = getAttrib("customColorSpace");
+
+        if (isHandled) {
+            getAttrAndHandle("cocoaTouchSystemColor");
         }
-        if ( strcmp(space, "calibratedWhite") == 0 ) {
+
+    } else if (getAttrib("colorSpace")) {
+        const char* space = getAttrib("colorSpace");
+
+        bool spaceIsHandled = true;
+
+        if (strcmp(space, "custom") == 0) {
+            space = getAttrAndHandle("customColorSpace");
+        }
+
+        if (strcmp(space, "calibratedWhite") == 0) {
             _colorSpaceOut = colorSpaceWhite;
-            _white = strtod(getAttrib("white"), NULL);
-            _a = strtod(getAttrib("alpha"), NULL);
-        } else if ( strcmp(space, "calibratedRGB") == 0 || strcmp(space, "deviceRGB") == 0 || strcmp(space, "adobeRGB1998") == 0) {
+            _white = strtod(getAttrAndHandle("white"), NULL);
+            _a = strtod(getAttrAndHandle("alpha"), NULL);
+        } else if (strcmp(space, "calibratedRGB") == 0 || strcmp(space, "deviceRGB") == 0 || strcmp(space, "adobeRGB1998") == 0) {
             _colorSpaceOut = colorSpaceRGB;
-            _a = strtod(getAttrib("alpha"), NULL);
-            _r = strtod(getAttrib("red"), NULL);
-            _g = strtod(getAttrib("green"), NULL);
-            _b = strtod(getAttrib("blue"), NULL);
+            _a = strtod(getAttrAndHandle("alpha"), NULL);
+            _r = strtod(getAttrAndHandle("red"), NULL);
+            _g = strtod(getAttrAndHandle("green"), NULL);
+            _b = strtod(getAttrAndHandle("blue"), NULL);
         } else {
-            assert(0);
+            spaceIsHandled = false;
         }
-    } else {
-        assert(0);
+
+        if (spaceIsHandled) {
+            getAttrAndHandle("colorSpace");
+        }
     }
 
     _outputClassName = "UIColor";
 }
 
-void UIColor::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
-    if ( !_outputClassName ) _outputClassName = "UIColor";
-    if ( !_isStory ) {
-        switch ( _colorSpaceOut ) {
+void UIColor::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
+    if (!_outputClassName)
+        _outputClassName = "UIColor";
+    if (!_isStory) {
+        switch (_colorSpaceOut) {
             case colorSpaceRGB:
             case colorSpaceFull:
-                if ( _r == _g && _r == _b ) {
+                if (_r == _g && _r == _b) {
                     AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_r));
                 }
 
@@ -163,12 +170,12 @@ void UIColor::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
                 break;
         }
 
-        if ( _systemName ) {
+        if (_systemName) {
             AddString(writer, "UISystemColorName", _systemName);
             AddString(writer, "UIPatternSelector", _systemName);
         }
     } else {
-        switch ( _colorSpaceOut ) {
+        switch (_colorSpaceOut) {
             case colorSpaceWhite:
                 AddOutputMember(writer, "UIWhite", new XIBObjectFloat(_white));
                 AddOutputMember(writer, "UIAlpha", new XIBObjectFloat(_a));
@@ -183,15 +190,14 @@ void UIColor::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
                 break;
         }
 
-        if ( _systemName ) {
+        if (_systemName) {
             AddString(writer, "UISystemColorName", _systemName);
         }
     }
 }
 
-XIBObject *UIColor::CreateObject(NIBWriter *writer)
-{
-    XIBObject *ret = new XIBObject();
+XIBObject* UIColor::CreateObject(NIBWriter* writer) {
+    XIBObject* ret = new XIBObject();
 
     ret->_needsConversion = false;
     ret->_outputClassName = "UIColor";
@@ -201,7 +207,6 @@ XIBObject *UIColor::CreateObject(NIBWriter *writer)
     return ret;
 }
 
-ObjectConverter *UIColor::Clone()
-{
+ObjectConverter* UIColor::Clone() {
     return new UIColor();
 }
