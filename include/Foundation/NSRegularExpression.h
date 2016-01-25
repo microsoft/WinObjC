@@ -89,4 +89,10 @@ FOUNDATION_EXPORT_CLASS
 
 @end
 
+@interface NSDataDetector : NSRegularExpression
+
++ (NSDataDetector*)dataDetectorWithTypes:(NSTextCheckingTypes)checkingTypes error:(NSError**)error;
+
+@end
+
 #endif /* _NSREGULAREXPRESSION_H_ */
