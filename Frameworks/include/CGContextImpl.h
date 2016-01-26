@@ -135,6 +135,8 @@ public:
         CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options);
     virtual void CGContextDrawLayerInRect(CGRect destRect, CGLayerRef layer);
     virtual void CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer);
+    virtual CGInterpolationQuality CGContextGetInterpolationQuality();
+    virtual void CGContextSetInterpolationQuality(CGInterpolationQuality quality);
     virtual void CGContextSetLineDash(float phase, float* lengths, DWORD count);
     virtual void CGContextSetMiterLimit(float limit);
     virtual void CGContextSetLineJoin(DWORD lineJoin);

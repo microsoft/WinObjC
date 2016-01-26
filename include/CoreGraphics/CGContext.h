@@ -39,6 +39,7 @@ typedef enum {
    kCGInterpolationDefault,
    kCGInterpolationNone,
    kCGInterpolationLow,
+   kCGInterpolationMedium,
    kCGInterpolationHigh,
 } CGInterpolationQuality;
 

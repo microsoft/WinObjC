@@ -20,8 +20,18 @@ struct _cairo_surface;
 typedef struct _cairo_surface cairo_surface_t;
 struct _cairo;
 typedef struct _cairo cairo_t;
+typedef enum _cairo_filter cairo_filter_t;
+typedef struct _cairo_pattern cairo_pattern_t;
 
 class CGContextCairo : public CGContextImpl {
+private:
+    cairo_filter_t _filter;
+
+    // Filter is assigned for each pattern. If the pattern is getting destroyed we must 
+    // reset the filter as well.
+    // pattern: The pattern for which current filter should be assigned.
+    void _assignAndResetFilter(cairo_pattern_t* pattern);
+
 protected:
     cairo_t* _drawContext;
 
@@ -96,6 +106,8 @@ public:
         CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options);
     virtual void CGContextDrawLayerInRect(CGRect destRect, CGLayerRef layer);
     virtual void CGContextDrawLayerAtPoint(CGPoint destPoint, CGLayerRef layer);
+    virtual CGInterpolationQuality CGContextGetInterpolationQuality();
+    virtual void CGContextSetInterpolationQuality(CGInterpolationQuality quality);
     virtual void CGContextSetLineDash(float phase, float* lengths, DWORD count);
     virtual void CGContextSetMiterLimit(float limit);
     virtual void CGContextSetLineJoin(DWORD lineJoin);

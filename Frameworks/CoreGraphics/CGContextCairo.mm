@@ -43,7 +43,10 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
-CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) : CGContextImpl(base, destinationImage), _drawContext(0) {
+CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) : 
+    CGContextImpl(base, destinationImage), 
+    _drawContext(0), 
+    _filter(CAIRO_FILTER_BILINEAR) {
 }
 
 CGContextCairo::~CGContextCairo() {
@@ -68,6 +71,11 @@ void CGContextCairo::ReleaseLock() {
         _imgDest->Backing()->ReleaseCairoSurface();
         _drawContext = NULL;
     }
+}
+
+void CGContextCairo::_assignAndResetFilter(cairo_pattern_t* pattern) {
+    cairo_pattern_set_filter(pattern, _filter);
+    _filter = CAIRO_FILTER_BILINEAR;
 }
 
 void CGContextCairo::Clear(float r, float g, float b, float a) {
@@ -125,6 +133,8 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         float r, g, b, a;
         img->Backing()->GetPixel(int(src.origin.x), int(src.origin.y), r, g, b, a);
         cairo_set_source_rgba(_drawContext, r, g, b, a);
+        cairo_pattern_t* pattern = cairo_get_source(_drawContext);
+        _assignAndResetFilter(pattern);
         cairo_new_path(_drawContext);
         cairo_rectangle(_drawContext, 0, 0, dest.size.width, dest.size.height);
         cairo_clip(_drawContext);
@@ -140,6 +150,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
 
         cairo_matrix_t srcMatrix;
         cairo_pattern_t* p = cairo_pattern_create_for_surface(img->Backing()->LockCairoSurface());
+        _assignAndResetFilter(p);
 
         if (tiled) {
             cairo_pattern_set_extend(p, CAIRO_EXTEND_REPEAT);
@@ -1176,6 +1187,7 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
 
     LOCK_CAIRO();
     cairo_pattern_t* pattern = cairo_pattern_create_linear(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+    _assignAndResetFilter(pattern);
 
     switch (gradient->_colorSpace) {
         case _ColorRGBA:
@@ -1216,6 +1228,7 @@ void CGContextCairo::CGContextDrawRadialGradient(
 
     LOCK_CAIRO();
     cairo_pattern_t* pattern = cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
+    _assignAndResetFilter(pattern);
 
     switch (gradient->_colorSpace) {
         case _ColorRGBA:
@@ -1284,6 +1297,74 @@ destRect.size.height = (float) layer->_layerBacking->Backing()->Height();
 
 DrawImage(layer->_layerBacking, src, destRect);
 #endif
+}
+
+CGInterpolationQuality CGContextCairo::CGContextGetInterpolationQuality() {
+    CGInterpolationQuality quality = kCGInterpolationDefault;
+
+    // Convert cairo_filter_t to CGInterpolationQuality
+    switch (_filter) {
+        case CAIRO_FILTER_NEAREST:
+            quality = kCGInterpolationNone;
+            break;
+
+        case CAIRO_FILTER_FAST:
+            quality = kCGInterpolationLow;
+            break;
+
+        case CAIRO_FILTER_GOOD:
+            quality = kCGInterpolationMedium;
+            break;
+
+        case CAIRO_FILTER_BEST:
+            quality = kCGInterpolationHigh;
+            break;
+
+        case CAIRO_FILTER_BILINEAR:
+            quality = kCGInterpolationDefault;
+            break;
+
+        default:
+            // Apple framework allows invalid values to be set for interpolation quality.
+            // We are emulating this behavior so _filter could be having a value
+            // which is beyond the enums defined for cairo_filter_t,
+            // nevertheless we still return this value as CGInterpolationQuality.
+            quality = static_cast<CGInterpolationQuality>(_filter);
+    }
+
+    return quality;
+}
+
+void CGContextCairo::CGContextSetInterpolationQuality(CGInterpolationQuality quality) {
+    // Convert CGInterpolationQuality to cairo_filter_t
+    switch (quality) {
+        case kCGInterpolationNone:
+            _filter = CAIRO_FILTER_NEAREST;
+            break;
+
+        case kCGInterpolationLow:
+            _filter = CAIRO_FILTER_FAST;
+            break;
+
+        case kCGInterpolationMedium:
+            _filter = CAIRO_FILTER_GOOD;
+            break;
+
+        case kCGInterpolationHigh:
+            _filter = CAIRO_FILTER_BEST;
+            break;
+
+        case kCGInterpolationDefault:
+            _filter = CAIRO_FILTER_BILINEAR;
+            break;
+
+        default:
+            // Apple framework allows invalid values to be set for interpolation quality.
+            // We are emulating this behavior so quality could be having a value
+            // which is beyond the enums defined for CGInterpolationQuality,
+            // nevertheless we still store and use this value as cairo_filter_t.
+            _filter = static_cast<cairo_filter_t>(quality);
+    }
 }
 
 void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {

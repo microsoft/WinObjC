@@ -658,10 +658,10 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 }
 
 /**
- @Status Stub
+ @Status interoperable
 */
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
-    UNIMPLEMENTED();
+    context->Backing()->CGContextSetInterpolationQuality(quality);
 }
 
 /**
@@ -875,11 +875,10 @@ void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsi
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef ctx) {
-    UNIMPLEMENTED();
-    return (CGInterpolationQuality)0;
+CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
+    return context->Backing()->CGContextGetInterpolationQuality();
 }
 
 void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font) {

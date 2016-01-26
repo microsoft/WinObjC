@@ -616,6 +616,17 @@ DrawImage(layer->_layerBacking, src, destRect);
 #endif
 }
 
+CGInterpolationQuality CGContextImpl::CGContextGetInterpolationQuality() {
+    // CGContext could be backed by CGContextImpl or CGContextCairo.
+    // CGContextImpl is not being currently used but, by convention we add the method here.
+    return kCGInterpolationDefault;
+}
+
+void CGContextImpl::CGContextSetInterpolationQuality(CGInterpolationQuality) {
+    // CGContext could be backed by CGContextImpl or CGContextCairo.
+    // CGContextImpl is not being currently used but, by convention we add the method here
+}
+
 void CGContextImpl::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
 }
 
