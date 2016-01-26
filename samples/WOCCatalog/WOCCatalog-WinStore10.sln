@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{802EC330-1C66-4ECE-ACAC-A22F0058E869}"
 EndProject
@@ -10,17 +10,25 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vs
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{A74AAE3B-53F9-42FE-B857-87153273DA20}*SharedItemsImports = 9
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}*SharedItemsImports = 4
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{bef9b300-b97b-4e96-90ac-c7d0150a6ed7}*SharedItemsImports = 4
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{a74aae3b-53f9-42fe-b857-87153273da20}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.Build.0 = Debug|ARM
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.Deploy.0 = Debug|ARM
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Build.0 = Debug|Win32
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Deploy.0 = Debug|Win32
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.ActiveCfg = Release|ARM
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.Build.0 = Release|ARM
+		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.Deploy.0 = Release|ARM
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.ActiveCfg = Release|Win32
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Build.0 = Release|Win32
 		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Deploy.0 = Release|Win32
