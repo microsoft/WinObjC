@@ -15,6 +15,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBook\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBookUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ApplicationServices\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AssetsLibrary\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AudioToolbox\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AVFoundation\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CFNetwork\*.h" />

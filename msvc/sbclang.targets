@@ -27,6 +27,7 @@
 
     <PropertyGroup>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+      <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>

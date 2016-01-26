@@ -19,6 +19,7 @@
 @import AdSupport;
 @import AddressBook;
 @import AddressBookUI;
+@import AssetsLibrary;
 @import AudioToolbox;
 @import AVFoundation;
 @import CFNetwork;

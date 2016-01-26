@@ -1,0 +1,39 @@
+LIBRARY AssetsLibrary
+    EXPORTS
+        ; ALAsset.mm
+        ALAssetPropertyType DATA
+        ALAssetPropertyLocation DATA
+        ALAssetPropertyDuration DATA
+        ALAssetPropertyOrientation DATA
+        ALAssetPropertyDate DATA
+        ALAssetPropertyRepresentations DATA
+        ALAssetPropertyURLs DATA
+        ALAssetPropertyAssetURL DATA
+        ALErrorInvalidProperty DATA
+        ALAssetTypePhoto DATA
+        ALAssetTypeVideo DATA
+        ALAssetTypeUnknown DATA
+        _OBJC_CLASS_ALAsset DATA
+        __objc_class_name_ALAsset CONSTANT
+
+        ; ALAssetRepresentation.mm
+        _OBJC_CLASS_ALAssetRepresentation DATA
+        __objc_class_name_ALAssetRepresentation CONSTANT
+
+        ; ALAssetsGroup.mm
+        ALAssetsGroupPropertyName DATA
+        ALAssetsGroupPropertyType DATA
+        ALAssetsGroupPropertyPersistentID DATA
+        ALAssetsGroupPropertyURL DATA
+        _OBJC_CLASS_ALAssetsGroup DATA
+        __objc_class_name_ALAssetsGroup CONSTANT
+
+        ; ALAssetsLibrary.mm
+        ALAssetLibraryUpdatedAssetsKey DATA
+        ALAssetLibraryInsertedAssetGroupsKey DATA
+        ALAssetLibraryUpdatedAssetGroupsKey DATA
+        ALAssetLibraryDeletedAssetGroupsKey DATA
+        ALAssetsLibraryErrorDomain DATA
+        _OBJC_CLASS_ALAssetsLibrary DATA
+        __objc_class_name_ALAssetsLibrary CONSTANT
+
