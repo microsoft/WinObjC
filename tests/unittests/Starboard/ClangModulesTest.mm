@@ -17,6 +17,8 @@
 #include "gtest-api.h"
 
 @import AdSupport;
+@import AddressBook;
+@import AddressBookUI;
 @import AudioToolbox;
 @import AVFoundation;
 @import CFNetwork;
