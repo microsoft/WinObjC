@@ -35,6 +35,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libkern\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
+	<Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MessageUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Metal\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\objc\*.h" />
@@ -71,7 +72,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet6\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\os\*.h" />
-    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\sys\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\sys\*.h" />	
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

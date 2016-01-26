@@ -12,18 +12,6 @@ LIBRARY UIKit
         DNSServiceRegister
         DNSServiceResolve
         DNSServiceSetDispatchQueue
-        MPMoviePlayerDidEnterFullscreenNotification DATA
-        MPMoviePlayerDidExitFullscreenNotification DATA
-        MPMoviePlayerFullscreenAnimationCurveUserInfoKey DATA
-        MPMoviePlayerFullscreenAnimationDurationUserInfoKey DATA
-        MPMoviePlayerLoadStateDidChangeNotification DATA
-        MPMoviePlayerPlaybackDidFinishNotification DATA
-        MPMoviePlayerPlaybackDidFinishReasonUserInfoKey DATA
-        MPMoviePlayerThumbnailErrorKey DATA
-        MPMoviePlayerThumbnailImageKey DATA
-        MPMoviePlayerThumbnailTimeKey DATA
-        MPMoviePlayerWillEnterFullscreenNotification DATA
-        MPMoviePlayerWillExitFullscreenNotification DATA
         NSAttachmentAttributeName DATA
         NSBackgroundColorAttributeName DATA
         NSBackgroundColorDocumentAttribute DATA
@@ -214,8 +202,6 @@ LIBRARY UIKit
         _OBJC_CLASS_GKLeaderboardViewController DATA
         _OBJC_CLASS_GKLocalPlayer DATA
         _OBJC_CLASS_GKScore DATA
-        _OBJC_CLASS_MPMoviePlayerController DATA
-        _OBJC_CLASS_MPMoviePlayerViewController DATA
         _OBJC_CLASS_NSLayoutConstraint DATA
         _OBJC_CLASS_NSLayoutManager DATA
         _OBJC_CLASS_NSMutableParagraphStyle DATA
@@ -304,8 +290,6 @@ LIBRARY UIKit
         __objc_class_name_GKLeaderboardViewController CONSTANT
         __objc_class_name_GKLocalPlayer CONSTANT
         __objc_class_name_GKScore CONSTANT
-        __objc_class_name_MPMoviePlayerController CONSTANT
-        __objc_class_name_MPMoviePlayerViewController CONSTANT
         __objc_class_name_NSLayoutConstraint CONSTANT
         __objc_class_name_NSLayoutManager CONSTANT
         __objc_class_name_NSMutableParagraphStyle CONSTANT

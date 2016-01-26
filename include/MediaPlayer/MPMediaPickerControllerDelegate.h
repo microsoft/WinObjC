@@ -16,17 +16,14 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class MPMediaPickerController;
+@class MPMediaItemCollection;
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@protocol MPMediaPickerControllerDelegate
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@optional
+- (void)mediaPicker:(MPMediaPickerController*)mediaPicker didPickMediaItems:(MPMediaItemCollection*)mediaItemCollection;
+- (void)mediaPickerDidCancel:(MPMediaPickerController*)mediaPicker;
 
 @end

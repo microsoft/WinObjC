@@ -16,17 +16,18 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSString;
+@class NSSet;
+
+MEDIAPLAYER_EXPORT NSString* const MPMediaEntityPropertyPersistentID;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPMediaEntity : NSObject <NSSecureCoding>
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
++ (BOOL)canFilterByProperty:(NSString*)property STUB_METHOD;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+- (id)valueForProperty:(NSString*)property STUB_METHOD;
+- (void)enumerateValuesForProperties:(NSSet*)properties usingBlock:(void (^)(NSString*, id, BOOL*))block STUB_METHOD;
 
 @end

@@ -16,17 +16,23 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <Foundation/NSObject.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSString;
+@class NSDictionary;
+
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyElapsedPlaybackTime;
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyPlaybackRate;
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyPlaybackQueueIndex;
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyPlaybackQueueCount;
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyChapterNumber;
+MEDIAPLAYER_EXPORT NSString* const MPNowPlayingInfoPropertyChapterCount;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPNowPlayingInfoCenter : NSObject <NSObject>
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
++ (MPNowPlayingInfoCenter*)defaultCenter STUB_METHOD;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@property (copy) NSDictionary* nowPlayingInfo STUB_PROPERTY;
 
 @end

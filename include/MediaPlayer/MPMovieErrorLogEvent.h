@@ -16,17 +16,19 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSDate;
+@class NSString;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPMovieErrorLogEvent : NSObject <NSCopying>
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@property (readonly, nonatomic) NSDate* date STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* URI STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* serverAddress STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* playbackSessionID STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger errorStatusCode STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* errorDomain STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* errorComment STUB_PROPERTY;
 
 @end

@@ -16,17 +16,19 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@protocol MPMediaPlayback
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@property (nonatomic, readonly) BOOL isPreparedToPlay;
+@property (nonatomic) float currentPlaybackRate;
+@property (nonatomic) NSTimeInterval currentPlaybackTime;
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+- (void)play;
+- (void)pause;
+- (void)stop;
+- (void)prepareToPlay;
+- (void)beginSeekingBackward;
+- (void)beginSeekingForward;
+- (void)endSeeking;
 
 @end

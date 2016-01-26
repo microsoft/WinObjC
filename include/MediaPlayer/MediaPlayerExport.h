@@ -15,18 +15,26 @@
 //******************************************************************************
 #pragma once
 
-#import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#ifndef MEDIAPLAYER_IMPEXP
+#define MEDIAPLAYER_IMPEXP __declspec(dllimport)
+#endif
 
-@class NSURL;
-@class MPMoviePlayerController;
+#ifndef MEDIAPLAYER_EXPORT
+#ifdef __cplusplus
+#define MEDIAPLAYER_EXPORT MEDIAPLAYER_IMPEXP extern "C"
+#define MEDIAPLAYER_EXPORT_CLASS MEDIAPLAYER_IMPEXP
+#else
+#define MEDIAPLAYER_EXPORT MEDIAPLAYER_IMPEXP extern
+#define MEDIAPLAYER_EXPORT_CLASS MEDIAPLAYER_IMPEXP
+#endif
+#endif
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
-
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
-
-@end
+#ifndef MEDIAPLAYER_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define MEDIAPLAYER_EXTERNC_BEGIN extern "C" {
+#define MEDIAPLAYER_EXTERNC_END }
+#else
+#define MEDIAPLAYER_EXTERNC_BEGIN
+#define MEDIAPLAYER_EXTERNC_END
+#endif
+#endif

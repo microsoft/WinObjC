@@ -16,17 +16,24 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <MediaPlayer/MPMediaItem.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@protocol MPMediaPickerControllerDelegate;
+@class NSString;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+@interface MPMediaPickerController : UIViewController <NSCoding, UIAppearanceContainer>
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@property (nonatomic)BOOL allowsPickingMultipleItems STUB_PROPERTY;
+@property (nonatomic)BOOL showsCloudItems STUB_PROPERTY;
+@property (nonatomic, assign) id<MPMediaPickerControllerDelegate> delegate STUB_PROPERTY;
+@property (readonly, nonatomic) MPMediaType mediaTypes STUB_PROPERTY;
+@property (copy, nonatomic) NSString* prompt STUB_PROPERTY;
+
+- (instancetype)init STUB_METHOD;
+- (instancetype)initWithMediaTypes:(MPMediaType)mediaTypes STUB_METHOD;
 
 @end

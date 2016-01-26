@@ -13,20 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+#import <StubReturn.h>
+#import <MediaPlayer/MediaPlayerFunctions.h>
 
-#import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+/**
+ @Status Stub
+ @Notes
+*/
+void MPVolumeSettingsAlertShow() {
+    UNIMPLEMENTED();
+}
 
-@class NSURL;
-@class MPMoviePlayerController;
+/**
+ @Status Stub
+ @Notes
+*/
+void MPVolumeSettingsAlertHide() {
+    UNIMPLEMENTED();
+}
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
-
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
-
-@end
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL MPVolumeSettingsAlertIsVisible() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}

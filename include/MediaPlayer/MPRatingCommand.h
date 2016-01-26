@@ -16,17 +16,12 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
-
-@class NSURL;
-@class MPMoviePlayerController;
+#import <MediaPlayer/MPRemoteCommand.h>
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPRatingCommand : MPRemoteCommand
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@property (assign, nonatomic) float maximumRating STUB_PROPERTY;
+@property (assign, nonatomic) float minimumRating STUB_PROPERTY;
 
 @end

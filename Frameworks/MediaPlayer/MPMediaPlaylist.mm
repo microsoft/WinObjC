@@ -13,20 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <StubReturn.h>
+#import <MediaPlayer/MPMediaPlaylist.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+NSString* const MPMediaPlaylistPropertyPersistentID = @"MPMediaPlaylistPropertyPersistentID";
+NSString* const MPMediaPlaylistPropertyName = @"MPMediaPlaylistPropertyName";
+NSString* const MPMediaPlaylistPropertyPlaylistAttributes = @"MPMediaPlaylistPropertyPlaylistAttributes";
+NSString* const MPMediaPlaylistPropertySeedItems = @"MPMediaPlaylistPropertySeedItems";
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
-
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
-
+@implementation MPMediaPlaylist
 @end

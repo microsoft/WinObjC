@@ -15,18 +15,18 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObject.h>
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class UIImage;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPMediaItemArtwork : NSObject
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+@property (readonly, nonatomic) CGRect bounds STUB_PROPERTY;
+@property (readonly, nonatomic) CGRect imageCropRect STUB_PROPERTY;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+- (UIImage*)imageWithSize:(CGSize)size STUB_METHOD;
+- (instancetype)initWithImage:(UIImage*)image STUB_METHOD;
 
 @end

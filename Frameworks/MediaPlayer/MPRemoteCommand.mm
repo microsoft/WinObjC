@@ -13,20 +13,42 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <StubReturn.h>
+#import <MediaPlayer/MPRemoteCommand.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@implementation MPRemoteCommand
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)addTarget:(id)target action:(SEL)action {
+    UNIMPLEMENTED();
+}
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeTarget:(id)target {
+    UNIMPLEMENTED();
+}
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeTarget:(id)target action:(SEL)action {
+    UNIMPLEMENTED();
+}
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)addTargetWithHandler:(MPRemoteCommandHandlerStatus (^)(MPRemoteCommandEvent*))handler {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 @end

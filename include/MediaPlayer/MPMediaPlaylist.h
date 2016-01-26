@@ -16,17 +16,24 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <MediaPlayer/MPMediaItemCollection.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSString;
+
+typedef NS_OPTIONS(NSUInteger, MPMediaPlaylistAttribute) {
+    MPMediaPlaylistAttributeNone = 0,
+    MPMediaPlaylistAttributeOnTheGo = (1 << 0),
+    MPMediaPlaylistAttributeSmart = (1 << 1),
+    MPMediaPlaylistAttributeGenius = (1 << 2)
+};
+
+MEDIAPLAYER_EXPORT NSString* const MPMediaPlaylistPropertyPersistentID;
+MEDIAPLAYER_EXPORT NSString* const MPMediaPlaylistPropertyName;
+MEDIAPLAYER_EXPORT NSString* const MPMediaPlaylistPropertyPlaylistAttributes;
+MEDIAPLAYER_EXPORT NSString* const MPMediaPlaylistPropertySeedItems;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@interface MPMediaPlaylist : MPMediaItemCollection 
 
 @end

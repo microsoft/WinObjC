@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <StubReturn.h>
+#import <MediaPlayer/MPTimedMetadata.h>
 
-#include "MediaPlayer/MPMoviePlayerViewController.h"
+NSString* const MPMoviePlayerTimedMetadataKeyName = @"MPMoviePlayerTimedMetadataKeyName";
+NSString* const MPMoviePlayerTimedMetadataKeyInfo = @"MPMoviePlayerTimedMetadataKeyInfo";
+NSString* const MPMoviePlayerTimedMetadataKeyMIMEType = @"MPMoviePlayerTimedMetadataKeyMIMEType";
+NSString* const MPMoviePlayerTimedMetadataKeyDataType = @"MPMoviePlayerTimedMetadataKeyDataType";
+NSString* const MPMoviePlayerTimedMetadataKeyLanguageCode = @"MPMoviePlayerTimedMetadataKeyLanguageCode";
 
-@implementation MPMoviePlayerViewController
-
+@implementation MPTimedMetadata
 @end

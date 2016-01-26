@@ -15,18 +15,25 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObject.h>
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class MPRemoteCommandEvent;
+
+typedef NS_ENUM(NSInteger, MPRemoteCommandHandlerStatus) {
+    MPRemoteCommandHandlerStatusSuccess = 0,
+    MPRemoteCommandHandlerStatusNoSuchContent = 100,
+    MPRemoteCommandHandlerStatusCommandFailed = 200
+};
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPRemoteCommand : NSObject
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+@property (getter=isEnabled, assign, nonatomic) BOOL enabled STUB_PROPERTY;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+- (void)addTarget:(id)target action:(SEL)action STUB_METHOD;
+- (void)removeTarget:(id)target STUB_METHOD;
+- (void)removeTarget:(id)target action:(SEL)action STUB_METHOD;
+- (id)addTargetWithHandler:(MPRemoteCommandHandlerStatus (^)(MPRemoteCommandEvent*))handler STUB_METHOD;
 
 @end

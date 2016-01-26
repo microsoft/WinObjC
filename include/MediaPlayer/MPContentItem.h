@@ -15,18 +15,22 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObject.h>
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSString;
+@class MPMediaItemArtwork;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPContentItem : NSObject
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+@property (nonatomic, strong) MPMediaItemArtwork* artwork STUB_PROPERTY;
+@property (getter = isContainer, assign, nonatomic) BOOL container STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* identifier STUB_PROPERTY;
+@property (getter = isPlayable, assign, nonatomic) BOOL playable STUB_PROPERTY;
+@property (assign, nonatomic) float playbackProgress STUB_PROPERTY;
+@property (copy, nonatomic) NSString* subtitle STUB_PROPERTY;
+@property (copy, nonatomic) NSString* title STUB_PROPERTY;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
-
+- (instancetype)initWithIdentifier:(NSString*)identifier STUB_METHOD;
 @end

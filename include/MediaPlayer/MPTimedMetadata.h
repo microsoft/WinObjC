@@ -16,17 +16,23 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class NSString;
+@class NSDictionary;
+
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerTimedMetadataKeyName;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerTimedMetadataKeyInfo;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerTimedMetadataKeyMIMEType;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerTimedMetadataKeyDataType;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerTimedMetadataKeyLanguageCode;
 
 MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@interface MPTimedMetadata : NSObject
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
-
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@property (readonly, nonatomic) NSDictionary* allMetadata STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* key STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* keyspace STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval timestamp STUB_PROPERTY;
+@property (readonly, nonatomic) id value STUB_PROPERTY;
 
 @end

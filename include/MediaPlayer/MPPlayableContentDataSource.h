@@ -16,17 +16,18 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
 
-@class NSURL;
-@class MPMoviePlayerController;
+@class MPContentItem;
+@class NSIndexPath;
+@class NSError;
 
-MEDIAPLAYER_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
+@protocol MPPlayableContentDataSource
 
-@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+- (MPContentItem*)contentItemAtIndexPath:(NSIndexPath*)indexPath;
+- (NSInteger)numberOfChildItemsAtIndexPath:(NSIndexPath*)indexPath;
 
-- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
+@optional
+- (void)beginLoadingChildItemsAtIndexPath:(NSIndexPath*)indexPath completionHandler:(void (^)(NSError*))completionHandler;
+- (BOOL)childItemsDisplayPlaybackProgressAtIndexPath:(NSIndexPath*)indexPath;
 
 @end
