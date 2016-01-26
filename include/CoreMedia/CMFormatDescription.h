@@ -26,8 +26,6 @@
 #import <CoreMedia/CMTime.h>
 #import <CoreMedia/CoreMediaExport.h>
 
-@class AudioChannelLayout;
-
 typedef struct opaqueCMFormatDescription* CMFormatDescriptionRef;
 typedef CMFormatDescriptionRef CMAudioFormatDescriptionRef;
 typedef CMFormatDescriptionRef CMVideoFormatDescriptionRef;

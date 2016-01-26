@@ -17,7 +17,7 @@
 #pragma once
 
 #import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
+#import <CoreMedia/CMTypes.h>
 #import <CoreMedia/CMTime.h>
 #import <CoreFoundation/CFString.h>
 

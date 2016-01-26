@@ -17,3 +17,4 @@
 #import <CoreVideo/CVBuffer.h>
 #import <CoreVideo/CVImageBuffer.h>
 #import <CoreVideo/CVPixelBuffer.h>
+#import <CoreVideo/CVPixelBufferPool.h>

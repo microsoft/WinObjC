@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,15 +14,37 @@
 //
 //******************************************************************************
 
-#ifndef _AVAUDIORECORDER_H_
-#define _AVAUDIORECORDER_H_
+#pragma once
 
-#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
-@protocol AVAudioRecorderDelegate <NSObject>
-@end
+@class NSURL;
+@class NSDictionary;
+@class NSError;
+@protocol AVAudioRecorderDelegate;
+@class NSArray;
 
+AVFOUNDATION_EXPORT_CLASS
 @interface AVAudioRecorder : NSObject
+- (instancetype)initWithURL:(NSURL*)url settings:(NSDictionary*)settings error:(NSError* _Nullable*)outError STUB_METHOD;
+- (BOOL)prepareToRecord STUB_METHOD;
+- (BOOL)record STUB_METHOD;
+- (BOOL)recordAtTime:(NSTimeInterval)time STUB_METHOD;
+- (BOOL)recordForDuration:(NSTimeInterval)duration STUB_METHOD;
+- (BOOL)recordAtTime:(NSTimeInterval)time forDuration:(NSTimeInterval)duration STUB_METHOD;
+- (void)pause STUB_METHOD;
+- (void)stop STUB_METHOD;
+@property (assign) id<AVAudioRecorderDelegate> delegate STUB_PROPERTY;
+- (BOOL)deleteRecording STUB_METHOD;
+@property (readonly, getter=isRecording) BOOL recording STUB_PROPERTY;
+@property (readonly) NSURL* url STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* channelAssignments STUB_PROPERTY;
+@property (readonly) NSTimeInterval currentTime STUB_PROPERTY;
+@property (readonly) NSTimeInterval deviceCurrentTime STUB_PROPERTY;
+@property (readonly) NSDictionary* settings STUB_PROPERTY;
+@property (getter=isMeteringEnabled) BOOL meteringEnabled STUB_PROPERTY;
+- (void)updateMeters STUB_METHOD;
+- (float)peakPowerForChannel:(NSUInteger)channelNumber STUB_METHOD;
+- (float)averagePowerForChannel:(NSUInteger)channelNumber STUB_METHOD;
 @end
-
-#endif /* _AVAUDIORECORDER_H_ */

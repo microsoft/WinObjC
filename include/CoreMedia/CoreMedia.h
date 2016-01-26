@@ -17,6 +17,9 @@
 #pragma once
 
 #import <StubIncludes.h>
+#import <CoreMedia/CoreMediaExport.h>
+#import <CoreMedia/CoreMediaConstants.h>
+#import <CoreMedia/CMTypes.h>
 #import <CoreMedia/CMAttachment.h>
 #import <CoreMedia/CMBlockBuffer.h>
 #import <CoreMedia/CMBufferQueue.h>
@@ -26,7 +29,3 @@
 #import <CoreMedia/CMTextMarkup.h>
 #import <CoreMedia/CMTime.h>
 #import <CoreMedia/CMTimeRange.h>
-#import <CoreMedia/CoreMedia.h>
-#import <CoreMedia/CoreMediaConstants.h>
-#import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>

@@ -23,7 +23,7 @@
 #import <CoreMedia/CMFormatDescription.h>
 #import <CoreMedia/CMTime.h>
 #import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
+#import <CoreMedia/CMTypes.h>
 #import <CoreVideo/CVImageBuffer.h>
 
 typedef struct opaqueCMSampleBuffer* CMSampleBufferRef;

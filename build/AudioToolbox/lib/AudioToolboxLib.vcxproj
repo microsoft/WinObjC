@@ -30,7 +30,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\AudioFile.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\CAFDecoder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\stb_vorbis.c" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AVFoundation\AudioSession.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\AudioSession.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\AudioToolbox\CAFDecoder.h" />

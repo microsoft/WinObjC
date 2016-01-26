@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,39 @@
 //
 //******************************************************************************
 
-#ifndef _AVCAPTUREVIDEOPREVIEWLAYER_H_
-#define _AVCAPTUREVIDEOPREVIEWLAYER_H_
+#pragma once
 
-#import <QuartzCore/QuartzCore.h>
-#include "AVExport.h"
+#import <AVFoundation/AVFoundationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <QuartzCore/CALayer.h>
+#import <AVFoundation/AVCaptureConnection.h>
 
 @class AVCaptureSession;
+@class NSString;
+@class AVCaptureConnection;
+@class AVMetadataObject;
 
-@interface AVCaptureVideoPreviewLayer : CALayer
-
-@property (copy) NSString* videoGravity;
-
-- (id)initWithSession:(AVCaptureSession*)session;
-
+AVFOUNDATION_EXPORT_CLASS
+@interface AVCaptureVideoPreviewLayer : CALayer <CAMediaTiming, NSCoding>
+- (instancetype)initWithSession:(AVCaptureSession*)session STUB_METHOD;
++ (instancetype)layerWithSession:(AVCaptureSession*)session STUB_METHOD;
+- (instancetype)initWithSessionWithNoConnection:(AVCaptureSession*)session STUB_METHOD;
++ (instancetype)layerWithSessionWithNoConnection:(AVCaptureSession*)session STUB_METHOD;
+@property (copy) NSString* videoGravity STUB_PROPERTY;
+@property (nonatomic) AVCaptureVideoOrientation orientation STUB_PROPERTY;
+@property (readonly, getter=isOrientationSupported, nonatomic) BOOL orientationSupported STUB_PROPERTY;
+@property (getter=isMirrored, nonatomic) BOOL mirrored STUB_PROPERTY;
+@property (readonly, getter=isMirroringSupported, nonatomic) BOOL mirroringSupported STUB_PROPERTY;
+@property (nonatomic) BOOL automaticallyAdjustsMirroring STUB_PROPERTY;
+@property (readonly, nonatomic) AVCaptureConnection* connection STUB_PROPERTY;
+@property (retain, nonatomic) AVCaptureSession* session STUB_PROPERTY;
+- (void)setSessionWithNoConnection:(AVCaptureSession*)session STUB_METHOD;
+- (CGPoint)captureDevicePointOfInterestForPoint:(CGPoint)pointInLayer STUB_METHOD;
+- (CGPoint)pointForCaptureDevicePointOfInterest:(CGPoint)captureDevicePointOfInterest STUB_METHOD;
+- (AVMetadataObject*)transformedMetadataObjectForMetadataObject:(AVMetadataObject*)metadataObject STUB_METHOD;
+- (CGRect)metadataOutputRectOfInterestForRect:(CGRect)rectInLayerCoordinates STUB_METHOD;
+- (CGRect)rectForMetadataOutputRectOfInterest:(CGRect)rectInMetadataOutputCoordinates STUB_METHOD;
 @end
-
-#endif /* _AVCAPTUREVIDEOPREVIEWLAYER_H_ */
