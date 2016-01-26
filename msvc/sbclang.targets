@@ -335,12 +335,6 @@
       </ClangCompile>
     </ItemGroup>
 
-    <!-- Include the stub prefix header -->
-    <ItemGroup>
-      <ClangCompile>
-        <AdditionalOptions>%(ClangCompile.AdditionalOptions) -include StubIncludes.h</AdditionalOptions>
-      </ClangCompile>
-    </ItemGroup>
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
