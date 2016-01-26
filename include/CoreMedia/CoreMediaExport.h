@@ -16,17 +16,26 @@
 
 #pragma once
 
-#import <StubIncludes.h>
-#import <CoreMedia/CMAttachment.h>
-#import <CoreMedia/CMBlockBuffer.h>
-#import <CoreMedia/CMBufferQueue.h>
-#import <CoreMedia/CMFormatDescription.h>
-#import <CoreMedia/CMSampleBuffer.h>
-#import <CoreMedia/CMSync.h>
-#import <CoreMedia/CMTextMarkup.h>
-#import <CoreMedia/CMTime.h>
-#import <CoreMedia/CMTimeRange.h>
-#import <CoreMedia/CoreMedia.h>
-#import <CoreMedia/CoreMediaConstants.h>
-#import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
+#ifndef COREMEDIA_IMPEXP
+#define COREMEDIA_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef COREMEDIA_EXPORT
+#ifdef __cplusplus
+#define COREMEDIA_EXPORT COREMEDIA_IMPEXP extern "C"
+#define COREMEDIA_EXPORT_CLASS COREMEDIA_IMPEXP
+#else
+#define COREMEDIA_EXPORT COREMEDIA_IMPEXP extern
+#define COREMEDIA_EXPORT_CLASS COREMEDIA_IMPEXP
+#endif
+#endif
+
+#ifndef COREMEDIA_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define COREMEDIA_EXTERNC_BEGIN extern "C" {
+#define COREMEDIA_EXTERNC_END }
+#else
+#define COREMEDIA_EXTERNC_BEGIN
+#define COREMEDIA_EXTERNC_END
+#endif
+#endif

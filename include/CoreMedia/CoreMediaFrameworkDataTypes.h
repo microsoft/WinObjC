@@ -16,17 +16,9 @@
 
 #pragma once
 
-#import <StubIncludes.h>
-#import <CoreMedia/CMAttachment.h>
-#import <CoreMedia/CMBlockBuffer.h>
-#import <CoreMedia/CMBufferQueue.h>
-#import <CoreMedia/CMFormatDescription.h>
-#import <CoreMedia/CMSampleBuffer.h>
-#import <CoreMedia/CMSync.h>
-#import <CoreMedia/CMTextMarkup.h>
-#import <CoreMedia/CMTime.h>
-#import <CoreMedia/CMTimeRange.h>
-#import <CoreMedia/CoreMedia.h>
-#import <CoreMedia/CoreMediaConstants.h>
 #import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
+#import <CoreFoundation/CFBase.h>
+
+typedef signed long CMItemCount;
+typedef signed long CMItemIndex;
+typedef int32_t CMPersistentTrackID;

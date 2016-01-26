@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,10 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _CMBASE_H_
-#define _CMBASE_H_
-
-typedef signed long CMItemCount;
-
-#endif /* _CMBASE_H_ */
