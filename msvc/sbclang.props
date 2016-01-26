@@ -38,7 +38,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs>Starboard.lib;Foundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;Accounts.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs>Starboard.lib;Foundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;Accounts.lib;AdSupport.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
