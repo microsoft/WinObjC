@@ -19,6 +19,7 @@
 
 #include <utility>
 
+#import <StubReturn.h>
 #import <Starboard.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
@@ -30,6 +31,9 @@ NSString* const GLKTextureLoaderGenerateMipmaps = @"Mips";
 NSString* const GLKTextureLoaderOriginBottomLeft = @"BottomLeft";
 NSString* const GLKTextureLoaderGrayscaleAsAlpha = @"AlphaGrayscale";
 NSString* const GLKTextureLoaderSRGB = @"SRGB";
+NSString* const GLKTextureLoaderErrorDomain = @"GLKTextureLoaderErrorDomain";
+NSString* const GLKTextureLoaderErrorKey = @"GLKTextureLoaderErrorKey";
+NSString* const GLKTextureLoaderGLErrorKey = @"GLKTextureLoaderGLErrorKey";
 
 namespace {
 
@@ -250,6 +254,16 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     _textureOrigin = GLKTextureInfoOriginTopLeft;
     return self;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end
 
 @implementation GLKTextureLoader {
@@ -645,6 +659,110 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 - (id)initWithShareContext:(NSOpenGLContext*)context {
     UNIMPLEMENTED();
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithSharegroup:(EAGLSharegroup*)sharegroup {
+    UNIMPLEMENTED();
+    return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)textureWithContentsOfFile:(NSString*)fileName
+                          options:(NSDictionary*)textureOperations
+                            queue:(dispatch_queue_t)queue
+                completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (GLKTextureInfo*)textureWithContentsOfURL:(NSURL*)filePath options:(NSDictionary*)textureOperations error:(NSError* _Nullable*)outError {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)textureWithContentsOfURL:(NSURL*)filePath
+                         options:(NSDictionary*)textureOperations
+                           queue:(dispatch_queue_t)queue
+               completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)textureWithContentsOfData:(NSData*)data
+                          options:(NSDictionary*)textureOperations
+                            queue:(dispatch_queue_t)queue
+                completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)textureWithCGImage:(CGImageRef)cgImage
+                   options:(NSDictionary*)textureOperations
+                     queue:(dispatch_queue_t)queue
+         completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)cubeMapWithContentsOfFile:(NSString*)fileName
+                          options:(NSDictionary*)textureOperations
+                            queue:(dispatch_queue_t)queue
+                completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)cubeMapWithContentsOfFiles:(NSArray*)filePaths
+                           options:(NSDictionary*)textureOperations
+                             queue:(dispatch_queue_t)queue
+                 completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (GLKTextureInfo*)cubeMapWithContentsOfURL:(NSURL*)filePath options:(NSDictionary*)textureOperations error:(NSError* _Nullable*)outError {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)cubeMapWithContentsOfURL:(NSURL*)filePath
+                         options:(NSDictionary*)textureOperations
+                           queue:(dispatch_queue_t)queue
+               completionHandler:(GLKTextureLoaderCallback)block {
+    UNIMPLEMENTED();
 }
 
 @end

@@ -22,10 +22,7 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKEnums.h>
 
-typedef NS_ENUM(NSUInteger, GLKViewDrawableMultisample) {
-    GLKViewDrawableMultisampleNone,
-    GLKViewDrawableMultisample4X
-};
+typedef NS_ENUM(NSUInteger, GLKViewDrawableMultisample) { GLKViewDrawableMultisampleNone, GLKViewDrawableMultisample4X };
 
 @class GLKView;
 
@@ -40,26 +37,39 @@ typedef NS_ENUM(NSUInteger, GLKViewDrawableMultisample) {
 // --------------------------------------------------------------------------------
 
 GLKIT_EXPORT_CLASS
-@interface GLKView : UIView
+@interface GLKView : UIView <NSCoding,
+                             NSObject,
+                             UIAppearance,
+                             UIAppearanceContainer,
+                             UICoordinateSpace,
+                             UIDynamicItem,
+                             UIFocusEnvironment,
+                             UITraitEnvironment>
 
-@property (assign) id<GLKViewDelegate> delegate;
-@property (retain) EAGLContext* context;
+@property (assign, nonatomic) id<GLKViewDelegate> delegate;
+@property (retain, nonatomic) EAGLContext* context STUB_PROPERTY;
 
-@property (readonly) GLuint drawableWidth;
-@property (readonly) GLuint drawableHeight;
+@property (readonly, nonatomic) NSInteger drawableHeight;
+@property (readonly, nonatomic) NSInteger drawableWidth;
 
-@property GLKViewDrawableColorFormat drawableColorFormat;
-@property GLKViewDrawableDepthFormat drawableDepthFormat;
-@property GLKViewDrawableStencilFormat drawableStencilFormat;
-@property GLKViewDrawableMultisample drawableMultisample;
+@property (nonatomic) GLKViewDrawableColorFormat drawableColorFormat;
+@property (nonatomic) GLKViewDrawableDepthFormat drawableDepthFormat;
+@property (nonatomic) GLKViewDrawableStencilFormat drawableStencilFormat;
+@property (nonatomic) GLKViewDrawableMultisample drawableMultisample;
 
-@property BOOL enableSetNeedsDisplay;
+@property (readonly, strong) UIImage* snapshot STUB_PROPERTY;
+
+@property (nonatomic) BOOL enableSetNeedsDisplay;
 
 // ----------------------------------------
 
 - (id)initWithFrame:(CGRect)rect;
+- (instancetype)initWithFrame:(CGRect)frame context:(EAGLContext*)context STUB_METHOD;
 - (id)initWithCoder:(NSCoder*)coder;
 
+- (void)bindDrawable STUB_METHOD;
+- (void)display STUB_METHOD;
+- (void)deleteDrawable STUB_METHOD;
 - (void)layoutSubviews;
 
 @end

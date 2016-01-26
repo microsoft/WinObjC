@@ -19,6 +19,7 @@
 #import <OpenGLES/ES2/gl.h>
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKitExport.h>
+#import <GLKit/GLKView.h>
 
 @class GLKViewController;
 
@@ -38,22 +39,28 @@
 // --------------------------------------------------------------------------------
 
 GLKIT_EXPORT_CLASS
-@interface GLKViewController : UIViewController
+@interface GLKViewController : UIViewController <GLKViewDelegate,
+                                                 NSCoding,
+                                                 NSObject,
+                                                 UIAppearanceContainer,
+                                                 UIContentContainer,
+                                                 UIFocusEnvironment,
+                                                 UITraitEnvironment>
 
-@property id<GLKViewControllerDelegate> delegate;
+@property (assign, nonatomic) id<GLKViewControllerDelegate> delegate;
 
-@property (readonly) NSTimeInterval timeSinceFirstResume;
-@property (readonly) NSTimeInterval timeSinceLastResume;
-@property (readonly) NSTimeInterval timeSinceLastUpdate;
-@property (readonly) NSTimeInterval timeSinceLastDraw;
+@property (readonly, nonatomic) NSTimeInterval timeSinceFirstResume;
+@property (readonly, nonatomic) NSTimeInterval timeSinceLastResume;
+@property (readonly, nonatomic) NSTimeInterval timeSinceLastUpdate;
+@property (readonly, nonatomic) NSTimeInterval timeSinceLastDraw;
 
-@property (readonly) unsigned int framesDisplayed;
-@property (readonly) unsigned int framesPerSecond;
-@property unsigned int preferredFramesPerSecond;
+@property (readonly, nonatomic) NSInteger framesDisplayed;
+@property (readonly, nonatomic) NSInteger framesPerSecond;
+@property (nonatomic) NSInteger preferredFramesPerSecond;
 
-@property BOOL paused;
-@property BOOL pauseOnWillResignActive; // TODO: BK: should both be true.
-@property BOOL resumeOnDidBecomeActive;
+@property (getter=isPaused, nonatomic) BOOL paused;
+@property (nonatomic) BOOL pauseOnWillResignActive; // TODO: BK: should both be true.
+@property (nonatomic) BOOL resumeOnDidBecomeActive;
 
 // ----------------------------------------
 

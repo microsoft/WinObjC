@@ -15,13 +15,15 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import <StubReturn.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKMath.h>
 
 #include <utility>
 
-GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
-GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
+const GLKMatrix3 GLKMatrix3Identity = GLKMatrix3MakeIdentity();
+const GLKMatrix4 GLKMatrix4Identity = GLKMatrix4MakeIdentity();
+const GLKQuaternion GLKQuaternionIdentity = GLKQuaternionMakeIdentity();
 
 /**
  @Status Interoperable
@@ -90,6 +92,20 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeIdentity() {
     res.m31 = 0.f;
     res.m32 = 0.f;
     res.m33 = 1.f;
+
+    return res;
+}
+
+/**
+ @Status Interoperable
+*/
+GLKQuaternion GLKQuaternionMakeIdentity() {
+    GLKQuaternion res;
+
+    res.x = 0.0f;
+    res.y = 0.0f;
+    res.z = 0.0f;
+    res.w = 1.0f;
 
     return res;
 }
@@ -975,4 +991,452 @@ GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat) {
     GLKQuaternion res;
 
     return res;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projection, int* viewport) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKMatrix2(GLKMatrix2 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKMatrix3(GLKMatrix3 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKMatrix4(GLKMatrix4 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKVector2(GLKVector2 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKVector3(GLKVector3 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKVector4(GLKVector4 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSStringFromGLKQuaternion(GLKQuaternion quaternion) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3MakeWithQuaternion(GLKQuaternion quaternion) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3SetRow(GLKMatrix3 matrix, int row, GLKVector3 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, bool* isInvertible) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 matrix, bool* isInvertible) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Multiply(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Rotate(GLKMatrix3 matrix, float radians, float x, float y, float z) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3RotateWithVector3(GLKMatrix3 matrix, float radians, GLKVector3 axisVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3RotateWithVector4(GLKMatrix3 matrix, float radians, GLKVector4 axisVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3RotateX(GLKMatrix3 matrix, float radians) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3RotateY(GLKMatrix3 matrix, float radians) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3RotateZ(GLKMatrix3 matrix, float radians) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Scale(GLKMatrix3 matrix, float sx, float sy, float sz) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3 scaleVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3ScaleWithVector4(GLKMatrix3 matrix, GLKVector4 scaleVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Add(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 matrix) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector4 GLKMatrix4GetRow(GLKMatrix4 matrix, int row) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVector4 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4RotateWithVector3(GLKMatrix4 matrix, float radians, GLKVector3 axisVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4RotateWithVector4(GLKMatrix4 matrix, float radians, GLKVector4 axisVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4ScaleWithVector3(GLKMatrix4 matrix, GLKVector3 scaleVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4ScaleWithVector4(GLKMatrix4 matrix, GLKVector4 scaleVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4TranslateWithVector3(GLKMatrix4 matrix, GLKVector3 translationVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4TranslateWithVector4(GLKMatrix4 matrix, GLKVector4 translationVector) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4Add(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKMatrix4 GLKMatrix4Subtract(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+GLKVector3 GLKMatrix4MultiplyAndProjectVector3(GLKMatrix4 matrixLeft, GLKVector3 vectorRight) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void GLKMatrix4MultiplyAndProjectVector3Array(GLKMatrix4 matrix, GLKVector3* vectors, size_t vectorCount) {
+    UNIMPLEMENTED();
 }

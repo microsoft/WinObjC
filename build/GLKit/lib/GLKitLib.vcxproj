@@ -37,6 +37,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderInfo.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderProg.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\GLKMatrixStack.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\GLKit\ShaderGen.h" />

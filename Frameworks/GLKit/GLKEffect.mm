@@ -158,7 +158,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 @implementation GLKBaseEffect {
     NSMutableArray* _textures;
     NSMutableArray* _lights;
-    BOOL _useConstantColor;
+    GLboolean _useConstantColor;
     BOOL _lightingEnabled;
     GLKLightingType _lightingType;
 }
@@ -524,14 +524,14 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 /**
  @Status Interoperable
 */
-- (BOOL)useConstantColor {
+- (GLboolean)useConstantColor {
     return _useConstantColor;
 }
 
 /**
  @Status Interoperable
 */
-- (void)setUseConstantColor:(BOOL)use {
+- (void)setUseConstantColor:(GLboolean)use {
     if (_useConstantColor != use) {
         self.effectChanged = TRUE;
         _useConstantColor = use;
