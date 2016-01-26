@@ -222,9 +222,6 @@ LIBRARY UIKit
         _OBJC_CLASS_NSParagraphStyle DATA
         _OBJC_CLASS_NSTextContainer DATA
         _OBJC_CLASS_NSTextStorage DATA
-        _OBJC_CLASS_SKPayment DATA
-        _OBJC_CLASS_SKPaymentQueue DATA
-        _OBJC_CLASS_SKProductsRequest DATA
         _OBJC_CLASS_SLComposeViewController DATA
         _OBJC_CLASS_UIAccelerometer DATA
         _OBJC_CLASS_UIAccessibilityElement DATA
@@ -315,9 +312,6 @@ LIBRARY UIKit
         __objc_class_name_NSParagraphStyle CONSTANT
         __objc_class_name_NSTextContainer CONSTANT
         __objc_class_name_NSTextStorage CONSTANT
-        __objc_class_name_SKPayment CONSTANT
-        __objc_class_name_SKPaymentQueue CONSTANT
-        __objc_class_name_SKProductsRequest CONSTANT
         __objc_class_name_SLComposeViewController CONSTANT
         __objc_class_name_UIAccelerometer CONSTANT
         __objc_class_name_UIAccessibilityElement CONSTANT

@@ -14,18 +14,17 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StoreKit/SKProductsRequest.h>
+#import <StubReturn.h>
 
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+@implementation SKProductsRequest
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
-
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
 @end

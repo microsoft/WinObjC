@@ -14,18 +14,10 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StoreKit/SKDownload.h>
+#import <StubReturn.h>
 
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+const NSTimeInterval SKDownloadTimeRemainingUnknown = -1.0;
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
-
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@implementation SKDownload
 @end

@@ -14,18 +14,25 @@
 //
 //******************************************************************************
 
-#pragma once
-
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
 #import <StoreKit/SKRequest.h>
+#import <StubReturn.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@implementation SKRequest
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)start {
+    // For a potential starting point for this implementation, git show 18c6ae:Frameworks/limbo/SKProductsRequest.mm
+    UNIMPLEMENTED();
+}
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)cancel {
+    UNIMPLEMENTED();
+}
+
 @end

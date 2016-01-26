@@ -17,15 +17,12 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@class SKRequest;
+@class NSError;
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@protocol SKRequestDelegate
+@optional
+- (void)requestDidFinish:(SKRequest*)request;
+- (void)request:(SKRequest*)request didFailWithError:(NSError*)error;
 @end

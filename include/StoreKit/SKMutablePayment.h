@@ -17,15 +17,16 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+#import <StoreKit/SKPayment.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@class NSString;
+@class NSData;
 
 STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@interface SKMutablePayment : SKPayment <NSCopying, NSMutableCopying, NSObject>
+@property (readwrite, copy, nonatomic) NSString* productIdentifier STUB_PROPERTY;
+@property (readwrite, nonatomic) NSInteger quantity STUB_PROPERTY;
+@property (readwrite, copy, nonatomic) NSData* requestData STUB_PROPERTY;
 @end

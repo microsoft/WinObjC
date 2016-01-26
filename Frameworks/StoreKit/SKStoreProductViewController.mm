@@ -14,18 +14,21 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StoreKit/SKStoreProductViewController.h>
+#import <StubReturn.h>
 
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+NSString* const SKStoreProductParameterITunesItemIdentifier = @"SKStoreProductParameterITunesItemIdentifier";
+NSString* const SKStoreProductParameterAffiliateToken = @"SKStoreProductParameterAffiliateToken";
+NSString* const SKStoreProductParameterCampaignToken = @"SKStoreProductParameterCampaignToken";
+NSString* const SKStoreProductParameterProviderToken = @"SKStoreProductParameterProviderToken";
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@implementation SKStoreProductViewController
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)loadProductWithParameters:(NSDictionary*)parameters completionBlock:(void (^)(BOOL, NSError*))block {
+    UNIMPLEMENTED();
+}
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
 @end

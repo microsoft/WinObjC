@@ -14,18 +14,44 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StoreKit/SKPayment.h>
+#import <StubReturn.h>
 
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+@implementation SKPayment
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)paymentWithProduct:(SKProduct*)product {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)paymentWithProductIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

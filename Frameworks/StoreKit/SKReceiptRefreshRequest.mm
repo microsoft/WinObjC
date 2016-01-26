@@ -14,18 +14,21 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StoreKit/SKReceiptRefreshRequest.h>
+#import <StubReturn.h>
 
-#import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
+NSString* const SKReceiptPropertyIsExpired = @"SKReceiptPropertyIsExpired";
+NSString* const SKReceiptPropertyIsRevoked = @"SKReceiptPropertyIsRevoked";
+NSString* const SKReceiptPropertyIsVolumePurchase = @"SKReceiptPropertyIsVolumePurchase";
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@implementation SKReceiptRefreshRequest
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithReceiptProperties:(NSDictionary*)properties {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
 @end

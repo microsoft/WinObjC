@@ -19,30 +19,32 @@
 #import <StoreKit/StoreKitExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSError;
-@class SKPayment;
 @class NSString;
-@class NSData;
-@class NSDate;
-@class NSArray;
+@class SKPaymentTransaction;
+@class NSError;
+@class NSURL;
 
-typedef NSInteger SKPaymentTransactionState;
+typedef NSInteger SKDownloadState;
 enum {
-    SKPaymentTransactionStatePurchasing,
-    SKPaymentTransactionStatePurchased,
-    SKPaymentTransactionStateFailed,
-    SKPaymentTransactionStateRestored,
-    SKPaymentTransactionStateDeferred,
+    SKDownloadStateWaiting,
+    SKDownloadStateActive,
+    SKDownloadStatePaused,
+    SKDownloadStateFinished,
+    SKDownloadStateFailed,
+    SKDownloadStateCancelled,
 };
 
+STOREKIT_EXPORT const NSTimeInterval SKDownloadTimeRemainingUnknown;
+
 STOREKIT_EXPORT_CLASS
-@interface SKPaymentTransaction : NSObject <NSObject>
+@interface SKDownload : NSObject <NSObject>
+@property (readonly, nonatomic) NSString* contentIdentifier STUB_PROPERTY;
+@property (readonly, nonatomic) long long contentLength STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* contentVersion STUB_PROPERTY;
+@property (readonly, nonatomic) SKPaymentTransaction* transaction STUB_PROPERTY;
+@property (readonly, nonatomic) SKDownloadState downloadState STUB_PROPERTY;
+@property (readonly, nonatomic) float progress STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval timeRemaining STUB_PROPERTY;
 @property (readonly, nonatomic) NSError* error STUB_PROPERTY;
-@property (readonly, nonatomic) SKPayment* payment STUB_PROPERTY;
-@property (readonly, nonatomic) SKPaymentTransactionState transactionState STUB_PROPERTY;
-@property (readonly, nonatomic) NSString* transactionIdentifier STUB_PROPERTY;
-@property (readonly, nonatomic) NSData* transactionReceipt STUB_PROPERTY;
-@property (readonly, nonatomic) NSDate* transactionDate STUB_PROPERTY;
-@property (readonly, nonatomic) NSArray* downloads STUB_PROPERTY;
-@property (readonly, nonatomic) SKPaymentTransaction* originalTransaction STUB_PROPERTY;
+@property (readonly, nonatomic) NSURL* contentURL STUB_PROPERTY;
 @end

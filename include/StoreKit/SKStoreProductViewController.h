@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,24 +14,25 @@
 //
 //******************************************************************************
 
-#ifndef _SKSTOREPRODUCTVIEWCONTROLLER_H_
-#define _SKSTOREPRODUCTVIEWCONTROLLER_H_
+#pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
 #import <UIKit/UIViewController.h>
 
-@protocol SKStoreProductViewControllerDelegate <NSObject>
-@end
-
-@interface SKStoreProductViewController : UIViewController {
-}
-
-- (void)loadProductWithParameters:(NSDictionary*)params completionBlock:(void (^)(BOOL result, NSError* error))block;
-
-@property (nonatomic, assign) id<SKStoreProductViewControllerDelegate> delegate;
-
-@end
+@class NSString;
+@protocol SKStoreProductViewControllerDelegate;
+@class NSDictionary;
+@class NSError;
 
 STOREKIT_EXPORT NSString* const SKStoreProductParameterITunesItemIdentifier;
-
-#endif // _SKSTOREPRODUCTVIEWCONTROLLER_H_
+STOREKIT_EXPORT NSString* const SKStoreProductParameterAffiliateToken;
+STOREKIT_EXPORT NSString* const SKStoreProductParameterCampaignToken;
+STOREKIT_EXPORT NSString* const SKStoreProductParameterProviderToken;
+STOREKIT_EXPORT_CLASS
+@interface SKStoreProductViewController
+    : UIViewController
+@property (assign, nonatomic) id<SKStoreProductViewControllerDelegate> delegate STUB_PROPERTY;
+- (void)loadProductWithParameters:(NSDictionary*)parameters completionBlock:(void (^)(BOOL, NSError*))block STUB_METHOD;
+@end

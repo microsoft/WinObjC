@@ -17,15 +17,17 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@class SKPaymentQueue;
+@class NSArray;
+@class NSError;
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@protocol SKPaymentTransactionObserver
+@required
+- (void)paymentQueue:(SKPaymentQueue*)queue updatedTransactions:(NSArray*)transactions;
+@optional
+- (void)paymentQueue:(SKPaymentQueue*)queue removedTransactions:(NSArray*)transactions;
+- (void)paymentQueue:(SKPaymentQueue*)queue restoreCompletedTransactionsFailedWithError:(NSError*)error;
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue*)queue;
+- (void)paymentQueue:(SKPaymentQueue*)queue updatedDownloads:(NSArray*)downloads;
 @end

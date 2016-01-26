@@ -17,15 +17,10 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSObject.h>
-#import <Foundation/NSObject.h>
-#import <StoreKit/SKRequest.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@class SKStoreProductViewController;
 
-STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@protocol SKStoreProductViewControllerDelegate
+@optional
+- (void)productViewControllerDidFinish:(SKStoreProductViewController*)viewController;
 @end

@@ -21,11 +21,15 @@
 #import <Foundation/NSObject.h>
 #import <StoreKit/SKRequest.h>
 
-@class NSSet;
-@protocol SKProductsRequestDelegate;
+@class NSString;
+@class NSDictionary;
+
+STOREKIT_EXPORT NSString* const SKReceiptPropertyIsExpired;
+STOREKIT_EXPORT NSString* const SKReceiptPropertyIsRevoked;
+STOREKIT_EXPORT NSString* const SKReceiptPropertyIsVolumePurchase;
 
 STOREKIT_EXPORT_CLASS
-@interface SKProductsRequest : SKRequest <NSObject>
-- (instancetype)initWithProductIdentifiers:(NSSet*)productIdentifiers STUB_METHOD;
-@property (assign, nonatomic) id<SKProductsRequestDelegate> delegate STUB_PROPERTY;
+@interface SKReceiptRefreshRequest : SKRequest <NSObject>
+- (instancetype)initWithReceiptProperties:(NSDictionary*)properties STUB_METHOD;
+@property (readonly, nonatomic) NSDictionary* receiptProperties STUB_PROPERTY;
 @end
