@@ -6,9 +6,16 @@ param(
     [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
     [string]$TestDirectory = "",
 
+    [Parameter(HelpMessage="Architecture of tests to run")]
+    [string][ValidateSet("Win32", "ARM")]
+    $Platform = "Win32",
+
     [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
     [string][ValidateSet("Debug", "Release")]
     $Config = "Debug",
+
+    [Parameter(HelpMessage="IP address of remote device to run tests on")]
+    [string]$IpAddress = "127.0.0.1",
 
     [Parameter(HelpMessage="Regex of Test Modules to look for")]
     [string]$ModuleFilter = $null,
@@ -24,21 +31,112 @@ param(
     $Verbosity = "Verbose"
 )
 
+$TargetingDevice = ($Platform -eq "ARM")
+
+function EnsureDeviceConnection
+{
+    if ($DeviceAddress -eq $null)
+    {
+        if ((Get-Command Open-Device -ErrorAction SilentlyContinue) -eq $null)
+        {
+            Write-Host "Can't connect to device. Try installing TShell."
+            throw "DeviceConnectError"
+        }
+
+        # If the caller has already connected to the device, use the existing connection.
+        # Otherwise, try connecting to device now.
+        Open-Device -ip $IpAddress
+    }
+}
+
+function DeployTests
+{
+    if ($TargetingDevice)
+    {
+        # Copy the tests to the device
+
+        Try {
+            mdd $TestDstDirectory
+        } Catch {
+            # putd fails if the directory doesn't already exist.
+            # mdd fails if the directory does already exist.
+            # This is awkward.
+        }
+
+        putd -recurse $TestSrcDirectory\*.dll $TestDstDirectory
+        putd -recurse $TestSrcDirectory\*.exe $TestDstDirectory
+        putd -recurse $TestSrcDirectory\*.txt $TestDstDirectory
+    }
+    else
+    {
+        # Otherwise run tests in place
+    }
+}
+
+function ExecTest($test, $argList, $outputRemoteName, $outputLocalName)
+{
+    $testPath = Join-Path $TestDstDirectory $test
+
+    if ($TargetingDevice)
+    {
+        execd $testPath $argList
+
+        # Fetch the output from the device
+        getd $outputRemoteName $outputLocalName
+        deld $outputRemoteName
+    }
+    else
+    {
+        if ($Verbosity -eq "Minimal")
+        {
+            & $testPath $argList >$null
+        }
+        else
+        {
+            & $testPath $argList
+        }
+    }
+}
+
 if ($TestDirectory -eq "") 
 {
     $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-    $TestDirectory = Join-Path $MyPath "..\build\$Config"
+    $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config"
+}
+else
+{
+    $TestSrcDirectory = $TestDirectory
+}
+
+if ($TargetingDevice)
+{
+    $TestDstDirectory = "\test\bin\islandwood"
+}
+else
+{
+    $TestDstDirectory = $TestSrcDirectory
+}
+
+if ($TargetingDevice)
+{
+    EnsureDeviceConnection
 }
 
 $DefaultModuleFilter = ".*((u|U)nit)(t|T)ests.*\.(exe)"
 
 $Tests = $null
 
+DeployTests $TestDirectory
+
+Push-Location $TestSrcDirectory
+
 if ($ModuleFilter -ne [string]$null) {
-    $Tests = Get-ChildItem $TestDirectory -Recurse | Where-Object {($_.Name -Match $DefaultModuleFilter) -and ($_.Name -Like ($ModuleFilter + "*exe") -or $_.Name -Like ($ModuleFilter))}
+    $Tests = Get-ChildItem -Recurse | Where-Object {($_.Name -Match $DefaultModuleFilter) -and ($_.Name -Like ($ModuleFilter + "*exe") -or $_.Name -Like ($ModuleFilter))} | Resolve-Path -Relative
 } else {
-    $Tests = Get-ChildItem $TestDirectory -Recurse | Where-Object {$_.Name -Match $DefaultModuleFilter}
+    $Tests = Get-ChildItem -Recurse | Where-Object {$_.Name -Match $DefaultModuleFilter} | Resolve-Path -Relative
 }
+
+Pop-Location
 
 if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDirectory -PathType Container) -eq 0)) {
     New-Item -ItemType Directory -Path $XMLOutputDirectory
@@ -47,37 +145,47 @@ if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDir
 $xmlOutputArray = @()
 $crashingTestArray = @()
 foreach ($test in $Tests) {
-    $outputName = $null;
+    $testInfo = Get-Item (Join-Path $TestSrcDirectory $test)
+
+    $outputLocalName = $null;
+    $outputRemoteName = $null;
+
+    # Decide where the XML output files will live
+
     if ($XMLOutputDirectory -eq [string]$null) {
-        $outputName = [System.IO.Path]::GetRandomFileName()
+        $outputLocalName = [System.IO.Path]::GetRandomFileName()
     } else {
-        $outputName = Join-Path -Path $XMLOutputDirectory -ChildPath ($test.Name + ".xml")
+        $outputLocalName = Join-Path -Path $XMLOutputDirectory -ChildPath ($testInfo.Name + ".xml")
+    }
+
+    if ($TargetingDevice) {
+        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([System.IO.Path]::GetRandomFileName())
+    } else {
+        $outputRemoteName = $outputLocalName
     }
 
     Try {
-        $argList = @("--gtest_output=xml:$outputName")
+        $argList = @("--gtest_output=xml:$outputRemoteName")
 
         if($TestFilter -ne [string]$null) {
             $argList += "--gtest_filter=$TestFilter"
         }
 
         if($Verbosity -eq "Minimal") {
-            & $test.FullName $argList --quiet --no-verbose >$null
-        } else {
-            & $test.FullName $argList
+            $argList += "--quiet --no-verbose"
         }
 
-        
+        ExecTest $test $argList $outputRemoteName $outputLocalName
 
-        [xml]$xml = Get-Content $outputName
-        $xmlOutputArray += [tuple]::Create($test.FullName, $xml)
+        [xml]$xml = Get-Content $outputLocalName
+        $xmlOutputArray += [tuple]::Create($testInfo.FullName, $xml)
 
         if ($XMLOutputDirectory -eq [string]$null) {
-            Remove-Item $outputName -Force
+            Remove-Item $outputLocalName -Force
         }
     } Catch {
 
-        $crashingTestArray += ($test.FullName)
+        $crashingTestArray += ($testInfo.FullName)
     }
     
 }

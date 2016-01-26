@@ -60,7 +60,11 @@ static void perform(const char* what, bool (^block)(), bool flipbit = false) {
 }
 
 struct ArbitrarilyComplexStruct {
+#ifdef _M_ARM
+    float32x4_t i;
+#else
     __m128 i;
+#endif
     _Complex double c;
 };
 
