@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltimeter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltitudeData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAttitude.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMDeviceMotion.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMGyroData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMLogItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMagnetometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivity.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivityManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMRecordedAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorDataList.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorRecorder.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMStepCounter.mm" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EventKit.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\EventKitLib.vcxproj">
+      <Project>{8eca5e02-182f-4c5a-893b-3c83d3957073}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AF9DAD32-9B21-41DA-9B36-A6B53D008523}</ProjectGuid>
-    <ProjectName>CoreMotionLib</ProjectName>
-    <RootNamespace>CoreMotion</RootNamespace>
+    <ProjectGuid>{75DE8D5A-3A9C-4255-AF8E-C1B081B79EF0}</ProjectGuid>
+    <RootNamespace>EventKit</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -49,31 +49,31 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>CoreMotionLib</OutputName>
+    <OutputName>EventKit</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v140</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v140</PlatformToolset>
@@ -133,10 +133,15 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>EventKit.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -153,13 +158,16 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>EventKit.def</ModuleDefinitionFile>
+      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -175,10 +183,15 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>EventKit.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -195,13 +208,16 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>EventKit.def</ModuleDefinitionFile>
+      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

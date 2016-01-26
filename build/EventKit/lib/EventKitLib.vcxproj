@@ -19,28 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltimeter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAltitudeData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMAttitude.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMDeviceMotion.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMGyroData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMLogItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMagnetometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivity.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionActivityManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMMotionManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMPedometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMRecordedAccelerometerData.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorDataList.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMSensorRecorder.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\CoreMotion\CMStepCounter.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKAlarm.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKCalendar.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKCalendarItem.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKEvent.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKEventStore.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKObject.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKParticipant.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceDayOfWeek.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceEnd.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceRule.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKReminder.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKSource.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKStructuredLocation.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EventKitConstants.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AF9DAD32-9B21-41DA-9B36-A6B53D008523}</ProjectGuid>
-    <ProjectName>CoreMotionLib</ProjectName>
-    <RootNamespace>CoreMotion</RootNamespace>
+    <ProjectGuid>{8ECA5E02-182F-4C5A-893B-3C83D3957073}</ProjectGuid>
+    <ProjectName>EventKitLib</ProjectName>
+    <RootNamespace>EventKit</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -49,7 +46,7 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>CoreMotionLib</OutputName>
+    <OutputName>EventKitLib</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -136,7 +133,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -156,7 +153,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
@@ -178,7 +175,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -198,7 +195,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMOTION_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
