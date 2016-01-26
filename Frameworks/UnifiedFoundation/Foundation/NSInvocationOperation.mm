@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,7 +14,30 @@
 //
 //******************************************************************************
 
-#import <Foundation/Foundation.h>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <Foundation/NSInvocationOperation.h>
+
+NSString* const NSInvocationOperationVoidResultException = @"NSInvocationOperationVoidResultException";
+NSString* const NSInvocationOperationCancelledException = @"NSInvocationOperationCancelledException";
 
 @implementation NSInvocationOperation
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithTarget:(id)target selector:(SEL)sel object:(id)arg {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithInvocation:(NSInvocation*)inv {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

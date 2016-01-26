@@ -25,7 +25,7 @@
 @class NSNumber;
 
 COREMOTION_EXPORT_CLASS
-@interface CMPedometerData : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CMPedometerData : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) NSDate* startDate STUB_PROPERTY;
 @property (readonly, nonatomic) NSDate* endDate STUB_PROPERTY;
 @property (readonly, nonatomic) NSNumber* numberOfSteps STUB_PROPERTY;

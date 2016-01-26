@@ -1,68 +1,71 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
 #import <Foundation/NSNumber.h>
-#import <Foundation/NSDecimal.h>
 
-FOUNDATION_EXPORT NSString * const NSDecimalNumberDivideByZeroException;
-FOUNDATION_EXPORT NSString * const NSDecimalNumberUnderflowException;
-FOUNDATION_EXPORT NSString * const NSDecimalNumberOverflowException;
-FOUNDATION_EXPORT NSString * const NSDecimalNumberExactnessException;
+@class NSString;
+@protocol NSDecimalNumberBehaviors;
 
-@protocol NSDecimalNumberBehaviors
-@end
+FOUNDATION_EXPORT NSString* const NSDecimalNumberExactnessException;
+FOUNDATION_EXPORT NSString* const NSDecimalNumberOverflowException;
+FOUNDATION_EXPORT NSString* const NSDecimalNumberUnderflowException;
+FOUNDATION_EXPORT NSString* const NSDecimalNumberDivideByZeroException;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDecimalNumber : NSNumber {
-}
-
--initWithDecimal:(NSDecimal)decimal;
--initWithMantissa:(uint64_t)mantissa exponent:(int16_t)exponent isNegative:(BOOL)flag;
--initWithString:(NSString *)string;
--initWithString:(NSString *)string locale:(NSDictionary *)locale;
-
-+(NSDecimalNumber *)decimalNumberWithDecimal:(NSDecimal)decimal;
-+(NSDecimalNumber *)decimalNumberWithMantissa:(uint64_t)mantissa exponent:(int16_t)exponent isNegative:(BOOL)negative;
-+(NSDecimalNumber *)decimalNumberWithString:(NSString *)string;
-+(NSDecimalNumber *)decimalNumberWithString:(NSString *)string locale:(NSDictionary *)locale;
-
-+(NSDecimalNumber *)zero;
-+(NSDecimalNumber *)one;
-+(NSDecimalNumber *)minimumDecimalNumber;
-+(NSDecimalNumber *)maximumDecimalNumber;
-+(NSDecimalNumber *)notANumber;
-
-+(id <NSDecimalNumberBehaviors>)defaultBehavior;
-+(void)setDefaultBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSComparisonResult)compare:(NSNumber *)other;
-
--(double)doubleValue;
--(const char *)objCType;
-
--(NSDecimalNumber *)decimalNumberByRoundingAccordingToBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSDecimalNumber *)decimalNumberByAdding:(NSDecimalNumber *)other;
--(NSDecimalNumber *)decimalNumberByAdding:(NSDecimalNumber *)other withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
--(NSDecimalNumber *)decimalNumberBySubtracting:(NSDecimalNumber *)other;
--(NSDecimalNumber *)decimalNumberBySubtracting:(NSDecimalNumber *)other withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSDecimalNumber *)decimalNumberByMultiplyingBy:(NSDecimalNumber *)other;
--(NSDecimalNumber *)decimalNumberByMultiplyingBy:(NSDecimalNumber *)other withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
--(NSDecimalNumber *)decimalNumberByDividingBy:(NSDecimalNumber *)other;
--(NSDecimalNumber *)decimalNumberByDividingBy:(NSDecimalNumber *)other withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSDecimalNumber *)decimalNumberByMultiplyingByPowerOf10:(int16_t)power;
--(NSDecimalNumber *)decimalNumberByMultiplyingByPowerOf10:(int16_t)power withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSDecimalNumber *)decimalNumberByRaisingToPower:(NSUInteger)power;
--(NSDecimalNumber *)decimalNumberByRaisingToPower:(NSUInteger)power withBehavior:(id <NSDecimalNumberBehaviors>)behavior;
-
--(NSString *)descriptionWithLocale:(NSDictionary *)locale;
-
+@interface NSDecimalNumber : NSNumber <NSCopying, NSSecureCoding>
++ (NSDecimalNumber*)decimalNumberWithDecimal:(NSDecimal)decimal STUB_METHOD;
++ (NSDecimalNumber*)decimalNumberWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)isNegative STUB_METHOD;
++ (NSDecimalNumber*)decimalNumberWithString:(NSString*)numericString;
++ (NSDecimalNumber*)decimalNumberWithString:(NSString*)numericString locale:(id)locale STUB_METHOD;
++ (NSDecimalNumber*)one STUB_METHOD;
++ (NSDecimalNumber*)zero STUB_METHOD;
++ (NSDecimalNumber*)notANumber STUB_METHOD;
+- (instancetype)initWithDecimal:(NSDecimal)decimal STUB_METHOD;
+- (instancetype)initWithMantissa:(unsigned long long)mantissa exponent:(short)exponent isNegative:(BOOL)flag STUB_METHOD;
+- (instancetype)initWithString:(NSString*)numericString STUB_METHOD;
+- (instancetype)initWithString:(NSString*)numericString locale:(id)locale STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByAdding:(NSDecimalNumber*)decimalNumber withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberBySubtracting:(NSDecimalNumber*)decimalNumber
+                                  withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByMultiplyingBy:(NSDecimalNumber*)decimalNumber
+                                    withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByDividingBy:(NSDecimalNumber*)decimalNumber
+                                 withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSDecimalNumber*)decimalNumberByRoundingAccordingToBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+@property (readonly) NSDecimal decimalValue STUB_PROPERTY;
+@property (readonly) double doubleValue STUB_PROPERTY;
+- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
+@property (readonly) const char* objCType STUB_PROPERTY;
++ (id<NSDecimalNumberBehaviors>)defaultBehavior STUB_METHOD;
++ (void)setDefaultBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
+- (NSComparisonResult)compare:(NSNumber*)decimalNumber STUB_METHOD;
++ (NSDecimalNumber*)maximumDecimalNumber STUB_METHOD;
++ (NSDecimalNumber*)minimumDecimalNumber STUB_METHOD;
 @end

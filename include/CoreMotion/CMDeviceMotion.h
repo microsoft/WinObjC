@@ -30,7 +30,7 @@
 @class CMAttitude;
 
 COREMOTION_EXPORT_CLASS
-@interface CMDeviceMotion : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMDeviceMotion : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CMAttitude* attitude STUB_PROPERTY;
 @property (readonly, nonatomic) CMRotationRate rotationRate STUB_PROPERTY;
 @property (readonly, nonatomic) CMAcceleration gravity STUB_PROPERTY;

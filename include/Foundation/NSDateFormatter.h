@@ -1,32 +1,36 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSDATEFORMATTER_H_
-#define _NSDATEFORMATTER_H_
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
 
 #import <Foundation/NSFormatter.h>
-#import <Foundation/NSDate.h>
+
+@class NSDate;
+@class NSString;
+@class NSCalendar;
+@class NSLocale;
+@class NSTimeZone;
+@class NSArray;
+
+#import <Foundation/NSError.h>
 #import <CoreFoundation/CFDateFormatter.h>
-
-typedef enum {
-    NSDateFormatterBehaviorDefault = 0,
-    NSDateFormatterBehavior10_0 = 1000,
-    NSDateFormatterBehavior10_4 = 1040,
-} NSDateFormatterBehavior;
-
 typedef enum {
     NSDateFormatterNoStyle = kCFDateFormatterNoStyle,
     NSDateFormatterShortStyle = kCFDateFormatterShortStyle,
@@ -34,50 +38,54 @@ typedef enum {
     NSDateFormatterLongStyle = kCFDateFormatterLongStyle,
     NSDateFormatterFullStyle = kCFDateFormatterFullStyle
 } NSDateFormatterStyle;
-
-@class NSCalendar;
+typedef enum {
+    NSDateFormatterBehaviorDefault = 0,
+    NSDateFormatterBehavior10_0 = 1000,
+    NSDateFormatterBehavior10_4 = 1040,
+} NSDateFormatterBehavior;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDateFormatter : NSFormatter
-
-+ (NSString*)dateFormatFromTemplate:(NSString*)tmplate options:(NSUInteger)opts locale:(NSLocale*)locale;
+@interface NSDateFormatter : NSFormatter <NSCoding, NSCopying>
+- (NSDate*)dateFromString:(NSString*)string;
+- (NSString*)stringFromDate:(NSDate*)date;
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
+- (BOOL)getObjectValue:(id _Nullable*)obj forString:(NSString*)string range:(NSRange*)rangep error:(NSError* _Nullable*)error STUB_METHOD;
 
-- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag; // shouldn't this be "allows" ?
+@property BOOL generatesCalendarDates;
+@property (copy) NSString* dateFormat;
+@property NSDateFormatterStyle dateStyle;
+@property NSDateFormatterStyle timeStyle;
 
++ (NSString*)dateFormatFromTemplate:(NSString*)templateObj options:(NSUInteger)opts locale:(NSLocale*)locale;
+@property (copy) NSCalendar* calendar;
+@property (copy) NSDate* defaultDate;
+@property (copy) NSLocale* locale;
+@property (copy) NSTimeZone* timeZone;
+@property (copy) NSDate* twoDigitStartDate;
+@property (copy) NSDate* gregorianStartDate;
+@property NSDateFormatterBehavior formatterBehavior;
 + (NSDateFormatterBehavior)defaultFormatterBehavior;
 + (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior;
-
-// added because NSDateFormatter is the backend for initWithString:calendarFormat:locale
-// shouldn't this really exist anyway?
-- initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSLocale*)locale;
-
-- (void)setFormatterBehavior:(NSDateFormatterBehavior)value;
-
-- (NSString*)stringFromDate:(NSDate*)date;
-- (NSDate*)dateFromString:(NSString*)string;
-
-@property BOOL lenient;
-@property BOOL allowsNaturalLanguage;
-
-@property (copy) NSString* dateFormat;
-
-@property NSDateFormatterStyle timeStyle;
-@property NSDateFormatterStyle dateStyle;
-
-@property (copy) NSLocale* locale;
-@property (copy) NSCalendar* calendar;
-@property (copy) NSTimeZone* timeZone;
-@property (copy) NSArray* monthSymbols;
-@property (copy) NSArray* standaloneMonthSymbols;
-@property (copy) NSArray* weekdaySymbols;
-@property (copy) NSArray* shortWeekdaySymbols;
-@property (copy) NSArray* shortStandaloneWeekdaySymbols;
-@property (copy) NSArray* standaloneWeekdaySymbols;
-@property NSDateFormatterBehavior formatterBehavior;
-
+@property (getter=isLenient) BOOL lenient;
+@property BOOL doesRelativeDateFormatting;
 @property (copy) NSString* AMSymbol;
 @property (copy) NSString* PMSymbol;
+@property (copy) NSArray* weekdaySymbols;
+@property (copy) NSArray* shortWeekdaySymbols;
+@property (copy) NSArray* veryShortWeekdaySymbols;
+@property (copy) NSArray* standaloneWeekdaySymbols;
+@property (copy) NSArray* shortStandaloneWeekdaySymbols;
+@property (copy) NSArray* veryShortStandaloneWeekdaySymbols;
+@property (copy) NSArray* monthSymbols;
+@property (copy) NSArray* shortMonthSymbols;
+@property (copy) NSArray* veryShortMonthSymbols;
+@property (copy) NSArray* standaloneMonthSymbols;
+@property (copy) NSArray* shortStandaloneMonthSymbols;
+@property (copy) NSArray* veryShortStandaloneMonthSymbols;
+@property (copy) NSArray* quarterSymbols;
+@property (copy) NSArray* shortQuarterSymbols;
+@property (copy) NSArray* standaloneQuarterSymbols;
+@property (copy) NSArray* shortStandaloneQuarterSymbols;
+@property (copy) NSArray* eraSymbols;
+@property (copy) NSArray* longEraSymbols;
 @end
-
-#endif /* _NSDATEFORMATTER_H_ */

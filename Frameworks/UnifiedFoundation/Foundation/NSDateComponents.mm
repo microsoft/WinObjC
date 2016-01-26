@@ -14,6 +14,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSDateComponents.h"
 
 #define NSUndefinedDateComponent 0x7fffffff
@@ -32,6 +33,50 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _minute = NSUndefinedDateComponent;
     _second = NSUndefinedDateComponent;
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isValidDateInCalendar:(NSCalendar*)calendar {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSInteger)valueForComponent:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setValue:(NSInteger)value forComponent:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

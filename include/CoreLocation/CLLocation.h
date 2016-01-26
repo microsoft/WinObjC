@@ -24,7 +24,7 @@
 @class NSDate;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLLocation : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLLocation : NSObject <NSCopying, NSSecureCoding>
 - (instancetype)initWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude;
 - (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate
                           altitude:(CLLocationDistance)altitude

@@ -17,7 +17,7 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
-#import <Foundation/NSURLSession.h>
+#import <Foundation/Foundation.h>
 
 @class WKWebView;
 @class WKNavigation;

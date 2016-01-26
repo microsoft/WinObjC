@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 using WCHAR = wchar_t;
 
@@ -538,34 +539,34 @@ using namespace Windows::Foundation;
     const int tmpBufSize = 16 + length * 2 + (length / 4);
     std::vector<char> tmpBuf(tmpBufSize);
     int tmpBufLen = 0;
-    
-    tmpBuf[tmpBufLen ++] = '<';
+
+    tmpBuf[tmpBufLen++] = '<';
 
     for (auto i = 0; i < length;) {
         int outDigit = ((bytes[i] & 0xF0) >> 4);
-        if ( outDigit < 10 ) {
-            tmpBuf[tmpBufLen ++] = '0' + outDigit;
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
         } else {
-            tmpBuf[tmpBufLen ++] = 'A' + outDigit - 10;
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
         }
         assert(tmpBufLen < tmpBufSize);
         outDigit = bytes[i] & 0xF;
-        if ( outDigit < 10 ) {
-            tmpBuf[tmpBufLen ++] = '0' + outDigit;
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
         } else {
-            tmpBuf[tmpBufLen ++] = 'A' + outDigit - 10;
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
         }
         assert(tmpBufLen < tmpBufSize);
-        i ++;
+        i++;
 
         if ((i % 4) == 0 && i < length) {
-            tmpBuf[tmpBufLen ++] = ' ';
+            tmpBuf[tmpBufLen++] = ' ';
             assert(tmpBufLen < tmpBufSize);
         }
     }
-    tmpBuf[tmpBufLen ++] = '>';
+    tmpBuf[tmpBufLen++] = '>';
 
-    NSString *ret = [[NSString alloc] initWithCString: tmpBuf.data() length: tmpBufLen];
+    NSString* ret = [[NSString alloc] initWithCString:tmpBuf.data() length:tmpBufLen];
 
     return [ret autorelease];
 }
@@ -591,6 +592,15 @@ using namespace Windows::Foundation;
     }
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

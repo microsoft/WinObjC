@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,22 +15,37 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#include "StubReturn.h"
 #include <stdio.h>
 #include <stdlib.h>
-#import "Foundation/Foundation.h"
-#include <Starboard/String.h>
-#include "../UnifiedFoundation/Foundation/NSValueTransformers.h"
-#include "NSObject_NSKeyValueArrayAdapter-Internal.h"
-
-#include "CoreGraphics/CGAffineTransform.h"
-#include "QuartzCore/CATransform3D.h"
+#import <Foundation/Foundation.h>
+#import <Foundation/NSKeyValueCoding.h>
+#import <Starboard/String.h>
+#import "NSValueTransformers.h"
+#import "NSObject_NSKeyValueArrayAdapter-Internal.h"
+#import "NSDelayedPerform.h"
 
 #include <memory>
 #include <vector>
 #include <unordered_set>
 #include <functional>
 
-@implementation NSObject (KeyValueCoding)
+NSString* const NSUndefinedKeyException = @"NSUndefinedKeyException";
+NSString* const NSTargetObjectUserInfoKey = @"NSTargetObjectUserInfoKey";
+NSString* const NSUnknownUserInfoKey = @"NSUnknownUserInfoKey";
+NSString* const NSAverageKeyValueOperator = @"NSAverageKeyValueOperator";
+NSString* const NSCountKeyValueOperator = @"NSCountKeyValueOperator";
+NSString* const NSDistinctUnionOfArraysKeyValueOperator = @"NSDistinctUnionOfArraysKeyValueOperator";
+NSString* const NSDistinctUnionOfObjectsKeyValueOperator = @"NSDistinctUnionOfObjectsKeyValueOperator";
+NSString* const NSDistinctUnionOfSetsKeyValueOperator = @"NSDistinctUnionOfSetsKeyValueOperator";
+NSString* const NSMaximumKeyValueOperator = @"NSMaximumKeyValueOperator";
+NSString* const NSMinimumKeyValueOperator = @"NSMinimumKeyValueOperator";
+NSString* const NSSumKeyValueOperator = @"NSSumKeyValueOperator";
+NSString* const NSUnionOfArraysKeyValueOperator = @"NSUnionOfArraysKeyValueOperator";
+NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOperator";
+NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
+
+@implementation NSObject (NSKeyValueCoding)
 
 /**
  @Status Interoperable
@@ -370,6 +385,86 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
     [NSException raise:NSInvalidArgumentException format:@"Class %s is not KVC compliant for key %@.", class_getName([self class]), key];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)dictionaryWithValuesForKeys:(NSArray*)keys {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSMutableSet*)mutableSetValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSMutableSet*)mutableSetValueForKeyPath:(NSString*)keyPath {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSMutableOrderedSet*)mutableOrderedSetValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSMutableOrderedSet*)mutableOrderedSetValueForKeyPath:(NSString*)keyPath {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setNilValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)validateValue:(id _Nullable*)ioValue forKey:(NSString*)key error:(NSError* _Nullable*)outError {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)validateValue:(id _Nullable*)ioValue forKeyPath:(NSString*)key error:(NSError* _Nullable*)outError {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end
 
 @implementation NSObject (Foundation)
@@ -490,6 +585,13 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 /**
  @Status Interoperable
 */
+- (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(double)delay inModes:(NSArray*)modes {
+    [[self class] object:self performSelector:selector withObject:obj1 afterDelay:delay inModes:modes];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
     return [[self class] instanceMethodSignatureForSelector:selector];
 }
@@ -522,7 +624,3 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
     return [NSMethodSignature signatureWithObjCTypes:methodTypes];
 }
 @end
-
-/** Included to force TU to be linked - remove once exported as DLL **/
-extern "C" void NSObjForceinclude() {
-}

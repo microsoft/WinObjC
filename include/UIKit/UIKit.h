@@ -147,7 +147,6 @@
 #import <UIKit/UIPageViewController.h>
 #import <UIKit/UIPrintInteractionController.h>
 #import <UIKit/NSLayoutConstraint.h>
-#import <UIKit/UIPageViewController.h>
 #import <UIKit/UICollectionViewCommon.h>
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UICollectionViewController.h>

@@ -23,7 +23,7 @@
 typedef NS_ENUM(NSUInteger, CLRegionState) { CLRegionStateUnknown, CLRegionStateInside, CLRegionStateOutside };
 
 CORELOCATION_EXPORT_CLASS
-@interface CLRegion : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLRegion : NSObject <NSCopying, NSSecureCoding>
 - (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
                                       radius:(CLLocationDistance)radius
                                   identifier:(NSString*)identifier STUB_METHOD;

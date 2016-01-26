@@ -20,6 +20,6 @@
 #import <Foundation/NSObject.h>
 
 CORELOCATION_EXPORT_CLASS
-@interface CLFloor : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLFloor : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) NSInteger level STUB_PROPERTY;
 @end

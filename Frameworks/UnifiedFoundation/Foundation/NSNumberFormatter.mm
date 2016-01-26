@@ -14,6 +14,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import "Starboard.h"
+#import "StubReturn.h"
 #import "Foundation/NSNumberFormatter.h"
 #import "Foundation/NSMutableString.h"
 #import "Foundation/NSNumber.h"
@@ -789,4 +790,22 @@ static BOOL numberIsNegative(id number) {
 
     return ret;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)aString range:(NSRange*)rangep error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

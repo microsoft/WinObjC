@@ -30,7 +30,6 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
  * CLLocation class extension.
  */
 @interface CLLocation () {
-    volatile NSUInteger _hashCode;
 }
 
 @property (readwrite, nonatomic) CLLocationCoordinate2D coordinate;
@@ -39,7 +38,6 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
 @property (readwrite, nonatomic, assign) CLLocationAccuracy horizontalAccuracy;
 @property (readwrite, nonatomic, assign) CLLocationAccuracy verticalAccuracy;
 @property (readwrite, nonatomic, copy) NSDate* timestamp;
-@property (readwrite, nonatomic, copy) NSString* description;
 @property (readwrite, nonatomic, assign) CLLocationSpeed speed;
 @property (readwrite, nonatomic, assign) CLLocationDirection course;
 @end
@@ -47,7 +45,9 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
 /**
  * CLLocation main implementation.
  */
-@implementation CLLocation
+@implementation CLLocation {
+    volatile NSUInteger _hashCode;
+}
 
 /**
  @Status Stub
@@ -111,7 +111,6 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
         _course = course;
         _speed = speed;
         _timestamp = [timestamp copy];
-        _description = nil;
     }
 
     return self;
@@ -120,10 +119,6 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
 - (void)dealloc {
     if (_timestamp != nil) {
         [_timestamp release];
-    }
-
-    if (_description != nil) {
-        [_description release];
     }
 
     [super dealloc];
@@ -240,7 +235,6 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
         newLocation->_horizontalAccuracy = _horizontalAccuracy;
         newLocation->_verticalAccuracy = _verticalAccuracy;
         newLocation->_timestamp = [_timestamp copyWithZone:zone];
-        newLocation->_description = [_description copyWithZone:zone];
         newLocation->_speed = _speed;
         newLocation->_course = _course;
     }

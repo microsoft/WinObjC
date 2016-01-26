@@ -25,7 +25,7 @@
 typedef double CLHeadingComponentValue;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLHeading : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLHeading : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CLLocationDirection magneticHeading STUB_PROPERTY;
 @property (readonly, nonatomic) CLLocationDirection trueHeading STUB_PROPERTY;
 @property (readonly, nonatomic) CLLocationDirection headingAccuracy STUB_PROPERTY;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,86 +13,78 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _NSREGULAREXPRESSION_H_
-#define _NSREGULAREXPRESSION_H_
-
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSRange.h>
-#import <Foundation/NSTextCheckingResult.h>
 
-typedef NS_OPTIONS(NSUInteger, NSMatchingFlags) {
-    NSMatchingProgress = 1,
-    NSMatchingCompleted = 2,
-    NSMatchingHitEnd = 4,
-    NSMatchingRequiredEnd = 8,
-    NSMatchingInternalError = 16,
-};
-
-typedef NS_OPTIONS(NSUInteger, NSRegularExpressionOptions) {
-    NSRegularExpressionCaseInsensitive = 1,
-    NSRegularExpressionAllowCommentsAndWhitespace = 2,
-    NSRegularExpressionIgnoreMetacharacters = 4,
-    NSRegularExpressionDotMatchesLineSeparators = 8,
-    NSRegularExpressionAnchorsMatchLines = 16,
-    NSRegularExpressionUseUnixLineSeparators = 32,
-    NSRegularExpressionUseUnicodeWordBoundaries = 64
-};
-
-typedef NS_OPTIONS(NSUInteger, NSMatchingOptions) {
-    NSMatchingReportProgress = 1,
-    NSMatchingReportCompletion = 2,
-    NSMatchingAnchored = 4,
-    NSMatchingWithTransparentBounds = 8,
-    NSMatchingWithoutAnchoringBounds = 16
-};
-
+@class NSString;
 @class NSError;
+@class NSTextCheckingResult;
 @class NSArray;
 @class NSMutableString;
 
-FOUNDATION_EXPORT_CLASS
-@interface NSRegularExpression : NSObject <NSSecureCoding, NSCopying, NSObject>
+typedef NSUInteger NSRegularExpressionOptions;
+typedef NSUInteger NSMatchingFlags;
+typedef NSUInteger NSMatchingOptions;
+enum {
+    NSRegularExpressionCaseInsensitive = 1 << 0,
+    NSRegularExpressionAllowCommentsAndWhitespace = 1 << 1,
+    NSRegularExpressionIgnoreMetacharacters = 1 << 2,
+    NSRegularExpressionDotMatchesLineSeparators = 1 << 3,
+    NSRegularExpressionAnchorsMatchLines = 1 << 4,
+    NSRegularExpressionUseUnixLineSeparators = 1 << 5,
+    NSRegularExpressionUseUnicodeWordBoundaries = 1 << 6
+};
 
+enum {
+    NSMatchingProgress = 1 << 0,
+    NSMatchingCompleted = 1 << 1,
+    NSMatchingHitEnd = 1 << 2,
+    NSMatchingRequiredEnd = 1 << 3,
+    NSMatchingInternalError = 1 << 4
+};
+
+enum {
+    NSMatchingReportProgress = 1 << 0,
+    NSMatchingReportCompletion = 1 << 1,
+    NSMatchingAnchored = 1 << 2,
+    NSMatchingWithTransparentBounds = 1 << 3,
+    NSMatchingWithoutAnchoringBounds = 1 << 4
+};
+
+FOUNDATION_EXPORT_CLASS
+@interface NSRegularExpression : NSObject <NSCoding, NSCopying>
++ (NSRegularExpression*)regularExpressionWithPattern:(NSString*)pattern
+                                             options:(NSRegularExpressionOptions)options
+                                               error:(NSError* _Nullable*)error;
+- (instancetype)initWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError* _Nullable*)error;
 @property (readonly, copy) NSString* pattern;
 @property (readonly) NSRegularExpressionOptions options;
 @property (readonly) NSUInteger numberOfCaptureGroups;
-
-+ (NSRegularExpression*)regularExpressionWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error;
-+ (NSString*)escapedTemplateForString:(NSString*)string;
-+ (NSString*)escapedPatternForString:(NSString*)string;
-
-- (instancetype)initWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error;
 - (NSUInteger)numberOfMatchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
-- (NSArray*)matchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
 - (void)enumerateMatchesInString:(NSString*)string
                          options:(NSMatchingOptions)options
                            range:(NSRange)range
-                      usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block;
-
+                      usingBlock:(void (^)(NSTextCheckingResult*, NSMatchingFlags, BOOL*))block;
+- (NSArray*)matchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
 - (NSTextCheckingResult*)firstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
 - (NSRange)rangeOfFirstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range;
-- (NSString*)stringByReplacingMatchesInString:(NSString*)string
-                                      options:(NSMatchingOptions)options
-                                        range:(NSRange)range
-                                 withTemplate:(NSString*)templateObj;
-
-- (NSString*)replacementStringForResult:(NSTextCheckingResult*)result
-                               inString:(NSString*)string
-                                 offset:(NSInteger)offset
-                               template:(NSString*)templateObj;
 
 - (NSUInteger)replaceMatchesInString:(NSMutableString*)string
                              options:(NSMatchingOptions)options
                                range:(NSRange)range
-                        withTemplate:(NSString*)templateStr;
-
+                        withTemplate:(NSString*)templateObj;
+- (NSString*)stringByReplacingMatchesInString:(NSString*)string
+                                      options:(NSMatchingOptions)options
+                                        range:(NSRange)range
+                                 withTemplate:(NSString*)templateObj;
++ (NSString*)escapedTemplateForString:(NSString*)string;
++ (NSString*)escapedPatternForString:(NSString*)string;
+- (NSString*)replacementStringForResult:(NSTextCheckingResult*)result
+                               inString:(NSString*)string
+                                 offset:(NSInteger)offset
+                               template:(NSString*)templateObj;
 @end
-
-@interface NSDataDetector : NSRegularExpression
-
-+ (NSDataDetector*)dataDetectorWithTypes:(NSTextCheckingTypes)checkingTypes error:(NSError**)error;
-
-@end
-
-#endif /* _NSREGULAREXPRESSION_H_ */

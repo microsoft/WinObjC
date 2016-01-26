@@ -33,7 +33,7 @@ typedef enum : NSInteger {
 } CMMotionActivityConfidence;
 
 COREMOTION_EXPORT_CLASS
-@interface CMMotionActivity : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMMotionActivity : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) BOOL stationary STUB_PROPERTY;
 @property (readonly, nonatomic) BOOL walking STUB_PROPERTY;
 @property (readonly, nonatomic) BOOL running STUB_PROPERTY;

@@ -21,7 +21,7 @@
 /**
 @Status Stub
 */
--(id)copyWithZone:(NSZone *)zone {
+- (id)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -29,7 +29,7 @@
 /**
 @Status Stub
 */
-+(BOOL)supportsSecureCoding {
++ (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -37,7 +37,7 @@
 /**
 @Status Stub
 */
--(instancetype)initWithCoder:(NSCoder*)decoder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -45,7 +45,7 @@
 /**
 @Status Stub
 */
--(void)encodeWithCoder:(NSCoder*)encoder {
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
 @end

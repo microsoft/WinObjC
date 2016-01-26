@@ -22,6 +22,6 @@
 #import <Foundation/NSSecureCoding.h>
 
 COREMOTION_EXPORT_CLASS
-@interface CMLogItem : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CMLogItem : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) NSTimeInterval timestamp STUB_PROPERTY;
 @end

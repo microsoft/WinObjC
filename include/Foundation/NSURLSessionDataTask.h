@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,25 +13,47 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+
+#import <Foundation/NSURLSession.h>
 #import <Foundation/NSURLSessionTask.h>
 
-@class NSCachedURLResponse;
+@class NSURLSession;
+@class NSURLSessionDownloadTask;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionDataTask : NSURLSessionTask
+@interface NSURLSessionDataTask : NSURLSessionTask <NSCopying>
 @end
 
-FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionUploadTask : NSURLSessionTask
-@end
+typedef NS_ENUM(NSInteger, NSURLSessionResponseDisposition) {
+    NSURLSessionResponseCancel = 0,
+    NSURLSessionResponseAllow = 1,
+    NSURLSessionResponseBecomeDownload = 2
+};
 
-@protocol NSURLSessionDataDelegate <NSObject>
+@protocol NSURLSessionDataDelegate
 @optional
-- (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)task didReceiveResponse:(NSURLResponse*)response completionHandler:(void(^)(NSURLSessionResponseDisposition disposition))completionHandler;
-- (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)task didBecomeDownloadTask:(NSURLSessionDownloadTask*)downloadTask;
-- (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)task didReceiveData:(NSData*)data;
-- (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)task willCacheResponse:(NSCachedURLResponse*)proposedResponse completionHandler:(void(^)(NSCachedURLResponse*))completionHandler;
+- (void)URLSession:(NSURLSession*)session
+          dataTask:(NSURLSessionDataTask*)dataTask
+didReceiveResponse:(NSURLResponse*)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+                 dataTask:(NSURLSessionDataTask*)dataTask
+    didBecomeDownloadTask:(NSURLSessionDownloadTask*)downloadTask;
+
+@optional
+- (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)dataTask didReceiveData:(NSData*)data;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+          dataTask:(NSURLSessionDataTask*)dataTask
+ willCacheResponse:(NSCachedURLResponse*)proposedResponse
+ completionHandler:(void (^)(NSCachedURLResponse* cachedResponse))completionHandler;
+
 @end

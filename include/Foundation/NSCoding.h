@@ -13,11 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <Foundation/FoundationExport.h>
 @class NSCoder;
 
 @protocol NSCoding
-@required
+
 - (instancetype)initWithCoder:(NSCoder*)decoder;
+
 - (void)encodeWithCoder:(NSCoder*)encoder;
+
 @end

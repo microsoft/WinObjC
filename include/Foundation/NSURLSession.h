@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,99 +13,96 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <Foundation/NSURLRequest.h>
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSURLSessionTask.h>
+#import <Foundation/NSURLSessionDataTask.h>
+#import <Foundation/NSURLSessionDownloadTask.h>
+#import <Foundation/NSURLSessionUploadTask.h>
+#import <Foundation/NSObject.h>
 
-typedef NS_ENUM(NSInteger, NSURLSessionResponseDisposition) {
-    NSURLSessionResponseCancel = 0,
-    NSURLSessionResponseAllow = 1,
-    NSURLSessionResponseBecomeDownload = 2
+@class NSString;
+@class NSURLSessionConfiguration;
+@protocol NSURLSessionDelegate;
+@class NSOperationQueue;
+@class NSURLSessionTask;
+@class NSURLSessionDataTask;
+@class NSURL;
+@class NSData;
+@class NSURLResponse;
+@class NSError;
+@class NSURLRequest;
+@class NSURLSessionDownloadTask;
+@class NSURLSessionUploadTask;
+@class NSArray;
+
+FOUNDATION_EXPORT NSString* const NSURLSessionDownloadTaskResumeData;
+FOUNDATION_EXPORT NSString* const NSURLErrorBackgroundTaskCancelledReasonKey;
+
+typedef void (^NSURLSessionTaskCompletionHandler)(NSData* data, NSURLResponse* response, NSError* error);
+typedef void (^NSURLSessionDownloadTaskCompletionHandler)(NSURL* location, NSURLResponse* response, NSError* error);
+
+enum {
+    NSURLErrorCancelledReasonUserForceQuitApplication = 0,
+    NSURLErrorCancelledReasonBackgroundUpdatesDisabled = 1,
 };
+
+typedef NSUInteger NSURLErrorBackgroundTaskCancelledReason;
 
 FOUNDATION_EXPORT const int64_t NSURLSessionTransferSizeUnknown;
 
-// A key in the error dictionary that provides resume data.
-FOUNDATION_EXPORT NSString* const NSURLSessionDownloadTaskResumeData;
-
-// An NSNumber value indicating why a background task was cancelled.
-FOUNDATION_EXPORT NSString* const NSURLErrorBackgroundTaskCancelledReasonKey;
-
-typedef NS_ENUM(NSUInteger, NSURLErrorBackgroundTaskCancelledReason) {
-   NSURLErrorCancelledReasonUserForceQuitApplication =    0,
-   NSURLErrorCancelledReasonBackgroundUpdatesDisabled =   1,
-};
-
-@class NSURLCredential;
-@class NSURLAuthenticationChallenge;
-@class NSURLSessionTask;
-@class NSURLSessionDataTask;
-@class NSURLSessionDownloadTask;
-@class NSURLSessionUploadTask;
-@class NSURLSessionConfiguration;
-@class NSURLResponse;
-@class NSError;
-@class NSOperationQueue;
-
-typedef NS_ENUM(NSInteger, NSURLSessionAuthChallengeDisposition) {
-    NSURLSessionAuthChallengeUseCredential = 0,
-    NSURLSessionAuthChallengePerformDefaultHandling = 1,
-    NSURLSessionAuthChallengeCancelAuthenticationChallenge = 2,
-    NSURLSessionAuthChallengeRejectProtectionSpace = 3,
-};
-
-@protocol NSURLSessionDelegate;
-
-typedef void(^NSURLSessionTaskCompletionHandler)(NSData* data, NSURLResponse* response, NSError* error);
-typedef void(^NSURLSessionDownloadTaskCompletionHandler)(NSURL* location, NSURLResponse* response, NSError* error);
-
 FOUNDATION_EXPORT_CLASS
 @interface NSURLSession : NSObject
-+ (instancetype)sharedSession;
-+ (instancetype)sessionWithConfiguration:(NSURLSessionConfiguration*)configuration;
-+ (instancetype)sessionWithConfiguration:(NSURLSessionConfiguration*)configuration
-                                delegate:(id<NSURLSessionDelegate>)delegate
-                           delegateQueue:(NSOperationQueue*)operationQueue;
-
++ (NSURLSession*)sessionWithConfiguration:(NSURLSessionConfiguration*)configuration;
++ (NSURLSession*)sessionWithConfiguration:(NSURLSessionConfiguration*)configuration
+                                 delegate:(id<NSURLSessionDelegate>)delegate
+                            delegateQueue:(NSOperationQueue*)queue;
++ (NSURLSession*)sharedSession;
 @property (readonly, copy) NSURLSessionConfiguration* configuration;
 @property (readonly, retain) id<NSURLSessionDelegate> delegate;
 @property (readonly, retain) NSOperationQueue* delegateQueue;
 @property (copy) NSString* sessionDescription;
-
 - (NSURLSessionDataTask*)dataTaskWithURL:(NSURL*)url;
-- (NSURLSessionDataTask*)dataTaskWithURL:(NSURL*)url completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler;
+- (NSURLSessionDataTask*)dataTaskWithURL:(NSURL*)url completionHandler:(void (^)(NSData*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionDataTask*)dataTaskWithRequest:(NSURLRequest*)request;
-- (NSURLSessionDataTask*)dataTaskWithRequest:(NSURLRequest*)request completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler;
-
+- (NSURLSessionDataTask*)dataTaskWithRequest:(NSURLRequest*)request
+                           completionHandler:(void (^)(NSData*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionDownloadTask*)downloadTaskWithURL:(NSURL*)url;
-- (NSURLSessionDownloadTask*)downloadTaskWithURL:(NSURL*)url completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler;
+- (NSURLSessionDownloadTask*)downloadTaskWithURL:(NSURL*)url
+                               completionHandler:(void (^)(NSURL*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionDownloadTask*)downloadTaskWithRequest:(NSURLRequest*)request;
-- (NSURLSessionDownloadTask*)downloadTaskWithRequest:(NSURLRequest*)request completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler;
+- (NSURLSessionDownloadTask*)downloadTaskWithRequest:(NSURLRequest*)request
+                                   completionHandler:(void (^)(NSURL*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionDownloadTask*)downloadTaskWithResumeData:(NSData*)resumeData;
-- (NSURLSessionDownloadTask*)downloadTaskWithResumeData:(NSData*)resumeData completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler;
-
-- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request fromData:(NSData*)data;
-- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request fromData:(NSData*)data completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler;
+- (NSURLSessionDownloadTask*)downloadTaskWithResumeData:(NSData*)resumeData
+                                      completionHandler:(void (^)(NSURL*, NSURLResponse*, NSError*))completionHandler;
+- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request fromData:(NSData*)bodyData;
+- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request
+                                        fromData:(NSData*)bodyData
+                               completionHandler:(void (^)(NSData*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request fromFile:(NSURL*)fileURL;
-- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request fromFile:(NSURL*)fileURL completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler;
+- (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request
+                                        fromFile:(NSURL*)fileURL
+                               completionHandler:(void (^)(NSData*, NSURLResponse*, NSError*))completionHandler;
 - (NSURLSessionUploadTask*)uploadTaskWithStreamedRequest:(NSURLRequest*)request;
-
 - (void)finishTasksAndInvalidate;
-- (void)flushWithCompletionHandler:(void(^)(void))completionHandler;
-- (void)getTasksWithCompletionHandler:(void(^)(NSArray* dataTasks, NSArray* uploadTasks, NSArray* downloadTasks))completionHandler;
+- (void)flushWithCompletionHandler:(void (^)(void))completionHandler;
+- (void)getTasksWithCompletionHandler:(void (^)(NSArray*, NSArray*, NSArray*))completionHandler;
 - (void)invalidateAndCancel;
-- (void)resetWithCompletionHandler:(void(^)(void))completionHandler;
+- (void)resetWithCompletionHandler:(void (^)(void))completionHandler;
 @end
 
-@protocol NSURLSessionDelegate <NSObject>
-
+@protocol NSURLSessionDelegate
+@optional
 - (void)URLSession:(NSURLSession*)session didBecomeInvalidWithError:(NSError*)error;
 
+@optional
 - (void)URLSession:(NSURLSession*)session
     didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge
       completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential))completionHandler;
 
+@optional
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession*)session;
 
 @end

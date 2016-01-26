@@ -25,7 +25,7 @@
 @class NSNumber;
 
 COREMOTION_EXPORT_CLASS
-@interface CMAltitudeData : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMAltitudeData : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) NSNumber* relativeAltitude STUB_PROPERTY;
 @property (readonly, nonatomic) NSNumber* pressure STUB_PROPERTY;
 @end

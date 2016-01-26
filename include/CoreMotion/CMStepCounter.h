@@ -29,9 +29,14 @@ typedef void (^CMStepQueryHandler)(NSInteger numberOfSteps, NSError* error);
 typedef void (^CMStepUpdateHandler)(NSInteger numberOfSteps, NSDate* timestamp, NSError* error);
 
 COREMOTION_EXPORT_CLASS
-@interface CMStepCounter : NSObject <NSObject>
+@interface CMStepCounter : NSObject
 + (BOOL)isStepCountingAvailable STUB_METHOD;
-- (void)startStepCountingUpdatesToQueue:(NSOperationQueue*)queue updateOn:(NSInteger)stepCounts withHandler:(CMStepUpdateHandler)handler STUB_METHOD;
+- (void)startStepCountingUpdatesToQueue:(NSOperationQueue*)queue
+                               updateOn:(NSInteger)stepCounts
+                            withHandler:(CMStepUpdateHandler)handler STUB_METHOD;
 - (void)stopStepCountingUpdates STUB_METHOD;
-- (void)queryStepCountStartingFrom:(NSDate*)start to:(NSDate*)end toQueue:(NSOperationQueue*)queue withHandler:(CMStepQueryHandler)handler STUB_METHOD;
+- (void)queryStepCountStartingFrom:(NSDate*)start
+                                to:(NSDate*)end
+                           toQueue:(NSOperationQueue*)queue
+                       withHandler:(CMStepQueryHandler)handler STUB_METHOD;
 @end

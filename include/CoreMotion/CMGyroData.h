@@ -29,6 +29,6 @@ typedef struct {
 } CMRotationRate;
 
 COREMOTION_EXPORT_CLASS
-@interface CMGyroData : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMGyroData : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CMRotationRate rotationRate STUB_PROPERTY;
 @end

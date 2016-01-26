@@ -15,69 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Foundation/NSNotificationCenter.h"
-
-@implementation NSNotification {
-    NSString* notificationName;
-    id notificationObj;
-    id userInfo;
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSNotification*)notificationWithName:(NSString*)name object:(id)obj {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = nil;
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSNotification*)notificationWithName:(NSString*)name object:(id)obj userInfo:(NSDictionary*)info {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = [info retain];
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)object {
-    return notificationObj;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return notificationName;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)userInfo {
-    return userInfo;
-}
-
-- (void)dealloc {
-    [notificationName release];
-    [notificationObj release];
-    [userInfo release];
-
-    [super dealloc];
-}
-@end
+#import <Foundation/NSNotification.h>
+#import <Foundation/NSNotificationCenter.h>
 
 @interface NSNotificationReceiver : NSObject {
 @public

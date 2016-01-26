@@ -26,7 +26,7 @@
 typedef NS_ENUM(NSUInteger, CLProximity) { CLProximityUnknown, CLProximityImmediate, CLProximityNear, CLProximityFar };
 
 CORELOCATION_EXPORT_CLASS
-@interface CLBeacon : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLBeacon : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic, strong) NSUUID* proximityUUID STUB_PROPERTY;
 @property (readonly, nonatomic, strong) NSNumber* major STUB_PROPERTY;
 @property (readonly, nonatomic, strong) NSNumber* minor STUB_PROPERTY;

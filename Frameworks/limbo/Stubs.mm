@@ -75,9 +75,6 @@ void EbrResumeSound(void) {
 @implementation _UISettings
 @end
 
-@implementation NSUndoManager
-@end
-
 @implementation NSAppearanceSetter
 @end
 

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSArray.h"
@@ -208,7 +209,6 @@ const static int c_minutesToMilliseconds = -60000;
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         // Can't encode/decode ICU object. Potentially recreate system TZ?
-        _description = [[coder decodeObjectForKey:@"description"] retain];
         _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
         _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
         _name = [[coder decodeObjectForKey:@"name"] retain];
@@ -225,7 +225,7 @@ const static int c_minutesToMilliseconds = -60000;
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     // Can't encode/decode ICU object. Potentially recreate system TZ?
-    [coder encodeObject:_description forKey:@"description"];
+    [coder encodeObject:[self description] forKey:@"description"];
     [coder encodeObject:_nextDaylightSavingTimeTransition forKey:@"nextDaylightSavingTimeTransition"];
     [coder encodeObject:_abbreviation forKey:@"abbreviation"];
     [coder encodeObject:_name forKey:@"name"];
@@ -428,6 +428,15 @@ const static int c_minutesToMilliseconds = -60000;
 - (void)dealloc {
     delete _icuTZ;
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSString*)timeZoneDataVersion {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

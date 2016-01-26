@@ -25,6 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/FoundationExport.h>
 #import <Availability.h>
 #import <StarboardExport.h>
+#import <StubIncludes.h>
 
 #define NS_INLINE static inline
 
@@ -180,7 +181,9 @@ FOUNDATION_EXPORT NSString* NSStringFromSelector(SEL selector);
 
 FOUNDATION_EXPORT Class NSClassFromString(NSString* className);
 FOUNDATION_EXPORT NSString* NSStringFromClass(Class aClass);
-FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
+
+FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto) STUB_METHOD;
+FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
 
 #ifndef NS_FORMAT_FUNCTION
 #define NS_FORMAT_FUNCTION(F, A)
@@ -263,15 +266,17 @@ enum {
     NSSortConcurrent = 1UL,
     NSSortStable = 16UL,
 };
+
 typedef uint32_t NSSortOptions;
 
 enum {
     NSEnumerationConcurrent = 1,
     NSEnumerationReverse = 2,
 };
+
 typedef uint32_t NSEnumerationOptions;
 
-FOUNDATION_EXPORT double NSFoundationVersionNumber;
+FOUNDATION_EXPORT const double NSFoundationVersionNumber;
 
 #define NSFoundationVersionNumber_iPhoneOS_2_0 678.24
 #define NSFoundationVersionNumber_iPhoneOS_2_1 678.26

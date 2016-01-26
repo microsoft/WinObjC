@@ -13,11 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <Foundation/NSCoding.h>
-#import <objc/runtime.h>
+#import <Foundation/FoundationExport.h>
 
-@protocol NSSecureCoding <NSCoding>
-@required
+@protocol NSSecureCoding
+
 + (BOOL)supportsSecureCoding;
+
 @end

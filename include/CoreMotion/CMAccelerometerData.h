@@ -29,6 +29,6 @@ typedef struct {
 } CMAcceleration;
 
 COREMOTION_EXPORT_CLASS
-@interface CMAccelerometerData : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMAccelerometerData : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CMAcceleration acceleration STUB_PROPERTY;
 @end

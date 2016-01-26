@@ -23,7 +23,7 @@
 @class NSDictionary;
 
 CA_EXPORT_CLASS
-@interface CAEmitterCell : NSObject <CAMediaTiming, NSCoding, NSObject>
+@interface CAEmitterCell : NSObject <CAMediaTiming, NSCoding>
 
 + (instancetype)emitterCell;
 @property (strong) id contents;

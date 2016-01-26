@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
+
+@class NSString;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSUUID : NSObject <NSCoding, NSCopying>
-+ (NSUUID*)UUID;
-- (id)init;
-- (id)initWithUUIDString:(NSString*)string;
-- (id)initWithUUIDBytes:(const void*)bytes;
-- (NSString*)UUIDString;
-- (void)getUUIDBytes:(void*)bytes;
+@interface NSUUID : NSObject <NSCopying, NSSecureCoding>
++ (instancetype)UUID;
+- (instancetype)init;
+- (instancetype)initWithUUIDBytes:(const void*)bytes;
+- (instancetype)initWithUUIDString:(NSString*)string;
+- (void)getUUIDBytes:(void*)uuid;
+@property (readonly, copy) NSString* UUIDString;
 @end

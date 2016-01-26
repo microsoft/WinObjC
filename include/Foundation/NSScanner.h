@@ -1,58 +1,60 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSDecimal.h>
 
-@class NSDictionary,NSCharacterSet,NSLocale;
+@class NSString;
+@class NSCharacterSet;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSScanner : NSObject <NSCopying> {
-    NSString *_string;
+    NSString* _string;
     NSUInteger _location;
     NSUInteger _len;
-    NSCharacterSet *_skipSet;
+    NSCharacterSet* _skipSet;
     BOOL _isCaseSensitive;
-    NSLocale *_locale;
+    NSLocale* _locale;
 }
 
-+scannerWithString:(NSString *)string;
-+localizedScannerWithString:(NSString *)string;
-
--initWithString:(NSString *)string;
-
--(NSString *)string;
-
--(NSCharacterSet *)charactersToBeSkipped;
--(BOOL)caseSensitive;
--(NSDictionary *)locale;
-
--(void)setCharactersToBeSkipped:(NSCharacterSet *)set;
--(void)setCaseSensitive:(BOOL)flag;
--(void)setLocale:(NSDictionary *)locale;
-
--(BOOL)isAtEnd;
--(NSUInteger)scanLocation;
--(void)setScanLocation:(NSUInteger)location;
-
--(BOOL)scanInt:(int *)valuep;
--(BOOL)scanInteger:(NSInteger *)valuep;
--(BOOL)scanLongLong:(long long *)valuep;
--(BOOL)scanFloat:(float *)valuep;
--(BOOL)scanDouble:(double *)valuep;
--(BOOL)scanDecimal:(NSDecimal *)valuep;
--(BOOL)scanHexInt:(unsigned *)valuep;
--(BOOL)scanHexLongLong:(unsigned long long *)valuep;
-
--(BOOL)scanString:(NSString *)string intoString:(NSString **)stringp;
--(BOOL)scanUpToString:(NSString *)string intoString:(NSString **)stringp;
-
--(BOOL)scanCharactersFromSet:(NSCharacterSet *)charset intoString:(NSString **)stringp;
--(BOOL)scanUpToCharactersFromSet:(NSCharacterSet *)charset intoString:(NSString **)stringp;
-
++ (instancetype)scannerWithString:(NSString*)aString;
++ (id)localizedScannerWithString:(NSString*)aString STUB_METHOD;
+- (instancetype)initWithString:(NSString*)aString;
+@property (readonly, copy) NSString* string;
+@property NSUInteger scanLocation;
+@property BOOL caseSensitive;
+@property (copy) NSCharacterSet* charactersToBeSkipped;
+@property (retain) id locale STUB_PROPERTY;
+- (BOOL)scanCharactersFromSet:(NSCharacterSet*)scanSet intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanUpToCharactersFromSet:(NSCharacterSet*)stopSet intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanDecimal:(NSDecimal*)decimalValue STUB_METHOD;
+- (BOOL)scanDouble:(double*)doubleValue;
+- (BOOL)scanFloat:(float*)floatValue;
+- (BOOL)scanHexDouble:(double*)result STUB_METHOD;
+- (BOOL)scanHexFloat:(float*)result STUB_METHOD;
+- (BOOL)scanHexInt:(unsigned int*)intValue;
+- (BOOL)scanHexLongLong:(unsigned long long*)result;
+- (BOOL)scanInteger:(NSInteger*)value;
+- (BOOL)scanInt:(int*)intValue;
+- (BOOL)scanLongLong:(long long*)longLongValue;
+- (BOOL)scanString:(NSString*)string intoString:(NSString* _Nullable*)stringValue;
+- (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue STUB_METHOD;
+- (BOOL)scanUpToString:(NSString*)stopString intoString:(NSString* _Nullable*)stringValue;
+@property (readonly, getter=isAtEnd) BOOL atEnd;
 @end

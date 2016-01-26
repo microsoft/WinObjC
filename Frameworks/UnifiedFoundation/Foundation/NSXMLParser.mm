@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -285,6 +286,23 @@ void abortParsing__unused() {
 - (int)lineNumber {
     UNIMPLEMENTED();
     return xmlSAX2GetColumnNumber((void*)self);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)abortParsing {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithStream:(NSInputStream*)stream {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

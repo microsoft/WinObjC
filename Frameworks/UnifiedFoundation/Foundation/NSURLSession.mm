@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Foundation/Foundation.h>
+#import <Foundation/NSURLSession.h>
 #import <functional>
 #import <Starboard.h>
 #import <Windows.h>
@@ -28,6 +29,10 @@
 #import "NSURLSessionTask-Internal.h"
 
 const int64_t NSURLSessionTransferSizeUnknown = -1LL;
+
+#import <StubReturn.h>
+
+NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgroundTaskCancelledReasonKey";
 
 template <typename... Args>
 static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd, Args... args) {
@@ -116,8 +121,8 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     std::mutex _mutex;
     std::condition_variable _taskRemovalCondition;
 
-    NSThread *_taskDispatchThread;
-    NSRunLoopSource *_runLoopCancelSource;
+    NSThread* _taskDispatchThread;
+    NSRunLoopSource* _runLoopCancelSource;
 
     uint32_t _threadInitializedFuse;
 }
@@ -202,7 +207,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 
 - (void)_ensureTaskDispatchThreadIsRunning {
     // TODO(DH): this should be an atomic<bool>, but atomics require an intrinsic we can't emit right now.
-    if(InterlockedCompareExchange(&_threadInitializedFuse, 0x1, 0x0) == 0x0) {
+    if (InterlockedCompareExchange(&_threadInitializedFuse, 0x1, 0x0) == 0x0) {
         _runLoopCancelSource = [[NSRunLoopSource alloc] init];
         _taskDispatchThread = [[NSThread alloc] initWithTarget:self selector:@selector(_taskDispatchThreadBody:) object:nil];
         [_taskDispatchThread start];
@@ -212,7 +217,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 - (void)_taskDispatchThreadBody:(id)sender {
     NSRunLoop* currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addInputSource:_runLoopCancelSource forMode:@"kCFRunLoopDefaultMode"];
-    while(!_invalidating) {
+    while (!_invalidating) {
         [currentRunLoop runUntilDate:[NSDate distantFuture]];
     }
 }

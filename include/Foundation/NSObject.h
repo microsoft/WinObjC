@@ -18,37 +18,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSZone.h>
 
-@class NSCoder, NSInvocation, NSMethodSignature, NSString;
+@class NSCoder, NSInvocation, NSMethodSignature, NSString, NSArray, NSThread, NSKeyedArchiver, NSArchiver, NSTimer;
 
 @protocol NSObject
 
-- (NSZone*)zone;
-
-- (id)self;
 - (Class) class;
-- (Class)superclass;
-
-- (id)retain;
-- (id)autorelease;
-- (oneway void)release;
-- (NSUInteger)retainCount;
-
-- (NSUInteger)hash;
-- (BOOL)isEqual:object;
-
+@property (readonly) Class superclass;
+- (BOOL)isEqual:(id)anObject;
+@property (readonly) NSUInteger hash;
+- (instancetype)self;
 - (BOOL)isKindOfClass:(Class)aClass;
 - (BOOL)isMemberOfClass:(Class)aClass;
-- (BOOL)conformsToProtocol:(Protocol*)protocol;
+- (BOOL)respondsToSelector:(SEL)aSelector;
+- (BOOL)conformsToProtocol:(Protocol*)aProtocol;
+@property (readonly, copy) NSString* description;
+@property (readonly, copy) NSString* debugDescription;
+- (id)performSelector:(SEL)aSelector;
+- (id)performSelector:(SEL)aSelector withObject:(id)anObject;
+- (id)performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject;
+- (BOOL)isProxy STUB_METHOD;
+- (instancetype)retain;
+- (oneway void)release;
+- (instancetype)autorelease;
+- (NSUInteger)retainCount;
+- (NSZone*)zone;
 
-- (BOOL)respondsToSelector:(SEL)selector;
-- (id)performSelector:(SEL)selector;
-- (id)performSelector:(SEL)selector withObject:(id)object0;
-- (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
-
-- (BOOL)isProxy;
-
-- (NSString*)description;
-- (NSString*)debugDescription;
 @end
 
 @protocol NSMutableCopying
@@ -68,68 +62,78 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
     Class isa;
 }
 
-/* Class Initialization */
++ (void)initialize STUB_METHOD;
 + (void)load;
-+ (void)initialize;
-
-/* Creation and Destruction */
-+ (id) new;
-+ (id)alloc;
-+ (id)allocWithZone:(NSZone*)zone;
-
-- (id)init;
++ (instancetype)alloc;
++ (instancetype)allocWithZone:(NSZone*)zone;
+- (instancetype)init;
+- (id)copy;
++ (id)copyWithZone:(NSZone*)zone;
+- (id)mutableCopy;
++ (id)mutableCopyWithZone:(NSZone*)zone;
 - (void)dealloc;
++ (instancetype) new;
++ (Class) class;
++ (Class)superclass;
++ (BOOL)isSubclassOfClass:(Class)aClass;
++ (BOOL)instancesRespondToSelector:(SEL)aSelector;
++ (BOOL)conformsToProtocol:(Protocol*)aProtocol;
+- (IMP)methodForSelector:(SEL)aSelector;
++ (IMP)instanceMethodForSelector:(SEL)aSelector;
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector STUB_METHOD;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector STUB_METHOD;
++ (NSString*)description;
+@property (readonly, copy) NSString* description;
+@property (readonly, retain) id autoContentAccessingProxy STUB_PROPERTY;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
+- (id)forwardingTargetForSelector:(SEL)aSelector;
+- (void)forwardInvocation:(NSInvocation*)invocation STUB_METHOD;
++ (BOOL)resolveClassMethod:(SEL)selector STUB_METHOD;
++ (BOOL)resolveInstanceMethod:(SEL)selector STUB_METHOD;
+- (void)doesNotRecognizeSelector:(SEL)aSelector;
++ (NSInteger)version STUB_METHOD;
++ (void)setVersion:(NSInteger)version STUB_METHOD;
 - (void)finalize;
 
-+ (NSInteger)version;
-+ (void)setVersion:(NSInteger)version;
-
-+ (id)self;
-- (id)self;
-
-/* Inheritance Introspection */
-+ (Class) class;
-- (Class) class;
-+ (Class)superclass;
-+ (BOOL)isSubclassOfClass:(Class)cls;
-- (BOOL)isKindOfClass:(Class)aClass;
-- (BOOL)isMemberOfClass:(Class)aClass;
-+ (BOOL)conformsToProtocol:(Protocol*)protocol;
-- (BOOL)conformsToProtocol:(Protocol*)protocol;
-
-/* Dynamic Invocation */
-- (id)performSelector:(SEL)selector;
-- (id)performSelector:(SEL)selector withObject:(id)object0;
-- (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
-
-/* Method Introspection */
-+ (BOOL)instancesRespondToSelector:(SEL)selector;
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
-- (IMP)methodForSelector:(SEL)selector;
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
-+ (IMP)instanceMethodForSelector:(SEL)selector;
-- (void)doesNotRecognizeSelector:(SEL)selector;
-
-/* Forwarding */
-+ (BOOL)resolveClassMethod:(SEL)selector;
-+ (BOOL)resolveInstanceMethod:(SEL)selector;
-- (id)forwardingTargetForSelector:(SEL)aSelector;
-- (void)forwardInvocation:(NSInvocation*)invocation;
-
-+ (NSString*)description;
-- (NSString*)description;
-
-- (id)copy;
-- (id)mutableCopy;
 @end
 
-    @interface NSObject(NSCoding) -
-    (Class)classForCoder;
+    // clang-format off
+@interface NSObject(NSCoding)
+- (Class) classForCoder; // really should be a property but *bad* things happen if an ivar is produced.
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
+
+@interface NSObject(NSArchiver) 
+- (Class)classForArchiver;
+- (id)replacementObjectForArchiver:(NSArchiver*)archiver;
+@end
+
+@interface NSObject(NSKeyedArchiver) 
+- (Class)classForKeyedArchiver;
++ (Class)classForKeyedUnarchiver;
++ (NSArray*)classFallbacksForKeyedArchiver;
+- (id)replacementObjectForKeyedArchiver:(NSKeyedArchiver*)archiver;
+@end
+
+@interface NSObject (Foundation)
+- (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj1 waitUntilDone:(BOOL)wait;
+- (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj waitUntilDone:(BOOL)wait modes:(NSArray*)modes;
+- (void)performSelectorInBackground:(SEL)selector withObject:(id)obj;
++ (void)performSelectorInBackground:(SEL)selector withObject:(id)obj;
+- (void)_performSelectorAndSignal:(NSArray*)args;
+- (void)performSelector:(SEL)selector onThread:(NSThread*)thread withObject:(id)obj waitUntilDone:(BOOL)waitUntilDone modes:(id)modes;
+- (void)performSelector:(SEL)selector onThread:(id)thread withObject:(id)obj waitUntilDone:(BOOL)wait;
++ (void)_delayedPerform:(NSTimer*)timer;
++ (void)object:(id)object performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
+- (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay;
+- (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
+@end
+// clang-format on
+
 #if __has_feature(objc_arc)
     NS_INLINE NS_RETURNS_RETAINED CFTypeRef
     CFBridgingRetain(id X) {

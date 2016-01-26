@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,27 +13,26 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
-@class NSArray, NSDictionary;
+@class NSString;
+@class NSDictionary;
+@class NSArray;
 
-@interface NSOrthography : NSObject {
-    NSString* _dominantScript;
-    NSDictionary* _languageMap;
-}
-
-+ orthographyWithDominantScript:(NSString*)script languageMap:(NSDictionary*)languageMap;
-
-- initWithDominantScript:(NSString*)script languageMap:(NSDictionary*)languageMap;
-
-@property (readonly) NSDictionary* languageMap;
-@property (readonly) NSArray* allLanguages;
-@property (readonly) NSArray* allScripts;
-@property (readonly) NSString* dominantLanguage;
-@property (readonly) NSString* dominantScript;
-
-- (NSString*)dominantLanguageForScript:(NSString*)script;
+FOUNDATION_EXPORT_CLASS
+@interface NSOrthography : NSObject <NSCoding, NSCopying>
++ (instancetype)orthographyWithDominantScript:(NSString*)script languageMap:(NSDictionary*)map;
+- (instancetype)initWithDominantScript:(NSString*)script languageMap:(NSDictionary*)map;
+@property (readonly, copy) NSString* dominantScript;
+@property (readonly, copy) NSDictionary* languageMap;
 - (NSArray*)languagesForScript:(NSString*)script;
-
+- (NSString*)dominantLanguageForScript:(NSString*)script;
+@property (readonly, copy) NSArray* allLanguages;
+@property (readonly, copy) NSArray* allScripts;
+@property (readonly, copy) NSString* dominantLanguage;
 @end

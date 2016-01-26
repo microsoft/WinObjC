@@ -51,7 +51,6 @@ void ForceInclusion() {
     [UISwitch class];
     [UISlider class];
     [UIProxyObject class];
-    NSObjForceinclude();
     NSStringForceinclude();
     NSValueForceinclude();
 }

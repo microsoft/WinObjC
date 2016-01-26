@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,30 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _NSCOMPOUNDPREDICATE_H_
-#define _NSCOMPOUNDPREDICATE_H_
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
 #import <Foundation/NSPredicate.h>
+@class NSArray;
 
-typedef NS_ENUM(NSInteger, NSCompoundPredicateType) {
+typedef enum {
     NSNotPredicateType = 0,
     NSAndPredicateType,
     NSOrPredicateType,
-};
+} NSCompoundPredicateType;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCompoundPredicate : NSPredicate <NSSecureCoding, NSCopying>
-
-- (instancetype)initWithType:(NSCompoundPredicateType)type subpredicates:(NSArray*)subpredicates;
-
-+ (NSCompoundPredicate*)notPredicateWithSubpredicate:(NSPredicate*)predicate;
+@interface NSCompoundPredicate : NSPredicate <NSCopying, NSSecureCoding>
 + (NSCompoundPredicate*)andPredicateWithSubpredicates:(NSArray*)subpredicates;
++ (NSCompoundPredicate*)notPredicateWithSubpredicate:(NSPredicate*)predicate;
 + (NSCompoundPredicate*)orPredicateWithSubpredicates:(NSArray*)subpredicates;
-
+- (instancetype)initWithType:(NSCompoundPredicateType)type subpredicates:(NSArray*)subpredicates;
 @property (readonly) NSCompoundPredicateType compoundPredicateType;
 @property (readonly, copy) NSArray* subpredicates;
-
 @end
-
-#endif /* _NSCOMPOUNDPREDICATE_H_ */

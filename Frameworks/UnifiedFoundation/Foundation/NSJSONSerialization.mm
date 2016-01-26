@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/FoundationErrors.h>
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include <COMIncludes.h>
 #include <wrl\client.h>
@@ -267,6 +268,33 @@ id _WDJJsonValueToNSJSON(const ComPtr<IJsonValue>& value, NSError** error, BOOL 
     }
 
     return ret;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)JSONObjectWithStream:(NSInputStream*)stream options:(NSJSONReadingOptions)opt error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSInteger)writeJSONObject:(id)obj toStream:(NSOutputStream*)stream options:(NSJSONWritingOptions)opt error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)isValidJSONObject:(id)obj {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

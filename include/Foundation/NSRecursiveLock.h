@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <Foundation/NSLock.h>
-#import <Foundation/NSThread.h>
-#import <Foundation/NSString.h>
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSLocking.h>
+#import <Foundation/NSObject.h>
+
+@class NSDate;
+@class NSString;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSRecursiveLock : NSObject <NSLocking>
-@property (nonatomic, copy) NSString* name;
+- (BOOL)lockBeforeDate:(NSDate*)limit;
 - (BOOL)tryLock;
-- (BOOL)lockBeforeDate:(NSDate*)value;
+@property (copy) NSString* name;
 @end

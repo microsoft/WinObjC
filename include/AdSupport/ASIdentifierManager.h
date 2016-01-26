@@ -20,7 +20,7 @@
 @class NSUUID;
 
 ADSUPPORT_EXPORT_CLASS
-@interface ASIdentifierManager : NSObject <NSObject>
+@interface ASIdentifierManager : NSObject
 @property (readonly, nonatomic) NSUUID* advertisingIdentifier STUB_PROPERTY;
 @property (readonly, getter=isAdvertisingTrackingEnabled, nonatomic) BOOL advertisingTrackingEnabled STUB_PROPERTY;
 + (ASIdentifierManager*)sharedManager STUB_METHOD;

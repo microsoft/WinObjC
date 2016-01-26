@@ -17,6 +17,7 @@
 #include <winsock2.h>
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableString.h"
 #include "Foundation/NSURLProtocol.h"
 #include "NSURLProtocol_http.h"
@@ -802,6 +803,55 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
 
 - (id)continueWithoutCredentialForAuthenticationChallenge:(id)challenge {
     return self;
+}
+
+- (void)selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)_socketTimeout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)run {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)init {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)addHTTPRequest:(NSURLProtocol_http*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)cancelHTTPRequest:(NSURLProtocol_http*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

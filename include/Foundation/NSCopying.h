@@ -13,11 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#import <Foundation/FoundationExport.h>
+#pragma once
 
-@class NSZone;
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSZone.h>
 
 @protocol NSCopying
-@required
+
 - (id)copyWithZone:(NSZone*)zone;
+
 @end

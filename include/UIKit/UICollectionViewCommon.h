@@ -31,7 +31,6 @@
 @class UICollectionView, UICollectionViewCell, UICollectionReusableView;
 
 @protocol UICollectionViewDataSource <NSObject>
-@required
 
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section;
 

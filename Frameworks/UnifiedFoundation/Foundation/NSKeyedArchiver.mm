@@ -23,7 +23,7 @@
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSNull.h"
 #import "Foundation/NSValue.h"
-#import "Foundation/NSPropertyList.h"
+#import "Foundation/NSPropertyListSerialization.h"
 #import "Foundation/NSKeyedArchiver.h"
 #import "Foundation/NSDate.h"
 #import "Foundation/NSAutoreleasePool.h"
@@ -34,6 +34,8 @@ typedef HashMap<id, unsigned> o2uHash;
 typedef HashMap<id, id> o2oHash;
 
 NSString* const NSInvalidArchiveOperationException = @"NSInvalidArchiveOperationException";
+
+NSString* const NSKeyedArchiveRootObjectKey = @"NSKeyedArchiveRootObjectKey";
 
 static HashMap<Class, StrongId<NSString>> s_clsMap;
 struct NSKeyedArchiverPriv {

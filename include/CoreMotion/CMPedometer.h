@@ -28,7 +28,7 @@
 typedef void (^CMPedometerHandler)(CMPedometerData* pedometerData, NSError* error);
 
 COREMOTION_EXPORT_CLASS
-@interface CMPedometer : NSObject <NSObject>
+@interface CMPedometer : NSObject
 + (BOOL)isStepCountingAvailable STUB_METHOD;
 + (BOOL)isDistanceAvailable STUB_METHOD;
 + (BOOL)isFloorCountingAvailable STUB_METHOD;

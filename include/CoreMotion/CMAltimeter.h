@@ -28,7 +28,7 @@
 typedef void (^CMAltitudeHandler)(CMAltitudeData* altitudeData, NSError* error);
 
 COREMOTION_EXPORT_CLASS
-@interface CMAltimeter : NSObject <NSObject>
+@interface CMAltimeter : NSObject
 + (BOOL)isRelativeAltitudeAvailable STUB_METHOD;
 - (void)startRelativeAltitudeUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAltitudeHandler)handler STUB_METHOD;
 - (void)stopRelativeAltitudeUpdates STUB_METHOD;

@@ -49,7 +49,7 @@ typedef enum {
 COREMOTION_EXPORT NSString* const CMErrorDomain;
 
 COREMOTION_EXPORT_CLASS
-@interface CMMotionManager : NSObject <NSObject>
+@interface CMMotionManager : NSObject
 @property (assign, nonatomic) NSTimeInterval accelerometerUpdateInterval STUB_PROPERTY;
 - (void)startAccelerometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAccelerometerHandler)handler STUB_METHOD;
 - (void)startAccelerometerUpdates STUB_METHOD;

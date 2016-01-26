@@ -1,33 +1,36 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSMUTABLEINDEXSET_H_
-#define _NSMUTABLEINDEXSET_H_
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSMutableCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
 #import <Foundation/NSIndexSet.h>
 
 FOUNDATION_EXPORT_CLASS
-@interface NSMutableIndexSet : NSIndexSet
-
-- (void)addIndexesInRange:(NSRange)range;
-- (void)addIndexes:(NSIndexSet *)other;
+@interface NSMutableIndexSet : NSIndexSet <NSCopying, NSMutableCopying, NSSecureCoding>
 - (void)addIndex:(NSUInteger)index;
-
-- (void)removeAllIndexes;
-- (void)removeIndexesInRange:(NSRange)range;
-- (void)removeIndexes:(NSIndexSet *)other;
+- (void)addIndexes:(NSIndexSet*)indexSet;
+- (void)addIndexesInRange:(NSRange)indexRange;
 - (void)removeIndex:(NSUInteger)index;
-
-- (void)shiftIndexesStartingAtIndex:(NSUInteger)index by:(NSInteger)delta;
-
-- (void)encodeWithCoder:(NSCoder *)coder;
-- (id)initWithCoder:(NSCoder *)coder;
-
+- (void)removeIndexes:(NSIndexSet*)indexSet;
+- (void)removeAllIndexes;
+- (void)removeIndexesInRange:(NSRange)indexRange;
+- (void)shiftIndexesStartingAtIndex:(NSUInteger)startIndex by:(NSInteger)delta;
 @end
-
-#endif /* _NSMUTABLEINDEXSET_H_ */

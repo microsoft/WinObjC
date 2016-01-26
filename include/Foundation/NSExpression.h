@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _NSEXPRESSION_H_
-#define _NSEXPRESSION_H_
-
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
-@class NSString, NSArray, NSMutableDictionary, NSPredicate;
+@class NSString;
+@class NSArray;
+@class NSMutableDictionary;
+@class NSPredicate;
 
-typedef NS_ENUM(NSInteger, NSExpressionType) {
+typedef NSUInteger NSExpressionType;
+enum {
     NSConstantValueExpressionType = 0,
     NSEvaluatedObjectExpressionType,
     NSVariableExpressionType,
@@ -37,8 +42,7 @@ typedef NS_ENUM(NSInteger, NSExpressionType) {
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSExpression : NSObject <NSCopying, NSObject, NSSecureCoding>
-
+@interface NSExpression : NSObject <NSCopying, NSSecureCoding>
 - (instancetype)initWithExpressionType:(NSExpressionType)type;
 + (NSExpression*)expressionWithFormat:(NSString*)expressionFormat, ...;
 + (NSExpression*)expressionWithFormat:(NSString*)expressionFormat argumentArray:(NSArray*)arguments;
@@ -53,8 +57,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSExpression*)expressionForIntersectSet:(NSExpression*)left with:(NSExpression*)right;
 + (NSExpression*)expressionForMinusSet:(NSExpression*)left with:(NSExpression*)right;
 + (NSExpression*)expressionForSubquery:(NSExpression*)expression usingIteratorVariable:(NSString*)variable predicate:(id)predicate;
-+ (NSExpression*)expressionForBlock:(id (^)(id evaluatedObject, NSArray* expressions, NSMutableDictionary* context))block
-                          arguments:(NSArray*)arguments;
++ (NSExpression*)expressionForBlock:(id _Nonnull (^)(id, NSArray*, NSMutableDictionary*))block arguments:(NSArray*)arguments;
 + (NSExpression*)expressionForFunction:(NSString*)name arguments:(NSArray*)parameters;
 + (NSExpression*)expressionForFunction:(NSExpression*)target selectorName:(NSString*)name arguments:(NSArray*)parameters;
 @property (readonly, copy) NSArray* arguments;
@@ -70,7 +73,5 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSString* variable;
 - (id)expressionValueWithObject:(id)object context:(NSMutableDictionary*)context;
 - (void)allowEvaluation;
-@property (readonly, copy) id (^expressionBlock)(id, NSArray*, NSMutableDictionary*);
+@property (readonly, copy, nonnull) id (^expressionBlock)(id, NSArray*, NSMutableDictionary*);
 @end
-
-#endif /* _NSEXPRESSION_H_ */

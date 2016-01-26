@@ -1,104 +1,99 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSCODER_H_
-#define _NSCODER_H_
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSGeometry.h>
+// HACKHACK: these should be class extensions in other libraries
+// #import <CoreGraphics/CGGeometry.h>
+// #import <CoreGraphics/CGAffineTransform.h>
+// #import <CoreMedia/CMTime.h>
+// #import <CoreMedia/CMTimeRange.h>
+@class NSString;
+@class NSData;
+@class NSSet;
 
-@class NSString, NSData, NSSet;
-
+FOUNDATION_EXPORT_CLASS
 @interface NSCoder : NSObject
-
-// Value indicating whether this coder requires secure coding.
-@property (nonatomic, readonly) BOOL requiresSecureCoding;
-
-// The set of classes allowable for secure coding. Every class in this set must conform to the NSSecureCoding protocol.
-@property (readonly) NSSet* allowedClasses;
-
-- (id)_bundle;
-
-- (unsigned)systemVersion;
-
-- (void)setObjectZone:(NSZone*)zone;
-- (NSZone*)objectZone;
-
-- (BOOL)allowsKeyedCoding;
-
-- (void)encodeValueOfObjCType:(const char*)type at:(const void*)ptr;
-- (void)encodeDataObject:(NSData*)data;
-     
-- (void)encodeObject:object;
-- (void)encodePropertyList:propertyList;
-- (void)encodeRootObject:rootObject;
-- (void)encodeBycopyObject:object;
-- (void)encodeByrefObject:object;
-
-- (void)encodeConditionalObject:object;
-- (void)encodeValuesOfObjCTypes:(const char*)types, ...;
-- (void)encodeArrayOfObjCType:(const char*)type count:(NSUInteger)count at:(const void*)ptr;
-- (void)encodeBytes:(const void*)ptr length:(NSUInteger)length;
-
-- (void)encodePoint:(NSPoint)point;
-- (void)encodeSize:(NSSize)size;
-- (void)encodeRect:(NSRect)rect;
-
-- (void)encodePoint:(NSPoint)value forKey:(NSString*)key;
-- (void)encodeRect:(NSRect)value forKey:(NSString*)key;
-- (void)encodeSize:(NSSize)value forKey:(NSString*)key;
-
-- (void)encodeBool:(BOOL)value forKey:(NSString*)key;
-- (void)encodeConditionalObject:object forKey:(NSString*)key;
-- (void)encodeDouble:(double)value forKey:(NSString*)key;
-- (void)encodeFloat:(float)value forKey:(NSString*)key;
-- (void)encodeInt:(int)value forKey:(NSString*)key;
-- (void)encodeObject:object forKey:(NSString*)key;
-
-- (void)encodeInt32:(int32_t)value forKey:(NSString*)key;
-- (void)encodeInt64:(int64_t)value forKey:(NSString*)key;
-- (void)encodeInteger:(NSInteger)value forKey:(NSString*)key;
-
-- (void)encodeBytes:(const uint8_t*)bytes length:(NSUInteger)length forKey:(NSString*)key;
-
-- (void)decodeValueOfObjCType:(const char*)type at:(void*)ptr;
-- (NSData*)decodeDataObject;
-- (NSInteger)versionForClassName:(NSString*)className;
-
-- (id)decodeObject;
-- (id)decodePropertyList;
-- (void)decodeValuesOfObjCTypes:(const char*)types, ...;
-- (void)decodeArrayOfObjCType:(const char*)type count:(NSUInteger)count at:(void*)array;
-- (void*)decodeBytesWithReturnedLength:(NSUInteger*)lengthp;
-
-- (NSPoint)decodePoint;
-- (NSSize)decodeSize;
-- (NSRect)decodeRect;
-
+@property (readonly) BOOL allowsKeyedCoding;
 - (BOOL)containsValueForKey:(NSString*)key;
-
-- (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)lengthp;
-- (NSPoint)decodePointForKey:(NSString*)key;
-- (NSRect)decodeRectForKey:(NSString*)key;
-- (NSSize)decodeSizeForKey:(NSString*)key;
-
+- (void)encodeArrayOfObjCType:(const char*)type count:(NSUInteger)count at:(const void*)array;
+- (void)encodeBool:(BOOL)boolv forKey:(NSString*)key;
+- (void)encodeBycopyObject:(id)anObject;
+- (void)encodeByrefObject:(id)anObject;
+- (void)encodeBytes:(const void*)byteaddr length:(NSUInteger)length;
+- (void)encodeBytes:(const uint8_t*)bytesp length:(NSUInteger)lenv forKey:(NSString*)key;
+- (void)encodeConditionalObject:(id)object;
+- (void)encodeConditionalObject:(id)objv forKey:(NSString*)key;
+- (void)encodeDataObject:(NSData*)data;
+- (void)encodeDouble:(double)realv forKey:(NSString*)key;
+- (void)encodeFloat:(float)realv forKey:(NSString*)key;
+- (void)encodeInt:(int)intv forKey:(NSString*)key;
+- (void)encodeInteger:(NSInteger)intv forKey:(NSString*)key;
+- (void)encodeInt32:(int32_t)intv forKey:(NSString*)key;
+- (void)encodeInt64:(int64_t)intv forKey:(NSString*)key;
+- (void)encodeObject:(id)object;
+- (void)encodeObject:(id)objv forKey:(NSString*)key;
+- (void)encodeRootObject:(id)rootObject;
+- (void)encodeValueOfObjCType:(const char*)type at:(const void*)addr;
+- (void)encodeValuesOfObjCTypes:(const char*)types, ...;
+- (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key STUB_METHOD;
+- (void)encodeCGRect:(CGRect)rect forKey:(NSString*)key STUB_METHOD;
+- (void)encodeCGSize:(CGSize)size forKey:(NSString*)key STUB_METHOD;
+// HACKHACK: these should be class extensions in other libraries
+// - (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key;
+// - (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key;
+// - (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key;
+// - (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key;
+// - (void)encodeCMTime:(CMTime)time forKey:(NSString*)key;
+// - (void)encodeCMTimeRange:(CMTimeRange)timeRange forKey:(NSString*)key;
+// - (void)encodeCMTimeMapping:(CMTimeMapping)timeMapping forKey:(NSString*)key;
+- (void)decodeArrayOfObjCType:(const char*)itemType count:(NSUInteger)count at:(void*)array;
 - (BOOL)decodeBoolForKey:(NSString*)key;
+- (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)lengthp;
+- (void*)decodeBytesWithReturnedLength:(NSUInteger*)lengthp;
+- (NSData*)decodeDataObject;
 - (double)decodeDoubleForKey:(NSString*)key;
 - (float)decodeFloatForKey:(NSString*)key;
 - (int)decodeIntForKey:(NSString*)key;
-- (id)decodeObjectForKey:(NSString*)key;
-- (id)decodeObjectOfClass:(Class)expectedClass forKey:(NSString*)key;
-- (id)decodeObjectOfClasses:(NSSet*)expectedClasses forKey:(NSString*)key;
-
+- (NSInteger)decodeIntegerForKey:(NSString*)key;
 - (int32_t)decodeInt32ForKey:(NSString*)key;
 - (int64_t)decodeInt64ForKey:(NSString*)key;
-- (NSInteger)decodeIntegerForKey:(NSString*)key;
-
+- (id)decodeObject;
+- (id)decodeObjectForKey:(NSString*)key;
+- (void)decodeValueOfObjCType:(const char*)type at:(void*)data;
+- (void)decodeValuesOfObjCTypes:(const char*)types, ...;
+- (id)decodeObjectOfClass:(Class)aClass forKey:(NSString*)key;
+- (id)decodeObjectOfClasses:(NSSet*)classes forKey:(NSString*)key;
+- (id)decodePropertyListForKey:(NSString*)key STUB_METHOD;
+- (CGPoint)decodeCGPointForKey:(NSString*)key STUB_METHOD;
+- (CGRect)decodeCGRectForKey:(NSString*)key STUB_METHOD;
+- (CGSize)decodeCGSizeForKey:(NSString*)key STUB_METHOD;
+// HACKHACK: these should be class extensions in other libraries
+// - (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key;
+// - (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key;
+// - (UIOffset)decodeUIOffsetForKey:(NSString*)key;
+// - (CGVector)decodeCGVectorForKey:(NSString*)key;
+// - (CMTime)decodeCMTimeForKey:(NSString*)key;
+// - (CMTimeRange)decodeCMTimeRangeForKey:(NSString*)key;
+// - (CMTimeMapping)decodeCMTimeMappingForKey:(NSString*)key;
+@property (readonly) BOOL requiresSecureCoding;
+@property (readonly, copy) NSSet* allowedClasses;
+@property (readonly) unsigned int systemVersion;
+- (NSInteger)versionForClassName:(NSString*)className;
+- (NSZone*)objectZone;
+- (void)setObjectZone:(NSZone*)zone;
 @end
-
-#endif /* _NSCODER_H_ */

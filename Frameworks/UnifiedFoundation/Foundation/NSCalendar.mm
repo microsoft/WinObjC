@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSDate.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSCalendar.h"
@@ -23,6 +24,24 @@
 #include "NSLocaleInternal.h"
 
 #include <unicode/gregocal.h>
+
+NSString* const NSCalendarIdentifierGregorian = @"NSCalendarIdentifierGregorian";
+NSString* const NSCalendarIdentifierBuddhist = @"NSCalendarIdentifierBuddhist";
+NSString* const NSCalendarIdentifierChinese = @"NSCalendarIdentifierChinese";
+NSString* const NSCalendarIdentifierCoptic = @"NSCalendarIdentifierCoptic";
+NSString* const NSCalendarIdentifierEthiopicAmeteMihret = @"NSCalendarIdentifierEthiopicAmeteMihret";
+NSString* const NSCalendarIdentifierEthiopicAmeteAlem = @"NSCalendarIdentifierEthiopicAmeteAlem";
+NSString* const NSCalendarIdentifierHebrew = @"NSCalendarIdentifierHebrew";
+NSString* const NSCalendarIdentifierISO8601 = @"NSCalendarIdentifierISO8601";
+NSString* const NSCalendarIdentifierIndian = @"NSCalendarIdentifierIndian";
+NSString* const NSCalendarIdentifierIslamic = @"NSCalendarIdentifierIslamic";
+NSString* const NSCalendarIdentifierIslamicCivil = @"NSCalendarIdentifierIslamicCivil";
+NSString* const NSCalendarIdentifierJapanese = @"NSCalendarIdentifierJapanese";
+NSString* const NSCalendarIdentifierPersian = @"NSCalendarIdentifierPersian";
+NSString* const NSCalendarIdentifierRepublicOfChina = @"NSCalendarIdentifierRepublicOfChina";
+NSString* const NSCalendarIdentifierIslamicTabular = @"NSCalendarIdentifierIslamicTabular";
+NSString* const NSCalendarIdentifierIslamicUmmAlQura = @"NSCalendarIdentifierIslamicUmmAlQura";
+NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotification";
 
 @implementation NSCalendar {
     NSString* _identifier;
@@ -445,6 +464,319 @@ static UCalendarDateFields icuFieldFromUnit(NSCalendarUnit unit) {
     }
     delete copy;
     return ret;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)maximumRangeOfUnit:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)minimumRangeOfUnit:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)rangeOfWeekendStartDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip containingDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)dateByAddingUnit:(NSCalendarUnit)unit value:(NSInteger)value toDate:(NSDate*)date options:(NSCalendarOptions)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateDatesStartingAfterDate:(NSDate*)start
+                     matchingComponents:(NSDateComponents*)comps
+                                options:(NSCalendarOptions)opts
+                             usingBlock:(void (^)(NSDate*, BOOL, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)dateBySettingHour:(NSInteger)h minute:(NSInteger)m second:(NSInteger)s ofDate:(NSDate*)date options:(NSCalendarOptions)opts {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)dateBySettingUnit:(NSCalendarUnit)unit value:(NSInteger)v ofDate:(NSDate*)date options:(NSCalendarOptions)opts {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)dateWithEra:(NSInteger)eraValue
+                  year:(NSInteger)yearValue
+                 month:(NSInteger)monthValue
+                   day:(NSInteger)dayValue
+                  hour:(NSInteger)hourValue
+                minute:(NSInteger)minuteValue
+                second:(NSInteger)secondValue
+            nanosecond:(NSInteger)nanosecondValue {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)dateWithEra:(NSInteger)eraValue
+     yearForWeekOfYear:(NSInteger)yearValue
+            weekOfYear:(NSInteger)weekValue
+               weekday:(NSInteger)weekdayValue
+                  hour:(NSInteger)hourValue
+                minute:(NSInteger)minuteValue
+                second:(NSInteger)secondValue
+            nanosecond:(NSInteger)nanosecondValue {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)date:(NSDate*)date matchesComponents:(NSDateComponents*)comps {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)nextDateAfterDate:(NSDate*)date matchingComponents:(NSDateComponents*)comps options:(NSCalendarOptions)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)nextDateAfterDate:(NSDate*)date
+                matchingHour:(NSInteger)hourValue
+                      minute:(NSInteger)minuteValue
+                      second:(NSInteger)secondValue
+                     options:(NSCalendarOptions)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)nextDateAfterDate:(NSDate*)date matchingUnit:(NSCalendarUnit)unit value:(NSInteger)value options:(NSCalendarOptions)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)nextWeekendStartDate:(NSDate* _Nullable*)datep
+                    interval:(NSTimeInterval*)tip
+                     options:(NSCalendarOptions)options
+                   afterDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDateInToday:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDate*)startOfDayForDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSComparisonResult)compareDate:(NSDate*)date1 toDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDate:(NSDate*)date1 equalToDate:(NSDate*)date2 toUnitGranularity:(NSCalendarUnit)unit {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDate:(NSDate*)date1 inSameDayAsDate:(NSDate*)date2 {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDateInTomorrow:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDateInWeekend:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDateInYesterday:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getEra:(NSInteger*)eraValuePointer
+          year:(NSInteger*)yearValuePointer
+         month:(NSInteger*)monthValuePointer
+           day:(NSInteger*)dayValuePointer
+      fromDate:(NSDate*)date {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getEra:(NSInteger*)eraValuePointer
+    yearForWeekOfYear:(NSInteger*)yearValuePointer
+           weekOfYear:(NSInteger*)weekValuePointer
+              weekday:(NSInteger*)weekdayValuePointer
+             fromDate:(NSDate*)date {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSInteger)component:(NSCalendarUnit)unit fromDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDateComponents*)components:(NSCalendarUnit)unitFlags
+             fromDateComponents:(NSDateComponents*)startingDateComp
+               toDateComponents:(NSDateComponents*)resultDateComp
+                        options:(NSCalendarOptions)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDateComponents*)componentsInTimeZone:(NSTimeZone*)timezone fromDate:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getHour:(NSInteger*)hourValuePointer
+         minute:(NSInteger*)minuteValuePointer
+         second:(NSInteger*)secondValuePointer
+     nanosecond:(NSInteger*)nanosecondValuePointer
+       fromDate:(NSDate*)date {
+    UNIMPLEMENTED();
+}
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSCalendar*)autoupdatingCurrentCalendar {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSCalendar*)calendarWithIdentifier:(NSString*)calendarIdentifierConstant {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

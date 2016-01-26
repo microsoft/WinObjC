@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,7 +14,49 @@
 //
 //******************************************************************************
 
-#import <Foundation/Foundation.h>
+#import <StubReturn.h>
+#import <Foundation/NSCache.h>
 
-@implementation NSNetService
+@implementation NSCache
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)objectForKey:(id)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setObject:(id)obj forKey:(id)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setObject:(id)obj forKey:(id)key cost:(NSUInteger)num {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObjectForKey:(id)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeAllObjects {
+    UNIMPLEMENTED();
+}
+
 @end

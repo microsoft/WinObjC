@@ -37,7 +37,7 @@ typedef enum {
 } CMAttitudeReferenceFrame;
 
 COREMOTION_EXPORT_CLASS
-@interface CMAttitude : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CMAttitude : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) double roll STUB_PROPERTY;
 @property (readonly, nonatomic) double pitch STUB_PROPERTY;
 @property (readonly, nonatomic) double yaw STUB_PROPERTY;

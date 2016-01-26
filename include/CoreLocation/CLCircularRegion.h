@@ -22,7 +22,7 @@
 #import <CoreLocation/CoreLocationDataTypes.h>
 
 CORELOCATION_EXPORT_CLASS
-@interface CLCircularRegion : CLRegion <NSCopying, NSObject, NSSecureCoding>
+@interface CLCircularRegion : CLRegion <NSCopying, NSSecureCoding>
 - (instancetype)initWithCenter:(CLLocationCoordinate2D)center
                         radius:(CLLocationDistance)radius
                     identifier:(NSString*)identifier STUB_METHOD;

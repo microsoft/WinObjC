@@ -24,7 +24,7 @@
 @class CMSensorDataList;
 
 COREMOTION_EXPORT_CLASS
-@interface CMSensorRecorder : NSObject <NSObject>
+@interface CMSensorRecorder : NSObject
 + (BOOL)isAccelerometerRecordingAvailable STUB_METHOD;
 + (BOOL)isAuthorizedForRecording STUB_METHOD;
 - (CMSensorDataList*)accelerometerDataSince:(uint64_t)identifier STUB_METHOD;

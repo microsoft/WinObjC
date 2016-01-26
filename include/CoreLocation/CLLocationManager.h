@@ -46,7 +46,7 @@ enum {
 CORELOCATION_EXPORT const CLLocationDistance CLLocationDistanceMax;
 CORELOCATION_EXPORT const NSTimeInterval CLTimeIntervalMax;
 CORELOCATION_EXPORT_CLASS
-@interface CLLocationManager : NSObject <NSObject>
+@interface CLLocationManager : NSObject
 - (void)requestWhenInUseAuthorization;
 - (void)requestAlwaysAuthorization;
 + (CLAuthorizationStatus)authorizationStatus;

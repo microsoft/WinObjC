@@ -26,7 +26,7 @@
 @class NSArray;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLPlacemark : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLPlacemark : NSObject <NSCopying, NSSecureCoding>
 - (instancetype)initWithPlacemark:(CLPlacemark*)placemark STUB_METHOD;
 @property (readonly, copy, nonatomic) CLLocation* location STUB_PROPERTY;
 @property (readonly, copy, nonatomic) NSString* name STUB_PROPERTY;

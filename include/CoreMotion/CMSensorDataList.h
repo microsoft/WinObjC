@@ -21,5 +21,5 @@
 #import <Foundation/NSObject.h>
 
 COREMOTION_EXPORT_CLASS
-@interface CMSensorDataList : NSObject <NSFastEnumeration, NSObject>
+@interface CMSensorDataList : NSObject <NSFastEnumeration>
 @end

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSNumber.h"
@@ -82,6 +83,57 @@ NSString* const NSURLFileAllocatedSizeKey = @"NSURLFileAllocatedSizeKey";
 NSString* const NSURLIsAliasFileKey = @"NSURLIsAliasFileKey";
 NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
 NSString* const NSURLTotalFileSizeKey = @"NSURLTotalFileSizeKey";
+
+NSString* const NSThumbnail1024x1024SizeKey = @"NSThumbnail1024x1024SizeKey";
+NSString* const NSURLGenerationIdentifierKey = @"NSURLGenerationIdentifierKey";
+NSString* const NSURLVolumeLocalizedFormatDescriptionKey = @"NSURLVolumeLocalizedFormatDescriptionKey";
+NSString* const NSURLVolumeTotalCapacityKey = @"NSURLVolumeTotalCapacityKey";
+NSString* const NSURLVolumeAvailableCapacityKey = @"NSURLVolumeAvailableCapacityKey";
+NSString* const NSURLVolumeResourceCountKey = @"NSURLVolumeResourceCountKey";
+NSString* const NSURLVolumeSupportsPersistentIDsKey = @"NSURLVolumeSupportsPersistentIDsKey";
+NSString* const NSURLVolumeSupportsSymbolicLinksKey = @"NSURLVolumeSupportsSymbolicLinksKey";
+NSString* const NSURLVolumeSupportsHardLinksKey = @"NSURLVolumeSupportsHardLinksKey";
+NSString* const NSURLVolumeSupportsJournalingKey = @"NSURLVolumeSupportsJournalingKey";
+NSString* const NSURLVolumeIsJournalingKey = @"NSURLVolumeIsJournalingKey";
+NSString* const NSURLVolumeSupportsSparseFilesKey = @"NSURLVolumeSupportsSparseFilesKey";
+NSString* const NSURLVolumeSupportsZeroRunsKey = @"NSURLVolumeSupportsZeroRunsKey";
+NSString* const NSURLVolumeSupportsCaseSensitiveNamesKey = @"NSURLVolumeSupportsCaseSensitiveNamesKey";
+NSString* const NSURLVolumeSupportsCasePreservedNamesKey = @"NSURLVolumeSupportsCasePreservedNamesKey";
+NSString* const NSURLVolumeSupportsRootDirectoryDatesKey = @"NSURLVolumeSupportsRootDirectoryDatesKey";
+NSString* const NSURLVolumeSupportsVolumeSizesKey = @"NSURLVolumeSupportsVolumeSizesKey";
+NSString* const NSURLVolumeSupportsRenamingKey = @"NSURLVolumeSupportsRenamingKey";
+NSString* const NSURLVolumeSupportsAdvisoryFileLockingKey = @"NSURLVolumeSupportsAdvisoryFileLockingKey";
+NSString* const NSURLVolumeSupportsExtendedSecurityKey = @"NSURLVolumeSupportsExtendedSecurityKey";
+NSString* const NSURLVolumeIsBrowsableKey = @"NSURLVolumeIsBrowsableKey";
+NSString* const NSURLVolumeMaximumFileSizeKey = @"NSURLVolumeMaximumFileSizeKey";
+NSString* const NSURLVolumeIsEjectableKey = @"NSURLVolumeIsEjectableKey";
+NSString* const NSURLVolumeIsRemovableKey = @"NSURLVolumeIsRemovableKey";
+NSString* const NSURLVolumeIsInternalKey = @"NSURLVolumeIsInternalKey";
+NSString* const NSURLVolumeIsAutomountedKey = @"NSURLVolumeIsAutomountedKey";
+NSString* const NSURLVolumeIsLocalKey = @"NSURLVolumeIsLocalKey";
+NSString* const NSURLVolumeIsReadOnlyKey = @"NSURLVolumeIsReadOnlyKey";
+NSString* const NSURLVolumeCreationDateKey = @"NSURLVolumeCreationDateKey";
+NSString* const NSURLVolumeURLForRemountingKey = @"NSURLVolumeURLForRemountingKey";
+NSString* const NSURLVolumeUUIDStringKey = @"NSURLVolumeUUIDStringKey";
+NSString* const NSURLVolumeNameKey = @"NSURLVolumeNameKey";
+NSString* const NSURLVolumeLocalizedNameKey = @"NSURLVolumeLocalizedNameKey";
+NSString* const NSURLKeysOfUnsetValuesKey = @"NSURLKeysOfUnsetValuesKey";
+NSString* const NSURLIsUbiquitousItemKey = @"NSURLIsUbiquitousItemKey";
+NSString* const NSURLUbiquitousItemDownloadingErrorKey = @"NSURLUbiquitousItemDownloadingErrorKey";
+NSString* const NSURLUbiquitousItemDownloadingStatusKey = @"NSURLUbiquitousItemDownloadingStatusKey";
+NSString* const NSURLUbiquitousItemHasUnresolvedConflictsKey = @"NSURLUbiquitousItemHasUnresolvedConflictsKey";
+NSString* const NSURLUbiquitousItemIsDownloadedKey = @"NSURLUbiquitousItemIsDownloadedKey";
+NSString* const NSURLUbiquitousItemIsDownloadingKey = @"NSURLUbiquitousItemIsDownloadingKey";
+NSString* const NSURLUbiquitousItemIsUploadedKey = @"NSURLUbiquitousItemIsUploadedKey";
+NSString* const NSURLUbiquitousItemIsUploadingKey = @"NSURLUbiquitousItemIsUploadingKey";
+NSString* const NSURLUbiquitousItemUploadingErrorKey = @"NSURLUbiquitousItemUploadingErrorKey";
+NSString* const NSURLUbiquitousItemDownloadRequestedKey = @"NSURLUbiquitousItemDownloadRequestedKey";
+NSString* const NSURLUbiquitousItemContainerDisplayNameKey = @"NSURLUbiquitousItemContainerDisplayNameKey";
+NSString* const NSURLUbiquitousItemPercentUploadedKey = @"NSURLUbiquitousItemPercentUploadedKey";
+NSString* const NSURLUbiquitousItemDownloadingStatusCurrent = @"NSURLUbiquitousItemDownloadingStatusCurrent";
+NSString* const NSURLUbiquitousItemDownloadingStatusDownloaded = @"NSURLUbiquitousItemDownloadingStatusDownloaded";
+NSString* const NSURLUbiquitousItemDownloadingStatusNotDownloaded = @"NSURLUbiquitousItemDownloadingStatusNotDownloaded";
+NSString* const NSURLThumbnailDictionaryKey = @"NSURLThumbnailDictionaryKey";
 
 static void StripSlashes(char* pPath) {
     size_t length = strnlen_s(pPath, NSURLMAXLEN);
@@ -1179,4 +1231,222 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 - (id)propertyForKey:(NSString*)propertyKey {
     return [_properties objectForKey:propertyKey];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)setResourceValues:(NSDictionary*)keyedValues error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initByResolvingBookmarkData:(NSData*)bookmarkData
+                                    options:(NSURLBookmarkResolutionOptions)options
+                              relativeToURL:(NSURL*)relativeURL
+                        bookmarkDataIsStale:(BOOL*)isStale
+                                      error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSData*)bookmarkDataWithOptions:(NSURLBookmarkCreationOptions)options
+    includingResourceValuesForKeys:(NSArray*)keys
+                     relativeToURL:(NSURL*)relativeURL
+                             error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)startAccessingSecurityScopedResource {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopAccessingSecurityScopedResource {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)resourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeAllCachedResourceValues {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeCachedResourceValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setTemporaryResourceValue:(id)value forKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)checkPromisedItemIsReachableAndReturnError:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getPromisedItemResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSURL*)fileURLWithPathComponents:(NSArray*)components {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)URLByResolvingAliasFileAtURL:(NSURL*)url options:(NSURLBookmarkResolutionOptions)options error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)URLByResolvingBookmarkData:(NSData*)bookmarkData
+                                   options:(NSURLBookmarkResolutionOptions)options
+                             relativeToURL:(NSURL*)relativeURL
+                       bookmarkDataIsStale:(BOOL*)isStale
+                                     error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSData*)bookmarkDataWithContentsOfURL:(NSURL*)bookmarkFileURL error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSDictionary*)resourceValuesForKeys:(NSArray*)keys fromBookmarkData:(NSData*)bookmarkData {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)writeBookmarkData:(NSData*)bookmarkData
+                    toURL:(NSURL*)bookmarkFileURL
+                  options:(NSURLBookmarkFileCreationOptions)options
+                    error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

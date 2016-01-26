@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,27 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@protocol NSCacheDelegate <NSObject>
+@class NSString;
+@protocol NSCacheDelegate;
+
+FOUNDATION_EXPORT_CLASS
+@interface NSCache : NSObject
+@property (copy) NSString* name STUB_METHOD;
+- (id)objectForKey:(id)key STUB_METHOD;
+- (void)setObject:(id)obj forKey:(id)key STUB_METHOD;
+- (void)setObject:(id)obj forKey:(id)key cost:(NSUInteger)num STUB_METHOD;
+- (void)removeObjectForKey:(id)key STUB_METHOD;
+- (void)removeAllObjects STUB_METHOD;
+@property NSUInteger countLimit STUB_PROPERTY;
+@property NSUInteger totalCostLimit STUB_PROPERTY;
+@property BOOL evictsObjectsWithDiscardedContent STUB_PROPERTY;
+@property (assign) id<NSCacheDelegate> delegate STUB_PROPERTY;
 @end
 
-@interface NSCache : NSObject
-
-- (id<NSCacheDelegate>)delegate;
-- (NSUInteger)countLimit;
-- (NSUInteger)totalCostLimit;
-
-- (void)setDelegate:(id<NSCacheDelegate>)del;
-- (void)setCountLimit:(NSUInteger)lim;
-- (void)setTotalCostLimit:(NSUInteger)lim;
-- (void)setObject:(id)obj forKey:(id)key;
-- (id)objectForKey:(id)key;
-- (NSString*)name;
-- (void)setName:(NSString*)cacheName;
-- (void)setObject:(id)obj forKey:(id)key cost:(NSUInteger)num;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
+@protocol NSCacheDelegate
+@optional
+- (void)cache:(NSCache*)cache willEvictObject:(id)obj;
 
 @end

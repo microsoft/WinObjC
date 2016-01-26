@@ -47,21 +47,21 @@ typedef struct ssl_ctx_st SSL_CTX;
     id _outputStream;
 #endif
 }
-- (int)writePlaintext:(const uint8_t*)buffer maxLength:(int)length;
-- (unsigned)readPlaintext:(uint8_t*)buffer maxLength:(unsigned)length;
-- (id)initWithProperties:(id)properties;
-- (id)dealloc;
-- (id)isHandshaking;
-- (id)writeBytesAvailable;
-- (id)wantsMoreIncoming;
-- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length;
-- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length;
-- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length;
-- (id)readBytesAvailable;
-- (id)transferOneBufferFromSSLToSocket:(id)socket;
-- (id)transferOneBufferFromSocketToSSL:(id)socket;
-- (id)runHandshakeIfNeeded:(id)socket;
-- (id)runWithSocket:(id)socket;
-- (id)setOutputStream:(id)stream;
-+ (id)initialize;
+- (int)writePlaintext:(const uint8_t*)buffer maxLength:(int)length STUB_METHOD;
+- (unsigned)readPlaintext:(uint8_t*)buffer maxLength:(unsigned)length STUB_METHOD;
+- (id)initWithProperties:(id)properties STUB_METHOD;
+- (id)dealloc STUB_METHOD;
+- (id)isHandshaking STUB_METHOD;
+- (id)writeBytesAvailable STUB_METHOD;
+- (id)wantsMoreIncoming STUB_METHOD;
+- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length STUB_METHOD;
+- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length STUB_METHOD;
+- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length STUB_METHOD;
+- (id)readBytesAvailable STUB_METHOD;
+- (id)transferOneBufferFromSSLToSocket:(id)socket STUB_METHOD;
+- (id)transferOneBufferFromSocketToSSL:(id)socket STUB_METHOD;
+- (id)runHandshakeIfNeeded:(id)socket STUB_METHOD;
+- (id)runWithSocket:(id)socket STUB_METHOD;
+- (id)setOutputStream:(id)stream STUB_METHOD;
++ (id)initialize STUB_METHOD;
 @end

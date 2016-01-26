@@ -161,4 +161,12 @@
     [super dealloc];
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)allowEvaluation {
+    UNIMPLEMENTED();
+}
+
 @end

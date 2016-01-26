@@ -239,14 +239,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\limbo\NSObject_NSFoundation.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\BlockClassTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSRegularExpressionTests.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSSortDescriptorTests.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSLockTests.m" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\NSRecursiveLockTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\BlockClassTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRegularExpressionTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSortDescriptorTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBinaryHeapTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBridgeBaseTests.mm" />

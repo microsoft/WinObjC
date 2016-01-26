@@ -30,7 +30,7 @@ typedef enum UIUserNotificationType : NSUInteger {
 @class NSSet;
 
 UIKIT_EXPORT_CLASS
-@interface UIUserNotificationSettings : NSObject <NSObject>
+@interface UIUserNotificationSettings : NSObject
 
 @property (nonatomic, readonly) UIUserNotificationType types;
 @property (nonatomic, copy, readonly) NSSet* categories;

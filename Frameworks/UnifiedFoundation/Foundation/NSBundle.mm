@@ -14,13 +14,14 @@
 //
 //******************************************************************************
 
+#include "StubReturn.h"
 #include <string.h>
 #include <ctype.h>
 #include "Starboard.h"
 #include "NSStringInternal.h"
 #include "Foundation/NSBundle.h"
 #include "Foundation/NSString.h"
-#include "Foundation/NSPropertyList.h"
+#include "Foundation/NSPropertyListSerialization.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
@@ -29,6 +30,8 @@
 #include "Foundation/NSException.h"
 
 #include <sys/stat.h>
+
+NSString* const NSLoadedClasses = @"NSLoadedClasses";
 
 @class NSNib;
 
@@ -770,6 +773,15 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 - (void)dealloc {

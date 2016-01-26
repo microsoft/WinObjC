@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,23 +13,34 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <Foundation/NSURLSessionTask.h>
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
 
+#import <Foundation/NSURLSessionTask.h>
 @class NSData;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionDownloadTask : NSURLSessionTask
-- (void)cancelByProducingResumeData:(void(^)(NSData* resumeData))completionHandler;
+@interface NSURLSessionDownloadTask : NSURLSessionTask <NSCopying>
+- (void)cancelByProducingResumeData:(void (^)(NSData*))completionHandler;
 @end
 
-@protocol NSURLSessionDownloadDelegate <NSObject>
+@protocol NSURLSessionDownloadDelegate
 @optional
-- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)task didResumeAtOffset:(int64_t)offset expectedTotalBytes:(int64_t)expectedTotalBytes;
-- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)task didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
+- (void)URLSession:(NSURLSession*)session
+      downloadTask:(NSURLSessionDownloadTask*)downloadTask
+ didResumeAtOffset:(int64_t)fileOffset
+expectedTotalBytes:(int64_t)expectedTotalBytes;
 
-@required
-- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)task didFinishDownloadingToURL:(NSURL*)url;
+@optional
+- (void)URLSession:(NSURLSession*)session
+                 downloadTask:(NSURLSessionDownloadTask*)downloadTask
+                 didWriteData:(int64_t)bytesWritten
+            totalBytesWritten:(int64_t)totalBytesWritten
+    totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
+
+- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)downloadTask didFinishDownloadingToURL:(NSURL*)location;
+
 @end

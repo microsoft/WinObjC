@@ -38,44 +38,42 @@
 
 #import "UIView.h"
 
-@protocol UIPickerViewDataSource, UIPickerViewDelegate;
+@protocol UIPickerViewDataSource
+, UIPickerViewDelegate;
 
 @class UIPickerSubView;
 
 UIKIT_EXPORT_CLASS
-@interface UIPickerView : UIView 
+@interface UIPickerView : UIView
 
 @property (nonatomic, assign) id<UIPickerViewDataSource> dataSource;
-@property (nonatomic, assign) id<UIPickerViewDelegate>   delegate;
-@property (nonatomic, assign) BOOL                       showsSelectionIndicator;
-@property (nonatomic, readonly) NSInteger                numberOfComponents;
+@property (nonatomic, assign) id<UIPickerViewDelegate> delegate;
+@property (nonatomic, assign) BOOL showsSelectionIndicator;
+@property (nonatomic, readonly) NSInteger numberOfComponents;
 
-- (NSInteger) numberOfRowsInComponent: (NSInteger) component; // stub
-- (void) reloadAllComponents; // stub
-- (void) reloadComponent: (NSInteger) component; // stub
-- (CGSize) rowSizeForComponent: (NSInteger) component; // stub
-- (NSInteger) selectedRowInComponent: (NSInteger) component; // stub
+- (NSInteger)numberOfRowsInComponent:(NSInteger)component; // stub
+- (void)reloadAllComponents; // stub
+- (void)reloadComponent:(NSInteger)component; // stub
+- (CGSize)rowSizeForComponent:(NSInteger)component; // stub
+- (NSInteger)selectedRowInComponent:(NSInteger)component; // stub
 - (void)selectRow:(NSInteger)row inComponent:(NSInteger)component animated:(BOOL)animated; // stub
-- (UIView *) viewForRow: (NSInteger) row inComponent: (NSInteger) component; // stub
+- (UIView*)viewForRow:(NSInteger)row inComponent:(NSInteger)component; // stub
 
 @end
-
 
 @protocol UIPickerViewDataSource <NSObject>
-@required
 
 /**
  @Status Interoperable
 */
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView*)pickerView;
 
 /**
  @Status Interoperable
 */
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
+- (NSInteger)pickerView:(UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component;
 
 @end
-
 
 @protocol UIPickerViewDelegate <NSObject>
 @optional
@@ -83,27 +81,27 @@ UIKIT_EXPORT_CLASS
 /**
  @Status Interoperable
 */
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component;
+- (CGFloat)pickerView:(UIPickerView*)pickerView widthForComponent:(NSInteger)component;
 
 /**
  @Status Interoperable
 */
-- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component;
+- (CGFloat)pickerView:(UIPickerView*)pickerView rowHeightForComponent:(NSInteger)component;
 
 /**
  @Status Interoperable
 */
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
+- (NSString*)pickerView:(UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
 
 /**
  @Status Interoperable
 */
-- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view;
+- (UIView*)pickerView:(UIPickerView*)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView*)view;
 
 /**
  @Status Interoperable
 */
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
+- (void)pickerView:(UIPickerView*)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 
 @end
 

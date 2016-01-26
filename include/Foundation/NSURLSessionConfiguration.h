@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,23 +13,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSURLRequest.h>
 
 #import <Foundation/NSHTTPCookieStorage.h>
-#import <Foundation/NSURLRequest.h>
-#import <Foundation/NSURLCredentialStorage.h>
-#import <Foundation/NSURLCache.h>
 #import <Security/SecureTransport.h>
-
-@class NSDictionary, NSObject;
+@class NSString;
+@class NSDictionary;
+@class NSHTTPCookieStorage;
+@class NSURLCredentialStorage;
+@class NSURLCache;
+@class NSArray;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionConfiguration : NSObject <NSCopying, NSObject>
-
+@interface NSURLSessionConfiguration : NSObject <NSCopying>
 + (NSURLSessionConfiguration*)defaultSessionConfiguration;
 + (NSURLSessionConfiguration*)ephemeralSessionConfiguration;
 + (NSURLSessionConfiguration*)backgroundSessionConfigurationWithIdentifier:(NSString*)identifier;
-// Deprecated, calls into backgroundSessionConfigurationWithIdentifier
-+ (NSURLSessionConfiguration*)backgroundSessionConfiguration:(NSString*)identifier;
 @property (readonly, copy) NSString* identifier;
 @property (copy) NSDictionary* HTTPAdditionalHeaders;
 @property NSURLRequestNetworkServiceType networkServiceType;
@@ -51,4 +55,5 @@ FOUNDATION_EXPORT_CLASS
 @property NSInteger HTTPMaximumConnectionsPerHost;
 @property BOOL HTTPShouldUsePipelining;
 @property (copy) NSDictionary* connectionProxyDictionary;
++ (NSURLSessionConfiguration*)backgroundSessionConfiguration:(NSString*)identifier;
 @end

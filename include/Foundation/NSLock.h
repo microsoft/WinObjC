@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,42 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSLocking.h>
 #import <Foundation/NSObject.h>
 
 @class NSDate;
-
-@protocol NSLocking
-
-/**
-@Status Interoperable
-*/
-- (void)lock;
-
-/**
-@Status Interoperable
-*/
-- (void)unlock;
-@end
+@class NSString;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSLock : NSObject <NSLocking>
-@property (copy) NSString* name;
-
+- (BOOL)lockBeforeDate:(NSDate*)limit;
 - (BOOL)tryLock;
-- (BOOL)lockBeforeDate:(NSDate*)value;
-
-@end
-
-FOUNDATION_EXPORT_CLASS
-@interface NSCondition : NSObject <NSLocking>
-- (void)broadcast;
-- (void)signal;
-
-- (void)wait;
-- (BOOL)waitUntilDate:(NSDate*)limit;
-
-@property (nonatomic, copy) NSString* name;
+@property (copy) NSString* name;
 @end
 
 #import <Foundation/NSConditionLock.h>

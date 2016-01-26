@@ -17,6 +17,7 @@
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UIDocument.h>
 #import <CoreData/NSManagedObjectContext.h>
+#import <CoreData/NSManagedObjectModel.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIManagedDocument : UIDocument {

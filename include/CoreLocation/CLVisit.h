@@ -23,7 +23,7 @@
 @class NSDate;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLVisit : NSObject <NSCopying, NSObject, NSSecureCoding>
+@interface CLVisit : NSObject <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CLLocationCoordinate2D coordinate STUB_PROPERTY;
 @property (readonly, nonatomic) CLLocationAccuracy horizontalAccuracy STUB_PROPERTY;
 @property (readonly, copy, nonatomic) NSDate* arrivalDate STUB_PROPERTY;

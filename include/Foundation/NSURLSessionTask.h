@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCachedURLResponse.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSHTTPURLResponse.h>
+#import <Foundation/NSInputStream.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSURLSession.h>
+#import <Foundation/NSUrlSession.h>
+#import <Foundation/NSURLAuthenticationChallenge.h>
+#import <Foundation/NSURLCredential.h>
+
+@class NSURLSession;
+@class NSURLRequest;
+@class NSURLResponse;
+@class NSString;
+@class NSError;
 
 typedef NS_ENUM(NSInteger, NSURLSessionTaskState) {
     NSURLSessionTaskStateRunning = 0,
@@ -30,43 +42,52 @@ FOUNDATION_EXPORT const float NSURLSessionTaskPriorityDefault;
 FOUNDATION_EXPORT const float NSURLSessionTaskPriorityLow;
 FOUNDATION_EXPORT const float NSURLSessionTaskPriorityHigh;
 
-@class NSURLRequest;
-@class NSURLResponse;
-@class NSString;
-@class NSError;
-@class NSURLSession;
-@class NSURLCredential;
-@class NSURLAuthenticationChallenge;
-@class NSHTTPURLResponse;
-
 FOUNDATION_EXPORT_CLASS
-@interface NSURLSessionTask : NSObject <NSCopying, NSObject>
-
+@interface NSURLSessionTask : NSObject <NSCopying>
 - (void)cancel;
 - (void)resume;
 - (void)suspend;
-
-@property(assign) float priority;
-@property(copy) NSString* taskDescription;
-
-@property(readonly) NSURLSessionTaskState state;
-@property(readonly) int64_t countOfBytesExpectedToReceive;
-@property(readonly) int64_t countOfBytesReceived;
-@property(readonly) int64_t countOfBytesExpectedToSend;
-@property(readonly) int64_t countOfBytesSent;
-@property(readonly, copy) NSURLRequest* currentRequest;
-@property(readonly, copy) NSURLRequest* originalRequest;
-@property(readonly, copy) NSURLResponse* response;
-@property(readonly) NSUInteger taskIdentifier;
-@property(readonly, copy) NSError* error;
-
+@property (readonly) NSURLSessionTaskState state;
+@property float priority;
+@property (readonly) int64_t countOfBytesExpectedToReceive;
+@property (readonly) int64_t countOfBytesReceived;
+@property (readonly) int64_t countOfBytesExpectedToSend;
+@property (readonly) int64_t countOfBytesSent;
+@property (readonly, copy) NSURLRequest* currentRequest;
+@property (readonly, copy) NSURLRequest* originalRequest;
+@property (readonly, copy) NSURLResponse* response;
+@property (copy) NSString* taskDescription;
+@property (readonly) NSUInteger taskIdentifier;
+@property (readonly, copy) NSError* error;
 @end
 
-@protocol NSURLSessionTaskDelegate <NSObject>
+@protocol NSURLSessionTaskDelegate
 @optional
 - (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error;
-- (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential))completionHandler;
-- (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
-- (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task needNewBodyStream:(void (^)(NSInputStream* bodyStream))completionHandler;
-- (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task willPerformHTTPRedirection:(NSHTTPURLResponse*)response newRequest:(NSURLRequest*)request completionHandler:(void (^)(NSURLRequest*))completionHandler;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+                   task:(NSURLSessionTask*)task
+    didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge
+      completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential))completionHandler;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+                        task:(NSURLSessionTask*)task
+             didSendBodyData:(int64_t)bytesSent
+              totalBytesSent:(int64_t)totalBytesSent
+    totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+              task:(NSURLSessionTask*)task
+ needNewBodyStream:(void (^)(NSInputStream* bodyStream))completionHandler;
+
+@optional
+- (void)URLSession:(NSURLSession*)session
+                          task:(NSURLSessionTask*)task
+    willPerformHTTPRedirection:(NSHTTPURLResponse*)response
+                    newRequest:(NSURLRequest*)request
+             completionHandler:(void (^)(NSURLRequest*))completionHandler;
+
 @end

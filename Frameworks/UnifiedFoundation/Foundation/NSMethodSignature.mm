@@ -16,6 +16,7 @@
 
 #include <ctype.h>
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMethodSignature.h"
 
 bool getTypeSize(char type, int* size);
@@ -157,6 +158,15 @@ int getArgumentSize(const char* type);
         }
     }
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isOneway {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

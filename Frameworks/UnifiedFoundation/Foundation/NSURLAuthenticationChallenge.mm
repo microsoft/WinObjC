@@ -15,9 +15,16 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSURLAuthenticationChallenge.h"
 #include "Foundation/NSURLProtectionSpace.h"
+
+@interface NSURLAuthenticationChallenge () {
+    id _protectionSpace;
+    id _sender;
+}
+@end
 
 @implementation NSURLAuthenticationChallenge : NSObject
 
@@ -55,6 +62,39 @@
     _sender = sender;
 
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge
+                                         sender:(id<NSURLAuthenticationChallengeSender>)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithProtectionSpace:(NSURLProtectionSpace*)space
+                     proposedCredential:(NSURLCredential*)credential
+                   previousFailureCount:(NSInteger)count
+                        failureResponse:(NSURLResponse*)response
+                                  error:(NSError*)error
+                                 sender:(id<NSURLAuthenticationChallengeSender>)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

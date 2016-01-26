@@ -690,7 +690,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (void)encodeWithCoder:(NSKeyedArchiver*)coder {
     [coder encodeInt:(int)_valueType forKey:@"NSV.type"];
     [coder encodeObject:[NSString stringWithUTF8String:[self objCType]] forKey:@"NSV.objcType"];
-    [coder encodeBytes:[self _rawBytes] length:[self _rawSize] forKey:@"NSV.data"];
+    [coder encodeBytes:static_cast<const unsigned char*>([self _rawBytes]) length:[self _rawSize] forKey:@"NSV.data"];
 }
 
 /**

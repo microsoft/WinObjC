@@ -12,7 +12,7 @@ MERCHANTABILITY,FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVEN
 CLAIM,DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT,TORT OR OTHERWISE,ARISING FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <CoreFoundation/CFBase.h>
-#import <Foundation/FoundationExport.h>
+#import <CoreFoundation/CoreFoundationExport.h>
 
 typedef struct __CFBinaryHeap* CFBinaryHeapRef;
 
@@ -39,22 +39,22 @@ typedef struct {
 
 typedef void (*CFBinaryHeapApplierFunction)(const void* value, void* context);
 
-FOUNDATION_EXPORT const CFBinaryHeapCallBacks kCFStringBinaryHeapCallBacks;
+COREFOUNDATION_EXPORT const CFBinaryHeapCallBacks kCFStringBinaryHeapCallBacks;
 
-FOUNDATION_EXPORT CFTypeID CFBinaryHeapGetTypeID(void);
+COREFOUNDATION_EXPORT CFTypeID CFBinaryHeapGetTypeID(void);
 
-FOUNDATION_EXPORT void CFBinaryHeapAddValue(CFBinaryHeapRef heap, const void* value);
-FOUNDATION_EXPORT void CFBinaryHeapApplyFunction(CFBinaryHeapRef heap, CFBinaryHeapApplierFunction function, void* context);
-FOUNDATION_EXPORT Boolean CFBinaryHeapContainsValue(CFBinaryHeapRef heap, const void* value);
-FOUNDATION_EXPORT CFBinaryHeapRef CFBinaryHeapCreate(CFAllocatorRef allocator,
-                                                     CFIndex capacity,
-                                                     const CFBinaryHeapCallBacks* callbacks,
-                                                     const CFBinaryHeapCompareContext* context);
-FOUNDATION_EXPORT CFBinaryHeapRef CFBinaryHeapCreateCopy(CFAllocatorRef allocator, CFIndex capacity, CFBinaryHeapRef heap);
-FOUNDATION_EXPORT CFIndex CFBinaryHeapGetCount(CFBinaryHeapRef heap);
-FOUNDATION_EXPORT CFIndex CFBinaryHeapGetCountOfValue(CFBinaryHeapRef heap, const void* value);
-FOUNDATION_EXPORT const void* CFBinaryHeapGetMinimum(CFBinaryHeapRef heap);
-FOUNDATION_EXPORT Boolean CFBinaryHeapGetMinimumIfPresent(CFBinaryHeapRef heap, const void** value);
-FOUNDATION_EXPORT void CFBinaryHeapGetValues(CFBinaryHeapRef heap, const void** values);
-FOUNDATION_EXPORT void CFBinaryHeapRemoveAllValues(CFBinaryHeapRef heap);
-FOUNDATION_EXPORT void CFBinaryHeapRemoveMinimumValue(CFBinaryHeapRef heap);
+COREFOUNDATION_EXPORT void CFBinaryHeapAddValue(CFBinaryHeapRef heap, const void* value);
+COREFOUNDATION_EXPORT void CFBinaryHeapApplyFunction(CFBinaryHeapRef heap, CFBinaryHeapApplierFunction function, void* context);
+COREFOUNDATION_EXPORT Boolean CFBinaryHeapContainsValue(CFBinaryHeapRef heap, const void* value);
+COREFOUNDATION_EXPORT CFBinaryHeapRef CFBinaryHeapCreate(CFAllocatorRef allocator,
+                                                         CFIndex capacity,
+                                                         const CFBinaryHeapCallBacks* callbacks,
+                                                         const CFBinaryHeapCompareContext* context);
+COREFOUNDATION_EXPORT CFBinaryHeapRef CFBinaryHeapCreateCopy(CFAllocatorRef allocator, CFIndex capacity, CFBinaryHeapRef heap);
+COREFOUNDATION_EXPORT CFIndex CFBinaryHeapGetCount(CFBinaryHeapRef heap);
+COREFOUNDATION_EXPORT CFIndex CFBinaryHeapGetCountOfValue(CFBinaryHeapRef heap, const void* value);
+COREFOUNDATION_EXPORT const void* CFBinaryHeapGetMinimum(CFBinaryHeapRef heap);
+COREFOUNDATION_EXPORT Boolean CFBinaryHeapGetMinimumIfPresent(CFBinaryHeapRef heap, const void** value);
+COREFOUNDATION_EXPORT void CFBinaryHeapGetValues(CFBinaryHeapRef heap, const void** values);
+COREFOUNDATION_EXPORT void CFBinaryHeapRemoveAllValues(CFBinaryHeapRef heap);
+COREFOUNDATION_EXPORT void CFBinaryHeapRemoveMinimumValue(CFBinaryHeapRef heap);

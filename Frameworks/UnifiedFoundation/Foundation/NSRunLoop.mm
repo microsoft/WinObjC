@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -25,7 +26,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSOperationQueue.h>
 #import <Windows.h>
+#import "NSInputSource.h"
 #import "NSRunLoopState.h"
+#import "NSDelayedPerform.h"
 #import "NSOrderedPerform.h"
 #import "NSRunLoop+Internal.h"
 #import "dispatch/dispatch.h"
@@ -33,7 +36,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 extern "C" NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
 extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
-@interface NSRunLoop ()
+@interface NSRunLoop () {
+    NSMutableDictionary* _modes;
+    NSMutableArray* _commonModes;
+    NSString* _currentMode;
+    NSMutableArray* _continue;
+    NSMutableArray* _orderedPerforms;
+    NSRecursiveLock* _orderedLock;
+    bool _stop;
+    pthread_mutex_t _modeLock;
+}
 @property (readwrite, copy) NSString* currentMode;
 @end
 
@@ -487,5 +499,13 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
 + (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
     [NSRunLoopState setUIThreadWaitFunction:callback];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removePort:(NSPort*)aPort forMode:(NSString*)mode {
+    UNIMPLEMENTED();
 }
 @end

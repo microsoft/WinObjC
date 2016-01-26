@@ -14,48 +14,13 @@
 //
 //******************************************************************************
 
+#include "StubReturn.h"
 #include "Foundation/Foundation.h"
+#include "Foundation/NSObjCRuntime.h"
 #include "Foundation/NSArray.h"
 #include "Foundation/NSPathUtilities.h"
 
-/**
- @Status Interoperable
-*/
-NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearchPathDomainMask mask, BOOL tilde) {
-    switch (dir) {
-        case NSDocumentDirectory:
-            return [NSArray arrayWithObject:@"/Documents/"];
-
-        case NSApplicationDirectory:
-            return [NSArray arrayWithObject:@"./"];
-
-        case NSLibraryDirectory:
-            return [NSArray arrayWithObject:@"/Library/"];
-
-        case NSCachesDirectory:
-            return [NSArray arrayWithObject:@"/Cache/"];
-
-        case NSApplicationSupportDirectory:
-            return [NSArray arrayWithObject:@"/AppSupport/"];
-
-        case NSAllApplicationsDirectory:
-            return [NSArray arrayWithObject:@"/"];
-
-        default:
-            assert(0);
-            break;
-    }
-
-    return 0;
-}
-
-/**
- @Status Interoperable
-*/
-NSString* NSHomeDirectory(void) {
-    // We expect this call to only return a single directory
-    return [NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, 0, FALSE) lastObject];
-}
+const double NSFoundationVersionNumber = NSFoundationVersionNumber_iOS_6_0;
 
 /**
  @Status Interoperable
@@ -84,30 +49,34 @@ NSString* NSStringFromClass(Class cls) {
 /**
  @Status Interoperable
 */
-unsigned int NSSwapHostIntToBig(unsigned int val) {
-    return ((val & 0xFF) << 24) | ((val & 0xFF00) << 8) | ((val & 0xFF0000) >> 8) | (val >> 24);
-}
-
-/**
- @Status Interoperable
-*/
 NSString* NSStringFromSelector(SEL sel) {
     NSString* ret = [NSString stringWithCString:sel_getName(sel)];
     return ret;
 }
 
-NSString* temporaryDirectory = @"/tmp";
-
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
-NSString* NSTemporaryDirectory(void) {
-    return temporaryDirectory;
+NSString* NSStringFromProtocol(Protocol* proto) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
-void NSSetTemporaryDirectory(NSString* path) {
-    temporaryDirectory = [path retain];
+Protocol* NSProtocolFromString(NSString* namestr) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+const char* NSGetSizeAndAlignment(const char* typePtr, NSUInteger* sizep, NSUInteger* alignp) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

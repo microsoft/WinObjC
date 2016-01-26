@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #import <Foundation/Foundation.h>
 #include <unicode/datefmt.h>
@@ -498,6 +499,15 @@ static NSLocale* _currentLocale;
     [coder encodeObject:_userPreferredLanguagesSeperatedByString forKey:@"userPreferredLanguagesSeperatedByString"];
     [coder encodeObject:_ISOCountryCodes forKey:@"ISOCountryCodes"];
     [coder encodeObject:_ISOLanguageCodes forKey:@"ISOLanguageCodes"];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

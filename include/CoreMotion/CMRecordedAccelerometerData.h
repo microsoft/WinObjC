@@ -27,7 +27,7 @@
 @class NSDate;
 
 COREMOTION_EXPORT_CLASS
-@interface CMRecordedAccelerometerData : CMAccelerometerData <NSCopying, NSObject, NSSecureCoding>
+@interface CMRecordedAccelerometerData : CMAccelerometerData <NSCopying, NSSecureCoding>
 @property (readonly) NSDate* startDate STUB_PROPERTY;
 @property (readonly) uint64_t identifier STUB_PROPERTY;
 @end

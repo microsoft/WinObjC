@@ -650,9 +650,9 @@ ALCdevice_struct::ALCdevice_struct() {
     _terminateThread = false;
 
 #ifdef EBRIUS
-    auto workItemHandler =
-        ref new Windows::System::Threading::WorkItemHandler([=](Windows::Foundation::IAsyncAction ^ ) { AudioPlaybackThread(); },
-                                                            Platform::CallbackContext::Any);
+    auto workItemHandler = ref new Windows::System::Threading::WorkItemHandler([=](Windows::Foundation::IAsyncAction ^ ) {
+        AudioPlaybackThread();
+    }, Platform::CallbackContext::Any);
 
     Windows::System::Threading::ThreadPool::RunAsync(workItemHandler,
                                                      Windows::System::Threading::WorkItemPriority::High,
@@ -748,7 +748,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
         free(deviceName);
         WindowsDeleteString(defaultRenderDevice);
     };
-    NSArray* modes = [[NSArray alloc] initWithObject:kCFRunLoopDefaultMode];
+    NSArray* modes = [[NSArray alloc] initWithObject:static_cast<id>(kCFRunLoopDefaultMode)];
     [[NSRunLoop mainRunLoop] performSelector:@selector(invoke) target:activateAudioOnMainThread argument:nil order:0 modes:modes];
     openCallback.Wait();
 

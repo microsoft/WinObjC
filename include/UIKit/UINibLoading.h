@@ -32,11 +32,10 @@
 
 #import <Foundation/Foundation.h>
 
-SB_EXPORT NSString * const UINibProxiedObjectsKey;
-SB_EXPORT NSString * const UINibExternalObjects;
+SB_EXPORT NSString* const UINibProxiedObjectsKey;
 
 @interface NSBundle (UINibLoading)
-- (NSArray *)loadNibNamed:(NSString *)name owner:(id)owner options:(NSDictionary *)options;     // not implemented, but here to avoid some warnings
+- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options; // not implemented, but here to avoid some warnings
 @end
 
 @interface NSObject (UINibLoading)

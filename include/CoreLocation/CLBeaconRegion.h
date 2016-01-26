@@ -28,7 +28,7 @@ typedef uint16_t CLBeaconMajorValue;
 typedef uint16_t CLBeaconMinorValue;
 
 CORELOCATION_EXPORT_CLASS
-@interface CLBeaconRegion : CLRegion <NSCopying, NSObject, NSSecureCoding>
+@interface CLBeaconRegion : CLRegion <NSCopying, NSSecureCoding>
 - (instancetype)initWithProximityUUID:(NSUUID*)proximityUUID identifier:(NSString*)identifier STUB_METHOD;
 - (instancetype)initWithProximityUUID:(NSUUID*)proximityUUID major:(CLBeaconMajorValue)major identifier:(NSString*)identifier STUB_METHOD;
 - (instancetype)initWithProximityUUID:(NSUUID*)proximityUUID

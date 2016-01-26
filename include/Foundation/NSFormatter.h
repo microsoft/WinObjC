@@ -1,38 +1,59 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSRange.h>
 
-@class NSAttributedString, NSDictionary;
+@class NSString;
+@class NSAttributedString;
+@class NSDictionary;
+
+typedef NSUInteger NSFormattingUnitStyle;
+typedef NSUInteger NSFormattingContext;
+enum {
+    NSFormattingUnitStyleShort = 1,
+    NSFormattingUnitStyleMedium,
+    NSFormattingUnitStyleLong,
+};
+
+enum {
+    NSFormattingContextUnknown = 0,
+    NSFormattingContextDynamic = 1,
+    NSFormattingContextStandalone = 2,
+    NSFormattingContextListItem = 3,
+    NSFormattingContextBeginningOfSentence = 4,
+    NSFormattingContextMiddleOfSentence = 5,
+};
 
 FOUNDATION_EXPORT_CLASS
 @interface NSFormatter : NSObject <NSCoding, NSCopying>
+- (NSString*)stringForObjectValue:(id)anObject STUB_METHOD;
+- (NSAttributedString*)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary*)attributes STUB_METHOD;
+- (NSString*)editingStringForObjectValue:(id)anObject STUB_METHOD;
+- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)string errorDescription:(NSString* _Nullable*)error STUB_METHOD;
+- (BOOL)isPartialStringValid:(NSString*)partialString
+            newEditingString:(NSString* _Nullable*)newString
+            errorDescription:(NSString* _Nullable*)error STUB_METHOD;
 
-- (BOOL)isPartialStringValid:(NSString*)partial newEditingString:(NSString**)editing errorDescription:(NSString**)error;
-
-- (BOOL)getObjectValue:(id*)object forString:(NSString*)string errorDescription:(NSString**)error;
-
-- (NSString*)stringForObjectValue:object;
-
-- (NSString*)editingStringForObjectValue:object;
-
-- (NSAttributedString*)attributedStringForObjectValue:object withDefaultAttributes:(NSDictionary*)attributes;
-
-- (BOOL)isPartialStringValid:(NSString**)partialStringp
-       proposedSelectedRange:(NSRange*)proposedRangep
-              originalString:(NSString*)originalString
-       originalSelectedRange:(NSRange)originalRange
-            errorDescription:(NSString**)errorStringp;
-
+- (BOOL)isPartialStringValid:(NSString* _Nonnull*)partialStringPtr
+       proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
+              originalString:(NSString*)origString
+       originalSelectedRange:(NSRange)origSelRange
+            errorDescription:(NSString* _Nullable*)error STUB_METHOD;
 @end

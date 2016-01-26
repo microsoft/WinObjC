@@ -31,7 +31,7 @@ typedef void (^CMMotionActivityHandler)(CMMotionActivity* activity);
 typedef void (^CMMotionActivityQueryHandler)(NSArray* activities, NSError* error);
 
 COREMOTION_EXPORT_CLASS
-@interface CMMotionActivityManager : NSObject <NSObject>
+@interface CMMotionActivityManager : NSObject
 + (BOOL)isActivityAvailable STUB_METHOD;
 - (void)startActivityUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMotionActivityHandler)handler STUB_METHOD;
 - (void)stopActivityUpdates STUB_METHOD;

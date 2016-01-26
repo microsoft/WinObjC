@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import "StubReturn.h"
 #import <Foundation/NSExpression.h>
 
 @implementation NSExpression
@@ -169,6 +170,24 @@
 */
 - (void)allowEvaluation {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

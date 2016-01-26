@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,33 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _NSCOMPARISONPREDICATE_H_
-#define _NSCOMPARISONPREDICATE_H_
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
 #import <Foundation/NSPredicate.h>
-
 @class NSExpression;
 
-typedef NS_ENUM(NSInteger, NSPredicateOperatorType) {
+typedef NSUInteger NSComparisonPredicateModifier;
+typedef NSUInteger NSComparisonPredicateOptions;
+typedef NSUInteger NSPredicateOperatorType;
+enum {
+    NSDirectPredicateModifier = 0,
+    NSAllPredicateModifier,
+    NSAnyPredicateModifier,
+};
+
+enum {
+    NSCaseInsensitivePredicateOption = 0x01,
+    NSDiacriticInsensitivePredicateOption = 0x02,
+    NSNormalizedPredicateOption = 0x04,
+    NSLocaleSensitivePredicateOption = 0x08
+};
+
+enum {
     NSLessThanPredicateOperatorType = 0,
     NSLessThanOrEqualToPredicateOperatorType,
     NSGreaterThanPredicateOperatorType,
@@ -38,45 +56,24 @@ typedef NS_ENUM(NSInteger, NSPredicateOperatorType) {
     NSBetweenPredicateOperatorType
 };
 
-typedef NS_ENUM(NSInteger, NSComparisonPredicateOptions) {
-    NSCaseInsensitivePredicateOption = 0x01,
-    NSDiacriticInsensitivePredicateOption = 0x02,
-    NSNormalizedPredicateOption = 0x04,
-    NSLocaleSensitivePredicateOption = 0x08
-};
-
-typedef NS_ENUM(NSInteger, NSComparisonPredicateModifier) {
-    NSDirectPredicateModifier = 0,
-    NSAllPredicateModifier,
-    NSAnyPredicateModifier,
-};
-
 FOUNDATION_EXPORT_CLASS
-@interface NSComparisonPredicate : NSPredicate <NSSecureCoding, NSCopying>
-
+@interface NSComparisonPredicate : NSPredicate <NSCopying, NSSecureCoding>
 + (NSComparisonPredicate*)predicateWithLeftExpression:(NSExpression*)lhs rightExpression:(NSExpression*)rhs customSelector:(SEL)selector;
-
 + (NSComparisonPredicate*)predicateWithLeftExpression:(NSExpression*)lhs
                                       rightExpression:(NSExpression*)rhs
                                              modifier:(NSComparisonPredicateModifier)modifier
                                                  type:(NSPredicateOperatorType)type
                                               options:(NSComparisonPredicateOptions)options;
-
+- (instancetype)initWithLeftExpression:(NSExpression*)lhs rightExpression:(NSExpression*)rhs customSelector:(SEL)selector;
 - (instancetype)initWithLeftExpression:(NSExpression*)lhs
                        rightExpression:(NSExpression*)rhs
                               modifier:(NSComparisonPredicateModifier)modifier
                                   type:(NSPredicateOperatorType)type
                                options:(NSComparisonPredicateOptions)options;
-
-- (instancetype)initWithLeftExpression:(NSExpression*)lhs rightExpression:(NSExpression*)rhs customSelector:(SEL)selector;
-
-@property (readonly, retain) NSExpression* leftExpression;
-@property (readonly, retain) NSExpression* rightExpression;
-@property (readonly) NSPredicateOperatorType predicateOperatorType;
 @property (readonly) NSComparisonPredicateModifier comparisonPredicateModifier;
-@property (readonly) NSComparisonPredicateOptions options;
 @property (readonly) SEL customSelector;
-
+@property (readonly, retain) NSExpression* rightExpression;
+@property (readonly, retain) NSExpression* leftExpression;
+@property (readonly) NSComparisonPredicateOptions options;
+@property (readonly) NSPredicateOperatorType predicateOperatorType;
 @end
-
-#endif /* _NSCOMPARISONPREDICATE_H_ */

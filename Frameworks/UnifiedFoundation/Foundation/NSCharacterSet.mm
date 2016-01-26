@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#import "StubReturn.h"
 #import "Foundation/NSCharacterSet.h"
 #import "Foundation/NSMutableCharacterSet.h"
 #import "Foundation/NSMutableString.h"
@@ -435,6 +436,15 @@ static UnicodeSet* setWithCharacters(const char* chars) {
         _invertedSet->_invertedSet = self;
     }
     return _invertedSet;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSCharacterSet*)capitalizedLetterCharacterSet {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

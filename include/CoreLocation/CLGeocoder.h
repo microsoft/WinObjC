@@ -26,7 +26,7 @@
 typedef void (^CLGeocodeCompletionHandler)(NSArray* placemark, NSError* error);
 
 CORELOCATION_EXPORT_CLASS
-@interface CLGeocoder : NSObject <NSObject>
+@interface CLGeocoder : NSObject
 - (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;
 - (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary
                completionHandler:(CLGeocodeCompletionHandler)completionHandler STUB_METHOD;

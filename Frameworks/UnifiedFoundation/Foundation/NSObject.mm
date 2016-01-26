@@ -32,6 +32,7 @@
 #import <StringHelpers.h>
 #import <ErrorHandling.h>
 #import <Logging.h>
+#import <StubReturn.h>
 
 static BOOL _NSSelectorNotFoundIsNonFatal;
 
@@ -46,7 +47,7 @@ static BOOL _NSSelectorNotFoundIsNonFatal;
 /**
  @Status Interoperable
 */
-+ (id)new {
++ (id) new {
     return [[self alloc] init];
 }
 
@@ -106,7 +107,8 @@ static BOOL _NSSelectorNotFoundIsNonFatal;
  *  To actually be ARC compliant, we need to store our refcount sizeof(intptr_t) bytes before
  *  self->isa, and mimic the runtime's behaviour for direct invocations of retain/release.
  */
-- (void)_ARCCompliantRetainRelease { }
+- (void)_ARCCompliantRetainRelease {
+}
 
 /**
  @Status Interoperable
@@ -177,14 +179,14 @@ static id _NSWeakLoad(id obj) {
 /**
  @Status Interoperable
 */
-- (Class)class {
+- (Class) class {
     return object_getClass(self);
 }
 
-/**
- @Status Interoperable
-*/
-- (Class)superclass {
+    /**
+     @Status Interoperable
+    */
+    - (Class)superclass {
     return class_getSuperclass(object_getClass(self));
 }
 
@@ -426,14 +428,14 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
 /**
  @Status Interoperable
 */
-+ (Class)class {
++ (Class) class {
     return self;
 }
 
-/**
- @Status Interoperable
-*/
-+ (Class)superclass {
+    /**
+     @Status Interoperable
+    */
+    + (Class)superclass {
     return class_getSuperclass(self);
 }
 
@@ -441,6 +443,13 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
  @Status Interoperable
 */
 + (id)copyWithZone:(NSZone*)zone {
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
++ (id)mutableCopyWithZone:(NSZone*)zone {
     return self;
 }
 
@@ -495,6 +504,105 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     _NSSelectorNotFoundIsNonFatal = YES;
 #endif
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)forwardInvocation:(NSInvocation*)anInvocation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)initialize {
+    UNIMPLEMENTED();
+}
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)setVersion:(NSInteger)aVersion {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSInteger)version {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)aSelector {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)resolveClassMethod:(SEL)name {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isProxy {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)resolveInstanceMethod:(SEL)name {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (id)autoContentAccessingProxy {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end
 
 void WinObjC_SetMissingSelectorFatal(BOOL fatal) {

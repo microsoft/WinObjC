@@ -39,6 +39,6 @@ typedef struct CMCalibratedMagneticField {
 };
 
 COREMOTION_EXPORT_CLASS
-@interface CMMagnetometerData : CMLogItem <NSCopying, NSObject, NSSecureCoding>
+@interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>
 @property (readonly, nonatomic) CMMagneticField magneticField STUB_PROPERTY;
 @end
