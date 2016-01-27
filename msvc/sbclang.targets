@@ -53,6 +53,7 @@
       <IncludeSSLEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
       <IncludeStoreKit Condition="$(LinkAdditionalDependencies.Contains('StoreKit.lib'))">true</IncludeStoreKit>
       <IncludeMediaPlayer Condition="$(LinkAdditionalDependencies.Contains('MediaPlayer.lib'))">true</IncludeMediaPlayer>
+      <IncludeMapKit Condition="$(LinkAdditionalDependencies.Contains('MapKit.lib'))">true</IncludeMapKit>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeLogging>true</IncludeLogging>
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
@@ -115,6 +116,7 @@
       <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />
 
       <SBResourceCopy Condition="'$(IncludeMediaPlayer)' == 'true'" Include="$(StarboardLibDirs)\MediaPlayer.dll" />
+      <SBResourceCopy Condition="'$(IncludeMapKit)' == 'true'" Include="$(StarboardLibDirs)\MapKit.dll" />
     </ItemGroup>
   </Target>
 

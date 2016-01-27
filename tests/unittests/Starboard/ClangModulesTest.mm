@@ -43,6 +43,7 @@
 @import GLKit;
 @import iAd;
 @import ImageIO;
+@import MapKit;
 @import MediaPlayer;
 @import MessageUI;
 @import MobileCoreServices;
