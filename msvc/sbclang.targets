@@ -27,6 +27,7 @@
 
     <PropertyGroup>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+      <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
       <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
@@ -101,6 +102,7 @@
 
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
+      <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
     </ItemGroup>
   </Target>
 
