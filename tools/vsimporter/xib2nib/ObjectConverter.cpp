@@ -65,6 +65,8 @@
 #include "UISwipeGestureRecognizer.h"
 #include <assert.h>
 
+#include "..\WBITelemetry\WBITelemetry.h"
+
 #define IS_CONVERTER(newinst, classnamevar, name, type) \
     if (strcmp(classnamevar, name) == 0) {              \
         newinst = new type();                           \
@@ -185,6 +187,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
 #ifdef _DEBUG
 // printf("Unrecognized tag <%s>\n", className);
 #endif
+        TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
         ret = new XIBObject();
     }
 

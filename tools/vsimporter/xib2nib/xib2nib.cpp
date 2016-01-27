@@ -23,12 +23,15 @@
 #include <direct.h>
 #include <assert.h>
 #include <map>
+#include <filesystem>
 
 #include "XIBObject.h"
 #include "XIBObjectTypes.h"
 #include "XIBDocument.h"
 #include "NIBWriter.h"
 #include "Plist.hpp"
+
+#include "..\WBITelemetry\WBITelemetry.h"
 
 static char _g_outputDirectory[4096];
 std::string GetOutputFilename(const char* filename) {
@@ -234,6 +237,12 @@ int main(int argc, char* argv[]) {
     argc = 3;
 #endif
 
+    TELEMETRY_INIT(L"AIF-66d56db8-2223-42bb-bf14-16ea3667ff90");
+
+    std::tr2::sys::path fName(argv[1]);
+
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);
     if (!result) {
@@ -289,6 +298,8 @@ int main(int argc, char* argv[]) {
         exit(4);
         return -1;
     }
+
+    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
 
     exit(0);
 }
