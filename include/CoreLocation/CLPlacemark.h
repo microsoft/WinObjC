@@ -22,6 +22,8 @@
 @class CLLocation;
 @class CLRegion;
 @class NSTimeZone;
+@class NSDictionary;
+@class NSArray;
 
 CORELOCATION_EXPORT_CLASS
 @interface CLPlacemark : NSObject <NSCopying, NSObject, NSSecureCoding>

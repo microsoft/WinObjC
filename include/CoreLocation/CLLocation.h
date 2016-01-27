@@ -18,8 +18,10 @@
 
 #import <CoreLocation/CoreLocationExport.h>
 #import <CoreLocation/CoreLocationDataTypes.h>
+#import <Foundation/NSObject.h>
 
 @class CLFloor;
+@class NSDate;
 
 CORELOCATION_EXPORT_CLASS
 @interface CLLocation : NSObject <NSCopying, NSObject, NSSecureCoding>
