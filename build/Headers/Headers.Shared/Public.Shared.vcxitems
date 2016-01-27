@@ -54,6 +54,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\StoreKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\sys\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\SystemConfiguration\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Twitter\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\UIKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\winobjc\*.h" />

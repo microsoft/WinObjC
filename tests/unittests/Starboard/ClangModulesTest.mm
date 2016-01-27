@@ -54,6 +54,7 @@
 @import Social;
 @import StoreKit;
 @import SystemConfiguration;
+@import Twitter;
 @import UIKit;
 
 TEST(ClangModules, BasicSanity) {
