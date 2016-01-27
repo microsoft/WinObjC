@@ -13,26 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSObject.h>
+#import <HealthKit/HKQuery.h>
 
-#import <StubReturn.h>
+@class HKCorrelationType;
+@class NSPredicate;
+@class NSDictionary;
+@class NSArray;
+@class NSError;
 
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKCorrelationQuery : HKQuery
+- (instancetype)initWithType:(HKCorrelationType*)correlationType
+                   predicate:(NSPredicate*)predicate
+            samplePredicates:(NSDictionary*)samplePredicates
+                  completion:(void (^)(HKCorrelationQuery*, NSArray*, NSError*))completion STUB_METHOD;
+@property (readonly, copy) HKCorrelationType* correlationType STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* samplePredicates STUB_PROPERTY;
 @end

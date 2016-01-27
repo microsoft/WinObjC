@@ -14,25 +14,45 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKStatisticsCollection.h>
+
+@implementation HKStatisticsCollection
 
 /**
  @Status Stub
+ @Notes
 */
-- (instancetype)initWithCoder:(NSCoder*)decoder {
+- (NSArray*)statistics {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (void)encodeWithCoder:(NSCoder*)encoder {
+- (HKStatistics*)statisticsForDate:(NSDate*)date {
     UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateStatisticsFromDate:(NSDate*)startDate toDate:(NSDate*)endDate withBlock:(void (^)(HKStatistics*, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)sources {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

@@ -14,11 +14,53 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKDevice.h>
+
+@implementation HKDevice
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithName:(NSString*)name
+                manufacturer:(NSString*)manufacturer
+                       model:(NSString*)model
+             hardwareVersion:(NSString*)hardwareVersion
+             firmwareVersion:(NSString*)firmwareVersion
+             softwareVersion:(NSString*)softwareVersion
+             localIdentifier:(NSString*)localIdentifier
+         UDIDeviceIdentifier:(NSString*)UDIDeviceIdentifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKDevice*)localDevice {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 /**
  @Status Stub

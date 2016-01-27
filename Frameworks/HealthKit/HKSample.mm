@@ -14,25 +14,14 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKSample.h>
 
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
+NSString* const HKSampleSortIdentifierStartDate = @"HKSampleSortIdentifierStartDate";
+NSString* const HKSampleSortIdentifierEndDate = @"HKSampleSortIdentifierEndDate";
+NSString* const HKPredicateKeyPathStartDate = @"HKPredicateKeyPathStartDate";
+NSString* const HKPredicateKeyPathEndDate = @"HKPredicateKeyPathEndDate";
 
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+@implementation HKSample
 @end

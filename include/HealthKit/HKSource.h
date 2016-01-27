@@ -13,26 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
-#import <StubReturn.h>
+@class NSString;
 
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKSource : NSObject <NSCopying, NSSecureCoding>
++ (HKSource*)defaultSource STUB_METHOD;
+@property (readonly, strong) NSString* bundleIdentifier STUB_PROPERTY;
+@property (readonly, strong) NSString* name STUB_PROPERTY;
 @end

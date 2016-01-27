@@ -13,26 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
+#import <HealthKit/HKSampleType.h>
 
-#import <StubReturn.h>
+@class HKUnit;
 
-@implementation ABUnknownPersonViewController
+typedef enum : NSInteger {
+    HKQuantityAggregationStyleCumulative = 0,
+    HKQuantityAggregationStyleDiscrete,
+} HKQuantityAggregationStyle;
 
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKQuantityType : HKSampleType <NSCopying, NSSecureCoding>
+@property (readonly) HKQuantityAggregationStyle aggregationStyle STUB_PROPERTY;
+- (BOOL)isCompatibleWithUnit:(HKUnit*)unit STUB_METHOD;
 @end

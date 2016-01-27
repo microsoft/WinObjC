@@ -14,11 +14,27 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKObject.h>
+
+NSString* const HKPredicateKeyPathUUID = @"HKPredicateKeyPathUUID";
+NSString* const HKPredicateKeyPathSource = @"HKPredicateKeyPathSource";
+NSString* const HKPredicateKeyPathMetadata = @"HKPredicateKeyPathMetadata";
+NSString* const HKPredicateKeyPathCorrelation = @"HKPredicateKeyPathCorrelation";
+NSString* const HKPredicateKeyPathWorkout = @"HKPredicateKeyPathWorkout";
+NSString* const HKPredicateKeyPathDevice = @"HKPredicateKeyPathDevice";
+NSString* const HKPredicateKeyPathSourceRevision = @"HKPredicateKeyPathSourceRevision";
+
+@implementation HKObject
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 /**
  @Status Stub

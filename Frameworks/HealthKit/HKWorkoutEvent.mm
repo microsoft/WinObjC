@@ -14,11 +14,28 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKWorkoutEvent.h>
+
+@implementation HKWorkoutEvent
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)workoutEventWithType:(HKWorkoutEventType)type date:(NSDate*)date {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 /**
  @Status Stub

@@ -14,25 +14,21 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKObserverQuery.h>
+
+@implementation HKObserverQuery
 
 /**
  @Status Stub
+ @Notes
 */
-- (instancetype)initWithCoder:(NSCoder*)decoder {
+- (instancetype)initWithSampleType:(HKSampleType*)sampleType
+                         predicate:(NSPredicate*)predicate
+                     updateHandler:(void (^)(HKObserverQuery*, HKObserverQueryCompletionHandler, NSError*))updateHandler {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
 }
 
 @end

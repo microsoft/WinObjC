@@ -13,26 +13,25 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
+#import <HealthKit/HKObject.h>
 
-#import <StubReturn.h>
+@class NSString;
+@class NSDate;
+@class HKSampleType;
 
-@implementation ABUnknownPersonViewController
+HEALTHKIT_EXPORT NSString* const HKSampleSortIdentifierStartDate;
+HEALTHKIT_EXPORT NSString* const HKSampleSortIdentifierEndDate;
+HEALTHKIT_EXPORT NSString* const HKPredicateKeyPathStartDate;
+HEALTHKIT_EXPORT NSString* const HKPredicateKeyPathEndDate;
 
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKSample : HKObject <NSSecureCoding>
+@property (readonly, strong) NSDate* startDate STUB_PROPERTY;
+@property (readonly, strong) NSDate* endDate STUB_PROPERTY;
+@property (readonly, strong) HKSampleType* sampleType STUB_PROPERTY;
 @end

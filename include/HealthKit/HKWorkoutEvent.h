@@ -13,26 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
 
-#import <StubReturn.h>
+@class NSDate;
 
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+typedef enum : NSInteger { HKWorkoutEventTypePause = 1, HKWorkoutEventTypeResume } HKWorkoutEventType;
+HEALTHKIT_EXPORT_CLASS
+@interface HKWorkoutEvent : NSObject <NSSecureCoding>
++ (instancetype)workoutEventWithType:(HKWorkoutEventType)type date:(NSDate*)date STUB_METHOD;
+@property (readonly, copy) NSDate* date STUB_PROPERTY;
+@property (readonly, assign) HKWorkoutEventType type STUB_PROPERTY;
 @end

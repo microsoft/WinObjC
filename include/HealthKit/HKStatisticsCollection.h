@@ -13,26 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSObject.h>
 
-#import <StubReturn.h>
+@class NSArray;
+@class HKStatistics;
+@class NSDate;
+@class NSSet;
 
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKStatisticsCollection : NSObject
+- (NSArray*)statistics STUB_METHOD;
+- (HKStatistics*)statisticsForDate:(NSDate*)date STUB_METHOD;
+- (void)enumerateStatisticsFromDate:(NSDate*)startDate toDate:(NSDate*)endDate withBlock:(void (^)(HKStatistics*, BOOL*))block STUB_METHOD;
+- (NSSet*)sources STUB_METHOD;
 @end

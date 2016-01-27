@@ -47,14 +47,6 @@ NSString* const ABPersonPostalAddressesProperty = @"ABPersonPostalAddressesPrope
 /**
  @Status Stub
 */
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
 - (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
     return StubReturn();

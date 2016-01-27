@@ -14,42 +14,48 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABPersonViewController
+#import <HealthKit/HKCategorySample.h>
+
+NSString* const HKPredicateKeyPathCategoryValue = @"HKPredicateKeyPathCategoryValue";
+
+@implementation HKCategorySample
 
 /**
  @Status Stub
  @Notes
 */
-- (void)setHighlightedItemForProperty:(ABPropertyID)property withIdentifier:(ABMultiValueIdentifier)identifier {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray*)identifierComponents coder:(NSCoder*)coder {
++ (instancetype)categorySampleWithType:(HKCategoryType*)type value:(NSInteger)value startDate:(NSDate*)startDate endDate:(NSDate*)endDate {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (instancetype)initWithCoder:(NSCoder*)decoder {
++ (instancetype)categorySampleWithType:(HKCategoryType*)type
+                                 value:(NSInteger)value
+                             startDate:(NSDate*)startDate
+                               endDate:(NSDate*)endDate
+                              metadata:(NSDictionary*)metadata {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (void)encodeWithCoder:(NSCoder*)encoder {
++ (instancetype)categorySampleWithType:(HKCategoryType*)type
+                                 value:(NSInteger)value
+                             startDate:(NSDate*)startDate
+                               endDate:(NSDate*)endDate
+                                device:(HKDevice*)device
+                              metadata:(NSDictionary*)metadata {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

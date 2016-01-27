@@ -14,11 +14,73 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABUnknownPersonViewController
+#import <HealthKit/HKObjectType.h>
+
+@implementation HKObjectType
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKCategoryType*)categoryTypeForIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKCharacteristicType*)characteristicTypeForIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKCorrelationType*)correlationTypeForIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKQuantityType*)quantityTypeForIdentifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (HKWorkoutType*)workoutType {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 /**
  @Status Stub
@@ -34,5 +96,4 @@
 - (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
-
 @end

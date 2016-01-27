@@ -68,6 +68,9 @@
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
       <IncludeHomeKit Condition="$(LinkAdditionalDependencies.Contains('HomeKit.lib'))">true</IncludeHomeKit>
       <IncludeCoreVideo Condition="$(LinkAdditionalDependencies.Contains('CoreVideo.lib'))">true</IncludeCoreVideo>
+      <IncludeAddressBook Condition="$(LinkAdditionalDependencies.Contains('AddressBook.lib'))">true</IncludeAddressBook>
+      <IncludeAddressBookUI Condition="$(LinkAdditionalDependencies.Contains('AddressBookUI.lib'))">true</IncludeAddressBookUI>
+      <IncludeHealthKit Condition="$(LinkAdditionalDependencies.Contains('HealthKit.lib'))">true</IncludeHealthKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -129,6 +132,9 @@
       <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
       
       <SBResourceCopy Condition="'$(IncludeCoreVideo)' == 'true'" Include="$(StarboardLibDirs)\CoreVideo.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBook)' == 'true'" Include="$(StarboardLibDirs)\AddressBook.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBookUI)' == 'true'" Include="$(StarboardLibDirs)\AddressBookUI.dll" />
+      <SBResourceCopy Condition="'$(IncludeHealthKit)' == 'true'" Include="$(StarboardLibDirs)\HealthKit.dll" />
     </ItemGroup>
   </Target>
 

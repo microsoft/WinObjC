@@ -35,6 +35,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKitUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\HealthKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\HomeKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\iAd\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ImageIO\*.h" />

@@ -13,26 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#ifndef HEALTHKIT_IMPEXP
+#define HEALTHKIT_IMPEXP __declspec(dllimport)
+#endif
 
-#import <StubReturn.h>
+#ifndef HEALTHKIT_EXPORT
+#ifdef __cplusplus
+#define HEALTHKIT_EXPORT HEALTHKIT_IMPEXP extern "C"
+#define HEALTHKIT_EXPORT_CLASS HEALTHKIT_IMPEXP
+#else
+#define HEALTHKIT_EXPORT HEALTHKIT_IMPEXP extern
+#define HEALTHKIT_EXPORT_CLASS HEALTHKIT_IMPEXP
+#endif
+#endif
 
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
-@end
+#ifndef HEALTHKIT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define HEALTHKIT_EXTERNC_BEGIN extern "C" {
+#define HEALTHKIT_EXTERNC_END }
+#else
+#define HEALTHKIT_EXTERNC_BEGIN
+#define HEALTHKIT_EXTERNC_END
+#endif
+#endif

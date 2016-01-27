@@ -13,26 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#import <AddressBookUI/ABUnknownPersonViewController.h>
-
-#import <StubReturn.h>
-
-@implementation ABUnknownPersonViewController
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
-@end

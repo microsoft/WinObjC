@@ -13,26 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AddressBookUI/ABUnknownPersonViewController.h>
+#import <HealthKit/HealthKitExport.h>
+#import <Foundation/NSObject.h>
+#import <HealthKit/HKQuery.h>
 
-#import <StubReturn.h>
+@class HKSampleType;
+@class NSPredicate;
+@class NSError;
 
-@implementation ABUnknownPersonViewController
+typedef void (^HKObserverQueryCompletionHandler)(void);
 
-/**
- @Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
-
+HEALTHKIT_EXPORT_CLASS
+@interface HKObserverQuery : HKQuery
+- (instancetype)initWithSampleType:(HKSampleType*)sampleType
+                         predicate:(NSPredicate*)predicate
+                     updateHandler:(void (^)(HKObserverQuery*, HKObserverQueryCompletionHandler, NSError*))updateHandler STUB_METHOD;
 @end

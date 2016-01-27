@@ -14,25 +14,97 @@
 //
 //******************************************************************************
 
-#import <AddressBookUI/ABPersonViewController.h>
-
 #import <StubReturn.h>
 
-@implementation ABPersonViewController
+#import <HealthKit/HKStatistics.h>
+
+@implementation HKStatistics
 
 /**
  @Status Stub
  @Notes
 */
-- (void)setHighlightedItemForProperty:(ABPropertyID)property withIdentifier:(ABMultiValueIdentifier)identifier {
+- (HKQuantity*)averageQuantity {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Stub
  @Notes
 */
-+ (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray*)identifierComponents coder:(NSCoder*)coder {
+- (HKQuantity*)averageQuantityForSource:(HKSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)maximumQuantity {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)maximumQuantityForSource:(HKSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)minimumQuantity {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)minimumQuantityForSource:(HKSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)sumQuantity {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (HKQuantity*)sumQuantityForSource:(HKSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();
     return StubReturn();
 }
