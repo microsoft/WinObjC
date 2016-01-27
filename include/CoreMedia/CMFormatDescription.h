@@ -16,17 +16,17 @@
 
 #pragma once
 
-#import <CoreMedia/CoreMediaExport.h>
+#import <AudioToolBox/AudioFormat.h>
+#import <CoreAudio/CoreAudioTypes.h>
 #import <CoreFoundation/CFPropertyList.h>
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFArray.h>
 #import <CoreVideo/CVImageBuffer.h>
 #import <CoreMedia/CMTime.h>
+#import <CoreMedia/CoreMediaExport.h>
 
-@class AudioStreamBasicDescription;
 @class AudioChannelLayout;
-@class AudioFormatListItem;
 
 typedef struct opaqueCMFormatDescription* CMFormatDescriptionRef;
 typedef CMFormatDescriptionRef CMAudioFormatDescriptionRef;

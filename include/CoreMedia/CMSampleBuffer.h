@@ -16,17 +16,15 @@
 
 #pragma once
 
-#import <CoreMedia/CoreMediaExport.h>
-#import <CoreMedia/CMBlockBuffer.h>
-#import <CoreMedia/CMFormatDescription.h>
-#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
-#import <CoreMedia/CMTime.h>
-#import <CoreVideo/CVImageBuffer.h>
+#import <CoreAudio/CoreAudioTypes.h>
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFString.h>
-
-@class AudioStreamPacketDescription;
-@class AudioBufferList;
+#import <CoreMedia/CMBlockBuffer.h>
+#import <CoreMedia/CMFormatDescription.h>
+#import <CoreMedia/CMTime.h>
+#import <CoreMedia/CoreMediaExport.h>
+#import <CoreMedia/CoreMediaFrameworkDataTypes.h>
+#import <CoreVideo/CVImageBuffer.h>
 
 typedef struct opaqueCMSampleBuffer* CMSampleBufferRef;
 typedef struct {
