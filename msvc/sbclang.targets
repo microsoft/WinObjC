@@ -58,6 +58,8 @@
       <IncludeCairo Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeCairo>
       <IncludeLibPNG Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeLibPNG>
       <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibCurl)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
+      <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
+      <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -106,6 +108,10 @@
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
       <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
       <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeEventKitUI)' == 'true'" Include="$(StarboardLibDirs)\EventKitUI.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />
     </ItemGroup>
   </Target>
 

@@ -29,6 +29,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreMedia\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreText\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreVideo\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKitUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Foundation\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
@@ -49,6 +50,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows Phone 8.1\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Platform\Windows Phone 8.1\UWP\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\QuartzCore\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\QuickLook\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Security\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Social\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\StoreKit\*.h" />

@@ -50,6 +50,7 @@
 @import OpenAL;
 @import OpenGLES;
 @import QuartzCore;
+@import QuickLook;
 @import Security;
 @import Social;
 @import StoreKit;
