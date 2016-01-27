@@ -1539,12 +1539,25 @@ CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settin
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes matrix parameter not supported
 */
 CTFontRef CTFontCreateCopyWithSymbolicTraits(
     CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask) {
-    UNIMPLEMENTED();
-    return nullptr;
+    if (font == nil) {
+        return nullptr;
+    }
+
+    UIFontDescriptorSymbolicTraits existingTraits = [(UIFont*)font fontDescriptor].symbolicTraits;
+    UIFontDescriptor* newFontDescriptor =
+        [[(UIFont*)font fontDescriptor] fontDescriptorWithSymbolicTraits:(existingTraits | symTraitValue) & symTraitMask];
+
+    if (size == 0.0f) {
+        size = ((UIFont*)font).pointSize;
+    }
+    UIFont* ret = [_LazyUIFont fontWithDescriptor:newFontDescriptor size:size];
+
+    return (CTFontRef)ret;
 }
 
 /**
@@ -1765,7 +1778,7 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     }
 
     _CTRun* curRun = static_cast<_CTRun*>(run);
-    
+
     if (range.length == 0) {
         range = curRun->_range;
     }
@@ -1794,7 +1807,7 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     if (range.length < 0) {
         return 0;
     }
-    
+
     // Calculate the typographic width for the specified range
     double typographicWidth = 0;
     auto it = curRun->_glyphAdvances.begin() + range.location;
